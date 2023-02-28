@@ -117,7 +117,7 @@ def beckSplitCoequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
 #align category_theory.monad.beck_split_coequalizer CategoryTheory.Monad.beckSplitCoequalizer
 
 /-- This is the Beck cofork. It is a split coequalizer, in particular a coequalizer. -/
-@[simps x]
+@[simps pt]
 def beckCofork : Cofork (T.map X.a) (T.μ.app _) :=
   (beckSplitCoequalizer X).asCofork
 #align category_theory.monad.beck_cofork CategoryTheory.Monad.beckCofork

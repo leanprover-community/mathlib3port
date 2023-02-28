@@ -112,7 +112,7 @@ variable (J : Type v₁) [SmallCategory J]
 @[simps]
 def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) : Bicone J ⥤ C
     where
-  obj X := Bicone.casesOn X c₁.x c₂.x fun j => F.obj j
+  obj X := Bicone.casesOn X c₁.pt c₂.pt fun j => F.obj j
   map X Y f := by
     cases f
     exact 𝟙 _

@@ -35,7 +35,7 @@ variable {C : Type u} [Category.{v} C] [HasLimits C]
 
 variable {J : Type v} [Category.{v} J] (F : J ⥤ SheafedSpace C)
 
-theorem isColimit_exists_rep {c : Cocone F} (hc : IsColimit c) (x : c.x) :
+theorem isColimit_exists_rep {c : Cocone F} (hc : IsColimit c) (x : c.pt) :
     ∃ (i : J)(y : F.obj i), (c.ι.app i).base y = x :=
   Concrete.isColimit_exists_rep (F ⋙ SheafedSpace.forget _)
     (isColimitOfPreserves (SheafedSpace.forget _) hc) x
@@ -80,7 +80,7 @@ noncomputable def coproduct : LocallyRingedSpace
 /-- The explicit coproduct cofan for `F : discrete ι ⥤ LocallyRingedSpace`. -/
 noncomputable def coproductCofan : Cocone F
     where
-  x := coproduct F
+  pt := coproduct F
   ι :=
     { app := fun j => ⟨colimit.ι (F ⋙ forgetToSheafedSpace) j, inferInstance⟩
       naturality' := fun j j' f => by

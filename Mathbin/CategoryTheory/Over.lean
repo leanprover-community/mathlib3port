@@ -144,7 +144,7 @@ theorem forget_map {U V : Over X} {f : U ⟶ V} : (forget X).map f = f.left :=
 /-- The natural cocone over the forgetful functor `over X ⥤ T` with cocone point `X`. -/
 @[simps]
 def forgetCocone (X : T) : Limits.Cocone (forget X) :=
-  { x
+  { pt
     ι := { app := Comma.hom } }
 #align category_theory.over.forget_cocone CategoryTheory.Over.forgetCocone
 
@@ -408,7 +408,7 @@ theorem forget_map {U V : Under X} {f : U ⟶ V} : (forget X).map f = f.right :=
 /-- The natural cone over the forgetful functor `under X ⥤ T` with cone point `X`. -/
 @[simps]
 def forgetCone (X : T) : Limits.Cone (forget X) :=
-  { x
+  { pt
     π := { app := Comma.hom } }
 #align category_theory.under.forget_cone CategoryTheory.Under.forgetCone
 

@@ -110,9 +110,9 @@ the corresponding direct factor of `F.obj j`. -/
 @[simps]
 def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C
     where
-  obj j := ⟨P.x.obj j, P.p.app j, congr_app P.idem j⟩
+  obj j := ⟨P.pt.obj j, P.p.app j, congr_app P.idem j⟩
   map j j' φ :=
-    { f := P.p.app j ≫ P.x.map φ
+    { f := P.p.app j ≫ P.pt.map φ
       comm := by
         simp only [nat_trans.naturality, assoc]
         have h := congr_app P.idem j

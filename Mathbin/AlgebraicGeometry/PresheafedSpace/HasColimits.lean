@@ -210,7 +210,7 @@ theorem colimit_presheaf (F : J ⥤ PresheafedSpace.{v} C) :
 @[simps]
 def colimitCocone (F : J ⥤ PresheafedSpace.{v} C) : Cocone F
     where
-  x := colimit F
+  pt := colimit F
   ι :=
     { app := fun j =>
         { base := colimit.ι (F ⋙ PresheafedSpace.forget C) j
@@ -240,15 +240,15 @@ namespace ColimitCoconeIsColimit
 
 /-- Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
-def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.x.carrier)ᵒᵖ) :
-    s.x.Presheaf.obj U ⟶
+def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.pt.carrier)ᵒᵖ) :
+    s.pt.Presheaf.obj U ⟶
       (colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) _*
             limit (pushforwardDiagramToColimit F).leftOp).obj
         U :=
   by
   refine'
     limit.lift _
-        { x := s.X.presheaf.obj U
+        { pt := s.X.presheaf.obj U
           π :=
             { app := fun j => _
               naturality' := fun j j' f => _ } } ≫
@@ -275,10 +275,10 @@ def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.x
 #align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_app AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.descCApp
 
 theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F)
-    {U V : (Opens ↥s.x.carrier)ᵒᵖ} (i : U ⟶ V) :
-    s.x.Presheaf.map i ≫ descCApp F s V =
+    {U V : (Opens ↥s.pt.carrier)ᵒᵖ} (i : U ⟶ V) :
+    s.pt.Presheaf.map i ≫ descCApp F s V =
       descCApp F s U ≫
-        (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimitCocone F).x.Presheaf).map
+        (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimitCocone F).pt.Presheaf).map
           i :=
   by
   dsimp [desc_c_app]
@@ -300,7 +300,7 @@ theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F)
 
 /-- Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
-def desc (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) : colimit F ⟶ s.x
+def desc (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) : colimit F ⟶ s.pt
     where
   base := colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s)
   c :=

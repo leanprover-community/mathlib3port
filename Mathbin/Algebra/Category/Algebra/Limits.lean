@@ -59,17 +59,17 @@ def sectionsSubalgebra (F : J ⥤ AlgebraCat.{max v w} R) : Subalgebra R (∀ j,
 #align Algebra.sections_subalgebra AlgebraCat.sectionsSubalgebra
 
 instance limitSemiring (F : J ⥤ AlgebraCat.{max v w} R) :
-    Ring (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).x :=
+    Ring (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).pt :=
   by
   change Ring (sections_subalgebra F)
   infer_instance
 #align Algebra.limit_semiring AlgebraCat.limitSemiring
 
 instance limitAlgebra (F : J ⥤ AlgebraCat.{max v w} R) :
-    Algebra R (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).x :=
+    Algebra R (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).pt :=
   by
   have :
-    Algebra R (types.limit_cone (F ⋙ forget (AlgebraCat.{max v w} R))).x =
+    Algebra R (types.limit_cone (F ⋙ forget (AlgebraCat.{max v w} R))).pt =
       Algebra R (sections_subalgebra F) :=
     by rfl
   rw [this]
@@ -78,7 +78,7 @@ instance limitAlgebra (F : J ⥤ AlgebraCat.{max v w} R) :
 
 /-- `limit.π (F ⋙ forget (Algebra R)) j` as a `alg_hom`. -/
 def limitπAlgHom (F : J ⥤ AlgebraCat.{max v w} R) (j) :
-    (Types.limitCone (F ⋙ forget (AlgebraCat R))).x →ₐ[R]
+    (Types.limitCone (F ⋙ forget (AlgebraCat R))).pt →ₐ[R]
       (F ⋙ forget (AlgebraCat.{max v w} R)).obj j :=
   {
     SemiRing.limitπRingHom
@@ -96,7 +96,7 @@ namespace HasLimits
 -/
 def limitCone (F : J ⥤ AlgebraCat.{max v w} R) : Cone F
     where
-  x := AlgebraCat.of R (Types.limitCone (F ⋙ forget _)).x
+  pt := AlgebraCat.of R (Types.limitCone (F ⋙ forget _)).pt
   π :=
     { app := limitπAlgHom F
       naturality' := fun j j' f =>

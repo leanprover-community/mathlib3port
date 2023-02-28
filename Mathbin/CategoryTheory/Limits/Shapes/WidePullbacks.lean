@@ -120,7 +120,7 @@ def diagramIsoWideCospan (F : WidePullbackShape J ⥤ C) :
 @[simps]
 def mkCone {F : WidePullbackShape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : ∀ j, X ⟶ F.obj (some j))
     (w : ∀ j, π j ≫ F.map (Hom.term j) = f) : Cone F :=
-  { x
+  { pt
     π :=
       { app := fun j =>
           match j with
@@ -220,7 +220,7 @@ def diagramIsoWideSpan (F : WidePushoutShape J ⥤ C) :
 @[simps]
 def mkCocone {F : WidePushoutShape J ⥤ C} {X : C} (f : F.obj none ⟶ X) (ι : ∀ j, F.obj (some j) ⟶ X)
     (w : ∀ j, F.map (Hom.init j) ≫ ι j = f) : Cocone F :=
-  { x
+  { pt
     ι :=
       { app := fun j =>
           match j with
@@ -527,7 +527,7 @@ def widePullbackShapeOpEquiv : (WidePullbackShape J)ᵒᵖ ≌ WidePushoutShape 
 /-- If a category has wide pullbacks on a higher universe level it also has wide pullbacks
 on a lower universe level. -/
 theorem hasWidePullbacks_shrink [HasWidePullbacks.{max w w'} C] : HasWidePullbacks.{w} C := fun J =>
-  hasLimitsOfShape_of_equivalence (WidePullbackShape.equivalenceOfEquiv _ Equiv.ulift.{w'})
+  hasLimitsOfShapeOfEquivalence (WidePullbackShape.equivalenceOfEquiv _ Equiv.ulift.{w'})
 #align category_theory.limits.has_wide_pullbacks_shrink CategoryTheory.Limits.hasWidePullbacks_shrink
 
 end CategoryTheory.Limits

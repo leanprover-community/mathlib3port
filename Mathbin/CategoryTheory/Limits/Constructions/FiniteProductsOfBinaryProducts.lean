@@ -50,8 +50,8 @@ limit.
 -/
 @[simps (config := { rhsMd := semireducible })]
 def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i.succ)
-    (c₂ : BinaryFan (f 0) c₁.x) : Fan f :=
-  Fan.mk c₂.x
+    (c₂ : BinaryFan (f 0) c₁.pt) : Fan f :=
+  Fan.mk c₂.pt
     (by
       refine' Fin.cases _ _
       · apply c₂.fst
@@ -63,7 +63,7 @@ def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i
 limit.
 -/
 def extendFanIsLimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Fan fun i : Fin n => f i.succ}
-    {c₂ : BinaryFan (f 0) c₁.x} (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) : IsLimit (extendFan c₁ c₂)
+    {c₂ : BinaryFan (f 0) c₁.pt} (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) : IsLimit (extendFan c₁ c₂)
     where
   lift s := by
     apply (binary_fan.is_limit.lift' t₂ (s.π.app ⟨0⟩) _).1
@@ -201,8 +201,8 @@ then this cofan is also a colimit.
 -/
 @[simps (config := { rhsMd := semireducible })]
 def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n => f i.succ)
-    (c₂ : BinaryCofan (f 0) c₁.x) : Cofan f :=
-  Cofan.mk c₂.x
+    (c₂ : BinaryCofan (f 0) c₁.pt) : Cofan f :=
+  Cofan.mk c₂.pt
     (by
       refine' Fin.cases _ _
       · apply c₂.inl
@@ -214,7 +214,7 @@ def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n =>
 then the constructed cofan is also a colimit.
 -/
 def extendCofanIsColimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Cofan fun i : Fin n => f i.succ}
-    {c₂ : BinaryCofan (f 0) c₁.x} (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) :
+    {c₂ : BinaryCofan (f 0) c₁.pt} (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) :
     IsColimit (extendCofan c₁ c₂)
     where
   desc s := by

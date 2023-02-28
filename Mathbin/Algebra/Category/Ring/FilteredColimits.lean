@@ -121,7 +121,7 @@ def colimit : SemiRing :=
 
 /-- The cocone over the proposed colimit semiring. -/
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι :=
     { app := fun j =>
         { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ SemiRing Mon.{max v u})).ι.app j,
@@ -194,7 +194,7 @@ def colimit : CommSemiRing :=
 
 /-- The cocone over the proposed colimit commutative semiring. -/
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι :=
     {
       (SemiRing.FilteredColimits.colimitCocone
@@ -264,7 +264,7 @@ def colimit : RingCat :=
 
 /-- The cocone over the proposed colimit ring. -/
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι := { (SemiRing.FilteredColimits.colimitCocone (F ⋙ forget₂ RingCat SemiRing.{max v u})).ι with }
 #align Ring.filtered_colimits.colimit_cocone RingCat.FilteredColimits.colimitCocone
 
@@ -328,7 +328,7 @@ def colimit : CommRingCat :=
 
 /-- The cocone over the proposed colimit commutative ring. -/
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι :=
     { (RingCat.FilteredColimits.colimitCocone (F ⋙ forget₂ CommRingCat RingCat.{max v u})).ι with }
 #align CommRing.filtered_colimits.colimit_cocone CommRingCat.FilteredColimits.colimitCocone

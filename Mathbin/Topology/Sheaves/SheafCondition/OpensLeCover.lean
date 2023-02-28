@@ -85,7 +85,7 @@ end OpensLeCover
 -/
 def opensLeCoverCocone : Cocone (fullSubcategoryInclusion _ : OpensLeCover U ⥤ Opens X)
     where
-  x := supᵢ U
+  pt := supᵢ U
   ι := { app := fun V : OpensLeCover U => V.homToIndex ≫ Opens.leSupr U _ }
 #align Top.presheaf.sheaf_condition.opens_le_cover_cocone TopCat.Presheaf.SheafCondition.opensLeCoverCocone
 

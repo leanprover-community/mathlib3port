@@ -63,7 +63,7 @@ def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
 
 @[to_additive]
 instance limitGroup (F : J ⥤ GroupCat.{max v u}) :
-    Group (Types.limitCone (F ⋙ forget GroupCat)).x :=
+    Group (Types.limitCone (F ⋙ forget GroupCat)).pt :=
   by
   change Group (sections_subgroup F)
   infer_instance
@@ -80,7 +80,7 @@ instance Forget₂.createsLimit (F : J ⥤ GroupCat.{max v u}) :
     CreatesLimit F (forget₂ GroupCat.{max v u} Mon.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := GroupCat.of (Types.limitCone (F ⋙ forget GroupCat)).x
+        { pt := GroupCat.of (Types.limitCone (F ⋙ forget GroupCat)).pt
           π :=
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ GroupCat Mon.{max v u})
               naturality' :=
@@ -176,7 +176,7 @@ instance commGroupObj (F : J ⥤ CommGroupCat.{max v u}) (j) :
 
 @[to_additive]
 instance limitCommGroup (F : J ⥤ CommGroupCat.{max v u}) :
-    CommGroup (Types.limitCone (F ⋙ forget CommGroupCat.{max v u})).x :=
+    CommGroup (Types.limitCone (F ⋙ forget CommGroupCat.{max v u})).pt :=
   @Subgroup.toCommGroup (∀ j, F.obj j) _
     (GroupCat.sectionsSubgroup (F ⋙ forget₂ CommGroupCat GroupCat.{max v u}))
 #align CommGroup.limit_comm_group CommGroupCat.limitCommGroup
@@ -193,7 +193,7 @@ instance Forget₂.createsLimit (F : J ⥤ CommGroupCat.{max v u}) :
     CreatesLimit F (forget₂ CommGroupCat GroupCat.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := CommGroupCat.of (Types.limitCone (F ⋙ forget CommGroupCat)).x
+        { pt := CommGroupCat.of (Types.limitCone (F ⋙ forget CommGroupCat)).pt
           π :=
             { app :=
                 Mon.limitπMonoidHom

@@ -60,7 +60,7 @@ abbrev diagram : DiscreteQuotient X ⥤ Profinite :=
 
 /-- A cone over `X.diagram` whose cone point is `X`. -/
 def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
-  { x
+  { pt
     π := { app := fun S => ⟨S.proj, S.proj_isLocallyConstant.Continuous⟩ } }
 #align Profinite.as_limit_cone Profinite.asLimitCone
 
@@ -69,7 +69,7 @@ instance isIso_asLimitCone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asL
     (by
       refine' ⟨fun a b h => _, fun a => _⟩
       · refine' DiscreteQuotient.eq_of_forall_proj_eq fun S => _
-        apply_fun fun f : (limit_cone X.diagram).x => f.val S  at h
+        apply_fun fun f : (limit_cone X.diagram).pt => f.val S  at h
         exact h
       · obtain ⟨b, hb⟩ :=
           DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (hom_of_le h)
@@ -81,7 +81,7 @@ instance isIso_asLimitCone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asL
 /-- The isomorphism between `X` and the explicit limit of `X.diagram`,
 induced by lifting `X.as_limit_cone`.
 -/
-def isoAsLimitConeLift : X ≅ (limitCone X.diagram).x :=
+def isoAsLimitConeLift : X ≅ (limitCone X.diagram).pt :=
   asIso <| (limitConeIsLimit _).lift X.asLimitCone
 #align Profinite.iso_as_limit_cone_lift Profinite.isoAsLimitConeLift
 

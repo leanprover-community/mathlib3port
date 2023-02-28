@@ -74,7 +74,7 @@ from a `diagram_of_cones`.
 @[simps]
 def DiagramOfCones.conePoints (D : DiagramOfCones F) : J ⥤ C
     where
-  obj j := (D.obj j).x
+  obj j := (D.obj j).pt
   map j j' f := (D.map f).Hom
   map_id' j := D.id j
   map_comp' j₁ j₂ j₃ f g := D.comp f g
@@ -87,11 +87,11 @@ we can construct a cone over the diagram consisting of the cone points from `D`.
 def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j))
     (c : Cone (uncurry.obj F)) : Cone D.conePoints
     where
-  x := c.x
+  pt := c.pt
   π :=
     { app := fun j =>
         (Q j).lift
-          { x := c.x
+          { pt := c.pt
             π :=
               { app := fun k => c.π.app (j, k)
                 naturality' := fun k k' f => by
@@ -123,7 +123,7 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
     where
   lift s :=
     P.lift
-      { x := s.x
+      { pt := s.pt
         π :=
           { app := fun p => s.π.app p.1 ≫ (D.obj p.1).π.app p.2
             naturality' := fun p p' f => by
@@ -151,7 +151,7 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
     by
     refine'
       P.uniq
-        { x := s.X
+        { pt := s.X
           π := _ } m _
     rintro ⟨j, k⟩
     dsimp
@@ -172,7 +172,7 @@ and the universal cone morphisms between these.
 @[simps]
 noncomputable def DiagramOfCones.mkOfHasLimits : DiagramOfCones F
     where
-  obj j := Limit.cone (F.obj j)
+  obj j := limit.cone (F.obj j)
   map j j' f := { Hom := lim.map (F.map f) }
 #align category_theory.limits.diagram_of_cones.mk_of_has_limits CategoryTheory.Limits.DiagramOfCones.mkOfHasLimits
 

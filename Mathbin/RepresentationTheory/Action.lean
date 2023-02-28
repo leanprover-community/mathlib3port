@@ -777,7 +777,7 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
     LimitCone (Discrete.functor fun i : ι => Action.ofMulAction G (F i))
     where
   Cone :=
-    { x := Action.ofMulAction G (∀ i : ι, F i)
+    { pt := Action.ofMulAction G (∀ i : ι, F i)
       π :=
         { app := fun i => ⟨fun x => x i.as, fun g => by ext <;> rfl⟩
           naturality' := fun i j x => by

@@ -69,7 +69,7 @@ variable {K : J ⥤ C} (F : C ⥤ D) (c : Cone K)
 arrows over `X` with `f` as the cone point. This is the underlying diagram.
 -/
 @[simps]
-def toDiagram : J ⥤ StructuredArrow c.x K
+def toDiagram : J ⥤ StructuredArrow c.pt K
     where
   obj j := StructuredArrow.mk (c.π.app j)
   map j k g := StructuredArrow.homMk g (by simpa)
@@ -78,7 +78,7 @@ def toDiagram : J ⥤ StructuredArrow c.x K
 /-- Given a diagram of `structured_arrow X F`s, we may obtain a cone with cone point `X`. -/
 @[simps]
 def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F ⋙ F) :=
-  { x
+  { pt
     π := { app := fun j => (G.obj j).Hom } }
 #align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
 
@@ -86,9 +86,9 @@ def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F
 arrows over `X` with `f` as the cone point.
 -/
 @[simps]
-def toCone {X : D} (f : X ⟶ F.obj c.x) : Cone (toDiagram (F.mapCone c) ⋙ map f ⋙ pre _ K F)
+def toCone {X : D} (f : X ⟶ F.obj c.pt) : Cone (toDiagram (F.mapCone c) ⋙ map f ⋙ pre _ K F)
     where
-  x := mk f
+  pt := mk f
   π :=
     { app := fun j => homMk (c.π.app j) rfl
       naturality' := fun j k g => by
@@ -221,15 +221,15 @@ include hc
 Given a limit cone `c : cone K` and a cone `s : cone (K ⋙ F)` with `F` representably flat,
 `s` can factor through `F.map_cone c`.
 -/
-noncomputable def lift : s.x ⟶ F.obj c.x :=
+noncomputable def lift : s.pt ⟶ F.obj c.pt :=
   let s' := IsCofiltered.cone (toDiagram s ⋙ StructuredArrow.pre _ K F)
-  s'.x.Hom ≫
+  s'.pt.Hom ≫
     (F.map <|
       hc.lift <|
         (Cones.postcompose
               ({  app := fun X => 𝟙 _
-                  naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
-          (StructuredArrow.proj s.x F).mapCone s')
+                  naturality' := by simp } : (toDiagram s ⋙ pre s.pt K F) ⋙ proj s.pt F ⟶ K)).obj <|
+          (StructuredArrow.proj s.pt F).mapCone s')
 #align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
 
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
@@ -238,8 +238,8 @@ theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
 
 attribute [local simp] eq_to_hom_map
 
-theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F)) (f₁ f₂ : s.x ⟶ F.obj c.x)
-    (h₁ : ∀ j : J, f₁ ≫ (F.mapCone c).π.app j = s.π.app j)
+theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
+    (f₁ f₂ : s.pt ⟶ F.obj c.pt) (h₁ : ∀ j : J, f₁ ≫ (F.mapCone c).π.app j = s.π.app j)
     (h₂ : ∀ j : J, f₂ ≫ (F.mapCone c).π.app j = s.π.app j) : f₁ = f₂ :=
   by
   -- We can make two cones over the diagram of `s` via `f₁` and `f₂`.

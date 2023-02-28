@@ -56,7 +56,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
     [DecidableEq α] (F : Discrete α ⥤ C) : ColimitCocone F
     where
   Cocone :=
-    { x := colimit (liftToFinset F)
+    { pt := colimit (liftToFinset F)
       ι :=
         Discrete.natTrans fun j =>
           @Sigma.ι _ _ _ (fun x : ({j} : Finset (Discrete α)) => F.obj x) _ ⟨j, by simp⟩ ≫
@@ -64,7 +64,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
   IsColimit :=
     { desc := fun s =>
         colimit.desc (liftToFinset F)
-          { x := s.x
+          { pt := s.pt
             ι := { app := fun t => Sigma.desc fun x => s.ι.app x } }
       uniq := fun s m h => by
         ext (t⟨⟨j, hj⟩⟩)

@@ -117,7 +117,7 @@ def hσ (q : ℕ) (n : ℕ) : X _[n] ⟶ X _[n + 1] :=
 #align algebraic_topology.dold_kan.hσ AlgebraicTopology.DoldKan.hσ
 
 /-- We can turn `hσ` into a datum that can be passed to `null_homotopic_map'`. -/
-def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].x n ⟶ K[X].x m) := fun n m hnm =>
+def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].pt n ⟶ K[X].pt m) := fun n m hnm =>
   hσ q n ≫ eqToHom (by congr )
 #align algebraic_topology.dold_kan.hσ' AlgebraicTopology.DoldKan.hσ'
 
@@ -210,8 +210,8 @@ def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapCo
 /-- The maps `hσ' q n m hnm` are compatible with the application of additive functors. -/
 theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
     (X : SimplicialObject C) (q n m : ℕ) (hnm : c.Rel m n) :
-    (hσ' q n m hnm : K[((whiskering _ _).obj G).obj X].x n ⟶ _) =
-      G.map (hσ' q n m hnm : K[X].x n ⟶ _) :=
+    (hσ' q n m hnm : K[((whiskering _ _).obj G).obj X].pt n ⟶ _) =
+      G.map (hσ' q n m hnm : K[X].pt n ⟶ _) :=
   by
   unfold hσ' hσ
   split_ifs

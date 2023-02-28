@@ -74,13 +74,13 @@ theorem pushoutCocone_inr :
 #align CommRing.pushout_cocone_inr CommRingCat.pushoutCocone_inr
 
 @[simp]
-theorem pushoutCocone_x :
-    (pushoutCocone f g).x = by
+theorem pushoutCocone_pt :
+    (pushoutCocone f g).pt = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact CommRingCat.of (A ⊗[R] B) :=
   rfl
-#align CommRing.pushout_cocone_X CommRingCat.pushoutCocone_x
+#align CommRing.pushout_cocone_X CommRingCat.pushoutCocone_pt
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
 def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
@@ -172,7 +172,7 @@ section Product
 variable (A B : CommRingCat.{u})
 
 /-- The product in `CommRing` is the cartesian product. This is the binary fan. -/
-@[simps x]
+@[simps pt]
 def prodFan : BinaryFan A B :=
   BinaryFan.mk (CommRingCat.ofHom <| RingHom.fst A B) (CommRingCat.ofHom <| RingHom.snd A B)
 #align CommRing.prod_fan CommRingCat.prodFan

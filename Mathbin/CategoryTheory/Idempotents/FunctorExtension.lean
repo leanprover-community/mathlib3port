@@ -45,7 +45,7 @@ variable {C D E : Type _} [Category C] [Category D] [Category E]
 /-- A natural transformation between functors `karoubi C ⥤ D` is determined
 by its value on objects coming from `C`. -/
 theorem nat_trans_eq {F G : Karoubi C ⥤ D} (φ : F ⟶ G) (P : Karoubi C) :
-    φ.app P = F.map (decompIdI P) ≫ φ.app P.x ≫ G.map (decompIdP P) :=
+    φ.app P = F.map (decompIdI P) ≫ φ.app P.pt ≫ G.map (decompIdP P) :=
   by
   rw [← φ.naturality, ← assoc, ← F.map_comp]
   conv =>
@@ -63,7 +63,7 @@ namespace FunctorExtension₁
 def obj (F : C ⥤ Karoubi D) : Karoubi C ⥤ Karoubi D
     where
   obj P :=
-    ⟨(F.obj P.x).x, (F.map P.p).f, by simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
+    ⟨(F.obj P.pt).pt, (F.map P.p).f, by simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
   map P Q f := ⟨(F.map f.f).f, by simpa only [F.map_comp, hom_ext] using F.congr_map f.comm⟩
 #align category_theory.idempotents.functor_extension₁.obj CategoryTheory.Idempotents.FunctorExtension₁.obj
 
@@ -74,7 +74,7 @@ extension of these functors to `karoubi C ⥤ karoubi D` -/
 def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G
     where
   app P :=
-    { f := (F.map P.p).f ≫ (φ.app P.x).f
+    { f := (F.map P.p).f ≫ (φ.app P.pt).f
       comm := by
         have h := φ.naturality P.p
         have h' := F.congr_map P.idem
@@ -294,7 +294,7 @@ variable {C D}
 theorem whiskeringLeft_obj_preimage_app {F G : Karoubi C ⥤ D}
     (τ : toKaroubi _ ⋙ F ⟶ toKaroubi _ ⋙ G) (P : Karoubi C) :
     (((whiskeringLeft _ _ _).obj (toKaroubi _)).preimage τ).app P =
-      F.map P.decompIdI ≫ τ.app P.x ≫ G.map P.decompIdP :=
+      F.map P.decompIdI ≫ τ.app P.pt ≫ G.map P.decompIdP :=
   by
   rw [nat_trans_eq]
   congr 2

@@ -58,7 +58,7 @@ variable {C : Type _} [Category C] [Preadditive C]
 def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)
     where
   obj X :=
-    { x := AlternatingFaceMapComplex.obj X
+    { pt := AlternatingFaceMapComplex.obj X
       p := pInfty
       idem := pInfty_idem }
   map X Y f :=

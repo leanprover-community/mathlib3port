@@ -231,7 +231,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
 /-- The cocone over the proposed colimit monoid. -/
 @[to_additive "The cocone over the proposed colimit additive monoid."]
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι := { app := cocone_morphism }
 #align Mon.filtered_colimits.colimit_cocone Mon.FilteredColimits.colimitCocone
 #align AddMon.filtered_colimits.colimit_cocone AddMon.FilteredColimits.colimitCocone
@@ -242,7 +242,7 @@ The only thing left to see is that it is a monoid homomorphism.
 -/
 @[to_additive
       "Given a cocone `t` of `F`, the induced additive monoid homomorphism from the colimit\nto the cocone point. As a function, this is simply given by the induced map of the corresponding\ncocone in `Type`. The only thing left to see is that it is an additive monoid homomorphism."]
-def colimitDesc (t : cocone F) : colimit ⟶ t.x
+def colimitDesc (t : cocone F) : colimit ⟶ t.pt
     where
   toFun := (Types.colimitCoconeIsColimit (F ⋙ forget Mon)).desc ((forget Mon).mapCocone t)
   map_one' := by
@@ -330,7 +330,7 @@ def colimit : CommMon :=
 /-- The cocone over the proposed colimit commutative monoid. -/
 @[to_additive "The cocone over the proposed colimit additive commutative monoid."]
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι := { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ CommMon Mon.{max v u})).ι with }
 #align CommMon.filtered_colimits.colimit_cocone CommMon.FilteredColimits.colimitCocone
 #align AddCommMon.filtered_colimits.colimit_cocone AddCommMon.FilteredColimits.colimitCocone

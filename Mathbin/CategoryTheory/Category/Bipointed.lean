@@ -29,7 +29,7 @@ variable {α β : Type _}
 
 /-- The category of bipointed types. -/
 structure Bipointed : Type (u + 1) where
-  x : Type u
+  pt : Type u
   toProd : X × X
 #align Bipointed Bipointed
 

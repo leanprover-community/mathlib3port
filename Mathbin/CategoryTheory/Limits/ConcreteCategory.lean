@@ -35,7 +35,7 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{max w v} C] {J : Type 
   (F : J ⥤ C) [PreservesLimit F (forget C)]
 
 theorem Concrete.to_product_injective_of_isLimit {D : Cone F} (hD : IsLimit D) :
-    Function.Injective fun (x : D.x) (j : J) => D.π.app j x :=
+    Function.Injective fun (x : D.pt) (j : J) => D.π.app j x :=
   by
   let E := (forget C).mapCone D
   let hE : is_limit E := is_limit_of_preserves _ hD
@@ -51,7 +51,7 @@ theorem Concrete.to_product_injective_of_isLimit {D : Cone F} (hD : IsLimit D) :
   apply Subtype.ext
 #align category_theory.limits.concrete.to_product_injective_of_is_limit CategoryTheory.Limits.Concrete.to_product_injective_of_isLimit
 
-theorem Concrete.isLimit_ext {D : Cone F} (hD : IsLimit D) (x y : D.x) :
+theorem Concrete.isLimit_ext {D : Cone F} (hD : IsLimit D) (x y : D.pt) :
     (∀ j, D.π.app j x = D.π.app j y) → x = y := fun h =>
   Concrete.to_product_injective_of_isLimit _ hD (funext h)
 #align category_theory.limits.concrete.is_limit_ext CategoryTheory.Limits.Concrete.isLimit_ext
@@ -180,7 +180,7 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {J : Type v} [Sm
   (F : J ⥤ C) [PreservesColimit F (forget C)]
 
 theorem Concrete.from_union_surjective_of_isColimit {D : Cocone F} (hD : IsColimit D) :
-    let ff : (Σj : J, F.obj j) → D.x := fun a => D.ι.app a.1 a.2
+    let ff : (Σj : J, F.obj j) → D.pt := fun a => D.ι.app a.1 a.2
     Function.Surjective ff :=
   by
   intro ff
@@ -207,7 +207,7 @@ theorem Concrete.from_union_surjective_of_isColimit {D : Cocone F} (hD : IsColim
   exact ⟨⟨j, a⟩, rfl⟩
 #align category_theory.limits.concrete.from_union_surjective_of_is_colimit CategoryTheory.Limits.Concrete.from_union_surjective_of_isColimit
 
-theorem Concrete.isColimit_exists_rep {D : Cocone F} (hD : IsColimit D) (x : D.x) :
+theorem Concrete.isColimit_exists_rep {D : Cocone F} (hD : IsColimit D) (x : D.pt) :
     ∃ (j : J)(y : F.obj j), D.ι.app j y = x :=
   by
   obtain ⟨a, rfl⟩ := concrete.from_union_surjective_of_is_colimit F hD x

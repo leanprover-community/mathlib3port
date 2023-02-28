@@ -62,11 +62,11 @@ $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
 noncomputable def colimitLimitToLimitColimit :
     colimit (curry.obj (swap K J ⋙ F) ⋙ lim) ⟶ limit (curry.obj F ⋙ colim) :=
   limit.lift (curry.obj F ⋙ colim)
-    { x := _
+    { pt := _
       π :=
         { app := fun j =>
             colimit.desc (curry.obj (swap K J ⋙ F) ⋙ lim)
-              { x := _
+              { pt := _
                 ι :=
                   { app := fun k =>
                       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫
@@ -110,7 +110,7 @@ theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]
 noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G] :
-    colim.mapCone (Limit.cone G) ⟶ Limit.cone (G ⋙ colim)
+    colim.mapCone (limit.cone G) ⟶ limit.cone (G ⋙ colim)
     where
   Hom :=
     colim.map (limitIsoSwapCompLim G).Hom ≫

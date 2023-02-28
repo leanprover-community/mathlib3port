@@ -147,7 +147,7 @@ def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supᵢ U
 -/
 @[simps]
 def cocone : Cocone (diagram U) where
-  x := supᵢ U
+  pt := supᵢ U
   ι := { app := coconeιApp U }
 #align category_theory.pairwise.cocone CategoryTheory.Pairwise.cocone
 

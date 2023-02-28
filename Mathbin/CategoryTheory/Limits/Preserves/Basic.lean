@@ -183,7 +183,7 @@ instance idPreservesLimits : PreservesLimitsOfSize.{w', w} (𝟭 C)
     {
       PreservesLimit := fun K =>
         ⟨fun c h =>
-          ⟨fun s => h.lift ⟨s.x, fun j => s.π.app j, fun j j' f => s.π.naturality f⟩, by
+          ⟨fun s => h.lift ⟨s.pt, fun j => s.π.app j, fun j j' f => s.π.naturality f⟩, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s j <;> cases s <;> exact h.fac _ j, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s m w <;> rcases s with ⟨_, _, _⟩ <;>
               exact h.uniq _ m w⟩⟩ }
@@ -194,7 +194,7 @@ instance idPreservesColimits : PreservesColimitsOfSize.{w', w} (𝟭 C)
     {
       PreservesColimit := fun K =>
         ⟨fun c h =>
-          ⟨fun s => h.desc ⟨s.x, fun j => s.ι.app j, fun j j' f => s.ι.naturality f⟩, by
+          ⟨fun s => h.desc ⟨s.pt, fun j => s.ι.app j, fun j j' f => s.ι.naturality f⟩, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s j <;> cases s <;> exact h.fac _ j, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s m w <;> rcases s with ⟨_, _, _⟩ <;>
               exact h.uniq _ m w⟩⟩ }
@@ -536,7 +536,7 @@ instance idReflectsLimits : ReflectsLimitsOfSize.{w, w'} (𝟭 C)
     {
       ReflectsLimit := fun K =>
         ⟨fun c h =>
-          ⟨fun s => h.lift ⟨s.x, fun j => s.π.app j, fun j j' f => s.π.naturality f⟩, by
+          ⟨fun s => h.lift ⟨s.pt, fun j => s.π.app j, fun j j' f => s.π.naturality f⟩, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s j <;> cases s <;> exact h.fac _ j, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s m w <;> rcases s with ⟨_, _, _⟩ <;>
               exact h.uniq _ m w⟩⟩ }
@@ -547,7 +547,7 @@ instance idReflectsColimits : ReflectsColimitsOfSize.{w, w'} (𝟭 C)
     {
       ReflectsColimit := fun K =>
         ⟨fun c h =>
-          ⟨fun s => h.desc ⟨s.x, fun j => s.ι.app j, fun j j' f => s.ι.naturality f⟩, by
+          ⟨fun s => h.desc ⟨s.pt, fun j => s.ι.app j, fun j j' f => s.ι.naturality f⟩, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s j <;> cases s <;> exact h.fac _ j, by
             cases K <;> rcases c with ⟨_, _, _⟩ <;> intro s m w <;> rcases s with ⟨_, _, _⟩ <;>
               exact h.uniq _ m w⟩⟩ }

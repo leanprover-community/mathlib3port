@@ -365,7 +365,7 @@ in `C` equipped with a splitting, and morphisms are morphisms of simplicial obje
 which are compatible with the splittings. -/
 @[ext, nolint has_nonempty_instance]
 structure Split where
-  x : SimplicialObject C
+  pt : SimplicialObject C
   s : Splitting X
 #align simplicial_object.split SimplicialObject.Split
 
@@ -384,7 +384,7 @@ def mk' {X : SimplicialObject C} (s : Splitting X) : Split C :=
 are compatible with the splittings. -/
 @[nolint has_nonempty_instance]
 structure Hom (S₁ S₂ : Split C) where
-  f : S₁.x ⟶ S₂.x
+  f : S₁.pt ⟶ S₂.pt
   f : ∀ n : ℕ, S₁.s.n n ⟶ S₂.s.n n
   comm' : ∀ n : ℕ, S₁.s.ι n ≫ F.app (op [n]) = f n ≫ S₂.s.ι n
 #align simplicial_object.split.hom SimplicialObject.Split.Hom
@@ -441,7 +441,7 @@ theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ =
 #align simplicial_object.split.congr_f SimplicialObject.Split.congr_f
 
 @[simp]
-theorem id_f (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.x :=
+theorem id_f (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.pt :=
   rfl
 #align simplicial_object.split.id_F SimplicialObject.Split.id_f
 
@@ -489,7 +489,7 @@ the splitting. -/
 @[simps]
 def forget : Split C ⥤ SimplicialObject C
     where
-  obj S := S.x
+  obj S := S.pt
   map S₁ S₂ Φ := Φ.f
 #align simplicial_object.split.forget SimplicialObject.Split.forget
 

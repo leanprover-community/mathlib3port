@@ -94,7 +94,7 @@ Given a cone for (X × K -), produce a cone for K using the natural transformati
 @[simps]
 def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K
     where
-  x := s.x
+  pt := s.pt
   π := s.π ≫ γ₂ X
 #align category_theory.prod_preserves_connected_limits.forget_cone CategoryTheory.ProdPreservesConnectedLimits.forgetCone
 

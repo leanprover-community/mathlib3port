@@ -31,10 +31,10 @@ variable {C}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A module object for a monoid object, all internal to some monoidal category. -/
 structure ModCat (A : Mon_ C) where
-  x : C
-  act : A.x ⊗ X ⟶ X
+  pt : C
+  act : A.pt ⊗ X ⟶ X
   one_act' : (A.one ⊗ 𝟙 X) ≫ act = (λ_ X).Hom := by obviously
-  assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.x A.x X).Hom ≫ (𝟙 A.x ⊗ act) ≫ act := by obviously
+  assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.pt A.pt X).Hom ≫ (𝟙 A.pt ⊗ act) ≫ act := by obviously
 #align Mod ModCat
 
 restate_axiom ModCat.one_act'
@@ -49,16 +49,16 @@ variable {A : Mon_ C} (M : ModCat A)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ (A.mul ⊗ 𝟙 M.x) ≫ M.act := by
-  simp
+theorem assoc_flip :
+    (𝟙 A.pt ⊗ M.act) ≫ M.act = (α_ A.pt A.pt M.pt).inv ≫ (A.mul ⊗ 𝟙 M.pt) ≫ M.act := by simp
 #align Mod.assoc_flip ModCat.assoc_flip
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A morphism of module objects. -/
 @[ext]
 structure Hom (M N : ModCat A) where
-  Hom : M.x ⟶ N.x
-  act_hom' : M.act ≫ hom = (𝟙 A.x ⊗ hom) ≫ N.act := by obviously
+  Hom : M.pt ⟶ N.pt
+  act_hom' : M.act ≫ hom = (𝟙 A.pt ⊗ hom) ≫ N.act := by obviously
 #align Mod.hom ModCat.Hom
 
 restate_axiom hom.act_hom'
@@ -67,7 +67,7 @@ attribute [simp, reassoc.1] hom.act_hom
 
 /-- The identity morphism on a module object. -/
 @[simps]
-def id (M : ModCat A) : Hom M M where Hom := 𝟙 M.x
+def id (M : ModCat A) : Hom M M where Hom := 𝟙 M.pt
 #align Mod.id ModCat.id
 
 instance homInhabited (M : ModCat A) : Inhabited (Hom M M) :=
@@ -85,7 +85,7 @@ instance : Category (ModCat A) where
   comp M N O f g := comp f g
 
 @[simp]
-theorem id_hom' (M : ModCat A) : (𝟙 M : Hom M M).Hom = 𝟙 M.x :=
+theorem id_hom' (M : ModCat A) : (𝟙 M : Hom M M).Hom = 𝟙 M.pt :=
   rfl
 #align Mod.id_hom' ModCat.id_hom'
 
@@ -100,7 +100,7 @@ variable (A)
 /-- A monoid object as a module over itself. -/
 @[simps]
 def regular : ModCat A where
-  x := A.x
+  pt := A.pt
   act := A.mul
 #align Mod.regular ModCat.regular
 
@@ -109,7 +109,7 @@ instance : Inhabited (ModCat A) :=
 
 /-- The forgetful functor from module objects to the ambient category. -/
 def forget : ModCat A ⥤ C where
-  obj A := A.x
+  obj A := A.pt
   map A B f := f.Hom
 #align Mod.forget ModCat.forget
 
@@ -123,8 +123,8 @@ between the categories of module objects.
 def comap {A B : Mon_ C} (f : A ⟶ B) : ModCat B ⥤ ModCat A
     where
   obj M :=
-    { x := M.x
-      act := (f.Hom ⊗ 𝟙 M.x) ≫ M.act
+    { pt := M.pt
+      act := (f.Hom ⊗ 𝟙 M.pt) ≫ M.act
       one_act' := by
         slice_lhs 1 2 => rw [← comp_tensor_id]
         rw [f.one_hom, one_act]

@@ -210,7 +210,7 @@ noncomputable instance [HasLimits C] :
   ⟨fun J hJ =>
     ⟨fun K =>
       creates_colimit_of_fully_faithful_of_iso
-        ⟨(PresheafedSpace.colimit_cocone (K ⋙ forget_to_PresheafedSpace)).x,
+        ⟨(PresheafedSpace.colimit_cocone (K ⋙ forget_to_PresheafedSpace)).pt,
           limit_is_sheaf _ fun j => sheaf.pushforward_sheaf_of_sheaf _ (K.obj (unop j)).2⟩
         (colimit.iso_colimit_cocone ⟨_, PresheafedSpace.colimit_cocone_is_colimit _⟩).symm⟩⟩
 

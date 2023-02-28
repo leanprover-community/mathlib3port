@@ -30,7 +30,7 @@ variable {α β : Type _}
 
 /-- The category of pointed types. -/
 structure Pointed : Type (u + 1) where
-  x : Type u
+  pt : Type u
   point : X
 #align Pointed Pointed
 

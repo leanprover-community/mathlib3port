@@ -51,8 +51,8 @@ the biproduct of a functor `J ⥤ karoubi C` when the category `C` is additive. 
 @[simps]
 def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) : Bicone F
     where
-  x :=
-    { x := biproduct fun j => (F j).x
+  pt :=
+    { pt := biproduct fun j => (F j).pt
       p := biproduct.map fun j => (F j).p
       idem := by
         ext j
@@ -122,14 +122,14 @@ endomorphism `𝟙 P.X - P.p` -/
 @[simps]
 def complement (P : Karoubi C) : Karoubi C
     where
-  x := P.x
+  pt := P.pt
   p := 𝟙 _ - P.p
   idem := idem_of_id_sub_idem P.p P.idem
 #align category_theory.idempotents.karoubi.complement CategoryTheory.Idempotents.Karoubi.complement
 
 instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
   hasBinaryBiproduct_of_total
-    { x := P.x
+    { pt := P.pt
       fst := P.decompIdP
       snd := P.complement.decompIdP
       inl := P.decompIdI
@@ -153,7 +153,7 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
 /-- A formal direct factor `P : karoubi C` of an object `P.X : C` in a
 preadditive category is actually a direct factor of the image `(to_karoubi C).obj P.X`
 of `P.X` in the category `karoubi C` -/
-def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
+def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.pt
     where
   Hom := biprod.desc P.decompIdI P.complement.decompIdI
   inv := biprod.lift P.decompIdP P.complement.decompIdP

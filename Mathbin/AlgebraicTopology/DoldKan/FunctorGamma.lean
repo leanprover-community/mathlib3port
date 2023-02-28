@@ -80,7 +80,7 @@ namespace Obj
 /-- In the definition of `(Γ₀.obj K).obj Δ` as a direct sum indexed by `A : splitting.index_set Δ`,
 the summand `summand K Δ A` is `K.X A.1.len`. -/
 def summand (Δ : SimplexCategoryᵒᵖ) (A : Splitting.IndexSet Δ) : C :=
-  K.x A.1.unop.len
+  K.pt A.1.unop.len
 #align algebraic_topology.dold_kan.Γ₀.obj.summand AlgebraicTopology.DoldKan.Γ₀.Obj.summand
 
 /-- The functor `Γ₀` sends a chain complex `K` to the simplicial object which
@@ -95,7 +95,7 @@ namespace Termwise
 is the identity if `Δ = Δ'`, the differential on the complex `K` if `i = δ 0`, and
 zero otherwise. -/
 def mapMono (K : ChainComplex C ℕ) {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ) [Mono i] :
-    K.x Δ.len ⟶ K.x Δ'.len := by
+    K.pt Δ.len ⟶ K.pt Δ'.len := by
   by_cases Δ = Δ'
   · exact eq_to_hom (by congr )
   · by_cases is_δ₀ i
@@ -265,7 +265,7 @@ theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
 /-- By construction, the simplicial `Γ₀.obj K` is equipped with a splitting. -/
 def splitting (K : ChainComplex C ℕ) : SimplicialObject.Splitting (Γ₀.obj K)
     where
-  n n := K.x n
+  n n := K.pt n
   ι n := Sigma.ι (Γ₀.Obj.summand K (op [n])) (Splitting.IndexSet.id (op [n]))
   map_is_iso' Δ := by
     rw [Γ₀.splitting_map_eq_id]

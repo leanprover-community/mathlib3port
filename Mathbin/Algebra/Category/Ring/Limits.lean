@@ -59,13 +59,13 @@ def sectionsSubsemiring (F : J ⥤ SemiRing.{max v u}) : Subsemiring (∀ j, F.o
 #align SemiRing.sections_subsemiring SemiRing.sectionsSubsemiring
 
 instance limitSemiring (F : J ⥤ SemiRing.{max v u}) :
-    Semiring (Types.limitCone (F ⋙ forget SemiRing.{max v u})).x :=
+    Semiring (Types.limitCone (F ⋙ forget SemiRing.{max v u})).pt :=
   (sectionsSubsemiring F).toSemiring
 #align SemiRing.limit_semiring SemiRing.limitSemiring
 
 /-- `limit.π (F ⋙ forget SemiRing) j` as a `ring_hom`. -/
 def limitπRingHom (F : J ⥤ SemiRing.{max v u}) (j) :
-    (Types.limitCone (F ⋙ forget SemiRing)).x →+* (F ⋙ forget SemiRing).obj j :=
+    (Types.limitCone (F ⋙ forget SemiRing)).pt →+* (F ⋙ forget SemiRing).obj j :=
   {
     AddMon.limitπAddMonoidHom
       (F ⋙ forget₂ SemiRing AddCommMon.{max v u} ⋙ forget₂ AddCommMon AddMon.{max v u}) j,
@@ -83,7 +83,7 @@ namespace HasLimits
 -/
 def limitCone (F : J ⥤ SemiRing.{max v u}) : Cone F
     where
-  x := SemiRing.of (Types.limitCone (F ⋙ forget _)).x
+  pt := SemiRing.of (Types.limitCone (F ⋙ forget _)).pt
   π :=
     { app := limitπRingHom F
       naturality' := fun j j' f =>
@@ -192,7 +192,7 @@ instance commSemiringObj (F : J ⥤ CommSemiRing.{max v u}) (j) :
 #align CommSemiRing.comm_semiring_obj CommSemiRing.commSemiringObj
 
 instance limitCommSemiring (F : J ⥤ CommSemiRing.{max v u}) :
-    CommSemiring (Types.limitCone (F ⋙ forget CommSemiRing.{max v u})).x :=
+    CommSemiring (Types.limitCone (F ⋙ forget CommSemiRing.{max v u})).pt :=
   @Subsemiring.toCommSemiring (∀ j, F.obj j) _
     (SemiRing.sectionsSubsemiring (F ⋙ forget₂ CommSemiRing SemiRing.{max v u}))
 #align CommSemiRing.limit_comm_semiring CommSemiRing.limitCommSemiring
@@ -206,7 +206,7 @@ instance (F : J ⥤ CommSemiRing.{max v u}) :
     CreatesLimit F (forget₂ CommSemiRing SemiRing.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := CommSemiRing.of (Types.limitCone (F ⋙ forget _)).x
+        { pt := CommSemiRing.of (Types.limitCone (F ⋙ forget _)).pt
           π :=
             { app := by apply SemiRing.limitπRingHom (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})
               naturality' :=
@@ -294,7 +294,7 @@ def sectionsSubring (F : J ⥤ RingCat.{max v u}) : Subring (∀ j, F.obj j) :=
 #align Ring.sections_subring RingCat.sectionsSubring
 
 instance limitRing (F : J ⥤ RingCat.{max v u}) :
-    Ring (Types.limitCone (F ⋙ forget RingCat.{max v u})).x :=
+    Ring (Types.limitCone (F ⋙ forget RingCat.{max v u})).pt :=
   (sectionsSubring F).toRing
 #align Ring.limit_ring RingCat.limitRing
 
@@ -306,7 +306,7 @@ and then reuse the existing limit.
 instance (F : J ⥤ RingCat.{max v u}) : CreatesLimit F (forget₂ RingCat SemiRing.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := RingCat.of (Types.limitCone (F ⋙ forget _)).x
+        { pt := RingCat.of (Types.limitCone (F ⋙ forget _)).pt
           π :=
             { app := by apply SemiRing.limitπRingHom (F ⋙ forget₂ RingCat SemiRing.{max v u})
               naturality' :=
@@ -405,7 +405,7 @@ instance commRingObj (F : J ⥤ CommRingCat.{max v u}) (j) :
 #align CommRing.comm_ring_obj CommRingCat.commRingObj
 
 instance limitCommRing (F : J ⥤ CommRingCat.{max v u}) :
-    CommRing (Types.limitCone (F ⋙ forget CommRingCat.{max v u})).x :=
+    CommRing (Types.limitCone (F ⋙ forget CommRingCat.{max v u})).pt :=
   @Subring.toCommRing (∀ j, F.obj j) _
     (RingCat.sectionsSubring (F ⋙ forget₂ CommRingCat RingCat.{max v u}))
 #align CommRing.limit_comm_ring CommRingCat.limitCommRing
@@ -426,7 +426,7 @@ instance (F : J ⥤ CommRingCat.{max v u}) : CreatesLimit F (forget₂ CommRingC
     createsLimitOfReflectsIso
     fun c' t =>
     { liftedCone :=
-        { x := CommRingCat.of (Types.limitCone (F ⋙ forget _)).x
+        { pt := CommRingCat.of (Types.limitCone (F ⋙ forget _)).pt
           π :=
             { app := by
                 apply

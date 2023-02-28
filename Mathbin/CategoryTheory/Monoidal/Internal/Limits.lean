@@ -52,7 +52,7 @@ def limit (F : J ⥤ Mon_ C) : Mon_ C :=
 -/
 @[simps]
 def limitCone (F : J ⥤ Mon_ C) : Cone F where
-  x := limit F
+  pt := limit F
   π :=
     { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j }
       naturality' := fun j j' f => by
@@ -64,7 +64,7 @@ def limitCone (F : J ⥤ Mon_ C) : Cone F where
 `forget C : Mon_ C ⥤ C` is isomorphic to the limit cone of `F ⋙ forget C`.
 -/
 def forgetMapConeLimitConeIso (F : J ⥤ Mon_ C) :
-    (forget C).mapCone (limitCone F) ≅ Limit.cone (F ⋙ forget C) :=
+    (forget C).mapCone (limitCone F) ≅ limit.cone (F ⋙ forget C) :=
   Cones.ext (Iso.refl _) fun j => by tidy
 #align Mon_.forget_map_cone_limit_cone_iso Mon_.forgetMapConeLimitConeIso
 

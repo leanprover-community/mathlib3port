@@ -56,7 +56,7 @@ def evaluationJointlyReflectsLimits {F : J ⥤ K ⥤ C} (c : Cone F)
     (t : ∀ k : K, IsLimit (((evaluation K C).obj k).mapCone c)) : IsLimit c
     where
   lift s :=
-    { app := fun k => (t k).lift ⟨s.x.obj k, whiskerRight s.π ((evaluation K C).obj k)⟩
+    { app := fun k => (t k).lift ⟨s.pt.obj k, whiskerRight s.π ((evaluation K C).obj k)⟩
       naturality' := fun X Y f =>
         (t Y).hom_ext fun j => by
           rw [assoc, (t Y).fac _ j]
@@ -68,7 +68,7 @@ def evaluationJointlyReflectsLimits {F : J ⥤ K ⥤ C} (c : Cone F)
       funext fun x =>
         (t x).hom_ext fun j =>
           (congr_app (w j) x).trans
-            ((t x).fac ⟨s.x.obj _, whiskerRight s.π ((evaluation K C).obj _)⟩ j).symm
+            ((t x).fac ⟨s.pt.obj _, whiskerRight s.π ((evaluation K C).obj _)⟩ j).symm
 #align category_theory.limits.evaluation_jointly_reflects_limits CategoryTheory.Limits.evaluationJointlyReflectsLimits
 
 /-- Given a functor `F` and a collection of limit cones for each diagram `X ↦ F X k`, we can stitch
@@ -79,8 +79,8 @@ them together to give a cone for the diagram `F`.
 @[simps]
 def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) : Cone F
     where
-  x :=
-    { obj := fun k => (c k).Cone.x
+  pt :=
+    { obj := fun k => (c k).Cone.pt
       map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩
       map_id' := fun k =>
         (c k).IsLimit.hom_ext fun j => by
@@ -113,7 +113,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
     (t : ∀ k : K, IsColimit (((evaluation K C).obj k).mapCocone c)) : IsColimit c
     where
   desc s :=
-    { app := fun k => (t k).desc ⟨s.x.obj k, whiskerRight s.ι ((evaluation K C).obj k)⟩
+    { app := fun k => (t k).desc ⟨s.pt.obj k, whiskerRight s.ι ((evaluation K C).obj k)⟩
       naturality' := fun X Y f =>
         (t X).hom_ext fun j => by
           rw [(t X).fac_assoc _ j]
@@ -127,7 +127,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
       funext fun x =>
         (t x).hom_ext fun j =>
           (congr_app (w j) x).trans
-            ((t x).fac ⟨s.x.obj _, whiskerRight s.ι ((evaluation K C).obj _)⟩ j).symm
+            ((t x).fac ⟨s.pt.obj _, whiskerRight s.ι ((evaluation K C).obj _)⟩ j).symm
 #align category_theory.limits.evaluation_jointly_reflects_colimits CategoryTheory.Limits.evaluationJointlyReflectsColimits
 
 /--
@@ -139,8 +139,8 @@ them together to give a cocone for the diagram `F`.
 @[simps]
 def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) : Cocone F
     where
-  x :=
-    { obj := fun k => (c k).Cocone.x
+  pt :=
+    { obj := fun k => (c k).Cocone.pt
       map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩
       map_id' := fun k =>
         (c k).IsColimit.hom_ext fun j => by

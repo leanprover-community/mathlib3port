@@ -55,14 +55,14 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D
     where
   obj A :=
     { obj := fun X =>
-        { x := A.x.obj X
+        { pt := A.pt.obj X
           one := A.one.app X
           mul := A.mul.app X
           one_mul' := congr_app A.one_mul X
           mul_one' := congr_app A.mul_one X
           mul_assoc' := congr_app A.mul_assoc X }
       map := fun X Y f =>
-        { Hom := A.x.map f
+        { Hom := A.pt.map f
           one_hom' := by
             rw [← A.one.naturality, tensor_unit_map]
             dsimp
@@ -93,7 +93,7 @@ to a monoid object in the functor category
 def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D)
     where
   obj F :=
-    { x := F ⋙ Mon_.forget D
+    { pt := F ⋙ Mon_.forget D
       one := { app := fun X => (F.obj X).one }
       mul := { app := fun X => (F.obj X).mul }
       one_mul' := by

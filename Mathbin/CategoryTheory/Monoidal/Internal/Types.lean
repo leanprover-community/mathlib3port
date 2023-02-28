@@ -28,7 +28,7 @@ open CategoryTheory
 
 namespace monTypeEquivalenceMon
 
-instance monMonoid (A : Mon_ (Type u)) : Monoid A.x
+instance monMonoid (A : Mon_ (Type u)) : Monoid A.pt
     where
   one := A.one PUnit.unit
   mul x y := A.mul (x, y)
@@ -40,7 +40,7 @@ instance monMonoid (A : Mon_ (Type u)) : Monoid A.x
 /-- Converting a monoid object in `Type` to a bundled monoid.
 -/
 def functor : Mon_ (Type u) ⥤ Mon.{u} where
-  obj A := ⟨A.x⟩
+  obj A := ⟨A.pt⟩
   map A B f :=
     { toFun := f.Hom
       map_one' := congr_fun f.OneHom PUnit.unit
@@ -52,7 +52,7 @@ def functor : Mon_ (Type u) ⥤ Mon.{u} where
 def inverse : Mon.{u} ⥤ Mon_ (Type u)
     where
   obj A :=
-    { x := A
+    { pt := A
       one := fun _ => 1
       mul := fun p => p.1 * p.2
       one_mul' := by
@@ -114,7 +114,7 @@ instance monTypeInhabited : Inhabited (Mon_ (Type u)) :=
 
 namespace commMonTypeEquivalenceCommMon
 
-instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.x :=
+instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.pt :=
   { MonTypeEquivalenceMon.monMonoid A.toMon_ with
     mul_comm := fun x y => by convert congr_fun A.mul_comm (y, x) }
 #align CommMon_Type_equivalence_CommMon.CommMon_comm_monoid CommMonTypeEquivalenceCommMon.commMonCommMonoid
@@ -123,7 +123,7 @@ instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.x :=
 -/
 def functor : CommMon_ (Type u) ⥤ CommMon.{u}
     where
-  obj A := ⟨A.x⟩
+  obj A := ⟨A.pt⟩
   map A B f := MonTypeEquivalenceMon.functor.map f
 #align CommMon_Type_equivalence_CommMon.functor CommMonTypeEquivalenceCommMon.functor
 

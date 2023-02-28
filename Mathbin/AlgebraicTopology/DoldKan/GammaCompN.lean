@@ -162,7 +162,7 @@ theorem n₂Γ₂_compatible_with_n₁Γ₀ (K : ChainComplex C ℕ) :
 @[simp]
 theorem n₂Γ₂_inv_app_f_f (X : Karoubi (ChainComplex C ℕ)) (n : ℕ) :
     (n₂Γ₂.inv.app X).f.f n =
-      X.p.f n ≫ (Γ₀.splitting X.x).ιSummand (Splitting.IndexSet.id (op [n])) :=
+      X.p.f n ≫ (Γ₀.splitting X.pt).ιSummand (Splitting.IndexSet.id (op [n])) :=
   by
   dsimp only [N₂Γ₂, functor.preimage_iso, iso.trans]
   simp only [whiskering_left_obj_preimage_app, N₂Γ₂_to_karoubi_iso_inv, functor.id_map,

@@ -78,7 +78,7 @@ theorem NatTrans.Equifibered.comp {F G H : J ⥤ C} {α : F ⟶ G} {β : G ⟶ H
 
 /-- A (colimit) cocone over a diagram `F : J ⥤ C` is universal if it is stable under pullbacks. -/
 def IsUniversalColimit {F : J ⥤ C} (c : Cocone F) : Prop :=
-  ∀ ⦃F' : J ⥤ C⦄ (c' : Cocone F') (α : F' ⟶ F) (f : c'.x ⟶ c.x)
+  ∀ ⦃F' : J ⥤ C⦄ (c' : Cocone F') (α : F' ⟶ F) (f : c'.pt ⟶ c.pt)
     (h : α ≫ c.ι = c'.ι ≫ (Functor.const J).map f) (hα : α.Equifibered),
     (∀ j : J, IsPullback (c'.ι.app j) (α.app j) f (c.ι.app j)) → Nonempty (IsColimit c')
 #align category_theory.is_universal_colimit CategoryTheory.IsUniversalColimit
@@ -90,7 +90,7 @@ TODO: Show that this is iff the functor `C ⥤ Catᵒᵖ` sending `x` to `C/x` p
 TODO: Show that this is iff the inclusion functor `C ⥤ Span(C)` preserves it.
 -/
 def IsVanKampenColimit {F : J ⥤ C} (c : Cocone F) : Prop :=
-  ∀ ⦃F' : J ⥤ C⦄ (c' : Cocone F') (α : F' ⟶ F) (f : c'.x ⟶ c.x)
+  ∀ ⦃F' : J ⥤ C⦄ (c' : Cocone F') (α : F' ⟶ F) (f : c'.pt ⟶ c.pt)
     (h : α ≫ c.ι = c'.ι ≫ (Functor.const J).map f) (hα : α.Equifibered),
     Nonempty (IsColimit c') ↔ ∀ j : J, IsPullback (c'.ι.app j) (α.app j) f (c.ι.app j)
 #align category_theory.is_van_kampen_colimit CategoryTheory.IsVanKampenColimit
@@ -162,7 +162,7 @@ theorem map_pair_equifibered {F F' : Discrete WalkingPair ⥤ C} (α : F ⟶ F')
 
 theorem BinaryCofan.is_van_kampen_iff (c : BinaryCofan X Y) :
     IsVanKampenColimit c ↔
-      ∀ {X' Y' : C} (c' : BinaryCofan X' Y') (αX : X' ⟶ X) (αY : Y' ⟶ Y) (f : c'.x ⟶ c.x)
+      ∀ {X' Y' : C} (c' : BinaryCofan X' Y') (αX : X' ⟶ X) (αY : Y' ⟶ Y) (f : c'.pt ⟶ c.pt)
         (hαX : αX ≫ c.inl = c'.inl ≫ f) (hαY : αY ≫ c.inr = c'.inr ≫ f),
         Nonempty (IsColimit c') ↔ IsPullback c'.inl αX f c.inl ∧ IsPullback c'.inr αY f c.inr :=
   by
@@ -198,11 +198,12 @@ theorem BinaryCofan.is_van_kampen_mk {X Y : C} (c : BinaryCofan X Y)
     (cones : ∀ {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), PullbackCone f g)
     (limits : ∀ {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), IsLimit (cones f g))
     (h₁ :
-      ∀ {X' Y' : C} (αX : X' ⟶ X) (αY : Y' ⟶ Y) (f : (cofans X' Y').x ⟶ c.x)
+      ∀ {X' Y' : C} (αX : X' ⟶ X) (αY : Y' ⟶ Y) (f : (cofans X' Y').pt ⟶ c.pt)
         (hαX : αX ≫ c.inl = (cofans X' Y').inl ≫ f) (hαY : αY ≫ c.inr = (cofans X' Y').inr ≫ f),
         IsPullback (cofans X' Y').inl αX f c.inl ∧ IsPullback (cofans X' Y').inr αY f c.inr)
     (h₂ :
-      ∀ {Z : C} (f : Z ⟶ c.x), IsColimit (BinaryCofan.mk (cones f c.inl).fst (cones f c.inr).fst)) :
+      ∀ {Z : C} (f : Z ⟶ c.pt),
+        IsColimit (BinaryCofan.mk (cones f c.inl).fst (cones f c.inr).fst)) :
     IsVanKampenColimit c := by
   rw [binary_cofan.is_van_kampen_iff]
   introv hX hY

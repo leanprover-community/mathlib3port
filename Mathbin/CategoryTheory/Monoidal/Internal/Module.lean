@@ -39,10 +39,10 @@ variable {R : Type u} [CommRing R]
 namespace MonModuleEquivalenceAlgebra
 
 @[simps]
-instance (A : Mon_ (ModuleCat.{u} R)) : Ring A.x :=
+instance (A : Mon_ (ModuleCat.{u} R)) : Ring A.pt :=
   {
     (by infer_instance : AddCommGroup
-        A.x) with
+        A.pt) with
     one := A.one (1 : R)
     mul := fun x y => A.mul (x ⊗ₜ y)
     one_mul := fun x => by
@@ -63,7 +63,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Ring A.x :=
       rw [← TensorProduct.add_tmul]
       rfl }
 
-instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
+instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.pt :=
   { A.one with
     map_zero' := A.one.map_zero
     map_one' := rfl
@@ -79,7 +79,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
     smul_def' := fun r a => (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm }
 
 @[simp]
-theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
+theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.pt r = A.one r :=
   rfl
 #align Module.Mon_Module_equivalence_Algebra.algebra_map ModuleCat.MonModuleEquivalenceAlgebra.algebraMap
 
@@ -88,7 +88,7 @@ theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A
 @[simps]
 def functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R
     where
-  obj A := AlgebraCat.of R A.x
+  obj A := AlgebraCat.of R A.pt
   map A B f :=
     { f.Hom.toAddMonoidHom with
       toFun := f.Hom
@@ -102,7 +102,7 @@ def functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R
 @[simps]
 def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
     where
-  x := ModuleCat.of R A
+  pt := ModuleCat.of R A
   one := Algebra.linearMap R A
   mul := LinearMap.mul' R A
   one_mul' := by

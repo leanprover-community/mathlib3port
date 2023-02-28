@@ -79,7 +79,7 @@ you will not typically need to use this bundled object, and will instead use
 structure ProjectiveResolution (Z : C) where
   complex : ChainComplex C ℕ
   π : HomologicalComplex.Hom complex ((ChainComplex.single₀ C).obj Z)
-  Projective : ∀ n, Projective (complex.x n) := by infer_instance
+  Projective : ∀ n, Projective (complex.pt n) := by infer_instance
   exact₀ : Exact (complex.d 1 0) (π.f 0)
   exact : ∀ n, Exact (complex.d (n + 2) (n + 1)) (complex.d (n + 1) n)
   Epi : Epi (π.f 0) := by infer_instance
@@ -158,13 +158,13 @@ def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolution Z
 
 /-- Auxiliary construction for `lift`. -/
 def liftFZero {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
-    P.complex.x 0 ⟶ Q.complex.x 0 :=
+    P.complex.pt 0 ⟶ Q.complex.pt 0 :=
   factorThru (P.π.f 0 ≫ f) (Q.π.f 0)
 #align category_theory.ProjectiveResolution.lift_f_zero CategoryTheory.ProjectiveResolution.liftFZero
 
 /-- Auxiliary construction for `lift`. -/
 def liftFOne {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
-    P.complex.x 1 ⟶ Q.complex.x 1 :=
+    P.complex.pt 1 ⟶ Q.complex.pt 1 :=
   Exact.lift (P.complex.d 1 0 ≫ liftFZero f P Q) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀
     (by simp [lift_f_zero, P.exact₀.w_assoc])
 #align category_theory.ProjectiveResolution.lift_f_one CategoryTheory.ProjectiveResolution.liftFOne
@@ -181,9 +181,9 @@ theorem liftFOne_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y)
 
 /-- Auxiliary construction for `lift`. -/
 def liftFSucc {Y Z : C} (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) (n : ℕ)
-    (g : P.complex.x n ⟶ Q.complex.x n) (g' : P.complex.x (n + 1) ⟶ Q.complex.x (n + 1))
+    (g : P.complex.pt n ⟶ Q.complex.pt n) (g' : P.complex.pt (n + 1) ⟶ Q.complex.pt (n + 1))
     (w : g' ≫ Q.complex.d (n + 1) n = P.complex.d (n + 1) n ≫ g) :
-    Σ'g'' : P.complex.x (n + 2) ⟶ Q.complex.x (n + 2),
+    Σ'g'' : P.complex.pt (n + 2) ⟶ Q.complex.pt (n + 2),
       g'' ≫ Q.complex.d (n + 2) (n + 1) = P.complex.d (n + 2) (n + 1) ≫ g' :=
   ⟨Exact.lift (P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 2) (n + 1))
       (Q.complex.d (n + 1) n) (Q.exact _) (by simp [w]),
@@ -219,24 +219,24 @@ variable [HasZeroObject C] [Preadditive C] [HasEqualizers C] [HasImages C]
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
-    (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.x 0 ⟶ Q.complex.x 1 :=
+    (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.pt 0 ⟶ Q.complex.pt 1 :=
   Exact.lift (f.f 0) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀
     (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 #align category_theory.ProjectiveResolution.lift_homotopy_zero_zero CategoryTheory.ProjectiveResolution.liftHomotopyZeroZero
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroOne {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
-    (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.x 1 ⟶ Q.complex.x 2 :=
+    (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.pt 1 ⟶ Q.complex.pt 2 :=
   Exact.lift (f.f 1 - P.complex.d 1 0 ≫ liftHomotopyZeroZero f comm) (Q.complex.d 2 1)
     (Q.complex.d 1 0) (Q.exact _) (by simp [lift_homotopy_zero_zero])
 #align category_theory.ProjectiveResolution.lift_homotopy_zero_one CategoryTheory.ProjectiveResolution.liftHomotopyZeroOne
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroSucc {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
-    (f : P.complex ⟶ Q.complex) (n : ℕ) (g : P.complex.x n ⟶ Q.complex.x (n + 1))
-    (g' : P.complex.x (n + 1) ⟶ Q.complex.x (n + 2))
+    (f : P.complex ⟶ Q.complex) (n : ℕ) (g : P.complex.pt n ⟶ Q.complex.pt (n + 1))
+    (g' : P.complex.pt (n + 1) ⟶ Q.complex.pt (n + 2))
     (w : f.f (n + 1) = P.complex.d (n + 1) n ≫ g + g' ≫ Q.complex.d (n + 2) (n + 1)) :
-    P.complex.x (n + 2) ⟶ Q.complex.x (n + 3) :=
+    P.complex.pt (n + 2) ⟶ Q.complex.pt (n + 3) :=
   Exact.lift (f.f (n + 2) - P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 3) (n + 2))
     (Q.complex.d (n + 2) (n + 1)) (Q.exact _) (by simp [w])
 #align category_theory.ProjectiveResolution.lift_homotopy_zero_succ CategoryTheory.ProjectiveResolution.liftHomotopyZeroSucc

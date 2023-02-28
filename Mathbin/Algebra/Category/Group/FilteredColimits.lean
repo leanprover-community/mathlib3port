@@ -135,7 +135,7 @@ def colimit : GroupCat :=
 /-- The cocone over the proposed colimit group. -/
 @[to_additive "The cocone over the proposed colimit additive group."]
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι := { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ GroupCat Mon.{max v u})).ι with }
 #align Group.filtered_colimits.colimit_cocone GroupCat.FilteredColimits.colimitCocone
 #align AddGroup.filtered_colimits.colimit_cocone AddGroupCat.FilteredColimits.colimitCocone
@@ -212,7 +212,7 @@ def colimit : CommGroupCat :=
 /-- The cocone over the proposed colimit commutative group. -/
 @[to_additive "The cocone over the proposed colimit additive commutative group."]
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι :=
     {
       (GroupCat.FilteredColimits.colimitCocone

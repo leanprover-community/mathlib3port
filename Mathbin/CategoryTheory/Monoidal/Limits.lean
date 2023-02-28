@@ -58,11 +58,11 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
     where
   ε :=
     limit.lift _
-      { x := _
+      { pt := _
         π := { app := fun j => 𝟙 _ } }
   μ F G :=
     limit.lift (F ⊗ G)
-      { x := limit F ⊗ limit G
+      { pt := limit F ⊗ limit G
         π :=
           { app := fun j => limit.π F j ⊗ limit.π G j
             naturality' := fun j j' f => by
@@ -132,7 +132,7 @@ theorem limLax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α :
 theorem limLax_ε :
     (@limLax J _ C _ _ _).ε =
       limit.lift _
-        { x := _
+        { pt := _
           π := { app := fun j => 𝟙 _ } } :=
   rfl
 #align category_theory.limits.lim_lax_ε CategoryTheory.Limits.limLax_ε
@@ -144,7 +144,7 @@ theorem limLax_ε :
 theorem limLax_μ (F G : J ⥤ C) :
     (@limLax J _ C _ _ _).μ F G =
       limit.lift (F ⊗ G)
-        { x := limit F ⊗ limit G
+        { pt := limit F ⊗ limit G
           π :=
             { app := fun j => limit.π F j ⊗ limit.π G j
               naturality' := fun j j' f => by

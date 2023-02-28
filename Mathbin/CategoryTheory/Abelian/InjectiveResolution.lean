@@ -55,7 +55,7 @@ variable [HasZeroMorphisms C] [HasZeroObject C] [HasEqualizers C] [HasImages C]
 
 /-- Auxiliary construction for `desc`. -/
 def descFZero {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
-    J.cocomplex.x 0 ⟶ I.cocomplex.x 0 :=
+    J.cocomplex.pt 0 ⟶ I.cocomplex.pt 0 :=
   factorThru (f ≫ I.ι.f 0) (J.ι.f 0)
 #align category_theory.InjectiveResolution.desc_f_zero CategoryTheory.InjectiveResolution.descFZero
 
@@ -67,7 +67,7 @@ variable [Abelian C]
 
 /-- Auxiliary construction for `desc`. -/
 def descFOne {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResolution Z) :
-    J.cocomplex.x 1 ⟶ I.cocomplex.x 1 :=
+    J.cocomplex.pt 1 ⟶ I.cocomplex.pt 1 :=
   Exact.desc (descFZero f I J ≫ I.cocomplex.d 0 1) (J.ι.f 0) (J.cocomplex.d 0 1)
     (Abelian.Exact.op _ _ J.exact₀) (by simp [← category.assoc, desc_f_zero])
 #align category_theory.InjectiveResolution.desc_f_one CategoryTheory.InjectiveResolution.descFOne
@@ -81,9 +81,9 @@ theorem descFOne_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
 
 /-- Auxiliary construction for `desc`. -/
 def descFSucc {Y Z : C} (I : InjectiveResolution Y) (J : InjectiveResolution Z) (n : ℕ)
-    (g : J.cocomplex.x n ⟶ I.cocomplex.x n) (g' : J.cocomplex.x (n + 1) ⟶ I.cocomplex.x (n + 1))
+    (g : J.cocomplex.pt n ⟶ I.cocomplex.pt n) (g' : J.cocomplex.pt (n + 1) ⟶ I.cocomplex.pt (n + 1))
     (w : J.cocomplex.d n (n + 1) ≫ g' = g ≫ I.cocomplex.d n (n + 1)) :
-    Σ'g'' : J.cocomplex.x (n + 2) ⟶ I.cocomplex.x (n + 2),
+    Σ'g'' : J.cocomplex.pt (n + 2) ⟶ I.cocomplex.pt (n + 2),
       J.cocomplex.d (n + 1) (n + 2) ≫ g'' = g' ≫ I.cocomplex.d (n + 1) (n + 2) :=
   ⟨@Exact.desc C _ _ _ _ _ _ _ _ _ (g' ≫ I.cocomplex.d (n + 1) (n + 2)) (J.cocomplex.d n (n + 1))
       (J.cocomplex.d (n + 1) (n + 2)) (Abelian.Exact.op _ _ (J.exact _))
@@ -113,7 +113,7 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
 -- we can seal away the actual definition.
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
-    (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = 0) : I.cocomplex.x 1 ⟶ J.cocomplex.x 0 :=
+    (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = 0) : I.cocomplex.pt 1 ⟶ J.cocomplex.pt 0 :=
   Exact.desc (f.f 0) (I.ι.f 0) (I.cocomplex.d 0 1) (Abelian.Exact.op _ _ I.exact₀)
     (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 #align category_theory.InjectiveResolution.desc_homotopy_zero_zero CategoryTheory.InjectiveResolution.descHomotopyZeroZero
@@ -121,7 +121,7 @@ def descHomotopyZeroZero {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
     (f : I.cocomplex ⟶ J.cocomplex) (comm : I.ι ≫ f = (0 : _ ⟶ J.cocomplex)) :
-    I.cocomplex.x 2 ⟶ J.cocomplex.x 1 :=
+    I.cocomplex.pt 2 ⟶ J.cocomplex.pt 1 :=
   Exact.desc (f.f 1 - descHomotopyZeroZero f comm ≫ J.cocomplex.d 0 1) (I.cocomplex.d 0 1)
     (I.cocomplex.d 1 2) (Abelian.Exact.op _ _ (I.exact _))
     (by simp [desc_homotopy_zero_zero, ← category.assoc])
@@ -129,10 +129,10 @@ def descHomotopyZeroOne {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveReso
 
 /-- An auxiliary definition for `desc_homotopy_zero`. -/
 def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveResolution Z}
-    (f : I.cocomplex ⟶ J.cocomplex) (n : ℕ) (g : I.cocomplex.x (n + 1) ⟶ J.cocomplex.x n)
-    (g' : I.cocomplex.x (n + 2) ⟶ J.cocomplex.x (n + 1))
+    (f : I.cocomplex ⟶ J.cocomplex) (n : ℕ) (g : I.cocomplex.pt (n + 1) ⟶ J.cocomplex.pt n)
+    (g' : I.cocomplex.pt (n + 2) ⟶ J.cocomplex.pt (n + 1))
     (w : f.f (n + 1) = I.cocomplex.d (n + 1) (n + 2) ≫ g' + g ≫ J.cocomplex.d n (n + 1)) :
-    I.cocomplex.x (n + 3) ⟶ J.cocomplex.x (n + 2) :=
+    I.cocomplex.pt (n + 3) ⟶ J.cocomplex.pt (n + 2) :=
   Exact.desc (f.f (n + 2) - g' ≫ J.cocomplex.d _ _) (I.cocomplex.d (n + 1) (n + 2))
     (I.cocomplex.d (n + 2) (n + 3)) (Abelian.Exact.op _ _ (I.exact _))
     (by
@@ -312,7 +312,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 /-- If `X` is a cochain complex of injective objects and we have a quasi-isomorphism
 `f : Y[0] ⟶ X`, then `X` is an injective resolution of `Y.` -/
 def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex C ℕ) (Y : C)
-    (f : (CochainComplex.single₀ C).obj Y ⟶ X) [QuasiIso f] (H : ∀ n, Injective (X.x n)) :
+    (f : (CochainComplex.single₀ C).obj Y ⟶ X) [QuasiIso f] (H : ∀ n, Injective (X.pt n)) :
     InjectiveResolution Y where
   cocomplex := X
   ι := f

@@ -350,7 +350,7 @@ include H
 attribute [local instance] has_colimit_multispan_comp
 
 theorem has_colimit_mapGlueData_diagram : HasMulticoequalizer (D.mapGlueData F).diagram :=
-  hasColimit_of_iso (D.diagramIso F).symm
+  hasColimitOfIso (D.diagramIso F).symm
 #align category_theory.glue_data.has_colimit_map_glue_data_diagram CategoryTheory.GlueData.has_colimit_mapGlueData_diagram
 
 attribute [local instance] has_colimit_map_glue_data_diagram

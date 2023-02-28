@@ -70,23 +70,23 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
 -- Adding the following instance speeds up `limit_module` noticeably,
 -- by preventing a bad unfold of `limit_add_comm_group`.
 instance limitAddCommMonoid (F : J ⥤ ModuleCat R) :
-    AddCommMonoid (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
+    AddCommMonoid (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).pt :=
   show AddCommMonoid (sectionsSubmodule F) by infer_instance
 #align Module.limit_add_comm_monoid ModuleCat.limitAddCommMonoid
 
 instance limitAddCommGroup (F : J ⥤ ModuleCat R) :
-    AddCommGroup (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
+    AddCommGroup (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).pt :=
   show AddCommGroup (sectionsSubmodule F) by infer_instance
 #align Module.limit_add_comm_group ModuleCat.limitAddCommGroup
 
 instance limitModule (F : J ⥤ ModuleCat R) :
-    Module R (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
+    Module R (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).pt :=
   show Module R (sectionsSubmodule F) by infer_instance
 #align Module.limit_module ModuleCat.limitModule
 
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
 def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
-    (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x →ₗ[R] (F ⋙ forget (ModuleCat R)).obj j
+    (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).pt →ₗ[R] (F ⋙ forget (ModuleCat R)).obj j
     where
   toFun := (Types.limitCone (F ⋙ forget (ModuleCat R))).π.app j
   map_smul' x y := rfl
@@ -103,7 +103,7 @@ namespace HasLimits
 -/
 def limitCone (F : J ⥤ ModuleCat.{max v w} R) : Cone F
     where
-  x := ModuleCat.of R (Types.limitCone (F ⋙ forget _)).x
+  pt := ModuleCat.of R (Types.limitCone (F ⋙ forget _)).pt
   π :=
     { app := limitπLinearMap F
       naturality' := fun j j' f =>
@@ -222,7 +222,7 @@ In `direct_limit_is_colimit` we show that it is a colimit cocone. -/
 @[simps]
 def directLimitCocone : Cocone (directLimitDiagram G f)
     where
-  x := ModuleCat.of R <| DirectLimit G f
+  pt := ModuleCat.of R <| DirectLimit G f
   ι :=
     { app := Module.DirectLimit.of R ι G f
       naturality' := fun i j hij => by

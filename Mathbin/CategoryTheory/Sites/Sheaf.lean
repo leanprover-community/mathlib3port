@@ -118,7 +118,7 @@ variable {P S E} {x : FamilyOfElements (P ⋙ coyoneda.obj E) S} (hx : x.SieveCo
 @[simp]
 def CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone : Cone (S.arrows.diagram.op ⋙ P)
     where
-  x := E.unop
+  pt := E.unop
   π := (conesEquivSieveCompatibleFamily P S E).invFun ⟨x, hx⟩
 #align category_theory.presieve.family_of_elements.sieve_compatible.cone CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone
 

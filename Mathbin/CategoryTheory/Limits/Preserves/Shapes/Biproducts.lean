@@ -56,7 +56,7 @@ variable {J : Type w₁}
 @[simps]
 def mapBicone {f : J → C} (b : Bicone f) : Bicone (F.obj ∘ f)
     where
-  x := F.obj b.x
+  pt := F.obj b.pt
   π j := F.map (b.π j)
   ι j := F.map (b.ι j)
   ι_π j j' := by
@@ -78,7 +78,7 @@ end Bicone
 @[simps]
 def mapBinaryBicone {X Y : C} (b : BinaryBicone X Y) : BinaryBicone (F.obj X) (F.obj Y)
     where
-  x := F.obj b.x
+  pt := F.obj b.pt
   fst := F.map b.fst
   snd := F.map b.snd
   inl := F.map b.inl

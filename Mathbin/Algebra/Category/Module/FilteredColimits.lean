@@ -148,7 +148,7 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit :=
 
 /-- The cocone over the proposed colimit module. -/
 def colimitCocone : cocone F where
-  x := colimit
+  pt := colimit
   ι :=
     { app := cocone_morphism
       naturality' := fun j j' f =>
@@ -159,7 +159,7 @@ def colimitCocone : cocone F where
 We already know that this is a morphism between additive groups. The only thing left to see is that
 it is a linear map, i.e. preserves scalar multiplication.
 -/
-def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
+def colimitDesc (t : cocone F) : colimit ⟶ t.pt :=
   {
     (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).desc

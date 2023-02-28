@@ -358,7 +358,7 @@ to glue these into a map `s.X ⟶ Uᵢ ×[Z] Y`, we need to show that the maps a
 `(s.fst ⁻¹' Uᵢ) ×[s.X] (s.fst ⁻¹' Uⱼ) ⟶ Uᵢ ×[Z] Y`. This is achieved by showing that both of these
 maps factors through `glued_lift_pullback_map`.
 -/
-def gluedLift : s.x ⟶ (gluing 𝒰 f g).glued :=
+def gluedLift : s.pt ⟶ (gluing 𝒰 f g).glued :=
   by
   fapply (𝒰.pullback_cover s.fst).glueMorphisms
   ·

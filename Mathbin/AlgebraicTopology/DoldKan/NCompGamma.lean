@@ -193,7 +193,7 @@ def natTrans : (n₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ ⟶ 𝟭 _ 
 theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
     Γ₂N₂.natTrans.app P =
       (n₂ ⋙ Γ₂).map P.decompIdI ≫
-        (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.x ≫ P.decompIdP :=
+        (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.pt ≫ P.decompIdP :=
   whiskeringLeft_obj_preimage_app (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans) P
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app
 
@@ -218,10 +218,11 @@ theorem identity_n₂_objectwise (P : Karoubi (SimplicialObject C)) :
   have eq₁ :
     (N₂Γ₂.inv.app (N₂.obj P)).f.f n =
       P_infty.f n ≫
-        P.p.app (op [n]) ≫ (Γ₀.splitting (N₂.obj P).x).ιSummand (splitting.index_set.id (op [n])) :=
+        P.p.app (op [n]) ≫
+          (Γ₀.splitting (N₂.obj P).pt).ιSummand (splitting.index_set.id (op [n])) :=
     by simp only [N₂Γ₂_inv_app_f_f, N₂_obj_p_f, assoc]
   have eq₂ :
-    (Γ₀.splitting (N₂.obj P).x).ιSummand (splitting.index_set.id (op [n])) ≫
+    (Γ₀.splitting (N₂.obj P).pt).ιSummand (splitting.index_set.id (op [n])) ≫
         (N₂.map (Γ₂N₂.nat_trans.app P)).f.f n =
       P_infty.f n ≫ P.p.app (op [n]) :=
     by

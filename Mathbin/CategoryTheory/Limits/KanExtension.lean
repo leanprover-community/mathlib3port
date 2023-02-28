@@ -63,7 +63,7 @@ variable {ι}
 @[simp]
 def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagram ι F x)
     where
-  x := G.obj x
+  pt := G.obj x
   π :=
     { app := fun i => G.map i.Hom ≫ f.app i.right
       naturality' := by
@@ -183,7 +183,7 @@ variable {ι}
 @[simp]
 def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (diagram ι F x)
     where
-  x := G.obj x
+  pt := G.obj x
   ι :=
     { app := fun i => f.app i.left ≫ G.map i.Hom
       naturality' := by

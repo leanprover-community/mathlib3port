@@ -56,14 +56,14 @@ def γ : D ⋙ T.forget ⋙ ↑T ⟶ D ⋙ T.forget where app j := (D.obj j).a
 /-- (Impl) This new cone is used to construct the algebra structure -/
 @[simps π_app]
 def newCone : Cone (D ⋙ forget T) where
-  x := T.obj c.x
+  pt := T.obj c.pt
   π := (Functor.constComp _ _ ↑T).inv ≫ whiskerRight c.π T ≫ γ D
 #align category_theory.monad.forget_creates_limits.new_cone CategoryTheory.Monad.ForgetCreatesLimits.newCone
 
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps]
 def conePoint : Algebra T where
-  a := c.x
+  a := c.pt
   a := t.lift (newCone D c)
   unit' :=
     t.hom_ext fun j =>
@@ -84,7 +84,7 @@ def conePoint : Algebra T where
 /-- (Impl) Construct the lifted cone in `algebra T` which will be limiting. -/
 @[simps]
 def liftedCone : Cone D where
-  x := conePoint D c t
+  pt := conePoint D c t
   π :=
     { app := fun j => { f := c.π.app j }
       naturality' := fun X Y f => by
@@ -162,7 +162,7 @@ with the colimiting cocone for `D ⋙ forget T`.
 @[simps]
 def newCocone : Cocone ((D ⋙ forget T) ⋙ ↑T)
     where
-  x := c.x
+  pt := c.pt
   ι := γ ≫ c.ι
 #align category_theory.monad.forget_creates_colimits.new_cocone CategoryTheory.Monad.ForgetCreatesColimits.newCocone
 
@@ -174,7 +174,7 @@ we will show is the colimiting object. We use the cocone constructed by `c` and 
 `T` preserves colimits to produce this morphism.
 -/
 @[reducible]
-def lambda : ((T : C ⥤ C).mapCocone c).x ⟶ c.x :=
+def lambda : ((T : C ⥤ C).mapCocone c).pt ⟶ c.pt :=
   (isColimitOfPreserves _ t).desc (newCocone c)
 #align category_theory.monad.forget_creates_colimits.lambda CategoryTheory.Monad.ForgetCreatesColimits.lambda
 
@@ -192,7 +192,7 @@ our `commuting` lemma.
 -/
 @[simps]
 def coconePoint : Algebra T where
-  a := c.x
+  a := c.pt
   a := lambda c t
   unit' := by
     apply t.hom_ext
@@ -214,7 +214,7 @@ def coconePoint : Algebra T where
 /-- (Impl) Construct the lifted cocone in `algebra T` which will be colimiting. -/
 @[simps]
 def liftedCocone : Cocone D where
-  x := coconePoint c t
+  pt := coconePoint c t
   ι :=
     { app := fun j =>
         { f := c.ι.app j
@@ -258,7 +258,7 @@ noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T)
     [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : CreatesColimit D (forget T) :=
   createsColimitOfReflectsIso fun c t =>
     { liftedCocone :=
-        { x := coconePoint c t
+        { pt := coconePoint c t
           ι :=
             { app := fun j =>
                 { f := c.ι.app j
@@ -296,7 +296,7 @@ variable {J : Type u} [Category.{v} J]
 instance comp_comparison_forget_hasLimit (F : J ⥤ D) (R : D ⥤ C) [MonadicRightAdjoint R]
     [HasLimit (F ⋙ R)] :
     HasLimit ((F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R)) ⋙ Monad.forget _) :=
-  @hasLimit_of_iso _ _ _ _ (F ⋙ R) _ _
+  @hasLimitOfIso _ _ _ _ (F ⋙ R) _ _
     (isoWhiskerLeft F (Monad.comparisonForget (Adjunction.ofRightAdjoint R)).symm)
 #align category_theory.comp_comparison_forget_has_limit CategoryTheory.comp_comparison_forget_hasLimit
 

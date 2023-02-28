@@ -151,7 +151,7 @@ variable {C : Type u} [Category.{v} C]
 /-- To construct an isomorphism of cones over the walking cospan,
 it suffices to construct an isomorphism
 of the cone points and check it commutes with the legs to `left` and `right`. -/
-def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x)
+def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.pt ≅ t.pt)
     (w₁ : s.π.app WalkingCospan.left = i.Hom ≫ t.π.app WalkingCospan.left)
     (w₂ : s.π.app WalkingCospan.right = i.Hom ≫ t.π.app WalkingCospan.right) : s ≅ t :=
   by
@@ -171,7 +171,7 @@ def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x)
 /-- To construct an isomorphism of cocones over the walking span,
 it suffices to construct an isomorphism
 of the cocone points and check it commutes with the legs from `left` and `right`. -/
-def WalkingSpan.ext {F : WalkingSpan ⥤ C} {s t : Cocone F} (i : s.x ≅ t.x)
+def WalkingSpan.ext {F : WalkingSpan ⥤ C} {s t : Cocone F} (i : s.pt ≅ t.pt)
     (w₁ : s.ι.app WalkingCospan.left ≫ i.Hom = t.ι.app WalkingCospan.left)
     (w₂ : s.ι.app WalkingCospan.right ≫ i.Hom = t.ι.app WalkingCospan.right) : s ≅ t :=
   by
@@ -574,12 +574,12 @@ namespace PullbackCone
 variable {f : X ⟶ Z} {g : Y ⟶ Z}
 
 /-- The first projection of a pullback cone. -/
-abbrev fst (t : PullbackCone f g) : t.x ⟶ X :=
+abbrev fst (t : PullbackCone f g) : t.pt ⟶ X :=
   t.π.app WalkingCospan.left
 #align category_theory.limits.pullback_cone.fst CategoryTheory.Limits.PullbackCone.fst
 
 /-- The second projection of a pullback cone. -/
-abbrev snd (t : PullbackCone f g) : t.x ⟶ Y :=
+abbrev snd (t : PullbackCone f g) : t.pt ⟶ Y :=
   t.π.app WalkingCospan.right
 #align category_theory.limits.pullback_cone.snd CategoryTheory.Limits.PullbackCone.snd
 
@@ -602,12 +602,12 @@ theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fs
 
 /-- This is a slightly more convenient method to verify that a pullback cone is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ t.x)
+def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.pt ⟶ t.pt)
     (fac_left : ∀ s : PullbackCone f g, lift s ≫ t.fst = s.fst)
     (fac_right : ∀ s : PullbackCone f g, lift s ≫ t.snd = s.snd)
     (uniq :
-      ∀ (s : PullbackCone f g) (m : s.x ⟶ t.x) (w : ∀ j : WalkingCospan, m ≫ t.π.app j = s.π.app j),
-        m = lift s) :
+      ∀ (s : PullbackCone f g) (m : s.pt ⟶ t.pt)
+        (w : ∀ j : WalkingCospan, m ≫ t.π.app j = s.π.app j), m = lift s) :
     IsLimit t :=
   { lift
     fac := fun s j =>
@@ -640,7 +640,7 @@ def isLimitAux' (t : PullbackCone f g)
 @[simps]
 def mk {W : C} (fst : W ⟶ X) (snd : W ⟶ Y) (eq : fst ≫ f = snd ≫ g) : PullbackCone f g
     where
-  x := W
+  pt := W
   π := { app := fun j => Option.casesOn j (fst ≫ f) fun j' => WalkingPair.casesOn j' fst snd }
 #align category_theory.limits.pullback_cone.mk CategoryTheory.Limits.PullbackCone.mk
 
@@ -681,14 +681,14 @@ theorem condition (t : PullbackCone f g) : fst t ≫ f = snd t ≫ g :=
 
 /-- To check whether a morphism is equalized by the maps of a pullback cone, it suffices to check
   it for `fst t` and `snd t` -/
-theorem equalizer_ext (t : PullbackCone f g) {W : C} {k l : W ⟶ t.x} (h₀ : k ≫ fst t = l ≫ fst t)
+theorem equalizer_ext (t : PullbackCone f g) {W : C} {k l : W ⟶ t.pt} (h₀ : k ≫ fst t = l ≫ fst t)
     (h₁ : k ≫ snd t = l ≫ snd t) : ∀ j : WalkingCospan, k ≫ t.π.app j = l ≫ t.π.app j
   | some walking_pair.left => h₀
   | some walking_pair.right => h₁
   | none => by rw [← t.w inl, reassoc_of h₀]
 #align category_theory.limits.pullback_cone.equalizer_ext CategoryTheory.Limits.PullbackCone.equalizer_ext
 
-theorem IsLimit.hom_ext {t : PullbackCone f g} (ht : IsLimit t) {W : C} {k l : W ⟶ t.x}
+theorem IsLimit.hom_ext {t : PullbackCone f g} (ht : IsLimit t) {W : C} {k l : W ⟶ t.pt}
     (h₀ : k ≫ fst t = l ≫ fst t) (h₁ : k ≫ snd t = l ≫ snd t) : k = l :=
   ht.hom_ext <| equalizer_ext _ h₀ h₁
 #align category_theory.limits.pullback_cone.is_limit.hom_ext CategoryTheory.Limits.PullbackCone.IsLimit.hom_ext
@@ -705,7 +705,7 @@ theorem mono_fst_of_is_pullback_of_mono {t : PullbackCone f g} (ht : IsLimit t) 
 
 /-- To construct an isomorphism of pullback cones, it suffices to construct an isomorphism
 of the cone points and check it commutes with `fst` and `snd`. -/
-def ext {s t : PullbackCone f g} (i : s.x ≅ t.x) (w₁ : s.fst = i.Hom ≫ t.fst)
+def ext {s t : PullbackCone f g} (i : s.pt ≅ t.pt) (w₁ : s.fst = i.Hom ≫ t.fst)
     (w₂ : s.snd = i.Hom ≫ t.snd) : s ≅ t :=
   WalkingCospan.ext i w₁ w₂
 #align category_theory.limits.pullback_cone.ext CategoryTheory.Limits.PullbackCone.ext
@@ -714,7 +714,7 @@ def ext {s t : PullbackCone f g} (i : s.x ≅ t.x) (w₁ : s.fst = i.Hom ≫ t.f
     `h ≫ f = k ≫ g`, then we have `l : W ⟶ t.X` satisfying `l ≫ fst t = h` and `l ≫ snd t = k`.
     -/
 def IsLimit.lift' {t : PullbackCone f g} (ht : IsLimit t) {W : C} (h : W ⟶ X) (k : W ⟶ Y)
-    (w : h ≫ f = k ≫ g) : { l : W ⟶ t.x // l ≫ fst t = h ∧ l ≫ snd t = k } :=
+    (w : h ≫ f = k ≫ g) : { l : W ⟶ t.pt // l ≫ fst t = h ∧ l ≫ snd t = k } :=
   ⟨ht.lift <| PullbackCone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
 #align category_theory.limits.pullback_cone.is_limit.lift' CategoryTheory.Limits.PullbackCone.IsLimit.lift'
 
@@ -722,11 +722,11 @@ def IsLimit.lift' {t : PullbackCone f g} (ht : IsLimit t) {W : C} (h : W ⟶ X) 
 `pullback_cone.mk` is a limit cone.
 -/
 def IsLimit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫ g)
-    (lift : ∀ s : PullbackCone f g, s.x ⟶ W)
+    (lift : ∀ s : PullbackCone f g, s.pt ⟶ W)
     (fac_left : ∀ s : PullbackCone f g, lift s ≫ fst = s.fst)
     (fac_right : ∀ s : PullbackCone f g, lift s ≫ snd = s.snd)
     (uniq :
-      ∀ (s : PullbackCone f g) (m : s.x ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd),
+      ∀ (s : PullbackCone f g) (m : s.pt ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd),
         m = lift s) :
     IsLimit (mk fst snd Eq) :=
   isLimitAux _ lift fac_left fac_right fun s m w =>
@@ -820,12 +820,12 @@ namespace PushoutCocone
 variable {f : X ⟶ Y} {g : X ⟶ Z}
 
 /-- The first inclusion of a pushout cocone. -/
-abbrev inl (t : PushoutCocone f g) : Y ⟶ t.x :=
+abbrev inl (t : PushoutCocone f g) : Y ⟶ t.pt :=
   t.ι.app WalkingSpan.left
 #align category_theory.limits.pushout_cocone.inl CategoryTheory.Limits.PushoutCocone.inl
 
 /-- The second inclusion of a pushout cocone. -/
-abbrev inr (t : PushoutCocone f g) : Z ⟶ t.x :=
+abbrev inr (t : PushoutCocone f g) : Z ⟶ t.pt :=
   t.ι.app WalkingSpan.right
 #align category_theory.limits.pushout_cocone.inr CategoryTheory.Limits.PushoutCocone.inr
 
@@ -848,12 +848,12 @@ theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f �
 
 /-- This is a slightly more convenient method to verify that a pushout cocone is a colimit cocone.
     It only asks for a proof of facts that carry any mathematical content -/
-def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x ⟶ s.x)
+def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.pt ⟶ s.pt)
     (fac_left : ∀ s : PushoutCocone f g, t.inl ≫ desc s = s.inl)
     (fac_right : ∀ s : PushoutCocone f g, t.inr ≫ desc s = s.inr)
     (uniq :
-      ∀ (s : PushoutCocone f g) (m : t.x ⟶ s.x) (w : ∀ j : WalkingSpan, t.ι.app j ≫ m = s.ι.app j),
-        m = desc s) :
+      ∀ (s : PushoutCocone f g) (m : t.pt ⟶ s.pt)
+        (w : ∀ j : WalkingSpan, t.ι.app j ≫ m = s.ι.app j), m = desc s) :
     IsColimit t :=
   { desc
     fac := fun s j =>
@@ -881,7 +881,7 @@ def isColimitAux' (t : PushoutCocone f g)
 @[simps]
 def mk {W : C} (inl : Y ⟶ W) (inr : Z ⟶ W) (eq : f ≫ inl = g ≫ inr) : PushoutCocone f g
     where
-  x := W
+  pt := W
   ι := { app := fun j => Option.casesOn j (f ≫ inl) fun j' => WalkingPair.casesOn j' inl inr }
 #align category_theory.limits.pushout_cocone.mk CategoryTheory.Limits.PushoutCocone.mk
 
@@ -922,14 +922,15 @@ theorem condition (t : PushoutCocone f g) : f ≫ inl t = g ≫ inr t :=
 
 /-- To check whether a morphism is coequalized by the maps of a pushout cocone, it suffices to check
   it for `inl t` and `inr t` -/
-theorem coequalizer_ext (t : PushoutCocone f g) {W : C} {k l : t.x ⟶ W} (h₀ : inl t ≫ k = inl t ≫ l)
-    (h₁ : inr t ≫ k = inr t ≫ l) : ∀ j : WalkingSpan, t.ι.app j ≫ k = t.ι.app j ≫ l
+theorem coequalizer_ext (t : PushoutCocone f g) {W : C} {k l : t.pt ⟶ W}
+    (h₀ : inl t ≫ k = inl t ≫ l) (h₁ : inr t ≫ k = inr t ≫ l) :
+    ∀ j : WalkingSpan, t.ι.app j ≫ k = t.ι.app j ≫ l
   | some walking_pair.left => h₀
   | some walking_pair.right => h₁
   | none => by rw [← t.w fst, category.assoc, category.assoc, h₀]
 #align category_theory.limits.pushout_cocone.coequalizer_ext CategoryTheory.Limits.PushoutCocone.coequalizer_ext
 
-theorem IsColimit.hom_ext {t : PushoutCocone f g} (ht : IsColimit t) {W : C} {k l : t.x ⟶ W}
+theorem IsColimit.hom_ext {t : PushoutCocone f g} (ht : IsColimit t) {W : C} {k l : t.pt ⟶ W}
     (h₀ : inl t ≫ k = inl t ≫ l) (h₁ : inr t ≫ k = inr t ≫ l) : k = l :=
   ht.hom_ext <| coequalizer_ext _ h₀ h₁
 #align category_theory.limits.pushout_cocone.is_colimit.hom_ext CategoryTheory.Limits.PushoutCocone.IsColimit.hom_ext
@@ -938,7 +939,7 @@ theorem IsColimit.hom_ext {t : PushoutCocone f g} (ht : IsColimit t) {W : C} {k 
     morphisms satisfying `f ≫ h = g ≫ k`, then we have a factorization `l : t.X ⟶ W` such that
     `inl t ≫ l = h` and `inr t ≫ l = k`. -/
 def IsColimit.desc' {t : PushoutCocone f g} (ht : IsColimit t) {W : C} (h : Y ⟶ W) (k : Z ⟶ W)
-    (w : f ≫ h = g ≫ k) : { l : t.x ⟶ W // inl t ≫ l = h ∧ inr t ≫ l = k } :=
+    (w : f ≫ h = g ≫ k) : { l : t.pt ⟶ W // inl t ≫ l = h ∧ inr t ≫ l = k } :=
   ⟨ht.desc <| PushoutCocone.mk _ _ w, ht.fac _ _, ht.fac _ _⟩
 #align category_theory.limits.pushout_cocone.is_colimit.desc' CategoryTheory.Limits.PushoutCocone.IsColimit.desc'
 
@@ -954,7 +955,7 @@ theorem epi_inl_of_is_pushout_of_epi {t : PushoutCocone f g} (ht : IsColimit t) 
 
 /-- To construct an isomorphism of pushout cocones, it suffices to construct an isomorphism
 of the cocone points and check it commutes with `inl` and `inr`. -/
-def ext {s t : PushoutCocone f g} (i : s.x ≅ t.x) (w₁ : s.inl ≫ i.Hom = t.inl)
+def ext {s t : PushoutCocone f g} (i : s.pt ≅ t.pt) (w₁ : s.inl ≫ i.Hom = t.inl)
     (w₂ : s.inr ≫ i.Hom = t.inr) : s ≅ t :=
   WalkingSpan.ext i w₁ w₂
 #align category_theory.limits.pushout_cocone.ext CategoryTheory.Limits.PushoutCocone.ext
@@ -963,11 +964,11 @@ def ext {s t : PushoutCocone f g} (i : s.x ≅ t.x) (w₁ : s.inl ≫ i.Hom = t.
 `pushout_cocone.mk` is a colimit cocone.
 -/
 def IsColimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫ inr)
-    (desc : ∀ s : PushoutCocone f g, W ⟶ s.x)
+    (desc : ∀ s : PushoutCocone f g, W ⟶ s.pt)
     (fac_left : ∀ s : PushoutCocone f g, inl ≫ desc s = s.inl)
     (fac_right : ∀ s : PushoutCocone f g, inr ≫ desc s = s.inr)
     (uniq :
-      ∀ (s : PushoutCocone f g) (m : W ⟶ s.x) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr),
+      ∀ (s : PushoutCocone f g) (m : W ⟶ s.pt) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr),
         m = desc s) :
     IsColimit (mk inl inr Eq) :=
   isColimitAux _ desc fac_left fac_right fun s m w =>
@@ -1062,7 +1063,7 @@ end PushoutCocone
 @[simps]
 def Cone.ofPullbackCone {F : WalkingCospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) : Cone F
     where
-  x := t.x
+  pt := t.pt
   π := t.π ≫ (diagramIsoCospan F).inv
 #align category_theory.limits.cone.of_pullback_cone CategoryTheory.Limits.Cone.ofPullbackCone
 
@@ -1076,7 +1077,7 @@ def Cone.ofPullbackCone {F : WalkingCospan ⥤ C} (t : PullbackCone (F.map inl) 
 @[simps]
 def Cocone.ofPushoutCocone {F : WalkingSpan ⥤ C} (t : PushoutCocone (F.map fst) (F.map snd)) :
     Cocone F where
-  x := t.x
+  pt := t.pt
   ι := (diagramIsoSpan F).Hom ≫ t.ι
 #align category_theory.limits.cocone.of_pushout_cocone CategoryTheory.Limits.Cocone.ofPushoutCocone
 
@@ -1085,7 +1086,7 @@ def Cocone.ofPushoutCocone {F : WalkingSpan ⥤ C} (t : PushoutCocone (F.map fst
 @[simps]
 def PullbackCone.ofCone {F : WalkingCospan ⥤ C} (t : Cone F) : PullbackCone (F.map inl) (F.map inr)
     where
-  x := t.x
+  pt := t.pt
   π := t.π ≫ (diagramIsoCospan F).Hom
 #align category_theory.limits.pullback_cone.of_cone CategoryTheory.Limits.PullbackCone.ofCone
 
@@ -1106,8 +1107,9 @@ def PullbackCone.isoMk {F : WalkingCospan ⥤ C} (t : Cone F) :
     and a cocone on `F`, we get a pushout cocone on `F.map fst` and `F.map snd`. -/
 @[simps]
 def PushoutCocone.ofCocone {F : WalkingSpan ⥤ C} (t : Cocone F) :
-    PushoutCocone (F.map fst) (F.map snd) where
-  x := t.x
+    PushoutCocone (F.map fst) (F.map snd)
+    where
+  pt := t.pt
   ι := (diagramIsoSpan F).inv ≫ t.ι
 #align category_theory.limits.pushout_cocone.of_cocone CategoryTheory.Limits.PushoutCocone.ofCocone
 
@@ -1184,25 +1186,25 @@ abbrev pushout.desc {W X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [HasPushout f g] (
 
 @[simp]
 theorem PullbackCone.fst_colimit_cocone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
-    [HasLimit (cospan f g)] : PullbackCone.fst (Limit.cone (cospan f g)) = pullback.fst :=
+    [HasLimit (cospan f g)] : PullbackCone.fst (limit.cone (cospan f g)) = pullback.fst :=
   rfl
 #align category_theory.limits.pullback_cone.fst_colimit_cocone CategoryTheory.Limits.PullbackCone.fst_colimit_cocone
 
 @[simp]
 theorem PullbackCone.snd_colimit_cocone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
-    [HasLimit (cospan f g)] : PullbackCone.snd (Limit.cone (cospan f g)) = pullback.snd :=
+    [HasLimit (cospan f g)] : PullbackCone.snd (limit.cone (cospan f g)) = pullback.snd :=
   rfl
 #align category_theory.limits.pullback_cone.snd_colimit_cocone CategoryTheory.Limits.PullbackCone.snd_colimit_cocone
 
 @[simp]
 theorem PushoutCocone.inl_colimit_cocone {X Y Z : C} (f : Z ⟶ X) (g : Z ⟶ Y)
-    [HasColimit (span f g)] : PushoutCocone.inl (Colimit.cocone (span f g)) = pushout.inl :=
+    [HasColimit (span f g)] : PushoutCocone.inl (colimit.cocone (span f g)) = pushout.inl :=
   rfl
 #align category_theory.limits.pushout_cocone.inl_colimit_cocone CategoryTheory.Limits.PushoutCocone.inl_colimit_cocone
 
 @[simp]
 theorem PushoutCocone.inr_colimit_cocone {X Y Z : C} (f : Z ⟶ X) (g : Z ⟶ Y)
-    [HasColimit (span f g)] : PushoutCocone.inr (Colimit.cocone (span f g)) = pushout.inr :=
+    [HasColimit (span f g)] : PushoutCocone.inr (colimit.cocone (span f g)) = pushout.inr :=
   rfl
 #align category_theory.limits.pushout_cocone.inr_colimit_cocone CategoryTheory.Limits.PushoutCocone.inr_colimit_cocone
 
@@ -1652,9 +1654,9 @@ def pullbackConeOfLeftIso : PullbackCone f g :=
 #align category_theory.limits.pullback_cone_of_left_iso CategoryTheory.Limits.pullbackConeOfLeftIso
 
 @[simp]
-theorem pullbackConeOfLeftIso_x : (pullbackConeOfLeftIso f g).x = Y :=
+theorem pullbackConeOfLeftIso_pt : (pullbackConeOfLeftIso f g).pt = Y :=
   rfl
-#align category_theory.limits.pullback_cone_of_left_iso_X CategoryTheory.Limits.pullbackConeOfLeftIso_x
+#align category_theory.limits.pullback_cone_of_left_iso_X CategoryTheory.Limits.pullbackConeOfLeftIso_pt
 
 @[simp]
 theorem pullbackConeOfLeftIso_fst : (pullbackConeOfLeftIso f g).fst = g ≫ inv f :=
@@ -1737,9 +1739,9 @@ def pullbackConeOfRightIso : PullbackCone f g :=
 #align category_theory.limits.pullback_cone_of_right_iso CategoryTheory.Limits.pullbackConeOfRightIso
 
 @[simp]
-theorem pullbackConeOfRightIso_x : (pullbackConeOfRightIso f g).x = X :=
+theorem pullbackConeOfRightIso_pt : (pullbackConeOfRightIso f g).pt = X :=
   rfl
-#align category_theory.limits.pullback_cone_of_right_iso_X CategoryTheory.Limits.pullbackConeOfRightIso_x
+#align category_theory.limits.pullback_cone_of_right_iso_X CategoryTheory.Limits.pullbackConeOfRightIso_pt
 
 @[simp]
 theorem pullbackConeOfRightIso_fst : (pullbackConeOfRightIso f g).fst = 𝟙 _ :=
@@ -1832,9 +1834,9 @@ def pushoutCoconeOfLeftIso : PushoutCocone f g :=
 #align category_theory.limits.pushout_cocone_of_left_iso CategoryTheory.Limits.pushoutCoconeOfLeftIso
 
 @[simp]
-theorem pushoutCoconeOfLeftIso_x : (pushoutCoconeOfLeftIso f g).x = Z :=
+theorem pushoutCoconeOfLeftIso_pt : (pushoutCoconeOfLeftIso f g).pt = Z :=
   rfl
-#align category_theory.limits.pushout_cocone_of_left_iso_X CategoryTheory.Limits.pushoutCoconeOfLeftIso_x
+#align category_theory.limits.pushout_cocone_of_left_iso_X CategoryTheory.Limits.pushoutCoconeOfLeftIso_pt
 
 @[simp]
 theorem pushoutCoconeOfLeftIso_inl : (pushoutCoconeOfLeftIso f g).inl = inv f ≫ g :=
@@ -1917,9 +1919,9 @@ def pushoutCoconeOfRightIso : PushoutCocone f g :=
 #align category_theory.limits.pushout_cocone_of_right_iso CategoryTheory.Limits.pushoutCoconeOfRightIso
 
 @[simp]
-theorem pushoutCoconeOfRightIso_x : (pushoutCoconeOfRightIso f g).x = Y :=
+theorem pushoutCoconeOfRightIso_pt : (pushoutCoconeOfRightIso f g).pt = Y :=
   rfl
-#align category_theory.limits.pushout_cocone_of_right_iso_X CategoryTheory.Limits.pushoutCoconeOfRightIso_x
+#align category_theory.limits.pushout_cocone_of_right_iso_X CategoryTheory.Limits.pushoutCoconeOfRightIso_pt
 
 @[simp]
 theorem pushoutCoconeOfRightIso_inl : (pushoutCoconeOfRightIso f g).inl = 𝟙 _ :=
@@ -2776,13 +2778,13 @@ abbrev HasPushouts :=
 /-- If `C` has all limits of diagrams `cospan f g`, then it has all pullbacks -/
 theorem hasPullbacks_of_hasLimit_cospan
     [∀ {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z}, HasLimit (cospan f g)] : HasPullbacks C :=
-  { HasLimit := fun F => hasLimit_of_iso (diagramIsoCospan F).symm }
+  { HasLimit := fun F => hasLimitOfIso (diagramIsoCospan F).symm }
 #align category_theory.limits.has_pullbacks_of_has_limit_cospan CategoryTheory.Limits.hasPullbacks_of_hasLimit_cospan
 
 /-- If `C` has all colimits of diagrams `span f g`, then it has all pushouts -/
 theorem hasPushouts_of_hasColimit_span
     [∀ {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z}, HasColimit (span f g)] : HasPushouts C :=
-  { HasColimit := fun F => hasColimit_of_iso (diagramIsoSpan F) }
+  { HasColimit := fun F => hasColimitOfIso (diagramIsoSpan F) }
 #align category_theory.limits.has_pushouts_of_has_colimit_span CategoryTheory.Limits.hasPushouts_of_hasColimit_span
 
 /-- The duality equivalence `walking_spanᵒᵖ ≌ walking_cospan` -/

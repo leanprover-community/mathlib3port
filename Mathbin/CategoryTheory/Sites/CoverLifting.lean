@@ -129,7 +129,7 @@ variable {G : C ⥤ D} (hu : CoverLifting J K G) (ℱ : Sheaf J A)
 variable {X : A} {U : D} (S : Sieve U) (hS : S ∈ K U)
 
 instance (X : Dᵒᵖ) : HasLimitsOfShape (StructuredArrow X G.op) A :=
-  haveI := Limits.hasLimitsOfSize_shrink.{v, max u v, max u v, max u v} A
+  haveI := Limits.hasLimitsOfSizeShrink.{v, max u v, max u v, max u v} A
   has_limits_of_size.has_limits_of_shape _
 
 variable (x : S.arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))
@@ -198,7 +198,7 @@ theorem getSection_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
 def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
-  { x
+  { pt
     π :=
       { app := fun Y => getSection hu ℱ hS hx Y
         naturality' := fun Y Z f => by tidy } }

@@ -52,9 +52,9 @@ def widePullbackDiagramOfDiagramOver (B : C) {J : Type w} (F : Discrete J ⥤ Ov
 def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : Cone F) :
     Cone (widePullbackDiagramOfDiagramOver B F)
     where
-  x := c.x.left
+  pt := c.pt.left
   π :=
-    { app := fun X => Option.casesOn X c.x.Hom fun j : J => (c.π.app ⟨j⟩).left
+    { app := fun X => Option.casesOn X c.pt.Hom fun j : J => (c.π.app ⟨j⟩).left
       -- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by
         dsimp; cases X <;> cases Y <;> cases f
@@ -87,7 +87,7 @@ def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F
     where
   obj c :=
-    { x := Over.mk (c.π.app none)
+    { pt := Over.mk (c.π.app none)
       π :=
         {
           app := fun ⟨j⟩ =>
@@ -182,7 +182,7 @@ theorem over_hasTerminal (B : C) : HasTerminal (Over B) :=
     HasLimit := fun F =>
       HasLimit.mk
         { Cone :=
-            { x := Over.mk (𝟙 _)
+            { pt := Over.mk (𝟙 _)
               π := { app := fun p => p.as.elim } }
           IsLimit :=
             { lift := fun s => Over.homMk _

@@ -39,15 +39,15 @@ exchanging the horizontal and vertical directions.
 def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') :
     HomologicalComplex (HomologicalComplex V c') c
     where
-  x i :=
-    { x := fun j => (C.x j).x i
+  pt i :=
+    { pt := fun j => (C.pt j).pt i
       d := fun j j' => (C.d j j').f i
       shape' := fun j j' w => by
         rw [C.shape j j' w]
         simp
       d_comp_d' := fun j₁ j₂ j₃ _ _ => congr_hom (C.d_comp_d j₁ j₂ j₃) i }
   d i i' :=
-    { f := fun j => (C.x j).d i i'
+    { f := fun j => (C.pt j).d i i'
       comm' := fun j j' h => ((C.d j j').comm i i').symm }
   shape' i i' w := by
     ext j
@@ -76,13 +76,13 @@ def flipEquivalenceUnitIso :
   NatIso.ofComponents
     (fun C =>
       { Hom :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
+          { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
             comm' := fun i j h => by
               ext
               dsimp
               simp only [category.id_comp, category.comp_id] }
         inv :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
+          { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
             comm' := fun i j h => by
               ext
               dsimp
@@ -100,13 +100,13 @@ def flipEquivalenceCounitIso :
   NatIso.ofComponents
     (fun C =>
       { Hom :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
+          { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
             comm' := fun i j h => by
               ext
               dsimp
               simp only [category.id_comp, category.comp_id] }
         inv :=
-          { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
+          { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
             comm' := fun i j h => by
               ext
               dsimp

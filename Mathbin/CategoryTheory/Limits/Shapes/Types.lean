@@ -70,7 +70,7 @@ theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶
 def terminalLimitCone : Limits.LimitCone (Functor.empty (Type u))
     where
   Cone :=
-    { x := PUnit
+    { pt := PUnit
       π := by tidy }
   IsLimit := by tidy
 #align category_theory.limits.types.terminal_limit_cone CategoryTheory.Limits.Types.terminalLimitCone
@@ -89,7 +89,7 @@ noncomputable def isTerminalPunit : IsTerminal (PUnit : Type u) :=
 def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u))
     where
   Cocone :=
-    { x := PEmpty
+    { pt := PEmpty
       ι := by tidy }
   IsColimit := by tidy
 #align category_theory.limits.types.initial_colimit_cocone CategoryTheory.Limits.Types.initialColimitCocone
@@ -109,7 +109,7 @@ open CategoryTheory.Limits.WalkingPair
 -- We manually generate the other projection lemmas since the simp-normal form for the legs is
 -- otherwise not created correctly.
 /-- The product type `X × Y` forms a cone for the binary product of `X` and `Y`. -/
-@[simps x]
+@[simps pt]
 def binaryProductCone (X Y : Type u) : BinaryFan X Y :=
   BinaryFan.mk Prod.fst Prod.snd
 #align category_theory.limits.types.binary_product_cone CategoryTheory.Limits.Types.binaryProductCone
@@ -324,7 +324,7 @@ noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
 def productLimitCone {J : Type u} (F : J → Type max u v) : Limits.LimitCone (Discrete.functor F)
     where
   Cone :=
-    { x := ∀ j, F j
+    { pt := ∀ j, F j
       π := { app := fun j f => f j.as } }
   IsLimit :=
     { lift := fun s x j => s.π.app ⟨j⟩ x
@@ -353,7 +353,7 @@ theorem productIso_inv_comp_π {J : Type u} (F : J → Type max u v) (j : J) :
 def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocone (Discrete.functor F)
     where
   Cocone :=
-    { x := Σj, F j
+    { pt := Σj, F j
       ι := { app := fun j x => ⟨j.as, x⟩ } }
   IsColimit :=
     { desc := fun s x => s.ι.app ⟨x.1⟩ x.2
@@ -573,7 +573,7 @@ def pullbackLimitCone (f : X ⟶ Z) (g : Y ⟶ Z) : Limits.LimitCone (cospan f g
 /-- The pullback cone given by the instance `has_pullbacks (Type u)` is isomorphic to the
 explicit pullback cone given by `pullback_limit_cone`.
 -/
-noncomputable def pullbackConeIsoPullback : Limit.cone (cospan f g) ≅ pullbackCone f g :=
+noncomputable def pullbackConeIsoPullback : limit.cone (cospan f g) ≅ pullbackCone f g :=
   (limit.isLimit _).uniqueUpToIso (pullbackLimitCone f g).IsLimit
 #align category_theory.limits.types.pullback_cone_iso_pullback CategoryTheory.Limits.Types.pullbackConeIsoPullback
 

@@ -39,8 +39,8 @@ variable {V : Type _} [Category V] [HasZeroMorphisms V]
 /-- Since `eq_to_hom` only preserves the fact that `X.X i = X.X j` but not `i = j`, this definition
 is used to aid the simplifier. -/
 abbrev CategoryTheory.DifferentialObject.xEqToHom
-    (X : DifferentialObject (GradedObjectWithShift b V)) {i j : β} (h : i = j) : X.x i ⟶ X.x j :=
-  eqToHom (congr_arg X.x h)
+    (X : DifferentialObject (GradedObjectWithShift b V)) {i j : β} (h : i = j) : X.pt i ⟶ X.pt j :=
+  eqToHom (congr_arg X.pt h)
 #align category_theory.differential_object.X_eq_to_hom CategoryTheory.DifferentialObject.xEqToHom
 
 @[simp]
@@ -65,7 +65,7 @@ theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : 
 
 @[simp, reassoc.1]
 theorem d_eqToHom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β} (h : y = z) :
-    X.d x y ≫ eqToHom (congr_arg X.x h) = X.d x z :=
+    X.d x y ≫ eqToHom (congr_arg X.pt h) = X.d x z :=
   by
   cases h
   simp
@@ -90,7 +90,7 @@ def dgoToHomologicalComplex :
     DifferentialObject (GradedObjectWithShift b V) ⥤ HomologicalComplex V (ComplexShape.up' b)
     where
   obj X :=
-    { x := fun i => X.x i
+    { pt := fun i => X.pt i
       d := fun i j =>
         if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0
       shape' := fun i j w => by
@@ -119,7 +119,7 @@ def homologicalComplexToDgo :
     HomologicalComplex V (ComplexShape.up' b) ⥤ DifferentialObject (GradedObjectWithShift b V)
     where
   obj X :=
-    { x := fun i => X.x i
+    { pt := fun i => X.pt i
       d := fun i => X.d i (i + 1 • b)
       d_squared' := by
         ext i
@@ -141,8 +141,8 @@ def dgoEquivHomologicalComplexUnitIso :
       dgoToHomologicalComplex b V ⋙ homologicalComplexToDgo b V :=
   NatIso.ofComponents
     (fun X =>
-      { Hom := { f := fun i => 𝟙 (X.x i) }
-        inv := { f := fun i => 𝟙 (X.x i) } })
+      { Hom := { f := fun i => 𝟙 (X.pt i) }
+        inv := { f := fun i => 𝟙 (X.pt i) } })
     (by tidy)
 #align homological_complex.dgo_equiv_homological_complex_unit_iso HomologicalComplex.dgoEquivHomologicalComplexUnitIso
 
@@ -155,13 +155,13 @@ def dgoEquivHomologicalComplexCounitIso :
   NatIso.ofComponents
     (fun X =>
       { Hom :=
-          { f := fun i => 𝟙 (X.x i)
+          { f := fun i => 𝟙 (X.pt i)
             comm' := fun i j h => by
               dsimp at h⊢; subst h
               delta homological_complex_to_dgo
               simp }
         inv :=
-          { f := fun i => 𝟙 (X.x i)
+          { f := fun i => 𝟙 (X.pt i)
             comm' := fun i j h => by
               dsimp at h⊢; subst h
               delta homological_complex_to_dgo

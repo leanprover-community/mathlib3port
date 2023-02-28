@@ -51,7 +51,7 @@ one may define a formal direct factor of an object `X : C` : it consists of an i
 type of the objects of the karoubi enveloppe of `C`. It makes sense for any category `C`. -/
 @[nolint has_nonempty_instance]
 structure Karoubi where
-  x : C
+  pt : C
   p : X ⟶ X
   idem : p ≫ p = p
 #align category_theory.idempotents.karoubi CategoryTheory.Idempotents.Karoubi
@@ -63,7 +63,7 @@ variable {C}
 attribute [simp, reassoc.1] idem
 
 @[ext]
-theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) :
+theorem ext {P Q : Karoubi C} (h_X : P.pt = Q.pt) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) :
     P = Q := by
   cases P
   cases Q
@@ -79,7 +79,7 @@ map between the corresponding "formal direct factors" and that it vanishes on th
 formal direct factor. -/
 @[ext]
 structure Hom (P Q : Karoubi C) where
-  f : P.x ⟶ Q.x
+  f : P.pt ⟶ Q.pt
   comm : f = P.p ≫ f ≫ Q.p
 #align category_theory.idempotents.karoubi.hom CategoryTheory.Idempotents.Karoubi.Hom
 
@@ -132,7 +132,7 @@ instance coe : CoeTC C (Karoubi C) :=
 #align category_theory.idempotents.karoubi.coe CategoryTheory.Idempotents.Karoubi.coe
 
 @[simp]
-theorem coe_x (X : C) : (X : Karoubi C).x = X := by rfl
+theorem coe_x (X : C) : (X : Karoubi C).pt = X := by rfl
 #align category_theory.idempotents.karoubi.coe_X CategoryTheory.Idempotents.Karoubi.coe_x
 
 @[simp]
@@ -196,7 +196,7 @@ theorem hom_eq_zero_iff [Preadditive C] {P Q : Karoubi C} {f : Hom P Q} : f = 0 
 
 /-- The map sending `f : P ⟶ Q` to `f.f : P.X ⟶ Q.X` is additive. -/
 @[simps]
-def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x ⟶ Q.x)
+def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.pt ⟶ Q.pt)
     where
   toFun f := f.f
   map_zero' := rfl
@@ -252,13 +252,13 @@ variable {C}
 
 /-- The split mono which appears in the factorisation `decomp_id P`. -/
 @[simps]
-def decompIdI (P : Karoubi C) : P ⟶ P.x :=
+def decompIdI (P : Karoubi C) : P ⟶ P.pt :=
   ⟨P.p, by erw [coe_p, comp_id, P.idem]⟩
 #align category_theory.idempotents.karoubi.decomp_id_i CategoryTheory.Idempotents.Karoubi.decompIdI
 
 /-- The split epi which appears in the factorisation `decomp_id P`. -/
 @[simps]
-def decompIdP (P : Karoubi C) : (P.x : Karoubi C) ⟶ P :=
+def decompIdP (P : Karoubi C) : (P.pt : Karoubi C) ⟶ P :=
   ⟨P.p, by erw [coe_p, id_comp, P.idem]⟩
 #align category_theory.idempotents.karoubi.decomp_id_p CategoryTheory.Idempotents.Karoubi.decompIdP
 
@@ -296,7 +296,8 @@ theorem decompIdI_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
 #align category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decompIdI_naturality
 
 theorem decompIdP_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
-    decompIdP P ≫ f = (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.x : Karoubi C) ⟶ Q.x) ≫ decompIdP Q :=
+    decompIdP P ≫ f =
+      (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.pt : Karoubi C) ⟶ Q.pt) ≫ decompIdP Q :=
   by
   ext
   simp only [comp_f, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]

@@ -51,7 +51,7 @@ variable {J : Type w} [SmallCategory J]
 namespace HasLimitOfHasProductsOfHasEqualizers
 
 variable {F : J ⥤ C} {c₁ : Fan F.obj} {c₂ : Fan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2}
-  (s t : c₁.x ⟶ c₂.x)
+  (s t : c₁.pt ⟶ c₂.pt)
   (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.1⟩ ≫ F.map f.2)
   (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.2⟩) (i : Fork s t)
 
@@ -63,7 +63,7 @@ limiting if the given cones are also.
 -/
 @[simps]
 def buildLimit : Cone F where
-  x := i.x
+  pt := i.pt
   π :=
     { app := fun j => i.ι ≫ c₁.π.app ⟨_⟩
       naturality' := fun j₁ j₂ f => by
@@ -254,7 +254,7 @@ We now dualize the above constructions, resorting to copy-paste.
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
 variable {F : J ⥤ C} {c₁ : Cofan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : Cofan F.obj}
-  (s t : c₁.x ⟶ c₂.x)
+  (s t : c₁.pt ⟶ c₂.pt)
   (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ s = F.map f.2 ≫ c₂.ι.app ⟨f.1.2⟩)
   (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ t = c₂.ι.app ⟨f.1.1⟩) (i : Cofork s t)
 
@@ -265,7 +265,7 @@ build the cocone for `F` which is colimiting if the given cocones are also.
 -/
 @[simps]
 def buildColimit : Cocone F where
-  x := i.x
+  pt := i.pt
   ι :=
     { app := fun j => c₂.ι.app ⟨_⟩ ≫ i.π
       naturality' := fun j₁ j₂ f => by

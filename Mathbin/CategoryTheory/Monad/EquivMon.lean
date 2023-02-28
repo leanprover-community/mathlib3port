@@ -44,7 +44,7 @@ attribute [local instance, local reducible] endofunctor_monoidal_category
 /-- To every `Monad C` we associated a monoid object in `C ⥤ C`.-/
 @[simps]
 def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
-  { x := (M : C ⥤ C)
+  { pt := (M : C ⥤ C)
     one := M.η
     mul := M.μ
     one_mul' := by
@@ -82,7 +82,7 @@ variable {C}
 /-- To every monoid object in `C ⥤ C` we associate a `Monad C`. -/
 @[simps]
 def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
-  { toFunctor := M.x
+  { toFunctor := M.pt
     η' := M.one
     μ' := M.mul
     left_unit' := fun X =>

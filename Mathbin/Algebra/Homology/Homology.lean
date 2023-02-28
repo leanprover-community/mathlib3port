@@ -47,7 +47,7 @@ section Cycles
 variable [HasKernels V]
 
 /-- The cycles at index `i`, as a subobject. -/
-abbrev cycles (i : ι) : Subobject (C.x i) :=
+abbrev cycles (i : ι) : Subobject (C.pt i) :=
   kernelSubobject (C.dFrom i)
 #align homological_complex.cycles HomologicalComplex.cycles
 
@@ -77,7 +77,7 @@ section Boundaries
 variable [HasImages V]
 
 /-- The boundaries at index `i`, as a subobject. -/
-abbrev boundaries (C : HomologicalComplex V c) (j : ι) : Subobject (C.x j) :=
+abbrev boundaries (C : HomologicalComplex V c) (j : ι) : Subobject (C.pt j) :=
   imageSubobject (C.dTo j)
 #align homological_complex.boundaries HomologicalComplex.boundaries
 

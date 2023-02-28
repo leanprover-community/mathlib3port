@@ -115,17 +115,18 @@ end
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A bimodule object for a pair of monoid objects, all internal to some monoidal category. -/
 structure Bimod (A B : Mon_ C) where
-  x : C
-  actLeft : A.x ⊗ X ⟶ X
+  pt : C
+  actLeft : A.pt ⊗ X ⟶ X
   one_act_left' : (A.one ⊗ 𝟙 X) ≫ act_left = (λ_ X).Hom := by obviously
-  left_assoc' : (A.mul ⊗ 𝟙 X) ≫ act_left = (α_ A.x A.x X).Hom ≫ (𝟙 A.x ⊗ act_left) ≫ act_left := by
-    obviously
-  actRight : X ⊗ B.x ⟶ X
+  left_assoc' :
+    (A.mul ⊗ 𝟙 X) ≫ act_left = (α_ A.pt A.pt X).Hom ≫ (𝟙 A.pt ⊗ act_left) ≫ act_left := by obviously
+  actRight : X ⊗ B.pt ⟶ X
   actRight_one' : (𝟙 X ⊗ B.one) ≫ act_right = (ρ_ X).Hom := by obviously
   right_assoc' :
-    (𝟙 X ⊗ B.mul) ≫ act_right = (α_ X B.x B.x).inv ≫ (act_right ⊗ 𝟙 B.x) ≫ act_right := by obviously
+    (𝟙 X ⊗ B.mul) ≫ act_right = (α_ X B.pt B.pt).inv ≫ (act_right ⊗ 𝟙 B.pt) ≫ act_right := by
+    obviously
   middle_assoc' :
-    (act_left ⊗ 𝟙 B.x) ≫ act_right = (α_ A.x X B.x).Hom ≫ (𝟙 A.x ⊗ act_right) ≫ act_left := by
+    (act_left ⊗ 𝟙 B.pt) ≫ act_right = (α_ A.pt X B.pt).Hom ≫ (𝟙 A.pt ⊗ act_right) ≫ act_left := by
     obviously
 #align Bimod Bimod
 
@@ -151,9 +152,9 @@ variable {A B : Mon_ C} (M : Bimod A B)
 /-- A morphism of bimodule objects. -/
 @[ext]
 structure Hom (M N : Bimod A B) where
-  Hom : M.x ⟶ N.x
-  left_act_hom' : M.actLeft ≫ hom = (𝟙 A.x ⊗ hom) ≫ N.actLeft := by obviously
-  right_act_hom' : M.actRight ≫ hom = (hom ⊗ 𝟙 B.x) ≫ N.actRight := by obviously
+  Hom : M.pt ⟶ N.pt
+  left_act_hom' : M.actLeft ≫ hom = (𝟙 A.pt ⊗ hom) ≫ N.actLeft := by obviously
+  right_act_hom' : M.actRight ≫ hom = (hom ⊗ 𝟙 B.pt) ≫ N.actRight := by obviously
 #align Bimod.hom Bimod.Hom
 
 restate_axiom hom.left_act_hom'
@@ -164,7 +165,7 @@ attribute [simp, reassoc.1] hom.left_act_hom hom.right_act_hom
 
 /-- The identity morphism on a bimodule object. -/
 @[simps]
-def id' (M : Bimod A B) : Hom M M where Hom := 𝟙 M.x
+def id' (M : Bimod A B) : Hom M M where Hom := 𝟙 M.pt
 #align Bimod.id' Bimod.id'
 
 instance homInhabited (M : Bimod A B) : Inhabited (Hom M M) :=
@@ -182,7 +183,7 @@ instance : Category (Bimod A B) where
   comp M N O f g := comp f g
 
 @[simp]
-theorem id_hom' (M : Bimod A B) : (𝟙 M : Hom M M).Hom = 𝟙 M.x :=
+theorem id_hom' (M : Bimod A B) : (𝟙 M : Hom M M).Hom = 𝟙 M.pt :=
   rfl
 #align Bimod.id_hom' Bimod.id_hom'
 
@@ -198,9 +199,9 @@ theorem comp_hom' {M N K : Bimod A B} (f : M ⟶ N) (g : N ⟶ K) :
 and checking compatibility with left and right actions only in the forward direction.
 -/
 @[simps]
-def isoOfIso {X Y : Mon_ C} {P Q : Bimod X Y} (f : P.x ≅ Q.x)
-    (f_left_act_hom : P.actLeft ≫ f.Hom = (𝟙 X.x ⊗ f.Hom) ≫ Q.actLeft)
-    (f_right_act_hom : P.actRight ≫ f.Hom = (f.Hom ⊗ 𝟙 Y.x) ≫ Q.actRight) : P ≅ Q
+def isoOfIso {X Y : Mon_ C} {P Q : Bimod X Y} (f : P.pt ≅ Q.pt)
+    (f_left_act_hom : P.actLeft ≫ f.Hom = (𝟙 X.pt ⊗ f.Hom) ≫ Q.actLeft)
+    (f_right_act_hom : P.actRight ≫ f.Hom = (f.Hom ⊗ 𝟙 Y.pt) ≫ Q.actRight) : P ≅ Q
     where
   Hom := ⟨f.Hom⟩
   inv :=
@@ -222,7 +223,7 @@ variable (A)
 /-- A monoid object as a bimodule over itself. -/
 @[simps]
 def regular : Bimod A A where
-  x := A.x
+  pt := A.pt
   actLeft := A.mul
   actRight := A.mul
 #align Bimod.regular Bimod.regular
@@ -232,7 +233,7 @@ instance : Inhabited (Bimod A A) :=
 
 /-- The forgetful functor from bimodule objects to the ambient category. -/
 def forget : Bimod A B ⥤ C where
-  obj A := A.x
+  obj A := A.pt
   map A B f := f.Hom
 #align Bimod.forget Bimod.forget
 
@@ -248,7 +249,7 @@ variable {R S T : Mon_ C} (P : Bimod R S) (Q : Bimod S T)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The underlying object of the tensor product of two bimodules. -/
 noncomputable def x : C :=
-  coequalizer (P.actRight ⊗ 𝟙 Q.x) ((α_ _ _ _).Hom ≫ (𝟙 P.x ⊗ Q.actLeft))
+  coequalizer (P.actRight ⊗ 𝟙 Q.pt) ((α_ _ _ _).Hom ≫ (𝟙 P.pt ⊗ Q.actLeft))
 #align Bimod.tensor_Bimod.X Bimod.TensorBimod.x
 
 section
@@ -261,12 +262,12 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorLeft X)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Left action for the tensor product of two bimodules. -/
-noncomputable def actLeft : R.x ⊗ x P Q ⟶ x P Q :=
-  (PreservesCoequalizer.iso (tensorLeft R.x) _ _).inv ≫
+noncomputable def actLeft : R.pt ⊗ x P Q ⟶ x P Q :=
+  (PreservesCoequalizer.iso (tensorLeft R.pt) _ _).inv ≫
     colimMap
       (parallelPairHom _ _ _ _
-        ((𝟙 _ ⊗ (α_ _ _ _).Hom) ≫ (α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 S.x ⊗ 𝟙 Q.x) ≫ (α_ _ _ _).inv)
-        ((α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 Q.x))
+        ((𝟙 _ ⊗ (α_ _ _ _).Hom) ≫ (α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 S.pt ⊗ 𝟙 Q.pt) ≫ (α_ _ _ _).inv)
+        ((α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 Q.pt))
         (by
           dsimp
           slice_lhs 1 2 => rw [associator_inv_naturality]
@@ -285,8 +286,8 @@ noncomputable def actLeft : R.x ⊗ x P Q ⟶ x P Q :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem id_tensor_π_actLeft :
-    (𝟙 R.x ⊗ coequalizer.π _ _) ≫ actLeft P Q =
-      (α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 Q.x) ≫ coequalizer.π _ _ :=
+    (𝟙 R.pt ⊗ coequalizer.π _ _) ≫ actLeft P Q =
+      (α_ _ _ _).inv ≫ (P.actLeft ⊗ 𝟙 Q.pt) ≫ coequalizer.π _ _ :=
   by
   erw [map_π_preserves_coequalizer_inv_colim_map (tensor_left _)]
   simp only [category.assoc]
@@ -308,7 +309,7 @@ theorem one_act_left' : (R.one ⊗ 𝟙 _) ≫ actLeft P Q = (λ_ _).Hom :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem left_assoc' :
-    (R.mul ⊗ 𝟙 _) ≫ actLeft P Q = (α_ R.x R.x _).Hom ≫ (𝟙 R.x ⊗ actLeft P Q) ≫ actLeft P Q :=
+    (R.mul ⊗ 𝟙 _) ≫ actLeft P Q = (α_ R.pt R.pt _).Hom ≫ (𝟙 R.pt ⊗ actLeft P Q) ≫ actLeft P Q :=
   by
   refine' (cancel_epi ((tensor_left _).map (coequalizer.π _ _))).1 _
   dsimp [X]
@@ -334,12 +335,12 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Right action for the tensor product of two bimodules. -/
-noncomputable def actRight : x P Q ⊗ T.x ⟶ x P Q :=
-  (PreservesCoequalizer.iso (tensorRight T.x) _ _).inv ≫
+noncomputable def actRight : x P Q ⊗ T.pt ⟶ x P Q :=
+  (PreservesCoequalizer.iso (tensorRight T.pt) _ _).inv ≫
     colimMap
       (parallelPairHom _ _ _ _
-        ((α_ _ _ _).Hom ≫ (α_ _ _ _).Hom ≫ (𝟙 P.x ⊗ 𝟙 S.x ⊗ Q.actRight) ≫ (α_ _ _ _).inv)
-        ((α_ _ _ _).Hom ≫ (𝟙 P.x ⊗ Q.actRight))
+        ((α_ _ _ _).Hom ≫ (α_ _ _ _).Hom ≫ (𝟙 P.pt ⊗ 𝟙 S.pt ⊗ Q.actRight) ≫ (α_ _ _ _).inv)
+        ((α_ _ _ _).Hom ≫ (𝟙 P.pt ⊗ Q.actRight))
         (by
           dsimp
           slice_lhs 1 2 => rw [associator_naturality]
@@ -360,8 +361,8 @@ noncomputable def actRight : x P Q ⊗ T.x ⟶ x P Q :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem π_tensor_id_actRight :
-    (coequalizer.π _ _ ⊗ 𝟙 T.x) ≫ actRight P Q =
-      (α_ _ _ _).Hom ≫ (𝟙 P.x ⊗ Q.actRight) ≫ coequalizer.π _ _ :=
+    (coequalizer.π _ _ ⊗ 𝟙 T.pt) ≫ actRight P Q =
+      (α_ _ _ _).Hom ≫ (𝟙 P.pt ⊗ Q.actRight) ≫ coequalizer.π _ _ :=
   by
   erw [map_π_preserves_coequalizer_inv_colim_map (tensor_right _)]
   simp only [category.assoc]
@@ -383,7 +384,7 @@ theorem actRight_one' : (𝟙 _ ⊗ T.one) ≫ actRight P Q = (ρ_ _).Hom :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem right_assoc' :
-    (𝟙 _ ⊗ T.mul) ≫ actRight P Q = (α_ _ T.x T.x).inv ≫ (actRight P Q ⊗ 𝟙 T.x) ≫ actRight P Q :=
+    (𝟙 _ ⊗ T.mul) ≫ actRight P Q = (α_ _ T.pt T.pt).inv ≫ (actRight P Q ⊗ 𝟙 T.pt) ≫ actRight P Q :=
   by
   refine' (cancel_epi ((tensor_right _).map (coequalizer.π _ _))).1 _
   dsimp [X]
@@ -409,8 +410,8 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem middle_assoc' :
-    (actLeft P Q ⊗ 𝟙 T.x) ≫ actRight P Q =
-      (α_ R.x _ T.x).Hom ≫ (𝟙 R.x ⊗ actRight P Q) ≫ actLeft P Q :=
+    (actLeft P Q ⊗ 𝟙 T.pt) ≫ actRight P Q =
+      (α_ R.pt _ T.pt).Hom ≫ (𝟙 R.pt ⊗ actRight P Q) ≫ actLeft P Q :=
   by
   refine' (cancel_epi ((tensor_left _ ⋙ tensor_right _).map (coequalizer.π _ _))).1 _
   dsimp [X]
@@ -440,7 +441,7 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 @[simps]
 noncomputable def tensorBimod {X Y Z : Mon_ C} (M : Bimod X Y) (N : Bimod Y Z) : Bimod X Z
     where
-  x := TensorBimod.x M N
+  pt := TensorBimod.x M N
   actLeft := TensorBimod.actLeft M N
   actRight := TensorBimod.actRight M N
   one_act_left' := TensorBimod.one_act_left' M N
@@ -460,7 +461,7 @@ noncomputable def tensorHom {X Y Z : Mon_ C} {M₁ M₂ : Bimod X Y} {N₁ N₂ 
     where
   Hom :=
     colimMap
-      (parallelPairHom _ _ _ _ ((f.Hom ⊗ 𝟙 Y.x) ⊗ g.Hom) (f.Hom ⊗ g.Hom)
+      (parallelPairHom _ _ _ _ ((f.Hom ⊗ 𝟙 Y.pt) ⊗ g.Hom) (f.Hom ⊗ g.Hom)
         (by
           rw [← tensor_comp, ← tensor_comp, hom.right_act_hom, category.id_comp, category.comp_id])
         (by
@@ -523,9 +524,9 @@ variable {R S T U : Mon_ C} (P : Bimod R S) (Q : Bimod S T) (L : Bimod T U)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An auxiliary morphism for the definition of the underlying morphism of the forward component of
 the associator isomorphism. -/
-noncomputable def homAux : (P.tensorBimod Q).x ⊗ L.x ⟶ (P.tensorBimod (Q.tensorBimod L)).x :=
-  (PreservesCoequalizer.iso (tensorRight L.x) _ _).inv ≫
-    coequalizer.desc ((α_ _ _ _).Hom ≫ (𝟙 P.x ⊗ coequalizer.π _ _) ≫ coequalizer.π _ _)
+noncomputable def homAux : (P.tensorBimod Q).pt ⊗ L.pt ⟶ (P.tensorBimod (Q.tensorBimod L)).pt :=
+  (PreservesCoequalizer.iso (tensorRight L.pt) _ _).inv ≫
+    coequalizer.desc ((α_ _ _ _).Hom ≫ (𝟙 P.pt ⊗ coequalizer.π _ _) ≫ coequalizer.π _ _)
       (by
         dsimp; dsimp [tensor_Bimod.X]
         slice_lhs 1 2 => rw [associator_naturality]
@@ -541,7 +542,8 @@ noncomputable def homAux : (P.tensorBimod Q).x ⊗ L.x ⟶ (P.tensorBimod (Q.ten
 #align Bimod.associator_Bimod.hom_aux Bimod.AssociatorBimod.homAux
 
 /-- The underlying morphism of the forward component of the associator isomorphism. -/
-noncomputable def hom : ((P.tensorBimod Q).tensorBimod L).x ⟶ (P.tensorBimod (Q.tensorBimod L)).x :=
+noncomputable def hom :
+    ((P.tensorBimod Q).tensorBimod L).pt ⟶ (P.tensorBimod (Q.tensorBimod L)).pt :=
   coequalizer.desc (homAux P Q L)
     (by
       dsimp [hom_aux]
@@ -563,7 +565,7 @@ noncomputable def hom : ((P.tensorBimod Q).tensorBimod L).x ⟶ (P.tensorBimod (
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_left_act_hom' :
     ((P.tensorBimod Q).tensorBimod L).actLeft ≫ hom P Q L =
-      (𝟙 R.x ⊗ hom P Q L) ≫ (P.tensorBimod (Q.tensorBimod L)).actLeft :=
+      (𝟙 R.pt ⊗ hom P Q L) ≫ (P.tensorBimod (Q.tensorBimod L)).actLeft :=
   by
   dsimp; dsimp [hom, hom_aux]
   refine' (cancel_epi ((tensor_left _).map (coequalizer.π _ _))).1 _
@@ -591,7 +593,7 @@ theorem hom_left_act_hom' :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_right_act_hom' :
     ((P.tensorBimod Q).tensorBimod L).actRight ≫ hom P Q L =
-      (hom P Q L ⊗ 𝟙 U.x) ≫ (P.tensorBimod (Q.tensorBimod L)).actRight :=
+      (hom P Q L ⊗ 𝟙 U.pt) ≫ (P.tensorBimod (Q.tensorBimod L)).actRight :=
   by
   dsimp; dsimp [hom, hom_aux]
   refine' (cancel_epi ((tensor_right _).map (coequalizer.π _ _))).1 _
@@ -622,9 +624,9 @@ theorem hom_right_act_hom' :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An auxiliary morphism for the definition of the underlying morphism of the inverse component of
 the associator isomorphism. -/
-noncomputable def invAux : P.x ⊗ (Q.tensorBimod L).x ⟶ ((P.tensorBimod Q).tensorBimod L).x :=
-  (PreservesCoequalizer.iso (tensorLeft P.x) _ _).inv ≫
-    coequalizer.desc ((α_ _ _ _).inv ≫ (coequalizer.π _ _ ⊗ 𝟙 L.x) ≫ coequalizer.π _ _)
+noncomputable def invAux : P.pt ⊗ (Q.tensorBimod L).pt ⟶ ((P.tensorBimod Q).tensorBimod L).pt :=
+  (PreservesCoequalizer.iso (tensorLeft P.pt) _ _).inv ≫
+    coequalizer.desc ((α_ _ _ _).inv ≫ (coequalizer.π _ _ ⊗ 𝟙 L.pt) ≫ coequalizer.π _ _)
       (by
         dsimp; dsimp [tensor_Bimod.X]
         slice_lhs 1 2 => rw [associator_inv_naturality]
@@ -642,7 +644,8 @@ noncomputable def invAux : P.x ⊗ (Q.tensorBimod L).x ⟶ ((P.tensorBimod Q).te
 #align Bimod.associator_Bimod.inv_aux Bimod.AssociatorBimod.invAux
 
 /-- The underlying morphism of the inverse component of the associator isomorphism. -/
-noncomputable def inv : (P.tensorBimod (Q.tensorBimod L)).x ⟶ ((P.tensorBimod Q).tensorBimod L).x :=
+noncomputable def inv :
+    (P.tensorBimod (Q.tensorBimod L)).pt ⟶ ((P.tensorBimod Q).tensorBimod L).pt :=
   coequalizer.desc (invAux P Q L)
     (by
       dsimp [inv_aux]
@@ -699,7 +702,7 @@ namespace LeftUnitorBimod
 variable {R S : Mon_ C} (P : Bimod R S)
 
 /-- The underlying morphism of the forward component of the left unitor isomorphism. -/
-noncomputable def hom : TensorBimod.x (regular R) P ⟶ P.x :=
+noncomputable def hom : TensorBimod.x (regular R) P ⟶ P.pt :=
   coequalizer.desc P.actLeft
     (by
       dsimp
@@ -708,8 +711,8 @@ noncomputable def hom : TensorBimod.x (regular R) P ⟶ P.x :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The underlying morphism of the inverse component of the left unitor isomorphism. -/
-noncomputable def inv : P.x ⟶ TensorBimod.x (regular R) P :=
-  (λ_ P.x).inv ≫ (R.one ⊗ 𝟙 _) ≫ coequalizer.π _ _
+noncomputable def inv : P.pt ⟶ TensorBimod.x (regular R) P :=
+  (λ_ P.pt).inv ≫ (R.one ⊗ 𝟙 _) ≫ coequalizer.π _ _
 #align Bimod.left_unitor_Bimod.inv Bimod.LeftUnitorBimod.inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -741,7 +744,7 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_left_act_hom' :
-    ((regular R).tensorBimod P).actLeft ≫ hom P = (𝟙 R.x ⊗ hom P) ≫ P.actLeft :=
+    ((regular R).tensorBimod P).actLeft ≫ hom P = (𝟙 R.pt ⊗ hom P) ≫ P.actLeft :=
   by
   dsimp; dsimp [hom, tensor_Bimod.act_left, regular]
   refine' (cancel_epi ((tensor_left _).map (coequalizer.π _ _))).1 _
@@ -754,7 +757,7 @@ theorem hom_left_act_hom' :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_right_act_hom' :
-    ((regular R).tensorBimod P).actRight ≫ hom P = (hom P ⊗ 𝟙 S.x) ≫ P.actRight :=
+    ((regular R).tensorBimod P).actRight ≫ hom P = (hom P ⊗ 𝟙 S.pt) ≫ P.actRight :=
   by
   dsimp; dsimp [hom, tensor_Bimod.act_right, regular]
   refine' (cancel_epi ((tensor_right _).map (coequalizer.π _ _))).1 _
@@ -772,7 +775,7 @@ namespace RightUnitorBimod
 variable {R S : Mon_ C} (P : Bimod R S)
 
 /-- The underlying morphism of the forward component of the right unitor isomorphism. -/
-noncomputable def hom : TensorBimod.x P (regular S) ⟶ P.x :=
+noncomputable def hom : TensorBimod.x P (regular S) ⟶ P.pt :=
   coequalizer.desc P.actRight
     (by
       dsimp
@@ -781,8 +784,8 @@ noncomputable def hom : TensorBimod.x P (regular S) ⟶ P.x :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The underlying morphism of the inverse component of the right unitor isomorphism. -/
-noncomputable def inv : P.x ⟶ TensorBimod.x P (regular S) :=
-  (ρ_ P.x).inv ≫ (𝟙 _ ⊗ S.one) ≫ coequalizer.π _ _
+noncomputable def inv : P.pt ⟶ TensorBimod.x P (regular S) :=
+  (ρ_ P.pt).inv ≫ (𝟙 _ ⊗ S.one) ≫ coequalizer.π _ _
 #align Bimod.right_unitor_Bimod.inv Bimod.RightUnitorBimod.inv
 
 theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ :=
@@ -812,7 +815,7 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_left_act_hom' :
-    (P.tensorBimod (regular S)).actLeft ≫ hom P = (𝟙 R.x ⊗ hom P) ≫ P.actLeft :=
+    (P.tensorBimod (regular S)).actLeft ≫ hom P = (𝟙 R.pt ⊗ hom P) ≫ P.actLeft :=
   by
   dsimp; dsimp [hom, tensor_Bimod.act_left, regular]
   refine' (cancel_epi ((tensor_left _).map (coequalizer.π _ _))).1 _
@@ -825,7 +828,7 @@ theorem hom_left_act_hom' :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem hom_right_act_hom' :
-    (P.tensorBimod (regular S)).actRight ≫ hom P = (hom P ⊗ 𝟙 S.x) ≫ P.actRight :=
+    (P.tensorBimod (regular S)).actRight ≫ hom P = (hom P ⊗ 𝟙 S.pt) ≫ P.actRight :=
   by
   dsimp; dsimp [hom, tensor_Bimod.act_right, regular]
   refine' (cancel_epi ((tensor_right _).map (coequalizer.π _ _))).1 _

@@ -61,7 +61,7 @@ def sectionsSubmonoid (F : J ⥤ Mon.{max v u}) : Submonoid (∀ j, F.obj j)
 
 @[to_additive]
 instance limitMonoid (F : J ⥤ Mon.{max v u}) :
-    Monoid (Types.limitCone (F ⋙ forget Mon.{max v u})).x :=
+    Monoid (Types.limitCone (F ⋙ forget Mon.{max v u})).pt :=
   (sectionsSubmonoid F).toMonoid
 #align Mon.limit_monoid Mon.limitMonoid
 #align AddMon.limit_add_monoid AddMon.limitAddMonoid
@@ -69,7 +69,7 @@ instance limitMonoid (F : J ⥤ Mon.{max v u}) :
 /-- `limit.π (F ⋙ forget Mon) j` as a `monoid_hom`. -/
 @[to_additive "`limit.π (F ⋙ forget AddMon) j` as an `add_monoid_hom`."]
 def limitπMonoidHom (F : J ⥤ Mon.{max v u}) (j) :
-    (Types.limitCone (F ⋙ forget Mon)).x →* (F ⋙ forget Mon).obj j
+    (Types.limitCone (F ⋙ forget Mon)).pt →* (F ⋙ forget Mon).obj j
     where
   toFun := (Types.limitCone (F ⋙ forget Mon)).π.app j
   map_one' := rfl
@@ -88,7 +88,7 @@ namespace HasLimits
 @[to_additive "(Internal use only; use the limits API.)"]
 def limitCone (F : J ⥤ Mon.{max v u}) : Cone F
     where
-  x := Mon.of (Types.limitCone (F ⋙ forget _)).x
+  pt := Mon.of (Types.limitCone (F ⋙ forget _)).pt
   π :=
     { app := limitπMonoidHom F
       naturality' := fun j j' f =>
@@ -166,7 +166,7 @@ instance commMonoidObj (F : J ⥤ CommMon.{max v u}) (j) : CommMonoid ((F ⋙ fo
 
 @[to_additive]
 instance limitCommMonoid (F : J ⥤ CommMon.{max v u}) :
-    CommMonoid (Types.limitCone (F ⋙ forget CommMon.{max v u})).x :=
+    CommMonoid (Types.limitCone (F ⋙ forget CommMon.{max v u})).pt :=
   @Submonoid.toCommMonoid (∀ j, F.obj j) _
     (Mon.sectionsSubmonoid (F ⋙ forget₂ CommMon Mon.{max v u}))
 #align CommMon.limit_comm_monoid CommMon.limitCommMonoid
@@ -181,7 +181,7 @@ and then reuse the existing limit. -/
 instance (F : J ⥤ CommMon.{max v u}) : CreatesLimit F (forget₂ CommMon Mon.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { x := CommMon.of (Types.limitCone (F ⋙ forget CommMon)).x
+        { pt := CommMon.of (Types.limitCone (F ⋙ forget CommMon)).pt
           π :=
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ CommMon Mon.{max v u})
               naturality' :=

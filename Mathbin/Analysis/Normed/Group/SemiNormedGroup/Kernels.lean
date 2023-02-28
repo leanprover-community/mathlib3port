@@ -53,7 +53,7 @@ def cokernelCocone {X Y : SemiNormedGroup₁.{u}} (f : X ⟶ Y) : Cofork f 0 :=
 
 /-- Auxiliary definition for `has_cokernels SemiNormedGroup₁`. -/
 def cokernelLift {X Y : SemiNormedGroup₁.{u}} (f : X ⟶ Y) (s : CokernelCofork f) :
-    (cokernelCocone f).x ⟶ s.x := by
+    (cokernelCocone f).pt ⟶ s.pt := by
   fconstructor
   -- The lift itself:
   · apply NormedAddGroupHom.lift _ s.π.1
@@ -142,7 +142,7 @@ def cokernelCocone {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : Cofork f 0 :=
 
 /-- Auxiliary definition for `has_cokernels SemiNormedGroup`. -/
 def cokernelLift {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) (s : CokernelCofork f) :
-    (cokernelCocone f).x ⟶ s.x :=
+    (cokernelCocone f).pt ⟶ s.pt :=
   NormedAddGroupHom.lift _ s.π
     (by
       rintro _ ⟨b, rfl⟩
@@ -176,7 +176,7 @@ section ExplicitCokernel
 
 /-- An explicit choice of cokernel, which has good properties with respect to the norm. -/
 def explicitCokernel {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : SemiNormedGroup.{u} :=
-  (cokernelCocone f).x
+  (cokernelCocone f).pt
 #align SemiNormedGroup.explicit_cokernel SemiNormedGroup.explicitCokernel
 
 /-- Descend to the explicit cokernel. -/

@@ -298,7 +298,7 @@ def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
 it suffices to exhibit a lift of the chosen limit cone for `K ⋙ F`.
 -/
 def createsLimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
-    [HasLimit (K ⋙ F)] (c : Cone K) (i : F.mapCone c ≅ Limit.cone (K ⋙ F)) : CreatesLimit K F :=
+    [HasLimit (K ⋙ F)] (c : Cone K) (i : F.mapCone c ≅ limit.cone (K ⋙ F)) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfLift' (limit.isLimit _) c i
 #align category_theory.creates_limit_of_fully_faithful_of_lift CategoryTheory.createsLimitOfFullyFaithfulOfLift
 
@@ -310,9 +310,9 @@ When `F` is fully faithful, to show that `F` creates the limit for `K` it suffic
 limit point is in the essential image of `F`.
 -/
 def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
-    {l : Cone (K ⋙ F)} (hl : IsLimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesLimit K F :=
+    {l : Cone (K ⋙ F)} (hl : IsLimit l) (X : C) (i : F.obj X ≅ l.pt) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfLift' hl
-    { x
+    { pt
       π :=
         { app := fun j => F.preimage (i.Hom ≫ l.π.app j)
           naturality' := fun Y Z f =>
@@ -408,7 +408,7 @@ When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` create
 it suffices to exhibit a lift of the chosen colimit cocone for `K ⋙ F`.
 -/
 def createsColimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
-    [HasColimit (K ⋙ F)] (c : Cocone K) (i : F.mapCocone c ≅ Colimit.cocone (K ⋙ F)) :
+    [HasColimit (K ⋙ F)] (c : Cocone K) (i : F.mapCocone c ≅ colimit.cocone (K ⋙ F)) :
     CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfLift' (colimit.isColimit _) c i
 #align category_theory.creates_colimit_of_fully_faithful_of_lift CategoryTheory.createsColimitOfFullyFaithfulOfLift
@@ -421,9 +421,9 @@ When `F` is fully faithful, to show that `F` creates the colimit for `K` it suff
 a colimit point is in the essential image of `F`.
 -/
 def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
-    {l : Cocone (K ⋙ F)} (hl : IsColimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesColimit K F :=
+    {l : Cocone (K ⋙ F)} (hl : IsColimit l) (X : C) (i : F.obj X ≅ l.pt) : CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfLift' hl
-    { x
+    { pt
       ι :=
         { app := fun j => F.preimage (l.ι.app j ≫ i.inv)
           naturality' := fun Y Z f =>
@@ -573,7 +573,7 @@ def liftsToColimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c 
 def idLiftsCone (c : Cone (K ⋙ 𝟭 C)) : LiftableCone K (𝟭 C) c
     where
   liftedCone :=
-    { x := c.x
+    { pt := c.pt
       π := c.π ≫ K.rightUnitor.Hom }
   validLift := Cones.ext (Iso.refl _) (by tidy)
 #align category_theory.id_lifts_cone CategoryTheory.idLiftsCone
@@ -588,7 +588,7 @@ instance idCreatesLimits : CreatesLimitsOfSize.{w, w'} (𝟭 C)
 def idLiftsCocone (c : Cocone (K ⋙ 𝟭 C)) : LiftableCocone K (𝟭 C) c
     where
   liftedCocone :=
-    { x := c.x
+    { pt := c.pt
       ι := K.rightUnitor.inv ≫ c.ι }
   validLift := Cocones.ext (Iso.refl _) (by tidy)
 #align category_theory.id_lifts_cocone CategoryTheory.idLiftsCocone

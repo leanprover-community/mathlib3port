@@ -72,7 +72,7 @@ Auxiliary definition for `functoriality_is_left_adjoint`.
 -/
 @[simps]
 def functorialityUnit : 𝟭 (Cocone K) ⟶ Cocones.functoriality _ F ⋙ functorialityRightAdjoint adj K
-    where app c := { Hom := adj.Unit.app c.x }
+    where app c := { Hom := adj.Unit.app c.pt }
 #align category_theory.adjunction.functoriality_unit CategoryTheory.Adjunction.functorialityUnit
 
 /-- The counit for the adjunction for `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)`.
@@ -82,7 +82,7 @@ Auxiliary definition for `functoriality_is_left_adjoint`.
 @[simps]
 def functorialityCounit :
     functorialityRightAdjoint adj K ⋙ Cocones.functoriality _ F ⟶ 𝟭 (Cocone (K ⋙ F))
-    where app c := { Hom := adj.counit.app c.x }
+    where app c := { Hom := adj.counit.app c.pt }
 #align category_theory.adjunction.functoriality_counit CategoryTheory.Adjunction.functorialityCounit
 
 /-- The functor `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)` is a left adjoint. -/
@@ -153,13 +153,13 @@ example (E : C ⥤ D) [IsEquivalence E] (c : Cocone K) (h : IsColimit c) :
 theorem hasColimit_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit K] :
     HasColimit (K ⋙ E) :=
   HasColimit.mk
-    { Cocone := E.mapCocone (Colimit.cocone K)
+    { Cocone := E.mapCocone (colimit.cocone K)
       IsColimit := PreservesColimit.preserves (colimit.isColimit K) }
 #align category_theory.adjunction.has_colimit_comp_equivalence CategoryTheory.Adjunction.hasColimit_comp_equivalence
 
 theorem hasColimit_of_comp_equivalence (E : C ⥤ D) [IsEquivalence E] [HasColimit (K ⋙ E)] :
     HasColimit K :=
-  @hasColimit_of_iso _ _ _ _ (K ⋙ E ⋙ inv E) K
+  @hasColimitOfIso _ _ _ _ (K ⋙ E ⋙ inv E) K
     (@hasColimit_comp_equivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
     ((Functor.rightUnitor _).symm ≪≫ isoWhiskerLeft K E.asEquivalence.unitIso)
 #align category_theory.adjunction.has_colimit_of_comp_equivalence CategoryTheory.Adjunction.hasColimit_of_comp_equivalence
@@ -199,7 +199,7 @@ Auxiliary definition for `functoriality_is_right_adjoint`.
 -/
 @[simps]
 def functorialityUnit' : 𝟭 (Cone (K ⋙ G)) ⟶ functorialityLeftAdjoint adj K ⋙ Cones.functoriality _ G
-    where app c := { Hom := adj.Unit.app c.x }
+    where app c := { Hom := adj.Unit.app c.pt }
 #align category_theory.adjunction.functoriality_unit' CategoryTheory.Adjunction.functorialityUnit'
 
 /-- The counit for the adjunction for`cones.functoriality K G : cone K ⥤ cone (K ⋙ G)`.
@@ -208,7 +208,7 @@ Auxiliary definition for `functoriality_is_right_adjoint`.
 -/
 @[simps]
 def functorialityCounit' : Cones.functoriality _ G ⋙ functorialityLeftAdjoint adj K ⟶ 𝟭 (Cone K)
-    where app c := { Hom := adj.counit.app c.x }
+    where app c := { Hom := adj.counit.app c.pt }
 #align category_theory.adjunction.functoriality_counit' CategoryTheory.Adjunction.functorialityCounit'
 
 /-- The functor `cones.functoriality K G : cone K ⥤ cone (K ⋙ G)` is a right adjoint. -/
@@ -276,13 +276,13 @@ example (E : D ⥤ C) [IsEquivalence E] (c : Cone K) [h : IsLimit c] : IsLimit (
 
 theorem hasLimit_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit K] : HasLimit (K ⋙ E) :=
   HasLimit.mk
-    { Cone := E.mapCone (Limit.cone K)
+    { Cone := E.mapCone (limit.cone K)
       IsLimit := PreservesLimit.preserves (limit.isLimit K) }
 #align category_theory.adjunction.has_limit_comp_equivalence CategoryTheory.Adjunction.hasLimit_comp_equivalence
 
 theorem hasLimit_of_comp_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimit (K ⋙ E)] :
     HasLimit K :=
-  @hasLimit_of_iso _ _ _ _ (K ⋙ E ⋙ inv E) K
+  @hasLimitOfIso _ _ _ _ (K ⋙ E ⋙ inv E) K
     (@hasLimit_comp_equivalence _ _ _ _ _ _ (K ⋙ E) (inv E) _ _)
     (isoWhiskerLeft K E.asEquivalence.unitIso.symm ≪≫ Functor.rightUnitor _)
 #align category_theory.adjunction.has_limit_of_comp_equivalence CategoryTheory.Adjunction.hasLimit_of_comp_equivalence

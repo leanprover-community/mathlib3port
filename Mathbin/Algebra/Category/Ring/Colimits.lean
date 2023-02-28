@@ -363,14 +363,14 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
 
 /-- The cocone over the proposed colimit commutative ring. -/
 def colimitCocone : Cocone F where
-  x := colimit F
+  pt := colimit F
   ι := { app := coconeMorphism F }
 #align CommRing.colimits.colimit_cocone CommRingCat.Colimits.colimitCocone
 
 /-- The function from the free commutative ring on the diagram to the cone point of any other
 cocone. -/
 @[simp]
-def descFunLift (s : Cocone F) : Prequotient F → s.x
+def descFunLift (s : Cocone F) : Prequotient F → s.pt
   | of j x => (s.ι.app j) x
   | zero => 0
   | one => 1
@@ -380,7 +380,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 #align CommRing.colimits.desc_fun_lift CommRingCat.Colimits.descFunLift
 
 /-- The function from the colimit commutative ring to the cone point of any other cocone. -/
-def descFun (s : Cocone F) : ColimitType F → s.x :=
+def descFun (s : Cocone F) : ColimitType F → s.pt :=
   by
   fapply Quot.lift
   · exact desc_fun_lift F s
@@ -440,7 +440,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x :=
 
 /-- The ring homomorphism from the colimit commutative ring to the cone point of any other
 cocone. -/
-def descMorphism (s : Cocone F) : colimit F ⟶ s.x
+def descMorphism (s : Cocone F) : colimit F ⟶ s.pt
     where
   toFun := descFun F s
   map_one' := rfl

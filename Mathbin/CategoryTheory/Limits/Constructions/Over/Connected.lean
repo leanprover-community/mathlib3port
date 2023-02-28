@@ -52,7 +52,7 @@ where the connected assumption is used.
 @[simps]
 def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) : Cone F
     where
-  x := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).Hom)
+  pt := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).Hom)
   π :=
     {
       app := fun j =>

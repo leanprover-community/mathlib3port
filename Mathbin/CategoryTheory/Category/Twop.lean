@@ -31,7 +31,7 @@ variable {α β : Type _}
 
 /-- The category of two-pointed types. -/
 structure Twop : Type (u + 1) where
-  x : Type u
+  pt : Type u
   toTwoPointing : TwoPointing X
 #align Twop Twop
 

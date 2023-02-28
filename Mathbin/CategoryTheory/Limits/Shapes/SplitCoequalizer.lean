@@ -100,7 +100,7 @@ section
 open Limits
 
 /-- A split coequalizer clearly induces a cofork. -/
-@[simps x]
+@[simps pt]
 def IsSplitCoequalizer.asCofork {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) : Cofork f g :=
   Cofork.ofπ h t.condition
 #align category_theory.is_split_coequalizer.as_cofork CategoryTheory.IsSplitCoequalizer.asCofork

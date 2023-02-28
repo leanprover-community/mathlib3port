@@ -169,7 +169,7 @@ theorem comparisonAdjunction_unit_f_aux
 /-- This is a cofork which is helpful for establishing monadicity: the morphism from the Beck
 coequalizer to this cofork is the unit for the adjunction on the comparison functor.
 -/
-@[simps x]
+@[simps pt]
 def unitCofork (A : adj.toMonad.Algebra) [HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
     Cofork (G.map (F.map A.a)) (G.map (adj.counit.app (F.obj A.A))) :=
   Cofork.ofπ (G.map (coequalizer.π (F.map A.a) (adj.counit.app (F.obj A.A))))

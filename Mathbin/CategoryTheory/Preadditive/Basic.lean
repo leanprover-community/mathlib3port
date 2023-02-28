@@ -292,7 +292,7 @@ section
 variable {X Y : C} {f : X ⟶ Y} {g : X ⟶ Y}
 
 /-- Map a kernel cone on the difference of two morphisms to the equalizer fork. -/
-@[simps x]
+@[simps pt]
 def forkOfKernelFork (c : KernelFork (f - g)) : Fork f g :=
   Fork.ofι c.ι <| by rw [← sub_eq_zero, ← comp_sub, c.condition]
 #align category_theory.preadditive.fork_of_kernel_fork CategoryTheory.Preadditive.forkOfKernelFork
@@ -356,7 +356,7 @@ theorem hasKernel_of_hasEqualizer [HasEqualizer f g] : HasKernel (f - g) :=
 variable {f g}
 
 /-- Map a cokernel cocone on the difference of two morphisms to the coequalizer cofork. -/
-@[simps x]
+@[simps pt]
 def coforkOfCokernelCofork (c : CokernelCofork (f - g)) : Cofork f g :=
   Cofork.ofπ c.π <| by rw [← sub_eq_zero, ← sub_comp, c.condition]
 #align category_theory.preadditive.cofork_of_cokernel_cofork CategoryTheory.Preadditive.coforkOfCokernelCofork

@@ -200,7 +200,7 @@ attribute [local tidy] tactic.discrete_cases
 def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y)))
     where
   desc c :=
-    homMk (T.preimage c.x.Hom)
+    homMk (T.preimage c.pt.Hom)
       (by
         dsimp
         simp)
@@ -394,7 +394,7 @@ attribute [local tidy] tactic.discrete_cases
 def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y)))
     where
   lift c :=
-    homMk (S.preimage c.x.Hom)
+    homMk (S.preimage c.pt.Hom)
       (by
         dsimp
         simp)

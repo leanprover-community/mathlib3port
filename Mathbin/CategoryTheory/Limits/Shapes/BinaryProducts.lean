@@ -222,11 +222,11 @@ theorem BinaryFan.π_app_right {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨Walki
 
 /-- A convenient way to show that a binary fan is a limit. -/
 def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y)
-    (lift : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), T ⟶ s.x)
+    (lift : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), T ⟶ s.pt)
     (hl₁ : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), lift f g ≫ s.fst = f)
     (hl₂ : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), lift f g ≫ s.snd = g)
     (uniq :
-      ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y) (m : T ⟶ s.x) (h₁ : m ≫ s.fst = f) (h₂ : m ≫ s.snd = g),
+      ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y) (m : T ⟶ s.pt) (h₁ : m ≫ s.fst = f) (h₂ : m ≫ s.snd = g),
         m = lift f g) :
     IsLimit s :=
   IsLimit.mk (fun t => lift (BinaryFan.fst t) (BinaryFan.snd t))
@@ -237,7 +237,7 @@ def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y)
     fun t m h => uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
 #align category_theory.limits.binary_fan.is_limit.mk CategoryTheory.Limits.BinaryFan.IsLimit.mk
 
-theorem BinaryFan.IsLimit.hom_ext {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) {f g : W ⟶ s.x}
+theorem BinaryFan.IsLimit.hom_ext {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) {f g : W ⟶ s.pt}
     (h₁ : f ≫ s.fst = g ≫ s.fst) (h₂ : f ≫ s.snd = g ≫ s.snd) : f = g :=
   h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 #align category_theory.limits.binary_fan.is_limit.hom_ext CategoryTheory.Limits.BinaryFan.IsLimit.hom_ext
@@ -271,11 +271,11 @@ theorem BinaryCofan.ι_app_right {X Y : C} (s : BinaryCofan X Y) :
 
 /-- A convenient way to show that a binary cofan is a colimit. -/
 def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y)
-    (desc : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.x ⟶ T)
+    (desc : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.pt ⟶ T)
     (hd₁ : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.inl ≫ desc f g = f)
     (hd₂ : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.inr ≫ desc f g = g)
     (uniq :
-      ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T) (m : s.x ⟶ T) (h₁ : s.inl ≫ m = f) (h₂ : s.inr ≫ m = g),
+      ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T) (m : s.pt ⟶ T) (h₁ : s.inl ≫ m = f) (h₂ : s.inr ≫ m = g),
         m = desc f g) :
     IsColimit s :=
   IsColimit.mk (fun t => desc (BinaryCofan.inl t) (BinaryCofan.inr t))
@@ -287,7 +287,7 @@ def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y)
 #align category_theory.limits.binary_cofan.is_colimit.mk CategoryTheory.Limits.BinaryCofan.IsColimit.mk
 
 theorem BinaryCofan.IsColimit.hom_ext {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s)
-    {f g : s.x ⟶ W} (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
+    {f g : s.pt ⟶ W} (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
   h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 #align category_theory.limits.binary_cofan.is_colimit.hom_ext CategoryTheory.Limits.BinaryCofan.IsColimit.hom_ext
 
@@ -298,18 +298,18 @@ section
 attribute [local tidy] tactic.discrete_cases
 
 /-- A binary fan with vertex `P` consists of the two projections `π₁ : P ⟶ X` and `π₂ : P ⟶ Y`. -/
-@[simps x]
+@[simps pt]
 def BinaryFan.mk {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : BinaryFan X Y
     where
-  x := P
+  pt := P
   π := { app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j π₁ π₂ }
 #align category_theory.limits.binary_fan.mk CategoryTheory.Limits.BinaryFan.mk
 
 /-- A binary cofan with vertex `P` consists of the two inclusions `ι₁ : X ⟶ P` and `ι₂ : Y ⟶ P`. -/
-@[simps x]
+@[simps pt]
 def BinaryCofan.mk {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : BinaryCofan X Y
     where
-  x := P
+  pt := P
   ι := { app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j ι₁ ι₂ }
 #align category_theory.limits.binary_cofan.mk CategoryTheory.Limits.BinaryCofan.mk
 
@@ -358,11 +358,11 @@ def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.in
 /-- This is a more convenient formulation to show that a `binary_fan` constructed using
 `binary_fan.mk` is a limit cone.
 -/
-def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : BinaryFan X Y, s.x ⟶ W)
+def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : BinaryFan X Y, s.pt ⟶ W)
     (fac_left : ∀ s : BinaryFan X Y, lift s ≫ fst = s.fst)
     (fac_right : ∀ s : BinaryFan X Y, lift s ≫ snd = s.snd)
     (uniq :
-      ∀ (s : BinaryFan X Y) (m : s.x ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd),
+      ∀ (s : BinaryFan X Y) (m : s.pt ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd),
         m = lift s) :
     IsLimit (BinaryFan.mk fst snd) :=
   { lift
@@ -376,10 +376,11 @@ def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : 
 `binary_cofan.mk` is a colimit cocone.
 -/
 def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
-    (desc : ∀ s : BinaryCofan X Y, W ⟶ s.x) (fac_left : ∀ s : BinaryCofan X Y, inl ≫ desc s = s.inl)
+    (desc : ∀ s : BinaryCofan X Y, W ⟶ s.pt)
+    (fac_left : ∀ s : BinaryCofan X Y, inl ≫ desc s = s.inl)
     (fac_right : ∀ s : BinaryCofan X Y, inr ≫ desc s = s.inr)
     (uniq :
-      ∀ (s : BinaryCofan X Y) (m : W ⟶ s.x) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr),
+      ∀ (s : BinaryCofan X Y) (m : W ⟶ s.pt) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr),
         m = desc s) :
     IsColimit (BinaryCofan.mk inl inr) :=
   { desc
@@ -394,7 +395,7 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
     -/
 @[simps]
 def BinaryFan.IsLimit.lift' {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) (f : W ⟶ X)
-    (g : W ⟶ Y) : { l : W ⟶ s.x // l ≫ s.fst = f ∧ l ≫ s.snd = g } :=
+    (g : W ⟶ Y) : { l : W ⟶ s.pt // l ≫ s.fst = f ∧ l ≫ s.snd = g } :=
   ⟨h.lift <| BinaryFan.mk f g, h.fac _ _, h.fac _ _⟩
 #align category_theory.limits.binary_fan.is_limit.lift' CategoryTheory.Limits.BinaryFan.IsLimit.lift'
 
@@ -403,7 +404,7 @@ def BinaryFan.IsLimit.lift' {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) (f :
     -/
 @[simps]
 def BinaryCofan.IsColimit.desc' {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s) (f : X ⟶ W)
-    (g : Y ⟶ W) : { l : s.x ⟶ W // s.inl ≫ l = f ∧ s.inr ≫ l = g } :=
+    (g : Y ⟶ W) : { l : s.pt ⟶ W // s.inl ≫ l = f ∧ s.inr ≫ l = g } :=
   ⟨h.desc <| BinaryCofan.mk f g, h.fac _ _, h.fac _ _⟩
 #align category_theory.limits.binary_cofan.is_colimit.desc' CategoryTheory.Limits.BinaryCofan.IsColimit.desc'
 
@@ -959,13 +960,13 @@ abbrev HasBinaryCoproducts :=
 /-- If `C` has all limits of diagrams `pair X Y`, then it has all binary products -/
 theorem hasBinaryProducts_of_hasLimit_pair [∀ {X Y : C}, HasLimit (pair X Y)] :
     HasBinaryProducts C :=
-  { HasLimit := fun F => hasLimit_of_iso (diagramIsoPair F).symm }
+  { HasLimit := fun F => hasLimitOfIso (diagramIsoPair F).symm }
 #align category_theory.limits.has_binary_products_of_has_limit_pair CategoryTheory.Limits.hasBinaryProducts_of_hasLimit_pair
 
 /-- If `C` has all colimits of diagrams `pair X Y`, then it has all binary coproducts -/
 theorem hasBinaryCoproducts_of_hasColimit_pair [∀ {X Y : C}, HasColimit (pair X Y)] :
     HasBinaryCoproducts C :=
-  { HasColimit := fun F => hasColimit_of_iso (diagramIsoPair F) }
+  { HasColimit := fun F => hasColimitOfIso (diagramIsoPair F) }
 #align category_theory.limits.has_binary_coproducts_of_has_colimit_pair CategoryTheory.Limits.hasBinaryCoproducts_of_hasColimit_pair
 
 section

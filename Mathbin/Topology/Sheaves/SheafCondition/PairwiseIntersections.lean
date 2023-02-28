@@ -317,9 +317,9 @@ def interUnionPullbackCone :
 #align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackCone
 
 @[simp]
-theorem interUnionPullbackCone_x : (interUnionPullbackCone F U V).x = F.1.obj (op <| U ⊔ V) :=
+theorem interUnionPullbackCone_pt : (interUnionPullbackCone F U V).pt = F.1.obj (op <| U ⊔ V) :=
   rfl
-#align Top.sheaf.inter_union_pullback_cone_X TopCat.Sheaf.interUnionPullbackCone_x
+#align Top.sheaf.inter_union_pullback_cone_X TopCat.Sheaf.interUnionPullbackCone_pt
 
 @[simp]
 theorem interUnionPullbackCone_fst :
@@ -340,7 +340,7 @@ variable
 /-- (Implementation).
 Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through `F(U ⊔ V)`.
 -/
-def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) :=
+def interUnionPullbackConeLift : s.pt ⟶ F.1.obj (op (U ⊔ V)) :=
   by
   let ι : ULift.{w} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
   have hι : U ⊔ V = supᵢ ι := by

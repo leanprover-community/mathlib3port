@@ -108,7 +108,7 @@ variable [Preadditive V]
 @[simps]
 protected def op (X : HomologicalComplex V c) : HomologicalComplex Vᵒᵖ c.symm
     where
-  x i := op (X.x i)
+  pt i := op (X.pt i)
   d i j := (X.d j i).op
   shape' i j hij := by rw [X.shape j i hij, op_zero]
   d_comp_d' := by
@@ -120,7 +120,7 @@ protected def op (X : HomologicalComplex V c) : HomologicalComplex Vᵒᵖ c.sym
 @[simps]
 protected def opSymm (X : HomologicalComplex V c.symm) : HomologicalComplex Vᵒᵖ c
     where
-  x i := op (X.x i)
+  pt i := op (X.pt i)
   d i j := (X.d j i).op
   shape' i j hij := by rw [X.shape j i hij, op_zero]
   d_comp_d' := by
@@ -132,7 +132,7 @@ protected def opSymm (X : HomologicalComplex V c.symm) : HomologicalComplex Vᵒ
 @[simps]
 protected def unop (X : HomologicalComplex Vᵒᵖ c) : HomologicalComplex V c.symm
     where
-  x i := unop (X.x i)
+  pt i := unop (X.pt i)
   d i j := (X.d j i).unop
   shape' i j hij := by rw [X.shape j i hij, unop_zero]
   d_comp_d' := by
@@ -144,7 +144,7 @@ protected def unop (X : HomologicalComplex Vᵒᵖ c) : HomologicalComplex V c.s
 @[simps]
 protected def unopSymm (X : HomologicalComplex Vᵒᵖ c.symm) : HomologicalComplex V c
     where
-  x i := unop (X.x i)
+  pt i := unop (X.pt i)
   d i j := (X.d j i).unop
   shape' i j hij := by rw [X.shape j i hij, unop_zero]
   d_comp_d' := by

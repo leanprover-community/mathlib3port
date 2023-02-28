@@ -183,7 +183,7 @@ theorem ιSummand_comp_d_comp_πSummand_eq_zero (j k : ℕ) (A : IndexSet (op [j
 the nondegenerate `n`-simplices of `X`. -/
 @[simps]
 def nondegComplex : ChainComplex C ℕ where
-  x := s.n
+  pt := s.n
   d := s.d
   shape' i j hij := by simp only [d, K[X].shape i j hij, zero_comp, comp_zero]
   d_comp_d' i j k hij hjk := by

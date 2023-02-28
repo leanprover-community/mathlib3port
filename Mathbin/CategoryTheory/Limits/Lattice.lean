@@ -39,7 +39,7 @@ variable {J : Type w} [SmallCategory J] [FinCategory J]
 def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone F
     where
   Cone :=
-    { x := Finset.univ.inf F.obj
+    { pt := Finset.univ.inf F.obj
       π := { app := fun j => homOfLE (Finset.inf_le (Fintype.complete _)) } }
   IsLimit := { lift := fun s => homOfLE (Finset.le_inf fun j _ => (s.π.app j).down.down) }
 #align category_theory.limits.complete_lattice.finite_limit_cone CategoryTheory.Limits.CompleteLattice.finiteLimitCone
@@ -50,7 +50,7 @@ The colimit cocone over any functor from a finite diagram into a `semilattice_su
 def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : ColimitCocone F
     where
   Cocone :=
-    { x := Finset.univ.sup F.obj
+    { pt := Finset.univ.sup F.obj
       ι := { app := fun i => homOfLE (Finset.le_sup (Fintype.complete _)) } }
   IsColimit := { desc := fun s => homOfLE (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
 #align category_theory.limits.complete_lattice.finite_colimit_cocone CategoryTheory.Limits.CompleteLattice.finiteColimitCocone
@@ -204,7 +204,7 @@ variable {J : Type u} [SmallCategory J]
 def limitCone (F : J ⥤ α) : LimitCone F
     where
   Cone :=
-    { x := infᵢ F.obj
+    { pt := infᵢ F.obj
       π := { app := fun j => homOfLE (CompleteLattice.inf_le _ _ (Set.mem_range_self _)) } }
   IsLimit :=
     {
@@ -217,7 +217,7 @@ def limitCone (F : J ⥤ α) : LimitCone F
 def colimitCocone (F : J ⥤ α) : ColimitCocone F
     where
   Cocone :=
-    { x := supᵢ F.obj
+    { pt := supᵢ F.obj
       ι := { app := fun j => homOfLE (CompleteLattice.le_sup _ _ (Set.mem_range_self _)) } }
   IsColimit :=
     {

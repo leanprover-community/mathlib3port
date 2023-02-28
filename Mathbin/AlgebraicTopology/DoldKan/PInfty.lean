@@ -209,7 +209,7 @@ computes `P_infty` for the associated object in `simplicial_object (karoubi C)`
 in terms of `P_infty` for `Y.X : simplicial_object C` and `Y.p`. -/
 theorem karoubi_pInfty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
     ((pInfty : K[(karoubiFunctorCategoryEmbedding _ _).obj Y] ⟶ _).f n).f =
-      Y.p.app (op [n]) ≫ (pInfty : K[Y.x] ⟶ _).f n :=
+      Y.p.app (op [n]) ≫ (pInfty : K[Y.pt] ⟶ _).f n :=
   by
   -- We introduce P_infty endomorphisms P₁, P₂, P₃, P₄ on various objects Y₁, Y₂, Y₃, Y₄.
   let Y₁ := (karoubi_functor_category_embedding _ _).obj Y

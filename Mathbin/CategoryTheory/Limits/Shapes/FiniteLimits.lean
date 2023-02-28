@@ -53,7 +53,7 @@ instance (priority := 100) hasLimitsOfShape_of_hasFiniteLimits (J : Type w) [Sma
 instance (priority := 100) hasFiniteLimits_of_hasLimitsOfSize [HasLimitsOfSize.{v', u'} C] :
     HasFiniteLimits C :=
   ⟨fun J hJ hJ' =>
-    haveI := hasLimitsOfSize_shrink.{0, 0} C
+    haveI := hasLimitsOfSizeShrink.{0, 0} C
     has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
 #align category_theory.limits.has_finite_limits_of_has_limits_of_size CategoryTheory.Limits.hasFiniteLimits_of_hasLimitsOfSize
 

@@ -195,8 +195,8 @@ namespace CompHaus
 `Top.limit_cone`. -/
 def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F
     where
-  x :=
-    { toTop := (TopCat.limitCone (F ⋙ compHausToTop)).x
+  pt :=
+    { toTop := (TopCat.limitCone (F ⋙ compHausToTop)).pt
       IsCompact :=
         by
         show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j }

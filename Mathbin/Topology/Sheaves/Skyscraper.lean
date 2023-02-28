@@ -145,7 +145,7 @@ variable {C : Type v} [Category.{u} C] (A : C) [HasTerminal C]
 def skyscraperPresheafCoconeOfSpecializes {y : X} (h : p₀ ⤳ y) :
     Cocone ((OpenNhds.inclusion y).op ⋙ skyscraperPresheaf p₀ A)
     where
-  x := A
+  pt := A
   ι :=
     { app := fun U => eqToHom <| if_pos <| h.mem_open U.unop.1.2 U.unop.2
       naturality' := fun U V inc => by
@@ -188,7 +188,7 @@ noncomputable def skyscraperPresheafStalkOfSpecializes [HasColimits C] {y : X} (
 @[simps]
 def skyscraperPresheafCocone (y : X) : Cocone ((OpenNhds.inclusion y).op ⋙ skyscraperPresheaf p₀ A)
     where
-  x := terminal C
+  pt := terminal C
   ι :=
     { app := fun U => terminal.from _
       naturality' := fun U V inc => terminalIsTerminal.hom_ext _ _ }

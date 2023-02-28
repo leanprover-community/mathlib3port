@@ -61,7 +61,7 @@ you will not typically need to use this bundled object, and will instead use
 structure InjectiveResolution (Z : C) where
   cocomplex : CochainComplex C ℕ
   ι : (CochainComplex.single₀ C).obj Z ⟶ cocomplex
-  Injective : ∀ n, Injective (cocomplex.x n) := by infer_instance
+  Injective : ∀ n, Injective (cocomplex.pt n) := by infer_instance
   exact₀ : Exact (ι.f 0) (cocomplex.d 0 1) := by infer_instance
   exact : ∀ n, Exact (cocomplex.d n (n + 1)) (cocomplex.d (n + 1) (n + 2)) := by infer_instance
   Mono : Mono (ι.f 0) := by infer_instance

@@ -205,20 +205,20 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
 
 /-- The cocone over the proposed colimit monoid. -/
 def colimitCocone : Cocone F where
-  x := colimit F
+  pt := colimit F
   ι := { app := coconeMorphism F }
 #align Mon.colimits.colimit_cocone Mon.Colimits.colimitCocone
 
 /-- The function from the free monoid on the diagram to the cone point of any other cocone. -/
 @[simp]
-def descFunLift (s : Cocone F) : Prequotient F → s.x
+def descFunLift (s : Cocone F) : Prequotient F → s.pt
   | of j x => (s.ι.app j) x
   | one => 1
   | mul x y => desc_fun_lift x * desc_fun_lift y
 #align Mon.colimits.desc_fun_lift Mon.Colimits.descFunLift
 
 /-- The function from the colimit monoid to the cone point of any other cocone. -/
-def descFun (s : Cocone F) : ColimitType F → s.x :=
+def descFun (s : Cocone F) : ColimitType F → s.pt :=
   by
   fapply Quot.lift
   · exact desc_fun_lift F s
@@ -249,7 +249,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x :=
 #align Mon.colimits.desc_fun Mon.Colimits.descFun
 
 /-- The monoid homomorphism from the colimit monoid to the cone point of any other cocone. -/
-def descMorphism (s : Cocone F) : colimit F ⟶ s.x
+def descMorphism (s : Cocone F) : colimit F ⟶ s.pt
     where
   toFun := descFun F s
   map_one' := rfl

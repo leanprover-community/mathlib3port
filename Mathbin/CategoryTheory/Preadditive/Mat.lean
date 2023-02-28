@@ -70,7 +70,7 @@ variable (C : Type u₁) [Category.{v₁} C] [Preadditive C]
 structure Mat_ where
   ι : Type
   [f : Fintype ι]
-  x : ι → C
+  pt : ι → C
 #align category_theory.Mat_ CategoryTheory.Mat_
 
 attribute [instance] Mat_.F
@@ -82,13 +82,13 @@ variable {C}
 /-- A morphism in `Mat_ C` is a dependently typed matrix of morphisms. -/
 @[nolint has_nonempty_instance]
 def Hom (M N : Mat_ C) : Type v₁ :=
-  DMatrix M.ι N.ι fun i j => M.x i ⟶ N.x j
+  DMatrix M.ι N.ι fun i j => M.pt i ⟶ N.pt j
 #align category_theory.Mat_.hom CategoryTheory.Mat_.Hom
 
 namespace Hom
 
 /-- The identity matrix consists of identity morphisms on the diagonal, and zeros elsewhere. -/
-def id (M : Mat_ C) : Hom M M := fun i j => if h : i = j then eqToHom (congr_arg M.x h) else 0
+def id (M : Mat_ C) : Hom M M := fun i j => if h : i = j then eqToHom (congr_arg M.pt h) else 0
 #align category_theory.Mat_.hom.id CategoryTheory.Mat_.Hom.id
 
 /-- Composition of matrices using matrix multiplication. -/
@@ -114,12 +114,12 @@ instance : Category.{v₁} (Mat_ C) where
     rw [Finset.sum_comm]
 
 theorem id_def (M : Mat_ C) :
-    (𝟙 M : Hom M M) = fun i j => if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
+    (𝟙 M : Hom M M) = fun i j => if h : i = j then eqToHom (congr_arg M.pt h) else 0 :=
   rfl
 #align category_theory.Mat_.id_def CategoryTheory.Mat_.id_def
 
 theorem id_apply (M : Mat_ C) (i j : M.ι) :
-    (𝟙 M : Hom M M) i j = if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
+    (𝟙 M : Hom M M) i j = if h : i = j then eqToHom (congr_arg M.pt h) else 0 :=
   rfl
 #align category_theory.Mat_.id_apply CategoryTheory.Mat_.id_apply
 
@@ -144,7 +144,7 @@ theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) (i k) :
 #align category_theory.Mat_.comp_apply CategoryTheory.Mat_.comp_apply
 
 instance (M N : Mat_ C) : Inhabited (M ⟶ N) :=
-  ⟨fun i j => (0 : M.x i ⟶ N.x j)⟩
+  ⟨fun i j => (0 : M.pt i ⟶ N.pt j)⟩
 
 end
 
@@ -179,7 +179,7 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C)
     {
       HasBiproduct := fun f =>
         hasBiproduct_of_total
-          { x := ⟨Σj, (f j).ι, fun p => (f p.1).x p.2⟩
+          { pt := ⟨Σj, (f j).ι, fun p => (f p.1).pt p.2⟩
             π := fun j x y => by
               dsimp at x⊢
               refine' if h : x.1 = j then _ else 0
@@ -244,7 +244,7 @@ attribute [local simp] Mat_.id_apply eq_to_hom_map
 @[simps]
 def mapMat_ (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ Mat_ D
     where
-  obj M := ⟨M.ι, fun i => F.obj (M.x i)⟩
+  obj M := ⟨M.ι, fun i => F.obj (M.pt i)⟩
   map M N f i j := F.map (f i j)
   map_comp' M N K f g := by
     ext (i k)
@@ -325,10 +325,10 @@ variable {C}
 /-- Every object in `Mat_ C` is isomorphic to the biproduct of its summands.
 -/
 @[simps]
-def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M.x i)
+def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M.pt i)
     where
-  hom := biproduct.lift fun i j k => if h : j = i then eqToHom (congr_arg M.x h) else 0
-  inv := biproduct.desc fun i j k => if h : i = k then eqToHom (congr_arg M.x h) else 0
+  hom := biproduct.lift fun i j k => if h : j = i then eqToHom (congr_arg M.pt h) else 0
+  inv := biproduct.desc fun i j k => if h : i = k then eqToHom (congr_arg M.pt h) else 0
   hom_inv_id' := by
     simp only [biproduct.lift_desc]
     funext i
@@ -362,7 +362,7 @@ variable {D : Type u₁} [Category.{v₁} D] [Preadditive D]
 /-- Every `M` is a direct sum of objects from `C`, and `F` preserves biproducts. -/
 @[simps]
 def additiveObjIsoBiproduct (F : Mat_ C ⥤ D) [Functor.Additive F] (M : Mat_ C) :
-    F.obj M ≅ ⨁ fun i => F.obj ((embedding C).obj (M.x i)) :=
+    F.obj M ≅ ⨁ fun i => F.obj ((embedding C).obj (M.pt i)) :=
   F.mapIso (isoBiproductEmbedding M) ≪≫ F.mapBiproduct _
 #align category_theory.Mat_.additive_obj_iso_biproduct CategoryTheory.Mat_.additiveObjIsoBiproduct
 
@@ -408,7 +408,7 @@ a functor `Mat_ C ⥤ D`. -/
 @[simps]
 def lift (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ D
     where
-  obj X := ⨁ fun i => F.obj (X.x i)
+  obj X := ⨁ fun i => F.obj (X.pt i)
   map X Y f := biproduct.matrix fun i j => F.map (f i j)
   map_id' X := by
     ext (i j)
@@ -447,8 +447,8 @@ def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Ad
   NatIso.ofComponents
     (fun M =>
       additiveObjIsoBiproduct L M ≪≫
-        (biproduct.mapIso fun i => α.app (M.x i)) ≪≫
-          (biproduct.mapIso fun i => (embeddingLiftIso F).symm.app (M.x i)) ≪≫
+        (biproduct.mapIso fun i => α.app (M.pt i)) ≪≫
+          (biproduct.mapIso fun i => (embeddingLiftIso F).symm.app (M.pt i)) ≪≫
             (additiveObjIsoBiproduct (lift F) M).symm)
     fun M N f => by
     dsimp only [iso.trans_hom, iso.symm_hom, biproduct.map_iso_hom]
@@ -600,7 +600,7 @@ instance : Full (equivalenceSingleObjInverse R) where Preimage X Y f i j := MulO
 instance : EssSurj (equivalenceSingleObjInverse R)
     where mem_essImage X :=
     ⟨{  ι := X
-        x := fun _ => PUnit.unit },
+        pt := fun _ => PUnit.unit },
       ⟨eqToIso
           (by
             dsimp

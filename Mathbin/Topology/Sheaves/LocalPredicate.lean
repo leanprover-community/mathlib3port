@@ -231,7 +231,7 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.s
   by
   refine'
     colimit.desc _
-      { x := T x
+      { pt := T x
         ι :=
           { app := fun U f => _
             naturality' := _ } }

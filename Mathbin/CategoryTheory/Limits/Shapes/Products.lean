@@ -67,7 +67,7 @@ abbrev Cofan (f : β → C) :=
 @[simps]
 def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) : Fan f
     where
-  x := P
+  pt := P
   π := { app := fun X => p X.as }
 #align category_theory.limits.fan.mk CategoryTheory.Limits.Fan.mk
 
@@ -75,13 +75,13 @@ def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) : Fan f
 @[simps]
 def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) : Cofan f
     where
-  x := P
+  pt := P
   ι := { app := fun X => p X.as }
 #align category_theory.limits.cofan.mk CategoryTheory.Limits.Cofan.mk
 
 -- FIXME dualize as needed below (and rename?)
 /-- Get the `j`th map in the fan -/
-def Fan.proj {f : β → C} (p : Fan f) (j : β) : p.x ⟶ f j :=
+def Fan.proj {f : β → C} (p : Fan f) (j : β) : p.pt ⟶ f j :=
   p.π.app (Discrete.mk j)
 #align category_theory.limits.fan.proj CategoryTheory.Limits.Fan.proj
 
@@ -103,9 +103,9 @@ abbrev HasCoproduct (f : β → C) :=
 /-- Make a fan `f` into a limit fan by providing `lift`, `fac`, and `uniq` --
   just a convenience lemma to avoid having to go through `discrete` -/
 @[simps]
-def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.x ⟶ t.x)
+def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.pt ⟶ t.pt)
     (fac : ∀ (s : Fan f) (j : β), lift s ≫ t.proj j = s.proj j)
-    (uniq : ∀ (s : Fan f) (m : s.x ⟶ t.x) (w : ∀ j : β, m ≫ t.proj j = s.proj j), m = lift s) :
+    (uniq : ∀ (s : Fan f) (m : s.pt ⟶ t.pt) (w : ∀ j : β, m ≫ t.proj j = s.proj j), m = lift s) :
     IsLimit t :=
   { lift
     fac := fun s j => by convert fac s j.as <;> simp
@@ -295,7 +295,7 @@ abbrev HasCoproducts :=
 variable {C}
 
 theorem has_smallest_products_of_hasProducts [HasProducts.{w} C] : HasProducts.{0} C := fun J =>
-  hasLimitsOfShape_of_equivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
+  hasLimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 #align category_theory.limits.has_smallest_products_of_has_products CategoryTheory.Limits.has_smallest_products_of_hasProducts
 
 theorem has_smallest_coproducts_of_hasCoproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C :=
@@ -327,7 +327,7 @@ variable {C} [Unique β] (f : β → C)
 def limitConeOfUnique : LimitCone (Discrete.functor f)
     where
   Cone :=
-    { x := f default
+    { pt := f default
       π :=
         {
           app := fun j =>
@@ -364,7 +364,7 @@ def productUniqueIso : ∏ f ≅ f default :=
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
     where
   Cocone :=
-    { x := f default
+    { pt := f default
       ι :=
         {
           app := fun j =>

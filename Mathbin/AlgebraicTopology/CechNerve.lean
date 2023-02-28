@@ -514,7 +514,7 @@ variable [HasFiniteProducts C]
 def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
     where
   Cone :=
-    { x := ∏ fun i : ι => X
+    { pt := ∏ fun i : ι => X
       π :=
         { app := fun X => Option.casesOn X (terminal.from _) fun i => limit.π _ ⟨i⟩
           naturality' := fun i j f => by

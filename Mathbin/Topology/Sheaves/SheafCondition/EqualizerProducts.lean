@@ -114,9 +114,9 @@ def fork : Fork.{v} (leftRes F U) (rightRes F U) :=
 #align Top.presheaf.sheaf_condition_equalizer_products.fork TopCat.Presheaf.SheafConditionEqualizerProducts.fork
 
 @[simp]
-theorem fork_x : (fork F U).x = F.obj (op (supᵢ U)) :=
+theorem fork_pt : (fork F U).pt = F.obj (op (supᵢ U)) :=
   rfl
-#align Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_x
+#align Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_pt
 
 @[simp]
 theorem fork_ι : (fork F U).ι = res F U :=
@@ -203,7 +203,7 @@ open CategoryTheory.Pairwise CategoryTheory.Pairwise.Hom
 def coneEquivFunctorObj (c : Cone ((diagram U).op ⋙ F)) :
     Cone (SheafConditionEqualizerProducts.diagram F U)
     where
-  x := c.x
+  pt := c.pt
   π :=
     { app := fun Z =>
         WalkingParallelPair.casesOn Z (Pi.lift fun i : ι => c.π.app (op (single i)))
@@ -263,7 +263,7 @@ end
 @[simps]
 def coneEquivInverseObj (c : Limits.Cone (SheafConditionEqualizerProducts.diagram F U)) :
     Limits.Cone ((diagram U).op ⋙ F) where
-  x := c.x
+  pt := c.pt
   π :=
     { app := by
         intro x

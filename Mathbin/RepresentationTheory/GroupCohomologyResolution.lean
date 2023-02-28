@@ -407,12 +407,12 @@ variable (k G)
 
 /-- The `n`th object of the standard resolution of `k` is definitionally isomorphic to `k[Gⁿ⁺¹]`
 equipped with the representation induced by the diagonal action of `G`. -/
-def xIso (n : ℕ) : (GroupCohomology.resolution k G).x n ≅ Rep.ofMulAction k G (Fin (n + 1) → G) :=
+def xIso (n : ℕ) : (GroupCohomology.resolution k G).pt n ≅ Rep.ofMulAction k G (Fin (n + 1) → G) :=
   Iso.refl _
 #align group_cohomology.resolution.X_iso GroupCohomology.resolution.xIso
 
 theorem x_projective (G : Type u) [Group G] (n : ℕ) :
-    Projective ((GroupCohomology.resolution k G).x n) :=
+    Projective ((GroupCohomology.resolution k G).pt n) :=
   Rep.equivalenceModuleMonoidAlgebra.toAdjunction.projective_of_map_projective _ <|
     @ModuleCat.projective_of_free.{u} _ _
       (ModuleCat.of (MonoidAlgebra k G) (Representation.ofMulAction k G (Fin (n + 1) → G)).AsModule)

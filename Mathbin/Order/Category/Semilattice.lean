@@ -29,14 +29,14 @@ open CategoryTheory
 
 /-- The category of sup-semilattices with a bottom element. -/
 structure SemilatticeSupCat : Type (u + 1) where
-  x : Type u
+  pt : Type u
   [isSemilatticeSup : SemilatticeSup X]
   [isOrderBot : OrderBot X]
 #align SemilatticeSup SemilatticeSupCat
 
 /-- The category of inf-semilattices with a top element. -/
 structure SemilatticeInfCat : Type (u + 1) where
-  x : Type u
+  pt : Type u
   [isSemilatticeInf : SemilatticeInf X]
   [isOrderTop : OrderTop X]
 #align SemilatticeInf SemilatticeInfCat

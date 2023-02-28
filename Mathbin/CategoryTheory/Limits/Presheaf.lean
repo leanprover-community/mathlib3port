@@ -93,7 +93,7 @@ It is shown in `restrict_yoneda_hom_equiv_natural` that this is a natural biject
 -/
 def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ)
     {c : Cocone ((categoryOfElements.π P).leftOp ⋙ A)} (t : IsColimit c) :
-    (c.x ⟶ E) ≃ (P ⟶ (restrictedYoneda A).obj E) :=
+    (c.pt ⟶ E) ≃ (P ⟶ (restrictedYoneda A).obj E) :=
   ((uliftTrivial _).symm ≪≫ t.homIso' E).toEquiv.trans
     { toFun := fun k =>
         { app := fun c p => k.1 (Opposite.op ⟨_, p⟩)
@@ -122,7 +122,7 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ)
 (Implementation). Show that the bijection in `restrict_yoneda_hom_equiv` is natural (on the right).
 -/
 theorem restrictYonedaHomEquiv_natural (P : Cᵒᵖ ⥤ Type u₁) (E₁ E₂ : ℰ) (g : E₁ ⟶ E₂) {c : Cocone _}
-    (t : IsColimit c) (k : c.x ⟶ E₁) :
+    (t : IsColimit c) (k : c.pt ⟶ E₁) :
     restrictYonedaHomEquiv A P E₂ t (k ≫ g) =
       restrictYonedaHomEquiv A P E₁ t k ≫ (restrictedYoneda A).map g :=
   by
@@ -179,7 +179,7 @@ def Elements.initial (A : C) : (yoneda.obj A).Elements :=
 -/
 def isInitial (A : C) : IsInitial (Elements.initial A)
     where
-  desc s := ⟨s.x.2.op, comp_id _⟩
+  desc s := ⟨s.pt.2.op, comp_id _⟩
   uniq s m w := by
     simp_rw [← m.2]
     dsimp [elements.initial]
@@ -306,13 +306,13 @@ presheaf `P` as a colimit of representables.
 The construction of [MM92], Chapter I, Section 5, Corollary 3.
 -/
 def coconeOfRepresentable (P : Cᵒᵖ ⥤ Type u₁) : Cocone (functorToRepresentables P) :=
-  Cocone.extend (Colimit.cocone _) (extendAlongYonedaYoneda.Hom.app P)
+  Cocone.extend (colimit.cocone _) (extendAlongYonedaYoneda.Hom.app P)
 #align category_theory.cocone_of_representable CategoryTheory.coconeOfRepresentable
 
 @[simp]
-theorem coconeOfRepresentable_x (P : Cᵒᵖ ⥤ Type u₁) : (coconeOfRepresentable P).x = P :=
+theorem coconeOfRepresentable_pt (P : Cᵒᵖ ⥤ Type u₁) : (coconeOfRepresentable P).pt = P :=
   rfl
-#align category_theory.cocone_of_representable_X CategoryTheory.coconeOfRepresentable_x
+#align category_theory.cocone_of_representable_X CategoryTheory.coconeOfRepresentable_pt
 
 -- Marking this as a simp lemma seems to make things more awkward.
 /-- An explicit formula for the legs of the cocone `cocone_of_representable`. -/

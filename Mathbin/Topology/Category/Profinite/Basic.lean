@@ -209,8 +209,8 @@ namespace Profinite
 `Top.limit_cone`. -/
 def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.Cone F
     where
-  x :=
-    { toCompHaus := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).x
+  pt :=
+    { toCompHaus := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).pt
       IsTotallyDisconnected :=
         by
         change TotallyDisconnectedSpace ↥{ u : ∀ j : J, F.obj j | _ }

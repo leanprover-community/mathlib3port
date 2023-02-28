@@ -38,7 +38,7 @@ section
 
 /-- The composition of `C.d i i' ≫ f i' i` if there is some `i'` coming after `i`,
 and `0` otherwise. -/
-def dNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x i ⟶ D.x i) :=
+def dNext (i : ι) : (∀ i j, C.pt i ⟶ D.pt j) →+ (C.pt i ⟶ D.pt i) :=
   AddMonoidHom.mk' (fun f => C.d i (c.next i) ≫ f (c.next i) i) fun f g =>
     Preadditive.comp_add _ _ _ _ _ _
 #align d_next dNext
@@ -46,17 +46,17 @@ def dNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x i ⟶ D.x i) :=
 /-- `f i' i` if `i'` comes after `i`, and 0 if there's no such `i'`.
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
-def fromNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.xNext i ⟶ D.x i) :=
+def fromNext (i : ι) : (∀ i j, C.pt i ⟶ D.pt j) →+ (C.xNext i ⟶ D.pt i) :=
   AddMonoidHom.mk' (fun f => f (c.next i) i) fun f g => rfl
 #align from_next fromNext
 
 @[simp]
-theorem dNext_eq_dFrom_fromNext (f : ∀ i j, C.x i ⟶ D.x j) (i : ι) :
+theorem dNext_eq_dFrom_fromNext (f : ∀ i j, C.pt i ⟶ D.pt j) (i : ι) :
     dNext i f = C.dFrom i ≫ fromNext i f :=
   rfl
 #align d_next_eq_d_from_from_next dNext_eq_dFrom_fromNext
 
-theorem dNext_eq (f : ∀ i j, C.x i ⟶ D.x j) {i i' : ι} (w : c.Rel i i') :
+theorem dNext_eq (f : ∀ i j, C.pt i ⟶ D.pt j) {i i' : ι} (w : c.Rel i i') :
     dNext i f = C.d i i' ≫ f i' i :=
   by
   obtain rfl := c.next_eq' w
@@ -64,20 +64,20 @@ theorem dNext_eq (f : ∀ i j, C.x i ⟶ D.x j) {i i' : ι} (w : c.Rel i i') :
 #align d_next_eq dNext_eq
 
 @[simp]
-theorem dNext_comp_left (f : C ⟶ D) (g : ∀ i j, D.x i ⟶ E.x j) (i : ι) :
+theorem dNext_comp_left (f : C ⟶ D) (g : ∀ i j, D.pt i ⟶ E.pt j) (i : ι) :
     (dNext i fun i j => f.f i ≫ g i j) = f.f i ≫ dNext i g :=
   (f.comm_assoc _ _ _).symm
 #align d_next_comp_left dNext_comp_left
 
 @[simp]
-theorem dNext_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (i : ι) :
+theorem dNext_comp_right (f : ∀ i j, C.pt i ⟶ D.pt j) (g : D ⟶ E) (i : ι) :
     (dNext i fun i j => f i j ≫ g.f j) = dNext i f ≫ g.f i :=
   (Category.assoc _ _ _).symm
 #align d_next_comp_right dNext_comp_right
 
 /-- The composition of `f j j' ≫ D.d j' j` if there is some `j'` coming before `j`,
 and `0` otherwise. -/
-def prevD (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.x j) :=
+def prevD (j : ι) : (∀ i j, C.pt i ⟶ D.pt j) →+ (C.pt j ⟶ D.pt j) :=
   AddMonoidHom.mk' (fun f => f j (c.prev j) ≫ D.d (c.prev j) j) fun f g =>
     Preadditive.add_comp _ _ _ _ _ _
 #align prev_d prevD
@@ -85,16 +85,17 @@ def prevD (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.x j) :=
 /-- `f j j'` if `j'` comes after `j`, and 0 if there's no such `j'`.
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
-def toPrev (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.xPrev j) :=
+def toPrev (j : ι) : (∀ i j, C.pt i ⟶ D.pt j) →+ (C.pt j ⟶ D.xPrev j) :=
   AddMonoidHom.mk' (fun f => f j (c.prev j)) fun f g => rfl
 #align to_prev toPrev
 
 @[simp]
-theorem prevD_eq_toPrev_dTo (f : ∀ i j, C.x i ⟶ D.x j) (j : ι) : prevD j f = toPrev j f ≫ D.dTo j :=
+theorem prevD_eq_toPrev_dTo (f : ∀ i j, C.pt i ⟶ D.pt j) (j : ι) :
+    prevD j f = toPrev j f ≫ D.dTo j :=
   rfl
 #align prev_d_eq_to_prev_d_to prevD_eq_toPrev_dTo
 
-theorem prevD_eq (f : ∀ i j, C.x i ⟶ D.x j) {j j' : ι} (w : c.Rel j' j) :
+theorem prevD_eq (f : ∀ i j, C.pt i ⟶ D.pt j) {j j' : ι} (w : c.Rel j' j) :
     prevD j f = f j j' ≫ D.d j' j :=
   by
   obtain rfl := c.prev_eq' w
@@ -102,20 +103,20 @@ theorem prevD_eq (f : ∀ i j, C.x i ⟶ D.x j) {j j' : ι} (w : c.Rel j' j) :
 #align prev_d_eq prevD_eq
 
 @[simp]
-theorem prevD_comp_left (f : C ⟶ D) (g : ∀ i j, D.x i ⟶ E.x j) (j : ι) :
+theorem prevD_comp_left (f : C ⟶ D) (g : ∀ i j, D.pt i ⟶ E.pt j) (j : ι) :
     (prevD j fun i j => f.f i ≫ g i j) = f.f j ≫ prevD j g :=
   Category.assoc _ _ _
 #align prev_d_comp_left prevD_comp_left
 
 @[simp]
-theorem prevD_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (j : ι) :
+theorem prevD_comp_right (f : ∀ i j, C.pt i ⟶ D.pt j) (g : D ⟶ E) (j : ι) :
     (prevD j fun i j => f i j ≫ g.f j) = prevD j f ≫ g.f j :=
   by
   dsimp [prevD]
   simp only [category.assoc, g.comm]
 #align prev_d_comp_right prevD_comp_right
 
-theorem dNext_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶ D.x j) :
+theorem dNext_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.pt i ⟶ D.pt j) :
     dNext i f = C.d i (i - 1) ≫ f (i - 1) i :=
   by
   dsimp [dNext]
@@ -131,7 +132,7 @@ theorem dNext_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶ D
     congr 2
 #align d_next_nat dNext_nat
 
-theorem prevD_nat (C D : CochainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶ D.x j) :
+theorem prevD_nat (C D : CochainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.pt i ⟶ D.pt j) :
     prevD i f = f i (i - 1) ≫ D.d (i - 1) i :=
   by
   dsimp [prevD]
@@ -153,7 +154,7 @@ which are zero unless `c.rel j i`, satisfying the homotopy condition.
 -/
 @[ext, nolint has_nonempty_instance]
 structure Homotopy (f g : C ⟶ D) where
-  Hom : ∀ i j, C.x i ⟶ D.x j
+  Hom : ∀ i j, C.pt i ⟶ D.pt j
   zero' : ∀ i j, ¬c.Rel j i → hom i j = 0 := by obviously
   comm : ∀ i, f.f i = dNext i hom + prevD i hom + g.f i := by
     run_tac
@@ -280,7 +281,7 @@ two differentials going to and from a certain degree, only one, or none.
 This is the same datum as for the field `hom` in the structure `homotopy`. For
 this definition, we do not need the field `zero` of that structure
 as this definition uses only the maps `C_i ⟶ C_j` when `c.rel j i`. -/
-def nullHomotopicMap (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D
+def nullHomotopicMap (hom : ∀ i j, C.pt i ⟶ D.pt j) : C ⟶ D
     where
   f i := dNext i hom + prevD i hom
   comm' i j hij :=
@@ -295,13 +296,13 @@ def nullHomotopicMap (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D
 
 /-- Variant of `null_homotopic_map` where the input consists only of the
 relevant maps `C_i ⟶ D_j` such that `c.rel j i`. -/
-def nullHomotopicMap' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : C ⟶ D :=
+def nullHomotopicMap' (h : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) : C ⟶ D :=
   nullHomotopicMap fun i j => dite (c.Rel j i) (h i j) fun _ => 0
 #align homotopy.null_homotopic_map' Homotopy.nullHomotopicMap'
 
 /-- Compatibility of `null_homotopic_map` with the postcomposition by a morphism
 of complexes. -/
-theorem nullHomotopicMap_comp (hom : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) :
+theorem nullHomotopicMap_comp (hom : ∀ i j, C.pt i ⟶ D.pt j) (g : D ⟶ E) :
     nullHomotopicMap hom ≫ g = nullHomotopicMap fun i j => hom i j ≫ g.f j :=
   by
   ext n
@@ -311,7 +312,7 @@ theorem nullHomotopicMap_comp (hom : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) :
 
 /-- Compatibility of `null_homotopic_map'` with the postcomposition by a morphism
 of complexes. -/
-theorem nullHomotopicMap'_comp (hom : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) (g : D ⟶ E) :
+theorem nullHomotopicMap'_comp (hom : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) (g : D ⟶ E) :
     nullHomotopicMap' hom ≫ g = nullHomotopicMap' fun i j hij => hom i j hij ≫ g.f j :=
   by
   ext n
@@ -325,7 +326,7 @@ theorem nullHomotopicMap'_comp (hom : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) 
 
 /-- Compatibility of `null_homotopic_map` with the precomposition by a morphism
 of complexes. -/
-theorem comp_nullHomotopicMap (f : C ⟶ D) (hom : ∀ i j, D.x i ⟶ E.x j) :
+theorem comp_nullHomotopicMap (f : C ⟶ D) (hom : ∀ i j, D.pt i ⟶ E.pt j) :
     f ≫ nullHomotopicMap hom = nullHomotopicMap fun i j => f.f i ≫ hom i j :=
   by
   ext n
@@ -335,7 +336,7 @@ theorem comp_nullHomotopicMap (f : C ⟶ D) (hom : ∀ i j, D.x i ⟶ E.x j) :
 
 /-- Compatibility of `null_homotopic_map'` with the precomposition by a morphism
 of complexes. -/
-theorem comp_nullHomotopicMap' (f : C ⟶ D) (hom : ∀ i j, c.Rel j i → (D.x i ⟶ E.x j)) :
+theorem comp_nullHomotopicMap' (f : C ⟶ D) (hom : ∀ i j, c.Rel j i → (D.pt i ⟶ E.pt j)) :
     f ≫ nullHomotopicMap' hom = nullHomotopicMap' fun i j hij => f.f i ≫ hom i j hij :=
   by
   ext n
@@ -349,7 +350,7 @@ theorem comp_nullHomotopicMap' (f : C ⟶ D) (hom : ∀ i j, c.Rel j i → (D.x 
 
 /-- Compatibility of `null_homotopic_map` with the application of additive functors -/
 theorem map_nullHomotopicMap {W : Type _} [Category W] [Preadditive W] (G : V ⥤ W) [G.Additive]
-    (hom : ∀ i j, C.x i ⟶ D.x j) :
+    (hom : ∀ i j, C.pt i ⟶ D.pt j) :
     (G.mapHomologicalComplex c).map (nullHomotopicMap hom) =
       nullHomotopicMap fun i j => G.map (hom i j) :=
   by
@@ -360,7 +361,7 @@ theorem map_nullHomotopicMap {W : Type _} [Category W] [Preadditive W] (G : V �
 
 /-- Compatibility of `null_homotopic_map'` with the application of additive functors -/
 theorem map_nullHomotopicMap' {W : Type _} [Category W] [Preadditive W] (G : V ⥤ W) [G.Additive]
-    (hom : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) :
+    (hom : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) :
     (G.mapHomologicalComplex c).map (nullHomotopicMap' hom) =
       nullHomotopicMap' fun i j hij => G.map (hom i j hij) :=
   by
@@ -376,7 +377,7 @@ theorem map_nullHomotopicMap' {W : Type _} [Category W] [Preadditive W] (G : V �
 /-- Tautological construction of the `homotopy` to zero for maps constructed by
 `null_homotopic_map`, at least when we have the `zero'` condition. -/
 @[simps]
-def nullHomotopy (hom : ∀ i j, C.x i ⟶ D.x j) (zero' : ∀ i j, ¬c.Rel j i → hom i j = 0) :
+def nullHomotopy (hom : ∀ i j, C.pt i ⟶ D.pt j) (zero' : ∀ i j, ¬c.Rel j i → hom i j = 0) :
     Homotopy (nullHomotopicMap hom) 0 :=
   { Hom
     zero'
@@ -388,7 +389,7 @@ def nullHomotopy (hom : ∀ i j, C.x i ⟶ D.x j) (zero' : ∀ i j, ¬c.Rel j i 
 
 /-- Homotopy to zero for maps constructed with `null_homotopic_map'` -/
 @[simps]
-def nullHomotopy' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : Homotopy (nullHomotopicMap' h) 0 :=
+def nullHomotopy' (h : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) : Homotopy (nullHomotopicMap' h) 0 :=
   by
   apply null_homotopy fun i j => dite (c.rel j i) (h i j) fun _ => 0
   intro i j hij
@@ -406,7 +407,7 @@ with `null_homotopic_map` or `null_homotopic_map'` -/
 
 @[simp]
 theorem nullHomotopicMap_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) (r₁₀ : c.Rel k₁ k₀)
-    (hom : ∀ i j, C.x i ⟶ D.x j) :
+    (hom : ∀ i j, C.pt i ⟶ D.pt j) :
     (nullHomotopicMap hom).f k₁ = C.d k₁ k₀ ≫ hom k₀ k₁ + hom k₁ k₂ ≫ D.d k₂ k₁ :=
   by
   dsimp only [null_homotopic_map]
@@ -415,7 +416,7 @@ theorem nullHomotopicMap_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) (r�
 
 @[simp]
 theorem nullHomotopicMap'_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) (r₁₀ : c.Rel k₁ k₀)
-    (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) :
+    (h : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) :
     (nullHomotopicMap' h).f k₁ = C.d k₁ k₀ ≫ h k₀ k₁ r₁₀ + h k₁ k₂ r₂₁ ≫ D.d k₂ k₁ :=
   by
   simp only [← null_homotopic_map']
@@ -427,7 +428,7 @@ theorem nullHomotopicMap'_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) (r
 
 @[simp]
 theorem nullHomotopicMap_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀)
-    (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (hom : ∀ i j, C.x i ⟶ D.x j) :
+    (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (hom : ∀ i j, C.pt i ⟶ D.pt j) :
     (nullHomotopicMap hom).f k₀ = hom k₀ k₁ ≫ D.d k₁ k₀ :=
   by
   dsimp only [null_homotopic_map]
@@ -437,7 +438,7 @@ theorem nullHomotopicMap_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel k�
 
 @[simp]
 theorem nullHomotopicMap'_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀)
-    (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) :
+    (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (h : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) :
     (nullHomotopicMap' h).f k₀ = h k₀ k₁ r₁₀ ≫ D.d k₁ k₀ :=
   by
   simp only [← null_homotopic_map']
@@ -449,7 +450,7 @@ theorem nullHomotopicMap'_f_of_not_rel_left {k₁ k₀ : ι} (r₁₀ : c.Rel k�
 
 @[simp]
 theorem nullHomotopicMap_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀)
-    (hk₁ : ∀ l : ι, ¬c.Rel l k₁) (hom : ∀ i j, C.x i ⟶ D.x j) :
+    (hk₁ : ∀ l : ι, ¬c.Rel l k₁) (hom : ∀ i j, C.pt i ⟶ D.pt j) :
     (nullHomotopicMap hom).f k₁ = C.d k₁ k₀ ≫ hom k₀ k₁ :=
   by
   dsimp only [null_homotopic_map]
@@ -459,7 +460,7 @@ theorem nullHomotopicMap_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel k�
 
 @[simp]
 theorem nullHomotopicMap'_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel k₁ k₀)
-    (hk₁ : ∀ l : ι, ¬c.Rel l k₁) (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) :
+    (hk₁ : ∀ l : ι, ¬c.Rel l k₁) (h : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) :
     (nullHomotopicMap' h).f k₁ = C.d k₁ k₀ ≫ h k₀ k₁ r₁₀ :=
   by
   simp only [← null_homotopic_map']
@@ -471,7 +472,8 @@ theorem nullHomotopicMap'_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel k
 
 @[simp]
 theorem nullHomotopicMap_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀ l)
-    (hk₀' : ∀ l : ι, ¬c.Rel l k₀) (hom : ∀ i j, C.x i ⟶ D.x j) : (nullHomotopicMap hom).f k₀ = 0 :=
+    (hk₀' : ∀ l : ι, ¬c.Rel l k₀) (hom : ∀ i j, C.pt i ⟶ D.pt j) :
+    (nullHomotopicMap hom).f k₀ = 0 :=
   by
   dsimp [null_homotopic_map, dNext, prevD]
   rw [C.shape, D.shape, zero_comp, comp_zero, add_zero] <;> apply_assumption
@@ -479,7 +481,7 @@ theorem nullHomotopicMap_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀
 
 @[simp]
 theorem nullHomotopicMap'_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀ l)
-    (hk₀' : ∀ l : ι, ¬c.Rel l k₀) (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) :
+    (hk₀' : ∀ l : ι, ¬c.Rel l k₀) (h : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)) :
     (nullHomotopicMap' h).f k₀ = 0 :=
   by
   simp only [← null_homotopic_map']
@@ -506,15 +508,15 @@ section MkInductive
 variable {P Q : ChainComplex V ℕ}
 
 @[simp]
-theorem prevD_chainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (j : ℕ) : prevD j f = f j (j + 1) ≫ Q.d _ _ :=
-  by
+theorem prevD_chainComplex (f : ∀ i j, P.pt i ⟶ Q.pt j) (j : ℕ) :
+    prevD j f = f j (j + 1) ≫ Q.d _ _ := by
   dsimp [prevD]
   have : (ComplexShape.down ℕ).prev j = j + 1 := ChainComplex.prev ℕ j
   congr 2
 #align homotopy.prev_d_chain_complex Homotopy.prevD_chainComplex
 
 @[simp]
-theorem dNext_succ_chainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) :
+theorem dNext_succ_chainComplex (f : ∀ i j, P.pt i ⟶ Q.pt j) (i : ℕ) :
     dNext (i + 1) f = P.d _ _ ≫ f i (i + 1) :=
   by
   dsimp [dNext]
@@ -523,21 +525,21 @@ theorem dNext_succ_chainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) :
 #align homotopy.d_next_succ_chain_complex Homotopy.dNext_succ_chainComplex
 
 @[simp]
-theorem dNext_zero_chainComplex (f : ∀ i j, P.x i ⟶ Q.x j) : dNext 0 f = 0 :=
+theorem dNext_zero_chainComplex (f : ∀ i j, P.pt i ⟶ Q.pt j) : dNext 0 f = 0 :=
   by
   dsimp [dNext]
   rw [P.shape, zero_comp]
   rw [ChainComplex.next_nat_zero]; dsimp; decide
 #align homotopy.d_next_zero_chain_complex Homotopy.dNext_zero_chainComplex
 
-variable (e : P ⟶ Q) (zero : P.x 0 ⟶ Q.x 1) (comm_zero : e.f 0 = zero ≫ Q.d 1 0)
-  (one : P.x 1 ⟶ Q.x 2) (comm_one : e.f 1 = P.d 1 0 ≫ zero + one ≫ Q.d 2 1)
+variable (e : P ⟶ Q) (zero : P.pt 0 ⟶ Q.pt 1) (comm_zero : e.f 0 = zero ≫ Q.d 1 0)
+  (one : P.pt 1 ⟶ Q.pt 2) (comm_one : e.f 1 = P.d 1 0 ≫ zero + one ≫ Q.d 2 1)
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+        Σ'(f : P.pt n ⟶ Q.pt (n + 1))(f' : P.pt (n + 1) ⟶ Q.pt (n + 2)),
           e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)),
-      Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 3),
+      Σ'f'' : P.pt (n + 2) ⟶ Q.pt (n + 3),
         e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
 
 include comm_one comm_zero
@@ -562,7 +564,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkInductiveAux₁ :
     ∀ n,
-      Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+      Σ'(f : P.pt n ⟶ Q.pt (n + 1))(f' : P.pt (n + 1) ⟶ Q.pt (n + 2)),
         e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -583,7 +585,7 @@ Case conversion may be inaccurate. Consider using '#align homotopy.mk_inductive_
 -/
 @[simp]
 def mkInductiveAux₂ :
-    ∀ n, Σ'(f : P.xNext n ⟶ Q.x n)(f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
+    ∀ n, Σ'(f : P.xNext n ⟶ Q.pt n)(f' : P.pt n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
   | 0 => ⟨0, zero ≫ (Q.xPrevIso rfl).inv, by simpa using comm_zero⟩
   | n + 1 =>
     let I := mkInductiveAux₁ e zero comm_zero one comm_one succ n
@@ -655,7 +657,7 @@ section MkCoinductive
 variable {P Q : CochainComplex V ℕ}
 
 @[simp]
-theorem dNext_cochainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (j : ℕ) :
+theorem dNext_cochainComplex (f : ∀ i j, P.pt i ⟶ Q.pt j) (j : ℕ) :
     dNext j f = P.d _ _ ≫ f (j + 1) j := by
   dsimp [dNext]
   have : (ComplexShape.up ℕ).next j = j + 1 := CochainComplex.next ℕ j
@@ -663,7 +665,7 @@ theorem dNext_cochainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (j : ℕ) :
 #align homotopy.d_next_cochain_complex Homotopy.dNext_cochainComplex
 
 @[simp]
-theorem prevD_succ_cochainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) :
+theorem prevD_succ_cochainComplex (f : ∀ i j, P.pt i ⟶ Q.pt j) (i : ℕ) :
     prevD (i + 1) f = f (i + 1) _ ≫ Q.d i (i + 1) :=
   by
   dsimp [prevD]
@@ -672,21 +674,21 @@ theorem prevD_succ_cochainComplex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) :
 #align homotopy.prev_d_succ_cochain_complex Homotopy.prevD_succ_cochainComplex
 
 @[simp]
-theorem prevD_zero_cochainComplex (f : ∀ i j, P.x i ⟶ Q.x j) : prevD 0 f = 0 :=
+theorem prevD_zero_cochainComplex (f : ∀ i j, P.pt i ⟶ Q.pt j) : prevD 0 f = 0 :=
   by
   dsimp [prevD]
   rw [Q.shape, comp_zero]
   rw [CochainComplex.prev_nat_zero]; dsimp; decide
 #align homotopy.prev_d_zero_cochain_complex Homotopy.prevD_zero_cochainComplex
 
-variable (e : P ⟶ Q) (zero : P.x 1 ⟶ Q.x 0) (comm_zero : e.f 0 = P.d 0 1 ≫ zero)
-  (one : P.x 2 ⟶ Q.x 1) (comm_one : e.f 1 = zero ≫ Q.d 0 1 + P.d 1 2 ≫ one)
+variable (e : P ⟶ Q) (zero : P.pt 1 ⟶ Q.pt 0) (comm_zero : e.f 0 = P.d 0 1 ≫ zero)
+  (one : P.pt 2 ⟶ Q.pt 1) (comm_one : e.f 1 = zero ≫ Q.d 0 1 + P.d 1 2 ≫ one)
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+        Σ'(f : P.pt (n + 1) ⟶ Q.pt n)(f' : P.pt (n + 2) ⟶ Q.pt (n + 1)),
           e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'),
-      Σ'f'' : P.x (n + 3) ⟶ Q.x (n + 2),
+      Σ'f'' : P.pt (n + 3) ⟶ Q.pt (n + 2),
         e.f (n + 2) = p.2.1 ≫ Q.d (n + 1) (n + 2) + P.d (n + 2) (n + 3) ≫ f'')
 
 include comm_one comm_zero succ
@@ -711,7 +713,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkCoinductiveAux₁ :
     ∀ n,
-      Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+      Σ'(f : P.pt (n + 1) ⟶ Q.pt n)(f' : P.pt (n + 2) ⟶ Q.pt (n + 1)),
         e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -732,7 +734,7 @@ Case conversion may be inaccurate. Consider using '#align homotopy.mk_coinductiv
 -/
 @[simp]
 def mkCoinductiveAux₂ :
-    ∀ n, Σ'(f : P.x n ⟶ Q.xPrev n)(f' : P.xNext n ⟶ Q.x n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
+    ∀ n, Σ'(f : P.pt n ⟶ Q.xPrev n)(f' : P.xNext n ⟶ Q.pt n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
   | 0 => ⟨0, (P.xNextIso rfl).Hom ≫ zero, by simpa using comm_zero⟩
   | n + 1 =>
     let I := mkCoinductiveAux₁ e zero comm_zero one comm_one succ n

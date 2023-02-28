@@ -72,11 +72,11 @@ on objects. -/
 @[simps]
 def obj (P : Karoubi (HomologicalComplex C c)) : HomologicalComplex (Karoubi C) c
     where
-  x n :=
-    ⟨P.x.x n, P.p.f n, by
+  pt n :=
+    ⟨P.pt.pt n, P.p.f n, by
       simpa only [HomologicalComplex.comp_f] using HomologicalComplex.congr_hom P.idem n⟩
   d i j :=
-    { f := P.p.f i ≫ P.x.d i j
+    { f := P.p.f i ≫ P.pt.d i j
       comm := by tidy }
   shape' i j hij := by simp only [hom_eq_zero_iff, P.X.shape i j hij, limits.comp_zero]
 #align category_theory.idempotents.karoubi_homological_complex_equivalence.functor.obj CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.Functor.obj
@@ -107,14 +107,14 @@ on objects -/
 @[simps]
 def obj (K : HomologicalComplex (Karoubi C) c) : Karoubi (HomologicalComplex C c)
     where
-  x :=
-    { x := fun n => (K.x n).x
+  pt :=
+    { pt := fun n => (K.pt n).pt
       d := fun i j => (K.d i j).f
       shape' := fun i j hij => hom_eq_zero_iff.mp (K.shape i j hij)
       d_comp_d' := fun i j k hij hjk => by
         simpa only [comp_f] using hom_eq_zero_iff.mp (K.d_comp_d i j k) }
   p :=
-    { f := fun n => (K.x n).p
+    { f := fun n => (K.pt n).p
       comm' := by simp }
   idem := by tidy
 #align category_theory.idempotents.karoubi_homological_complex_equivalence.inverse.obj CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.Inverse.obj

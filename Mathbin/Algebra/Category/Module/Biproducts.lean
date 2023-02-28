@@ -46,7 +46,7 @@ instance : HasFiniteBiproducts (ModuleCat.{v} R) :=
 def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
     where
   Cone :=
-    { x := ModuleCat.of R (M × N)
+    { pt := ModuleCat.of R (M × N)
       π :=
         { app := fun j =>
             Discrete.casesOn j fun j =>
@@ -105,7 +105,7 @@ variable {J : Type w} (f : J → ModuleCat.{max w v} R)
 to the cartesian product of those groups.
 -/
 @[simps]
-def lift (s : Fan f) : s.x ⟶ ModuleCat.of R (∀ j, f j)
+def lift (s : Fan f) : s.pt ⟶ ModuleCat.of R (∀ j, f j)
     where
   toFun x j := s.π.app ⟨j⟩ x
   map_add' x y := by
@@ -122,7 +122,7 @@ def lift (s : Fan f) : s.x ⟶ ModuleCat.of R (∀ j, f j)
 def productLimitCone : Limits.LimitCone (Discrete.functor f)
     where
   Cone :=
-    { x := ModuleCat.of R (∀ j, f j)
+    { pt := ModuleCat.of R (∀ j, f j)
       π := Discrete.natTrans fun j => (LinearMap.proj j.as : (∀ j, f j) →ₗ[R] f j.as) }
   IsLimit :=
     { lift := lift f

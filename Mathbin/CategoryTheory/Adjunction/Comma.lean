@@ -154,7 +154,7 @@ category on `G`. -/
 def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
     IsInitial (StructuredArrow.mk (h.Unit.app A) : StructuredArrow A G)
     where
-  desc B := StructuredArrow.homMk ((h.homEquiv _ _).symm B.x.Hom) (by tidy)
+  desc B := StructuredArrow.homMk ((h.homEquiv _ _).symm B.pt.Hom) (by tidy)
   uniq s m w := by
     ext
     dsimp
@@ -167,7 +167,7 @@ category on `F`. -/
 def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
     IsTerminal (CostructuredArrow.mk (h.counit.app A) : CostructuredArrow F A)
     where
-  lift B := CostructuredArrow.homMk (h.homEquiv _ _ B.x.Hom) (by tidy)
+  lift B := CostructuredArrow.homMk (h.homEquiv _ _ B.pt.Hom) (by tidy)
   uniq s m w := by
     ext
     dsimp

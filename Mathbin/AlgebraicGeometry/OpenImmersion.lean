@@ -408,7 +408,7 @@ variable (s : PullbackCone f g)
 
 /-- (Implementation.) Any cone over `cospan f g` indeed factors through the constructed cone.
 -/
-def pullbackConeOfLeftLift : s.x ⟶ (pullbackConeOfLeft f g).x
+def pullbackConeOfLeftLift : s.pt ⟶ (pullbackConeOfLeft f g).pt
     where
   base :=
     pullback.lift s.fst.base s.snd.base
@@ -416,7 +416,7 @@ def pullbackConeOfLeftLift : s.x ⟶ (pullbackConeOfLeft f g).x
   c :=
     { app := fun U =>
         s.snd.c.app _ ≫
-          s.x.Presheaf.map
+          s.pt.Presheaf.map
             (eqToHom
               (by
                 dsimp only [opens.map, IsOpenMap.functor, functor.op]

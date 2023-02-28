@@ -91,7 +91,7 @@ def limitConeX (F : J ⥤ Cat.{v, v}) : Cat.{v, v} where α := limit (F ⋙ Cat.
 @[simps]
 def limitCone (F : J ⥤ Cat.{v, v}) : Cone F
     where
-  x := limitConeX F
+  pt := limitConeX F
   π :=
     { app := fun j =>
         { obj := limit.π (F ⋙ Cat.objects) j
@@ -103,11 +103,11 @@ def limitCone (F : J ⥤ Cat.{v, v}) : Cone F
 
 /-- Auxiliary definition: the universal morphism to the proposed limit cone. -/
 @[simps]
-def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F
+def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.pt ⟶ limitConeX F
     where
   obj :=
     limit.lift (F ⋙ Cat.objects)
-      { x := s.x
+      { pt := s.pt
         π :=
           { app := fun j => (s.π.app j).obj
             naturality' := fun j j' f => (congr_arg Functor.obj (s.π.naturality f) : _) } }

@@ -61,9 +61,9 @@ cone.
 def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L R))
     {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) : Cone F
     where
-  x :=
-    { left := c₁.x
-      right := c₂.x
+  pt :=
+    { left := c₁.pt
+      right := c₂.pt
       Hom := (isLimitOfPreserves R t₂).lift (limitAuxiliaryCone _ c₁) }
   π :=
     { app := fun j =>
@@ -110,9 +110,9 @@ colimit cocone.
 def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)}
     (t₁ : IsColimit c₁) (c₂ : Cocone (F ⋙ snd L R)) : Cocone F
     where
-  x :=
-    { left := c₁.x
-      right := c₂.x
+  pt :=
+    { left := c₁.pt
+      right := c₂.pt
       Hom := (isColimitOfPreserves L t₁).desc (colimitAuxiliaryCocone _ c₂) }
   ι :=
     { app := fun j =>

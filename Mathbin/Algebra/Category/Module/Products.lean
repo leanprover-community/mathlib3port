@@ -36,7 +36,7 @@ def productCone : Fan Z :=
 /-- The concrete product cone is limiting. -/
 def productConeIsLimit : IsLimit (productCone Z)
     where
-  lift s := (LinearMap.pi fun j => s.π.app ⟨j⟩ : s.x →ₗ[R] ∀ i : ι, Z i)
+  lift s := (LinearMap.pi fun j => s.π.app ⟨j⟩ : s.pt →ₗ[R] ∀ i : ι, Z i)
   fac s j := by
     cases j
     tidy

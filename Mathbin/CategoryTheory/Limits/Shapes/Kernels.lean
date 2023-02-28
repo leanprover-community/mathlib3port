@@ -138,15 +138,15 @@ end
 /-- If `s` is a limit kernel fork and `k : W ⟶ X` satisfies ``k ≫ f = 0`, then there is some
     `l : W ⟶ s.X` such that `l ≫ fork.ι s = k`. -/
 def KernelFork.IsLimit.lift' {s : KernelFork f} (hs : IsLimit s) {W : C} (k : W ⟶ X)
-    (h : k ≫ f = 0) : { l : W ⟶ s.x // l ≫ Fork.ι s = k } :=
+    (h : k ≫ f = 0) : { l : W ⟶ s.pt // l ≫ Fork.ι s = k } :=
   ⟨hs.lift <| KernelFork.ofι _ h, hs.fac _ _⟩
 #align category_theory.limits.kernel_fork.is_limit.lift' CategoryTheory.Limits.KernelFork.IsLimit.lift'
 
 /-- This is a slightly more convenient method to verify that a kernel fork is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x)
+def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.pt ⟶ t.pt)
     (fac : ∀ s : KernelFork f, lift s ≫ t.ι = s.ι)
-    (uniq : ∀ (s : KernelFork f) (m : s.x ⟶ t.x) (w : m ≫ t.ι = s.ι), m = lift s) : IsLimit t :=
+    (uniq : ∀ (s : KernelFork f) (m : s.pt ⟶ t.pt) (w : m ≫ t.ι = s.ι), m = lift s) : IsLimit t :=
   { lift
     fac := fun s j => by
       cases j
@@ -451,7 +451,7 @@ open ZeroObject
 
 /-- The morphism from the zero object determines a cone on a kernel diagram -/
 def kernel.zeroKernelFork : KernelFork f where
-  x := 0
+  pt := 0
   π := { app := fun j => 0 }
 #align category_theory.limits.kernel.zero_kernel_fork CategoryTheory.Limits.kernel.zeroKernelFork
 
@@ -509,7 +509,7 @@ def kernel.ofCompIso [HasKernel f] {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l �
 
 /-- If `s` is any limit kernel cone over `f` and if  `i` is an isomorphism such that
     `i.hom ≫ s.ι  = l`, then `l` is a kernel of `f`. -/
-def IsKernel.isoKernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit s) (i : Z ≅ s.x)
+def IsKernel.isoKernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit s) (i : Z ≅ s.pt)
     (h : i.Hom ≫ Fork.ι s = l) : IsLimit (KernelFork.ofι l <| show l ≫ f = 0 by simp [← h]) :=
   IsLimit.ofIsoLimit hs <|
     Cones.ext i.symm fun j => by
@@ -581,15 +581,15 @@ def ofπCongr {P : C} {π π' : Y ⟶ P} {w : f ≫ π = 0} (h : π = π') :
 /-- If `s` is a colimit cokernel cofork, then every `k : Y ⟶ W` satisfying `f ≫ k = 0` induces
     `l : s.X ⟶ W` such that `cofork.π s ≫ l = k`. -/
 def CokernelCofork.IsColimit.desc' {s : CokernelCofork f} (hs : IsColimit s) {W : C} (k : Y ⟶ W)
-    (h : f ≫ k = 0) : { l : s.x ⟶ W // Cofork.π s ≫ l = k } :=
+    (h : f ≫ k = 0) : { l : s.pt ⟶ W // Cofork.π s ≫ l = k } :=
   ⟨hs.desc <| CokernelCofork.ofπ _ h, hs.fac _ _⟩
 #align category_theory.limits.cokernel_cofork.is_colimit.desc' CategoryTheory.Limits.CokernelCofork.IsColimit.desc'
 
 /-- This is a slightly more convenient method to verify that a cokernel cofork is a colimit cocone.
 It only asks for a proof of facts that carry any mathematical content -/
-def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x ⟶ s.x)
+def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.pt ⟶ s.pt)
     (fac : ∀ s : CokernelCofork f, t.π ≫ desc s = s.π)
-    (uniq : ∀ (s : CokernelCofork f) (m : t.x ⟶ s.x) (w : t.π ≫ m = s.π), m = desc s) :
+    (uniq : ∀ (s : CokernelCofork f) (m : t.pt ⟶ s.pt) (w : t.π ≫ m = s.π), m = desc s) :
     IsColimit t :=
   { desc
     fac := fun s j => by
@@ -912,7 +912,7 @@ open ZeroObject
 /-- The morphism to the zero object determines a cocone on a cokernel diagram -/
 def cokernel.zeroCokernelCofork : CokernelCofork f
     where
-  x := 0
+  pt := 0
   ι := { app := fun j => 0 }
 #align category_theory.limits.cokernel.zero_cokernel_cofork CategoryTheory.Limits.cokernel.zeroCokernelCofork
 
@@ -1052,7 +1052,7 @@ def cokernel.ofIsoComp [HasCokernel f] {Z : C} (l : Z ⟶ Y) (i : X ≅ Z) (h : 
 /-- If `s` is any colimit cokernel cocone over `f` and `i` is an isomorphism such that
     `s.π ≫ i.hom = l`, then `l` is a cokernel of `f`. -/
 def IsCokernel.cokernelIso {Z : C} (l : Y ⟶ Z) {s : CokernelCofork f} (hs : IsColimit s)
-    (i : s.x ≅ Z) (h : Cofork.π s ≫ i.Hom = l) :
+    (i : s.pt ≅ Z) (h : Cofork.π s ≫ i.Hom = l) :
     IsColimit (CokernelCofork.ofπ l <| show f ≫ l = 0 by simp [← h]) :=
   IsColimit.ofIsoColimit hs <|
     Cocones.ext i fun j => by

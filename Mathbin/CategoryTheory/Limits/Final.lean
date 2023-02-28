@@ -225,7 +225,7 @@ variable {F G}
 def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G
     where
   obj c :=
-    { x := c.x
+    { pt := c.pt
       ι :=
         { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X)
           naturality' := fun X Y f => by
@@ -307,7 +307,7 @@ instance (priority := 100) comp_hasColimit [HasColimit G] : HasColimit (F ⋙ G)
 #align category_theory.functor.final.comp_has_colimit CategoryTheory.Functor.Final.comp_hasColimit
 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
-    ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x :=
+    ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.pt :=
   by
   dsimp [is_colimit_whisker_equiv]
   apply P.hom_ext
@@ -499,7 +499,7 @@ variable {F G}
 def extendCone : Cone (F ⋙ G) ⥤ Cone G
     where
   obj c :=
-    { x := c.x
+    { pt := c.pt
       π :=
         { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d)
           naturality' := fun X Y f => by
@@ -583,7 +583,7 @@ instance (priority := 100) comp_hasLimit [HasLimit G] : HasLimit (F ⋙ G) :=
 #align category_theory.functor.initial.comp_has_limit CategoryTheory.Functor.Initial.comp_hasLimit
 
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
-    ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x :=
+    ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.pt :=
   by
   dsimp [is_limit_whisker_equiv]
   apply P.hom_ext

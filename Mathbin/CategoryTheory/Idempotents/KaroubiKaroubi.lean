@@ -35,7 +35,7 @@ variable (C : Type _) [Category C]
 @[simps]
 def inverse : Karoubi (Karoubi C) ⥤ Karoubi C
     where
-  obj P := ⟨P.x.x, P.p.f, by simpa only [hom_ext] using P.idem⟩
+  obj P := ⟨P.pt.pt, P.p.f, by simpa only [hom_ext] using P.idem⟩
   map P Q f := ⟨f.f.f, by simpa only [hom_ext] using f.comm⟩
 #align category_theory.idempotents.karoubi_karoubi.inverse CategoryTheory.Idempotents.KaroubiKaroubi.inverse
 

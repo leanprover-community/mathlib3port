@@ -45,7 +45,7 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
     (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj (op W))) :
     Cone (F ⋙ (evaluation _ _).obj (op i.y))
     where
-  x := E.x
+  pt := E.pt
   π :=
     { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i
       naturality' := by
@@ -61,7 +61,7 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
 abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLimitsOfShape K D]
     {W : (J.cover X)ᵒᵖ} (F : K ⥤ Cᵒᵖ ⥤ D)
     (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj W)) :
-    E.x ⟶ (J.diagram (limit F) X).obj W :=
+    E.pt ⟶ (J.diagram (limit F) X).obj W :=
   multiequalizer.lift _ _
     (fun i =>
       (isLimitOfPreserves ((evaluation _ _).obj (op i.y)) (limit.isLimit _)).lift
@@ -125,7 +125,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
     [HasLimitsOfShape K D] [PreservesLimitsOfShape K (forget D)]
     [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
     (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) :
-    S.x ⟶ (J.plusObj (limit F)).obj (op X) :=
+    S.pt ⟶ (J.plusObj (limit F)).obj (op X) :=
   let e := colimitLimitIso (F ⋙ J.diagramFunctor D X)
   let t : J.diagram (limit F) X ≅ limit (F ⋙ J.diagramFunctor D X) :=
     (isLimitOfPreserves (J.diagramFunctor D X) (limit.isLimit _)).conePointUniqueUpToIso

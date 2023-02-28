@@ -282,7 +282,7 @@ formed by gluing the `open_to_localization` maps. -/
 def stalkToFiberRingHom (x : ProjectiveSpectrum.top 𝒜) :
     (Proj.structureSheaf 𝒜).Presheaf.stalk x ⟶ CommRingCat.of (at x) :=
   Limits.colimit.desc ((OpenNhds.inclusion x).op ⋙ (Proj.structureSheaf 𝒜).1)
-    { x := _
+    { pt := _
       ι :=
         {
           app := fun U =>

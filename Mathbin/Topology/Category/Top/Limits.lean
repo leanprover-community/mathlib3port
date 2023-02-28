@@ -46,7 +46,7 @@ Generally you should just use `limit.cone F`, unless you need the actual definit
 -/
 def limitCone (F : J ⥤ TopCat.{max v u}) : Cone F
     where
-  x := TopCat.of { u : ∀ j : J, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j }
+  pt := TopCat.of { u : ∀ j : J, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j }
   π :=
     {
       app := fun j =>
@@ -62,8 +62,8 @@ Generally you should just use `limit.cone F`, unless you need the actual definit
 -/
 def limitConeInfi (F : J ⥤ TopCat.{max v u}) : Cone F
     where
-  x :=
-    ⟨(Types.limitCone (F ⋙ forget)).x,
+  pt :=
+    ⟨(Types.limitCone (F ⋙ forget)).pt,
       ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
   π :=
     { app := fun j =>
@@ -136,8 +136,8 @@ Generally you should just use `colimit.coone F`, unless you need the actual defi
 -/
 def colimitCocone (F : J ⥤ TopCat.{max v u}) : Cocone F
     where
-  x :=
-    ⟨(Types.colimitCocone (F ⋙ forget)).x,
+  pt :=
+    ⟨(Types.colimitCocone (F ⋙ forget)).pt,
       ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
   ι :=
     { app := fun j =>
@@ -193,7 +193,7 @@ abbrev piπ {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : TopCat.of (�
 #align Top.pi_π TopCat.piπ
 
 /-- The explicit fan of a family of topological spaces given by the pi type. -/
-@[simps x π_app]
+@[simps pt π_app]
 def piFan {ι : Type v} (α : ι → TopCat.{max v u}) : Fan α :=
   Fan.mk (TopCat.of (∀ i, α i)) (piπ α)
 #align Top.pi_fan TopCat.piFan
@@ -244,7 +244,7 @@ abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ 
 #align Top.sigma_ι TopCat.sigmaι
 
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
-@[simps x ι_app]
+@[simps pt ι_app]
 def sigmaCofan {ι : Type v} (α : ι → TopCat.{max v u}) : Cofan α :=
   Cofan.mk (TopCat.of (Σi, α i)) (sigmaι α)
 #align Top.sigma_cofan TopCat.sigmaCofan
@@ -290,7 +290,7 @@ theorem sigmaIsoSigma_inv_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i 
 #align Top.sigma_iso_sigma_inv_apply TopCat.sigmaIsoSigma_inv_apply
 
 theorem induced_of_isLimit {F : J ⥤ TopCat.{max v u}} (C : Cone F) (hC : IsLimit C) :
-    C.x.TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) :=
+    C.pt.TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) :=
   by
   let homeo := homeo_of_iso (hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit F))
   refine' homeo.inducing.induced.trans _
@@ -932,7 +932,7 @@ theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
 
 --TODO: Add analogous constructions for `pushout`.
 theorem coinduced_of_isColimit {F : J ⥤ TopCat.{max v u}} (c : Cocone F) (hc : IsColimit c) :
-    c.x.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) :=
+    c.pt.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) :=
   by
   let homeo := homeo_of_iso (hc.cocone_point_unique_up_to_iso (colimit_cocone_is_colimit F))
   ext
@@ -987,7 +987,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
     (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
     IsTopologicalBasis
-      { U : Set C.x | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } :=
+      { U : Set C.pt | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } :=
   by
   classical
     -- The limit cone for `F` whose topology is defined as an infimum.
@@ -1175,7 +1175,7 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
 -/
 theorem nonempty_limitCone_of_compact_t2_cofiltered_system [IsCofiltered J]
     [∀ j : J, Nonempty (F.obj j)] [∀ j : J, CompactSpace (F.obj j)] [∀ j : J, T2Space (F.obj j)] :
-    Nonempty (TopCat.limitCone.{u} F).x := by
+    Nonempty (TopCat.limitCone.{u} F).pt := by
   classical
     obtain ⟨u, hu⟩ :=
       IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed (fun G => partial_sections F _)

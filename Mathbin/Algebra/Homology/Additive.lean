@@ -102,7 +102,7 @@ instance : Preadditive (HomologicalComplex V c) where
 
 /-- The `i`-th component of a chain map, as an additive map from chain maps to morphisms. -/
 @[simps]
-def Hom.fAddMonoidHom {C₁ C₂ : HomologicalComplex V c} (i : ι) : (C₁ ⟶ C₂) →+ (C₁.x i ⟶ C₂.x i) :=
+def Hom.fAddMonoidHom {C₁ C₂ : HomologicalComplex V c} (i : ι) : (C₁ ⟶ C₂) →+ (C₁.pt i ⟶ C₂.pt i) :=
   AddMonoidHom.mk' (fun f => Hom.f f i) fun _ _ => rfl
 #align homological_complex.hom.f_add_monoid_hom HomologicalComplex.Hom.fAddMonoidHom
 
@@ -146,7 +146,7 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
     HomologicalComplex V c ⥤ HomologicalComplex W c
     where
   obj C :=
-    { x := fun i => F.obj (C.x i)
+    { pt := fun i => F.obj (C.pt i)
       d := fun i j => F.map (C.d i j)
       shape' := fun i j w => by rw [C.shape _ _ w, F.map_zero]
       d_comp_d' := fun i j k _ _ => by rw [← F.map_comp, C.d_comp_d, F.map_zero] }

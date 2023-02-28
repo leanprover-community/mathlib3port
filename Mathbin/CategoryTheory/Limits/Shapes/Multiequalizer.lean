@@ -327,7 +327,7 @@ namespace Multifork
 variable {I : MulticospanIndex C} (K : Multifork I)
 
 /-- The maps from the cone point of a multifork to the objects on the left. -/
-def ι (a : I.L) : K.x ⟶ I.left a :=
+def ι (a : I.L) : K.pt ⟶ I.left a :=
   K.π.app (WalkingMulticospan.left _)
 #align category_theory.limits.multifork.ι CategoryTheory.Limits.Multifork.ι
 
@@ -362,7 +362,7 @@ theorem hom_comp_ι (K₁ K₂ : Multifork I) (f : K₁ ⟶ K₂) (j : I.L) : f.
 def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
     (w : ∀ b, ι (I.fstTo b) ≫ I.fst b = ι (I.sndTo b) ≫ I.snd b) : Multifork I
     where
-  x := P
+  pt := P
   π :=
     { app := fun x =>
         match x with
@@ -386,9 +386,9 @@ theorem condition (b) : K.ι (I.fstTo b) ≫ I.fst b = K.ι (I.sndTo b) ≫ I.sn
 
 /-- This definition provides a convenient way to show that a multifork is a limit. -/
 @[simps]
-def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x)
+def IsLimit.mk (lift : ∀ E : Multifork I, E.pt ⟶ K.pt)
     (fac : ∀ (E : Multifork I) (i : I.L), lift E ≫ K.ι i = E.ι i)
-    (uniq : ∀ (E : Multifork I) (m : E.x ⟶ K.x), (∀ i : I.L, m ≫ K.ι i = E.ι i) → m = lift E) :
+    (uniq : ∀ (E : Multifork I) (m : E.pt ⟶ K.pt), (∀ i : I.L, m ≫ K.ι i = E.ι i) → m = lift E) :
     IsLimit K :=
   { lift
     fac := by
@@ -418,10 +418,10 @@ theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap
 #align category_theory.limits.multifork.pi_condition CategoryTheory.Limits.Multifork.pi_condition
 
 /-- Given a multifork, we may obtain a fork over `∏ I.left ⇉ ∏ I.right`. -/
-@[simps x]
+@[simps pt]
 noncomputable def toPiFork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap
     where
-  x := K.x
+  pt := K.pt
   π :=
     { app := fun x =>
         match x with
@@ -446,10 +446,10 @@ theorem toPiFork_π_app_one : K.toPiFork.π.app WalkingParallelPair.one = Pi.lif
 variable (I)
 
 /-- Given a fork over `∏ I.left ⇉ ∏ I.right`, we may obtain a multifork. -/
-@[simps x]
+@[simps pt]
 noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I
     where
-  x := c.x
+  pt := c.pt
   π :=
     { app := fun x =>
         match x with
@@ -552,7 +552,7 @@ namespace Multicofork
 variable {I : MultispanIndex C} (K : Multicofork I)
 
 /-- The maps to the cocone point of a multicofork from the objects on the right. -/
-def π (b : I.R) : I.right b ⟶ K.x :=
+def π (b : I.R) : I.right b ⟶ K.pt :=
   K.ι.app (WalkingMultispan.right _)
 #align category_theory.limits.multicofork.π CategoryTheory.Limits.Multicofork.π
 
@@ -580,7 +580,7 @@ theorem snd_app_right (a) : K.ι.app (WalkingMultispan.left a) = I.snd a ≫ K.�
 def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
     (w : ∀ a, I.fst a ≫ π (I.fstFrom a) = I.snd a ≫ π (I.sndFrom a)) : Multicofork I
     where
-  x := P
+  pt := P
   ι :=
     { app := fun x =>
         match x with
@@ -604,9 +604,9 @@ theorem condition (a) : I.fst a ≫ K.π (I.fstFrom a) = I.snd a ≫ K.π (I.snd
 
 /-- This definition provides a convenient way to show that a multicofork is a colimit. -/
 @[simps]
-def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x)
+def IsColimit.mk (desc : ∀ E : Multicofork I, K.pt ⟶ E.pt)
     (fac : ∀ (E : Multicofork I) (i : I.R), K.π i ≫ desc E = E.π i)
-    (uniq : ∀ (E : Multicofork I) (m : K.x ⟶ E.x), (∀ i : I.R, K.π i ≫ m = E.π i) → m = desc E) :
+    (uniq : ∀ (E : Multicofork I) (m : K.pt ⟶ E.pt), (∀ i : I.R, K.π i ≫ m = E.π i) → m = desc E) :
     IsColimit K :=
   { desc
     fac := by
@@ -636,10 +636,10 @@ theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ 
 #align category_theory.limits.multicofork.sigma_condition CategoryTheory.Limits.Multicofork.sigma_condition
 
 /-- Given a multicofork, we may obtain a cofork over `∐ I.left ⇉ ∐ I.right`. -/
-@[simps x]
+@[simps pt]
 noncomputable def toSigmaCofork (K : Multicofork I) : Cofork I.fstSigmaMap I.sndSigmaMap
     where
-  x := K.x
+  pt := K.pt
   ι :=
     { app := fun x =>
         match x with
@@ -659,10 +659,10 @@ theorem toSigmaCofork_π : K.toSigmaCofork.π = Sigma.desc K.π :=
 variable (I)
 
 /-- Given a cofork over `∐ I.left ⇉ ∐ I.right`, we may obtain a multicofork. -/
-@[simps x]
+@[simps pt]
 noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multicofork I
     where
-  x := c.x
+  pt := c.pt
   ι :=
     { app := fun x =>
         match x with
@@ -786,7 +786,7 @@ abbrev ι (a : I.L) : multiequalizer I ⟶ I.left a :=
 
 /-- The multifork associated to the multiequalizer. -/
 abbrev multifork : Multifork I :=
-  Limit.cone _
+  limit.cone _
 #align category_theory.limits.multiequalizer.multifork CategoryTheory.Limits.multiequalizer.multifork
 
 @[simp]
@@ -868,7 +868,7 @@ abbrev π (b : I.R) : I.right b ⟶ multicoequalizer I :=
 
 /-- The multicofork associated to the multicoequalizer. -/
 abbrev multicofork : Multicofork I :=
-  Colimit.cocone _
+  colimit.cocone _
 #align category_theory.limits.multicoequalizer.multicofork CategoryTheory.Limits.multicoequalizer.multicofork
 
 @[simp]

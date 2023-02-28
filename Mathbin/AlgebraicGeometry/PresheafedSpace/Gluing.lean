@@ -331,7 +331,7 @@ This forms the inverse of `(𝖣.ι i).c.app (op U)`. -/
 def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
     (D.U i).Presheaf.obj (op U) ⟶ limit (D.diagramOverOpen U) :=
   limit.lift (D.diagramOverOpen U)
-    { x := (D.U i).Presheaf.obj (op U)
+    { pt := (D.U i).Presheaf.obj (op U)
       π :=
         { app := fun j => D.ιInvAppπApp U (unop j)
           naturality' := fun X Y f' => by

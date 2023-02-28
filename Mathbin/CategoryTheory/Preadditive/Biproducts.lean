@@ -82,7 +82,7 @@ any bicone `b` for `f` satisfying `total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b
 
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
-def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.x) :
+def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.pt) :
     b.IsBilimit
     where
   IsLimit :=
@@ -112,7 +112,7 @@ def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j �
 #align category_theory.limits.is_bilimit_of_total CategoryTheory.Limits.isBilimitOfTotal
 
 theorem IsBilimit.total {f : J → C} {b : Bicone f} (i : b.IsBilimit) :
-    (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.x :=
+    (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.pt :=
   i.IsLimit.hom_ext fun j => by
     cases j
     simp [sum_comp, b.ι_π, comp_dite]
@@ -124,7 +124,7 @@ any bicone `b` for `f` satisfying `total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
 theorem hasBiproduct_of_total {f : J → C} (b : Bicone f)
-    (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.x) : HasBiproduct f :=
+    (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.pt) : HasBiproduct f :=
   HasBiproduct.mk
     { Bicone := b
       IsBilimit := isBilimitOfTotal b Total }
@@ -310,7 +310,7 @@ any binary bicone `b` satisfying `total : b.fst ≫ b.inl + b.snd ≫ b.inr = �
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
 def isBinaryBilimitOfTotal {X Y : C} (b : BinaryBicone X Y)
-    (total : b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.x) : b.IsBilimit
+    (total : b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.pt) : b.IsBilimit
     where
   IsLimit :=
     { lift := fun s => BinaryFan.fst s ≫ b.inl + BinaryFan.snd s ≫ b.inr
@@ -327,7 +327,7 @@ def isBinaryBilimitOfTotal {X Y : C} (b : BinaryBicone X Y)
 #align category_theory.limits.is_binary_bilimit_of_total CategoryTheory.Limits.isBinaryBilimitOfTotal
 
 theorem IsBilimit.binary_total {X Y : C} {b : BinaryBicone X Y} (i : b.IsBilimit) :
-    b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.x :=
+    b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.pt :=
   i.IsLimit.hom_ext fun j => by rcases j with ⟨⟨⟩⟩ <;> simp
 #align category_theory.limits.is_bilimit.binary_total CategoryTheory.Limits.IsBilimit.binary_total
 
@@ -337,7 +337,7 @@ any binary bicone `b` satisfying `total : b.fst ≫ b.inl + b.snd ≫ b.inr = �
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
 theorem hasBinaryBiproduct_of_total {X Y : C} (b : BinaryBicone X Y)
-    (total : b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.x) : HasBinaryBiproduct X Y :=
+    (total : b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.pt) : HasBinaryBiproduct X Y :=
   HasBinaryBiproduct.mk
     { Bicone := b
       IsBilimit := isBinaryBilimitOfTotal b Total }
@@ -347,7 +347,7 @@ theorem hasBinaryBiproduct_of_total {X Y : C} (b : BinaryBicone X Y)
 @[simps]
 def BinaryBicone.ofLimitCone {X Y : C} {t : Cone (pair X Y)} (ht : IsLimit t) : BinaryBicone X Y
     where
-  x := t.x
+  pt := t.pt
   fst := t.π.app ⟨WalkingPair.left⟩
   snd := t.π.app ⟨WalkingPair.right⟩
   inl := ht.lift (BinaryFan.mk (𝟙 X) 0)
@@ -395,7 +395,7 @@ theorem HasBinaryBiproducts.of_hasBinaryProducts [HasBinaryProducts C] : HasBina
 @[simps]
 def BinaryBicone.ofColimitCocone {X Y : C} {t : Cocone (pair X Y)} (ht : IsColimit t) :
     BinaryBicone X Y where
-  x := t.x
+  pt := t.pt
   fst := ht.desc (BinaryCofan.mk (𝟙 X) 0)
   snd := ht.desc (BinaryCofan.mk 0 (𝟙 Y))
   inl := t.ι.app ⟨WalkingPair.left⟩
@@ -488,8 +488,9 @@ We will show in `is_bilimit_binary_bicone_of_split_mono_of_cokernel` that this b
 fact already a biproduct. -/
 @[simps]
 def binaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSplitMono f] {c : CokernelCofork f}
-    (i : IsColimit c) : BinaryBicone X c.x where
-  x := Y
+    (i : IsColimit c) : BinaryBicone X c.pt
+    where
+  pt := Y
   fst := retraction f
   snd := c.π
   inl := f
@@ -601,8 +602,8 @@ We will show in `binary_bicone_of_is_split_mono_of_cokernel` that this binary bi
 already a biproduct. -/
 @[simps]
 def binaryBiconeOfIsSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [IsSplitEpi f] {c : KernelFork f}
-    (i : IsLimit c) : BinaryBicone c.x Y :=
-  { x
+    (i : IsLimit c) : BinaryBicone c.pt Y :=
+  { pt
     fst :=
       let c' : KernelFork (𝟙 X - (𝟙 X - f ≫ section_ f)) := KernelFork.ofι (Fork.ι c) (by simp)
       let i' : IsLimit c' := isKernelCompMono i (section_ f) (by simp)

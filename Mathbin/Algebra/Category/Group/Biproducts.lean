@@ -43,7 +43,7 @@ instance : HasFiniteBiproducts AddCommGroupCat :=
 def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair G H)
     where
   Cone :=
-    { x := AddCommGroupCat.of (G × H)
+    { pt := AddCommGroupCat.of (G × H)
       π :=
         { app := fun j =>
             Discrete.casesOn j fun j =>
@@ -100,7 +100,7 @@ variable {J : Type w} (f : J → AddCommGroupCat.{max w u})
 to the cartesian product of those groups.
 -/
 @[simps]
-def lift (s : Fan f) : s.x ⟶ AddCommGroupCat.of (∀ j, f j)
+def lift (s : Fan f) : s.pt ⟶ AddCommGroupCat.of (∀ j, f j)
     where
   toFun x j := s.π.app ⟨j⟩ x
   map_zero' := by
@@ -117,7 +117,7 @@ def lift (s : Fan f) : s.x ⟶ AddCommGroupCat.of (∀ j, f j)
 def productLimitCone : Limits.LimitCone (Discrete.functor f)
     where
   Cone :=
-    { x := AddCommGroupCat.of (∀ j, f j)
+    { pt := AddCommGroupCat.of (∀ j, f j)
       π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => f j) j.as }
   IsLimit :=
     { lift := lift f

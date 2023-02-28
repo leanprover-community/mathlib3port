@@ -52,7 +52,7 @@ instance : Category (CommMon_ C) :=
   InducedCategory.category CommMon_.toMon_
 
 @[simp]
-theorem id_hom (A : CommMon_ C) : Mon_.Hom.hom (𝟙 A) = 𝟙 A.x :=
+theorem id_hom (A : CommMon_ C) : Mon_.Hom.hom (𝟙 A) = 𝟙 A.pt :=
   rfl
 #align CommMon_.id_hom CommMon_.id_hom
 
@@ -126,7 +126,7 @@ variable (C) (D)
 def mapCommMonFunctor : LaxBraidedFunctor C D ⥤ CommMon_ C ⥤ CommMon_ D
     where
   obj := mapCommMon
-  map F G α := { app := fun A => { Hom := α.app A.x } }
+  map F G α := { app := fun A => { Hom := α.app A.pt } }
 #align category_theory.lax_braided_functor.map_CommMon_functor CategoryTheory.LaxBraidedFunctor.mapCommMonFunctor
 
 end CategoryTheory.LaxBraidedFunctor
@@ -150,12 +150,12 @@ def laxBraidedToCommMon : LaxBraidedFunctor (Discrete PUnit.{u + 1}) C ⥤ CommM
 def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 1}) C
     where
   obj A :=
-    { obj := fun _ => A.x
+    { obj := fun _ => A.pt
       map := fun _ _ _ => 𝟙 _
       ε := A.one
       μ := fun _ _ => A.mul
       map_id' := fun _ => rfl
-      map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
+      map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.pt)).symm }
   map A B f :=
     { app := fun _ => f.Hom
       naturality' := fun _ _ _ => by

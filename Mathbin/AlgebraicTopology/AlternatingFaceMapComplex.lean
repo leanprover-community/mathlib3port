@@ -145,7 +145,7 @@ def obj : ChainComplex C ℕ :=
 #align algebraic_topology.alternating_face_map_complex.obj AlgebraicTopology.AlternatingFaceMapComplex.obj
 
 @[simp]
-theorem obj_x (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.obj X).x n = X _[n] :=
+theorem obj_x (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.obj X).pt n = X _[n] :=
   rfl
 #align algebraic_topology.alternating_face_map_complex.obj_X AlgebraicTopology.AlternatingFaceMapComplex.obj_x
 
@@ -190,7 +190,7 @@ variable {C}
 
 @[simp]
 theorem alternatingFaceMapComplex_obj_x (X : SimplicialObject C) (n : ℕ) :
-    ((alternatingFaceMapComplex C).obj X).x n = X _[n] :=
+    ((alternatingFaceMapComplex C).obj X).pt n = X _[n] :=
   rfl
 #align algebraic_topology.alternating_face_map_complex_obj_X AlgebraicTopology.alternatingFaceMapComplex_obj_x
 
@@ -230,7 +230,7 @@ theorem map_alternatingFaceMapComplex {D : Type _} [Category D] [Preadditive D] 
 
 theorem karoubi_alternating_face_map_complex_d (P : Karoubi (SimplicialObject C)) (n : ℕ) :
     ((AlternatingFaceMapComplex.obj (KaroubiFunctorCategoryEmbedding.obj P)).d (n + 1) n).f =
-      P.p.app (op [n + 1]) ≫ (AlternatingFaceMapComplex.obj P.x).d (n + 1) n :=
+      P.p.app (op [n + 1]) ≫ (AlternatingFaceMapComplex.obj P.pt).d (n + 1) n :=
   by
   dsimp
   simpa only [alternating_face_map_complex.obj_d_eq, karoubi.sum_hom, preadditive.comp_sum,
