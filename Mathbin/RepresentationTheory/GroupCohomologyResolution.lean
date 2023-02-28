@@ -272,10 +272,10 @@ def ofMulActionBasis :
     (ofMulActionBasisAux k G n)
 #align group_cohomology.resolution.of_mul_action_basis GroupCohomology.Resolution.ofMulActionBasis
 
-theorem ofMulActionFree :
+theorem ofMulAction_free :
     Module.Free (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
-  Module.Free.ofBasis (ofMulActionBasis k G n)
-#align group_cohomology.resolution.of_mul_action_free GroupCohomology.Resolution.ofMulActionFree
+  Module.Free.of_basis (ofMulActionBasis k G n)
+#align group_cohomology.resolution.of_mul_action_free GroupCohomology.Resolution.ofMulAction_free
 
 end Basis
 

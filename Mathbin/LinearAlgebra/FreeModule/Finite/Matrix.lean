@@ -41,7 +41,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) :=
   by
   cases subsingleton_or_nontrivial R
-  · apply Module.Free.ofSubsingleton'
+  · apply Module.Free.of_subsingleton'
   classical exact
       of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
 #align module.free.linear_map Module.Free.linearMap
@@ -72,7 +72,7 @@ instance Module.Finite.addMonoidHom : Module.Finite ℤ (M →+ N) :=
 
 instance addMonoidHom : Module.Free ℤ (M →+ N) :=
   letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linearMap _ _ _
-  Module.Free.ofEquiv (addMonoidHomLequivInt ℤ).symm
+  Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 #align module.free.add_monoid_hom Module.Free.addMonoidHom
 
 end Integer

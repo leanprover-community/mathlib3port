@@ -197,7 +197,7 @@ theorem norm_eq_zero_iff' [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Fi
 theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {x : S} :
     Algebra.norm R x = 0 ↔ x = 0 :=
   by
-  haveI : Module.Free R S := Module.Free.ofBasis b
+  haveI : Module.Free R S := Module.Free.of_basis b
   haveI : Module.Finite R S := Module.Finite.of_basis b
   exact norm_eq_zero_iff
 #align algebra.norm_eq_zero_iff_of_basis Algebra.norm_eq_zero_iff_of_basis

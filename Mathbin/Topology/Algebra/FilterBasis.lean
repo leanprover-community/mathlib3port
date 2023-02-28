@@ -256,23 +256,23 @@ instance (priority := 100) is_topologicalGroup (B : GroupFilterBasis G) :
     @TopologicalGroup G B.topology _ := by
   letI := B.topology
   have basis := B.nhds_one_has_basis
-  have basis' := basis.prod basis
+  have basis' := Basis.prod Basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
-  · rw [basis'.tendsto_iff basis]
+  · rw [basis'.tendsto_iff Basis]
     suffices ∀ U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases mul U_in with ⟨V, V_in, hV⟩
     use V, V, V_in, V_in
     intro a b a_in b_in
     exact hV ⟨a, b, a_in, b_in, rfl⟩
-  · rw [basis.tendsto_iff basis]
+  · rw [basis.tendsto_iff Basis]
     intro U U_in
     simpa using inv U_in
   · intro x₀
     rw [nhds_eq, nhds_one_eq]
     rfl
   · intro x₀
-    rw [basis.tendsto_iff basis]
+    rw [basis.tendsto_iff Basis]
     intro U U_in
     exact conj x₀ U_in
 #align group_filter_basis.is_topological_group GroupFilterBasis.is_topologicalGroup
@@ -323,10 +323,10 @@ instance (priority := 100) is_topologicalRing {R : Type u} [Ring R] (B : RingFil
   let B' := B.to_add_group_filter_basis
   letI := B'.topology
   have basis := B'.nhds_zero_has_basis
-  have basis' := basis.prod basis
+  have basis' := Basis.prod Basis
   haveI := B'.is_topological_add_group
   apply TopologicalRing.of_add_group_of_nhds_zero
-  · rw [basis'.tendsto_iff basis]
+  · rw [basis'.tendsto_iff Basis]
     suffices ∀ U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases B.mul U_in with ⟨V, V_in, hV⟩
@@ -334,11 +334,11 @@ instance (priority := 100) is_topologicalRing {R : Type u} [Ring R] (B : RingFil
     intro a b a_in b_in
     exact hV ⟨a, b, a_in, b_in, rfl⟩
   · intro x₀
-    rw [basis.tendsto_iff basis]
+    rw [basis.tendsto_iff Basis]
     intro U
     simpa using B.mul_left x₀
   · intro x₀
-    rw [basis.tendsto_iff basis]
+    rw [basis.tendsto_iff Basis]
     intro U
     simpa using B.mul_right x₀
 #align ring_filter_basis.is_topological_ring RingFilterBasis.is_topologicalRing

@@ -52,12 +52,12 @@ private theorem free_and_finite :
     cases nonempty_fintype ι
     cases this _ (M₁ ∘ (Fintype.equivFin ι).symm)
     have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
-    exact ⟨Module.Free.ofEquiv e.symm, Module.Finite.equiv e.symm⟩
+    exact ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm⟩
   intro n N _ _ _ _
   induction' n with n ih
   ·
     exact
-      ⟨Module.Free.ofEquiv (const_linear_equiv_of_is_empty R N M₂),
+      ⟨Module.Free.of_equiv (const_linear_equiv_of_is_empty R N M₂),
         Module.Finite.equiv (const_linear_equiv_of_is_empty R N M₂)⟩
   · suffices
       Module.Free R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) ∧
@@ -65,7 +65,7 @@ private theorem free_and_finite :
       by
       cases this
       exact
-        ⟨Module.Free.ofEquiv (multilinearCurryLeftEquiv R N M₂),
+        ⟨Module.Free.of_equiv (multilinearCurryLeftEquiv R N M₂),
           Module.Finite.equiv (multilinearCurryLeftEquiv R N M₂)⟩
     cases ih fun i => N i.succ
     exact ⟨Module.Free.linearMap _ _ _, Module.Finite.linearMap _ _⟩

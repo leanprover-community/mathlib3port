@@ -511,7 +511,7 @@ instance : Module.Finite R ℍ[R,c₁,c₂] :=
   Module.Finite.of_basis (basisOneIJK c₁ c₂)
 
 instance : Module.Free R ℍ[R,c₁,c₂] :=
-  Module.Free.ofBasis (basisOneIJK c₁ c₂)
+  Module.Free.of_basis (basisOneIJK c₁ c₂)
 
 theorem dim_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 4 :=
   by

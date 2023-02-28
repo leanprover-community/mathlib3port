@@ -498,9 +498,9 @@ open Classical
 
 variable [Finite R M] [Free R M] [Nontrivial R]
 
-instance dualFree : Free R (Dual R M) :=
-  Free.ofBasis (Free.chooseBasis R M).dualBasis
-#align basis.dual_free Basis.dualFree
+instance dual_free : Free R (Dual R M) :=
+  Free.of_basis (Free.chooseBasis R M).dualBasis
+#align basis.dual_free Basis.dual_free
 
 instance dual_finite : Finite R (Dual R M) :=
   Finite.of_basis (Free.chooseBasis R M).dualBasis

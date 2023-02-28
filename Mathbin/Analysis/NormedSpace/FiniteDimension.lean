@@ -610,7 +610,7 @@ theorem LinearEquiv.closedEmbedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F]
     (f : E →L[𝕜] F) (hf : LinearMap.range f = ⊤) :
     ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
-  let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
+  let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_rightInverse_of_surjective hf
   ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
 #align continuous_linear_map.exists_right_inverse_of_surjective ContinuousLinearMap.exists_right_inverse_of_surjective
 

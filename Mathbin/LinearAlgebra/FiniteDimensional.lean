@@ -1014,7 +1014,7 @@ instance finiteDimensional_range [FiniteDimensional K V] (f : V →ₗ[K] V₂) 
 theorem injective_iff_surjective [FiniteDimensional K V] {f : V →ₗ[K] V} :
     Injective f ↔ Surjective f :=
   ⟨surjective_of_injective, fun hsurj =>
-    let ⟨g, hg⟩ := f.exists_right_inverse_of_surjective (range_eq_top.2 hsurj)
+    let ⟨g, hg⟩ := f.exists_rightInverse_of_surjective (range_eq_top.2 hsurj)
     have : Function.RightInverse g f := LinearMap.ext_iff.1 hg
     (leftInverse_of_surjective_of_rightInverse (surjective_of_injective this.Injective)
         this).Injective⟩
@@ -1032,7 +1032,7 @@ theorem mul_eq_one_of_mul_eq_one [FiniteDimensional K V] {f g : V →ₗ[K] V} (
   have ginj : Injective g :=
     HasLeftInverse.injective ⟨f, fun x => show (f * g) x = (1 : V →ₗ[K] V) x by rw [hfg] <;> rfl⟩
   let ⟨i, hi⟩ :=
-    g.exists_right_inverse_of_surjective (range_eq_top.2 (injective_iff_surjective.1 ginj))
+    g.exists_rightInverse_of_surjective (range_eq_top.2 (injective_iff_surjective.1 ginj))
   have : f * (g * i) = f * 1 := congr_arg _ hi
   rw [← mul_assoc, hfg, one_mul, mul_one] at this <;> rwa [← this]
 #align linear_map.mul_eq_one_of_mul_eq_one LinearMap.mul_eq_one_of_mul_eq_one

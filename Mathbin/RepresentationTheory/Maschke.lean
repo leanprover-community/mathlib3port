@@ -190,7 +190,7 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
     ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id :=
   by
   obtain ⟨φ, hφ⟩ :=
-    (f.restrict_scalars k).exists_left_inverse_of_injective
+    (f.restrict_scalars k).exists_leftInverse_of_injective
       (by simp only [hf, Submodule.restrictScalars_bot, LinearMap.ker_restrictScalars])
   refine' ⟨φ.equivariant_projection G, _⟩
   apply LinearMap.ext

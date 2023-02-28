@@ -244,7 +244,7 @@ theorem det_toLin' (f : Matrix ι ι R) : LinearMap.det f.toLin' = f.det := by
 
 /-- To show `P f.det` it suffices to consider `P (to_matrix _ _ f).det` and `P 1`. -/
 @[elab_as_elim]
-theorem detCases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
+theorem det_cases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
     (hb : ∀ (s : Finset M) (b : Basis s A M), P (toMatrix b b f).det) (h1 : P 1) : P f.det :=
   by
   unfold LinearMap.det
@@ -252,7 +252,7 @@ theorem detCases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
   · convert hb _ h.some_spec.some
     apply det_aux_def'
   · exact h1
-#align linear_map.det_cases LinearMap.detCases
+#align linear_map.det_cases LinearMap.det_cases
 
 @[simp]
 theorem det_comp (f g : M →ₗ[A] M) : (f.comp g).det = f.det * g.det :=
@@ -309,7 +309,7 @@ theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type _} [Field 𝕜] {M : Type _} 
     [Module 𝕜 M] (h : FiniteDimensional.finrank 𝕜 M = 0) (f : M →ₗ[𝕜] M) :
     (f : M →ₗ[𝕜] M).det = 1 := by
   classical
-    refine' @LinearMap.detCases M _ 𝕜 _ _ _ (fun t => t = 1) f _ rfl
+    refine' @LinearMap.det_cases M _ 𝕜 _ _ _ (fun t => t = 1) f _ rfl
     intro s b
     have : IsEmpty s := by
       rw [← Fintype.card_eq_zero_iff]

@@ -64,9 +64,9 @@ theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis
 
 variable {R M}
 
-theorem Module.Free.ofBasis {ι : Type w} (b : Basis ι R M) : Module.Free R M :=
+theorem Module.Free.of_basis {ι : Type w} (b : Basis ι R M) : Module.Free R M :=
   (Module.free_def R M).2 ⟨Set.range b, ⟨b.reindexRange⟩⟩
-#align module.free.of_basis Module.Free.ofBasis
+#align module.free.of_basis Module.Free.of_basis
 
 end Basic
 
@@ -118,26 +118,26 @@ instance [Nontrivial M] : Nonempty (Module.Free.ChooseBasisIndex R M) :=
 
 variable {R M N}
 
-theorem ofEquiv (e : M ≃ₗ[R] N) : Module.Free R N :=
-  ofBasis <| (chooseBasis R M).map e
-#align module.free.of_equiv Module.Free.ofEquiv
+theorem of_equiv (e : M ≃ₗ[R] N) : Module.Free R N :=
+  of_basis <| (chooseBasis R M).map e
+#align module.free.of_equiv Module.Free.of_equiv
 
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
 instance. -/
-theorem ofEquiv' {P : Type v} [AddCommMonoid P] [Module R P] (h : Module.Free R P) (e : P ≃ₗ[R] N) :
-    Module.Free R N :=
-  ofEquiv e
-#align module.free.of_equiv' Module.Free.ofEquiv'
+theorem of_equiv' {P : Type v} [AddCommMonoid P] [Module R P] (h : Module.Free R P)
+    (e : P ≃ₗ[R] N) : Module.Free R N :=
+  of_equiv e
+#align module.free.of_equiv' Module.Free.of_equiv'
 
 variable (R M N)
 
 /-- The module structure provided by `semiring.to_module` is free. -/
 instance self : Module.Free R R :=
-  ofBasis (Basis.singleton Unit R)
+  of_basis (Basis.singleton Unit R)
 #align module.free.self Module.Free.self
 
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
-  ofBasis <| (chooseBasis R M).Prod (chooseBasis R N)
+  of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
 #align module.free.prod Module.Free.prod
 
 /-- The product of finitely many free modules is free. -/
@@ -161,23 +161,23 @@ instance function [Finite ι] : Module.Free R (ι → M) :=
 #align module.free.function Module.Free.function
 
 instance finsupp : Module.Free R (ι →₀ M) :=
-  ofBasis (Finsupp.basis fun i => chooseBasis R M)
+  of_basis (Finsupp.basis fun i => chooseBasis R M)
 #align module.free.finsupp Module.Free.finsupp
 
 variable {ι}
 
-instance (priority := 100) ofSubsingleton [Subsingleton N] : Module.Free R N :=
-  ofBasis (Basis.empty N : Basis PEmpty R N)
-#align module.free.of_subsingleton Module.Free.ofSubsingleton
+instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
+  of_basis (Basis.empty N : Basis PEmpty R N)
+#align module.free.of_subsingleton Module.Free.of_subsingleton
 
-instance (priority := 100) ofSubsingleton' [Subsingleton R] : Module.Free R N :=
+instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N :=
   letI := Module.subsingleton R N
-  Module.Free.ofSubsingleton R N
-#align module.free.of_subsingleton' Module.Free.ofSubsingleton'
+  Module.Free.of_subsingleton R N
+#align module.free.of_subsingleton' Module.Free.of_subsingleton'
 
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
-  ofBasis <| Dfinsupp.basis fun i => chooseBasis R (M i)
+  of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
 
 instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
@@ -194,7 +194,7 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 instance tensor : Module.Free R (M ⊗[R] N) :=
-  ofEquiv' (ofEquiv' (Free.finsupp _ R _) (finsuppTensorFinsupp' R _ _).symm)
+  of_equiv' (of_equiv' (Free.finsupp _ R _) (finsuppTensorFinsupp' R _ _).symm)
     (TensorProduct.congr (chooseBasis R M).repr (chooseBasis R N).repr).symm
 #align module.free.tensor Module.Free.tensor
 
@@ -204,9 +204,9 @@ section DivisionRing
 
 variable [DivisionRing R] [AddCommGroup M] [Module R M]
 
-instance (priority := 100) ofDivisionRing : Module.Free R M :=
-  ofBasis (Basis.ofVectorSpace R M)
-#align module.free.of_division_ring Module.Free.ofDivisionRing
+instance (priority := 100) of_divisionRing : Module.Free R M :=
+  of_basis (Basis.ofVectorSpace R M)
+#align module.free.of_division_ring Module.Free.of_divisionRing
 
 end DivisionRing
 
