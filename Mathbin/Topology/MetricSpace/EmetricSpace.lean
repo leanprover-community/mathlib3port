@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_space
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,7 +215,7 @@ theorem uniformity_basis_edist :
       (fun r hr p hp =>
         ⟨min r p, lt_min hr hp, fun x hx => lt_of_lt_of_le hx (min_le_left _ _), fun x hx =>
           lt_of_lt_of_le hx (min_le_right _ _)⟩)
-      ⟨1, ENNReal.zero_lt_one⟩
+      ⟨1, zero_lt_one⟩
 #align uniformity_basis_edist uniformity_basis_edist
 
 /-- Characterization of the elements of the uniformity in terms of the extended distance -/
@@ -779,7 +779,7 @@ theorem isClosed_ball_top : IsClosed (ball x ⊤) :=
     isOpen_iff.2 fun y hy =>
       ⟨⊤, ENNReal.coe_lt_top,
         (ball_disjoint <| by
-            rw [ENNReal.top_add]
+            rw [top_add]
             exact le_of_not_lt hy).subset_compl_right⟩
 #align emetric.is_closed_ball_top Emetric.isClosed_ball_top
 
@@ -1270,6 +1270,46 @@ theorem diam_pos_iff : 0 < diam s ↔ ∃ x ∈ s, ∃ y ∈ s, x ≠ y := by
 end Diam
 
 end Emetric
+
+/-!
+### Separation quotient
+-/
+
+
+instance [PseudoEmetricSpace X] : HasEdist (UniformSpace.SeparationQuotient X) :=
+  ⟨fun x y =>
+    Quotient.liftOn₂' x y edist fun x y x' y' hx hy =>
+      calc
+        edist x y = edist x' y :=
+          edist_congr_right <| Emetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hx
+        _ = edist x' y' :=
+          edist_congr_left <| Emetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hy
+        ⟩
+
+@[simp]
+theorem UniformSpace.SeparationQuotient.edist_mk [PseudoEmetricSpace X] (x y : X) :
+    @edist (UniformSpace.SeparationQuotient X) _ (Quot.mk _ x) (Quot.mk _ y) = edist x y :=
+  rfl
+#align uniform_space.separation_quotient.edist_mk UniformSpace.SeparationQuotient.edist_mk
+
+instance [PseudoEmetricSpace X] : EmetricSpace (UniformSpace.SeparationQuotient X) :=
+  @Emetric.ofT0PseudoEmetricSpace (UniformSpace.SeparationQuotient X)
+    { edist_self := fun x => Quotient.inductionOn' x edist_self
+      edist_comm := fun x y => Quotient.inductionOn₂' x y edist_comm
+      edist_triangle := fun x y z => Quotient.inductionOn₃' x y z edist_triangle
+      toUniformSpace := inferInstance
+      uniformity_edist :=
+        (uniformity_basis_edist.map _).eq_binfᵢ.trans <|
+          infᵢ_congr fun ε =>
+            infᵢ_congr fun hε =>
+              congr_arg 𝓟
+                (by
+                  ext ⟨⟨x⟩, ⟨y⟩⟩
+                  refine' ⟨_, fun h => ⟨(x, y), h, rfl⟩⟩
+                  rintro ⟨⟨x', y'⟩, h', h⟩
+                  simp only [Prod.ext_iff] at h
+                  rwa [← h.1, ← h.2]) }
+    _
 
 /-!
 ### `additive`, `multiplicative`

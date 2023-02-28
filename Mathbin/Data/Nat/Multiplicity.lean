@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.multiplicity
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit 114ff8a4a7935cb7531062200bff375e7b1d6d85
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,8 +235,8 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) :
     exact dvd_mul_right _ _
 #align nat.prime.multiplicity_le_multiplicity_choose_add Nat.Prime.multiplicity_le_multiplicity_choose_add
 
-theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : 0 < k) :
-    multiplicity p (choose (p ^ n) k) + multiplicity p k = n :=
+theorem multiplicity_choose_prime_pow_add_multiplicity {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n)
+    (hk0 : k ≠ 0) : multiplicity p (choose (p ^ n) k) + multiplicity p k = n :=
   le_antisymm
     (by
       have hdisj :
@@ -246,12 +246,19 @@ theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ 
         simp (config := { contextual := true }) [disjoint_right, *, dvd_iff_mod_eq_zero,
           Nat.mod_lt _ (pow_pos hp.pos _)]
       rw [multiplicity_choose hp hkn (lt_succ_self _),
-        multiplicity_eq_card_pow_dvd (ne_of_gt hp.one_lt) hk0 (lt_succ_of_le (log_mono_right hkn)),
+        multiplicity_eq_card_pow_dvd (ne_of_gt hp.one_lt) hk0.bot_lt
+          (lt_succ_of_le (log_mono_right hkn)),
         ← Nat.cast_add, PartENat.coe_le_coe, log_pow hp.one_lt, ← card_disjoint_union hdisj,
         filter_union_right]
       have filter_le_Ico := (Ico 1 n.succ).card_filter_le _
       rwa [card_Ico 1 n.succ] at filter_le_Ico)
     (by rw [← hp.multiplicity_pow_self] <;> exact multiplicity_le_multiplicity_choose_add hp _ _)
+#align nat.prime.multiplicity_choose_prime_pow_add_multiplicity Nat.Prime.multiplicity_choose_prime_pow_add_multiplicity
+
+theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : k ≠ 0) :
+    multiplicity p (choose (p ^ n) k) =
+      ↑(n - (multiplicity p k).get (finite_nat_iff.2 ⟨hp.ne_one, hk0.bot_lt⟩)) :=
+  PartENat.eq_coe_sub_of_add_eq_coe <| multiplicity_choose_prime_pow_add_multiplicity hp hkn hk0
 #align nat.prime.multiplicity_choose_prime_pow Nat.Prime.multiplicity_choose_prime_pow
 
 end Prime

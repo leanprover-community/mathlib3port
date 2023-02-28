@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.point
-! leanprover-community/mathlib commit 67f92b6f60865717e0811128b77d49ab4c07f7f1
+! leanprover-community/mathlib commit 03994e05d8bfc59a41d2ec99523d6553d21848ac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,6 +75,11 @@ elliptic curve, rational point, group law
 /- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- temporary import to enable point notation
 -- temporary import to enable point notation
+private unsafe def map_simp : tactic Unit :=
+  sorry
+#align map_simp map_simp
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def eval_simp : tactic Unit :=
   sorry
 #align eval_simp eval_simp
@@ -89,7 +94,7 @@ private unsafe def derivative_simp : tactic Unit :=
   sorry
 #align derivative_simp derivative_simp
 
-universe u
+universe u v w
 
 namespace WeierstrassCurve
 
@@ -102,7 +107,8 @@ section Basic
 /-! ### Polynomials associated to nonsingular rational points on a Weierstrass curve -/
 
 
-variable {R : Type u} [CommRing R] (W : WeierstrassCurve R) (x₁ x₂ y₁ y₂ L : R)
+variable {R : Type u} [CommRing R] (W : WeierstrassCurve R) (A : Type v) [CommRing A] [Algebra R A]
+  (B : Type w) [CommRing B] [Algebra R B] [Algebra A B] [IsScalarTower R A B] (x₁ x₂ y₁ y₂ L : R)
 
 /-- The polynomial $-Y - a_1X - a_3$ associated to negation. -/
 noncomputable def negPolynomial : R[X][Y] :=
@@ -123,7 +129,24 @@ theorem negY_negY : W.negY x₁ (W.negY x₁ y₁) = y₁ :=
   ring1
 #align weierstrass_curve.neg_Y_neg_Y WeierstrassCurve.negY_negY
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.map_simp -/
+theorem baseChange_negY :
+    (W.base_change A).negY (algebraMap R A x₁) (algebraMap R A y₁) =
+      algebraMap R A (W.negY x₁ y₁) :=
+  by
+  simp only [neg_Y]
+  run_tac
+    map_simp
+  rfl
+#align weierstrass_curve.base_change_neg_Y WeierstrassCurve.baseChange_negY
+
+theorem baseChange_negY_of_baseChange (x₁ y₁ : A) :
+    (W.base_change B).negY (algebraMap A B x₁) (algebraMap A B y₁) =
+      algebraMap A B ((W.base_change A).negY x₁ y₁) :=
+  by rw [← base_change_neg_Y, base_change_base_change]
+#align weierstrass_curve.base_change_neg_Y_of_base_change WeierstrassCurve.baseChange_negY_of_baseChange
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
 @[simp]
 theorem eval_negPolynomial : (W.negPolynomial.eval <| c y₁).eval x₁ = W.negY x₁ y₁ :=
   by
@@ -132,7 +155,7 @@ theorem eval_negPolynomial : (W.negPolynomial.eval <| c y₁).eval x₁ = W.negY
     eval_simp
 #align weierstrass_curve.eval_neg_polynomial WeierstrassCurve.eval_negPolynomial
 
-/-- The polynomial $L*(X - x_1) + y_1$ associated to the line $Y = L*(X - x_1) + y_1$,
+/-- The polynomial $L(X - x_1) + y_1$ associated to the line $Y = L(X - x_1) + y_1$,
 with a slope of $L$ that passes through an affine point $(x_1, y_1)$.
 
 This does not depend on `W`, and has argument order: $x_1$, $y_1$, $L$. -/
@@ -140,7 +163,7 @@ noncomputable def linePolynomial : R[X] :=
   c L * (x - c x₁) + c y₁
 #align weierstrass_curve.line_polynomial WeierstrassCurve.linePolynomial
 
-/-- The polynomial obtained by substituting the line $Y = L*(X - x_1) + y_1$, with a slope of $L$
+/-- The polynomial obtained by substituting the line $Y = L(X - x_1) + y_1$, with a slope of $L$
 that passes through an affine point $(x_1, y_1)$, into the polynomial $W(X, Y)$ associated to `W`.
 If such a line intersects `W` at another point $(x_2, y_2)$, then the roots of this polynomial are
 precisely $x_1$, $x_2$, and the $X$-coordinate of the addition of $(x_1, y_1)$ and $(x_2, y_2)$.
@@ -150,8 +173,8 @@ noncomputable def addPolynomial : R[X] :=
   W.Polynomial.eval <| linePolynomial x₁ y₁ L
 #align weierstrass_curve.add_polynomial WeierstrassCurve.addPolynomial
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.170323567.C_simp -/
 theorem addPolynomial_eq :
     W.addPolynomial x₁ y₁ L =
       -Cubic.toPoly
@@ -176,6 +199,23 @@ def addX : R :=
   L ^ 2 + W.a₁ * L - W.a₂ - x₁ - x₂
 #align weierstrass_curve.add_X WeierstrassCurve.addX
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.map_simp -/
+theorem baseChange_addX :
+    (W.base_change A).addX (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A L) =
+      algebraMap R A (W.addX x₁ x₂ L) :=
+  by
+  simp only [add_X]
+  run_tac
+    map_simp
+  rfl
+#align weierstrass_curve.base_change_add_X WeierstrassCurve.baseChange_addX
+
+theorem baseChange_addX_of_baseChange (x₁ x₂ L : A) :
+    (W.base_change B).addX (algebraMap A B x₁) (algebraMap A B x₂) (algebraMap A B L) =
+      algebraMap A B ((W.base_change A).addX x₁ x₂ L) :=
+  by rw [← base_change_add_X, base_change_base_change]
+#align weierstrass_curve.base_change_add_X_of_base_change WeierstrassCurve.baseChange_addX_of_baseChange
+
 /-- The $Y$-coordinate, before applying the final negation, of the addition of two affine points
 $(x_1, y_1)$ and $(x_2, y_2)$, where the line through them is not vertical and has a slope of $L$.
 
@@ -184,6 +224,24 @@ This depends on `W`, and has argument order: $x_1$, $x_2$, $y_1$, $L$. -/
 def addY' : R :=
   L * (W.addX x₁ x₂ L - x₁) + y₁
 #align weierstrass_curve.add_Y' WeierstrassCurve.addY'
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.map_simp -/
+theorem baseChange_addY' :
+    (W.base_change A).addY' (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A y₁)
+        (algebraMap R A L) =
+      algebraMap R A (W.addY' x₁ x₂ y₁ L) :=
+  by
+  simp only [add_Y', base_change_add_X]
+  run_tac
+    map_simp
+#align weierstrass_curve.base_change_add_Y' WeierstrassCurve.baseChange_addY'
+
+theorem baseChange_addY'_of_baseChange (x₁ x₂ y₁ L : A) :
+    (W.base_change B).addY' (algebraMap A B x₁) (algebraMap A B x₂) (algebraMap A B y₁)
+        (algebraMap A B L) =
+      algebraMap A B ((W.base_change A).addY' x₁ x₂ y₁ L) :=
+  by rw [← base_change_add_Y', base_change_base_change]
+#align weierstrass_curve.base_change_add_Y'_of_base_change WeierstrassCurve.baseChange_addY'_of_baseChange
 
 /-- The $Y$-coordinate of the addition of two affine points $(x_1, y_1)$ and $(x_2, y_2)$ in `W`,
 where the line through them is not vertical and has a slope of $L$.
@@ -194,7 +252,21 @@ def addY : R :=
   W.negY (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L)
 #align weierstrass_curve.add_Y WeierstrassCurve.addY
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
+theorem baseChange_addY :
+    (W.base_change A).addY (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A y₁)
+        (algebraMap R A L) =
+      algebraMap R A (W.addY x₁ x₂ y₁ L) :=
+  by simp only [add_Y, base_change_add_Y', base_change_add_X, base_change_neg_Y]
+#align weierstrass_curve.base_change_add_Y WeierstrassCurve.baseChange_addY
+
+theorem baseChange_addY_of_baseChange (x₁ x₂ y₁ L : A) :
+    (W.base_change B).addY (algebraMap A B x₁) (algebraMap A B x₂) (algebraMap A B y₁)
+        (algebraMap A B L) =
+      algebraMap A B ((W.base_change A).addY x₁ x₂ y₁ L) :=
+  by rw [← base_change_add_Y, base_change_base_change]
+#align weierstrass_curve.base_change_add_Y_of_base_change WeierstrassCurve.baseChange_addY_of_baseChange
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
 theorem equation_add_iff :
     W.Equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) ↔
       (W.addPolynomial x₁ y₁ L).eval (W.addX x₁ x₂ L) = 0 :=
@@ -204,10 +276,10 @@ theorem equation_add_iff :
     eval_simp
 #align weierstrass_curve.equation_add_iff WeierstrassCurve.equation_add_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.170323567.derivative_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.150691367.derivative_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
 theorem nonsingular_add_of_eval_derivative_ne_zero
     (hx' : W.Equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L))
     (hx : (derivative <| W.addPolynomial x₁ y₁ L).eval (W.addX x₁ x₂ L) ≠ 0) :
@@ -340,7 +412,8 @@ section Addition
 
 open Classical
 
-variable {F : Type u} [Field F] (W : WeierstrassCurve F) (x₁ x₂ y₁ y₂ : F)
+variable {F : Type u} [Field F] (W : WeierstrassCurve F) (K : Type v) [Field K] [Algebra F K]
+  (x₁ x₂ y₁ y₂ : F)
 
 /-- The slope of the line through two affine points $(x_1, y_1)$ and $(x_2, y_2)$ in `W`.
 If $x_1 \ne x_2$, then this line is the secant of `W` through $(x_1, y_1)$ and $(x_2, y_2)$,
@@ -359,6 +432,11 @@ noncomputable def slope : F :=
 
 variable {W x₁ x₂ y₁ y₂} (h₁ : W.Nonsingular x₁ y₁) (h₂ : W.Nonsingular x₂ y₂)
   (h₁' : W.Equation x₁ y₁) (h₂' : W.Equation x₂ y₂)
+
+@[simp]
+theorem slope_of_Y_eq (hx : x₁ = x₂) (hy : y₁ = W.negY x₂ y₂) : W.slope x₁ x₂ y₁ y₂ = 0 := by
+  rw [slope, dif_pos hx, dif_pos hy]
+#align weierstrass_curve.slope_of_Y_eq WeierstrassCurve.slope_of_Y_eq
 
 @[simp]
 theorem slope_of_Y_ne (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂) :
@@ -380,6 +458,41 @@ theorem slope_of_Y_ne_eq_eval (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂
   rw [neg_Y, eval_polynomial_Y]
   ring1
 #align weierstrass_curve.slope_of_Y_ne_eq_eval WeierstrassCurve.slope_of_Y_ne_eq_eval
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.map_simp -/
+theorem baseChange_slope :
+    (W.base_change K).slope (algebraMap F K x₁) (algebraMap F K x₂) (algebraMap F K y₁)
+        (algebraMap F K y₂) =
+      algebraMap F K (W.slope x₁ x₂ y₁ y₂) :=
+  by
+  by_cases hx : x₁ = x₂
+  · by_cases hy : y₁ = W.neg_Y x₂ y₂
+    · rw [slope_of_Y_eq hx hy, slope_of_Y_eq <| congr_arg _ hx, map_zero]
+      · rw [hy, base_change_neg_Y]
+    · rw [slope_of_Y_ne hx hy, slope_of_Y_ne <| congr_arg _ hx]
+      · run_tac
+          map_simp
+        simpa only [base_change_neg_Y]
+      · rw [base_change_neg_Y]
+        contrapose! hy
+        exact NoZeroSMulDivisors.algebraMap_injective F K hy
+  · rw [slope_of_X_ne hx, slope_of_X_ne]
+    ·
+      run_tac
+        map_simp
+    · contrapose! hx
+      exact NoZeroSMulDivisors.algebraMap_injective F K hx
+#align weierstrass_curve.base_change_slope WeierstrassCurve.baseChange_slope
+
+theorem baseChange_slope_of_baseChange {R : Type u} [CommRing R] (W : WeierstrassCurve R)
+    (F : Type v) [Field F] [Algebra R F] (K : Type w) [Field K] [Algebra R K] [Algebra F K]
+    [IsScalarTower R F K] (x₁ x₂ y₁ y₂ : F) :
+    (W.base_change K).slope (algebraMap F K x₁) (algebraMap F K x₂) (algebraMap F K y₁)
+        (algebraMap F K y₂) =
+      algebraMap F K ((W.base_change F).slope x₁ x₂ y₁ y₂) :=
+  by rw [← base_change_slope, base_change_base_change]
+#align weierstrass_curve.base_change_slope_of_base_change WeierstrassCurve.baseChange_slope_of_baseChange
 
 include h₁' h₂'
 
@@ -424,7 +537,7 @@ theorem addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
       linear_combination (norm := (field_simp [hx] ; ring1)) x₂ * h₁' - x₁ * h₂'
 #align weierstrass_curve.add_polynomial_slope WeierstrassCurve.addPolynomial_slope
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.170323567.derivative_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.150691367.derivative_simp -/
 theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     derivative (W.addPolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) =
       -((x - c x₁) * (x - c x₂) + (x - c x₁) * (x - c (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)) +
@@ -439,7 +552,7 @@ theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x�
 /-! ### The addition law on nonsingular rational points on a Weierstrass curve -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
 /-- The addition of two affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, lies in `W`. -/
 theorem equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
@@ -461,7 +574,7 @@ omit h₁' h₂'
 
 include h₁ h₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2556673791.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
 /-- The addition of two nonsingular affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, is nonsingular. -/
 theorem nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
@@ -494,6 +607,8 @@ omit h₁ h₂
 
 namespace Point
 
+variable {h₁ h₂}
+
 /-- The addition of two nonsingular rational points.
 
 Given two nonsingular rational points `P` and `Q`, use `P + Q` instead of `add P Q`. -/
@@ -524,7 +639,7 @@ theorem some_add_some_of_Y_eq (hx : x₁ = x₂) (hy : y₁ = W.negY x₂ y₂) 
 
 @[simp]
 theorem some_add_self_of_Y_eq (hy : y₁ = W.negY x₁ y₁) : some h₁ + some h₁ = 0 :=
-  some_add_some_of_Y_eq h₁ h₁ rfl hy
+  some_add_some_of_Y_eq rfl hy
 #align weierstrass_curve.point.some_add_self_of_Y_eq WeierstrassCurve.Point.some_add_self_of_Y_eq
 
 @[simp]
@@ -535,18 +650,18 @@ theorem some_add_some_of_Y_ne (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂
 
 theorem some_add_some_of_Y_ne' (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂) :
     some h₁ + some h₂ = -some (nonsingular_add' h₁ h₂ fun _ => hy) :=
-  some_add_some_of_Y_ne h₁ h₂ hx hy
+  some_add_some_of_Y_ne hx hy
 #align weierstrass_curve.point.some_add_some_of_Y_ne' WeierstrassCurve.Point.some_add_some_of_Y_ne'
 
 @[simp]
 theorem some_add_self_of_Y_ne (hy : y₁ ≠ W.negY x₁ y₁) :
     some h₁ + some h₁ = some (nonsingular_add h₁ h₁ fun _ => hy) :=
-  some_add_some_of_Y_ne h₁ h₁ rfl hy
+  some_add_some_of_Y_ne rfl hy
 #align weierstrass_curve.point.some_add_self_of_Y_ne WeierstrassCurve.Point.some_add_self_of_Y_ne
 
 theorem some_add_self_of_Y_ne' (hy : y₁ ≠ W.negY x₁ y₁) :
     some h₁ + some h₁ = -some (nonsingular_add' h₁ h₁ fun _ => hy) :=
-  some_add_some_of_Y_ne h₁ h₁ rfl hy
+  some_add_some_of_Y_ne rfl hy
 #align weierstrass_curve.point.some_add_self_of_Y_ne' WeierstrassCurve.Point.some_add_self_of_Y_ne'
 
 @[simp]
@@ -557,7 +672,7 @@ theorem some_add_some_of_X_ne (hx : x₁ ≠ x₂) :
 
 theorem some_add_some_of_X_ne' (hx : x₁ ≠ x₂) :
     some h₁ + some h₂ = -some (nonsingular_add' h₁ h₂ fun h => (hx h).elim) :=
-  some_add_some_of_X_ne h₁ h₂ hx
+  some_add_some_of_X_ne hx
 #align weierstrass_curve.point.some_add_some_of_X_ne' WeierstrassCurve.Point.some_add_some_of_X_ne'
 
 end Point
@@ -576,7 +691,7 @@ namespace Point
 @[simp]
 theorem add_eq_zero (P Q : W.Point) : P + Q = 0 ↔ P = -Q :=
   by
-  rcases P, Q with ⟨_ | @⟨x₁, y₁, h₁⟩, _ | @⟨x₂, y₂, h₂⟩⟩
+  rcases P, Q with ⟨_ | @⟨x₁, y₁, _⟩, _ | @⟨x₂, y₂, _⟩⟩
   any_goals rfl
   · rw [zero_def, zero_add, eq_neg_iff_eq_neg, neg_zero]
   · simp only [neg_some]
@@ -585,11 +700,11 @@ theorem add_eq_zero (P Q : W.Point) : P + Q = 0 ↔ P = -Q :=
       by_cases hx : x₁ = x₂
       · by_cases hy : y₁ = W.neg_Y x₂ y₂
         · exact ⟨hx, hy⟩
-        · rw [some_add_some_of_Y_ne h₁ h₂ hx hy] at h
+        · rw [some_add_some_of_Y_ne hx hy] at h
           contradiction
-      · rw [some_add_some_of_X_ne h₁ h₂ hx] at h
+      · rw [some_add_some_of_X_ne hx] at h
         contradiction
-    · exact fun ⟨hx, hy⟩ => some_add_some_of_Y_eq h₁ h₂ hx hy
+    · exact fun ⟨hx, hy⟩ => some_add_some_of_Y_eq hx hy
 #align weierstrass_curve.point.add_eq_zero WeierstrassCurve.Point.add_eq_zero
 
 @[simp]
@@ -603,6 +718,76 @@ theorem neg_add_eq_zero (P Q : W.Point) : -P + Q = 0 ↔ P = Q := by rw [add_eq_
 end Point
 
 end Group
+
+section BaseChange
+
+/-! ### Nonsingular rational points on a base changed Weierstrass curve -/
+
+
+variable {R : Type u} [CommRing R] (W : WeierstrassCurve R) (F : Type v) [Field F] [Algebra R F]
+  (K : Type w) [Field K] [Algebra R K] [Algebra F K] [IsScalarTower R F K]
+
+namespace Point
+
+open WeierstrassCurve
+
+/- warning: weierstrass_curve.point.of_base_change_fun -> WeierstrassCurve.Point.ofBaseChangeFun is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (W : WeierstrassCurve.{u1} R) (F : Type.{u2}) [_inst_2 : Field.{u2} F] [_inst_3 : Algebra.{u1, u2} R F (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} F (DivisionRing.toRing.{u2} F (Field.toDivisionRing.{u2} F _inst_2)))] (K : Type.{u3}) [_inst_4 : Field.{u3} K] [_inst_5 : Algebra.{u1, u3} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4)))] [_inst_6 : Algebra.{u2, u3} F K (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_2)) (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4)))] [_inst_7 : IsScalarTower.{u1, u2, u3} R F K (SMulZeroClass.toHasSmul.{u1, u2} R F (AddZeroClass.toHasZero.{u2} F (AddMonoid.toAddZeroClass.{u2} F (AddCommMonoid.toAddMonoid.{u2} F (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} F (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} F (Semiring.toNonAssocSemiring.{u2} F (Ring.toSemiring.{u2} F (DivisionRing.toRing.{u2} F (Field.toDivisionRing.{u2} F _inst_2))))))))) (SMulWithZero.toSmulZeroClass.{u1, u2} R F (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u2} F (AddMonoid.toAddZeroClass.{u2} F (AddCommMonoid.toAddMonoid.{u2} F (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} F (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} F (Semiring.toNonAssocSemiring.{u2} F (Ring.toSemiring.{u2} F (DivisionRing.toRing.{u2} F (Field.toDivisionRing.{u2} F _inst_2))))))))) (MulActionWithZero.toSMulWithZero.{u1, u2} R F (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u2} F (AddMonoid.toAddZeroClass.{u2} F (AddCommMonoid.toAddMonoid.{u2} F (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} F (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} F (Semiring.toNonAssocSemiring.{u2} F (Ring.toSemiring.{u2} F (DivisionRing.toRing.{u2} F (Field.toDivisionRing.{u2} F _inst_2))))))))) (Module.toMulActionWithZero.{u1, u2} R F (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} F (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} F (Semiring.toNonAssocSemiring.{u2} F (Ring.toSemiring.{u2} F (DivisionRing.toRing.{u2} F (Field.toDivisionRing.{u2} F _inst_2)))))) (Algebra.toModule.{u1, u2} R F (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} F (DivisionRing.toRing.{u2} F (Field.toDivisionRing.{u2} F _inst_2))) _inst_3))))) (SMulZeroClass.toHasSmul.{u2, u3} F K (AddZeroClass.toHasZero.{u3} K (AddMonoid.toAddZeroClass.{u3} K (AddCommMonoid.toAddMonoid.{u3} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))))))))) (SMulWithZero.toSmulZeroClass.{u2, u3} F K (MulZeroClass.toHasZero.{u2} F (MulZeroOneClass.toMulZeroClass.{u2} F (MonoidWithZero.toMulZeroOneClass.{u2} F (Semiring.toMonoidWithZero.{u2} F (CommSemiring.toSemiring.{u2} F (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_2))))))) (AddZeroClass.toHasZero.{u3} K (AddMonoid.toAddZeroClass.{u3} K (AddCommMonoid.toAddMonoid.{u3} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))))))))) (MulActionWithZero.toSMulWithZero.{u2, u3} F K (Semiring.toMonoidWithZero.{u2} F (CommSemiring.toSemiring.{u2} F (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_2)))) (AddZeroClass.toHasZero.{u3} K (AddMonoid.toAddZeroClass.{u3} K (AddCommMonoid.toAddMonoid.{u3} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))))))))) (Module.toMulActionWithZero.{u2, u3} F K (CommSemiring.toSemiring.{u2} F (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_2))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4)))))) (Algebra.toModule.{u2, u3} F K (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_2)) (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))) _inst_6))))) (SMulZeroClass.toHasSmul.{u1, u3} R K (AddZeroClass.toHasZero.{u3} K (AddMonoid.toAddZeroClass.{u3} K (AddCommMonoid.toAddMonoid.{u3} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))))))))) (SMulWithZero.toSmulZeroClass.{u1, u3} R K (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (AddZeroClass.toHasZero.{u3} K (AddMonoid.toAddZeroClass.{u3} K (AddCommMonoid.toAddMonoid.{u3} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))))))))) (MulActionWithZero.toSMulWithZero.{u1, u3} R K (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (AddZeroClass.toHasZero.{u3} K (AddMonoid.toAddZeroClass.{u3} K (AddCommMonoid.toAddMonoid.{u3} K (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))))))))) (Module.toMulActionWithZero.{u1, u3} R K (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} K (Semiring.toNonAssocSemiring.{u3} K (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4)))))) (Algebra.toModule.{u1, u3} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u3} K (DivisionRing.toRing.{u3} K (Field.toDivisionRing.{u3} K _inst_4))) _inst_5)))))], (WeierstrassCurve.Point.{u2} F (EuclideanDomain.toCommRing.{u2} F (Field.toEuclideanDomain.{u2} F _inst_2)) (WeierstrassCurve.baseChange.{u1, u2} R _inst_1 W F (EuclideanDomain.toCommRing.{u2} F (Field.toEuclideanDomain.{u2} F _inst_2)) _inst_3)) -> (WeierstrassCurve.Point.{u3} K (EuclideanDomain.toCommRing.{u3} K (Field.toEuclideanDomain.{u3} K _inst_4)) (WeierstrassCurve.baseChange.{u1, u3} R _inst_1 W K (EuclideanDomain.toCommRing.{u3} K (Field.toEuclideanDomain.{u3} K _inst_4)) _inst_5))
+but is expected to have type
+  PUnit.{max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))}
+Case conversion may be inaccurate. Consider using '#align weierstrass_curve.point.of_base_change_fun WeierstrassCurve.Point.ofBaseChangeFunₓ'. -/
+/-- The function from `W⟮F⟯` to `W⟮K⟯` induced by a base change from `F` to `K`. -/
+def ofBaseChangeFun : W⟮F⟯ → W⟮K⟯
+  | 0 => 0
+  | some h => some <| (nonsingular_iff_baseChange_of_baseChange W F K _ _).mp h
+#align weierstrass_curve.point.of_base_change_fun WeierstrassCurve.Point.ofBaseChangeFun
+
+/-- The group homomorphism from `W⟮F⟯` to `W⟮K⟯` induced by a base change from `F` to `K`. -/
+@[simps]
+def ofBaseChange : W⟮F⟯ →+ W⟮K⟯
+    where
+  toFun := ofBaseChangeFun W F K
+  map_zero' := rfl
+  map_add' := by
+    rintro (_ | @⟨x₁, y₁, _⟩) (_ | @⟨x₂, y₂, _⟩)
+    any_goals rfl
+    by_cases hx : x₁ = x₂
+    · by_cases hy : y₁ = (W.base_change F).negY x₂ y₂
+      · simp only [some_add_some_of_Y_eq hx hy, of_base_change_fun]
+        rw [some_add_some_of_Y_eq <| congr_arg _ hx]
+        · rw [hy, base_change_neg_Y_of_base_change]
+      · simp only [some_add_some_of_Y_ne hx hy, of_base_change_fun]
+        rw [some_add_some_of_Y_ne <| congr_arg _ hx]
+        · simp only [base_change_add_X_of_base_change, base_change_add_Y_of_base_change,
+            base_change_slope_of_base_change]
+          exact ⟨rfl, rfl⟩
+        · rw [base_change_neg_Y_of_base_change]
+          contrapose! hy
+          exact NoZeroSMulDivisors.algebraMap_injective F K hy
+    · simp only [some_add_some_of_X_ne hx, of_base_change_fun]
+      rw [some_add_some_of_X_ne]
+      · simp only [base_change_add_X_of_base_change, base_change_add_Y_of_base_change,
+          base_change_slope_of_base_change]
+        exact ⟨rfl, rfl⟩
+      · contrapose! hx
+        exact NoZeroSMulDivisors.algebraMap_injective F K hx
+#align weierstrass_curve.point.of_base_change WeierstrassCurve.Point.ofBaseChange
+
+theorem ofBaseChange_injective : Function.Injective <| ofBaseChange W F K :=
+  by
+  rintro (_ | _) (_ | _) h
+  · rfl
+  any_goals contradiction
+  simp only
+  exact
+    ⟨NoZeroSMulDivisors.algebraMap_injective F K (some.inj h).left,
+      NoZeroSMulDivisors.algebraMap_injective F K (some.inj h).right⟩
+#align weierstrass_curve.point.of_base_change_injective WeierstrassCurve.Point.ofBaseChange_injective
+
+end Point
+
+end BaseChange
 
 end WeierstrassCurve
 

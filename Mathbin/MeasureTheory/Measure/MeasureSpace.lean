@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 3f5c9d30716c775bda043456728a1a3ee31412e7
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3634,7 +3634,8 @@ theorem countable_meas_pos_of_disjoint_of_meas_unionᵢ_ne_top {ι : Type _} [Me
     Set.Countable { i : ι | 0 < μ (As i) } :=
   by
   set posmeas := { i : ι | 0 < μ (As i) } with posmeas_def
-  rcases exists_seq_strictAnti_tendsto' ENNReal.zero_lt_one with ⟨as, ⟨as_decr, ⟨as_mem, as_lim⟩⟩⟩
+  rcases exists_seq_strictAnti_tendsto' (zero_lt_one : (0 : ℝ≥0∞) < 1) with
+    ⟨as, as_decr, as_mem, as_lim⟩
   set fairmeas := fun n : ℕ => { i : ι | as n ≤ μ (As i) } with fairmeas_def
   have countable_union : posmeas = ⋃ n, fairmeas n :=
     by

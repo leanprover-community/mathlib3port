@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich, Vincent Beffara
 
 ! This file was ported from Lean 3 source module probability.integration
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
     rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, ENNReal.supᵢ_mul]
     · simp_rw [← h_ind_f]
     · exact fun n => h_mul_indicator _ (h_measM_f n)
-    · exact fun m n h_le a => ENNReal.mul_le_mul (h_mono_f h_le a) le_rfl
+    · exact fun m n h_le a => mul_le_mul_right' (h_mono_f h_le a) _
 #align probability_theory.lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator ProbabilityTheory.lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
@@ -109,7 +109,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
     rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', ENNReal.mul_supᵢ]
     · simp_rw [← h_ind_f']
     · exact fun n => h_measM_f.mul (h_measM_f' n)
-    · exact fun n m (h_le : n ≤ m) a => ENNReal.mul_le_mul le_rfl (h_mono_f' h_le a)
+    · exact fun n m (h_le : n ≤ m) a => mul_le_mul_left' (h_mono_f' h_le a) _
 #align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,

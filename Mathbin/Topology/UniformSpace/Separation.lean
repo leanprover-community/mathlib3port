@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.separation
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
+! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,6 +136,19 @@ theorem Filter.HasBasis.mem_separationRel {ι : Sort _} {p : ι → Prop} {s : �
     (h : (𝓤 α).HasBasis p s) {a : α × α} : a ∈ 𝓢 α ↔ ∀ i, p i → a ∈ s i :=
   h.forall_mem_mem
 #align filter.has_basis.mem_separation_rel Filter.HasBasis.mem_separationRel
+
+#print separationRel_iff_specializes /-
+theorem separationRel_iff_specializes {a b : α} : (a, b) ∈ 𝓢 α ↔ a ⤳ b := by
+  simp only [(𝓤 α).basis_sets.mem_separationRel, id, mem_set_of_eq,
+    (nhds_basis_uniformity (𝓤 α).basis_sets).specializes_iff]
+#align separation_rel_iff_specializes separationRel_iff_specializes
+-/
+
+#print separationRel_iff_inseparable /-
+theorem separationRel_iff_inseparable {a b : α} : (a, b) ∈ 𝓢 α ↔ Inseparable a b :=
+  separationRel_iff_specializes.trans specializes_iff_inseparable
+#align separation_rel_iff_inseparable separationRel_iff_inseparable
+-/
 
 #print SeparatedSpace /-
 /-- A uniform space is separated if its separation relation is trivial (each point
@@ -517,6 +530,10 @@ instance : SeparatedSpace (SeparationQuotient α) :=
 
 instance [Inhabited α] : Inhabited (SeparationQuotient α) :=
   Quotient.inhabited (separationSetoid α)
+
+theorem mk'_eq_mk' {x y : α} : (⟦x⟧ : SeparationQuotient α) = ⟦y⟧ ↔ Inseparable x y :=
+  Quotient.eq''.trans separationRel_iff_inseparable
+#align uniform_space.separation_quotient.mk_eq_mk UniformSpace.SeparationQuotient.mk'_eq_mk'
 
 #print UniformSpace.SeparationQuotient.lift /-
 /-- Factoring functions to a separated space through the separation quotient. -/

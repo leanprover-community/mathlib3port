@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -561,7 +561,7 @@ theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {
   refine' ⟨fun i => δ' i / max 1 (w i), fun i => div_pos (Hpos _) (this i), _⟩
   refine' lt_of_le_of_lt (ENNReal.tsum_le_tsum fun i => _) Hsum
   rw [coe_div (this i).ne']
-  refine' mul_le_of_le_div' (ENNReal.mul_le_mul le_rfl <| ENNReal.inv_le_inv.2 _)
+  refine' mul_le_of_le_div' (mul_le_mul_left' (ENNReal.inv_le_inv.2 _) _)
   exact coe_le_coe.2 (le_max_right _ _)
 #align ennreal.exists_pos_tsum_mul_lt_of_countable ENNReal.exists_pos_tsum_mul_lt_of_countable
 

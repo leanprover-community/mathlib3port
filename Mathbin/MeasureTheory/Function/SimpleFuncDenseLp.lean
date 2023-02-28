@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense_lp
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -355,7 +355,7 @@ theorem memℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem integrable_iff {f : α →ₛ E} : Integrable f μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
-  memℒp_one_iff_integrable.symm.trans <| memℒp_iff ENNReal.zero_lt_one.ne' ENNReal.coe_ne_top
+  memℒp_one_iff_integrable.symm.trans <| memℒp_iff one_ne_zero ENNReal.coe_ne_top
 #align measure_theory.simple_func.integrable_iff MeasureTheory.SimpleFunc.integrable_iff
 
 theorem memℒp_iff_integrable {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) :
@@ -998,7 +998,7 @@ theorem lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : lp E p �
     (h_closed : IsClosed { f : lp E p μ | P f }) : ∀ f : lp E p μ, P f :=
   by
   refine' fun f => (Lp.simple_func.dense_range hp_ne_top).inductionOn f h_closed _
-  refine' Lp.simple_func.induction (lt_of_lt_of_le ENNReal.zero_lt_one _i.elim).ne' hp_ne_top _ _
+  refine' Lp.simple_func.induction (lt_of_lt_of_le zero_lt_one _i.elim).ne' hp_ne_top _ _
   · exact fun c s => h_ind c
   · exact fun f g hf hg => h_add hf hg
 #align measure_theory.Lp.induction MeasureTheory.lp.induction
@@ -1033,7 +1033,7 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
         convert h_ind 0 MeasurableSet.empty (by simp) using 1
         ext
         simp [const]
-      have hp_pos : p ≠ 0 := (lt_of_lt_of_le ENNReal.zero_lt_one _i.elim).ne'
+      have hp_pos : p ≠ 0 := (lt_of_lt_of_le zero_lt_one _i.elim).ne'
       exact h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs h)
     · intro f g hfg hf hg int_fg
       rw [simple_func.coe_add,

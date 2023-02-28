@@ -1901,6 +1901,7 @@ import Mathbin.LinearAlgebra.Basic
 import Mathbin.LinearAlgebra.Basis
 import Mathbin.LinearAlgebra.Basis.Bilinear
 import Mathbin.LinearAlgebra.BilinearForm
+import Mathbin.LinearAlgebra.BilinearForm.TensorProduct
 import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.LinearAlgebra.Charpoly.Basic
 import Mathbin.LinearAlgebra.Charpoly.ToMatrix

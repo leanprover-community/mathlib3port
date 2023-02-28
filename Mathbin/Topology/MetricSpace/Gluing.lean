@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gluing
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -598,7 +598,7 @@ variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z �
 
 open _Root_.Sum (inl inr)
 
-attribute [local instance] PseudoMetric.distSetoid
+attribute [local instance] UniformSpace.separationSetoid
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a pseudo metric space
 structure on `X ⊕ Y` by declaring that `Φ x` and `Ψ x` are at distance `0`. -/
@@ -613,23 +613,17 @@ def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (S
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
 space  `glue_space hΦ hΨ` by identifying in `X ⊕ Y` the points `Φ x` and `Ψ x`. -/
 def GlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
-  @PseudoMetricQuot _ (gluePremetric hΦ hΨ)
+  @UniformSpace.SeparationQuotient _ (gluePremetric hΦ hΨ).toUniformSpace deriving MetricSpace
 #align metric.glue_space Metric.GlueSpace
-
-instance metricSpaceGlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : MetricSpace (GlueSpace hΦ hΨ) :=
-  @metricSpaceQuot _ (gluePremetric hΦ hΨ)
-#align metric.metric_space_glue_space Metric.metricSpaceGlueSpace
 
 /-- The canonical map from `X` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
 def toGlueL (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (x : X) : GlueSpace hΦ hΨ :=
-  letI : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
-  ⟦inl x⟧
+  Quotient.mk'' (inl x)
 #align metric.to_glue_l Metric.toGlueL
 
 /-- The canonical map from `Y` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
 def toGlueR (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : GlueSpace hΦ hΨ :=
-  letI : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
-  ⟦inr y⟧
+  Quotient.mk'' (inr y)
 #align metric.to_glue_r Metric.toGlueR
 
 instance inhabitedLeft (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] :
@@ -645,9 +639,11 @@ instance inhabitedRight (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] :
 theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
     toGlueL hΦ hΨ ∘ Φ = toGlueR hΦ hΨ ∘ Ψ :=
   by
-  letI : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
+  letI i : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
+  letI := i.to_uniform_space
   funext
-  simp only [comp, to_glue_l, to_glue_r, Quotient.eq']
+  simp only [comp, to_glue_l, to_glue_r]
+  refine' UniformSpace.SeparationQuotient.mk'_eq_mk'.2 (Metric.inseparable_iff.2 _)
   exact glue_dist_glued_points Φ Ψ 0 x
 #align metric.to_glue_commute Metric.to_glue_commute
 
@@ -738,22 +734,16 @@ def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n
       
 #align metric.inductive_premetric Metric.inductivePremetric
 
-attribute [local instance] inductive_premetric PseudoMetric.distSetoid
+attribute [local instance] inductive_premetric UniformSpace.separationSetoid
 
 /-- The type giving the inductive limit in a metric space context. -/
 def InductiveLimit (I : ∀ n, Isometry (f n)) : Type _ :=
-  @PseudoMetricQuot _ (inductivePremetric I)
+  @UniformSpace.SeparationQuotient _ (inductivePremetric I).toUniformSpace deriving MetricSpace
 #align metric.inductive_limit Metric.InductiveLimit
-
-/-- Metric space structure on the inductive limit. -/
-instance metricSpaceInductiveLimit (I : ∀ n, Isometry (f n)) : MetricSpace (InductiveLimit I) :=
-  @metricSpaceQuot _ (inductivePremetric I)
-#align metric.metric_space_inductive_limit Metric.metricSpaceInductiveLimit
 
 /-- Mapping each `X n` to the inductive limit. -/
 def toInductiveLimit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.InductiveLimit I :=
-  letI : PseudoMetricSpace (Σn, X n) := inductive_premetric I
-  ⟦Sigma.mk n x⟧
+  Quotient.mk'' (Sigma.mk n x)
 #align metric.to_inductive_limit Metric.toInductiveLimit
 
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLimit I) :=
@@ -773,8 +763,10 @@ theorem toInductiveLimit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
 theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     toInductiveLimit I n.succ ∘ f n = toInductiveLimit I n :=
   by
+  letI := inductive_premetric I
   funext
-  simp only [comp, to_inductive_limit, Quotient.eq']
+  simp only [comp, to_inductive_limit]
+  refine' UniformSpace.SeparationQuotient.mk'_eq_mk'.2 (Metric.inseparable_iff.2 _)
   show inductive_limit_dist f ⟨n.succ, f n x⟩ ⟨n, x⟩ = 0
   · rw [inductive_limit_dist_eq_dist I ⟨n.succ, f n x⟩ ⟨n, x⟩ n.succ, le_rec_on_self,
       le_rec_on_succ, le_rec_on_self, dist_self]

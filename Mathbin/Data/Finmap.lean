@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sean Leather, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finmap
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
+! leanprover-community/mathlib commit c3fc15b26b3ff8958ec3e5711177a9ae3d5c45b7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -456,10 +456,10 @@ def foldl {δ : Type w} (f : δ → ∀ a, β a → δ)
 #print Finmap.any /-
 /-- `any f s` returns `tt` iff there exists a value `v` in `s` such that `f v = tt`. -/
 def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
-  s.foldl (fun x y z => x ∨ f y z)
+  s.foldl (fun x y z => x || f y z)
     (by
       intros
-      simp [or_right_comm])
+      simp_rw [Bool.or_assoc, Bool.or_comm])
     false
 #align finmap.any Finmap.any
 -/
@@ -467,11 +467,11 @@ def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
 #print Finmap.all /-
 /-- `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
 def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
-  s.foldl (fun x y z => x ∧ f y z)
+  s.foldl (fun x y z => x && f y z)
     (by
       intros
-      simp [and_right_comm])
-    false
+      simp_rw [Bool.and_assoc, Bool.and_comm])
+    true
 #align finmap.all Finmap.all
 -/
 

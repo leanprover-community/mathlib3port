@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris Van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.regular
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,11 +282,9 @@ theorem Set.exists_isOpen_lt_add [OuterRegular μ] (A : Set α) (hA : μ A ≠ �
 theorem Set.exists_isOpen_le_add (A : Set α) (μ : Measure α) [OuterRegular μ] {ε : ℝ≥0∞}
     (hε : ε ≠ 0) : ∃ (U : _)(_ : U ⊇ A), IsOpen U ∧ μ U ≤ μ A + ε :=
   by
-  rcases le_or_lt ∞ (μ A) with (H | H)
-  ·
-    exact
-      ⟨univ, subset_univ _, isOpen_univ, by simp only [top_le_iff.mp H, ENNReal.top_add, le_top]⟩
-  · rcases A.exists_is_open_lt_add H.ne hε with ⟨U, AU, U_open, hU⟩
+  rcases eq_or_ne (μ A) ∞ with (H | H)
+  · exact ⟨univ, subset_univ _, isOpen_univ, by simp only [H, _root_.top_add, le_top]⟩
+  · rcases A.exists_is_open_lt_add H hε with ⟨U, AU, U_open, hU⟩
     exact ⟨U, AU, U_open, hU.le⟩
 #align set.exists_is_open_le_add Set.exists_isOpen_le_add
 

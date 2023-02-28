@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 832a8ba8f10f11fea99367c469ff802e69a5b8ec
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -702,7 +702,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux1 (s : Set E) (x : E
         (eventually_of_forall fun b => zero_le _)
     filter_upwards [self_mem_nhdsWithin]
     rintro r (rpos : 0 < r)
-    apply ENNReal.mul_le_mul (measure_mono (inter_subset_inter_right _ _)) le_rfl
+    apply mul_le_mul_right' (measure_mono (inter_subset_inter_right _ _)) _
     intro y hy
     have : y - x ∈ r • closed_ball (0 : E) 1 :=
       by
@@ -845,7 +845,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
     μ (s ∩ ({x} + r • t)) / μ ({x} + r • t) ≤
         (μ (s ∩ ({x} + r • (t ∩ closed_ball 0 n))) + μ ({x} + r • (t \ closed_ball 0 n))) /
           μ ({x} + r • t) :=
-      ENNReal.mul_le_mul I le_rfl
+      mul_le_mul_right' I _
     _ < ε / 2 + ε / 2 := by
       rw [ENNReal.add_div]
       apply ENNReal.add_lt_add hr _
@@ -932,8 +932,7 @@ theorem tendsto_add_haar_inter_smul_one_of_density_one (s : Set E) (x : E)
       tendsto_add_haar_inter_smul_one_of_density_one_aux μ _ (measurable_set_to_measurable _ _) _ _
         t ht h't h''t
     apply tendsto_of_tendsto_of_tendsto_of_le_of_le' h tendsto_const_nhds
-    · apply eventually_of_forall fun r => _
-      apply ENNReal.mul_le_mul _ le_rfl
+    · refine' eventually_of_forall fun r => mul_le_mul_right' _ _
       exact measure_mono (inter_subset_inter_left _ (subset_to_measurable _ _))
     · filter_upwards [self_mem_nhdsWithin]
       rintro r (rpos : 0 < r)
@@ -958,7 +957,7 @@ theorem eventually_nonempty_inter_smul_of_density_one (s : Set E) (x : E)
     exists_subset_measure_lt_top ht h't.bot_lt
   filter_upwards [(tendsto_order.1
           (tendsto_add_haar_inter_smul_one_of_density_one μ s x h t' t'_meas t'pos.ne' t'top.ne)).1
-      0 ENNReal.zero_lt_one]
+      0 zero_lt_one]
   intro r hr
   have : μ (s ∩ ({x} + r • t')) ≠ 0 := fun h' => by
     simpa only [ENNReal.not_lt_zero, ENNReal.zero_div, h'] using hr

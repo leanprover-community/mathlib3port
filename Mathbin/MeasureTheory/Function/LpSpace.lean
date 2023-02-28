@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1339,8 +1339,7 @@ theorem snorm_smul_le_snorm_top_mul_snorm (p : ℝ≥0∞) {f : α → E} (hf : 
         exact ENNReal.toReal_nonneg
       refine' lintegral_mono_ae _
       filter_upwards [@ENNReal.ae_le_essSup _ _ μ fun x => ↑‖φ x‖₊]with x hx
-      refine' ENNReal.mul_le_mul _ le_rfl
-      exact ENNReal.rpow_le_rpow hx ENNReal.toReal_nonneg
+      exact mul_le_mul_right' (ENNReal.rpow_le_rpow hx ENNReal.toReal_nonneg) _
     _ = essSup (fun x => ↑‖φ x‖₊) μ * (∫⁻ x, ↑‖f x‖₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) :=
       by
       rw [lintegral_const_mul'']
@@ -1380,13 +1379,11 @@ theorem snorm_smul_le_mul_snorm {p q r : ℝ≥0∞} {f : α → E} (hf : AeStro
   · simp [hp_zero]
   have hq_ne_zero : q ≠ 0 := by
     intro hq_zero
-    simp only [hq_zero, hp_zero, one_div, ENNReal.inv_zero, ENNReal.top_add, ENNReal.inv_eq_top] at
-      hpqr
+    simp only [hq_zero, hp_zero, one_div, ENNReal.inv_zero, top_add, ENNReal.inv_eq_top] at hpqr
     exact hpqr
   have hr_ne_zero : r ≠ 0 := by
     intro hr_zero
-    simp only [hr_zero, hp_zero, one_div, ENNReal.inv_zero, ENNReal.add_top, ENNReal.inv_eq_top] at
-      hpqr
+    simp only [hr_zero, hp_zero, one_div, ENNReal.inv_zero, add_top, ENNReal.inv_eq_top] at hpqr
     exact hpqr
   by_cases hq_top : q = ∞
   · have hpr : p = r := by
@@ -1924,8 +1921,7 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p μ) :=
           exact snorm_add_le (Lp.ae_strongly_measurable f) (Lp.ae_strongly_measurable g) hp.1
         eq_zero_of_map_eq_zero' := fun f =>
           (norm_eq_zero_iff <|
-              ENNReal.zero_lt_one.trans_le
-                hp.1).1 } with
+              zero_lt_one.trans_le hp.1).1 } with
     edist := edist
     edist_dist := fun f g => by
       rw [edist_def, dist_def, ← snorm_congr_ae (coe_fn_sub _ _),
@@ -2014,7 +2010,7 @@ theorem snormEssSup_indicator_const_le (s : Set α) (c : G) :
   by
   by_cases hμ0 : μ = 0
   · rw [hμ0, snorm_ess_sup_measure_zero]
-    exact ENNReal.coe_nonneg
+    exact zero_le _
   · exact (snorm_ess_sup_indicator_le s fun x => c).trans (snorm_ess_sup_const c hμ0).le
 #align measure_theory.snorm_ess_sup_indicator_const_le MeasureTheory.snormEssSup_indicator_const_le
 
@@ -2957,7 +2953,7 @@ theorem ae_tendsto_of_cauchy_snorm [CompleteSpace E] {f : ℕ → α → E}
     by
     intro N n m hn hm
     specialize h_cau N n m hn hm
-    rwa [snorm_eq_snorm' (ennreal.zero_lt_one.trans_le hp).Ne.symm hp_top] at h_cau
+    rwa [snorm_eq_snorm' (zero_lt_one.trans_le hp).Ne.symm hp_top] at h_cau
   exact ae_tendsto_of_cauchy_snorm' hf hp1 hB h_cau'
 #align measure_theory.Lp.ae_tendsto_of_cauchy_snorm MeasureTheory.lp.ae_tendsto_of_cauchy_snorm
 
@@ -2994,7 +2990,7 @@ theorem memℒpOfCauchyTendsto (hp : 1 ≤ p) {f : ℕ → α → E} (hf : ∀ n
   by
   refine' ⟨h_lim_meas, _⟩
   rw [ENNReal.tendsto_atTop_zero] at h_tendsto
-  cases' h_tendsto 1 ENNReal.zero_lt_one with N h_tendsto_1
+  cases' h_tendsto 1 zero_lt_one with N h_tendsto_1
   specialize h_tendsto_1 N (le_refl N)
   have h_add : f_lim = f_lim - f N + f N := by abel
   rw [h_add]

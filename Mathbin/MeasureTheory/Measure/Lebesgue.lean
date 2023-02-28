@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.lebesgue
-! leanprover-community/mathlib commit 733fa0048f88bd38678c283c8c1bb1445ac5e23b
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem volume_closedBall (a r : ℝ) : volume (Metric.closedBall a r) = ofReal 
 theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.ball a r) = 2 * r :=
   by
   rcases eq_or_ne r ∞ with (rfl | hr)
-  · rw [Metric.emetric_ball_top, volume_univ, two_mul, ENNReal.top_add]
+  · rw [Metric.emetric_ball_top, volume_univ, two_mul, _root_.top_add]
   · lift r to ℝ≥0 using hr
     rw [Metric.emetric_ball_nNReal, volume_ball, two_mul, ← NNReal.coe_add,
       ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
@@ -130,7 +130,7 @@ theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.ball a 
 theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.closedBall a r) = 2 * r :=
   by
   rcases eq_or_ne r ∞ with (rfl | hr)
-  · rw [Emetric.closedBall_top, volume_univ, two_mul, ENNReal.top_add]
+  · rw [Emetric.closedBall_top, volume_univ, two_mul, _root_.top_add]
   · lift r to ℝ≥0 using hr
     rw [Metric.emetric_closedBall_nNReal, volume_closed_ball, two_mul, ← NNReal.coe_add,
       ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]

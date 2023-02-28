@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -659,7 +659,7 @@ theorem is_left_invariant_haarContent {K₀ : PositiveCompacts G} (g : G) (K : C
 theorem haarContent_outerMeasure_self_pos {K₀ : PositiveCompacts G} :
     0 < (haarContent K₀).OuterMeasure K₀ :=
   by
-  apply ennreal.zero_lt_one.trans_le
+  refine' zero_lt_one.trans_le _
   rw [content.outer_measure_eq_infi]
   refine' le_infᵢ₂ fun U hU => le_infᵢ fun hK₀ => le_trans _ <| le_supᵢ₂ K₀.to_compacts hK₀
   exact haar_content_self.ge

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.basic
-! leanprover-community/mathlib commit 1447cae870f372074e480de1acbeb51de0077698
+! leanprover-community/mathlib commit 9da1b3534b65d9661eb8f42443598a92bbb49211
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -6431,6 +6431,29 @@ theorem map_fst_add_enum_eq_enumFrom (l : List α) (n : ℕ) :
   map_fst_add_enumFrom_eq_enumFrom l _ _
 #align list.map_fst_add_enum_eq_enum_from List.map_fst_add_enum_eq_enumFrom
 -/
+
+theorem enumFrom_cons' (n : ℕ) (x : α) (xs : List α) :
+    enumFrom n (x :: xs) = (n, x) :: (enumFrom n xs).map (Prod.map Nat.succ id) := by
+  rw [enum_from_cons, add_comm, ← map_fst_add_enum_from_eq_enum_from]
+#align list.enum_from_cons' List.enumFrom_cons'
+
+theorem enum_cons' (x : α) (xs : List α) :
+    enum (x :: xs) = (0, x) :: (enum xs).map (Prod.map Nat.succ id) :=
+  enumFrom_cons' _ _ _
+#align list.enum_cons' List.enum_cons'
+
+theorem enumFrom_map (n : ℕ) (l : List α) (f : α → β) :
+    enumFrom n (l.map f) = (enumFrom n l).map (Prod.map id f) :=
+  by
+  induction' l with hd tl IH
+  · rfl
+  · rw [map_cons, enum_from_cons', enum_from_cons', map_cons, map_map, IH, map_map]
+    rfl
+#align list.enum_from_map List.enumFrom_map
+
+theorem enum_map (l : List α) (f : α → β) : (l.map f).enum = l.enum.map (Prod.map id f) :=
+  enumFrom_map _ _ _
+#align list.enum_map List.enum_map
 
 #print List.nthLe_enumFrom /-
 theorem nthLe_enumFrom (l : List α) (n i : ℕ) (hi' : i < (l.enumFrom n).length)

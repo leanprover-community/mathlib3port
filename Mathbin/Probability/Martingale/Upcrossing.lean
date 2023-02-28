@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.upcrossing
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -966,10 +966,10 @@ theorem upcrossings_lt_top_iff :
   simp_rw [this, upcrossings, supᵢ_le_iff]
   constructor <;> rintro ⟨k, hk⟩
   · obtain ⟨m, hm⟩ := exists_nat_ge k
-    refine' ⟨m, fun N => ENNReal.coe_nat_le_coe_nat.1 ((hk N).trans _)⟩
+    refine' ⟨m, fun N => Nat.cast_le.1 ((hk N).trans _)⟩
     rwa [← ENNReal.coe_nat, ENNReal.coe_le_coe]
   · refine' ⟨k, fun N => _⟩
-    simp only [ENNReal.coe_nat, ENNReal.coe_nat_le_coe_nat, hk N]
+    simp only [ENNReal.coe_nat, Nat.cast_le, hk N]
 #align measure_theory.upcrossings_lt_top_iff MeasureTheory.upcrossings_lt_top_iff
 
 /-- A variant of Doob's upcrossing estimate obtained by taking the supremum on both sides. -/
@@ -1003,7 +1003,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
         measurable_from_top.comp_ae_measurable
           (hf.adapted.measurable_upcrossings_before hab).AeMeasurable
     · refine' eventually_of_forall fun ω N M hNM => _
-      rw [ENNReal.coe_nat_le_coe_nat]
+      rw [Nat.cast_le]
       exact upcrossings_before_mono hab hNM ω
   · rw [not_lt, ← sub_nonpos] at hab
     rw [ENNReal.ofReal_of_nonpos hab, zero_mul]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.filter.ennreal
-! leanprover-community/mathlib commit 11c2b8c18d1a8e44fe9ba8ba6b931d51b4734150
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,8 +144,7 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
     f.limsup (u * v) ≤ f.limsup fun x => f.limsup u * v x :=
       by
       refine' limsup_le_limsup _ _
-      · filter_upwards [@eventually_le_limsup _ f _ u]with x hx
-        exact ENNReal.mul_le_mul hx le_rfl
+      · filter_upwards [@eventually_le_limsup _ f _ u]with x hx using mul_le_mul_right' hx _
       ·
         run_tac
           is_bounded_default

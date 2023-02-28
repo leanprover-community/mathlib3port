@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,7 @@ theorem infEdist_image (hΦ : Isometry Φ) : infEdist (Φ x) (Φ '' t) = infEdis
 theorem IsOpen.exists_unionᵢ_isClosed {U : Set α} (hU : IsOpen U) :
     ∃ F : ℕ → Set α, (∀ n, IsClosed (F n)) ∧ (∀ n, F n ⊆ U) ∧ (⋃ n, F n) = U ∧ Monotone F :=
   by
-  obtain ⟨a, a_pos, a_lt_one⟩ : ∃ a : ℝ≥0∞, 0 < a ∧ a < 1 := exists_between ENNReal.zero_lt_one
+  obtain ⟨a, a_pos, a_lt_one⟩ : ∃ a : ℝ≥0∞, 0 < a ∧ a < 1 := exists_between zero_lt_one
   let F := fun n : ℕ => (fun x => inf_edist x (Uᶜ)) ⁻¹' Ici (a ^ n)
   have F_subset : ∀ n, F n ⊆ U := by
     intro n x hx
@@ -221,7 +221,7 @@ theorem IsOpen.exists_unionᵢ_isClosed {U : Set α} (hU : IsOpen U) :
   show Monotone F
   · intro m n hmn x hx
     simp only [mem_Ici, mem_preimage] at hx⊢
-    apply le_trans (ENNReal.pow_le_pow_of_le_one a_lt_one.le hmn) hx
+    apply le_trans (pow_le_pow_of_le_one' a_lt_one.le hmn) hx
   show (⋃ n, F n) = U
   · refine' subset.antisymm (by simp only [Union_subset_iff, F_subset, forall_const]) fun x hx => _
     have : ¬x ∈ Uᶜ := by simpa using hx
@@ -1318,8 +1318,7 @@ theorem ediam_cthickening_le (ε : ℝ≥0) : Emetric.diam (cthickening ε s) �
               add_le_add hyy'.le <| edist_le_diam_of_mem hy' hx').trans_eq
         _)
   -- Now we're done, but `ring` won't do it because we're on `ennreal` :(
-  rw [← add_assoc, ← two_mul, mul_add,
-    ENNReal.mul_div_cancel' ENNReal.two_ne_zero ENNReal.two_ne_top]
+  rw [← add_assoc, ← two_mul, mul_add, ENNReal.mul_div_cancel' two_ne_zero ENNReal.two_ne_top]
   abel
 #align metric.ediam_cthickening_le Metric.ediam_cthickening_le
 

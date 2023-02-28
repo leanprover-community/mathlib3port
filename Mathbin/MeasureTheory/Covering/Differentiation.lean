@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.differentiation
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,13 +195,13 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
         simp only [coe_nnreal_smul_apply, ← mul_assoc, mul_comm _ (ε : ℝ≥0∞)]
         rw [ENNReal.mul_inv_cancel (ENNReal.coe_pos.2 εpos).ne' ENNReal.coe_ne_top, one_mul]
       _ ≤ ε⁻¹ * ρ (s ∩ o) := by
-        apply ENNReal.mul_le_mul le_rfl
+        refine' mul_le_mul_left' _ _
         refine' v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul ε) _ _
         intro x hx
         rw [hs] at hx
         simp only [mem_inter_iff, not_lt, not_eventually, mem_set_of_eq] at hx
         exact hx.1
-      _ ≤ ε⁻¹ * ρ o := ENNReal.mul_le_mul le_rfl (measure_mono (inter_subset_right _ _))
+      _ ≤ ε⁻¹ * ρ o := mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _
       _ = 0 := by rw [ρo, mul_zero]
       
   obtain ⟨u, u_anti, u_pos, u_lim⟩ :
@@ -218,7 +218,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
   filter_upwards [hx n, h'x, v.eventually_measure_lt_top x]
   intro a ha μa_pos μa_lt_top
   rw [ENNReal.div_lt_iff (Or.inl μa_pos.ne') (Or.inl μa_lt_top.ne)]
-  exact ha.trans_le (ENNReal.mul_le_mul ((ENNReal.coe_le_coe.2 hn.le).trans w_lt.le) le_rfl)
+  exact ha.trans_le (mul_le_mul_right' ((ENNReal.coe_le_coe.2 hn.le).trans w_lt.le) _)
 #align vitali_family.ae_eventually_measure_zero_of_singular VitaliFamily.ae_eventually_measure_zero_of_singular
 
 section AbsolutelyContinuous
@@ -517,7 +517,7 @@ theorem measure_le_mul_of_subset_limRatioMeas_lt {p : ℝ≥0} {s : Set α}
         add_le_add H ((measure_mono (inter_subset_right _ _)).trans (hρ A).le)
       _ ≤ p * μ s := by
         rw [add_zero]
-        exact ENNReal.mul_le_mul le_rfl (measure_mono (inter_subset_left _ _))
+        exact mul_le_mul_left' (measure_mono (inter_subset_left _ _)) _
       
   refine' v.measure_le_of_frequently_le _ hρ _ fun x hx => _
   have I : ∀ᶠ b : Set α in v.filter_at x, ρ b / μ b < p := (tendsto_order.1 hx.2).2 _ (h hx.1)
@@ -543,7 +543,7 @@ theorem mul_measure_le_of_subset_lt_limRatioMeas {q : ℝ≥0} {s : Set α}
       _ ≤ ρ (s ∩ t) + q * μ (tᶜ) := by
         apply add_le_add H
         rw [coe_nnreal_smul_apply]
-        exact ENNReal.mul_le_mul le_rfl (measure_mono (inter_subset_right _ _))
+        exact mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _
       _ ≤ ρ s := by
         rw [A, mul_zero, add_zero]
         exact measure_mono (inter_subset_left _ _)
@@ -659,9 +659,8 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
         rw [← mul_assoc, ← ENNReal.zpow_add t_ne_zero ENNReal.coe_ne_top]
         congr 2
         abel
-      _ ≤ t ^ 2 * ρ (s ∩ f ⁻¹' I) :=
-        by
-        apply ENNReal.mul_le_mul le_rfl _
+      _ ≤ t ^ 2 * ρ (s ∩ f ⁻¹' I) := by
+        refine' mul_le_mul_left' _ _
         rw [← ENNReal.coe_zpow (zero_lt_one.trans ht).ne']
         apply v.mul_measure_le_of_subset_lt_lim_ratio_meas hρ
         intro x hx
@@ -733,7 +732,7 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
         by
         apply lintegral_mono_ae ((ae_restrict_iff' M).2 (eventually_of_forall fun x hx => _))
         rw [add_comm, ENNReal.zpow_add t_ne_zero ENNReal.coe_ne_top, zpow_one]
-        exact ENNReal.mul_le_mul le_rfl hx.2.1
+        exact mul_le_mul_left' hx.2.1 _
       _ = t * ∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ := lintegral_const_mul _ f_meas
       
   calc

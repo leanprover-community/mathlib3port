@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 4b83fd2855cbf5e9da1fcf0fc1eba89a48c21551
+! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1707,6 +1707,17 @@ theorem nhds_inr (x : β) : 𝓝 (inr x : Sum α β) = map inr (𝓝 x) :=
   (openEmbedding_inr.map_nhds_eq _).symm
 #align nhds_inr nhds_inr
 
+/- warning: continuous_sum_dom -> continuous_sum_dom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] {f : (Sum.{u1, u2} α β) -> γ}, Iff (Continuous.{max u1 u2, u3} (Sum.{u1, u2} α β) γ (Sum.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) _inst_3 f) (And (Continuous.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u1, max (succ u1) (succ u2), succ u3} α (Sum.{u1, u2} α β) γ f (Sum.inl.{u1, u2} α β))) (Continuous.{u2, u3} β γ _inst_2 _inst_3 (Function.comp.{succ u2, max (succ u1) (succ u2), succ u3} β (Sum.{u1, u2} α β) γ f (Sum.inr.{u1, u2} α β))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u1} γ] {f : (Sum.{u2, u3} α β) -> γ}, Iff (Continuous.{max u2 u3, u1} (Sum.{u2, u3} α β) γ (instTopologicalSpaceSum.{u2, u3} α β _inst_1 _inst_2) _inst_3 f) (And (Continuous.{u2, u1} α γ _inst_1 _inst_3 (Function.comp.{succ u2, max (succ u2) (succ u3), succ u1} α (Sum.{u2, u3} α β) γ f (Sum.inl.{u2, u3} α β))) (Continuous.{u3, u1} β γ _inst_2 _inst_3 (Function.comp.{succ u3, max (succ u2) (succ u3), succ u1} β (Sum.{u2, u3} α β) γ f (Sum.inr.{u2, u3} α β))))
+Case conversion may be inaccurate. Consider using '#align continuous_sum_dom continuous_sum_domₓ'. -/
+theorem continuous_sum_dom {f : Sum α β → γ} :
+    Continuous f ↔ Continuous (f ∘ Sum.inl) ∧ Continuous (f ∘ Sum.inr) := by
+  simp only [continuous_sup_dom, continuous_coinduced_dom]
+#align continuous_sum_dom continuous_sum_dom
+
 /- warning: continuous_sum_elim -> continuous_sum_elim is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] {f : α -> γ} {g : β -> γ}, Iff (Continuous.{max u1 u2, u3} (Sum.{u1, u2} α β) γ (Sum.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) _inst_3 (Sum.elim.{u1, u2, succ u3} α β γ f g)) (And (Continuous.{u1, u3} α γ _inst_1 _inst_3 f) (Continuous.{u2, u3} β γ _inst_2 _inst_3 g))
@@ -1714,8 +1725,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u1} γ] {f : α -> γ} {g : β -> γ}, Iff (Continuous.{max u3 u2, u1} (Sum.{u2, u3} α β) γ (instTopologicalSpaceSum.{u2, u3} α β _inst_1 _inst_2) _inst_3 (Sum.elim.{u2, u3, succ u1} α β γ f g)) (And (Continuous.{u2, u1} α γ _inst_1 _inst_3 f) (Continuous.{u3, u1} β γ _inst_2 _inst_3 g))
 Case conversion may be inaccurate. Consider using '#align continuous_sum_elim continuous_sum_elimₓ'. -/
 theorem continuous_sum_elim {f : α → γ} {g : β → γ} :
-    Continuous (Sum.elim f g) ↔ Continuous f ∧ Continuous g := by
-  simp only [continuous_sup_dom, continuous_coinduced_dom, Sum.elim_comp_inl, Sum.elim_comp_inr]
+    Continuous (Sum.elim f g) ↔ Continuous f ∧ Continuous g :=
+  continuous_sum_dom
 #align continuous_sum_elim continuous_sum_elim
 
 /- warning: continuous.sum_elim -> Continuous.sum_elim is a dubious translation:

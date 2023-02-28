@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -653,7 +653,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     apply (ENNReal.mul_lt_mul_left hμs.ne' (measure_lt_top μ s).Ne).2
     rw [ENNReal.inv_lt_inv]
     conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
-    exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) ENNReal.zero_lt_one
+    exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) zero_lt_one
   have B : μ (o ∩ v i) = ∑' x : u i, μ (o ∩ closed_ball x (r x)) :=
     by
     have : o ∩ v i = ⋃ (x : s) (hx : x ∈ u i), o ∩ closed_ball x (r x) := by simp only [inter_Union]
@@ -865,7 +865,7 @@ theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measu
         _ ≤ (N / (N + 1)) ^ n.succ * μ s :=
           by
           rw [pow_succ, mul_assoc]
-          exact ENNReal.mul_le_mul le_rfl IH
+          exact mul_le_mul_left' IH _
         
     have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) :=
       by
@@ -873,7 +873,7 @@ theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measu
       apply ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1
       rw [ENNReal.div_lt_iff, one_mul]
       · conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
-        exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) ENNReal.zero_lt_one
+        exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) zero_lt_one
       · simp only [true_or_iff, add_eq_zero_iff, Ne.def, not_false_iff, one_ne_zero, and_false_iff]
       · simp only [ENNReal.nat_ne_top, Ne.def, not_false_iff, or_true_iff]
     rw [zero_mul] at C

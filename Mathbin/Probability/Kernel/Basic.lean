@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.basic
-! leanprover-community/mathlib commit 31a8a27684ce9a5749914f4248c3f7bf76605d41
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -739,8 +739,7 @@ theorem isFiniteKernelWithDensityOfBounded (κ : kernel α β) [IsFiniteKernel �
           calc
             (∫⁻ b in Set.univ, f a b ∂κ a) ≤ ∫⁻ b in Set.univ, B ∂κ a := lintegral_mono (hf_B a)
             _ = B * κ a Set.univ := by simp only [measure.restrict_univ, lintegral_const]
-            _ ≤ B * is_finite_kernel.bound κ :=
-              ENNReal.mul_le_mul le_rfl (measure_le_bound κ a Set.univ)
+            _ ≤ B * is_finite_kernel.bound κ := mul_le_mul_left' (measure_le_bound κ a Set.univ) _
             ⟩⟩
   · rw [with_density_of_not_measurable _ hf]
     infer_instance

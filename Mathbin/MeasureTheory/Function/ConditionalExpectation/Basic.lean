@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1167,7 +1167,7 @@ theorem condexpL2_constInner (hm : m ≤ m0) (f : lp E 2 μ) (c : E) :
   have h_eq : h_mem_Lp.to_Lp _ =ᵐ[μ] fun a => ⟪c, condexp_L2 𝕜 hm f a⟫ := h_mem_Lp.coe_fn_to_Lp
   refine' eventually_eq.trans _ h_eq
   refine'
-    Lp.ae_eq_of_forall_set_integral_eq' hm _ _ ennreal.zero_lt_two.ne.symm ENNReal.coe_ne_top
+    Lp.ae_eq_of_forall_set_integral_eq' hm _ _ two_ne_zero ENNReal.coe_ne_top
       (fun s hs hμs => integrable_on_condexp_L2_of_measure_ne_top hm hμs.Ne _) _ _ _ _
   · intro s hs hμs
     rw [integrable_on, integrable_congr (ae_restrict_of_ae h_eq)]
@@ -1217,7 +1217,7 @@ theorem condexpL2_comp_continuousLinearMap (hm : m ≤ m0) (T : E' →L[ℝ] E''
     (condexpL2 𝕜' hm (T.compLp f) : α →₂[μ] E'') =ᵐ[μ] T.compLp (condexpL2 𝕜 hm f : α →₂[μ] E') :=
   by
   refine'
-    Lp.ae_eq_of_forall_set_integral_eq' hm _ _ ennreal.zero_lt_two.ne.symm ENNReal.coe_ne_top
+    Lp.ae_eq_of_forall_set_integral_eq' hm _ _ two_ne_zero ENNReal.coe_ne_top
       (fun s hs hμs => integrable_on_condexp_L2_of_measure_ne_top hm hμs.Ne _)
       (fun s hs hμs => integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs.Ne) _ _
       _
@@ -1290,7 +1290,7 @@ theorem set_lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : Measur
       rw [lintegral_mul_const, Lp_meas_coe]
       exact (Lp.strongly_measurable _).ennnorm
     _ ≤ μ (s ∩ t) * ‖x‖₊ :=
-      ENNReal.mul_le_mul (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) le_rfl
+      mul_le_mul_right' (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) _
     
 #align measure_theory.set_lintegral_nnnorm_condexp_L2_indicator_le MeasureTheory.set_lintegral_nnnorm_condexpL2_indicator_le
 
@@ -1302,8 +1302,7 @@ theorem lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : Measurable
   · rw [Lp_meas_coe]
     exact (Lp.ae_strongly_measurable _).ennnorm
   refine' (set_lintegral_nnnorm_condexp_L2_indicator_le hm hs hμs x ht hμt).trans _
-  refine' ENNReal.mul_le_mul _ le_rfl
-  exact measure_mono (Set.inter_subset_left _ _)
+  exact mul_le_mul_right' (measure_mono (Set.inter_subset_left _ _)) _
 #align measure_theory.lintegral_nnnorm_condexp_L2_indicator_le MeasureTheory.lintegral_nnnorm_condexpL2_indicator_le
 
 /-- If the measure `μ.trim hm` is sigma-finite, then the conditional expectation of a measurable set
@@ -1318,7 +1317,7 @@ theorem integrableCondexpL2Indicator (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] 
     exact Lp.ae_strongly_measurable _
   · refine' fun t ht hμt =>
       (set_lintegral_nnnorm_condexp_L2_indicator_le hm hs hμs x ht hμt).trans _
-    exact ENNReal.mul_le_mul (measure_mono (Set.inter_subset_left _ _)) le_rfl
+    exact mul_le_mul_right' (measure_mono (Set.inter_subset_left _ _)) _
 #align measure_theory.integrable_condexp_L2_indicator MeasureTheory.integrableCondexpL2Indicator
 
 end CondexpL2Indicator
@@ -1390,7 +1389,7 @@ theorem set_lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableS
       rw [lintegral_mul_const, Lp_meas_coe]
       exact (Lp.strongly_measurable _).ennnorm
     _ ≤ μ (s ∩ t) * ‖x‖₊ :=
-      ENNReal.mul_le_mul (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) le_rfl
+      mul_le_mul_right' (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) _
     
 #align measure_theory.set_lintegral_nnnorm_condexp_ind_smul_le MeasureTheory.set_lintegral_nnnorm_condexpIndSmul_le
 
@@ -1400,8 +1399,7 @@ theorem lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableSet s
   refine' lintegral_le_of_forall_fin_meas_le' hm (μ s * ‖x‖₊) _ fun t ht hμt => _
   · exact (Lp.ae_strongly_measurable _).ennnorm
   refine' (set_lintegral_nnnorm_condexp_ind_smul_le hm hs hμs x ht hμt).trans _
-  refine' ENNReal.mul_le_mul _ le_rfl
-  exact measure_mono (Set.inter_subset_left _ _)
+  exact mul_le_mul_right' (measure_mono (Set.inter_subset_left _ _)) _
 #align measure_theory.lintegral_nnnorm_condexp_ind_smul_le MeasureTheory.lintegral_nnnorm_condexpIndSmul_le
 
 /-- If the measure `μ.trim hm` is sigma-finite, then the conditional expectation of a measurable set
@@ -1414,7 +1412,7 @@ theorem integrableCondexpIndSmul (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hs 
       _
   · exact Lp.ae_strongly_measurable _
   · refine' fun t ht hμt => (set_lintegral_nnnorm_condexp_ind_smul_le hm hs hμs x ht hμt).trans _
-    exact ENNReal.mul_le_mul (measure_mono (Set.inter_subset_left _ _)) le_rfl
+    exact mul_le_mul_right' (measure_mono (Set.inter_subset_left _ _)) _
 #align measure_theory.integrable_condexp_ind_smul MeasureTheory.integrableCondexpIndSmul
 
 theorem condexpIndSmul_empty {x : G} :

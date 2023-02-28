@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.analytic.composition
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -497,8 +497,8 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   /- This follows from the fact that the growth rate of `‖qₙ‖` and `‖pₙ‖` is at most geometric,
     giving a geometric bound on each `‖q.comp_along_composition p op‖`, together with the
     fact that there are `2^(n-1)` compositions of `n`, giving at most a geometric loss. -/
-  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min ENNReal.zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
-  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min ENNReal.zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
+  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
+  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
   simp only [lt_min_iff, ENNReal.coe_lt_one_iff, ENNReal.coe_pos] at hrp hrq rp_pos rq_pos
   obtain ⟨Cq, hCq0, hCq⟩ : ∃ Cq > 0, ∀ n, ‖q n‖₊ * rq ^ n ≤ Cq :=
     q.nnnorm_mul_pow_le_of_lt_radius hrq.2

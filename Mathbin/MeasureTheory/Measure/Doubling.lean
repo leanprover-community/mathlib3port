@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.measure.doubling
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
     refine' le_mul_of_one_le_of_le _ le_rfl
     apply ENNReal.one_le_coe_iff.2 (le_max_right _ _)
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
-    exact ENNReal.mul_le_mul (ENNReal.coe_le_coe.2 (le_max_left _ _)) le_rfl
+    exact mul_le_mul_right' (ENNReal.coe_le_coe.2 (le_max_left _ _)) _
 #align is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scalingConstantOf_mul
 
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
@@ -136,7 +136,7 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
   by
   filter_upwards [Classical.choose_spec
       (exists_eventually_forall_measure_closed_ball_le_mul μ K)]with r hr x
-  exact (hr x K le_rfl).trans (ENNReal.mul_le_mul (ENNReal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
+  exact (hr x K le_rfl).trans (mul_le_mul_right' (ENNReal.coe_le_coe.2 (le_max_left _ _)) _)
 #align is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
 
 theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :

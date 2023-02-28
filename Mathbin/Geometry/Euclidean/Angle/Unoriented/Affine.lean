@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.affine
-! leanprover-community/mathlib commit 217daaf45adff6a74a82df0dab1506ed3d5e2eec
+! leanprover-community/mathlib commit aedfb56fb0c32c0146e5dd15f5a1c5fe2088d15a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -502,6 +502,61 @@ theorem angle_lt_pi_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ (
     ∠ p₁ p₂ p₃ < π :=
   (angle_le_pi _ _ _).lt_of_ne <| angle_ne_pi_of_not_collinear h
 #align euclidean_geometry.angle_lt_pi_of_not_collinear EuclideanGeometry.angle_lt_pi_of_not_collinear
+
+/-- The cosine of the angle between three points is 1 if and only if the angle is 0. -/
+theorem cos_eq_one_iff_angle_eq_zero {p₁ p₂ p₃ : P} : Real.cos (∠ p₁ p₂ p₃) = 1 ↔ ∠ p₁ p₂ p₃ = 0 :=
+  cos_eq_one_iff_angle_eq_zero
+#align euclidean_geometry.cos_eq_one_iff_angle_eq_zero EuclideanGeometry.cos_eq_one_iff_angle_eq_zero
+
+/-- The cosine of the angle between three points is 0 if and only if the angle is π / 2. -/
+theorem cos_eq_zero_iff_angle_eq_pi_div_two {p₁ p₂ p₃ : P} :
+    Real.cos (∠ p₁ p₂ p₃) = 0 ↔ ∠ p₁ p₂ p₃ = π / 2 :=
+  cos_eq_zero_iff_angle_eq_pi_div_two
+#align euclidean_geometry.cos_eq_zero_iff_angle_eq_pi_div_two EuclideanGeometry.cos_eq_zero_iff_angle_eq_pi_div_two
+
+/-- The cosine of the angle between three points is -1 if and only if the angle is π. -/
+theorem cos_eq_neg_one_iff_angle_eq_pi {p₁ p₂ p₃ : P} :
+    Real.cos (∠ p₁ p₂ p₃) = -1 ↔ ∠ p₁ p₂ p₃ = π :=
+  cos_eq_neg_one_iff_angle_eq_pi
+#align euclidean_geometry.cos_eq_neg_one_iff_angle_eq_pi EuclideanGeometry.cos_eq_neg_one_iff_angle_eq_pi
+
+/-- The sine of the angle between three points is 0 if and only if the angle is 0 or π. -/
+theorem sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ : P} :
+    Real.sin (∠ p₁ p₂ p₃) = 0 ↔ ∠ p₁ p₂ p₃ = 0 ∨ ∠ p₁ p₂ p₃ = π :=
+  sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi
+#align euclidean_geometry.sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi EuclideanGeometry.sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi
+
+/-- The sine of the angle between three points is 1 if and only if the angle is π / 2. -/
+theorem sin_eq_one_iff_angle_eq_pi_div_two {p₁ p₂ p₃ : P} :
+    Real.sin (∠ p₁ p₂ p₃) = 1 ↔ ∠ p₁ p₂ p₃ = π / 2 :=
+  sin_eq_one_iff_angle_eq_pi_div_two
+#align euclidean_geometry.sin_eq_one_iff_angle_eq_pi_div_two EuclideanGeometry.sin_eq_one_iff_angle_eq_pi_div_two
+
+/-- Three points are collinear if and only if the first or third point equals the second or
+the sine of the angle between three points is zero. -/
+theorem collinear_iff_eq_or_eq_or_sin_eq_zero {p₁ p₂ p₃ : P} :
+    Collinear ℝ ({p₁, p₂, p₃} : Set P) ↔ p₁ = p₂ ∨ p₃ = p₂ ∨ Real.sin (∠ p₁ p₂ p₃) = 0 := by
+  rw [sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi,
+    collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi]
+#align euclidean_geometry.collinear_iff_eq_or_eq_or_sin_eq_zero EuclideanGeometry.collinear_iff_eq_or_eq_or_sin_eq_zero
+
+/-- If three points are not collinear, the sine of the angle between them is positive. -/
+theorem sin_pos_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ ({p₁, p₂, p₃} : Set P)) :
+    0 < Real.sin (∠ p₁ p₂ p₃) :=
+  Real.sin_pos_of_pos_of_lt_pi (angle_pos_of_not_collinear h) (angle_lt_pi_of_not_collinear h)
+#align euclidean_geometry.sin_pos_of_not_collinear EuclideanGeometry.sin_pos_of_not_collinear
+
+/-- If three points are not collinear, the sine of the angle between them is nonzero. -/
+theorem sin_ne_zero_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ ({p₁, p₂, p₃} : Set P)) :
+    Real.sin (∠ p₁ p₂ p₃) ≠ 0 :=
+  ne_of_gt (sin_pos_of_not_collinear h)
+#align euclidean_geometry.sin_ne_zero_of_not_collinear EuclideanGeometry.sin_ne_zero_of_not_collinear
+
+/-- If the sine of the angle between three points is 0, they are collinear. -/
+theorem collinear_of_sin_eq_zero {p₁ p₂ p₃ : P} (h : Real.sin (∠ p₁ p₂ p₃) = 0) :
+    Collinear ℝ ({p₁, p₂, p₃} : Set P) :=
+  imp_of_not_imp_not _ _ sin_ne_zero_of_not_collinear h
+#align euclidean_geometry.collinear_of_sin_eq_zero EuclideanGeometry.collinear_of_sin_eq_zero
 
 end EuclideanGeometry
 

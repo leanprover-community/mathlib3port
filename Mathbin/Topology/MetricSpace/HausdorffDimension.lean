@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_dimension
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -600,6 +600,6 @@ real vector space `F` of strictly larger dimension, then the complement of the r
 in `F`. -/
 theorem ContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F}
     (h : ContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense (range fᶜ) :=
-  dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| ENNReal.coe_nat_lt_coe_nat.2 hEF
+  dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| Nat.cast_lt.2 hEF
 #align cont_diff.dense_compl_range_of_finrank_lt_finrank ContDiff.dense_compl_range_of_finrank_lt_finrank
 

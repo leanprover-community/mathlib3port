@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.vitali_caratheodory
-! leanprover-community/mathlib commit 83871f6cff322a1eafaa382ef70e9515fe240abd
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
     by_cases h : (∫⁻ x, f x ∂μ) = ⊤
     · refine'
         ⟨fun x => c, fun x => _, lowerSemicontinuous_const, by
-          simp only [ENNReal.top_add, le_top, h]⟩
+          simp only [_root_.top_add, le_top, h]⟩
       simp only [simple_func.coe_const, simple_func.const_zero, simple_func.coe_zero,
         Set.piecewise_eq_indicator, simple_func.coe_piecewise]
       exact Set.indicator_le_self _ _ _
@@ -138,7 +138,7 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
           simple_func.const_zero, lintegral_indicator, simple_func.coe_zero,
           Set.piecewise_eq_indicator, simple_func.coe_piecewise, restrict_apply]
       calc
-        (c : ℝ≥0∞) * μ u ≤ c * (μ s + ε / c) := ENNReal.mul_le_mul le_rfl μu.le
+        (c : ℝ≥0∞) * μ u ≤ c * (μ s + ε / c) := mul_le_mul_left' μu.le _
         _ = c * μ s + ε := by
           simp_rw [mul_add]
           rw [ENNReal.mul_div_cancel' _ ENNReal.coe_ne_top]
@@ -381,7 +381,7 @@ theorem SimpleFunc.exists_upperSemicontinuous_le_lintegral_le (f : α →ₛ ℝ
           simple_func.const_zero, lintegral_indicator, simple_func.coe_zero,
           Set.piecewise_eq_indicator, simple_func.coe_piecewise, restrict_apply]
       calc
-        (c : ℝ≥0∞) * μ s ≤ c * (μ F + ε / c) := ENNReal.mul_le_mul le_rfl μF.le
+        (c : ℝ≥0∞) * μ s ≤ c * (μ F + ε / c) := mul_le_mul_left' μF.le _
         _ = c * μ F + ε := by
           simp_rw [mul_add]
           rw [ENNReal.mul_div_cancel' _ ENNReal.coe_ne_top]

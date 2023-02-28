@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.enorm
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
       _ ≤ ‖c‖₊ * (‖c⁻¹‖₊ * e (c • x)) := _
       _ = e (c • x) := _
       
-    · exact ENNReal.mul_le_mul le_rfl (e.map_smul_le' _ _)
+    · exact mul_le_mul_left' (e.map_smul_le' _ _) _
     ·
       rw [← mul_assoc, nnnorm_inv, ENNReal.coe_inv, ENNReal.mul_inv_cancel _ ENNReal.coe_ne_top,
           one_mul] <;>

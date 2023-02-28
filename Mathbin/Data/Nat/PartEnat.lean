@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.part_enat
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
+! leanprover-community/mathlib commit 114ff8a4a7935cb7531062200bff375e7b1d6d85
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,6 +147,9 @@ Case conversion may be inaccurate. Consider using '#align part_enat.dom_coe Part
 theorem dom_natCast (x : ℕ) : (x : PartENat).Dom :=
   trivial
 #align part_enat.dom_coe PartENat.dom_natCast
+
+instance : CanLift PartENat ℕ coe Dom :=
+  ⟨fun n hn => ⟨n.get hn, Part.some_get _⟩⟩
 
 instance : LE PartENat :=
   ⟨fun x y => ∃ h : y.Dom → x.Dom, ∀ hy : y.Dom, x.get (h hy) ≤ y.get hy⟩
@@ -654,6 +657,15 @@ instance : CanonicallyOrderedAddMonoid PartENat :=
         PartENat.casesOn a (fun h => ((natCast_lt_top _).not_le h).elim) fun a h =>
           ⟨(b - a : ℕ), by
             rw [← Nat.cast_add, coe_inj, add_comm, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩ }
+
+theorem eq_coe_sub_of_add_eq_coe {x y : PartENat} {n : ℕ} (h : x + y = n) :
+    x = ↑(n - y.get (dom_of_le_natCast ((le_add_left le_rfl).trans_eq h))) :=
+  by
+  lift x to ℕ using dom_of_le_coe ((le_add_right le_rfl).trans_eq h)
+  lift y to ℕ using dom_of_le_coe ((le_add_left le_rfl).trans_eq h)
+  rw [← Nat.cast_add, coe_inj] at h
+  rw [get_coe, coe_inj, eq_tsub_of_add_eq h]
+#align part_enat.eq_coe_sub_of_add_eq_coe PartENat.eq_coe_sub_of_add_eq_coe
 
 #print PartENat.add_lt_add_right /-
 protected theorem add_lt_add_right {x y z : PartENat} (h : x < y) (hz : z ≠ ⊤) : x + z < y + z :=

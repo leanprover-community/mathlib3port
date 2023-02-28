@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,16 +40,16 @@ section
 variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]
 
 theorem Memℒp.integrableSq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
-  simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow ENNReal.two_ne_zero ENNReal.two_ne_top
+  simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow two_ne_zero ENNReal.two_ne_top
 #align measure_theory.mem_ℒp.integrable_sq MeasureTheory.Memℒp.integrableSq
 
 theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
-  convert (mem_ℒp_norm_rpow_iff hf ENNReal.two_ne_zero ENNReal.two_ne_top).symm
+  convert (mem_ℒp_norm_rpow_iff hf two_ne_zero ENNReal.two_ne_top).symm
   · simp
-  · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel ENNReal.two_ne_zero ENNReal.two_ne_top]
+  · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.two_ne_top]
 #align measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.memℒp_two_iff_integrable_sq_norm
 
 theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurable f μ) :
@@ -132,11 +132,11 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.r
   have h_two : (2 : ℝ≥0∞).toReal = 2 := by simp
   rw [inner_def, integral_inner_eq_sq_snorm, norm_def, ← ENNReal.toReal_pow, IsROrC.of_real_re,
     ENNReal.toReal_eq_toReal (ENNReal.pow_ne_top (Lp.snorm_ne_top f)) _]
-  · rw [← ENNReal.rpow_nat_cast, snorm_eq_snorm' ENNReal.two_ne_zero ENNReal.two_ne_top, snorm', ←
+  · rw [← ENNReal.rpow_nat_cast, snorm_eq_snorm' two_ne_zero ENNReal.two_ne_top, snorm', ←
       ENNReal.rpow_mul, one_div, h_two]
     simp
   · refine' (lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top zero_lt_two _).Ne
-    rw [← h_two, ← snorm_eq_snorm' ENNReal.two_ne_zero ENNReal.two_ne_top]
+    rw [← h_two, ← snorm_eq_snorm' two_ne_zero ENNReal.two_ne_top]
     exact Lp.snorm_lt_top f
 #align measure_theory.L2.norm_sq_eq_inner' measure_theory.L2.norm_sq_eq_inner'
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.jacobian
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -387,7 +387,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
       _ ≤ ENNReal.ofReal (r ^ finrank ℝ E) * (m * μ (closed_ball 0 1)) :=
         by
         rw [add_comm]
-        exact ENNReal.mul_le_mul le_rfl hε.le
+        exact mul_le_mul_left' hε.le _
       _ = m * μ (closed_ball x r) :=
         by
         simp only [add_haar_closed_ball' _ _ r0]
@@ -421,7 +421,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
         ENNReal.tsum_le_tsum fun x => I x (r x) (ts x.2) (rpos x x.2).le
       _ ≤ m * (μ s + a) := by
         rw [ENNReal.tsum_mul_left]
-        exact ENNReal.mul_le_mul le_rfl μt
+        exact mul_le_mul_left' μt _
       
   -- taking the limit in `a`, one obtains the conclusion
   have L : tendsto (fun a => (m : ℝ≥0∞) * (μ s + a)) (𝓝[>] 0) (𝓝 (m * (μ s + 0))) :=
@@ -669,7 +669,7 @@ theorem add_haar_image_eq_zero_of_differentiableOn_of_add_haar_eq_zero (hf : Dif
       exact ht n
     _ ≤ ∑' n, (Real.toNNReal (|(A n).det|) + 1 : ℝ≥0) * 0 :=
       by
-      refine' ENNReal.tsum_le_tsum fun n => ENNReal.mul_le_mul le_rfl _
+      refine' ENNReal.tsum_le_tsum fun n => mul_le_mul_left' _ _
       exact le_trans (measure_mono (inter_subset_left _ _)) (le_of_eq hs)
     _ = 0 := by simp only [tsum_zero, mul_zero]
     
@@ -725,7 +725,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
     _ ≤ ε * ∑' n, μ (closed_ball 0 R ∩ t n) :=
       by
       rw [ENNReal.tsum_mul_left]
-      refine' ENNReal.mul_le_mul le_rfl (ENNReal.tsum_le_tsum fun n => measure_mono _)
+      refine' mul_le_mul_left' (ENNReal.tsum_le_tsum fun n => measure_mono _) _
       exact inter_subset_inter_left _ hs
     _ = ε * μ (⋃ n, closed_ball 0 R ∩ t n) :=
       by
@@ -735,7 +735,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
         exact measurable_set_closed_ball.inter (t_meas n)
     _ ≤ ε * μ (closed_ball 0 R) := by
       rw [← inter_Union]
-      exact ENNReal.mul_le_mul le_rfl (measure_mono (inter_subset_left _ _))
+      exact mul_le_mul_left' (measure_mono (inter_subset_left _ _)) _
     
 #align measure_theory.add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux MeasureTheory.add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
 
@@ -1091,7 +1091,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
       rcases eq_or_ne (μ t) ∞ with (ht | ht)
       ·
         simp only [ht, εpos.ne', WithTop.mul_top, ENNReal.coe_eq_zero, le_top, Ne.def,
-          not_false_iff, ENNReal.add_top]
+          not_false_iff, _root_.add_top]
       have := h t g (htg.mono_num (min_le_left _ _))
       rwa [WithTop.coe_sub, ENNReal.sub_mul, tsub_le_iff_right] at this
       simp only [ht, imp_true_iff, Ne.def, not_false_iff]

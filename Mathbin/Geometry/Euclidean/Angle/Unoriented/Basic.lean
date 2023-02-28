@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.basic
-! leanprover-community/mathlib commit df78eae582aad2f545024bf6c7249191d2723074
+! leanprover-community/mathlib commit aedfb56fb0c32c0146e5dd15f5a1c5fe2088d15a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,6 +29,8 @@ assert_not_exists conformal_at
 
 noncomputable section
 
+open Real Set
+
 open BigOperators
 
 open Real
@@ -37,7 +39,7 @@ open RealInnerProductSpace
 
 namespace InnerProductGeometry
 
-variable {V : Type _} [InnerProductSpace ℝ V]
+variable {V : Type _} [InnerProductSpace ℝ V] {x y : V}
 
 /-- The undirected angle between two vectors. If either vector is 0,
 this is π/2. See `orientation.oangle` for the corresponding oriented angle
@@ -359,6 +361,42 @@ theorem norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (x y : V) :
     inner_eq_zero_iff_angle_eq_pi_div_two x y, norm_add_pow_two_real, norm_sub_pow_two_real]
   constructor <;> intro h <;> linarith
 #align inner_product_geometry.norm_add_eq_norm_sub_iff_angle_eq_pi_div_two InnerProductGeometry.norm_add_eq_norm_sub_iff_angle_eq_pi_div_two
+
+/-- The cosine of the angle between two vectors is 1 if and only if the angle is 0. -/
+theorem cos_eq_one_iff_angle_eq_zero : cos (angle x y) = 1 ↔ angle x y = 0 :=
+  by
+  rw [← cos_zero]
+  exact inj_on_cos.eq_iff ⟨angle_nonneg x y, angle_le_pi x y⟩ (left_mem_Icc.2 pi_pos.le)
+#align inner_product_geometry.cos_eq_one_iff_angle_eq_zero InnerProductGeometry.cos_eq_one_iff_angle_eq_zero
+
+/-- The cosine of the angle between two vectors is 0 if and only if the angle is π / 2. -/
+theorem cos_eq_zero_iff_angle_eq_pi_div_two : cos (angle x y) = 0 ↔ angle x y = π / 2 :=
+  by
+  rw [← cos_pi_div_two]
+  apply inj_on_cos.eq_iff ⟨angle_nonneg x y, angle_le_pi x y⟩
+  constructor <;> linarith [pi_pos]
+#align inner_product_geometry.cos_eq_zero_iff_angle_eq_pi_div_two InnerProductGeometry.cos_eq_zero_iff_angle_eq_pi_div_two
+
+/-- The cosine of the angle between two vectors is -1 if and only if the angle is π. -/
+theorem cos_eq_neg_one_iff_angle_eq_pi : cos (angle x y) = -1 ↔ angle x y = π :=
+  by
+  rw [← cos_pi]
+  exact inj_on_cos.eq_iff ⟨angle_nonneg x y, angle_le_pi x y⟩ (right_mem_Icc.2 pi_pos.le)
+#align inner_product_geometry.cos_eq_neg_one_iff_angle_eq_pi InnerProductGeometry.cos_eq_neg_one_iff_angle_eq_pi
+
+/-- The sine of the angle between two vectors is 0 if and only if the angle is 0 or π. -/
+theorem sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi :
+    sin (angle x y) = 0 ↔ angle x y = 0 ∨ angle x y = π := by
+  rw [sin_eq_zero_iff_cos_eq, cos_eq_one_iff_angle_eq_zero, cos_eq_neg_one_iff_angle_eq_pi]
+#align inner_product_geometry.sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi InnerProductGeometry.sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi
+
+/-- The sine of the angle between two vectors is 1 if and only if the angle is π / 2. -/
+theorem sin_eq_one_iff_angle_eq_pi_div_two : sin (angle x y) = 1 ↔ angle x y = π / 2 :=
+  by
+  refine' ⟨fun h => _, fun h => by rw [h, sin_pi_div_two]⟩
+  rw [← cos_eq_zero_iff_angle_eq_pi_div_two, ← abs_eq_zero, abs_cos_eq_sqrt_one_sub_sin_sq, h]
+  simp
+#align inner_product_geometry.sin_eq_one_iff_angle_eq_pi_div_two InnerProductGeometry.sin_eq_one_iff_angle_eq_pi_div_two
 
 end InnerProductGeometry
 

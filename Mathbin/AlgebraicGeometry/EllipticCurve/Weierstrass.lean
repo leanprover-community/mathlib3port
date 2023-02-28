@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 67f92b6f60865717e0811128b77d49ab4c07f7f1
+! leanprover-community/mathlib commit 03994e05d8bfc59a41d2ec99523d6553d21848ac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ private unsafe def C_simp : tactic Unit :=
   sorry
 #align C_simp C_simp
 
-universe u v
+universe u v w
 
 variable {R : Type u}
 
@@ -256,12 +256,13 @@ theorem variableChange_Δ : (W.variableChange u r s t).Δ = ↑u⁻¹ ^ 12 * W.�
 
 end VariableChange
 
+variable (A : Type v) [CommRing A] [Algebra R A] (B : Type w) [CommRing B] [Algebra R B]
+  [Algebra A B] [IsScalarTower R A B]
+
 section BaseChange
 
 /-! ### Base changes -/
 
-
-variable (A : Type v) [CommRing A] [Algebra R A]
 
 /-- The Weierstrass curve over `R` base changed to `A`. -/
 @[simps]
@@ -332,6 +333,13 @@ theorem baseChange_Δ : (W.base_change A).Δ = algebraMap R A W.Δ :=
   run_tac
     map_simp
 #align weierstrass_curve.base_change_Δ WeierstrassCurve.baseChange_Δ
+
+theorem baseChange_self : W.base_change R = W := by ext <;> rfl
+#align weierstrass_curve.base_change_self WeierstrassCurve.baseChange_self
+
+theorem baseChange_baseChange : (W.base_change A).base_change B = W.base_change B := by
+  ext <;> exact (IsScalarTower.algebraMap_apply R A B _).symm
+#align weierstrass_curve.base_change_base_change WeierstrassCurve.baseChange_baseChange
 
 end BaseChange
 
@@ -491,6 +499,30 @@ theorem equation_iff_variableChange (x y : R) :
   ring1
 #align weierstrass_curve.equation_iff_variable_change WeierstrassCurve.equation_iff_variableChange
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.272596109.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.272596109.map_simp -/
+theorem equation_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R) :
+    W.Equation x y ↔ (W.base_change A).Equation (algebraMap R A x) (algebraMap R A y) :=
+  by
+  simp only [equation_iff]
+  refine' ⟨fun h => _, fun h => _⟩
+  ·
+    convert congr_arg (algebraMap R A) h <;>
+      · run_tac
+          map_simp
+        rfl
+  · apply NoZeroSMulDivisors.algebraMap_injective R A
+    run_tac
+      map_simp
+    exact h
+#align weierstrass_curve.equation_iff_base_change WeierstrassCurve.equation_iff_baseChange
+
+theorem equation_iff_baseChange_of_baseChange [Nontrivial B] [NoZeroSMulDivisors A B] (x y : A) :
+    (W.base_change A).Equation x y ↔
+      (W.base_change B).Equation (algebraMap A B x) (algebraMap A B y) :=
+  by rw [equation_iff_base_change (W.base_change A) B, base_change_base_change]
+#align weierstrass_curve.equation_iff_base_change_of_base_change WeierstrassCurve.equation_iff_baseChange_of_baseChange
+
 /-! ### Nonsingularity of Weierstrass curves -/
 
 
@@ -573,6 +605,32 @@ theorem nonsingular_iff_variableChange (x y : R) :
     nonsingular_zero, variable_change_a₃, variable_change_a₄, inv_one, Units.val_one]
   congr 4 <;> ring1
 #align weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.nonsingular_iff_variableChange
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.272596109.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.272596109.map_simp -/
+theorem nonsingular_iff_baseChange [Nontrivial A] [NoZeroSMulDivisors R A] (x y : R) :
+    W.Nonsingular x y ↔ (W.base_change A).Nonsingular (algebraMap R A x) (algebraMap R A y) :=
+  by
+  rw [nonsingular_iff, nonsingular_iff, and_congr <| W.equation_iff_base_change A x y]
+  refine'
+    ⟨Or.imp (not_imp_not.mpr fun h => _) (not_imp_not.mpr fun h => _),
+      Or.imp (not_imp_not.mpr fun h => _) (not_imp_not.mpr fun h => _)⟩
+  any_goals apply NoZeroSMulDivisors.algebraMap_injective R A;
+    run_tac
+      map_simp;
+    exact h
+  any_goals
+    convert congr_arg (algebraMap R A) h <;>
+      · run_tac
+          map_simp
+        rfl
+#align weierstrass_curve.nonsingular_iff_base_change WeierstrassCurve.nonsingular_iff_baseChange
+
+theorem nonsingular_iff_baseChange_of_baseChange [Nontrivial B] [NoZeroSMulDivisors A B] (x y : A) :
+    (W.base_change A).Nonsingular x y ↔
+      (W.base_change B).Nonsingular (algebraMap A B x) (algebraMap A B y) :=
+  by rw [nonsingular_iff_base_change (W.base_change A) B, base_change_base_change]
+#align weierstrass_curve.nonsingular_iff_base_change_of_base_change WeierstrassCurve.nonsingular_iff_baseChange_of_baseChange
 
 theorem nonsingular_zero_of_Δ_ne_zero (h : W.Equation 0 0) (hΔ : W.Δ ≠ 0) : W.Nonsingular 0 0 :=
   by

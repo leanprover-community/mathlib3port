@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.vitali
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -426,7 +426,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     _ ≤ ∑' a : { a // a ∉ w }, μ (closed_ball (c a) (3 * r a)) := measure_Union_le _
     _ ≤ ∑' a : { a // a ∉ w }, C * μ (B a) := ENNReal.tsum_le_tsum fun a => μB a (ut (vu a.1.2))
     _ = C * ∑' a : { a // a ∉ w }, μ (B a) := ENNReal.tsum_mul_left
-    _ ≤ C * (ε / C) := ENNReal.mul_le_mul le_rfl hw.le
+    _ ≤ C * (ε / C) := mul_le_mul_left' hw.le _
     _ ≤ ε := ENNReal.mul_div_le
     
 #align vitali.exists_disjoint_covering_ae Vitali.exists_disjoint_covering_ae

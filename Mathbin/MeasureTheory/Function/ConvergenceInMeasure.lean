@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.convergence_in_measure
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,7 +380,7 @@ theorem tendstoInMeasureOfTendstoSnorm {l : Filter ι} (hp_ne_zero : p ≠ 0)
 /-- Convergence in Lp implies convergence in measure. -/
 theorem tendstoInMeasureOfTendstoLp [hp : Fact (1 ≤ p)] {f : ι → lp E p μ} {g : lp E p μ}
     {l : Filter ι} (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
-  tendstoInMeasureOfTendstoSnorm (ENNReal.zero_lt_one.trans_le hp.elim).Ne.symm
+  tendstoInMeasureOfTendstoSnorm (zero_lt_one.trans_le hp.elim).Ne.symm
     (fun n => lp.aeStronglyMeasurable _) (lp.aeStronglyMeasurable _)
     ((lp.tendsto_lp_iff_tendsto_ℒp' _ _).mp hfg)
 #align measure_theory.tendsto_in_measure_of_tendsto_Lp MeasureTheory.tendstoInMeasureOfTendstoLp

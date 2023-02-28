@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.variance
-! leanprover-community/mathlib commit 7c60702a4145fa8de521d53b93e602463f555cd7
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,8 +63,7 @@ theorem MeasureTheory.Memℒp.evariance_lt_top [IsFiniteMeasure μ] (hX : Memℒ
     evariance X μ < ∞ :=
   by
   have := ENNReal.pow_lt_top (hX.sub <| mem_ℒp_const <| μ[X]).2 2
-  rw [snorm_eq_lintegral_rpow_nnnorm ENNReal.two_ne_zero ENNReal.two_ne_top, ← ENNReal.rpow_two] at
-    this
+  rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, ← ENNReal.rpow_two] at this
   simp only [Pi.sub_apply, [anonymous], ENNReal.one_toReal, one_div] at this
   rw [← ENNReal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), ENNReal.rpow_one] at this
   simp_rw [ENNReal.rpow_two] at this
@@ -78,7 +77,7 @@ theorem evariance_eq_top [IsFiniteMeasure μ] (hXm : AeStronglyMeasurable X μ) 
   have : mem_ℒp (fun ω => X ω - μ[X]) 2 μ :=
     by
     refine' ⟨hXm.sub ae_strongly_measurable_const, _⟩
-    rw [snorm_eq_lintegral_rpow_nnnorm ENNReal.two_ne_zero ENNReal.two_ne_top]
+    rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top]
     simp only [[anonymous], ENNReal.one_toReal, ENNReal.rpow_two, Ne.def]
     exact ENNReal.rpow_lt_top_of_nonneg (by simp) h.ne
   refine' hX _
@@ -124,7 +123,7 @@ theorem MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero (hX : Memℒp X 2 
     simp_rw [hXint, sub_zero]
   · rfl
   · exact integral_nonneg fun ω => pow_two_nonneg _
-  · convert hX.integrable_norm_rpow ENNReal.two_ne_zero ENNReal.two_ne_top
+  · convert hX.integrable_norm_rpow two_ne_zero ENNReal.two_ne_top
     ext ω
     simp only [Pi.sub_apply, Real.norm_eq_abs, [anonymous], ENNReal.one_toReal, Real.rpow_two,
       pow_bit0_abs]
@@ -138,8 +137,7 @@ theorem MeasureTheory.Memℒp.variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2
     ENNReal.toReal_ofReal]
   · rfl
   · exact integral_nonneg fun ω => pow_two_nonneg _
-  · convert
-      (hX.sub <| mem_ℒp_const (μ[X])).integrableNormRpow ENNReal.two_ne_zero ENNReal.two_ne_top
+  · convert (hX.sub <| mem_ℒp_const (μ[X])).integrableNormRpow two_ne_zero ENNReal.two_ne_top
     ext ω
     simp only [Pi.sub_apply, Real.norm_eq_abs, [anonymous], ENNReal.one_toReal, Real.rpow_two,
       pow_bit0_abs]
@@ -275,10 +273,10 @@ theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ
     refine' ⟨_, ENNReal.ofReal_ne_top⟩
     rw [mem_ℒp, not_and] at hℒ
     specialize hℒ hX
-    simp only [snorm_eq_lintegral_rpow_nnnorm ENNReal.two_ne_zero ENNReal.two_ne_top, not_lt,
-      top_le_iff, [anonymous], ENNReal.one_toReal, ENNReal.rpow_two, one_div,
-      ENNReal.rpow_eq_top_iff, inv_lt_zero, inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff,
-      or_iff_not_imp_left, not_and_or] at hℒ
+    simp only [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, not_lt, top_le_iff,
+      [anonymous], ENNReal.one_toReal, ENNReal.rpow_two, one_div, ENNReal.rpow_eq_top_iff,
+      inv_lt_zero, inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff, or_iff_not_imp_left,
+      not_and_or] at hℒ
     exact hℒ fun _ => zero_le_two
 #align probability_theory.evariance_def' ProbabilityTheory.evariance_def'
 
@@ -288,11 +286,11 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable 
   by
   have A : (c : ℝ≥0∞) ≠ 0 := by rwa [Ne.def, ENNReal.coe_eq_zero]
   have B : ae_strongly_measurable (fun ω : Ω => 𝔼[X]) ℙ := ae_strongly_measurable_const
-  convert meas_ge_le_mul_pow_snorm ℙ ENNReal.two_ne_zero ENNReal.two_ne_top (hX.sub B) A
+  convert meas_ge_le_mul_pow_snorm ℙ two_ne_zero ENNReal.two_ne_top (hX.sub B) A
   · ext ω
     simp only [Pi.sub_apply, ENNReal.coe_le_coe, ← Real.norm_eq_abs, ← coe_nnnorm,
       NNReal.coe_le_coe, ENNReal.ofReal_coe_nnreal]
-  · rw [snorm_eq_lintegral_rpow_nnnorm ENNReal.two_ne_zero ENNReal.two_ne_top]
+  · rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top]
     simp only [[anonymous], ENNReal.one_toReal, Pi.sub_apply, one_div]
     rw [div_eq_mul_inv, ENNReal.inv_pow, mul_comm, ENNReal.rpow_two]
     congr

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,7 +205,7 @@ theorem tendsto_nhds_top {m : α → ℝ≥0∞} {f : Filter α} (h : ∀ n : �
 
 theorem tendsto_nat_nhds_top : Tendsto (fun n : ℕ => ↑n) atTop (𝓝 ∞) :=
   tendsto_nhds_top fun n =>
-    mem_atTop_sets.2 ⟨n + 1, fun m hm => ENNReal.coe_nat_lt_coe_nat.2 <| Nat.lt_of_succ_le hm⟩
+    mem_atTop_sets.2 ⟨n + 1, fun m hm => mem_setOf.2 <| Nat.cast_lt.2 <| Nat.lt_of_succ_le hm⟩
 #align ennreal.tendsto_nat_nhds_top ENNReal.tendsto_nat_nhds_top
 
 @[simp, norm_cast]
@@ -539,7 +539,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0∞} (h : ∀ a < 1, a * x ≤ 
   have : tendsto (· * x) (𝓝[<] 1) (𝓝 (1 * x)) :=
     (ENNReal.continuousAt_mul_const (Or.inr one_ne_zero)).mono_left inf_le_left
   rw [one_mul] at this
-  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_Iio_self_neBot' ⟨0, ENNReal.zero_lt_one⟩
+  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_Iio_self_neBot' ⟨0, zero_lt_one⟩
   exact le_of_tendsto this (eventually_nhdsWithin_iff.2 <| eventually_of_forall h)
 #align ennreal.le_of_forall_lt_one_mul_le ENNReal.le_of_forall_lt_one_mul_le
 

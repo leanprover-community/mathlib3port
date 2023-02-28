@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2295,7 +2295,7 @@ theorem le_rpow_self_of_one_le {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (h_one_
 theorem rpow_pos_of_nonneg {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hp_nonneg : 0 ≤ p) : 0 < x ^ p :=
   by
   by_cases hp_zero : p = 0
-  · simp [hp_zero, ENNReal.zero_lt_one]
+  · simp [hp_zero, zero_lt_one]
   · rw [← Ne.def] at hp_zero
     have hp_pos := lt_of_le_of_ne hp_nonneg hp_zero.symm
     rw [← zero_rpow_of_pos hp_pos]
@@ -2327,7 +2327,7 @@ theorem rpow_le_one {x : ℝ≥0∞} {z : ℝ} (hx : x ≤ 1) (hz : 0 ≤ z) : x
 theorem rpow_lt_one_of_one_lt_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz : z < 0) : x ^ z < 1 :=
   by
   cases x
-  · simp [top_rpow_of_neg hz, ENNReal.zero_lt_one]
+  · simp [top_rpow_of_neg hz, zero_lt_one]
   · simp only [some_eq_coe, one_lt_coe_iff] at hx
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_trans zero_lt_one hx)),
       NNReal.rpow_lt_one_of_one_lt_of_neg hx hz]
@@ -2336,7 +2336,7 @@ theorem rpow_lt_one_of_one_lt_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz
 theorem rpow_le_one_of_one_le_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (hz : z < 0) : x ^ z ≤ 1 :=
   by
   cases x
-  · simp [top_rpow_of_neg hz, ENNReal.zero_lt_one]
+  · simp [top_rpow_of_neg hz, zero_lt_one]
   · simp only [one_le_coe_iff, some_eq_coe] at hx
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_of_lt_of_le zero_lt_one hx)),
       NNReal.rpow_le_one_of_one_le_of_nonpos hx (le_of_lt hz)]

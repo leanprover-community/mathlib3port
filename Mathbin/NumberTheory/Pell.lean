@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit a66d07e27d5b5b8ac1147cacfe353478e5c14002
+! leanprover-community/mathlib commit 35c1956cb727c474aa8863c13ca3abca4c2f885e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,9 +134,8 @@ theorem exists_iff_not_isSquare {d : ℤ} (h₀ : 0 < d) :
   by
   refine' ⟨_, exists_of_not_is_square h₀⟩
   rintro ⟨x, y, hxy, hy⟩ ⟨a, rfl⟩
-  rw [← sq, ← mul_pow, sq_sub_sq, Int.mul_eq_one_iff_eq_one_or_neg_one] at hxy
-  replace hxy := hxy.elim (fun h => h.1.trans h.2.symm) fun h => h.1.trans h.2.symm
-  simpa [mul_self_pos.mp h₀, sub_eq_add_neg, eq_neg_self_iff] using hxy
+  rw [← sq, ← mul_pow, sq_sub_sq] at hxy
+  simpa [mul_self_pos.mp h₀, sub_eq_add_neg, eq_neg_self_iff] using Int.eq_of_mul_eq_one hxy
 #align pell.exists_iff_not_is_square Pell.exists_iff_not_isSquare
 
 end Existence

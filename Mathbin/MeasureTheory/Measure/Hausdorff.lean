@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.hausdorff
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,7 +195,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
     `μ (s ∩ t) + μ (⋃ n, S n) ≤ μ s`. We can't pass to the limit because
     `μ` is only an outer measure. -/
   by_cases htop : μ (s \ t) = ∞
-  · rw [htop, ENNReal.add_top, ← htop]
+  · rw [htop, add_top, ← htop]
     exact μ.mono (diff_subset _ _)
   suffices : μ (⋃ n, S n) ≤ ⨆ n, μ (S n)
   calc
@@ -209,7 +209,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
     and the second term tends to zero, see `outer_measure.Union_nat_of_monotone_of_tsum_ne_top`
     for details. -/
   have : ∀ n, S n ⊆ S (n + 1) := fun n x hx =>
-    ⟨hx.1, le_trans (ENNReal.inv_le_inv.2 <| ENNReal.coe_nat_le_coe_nat.2 n.le_succ) hx.2⟩
+    ⟨hx.1, le_trans (ENNReal.inv_le_inv.2 <| Nat.cast_le.2 n.le_succ) hx.2⟩
   refine' (μ.Union_nat_of_monotone_of_tsum_ne_top this _).le
   clear this
   /- While the sets `S (k + 1) \ S k` are not pairwise metric separated, the sets in each
@@ -231,7 +231,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
   intro i j hj
   have A : ((↑(2 * j + r))⁻¹ : ℝ≥0∞) < (↑(2 * i + 1 + r))⁻¹ :=
     by
-    rw [ENNReal.inv_lt_inv, ENNReal.coe_nat_lt_coe_nat]
+    rw [ENNReal.inv_lt_inv, Nat.cast_lt]
     linarith
   refine' ⟨(↑(2 * i + 1 + r))⁻¹ - (↑(2 * j + r))⁻¹, by simpa using A, fun x hx y hy => _⟩
   have : inf_edist y t < (↑(2 * j + r))⁻¹ := not_le.1 fun hle => hy.2 ⟨hy.1, hle⟩
@@ -364,7 +364,7 @@ theorem mkMetric'_isMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :
 theorem mkMetric_mono_smul {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} {c : ℝ≥0∞} (hc : c ≠ ∞) (h0 : c ≠ 0)
     (hle : m₁ ≤ᶠ[𝓝[≥] 0] c • m₂) : (mkMetric m₁ : OuterMeasure X) ≤ c • mkMetric m₂ := by
   classical
-    rcases(mem_nhdsWithin_Ici_iff_exists_Ico_subset' ENNReal.zero_lt_one).1 hle with ⟨r, hr0, hr⟩
+    rcases(mem_nhdsWithin_Ici_iff_exists_Ico_subset' zero_lt_one).1 hle with ⟨r, hr0, hr⟩
     refine' fun s =>
       le_of_tendsto_of_tendsto (mk_metric'.tendsto_pre _ s)
         (ENNReal.Tendsto.const_mul (mk_metric'.tendsto_pre _ s) (Or.inr hc))
@@ -383,7 +383,7 @@ theorem mkMetric_mono_smul {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} {c : ℝ≥0�
 `mk_metric m₁ hm₁ ≤ mk_metric m₂ hm₂`-/
 theorem mkMetric_mono {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} (hle : m₁ ≤ᶠ[𝓝[≥] 0] m₂) :
     (mkMetric m₁ : OuterMeasure X) ≤ mkMetric m₂ := by
-  convert mk_metric_mono_smul ENNReal.one_ne_top ennreal.zero_lt_one.ne' _ <;> simp [*]
+  convert mk_metric_mono_smul ENNReal.one_ne_top one_ne_zero _ <;> simp [*]
 #align measure_theory.outer_measure.mk_metric_mono MeasureTheory.OuterMeasure.mkMetric_mono
 
 theorem isometry_comap_mkMetric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (hf : Isometry f)
@@ -500,7 +500,7 @@ theorem mkMetric_mono_smul {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} {c : ℝ≥0�
 `mk_metric m₁ hm₁ ≤ mk_metric m₂ hm₂`-/
 theorem mkMetric_mono {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} (hle : m₁ ≤ᶠ[𝓝[≥] 0] m₂) :
     (mkMetric m₁ : Measure X) ≤ mkMetric m₂ := by
-  convert mk_metric_mono_smul ENNReal.one_ne_top ennreal.zero_lt_one.ne' _ <;> simp [*]
+  convert mk_metric_mono_smul ENNReal.one_ne_top one_ne_zero _ <;> simp [*]
 #align measure_theory.measure.mk_metric_mono MeasureTheory.Measure.mkMetric_mono
 
 /-- A formula for `measure_theory.measure.mk_metric`. -/
@@ -647,12 +647,10 @@ theorem hausdorffMeasure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Se
     ENNReal.div_le_iff_le_mul (Or.inr ENNReal.coe_ne_top) (Or.inr <| mt ENNReal.coe_eq_zero.1 hc)]
   rcases eq_or_ne r 0 with (rfl | hr₀)
   · rcases lt_or_le 0 d₂ with (h₂ | h₂)
+    · simp only [h₂, ENNReal.zero_rpow_of_pos, zero_le, ENNReal.zero_div, ENNReal.coe_zero]
     ·
-      simp only [h₂, ENNReal.zero_rpow_of_pos, zero_le', ENNReal.coe_nonneg, ENNReal.zero_div,
+      simp only [h.trans_le h₂, ENNReal.div_top, zero_le, ENNReal.zero_rpow_of_neg,
         ENNReal.coe_zero]
-    ·
-      simp only [h.trans_le h₂, ENNReal.div_top, zero_le', ENNReal.coe_nonneg,
-        ENNReal.zero_rpow_of_neg, ENNReal.coe_zero]
   · have : (r : ℝ≥0∞) ≠ 0 := by simpa only [ENNReal.coe_eq_zero, Ne.def] using hr₀
     rw [← ENNReal.rpow_sub _ _ this ENNReal.coe_ne_top]
     refine' (ENNReal.rpow_lt_rpow hrc (sub_pos.2 h)).le.trans _
@@ -702,7 +700,7 @@ theorem hausdorffMeasure_zero_singleton (x : X) : μH[0] ({x} : Set X) = 1 :=
           ∑' n, ⨆ h : (t n).Nonempty, diam (t n) ^ (0 : ℝ)
       by
       apply le_trans this _
-      convert le_supᵢ₂ (1 : ℝ≥0∞) ENNReal.zero_lt_one
+      convert le_supᵢ₂ (1 : ℝ≥0∞) zero_lt_one
       rfl
     simp only [ENNReal.rpow_zero, le_infᵢ_iff]
     intro t hst h't

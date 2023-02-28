@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 31a8a27684ce9a5749914f4248c3f7bf76605d41
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1781,7 +1781,7 @@ theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : (
     _ = C * μ s + ε₁ := by
       simp only [← simple_func.lintegral_eq_lintegral, coe_const, lintegral_const,
         measure.restrict_apply, MeasurableSet.univ, univ_inter]
-    _ ≤ C * ((ε₂ - ε₁) / C) + ε₁ := add_le_add_right (ENNReal.mul_le_mul le_rfl hs.le) _
+    _ ≤ C * ((ε₂ - ε₁) / C) + ε₁ := add_le_add_right (mul_le_mul_left' hs.le _) _
     _ ≤ ε₂ - ε₁ + ε₁ := add_le_add mul_div_le le_rfl
     _ = ε₂ := tsub_add_cancel_of_le hε₁₂.le
     
@@ -2218,7 +2218,7 @@ theorem lintegral_sub_le (f g : α → ℝ≥0∞) (hf : Measurable f) :
   by
   rw [tsub_le_iff_right]
   by_cases hfi : (∫⁻ x, f x ∂μ) = ∞
-  · rw [hfi, ENNReal.add_top]
+  · rw [hfi, add_top]
     exact le_top
   · rw [← lintegral_add_right _ hf]
     exact lintegral_mono fun x => le_tsub_add
@@ -3160,8 +3160,7 @@ theorem lintegral_withDensity_eq_lintegral_mul (μ : Measure α) {f : α → ℝ
   · intro g h h_univ h_mea_g h_mea_h h_ind_g h_ind_h
     simp [mul_add, *, Measurable.mul]
   · intro g h_mea_g h_mono_g h_ind
-    have : Monotone fun n a => f a * g n a := fun m n hmn x =>
-      ENNReal.mul_le_mul le_rfl (h_mono_g hmn x)
+    have : Monotone fun n a => f a * g n a := fun m n hmn x => mul_le_mul_left' (h_mono_g hmn x) _
     simp [lintegral_supr, ENNReal.mul_supᵢ, h_mf.mul (h_mea_g _), *]
 #align measure_theory.lintegral_with_density_eq_lintegral_mul MeasureTheory.lintegral_withDensity_eq_lintegral_mul
 
@@ -3220,7 +3219,7 @@ theorem lintegral_withDensity_le_lintegral_mul (μ : Measure α) {f : α → ℝ
   by
   rw [← supr_lintegral_measurable_le_eq_lintegral, ← supr_lintegral_measurable_le_eq_lintegral]
   refine' supᵢ₂_le fun i i_meas => supᵢ_le fun hi => _
-  have A : f * i ≤ f * g := fun x => ENNReal.mul_le_mul le_rfl (hi x)
+  have A : f * i ≤ f * g := fun x => mul_le_mul_left' (hi x) _
   refine' le_supᵢ₂_of_le (f * i) (f_meas.mul i_meas) _
   exact le_supᵢ_of_le A (le_of_eq (lintegral_with_density_eq_lintegral_mul _ f_meas i_meas))
 #align measure_theory.lintegral_with_density_le_lintegral_mul MeasureTheory.lintegral_withDensity_le_lintegral_mul
@@ -3514,7 +3513,7 @@ theorem exists_absolutelyContinuous_isFiniteMeasure {m : MeasurableSpace α} (μ
   by
   obtain ⟨g, gpos, gmeas, hg⟩ :
     ∃ g : α → ℝ≥0, (∀ x : α, 0 < g x) ∧ Measurable g ∧ (∫⁻ x : α, ↑(g x) ∂μ) < 1 :=
-    exists_pos_lintegral_lt_of_sigma_finite μ ENNReal.zero_lt_one.ne'
+    exists_pos_lintegral_lt_of_sigma_finite μ one_ne_zero
   refine' ⟨μ.with_density fun x => g x, is_finite_measure_with_density hg.ne_top, _⟩
   have : μ = (μ.with_density fun x => g x).withDensity fun x => (g x)⁻¹ :=
     by

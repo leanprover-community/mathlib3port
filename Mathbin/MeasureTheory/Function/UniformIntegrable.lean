@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.uniform_integrable
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -517,7 +517,7 @@ theorem snorm_sub_le_of_dist_bdd {p : ℝ≥0∞} (hp' : p ≠ ∞) {s : Set α}
     · simp [indicator_of_not_mem hx]
   refine' le_trans (snorm_mono this) _
   rw [snorm_indicator_const hs hp hp']
-  refine' ENNReal.mul_le_mul (le_of_eq _) le_rfl
+  refine' mul_le_mul_right' (le_of_eq _) _
   rw [← ofReal_norm_eq_coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg hc]
 #align measure_theory.snorm_sub_le_of_dist_bdd MeasureTheory.snorm_sub_le_of_dist_bdd
 
@@ -541,7 +541,7 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp
   have hdivp : 0 ≤ 1 / p.to_real := by
     refine' one_div_nonneg.2 _
     rw [← ENNReal.zero_toReal, ENNReal.toReal_le_toReal ENNReal.zero_ne_top hp']
-    exact le_trans ennreal.zero_lt_one.le hp
+    exact le_trans (zero_le _) hp
   have hpow : 0 < measure_univ_nnreal μ ^ (1 / p.to_real) :=
     Real.rpow_pos_of_pos (measure_univ_nnreal_pos hμ) _
   obtain ⟨δ₁, hδ₁, hsnorm₁⟩ := hui hε'
@@ -691,7 +691,7 @@ theorem tendstoInMeasure_iff_tendsto_Lp [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp'
     TendstoInMeasure μ f atTop g ∧ UnifIntegrable f p μ ↔
       Tendsto (fun n => snorm (f n - g) p μ) atTop (𝓝 0) :=
   ⟨fun h => tendsto_Lp_of_tendstoInMeasure μ hp hp' (fun n => (hf n).1) hg h.2 h.1, fun h =>
-    ⟨tendstoInMeasureOfTendstoSnorm (lt_of_lt_of_le ENNReal.zero_lt_one hp).Ne.symm
+    ⟨tendstoInMeasureOfTendstoSnorm (lt_of_lt_of_le zero_lt_one hp).Ne.symm
         (fun n => (hf n).AeStronglyMeasurable) hg.AeStronglyMeasurable h,
       unifIntegrableOfTendstoLp μ hp hp' hf hg h⟩⟩
 #align measure_theory.tendsto_in_measure_iff_tendsto_Lp MeasureTheory.tendstoInMeasure_iff_tendsto_Lp
@@ -706,7 +706,7 @@ theorem unifIntegrableOf' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β
             0 < C ∧ ∀ i, snorm ({ x | C ≤ ‖f i x‖₊ }.indicator (f i)) p μ ≤ ENNReal.ofReal ε) :
     UnifIntegrable f p μ :=
   by
-  have hpzero := (lt_of_lt_of_le ENNReal.zero_lt_one hp).Ne.symm
+  have hpzero := (lt_of_lt_of_le zero_lt_one hp).Ne.symm
   by_cases hμ : μ Set.univ = 0
   · rw [measure.measure_univ_eq_zero] at hμ
     exact hμ.symm ▸ unif_integrable_zero_meas
@@ -984,7 +984,7 @@ theorem UniformIntegrable.spec' (hp : p ≠ 0) (hp' : p ≠ ∞) (hf : ∀ i, St
           rw [ENNReal.smul_def, ENNReal.smul_def, smul_eq_mul, smul_eq_mul]
           simp_rw [ENNReal.ofReal_coe_nnreal] at hℐ
           refine'
-            ENNReal.mul_le_mul le_rfl
+            mul_le_mul' le_rfl
               (ENNReal.rpow_le_rpow (hℐ C).le (one_div_nonneg.2 ENNReal.toReal_nonneg))
         _ ≤ snorm ({ x | C ≤ ‖f (ℐ C) x‖₊ }.indicator (f (ℐ C))) p μ :=
           by
@@ -1034,7 +1034,7 @@ theorem uniformIntegrable_iff [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
         ∀ ε : ℝ,
           0 < ε →
             ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ‖f i x‖₊ }.indicator (f i)) p μ ≤ ENNReal.ofReal ε :=
-  ⟨fun h => ⟨h.1, fun ε => h.spec (lt_of_lt_of_le ENNReal.zero_lt_one hp).Ne.symm hp'⟩, fun h =>
+  ⟨fun h => ⟨h.1, fun ε => h.spec (lt_of_lt_of_le zero_lt_one hp).Ne.symm hp'⟩, fun h =>
     uniformIntegrableOf hp hp' h.1 h.2⟩
 #align measure_theory.uniform_integrable_iff MeasureTheory.uniformIntegrable_iff
 

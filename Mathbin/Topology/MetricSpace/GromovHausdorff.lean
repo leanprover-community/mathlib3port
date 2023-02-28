@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -530,7 +530,6 @@ instance : MetricSpace GHSpace where
     let Ψ : Y → γ2 := optimal_GH_injl Y Z
     have hΨ : Isometry Ψ := isometry_optimal_GH_injl Y Z
     let γ := glue_space hΦ hΨ
-    letI : MetricSpace γ := Metric.metricSpaceGlueSpace hΦ hΨ
     have Comm : to_glue_l hΦ hΨ ∘ optimal_GH_injr X Y = to_glue_r hΦ hΨ ∘ optimal_GH_injl Y Z :=
       to_glue_commute hΦ hΨ
     calc
@@ -1088,6 +1087,8 @@ structure AuxGluingStruct (A : Type) [MetricSpace A] : Type 1 where
   isom : Isometry embed
 #align Gromov_Hausdorff.aux_gluing_struct GromovHausdorff.AuxGluingStruct
 
+attribute [local instance] aux_gluing_struct.metric
+
 instance (A : Type) [MetricSpace A] : Inhabited (AuxGluingStruct A) :=
   ⟨{  Space := A
       metric := by infer_instance
@@ -1098,18 +1099,12 @@ instance (A : Type) [MetricSpace A] : Inhabited (AuxGluingStruct A) :=
 `X i` is glued to `X (i+1)` in an optimal way. The space at step `n+1` is obtained from the space
 at step `n` by adding `X (n+1)`, glued in an optimal way to the `X n` already sitting there. -/
 def auxGluing (n : ℕ) : AuxGluingStruct (X n) :=
-  Nat.recOn n
-    { Space := X 0
-      metric := by infer_instance
-      embed := id
-      isom := fun x y => rfl } fun n Y =>
-    letI : MetricSpace Y.space := Y.metric
-    { Space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1)))
+  Nat.recOn n default fun n Y =>
+    { Space := GlueSpace Y.isom (isometry_optimalGHInjl (X n) (X (n + 1)))
       metric := by infer_instance
       embed :=
-        to_glue_r Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1))) ∘
-          optimal_GH_injr (X n) (X (n + 1))
-      isom := (to_glue_r_isometry _ _).comp (isometry_optimal_GH_injr (X n) (X (n + 1))) }
+        toGlueR Y.isom (isometry_optimalGHInjl (X n) (X (n + 1))) ∘ optimalGHInjr (X n) (X (n + 1))
+      isom := (toGlueR_isometry _ _).comp (isometry_optimalGHInjr (X n) (X (n + 1))) }
 #align Gromov_Hausdorff.aux_gluing GromovHausdorff.auxGluing
 
 /-- The Gromov-Hausdorff space is complete. -/
@@ -1125,23 +1120,22 @@ instance : CompleteSpace GHSpace :=
   let X n := (u n).rep
   -- glue them together successively in an optimal way, getting a sequence of metric spaces `Y n`
   let Y := aux_gluing X
-  letI : ∀ n, MetricSpace (Y n).Space := fun n => (Y n).metric
+  -- this equality is true by definition but Lean unfolds some defs in the wrong order
   have E :
-    ∀ n : ℕ, glue_space (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ)) = (Y n.succ).Space :=
+    ∀ n : ℕ,
+      glue_space (Y n).isom (isometry_optimal_GH_injl (X n) (X (n + 1))) = (Y (n + 1)).Space :=
     fun n => by
-    simp only [Y, aux_gluing]
+    dsimp only [Y, aux_gluing]
     rfl
   let c n := cast (E n)
-  have ic : ∀ n, Isometry (c n) := fun n x y => rfl
+  have ic : ∀ n, Isometry (c n) := fun n x y =>
+    by
+    dsimp only [Y, aux_gluing]
+    exact rfl
   -- there is a canonical embedding of `Y n` in `Y (n+1)`, by construction
-  let f : ∀ n, (Y n).Space → (Y n.succ).Space := fun n =>
-    c n ∘ to_glue_l (aux_gluing X n).isom (isometry_optimal_GH_injl (X n) (X n.succ))
-  have I : ∀ n, Isometry (f n) := by
-    intro n
-    apply Isometry.comp
-    · intro x y
-      rfl
-    · apply to_glue_l_isometry
+  let f : ∀ n, (Y n).Space → (Y (n + 1)).Space := fun n =>
+    c n ∘ to_glue_l (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ))
+  have I : ∀ n, Isometry (f n) := fun n => (ic n).comp (to_glue_l_isometry _ _)
   -- consider the inductive limit `Z0` of the `Y n`, and then its completion `Z`
   let Z0 := Metric.InductiveLimit I
   let Z := UniformSpace.Completion Z0

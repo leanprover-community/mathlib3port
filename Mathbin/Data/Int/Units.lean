@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.units
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 45a1ada01ed893722d0f8d15b9e44270996515d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,6 +102,11 @@ theorem eq_one_or_neg_one_of_mul_eq_one' {z w : ℤ} (h : z * w = 1) :
     tauto
 #align int.eq_one_or_neg_one_of_mul_eq_one' Int.eq_one_or_neg_one_of_mul_eq_one'
 -/
+
+theorem eq_of_mul_eq_one {z w : ℤ} (h : z * w = 1) : z = w :=
+  (eq_one_or_neg_one_of_mul_eq_one' h).elim (fun h => h.1.trans h.2.symm) fun h =>
+    h.1.trans h.2.symm
+#align int.eq_of_mul_eq_one Int.eq_of_mul_eq_one
 
 #print Int.mul_eq_one_iff_eq_one_or_neg_one /-
 theorem mul_eq_one_iff_eq_one_or_neg_one {z w : ℤ} : z * w = 1 ↔ z = 1 ∧ w = 1 ∨ z = -1 ∧ w = -1 :=

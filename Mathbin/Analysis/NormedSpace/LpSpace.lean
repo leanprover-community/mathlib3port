@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -679,7 +679,7 @@ theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ‖c • f‖ =
 instance [Fact (1 ≤ p)] : NormedSpace 𝕜 (lp E p)
     where norm_smul_le c f :=
     by
-    have hp : 0 < p := ennreal.zero_lt_one.trans_le (Fact.out _)
+    have hp : 0 < p := zero_lt_one.trans_le (Fact.out _)
     simp [norm_const_smul hp.ne']
 
 variable {𝕜' : Type _} [NormedField 𝕜']
@@ -1072,7 +1072,7 @@ protected theorem norm_compl_sum_single (hp : 0 < p.toReal) (f : lp E p) (s : Fi
 protected theorem hasSum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) :
     HasSum (fun i : α => lp.single p i (f i : E i)) f :=
   by
-  have hp₀ : 0 < p := ennreal.zero_lt_one.trans_le (Fact.out _)
+  have hp₀ : 0 < p := zero_lt_one.trans_le (Fact.out _)
   have hp' : 0 < p.to_real := ENNReal.toReal_pos hp₀.ne' hp
   have := lp.hasSum_norm hp' f
   rw [HasSum, Metric.tendsto_nhds] at this⊢
@@ -1107,7 +1107,7 @@ open Topology uniformity
 /-- The coercion from `lp E p` to `Π i, E i` is uniformly continuous. -/
 theorem uniformContinuous_coe [_i : Fact (1 ≤ p)] : UniformContinuous (coe : lp E p → ∀ i, E i) :=
   by
-  have hp : p ≠ 0 := (ennreal.zero_lt_one.trans_le _i.elim).ne'
+  have hp : p ≠ 0 := (zero_lt_one.trans_le _i.elim).ne'
   rw [uniformContinuous_pi]
   intro i
   rw [normed_add_comm_group.uniformity_basis_dist.uniform_continuous_iff
@@ -1139,7 +1139,7 @@ theorem sum_rpow_le_of_tendsto (hp : p ≠ ∞) {C : ℝ} {F : ι → lp E p} (h
     {f : ∀ a, E a} (hf : Tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) (s : Finset α) :
     (∑ i : α in s, ‖f i‖ ^ p.toReal) ≤ C ^ p.toReal :=
   by
-  have hp' : p ≠ 0 := (ennreal.zero_lt_one.trans_le _i.elim).ne'
+  have hp' : p ≠ 0 := (zero_lt_one.trans_le _i.elim).ne'
   have hp'' : 0 < p.to_real := ENNReal.toReal_pos hp' hp
   let G : (∀ a, E a) → ℝ := fun f => ∑ a in s, ‖f a‖ ^ p.to_real
   have hG : Continuous G := by
@@ -1164,7 +1164,7 @@ theorem norm_le_of_tendsto {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, �
   rcases eq_top_or_lt_top p with (rfl | hp)
   · apply norm_le_of_forall_le hC
     exact norm_apply_le_of_tendsto hCF hf
-  · have : 0 < p := ennreal.zero_lt_one.trans_le _i.elim
+  · have : 0 < p := zero_lt_one.trans_le _i.elim
     have hp' : 0 < p.to_real := ENNReal.toReal_pos this.ne' hp.ne
     apply norm_le_of_forall_sum_le hp' hC
     exact sum_rpow_le_of_tendsto hp.ne hCF hf

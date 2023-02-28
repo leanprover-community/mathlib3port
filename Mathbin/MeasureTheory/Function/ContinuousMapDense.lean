@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.continuous_map_dense
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ variable [NormedSpace ℝ E]
 theorem boundedContinuousFunction_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ :=
   by
-  have hp₀ : 0 < p := lt_of_lt_of_le ENNReal.zero_lt_one _i.elim
+  have hp₀ : 0 < p := lt_of_lt_of_le zero_lt_one _i.elim
   have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one ENNReal.toReal_nonneg
   have hp₀'' : 0 < p.to_real := by
     simpa [← ENNReal.toReal_lt_toReal ENNReal.zero_ne_top hp] using hp₀

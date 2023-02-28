@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3529,71 +3529,20 @@ end Metric
 
 section EqRel
 
-/-- The canonical equivalence relation on a pseudometric space. -/
-def PseudoMetric.distSetoid (α : Type u) [PseudoMetricSpace α] : Setoid α :=
-  Setoid.mk (fun x y => dist x y = 0)
-    (by
-      unfold Equivalence
-      repeat' constructor
-      · exact PseudoMetricSpace.dist_self
-      · intro x y h
-        rwa [PseudoMetricSpace.dist_comm]
-      · intro x y z hxy hyz
-        refine' le_antisymm _ dist_nonneg
-        calc
-          dist x z ≤ dist x y + dist y z := PseudoMetricSpace.dist_triangle _ _ _
-          _ = 0 + 0 := by rw [hxy, hyz]
-          _ = 0 := by simp
-          )
-#align pseudo_metric.dist_setoid PseudoMetric.distSetoid
+instance {α : Type u} [PseudoMetricSpace α] : HasDist (UniformSpace.SeparationQuotient α)
+    where dist p q :=
+    Quotient.liftOn₂' p q dist fun x y x' y' hx hy => by
+      rw [dist_edist, dist_edist, ← UniformSpace.SeparationQuotient.edist_mk x, ←
+        UniformSpace.SeparationQuotient.edist_mk x', Quot.sound hx, Quot.sound hy]
 
-attribute [local instance] PseudoMetric.distSetoid
-
-/-- The canonical quotient of a pseudometric space, identifying points at distance `0`. -/
-@[reducible]
-def PseudoMetricQuot (α : Type u) [PseudoMetricSpace α] : Type _ :=
-  Quotient (PseudoMetric.distSetoid α)
-#align pseudo_metric_quot PseudoMetricQuot
-
-instance hasDistMetricQuot {α : Type u} [PseudoMetricSpace α] : HasDist (PseudoMetricQuot α)
-    where dist :=
-    Quotient.lift₂ (fun p q : α => dist p q)
-      (by
-        intro x y x' y' hxx' hyy'
-        have Hxx' : dist x x' = 0 := hxx'
-        have Hyy' : dist y y' = 0 := hyy'
-        have A : dist x y ≤ dist x' y' :=
-          calc
-            dist x y ≤ dist x x' + dist x' y := PseudoMetricSpace.dist_triangle _ _ _
-            _ = dist x' y := by simp [Hxx']
-            _ ≤ dist x' y' + dist y' y := PseudoMetricSpace.dist_triangle _ _ _
-            _ = dist x' y' := by simp [PseudoMetricSpace.dist_comm, Hyy']
-            
-        have B : dist x' y' ≤ dist x y :=
-          calc
-            dist x' y' ≤ dist x' x + dist x y' := PseudoMetricSpace.dist_triangle _ _ _
-            _ = dist x y' := by simp [PseudoMetricSpace.dist_comm, Hxx']
-            _ ≤ dist x y + dist y y' := PseudoMetricSpace.dist_triangle _ _ _
-            _ = dist x y := by simp [Hyy']
-            
-        exact le_antisymm A B)
-#align has_dist_metric_quot hasDistMetricQuot
-
-theorem pseudo_metric_quot_dist_eq {α : Type u} [PseudoMetricSpace α] (p q : α) :
-    dist ⟦p⟧ ⟦q⟧ = dist p q :=
+theorem UniformSpace.SeparationQuotient.dist_mk {α : Type u} [PseudoMetricSpace α] (p q : α) :
+    @dist (UniformSpace.SeparationQuotient α) _ (Quot.mk _ p) (Quot.mk _ q) = dist p q :=
   rfl
-#align pseudo_metric_quot_dist_eq pseudo_metric_quot_dist_eq
+#align uniform_space.separation_quotient.dist_mk UniformSpace.SeparationQuotient.dist_mk
 
-instance metricSpaceQuot {α : Type u} [PseudoMetricSpace α] : MetricSpace (PseudoMetricQuot α)
-    where
-  dist_self := by
-    refine' Quotient.ind fun y => _
-    exact PseudoMetricSpace.dist_self _
-  eq_of_dist_eq_zero xc yc := Quotient.induction_on₂ xc yc fun x y H => Quotient.sound H
-  dist_comm xc yc := Quotient.induction_on₂ xc yc fun x y => PseudoMetricSpace.dist_comm _ _
-  dist_triangle xc yc zc :=
-    Quotient.induction_on₃ xc yc zc fun x y z => PseudoMetricSpace.dist_triangle _ _ _
-#align metric_space_quot metricSpaceQuot
+instance {α : Type u} [PseudoMetricSpace α] : MetricSpace (UniformSpace.SeparationQuotient α) :=
+  EmetricSpace.toMetricSpaceOfDist dist (fun x y => Quotient.inductionOn₂' x y edist_ne_top)
+    fun x y => Quotient.inductionOn₂' x y dist_edist
 
 end EqRel
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_paracompact
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     have pow_pos : ∀ k : ℕ, (0 : ℝ≥0∞) < 2⁻¹ ^ k := fun k =>
       ENNReal.pow_pos (ENNReal.inv_pos.2 ENNReal.two_ne_top) _
     have hpow_le : ∀ {m n : ℕ}, m ≤ n → (2⁻¹ : ℝ≥0∞) ^ n ≤ 2⁻¹ ^ m := fun m n h =>
-      ENNReal.pow_le_pow_of_le_one (ENNReal.inv_le_one.2 ennreal.one_lt_two.le) h
+      pow_le_pow_of_le_one' (ENNReal.inv_le_one.2 ennreal.one_lt_two.le) h
     have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n :=
       by
       intro n
@@ -120,10 +120,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       refine' hsub (lt_of_lt_of_le hyx _)
       calc
         2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mul _).symm
-        _ ≤ 3 * 2⁻¹ ^ n := ENNReal.mul_le_mul _ le_rfl
+        _ ≤ 3 * 2⁻¹ ^ n := mul_le_mul_right' _ _
         
       -- TODO: use `norm_num`
-      have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := ENNReal.coe_nat_le_coe_nat.2 (by norm_num1)
+      have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := Nat.cast_le.2 (by norm_num1)
       exact_mod_cast this
     -- Let us show the rest of the properties. Since the definition expects a family indexed
     -- by a single parameter, we use `ℕ × ι` as the domain.
@@ -177,7 +177,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
             apply_rules [ENNReal.add_lt_add]
           _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
           _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-            ENNReal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
+            mul_le_mul' le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
           _ = 3 * 2⁻¹ ^ m := by rw [mul_add, h2pow, bit1, add_mul, one_mul]
           
       -- Finally, we glue `Hgt` and `Hle`

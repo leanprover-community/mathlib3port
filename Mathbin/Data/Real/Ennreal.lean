@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ variable {α : Type _} {β : Type _}
 def ENNReal :=
   WithTop ℝ≥0deriving Zero, AddCommMonoidWithOne, SemilatticeSup, DistribLattice, OrderBot,
   BoundedOrder, CanonicallyOrderedCommSemiring, CompleteLinearOrder, DenselyOrdered, Nontrivial,
-  CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub, LinearOrderedAddCommMonoidWithTop
+  CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub, LinearOrderedAddCommMonoidWithTop, CharZero
 #align ennreal ENNReal
 -/
 
@@ -666,11 +666,6 @@ theorem one_eq_coe : 1 = (↑r : ℝ≥0∞) ↔ 1 = r :=
 #align ennreal.one_eq_coe ENNReal.one_eq_coe
 -/
 
-@[simp]
-theorem coe_nonneg : 0 ≤ (↑r : ℝ≥0∞) :=
-  coe_le_coe.2 <| zero_le _
-#align ennreal.coe_nonneg ENNReal.coe_nonneg
-
 /- warning: ennreal.coe_pos -> ENNReal.coe_pos is a dubious translation:
 lean 3 declaration is
   forall {r : NNReal}, Iff (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedAddCommMonoid.toPartialOrder.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) r)) (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) r)
@@ -797,10 +792,6 @@ theorem toReal_eq_toReal_iff' {x y : ℝ≥0∞} (hx : x ≠ ⊤) (hy : y ≠ �
   simp only [ENNReal.toReal, NNReal.coe_eq, to_nnreal_eq_to_nnreal_iff' hx hy]
 #align ennreal.to_real_eq_to_real_iff' ENNReal.toReal_eq_toReal_iff'
 
-protected theorem zero_lt_one : 0 < (1 : ℝ≥0∞) :=
-  zero_lt_one
-#align ennreal.zero_lt_one ENNReal.zero_lt_one
-
 /- warning: ennreal.one_lt_two -> ENNReal.one_lt_two is a dubious translation:
 lean 3 declaration is
   LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedAddCommMonoid.toPartialOrder.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))) (OfNat.ofNat.{0} ENNReal 1 (OfNat.mk.{0} ENNReal 1 (One.one.{0} ENNReal (AddMonoidWithOne.toOne.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))))) (OfNat.ofNat.{0} ENNReal 2 (OfNat.mk.{0} ENNReal 2 (bit0.{0} ENNReal (Distrib.toHasAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))))) (One.one.{0} ENNReal (AddMonoidWithOne.toOne.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))))))
@@ -811,15 +802,6 @@ Case conversion may be inaccurate. Consider using '#align ennreal.one_lt_two ENN
 theorem one_lt_two : (1 : ℝ≥0∞) < 2 :=
   coe_one ▸ coe_two ▸ by exact_mod_cast (one_lt_two : 1 < 2)
 #align ennreal.one_lt_two ENNReal.one_lt_two
-
-@[simp]
-theorem zero_lt_two : (0 : ℝ≥0∞) < 2 :=
-  lt_trans zero_lt_one one_lt_two
-#align ennreal.zero_lt_two ENNReal.zero_lt_two
-
-theorem two_ne_zero : (2 : ℝ≥0∞) ≠ 0 :=
-  (ne_of_lt zero_lt_two).symm
-#align ennreal.two_ne_zero ENNReal.two_ne_zero
 
 /- warning: ennreal.two_ne_top -> ENNReal.two_ne_top is a dubious translation:
 lean 3 declaration is
@@ -944,16 +926,6 @@ theorem supᵢ_ennreal {α : Type _} [CompleteLattice α] {f : ℝ≥0∞ → α
     (⨆ n, f n) = (⨆ n : ℝ≥0, f n) ⊔ f ∞ :=
   @infᵢ_ennreal αᵒᵈ _ _
 #align ennreal.supr_ennreal ENNReal.supᵢ_ennreal
-
-@[simp]
-theorem add_top : a + ∞ = ∞ :=
-  add_top _
-#align ennreal.add_top ENNReal.add_top
-
-@[simp]
-theorem top_add : ∞ + a = ∞ :=
-  top_add _
-#align ennreal.top_add ENNReal.top_add
 
 /- warning: ennreal.of_nnreal_hom -> ENNReal.ofNNRealHom is a dubious translation:
 lean 3 declaration is
@@ -1542,22 +1514,6 @@ theorem coe_finset_sup {s : Finset α} {f : α → ℝ≥0} : ↑(s.sup f) = s.s
   Finset.comp_sup_eq_sup_comp_of_is_total _ coe_mono rfl
 #align ennreal.coe_finset_sup ENNReal.coe_finset_sup
 
-theorem pow_le_pow {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
-  by
-  cases a
-  · cases m
-    · rw [eq_bot_iff.mpr h]
-      exact le_rfl
-    · rw [none_eq_top, top_pow (Nat.succ_pos m)]
-      exact le_top
-  · rw [some_eq_coe, ← coe_pow, ← coe_pow, coe_le_coe]
-    exact pow_le_pow (by simpa using ha) h
-#align ennreal.pow_le_pow ENNReal.pow_le_pow
-
-theorem one_le_pow_of_one_le (ha : 1 ≤ a) (n : ℕ) : 1 ≤ a ^ n := by
-  simpa using pow_le_pow ha (zero_le n)
-#align ennreal.one_le_pow_of_one_le ENNReal.one_le_pow_of_one_le
-
 /- warning: ennreal.max_eq_zero_iff -> ENNReal.max_eq_zero_iff is a dubious translation:
 lean 3 declaration is
   forall {a : ENNReal} {b : ENNReal}, Iff (Eq.{1} ENNReal (LinearOrder.max.{0} ENNReal (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{0} ENNReal ENNReal.canonicallyLinearOrderedAddMonoid) a b) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (And (Eq.{1} ENNReal a (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))) (Eq.{1} ENNReal b (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))))
@@ -1844,6 +1800,7 @@ lean 3 declaration is
 but is expected to have type
   forall {r : NNReal} {n : Nat}, Iff (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) (Nat.cast.{0} ENNReal (CanonicallyOrderedCommSemiring.toNatCast.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal) n) (ENNReal.some r)) (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (Nat.cast.{0} NNReal (CanonicallyOrderedCommSemiring.toNatCast.{0} NNReal instNNRealCanonicallyOrderedCommSemiring) n) r)
 Case conversion may be inaccurate. Consider using '#align ennreal.coe_nat_lt_coe ENNReal.coe_nat_lt_coeₓ'. -/
+@[simp, norm_cast]
 theorem coe_nat_lt_coe {n : ℕ} : (n : ℝ≥0∞) < r ↔ ↑n < r :=
   ENNReal.coe_nat n ▸ coe_lt_coe
 #align ennreal.coe_nat_lt_coe ENNReal.coe_nat_lt_coe
@@ -1854,25 +1811,10 @@ lean 3 declaration is
 but is expected to have type
   forall {r : NNReal} {n : Nat}, Iff (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) (ENNReal.some r) (Nat.cast.{0} ENNReal (CanonicallyOrderedCommSemiring.toNatCast.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal) n)) (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) r (Nat.cast.{0} NNReal (CanonicallyOrderedCommSemiring.toNatCast.{0} NNReal instNNRealCanonicallyOrderedCommSemiring) n))
 Case conversion may be inaccurate. Consider using '#align ennreal.coe_lt_coe_nat ENNReal.coe_lt_coe_natₓ'. -/
+@[simp, norm_cast]
 theorem coe_lt_coe_nat {n : ℕ} : (r : ℝ≥0∞) < n ↔ r < n :=
   ENNReal.coe_nat n ▸ coe_lt_coe
 #align ennreal.coe_lt_coe_nat ENNReal.coe_lt_coe_nat
-
-@[simp, norm_cast]
-theorem coe_nat_lt_coe_nat {m n : ℕ} : (m : ℝ≥0∞) < n ↔ m < n :=
-  ENNReal.coe_nat n ▸ coe_nat_lt_coe.trans Nat.cast_lt
-#align ennreal.coe_nat_lt_coe_nat ENNReal.coe_nat_lt_coe_nat
-
-theorem coe_nat_mono : StrictMono (coe : ℕ → ℝ≥0∞) := fun _ _ => coe_nat_lt_coe_nat.2
-#align ennreal.coe_nat_mono ENNReal.coe_nat_mono
-
-@[simp, norm_cast]
-theorem coe_nat_le_coe_nat {m n : ℕ} : (m : ℝ≥0∞) ≤ n ↔ m ≤ n :=
-  coe_nat_mono.le_iff_le
-#align ennreal.coe_nat_le_coe_nat ENNReal.coe_nat_le_coe_nat
-
-instance : CharZero ℝ≥0∞ :=
-  ⟨coe_nat_mono.Injective⟩
 
 /- warning: ennreal.exists_nat_gt -> ENNReal.exists_nat_gt is a dubious translation:
 lean 3 declaration is
@@ -2059,10 +2001,6 @@ theorem coe_infₛ {s : Set ℝ≥0} : s.Nonempty → (↑(infₛ s) : ℝ≥0�
   WithTop.coe_infₛ
 #align ennreal.coe_Inf ENNReal.coe_infₛ
 
-@[simp]
-theorem top_mem_upperBounds {s : Set ℝ≥0∞} : ∞ ∈ upperBounds s := fun x hx => le_top
-#align ennreal.top_mem_upper_bounds ENNReal.top_mem_upperBounds
-
 /- warning: ennreal.coe_mem_upper_bounds -> ENNReal.coe_mem_upperBounds is a dubious translation:
 lean 3 declaration is
   forall {r : NNReal} {s : Set.{0} NNReal}, Iff (Membership.Mem.{0, 0} ENNReal (Set.{0} ENNReal) (Set.hasMem.{0} ENNReal) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) r) (upperBounds.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedAddCommMonoid.toPartialOrder.{0} ENNReal (OrderedSemiring.toOrderedAddCommMonoid.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))) (Set.image.{0, 0} NNReal ENNReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe)))) s))) (Membership.Mem.{0, 0} NNReal (Set.{0} NNReal) (Set.hasMem.{0} NNReal) r (upperBounds.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring))) s))
@@ -2077,11 +2015,6 @@ theorem coe_mem_upperBounds {s : Set ℝ≥0} :
 end CompleteLattice
 
 section Mul
-
-@[mono]
-theorem mul_le_mul : a ≤ b → c ≤ d → a * c ≤ b * d :=
-  mul_le_mul'
-#align ennreal.mul_le_mul ENNReal.mul_le_mul
 
 /- warning: ennreal.mul_lt_mul -> ENNReal.mul_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -2101,7 +2034,7 @@ theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d :=
     ↑(a * b) < ↑(a' * b') :=
       coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))
     _ = ↑a' * ↑b' := coe_mul
-    _ ≤ c * d := mul_le_mul a'c.le b'd.le
+    _ ≤ c * d := mul_le_mul' a'c.le b'd.le
     
 #align ennreal.mul_lt_mul ENNReal.mul_lt_mul
 
@@ -2111,7 +2044,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : ENNReal}, Monotone.{0, 0} ENNReal ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))) (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))) (fun (x._@.Mathlib.Data.Real.ENNReal._hyg.12460 : ENNReal) => HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) a x._@.Mathlib.Data.Real.ENNReal._hyg.12460)
 Case conversion may be inaccurate. Consider using '#align ennreal.mul_left_mono ENNReal.mul_left_monoₓ'. -/
-theorem mul_left_mono : Monotone ((· * ·) a) := fun b c => mul_le_mul le_rfl
+-- TODO: generalize to `covariant_class α α (*) (≤)`
+theorem mul_left_mono : Monotone ((· * ·) a) := fun b c => mul_le_mul' le_rfl
 #align ennreal.mul_left_mono ENNReal.mul_left_mono
 
 /- warning: ennreal.mul_right_mono -> ENNReal.mul_right_mono is a dubious translation:
@@ -2120,7 +2054,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : ENNReal}, Monotone.{0, 0} ENNReal ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))) (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))) (fun (x : ENNReal) => HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) x a)
 Case conversion may be inaccurate. Consider using '#align ennreal.mul_right_mono ENNReal.mul_right_monoₓ'. -/
-theorem mul_right_mono : Monotone fun x => x * a := fun b c h => mul_le_mul h le_rfl
+-- TODO: generalize to `covariant_class α α (swap (*)) (≤)`
+theorem mul_right_mono : Monotone fun x => x * a := fun b c h => mul_le_mul' h le_rfl
 #align ennreal.mul_right_mono ENNReal.mul_right_mono
 
 /- warning: ennreal.pow_strict_mono -> ENNReal.pow_strictMono is a dubious translation:
@@ -2172,7 +2107,7 @@ theorem mul_left_strictMono (h0 : a ≠ 0) (hinf : a ≠ ∞) : StrictMono ((· 
   intro x y h
   contrapose! h
   simpa only [← mul_assoc, ← coe_mul, inv_mul_cancel h0, coe_one, one_mul] using
-    mul_le_mul' (le_refl ↑a⁻¹) h
+    mul_le_mul_left' h ↑a⁻¹
 #align ennreal.mul_left_strictMono ENNReal.mul_left_strictMono
 
 /- warning: ennreal.mul_eq_mul_left -> ENNReal.mul_eq_mul_left is a dubious translation:
@@ -2855,7 +2790,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ennreal.bit0_top [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] : bit0 ∞ = ∞ :=
-  add_top
+  add_top _
 #align ennreal.bit0_top [anonymous]
 
 /- warning: ennreal.bit0_eq_top_iff clashes with [anonymous] -> [anonymous]
@@ -3419,12 +3354,6 @@ theorem OrderIso.invENNReal_symm_apply : OrderIso.invENNReal.symm a = (OrderDual
   rfl
 #align order_iso.inv_ennreal_symm_apply OrderIso.invENNReal_symm_apply
 
-protected theorem pow_le_pow_of_le_one {n m : ℕ} (ha : a ≤ 1) (h : n ≤ m) : a ^ m ≤ a ^ n :=
-  by
-  rw [← inv_inv a, ← ENNReal.inv_pow, ← @ENNReal.inv_pow a⁻¹, ENNReal.inv_le_inv]
-  exact pow_le_pow (ENNReal.one_le_inv.2 ha) h
-#align ennreal.pow_le_pow_of_le_one ENNReal.pow_le_pow_of_le_one
-
 /- warning: ennreal.div_top -> ENNReal.div_top is a dubious translation:
 lean 3 declaration is
   forall {a : ENNReal}, Eq.{1} ENNReal (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toHasDiv.{0} ENNReal ENNReal.divInvMonoid)) a (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toHasTop.{0} ENNReal ENNReal.linearOrderedAddCommMonoidWithTop))) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero)))
@@ -3652,7 +3581,7 @@ but is expected to have type
   forall {a : ENNReal} {b : ENNReal} {c : ENNReal} {d : ENNReal}, (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) a b) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) d c) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OrderedSemiring.toPartialOrder.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) a c) (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) b d))
 Case conversion may be inaccurate. Consider using '#align ennreal.div_le_div ENNReal.div_le_divₓ'. -/
 protected theorem div_le_div (hab : a ≤ b) (hdc : d ≤ c) : a / c ≤ b / d :=
-  div_eq_mul_inv b d ▸ div_eq_mul_inv a c ▸ ENNReal.mul_le_mul hab (ENNReal.inv_le_inv.mpr hdc)
+  div_eq_mul_inv b d ▸ div_eq_mul_inv a c ▸ mul_le_mul' hab (ENNReal.inv_le_inv.mpr hdc)
 #align ennreal.div_le_div ENNReal.div_le_div
 
 /- warning: ennreal.div_le_div_left -> ENNReal.div_le_div_left is a dubious translation:
@@ -4041,8 +3970,8 @@ theorem exists_nat_pos_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ n > 0, b < (
   by
   have : b / a ≠ ∞ := mul_ne_top hb (inv_ne_top.2 ha)
   refine' (ENNReal.exists_nat_gt this).imp fun n hn => _
-  have : ↑0 < (n : ℝ≥0∞) := lt_of_le_of_lt (by simp) hn
-  refine' ⟨coe_nat_lt_coe_nat.1 this, _⟩
+  have : 0 < (n : ℝ≥0∞) := lt_of_le_of_lt (zero_le _) hn
+  refine' ⟨Nat.cast_pos.1 this, _⟩
   rwa [← ENNReal.div_lt_iff (Or.inl ha) (Or.inr hb)]
 #align ennreal.exists_nat_pos_mul_gt ENNReal.exists_nat_pos_mul_gt
 
@@ -4220,7 +4149,7 @@ theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) 
   · apply absurd h (not_le_of_gt _)
     exact lt_of_lt_of_le (Int.negSucc_lt_zero _) (Int.ofNat_nonneg _)
   · simp only [zpow_negSucc, Int.ofNat_eq_coe, zpow_ofNat]
-    refine' (ENNReal.inv_le_one.2 _).trans _ <;> exact ENNReal.one_le_pow_of_one_le hx _
+    refine' (ENNReal.inv_le_one.2 _).trans _ <;> exact one_le_pow_of_one_le' hx _
   · simp only [zpow_negSucc, ENNReal.inv_le_inv]
     apply pow_le_pow hx
     simpa only [← Int.ofNat_le, neg_le_neg_iff, Int.ofNat_add, Int.ofNat_one, Int.negSucc_eq] using

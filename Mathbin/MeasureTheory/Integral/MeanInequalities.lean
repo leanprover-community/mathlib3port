@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.mean_inequalities
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,8 +126,7 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsC
       by
       rw [lintegral_mul_const' (npf * nqg) _
           (by simp [hf_nontop, hg_nontop, hf_nonzero, hg_nonzero, ENNReal.mul_eq_top])]
-      nth_rw 2 [← one_mul (npf * nqg)]
-      refine' mul_le_mul _ (le_refl (npf * nqg))
+      refine' mul_le_of_le_one_left' _
       have hf1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.pos hf_nonzero hf_nontop
       have hg1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.symm.pos hg_nonzero hg_nontop
       exact lintegral_mul_le_one_of_lintegral_rpow_eq_one hpq (hf.mul_const _) hf1 hg1
@@ -205,9 +204,9 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
         rw [← ENNReal.zero_rpow_of_pos hp0_lt]
         exact ENNReal.rpow_lt_rpow (by simp [zero_lt_one]) hp0_lt
       have h_rw : (1 / 2) ^ p * (2 : ℝ≥0∞) ^ (p - 1) = 1 / 2 := by
-        rw [sub_eq_add_neg, ENNReal.rpow_add _ _ ENNReal.two_ne_zero ENNReal.coe_ne_top, ←
-          mul_assoc, ← ENNReal.mul_rpow_of_nonneg _ _ hp0, one_div,
-          ENNReal.inv_mul_cancel ENNReal.two_ne_zero ENNReal.coe_ne_top, ENNReal.one_rpow, one_mul,
+        rw [sub_eq_add_neg, ENNReal.rpow_add _ _ two_ne_zero ENNReal.coe_ne_top, ← mul_assoc, ←
+          ENNReal.mul_rpow_of_nonneg _ _ hp0, one_div,
+          ENNReal.inv_mul_cancel two_ne_zero ENNReal.coe_ne_top, ENNReal.one_rpow, one_mul,
           ENNReal.rpow_neg_one]
       rw [← ENNReal.mul_le_mul_left (ne_of_lt h_zero_lt_half_rpow).symm _]
       · rw [mul_add, ← mul_assoc, ← mul_assoc, h_rw, ← ENNReal.mul_rpow_of_nonneg _ _ hp0, mul_add]
@@ -215,11 +214,11 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
           ENNReal.rpow_arith_mean_le_arith_mean2_rpow (1 / 2 : ℝ≥0∞) (1 / 2 : ℝ≥0∞) (f a) (g a) _
             hp1
         rw [ENNReal.div_add_div_same, one_add_one_eq_two,
-          ENNReal.div_self ENNReal.two_ne_zero ENNReal.coe_ne_top]
+          ENNReal.div_self two_ne_zero ENNReal.coe_ne_top]
       · rw [← lt_top_iff_ne_top]
         refine' ENNReal.rpow_lt_top_of_nonneg hp0 _
         rw [one_div, ENNReal.inv_ne_top]
-        exact ENNReal.two_ne_zero
+        exact two_ne_zero
     _ < ⊤ :=
       by
       have h_two : (2 : ℝ≥0∞) ^ (p - 1) ≠ ⊤ :=

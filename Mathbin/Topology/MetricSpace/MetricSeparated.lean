@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metric_separated
-! leanprover-community/mathlib commit 6ca1a09bc9aa75824bf97388c9e3b441fc4ccf3f
+! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem comm : IsMetricSeparated s t ↔ IsMetricSeparated t s :=
 
 @[simp]
 theorem empty_left (s : Set X) : IsMetricSeparated ∅ s :=
-  ⟨1, ENNReal.zero_lt_one.ne', fun x => False.elim⟩
+  ⟨1, one_ne_zero, fun x => False.elim⟩
 #align is_metric_separated.empty_left IsMetricSeparated.empty_left
 
 @[simp]

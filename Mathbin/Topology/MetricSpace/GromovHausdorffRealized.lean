@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff_realized
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,17 +117,16 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (univ : Set (Sum X Y)) :=
       dist_le_diam_of_mem bounded_of_compactSpace (mem_univ _) (mem_univ _)
-    _ = diam (inl '' (univ : Set X) ∪ inr '' (univ : Set Y)) := by
-      apply congr_arg <;> ext (x y z) <;> cases x <;> simp [mem_univ, mem_range_self]
+    _ = diam (range inl ∪ range inr : Set (Sum X Y)) := by rw [range_inl_union_range_inr]
     _ ≤
-        diam (inl '' (univ : Set X)) + dist (inl default) (inr default) +
-          diam (inr '' (univ : Set Y)) :=
-      diam_union (mem_image_of_mem _ (mem_univ _)) (mem_image_of_mem _ (mem_univ _))
+        diam (range inl : Set (Sum X Y)) + dist (inl default) (inr default) +
+          diam (range inr : Set (Sum X Y)) :=
+      diam_union (mem_range_self _) (mem_range_self _)
     _ =
         diam (univ : Set X) + (dist default default + 1 + dist default default) +
           diam (univ : Set Y) :=
       by
-      rw [isometry_inl.diam_image, isometry_inr.diam_image]
+      rw [isometry_inl.diam_range, isometry_inr.diam_range]
       rfl
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) :=
@@ -547,60 +546,43 @@ def premetricOptimalGHDist : PseudoMetricSpace (Sum X Y)
   dist_triangle x y z := candidates_triangle (optimalGHDist_mem_candidatesB X Y)
 #align Gromov_Hausdorff.premetric_optimal_GH_dist GromovHausdorff.premetricOptimalGHDist
 
-attribute [local instance] premetric_optimal_GH_dist PseudoMetric.distSetoid
+attribute [local instance] premetric_optimal_GH_dist
 
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
 @[nolint has_nonempty_instance]
 def OptimalGHCoupling : Type _ :=
-  PseudoMetricQuot (Sum X Y)deriving MetricSpace
+  @UniformSpace.SeparationQuotient (Sum X Y) (premetricOptimalGHDist X Y).toUniformSpace deriving
+  MetricSpace
 #align Gromov_Hausdorff.optimal_GH_coupling GromovHausdorff.OptimalGHCoupling
 
 /-- Injection of `X` in the optimal coupling between `X` and `Y` -/
 def optimalGHInjl (x : X) : OptimalGHCoupling X Y :=
-  ⟦inl x⟧
+  Quotient.mk'' (inl x)
 #align Gromov_Hausdorff.optimal_GH_injl GromovHausdorff.optimalGHInjl
 
 /-- The injection of `X` in the optimal coupling between `X` and `Y` is an isometry. -/
 theorem isometry_optimalGHInjl : Isometry (optimalGHInjl X Y) :=
-  by
-  refine' Isometry.of_dist_eq fun x y => _
-  change dist ⟦inl x⟧ ⟦inl y⟧ = dist x y
-  exact candidates_dist_inl (optimal_GH_dist_mem_candidates_b X Y) _ _
+  Isometry.of_dist_eq fun x y => candidates_dist_inl (optimalGHDist_mem_candidatesB X Y) _ _
 #align Gromov_Hausdorff.isometry_optimal_GH_injl GromovHausdorff.isometry_optimalGHInjl
 
 /-- Injection of `Y` in the optimal coupling between `X` and `Y` -/
 def optimalGHInjr (y : Y) : OptimalGHCoupling X Y :=
-  ⟦inr y⟧
+  Quotient.mk'' (inr y)
 #align Gromov_Hausdorff.optimal_GH_injr GromovHausdorff.optimalGHInjr
 
 /-- The injection of `Y` in the optimal coupling between `X` and `Y` is an isometry. -/
 theorem isometry_optimalGHInjr : Isometry (optimalGHInjr X Y) :=
-  by
-  refine' Isometry.of_dist_eq fun x y => _
-  change dist ⟦inr x⟧ ⟦inr y⟧ = dist x y
-  exact candidates_dist_inr (optimal_GH_dist_mem_candidates_b X Y) _ _
+  Isometry.of_dist_eq fun x y => candidates_dist_inr (optimalGHDist_mem_candidatesB X Y) _ _
 #align Gromov_Hausdorff.isometry_optimal_GH_injr GromovHausdorff.isometry_optimalGHInjr
 
 /-- The optimal coupling between two compact spaces `X` and `Y` is still a compact space -/
 instance compactSpace_optimalGHCoupling : CompactSpace (OptimalGHCoupling X Y) :=
   ⟨by
-    have :
-      (univ : Set (optimal_GH_coupling X Y)) =
-        optimal_GH_injl X Y '' univ ∪ optimal_GH_injr X Y '' univ :=
-      by
-      refine' subset.antisymm (fun xc hxc => _) (subset_univ _)
-      rcases Quotient.exists_rep xc with ⟨x, hx⟩
-      cases x <;> rw [← hx]
-      · have : ⟦inl x⟧ = optimal_GH_injl X Y x := rfl
-        rw [this]
-        exact mem_union_left _ (mem_image_of_mem _ (mem_univ _))
-      · have : ⟦inr x⟧ = optimal_GH_injr X Y x := rfl
-        rw [this]
-        exact mem_union_right _ (mem_image_of_mem _ (mem_univ _))
-    rw [this]
+    rw [← range_quotient_mk']
     exact
-      (is_compact_univ.image (isometry_optimal_GH_injl X Y).Continuous).union
-        (is_compact_univ.image (isometry_optimal_GH_injr X Y).Continuous)⟩
+      isCompact_range
+        (continuous_sum_dom.2
+          ⟨(isometry_optimal_GH_injl X Y).Continuous, (isometry_optimal_GH_injr X Y).Continuous⟩)⟩
 #align Gromov_Hausdorff.compact_space_optimal_GH_coupling GromovHausdorff.compactSpace_optimalGHCoupling
 
 /-- For any candidate `f`, `HD(f)` is larger than or equal to the Hausdorff distance in the
@@ -613,46 +595,29 @@ theorem hausdorffDist_optimal_le_hD {f} (h : f ∈ candidatesB X Y) :
   refine' le_trans (le_of_forall_le_of_dense fun r hr => _) (HD_optimal_GH_dist_le X Y f h)
   have A : ∀ x ∈ range (optimal_GH_injl X Y), ∃ y ∈ range (optimal_GH_injr X Y), dist x y ≤ r :=
     by
-    intro x hx
-    rcases mem_range.1 hx with ⟨z, hz⟩
-    rw [← hz]
+    rintro _ ⟨z, rfl⟩
     have I1 : (⨆ x, ⨅ y, optimal_GH_dist X Y (inl x, inr y)) < r :=
       lt_of_le_of_lt (le_max_left _ _) hr
     have I2 :
       (⨅ y, optimal_GH_dist X Y (inl z, inr y)) ≤ ⨆ x, ⨅ y, optimal_GH_dist X Y (inl x, inr y) :=
       le_csupₛ (by simpa using HD_bound_aux1 _ 0) (mem_range_self _)
     have I : (⨅ y, optimal_GH_dist X Y (inl z, inr y)) < r := lt_of_le_of_lt I2 I1
-    rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
-    rcases mem_range.1 r'range with ⟨z', hz'⟩
-    exists optimal_GH_injr X Y z', mem_range_self _
-    have : (optimal_GH_dist X Y) (inl z, inr z') ≤ r :=
-      by
-      rw [hz']
-      exact le_of_lt hr'
-    exact this
+    rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
+    exact ⟨optimal_GH_injr X Y z', mem_range_self _, le_of_lt hr'⟩
   refine' Hausdorff_dist_le_of_mem_dist _ A _
-  · rcases exists_mem_of_nonempty X with ⟨xX, _⟩
-    have : optimal_GH_injl X Y xX ∈ range (optimal_GH_injl X Y) := mem_range_self _
-    rcases A _ this with ⟨y, yrange, hy⟩
+  · inhabit X
+    rcases A _ (mem_range_self default) with ⟨y, -, hy⟩
     exact le_trans dist_nonneg hy
-  · intro y hy
-    rcases mem_range.1 hy with ⟨z, hz⟩
-    rw [← hz]
+  · rintro _ ⟨z, rfl⟩
     have I1 : (⨆ y, ⨅ x, optimal_GH_dist X Y (inl x, inr y)) < r :=
       lt_of_le_of_lt (le_max_right _ _) hr
     have I2 :
       (⨅ x, optimal_GH_dist X Y (inl x, inr z)) ≤ ⨆ y, ⨅ x, optimal_GH_dist X Y (inl x, inr y) :=
       le_csupₛ (by simpa using HD_bound_aux2 _ 0) (mem_range_self _)
     have I : (⨅ x, optimal_GH_dist X Y (inl x, inr z)) < r := lt_of_le_of_lt I2 I1
-    rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
-    rcases mem_range.1 r'range with ⟨z', hz'⟩
-    exists optimal_GH_injl X Y z', mem_range_self _
-    have : (optimal_GH_dist X Y) (inl z', inr z) ≤ r :=
-      by
-      rw [hz']
-      exact le_of_lt hr'
-    rw [dist_comm]
-    exact this
+    rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
+    refine' ⟨optimal_GH_injl X Y z', mem_range_self _, le_of_lt _⟩
+    rwa [dist_comm]
 #align Gromov_Hausdorff.Hausdorff_dist_optimal_le_HD GromovHausdorff.hausdorffDist_optimal_le_hD
 
 end Consequences
