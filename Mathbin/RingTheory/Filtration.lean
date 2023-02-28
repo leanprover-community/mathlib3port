@@ -92,7 +92,7 @@ def Ideal.trivialFiltration (I : Ideal R) (N : Submodule R M) : I.Filtration M
 #align ideal.trivial_filtration Ideal.trivialFiltration
 
 /-- The `sup` of two `I.filtration`s is an `I.filtration`. -/
-instance : HasSup (I.Filtration M) :=
+instance : Sup (I.Filtration M) :=
   ⟨fun F F' =>
     ⟨F.n ⊔ F'.n, fun i => sup_le_sup (F.mono i) (F'.mono i), fun i =>
       (le_of_eq (Submodule.smul_sup _ _ _)).trans <| sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
@@ -113,7 +113,7 @@ instance : SupSet (I.Filtration M) :=
         exact F.smul_le i }⟩
 
 /-- The `inf` of two `I.filtration`s is an `I.filtration`. -/
-instance : HasInf (I.Filtration M) :=
+instance : Inf (I.Filtration M) :=
   ⟨fun F F' =>
     ⟨F.n ⊓ F'.n, fun i => inf_le_inf (F.mono i) (F'.mono i), fun i =>
       (Submodule.smul_inf_le _ _ _).trans <| inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩

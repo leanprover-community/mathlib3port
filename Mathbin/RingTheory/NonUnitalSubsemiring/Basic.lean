@@ -415,7 +415,7 @@ theorem mem_bot {x : R} : x ∈ (⊥ : NonUnitalSubsemiring R) ↔ x = 0 :=
 #align non_unital_subsemiring.mem_bot NonUnitalSubsemiring.mem_bot
 
 /-- The inf of two non-unital subsemirings is their intersection. -/
-instance : HasInf (NonUnitalSubsemiring R) :=
+instance : Inf (NonUnitalSubsemiring R) :=
   ⟨fun s t =>
     { s.toSubsemigroup ⊓ t.toSubsemigroup, s.toAddSubmonoid ⊓ t.toAddSubmonoid with
       carrier := s ∩ t }⟩

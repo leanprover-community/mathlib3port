@@ -232,7 +232,7 @@ theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t
 variable (𝕜 E)
 
 /-- The complex consisting of only the faces present in both of its arguments. -/
-instance : HasInf (SimplicialComplex 𝕜 E) :=
+instance : Inf (SimplicialComplex 𝕜 E) :=
   ⟨fun K L =>
     { faces := K.faces ∩ L.faces
       not_empty_mem := fun h => K.not_empty_mem (Set.inter_subset_left _ _ h)

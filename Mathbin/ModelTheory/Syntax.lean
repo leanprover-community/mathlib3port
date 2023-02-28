@@ -458,10 +458,10 @@ protected def ex (φ : L.BoundedFormula α (n + 1)) : L.BoundedFormula α n :=
 instance : Top (L.BoundedFormula α n) :=
   ⟨BoundedFormula.not ⊥⟩
 
-instance : HasInf (L.BoundedFormula α n) :=
+instance : Inf (L.BoundedFormula α n) :=
   ⟨fun f g => (f.imp g.Not).Not⟩
 
-instance : HasSup (L.BoundedFormula α n) :=
+instance : Sup (L.BoundedFormula α n) :=
   ⟨fun f g => f.Not.imp g⟩
 
 /-- The biimplication between two bounded formulas. -/

@@ -681,9 +681,9 @@ theorem bddBelow_union [SemilatticeInf γ] {s t : Set γ} :
 
 /- warning: is_lub.union -> IsLUB.union is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (HasSup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (Sup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (HasSup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (Sup.sup.{u1} γ (SemilatticeSup.toSup.{u1} γ _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align is_lub.union IsLUB.unionₓ'. -/
 /-- If `a` is the least upper bound of `s` and `b` is the least upper bound of `t`,
 then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
@@ -697,9 +697,9 @@ theorem IsLUB.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLUB s 
 
 /- warning: is_glb.union -> IsGLB.union is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (HasInf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a₁ a₂))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (Inf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a₁ a₂))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (HasInf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a₁ a₂))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (Inf.inf.{u1} γ (SemilatticeInf.toInf.{u1} γ _inst_3) a₁ a₂))
 Case conversion may be inaccurate. Consider using '#align is_glb.union IsGLB.unionₓ'. -/
 /-- If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
 then `a ⊓ b` is the greatest lower bound of `s ∪ t`. -/
@@ -1444,21 +1444,29 @@ theorem BddBelow.insert [SemilatticeInf γ] (a : γ) {s : Set γ} (hs : BddBelow
 #align bdd_below.insert BddBelow.insert
 -/
 
-#print IsLUB.insert /-
+/- warning: is_lub.insert -> IsLUB.insert is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] (a : γ) {b : γ} {s : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.hasInsert.{u1} γ) a s) (Sup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
+but is expected to have type
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] (a : γ) {b : γ} {s : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.instInsertSet.{u1} γ) a s) (Sup.sup.{u1} γ (SemilatticeSup.toSup.{u1} γ _inst_3) a b))
+Case conversion may be inaccurate. Consider using '#align is_lub.insert IsLUB.insertₓ'. -/
 theorem IsLUB.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLUB s b) :
     IsLUB (insert a s) (a ⊔ b) := by
   rw [insert_eq]
   exact is_lub_singleton.union hs
 #align is_lub.insert IsLUB.insert
--/
 
-#print IsGLB.insert /-
+/- warning: is_glb.insert -> IsGLB.insert is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] (a : γ) {b : γ} {s : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s b) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.hasInsert.{u1} γ) a s) (Inf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a b))
+but is expected to have type
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] (a : γ) {b : γ} {s : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s b) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.instInsertSet.{u1} γ) a s) (Inf.inf.{u1} γ (SemilatticeInf.toInf.{u1} γ _inst_3) a b))
+Case conversion may be inaccurate. Consider using '#align is_glb.insert IsGLB.insertₓ'. -/
 theorem IsGLB.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGLB s b) :
     IsGLB (insert a s) (a ⊓ b) := by
   rw [insert_eq]
   exact is_glb_singleton.union hs
 #align is_glb.insert IsGLB.insert
--/
 
 /- warning: is_greatest.insert -> IsGreatest.insert is a dubious translation:
 lean 3 declaration is
@@ -1527,17 +1535,25 @@ protected theorem OrderBot.bddBelow [OrderBot α] (s : Set α) : BddBelow s :=
 -/
 
 
-#print isLUB_pair /-
+/- warning: is_lub_pair -> isLUB_pair is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ}, IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.hasInsert.{u1} γ) a (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.hasSingleton.{u1} γ) b)) (Sup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b)
+but is expected to have type
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ}, IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.instInsertSet.{u1} γ) a (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.instSingletonSet.{u1} γ) b)) (Sup.sup.{u1} γ (SemilatticeSup.toSup.{u1} γ _inst_3) a b)
+Case conversion may be inaccurate. Consider using '#align is_lub_pair isLUB_pairₓ'. -/
 theorem isLUB_pair [SemilatticeSup γ] {a b : γ} : IsLUB {a, b} (a ⊔ b) :=
   isLUB_singleton.insert _
 #align is_lub_pair isLUB_pair
--/
 
-#print isGLB_pair /-
+/- warning: is_glb_pair -> isGLB_pair is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a : γ} {b : γ}, IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.hasInsert.{u1} γ) a (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.hasSingleton.{u1} γ) b)) (Inf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a b)
+but is expected to have type
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a : γ} {b : γ}, IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.instInsertSet.{u1} γ) a (Singleton.singleton.{u1, u1} γ (Set.{u1} γ) (Set.instSingletonSet.{u1} γ) b)) (Inf.inf.{u1} γ (SemilatticeInf.toInf.{u1} γ _inst_3) a b)
+Case conversion may be inaccurate. Consider using '#align is_glb_pair isGLB_pairₓ'. -/
 theorem isGLB_pair [SemilatticeInf γ] {a b : γ} : IsGLB {a, b} (a ⊓ b) :=
   isGLB_singleton.insert _
 #align is_glb_pair isGLB_pair
--/
 
 /- warning: is_least_pair -> isLeast_pair is a dubious translation:
 lean 3 declaration is

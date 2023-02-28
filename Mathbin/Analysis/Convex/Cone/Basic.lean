@@ -129,7 +129,7 @@ theorem add_mem ⦃x⦄ (hx : x ∈ S) ⦃y⦄ (hy : y ∈ S) : x + y ∈ S :=
 
 instance : AddMemClass (ConvexCone 𝕜 E) E where add_mem c a b ha hb := add_mem c ha hb
 
-instance : HasInf (ConvexCone 𝕜 E) :=
+instance : Inf (ConvexCone 𝕜 E) :=
   ⟨fun S T =>
     ⟨S ∩ T, fun c hc x hx => ⟨S.smul_mem hc hx.1, T.smul_mem hc hx.2⟩, fun x hx y hy =>
       ⟨S.add_mem hx.1 hy.1, T.add_mem hx.2 hy.2⟩⟩⟩

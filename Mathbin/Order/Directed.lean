@@ -148,13 +148,17 @@ theorem Antitone.directed_ge [SemilatticeSup α] [Preorder β] {f : α → β} (
 #align antitone.directed_ge Antitone.directed_ge
 -/
 
-#print directedOn_of_sup_mem /-
+/- warning: directed_on_of_sup_mem -> directedOn_of_sup_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {S : Set.{u1} α}, (forall {{i : α}} {{j : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i S) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j S) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) i j) S)) -> (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) S)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {S : Set.{u1} α}, (forall {{i : α}} {{j : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i S) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j S) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) i j) S)) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.Directed._hyg.1249 : α) (x._@.Mathlib.Order.Directed._hyg.1251 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Directed._hyg.1249 x._@.Mathlib.Order.Directed._hyg.1251) S)
+Case conversion may be inaccurate. Consider using '#align directed_on_of_sup_mem directedOn_of_sup_memₓ'. -/
 /-- A set stable by supremum is `≤`-directed. -/
 theorem directedOn_of_sup_mem [SemilatticeSup α] {S : Set α}
     (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊔ j ∈ S) : DirectedOn (· ≤ ·) S := fun a ha b hb =>
   ⟨a ⊔ b, H ha hb, le_sup_left, le_sup_right⟩
 #align directed_on_of_sup_mem directedOn_of_sup_mem
--/
 
 /- warning: directed.extend_bot -> Directed.extend_bot is a dubious translation:
 lean 3 declaration is
@@ -200,13 +204,17 @@ theorem Antitone.directed_le [SemilatticeInf α] [Preorder β] {f : α → β} (
 #align antitone.directed_le Antitone.directed_le
 -/
 
-#print directedOn_of_inf_mem /-
+/- warning: directed_on_of_inf_mem -> directedOn_of_inf_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {S : Set.{u1} α}, (forall {{i : α}} {{j : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i S) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j S) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) i j) S)) -> (DirectedOn.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) S)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {S : Set.{u1} α}, (forall {{i : α}} {{j : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i S) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j S) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) i j) S)) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.Directed._hyg.1751 : α) (x._@.Mathlib.Order.Directed._hyg.1753 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Directed._hyg.1751 x._@.Mathlib.Order.Directed._hyg.1753) S)
+Case conversion may be inaccurate. Consider using '#align directed_on_of_inf_mem directedOn_of_inf_memₓ'. -/
 /-- A set stable by infimum is `≥`-directed. -/
 theorem directedOn_of_inf_mem [SemilatticeInf α] {S : Set α}
     (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊓ j ∈ S) : DirectedOn (· ≥ ·) S := fun a ha b hb =>
   ⟨a ⊓ b, H ha hb, inf_le_left, inf_le_right⟩
 #align directed_on_of_inf_mem directedOn_of_inf_mem
--/
 
 #print IsDirected /-
 /-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that

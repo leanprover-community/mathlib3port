@@ -134,7 +134,7 @@ theorem ExtensionOf.ext_iff {a b : ExtensionOf i f} :
 
 end Ext
 
-instance : HasInf (ExtensionOf i f)
+instance : Inf (ExtensionOf i f)
     where inf X1 X2 :=
     {
       X1.toLinearPMap ⊓

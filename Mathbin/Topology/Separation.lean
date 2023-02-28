@@ -1357,9 +1357,9 @@ instance (priority := 100) T2Space.t1Space [T2Space α] : T1Space α :=
 
 /- warning: t2_iff_nhds -> t2_iff_nhds is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (T2Space.{u1} α _inst_1) (forall {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y))
 Case conversion may be inaccurate. Consider using '#align t2_iff_nhds t2_iff_nhdsₓ'. -/
 /-- A space is T₂ iff the neighbourhoods of distinct points generate the bottom filter. -/
 theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, NeBot (𝓝 x ⊓ 𝓝 y) → x = y := by
@@ -1368,9 +1368,9 @@ theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, NeBot (𝓝 x ⊓ 𝓝 y) �
 
 /- warning: eq_of_nhds_ne_bot -> eq_of_nhds_neBot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] {x : α} {y : α}, (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) (nhds.{u1} α _inst_1 y))) -> (Eq.{succ u1} α x y)
 Case conversion may be inaccurate. Consider using '#align eq_of_nhds_ne_bot eq_of_nhds_neBotₓ'. -/
 theorem eq_of_nhds_neBot [T2Space α] {x y : α} (h : NeBot (𝓝 x ⊓ 𝓝 y)) : x = y :=
   t2_iff_nhds.mp ‹_› h
@@ -2410,9 +2410,9 @@ theorem regularSpace_infᵢ {ι X} {t : ι → TopologicalSpace X} (h : ∀ i, @
 
 /- warning: regular_space.inf -> RegularSpace.inf is a dubious translation:
 lean 3 declaration is
-  forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (HasInf.inf.{u1} (TopologicalSpace.{u1} X) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} X) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.completeLattice.{u1} X))))) t₁ t₂))
+  forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (Inf.inf.{u1} (TopologicalSpace.{u1} X) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} X) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.completeLattice.{u1} X))))) t₁ t₂))
 but is expected to have type
-  forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (HasInf.inf.{u1} (TopologicalSpace.{u1} X) (Lattice.toHasInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X)))) t₁ t₂))
+  forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (Inf.inf.{u1} (TopologicalSpace.{u1} X) (Lattice.toInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X)))) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align regular_space.inf RegularSpace.infₓ'. -/
 theorem RegularSpace.inf {X} {t₁ t₂ : TopologicalSpace X} (h₁ : @RegularSpace X t₁)
     (h₂ : @RegularSpace X t₂) : @RegularSpace X (t₁ ⊓ t₂) :=

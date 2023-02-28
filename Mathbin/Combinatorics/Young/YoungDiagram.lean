@@ -133,7 +133,7 @@ theorem cells_ssubset_iff {μ ν : YoungDiagram} : μ.cells ⊂ ν.cells ↔ μ 
   Iff.rfl
 #align young_diagram.cells_ssubset_iff YoungDiagram.cells_ssubset_iff
 
-instance : HasSup YoungDiagram
+instance : Sup YoungDiagram
     where sup μ ν :=
     { cells := μ.cells ∪ ν.cells
       IsLowerSet := by
@@ -142,9 +142,9 @@ instance : HasSup YoungDiagram
 
 /- warning: young_diagram.cells_sup -> YoungDiagram.cells_sup is a dubious translation:
 lean 3 declaration is
-  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasSup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Union.union.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasUnion.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => Prod.decidableEq.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (Sup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Union.union.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasUnion.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => Prod.decidableEq.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
 but is expected to have type
-  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasSup.sup.{0} YoungDiagram YoungDiagram.instHasSupYoungDiagram μ ν)) (Union.union.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instUnionFinset.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => instDecidableEqProd.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (Sup.sup.{0} YoungDiagram YoungDiagram.instSupYoungDiagram μ ν)) (Union.union.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instUnionFinset.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => instDecidableEqProd.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
 Case conversion may be inaccurate. Consider using '#align young_diagram.cells_sup YoungDiagram.cells_supₓ'. -/
 @[simp]
 theorem cells_sup (μ ν : YoungDiagram) : (μ ⊔ ν).cells = μ.cells ∪ ν.cells :=
@@ -153,9 +153,9 @@ theorem cells_sup (μ ν : YoungDiagram) : (μ ⊔ ν).cells = μ.cells ∪ ν.c
 
 /- warning: young_diagram.coe_sup -> YoungDiagram.coe_sup is a dubious translation:
 lean 3 declaration is
-  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (HasSup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Union.union.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.hasUnion.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) ν))
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (Sup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Union.union.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.hasUnion.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) ν))
 but is expected to have type
-  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat (HasSup.sup.{0} YoungDiagram YoungDiagram.instHasSupYoungDiagram μ ν)) (Union.union.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.instUnionSet.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat μ) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat ν))
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat (Sup.sup.{0} YoungDiagram YoungDiagram.instSupYoungDiagram μ ν)) (Union.union.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.instUnionSet.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat μ) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat ν))
 Case conversion may be inaccurate. Consider using '#align young_diagram.coe_sup YoungDiagram.coe_supₓ'. -/
 @[simp, norm_cast]
 theorem coe_sup (μ ν : YoungDiagram) : ↑(μ ⊔ ν) = (μ ∪ ν : Set (ℕ × ℕ)) :=
@@ -164,16 +164,16 @@ theorem coe_sup (μ ν : YoungDiagram) : ↑(μ ⊔ ν) = (μ ∪ ν : Set (ℕ 
 
 /- warning: young_diagram.mem_sup -> YoungDiagram.mem_sup is a dubious translation:
 lean 3 declaration is
-  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x (HasSup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Or (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x μ) (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x ν))
+  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x (Sup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Or (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x μ) (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x ν))
 but is expected to have type
-  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x (HasSup.sup.{0} YoungDiagram YoungDiagram.instHasSupYoungDiagram μ ν)) (Or (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x μ) (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x ν))
+  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x (Sup.sup.{0} YoungDiagram YoungDiagram.instSupYoungDiagram μ ν)) (Or (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x μ) (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x ν))
 Case conversion may be inaccurate. Consider using '#align young_diagram.mem_sup YoungDiagram.mem_supₓ'. -/
 @[simp]
 theorem mem_sup {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊔ ν ↔ x ∈ μ ∨ x ∈ ν :=
   Finset.mem_union
 #align young_diagram.mem_sup YoungDiagram.mem_sup
 
-instance : HasInf YoungDiagram
+instance : Inf YoungDiagram
     where inf μ ν :=
     { cells := μ.cells ∩ ν.cells
       IsLowerSet := by
@@ -182,9 +182,9 @@ instance : HasInf YoungDiagram
 
 /- warning: young_diagram.cells_inf -> YoungDiagram.cells_inf is a dubious translation:
 lean 3 declaration is
-  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasInf.inf.{0} YoungDiagram YoungDiagram.hasInf μ ν)) (Inter.inter.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasInter.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => Prod.decidableEq.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (Inf.inf.{0} YoungDiagram YoungDiagram.hasInf μ ν)) (Inter.inter.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasInter.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => Prod.decidableEq.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
 but is expected to have type
-  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasInf.inf.{0} YoungDiagram YoungDiagram.instHasInfYoungDiagram μ ν)) (Inter.inter.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instInterFinset.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => instDecidableEqProd.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (Inf.inf.{0} YoungDiagram YoungDiagram.instInfYoungDiagram μ ν)) (Inter.inter.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instInterFinset.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => instDecidableEqProd.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
 Case conversion may be inaccurate. Consider using '#align young_diagram.cells_inf YoungDiagram.cells_infₓ'. -/
 @[simp]
 theorem cells_inf (μ ν : YoungDiagram) : (μ ⊓ ν).cells = μ.cells ∩ ν.cells :=

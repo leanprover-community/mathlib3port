@@ -302,9 +302,9 @@ theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →.
 
 /- warning: filter.pmap_res -> Filter.pmap_res is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : Filter.{u1} α) (s : Set.{u1} α) (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.pmap.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l) (Filter.map.{u1, u2} α β f (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)))
+  forall {α : Type.{u1}} {β : Type.{u2}} (l : Filter.{u1} α) (s : Set.{u1} α) (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.pmap.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (l : Filter.{u1} α) (s : Set.{u1} α) (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.pmap.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l) (Filter.map.{u1, u2} α β f (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l (Filter.principal.{u1} α s)))
+  forall {α : Type.{u1}} {β : Type.{u2}} (l : Filter.{u1} α) (s : Set.{u1} α) (f : α -> β), Eq.{succ u2} (Filter.{u2} β) (Filter.pmap.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l) (Filter.map.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l (Filter.principal.{u1} α s)))
 Case conversion may be inaccurate. Consider using '#align filter.pmap_res Filter.pmap_resₓ'. -/
 theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (PFun.res f s) l = map f (l ⊓ 𝓟 s) :=
   by
@@ -315,9 +315,9 @@ theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (PFun.res f
 
 /- warning: filter.tendsto_iff_ptendsto -> Filter.tendsto_iff_ptendsto is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β) (s : Set.{u1} α) (f : α -> β), Iff (Filter.Tendsto.{u1, u2} α β f (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) (Filter.Ptendsto.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l₁ l₂)
+  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β) (s : Set.{u1} α) (f : α -> β), Iff (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) (Filter.Ptendsto.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l₁ l₂)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β) (s : Set.{u1} α) (f : α -> β), Iff (Filter.Tendsto.{u1, u2} α β f (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) (Filter.Ptendsto.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l₁ l₂)
+  forall {α : Type.{u1}} {β : Type.{u2}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β) (s : Set.{u1} α) (f : α -> β), Iff (Filter.Tendsto.{u1, u2} α β f (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) (Filter.Ptendsto.{u1, u2} α β (PFun.res.{u1, u2} α β f s) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendstoₓ'. -/
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
     Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (PFun.res f s) l₁ l₂ := by

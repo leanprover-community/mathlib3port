@@ -279,7 +279,7 @@ section Lattice
 
 variable [Lattice α]
 
-instance : HasSup (NonemptyInterval α) :=
+instance : Sup (NonemptyInterval α) :=
   ⟨fun s t => ⟨⟨s.fst ⊓ t.fst, s.snd ⊔ t.snd⟩, inf_le_left.trans <| s.fst_le_snd.trans le_sup_left⟩⟩
 
 instance : SemilatticeSup (NonemptyInterval α) :=

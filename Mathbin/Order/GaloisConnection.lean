@@ -371,11 +371,15 @@ variable [SemilatticeSup α] [SemilatticeSup β] {l : α → β} {u : β → α}
 
 include gc
 
-#print GaloisConnection.l_sup /-
+/- warning: galois_connection.l_sup -> GaloisConnection.l_sup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {a₁ : α} {a₂ : α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a₁ a₂)) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (l a₁) (l a₂)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {a₁ : α} {a₂ : α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a₁ a₂)) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (l a₁) (l a₂)))
+Case conversion may be inaccurate. Consider using '#align galois_connection.l_sup GaloisConnection.l_supₓ'. -/
 theorem l_sup : l (a₁ ⊔ a₂) = l a₁ ⊔ l a₂ :=
   (gc.isLUB_l_image isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
 #align galois_connection.l_sup GaloisConnection.l_sup
--/
 
 end SemilatticeSup
 
@@ -385,11 +389,15 @@ variable [SemilatticeInf α] [SemilatticeInf β] {l : α → β} {u : β → α}
 
 include gc
 
-#print GaloisConnection.u_inf /-
+/- warning: galois_connection.u_inf -> GaloisConnection.u_inf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {b₁ : β} {b₂ : β} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) b₁ b₂)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) (u b₁) (u b₂)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {b₁ : β} {b₂ : β} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) b₁ b₂)) (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) (u b₁) (u b₂)))
+Case conversion may be inaccurate. Consider using '#align galois_connection.u_inf GaloisConnection.u_infₓ'. -/
 theorem u_inf : u (b₁ ⊓ b₂) = u b₁ ⊓ u b₂ :=
   gc.dual.l_sup
 #align galois_connection.u_inf GaloisConnection.u_inf
--/
 
 end SemilatticeInf
 
@@ -778,7 +786,12 @@ theorem u_injective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) :
 #align galois_insertion.u_injective GaloisInsertion.u_injective
 -/
 
-#print GaloisInsertion.l_sup_u /-
+/- warning: galois_insertion.l_sup_u -> GaloisInsertion.l_sup_u is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) (u a) (u b))) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) a b))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) (u a) (u b))) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) a b))
+Case conversion may be inaccurate. Consider using '#align galois_insertion.l_sup_u GaloisInsertion.l_sup_uₓ'. -/
 theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l u) (a b : β) :
     l (u a ⊔ u b) = a ⊔ b :=
   calc
@@ -786,7 +799,6 @@ theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l 
     _ = a ⊔ b := by simp only [gi.l_u_eq]
     
 #align galois_insertion.l_sup_u GaloisInsertion.l_sup_u
--/
 
 /- warning: galois_insertion.l_supr_u -> GaloisInsertion.l_supᵢ_u is a dubious translation:
 lean 3 declaration is
@@ -825,7 +837,12 @@ theorem l_supₛ_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisI
     (s : Set β) : l (supₛ (u '' s)) = supₛ s := by rw [supₛ_image, gi.l_bsupr_u, supₛ_eq_supᵢ]
 #align galois_insertion.l_Sup_u_image GaloisInsertion.l_supₛ_u_image
 
-#print GaloisInsertion.l_inf_u /-
+/- warning: galois_insertion.l_inf_u -> GaloisInsertion.l_inf_u is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) (u a) (u b))) (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) a b))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : β) (b : β), Eq.{succ u2} β (l (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) (u a) (u b))) (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) a b))
+Case conversion may be inaccurate. Consider using '#align galois_insertion.l_inf_u GaloisInsertion.l_inf_uₓ'. -/
 theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l u) (a b : β) :
     l (u a ⊓ u b) = a ⊓ b :=
   calc
@@ -833,7 +850,6 @@ theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l 
     _ = a ⊓ b := by simp only [gi.l_u_eq]
     
 #align galois_insertion.l_inf_u GaloisInsertion.l_inf_u
--/
 
 /- warning: galois_insertion.l_infi_u -> GaloisInsertion.l_infᵢ_u is a dubious translation:
 lean 3 declaration is
@@ -1150,12 +1166,16 @@ theorem l_injective [PartialOrder α] [Preorder β] (gi : GaloisCoinsertion l u)
 #align galois_coinsertion.l_injective GaloisCoinsertion.l_injective
 -/
 
-#print GaloisCoinsertion.u_inf_l /-
+/- warning: galois_coinsertion.u_inf_l -> GaloisCoinsertion.u_inf_l is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (l a) (l b))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (l a) (l b))) (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_inf_l GaloisCoinsertion.u_inf_lₓ'. -/
 theorem u_inf_l [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisCoinsertion l u) (a b : α) :
     u (l a ⊓ l b) = a ⊓ b :=
   gi.dual.l_sup_u a b
 #align galois_coinsertion.u_inf_l GaloisCoinsertion.u_inf_l
--/
 
 /- warning: galois_coinsertion.u_infi_l -> GaloisCoinsertion.u_infᵢ_l is a dubious translation:
 lean 3 declaration is
@@ -1179,12 +1199,16 @@ theorem u_infₛ_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisC
   gi.dual.l_supₛ_u_image _
 #align galois_coinsertion.u_Inf_l_image GaloisCoinsertion.u_infₛ_l_image
 
-#print GaloisCoinsertion.u_sup_l /-
+/- warning: galois_coinsertion.u_sup_l -> GaloisCoinsertion.u_sup_l is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (l a) (l b))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {l : α -> β} {u : β -> α} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β], (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) l u) -> (forall (a : α) (b : α), Eq.{succ u1} α (u (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (l a) (l b))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_sup_l GaloisCoinsertion.u_sup_lₓ'. -/
 theorem u_sup_l [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisCoinsertion l u) (a b : α) :
     u (l a ⊔ l b) = a ⊔ b :=
   gi.dual.l_inf_u _ _
 #align galois_coinsertion.u_sup_l GaloisCoinsertion.u_sup_l
--/
 
 /- warning: galois_coinsertion.u_supr_l -> GaloisCoinsertion.u_supᵢ_l is a dubious translation:
 lean 3 declaration is

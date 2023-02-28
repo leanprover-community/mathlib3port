@@ -84,19 +84,27 @@ noncomputable instance Prop.linearOrder : LinearOrder Prop := by
 #align Prop.linear_order Prop.linearOrder
 -/
 
-#print sup_Prop_eq /-
+/- warning: sup_Prop_eq -> sup_Prop_eq is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Prop -> Prop -> Prop) (Sup.sup.{0} Prop (SemilatticeSup.toHasSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (LinearOrder.toLattice.{0} Prop Prop.linearOrder)))) Or
+but is expected to have type
+  Eq.{1} (Prop -> Prop -> Prop) (fun (x._@.Mathlib.Order.PropInstances._hyg.307 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.309 : Prop) => Sup.sup.{0} Prop (SemilatticeSup.toSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (DistribLattice.toLattice.{0} Prop Prop.distribLattice))) x._@.Mathlib.Order.PropInstances._hyg.307 x._@.Mathlib.Order.PropInstances._hyg.309) (fun (x._@.Mathlib.Order.PropInstances._hyg.322 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.324 : Prop) => Or x._@.Mathlib.Order.PropInstances._hyg.322 x._@.Mathlib.Order.PropInstances._hyg.324)
+Case conversion may be inaccurate. Consider using '#align sup_Prop_eq sup_Prop_eqₓ'. -/
 @[simp]
 theorem sup_Prop_eq : (· ⊔ ·) = (· ∨ ·) :=
   rfl
 #align sup_Prop_eq sup_Prop_eq
--/
 
-#print inf_Prop_eq /-
+/- warning: inf_Prop_eq -> inf_Prop_eq is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Prop -> Prop -> Prop) (Inf.inf.{0} Prop (SemilatticeInf.toHasInf.{0} Prop (Lattice.toSemilatticeInf.{0} Prop (LinearOrder.toLattice.{0} Prop Prop.linearOrder)))) And
+but is expected to have type
+  Eq.{1} (Prop -> Prop -> Prop) (fun (x._@.Mathlib.Order.PropInstances._hyg.343 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.345 : Prop) => Inf.inf.{0} Prop (Lattice.toInf.{0} Prop (DistribLattice.toLattice.{0} Prop Prop.distribLattice)) x._@.Mathlib.Order.PropInstances._hyg.343 x._@.Mathlib.Order.PropInstances._hyg.345) (fun (x._@.Mathlib.Order.PropInstances._hyg.358 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.360 : Prop) => And x._@.Mathlib.Order.PropInstances._hyg.358 x._@.Mathlib.Order.PropInstances._hyg.360)
+Case conversion may be inaccurate. Consider using '#align inf_Prop_eq inf_Prop_eqₓ'. -/
 @[simp]
 theorem inf_Prop_eq : (· ⊓ ·) = (· ∧ ·) :=
   rfl
 #align inf_Prop_eq inf_Prop_eq
--/
 
 namespace Pi
 

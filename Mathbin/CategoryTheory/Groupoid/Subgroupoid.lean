@@ -246,7 +246,7 @@ instance : Bot (Subgroupoid C) :=
 instance : Inhabited (Subgroupoid C) :=
   ⟨⊤⟩
 
-instance : HasInf (Subgroupoid C) :=
+instance : Inf (Subgroupoid C) :=
   ⟨fun S T =>
     { arrows := fun c d => S.arrows c d ∩ T.arrows c d
       inv := by

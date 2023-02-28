@@ -247,7 +247,7 @@ theorem coe_subset_icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, 
 
 /-- `I ⊔ J` is the least box that includes both `I` and `J`. Since `↑I ∪ ↑J` is usually not a box,
 `↑(I ⊔ J)` is larger than `↑I ∪ ↑J`. -/
-instance : HasSup (Box ι) :=
+instance : Sup (Box ι) :=
   ⟨fun I J =>
     ⟨I.lower ⊓ J.lower, I.upper ⊔ J.upper, fun i =>
       (min_le_left _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_left _ _)⟩⟩
@@ -344,7 +344,7 @@ theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun 
     exact Ioc_eq_empty hi
 #align box_integral.box.coe_mk' BoxIntegral.Box.coe_mk'
 
-instance : HasInf (WithBot (Box ι)) :=
+instance : Inf (WithBot (Box ι)) :=
   ⟨fun I =>
     WithBot.recBotCoe (fun J => ⊥)
       (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower ⊔ J.lower) (I.upper ⊓ J.upper)) J) I⟩

@@ -264,9 +264,9 @@ instance (l : Filter α) [CountableInterFilter l] (f : α → β) : CountableInt
 
 /- warning: countable_Inter_filter_inf -> countableInterFilter_inf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₂)
+  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₂)
 but is expected to have type
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ l₂)
+  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_inf countableInterFilter_infₓ'. -/
 /-- Infimum of two `countable_Inter_filter`s is a `countable_Inter_filter`. This is useful, e.g.,
 to automatically get an instance for `residual α ⊓ 𝓟 s`. -/
@@ -284,9 +284,9 @@ instance countableInterFilter_inf (l₁ l₂ : Filter α) [CountableInterFilter 
 
 /- warning: countable_Inter_filter_sup -> countableInterFilter_sup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l₁ l₂)
+  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l₁ l₂)
 but is expected to have type
-  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) l₁ l₂)
+  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α) [_inst_2 : CountableInterFilter.{u1} α l₁] [_inst_3 : CountableInterFilter.{u1} α l₂], CountableInterFilter.{u1} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (CompleteLattice.toLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_sup countableInterFilter_supₓ'. -/
 /-- Supremum of two `countable_Inter_filter`s is a `countable_Inter_filter`. -/
 instance countableInterFilter_sup (l₁ l₂ : Filter α) [CountableInterFilter l₁]

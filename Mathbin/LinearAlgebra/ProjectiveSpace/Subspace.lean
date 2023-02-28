@@ -118,7 +118,7 @@ theorem span_coe (W : Subspace K V) : span ↑W = W :=
 #align projectivization.subspace.span_coe Projectivization.Subspace.span_coe
 
 /-- The infimum of two subspaces exists. -/
-instance hasInf : HasInf (Subspace K V) :=
+instance hasInf : Inf (Subspace K V) :=
   ⟨fun A B =>
     ⟨A ⊓ B, fun v w hv hw hvw h1 h2 =>
       ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
@@ -129,7 +129,7 @@ warning: projectivization.subspace.has_Inf -> Projectivization.Subspace.hasInf i
 lean 3 declaration is
   forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], InfSet.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
 but is expected to have type
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], HasInf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
+  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Inf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align projectivization.subspace.has_Inf Projectivization.Subspace.hasInfₓ'. -/
 /-- Infimums of arbitrary collections of subspaces exist. -/
 instance hasInf : InfSet (Subspace K V) :=
@@ -142,7 +142,7 @@ instance hasInf : InfSet (Subspace K V) :=
 
 /-- The subspaces of a projective space form a complete lattice. -/
 instance : CompleteLattice (Subspace K V) :=
-  { (inferInstance : HasInf _),
+  { (inferInstance : Inf _),
     completeLatticeOfInf (Subspace K V)
       (by
         refine' fun s => ⟨fun a ha x hx => hx _ ⟨a, ha, rfl⟩, fun a ha x hx E => _⟩

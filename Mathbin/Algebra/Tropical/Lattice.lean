@@ -37,9 +37,9 @@ variable {R S : Type _}
 
 open Tropical
 
-instance [HasSup R] : HasSup (Tropical R) where sup x y := trop (untrop x ⊔ untrop y)
+instance [Sup R] : Sup (Tropical R) where sup x y := trop (untrop x ⊔ untrop y)
 
-instance [HasInf R] : HasInf (Tropical R) where inf x y := trop (untrop x ⊓ untrop y)
+instance [Inf R] : Inf (Tropical R) where inf x y := trop (untrop x ⊓ untrop y)
 
 instance [SemilatticeInf R] : SemilatticeInf (Tropical R) :=
   { Tropical.hasInf,

@@ -207,9 +207,9 @@ instance : SemilatticeInf ℚ := by infer_instance
 
 instance : SemilatticeSup ℚ := by infer_instance
 
-instance : HasInf ℚ := by infer_instance
+instance : Inf ℚ := by infer_instance
 
-instance : HasSup ℚ := by infer_instance
+instance : Sup ℚ := by infer_instance
 
 instance : PartialOrder ℚ := by infer_instance
 
@@ -338,7 +338,7 @@ theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [
 lean 3 declaration is
   forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) q) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs (Rat.num q))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)))
 but is expected to have type
-  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat) q) (Rat.divInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
+  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) q) (Rat.divInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.abs_def Rat.abs_defₓ'. -/
 theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by

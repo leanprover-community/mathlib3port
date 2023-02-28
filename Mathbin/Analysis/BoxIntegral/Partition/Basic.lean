@@ -596,7 +596,7 @@ theorem le_bUnion_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
     exact ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩
 #align box_integral.prepartition.le_bUnion_iff BoxIntegral.Prepartition.le_bUnion_iff
 
-instance : HasInf (Prepartition I) :=
+instance : Inf (Prepartition I) :=
   ⟨fun π₁ π₂ => π₁.bunionᵢ fun J => π₂.restrict J⟩
 
 theorem inf_def (π₁ π₂ : Prepartition I) : π₁ ⊓ π₂ = π₁.bunionᵢ fun J => π₂.restrict J :=

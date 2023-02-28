@@ -291,7 +291,7 @@ theorem add_apply (x : E) : (p + q) x = p x + q x :=
 -- TODO: define `has_Sup` too, from the skeleton at
 -- https://github.com/leanprover-community/mathlib/pull/11329#issuecomment-1008915345
 @[to_additive]
-instance : HasSup (GroupSeminorm E) :=
+instance : Sup (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := p ⊔ q
       map_one' := by
@@ -401,7 +401,7 @@ theorem mul_bddBelow_range_add {p q : GroupSeminorm E} {x : E} :
 #align add_group_seminorm.add_bdd_below_range_add AddGroupSeminorm.add_bddBelow_range_add
 
 @[to_additive]
-noncomputable instance : HasInf (GroupSeminorm E) :=
+noncomputable instance : Inf (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := fun x => ⨅ y, p y + q (x / y)
       map_one' :=
@@ -570,7 +570,7 @@ instance : Inhabited (NonarchAddGroupSeminorm E) :=
 
 -- TODO: define `has_Sup` too, from the skeleton at
 -- https://github.com/leanprover-community/mathlib/pull/11329#issuecomment-1008915345
-instance : HasSup (NonarchAddGroupSeminorm E) :=
+instance : Sup (NonarchAddGroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := p ⊔ q
       map_zero' := by rw [Pi.sup_apply, ← map_zero p, sup_eq_left, map_zero p, map_zero q]
@@ -824,7 +824,7 @@ theorem add_apply (x : E) : (p + q) x = p x + q x :=
 
 -- TODO: define `has_Sup`
 @[to_additive]
-instance : HasSup (GroupNorm E) :=
+instance : Sup (GroupNorm E) :=
   ⟨fun p q =>
     { p.toGroupSeminorm ⊔ q.toGroupSeminorm with
       eq_one_of_map_eq_zero' := fun x hx =>
@@ -941,7 +941,7 @@ theorem coe_lt_coe : (p : E → ℝ) < q ↔ p < q :=
 
 variable (p q) (f : F →+ E)
 
-instance : HasSup (NonarchAddGroupNorm E) :=
+instance : Sup (NonarchAddGroupNorm E) :=
   ⟨fun p q =>
     { p.toNonarchAddGroupSeminorm ⊔ q.toNonarchAddGroupSeminorm with
       eq_zero_of_map_eq_zero' := fun x hx =>

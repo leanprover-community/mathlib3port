@@ -67,7 +67,7 @@ namespace Int
 lean 3 declaration is
   forall (a : Int), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs a))
 but is expected to have type
-  forall (a : Int), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs a))
+  forall (a : Int), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs a))
 Case conversion may be inaccurate. Consider using '#align int.abs_eq_nat_abs Int.abs_eq_natAbsₓ'. -/
 theorem abs_eq_natAbs : ∀ a : ℤ, |a| = natAbs a
   | (n : ℕ) => abs_of_nonneg <| ofNat_zero_le _
@@ -78,7 +78,7 @@ theorem abs_eq_natAbs : ∀ a : ℤ, |a| = natAbs a
 lean 3 declaration is
   forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs n)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) n)
 but is expected to have type
-  forall (n : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs n)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) n)
+  forall (n : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs n)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) n)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_abs Int.coe_natAbsₓ'. -/
 @[simp, norm_cast]
 theorem coe_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
@@ -89,7 +89,7 @@ theorem coe_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1))))) (Int.natAbs n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) n))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)) (Int.natAbs n)) (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) n))
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)) (Int.natAbs n)) (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) n))
 Case conversion may be inaccurate. Consider using '#align nat.cast_nat_abs Nat.cast_natAbsₓ'. -/
 theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑(|n|) := by
   rw [← Int.coe_natAbs, Int.cast_ofNat]
@@ -99,7 +99,7 @@ theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs
 lean 3 declaration is
   forall (a : Int), Eq.{1} Nat (Int.natAbs (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a)) (Int.natAbs a)
 but is expected to have type
-  forall (a : Int), Eq.{1} Nat (Int.natAbs (Abs.abs.{0} ([mdata borrowed:1 Int]) (Neg.toHasAbs.{0} ([mdata borrowed:1 Int]) Int.instNegInt (SemilatticeSup.toHasSup.{0} ([mdata borrowed:1 Int]) (Lattice.toSemilatticeSup.{0} ([mdata borrowed:1 Int]) (DistribLattice.toLattice.{0} ([mdata borrowed:1 Int]) (instDistribLattice.{0} ([mdata borrowed:1 Int]) Int.instLinearOrderInt))))) a)) (Int.natAbs a)
+  forall (a : Int), Eq.{1} Nat (Int.natAbs (Abs.abs.{0} ([mdata borrowed:1 Int]) (Neg.toHasAbs.{0} ([mdata borrowed:1 Int]) Int.instNegInt (SemilatticeSup.toSup.{0} ([mdata borrowed:1 Int]) (Lattice.toSemilatticeSup.{0} ([mdata borrowed:1 Int]) (DistribLattice.toLattice.{0} ([mdata borrowed:1 Int]) (instDistribLattice.{0} ([mdata borrowed:1 Int]) Int.instLinearOrderInt))))) a)) (Int.natAbs a)
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_abs Int.natAbs_absₓ'. -/
 theorem natAbs_abs (a : ℤ) : natAbs (|a|) = natAbs a := by rw [abs_eq_nat_abs] <;> rfl
 #align int.nat_abs_abs Int.natAbs_abs
@@ -108,7 +108,7 @@ theorem natAbs_abs (a : ℤ) : natAbs (|a|) = natAbs a := by rw [abs_eq_nat_abs]
 lean 3 declaration is
   forall (a : Int), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Int.sign a) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a)) a
 but is expected to have type
-  forall (a : Int), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Int.sign a) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a)) a
+  forall (a : Int), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Int.sign a) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a)) a
 Case conversion may be inaccurate. Consider using '#align int.sign_mul_abs Int.sign_mul_absₓ'. -/
 theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by rw [abs_eq_nat_abs, sign_mul_nat_abs]
 #align int.sign_mul_abs Int.sign_mul_abs
@@ -134,7 +134,7 @@ theorem coe_nat_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
 lean 3 declaration is
   forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
 but is expected to have type
-  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.cast.{0} Int Int.instNatCastInt n)
+  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.cast.{0} Int Int.instNatCastInt n)
 Case conversion may be inaccurate. Consider using '#align int.abs_coe_nat Int.abs_coe_natₓ'. -/
 @[norm_cast]
 theorem abs_coe_nat (n : ℕ) : |(n : ℤ)| = n :=
@@ -184,7 +184,7 @@ theorem le_sub_one_iff {a b : ℤ} : a ≤ b - 1 ↔ a < b :=
 lean 3 declaration is
   forall {a : Int}, Iff (LT.lt.{0} Int Int.hasLt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall {a : Int}, Iff (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall {a : Int}, Iff (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.abs_lt_one_iff Int.abs_lt_one_iffₓ'. -/
 @[simp]
 theorem abs_lt_one_iff {a : ℤ} : |a| < 1 ↔ a = 0 :=
@@ -198,7 +198,7 @@ theorem abs_lt_one_iff {a : ℤ} : |a| < 1 ↔ a = 0 :=
 lean 3 declaration is
   forall {a : Int}, Iff (LE.le.{0} Int Int.hasLe (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (Eq.{1} Int a (Neg.neg.{0} Int Int.hasNeg (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))))
 but is expected to have type
-  forall {a : Int}, Iff (LE.le.{0} Int Int.instLEInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Eq.{1} Int a (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))))
+  forall {a : Int}, Iff (LE.le.{0} Int Int.instLEInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Eq.{1} Int a (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))))
 Case conversion may be inaccurate. Consider using '#align int.abs_le_one_iff Int.abs_le_one_iffₓ'. -/
 theorem abs_le_one_iff {a : ℤ} : |a| ≤ 1 ↔ a = 0 ∨ a = 1 ∨ a = -1 := by
   rw [le_iff_lt_or_eq, abs_lt_one_iff, abs_eq (zero_le_one' ℤ)]
@@ -208,7 +208,7 @@ theorem abs_le_one_iff {a : ℤ} : |a| ≤ 1 ↔ a = 0 ∨ a = 1 ∨ a = -1 := b
 lean 3 declaration is
   forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) z))
 but is expected to have type
-  forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) z))
+  forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) z))
 Case conversion may be inaccurate. Consider using '#align int.one_le_abs Int.one_le_absₓ'. -/
 theorem one_le_abs {z : ℤ} (h₀ : z ≠ 0) : 1 ≤ |z| :=
   add_one_le_iff.mpr (abs_pos.mpr h₀)
@@ -306,7 +306,7 @@ protected theorem ediv_nonpos {a b : ℤ} (Ha : 0 ≤ a) (Hb : b ≤ 0) : a / b 
 lean 3 declaration is
   forall {a : Int} {b : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (LT.lt.{0} Int Int.hasLt a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) b)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LT.lt.{0} Int Int.instLTInt a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LT.lt.{0} Int Int.instLTInt a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.div_eq_zero_of_lt_abs Int.ediv_eq_zero_of_lt_absₓ'. -/
 theorem ediv_eq_zero_of_lt_abs {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < |b|) : a / b = 0 :=
   match b, |b|, abs_eq_natAbs b, H2 with
@@ -412,7 +412,7 @@ protected theorem add_ediv_of_dvd_left {a b c : ℤ} (H : c ∣ a) : (a + b) / c
 lean 3 declaration is
   forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) b)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a b)
 but is expected to have type
-  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a b)
+  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a b)
 Case conversion may be inaccurate. Consider using '#align int.mod_abs Int.emod_absₓ'. -/
 @[simp]
 theorem emod_abs (a b : ℤ) : a % |b| = a % b :=
@@ -439,7 +439,7 @@ theorem emod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
 lean 3 declaration is
   forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LT.lt.{0} Int Int.hasLt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a b) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) b))
 but is expected to have type
-  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LT.lt.{0} Int Int.instLTInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a b) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b))
+  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LT.lt.{0} Int Int.instLTInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a b) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b))
 Case conversion may be inaccurate. Consider using '#align int.mod_lt Int.emod_ltₓ'. -/
 theorem emod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by
   rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
@@ -637,7 +637,7 @@ theorem lt_ediv_add_one_mul_self (a : ℤ) {b : ℤ} (H : 0 < b) : a < (a / b + 
 lean 3 declaration is
   forall (a : Int) (b : Int), LE.le.{0} Int Int.hasLe (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a)
 but is expected to have type
-  forall (a : Int) (b : Int), LE.le.{0} Int Int.instLEInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a)
+  forall (a : Int) (b : Int), LE.le.{0} Int Int.instLEInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a)
 Case conversion may be inaccurate. Consider using '#align int.abs_div_le_abs Int.abs_ediv_le_absₓ'. -/
 theorem abs_ediv_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
   suffices ∀ (a : ℤ) (n : ℕ), |a / n| ≤ |a| from fun a b =>
@@ -869,7 +869,7 @@ protected theorem ediv_left_inj {a b d : ℤ} (hda : d ∣ a) (hdb : d ∣ b) : 
 lean 3 declaration is
   forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) (Int.sign z)) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
 but is expected to have type
-  forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Int.sign z)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+  forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Int.sign z)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.abs_sign_of_nonzero Int.abs_sign_of_nonzeroₓ'. -/
 theorem abs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : |z.sign| = 1 := by
   rw [abs_eq_nat_abs, nat_abs_sign_of_nonzero hz, Int.ofNat_one]
@@ -963,7 +963,7 @@ theorem sub_ediv_of_dvd_sub {a b c : ℤ} (hcab : c ∣ a - b) : (a - b) / c = a
 lean 3 declaration is
   forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a))
 but is expected to have type
-  forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a))
+  forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a))
 Case conversion may be inaccurate. Consider using '#align int.sign_eq_div_abs Int.sign_eq_ediv_absₓ'. -/
 protected theorem sign_eq_ediv_abs (a : ℤ) : sign a = a / |a| :=
   if az : a = 0 then by simp [az]

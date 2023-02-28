@@ -109,11 +109,15 @@ section SemilatticeSup
 
 variable [SemilatticeSup α] [SemilatticeSup β] {f : α → β}
 
-#print LeftOrdContinuous.map_sup /-
+/- warning: left_ord_continuous.map_sup -> LeftOrdContinuous.map_sup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β}, (LeftOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) x y)) (Sup.sup.{u2} β (SemilatticeSup.toHasSup.{u2} β _inst_2) (f x) (f y)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : SemilatticeSup.{u2} β] {f : α -> β}, (LeftOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) x y)) (Sup.sup.{u2} β (SemilatticeSup.toSup.{u2} β _inst_2) (f x) (f y)))
+Case conversion may be inaccurate. Consider using '#align left_ord_continuous.map_sup LeftOrdContinuous.map_supₓ'. -/
 theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x ⊔ y) = f x ⊔ f y :=
   (hf isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
 #align left_ord_continuous.map_sup LeftOrdContinuous.map_sup
--/
 
 #print LeftOrdContinuous.le_iff /-
 theorem le_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y := by
@@ -270,11 +274,15 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] [SemilatticeInf β] {f : α → β}
 
-#print RightOrdContinuous.map_inf /-
+/- warning: right_ord_continuous.map_inf -> RightOrdContinuous.map_inf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β}, (RightOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) x y)) (Inf.inf.{u2} β (SemilatticeInf.toHasInf.{u2} β _inst_2) (f x) (f y)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : SemilatticeInf.{u2} β] {f : α -> β}, (RightOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β _inst_2)) f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) x y)) (Inf.inf.{u2} β (SemilatticeInf.toInf.{u2} β _inst_2) (f x) (f y)))
+Case conversion may be inaccurate. Consider using '#align right_ord_continuous.map_inf RightOrdContinuous.map_infₓ'. -/
 theorem map_inf (hf : RightOrdContinuous f) (x y : α) : f (x ⊓ y) = f x ⊓ f y :=
   hf.OrderDual.map_sup x y
 #align right_ord_continuous.map_inf RightOrdContinuous.map_inf
--/
 
 #print RightOrdContinuous.le_iff /-
 theorem le_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y :=

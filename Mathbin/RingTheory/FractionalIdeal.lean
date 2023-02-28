@@ -428,7 +428,7 @@ theorem IsFractional.inf_right {I : Submodule R P} : IsFractional S I → ∀ J,
       exact hI b hbI⟩
 #align is_fractional.inf_right IsFractional.inf_right
 
-instance : HasInf (FractionalIdeal S P) :=
+instance : Inf (FractionalIdeal S P) :=
   ⟨fun I J => ⟨I ⊓ J, I.IsFractional.inf_right J⟩⟩
 
 @[simp, norm_cast]
@@ -436,7 +436,7 @@ theorem coe_inf (I J : FractionalIdeal S P) : ↑(I ⊓ J) = (I ⊓ J : Submodul
   rfl
 #align fractional_ideal.coe_inf FractionalIdeal.coe_inf
 
-instance : HasSup (FractionalIdeal S P) :=
+instance : Sup (FractionalIdeal S P) :=
   ⟨fun I J => ⟨I ⊔ J, I.IsFractional.sup J.IsFractional⟩⟩
 
 @[norm_cast]

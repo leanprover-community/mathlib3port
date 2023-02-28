@@ -84,7 +84,7 @@ theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a :=
 lean 3 declaration is
   forall {m : Int} {x : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) m x) -> (LT.lt.{0} Int Int.hasLt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) x) m) -> (Eq.{1} Int x (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall {m : Int} {x : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m x) -> (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) x) m) -> (Eq.{1} Int x (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall {m : Int} {x : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m x) -> (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) x) m) -> (Eq.{1} Int x (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_abs_lt_dvd Int.eq_zero_of_abs_lt_dvdₓ'. -/
 theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 :=
   by

@@ -628,7 +628,7 @@ theorem sub_def (p q : ℚ≥0) : p - q = toNNRat (p - q) :=
 lean 3 declaration is
   forall (q : NNRat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNRat Rat (HasLiftT.mk.{1, 1} NNRat Rat (CoeTCₓ.coe.{1, 1} NNRat Rat (coeBase.{1, 1} NNRat Rat NNRat.Rat.hasCoe))) q)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNRat Rat (HasLiftT.mk.{1, 1} NNRat Rat (CoeTCₓ.coe.{1, 1} NNRat Rat (coeBase.{1, 1} NNRat Rat NNRat.Rat.hasCoe))) q)
 but is expected to have type
-  forall (q : NNRat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat) (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) q)) (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) q)
+  forall (q : NNRat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) q)) (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) q)
 Case conversion may be inaccurate. Consider using '#align nnrat.abs_coe NNRat.abs_coeₓ'. -/
 @[simp]
 theorem abs_coe (q : ℚ≥0) : |(q : ℚ)| = q :=
@@ -895,7 +895,7 @@ def Rat.nnabs (x : ℚ) : ℚ≥0 :=
 lean 3 declaration is
   forall (x : Rat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNRat Rat (HasLiftT.mk.{1, 1} NNRat Rat (CoeTCₓ.coe.{1, 1} NNRat Rat (coeBase.{1, 1} NNRat Rat NNRat.Rat.hasCoe))) (Rat.nnabs x)) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) x)
 but is expected to have type
-  forall (x : Rat), Eq.{1} Rat (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) (Rat.nnabs x)) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat) x)
+  forall (x : Rat), Eq.{1} Rat (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) (Rat.nnabs x)) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) x)
 Case conversion may be inaccurate. Consider using '#align rat.coe_nnabs Rat.coe_nnabsₓ'. -/
 @[norm_cast, simp]
 theorem Rat.coe_nnabs (x : ℚ) : (Rat.nnabs x : ℚ) = abs x := by simp [Rat.nnabs]

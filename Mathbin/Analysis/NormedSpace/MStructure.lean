@@ -189,7 +189,7 @@ theorem coe_compl (P : { P : M // IsLprojection X P }) : ↑(Pᶜ) = (1 : M) - �
   rfl
 #align is_Lprojection.coe_compl IsLprojection.coe_compl
 
-instance [FaithfulSMul M X] : HasInf { P : M // IsLprojection X P } :=
+instance [FaithfulSMul M X] : Inf { P : M // IsLprojection X P } :=
   ⟨fun P Q => ⟨P * Q, P.Prop.mul Q.Prop⟩⟩
 
 @[simp]
@@ -198,7 +198,7 @@ theorem coe_inf [FaithfulSMul M X] (P Q : { P : M // IsLprojection X P }) :
   rfl
 #align is_Lprojection.coe_inf IsLprojection.coe_inf
 
-instance [FaithfulSMul M X] : HasSup { P : M // IsLprojection X P } :=
+instance [FaithfulSMul M X] : Sup { P : M // IsLprojection X P } :=
   ⟨fun P Q => ⟨P + Q - P * Q, P.Prop.join Q.Prop⟩⟩
 
 @[simp]

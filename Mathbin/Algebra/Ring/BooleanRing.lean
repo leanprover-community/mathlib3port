@@ -180,12 +180,12 @@ variable [BooleanRing α] [BooleanRing β] [BooleanRing γ]
 namespace BooleanRing
 
 /-- The join operation in a Boolean ring is `x + y + x * y`. -/
-def hasSup : HasSup α :=
+def hasSup : Sup α :=
   ⟨fun x y => x + y + x * y⟩
 #align boolean_ring.has_sup BooleanRing.hasSup
 
 /-- The meet operation in a Boolean ring is `x * y`. -/
-def hasInf : HasInf α :=
+def hasInf : Inf α :=
   ⟨(· * ·)⟩
 #align boolean_ring.has_inf BooleanRing.hasInf
 

@@ -236,19 +236,27 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {F : PFilter P}
 
-#print Order.PFilter.inf_mem /-
+/- warning: order.pfilter.inf_mem -> Order.PFilter.inf_mem is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} P] {x : P} {y : P} {F : Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))}, (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Order.PFilter.hasMem.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) x F) -> (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Order.PFilter.hasMem.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) y F) -> (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Order.PFilter.hasMem.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Inf.inf.{u1} P (SemilatticeInf.toHasInf.{u1} P _inst_1) x y) F)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} P] {x : P} {y : P} {F : Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))}, (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) P (Order.PFilter.instSetLikePFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1)))) x F) -> (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) P (Order.PFilter.instSetLikePFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1)))) y F) -> (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) P (Order.PFilter.instSetLikePFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1)))) (Inf.inf.{u1} P (SemilatticeInf.toInf.{u1} P _inst_1) x y) F)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.inf_mem Order.PFilter.inf_memₓ'. -/
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem (hx : x ∈ F) (hy : y ∈ F) : x ⊓ y ∈ F :=
   Ideal.sup_mem hx hy
 #align order.pfilter.inf_mem Order.PFilter.inf_mem
--/
 
-#print Order.PFilter.inf_mem_iff /-
+/- warning: order.pfilter.inf_mem_iff -> Order.PFilter.inf_mem_iff is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} P] {x : P} {y : P} {F : Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))}, Iff (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Order.PFilter.hasMem.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Inf.inf.{u1} P (SemilatticeInf.toHasInf.{u1} P _inst_1) x y) F) (And (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Order.PFilter.hasMem.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) x F) (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (Order.PFilter.hasMem.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) y F))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} P] {x : P} {y : P} {F : Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))}, Iff (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) P (Order.PFilter.instSetLikePFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1)))) (Inf.inf.{u1} P (SemilatticeInf.toInf.{u1} P _inst_1) x y) F) (And (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) P (Order.PFilter.instSetLikePFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1)))) x F) (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1))) P (Order.PFilter.instSetLikePFilter.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P _inst_1)))) y F))
+Case conversion may be inaccurate. Consider using '#align order.pfilter.inf_mem_iff Order.PFilter.inf_mem_iffₓ'. -/
 @[simp]
 theorem inf_mem_iff : x ⊓ y ∈ F ↔ x ∈ F ∧ y ∈ F :=
   Ideal.sup_mem_iff
 #align order.pfilter.inf_mem_iff Order.PFilter.inf_mem_iff
--/
 
 end SemilatticeInf
 

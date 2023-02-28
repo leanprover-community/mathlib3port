@@ -462,10 +462,10 @@ instance [Div β] : Div (α →ₛ β) :=
 instance [Inv β] : Inv (α →ₛ β) :=
   ⟨fun f => f.map Inv.inv⟩
 
-instance [HasSup β] : HasSup (α →ₛ β) :=
+instance [Sup β] : Sup (α →ₛ β) :=
   ⟨fun f g => (f.map (· ⊔ ·)).seq g⟩
 
-instance [HasInf β] : HasInf (α →ₛ β) :=
+instance [Inf β] : Inf (α →ₛ β) :=
   ⟨fun f g => (f.map (· ⊓ ·)).seq g⟩
 
 instance [LE β] : LE (α →ₛ β) :=
@@ -507,12 +507,12 @@ theorem coe_le [Preorder β] {f g : α →ₛ β} : (f : α → β) ≤ g ↔ f 
 #align measure_theory.simple_func.coe_le MeasureTheory.SimpleFunc.coe_le
 
 @[simp, norm_cast]
-theorem coe_sup [HasSup β] (f g : α →ₛ β) : ⇑(f ⊔ g) = f ⊔ g :=
+theorem coe_sup [Sup β] (f g : α →ₛ β) : ⇑(f ⊔ g) = f ⊔ g :=
   rfl
 #align measure_theory.simple_func.coe_sup MeasureTheory.SimpleFunc.coe_sup
 
 @[simp, norm_cast]
-theorem coe_inf [HasInf β] (f g : α →ₛ β) : ⇑(f ⊓ g) = f ⊓ g :=
+theorem coe_inf [Inf β] (f g : α →ₛ β) : ⇑(f ⊓ g) = f ⊓ g :=
   rfl
 #align measure_theory.simple_func.coe_inf MeasureTheory.SimpleFunc.coe_inf
 
@@ -534,11 +534,11 @@ theorem inv_apply [Inv β] (f : α →ₛ β) (x : α) : f⁻¹ x = (f x)⁻¹ :
 #align measure_theory.simple_func.inv_apply MeasureTheory.SimpleFunc.inv_apply
 #align measure_theory.simple_func.neg_apply MeasureTheory.SimpleFunc.neg_apply
 
-theorem sup_apply [HasSup β] (f g : α →ₛ β) (a : α) : (f ⊔ g) a = f a ⊔ g a :=
+theorem sup_apply [Sup β] (f g : α →ₛ β) (a : α) : (f ⊔ g) a = f a ⊔ g a :=
   rfl
 #align measure_theory.simple_func.sup_apply MeasureTheory.SimpleFunc.sup_apply
 
-theorem inf_apply [HasInf β] (f g : α →ₛ β) (a : α) : (f ⊓ g) a = f a ⊓ g a :=
+theorem inf_apply [Inf β] (f g : α →ₛ β) (a : α) : (f ⊓ g) a = f a ⊓ g a :=
   rfl
 #align measure_theory.simple_func.inf_apply MeasureTheory.SimpleFunc.inf_apply
 
@@ -570,7 +570,7 @@ theorem mul_eq_map₂ [Mul β] (f g : α →ₛ β) : f * g = (pair f g).map fun
 #align measure_theory.simple_func.mul_eq_map₂ MeasureTheory.SimpleFunc.mul_eq_map₂
 #align measure_theory.simple_func.add_eq_map₂ MeasureTheory.SimpleFunc.add_eq_map₂
 
-theorem sup_eq_map₂ [HasSup β] (f g : α →ₛ β) : f ⊔ g = (pair f g).map fun p : β × β => p.1 ⊔ p.2 :=
+theorem sup_eq_map₂ [Sup β] (f g : α →ₛ β) : f ⊔ g = (pair f g).map fun p : β × β => p.1 ⊔ p.2 :=
   rfl
 #align measure_theory.simple_func.sup_eq_map₂ MeasureTheory.SimpleFunc.sup_eq_map₂
 

@@ -296,10 +296,10 @@ instance : Top (L.DefinableSet A α) :=
 instance : Bot (L.DefinableSet A α) :=
   ⟨⟨⊥, definable_empty⟩⟩
 
-instance : HasSup (L.DefinableSet A α) :=
+instance : Sup (L.DefinableSet A α) :=
   ⟨fun s t => ⟨s ∪ t, s.2.union t.2⟩⟩
 
-instance : HasInf (L.DefinableSet A α) :=
+instance : Inf (L.DefinableSet A α) :=
   ⟨fun s t => ⟨s ∩ t, s.2.inter t.2⟩⟩
 
 instance : HasCompl (L.DefinableSet A α) :=

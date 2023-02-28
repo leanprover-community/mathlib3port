@@ -630,11 +630,15 @@ instance [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
         simp at h₂
         exact ⟨d, rfl, sup_le h₁' h₂⟩ }
 
-#print WithBot.coe_sup /-
+/- warning: with_bot.coe_sup -> WithBot.coe_sup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b)) (Sup.sup.{u1} (WithBot.{u1} α) (SemilatticeSup.toHasSup.{u1} (WithBot.{u1} α) (WithBot.semilatticeSup.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b)) (Sup.sup.{u1} (WithBot.{u1} α) (SemilatticeSup.toSup.{u1} (WithBot.{u1} α) (WithBot.semilatticeSup.{u1} α _inst_1)) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b))
+Case conversion may be inaccurate. Consider using '#align with_bot.coe_sup WithBot.coe_supₓ'. -/
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) = a ⊔ b :=
   rfl
 #align with_bot.coe_sup WithBot.coe_sup
--/
 
 instance [SemilatticeInf α] : SemilatticeInf (WithBot α) :=
   { WithBot.orderBot,
@@ -654,11 +658,15 @@ instance [SemilatticeInf α] : SemilatticeInf (WithBot α) :=
       rcases h₂ a rfl with ⟨c, ⟨⟩, ac⟩
       exact ⟨_, rfl, le_inf ab ac⟩ }
 
-#print WithBot.coe_inf /-
+/- warning: with_bot.coe_inf -> WithBot.coe_inf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b)) (Inf.inf.{u1} (WithBot.{u1} α) (SemilatticeInf.toHasInf.{u1} (WithBot.{u1} α) (WithBot.semilatticeInf.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithBot.{u1} α) (WithBot.some.{u1} α (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b)) (Inf.inf.{u1} (WithBot.{u1} α) (SemilatticeInf.toInf.{u1} (WithBot.{u1} α) (WithBot.semilatticeInf.{u1} α _inst_1)) (WithBot.some.{u1} α a) (WithBot.some.{u1} α b))
+Case conversion may be inaccurate. Consider using '#align with_bot.coe_inf WithBot.coe_infₓ'. -/
 theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithBot α) = a ⊓ b :=
   rfl
 #align with_bot.coe_inf WithBot.coe_inf
--/
 
 instance [Lattice α] : Lattice (WithBot α) :=
   { WithBot.semilatticeSup, WithBot.semilatticeInf with }
@@ -1832,11 +1840,15 @@ instance [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
         simp at h₂
         exact ⟨d, rfl, le_inf h₁' h₂⟩ }
 
-#print WithTop.coe_inf /-
+/- warning: with_top.coe_inf -> WithTop.coe_inf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b)) (Inf.inf.{u1} (WithTop.{u1} α) (SemilatticeInf.toHasInf.{u1} (WithTop.{u1} α) (WithTop.semilatticeInf.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b)) (Inf.inf.{u1} (WithTop.{u1} α) (SemilatticeInf.toInf.{u1} (WithTop.{u1} α) (WithTop.semilatticeInf.{u1} α _inst_1)) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b))
+Case conversion may be inaccurate. Consider using '#align with_top.coe_inf WithTop.coe_infₓ'. -/
 theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithTop α) = a ⊓ b :=
   rfl
 #align with_top.coe_inf WithTop.coe_inf
--/
 
 instance [SemilatticeSup α] : SemilatticeSup (WithTop α) :=
   { WithTop.partialOrder with
@@ -1855,11 +1867,15 @@ instance [SemilatticeSup α] : SemilatticeSup (WithTop α) :=
       rcases h₂ a rfl with ⟨c, ⟨⟩, ac⟩
       exact ⟨_, rfl, sup_le ab ac⟩ }
 
-#print WithTop.coe_sup /-
+/- warning: with_top.coe_sup -> WithTop.coe_sup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b)) (Sup.sup.{u1} (WithTop.{u1} α) (SemilatticeSup.toHasSup.{u1} (WithTop.{u1} α) (WithTop.semilatticeSup.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α) (b : α), Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b)) (Sup.sup.{u1} (WithTop.{u1} α) (SemilatticeSup.toSup.{u1} (WithTop.{u1} α) (WithTop.semilatticeSup.{u1} α _inst_1)) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b))
+Case conversion may be inaccurate. Consider using '#align with_top.coe_sup WithTop.coe_supₓ'. -/
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithTop α) = a ⊔ b :=
   rfl
 #align with_top.coe_sup WithTop.coe_sup
--/
 
 instance [Lattice α] : Lattice (WithTop α) :=
   { WithTop.semilatticeSup, WithTop.semilatticeInf with }

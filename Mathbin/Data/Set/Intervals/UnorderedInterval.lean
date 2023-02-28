@@ -170,11 +170,15 @@ theorem uIcc_subset_uIcc_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a
 #align set.uIcc_subset_uIcc_iff_mem Set.uIcc_subset_uIcc_iff_mem
 -/
 
-#print Set.uIcc_subset_uIcc_iff_le' /-
+/- warning: set.uIcc_subset_uIcc_iff_le' -> Set.uIcc_subset_uIcc_iff_le' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] {a₁ : α} {a₂ : α} {b₁ : α} {b₂ : α}, Iff (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.uIcc.{u1} α _inst_1 a₁ b₁) (Set.uIcc.{u1} α _inst_1 a₂ b₂)) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) a₂ b₂) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) a₁ b₁)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a₁ b₁) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a₂ b₂)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] {a₁ : α} {a₂ : α} {b₁ : α} {b₂ : α}, Iff (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.uIcc.{u1} α _inst_1 a₁ b₁) (Set.uIcc.{u1} α _inst_1 a₂ b₂)) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a₂ b₂) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a₁ b₁)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a₁ b₁) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a₂ b₂)))
+Case conversion may be inaccurate. Consider using '#align set.uIcc_subset_uIcc_iff_le' Set.uIcc_subset_uIcc_iff_le'ₓ'. -/
 theorem uIcc_subset_uIcc_iff_le' : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₂ ⊓ b₂ ≤ a₁ ⊓ b₁ ∧ a₁ ⊔ b₁ ≤ a₂ ⊔ b₂ :=
   Icc_subset_Icc_iff inf_le_sup
 #align set.uIcc_subset_uIcc_iff_le' Set.uIcc_subset_uIcc_iff_le'
--/
 
 #print Set.uIcc_subset_uIcc_right /-
 theorem uIcc_subset_uIcc_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] :=

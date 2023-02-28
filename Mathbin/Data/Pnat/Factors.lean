@@ -541,9 +541,9 @@ namespace PNat
 
 /- warning: pnat.factor_multiset_gcd -> PNat.factorMultiset_gcd is a dubious translation:
 lean 3 declaration is
-  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.gcd m n)) (HasInf.inf.{0} PrimeMultiset (SemilatticeInf.toHasInf.{0} PrimeMultiset (Lattice.toSemilatticeInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset PrimeMultiset.distribLattice))) (PNat.factorMultiset m) (PNat.factorMultiset n))
+  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.gcd m n)) (Inf.inf.{0} PrimeMultiset (SemilatticeInf.toHasInf.{0} PrimeMultiset (Lattice.toSemilatticeInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset PrimeMultiset.distribLattice))) (PNat.factorMultiset m) (PNat.factorMultiset n))
 but is expected to have type
-  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.gcd m n)) (HasInf.inf.{0} PrimeMultiset (Lattice.toHasInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset instPrimeMultisetDistribLattice)) (PNat.factorMultiset m) (PNat.factorMultiset n))
+  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.gcd m n)) (Inf.inf.{0} PrimeMultiset (Lattice.toInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset instPrimeMultisetDistribLattice)) (PNat.factorMultiset m) (PNat.factorMultiset n))
 Case conversion may be inaccurate. Consider using '#align pnat.factor_multiset_gcd PNat.factorMultiset_gcdₓ'. -/
 /-- The gcd and lcm operations on positive integers correspond
  to the inf and sup operations on multisets. -/
@@ -562,9 +562,9 @@ theorem factorMultiset_gcd (m n : ℕ+) :
 
 /- warning: pnat.factor_multiset_lcm -> PNat.factorMultiset_lcm is a dubious translation:
 lean 3 declaration is
-  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.lcm m n)) (HasSup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset PrimeMultiset.semilatticeSup) (PNat.factorMultiset m) (PNat.factorMultiset n))
+  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.lcm m n)) (Sup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset PrimeMultiset.semilatticeSup) (PNat.factorMultiset m) (PNat.factorMultiset n))
 but is expected to have type
-  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.lcm m n)) (HasSup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset instPrimeMultisetSemilatticeSup) (PNat.factorMultiset m) (PNat.factorMultiset n))
+  forall (m : PNat) (n : PNat), Eq.{1} PrimeMultiset (PNat.factorMultiset (PNat.lcm m n)) (Sup.sup.{0} PrimeMultiset (SemilatticeSup.toSup.{0} PrimeMultiset instPrimeMultisetSemilatticeSup) (PNat.factorMultiset m) (PNat.factorMultiset n))
 Case conversion may be inaccurate. Consider using '#align pnat.factor_multiset_lcm PNat.factorMultiset_lcmₓ'. -/
 theorem factorMultiset_lcm (m n : ℕ+) :
     factorMultiset (lcm m n) = factorMultiset m ⊔ factorMultiset n :=
@@ -608,9 +608,9 @@ namespace PrimeMultiset
 
 /- warning: prime_multiset.prod_inf -> PrimeMultiset.prod_inf is a dubious translation:
 lean 3 declaration is
-  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HasInf.inf.{0} PrimeMultiset (SemilatticeInf.toHasInf.{0} PrimeMultiset (Lattice.toSemilatticeInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset PrimeMultiset.distribLattice))) u v)) (PNat.gcd (PrimeMultiset.prod u) (PrimeMultiset.prod v))
+  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (Inf.inf.{0} PrimeMultiset (SemilatticeInf.toHasInf.{0} PrimeMultiset (Lattice.toSemilatticeInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset PrimeMultiset.distribLattice))) u v)) (PNat.gcd (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 but is expected to have type
-  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HasInf.inf.{0} PrimeMultiset (Lattice.toHasInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset instPrimeMultisetDistribLattice)) u v)) (PNat.gcd (PrimeMultiset.prod u) (PrimeMultiset.prod v))
+  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (Inf.inf.{0} PrimeMultiset (Lattice.toInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset instPrimeMultisetDistribLattice)) u v)) (PNat.gcd (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_inf PrimeMultiset.prod_infₓ'. -/
 theorem prod_inf (u v : PrimeMultiset) : (u ⊓ v).Prod = PNat.gcd u.Prod v.Prod :=
   by
@@ -624,9 +624,9 @@ theorem prod_inf (u v : PrimeMultiset) : (u ⊓ v).Prod = PNat.gcd u.Prod v.Prod
 
 /- warning: prime_multiset.prod_sup -> PrimeMultiset.prod_sup is a dubious translation:
 lean 3 declaration is
-  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HasSup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset PrimeMultiset.semilatticeSup) u v)) (PNat.lcm (PrimeMultiset.prod u) (PrimeMultiset.prod v))
+  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (Sup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset PrimeMultiset.semilatticeSup) u v)) (PNat.lcm (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 but is expected to have type
-  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HasSup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset instPrimeMultisetSemilatticeSup) u v)) (PNat.lcm (PrimeMultiset.prod u) (PrimeMultiset.prod v))
+  forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (Sup.sup.{0} PrimeMultiset (SemilatticeSup.toSup.{0} PrimeMultiset instPrimeMultisetSemilatticeSup) u v)) (PNat.lcm (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_sup PrimeMultiset.prod_supₓ'. -/
 theorem prod_sup (u v : PrimeMultiset) : (u ⊔ v).Prod = PNat.lcm u.Prod v.Prod :=
   by

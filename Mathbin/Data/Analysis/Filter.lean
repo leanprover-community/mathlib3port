@@ -360,9 +360,9 @@ protected def comap (m : α → β) {f : Filter β} (F : f.Realizer) : (comap m 
 
 /- warning: filter.realizer.sup -> Filter.Realizer.sup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u2 u3} α (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g))
+  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u2 u3} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) f g))
 but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u3 u2} α (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) f g))
+  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u3 u2} α (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) f g))
 Case conversion may be inaccurate. Consider using '#align filter.realizer.sup Filter.Realizer.supₓ'. -/
 /-- Construct a realizer for the sup of two filters -/
 protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊔ g).Realizer :=
@@ -386,9 +386,9 @@ protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊔ g
 
 /- warning: filter.realizer.inf -> Filter.Realizer.inf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u2 u3} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g))
+  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u2 u3} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g))
 but is expected to have type
-  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u3 u2} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) f g))
+  forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α f) -> (Filter.Realizer.{u1, u3} α g) -> (Filter.Realizer.{u1, max u3 u2} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g))
 Case conversion may be inaccurate. Consider using '#align filter.realizer.inf Filter.Realizer.infₓ'. -/
 /-- Construct a realizer for the inf of two filters -/
 protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g).Realizer :=

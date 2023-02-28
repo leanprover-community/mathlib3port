@@ -254,9 +254,9 @@ theorem mulSupport_binop_subset (op : M → N → P) (op1 : op 1 1 = 1) (f : α 
 
 /- warning: function.mul_support_sup -> Function.mulSupport_sup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeSup.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => HasSup.sup.{u2} M (SemilatticeSup.toHasSup.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeSup.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => Sup.sup.{u2} M (SemilatticeSup.toHasSup.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
 but is expected to have type
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeSup.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => HasSup.sup.{u2} M (SemilatticeSup.toHasSup.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeSup.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => Sup.sup.{u2} M (SemilatticeSup.toSup.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
 Case conversion may be inaccurate. Consider using '#align function.mul_support_sup Function.mulSupport_supₓ'. -/
 @[to_additive]
 theorem mulSupport_sup [SemilatticeSup M] (f g : α → M) :
@@ -267,9 +267,9 @@ theorem mulSupport_sup [SemilatticeSup M] (f g : α → M) :
 
 /- warning: function.mul_support_inf -> Function.mulSupport_inf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeInf.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => HasInf.inf.{u2} M (SemilatticeInf.toHasInf.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeInf.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => Inf.inf.{u2} M (SemilatticeInf.toHasInf.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
 but is expected to have type
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeInf.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => HasInf.inf.{u2} M (SemilatticeInf.toHasInf.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] [_inst_4 : SemilatticeInf.{u2} M] (f : α -> M) (g : α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => Inf.inf.{u2} M (SemilatticeInf.toInf.{u2} M _inst_4) (f x) (g x))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 f) (Function.mulSupport.{u1, u2} α M _inst_1 g))
 Case conversion may be inaccurate. Consider using '#align function.mul_support_inf Function.mulSupport_infₓ'. -/
 @[to_additive]
 theorem mulSupport_inf [SemilatticeInf M] (f g : α → M) :

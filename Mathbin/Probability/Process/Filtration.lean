@@ -101,7 +101,7 @@ instance : Bot (Filtration ι m) :=
 instance : Top (Filtration ι m) :=
   ⟨const ι m le_rfl⟩
 
-instance : HasSup (Filtration ι m) :=
+instance : Sup (Filtration ι m) :=
   ⟨fun f g =>
     { seq := fun i => f i ⊔ g i
       mono' := fun i j hij =>
@@ -113,7 +113,7 @@ theorem coeFn_sup {f g : Filtration ι m} : ⇑(f ⊔ g) = f ⊔ g :=
   rfl
 #align measure_theory.filtration.coe_fn_sup MeasureTheory.Filtration.coeFn_sup
 
-instance : HasInf (Filtration ι m) :=
+instance : Inf (Filtration ι m) :=
   ⟨fun f g =>
     { seq := fun i => f i ⊓ g i
       mono' := fun i j hij =>

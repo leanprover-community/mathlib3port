@@ -495,7 +495,7 @@ theorem LieHom.range_eq_map : f.range = map f ⊤ :=
   simp
 #align lie_hom.range_eq_map LieHom.range_eq_map
 
-instance : HasInf (LieSubalgebra R L) :=
+instance : Inf (LieSubalgebra R L) :=
   ⟨fun K K' =>
     { (K ⊓ K' : Submodule R L) with
       lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩

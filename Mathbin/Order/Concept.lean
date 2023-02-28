@@ -319,7 +319,7 @@ Case conversion may be inaccurate. Consider using '#align concept.snd_injective 
 theorem snd_injective : Injective fun c : Concept α β r => c.snd := fun c d => ext'
 #align concept.snd_injective Concept.snd_injective
 
-instance : HasSup (Concept α β r) :=
+instance : Sup (Concept α β r) :=
   ⟨fun c d =>
     { fst := extentClosure r (c.snd ∩ d.snd)
       snd := c.snd ∩ d.snd
@@ -328,7 +328,7 @@ instance : HasSup (Concept α β r) :=
           intentClosure_extentClosure_intentClosure]
       closure_snd := rfl }⟩
 
-instance : HasInf (Concept α β r) :=
+instance : Inf (Concept α β r) :=
   ⟨fun c d =>
     { fst := c.fst ∩ d.fst
       snd := intentClosure r (c.fst ∩ d.fst)
@@ -498,9 +498,9 @@ theorem bot_snd : (⊥ : Concept α β r).snd = univ :=
 
 /- warning: concept.sup_fst -> Concept.sup_fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (HasSup.sup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) c d))) (extentClosure.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Sup.sup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) c d))) (extentClosure.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (HasSup.sup.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instHasSupConcept.{u2, u1} α β r) c d))) (extentClosure.{u2, u1} α β r (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Sup.sup.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSupConcept.{u2, u1} α β r) c d))) (extentClosure.{u2, u1} α β r (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))))
 Case conversion may be inaccurate. Consider using '#align concept.sup_fst Concept.sup_fstₓ'. -/
 @[simp]
 theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = extentClosure r (c.snd ∩ d.snd) :=
@@ -509,9 +509,9 @@ theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = extentClosure r (c.snd
 
 /- warning: concept.sup_snd -> Concept.sup_snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (HasSup.sup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) c d))) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Sup.sup.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasSup.{u1, u2} α β r) c d))) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u1} (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (HasSup.sup.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instHasSupConcept.{u2, u1} α β r) c d))) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u1} (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Sup.sup.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instSupConcept.{u2, u1} α β r) c d))) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d)))
 Case conversion may be inaccurate. Consider using '#align concept.sup_snd Concept.sup_sndₓ'. -/
 @[simp]
 theorem sup_snd (c d : Concept α β r) : (c ⊔ d).snd = c.snd ∩ d.snd :=
@@ -520,9 +520,9 @@ theorem sup_snd (c d : Concept α β r) : (c ⊔ d).snd = c.snd ∩ d.snd :=
 
 /- warning: concept.inf_fst -> Concept.inf_fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (HasInf.inf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) c d))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u1} (Set.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Inf.inf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) c d))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (HasInf.inf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instHasInfConcept.{u2, u1} α β r) c d))) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u2} (Set.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Inf.inf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instInfConcept.{u2, u1} α β r) c d))) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d)))
 Case conversion may be inaccurate. Consider using '#align concept.inf_fst Concept.inf_fstₓ'. -/
 @[simp]
 theorem inf_fst (c d : Concept α β r) : (c ⊓ d).fst = c.fst ∩ d.fst :=
@@ -531,9 +531,9 @@ theorem inf_fst (c d : Concept α β r) : (c ⊓ d).fst = c.fst ∩ d.fst :=
 
 /- warning: concept.inf_snd -> Concept.inf_snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (HasInf.inf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) c d))) (intentClosure.{u1, u2} α β r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop} (c : Concept.{u1, u2} α β r) (d : Concept.{u1, u2} α β r), Eq.{succ u2} (Set.{u2} β) (Prod.snd.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r (Inf.inf.{max u1 u2} (Concept.{u1, u2} α β r) (Concept.hasInf.{u1, u2} α β r) c d))) (intentClosure.{u1, u2} α β r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r c)) (Prod.fst.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Concept.toProd.{u1, u2} α β r d))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u1} (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (HasInf.inf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instHasInfConcept.{u2, u1} α β r) c d))) (intentClosure.{u2, u1} α β r (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r) (d : Concept.{u2, u1} α β r), Eq.{succ u1} (Set.{u1} β) (Prod.snd.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r (Inf.inf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instInfConcept.{u2, u1} α β r) c d))) (intentClosure.{u2, u1} α β r (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r c)) (Prod.fst.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Concept.toProd.{u2, u1} α β r d))))
 Case conversion may be inaccurate. Consider using '#align concept.inf_snd Concept.inf_sndₓ'. -/
 @[simp]
 theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = intentClosure r (c.fst ∩ d.fst) :=

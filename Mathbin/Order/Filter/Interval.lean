@@ -144,9 +144,9 @@ theorem tendstoIxxClass_principal {s t : Set α} {Ixx : α → α → Set α} :
 
 /- warning: filter.tendsto_Ixx_class_inf -> Filter.tendstoIxxClass_inf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l₁ : Filter.{u1} α} {l₁' : Filter.{u1} α} {l₂ : Filter.{u1} α} {l₂' : Filter.{u1} α} {Ixx : α -> α -> (Set.{u1} α)} [h : Filter.TendstoIxxClass.{u1} α _inst_1 Ixx l₁ l₂] [h' : Filter.TendstoIxxClass.{u1} α _inst_1 Ixx l₁' l₂'], Filter.TendstoIxxClass.{u1} α _inst_1 Ixx (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₁') (HasInf.inf.{u1} (outParam.{succ u1} (Filter.{u1} α)) (Filter.hasInf.{u1} α) l₂ l₂')
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l₁ : Filter.{u1} α} {l₁' : Filter.{u1} α} {l₂ : Filter.{u1} α} {l₂' : Filter.{u1} α} {Ixx : α -> α -> (Set.{u1} α)} [h : Filter.TendstoIxxClass.{u1} α _inst_1 Ixx l₁ l₂] [h' : Filter.TendstoIxxClass.{u1} α _inst_1 Ixx l₁' l₂'], Filter.TendstoIxxClass.{u1} α _inst_1 Ixx (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₁') (Inf.inf.{u1} (outParam.{succ u1} (Filter.{u1} α)) (Filter.hasInf.{u1} α) l₂ l₂')
 but is expected to have type
-  forall {α : Type.{u1}} {_inst_1 : Filter.{u1} α} {l₁ : Filter.{u1} α} {l₁' : Filter.{u1} α} {l₂ : Filter.{u1} α} {l₂' : α -> α -> (Set.{u1} α)} [Ixx : Filter.TendstoIxxClass.{u1} α l₂' _inst_1 l₁'] [h : Filter.TendstoIxxClass.{u1} α l₂' l₁ l₂], Filter.TendstoIxxClass.{u1} α l₂' (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) _inst_1 l₁) (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁' l₂)
+  forall {α : Type.{u1}} {_inst_1 : Filter.{u1} α} {l₁ : Filter.{u1} α} {l₁' : Filter.{u1} α} {l₂ : Filter.{u1} α} {l₂' : α -> α -> (Set.{u1} α)} [Ixx : Filter.TendstoIxxClass.{u1} α l₂' _inst_1 l₁'] [h : Filter.TendstoIxxClass.{u1} α l₂' l₁ l₂], Filter.TendstoIxxClass.{u1} α l₂' (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) _inst_1 l₁) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) l₁' l₂)
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_Ixx_class_inf Filter.tendstoIxxClass_infₓ'. -/
 theorem tendstoIxxClass_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : TendstoIxxClass Ixx l₁ l₂]
     [h' : TendstoIxxClass Ixx l₁' l₂'] : TendstoIxxClass Ixx (l₁ ⊓ l₁') (l₂ ⊓ l₂') :=

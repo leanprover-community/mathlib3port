@@ -436,7 +436,7 @@ theorem mem_top (x : M) : x ∈ (⊤ : LieSubmodule R L M) :=
   mem_univ x
 #align lie_submodule.mem_top LieSubmodule.mem_top
 
-instance : HasInf (LieSubmodule R L M) :=
+instance : Inf (LieSubmodule R L M) :=
   ⟨fun N N' =>
     { (N ⊓ N' : Submodule R M) with
       lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩

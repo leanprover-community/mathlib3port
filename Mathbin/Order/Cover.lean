@@ -272,12 +272,16 @@ section SemilatticeSup
 
 variable [SemilatticeSup α] {a b c : α}
 
-#print Wcovby.sup_eq /-
+/- warning: wcovby.sup_eq -> Wcovby.sup_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a c) -> (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) b c) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b) c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a c) -> (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) b c) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b) c)
+Case conversion may be inaccurate. Consider using '#align wcovby.sup_eq Wcovby.sup_eqₓ'. -/
 theorem Wcovby.sup_eq (hac : a ⩿ c) (hbc : b ⩿ c) (hab : a ≠ b) : a ⊔ b = c :=
   (sup_le hac.le hbc.le).eq_of_not_lt fun h =>
     hab.lt_sup_or_lt_sup.elim (fun h' => hac.2 h' h) fun h' => hbc.2 h' h
 #align wcovby.sup_eq Wcovby.sup_eq
--/
 
 end SemilatticeSup
 
@@ -285,11 +289,15 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] {a b c : α}
 
-#print Wcovby.inf_eq /-
+/- warning: wcovby.inf_eq -> Wcovby.inf_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) c a) -> (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) c b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b) c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) c a) -> (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) c b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b) c)
+Case conversion may be inaccurate. Consider using '#align wcovby.inf_eq Wcovby.inf_eqₓ'. -/
 theorem Wcovby.inf_eq (hca : c ⩿ a) (hcb : c ⩿ b) (hab : a ≠ b) : a ⊓ b = c :=
   (le_inf hca.le hcb.le).eq_of_not_gt fun h => hab.inf_lt_or_inf_lt.elim (hca.2 h) (hcb.2 h)
 #align wcovby.inf_eq Wcovby.inf_eq
--/
 
 end SemilatticeInf
 

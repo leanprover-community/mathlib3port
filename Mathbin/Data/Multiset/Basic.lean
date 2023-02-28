@@ -2972,9 +2972,9 @@ instance : Lattice (Multiset α) :=
 
 /- warning: multiset.sup_eq_union -> Multiset.sup_eq_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (HasSup.sup.{u1} (Multiset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Multiset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} α) (Multiset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (Sup.sup.{u1} (Multiset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Multiset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} α) (Multiset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (HasSup.sup.{u1} (Multiset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Multiset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} α) (Multiset.instLatticeMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.instUnionMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (Sup.sup.{u1} (Multiset.{u1} α) (SemilatticeSup.toSup.{u1} (Multiset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} α) (Multiset.instLatticeMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.instUnionMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.sup_eq_union Multiset.sup_eq_unionₓ'. -/
 @[simp]
 theorem sup_eq_union (s t : Multiset α) : s ⊔ t = s ∪ t :=
@@ -2983,9 +2983,9 @@ theorem sup_eq_union (s t : Multiset α) : s ⊔ t = s ∪ t :=
 
 /- warning: multiset.inf_eq_inter -> Multiset.inf_eq_inter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (HasInf.inf.{u1} (Multiset.{u1} α) (SemilatticeInf.toHasInf.{u1} (Multiset.{u1} α) (Lattice.toSemilatticeInf.{u1} (Multiset.{u1} α) (Multiset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s t) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (Inf.inf.{u1} (Multiset.{u1} α) (SemilatticeInf.toHasInf.{u1} (Multiset.{u1} α) (Lattice.toSemilatticeInf.{u1} (Multiset.{u1} α) (Multiset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) s t) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (HasInf.inf.{u1} (Multiset.{u1} α) (Lattice.toHasInf.{u1} (Multiset.{u1} α) (Multiset.instLatticeMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s t) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.instInterMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (Inf.inf.{u1} (Multiset.{u1} α) (Lattice.toInf.{u1} (Multiset.{u1} α) (Multiset.instLatticeMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s t) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.instInterMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.inf_eq_inter Multiset.inf_eq_interₓ'. -/
 @[simp]
 theorem inf_eq_inter (s t : Multiset α) : s ⊓ t = s ∩ t :=

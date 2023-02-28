@@ -1622,10 +1622,10 @@ theorem prod_le [Nontrivial α] {a b : FactorSet α} : a.Prod ≤ b.Prod ↔ a �
 
 include dec dec'
 
-noncomputable instance : HasSup (Associates α) :=
+noncomputable instance : Sup (Associates α) :=
   ⟨fun a b => (a.factors ⊔ b.factors).Prod⟩
 
-noncomputable instance : HasInf (Associates α) :=
+noncomputable instance : Inf (Associates α) :=
   ⟨fun a b => (a.factors ⊓ b.factors).Prod⟩
 
 noncomputable instance : Lattice (Associates α) :=

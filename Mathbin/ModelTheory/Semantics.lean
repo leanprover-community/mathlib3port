@@ -283,7 +283,7 @@ theorem realize_top : (⊤ : L.BoundedFormula α l).realize v xs ↔ True := by 
 
 @[simp]
 theorem realize_inf : (φ ⊓ ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize v xs := by
-  simp [HasInf.inf, realize]
+  simp [Inf.inf, realize]
 #align first_order.language.bounded_formula.realize_inf FirstOrder.Language.BoundedFormula.realize_inf
 
 @[simp]
@@ -329,7 +329,7 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.term _} :
 @[simp]
 theorem realize_sup : (φ ⊔ ψ).realize v xs ↔ φ.realize v xs ∨ ψ.realize v xs :=
   by
-  simp only [realize, HasSup.sup, realize_not, eq_iff_iff]
+  simp only [realize, Sup.sup, realize_not, eq_iff_iff]
   tauto
 #align first_order.language.bounded_formula.realize_sup FirstOrder.Language.BoundedFormula.realize_sup
 

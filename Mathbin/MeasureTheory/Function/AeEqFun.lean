@@ -458,7 +458,7 @@ section Sup
 
 variable [SemilatticeSup β] [ContinuousSup β]
 
-instance : HasSup (α →ₘ[μ] β) where sup f g := AeEqFun.comp₂ (· ⊔ ·) continuous_sup f g
+instance : Sup (α →ₘ[μ] β) where sup f g := AeEqFun.comp₂ (· ⊔ ·) continuous_sup f g
 
 theorem coeFn_sup (f g : α →ₘ[μ] β) : ⇑(f ⊔ g) =ᵐ[μ] fun x => f x ⊔ g x :=
   coeFn_comp₂ _ _ _ _
@@ -494,7 +494,7 @@ section Inf
 
 variable [SemilatticeInf β] [ContinuousInf β]
 
-instance : HasInf (α →ₘ[μ] β) where inf f g := AeEqFun.comp₂ (· ⊓ ·) continuous_inf f g
+instance : Inf (α →ₘ[μ] β) where inf f g := AeEqFun.comp₂ (· ⊓ ·) continuous_inf f g
 
 theorem coeFn_inf (f g : α →ₘ[μ] β) : ⇑(f ⊓ g) =ᵐ[μ] fun x => f x ⊓ g x :=
   coeFn_comp₂ _ _ _ _
@@ -528,11 +528,11 @@ end Inf
 
 instance [Lattice β] [TopologicalLattice β] : Lattice (α →ₘ[μ] β) :=
   { AeEqFun.partialOrder with
-    sup := HasSup.sup
+    sup := Sup.sup
     le_sup_left := AeEqFun.le_sup_left
     le_sup_right := AeEqFun.le_sup_right
     sup_le := AeEqFun.sup_le
-    inf := HasInf.inf
+    inf := Inf.inf
     inf_le_left := AeEqFun.inf_le_left
     inf_le_right := AeEqFun.inf_le_right
     le_inf := AeEqFun.le_inf }

@@ -1361,27 +1361,27 @@ end MinMaxRec
 /-! ### `has_sup` and `has_inf` -/
 
 
-#print HasSup /-
+#print Sup /-
 /-- Typeclass for the `⊔` (`\lub`) notation -/
 @[notation_class]
-class HasSup (α : Type u) where
+class Sup (α : Type u) where
   sup : α → α → α
-#align has_sup HasSup
+#align has_sup Sup
 -/
 
-#print HasInf /-
+#print Inf /-
 /-- Typeclass for the `⊓` (`\glb`) notation -/
 @[notation_class]
-class HasInf (α : Type u) where
+class Inf (α : Type u) where
   inf : α → α → α
-#align has_inf HasInf
+#align has_inf Inf
 -/
 
 -- mathport name: «expr ⊔ »
-infixl:68 " ⊔ " => HasSup.sup
+infixl:68 " ⊔ " => Sup.sup
 
 -- mathport name: «expr ⊓ »
-infixl:69 " ⊓ " => HasInf.inf
+infixl:69 " ⊓ " => Inf.inf
 
 /-! ### Lifts of order instances -/
 
@@ -1411,16 +1411,16 @@ def PartialOrder.lift {α β} [PartialOrder β] (f : α → β) (inj : Injective
 
 /- warning: linear_order.lift -> LinearOrder.lift is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : HasSup.{u1} α] [_inst_3 : HasInf.{u1} α] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasSup.sup.{u1} α _inst_2 x y)) (LinearOrder.max.{u2} β _inst_1 (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasInf.inf.{u1} α _inst_3 x y)) (LinearOrder.min.{u2} β _inst_1 (f x) (f y))) -> (LinearOrder.{u1} α)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : Sup.{u1} α] [_inst_3 : Inf.{u1} α] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Sup.sup.{u1} α _inst_2 x y)) (LinearOrder.max.{u2} β _inst_1 (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Inf.inf.{u1} α _inst_3 x y)) (LinearOrder.min.{u2} β _inst_1 (f x) (f y))) -> (LinearOrder.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : HasSup.{u1} α] [_inst_3 : HasInf.{u1} α] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasSup.sup.{u1} α _inst_2 x y)) (Max.max.{u2} β (LinearOrder.toMax.{u2} β _inst_1) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HasInf.inf.{u1} α _inst_3 x y)) (Min.min.{u2} β (LinearOrder.toMin.{u2} β _inst_1) (f x) (f y))) -> (LinearOrder.{u1} α)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : Sup.{u1} α] [_inst_3 : Inf.{u1} α] (f : α -> β), (Function.Injective.{succ u1, succ u2} α β f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Sup.sup.{u1} α _inst_2 x y)) (Max.max.{u2} β (LinearOrder.toMax.{u2} β _inst_1) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (Inf.inf.{u1} α _inst_3 x y)) (Min.min.{u2} β (LinearOrder.toMin.{u2} β _inst_1) (f x) (f y))) -> (LinearOrder.{u1} α)
 Case conversion may be inaccurate. Consider using '#align linear_order.lift LinearOrder.liftₓ'. -/
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
 function `f : α → β`. This version takes `[has_sup α]` and `[has_inf α]` as arguments, then uses
 them for `max` and `min` fields. See `linear_order.lift'` for a version that autogenerates `min` and
 `max` fields. See note [reducible non-instances]. -/
 @[reducible]
-def LinearOrder.lift {α β} [LinearOrder β] [HasSup α] [HasInf α] (f : α → β) (inj : Injective f)
+def LinearOrder.lift {α β} [LinearOrder β] [Sup α] [Inf α] (f : α → β) (inj : Injective f)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrder α :=
   {

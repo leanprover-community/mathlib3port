@@ -40,19 +40,17 @@ section Preorder
 variable [Preorder α]
 
 @[simps]
-instance [SemilatticeSup β] : HasSup (α →o β)
-    where sup f g := ⟨fun a => f a ⊔ g a, f.mono.sup g.mono⟩
+instance [SemilatticeSup β] : Sup (α →o β) where sup f g := ⟨fun a => f a ⊔ g a, f.mono.sup g.mono⟩
 
 instance [SemilatticeSup β] : SemilatticeSup (α →o β) :=
   { (_ : PartialOrder (α →o β)) with
-    sup := HasSup.sup
+    sup := Sup.sup
     le_sup_left := fun a b x => le_sup_left
     le_sup_right := fun a b x => le_sup_right
     sup_le := fun a b c h₀ h₁ x => sup_le (h₀ x) (h₁ x) }
 
 @[simps]
-instance [SemilatticeInf β] : HasInf (α →o β)
-    where inf f g := ⟨fun a => f a ⊓ g a, f.mono.inf g.mono⟩
+instance [SemilatticeInf β] : Inf (α →o β) where inf f g := ⟨fun a => f a ⊓ g a, f.mono.inf g.mono⟩
 
 instance [SemilatticeInf β] : SemilatticeInf (α →o β) :=
   { (_ : PartialOrder (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with
@@ -161,7 +159,12 @@ instance [CompleteLattice β] : CompleteLattice (α →o β) :=
     le_inf := fun s f hf x => le_infᵢ₂ fun g hg => hf g hg x
     inf_le := fun s f hf x => infᵢ_le_of_le f (infᵢ_le _ hf) }
 
-#print OrderHom.iterate_sup_le_sup_iff /-
+/- warning: order_hom.iterate_sup_le_sup_iff -> OrderHom.iterate_sup_le_sup_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_2 : SemilatticeSup.{u1} α] (f : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))), Iff (forall (n₁ : Nat) (n₂ : Nat) (a₁ : α) (a₂ : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (Nat.iterate.{succ u1} α (coeFn.{succ u1, succ u1} (OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (fun (_x : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) => α -> α) (OrderHom.hasCoeToFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) f) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n₁ n₂) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a₁ a₂)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) (Nat.iterate.{succ u1} α (coeFn.{succ u1, succ u1} (OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (fun (_x : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) => α -> α) (OrderHom.hasCoeToFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) f) n₁ a₁) (Nat.iterate.{succ u1} α (coeFn.{succ u1, succ u1} (OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (fun (_x : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) => α -> α) (OrderHom.hasCoeToFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) f) n₂ a₂))) (forall (a₁ : α) (a₂ : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (coeFn.{succ u1, succ u1} (OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (fun (_x : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) => α -> α) (OrderHom.hasCoeToFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) f (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a₁ a₂)) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) (coeFn.{succ u1, succ u1} (OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (fun (_x : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) => α -> α) (OrderHom.hasCoeToFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) f a₁) a₂))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_2 : SemilatticeSup.{u1} α] (f : OrderHom.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))), Iff (forall (n₁ : Nat) (n₂ : Nat) (a₁ : α) (a₂ : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (Nat.iterate.{succ u1} α (OrderHom.toFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) f) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n₁ n₂) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a₁ a₂)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) (Nat.iterate.{succ u1} α (OrderHom.toFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) f) n₁ a₁) (Nat.iterate.{succ u1} α (OrderHom.toFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) f) n₂ a₂))) (forall (a₁ : α) (a₂ : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) (OrderHom.toFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) f (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a₁ a₂)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) (OrderHom.toFun.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)) f a₁) a₂))
+Case conversion may be inaccurate. Consider using '#align order_hom.iterate_sup_le_sup_iff OrderHom.iterate_sup_le_sup_iffₓ'. -/
 theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α) :
     (∀ n₁ n₂ a₁ a₂, (f^[n₁ + n₂]) (a₁ ⊔ a₂) ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂) ↔
       ∀ a₁ a₂, f (a₁ ⊔ a₂) ≤ f a₁ ⊔ a₂ :=
@@ -190,7 +193,6 @@ theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α
       _ ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂ := h' n₁ a₁ _
       
 #align order_hom.iterate_sup_le_sup_iff OrderHom.iterate_sup_le_sup_iff
--/
 
 end Preorder
 

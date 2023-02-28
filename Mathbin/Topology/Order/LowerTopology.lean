@@ -349,12 +349,16 @@ theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
   simp [map_Inf]
 #align Inf_hom.continuous InfₛHom.continuous
 
-#print LowerTopology.continuousInf /-
+/- warning: lower_topology.to_has_continuous_inf -> LowerTopology.continuousInf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : LowerTopology.{u1} α _inst_3 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))], ContinuousInf.{u1} α _inst_3 (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : LowerTopology.{u1} α _inst_3 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))], ContinuousInf.{u1} α _inst_3 (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align lower_topology.to_has_continuous_inf LowerTopology.continuousInfₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 90) LowerTopology.continuousInf : ContinuousInf α :=
   ⟨(infInfₛHom : InfₛHom (α × α) α).Continuous⟩
 #align lower_topology.to_has_continuous_inf LowerTopology.continuousInf
--/
 
 end CompleteLattice
 

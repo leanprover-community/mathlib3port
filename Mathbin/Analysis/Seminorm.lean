@@ -226,7 +226,7 @@ instance [Monoid R] [DistribMulAction R ℝ] [SMul R ℝ≥0] [IsScalarTower R �
 instance [Semiring R] [Module R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] : Module R (Seminorm 𝕜 E) :=
   (coeFnAddMonoidHom_injective 𝕜 E).Module R _ coe_smul
 
-instance : HasSup (Seminorm 𝕜 E)
+instance : Sup (Seminorm 𝕜 E)
     where sup p q :=
     {
       p.toAddGroupSeminorm ⊔ q.toAddGroupSeminorm with
@@ -449,7 +449,7 @@ theorem bddBelow_range_add : BddBelow (range fun u => p u + q (x - u)) :=
     positivity⟩
 #align seminorm.bdd_below_range_add Seminorm.bddBelow_range_add
 
-noncomputable instance : HasInf (Seminorm 𝕜 E)
+noncomputable instance : Inf (Seminorm 𝕜 E)
     where inf p q :=
     {
       p.toAddGroupSeminorm ⊓

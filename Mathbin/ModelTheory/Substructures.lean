@@ -178,7 +178,7 @@ theorem coe_top : ((⊤ : L.Substructure M) : Set M) = Set.univ :=
 #align first_order.language.substructure.coe_top FirstOrder.Language.Substructure.coe_top
 
 /-- The inf of two substructures is their intersection. -/
-instance : HasInf (L.Substructure M) :=
+instance : Inf (L.Substructure M) :=
   ⟨fun S₁ S₂ =>
     { carrier := S₁ ∩ S₂
       fun_mem := fun n f => (S₁.fun_mem f).inf (S₂.fun_mem f) }⟩

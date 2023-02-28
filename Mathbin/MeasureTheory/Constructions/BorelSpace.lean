@@ -897,26 +897,26 @@ instance (priority := 100) ContinuousSMul.hasMeasurableSmul {M α} [TopologicalS
 
 section Lattice
 
-instance (priority := 100) ContinuousSup.hasMeasurableSup [HasSup γ] [ContinuousSup γ] :
+instance (priority := 100) ContinuousSup.hasMeasurableSup [Sup γ] [ContinuousSup γ] :
     HasMeasurableSup γ
     where
   measurable_const_sup c := (continuous_const.sup continuous_id).Measurable
   measurable_sup_const c := (continuous_id.sup continuous_const).Measurable
 #align has_continuous_sup.has_measurable_sup ContinuousSup.hasMeasurableSup
 
-instance (priority := 100) ContinuousSup.hasMeasurableSup₂ [SecondCountableTopology γ] [HasSup γ]
+instance (priority := 100) ContinuousSup.hasMeasurableSup₂ [SecondCountableTopology γ] [Sup γ]
     [ContinuousSup γ] : HasMeasurableSup₂ γ :=
   ⟨continuous_sup.Measurable⟩
 #align has_continuous_sup.has_measurable_sup₂ ContinuousSup.hasMeasurableSup₂
 
-instance (priority := 100) ContinuousInf.hasMeasurableInf [HasInf γ] [ContinuousInf γ] :
+instance (priority := 100) ContinuousInf.hasMeasurableInf [Inf γ] [ContinuousInf γ] :
     HasMeasurableInf γ
     where
   measurable_const_inf c := (continuous_const.inf continuous_id).Measurable
   measurable_inf_const c := (continuous_id.inf continuous_const).Measurable
 #align has_continuous_inf.has_measurable_inf ContinuousInf.hasMeasurableInf
 
-instance (priority := 100) ContinuousInf.hasMeasurableInf₂ [SecondCountableTopology γ] [HasInf γ]
+instance (priority := 100) ContinuousInf.hasMeasurableInf₂ [SecondCountableTopology γ] [Inf γ]
     [ContinuousInf γ] : HasMeasurableInf₂ γ :=
   ⟨continuous_inf.Measurable⟩
 #align has_continuous_inf.has_measurable_inf₂ ContinuousInf.hasMeasurableInf₂

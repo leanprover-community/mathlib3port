@@ -522,13 +522,13 @@ open Filter
 
 open Filter
 
-protected theorem sup [HasSup β] [ContinuousSup β] (hf : StronglyMeasurable f)
+protected theorem sup [Sup β] [ContinuousSup β] (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable (f ⊔ g) :=
   ⟨fun n => hf.approx n ⊔ hg.approx n, fun x =>
     (hf.tendsto_approx x).sup_right_nhds (hg.tendsto_approx x)⟩
 #align measure_theory.strongly_measurable.sup MeasureTheory.StronglyMeasurable.sup
 
-protected theorem inf [HasInf β] [ContinuousInf β] (hf : StronglyMeasurable f)
+protected theorem inf [Inf β] [ContinuousInf β] (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable (f ⊓ g) :=
   ⟨fun n => hf.approx n ⊓ hg.approx n, fun x =>
     (hf.tendsto_approx x).inf_right_nhds (hg.tendsto_approx x)⟩

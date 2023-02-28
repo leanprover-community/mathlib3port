@@ -37,14 +37,14 @@ open MeasureTheory
 
 /-- We say that a type `has_measurable_sup` if `((⊔) c)` and `(⊔ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (⊔)` see `has_measurable_sup₂`. -/
-class HasMeasurableSup (M : Type _) [MeasurableSpace M] [HasSup M] : Prop where
+class HasMeasurableSup (M : Type _) [MeasurableSpace M] [Sup M] : Prop where
   measurable_const_sup : ∀ c : M, Measurable ((· ⊔ ·) c)
   measurable_sup_const : ∀ c : M, Measurable (· ⊔ c)
 #align has_measurable_sup HasMeasurableSup
 
 /-- We say that a type `has_measurable_sup₂` if `uncurry (⊔)` is a measurable functions.
 For a typeclass assuming measurability of `((⊔) c)` and `(⊔ c)` see `has_measurable_sup`. -/
-class HasMeasurableSup₂ (M : Type _) [MeasurableSpace M] [HasSup M] : Prop where
+class HasMeasurableSup₂ (M : Type _) [MeasurableSpace M] [Sup M] : Prop where
   measurable_sup : Measurable fun p : M × M => p.1 ⊔ p.2
 #align has_measurable_sup₂ HasMeasurableSup₂
 
@@ -54,14 +54,14 @@ export HasMeasurableSup (measurable_const_sup measurable_sup_const)
 
 /-- We say that a type `has_measurable_inf` if `((⊓) c)` and `(⊓ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (⊓)` see `has_measurable_inf₂`. -/
-class HasMeasurableInf (M : Type _) [MeasurableSpace M] [HasInf M] : Prop where
+class HasMeasurableInf (M : Type _) [MeasurableSpace M] [Inf M] : Prop where
   measurable_const_inf : ∀ c : M, Measurable ((· ⊓ ·) c)
   measurable_inf_const : ∀ c : M, Measurable (· ⊓ c)
 #align has_measurable_inf HasMeasurableInf
 
 /-- We say that a type `has_measurable_inf₂` if `uncurry (⊔)` is a measurable functions.
 For a typeclass assuming measurability of `((⊔) c)` and `(⊔ c)` see `has_measurable_inf`. -/
-class HasMeasurableInf₂ (M : Type _) [MeasurableSpace M] [HasInf M] : Prop where
+class HasMeasurableInf₂ (M : Type _) [MeasurableSpace M] [Inf M] : Prop where
   measurable_inf : Measurable fun p : M × M => p.1 ⊓ p.2
 #align has_measurable_inf₂ HasMeasurableInf₂
 
@@ -73,16 +73,16 @@ variable {M : Type _} [MeasurableSpace M]
 
 section OrderDual
 
-instance (priority := 100) [HasInf M] [HasMeasurableInf M] : HasMeasurableSup Mᵒᵈ :=
+instance (priority := 100) [Inf M] [HasMeasurableInf M] : HasMeasurableSup Mᵒᵈ :=
   ⟨@measurable_const_inf M _ _ _, @measurable_inf_const M _ _ _⟩
 
-instance (priority := 100) [HasSup M] [HasMeasurableSup M] : HasMeasurableInf Mᵒᵈ :=
+instance (priority := 100) [Sup M] [HasMeasurableSup M] : HasMeasurableInf Mᵒᵈ :=
   ⟨@measurable_const_sup M _ _ _, @measurable_sup_const M _ _ _⟩
 
-instance (priority := 100) [HasInf M] [HasMeasurableInf₂ M] : HasMeasurableSup₂ Mᵒᵈ :=
+instance (priority := 100) [Inf M] [HasMeasurableInf₂ M] : HasMeasurableSup₂ Mᵒᵈ :=
   ⟨@measurable_inf M _ _ _⟩
 
-instance (priority := 100) [HasSup M] [HasMeasurableSup₂ M] : HasMeasurableInf₂ Mᵒᵈ :=
+instance (priority := 100) [Sup M] [HasMeasurableSup₂ M] : HasMeasurableInf₂ Mᵒᵈ :=
   ⟨@measurable_sup M _ _ _⟩
 
 end OrderDual
@@ -93,7 +93,7 @@ include m
 
 section Sup
 
-variable [HasSup M]
+variable [Sup M]
 
 section MeasurableSup
 
@@ -161,7 +161,7 @@ end Sup
 
 section Inf
 
-variable [HasInf M]
+variable [Inf M]
 
 section MeasurableInf
 

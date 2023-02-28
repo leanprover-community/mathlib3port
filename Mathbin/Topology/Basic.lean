@@ -1766,9 +1766,9 @@ def ClusterPt (x : α) (F : Filter α) : Prop :=
 
 /- warning: cluster_pt.ne_bot -> ClusterPt.neBot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {F : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x F) -> (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) F))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {F : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x F) -> (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 x) F))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {F : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x F) -> (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) F))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {F : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x F) -> (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 x) F))
 Case conversion may be inaccurate. Consider using '#align cluster_pt.ne_bot ClusterPt.neBotₓ'. -/
 theorem ClusterPt.neBot {x : α} {F : Filter α} (h : ClusterPt x F) : NeBot (𝓝 x ⊓ F) :=
   h
@@ -1859,9 +1859,9 @@ theorem ClusterPt.mono {x : α} {f g : Filter α} (H : ClusterPt x f) (h : f ≤
 
 /- warning: cluster_pt.of_inf_left -> ClusterPt.of_inf_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x f)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x f)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x f)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x f)
 Case conversion may be inaccurate. Consider using '#align cluster_pt.of_inf_left ClusterPt.of_inf_leftₓ'. -/
 theorem ClusterPt.of_inf_left {x : α} {f g : Filter α} (H : ClusterPt x <| f ⊓ g) : ClusterPt x f :=
   H.mono inf_le_left
@@ -1869,9 +1869,9 @@ theorem ClusterPt.of_inf_left {x : α} {f g : Filter α} (H : ClusterPt x <| f �
 
 /- warning: cluster_pt.of_inf_right -> ClusterPt.of_inf_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x g)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x g)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x g)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Filter.{u1} α} {g : Filter.{u1} α}, (ClusterPt.{u1} α _inst_1 x (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) -> (ClusterPt.{u1} α _inst_1 x g)
 Case conversion may be inaccurate. Consider using '#align cluster_pt.of_inf_right ClusterPt.of_inf_rightₓ'. -/
 theorem ClusterPt.of_inf_right {x : α} {f g : Filter α} (H : ClusterPt x <| f ⊓ g) :
     ClusterPt x g :=
@@ -1936,9 +1936,9 @@ def AccPt (x : α) (F : Filter α) : Prop :=
 
 /- warning: acc_iff_cluster -> acc_iff_cluster is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (x : α) (F : Filter.{u1} α), Iff (AccPt.{u1} α _inst_1 x F) (ClusterPt.{u1} α _inst_1 x (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))) F))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (x : α) (F : Filter.{u1} α), Iff (AccPt.{u1} α _inst_1 x F) (ClusterPt.{u1} α _inst_1 x (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))) F))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (x : α) (F : Filter.{u1} α), Iff (AccPt.{u1} α _inst_1 x F) (ClusterPt.{u1} α _inst_1 x (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))) F))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (x : α) (F : Filter.{u1} α), Iff (AccPt.{u1} α _inst_1 x F) (ClusterPt.{u1} α _inst_1 x (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))) F))
 Case conversion may be inaccurate. Consider using '#align acc_iff_cluster acc_iff_clusterₓ'. -/
 theorem acc_iff_cluster (x : α) (F : Filter α) : AccPt x F ↔ ClusterPt x (𝓟 ({x}ᶜ) ⊓ F) := by
   rw [AccPt, nhdsWithin, ClusterPt, inf_assoc]
@@ -2144,9 +2144,9 @@ theorem mem_closure_iff_clusterPt {s : Set α} {a : α} : a ∈ closure s ↔ Cl
 
 /- warning: mem_closure_iff_nhds_ne_bot -> mem_closure_iff_nhds_neBot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α _inst_1 s)) (Ne.{succ u1} (Filter.{u1} α) (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 a) (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
+  forall {α : Type.{u1}} {a : α} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (closure.{u1} α _inst_1 s)) (Ne.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhds.{u1} α _inst_1 a) (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
 but is expected to have type
-  forall {α : Type.{u1}} {a : α} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α _inst_1 s)) (Ne.{succ u1} (Filter.{u1} α) (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (nhds.{u1} α _inst_1 a) (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
+  forall {α : Type.{u1}} {a : α} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (closure.{u1} α _inst_1 s)) (Ne.{succ u1} (Filter.{u1} α) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhds.{u1} α _inst_1 a) (Filter.principal.{u1} α s)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
 Case conversion may be inaccurate. Consider using '#align mem_closure_iff_nhds_ne_bot mem_closure_iff_nhds_neBotₓ'. -/
 theorem mem_closure_iff_nhds_neBot {s : Set α} : a ∈ closure s ↔ 𝓝 a ⊓ 𝓟 s ≠ ⊥ :=
   mem_closure_iff_clusterPt.trans neBot_iff
@@ -2462,9 +2462,9 @@ theorem mem_closure_of_tendsto {f : β → α} {b : Filter β} {a : α} {s : Set
 
 /- warning: tendsto_inf_principal_nhds_iff_of_forall_eq -> tendsto_inf_principal_nhds_iff_of_forall_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {f : β -> α} {l : Filter.{u2} β} {s : Set.{u2} β} {a : α}, (forall (x : β), (Not (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s)) -> (Eq.{succ u1} α (f x) a)) -> (Iff (Filter.Tendsto.{u2, u1} β α f (HasInf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) l (Filter.principal.{u2} β s)) (nhds.{u1} α _inst_1 a)) (Filter.Tendsto.{u2, u1} β α f l (nhds.{u1} α _inst_1 a)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {f : β -> α} {l : Filter.{u2} β} {s : Set.{u2} β} {a : α}, (forall (x : β), (Not (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s)) -> (Eq.{succ u1} α (f x) a)) -> (Iff (Filter.Tendsto.{u2, u1} β α f (Inf.inf.{u2} (Filter.{u2} β) (Filter.hasInf.{u2} β) l (Filter.principal.{u2} β s)) (nhds.{u1} α _inst_1 a)) (Filter.Tendsto.{u2, u1} β α f l (nhds.{u1} α _inst_1 a)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {f : β -> α} {l : Filter.{u2} β} {s : Set.{u2} β} {a : α}, (forall (x : β), (Not (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s)) -> (Eq.{succ u1} α (f x) a)) -> (Iff (Filter.Tendsto.{u2, u1} β α f (HasInf.inf.{u2} (Filter.{u2} β) (Filter.instHasInfFilter.{u2} β) l (Filter.principal.{u2} β s)) (nhds.{u1} α _inst_1 a)) (Filter.Tendsto.{u2, u1} β α f l (nhds.{u1} α _inst_1 a)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] {f : β -> α} {l : Filter.{u2} β} {s : Set.{u2} β} {a : α}, (forall (x : β), (Not (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s)) -> (Eq.{succ u1} α (f x) a)) -> (Iff (Filter.Tendsto.{u2, u1} β α f (Inf.inf.{u2} (Filter.{u2} β) (Filter.instInfFilter.{u2} β) l (Filter.principal.{u2} β s)) (nhds.{u1} α _inst_1 a)) (Filter.Tendsto.{u2, u1} β α f l (nhds.{u1} α _inst_1 a)))
 Case conversion may be inaccurate. Consider using '#align tendsto_inf_principal_nhds_iff_of_forall_eq tendsto_inf_principal_nhds_iff_of_forall_eqₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /-- Suppose that `f` sends the complement to `s` to a single point `a`, and `l` is some filter.
