@@ -494,8 +494,8 @@ theorem concatRec_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
   trans concat_rec_aux (@Hnil) (@Hconcat) (cons h.symm p.reverse)
   · congr
     simp
-  · rw [concat_rec_aux, ndrec_hEq_iff_hEq]
-    congr <;> simp [hEq_ndrec_iff_hEq]
+  · rw [concat_rec_aux, rec_heq_iff_heq]
+    congr <;> simp [heq_rec_iff_heq]
 #align simple_graph.walk.concat_rec_concat SimpleGraph.Walk.concatRec_concat
 
 end ConcatRec

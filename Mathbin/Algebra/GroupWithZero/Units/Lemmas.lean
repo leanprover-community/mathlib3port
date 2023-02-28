@@ -424,6 +424,12 @@ theorem div_div_cancel' (ha : a ≠ 0) : a / (a / b) = b :=
   ha.IsUnit.div_div_cancel
 #align div_div_cancel' div_div_cancel'
 
+/- warning: div_div_cancel_left' -> div_div_cancel_left' is a dubious translation:
+lean 3 declaration is
+  forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (OfNat.mk.{u1} G₀ 0 (Zero.zero.{u1} G₀ (MulZeroClass.toHasZero.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2))))))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (DivInvMonoid.toHasDiv.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (DivInvMonoid.toHasDiv.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))) a b) a) (Inv.inv.{u1} G₀ (DivInvMonoid.toHasInv.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2))) b))
+but is expected to have type
+  forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) a) (Inv.inv.{u1} G₀ (CommGroupWithZero.toInv.{u1} G₀ _inst_2) b))
+Case conversion may be inaccurate. Consider using '#align div_div_cancel_left' div_div_cancel_left'ₓ'. -/
 theorem div_div_cancel_left' (ha : a ≠ 0) : a / b / a = b⁻¹ :=
   ha.IsUnit.div_div_cancel_left
 #align div_div_cancel_left' div_div_cancel_left'

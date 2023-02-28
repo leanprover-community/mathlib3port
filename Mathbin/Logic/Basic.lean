@@ -1919,19 +1919,31 @@ theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast
 lean 3 declaration is
   forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} (e : Eq.{u1} α a b), (HEq.{u2} (C a) x β y) -> (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b e) β y)
 but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (e : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.ndrec.{u1, u2} α a C x β e) b y)
+  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (e : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.rec.{u1, u2} α a (fun (x._@.Mathlib.Logic.Basic._hyg.4253 : α) (h._@.Mathlib.Logic.Basic._hyg.4254 : Eq.{u2} α a x._@.Mathlib.Logic.Basic._hyg.4253) => C x._@.Mathlib.Logic.Basic._hyg.4253) x β e) b y)
 Case conversion may be inaccurate. Consider using '#align rec_heq_of_heq rec_heq_of_heqₓ'. -/
 theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (e : a = b) (h : HEq x y) :
     HEq (@Eq.ndrec α a C x b e) y := by subst e <;> exact h
 #align rec_heq_of_heq rec_heq_of_heq
 
-theorem ndrec_hEq_iff_hEq {β} {C : α → Sort _} {x : C a} {y : β} {e : a = b} :
+/- warning: rec_heq_iff_heq -> rec_heq_iff_heq is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} {e : Eq.{u1} α a b}, Iff (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b e) β y) (HEq.{u2} (C a) x β y)
+but is expected to have type
+  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} {e : Eq.{u2} α a β}, Iff (HEq.{u1} (C β) (Eq.rec.{u1, u2} α a (fun (x._@.Mathlib.Logic.Basic._hyg.4313 : α) (h._@.Mathlib.Logic.Basic._hyg.4314 : Eq.{u2} α a x._@.Mathlib.Logic.Basic._hyg.4313) => C x._@.Mathlib.Logic.Basic._hyg.4313) x β e) b y) (HEq.{u1} (C a) x b y)
+Case conversion may be inaccurate. Consider using '#align rec_heq_iff_heq rec_heq_iff_heqₓ'. -/
+theorem rec_heq_iff_heq {β} {C : α → Sort _} {x : C a} {y : β} {e : a = b} :
     HEq (@Eq.ndrec α a C x b e) y ↔ HEq x y := by subst e
-#align rec_heq_iff_heq ndrec_hEq_iff_hEq
+#align rec_heq_iff_heq rec_heq_iff_heq
 
-theorem hEq_ndrec_iff_hEq {β} {C : α → Sort _} {x : β} {y : C a} {e : a = b} :
+/- warning: heq_rec_iff_heq -> heq_rec_iff_heq is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : β} {y : C a} {e : Eq.{u1} α a b}, Iff (HEq.{u2} β x (C b) (Eq.ndrec.{u2, u1} α a C y b e)) (HEq.{u2} β x (C a) y)
+but is expected to have type
+  forall {α : Sort.{u2}} {a : Sort.{u1}} {b : α} {β : α} {C : α -> Sort.{u1}} {x : a} {y : C b} {e : Eq.{u2} α b β}, Iff (HEq.{u1} a x (C β) (Eq.rec.{u1, u2} α b (fun (x._@.Mathlib.Logic.Basic._hyg.4375 : α) (h._@.Mathlib.Logic.Basic._hyg.4376 : Eq.{u2} α b x._@.Mathlib.Logic.Basic._hyg.4375) => C x._@.Mathlib.Logic.Basic._hyg.4375) y β e)) (HEq.{u1} a x (C b) y)
+Case conversion may be inaccurate. Consider using '#align heq_rec_iff_heq heq_rec_iff_heqₓ'. -/
+theorem heq_rec_iff_heq {β} {C : α → Sort _} {x : β} {y : C a} {e : a = b} :
     HEq x (@Eq.ndrec α a C y b e) ↔ HEq x y := by subst e
-#align heq_rec_iff_heq hEq_ndrec_iff_hEq
+#align heq_rec_iff_heq heq_rec_iff_heq
 
 /- warning: eq.congr -> Eq.congr is a dubious translation:
 lean 3 declaration is
