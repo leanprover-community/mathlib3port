@@ -1476,13 +1476,13 @@ instance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=
   ⟨rfl⟩
 #align ennreal.borel_space ENNReal.borelSpace
 
-instance Ereal.measurableSpace : MeasurableSpace Ereal :=
-  borel Ereal
-#align ereal.measurable_space Ereal.measurableSpace
+instance EReal.measurableSpace : MeasurableSpace EReal :=
+  borel EReal
+#align ereal.measurable_space EReal.measurableSpace
 
-instance Ereal.borelSpace : BorelSpace Ereal :=
+instance EReal.borelSpace : BorelSpace EReal :=
   ⟨rfl⟩
-#align ereal.borel_space Ereal.borelSpace
+#align ereal.borel_space EReal.borelSpace
 
 instance Complex.measurableSpace : MeasurableSpace ℂ :=
   borel ℂ
@@ -2021,65 +2021,65 @@ theorem AeMeasurable.ennrealTsum {ι} [Countable ι] {f : ι → α → ℝ≥0�
 #align ae_measurable.ennreal_tsum AeMeasurable.ennrealTsum
 
 @[measurability]
-theorem measurable_coe_real_ereal : Measurable (coe : ℝ → Ereal) :=
-  continuous_coe_real_ereal.Measurable
-#align measurable_coe_real_ereal measurable_coe_real_ereal
+theorem measurable_coe_real_eReal : Measurable (coe : ℝ → EReal) :=
+  continuous_coe_real_eReal.Measurable
+#align measurable_coe_real_ereal measurable_coe_real_eReal
 
 @[measurability]
-theorem Measurable.coe_real_ereal {f : α → ℝ} (hf : Measurable f) :
-    Measurable fun x => (f x : Ereal) :=
-  measurable_coe_real_ereal.comp hf
-#align measurable.coe_real_ereal Measurable.coe_real_ereal
+theorem Measurable.coe_real_eReal {f : α → ℝ} (hf : Measurable f) :
+    Measurable fun x => (f x : EReal) :=
+  measurable_coe_real_eReal.comp hf
+#align measurable.coe_real_ereal Measurable.coe_real_eReal
 
 @[measurability]
 theorem AeMeasurable.coeRealEreal {f : α → ℝ} {μ : Measure α} (hf : AeMeasurable f μ) :
-    AeMeasurable (fun x => (f x : Ereal)) μ :=
-  measurable_coe_real_ereal.compAeMeasurable hf
+    AeMeasurable (fun x => (f x : EReal)) μ :=
+  measurable_coe_real_eReal.compAeMeasurable hf
 #align ae_measurable.coe_real_ereal AeMeasurable.coeRealEreal
 
 /-- The set of finite `ereal` numbers is `measurable_equiv` to `ℝ`. -/
-def MeasurableEquiv.erealEquivReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ᵐ ℝ :=
-  Ereal.neBotTopHomeomorphReal.toMeasurableEquiv
+def MeasurableEquiv.erealEquivReal : ({⊥, ⊤}ᶜ : Set EReal) ≃ᵐ ℝ :=
+  EReal.neBotTopHomeomorphReal.toMeasurableEquiv
 #align measurable_equiv.ereal_equiv_real MeasurableEquiv.erealEquivReal
 
-theorem Ereal.measurable_of_measurable_real {f : Ereal → α} (h : Measurable fun p : ℝ => f p) :
+theorem EReal.measurable_of_measurable_real {f : EReal → α} (h : Measurable fun p : ℝ => f p) :
     Measurable f :=
   measurable_of_measurable_on_compl_finite {⊥, ⊤} (by simp)
     (MeasurableEquiv.erealEquivReal.symm.measurable_comp_iff.1 h)
-#align ereal.measurable_of_measurable_real Ereal.measurable_of_measurable_real
+#align ereal.measurable_of_measurable_real EReal.measurable_of_measurable_real
 
 @[measurability]
-theorem measurable_ereal_toReal : Measurable Ereal.toReal :=
-  Ereal.measurable_of_measurable_real (by simpa using measurable_id)
-#align measurable_ereal_to_real measurable_ereal_toReal
+theorem measurable_eReal_toReal : Measurable EReal.toReal :=
+  EReal.measurable_of_measurable_real (by simpa using measurable_id)
+#align measurable_ereal_to_real measurable_eReal_toReal
 
 @[measurability]
-theorem Measurable.ereal_toReal {f : α → Ereal} (hf : Measurable f) :
+theorem Measurable.eReal_toReal {f : α → EReal} (hf : Measurable f) :
     Measurable fun x => (f x).toReal :=
-  measurable_ereal_toReal.comp hf
-#align measurable.ereal_to_real Measurable.ereal_toReal
+  measurable_eReal_toReal.comp hf
+#align measurable.ereal_to_real Measurable.eReal_toReal
 
 @[measurability]
-theorem AeMeasurable.erealToReal {f : α → Ereal} {μ : Measure α} (hf : AeMeasurable f μ) :
+theorem AeMeasurable.erealToReal {f : α → EReal} {μ : Measure α} (hf : AeMeasurable f μ) :
     AeMeasurable (fun x => (f x).toReal) μ :=
-  measurable_ereal_toReal.compAeMeasurable hf
+  measurable_eReal_toReal.compAeMeasurable hf
 #align ae_measurable.ereal_to_real AeMeasurable.erealToReal
 
 @[measurability]
-theorem measurable_coe_eNNReal_ereal : Measurable (coe : ℝ≥0∞ → Ereal) :=
-  continuous_coe_eNNReal_ereal.Measurable
-#align measurable_coe_ennreal_ereal measurable_coe_eNNReal_ereal
+theorem measurable_coe_eNNReal_eReal : Measurable (coe : ℝ≥0∞ → EReal) :=
+  continuous_coe_eNNReal_eReal.Measurable
+#align measurable_coe_ennreal_ereal measurable_coe_eNNReal_eReal
 
 @[measurability]
-theorem Measurable.coe_ereal_eNNReal {f : α → ℝ≥0∞} (hf : Measurable f) :
-    Measurable fun x => (f x : Ereal) :=
-  measurable_coe_eNNReal_ereal.comp hf
-#align measurable.coe_ereal_ennreal Measurable.coe_ereal_eNNReal
+theorem Measurable.coe_eReal_eNNReal {f : α → ℝ≥0∞} (hf : Measurable f) :
+    Measurable fun x => (f x : EReal) :=
+  measurable_coe_eNNReal_eReal.comp hf
+#align measurable.coe_ereal_ennreal Measurable.coe_eReal_eNNReal
 
 @[measurability]
 theorem AeMeasurable.coeErealEnnreal {f : α → ℝ≥0∞} {μ : Measure α} (hf : AeMeasurable f μ) :
-    AeMeasurable (fun x => (f x : Ereal)) μ :=
-  measurable_coe_eNNReal_ereal.compAeMeasurable hf
+    AeMeasurable (fun x => (f x : EReal)) μ :=
+  measurable_coe_eNNReal_eReal.compAeMeasurable hf
 #align ae_measurable.coe_ereal_ennreal AeMeasurable.coeErealEnnreal
 
 section NormedAddCommGroup

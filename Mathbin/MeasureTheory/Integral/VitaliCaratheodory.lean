@@ -486,11 +486,11 @@ integrable function `g > f` which is lower semicontinuous, with integral arbitra
 to that of `f`. This function has to be `ereal`-valued in general. -/
 theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → ℝ) (hf : Integrable f μ)
     {ε : ℝ} (εpos : 0 < ε) :
-    ∃ g : α → Ereal,
-      (∀ x, (f x : Ereal) < g x) ∧
+    ∃ g : α → EReal,
+      (∀ x, (f x : EReal) < g x) ∧
         LowerSemicontinuous g ∧
-          Integrable (fun x => Ereal.toReal (g x)) μ ∧
-            (∀ᵐ x ∂μ, g x < ⊤) ∧ (∫ x, Ereal.toReal (g x) ∂μ) < (∫ x, f x ∂μ) + ε :=
+          Integrable (fun x => EReal.toReal (g x)) μ ∧
+            (∀ᵐ x ∂μ, g x < ⊤) ∧ (∫ x, EReal.toReal (g x) ∂μ) < (∫ x, f x ∂μ) + ε :=
   by
   let δ : ℝ≥0 := ⟨ε / 2, (half_pos εpos).le⟩
   have δpos : 0 < δ := half_pos εpos
@@ -502,13 +502,13 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
   have int_fm : integrable (fun x => (fm x : ℝ)) μ := hf.neg.real_to_nnreal
   rcases exists_upper_semicontinuous_le_integral_le fm int_fm δpos with
     ⟨gm, gm_le_fm, gmcont, gm_integrable, gmint⟩
-  let g : α → Ereal := fun x => (gp x : Ereal) - gm x
-  have ae_g : ∀ᵐ x ∂μ, (g x).toReal = (gp x : Ereal).toReal - (gm x : Ereal).toReal :=
+  let g : α → EReal := fun x => (gp x : EReal) - gm x
+  have ae_g : ∀ᵐ x ∂μ, (g x).toReal = (gp x : EReal).toReal - (gm x : EReal).toReal :=
     by
     filter_upwards [gp_lt_top]with _ hx
-    rw [Ereal.toReal_sub] <;> simp [hx.ne]
+    rw [EReal.toReal_sub] <;> simp [hx.ne]
   refine' ⟨g, _, _, _, _, _⟩
-  show integrable (fun x => Ereal.toReal (g x)) μ
+  show integrable (fun x => EReal.toReal (g x)) μ
   · rw [integrable_congr ae_g]
     convert gp_integrable.sub gm_integrable
     ext x
@@ -516,17 +516,17 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
   show (∫ x : α, (g x).toReal ∂μ) < (∫ x : α, f x ∂μ) + ε
   exact
     calc
-      (∫ x : α, (g x).toReal ∂μ) = ∫ x : α, Ereal.toReal (gp x) - Ereal.toReal (gm x) ∂μ :=
+      (∫ x : α, (g x).toReal ∂μ) = ∫ x : α, EReal.toReal (gp x) - EReal.toReal (gm x) ∂μ :=
         integral_congr_ae ae_g
-      _ = (∫ x : α, Ereal.toReal (gp x) ∂μ) - ∫ x : α, gm x ∂μ :=
+      _ = (∫ x : α, EReal.toReal (gp x) ∂μ) - ∫ x : α, gm x ∂μ :=
         by
-        simp only [Ereal.toReal_coe_eNNReal, ENNReal.coe_toReal, coe_coe]
+        simp only [EReal.toReal_coe_ennreal, ENNReal.coe_toReal, coe_coe]
         exact integral_sub gp_integrable gm_integrable
       _ < (∫ x : α, ↑(fp x) ∂μ) + ↑δ - ∫ x : α, gm x ∂μ :=
         by
         apply sub_lt_sub_right
         convert gpint
-        simp only [Ereal.toReal_coe_eNNReal]
+        simp only [EReal.toReal_coe_ennreal]
       _ ≤ (∫ x : α, ↑(fp x) ∂μ) + ↑δ - ((∫ x : α, fm x ∂μ) - δ) := sub_le_sub_left gmint _
       _ = (∫ x : α, f x ∂μ) + 2 * δ :=
         by
@@ -538,37 +538,37 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
       
   show ∀ᵐ x : α ∂μ, g x < ⊤
   · filter_upwards [gp_lt_top]with _ hx
-    simp only [g, sub_eq_add_neg, coe_coe, Ne.def, (Ereal.add_lt_top _ _).Ne, lt_top_iff_ne_top,
-      lt_top_iff_ne_top.1 hx, Ereal.coe_eNNReal_eq_top_iff, not_false_iff, Ereal.neg_eq_top_iff,
-      Ereal.coe_eNNReal_ne_bot]
-  show ∀ x, (f x : Ereal) < g x
+    simp only [g, sub_eq_add_neg, coe_coe, Ne.def, (EReal.add_lt_top _ _).Ne, lt_top_iff_ne_top,
+      lt_top_iff_ne_top.1 hx, EReal.coe_ennreal_eq_top_iff, not_false_iff, EReal.neg_eq_top_iff,
+      EReal.coe_ennreal_ne_bot]
+  show ∀ x, (f x : EReal) < g x
   · intro x
-    rw [Ereal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (f x)]
-    refine' Ereal.sub_lt_sub_of_lt_of_le _ _ _ _
-    · simp only [Ereal.coe_eNNReal_lt_coe_eNNReal_iff, coe_coe]
+    rw [EReal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (f x)]
+    refine' EReal.sub_lt_sub_of_lt_of_le _ _ _ _
+    · simp only [EReal.coe_ennreal_lt_coe_ennreal_iff, coe_coe]
       exact fp_lt_gp x
-    · simp only [ENNReal.coe_le_coe, Ereal.coe_eNNReal_le_coe_eNNReal_iff, coe_coe]
+    · simp only [ENNReal.coe_le_coe, EReal.coe_ennreal_le_coe_ennreal_iff, coe_coe]
       exact gm_le_fm x
-    · simp only [Ereal.coe_eNNReal_ne_bot, Ne.def, not_false_iff, coe_coe]
-    · simp only [Ereal.coe_nNReal_ne_top, Ne.def, not_false_iff, coe_coe]
+    · simp only [EReal.coe_ennreal_ne_bot, Ne.def, not_false_iff, coe_coe]
+    · simp only [EReal.coe_nnreal_ne_top, Ne.def, not_false_iff, coe_coe]
   show LowerSemicontinuous g
   · apply LowerSemicontinuous.add'
     ·
       exact
         continuous_coe_ennreal_ereal.comp_lower_semicontinuous gpcont fun x y hxy =>
-          Ereal.coe_eNNReal_le_coe_eNNReal_iff.2 hxy
+          EReal.coe_ennreal_le_coe_ennreal_iff.2 hxy
     · apply
         ereal.continuous_neg.comp_upper_semicontinuous_antitone _ fun x y hxy =>
-          Ereal.neg_le_neg_iff.2 hxy
+          EReal.neg_le_neg_iff.2 hxy
       dsimp
       apply
         continuous_coe_ennreal_ereal.comp_upper_semicontinuous _ fun x y hxy =>
-          Ereal.coe_eNNReal_le_coe_eNNReal_iff.2 hxy
+          EReal.coe_ennreal_le_coe_ennreal_iff.2 hxy
       exact
         ennreal.continuous_coe.comp_upper_semicontinuous gmcont fun x y hxy =>
           ENNReal.coe_le_coe.2 hxy
     · intro x
-      exact Ereal.continuousAt_add (by simp) (by simp)
+      exact EReal.continuousAt_add (by simp) (by simp)
 #align measure_theory.exists_lt_lower_semicontinuous_integral_lt MeasureTheory.exists_lt_lowerSemicontinuous_integral_lt
 
 /-- **Vitali-Carathéodory Theorem**: given an integrable real function `f`, there exists an
@@ -576,20 +576,20 @@ integrable function `g < f` which is upper semicontinuous, with integral arbitra
 of `f`. This function has to be `ereal`-valued in general. -/
 theorem exists_upperSemicontinuous_lt_integral_gt [SigmaFinite μ] (f : α → ℝ) (hf : Integrable f μ)
     {ε : ℝ} (εpos : 0 < ε) :
-    ∃ g : α → Ereal,
-      (∀ x, (g x : Ereal) < f x) ∧
+    ∃ g : α → EReal,
+      (∀ x, (g x : EReal) < f x) ∧
         UpperSemicontinuous g ∧
-          Integrable (fun x => Ereal.toReal (g x)) μ ∧
-            (∀ᵐ x ∂μ, ⊥ < g x) ∧ (∫ x, f x ∂μ) < (∫ x, Ereal.toReal (g x) ∂μ) + ε :=
+          Integrable (fun x => EReal.toReal (g x)) μ ∧
+            (∀ᵐ x ∂μ, ⊥ < g x) ∧ (∫ x, f x ∂μ) < (∫ x, EReal.toReal (g x) ∂μ) + ε :=
   by
   rcases exists_lt_lower_semicontinuous_integral_lt (fun x => -f x) hf.neg εpos with
     ⟨g, g_lt_f, gcont, g_integrable, g_lt_top, gint⟩
   refine' ⟨fun x => -g x, _, _, _, _, _⟩
-  · exact fun x => Ereal.neg_lt_iff_neg_lt.1 (by simpa only [Ereal.coe_neg] using g_lt_f x)
+  · exact fun x => EReal.neg_lt_iff_neg_lt.1 (by simpa only [EReal.coe_neg] using g_lt_f x)
   ·
     exact
       ereal.continuous_neg.comp_lower_semicontinuous_antitone gcont fun x y hxy =>
-        Ereal.neg_le_neg_iff.2 hxy
+        EReal.neg_le_neg_iff.2 hxy
   · convert g_integrable.neg
     ext x
     simp

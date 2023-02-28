@@ -2569,13 +2569,13 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
     apply
       s_closed.Icc_subset_of_forall_exists_gt
         (by simp only [integral_same, mem_set_of_eq, sub_self]) fun t ht v t_lt_v => _
-    obtain ⟨y, g'_lt_y', y_lt_G'⟩ : ∃ y : ℝ, (g' t : Ereal) < y ∧ (y : Ereal) < G' t :=
-      Ereal.lt_iff_exists_real_btwn.1 ((Ereal.coe_le_coe_iff.2 (hφg t ht.2)).trans_lt (f_lt_G' t))
+    obtain ⟨y, g'_lt_y', y_lt_G'⟩ : ∃ y : ℝ, (g' t : EReal) < y ∧ (y : EReal) < G' t :=
+      EReal.lt_iff_exists_real_btwn.1 ((EReal.coe_le_coe_iff.2 (hφg t ht.2)).trans_lt (f_lt_G' t))
     -- bound from below the increase of `∫ x in a..u, G' x` on the right of `t`, using the lower
     -- semicontinuity of `G'`.
     have I1 : ∀ᶠ u in 𝓝[>] t, (u - t) * y ≤ ∫ w in t..u, (G' w).toReal :=
       by
-      have B : ∀ᶠ u in 𝓝 t, (y : Ereal) < G' u := G'cont.lower_semicontinuous_at _ _ y_lt_G'
+      have B : ∀ᶠ u in 𝓝 t, (y : EReal) < G' u := G'cont.lower_semicontinuous_at _ _ y_lt_G'
       rcases mem_nhds_iff_exists_Ioo_subset.1 B with ⟨m, M, ⟨hm, hM⟩, H⟩
       have : Ioo t (min M b) ∈ 𝓝[>] t :=
         mem_nhdsWithin_Ioi_iff_exists_Ioo_subset.2
@@ -2599,17 +2599,17 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
             have C2 : ∀ᵐ x : ℝ ∂volume.restrict (Icc t u), x ∈ Icc t u :=
               ae_restrict_mem measurableSet_Icc
             filter_upwards [C1, C2]with x G'x hx
-            apply Ereal.coe_le_coe_iff.1
+            apply EReal.coe_le_coe_iff.1
             have : x ∈ Ioo m M := by
               simp only [hm.trans_le hx.left,
                 (hx.right.trans_lt hu.right).trans_le (min_le_left M b), mem_Ioo, and_self_iff]
             convert le_of_lt (H this)
-            exact Ereal.coe_toReal G'x.ne (ne_bot_of_gt (f_lt_G' x))
+            exact EReal.coe_toReal G'x.ne (ne_bot_of_gt (f_lt_G' x))
         
     -- bound from above the increase of `g u - g a` on the right of `t`, using the derivative at `t`
     have I2 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ (u - t) * y :=
       by
-      have g'_lt_y : g' t < y := Ereal.coe_lt_coe_iff.1 g'_lt_y'
+      have g'_lt_y : g' t < y := EReal.coe_lt_coe_iff.1 g'_lt_y'
       filter_upwards [(hderiv t ⟨ht.2.1, ht.2.2⟩).limsup_slope_le' (not_mem_Ioi.2 le_rfl) g'_lt_y,
         self_mem_nhdsWithin]with u hu t_lt_u
       have := mul_le_mul_of_nonneg_left hu.le (sub_pos.2 t_lt_u).le
