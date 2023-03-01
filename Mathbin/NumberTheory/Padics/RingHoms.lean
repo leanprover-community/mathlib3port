@@ -104,7 +104,7 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : �
   have key : ‖(r.num : ℚ_[p])‖ < 1 := by
     calc
       _ = _ := hr.symm
-      _ < 1 * 1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one
+      _ < 1 * 1 := (mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one)
       _ = 1 := mul_one 1
       
   have : ↑p ∣ r.num ∧ (p : ℤ) ∣ r.denom :=
@@ -197,7 +197,7 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
     rw [norm_sub_rev] at hr
     calc
       _ = ‖(r : ℚ_[p]) - x + x‖ := by ring_nf
-      _ ≤ _ := padicNormE.nonarchimedean _ _
+      _ ≤ _ := (padicNormE.nonarchimedean _ _)
       _ ≤ _ := max_le (le_of_lt hr) x.2
       
   obtain ⟨n, hzn, hnp, hn⟩ := exists_mem_range_of_norm_rat_le_one r H

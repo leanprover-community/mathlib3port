@@ -641,7 +641,7 @@ variable {R M ι : Type _}
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M] [DecidableEq ι]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 -- TODO: In Lean 4 we can remove this and use `by { intros; exact Set.toFinite _ }` as a default
 -- argument.
 /-- Try using `set.to_finite` to dispatch a `set.finite` goal. -/
@@ -649,7 +649,7 @@ unsafe def use_finite_instance : tactic Unit :=
   sorry
 #align use_finite_instance use_finite_instance
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic use_finite_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic use_finite_instance -/
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
 @[nolint has_nonempty_instance]
 structure Module.DualBases (e : ι → M) (ε : ι → Dual R M) : Prop where

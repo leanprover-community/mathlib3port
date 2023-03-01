@@ -172,7 +172,7 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
     simp only [mem_set_of_eq, lt_top_iff_ne_top]
 #align ennreal.lt_top_homeomorph_nnreal ENNReal.ltTopHomeomorphNnreal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ennreal.nhds_top ENNReal.nhds_top
@@ -219,7 +219,7 @@ theorem tendsto_ofReal_atTop : Tendsto ENNReal.ofReal atTop (𝓝 ∞) :=
   tendsto_coe_nhds_top.2 tendsto_real_toNNReal_atTop
 #align ennreal.tendsto_of_real_at_top ENNReal.tendsto_ofReal_atTop
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]
 #align ennreal.nhds_zero ENNReal.nhds_zero
@@ -784,7 +784,7 @@ end TopologicalSpace
 
 section Liminf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hx : liminf (fun n => (‖x n‖₊ : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, x n < R :=
   by
@@ -802,7 +802,7 @@ theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x :
   filter_upwards [h r]with i hi using hi.trans ((coe_nnnorm (x i)).symm ▸ le_abs_self (x i))
 #align ennreal.exists_frequently_lt_of_liminf_ne_top ENNReal.exists_frequently_lt_of_liminf_ne_top
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hx : liminf (fun n => (‖x n‖₊ : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, R < x n :=
   by
@@ -1140,7 +1140,7 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
       apply tsum_congr_subtype
       rw [union_diff_self]
     _ = (∑' x : s, f x) + ∑' x : t \ s, f x :=
-      tsum_union_disjoint disjoint_sdiff_self_right ENNReal.summable ENNReal.summable
+      (tsum_union_disjoint disjoint_sdiff_self_right ENNReal.summable ENNReal.summable)
     _ ≤ (∑' x : s, f x) + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
     
 #align ennreal.tsum_union_le ENNReal.tsum_union_le
@@ -1155,7 +1155,7 @@ theorem tsum_bUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t 
     calc
       (∑' x : t i ∪ ⋃ j ∈ s, t j, f x) ≤ (∑' x : t i, f x) + ∑' x : ⋃ j ∈ s, t j, f x :=
         tsum_union_le _ _ _
-      _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := add_le_add le_rfl ihs
+      _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := (add_le_add le_rfl ihs)
       _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
       
 #align ennreal.tsum_bUnion_le ENNReal.tsum_bUnion_le
@@ -1692,13 +1692,13 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
       · rw [edist_comm] at hy
         calc
           f x ≤ f y + C * edist x y := h x y
-          _ ≤ f y + C * (ε / C) := add_le_add_left (mul_le_mul_left' hy C) (f y)
+          _ ≤ f y + C * (ε / C) := (add_le_add_left (mul_le_mul_left' hy C) (f y))
           _ = f y + ε := by rw [hεC]
           
       ·
         calc
           f y ≤ f x + C * edist y x := h y x
-          _ ≤ f x + C * (ε / C) := add_le_add_left (mul_le_mul_left' hy C) (f x)
+          _ ≤ f x + C * (ε / C) := (add_le_add_left (mul_le_mul_left' hy C) (f x))
           _ = f x + ε := by rw [hεC]
           
 #align continuous_of_le_add_edist continuous_of_le_add_edist
@@ -1711,7 +1711,7 @@ theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 :=
     edist x y ≤ edist x x' + edist x' y' + edist y' y := edist_triangle4 _ _ _ _
     _ = edist x' y' + (edist x x' + edist y y') := by simp [edist_comm] <;> cc
     _ ≤ edist x' y' + (edist (x, y) (x', y') + edist (x, y) (x', y')) :=
-      add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _
+      (add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _)
     _ = edist x' y' + 2 * edist (x, y) (x', y') := by rw [← mul_two, mul_comm]
     
 #align continuous_edist continuous_edist

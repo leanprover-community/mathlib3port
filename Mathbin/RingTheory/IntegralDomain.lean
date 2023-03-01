@@ -75,7 +75,7 @@ theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [Is
     dvd_add (dvd_mul_of_dvd_right (gcd_dvd_left _ _) _) (dvd_mul_of_dvd_right (gcd_dvd_right _ _) _)
 #align exists_eq_pow_of_mul_eq_pow_of_coprime exists_eq_pow_of_mul_eq_pow_of_coprime
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemiring R] [IsDomain R]
     [GCDMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
     (h : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → IsCoprime (f i) (f j))
@@ -237,15 +237,15 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
       _ =
           ∑ u : Rˣ in univ.image f.to_hom_units,
             (univ.filter fun g => f.to_hom_units g = u).card • u :=
-        sum_comp (coe : Rˣ → R) f.to_hom_units
+        (sum_comp (coe : Rˣ → R) f.to_hom_units)
       _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u :=
-        sum_congr rfl fun u hu => congr_arg₂ _ _ rfl
+        (sum_congr rfl fun u hu => congr_arg₂ _ _ rfl)
       -- remaining goal 1, proven below
           _ =
           ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
-        Finset.sum_subtype _ (by simp) _
+        (Finset.sum_subtype _ (by simp) _)
       _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) := smul_sum.symm
-      _ = c • 0 := congr_arg₂ _ rfl _
+      _ = c • 0 := (congr_arg₂ _ rfl _)
       -- remaining goal 2, proven below
           _ =
           0 :=

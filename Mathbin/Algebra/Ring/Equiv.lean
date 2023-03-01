@@ -396,16 +396,16 @@ protected def symm (e : R ≃+* S) : S ≃+* R :=
   { e.toMulEquiv.symm, e.toAddEquiv.symm with }
 #align ring_equiv.symm RingEquiv.symm
 
-/- warning: ring_equiv.simps.symm_apply -> RingEquiv.Simps.symmApply is a dubious translation:
+/- warning: ring_equiv.simps.symm_apply -> RingEquiv.Simps.symm_apply is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Mul.{u1} R] [_inst_2 : Add.{u1} R] [_inst_3 : Mul.{u2} S] [_inst_4 : Add.{u2} S], (RingEquiv.{u1, u2} R S _inst_1 _inst_2 _inst_3 _inst_4) -> S -> R
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Mul.{u1} R] [_inst_2 : Mul.{u2} S] [_inst_3 : Add.{u1} R] [_inst_4 : Add.{u2} S], (RingEquiv.{u1, u2} R S _inst_1 _inst_2 _inst_3 _inst_4) -> S -> R
-Case conversion may be inaccurate. Consider using '#align ring_equiv.simps.symm_apply RingEquiv.Simps.symmApplyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align ring_equiv.simps.symm_apply RingEquiv.Simps.symm_applyₓ'. -/
 /-- See Note [custom simps projection] -/
-def Simps.symmApply (e : R ≃+* S) : S → R :=
+def Simps.symm_apply (e : R ≃+* S) : S → R :=
   e.symm
-#align ring_equiv.simps.symm_apply RingEquiv.Simps.symmApply
+#align ring_equiv.simps.symm_apply RingEquiv.Simps.symm_apply
 
 initialize_simps_projections RingEquiv (toFun → apply, invFun → symm_apply)
 

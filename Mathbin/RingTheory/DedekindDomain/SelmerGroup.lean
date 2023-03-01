@@ -169,7 +169,7 @@ end HeightOneSpectrum
 
 variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmerGroup : Subgroup <| K/n
     where

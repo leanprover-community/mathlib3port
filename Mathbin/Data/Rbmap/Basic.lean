@@ -19,7 +19,7 @@ def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × �
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def Rbmap (α : Type u) (β : Type v)
     (lt : α → α → Prop := by
       run_tac
@@ -28,7 +28,7 @@ def Rbmap (α : Type u) (β : Type v)
   Rbtree (α × β) (RbmapLt lt)
 #align rbmap Rbmap
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def mkRbmap (α : Type u) (β : Type v)
     (lt : α → α → Prop := by
       run_tac
@@ -113,7 +113,7 @@ def contains (m : Rbmap α β lt) (k : α) : Bool :=
   (findEntry m k).isSome
 #align rbmap.contains Rbmap.contains
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def fromList (l : List (α × β))
     (lt : α → α → Prop := by
       run_tac
@@ -124,7 +124,7 @@ def fromList (l : List (α × β))
 
 end Rbmap
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def rbmapOf {α : Type u} {β : Type v} (l : List (α × β))
     (lt : α → α → Prop := by
       run_tac

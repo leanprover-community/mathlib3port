@@ -132,7 +132,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.862 : α) (x._@.Mathlib.Order.Zorn._hyg.864 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Zorn._hyg.862 x._@.Mathlib.Order.Zorn._hyg.864) c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))
 Case conversion may be inaccurate. Consider using '#align zorn_preorder₀ zorn_preorder₀ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) :
     ∃ m ∈ s, ∀ z ∈ s, m ≤ z → z ≤ m :=
@@ -153,7 +153,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.1178 : α) (x._@.Mathlib.Order.Zorn._hyg.1180 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Zorn._hyg.1178 x._@.Mathlib.Order.Zorn._hyg.1180) c) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub)))))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x m) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_nonempty_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
     (hxs : x ∈ s) : ∃ m ∈ s, x ≤ m ∧ ∀ z ∈ s, m ≤ z → z ≤ m :=
@@ -166,7 +166,7 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
       exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
 #align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
 #print zorn_nonempty_Ici₀ /-
 theorem zorn_nonempty_Ici₀ (a : α)
     (ih : ∀ (c) (_ : c ⊆ Ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub)
@@ -204,7 +204,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.1874 : α) (x._@.Mathlib.Order.Zorn._hyg.1876 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Zorn._hyg.1874 x._@.Mathlib.Order.Zorn._hyg.1876) c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))
 Case conversion may be inaccurate. Consider using '#align zorn_partial_order₀ zorn_partialOrder₀ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_partialOrder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) :
     ∃ m ∈ s, ∀ z ∈ s, m ≤ z → z = m :=
@@ -218,7 +218,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.2042 : α) (x._@.Mathlib.Order.Zorn._hyg.2044 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Zorn._hyg.2042 x._@.Mathlib.Order.Zorn._hyg.2044) c) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub)))))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x m) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_nonempty_partial_order₀ zorn_nonempty_partialOrder₀ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_nonempty_partialOrder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
     (hxs : x ∈ s) : ∃ m ∈ s, x ≤ m ∧ ∀ z ∈ s, m ≤ z → z = m :=
@@ -234,7 +234,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2249 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2251 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2249 x._@.Mathlib.Order.Zorn._hyg.2251) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) ub S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s ub))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))
 Case conversion may be inaccurate. Consider using '#align zorn_subset zorn_subsetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_subset (S : Set (Set α))
     (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub) :
     ∃ m ∈ S, ∀ a ∈ S, m ⊆ a → a = m :=
@@ -247,7 +247,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2373 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2375 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2373 x._@.Mathlib.Order.Zorn._hyg.2375) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) ub S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s ub))))) -> (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) x m) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_subset_nonempty zorn_subset_nonemptyₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_subset_nonempty (S : Set (Set α))
     (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub) (x)
     (hx : x ∈ S) : ∃ m ∈ S, x ⊆ m ∧ ∀ a ∈ S, m ⊆ a → a = m :=
@@ -260,7 +260,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2532 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2534 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2532 x._@.Mathlib.Order.Zorn._hyg.2534) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) lb S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) lb s))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))
 Case conversion may be inaccurate. Consider using '#align zorn_superset zorn_supersetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_superset (S : Set (Set α))
     (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) :
     ∃ m ∈ S, ∀ a ∈ S, a ⊆ m → a = m :=
@@ -273,7 +273,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2674 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2676 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2674 x._@.Mathlib.Order.Zorn._hyg.2676) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) lb S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) lb s))))) -> (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) m x) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_superset_nonempty zorn_superset_nonemptyₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_superset_nonempty (S : Set (Set α))
     (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) (x)
     (hx : x ∈ S) : ∃ m ∈ S, m ⊆ x ∧ ∀ a ∈ S, a ⊆ m → a = m :=

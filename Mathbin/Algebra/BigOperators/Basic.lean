@@ -1309,7 +1309,7 @@ theorem prod_apply_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p}
     _ =
         (∏ x in (s.filterₓ p).attach, h (if hx : p x.1 then f x.1 hx else g x.1 hx)) *
           ∏ x in (s.filterₓ fun x => ¬p x).attach, h (if hx : p x.1 then f x.1 hx else g x.1 hx) :=
-      congr_arg₂ _ prod_attach.symm prod_attach.symm
+      (congr_arg₂ _ prod_attach.symm prod_attach.symm)
     _ =
         (∏ x in (s.filterₓ p).attach, h (f x.1 (mem_filter.mp x.2).2)) *
           ∏ x in (s.filterₓ fun x => ¬p x).attach, h (g x.1 (mem_filter.mp x.2).2) :=
@@ -1585,7 +1585,7 @@ theorem prod_bij_ne_one {s : Finset α} {t : Finset γ} {f : α → β} {g : γ 
       calc
         (∏ x in s, f x) = ∏ x in s.filter fun x => f x ≠ 1, f x := prod_filter_ne_one.symm
         _ = ∏ x in t.filter fun x => g x ≠ 1, g x :=
-          prod_bij (fun a ha => i a (mem_filter.mp ha).1 (mem_filter.mp ha).2)
+          (prod_bij (fun a ha => i a (mem_filter.mp ha).1 (mem_filter.mp ha).2)
             (fun a ha =>
               (mem_filter.mp ha).elim fun h₁ h₂ =>
                 mem_filter.mpr ⟨hi a h₁ h₂, fun hg => h₂ (hg ▸ h a h₁ h₂)⟩)
@@ -1596,7 +1596,7 @@ theorem prod_bij_ne_one {s : Finset α} {t : Finset γ} {f : α → β} {g : γ 
             fun b hb =>
             (mem_filter.mp hb).elim fun h₁ h₂ =>
               let ⟨a, ha₁, ha₂, Eq⟩ := i_surj b h₁ h₂
-              ⟨a, mem_filter.mpr ⟨ha₁, ha₂⟩, Eq⟩
+              ⟨a, mem_filter.mpr ⟨ha₁, ha₂⟩, Eq⟩)
         _ = ∏ x in t, g x := prod_filter_ne_one
         
 #align finset.prod_bij_ne_one Finset.prod_bij_ne_one
@@ -2124,9 +2124,9 @@ theorem prod_comp [DecidableEq γ] (f : γ → β) (g : α → γ) :
           rintro ⟨b_fst, b_snd⟩ H
           simp only [mem_image, exists_prop, mem_filter, mem_sigma] at H
           tauto)
-    _ = ∏ b in s.image g, ∏ a in s.filterₓ fun a => g a = b, f (g a) := prod_sigma _ _ _
+    _ = ∏ b in s.image g, ∏ a in s.filterₓ fun a => g a = b, f (g a) := (prod_sigma _ _ _)
     _ = ∏ b in s.image g, ∏ a in s.filterₓ fun a => g a = b, f b :=
-      prod_congr rfl fun b hb => prod_congr rfl (by simp (config := { contextual := true }))
+      (prod_congr rfl fun b hb => prod_congr rfl (by simp (config := { contextual := true })))
     _ = ∏ b in s.image g, f b ^ (s.filterₓ fun a => g a = b).card :=
       prod_congr rfl fun _ _ => prod_const _
     
@@ -2670,7 +2670,7 @@ theorem card_bunionᵢ [DecidableEq β] {s : Finset α} {t : α → Finset β}
     (s.bunionᵢ t).card = ∑ u in s, card (t u) :=
   calc
     (s.bunionᵢ t).card = ∑ i in s.bunionᵢ t, 1 := by simp
-    _ = ∑ a in s, ∑ i in t a, 1 := Finset.sum_bunionᵢ h
+    _ = ∑ a in s, ∑ i in t a, 1 := (Finset.sum_bunionᵢ h)
     _ = ∑ u in s, card (t u) := by simp
     
 #align finset.card_bUnion Finset.card_bunionᵢ
@@ -3050,8 +3050,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {β : Type.{u1}} {i : Finset.{u1} β} {f : β -> (Multiset.{u2} α)}, Iff (Eq.{succ u2} (Multiset.{u2} α) (Finset.sum.{u2, u1} (Multiset.{u2} α) β (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)) i f) (Finset.sup.{u2, u1} (Multiset.{u2} α) β (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} α) (Multiset.instLatticeMultiset.{u2} α (fun (a : α) (b : α) => _inst_1 a b))) (Multiset.instOrderBotMultisetToLEToPreorderInstPartialOrderMultiset.{u2} α) i f)) (forall (x : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) x i) -> (forall (y : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) y i) -> (Ne.{succ u1} β x y) -> (Multiset.Disjoint.{u2} α (f x) (f y))))
 Case conversion may be inaccurate. Consider using '#align multiset.finset_sum_eq_sup_iff_disjoint Multiset.finset_sum_eq_sup_iff_disjointₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∈ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » i) -/
 theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β → Multiset α} :
     i.Sum f = i.sup f ↔ ∀ (x) (_ : x ∈ i) (y) (_ : y ∈ i), x ≠ y → Multiset.Disjoint (f x) (f y) :=
   by

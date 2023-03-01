@@ -200,7 +200,7 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
         (fun p : R × M => p.1 • p.2) '' closure (Set.univ ×ˢ s) :=
       by simp [closure_prod_eq]
     _ ⊆ closure ((fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ s) :=
-      image_closure_subset_closure_image continuous_smul
+      (image_closure_subset_closure_image continuous_smul)
     _ = closure s := by
       congr
       ext x

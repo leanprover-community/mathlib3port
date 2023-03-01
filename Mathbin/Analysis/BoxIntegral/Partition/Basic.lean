@@ -777,7 +777,7 @@ theorem union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.union
   h.unionᵢ_eq.symm ▸ π₁.unionᵢ_subset
 #align box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.union_subset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (J «expr ∈ » π) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (J «expr ∈ » π) -/
 protected theorem existsUnique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J :=
   by
   rcases h x hx with ⟨J, h, hx⟩

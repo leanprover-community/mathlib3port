@@ -312,7 +312,7 @@ instance : T0Space (SeparationQuotient α) :=
     Quotient.inductionOn₂' x' y' fun x y h =>
       SeparationQuotient.mk_eq_mk.2 <| SeparationQuotient.inducing_mk.inseparable_iff.1 h⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_closed_subsingleton /-
 theorem minimal_nonempty_closed_subsingleton [T0Space α] {s : Set α} (hs : IsClosed s)
     (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsClosed t → t = s) : s.Subsingleton :=
@@ -327,7 +327,7 @@ theorem minimal_nonempty_closed_subsingleton [T0Space α] {s : Set α} (hs : IsC
 #align minimal_nonempty_closed_subsingleton minimal_nonempty_closed_subsingleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_closed_eq_singleton /-
 theorem minimal_nonempty_closed_eq_singleton [T0Space α] {s : Set α} (hs : IsClosed s)
     (hne : s.Nonempty) (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsClosed t → t = s) : ∃ x, s = {x} :=
@@ -349,7 +349,7 @@ theorem IsClosed.exists_closed_singleton {α : Type _} [TopologicalSpace α] [T0
 #align is_closed.exists_closed_singleton IsClosed.exists_closed_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_open_subsingleton /-
 theorem minimal_nonempty_open_subsingleton [T0Space α] {s : Set α} (hs : IsOpen s)
     (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsOpen t → t = s) : s.Subsingleton :=
@@ -364,7 +364,7 @@ theorem minimal_nonempty_open_subsingleton [T0Space α] {s : Set α} (hs : IsOpe
 #align minimal_nonempty_open_subsingleton minimal_nonempty_open_subsingleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print minimal_nonempty_open_eq_singleton /-
 theorem minimal_nonempty_open_eq_singleton [T0Space α] {s : Set α} (hs : IsOpen s)
     (hne : s.Nonempty) (hmin : ∀ (t) (_ : t ⊆ s), t.Nonempty → IsOpen t → t = s) : ∃ x, s = {x} :=
@@ -378,7 +378,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.Nonempty.{u1} α s) -> (IsOpen.{u1} α _inst_1 s) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (IsOpen.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x))))
 Case conversion may be inaccurate. Consider using '#align exists_open_singleton_of_open_finite exists_open_singleton_of_open_finiteₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Given an open finite set `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
 theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s.Finite)
     (hne : s.Nonempty) (ho : IsOpen s) : ∃ x ∈ s, IsOpen ({x} : Set α) :=
@@ -2160,7 +2160,7 @@ lean 3 declaration is
 but is expected to have type
   forall (X : Type.{u1}) [_inst_2 : TopologicalSpace.{u1} X], List.TFAE (List.cons.{0} Prop (RegularSpace.{u1} X _inst_2) (List.cons.{0} Prop (forall (s : Set.{u1} X) (a : X), (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a (closure.{u1} X _inst_2 s))) -> (Disjoint.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} X) (Preorder.toLE.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} X) (Filter.instCompleteLatticeFilter.{u1} X))) (nhdsSet.{u1} X _inst_2 s) (nhds.{u1} X _inst_2 a))) (List.cons.{0} Prop (forall (a : X) (s : Set.{u1} X), Iff (Disjoint.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} X) (Preorder.toLE.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} X) (Filter.instCompleteLatticeFilter.{u1} X))) (nhdsSet.{u1} X _inst_2 s) (nhds.{u1} X _inst_2 a)) (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a (closure.{u1} X _inst_2 s)))) (List.cons.{0} Prop (forall (a : X) (s : Set.{u1} X), (Membership.mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (instMembershipSetFilter.{u1} X) s (nhds.{u1} X _inst_2 a)) -> (Exists.{succ u1} (Set.{u1} X) (fun (t : Set.{u1} X) => And (Membership.mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (instMembershipSetFilter.{u1} X) t (nhds.{u1} X _inst_2 a)) (And (IsClosed.{u1} X _inst_2 t) (HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) t s))))) (List.cons.{0} Prop (forall (a : X), LE.le.{u1} (Filter.{u1} X) (Preorder.toLE.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X))) (Filter.lift'.{u1, u1} X X (nhds.{u1} X _inst_2 a) (closure.{u1} X _inst_2)) (nhds.{u1} X _inst_2 a)) (List.cons.{0} Prop (forall (a : X), Eq.{succ u1} (Filter.{u1} X) (Filter.lift'.{u1, u1} X X (nhds.{u1} X _inst_2 a) (closure.{u1} X _inst_2)) (nhds.{u1} X _inst_2 a)) (List.nil.{0} Prop)))))))
 Case conversion may be inaccurate. Consider using '#align regular_space_tfae regularSpace_TFAEₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » closure[closure] s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » closure[closure] s) -/
 theorem regularSpace_TFAE (X : Type u) [TopologicalSpace X] :
     TFAE
       [RegularSpace X, ∀ (s : Set X) (a) (_ : a ∉ closure s), Disjoint (𝓝ˢ s) (𝓝 a),
@@ -2483,8 +2483,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T3Space.{u1} α _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U₁ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U₁ (nhds.{u1} α _inst_1 x)) (Exists.{succ u1} (Set.{u1} α) (fun (V₁ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) V₁ (nhds.{u1} α _inst_1 x)) (Exists.{succ u1} (Set.{u1} α) (fun (U₂ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U₂ (nhds.{u1} α _inst_1 y)) (Exists.{succ u1} (Set.{u1} α) (fun (V₂ : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) V₂ (nhds.{u1} α _inst_1 y)) (And (IsClosed.{u1} α _inst_1 V₁) (And (IsClosed.{u1} α _inst_1 V₂) (And (IsOpen.{u1} α _inst_1 U₁) (And (IsOpen.{u1} α _inst_1 U₂) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) V₁ U₁) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) V₂ U₂) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) U₁ U₂)))))))))))))))
 Case conversion may be inaccurate. Consider using '#align disjoint_nested_nhds disjoint_nested_nhdsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » nhds() x) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » nhds() y) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » nhds() x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » nhds() y) -/
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/
 theorem disjoint_nested_nhds [T3Space α] {x y : α} (h : x ≠ y) :

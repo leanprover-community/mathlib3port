@@ -222,7 +222,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_3 : One.{u1} β] {f : α -> β} [_inst_6 : T2Space.{u2} α _inst_1], Iff (Exists.{succ u2} (Set.{u2} α) (fun (K : Set.{u2} α) => And (IsCompact.{u2} α _inst_1 K) (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K)) -> (Eq.{succ u1} β (f x) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_3)))))) (HasCompactMulSupport.{u2, u1} α β _inst_1 _inst_3 f)
 Case conversion may be inaccurate. Consider using '#align exists_compact_iff_has_compact_mul_support exists_compact_iff_hasCompactMulSupportₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
@@ -237,7 +237,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_3 : One.{u1} β] {f : α -> β} [_inst_6 : T2Space.{u2} α _inst_1] {K : Set.{u2} α}, (IsCompact.{u2} α _inst_1 K) -> (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K)) -> (Eq.{succ u1} β (f x) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_3)))) -> (HasCompactMulSupport.{u2, u1} α β _inst_1 _inst_3 f)
 Case conversion may be inaccurate. Consider using '#align has_compact_mul_support.intro HasCompactMulSupport.introₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)
     (hfK : ∀ (x) (_ : x ∉ K), f x = 1) : HasCompactMulSupport f :=

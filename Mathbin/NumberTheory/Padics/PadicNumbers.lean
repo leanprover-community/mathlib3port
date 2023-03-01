@@ -675,7 +675,7 @@ open PadicSeq Padic
 
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   Quotient.inductionOn q fun q' =>
     have : ∃ N, ∀ (m) (_ : m ≥ N) (n) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -961,7 +961,7 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
     rw [eq_comm]
     calc
       ‖(k : ℚ_[p])‖ = ‖((k : ℚ) : ℚ_[p])‖ := by norm_cast
-      _ = padicNorm p k := padicNormE.eq_padicNorm _
+      _ = padicNorm p k := (padicNormE.eq_padicNorm _)
       _ = 1 := _
       
     rw [padicNorm]
@@ -1050,7 +1050,7 @@ theorem padic_norm_e_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf
   let ⟨N, hN⟩ := Setoid.symm (CauSeq.equiv_lim f) _ ha
   calc
     ‖f.lim‖ = ‖f.lim - f N + f N‖ := by simp
-    _ ≤ max ‖f.lim - f N‖ ‖f N‖ := padicNormE.nonarchimedean _ _
+    _ ≤ max ‖f.lim - f N‖ ‖f N‖ := (padicNormE.nonarchimedean _ _)
     _ ≤ a := max_le (le_of_lt (hN _ le_rfl)) (hf _)
     
 #align padic.padic_norm_e_lim_le Padic.padic_norm_e_lim_le

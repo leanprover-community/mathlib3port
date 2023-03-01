@@ -1173,7 +1173,7 @@ include W'_nhd
 
 /- warning: dense_inducing.extend_Z_bilin_aux clashes with [anonymous] -> [anonymous]
 Case conversion may be inaccurate. Consider using '#align dense_inducing.extend_Z_bilin_aux [anonymous]ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
 #print [anonymous] /-
 private theorem [anonymous] (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x) (_ : x ∈ U₂) (x') (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' :=
@@ -1197,10 +1197,10 @@ private theorem [anonymous] (x₀ : α) (y₁ : δ) :
 
 /- warning: dense_inducing.extend_Z_bilin_key clashes with [anonymous] -> [anonymous]
 Case conversion may be inaccurate. Consider using '#align dense_inducing.extend_Z_bilin_key [anonymous]ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
 #print [anonymous] /-
 private theorem [anonymous] (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),

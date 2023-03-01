@@ -282,7 +282,7 @@ instance (priority := 100) GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgeb
             )
           (calc
             y \ x ⊔ x = y ⊔ x := sdiff_sup_self'
-            _ ≤ x ⊔ z ⊔ x := sup_le_sup_right h x
+            _ ≤ x ⊔ z ⊔ x := (sup_le_sup_right h x)
             _ ≤ z ⊔ x := by rw [sup_assoc, sup_comm, sup_assoc, sup_idem]
             )⟩ }
 #align generalized_boolean_algebra.to_generalized_coheyting_algebra GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra

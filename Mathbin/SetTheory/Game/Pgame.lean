@@ -282,7 +282,7 @@ theorem Subsequent.mk_right {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (j :
   @Subsequent.moveRight (mk _ _ _ _) j
 #align pgame.subsequent.mk_right Pgame.Subsequent.mk_right
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry
@@ -1757,11 +1757,11 @@ theorem add_lf_add_right {y z : Pgame} (h : y ⧏ z) (x) : y + x ⧏ z + x :=
   fun w =>
   calc
     z ≤ z + 0 := (addZeroRelabelling _).symm.le
-    _ ≤ z + (x + -x) := add_le_add_left (zero_le_add_right_neg x) _
+    _ ≤ z + (x + -x) := (add_le_add_left (zero_le_add_right_neg x) _)
     _ ≤ z + x + -x := (addAssocRelabelling _ _ _).symm.le
-    _ ≤ y + x + -x := add_le_add_right w _
+    _ ≤ y + x + -x := (add_le_add_right w _)
     _ ≤ y + (x + -x) := (addAssocRelabelling _ _ _).le
-    _ ≤ y + 0 := add_le_add_left (add_right_neg_le_zero x) _
+    _ ≤ y + 0 := (add_le_add_left (add_right_neg_le_zero x) _)
     _ ≤ y := (addZeroRelabelling _).le
     
 #align pgame.add_lf_add_right Pgame.add_lf_add_right
@@ -1817,9 +1817,9 @@ theorem le_iff_sub_nonneg {x y : Pgame} : x ≤ y ↔ 0 ≤ y - x :=
   ⟨fun h => (zero_le_add_right_neg x).trans (add_le_add_right h _), fun h =>
     calc
       x ≤ 0 + x := (zeroAddRelabelling x).symm.le
-      _ ≤ y - x + x := add_le_add_right h _
+      _ ≤ y - x + x := (add_le_add_right h _)
       _ ≤ y + (-x + x) := (addAssocRelabelling _ _ _).le
-      _ ≤ y + 0 := add_le_add_left (add_left_neg_le_zero x) _
+      _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
       _ ≤ y := (addZeroRelabelling y).le
       ⟩
 #align pgame.le_iff_sub_nonneg Pgame.le_iff_sub_nonneg
@@ -1828,9 +1828,9 @@ theorem lf_iff_sub_zero_lf {x y : Pgame} : x ⧏ y ↔ 0 ⧏ y - x :=
   ⟨fun h => (zero_le_add_right_neg x).trans_lf (add_lf_add_right h _), fun h =>
     calc
       x ≤ 0 + x := (zeroAddRelabelling x).symm.le
-      _ ⧏ y - x + x := add_lf_add_right h _
+      _ ⧏ y - x + x := (add_lf_add_right h _)
       _ ≤ y + (-x + x) := (addAssocRelabelling _ _ _).le
-      _ ≤ y + 0 := add_le_add_left (add_left_neg_le_zero x) _
+      _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
       _ ≤ y := (addZeroRelabelling y).le
       ⟩
 #align pgame.lf_iff_sub_zero_lf Pgame.lf_iff_sub_zero_lf
@@ -1839,9 +1839,9 @@ theorem lt_iff_sub_pos {x y : Pgame} : x < y ↔ 0 < y - x :=
   ⟨fun h => lt_of_le_of_lt (zero_le_add_right_neg x) (add_lt_add_right h _), fun h =>
     calc
       x ≤ 0 + x := (zeroAddRelabelling x).symm.le
-      _ < y - x + x := add_lt_add_right h _
+      _ < y - x + x := (add_lt_add_right h _)
       _ ≤ y + (-x + x) := (addAssocRelabelling _ _ _).le
-      _ ≤ y + 0 := add_le_add_left (add_left_neg_le_zero x) _
+      _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
       _ ≤ y := (addZeroRelabelling y).le
       ⟩
 #align pgame.lt_iff_sub_pos Pgame.lt_iff_sub_pos

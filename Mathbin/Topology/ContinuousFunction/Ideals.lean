@@ -262,8 +262,8 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
             ‖f x * (1 - (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ :=
           by simp only [mul_sub, coe_sub, coe_one, Pi.sub_apply, Pi.one_apply, mul_one]
         _ ≤ ε / 2 * ‖(1 - (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ :=
-          (nnnorm_mul_le _ _).trans
-            (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ‖f x‖₊ from hx).le _)
+          ((nnnorm_mul_le _ _).trans
+            (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ‖f x‖₊ from hx).le _))
         _ ≤ ε / 2 := by simpa only [mul_one] using mul_le_mul_left' this _
         
   /- There is some `g' : C(X, ℝ≥0)` which is strictly positive on `t` such that the composition

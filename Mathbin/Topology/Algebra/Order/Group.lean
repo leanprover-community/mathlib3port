@@ -47,7 +47,7 @@ instance (priority := 100) LinearOrderedAddCommGroup.topologicalAddGroup : Topol
       rw [add_sub_add_comm]
       calc
         |x - a + (y - b)| ≤ |x - a| + |y - b| := abs_add _ _
-        _ < δ + (ε - δ) := add_lt_add hx hy
+        _ < δ + (ε - δ) := (add_lt_add hx hy)
         _ = ε := add_sub_cancel'_right _ _
         
     · -- Otherwise `ε`-nhd of each point `a` is `{a}`

@@ -155,8 +155,8 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
       _ ≤ fib (n + 1) := by exact_mod_cast fib_le_fib_succ
       _ ≤ fib (n + 1) * fib (n + 1) := by exact_mod_cast (fib (n + 1)).le_mul_self
       _ ≤ fib (n + 1) * fib (n + 2) :=
-        mul_le_mul_of_nonneg_left (by exact_mod_cast fib_le_fib_succ)
-          (by exact_mod_cast (fib (n + 1)).zero_le)
+        (mul_le_mul_of_nonneg_left (by exact_mod_cast fib_le_fib_succ)
+          (by exact_mod_cast (fib (n + 1)).zero_le))
       _ ≤ B * nB :=
         mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
       

@@ -935,7 +935,7 @@ theorem sign_bij [DecidableEq β] [Fintype β] {f : Perm α} {g : Perm β} (i : 
     sign f = sign (subtypePerm f <| by simp : Perm { x // f x ≠ x }) :=
       (sign_subtypePerm _ _ fun _ => id).symm
     _ = sign (subtypePerm g <| by simp : Perm { x // g x ≠ x }) :=
-      sign_eq_sign_of_equiv _ _
+      (sign_eq_sign_of_equiv _ _
         (Equiv.ofBijective
           (fun x : { x // f x ≠ x } =>
             (⟨i x.1 x.2, by
@@ -946,7 +946,7 @@ theorem sign_bij [DecidableEq β] [Fintype β] {f : Perm α} {g : Perm β} (i : 
           ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ h => Subtype.eq (hi _ _ _ _ (Subtype.mk.inj h)), fun ⟨y, hy⟩ =>
             let ⟨x, hfx, hx⟩ := hg y hy
             ⟨⟨x, hfx⟩, Subtype.eq hx⟩⟩)
-        fun ⟨x, _⟩ => Subtype.eq (h x _ _)
+        fun ⟨x, _⟩ => Subtype.eq (h x _ _))
     _ = sign g := sign_subtypePerm _ _ fun _ => id
     
 #align equiv.perm.sign_bij Equiv.Perm.sign_bij

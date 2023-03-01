@@ -602,7 +602,7 @@ theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
     AnalyticOn 𝕜 (f - g) s := fun z hz => (hf z hz).sub (hg z hz)
 #align analytic_on.sub AnalyticOn.sub
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ≠ » 0) -/
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Fin 0 → E) :
     pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elim _ _
@@ -682,7 +682,7 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
     ‖(p n) fun i : Fin n => y‖ ≤ ‖p n‖ * ∏ i : Fin n, ‖y‖ := ContinuousMultilinearMap.le_op_norm _ _
     _ = ‖p n‖ * r' ^ n * (‖y‖ / r') ^ n := by field_simp [hr'0.ne', mul_right_comm]
     _ ≤ C * a ^ n * (‖y‖ / r') ^ n :=
-      mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _)
+      (mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _))
     _ ≤ C * (a * (‖y‖ / r')) ^ n := by rw [mul_pow, mul_assoc]
     
 #align has_fpower_series_on_ball.uniform_geometric_approx' HasFpowerSeriesOnBall.uniform_geometric_approx'
@@ -796,7 +796,7 @@ theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
   exact (is_O_refl _ _).const_mul_left _
 #align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ‖y - x‖ ‖z - x‖) * ‖y - z‖`. -/
@@ -1000,7 +1000,7 @@ theorem Asymptotics.IsO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p : E[
           Finset.card_fin] using
           congr_arg norm (p.map_smul_univ (fun i : Fin n.succ => k⁻¹) fun i : Fin n.succ => k • y)
       _ ≤ ‖k⁻¹ ^ n.succ‖ * (‖k‖ ^ n.succ * (‖k‖ * (c * ‖y‖ ^ (n.succ + 1)))) :=
-        mul_le_mul_of_nonneg_left h₂ (norm_nonneg _)
+        (mul_le_mul_of_nonneg_left h₂ (norm_nonneg _))
       _ = ‖(k⁻¹ * k) ^ n.succ‖ * (‖k‖ * (c * ‖y‖ ^ (n.succ + 1))) :=
         by
         rw [← mul_assoc]
@@ -1465,13 +1465,13 @@ theorem hasFpowerSeriesAt_iff :
     simpa [nndist_eq_nnnorm, Real.lt_toNNReal_iff_coe_lt] using hyr
 #align has_fpower_series_at_iff hasFpowerSeriesAt_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]] -/
 theorem hasFpowerSeriesAt_iff' :
     HasFpowerSeriesAt f p z₀ ↔ ∀ᶠ z in 𝓝 z₀, HasSum (fun n => (z - z₀) ^ n • p.coeff n) (f z) :=
   by
   rw [← map_add_left_nhds_zero, eventually_map, hasFpowerSeriesAt_iff]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]"
   rw [add_sub_cancel']
 #align has_fpower_series_at_iff' hasFpowerSeriesAt_iff'
 

@@ -48,20 +48,25 @@ namespace SimpleGraph
 
 variable {V : Type u} (G : SimpleGraph V)
 
+#print SimpleGraph.IsAcyclic /-
 /-- A graph is *acyclic* (or a *forest*) if it has no cycles. -/
 def IsAcyclic : Prop :=
   ∀ (v : V) (c : G.Walk v v), ¬c.IsCycle
 #align simple_graph.is_acyclic SimpleGraph.IsAcyclic
+-/
 
+#print SimpleGraph.IsTree /-
 /-- A *tree* is a connected acyclic graph. -/
 @[mk_iff, protect_proj]
 structure IsTree : Prop where
   is_connected : G.Connected
   IsAcyclic : G.IsAcyclic
 #align simple_graph.is_tree SimpleGraph.IsTree
+-/
 
 variable {G}
 
+#print SimpleGraph.isAcyclic_iff_forall_adj_isBridge /-
 theorem isAcyclic_iff_forall_adj_isBridge :
     G.IsAcyclic ↔ ∀ ⦃v w : V⦄, G.Adj v w → G.IsBridge ⟦(v, w)⟧ :=
   by
@@ -78,12 +83,20 @@ theorem isAcyclic_iff_forall_adj_isBridge :
       rw [walk.edges_cons]
       apply List.mem_cons_self
 #align simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.isAcyclic_iff_forall_adj_isBridge
+-/
 
+/- warning: simple_graph.is_acyclic_iff_forall_edge_is_bridge -> SimpleGraph.isAcyclic_iff_forall_edge_isBridge is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Iff (SimpleGraph.IsAcyclic.{u1} V G) (forall {{e : Sym2.{u1} V}}, (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)) -> (SimpleGraph.IsBridge.{u1} V G e))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Iff (SimpleGraph.IsAcyclic.{u1} V G) (forall {{e : Sym2.{u1} V}}, (Membership.mem.{u1, u1} (Sym2.{u1} V) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : SimpleGraph.{u1} V) => Set.{u1} (Sym2.{u1} V)) G) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V))) (SimpleGraph.{u1} V) (fun (_x : SimpleGraph.{u1} V) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : SimpleGraph.{u1} V) => Set.{u1} (Sym2.{u1} V)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V))) (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)))) (RelEmbedding.toEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : SimpleGraph.{u1} V) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : SimpleGraph.{u1} V) => LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instLESimpleGraph.{u1} V) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (Sym2.{u1} V)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (Sym2.{u1} V)) => LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instLESet.{u1} (Sym2.{u1} V)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (SimpleGraph.edgeSetEmbedding.{u1} V)) G)) -> (SimpleGraph.IsBridge.{u1} V G e))
+Case conversion may be inaccurate. Consider using '#align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.isAcyclic_iff_forall_edge_isBridgeₓ'. -/
 theorem isAcyclic_iff_forall_edge_isBridge :
     G.IsAcyclic ↔ ∀ ⦃e⦄, e ∈ G.edgeSetEmbedding → G.IsBridge e := by
   simp [is_acyclic_iff_forall_adj_is_bridge, Sym2.forall]
 #align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.isAcyclic_iff_forall_edge_isBridge
 
+#print SimpleGraph.IsAcyclic.path_unique /-
 theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p q : G.Path v w) :
     p = q := by
   obtain ⟨p, hp⟩ := p
@@ -109,7 +122,9 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
     · rw [walk.cons_is_path_iff] at hp
       exact absurd (walk.fst_mem_support_of_mem_edges _ h) hp.2
 #align simple_graph.is_acyclic.path_unique SimpleGraph.IsAcyclic.path_unique
+-/
 
+#print SimpleGraph.isAcyclic_of_path_unique /-
 theorem isAcyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) : G.IsAcyclic :=
   by
   intro v c hc
@@ -122,11 +137,15 @@ theorem isAcyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) :
     simp only [path.singleton] at h
     simpa [-Quotient.eq', Sym2.eq_swap, h] using hc
 #align simple_graph.is_acyclic_of_path_unique SimpleGraph.isAcyclic_of_path_unique
+-/
 
+#print SimpleGraph.isAcyclic_iff_path_unique /-
 theorem isAcyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.Path v w), p = q :=
   ⟨IsAcyclic.path_unique, isAcyclic_of_path_unique⟩
 #align simple_graph.is_acyclic_iff_path_unique SimpleGraph.isAcyclic_iff_path_unique
+-/
 
+#print SimpleGraph.isTree_iff_existsUnique_path /-
 theorem isTree_iff_existsUnique_path :
     G.IsTree ↔ Nonempty V ∧ ∀ v w : V, ∃! p : G.Walk v w, p.IsPath := by
   classical
@@ -149,6 +168,7 @@ theorem isTree_iff_existsUnique_path :
       · rintro v w ⟨p, hp⟩ ⟨q, hq⟩
         simp only [ExistsUnique.unique (h v w) hp hq]
 #align simple_graph.is_tree_iff_exists_unique_path SimpleGraph.isTree_iff_existsUnique_path
+-/
 
 end SimpleGraph
 

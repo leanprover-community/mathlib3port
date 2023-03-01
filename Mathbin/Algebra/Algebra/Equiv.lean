@@ -480,11 +480,11 @@ def symm (e : A₁ ≃ₐ[R] A₂) : A₂ ≃ₐ[R] A₁ :=
 #align alg_equiv.symm AlgEquiv.symm
 -/
 
-#print AlgEquiv.Simps.symmApply /-
+#print AlgEquiv.Simps.symm_apply /-
 /-- See Note [custom simps projection] -/
-def Simps.symmApply (e : A₁ ≃ₐ[R] A₂) : A₂ → A₁ :=
+def Simps.symm_apply (e : A₁ ≃ₐ[R] A₂) : A₂ → A₁ :=
   e.symm
-#align alg_equiv.simps.symm_apply AlgEquiv.Simps.symmApply
+#align alg_equiv.simps.symm_apply AlgEquiv.Simps.symm_apply
 -/
 
 initialize_simps_projections AlgEquiv (toFun → apply, invFun → symm_apply)

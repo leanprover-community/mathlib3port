@@ -493,7 +493,7 @@ protected def insert {α} {s : Set.{u} α} [DecidablePred (· ∈ s)] {a : α} (
     (insert a s : Set α) ≃ Sum s PUnit.{u + 1} :=
   calc
     (insert a s : Set α) ≃ ↥(s ∪ {a}) := Equiv.Set.ofEq (by simp)
-    _ ≃ Sum s ({a} : Set α) := Equiv.Set.union fun x ⟨hx, hx'⟩ => by simp_all
+    _ ≃ Sum s ({a} : Set α) := (Equiv.Set.union fun x ⟨hx, hx'⟩ => by simp_all)
     _ ≃ Sum s PUnit.{u + 1} := sumCongr (Equiv.refl _) (Equiv.Set.singleton _)
     
 #align equiv.set.insert Equiv.Set.insert
@@ -541,7 +541,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.set.sum_compl Eq
 protected def sumCompl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (sᶜ : Set α) ≃ α :=
   calc
     Sum s (sᶜ : Set α) ≃ ↥(s ∪ sᶜ) := (Equiv.Set.union (by simp [Set.ext_iff])).symm
-    _ ≃ @univ α := Equiv.Set.ofEq (by simp)
+    _ ≃ @univ α := (Equiv.Set.ofEq (by simp))
     _ ≃ α := Equiv.Set.univ _
     
 #align equiv.set.sum_compl Equiv.Set.sumCompl
@@ -697,13 +697,13 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
     Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum (s ∪ t \ s : Set α) (s ∩ t : Set α) := by
       rw [union_diff_self]
     _ ≃ Sum (Sum s (t \ s : Set α)) (s ∩ t : Set α) :=
-      sumCongr (Set.union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equiv.refl _)
-    _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sumAssoc _ _ _
+      (sumCongr (Set.union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equiv.refl _))
+    _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := (sumAssoc _ _ _)
     _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
-      sumCongr (Equiv.refl _)
+      (sumCongr (Equiv.refl _)
         (by
           refine' (set.union' (· ∉ s) _ _).symm
-          exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1])
+          exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1]))
     _ ≃ Sum s t := by
       rw [(_ : t \ s ∪ s ∩ t = t)]
       rw [union_comm, inter_comm, inter_union_diff]
@@ -730,7 +730,7 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
     Subtype.mk
       (calc
         α ≃ Sum s (sᶜ : Set α) := (Set.sumCompl s).symm
-        _ ≃ Sum t (tᶜ : Set β) := e₀.sumCongr e₁
+        _ ≃ Sum t (tᶜ : Set β) := (e₀.sumCongr e₁)
         _ ≃ β := Set.sumCompl t
         )
       fun x => by

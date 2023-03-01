@@ -235,7 +235,7 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
       _ = ‖f.completion g - 0‖ := by rw [sub_zero _]
       _ = ‖f.completion g - f.completion hatg‖ := by rw [(f.completion.mem_ker _).mp hatg_in]
       _ = ‖f.completion (g - hatg)‖ := by rw [map_sub]
-      _ ≤ ‖f.completion‖ * ‖(g : completion G) - hatg‖ := f.completion.le_op_norm _
+      _ ≤ ‖f.completion‖ * ‖(g : completion G) - hatg‖ := (f.completion.le_op_norm _)
       _ = ‖f‖ * ‖hatg - g‖ := by rw [norm_sub_rev, f.norm_completion]
       
     have : ‖(g' : completion G)‖ ≤ C' * ‖f‖ * ‖hatg - g‖
@@ -254,9 +254,9 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
     ·
       calc
         ‖hatg - (g - g')‖ = ‖hatg - g + g'‖ := by abel
-        _ ≤ ‖hatg - g‖ + ‖(g' : completion G)‖ := norm_add_le _ _
+        _ ≤ ‖hatg - g‖ + ‖(g' : completion G)‖ := (norm_add_le _ _)
         _ < δ + C' * ‖f‖ * ‖hatg - g‖ := by linarith
-        _ ≤ δ + C' * ‖f‖ * δ := add_le_add_left (mul_le_mul_of_nonneg_left hg.le hCf) δ
+        _ ≤ δ + C' * ‖f‖ * δ := (add_le_add_left (mul_le_mul_of_nonneg_left hg.le hCf) δ)
         _ = (1 + C' * ‖f‖) * δ := by ring
         _ = ε := mul_div_cancel' _ ineq.ne.symm
         

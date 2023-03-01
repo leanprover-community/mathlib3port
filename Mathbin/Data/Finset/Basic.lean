@@ -1672,7 +1672,7 @@ theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) :
   (insert_inj h).1
 #align finset.insert_inj_on Finset.insert_inj_on
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.ssubset_iff /-
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
@@ -3479,7 +3479,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Finset.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) j s)] {f : forall (i : α), δ i} {f' : forall (i : α), δ i} {g : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (i : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) -> (Eq.{u1} (δ i) (f i) (f' i))) -> (forall (i : α), (Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s)) -> (Eq.{u1} (δ i) (g i) (g' i))) -> (Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u2, u1} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
 Case conversion may be inaccurate. Consider using '#align finset.piecewise_congr Finset.piecewise_congrₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i ∈ s, f i = f' i)
     (hg : ∀ (i) (_ : i ∉ s), g i = g' i) : s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
@@ -3646,7 +3646,7 @@ theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {
 #align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print Finset.piecewise_le_piecewise' /-
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) :

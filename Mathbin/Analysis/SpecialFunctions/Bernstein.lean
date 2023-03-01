@@ -254,7 +254,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
       rw [bernstein.probability]
     _ = |∑ k : Fin (n + 1), (f k/ₙ - f x) * bernstein n k x| := by
       simp [bernsteinApproximation, Finset.mul_sum, sub_mul]
-    _ ≤ ∑ k : Fin (n + 1), |(f k/ₙ - f x) * bernstein n k x| := Finset.abs_sum_le_sum_abs _ _
+    _ ≤ ∑ k : Fin (n + 1), |(f k/ₙ - f x) * bernstein n k x| := (Finset.abs_sum_le_sum_abs _ _)
     _ = ∑ k : Fin (n + 1), |f k/ₙ - f x| * bernstein n k x := by
       simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
     _ = (∑ k in S, |f k/ₙ - f x| * bernstein n k x) + ∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x :=
@@ -262,7 +262,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
     -- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
         _ <
         ε / 2 + ε / 2 :=
-      add_lt_add_of_le_of_lt _ _
+      (add_lt_add_of_le_of_lt _ _)
     _ = ε := add_halves ε
     
   ·-- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
@@ -276,8 +276,8 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
           -- so that we can use `bernstein.probability`.
           _ ≤
           ε / 2 * ∑ k : Fin (n + 1), bernstein n k x :=
-        mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg)
-          (le_of_lt (half_pos h))
+        (mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg)
+          (le_of_lt (half_pos h)))
       _ = ε / 2 := by rw [bernstein.probability, mul_one]
       
   ·-- We now turn to working on `Sᶜ`: we control the difference term just using `‖f‖`,
@@ -289,19 +289,19 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
           mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg
       _ = 2 * ‖f‖ * ∑ k in Sᶜ, bernstein n k x := by rw [Finset.mul_sum]
       _ ≤ 2 * ‖f‖ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
-        mul_le_mul_of_nonneg_left
+        (mul_le_mul_of_nonneg_left
           (Finset.sum_le_sum fun k m =>
             by
             conv_lhs => rw [← one_mul (bernstein _ _ _)]
             exact mul_le_mul_of_nonneg_right (le_of_mem_S_compl m) bernstein_nonneg)
-          w₁
+          w₁)
       -- Again enlarging the sum from `Sᶜ` to all of `fin (n+1)`
           _ ≤
           2 * ‖f‖ * ∑ k : Fin (n + 1), δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
-        mul_le_mul_of_nonneg_left
+        (mul_le_mul_of_nonneg_left
           (Finset.sum_le_univ_sum_of_nonneg fun k =>
             mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
-          w₁
+          w₁)
       _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x := by
         conv_rhs =>
           rw [mul_assoc, Finset.mul_sum]
@@ -313,8 +313,8 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
         rw [variance npos]
         ring
       _ ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) / n :=
-        (div_le_div_right npos).mpr <| by
-          refine' mul_le_of_le_of_le_one' (mul_le_of_le_one_right w₂ _) _ _ w₂ <;> unit_interval
+        ((div_le_div_right npos).mpr <| by
+          refine' mul_le_of_le_of_le_one' (mul_le_of_le_one_right w₂ _) _ _ w₂ <;> unit_interval)
       _ < ε / 2 := nh
       
 #align bernstein_approximation_uniform bernsteinApproximation_uniform

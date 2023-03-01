@@ -243,7 +243,7 @@ theorem liminfₛ_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ �
   le_antisymm
     (calc
       f.liminfₛ ≤ f.limsupₛ := liminfₛ_le_limsupₛ hb_le hb_ge
-      _ ≤ (𝓝 a).limsupₛ := limsupₛ_le_limsupₛ_of_le h hb_ge.isCobounded_flip (isBounded_le_nhds a)
+      _ ≤ (𝓝 a).limsupₛ := (limsupₛ_le_limsupₛ_of_le h hb_ge.isCobounded_flip (isBounded_le_nhds a))
       _ = a := limsupₛ_nhds a
       )
     (calc
@@ -279,8 +279,8 @@ theorem Filter.Tendsto.liminf_eq {f : Filter β} {u : β → α} {a : α} [NeBot
 #align filter.tendsto.liminf_eq Filter.Tendsto.liminf_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print tendsto_of_liminf_eq_limsup /-
 /-- If the liminf and the limsup of a function coincide, then the limit of the function
 exists and has the same value -/
@@ -297,8 +297,8 @@ theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hi
 #align tendsto_of_liminf_eq_limsup tendsto_of_liminf_eq_limsup
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print tendsto_of_le_liminf_of_limsup_le /-
 /-- If a number `a` is less than or equal to the `liminf` of a function `f` at some filter
 and is greater than or equal to the `limsup` of `f`, then `f` tends to `a` along this filter. -/
@@ -319,8 +319,8 @@ theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : �
 #align tendsto_of_le_liminf_of_limsup_le tendsto_of_le_liminf_of_limsup_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print tendsto_of_no_upcrossings /-
 /-- Assume that, for any `a < b`, a sequence can not be infinitely many times below `a` and
 above `b`. If it is also ultimately bounded above and below, then it has to converge. This even
@@ -368,8 +368,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u2} R] [_inst_3 : TopologicalSpace.{u2} R] [_inst_4 : OrderTopology.{u2} R _inst_3 (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))))] [_inst_5 : CompleteLinearOrder.{u1} S] [_inst_6 : TopologicalSpace.{u1} S] [_inst_7 : OrderTopology.{u1} S _inst_6 (PartialOrder.toPreorder.{u1} S (CompleteSemilatticeInf.toPartialOrder.{u1} S (CompleteLattice.toCompleteSemilatticeInf.{u1} S (CompleteLinearOrder.toCompleteLattice.{u1} S _inst_5))))] {F : Filter.{u2} R} [_inst_8 : Filter.NeBot.{u2} R F] {f : R -> S}, (Antitone.{u2, u1} R S (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (PartialOrder.toPreorder.{u1} S (CompleteSemilatticeInf.toPartialOrder.{u1} S (CompleteLattice.toCompleteSemilatticeInf.{u1} S (CompleteLinearOrder.toCompleteLattice.{u1} S _inst_5)))) f) -> (ContinuousAt.{u2, u1} R S _inst_3 _inst_6 f (Filter.limsupₛ.{u2} R (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} R (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} R (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} R _inst_2))) F)) -> (Eq.{succ u1} S (f (Filter.limsupₛ.{u2} R (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} R (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} R (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} R _inst_2))) F)) (Filter.liminf.{u1, u2} S R (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} S (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} S (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u1} S _inst_5))) f F))
 Case conversion may be inaccurate. Consider using '#align antitone.map_Limsup_of_continuous_at Antitone.map_limsupₛ_of_continuousAtₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /-- An antitone function between complete linear ordered spaces sends a `filter.Limsup`
 to the `filter.liminf` of the image if it is continuous at the `Limsup`. -/
 theorem Antitone.map_limsupₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}

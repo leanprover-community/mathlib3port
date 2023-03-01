@@ -64,8 +64,8 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
       by
       congr 1
       ring
-    _ ≤ u n + u (k * n + r) := h _ _
-    _ ≤ u n + (k * u n + u r) := add_le_add_left IH _
+    _ ≤ u n + u (k * n + r) := (h _ _)
+    _ ≤ u n + (k * u n + u r) := (add_le_add_left IH _)
     _ = (k + 1 : ℕ) * u n + u r := by simp <;> ring
     
 #align subadditive.apply_mul_add_le Subadditive.apply_mul_add_le
@@ -92,13 +92,13 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     have hp : p = s * n + r := by rw [mul_comm, Nat.div_add_mod]
     calc
       u p = u (s * n + r) := by rw [hp]
-      _ ≤ s * u n + u r := h.apply_mul_add_le _ _ _
+      _ ≤ s * u n + u r := (h.apply_mul_add_le _ _ _)
       _ = s * n * (u n / n) + u r := by
         field_simp [I _ hn.bot_lt]
         ring
       _ ≤ s * n * w + u r :=
-        add_le_add_right
-          (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))) _
+        (add_le_add_right
+          (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))) _)
       _ = (s * n + r) * w + (u r - r * w) := by ring
       _ = p * w + (u r - r * w) := by
         rw [hp]

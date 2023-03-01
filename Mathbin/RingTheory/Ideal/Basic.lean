@@ -125,7 +125,7 @@ theorem eq_top_of_unit_mem (x y : α) (hx : x ∈ I) (h : y * x = 1) : I = ⊤ :
   eq_top_iff.2 fun z _ =>
     calc
       z = z * (y * x) := by simp [h]
-      _ = z * y * x := Eq.symm <| mul_assoc z y x
+      _ = z * y * x := (Eq.symm <| mul_assoc z y x)
       _ ∈ I := I.mul_mem_left _ hx
       
 #align ideal.eq_top_of_unit_mem Ideal.eq_top_of_unit_mem
@@ -511,8 +511,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {I : Ideal.{u1} α _inst_1}, Iff (Not (Ideal.IsPrime.{u1} α _inst_1 I)) (Or (Eq.{succ u1} (Ideal.{u1} α _inst_1) I (Top.top.{u1} (Ideal.{u1} α _inst_1) (Submodule.instTopSubmodule.{u1, u1} α α _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Semiring.toModule.{u1} α _inst_1)))) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Ideal.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Ideal.{u1} α _inst_1) α (Submodule.instSetLikeSubmodule.{u1, u1} α α _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Semiring.toModule.{u1} α _inst_1))) x I)) (fun (H : Not (Membership.mem.{u1, u1} α (Ideal.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Ideal.{u1} α _inst_1) α (Submodule.instSetLikeSubmodule.{u1, u1} α α _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Semiring.toModule.{u1} α _inst_1))) x I)) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Ideal.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Ideal.{u1} α _inst_1) α (Submodule.instSetLikeSubmodule.{u1, u1} α α _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Semiring.toModule.{u1} α _inst_1))) y I)) (fun (H : Not (Membership.mem.{u1, u1} α (Ideal.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Ideal.{u1} α _inst_1) α (Submodule.instSetLikeSubmodule.{u1, u1} α α _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Semiring.toModule.{u1} α _inst_1))) y I)) => Membership.mem.{u1, u1} α (Ideal.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Ideal.{u1} α _inst_1) α (Submodule.instSetLikeSubmodule.{u1, u1} α α _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Semiring.toModule.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) x y) I))))))
 Case conversion may be inaccurate. Consider using '#align ideal.not_is_prime_iff Ideal.not_isPrime_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » I) -/
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I :=
   by
@@ -1322,7 +1322,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Nontrivial.{u1} R], (Not (IsField.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) -> (Exists.{succ u1} R (fun (x : R) => Exists.{0} (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1))))) (fun (H : Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1))))) => Not (IsUnit.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) x))))
 Case conversion may be inaccurate. Consider using '#align ring.exists_not_is_unit_of_not_is_field Ring.exists_not_isUnit_of_not_isFieldₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by

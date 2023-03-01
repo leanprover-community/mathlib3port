@@ -580,7 +580,7 @@ theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s
       hl.neBot_iff.trans <| by simp only [not_exists, not_and, nonempty_iff_ne_empty]
 #align filter.has_basis.eq_bot_iff Filter.HasBasis.eq_bot_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.generate_neBot_iff /-
 theorem generate_neBot_iff {s : Set (Set α)} :
     NeBot (generate s) ↔ ∀ (t) (_ : t ⊆ s), t.Finite → (⋂₀ t).Nonempty :=

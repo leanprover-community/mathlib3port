@@ -297,7 +297,7 @@ theorem condexp_strongly_measurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleF
       _ =ᵐ[μ] μ[⇑g₁ * g|m] + μ[⇑g₂ * g|m] := by
         rw [add_mul]
         exact condexp_add (hg.simple_func_mul' hm _) (hg.simple_func_mul' hm _)
-      _ =ᵐ[μ] ⇑g₁ * μ[g|m] + ⇑g₂ * μ[g|m] := eventually_eq.add h_eq₁ h_eq₂
+      _ =ᵐ[μ] ⇑g₁ * μ[g|m] + ⇑g₂ * μ[g|m] := (eventually_eq.add h_eq₁ h_eq₂)
       _ =ᵐ[μ] ⇑(g₁ + g₂) * μ[g|m] := by rw [h_add, add_mul]
       
 #align measure_theory.condexp_strongly_measurable_simple_func_mul MeasureTheory.condexp_strongly_measurable_simpleFunc_mul

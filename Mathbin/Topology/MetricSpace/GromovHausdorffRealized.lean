@@ -121,7 +121,7 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
     _ ≤
         diam (range inl : Set (Sum X Y)) + dist (inl default) (inr default) +
           diam (range inr : Set (Sum X Y)) :=
-      diam_union (mem_range_self _) (mem_range_self _)
+      (diam_union (mem_range_self _) (mem_range_self _))
     _ =
         diam (univ : Set X) + (dist default default + 1 + dist default default) +
           diam (univ : Set Y) :=
@@ -153,7 +153,7 @@ private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :
   have : 0 ≤ 2 * f (x, y) :=
     calc
       0 = f (x, x) := (candidates_refl fA).symm
-      _ ≤ f (x, y) + f (y, x) := candidates_triangle fA
+      _ ≤ f (x, y) + f (y, x) := (candidates_triangle fA)
       _ = f (x, y) + f (x, y) := by rw [candidates_symm fA]
       _ = 2 * f (x, y) := by ring
       
@@ -220,10 +220,10 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
     f (x, y) - f (z, t) ≤ f (x, t) + f (t, y) - f (z, t) :=
       sub_le_sub_right (candidates_triangle fA) _
     _ ≤ f (x, z) + f (z, t) + f (t, y) - f (z, t) :=
-      sub_le_sub_right (add_le_add_right (candidates_triangle fA) _) _
+      (sub_le_sub_right (add_le_add_right (candidates_triangle fA) _) _)
     _ = f (x, z) + f (t, y) := by simp [sub_eq_add_neg, add_assoc]
     _ ≤ maxVar X Y * dist x z + maxVar X Y * dist t y :=
-      add_le_add (candidates_dist_bound fA) (candidates_dist_bound fA)
+      (add_le_add (candidates_dist_bound fA) (candidates_dist_bound fA))
     _ ≤ maxVar X Y * max (dist x z) (dist t y) + maxVar X Y * max (dist x z) (dist t y) :=
       by
       apply add_le_add

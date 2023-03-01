@@ -256,7 +256,7 @@ theorem lt_one_iff {n : ℕ} : n < 1 ↔ n = 0 :=
 theorem add_pos_left {m : ℕ} (h : 0 < m) (n : ℕ) : 0 < m + n :=
   calc
     m + n > 0 + n := Nat.add_lt_add_right h n
-    _ = n := Nat.zero_add n
+    _ = n := (Nat.zero_add n)
     _ ≥ 0 := zero_le n
     
 #align nat.add_pos_left Nat.add_pos_left
@@ -540,7 +540,7 @@ protected theorem div_le_of_le_mul' (h : m ≤ k * n) : m / k ≤ n :=
     (mul_le_mul_left k0).1 <|
       calc
         k * (m / k) ≤ m % k + k * (m / k) := Nat.le_add_left _ _
-        _ = m := mod_add_div _ _
+        _ = m := (mod_add_div _ _)
         _ ≤ k * n := h
         
 #align nat.div_le_of_le_mul' Nat.div_le_of_le_mul'
@@ -562,7 +562,7 @@ protected theorem div_lt_of_lt_mul (h : m < n * k) : m / n < k :=
   lt_of_mul_lt_mul_left
     (calc
       n * (m / n) ≤ m % n + n * (m / n) := Nat.le_add_left _ _
-      _ = m := mod_add_div _ _
+      _ = m := (mod_add_div _ _)
       _ < n * k := h
       )
     (Nat.zero_le n)

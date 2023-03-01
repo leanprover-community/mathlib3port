@@ -188,7 +188,7 @@ def loopOfHom {a b : G} (p : a ⟶ b) : End (root' T) :=
   treeHom T a ≫ p ≫ inv (treeHom T b)
 #align is_free_groupoid.spanning_tree.loop_of_hom IsFreeGroupoid.SpanningTree.loopOfHom
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loopOfHom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) :=

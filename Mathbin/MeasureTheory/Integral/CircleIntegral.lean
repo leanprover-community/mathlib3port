@@ -585,8 +585,9 @@ theorem norm_cauchyPowerSeries_le (f : ℂ → E) (c : ℂ) (R : ℝ) (n : ℕ) 
           ∫ θ in 0 ..2 * π,
             ‖deriv (circleMap c R) θ •
                 (circleMap c R θ - c)⁻¹ ^ n • (circleMap c R θ - c)⁻¹ • f (circleMap c R θ)‖ :=
-      mul_le_mul_of_nonneg_left (intervalIntegral.norm_integral_le_integral_norm Real.two_pi_pos.le)
-        (by simp [real.pi_pos.le])
+      (mul_le_mul_of_nonneg_left
+        (intervalIntegral.norm_integral_le_integral_norm Real.two_pi_pos.le)
+        (by simp [real.pi_pos.le]))
     _ =
         (2 * π)⁻¹ *
           ((|R|)⁻¹ ^ n * (|R| * ((|R|)⁻¹ * ∫ x : ℝ in 0 ..2 * π, ‖f (circleMap c R x)‖))) :=

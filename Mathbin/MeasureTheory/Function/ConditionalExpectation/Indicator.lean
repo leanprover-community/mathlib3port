@@ -104,7 +104,8 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
         condexp_add (hf_int.indicator (hm _ hs)) (hf_int.indicator (hm _ hs.compl))
       filter_upwards [this]with x hx
       classical rw [Set.indicator_apply, Set.indicator_apply, hx]
-    _ = s.indicator (μ[s.indicator f|m]) + s.indicator (μ[sᶜ.indicator f|m]) := s.indicator_add' _ _
+    _ = s.indicator (μ[s.indicator f|m]) + s.indicator (μ[sᶜ.indicator f|m]) :=
+      (s.indicator_add' _ _)
     _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) + s.indicator (sᶜ.indicator (μ[sᶜ.indicator f|m])) :=
       by
       refine' filter.eventually_eq.rfl.add _
@@ -155,7 +156,7 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
         by
         rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
           measure.restrict_restrict (hm _ ht), Set.inter_comm]
-      _ = ∫ x in t, f x ∂μ.restrict s := set_integral_condexp hm hf_int.integrable_on ht
+      _ = ∫ x in t, f x ∂μ.restrict s := (set_integral_condexp hm hf_int.integrable_on ht)
       _ = ∫ x in t, s.indicator f x ∂μ := by
         rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
           measure.restrict_restrict (hm _ ht), Set.inter_comm]

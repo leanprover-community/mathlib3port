@@ -199,7 +199,7 @@ theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 
   ·
     calc
       truncation f A x ≤ |truncation f A x| := le_abs_self _
-      _ ≤ |f x| := abs_truncation_le_abs_self _ _ _
+      _ ≤ |f x| := (abs_truncation_le_abs_self _ _ _)
       _ = f x := abs_of_nonneg (h'f x)
       
 #align probability_theory.integral_truncation_le_integral_of_nonneg ProbabilityTheory.integral_truncation_le_integral_of_nonneg
@@ -301,7 +301,7 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
       _ = 𝔼[truncation X N] + ∫ x in 0 ..N, 1 ∂ρ := by
         rw [integral_truncation_eq_interval_integral_of_nonneg hint.1 hnonneg]
       _ ≤ 𝔼[X] + ∫ x in 0 ..N, 1 ∂ρ :=
-        add_le_add_right (integral_truncation_le_integral_of_nonneg hint hnonneg) _
+        (add_le_add_right (integral_truncation_le_integral_of_nonneg hint hnonneg) _)
       _ ≤ 𝔼[X] + 1 := by
         refine' add_le_add le_rfl _
         rw [intervalIntegral.integral_of_le (Nat.cast_nonneg _)]
@@ -425,12 +425,12 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
         calc
           2 / (↑k + 1) * x ^ 2 = x / (k + 1) * (2 * x) := by ring
           _ ≤ 1 * (2 * x) :=
-            mul_le_mul_of_nonneg_right
+            (mul_le_mul_of_nonneg_right
               (by
                 apply_mod_cast (div_le_one _).2 hx.2
                 simp only [Nat.cast_add, Nat.cast_one]
                 linarith only [show (0 : ℝ) ≤ k from Nat.cast_nonneg k])
-              (mul_nonneg zero_le_two ((Nat.cast_nonneg k).trans hx.1.le))
+              (mul_nonneg zero_le_two ((Nat.cast_nonneg k).trans hx.1.le)))
           _ = 2 * x := by rw [one_mul]
           
     _ = 2 * ∫ x in (0 : ℝ)..K, x ∂ρ :=

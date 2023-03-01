@@ -55,7 +55,7 @@ theorem le_natDegree_of_map_eq_mul_x_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime
     (calc
       ↑n = degree (q.map (mk P)) := by
         rw [hq, degree_mul, hc0, zero_add, degree_pow, degree_X, nsmul_one, Nat.cast_withBot]
-      _ ≤ degree q := degree_map_le _ _
+      _ ≤ degree q := (degree_map_le _ _)
       _ ≤ natDegree q := degree_le_natDegree
       )
 #align polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_natDegree_of_map_eq_mul_x_pow

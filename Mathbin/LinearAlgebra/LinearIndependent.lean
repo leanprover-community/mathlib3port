@@ -140,10 +140,10 @@ theorem linearIndependent_iff' :
         g i = (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R) (Finsupp.single i (g i)) := by
           rw [Finsupp.lapply_apply, Finsupp.single_eq_same]
         _ = ∑ j in s, (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R) (Finsupp.single j (g j)) :=
-          Eq.symm <|
+          (Eq.symm <|
             Finset.sum_eq_single i
               (fun j hjs hji => by rw [Finsupp.lapply_apply, Finsupp.single_eq_of_ne hji])
-              fun hnis => hnis.elim his
+              fun hnis => hnis.elim his)
         _ = (∑ j in s, Finsupp.single j (g j)) i :=
           (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R).map_sum.symm
         _ = 0 := Finsupp.ext_iff.1 h i
@@ -159,7 +159,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {R : Type.{u2}} {M : Type.{u1}} {v : ι -> M} [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_5 : Module.{u2, u1} R M _inst_1 _inst_2], Iff (LinearIndependent.{u3, u2, u1} ι R M v _inst_1 _inst_2 _inst_5) (forall (s : Finset.{u3} ι) (g : ι -> R), (forall (i : ι), (Not (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s)) -> (Eq.{succ u2} R (g i) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)))))) -> (Eq.{succ u1} M (Finset.sum.{u1, u3} M ι _inst_2 s (fun (i : ι) => HSMul.hSMul.{u2, u1, u1} R M M (instHSMul.{u2, u1} R M (SMulZeroClass.toSMul.{u2, u1} R M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R _inst_1) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (Module.toMulActionWithZero.{u2, u1} R M _inst_1 _inst_2 _inst_5))))) (g i) (v i))) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2))))) -> (forall (i : ι), Eq.{succ u2} R (g i) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align linear_independent_iff'' linearIndependent_iff''ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem linearIndependent_iff'' :
     LinearIndependent R v ↔
       ∀ (s : Finset ι) (g : ι → R) (hg : ∀ (i) (_ : i ∉ s), g i = 0),
@@ -633,7 +633,7 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
 #align linear_independent.mono LinearIndependent.mono
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print linearIndependent_of_finite /-
 theorem linearIndependent_of_finite (s : Set M)
     (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
@@ -1321,7 +1321,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} (R : Type.{u2}) {M : Type.{u1}} [_inst_1 : Ring.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_5 : Module.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] (s : ι -> M), Exists.{succ u3} (Set.{u3} ι) (fun (I : Set.{u3} ι) => And (LinearIndependent.{u3, u2, u1} (Set.Elem.{u3} ι I) R M (fun (x : Set.Elem.{u3} ι I) => s (Subtype.val.{succ u3} ι (fun (x : ι) => Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) x I) x)) (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_5) (forall (i : ι), (Not (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i I)) -> (Exists.{succ u2} R (fun (a : R) => And (Ne.{succ u2} R a (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1)))))) (Membership.mem.{u1, u1} M (Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_5) (SetLike.instMembership.{u1, u1} (Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_5) M (Submodule.instSetLikeSubmodule.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_5)) (HSMul.hSMul.{u2, u1, u1} R M M (instHSMul.{u2, u1} R M (SMulZeroClass.toSMul.{u2, u1} R M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1))) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (Module.toMulActionWithZero.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_5))))) a (s i)) (Submodule.span.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_5 (Set.image.{u3, u1} ι M s I)))))))
 Case conversion may be inaccurate. Consider using '#align exists_maximal_independent exists_maximal_independentₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι,
       (LinearIndependent R fun x : I => s x) ∧
@@ -1500,7 +1500,7 @@ theorem linearIndependent_monoidHom (G : Type _) [Monoid G] (L : Type _) [CommRi
                           ∑ i in s, (g i * i x - g i * a x) * i y :=
                         Finset.sum_apply _ _ _
                       _ = ∑ i in s, g i * i x * i y - g i * a x * i y :=
-                        Finset.sum_congr rfl fun _ _ => sub_mul _ _ _
+                        (Finset.sum_congr rfl fun _ _ => sub_mul _ _ _)
                       _ = (∑ i in s, g i * i x * i y) - ∑ i in s, g i * a x * i y :=
                         Finset.sum_sub_distrib
                       _ =
@@ -1514,10 +1514,10 @@ theorem linearIndependent_monoidHom (G : Type _) [Monoid G] (L : Type _) [CommRi
                       _ =
                           (∑ i in insert a s, g i * i (x * y)) -
                             ∑ i in insert a s, a x * (g i * i y) :=
-                        congr
+                        (congr
                           (congr_arg Sub.sub
                             (Finset.sum_congr rfl fun i _ => by rw [i.map_mul, mul_assoc]))
-                          (Finset.sum_congr rfl fun _ _ => by rw [mul_assoc, mul_left_comm])
+                          (Finset.sum_congr rfl fun _ _ => by rw [mul_assoc, mul_left_comm]))
                       _ =
                           (∑ i in insert a s, (g i • i : G → L)) (x * y) -
                             a x * (∑ i in insert a s, (g i • i : G → L)) y :=
@@ -1873,7 +1873,7 @@ lean 3 declaration is
 but is expected to have type
   forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_4 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] {s : Set.{u2} V} {t : Set.{u2} V}, (LinearIndependent.{u2, u1, u2} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x s)) K V (Subtype.val.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x s)) (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4) -> (HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) s t) -> (Exists.{succ u2} (Set.{u2} V) (fun (b : Set.{u2} V) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) b t) (fun (H : HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) b t) => And (HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) s b) (And (HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) t (SetLike.coe.{u2, u2} (Submodule.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4) V (Submodule.instSetLikeSubmodule.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4) (Submodule.span.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4 b))) (LinearIndependent.{u2, u1, u2} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x b)) K V (Subtype.val.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x b)) (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4)))))
 Case conversion may be inaccurate. Consider using '#align exists_linear_independent_extension exists_linearIndependent_extensionₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 theorem exists_linearIndependent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) :=
   by
@@ -1898,7 +1898,7 @@ lean 3 declaration is
 but is expected to have type
   forall (K : Type.{u1}) {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_4 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] (t : Set.{u2} V), Exists.{succ u2} (Set.{u2} V) (fun (b : Set.{u2} V) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) b t) (fun (H : HasSubset.Subset.{u2} (Set.{u2} V) (Set.instHasSubsetSet.{u2} V) b t) => And (Eq.{succ u2} (Submodule.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4) (Submodule.span.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4 b) (Submodule.span.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4 t)) (LinearIndependent.{u2, u1, u2} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x b)) K V (Subtype.val.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x b)) (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4)))
 Case conversion may be inaccurate. Consider using '#align exists_linear_independent exists_linearIndependentₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ⊆ » t) -/
 theorem exists_linearIndependent :
     ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) :=
   by

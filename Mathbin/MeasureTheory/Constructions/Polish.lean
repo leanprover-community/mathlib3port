@@ -570,8 +570,8 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       calc
         dist (y m) (y n) ≤ dist (y m) z + dist z (y n) := dist_triangle _ _ _
         _ ≤ u m + u n :=
-          add_le_add ((dist_le_diam_of_mem (hs m).1 (hy m) zsm).trans (hs m).2)
-            ((dist_le_diam_of_mem (hs n).1 zsn (hy n)).trans (hs n).2)
+          (add_le_add ((dist_le_diam_of_mem (hs m).1 (hy m) zsm).trans (hs m).2)
+            ((dist_le_diam_of_mem (hs n).1 zsn (hy n)).trans (hs n).2))
         _ ≤ 2 * u m := by linarith [u_anti.antitone hmn]
         
     haveI : Nonempty γ := ⟨y 0⟩
@@ -601,7 +601,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       calc
         dist a z ≤ dist a (y n) + dist (y n) z := dist_triangle _ _ _
         _ ≤ u n + dist (y n) z :=
-          add_le_add_right ((dist_le_diam_of_mem (hs n).1 ha (hy n)).trans (hs n).2) _
+          (add_le_add_right ((dist_le_diam_of_mem (hs n).1 ha (hy n)).trans (hs n).2) _)
         _ < δ := hn
         
     -- as `x` belongs to the closure of `f '' (s n)`, it belongs to the closure of `v`.

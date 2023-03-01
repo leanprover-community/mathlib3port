@@ -72,7 +72,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
     calc
       _ = (p - c a).roots.toFinset.card :=
         congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_C hp])
-      _ ≤ (p - c a).roots.card := Multiset.toFinset_card_le _
+      _ ≤ (p - c a).roots.card := (Multiset.toFinset_card_le _)
       _ ≤ _ := card_roots_sub_C' hp
       
 #align finite_field.card_image_polynomial_eval FiniteField.card_image_polynomial_eval
@@ -93,14 +93,14 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
       2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card ≤
           2 * Fintype.card R :=
         Nat.mul_le_mul_left _ (Finset.card_le_univ _)
-      _ = Fintype.card R + Fintype.card R := two_mul _
+      _ = Fintype.card R + Fintype.card R := (two_mul _)
       _ <
           nat_degree f * (univ.image fun x : R => eval x f).card +
             nat_degree (-g) * (univ.image fun x : R => eval x (-g)).card :=
-        add_lt_add_of_lt_of_le
+        (add_lt_add_of_lt_of_le
           (lt_of_le_of_ne (card_image_polynomial_eval (by rw [hf2] <;> exact by decide))
             (mt (congr_arg (· % 2)) (by simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
-          (card_image_polynomial_eval (by rw [degree_neg, hg2] <;> exact by decide))
+          (card_image_polynomial_eval (by rw [degree_neg, hg2] <;> exact by decide)))
       _ = 2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card := by
         rw [card_disjoint_union hd] <;>
           simp [nat_degree_eq_of_degree_eq_some hf2, nat_degree_eq_of_degree_eq_some hg2, bit0,

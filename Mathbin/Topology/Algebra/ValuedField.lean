@@ -210,7 +210,7 @@ noncomputable def extension : hat K → Γ₀ :=
   Completion.denseInducing_coe.extend (v : K → Γ₀)
 #align valued.extension Valued.extension
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » V') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » V') -/
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :=
   by
   refine' completion.dense_inducing_coe.continuous_extend _
@@ -289,7 +289,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       solve_by_elim
     calc
       v a = v (a * z₀⁻¹ * z₀) := by rw [mul_assoc, inv_mul_cancel z₀_ne, mul_one]
-      _ = v (a * z₀⁻¹) * v z₀ := Valuation.map_mul _ _ _
+      _ = v (a * z₀⁻¹) * v z₀ := (Valuation.map_mul _ _ _)
       _ = v z₀ := by rw [this, one_mul]
       
 #align valued.continuous_extension Valued.continuous_extension

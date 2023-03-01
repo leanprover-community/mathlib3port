@@ -627,7 +627,7 @@ theorem bliminf_eq_liminf_subtype {f : Filter β} {u : β → α} {p : β → Pr
 #align filter.bliminf_eq_liminf_subtype Filter.bliminf_eq_liminf_subtype
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.limsupₛ_le_of_le /-
 theorem limsupₛ_le_of_le {f : Filter α} {a}
     (hf : f.IsCobounded (· ≤ ·) := by
@@ -638,7 +638,7 @@ theorem limsupₛ_le_of_le {f : Filter α} {a}
 #align filter.Limsup_le_of_le Filter.limsupₛ_le_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.le_liminfₛ_of_le /-
 theorem le_liminfₛ_of_le {f : Filter α} {a}
     (hf : f.IsCobounded (· ≥ ·) := by
@@ -656,7 +656,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} [β : ConditionallyCompleteLattice.{u_1} α] {_inst_1 : Filter.{u_1} α} {f : α}, (autoParam.{0} (Filter.IsCobounded.{u_1} α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.4412 : α) (x._@.Mathlib.Order.LiminfLimsup._hyg.4414 : α) => LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (SemilatticeInf.toPartialOrder.{u_1} α (Lattice.toSemilatticeInf.{u_1} α (ConditionallyCompleteLattice.toLattice.{u_1} α β))))) x._@.Mathlib.Order.LiminfLimsup._hyg.4412 x._@.Mathlib.Order.LiminfLimsup._hyg.4414) _inst_1) _auto._@.Mathlib.Order.LiminfLimsup._hyg.4378) -> (Filter.Eventually.{u_1} α (fun (n : α) => LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (SemilatticeInf.toPartialOrder.{u_1} α (Lattice.toSemilatticeInf.{u_1} α (ConditionallyCompleteLattice.toLattice.{u_1} α β))))) n f) _inst_1) -> (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (SemilatticeInf.toPartialOrder.{u_1} α (Lattice.toSemilatticeInf.{u_1} α (ConditionallyCompleteLattice.toLattice.{u_1} α β))))) (Filter.limsupₛ.{u_1} α β _inst_1) f)
 Case conversion may be inaccurate. Consider using '#align filter.limsup_le_of_le Filter.limsupₛ_le_of_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem limsupₛ_le_of_le {f : Filter β} {u : β → α} {a}
     (hf : f.IsCoboundedUnder (· ≤ ·) u := by
       run_tac
@@ -665,7 +665,7 @@ theorem limsupₛ_le_of_le {f : Filter β} {u : β → α} {a}
   cinfₛ_le hf h
 #align filter.limsup_le_of_le Filter.limsupₛ_le_of_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.le_liminf_of_le /-
 theorem le_liminf_of_le {f : Filter β} {u : β → α} {a}
     (hf : f.IsCoboundedUnder (· ≥ ·) u := by
@@ -676,7 +676,7 @@ theorem le_liminf_of_le {f : Filter β} {u : β → α} {a}
 #align filter.le_liminf_of_le Filter.le_liminf_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.le_limsupₛ_of_le /-
 theorem le_limsupₛ_of_le {f : Filter α} {a}
     (hf : f.IsBounded (· ≤ ·) := by
@@ -687,7 +687,7 @@ theorem le_limsupₛ_of_le {f : Filter α} {a}
 #align filter.le_Limsup_of_le Filter.le_limsupₛ_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.liminfₛ_le_of_le /-
 theorem liminfₛ_le_of_le {f : Filter α} {a}
     (hf : f.IsBounded (· ≥ ·) := by
@@ -698,7 +698,7 @@ theorem liminfₛ_le_of_le {f : Filter α} {a}
 #align filter.Liminf_le_of_le Filter.liminfₛ_le_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.le_limsup_of_le /-
 theorem le_limsup_of_le {f : Filter β} {u : β → α} {a}
     (hf : f.IsBoundedUnder (· ≤ ·) u := by
@@ -709,7 +709,7 @@ theorem le_limsup_of_le {f : Filter β} {u : β → α} {a}
 #align filter.le_limsup_of_le Filter.le_limsup_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.liminf_le_of_le /-
 theorem liminf_le_of_le {f : Filter β} {u : β → α} {a}
     (hf : f.IsBoundedUnder (· ≥ ·) u := by
@@ -720,8 +720,8 @@ theorem liminf_le_of_le {f : Filter β} {u : β → α} {a}
 #align filter.liminf_le_of_le Filter.liminf_le_of_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.liminfₛ_le_limsupₛ /-
 theorem liminfₛ_le_limsupₛ {f : Filter α} [NeBot f]
     (h₁ : f.IsBounded (· ≤ ·) := by
@@ -739,8 +739,8 @@ theorem liminfₛ_le_limsupₛ {f : Filter α} [NeBot f]
 #align filter.Liminf_le_Limsup Filter.liminfₛ_le_limsupₛ
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.liminf_le_limsup /-
 theorem liminf_le_limsup {f : Filter β} [NeBot f] {u : β → α}
     (h : f.IsBoundedUnder (· ≤ ·) u := by
@@ -754,8 +754,8 @@ theorem liminf_le_limsup {f : Filter β} [NeBot f] {u : β → α}
 #align filter.liminf_le_limsup Filter.liminf_le_limsup
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.limsupₛ_le_limsupₛ /-
 theorem limsupₛ_le_limsupₛ {f g : Filter α}
     (hf : f.IsCobounded (· ≤ ·) := by
@@ -769,8 +769,8 @@ theorem limsupₛ_le_limsupₛ {f g : Filter α}
 #align filter.Limsup_le_Limsup Filter.limsupₛ_le_limsupₛ
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.liminfₛ_le_liminfₛ /-
 theorem liminfₛ_le_liminfₛ {f g : Filter α}
     (hf : f.IsBounded (· ≥ ·) := by
@@ -784,8 +784,8 @@ theorem liminfₛ_le_liminfₛ {f g : Filter α}
 #align filter.Liminf_le_Liminf Filter.liminfₛ_le_liminfₛ
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.limsup_le_limsup /-
 theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : u ≤ᶠ[f] v)
@@ -800,8 +800,8 @@ theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
 #align filter.limsup_le_limsup Filter.limsup_le_limsup
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.liminf_le_liminf /-
 theorem liminf_le_liminf {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : ∀ᶠ a in f, u a ≤ v a)
@@ -822,8 +822,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f g) -> (autoParam.{0} (Filter.IsCobounded.{u1} α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6061 : α) (x._@.Mathlib.Order.LiminfLimsup._hyg.6063 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6061 x._@.Mathlib.Order.LiminfLimsup._hyg.6063) f) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6033) -> (autoParam.{0} (Filter.IsBounded.{u1} α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6102 : α) (x._@.Mathlib.Order.LiminfLimsup._hyg.6104 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6102 x._@.Mathlib.Order.LiminfLimsup._hyg.6104) g) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6074) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) (Filter.limsupₛ.{u1} α _inst_1 f) (Filter.limsupₛ.{u1} α _inst_1 g))
 Case conversion may be inaccurate. Consider using '#align filter.Limsup_le_Limsup_of_le Filter.limsupₛ_le_limsupₛ_of_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem limsupₛ_le_limsupₛ_of_le {f g : Filter α} (h : f ≤ g)
     (hf : f.IsCobounded (· ≤ ·) := by
       run_tac
@@ -841,8 +841,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {f : Filter.{u1} α} {g : Filter.{u1} α}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) g f) -> (autoParam.{0} (Filter.IsBounded.{u1} α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6184 : α) (x._@.Mathlib.Order.LiminfLimsup._hyg.6186 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6184 x._@.Mathlib.Order.LiminfLimsup._hyg.6186) f) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6156) -> (autoParam.{0} (Filter.IsCobounded.{u1} α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6225 : α) (x._@.Mathlib.Order.LiminfLimsup._hyg.6227 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6225 x._@.Mathlib.Order.LiminfLimsup._hyg.6227) g) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6197) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) (Filter.liminfₛ.{u1} α _inst_1 f) (Filter.liminfₛ.{u1} α _inst_1 g))
 Case conversion may be inaccurate. Consider using '#align filter.Liminf_le_Liminf_of_le Filter.liminfₛ_le_liminfₛ_of_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem liminfₛ_le_liminfₛ_of_le {f g : Filter α} (h : g ≤ f)
     (hf : f.IsBounded (· ≥ ·) := by
       run_tac
@@ -860,8 +860,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : ConditionallyCompleteLattice.{u1} β] {f : Filter.{u2} α} {g : Filter.{u2} α}, (LE.le.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) f g) -> (forall {u : α -> β}, (autoParam.{0} (Filter.IsCoboundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6315 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.6317 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6315 x._@.Mathlib.Order.LiminfLimsup._hyg.6317) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6287) -> (autoParam.{0} (Filter.IsBoundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6357 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.6359 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6357 x._@.Mathlib.Order.LiminfLimsup._hyg.6359) g u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6329) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) (Filter.limsup.{u1, u2} β α _inst_2 u f) (Filter.limsup.{u1, u2} β α _inst_2 u g)))
 Case conversion may be inaccurate. Consider using '#align filter.limsup_le_limsup_of_le Filter.limsup_le_limsup_of_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem limsup_le_limsup_of_le {α β} [ConditionallyCompleteLattice β] {f g : Filter α} (h : f ≤ g)
     {u : α → β}
     (hf : f.IsCoboundedUnder (· ≤ ·) u := by
@@ -880,8 +880,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : ConditionallyCompleteLattice.{u1} β] {f : Filter.{u2} α} {g : Filter.{u2} α}, (LE.le.{u2} (Filter.{u2} α) (Preorder.toLE.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α))) g f) -> (forall {u : α -> β}, (autoParam.{0} (Filter.IsBoundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6441 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.6443 : β) => GE.ge.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6441 x._@.Mathlib.Order.LiminfLimsup._hyg.6443) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6413) -> (autoParam.{0} (Filter.IsCoboundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.6483 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.6485 : β) => GE.ge.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.6483 x._@.Mathlib.Order.LiminfLimsup._hyg.6485) g u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.6455) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) (Filter.liminf.{u1, u2} β α _inst_2 u f) (Filter.liminf.{u1, u2} β α _inst_2 u g)))
 Case conversion may be inaccurate. Consider using '#align filter.liminf_le_liminf_of_le Filter.liminf_le_liminf_of_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem liminf_le_liminf_of_le {α β} [ConditionallyCompleteLattice β] {f g : Filter α} (h : g ≤ f)
     {u : α → β}
     (hf : f.IsBoundedUnder (· ≥ ·) u := by
@@ -1112,7 +1112,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {f : Filter.{u2} β} {u : β -> α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (Filter.limsup.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1) u f) (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) β (fun (n : β) => u n))
 Case conversion may be inaccurate. Consider using '#align filter.limsup_le_supr Filter.limsup_le_supᵢₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem limsup_le_supᵢ {f : Filter β} {u : β → α} : limsup u f ≤ ⨆ n, u n :=
   limsupₛ_le_of_le
     (by
@@ -1127,7 +1127,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {f : Filter.{u2} β} {u : β -> α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) β (fun (n : β) => u n)) (Filter.liminf.{u1, u2} α β (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1) u f)
 Case conversion may be inaccurate. Consider using '#align filter.infi_le_liminf Filter.infᵢ_le_liminfₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem infᵢ_le_liminf {f : Filter β} {u : β → α} : (⨅ n, u n) ≤ liminf u f :=
   le_liminf_of_le
     (by
@@ -1839,7 +1839,7 @@ end SetLattice
 
 section ConditionallyCompleteLinearOrder
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.frequently_lt_of_lt_limsupₛ /-
 theorem frequently_lt_of_lt_limsupₛ {f : Filter α} [ConditionallyCompleteLinearOrder α] {a : α}
     (hf : f.IsCobounded (· ≤ ·) := by
@@ -1853,7 +1853,7 @@ theorem frequently_lt_of_lt_limsupₛ {f : Filter α} [ConditionallyCompleteLine
 #align filter.frequently_lt_of_lt_Limsup Filter.frequently_lt_of_lt_limsupₛ
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 #print Filter.frequently_lt_of_liminfₛ_lt /-
 theorem frequently_lt_of_liminfₛ_lt {f : Filter α} [ConditionallyCompleteLinearOrder α] {a : α}
     (hf : f.IsCobounded (· ≥ ·) := by
@@ -1870,7 +1870,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {u : α -> β} {b : β}, (LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) b (Filter.liminf.{u1, u2} β α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) u f)) -> (autoParam.{0} (Filter.IsBoundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.13616 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.13618 : β) => GE.ge.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.LiminfLimsup._hyg.13616 x._@.Mathlib.Order.LiminfLimsup._hyg.13618) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.13588) -> (Filter.Eventually.{u2} α (fun (a : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) b (u a)) f)
 Case conversion may be inaccurate. Consider using '#align filter.eventually_lt_of_lt_liminf Filter.eventually_lt_of_lt_liminfₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β}
     {b : β} (h : b < liminf u f)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by
@@ -1889,7 +1889,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {u : α -> β} {b : β}, (LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (Filter.limsup.{u1, u2} β α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) u f) b) -> (autoParam.{0} (Filter.IsBoundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.13787 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.13789 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.LiminfLimsup._hyg.13787 x._@.Mathlib.Order.LiminfLimsup._hyg.13789) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.13759) -> (Filter.Eventually.{u2} α (fun (a : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (u a) b) f)
 Case conversion may be inaccurate. Consider using '#align filter.eventually_lt_of_limsup_lt Filter.eventually_lt_of_limsup_ltₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β}
     {b : β} (h : limsup u f < b)
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
@@ -1905,7 +1905,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {f : Filter.{u2} α} {u : α -> β} {b : β}, (Filter.Frequently.{u2} α (fun (x : α) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) b (u x)) f) -> (autoParam.{0} (Filter.IsBoundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.13899 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.13901 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.LiminfLimsup._hyg.13899 x._@.Mathlib.Order.LiminfLimsup._hyg.13901) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.13871) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) b (Filter.limsup.{u1, u2} β α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) u f))
 Case conversion may be inaccurate. Consider using '#align filter.le_limsup_of_frequently_le Filter.le_limsup_of_frequently_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α}
     {u : α → β} {b : β} (hu_le : ∃ᶠ x in f, b ≤ u x)
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
@@ -1924,7 +1924,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {f : Filter.{u2} α} {u : α -> β} {b : β}, (Filter.Frequently.{u2} α (fun (x : α) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (u x) b) f) -> (autoParam.{0} (Filter.IsBoundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.14034 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.14036 : β) => GE.ge.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.LiminfLimsup._hyg.14034 x._@.Mathlib.Order.LiminfLimsup._hyg.14036) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14006) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (Filter.liminf.{u1, u2} β α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) u f) b)
 Case conversion may be inaccurate. Consider using '#align filter.liminf_le_of_frequently_le Filter.liminf_le_of_frequently_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem liminf_le_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α}
     {u : α → β} {b : β} (hu_le : ∃ᶠ x in f, u x ≤ b)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by
@@ -1940,7 +1940,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {f : Filter.{u2} α} {u : α -> β} {b : β}, (autoParam.{0} (Filter.IsCoboundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.14107 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.14109 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.LiminfLimsup._hyg.14107 x._@.Mathlib.Order.LiminfLimsup._hyg.14109) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14079) -> (LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) b (Filter.limsup.{u1, u2} β α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) u f)) -> (Filter.Frequently.{u2} α (fun (x : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) b (u x)) f)
 Case conversion may be inaccurate. Consider using '#align filter.frequently_lt_of_lt_limsup Filter.frequently_lt_of_lt_limsupₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α}
     {u : α → β} {b : β}
     (hu : f.IsCoboundedUnder (· ≤ ·) u := by
@@ -1959,7 +1959,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {f : Filter.{u2} α} {u : α -> β} {b : β}, (autoParam.{0} (Filter.IsCoboundedUnder.{u1, u2} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.14224 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.14226 : β) => GE.ge.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.LiminfLimsup._hyg.14224 x._@.Mathlib.Order.LiminfLimsup._hyg.14226) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14196) -> (LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (Filter.liminf.{u1, u2} β α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) u f) b) -> (Filter.Frequently.{u2} α (fun (x : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (u x) b) f)
 Case conversion may be inaccurate. Consider using '#align filter.frequently_lt_of_liminf_lt Filter.frequently_lt_of_liminf_ltₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem frequently_lt_of_liminf_lt {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α}
     {u : α → β} {b : β}
     (hu : f.IsCoboundedUnder (· ≥ ·) u := by
@@ -2035,8 +2035,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u3} β] [_inst_2 : ConditionallyCompleteLattice.{u2} γ] {f : Filter.{u1} α} {v : α -> β} {l : β -> γ} {u : γ -> β}, (GaloisConnection.{u3, u2} β γ (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (ConditionallyCompleteLattice.toLattice.{u3} β _inst_1)))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_2)))) l u) -> (autoParam.{0} (Filter.IsBoundedUnder.{u2, u1} γ α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.14768 : γ) (x._@.Mathlib.Order.LiminfLimsup._hyg.14770 : γ) => LE.le.{u2} γ (Preorder.toLE.{u2} γ (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.14768 x._@.Mathlib.Order.LiminfLimsup._hyg.14770) f (fun (x : α) => l (v x))) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14740) -> (autoParam.{0} (Filter.IsCoboundedUnder.{u3, u1} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.14817 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.14819 : β) => LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (ConditionallyCompleteLattice.toLattice.{u3} β _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.14817 x._@.Mathlib.Order.LiminfLimsup._hyg.14819) f v) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14789) -> (LE.le.{u2} γ (Preorder.toLE.{u2} γ (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_2))))) (l (Filter.limsup.{u3, u1} β α _inst_1 v f)) (Filter.limsup.{u2, u1} γ α _inst_2 (fun (x : α) => l (v x)) f))
 Case conversion may be inaccurate. Consider using '#align galois_connection.l_limsup_le GaloisConnection.l_limsup_leₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β]
     [ConditionallyCompleteLattice γ] {f : Filter α} {v : α → β} {l : β → γ} {u : γ → β}
     (gc : GaloisConnection l u)
@@ -2060,10 +2060,10 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : ConditionallyCompleteLattice.{u2} β] [_inst_2 : ConditionallyCompleteLattice.{u3} γ] {f : Filter.{u1} α} {u : α -> β} (g : OrderIso.{u2, u3} β γ (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2)))))), (autoParam.{0} (Filter.IsBoundedUnder.{u2, u1} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.14959 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.14961 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.14959 x._@.Mathlib.Order.LiminfLimsup._hyg.14961) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14931) -> (autoParam.{0} (Filter.IsCoboundedUnder.{u2, u1} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15001 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.15003 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15001 x._@.Mathlib.Order.LiminfLimsup._hyg.15003) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.14973) -> (autoParam.{0} (Filter.IsBoundedUnder.{u3, u1} γ α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15043 : γ) (x._@.Mathlib.Order.LiminfLimsup._hyg.15045 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15043 x._@.Mathlib.Order.LiminfLimsup._hyg.15045) f (fun (x : α) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (u x))) _auto._@.Mathlib.Order.LiminfLimsup._hyg.15015) -> (autoParam.{0} (Filter.IsCoboundedUnder.{u3, u1} γ α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15092 : γ) (x._@.Mathlib.Order.LiminfLimsup._hyg.15094 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15092 x._@.Mathlib.Order.LiminfLimsup._hyg.15094) f (fun (x : α) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (u x))) _auto._@.Mathlib.Order.LiminfLimsup._hyg.15064) -> (Eq.{succ u3} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) (Filter.limsup.{u2, u1} β α _inst_1 u f)) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (Filter.limsup.{u2, u1} β α _inst_1 u f)) (Filter.limsup.{u3, u1} γ α _inst_2 (fun (x : α) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (u x)) f))
 Case conversion may be inaccurate. Consider using '#align order_iso.limsup_apply OrderIso.limsup_applyₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ]
     {f : Filter α} {u : α → β} (g : β ≃o γ)
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
@@ -2096,10 +2096,10 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : ConditionallyCompleteLattice.{u2} β] [_inst_2 : ConditionallyCompleteLattice.{u3} γ] {f : Filter.{u1} α} {u : α -> β} (g : OrderIso.{u2, u3} β γ (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2)))))), (autoParam.{0} (Filter.IsBoundedUnder.{u2, u1} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15339 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.15341 : β) => GE.ge.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15339 x._@.Mathlib.Order.LiminfLimsup._hyg.15341) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.15311) -> (autoParam.{0} (Filter.IsCoboundedUnder.{u2, u1} β α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15381 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.15383 : β) => GE.ge.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15381 x._@.Mathlib.Order.LiminfLimsup._hyg.15383) f u) _auto._@.Mathlib.Order.LiminfLimsup._hyg.15353) -> (autoParam.{0} (Filter.IsBoundedUnder.{u3, u1} γ α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15423 : γ) (x._@.Mathlib.Order.LiminfLimsup._hyg.15425 : γ) => GE.ge.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15423 x._@.Mathlib.Order.LiminfLimsup._hyg.15425) f (fun (x : α) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (u x))) _auto._@.Mathlib.Order.LiminfLimsup._hyg.15395) -> (autoParam.{0} (Filter.IsCoboundedUnder.{u3, u1} γ α (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.15472 : γ) (x._@.Mathlib.Order.LiminfLimsup._hyg.15474 : γ) => GE.ge.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.LiminfLimsup._hyg.15472 x._@.Mathlib.Order.LiminfLimsup._hyg.15474) f (fun (x : α) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (u x))) _auto._@.Mathlib.Order.LiminfLimsup._hyg.15444) -> (Eq.{succ u3} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) (Filter.liminf.{u2, u1} β α _inst_1 u f)) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (Filter.liminf.{u2, u1} β α _inst_1 u f)) (Filter.liminf.{u3, u1} γ α _inst_2 (fun (x : α) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u3), succ u2, succ u3} (Function.Embedding.{succ u2, succ u3} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u3} β γ)) (RelEmbedding.toEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u3} β γ (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1))))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : γ) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_2))))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) g)) (u x)) f))
 Case conversion may be inaccurate. Consider using '#align order_iso.liminf_apply OrderIso.liminf_applyₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem OrderIso.liminf_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ]
     {f : Filter α} {u : α → β} (g : β ≃o γ)
     (hu : f.IsBoundedUnder (· ≥ ·) u := by

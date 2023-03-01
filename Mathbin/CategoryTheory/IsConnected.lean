@@ -222,9 +222,9 @@ theorem isPreconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPrec
       ⟨calc
           F ≅ e.inverse ⋙ e.Functor ⋙ F := (e.invFunIdAssoc F).symm
           _ ≅ e.inverse ⋙ (Functor.const J).obj ((e.Functor ⋙ F).obj (e.inverse.obj k)) :=
-            isoWhiskerLeft e.inverse (isoConstant (e.Functor ⋙ F) (e.inverse.obj k))
+            (isoWhiskerLeft e.inverse (isoConstant (e.Functor ⋙ F) (e.inverse.obj k)))
           _ ≅ e.inverse ⋙ (Functor.const J).obj (F.obj k) :=
-            isoWhiskerLeft _ ((F ⋙ Functor.const J).mapIso (e.counitIso.app k))
+            (isoWhiskerLeft _ ((F ⋙ Functor.const J).mapIso (e.counitIso.app k)))
           _ ≅ (Functor.const K).obj (F.obj k) := NatIso.ofComponents (fun X => Iso.refl _) (by simp)
           ⟩ }
 #align category_theory.is_preconnected_of_equivalent CategoryTheory.isPreconnected_of_equivalent

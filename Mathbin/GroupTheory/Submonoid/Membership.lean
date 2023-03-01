@@ -825,7 +825,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {s : Set.{u1} M}, (forall (a : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) a s) -> (forall (b : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) b s) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a b) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) b a)))) -> (CommMonoid.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x (Submonoid.closure.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1) s))))
 Case conversion may be inaccurate. Consider using '#align submonoid.closure_comm_monoid_of_comm Submonoid.closureCommMonoidOfCommₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive
       "If all the elements of a set `s` commute, then `closure s` forms an additive\ncommutative monoid."]

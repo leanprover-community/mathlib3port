@@ -68,7 +68,7 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
       change perm.subtype_equiv_subtype_perm p f a = a
       rw [perm.subtype_equiv_subtype_perm_apply_of_mem f ha, hfa, Subtype.coe_mk]
     _ ≃ { f : Perm α // ∃ h : ∀ a, ¬p a → a ∈ fixedPoints f, ∀ a, a ∈ fixedPoints f → ¬p a } :=
-      subtypeSubtypeEquivSubtypeExists _ _
+      (subtypeSubtypeEquivSubtypeExists _ _)
     _ ≃ { f : Perm α // ∀ a, ¬p a ↔ a ∈ fixedPoints f } :=
       subtypeEquivRight fun f => by
         simp_rw [exists_prop, ← forall_and, ← iff_iff_implies_and_implies]
@@ -189,9 +189,9 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
   calc
     derangements (Option α) ≃ Equiv.Perm.decomposeOption '' derangements (Option α) :=
       Equiv.image _ _
-    _ ≃ Σa : Option α, ↥(equiv.remove_none.fiber a) := set_prod_equiv_sigma _
+    _ ≃ Σa : Option α, ↥(equiv.remove_none.fiber a) := (set_prod_equiv_sigma _)
     _ ≃ Σa : α, ↥(equiv.remove_none.fiber (some a)) :=
-      sigma_option_equiv_of_some _ fiber_none_is_false
+      (sigma_option_equiv_of_some _ fiber_none_is_false)
     _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } := by simp_rw [equiv.remove_none.fiber_some]
     
 #align derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint

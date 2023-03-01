@@ -406,19 +406,20 @@ noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, fixedBy α β a)
   calc
     (Σa : α, fixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } :=
       (Equiv.subtypeProdEquivSigmaSubtype _).symm
-    _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } := (Equiv.prodComm α β).subtypeEquiv fun ab => Iff.rfl
+    _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } :=
+      ((Equiv.prodComm α β).subtypeEquiv fun ab => Iff.rfl)
     _ ≃ Σb : β, stabilizer α b :=
-      Equiv.subtypeProdEquivSigmaSubtype fun (b : β) a => a ∈ stabilizer α b
+      (Equiv.subtypeProdEquivSigmaSubtype fun (b : β) a => a ∈ stabilizer α b)
     _ ≃ Σωb : Σω : Ω, orbit α ω.out', stabilizer α (ωb.2 : β) :=
       (selfEquivSigmaOrbits α β).sigmaCongrLeft'
     _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α (b : β) :=
-      Equiv.sigmaAssoc fun (ω : Ω) (b : orbit α ω.out') => stabilizer α (b : β)
+      (Equiv.sigmaAssoc fun (ω : Ω) (b : orbit α ω.out') => stabilizer α (b : β))
     _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α ω.out' :=
-      Equiv.sigmaCongrRight fun ω =>
-        Equiv.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv
+      (Equiv.sigmaCongrRight fun ω =>
+        Equiv.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv)
     _ ≃ Σω : Ω, orbit α ω.out' × stabilizer α ω.out' :=
-      Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _
-    _ ≃ Σω : Ω, α := Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out'
+      (Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _)
+    _ ≃ Σω : Ω, α := (Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out')
     _ ≃ Ω × α := Equiv.sigmaEquivProd Ω α
     
 #align mul_action.sigma_fixed_by_equiv_orbits_prod_group MulAction.sigmaFixedByEquivOrbitsProdGroup

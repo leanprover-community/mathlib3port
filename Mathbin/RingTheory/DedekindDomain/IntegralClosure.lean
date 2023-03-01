@@ -106,7 +106,7 @@ variable (A) (K)
 
 include K
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) :
@@ -153,7 +153,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
     ⟨s',
       bs'.map
         {
-          Algebra.lmul _ _
+          LinearMap.Algebra.lmul _ _
             (algebraMap A L y) with
           toFun := fun x => algebraMap A L y * x
           invFun := fun x => (algebraMap A L y)⁻¹ * x

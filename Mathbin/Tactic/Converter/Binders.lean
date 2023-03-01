@@ -266,14 +266,14 @@ section
 
 variable [CompleteLattice α]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : infₛ (Set.image f s) = ⨅ a ∈ s, f a :=
   by
   simp [infₛ_eq_infᵢ, infᵢ_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : supₛ (Set.image f s) = ⨆ a ∈ s, f a :=
   by
   simp [supₛ_eq_supᵢ, supᵢ_and]

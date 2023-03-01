@@ -150,8 +150,8 @@ theorem infEdist_closure : infEdist x (closure s) = infEdist x s :=
   -- z : α,  zs : z ∈ s,  dyz : edist y z < ↑ε / 2
   calc
     inf_edist x s ≤ edist x z := inf_edist_le_edist_of_mem zs
-    _ ≤ edist x y + edist y z := edist_triangle _ _ _
-    _ ≤ inf_edist x (closure s) + ε / 2 + ε / 2 := add_le_add (le_of_lt hy) (le_of_lt dyz)
+    _ ≤ edist x y + edist y z := (edist_triangle _ _ _)
+    _ ≤ inf_edist x (closure s) + ε / 2 + ε / 2 := (add_le_add (le_of_lt hy) (le_of_lt dyz))
     _ = inf_edist x (closure s) + ↑ε := by rw [add_assoc, ENNReal.add_halves]
     
 #align emetric.inf_edist_closure Emetric.infEdist_closure
@@ -349,8 +349,8 @@ theorem infEdist_le_infEdist_add_hausdorffEdist :
     -- z : α,  zt : z ∈ t,  dyz : edist y z < Hausdorff_edist s t + ↑ε / 2
     calc
       inf_edist x t ≤ edist x z := inf_edist_le_edist_of_mem zt
-      _ ≤ edist x y + edist y z := edist_triangle _ _ _
-      _ ≤ inf_edist x s + ε / 2 + (Hausdorff_edist s t + ε / 2) := add_le_add dxy.le dyz.le
+      _ ≤ edist x y + edist y z := (edist_triangle _ _ _)
+      _ ≤ inf_edist x s + ε / 2 + (Hausdorff_edist s t + ε / 2) := (add_le_add dxy.le dyz.le)
       _ = inf_edist x s + Hausdorff_edist s t + ε := by
         simp [ENNReal.add_halves, add_comm, add_left_comm]
       
@@ -395,7 +395,7 @@ theorem hausdorffEdist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + ha
       inf_edist x s ≤ inf_edist x t + Hausdorff_edist t s :=
         inf_edist_le_inf_edist_add_Hausdorff_edist
       _ ≤ Hausdorff_edist u t + Hausdorff_edist t s :=
-        add_le_add_right (inf_edist_le_Hausdorff_edist_of_mem xu) _
+        (add_le_add_right (inf_edist_le_Hausdorff_edist_of_mem xu) _)
       _ = Hausdorff_edist s t + Hausdorff_edist t u := by simp [Hausdorff_edist_comm, add_comm]
       
 #align emetric.Hausdorff_edist_triangle Emetric.hausdorffEdist_triangle
@@ -1382,7 +1382,7 @@ theorem Disjoint.exists_thickenings (hst : Disjoint s t) (hs : IsCompact s) (ht 
   refine' (h x hx y hy).not_le _
   calc
     edist x y ≤ edist z x + edist z y := edist_triangle_left _ _ _
-    _ ≤ ↑(r / 2) + ↑(r / 2) := add_le_add hzx.le hzy.le
+    _ ≤ ↑(r / 2) + ↑(r / 2) := (add_le_add hzx.le hzy.le)
     _ = r := by rw [← ENNReal.coe_add, add_halves]
     
 #align disjoint.exists_thickenings Disjoint.exists_thickenings

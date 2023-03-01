@@ -449,9 +449,9 @@ def opCospan {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
   calc
     (cospan f g).op ≅ 𝟭 _ ⋙ (cospan f g).op := by rfl
     _ ≅ (walkingCospanOpEquiv.Functor ⋙ walkingCospanOpEquiv.inverse) ⋙ (cospan f g).op :=
-      isoWhiskerRight walkingCospanOpEquiv.unitIso _
+      (isoWhiskerRight walkingCospanOpEquiv.unitIso _)
     _ ≅ walkingCospanOpEquiv.Functor ⋙ walkingCospanOpEquiv.inverse ⋙ (cospan f g).op :=
-      Functor.associator _ _ _
+      (Functor.associator _ _ _)
     _ ≅ walkingCospanOpEquiv.Functor ⋙ span f.op g.op := isoWhiskerLeft _ (spanOp f g).symm
     
 #align category_theory.limits.op_cospan CategoryTheory.Limits.opCospan
@@ -471,9 +471,9 @@ def opSpan {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) :
   calc
     (span f g).op ≅ 𝟭 _ ⋙ (span f g).op := by rfl
     _ ≅ (walkingSpanOpEquiv.Functor ⋙ walkingSpanOpEquiv.inverse) ⋙ (span f g).op :=
-      isoWhiskerRight walkingSpanOpEquiv.unitIso _
+      (isoWhiskerRight walkingSpanOpEquiv.unitIso _)
     _ ≅ walkingSpanOpEquiv.Functor ⋙ walkingSpanOpEquiv.inverse ⋙ (span f g).op :=
-      Functor.associator _ _ _
+      (Functor.associator _ _ _)
     _ ≅ walkingSpanOpEquiv.Functor ⋙ cospan f.op g.op := isoWhiskerLeft _ (cospanOp f g).symm
     
 #align category_theory.limits.op_span CategoryTheory.Limits.opSpan

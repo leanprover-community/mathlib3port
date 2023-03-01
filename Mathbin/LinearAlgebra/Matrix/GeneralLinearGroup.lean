@@ -267,7 +267,7 @@ end SpecialLinearGroup
 section Examples
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
@@ -275,7 +275,7 @@ def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) :
     Matrix.GeneralLinearGroup (Fin 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
     («expr!![ »
-      "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
+      "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation")
     (by simpa [det_fin_two, sq] using hab)
 #align matrix.plane_conformal_matrix Matrix.planeConformalMatrix
 

@@ -598,7 +598,7 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
     calc
       ‖a.fst b‖₊ ^ 2 = ‖star (a.fst b) * a.fst b‖₊ := by
         simpa only [← sq] using CstarRing.nnnorm_star_mul_self.symm
-      _ ≤ ‖a.snd (star (a.fst b))‖₊ * ‖b‖₊ := a.central (star (a.fst b)) b ▸ nnnorm_mul_le _ _
+      _ ≤ ‖a.snd (star (a.fst b))‖₊ * ‖b‖₊ := (a.central (star (a.fst b)) b ▸ nnnorm_mul_le _ _)
       _ ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊ :=
         nnnorm_star (a.fst b) ▸ mul_le_mul_right' (a.snd.le_op_nnnorm _) _
       
@@ -609,8 +609,8 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
       ‖a.snd b‖₊ ^ 2 = ‖a.snd b * star (a.snd b)‖₊ := by
         simpa only [← sq] using CstarRing.nnnorm_self_mul_star.symm
       _ ≤ ‖b‖₊ * ‖a.fst (star (a.snd b))‖₊ :=
-        (a.central b (star (a.snd b))).symm ▸ nnnorm_mul_le _ _
-      _ = ‖a.fst (star (a.snd b))‖₊ * ‖b‖₊ := mul_comm _ _
+        ((a.central b (star (a.snd b))).symm ▸ nnnorm_mul_le _ _)
+      _ = ‖a.fst (star (a.snd b))‖₊ * ‖b‖₊ := (mul_comm _ _)
       _ ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊ :=
         nnnorm_star (a.snd b) ▸ mul_le_mul_right' (a.fst.le_op_nnnorm _) _
       
@@ -677,8 +677,8 @@ instance : CstarRing 𝓜(𝕜, A)
             ‖star (a.fst (star x)) * a.fst y‖₊ ≤ ‖a.fst (star x)‖₊ * ‖a.fst y‖₊ :=
               nnnorm_star (a.fst (star x)) ▸ nnnorm_mul_le _ _
             _ ≤ ‖a.fst‖₊ * 1 * (‖a.fst‖₊ * 1) :=
-              mul_le_mul' (a.fst.le_op_norm_of_le ((nnnorm_star x).trans_le hx))
-                (a.fst.le_op_norm_of_le hy)
+              (mul_le_mul' (a.fst.le_op_norm_of_le ((nnnorm_star x).trans_le hx))
+                (a.fst.le_op_norm_of_le hy))
             _ ≤ ‖a‖₊ * ‖a‖₊ := by simp only [mul_one, nnnorm_fst]
             
         rw [← nnnorm_snd]

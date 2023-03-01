@@ -158,10 +158,10 @@ theorem measure_le_of_frequently_le [SecondCountableTopology α] [BorelSpace α]
   haveI : Encodable h.index := h.index_countable.to_encodable
   calc
     ρ s ≤ ∑' x : h.index, ρ (h.covering x) := h.measure_le_tsum_of_absolutely_continuous hρ
-    _ ≤ ∑' x : h.index, ν (h.covering x) := ENNReal.tsum_le_tsum fun x => (h.covering_mem x.2).1
+    _ ≤ ∑' x : h.index, ν (h.covering x) := (ENNReal.tsum_le_tsum fun x => (h.covering_mem x.2).1)
     _ = ν (⋃ x : h.index, h.covering x) := by
       rw [measure_Union h.covering_disjoint_subtype fun i => h.measurable_set_u i.2]
-    _ ≤ ν U := measure_mono (Union_subset fun i => (h.covering_mem i.2).2)
+    _ ≤ ν U := (measure_mono (Union_subset fun i => (h.covering_mem i.2).2))
     _ ≤ ν s + ε := νU
     
 #align vitali_family.measure_le_of_frequently_le VitaliFamily.measure_le_of_frequently_le
@@ -188,7 +188,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
       μ s ≤ μ (s ∩ o ∪ oᶜ) := by
         conv_lhs => rw [← inter_union_compl s o]
         exact measure_mono (union_subset_union_right _ (inter_subset_right _ _))
-      _ ≤ μ (s ∩ o) + μ (oᶜ) := measure_union_le _ _
+      _ ≤ μ (s ∩ o) + μ (oᶜ) := (measure_union_le _ _)
       _ = μ (s ∩ o) := by rw [μo, add_zero]
       _ = ε⁻¹ * (ε • μ) (s ∩ o) :=
         by
@@ -201,7 +201,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
         rw [hs] at hx
         simp only [mem_inter_iff, not_lt, not_eventually, mem_set_of_eq] at hx
         exact hx.1
-      _ ≤ ε⁻¹ * ρ o := mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _
+      _ ≤ ε⁻¹ * ρ o := (mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _)
       _ = 0 := by rw [ρo, mul_zero]
       
   obtain ⟨u, u_anti, u_pos, u_lim⟩ :
@@ -392,7 +392,7 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
         have : μ (sᶜ) = 0 := v.ae_tendsto_div hρ
         rw [measure_to_measurable, this, zero_add]
       _ ≤ ∑' (m) (n), μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
-        (measure_Union_le _).trans (ENNReal.tsum_le_tsum fun m => measure_Union_le _)
+        ((measure_Union_le _).trans (ENNReal.tsum_le_tsum fun m => measure_Union_le _))
       _ = 0 := by simp only [H, tsum_zero]
       
   -- now starts the nontrivial part of the argument. We fix `m` and `n`, and show that the
@@ -512,9 +512,9 @@ theorem measure_le_mul_of_subset_limRatioMeas_lt {p : ℝ≥0} {s : Set α}
   exact
     calc
       ρ s = ρ (s ∩ t ∪ s ∩ tᶜ) := by rw [inter_union_compl]
-      _ ≤ ρ (s ∩ t) + ρ (s ∩ tᶜ) := measure_union_le _ _
+      _ ≤ ρ (s ∩ t) + ρ (s ∩ tᶜ) := (measure_union_le _ _)
       _ ≤ p * μ (s ∩ t) + 0 :=
-        add_le_add H ((measure_mono (inter_subset_right _ _)).trans (hρ A).le)
+        (add_le_add H ((measure_mono (inter_subset_right _ _)).trans (hρ A).le))
       _ ≤ p * μ s := by
         rw [add_zero]
         exact mul_le_mul_left' (measure_mono (inter_subset_left _ _)) _
@@ -539,7 +539,7 @@ theorem mul_measure_le_of_subset_lt_limRatioMeas {q : ℝ≥0} {s : Set α}
   exact
     calc
       (q • μ) s = (q • μ) (s ∩ t ∪ s ∩ tᶜ) := by rw [inter_union_compl]
-      _ ≤ (q • μ) (s ∩ t) + (q • μ) (s ∩ tᶜ) := measure_union_le _ _
+      _ ≤ (q • μ) (s ∩ t) + (q • μ) (s ∩ tᶜ) := (measure_union_le _ _)
       _ ≤ ρ (s ∩ t) + q * μ (tᶜ) := by
         apply add_le_add H
         rw [coe_nnreal_smul_apply]
@@ -679,7 +679,7 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     _ ≤
         ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' {0}) + ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' {∞}) +
           ∑' n : ℤ, ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      add_le_add (add_le_add A B) (ENNReal.tsum_le_tsum C)
+      (add_le_add (add_le_add A B) (ENNReal.tsum_le_tsum C))
     _ = ((t : ℝ≥0∞) ^ 2 • ρ) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ((t : ℝ≥0∞) ^ 2 • ρ) f_meas hs ht).symm
     
@@ -742,7 +742,7 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     _ ≤
         (t • ν) (s ∩ f ⁻¹' {0}) + (t • ν) (s ∩ f ⁻¹' {∞}) +
           ∑' n : ℤ, (t • ν) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      add_le_add (add_le_add A B) (ENNReal.tsum_le_tsum C)
+      (add_le_add (add_le_add A B) (ENNReal.tsum_le_tsum C))
     _ = (t • ν) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
     
@@ -928,7 +928,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
           rw [← ENNReal.coe_add]
           exact ENNReal.coe_le_coe.2 (nnnorm_sub_le _ _)
         _ = (∫⁻ y, ‖f y‖₊ ∂μ) + ∫⁻ y, ‖(A.set n).indicator (fun y : α => c) y‖₊ ∂μ :=
-          lintegral_add_left h'f.ennnorm _
+          (lintegral_add_left h'f.ennnorm _)
         _ < ∞ + ∞ :=
           haveI I : integrable ((A.set n).indicator fun y : α => c) μ := by
             simp only [integrable_indicator_iff (IsOpen.measurableSet (A.set_mem n)),
@@ -966,7 +966,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
       apply lintegral_mono fun x => _
       simpa only [← edist_eq_coe_nnnorm_sub] using edist_triangle_right _ _ _
     _ = (∫⁻ y in a, ‖f y - c‖₊ ∂μ) + ∫⁻ y in a, ‖f x - c‖₊ ∂μ :=
-      lintegral_add_right _ measurable_const
+      (lintegral_add_right _ measurable_const)
     _ ≤ ε / 2 * μ a + ε / 2 * μ a := by
       refine' add_le_add _ _
       · rw [ENNReal.div_lt_iff (Or.inl h'a.ne') (Or.inl h''a.ne)] at ha

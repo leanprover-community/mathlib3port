@@ -63,8 +63,8 @@ theorem cauchySeq_of_dist_le_of_summable (d : ℕ → ℝ) (hf : ∀ n, dist (f 
   rw [Real.dist_eq, ← sum_Ico_eq_sub _ hn] at hsum
   calc
     dist (f n) (f N) = dist (f N) (f n) := dist_comm _ _
-    _ ≤ ∑ x in Ico N n, d x := dist_le_Ico_sum_of_dist_le hn fun k _ _ => hf k
-    _ ≤ |∑ x in Ico N n, d x| := le_abs_self _
+    _ ≤ ∑ x in Ico N n, d x := (dist_le_Ico_sum_of_dist_le hn fun k _ _ => hf k)
+    _ ≤ |∑ x in Ico N n, d x| := (le_abs_self _)
     _ < ε := hsum
     
 #align cauchy_seq_of_dist_le_of_summable cauchySeq_of_dist_le_of_summable

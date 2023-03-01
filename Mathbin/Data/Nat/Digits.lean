@@ -35,18 +35,23 @@ namespace Nat
 
 variable {n : ℕ}
 
+#print Nat.digitsAux0 /-
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux0 : ℕ → List ℕ
   | 0 => []
   | n + 1 => [n + 1]
 #align nat.digits_aux_0 Nat.digitsAux0
+-/
 
+#print Nat.digitsAux1 /-
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux1 (n : ℕ) : List ℕ :=
   List.replicate n 1
 #align nat.digits_aux_1 Nat.digitsAux1
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digitsAux /-
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux (b : ℕ) (h : 2 ≤ b) : ℕ → List ℕ
   | 0 => []
@@ -54,12 +59,16 @@ def digitsAux (b : ℕ) (h : 2 ≤ b) : ℕ → List ℕ
     have : (n + 1) / b < n + 1 := Nat.div_lt_self (Nat.succ_pos _) h
     ((n + 1) % b)::digits_aux ((n + 1) / b)
 #align nat.digits_aux Nat.digitsAux
+-/
 
+#print Nat.digitsAux_zero /-
 @[simp]
 theorem digitsAux_zero (b : ℕ) (h : 2 ≤ b) : digitsAux b h 0 = [] := by rw [digits_aux]
 #align nat.digits_aux_zero Nat.digitsAux_zero
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digitsAux_def /-
 theorem digitsAux_def (b : ℕ) (h : 2 ≤ b) (n : ℕ) (w : 0 < n) :
     digitsAux b h n = (n % b)::digitsAux b h (n / b) :=
   by
@@ -67,7 +76,9 @@ theorem digitsAux_def (b : ℕ) (h : 2 ≤ b) (n : ℕ) (w : 0 < n) :
   · cases w
   · rw [digits_aux]
 #align nat.digits_aux_def Nat.digitsAux_def
+-/
 
+#print Nat.digits /-
 /-- `digits b n` gives the digits, in little-endian order,
 of a natural number `n` in a specified base `b`.
 
@@ -86,39 +97,53 @@ def digits : ℕ → ℕ → List ℕ
   | 1 => digitsAux1
   | b + 2 => digitsAux (b + 2) (by norm_num)
 #align nat.digits Nat.digits
+-/
 
+#print Nat.digits_zero /-
 @[simp]
 theorem digits_zero (b : ℕ) : digits b 0 = [] := by
   rcases b with (_ | ⟨_ | ⟨_⟩⟩) <;> simp [digits, digits_aux_0, digits_aux_1]
 #align nat.digits_zero Nat.digits_zero
+-/
 
+#print Nat.digits_zero_zero /-
 @[simp]
 theorem digits_zero_zero : digits 0 0 = [] :=
   rfl
 #align nat.digits_zero_zero Nat.digits_zero_zero
+-/
 
+#print Nat.digits_zero_succ /-
 @[simp]
 theorem digits_zero_succ (n : ℕ) : digits 0 n.succ = [n + 1] :=
   rfl
 #align nat.digits_zero_succ Nat.digits_zero_succ
+-/
 
+#print Nat.digits_zero_succ' /-
 theorem digits_zero_succ' : ∀ {n : ℕ}, n ≠ 0 → digits 0 n = [n]
   | 0, h => (h rfl).elim
   | n + 1, _ => rfl
 #align nat.digits_zero_succ' Nat.digits_zero_succ'
+-/
 
+#print Nat.digits_one /-
 @[simp]
 theorem digits_one (n : ℕ) : digits 1 n = List.replicate n 1 :=
   rfl
 #align nat.digits_one Nat.digits_one
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digits_one_succ /-
 @[simp]
 theorem digits_one_succ (n : ℕ) : digits 1 (n + 1) = 1::digits 1 n :=
   rfl
 #align nat.digits_one_succ Nat.digits_one_succ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digits_add_two_add_one /-
 @[simp]
 theorem digits_add_two_add_one (b n : ℕ) :
     digits (b + 2) (n + 1) = ((n + 1) % (b + 2))::digits (b + 2) ((n + 1) / (b + 2)) :=
@@ -126,15 +151,19 @@ theorem digits_add_two_add_one (b n : ℕ) :
   rw [digits, digits_aux_def]
   exact succ_pos n
 #align nat.digits_add_two_add_one Nat.digits_add_two_add_one
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digits_def' /-
 theorem digits_def' :
     ∀ {b : ℕ} (h : 1 < b) {n : ℕ} (w : 0 < n), digits b n = (n % b)::digits b (n / b)
   | 0, h => absurd h (by decide)
   | 1, h => absurd h (by decide)
   | b + 2, h => digitsAux_def _ _
 #align nat.digits_def' Nat.digits_def'
+-/
 
+#print Nat.digits_of_lt /-
 @[simp]
 theorem digits_of_lt (b x : ℕ) (hx : x ≠ 0) (hxb : x < b) : digits b x = [x] :=
   by
@@ -142,8 +171,10 @@ theorem digits_of_lt (b x : ℕ) (hx : x ≠ 0) (hxb : x < b) : digits b x = [x]
   rcases exists_eq_add_of_le' ((Nat.le_add_left 1 x).trans_lt hxb) with ⟨b, rfl⟩
   rw [digits_add_two_add_one, div_eq_of_lt hxb, digits_zero, mod_eq_of_lt hxb]
 #align nat.digits_of_lt Nat.digits_of_lt
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digits_add /-
 theorem digits_add (b : ℕ) (h : 1 < b) (x y : ℕ) (hxb : x < b) (hxy : x ≠ 0 ∨ y ≠ 0) :
     digits b (x + b * y) = x::digits b y :=
   by
@@ -157,8 +188,10 @@ theorem digits_add (b : ℕ) (h : 1 < b) (x y : ℕ) (hxb : x < b) (hxy : x ≠ 
     · simp [add_mul_div_left, div_eq_of_lt hxb]
   · apply Nat.succ_pos
 #align nat.digits_add Nat.digits_add
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.ofDigits /-
 -- If we had a function converting a list into a polynomial,
 -- and appropriate lemmas about that function,
 -- we could rewrite this in terms of that.
@@ -169,7 +202,14 @@ def ofDigits {α : Type _} [Semiring α] (b : α) : List ℕ → α
   | [] => 0
   | h::t => h + b * of_digits t
 #align nat.of_digits Nat.ofDigits
+-/
 
+/- warning: nat.of_digits_eq_foldr -> Nat.ofDigits_eq_foldr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (b : α) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 b L) (List.foldr.{0, u1} Nat α (fun (x : Nat) (y : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) b y)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) L)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (b : α) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 b L) (List.foldr.{0, u1} Nat α (fun (x : Nat) (y : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α _inst_1) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) b y)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)))) L)
+Case conversion may be inaccurate. Consider using '#align nat.of_digits_eq_foldr Nat.ofDigits_eq_foldrₓ'. -/
 theorem ofDigits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
     ofDigits b L = L.foldr (fun x y => x + b * y) 0 :=
   by
@@ -179,7 +219,8 @@ theorem ofDigits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
     rw [ih]
 #align nat.of_digits_eq_foldr Nat.ofDigits_eq_foldr
 
-theorem of_digits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
+#print Nat.ofDigits_eq_sum_map_with_index_aux /-
+theorem ofDigits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
     ((List.range l.length).zipWith ((fun i a : ℕ => a * b ^ i) ∘ succ) l).Sum =
       b * ((List.range l.length).zipWith (fun i a => a * b ^ i) l).Sum :=
   by
@@ -191,8 +232,10 @@ theorem of_digits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
   ext
   simp [pow_succ]
   ring
-#align nat.of_digits_eq_sum_map_with_index_aux Nat.of_digits_eq_sum_map_with_index_aux
+#align nat.of_digits_eq_sum_map_with_index_aux Nat.ofDigits_eq_sum_map_with_index_aux
+-/
 
+#print Nat.ofDigits_eq_sum_mapIdx /-
 theorem ofDigits_eq_sum_mapIdx (b : ℕ) (L : List ℕ) :
     ofDigits b L = (L.mapIdx fun i a => a * b ^ i).Sum :=
   by
@@ -204,17 +247,27 @@ theorem ofDigits_eq_sum_mapIdx (b : ℕ) (L : List ℕ) :
     simpa [List.range_succ_eq_map, List.zipWith_map_left, of_digits_eq_sum_map_with_index_aux] using
       Or.inl hl
 #align nat.of_digits_eq_sum_map_with_index Nat.ofDigits_eq_sum_mapIdx
+-/
 
+#print Nat.ofDigits_singleton /-
 @[simp]
 theorem ofDigits_singleton {b n : ℕ} : ofDigits b [n] = n := by simp [of_digits]
 #align nat.of_digits_singleton Nat.ofDigits_singleton
+-/
 
+/- warning: nat.of_digits_one_cons -> Nat.ofDigits_one_cons is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (h : Nat) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) (List.cons.{0} Nat h L)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) h) (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))))) L))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] (h : Nat) (L : List.{0} Nat), Eq.{succ u1} α (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α _inst_1))) (List.cons.{0} Nat h L)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α _inst_1) h) (Nat.ofDigits.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α _inst_1))) L))
+Case conversion may be inaccurate. Consider using '#align nat.of_digits_one_cons Nat.ofDigits_one_consₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem ofDigits_one_cons {α : Type _} [Semiring α] (h : ℕ) (L : List ℕ) :
     ofDigits (1 : α) (h::L) = h + ofDigits 1 L := by simp [of_digits]
 #align nat.of_digits_one_cons Nat.ofDigits_one_cons
 
+#print Nat.ofDigits_append /-
 theorem ofDigits_append {b : ℕ} {l1 l2 : List ℕ} :
     ofDigits b (l1 ++ l2) = ofDigits b l1 + b ^ l1.length * ofDigits b l2 :=
   by
@@ -223,7 +276,9 @@ theorem ofDigits_append {b : ℕ} {l1 l2 : List ℕ} :
   · rw [of_digits, List.cons_append, of_digits, IH, List.length_cons, pow_succ']
     ring
 #align nat.of_digits_append Nat.ofDigits_append
+-/
 
+#print Nat.coe_ofDigits /-
 @[norm_cast]
 theorem coe_ofDigits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) :
     ((ofDigits b L : ℕ) : α) = ofDigits (b : α) L :=
@@ -234,7 +289,14 @@ theorem coe_ofDigits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) :
     push_cast
     rw [ih]
 #align nat.coe_of_digits Nat.coe_ofDigits
+-/
 
+/- warning: nat.coe_int_of_digits -> Nat.coe_int_ofDigits is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat) (L : List.{0} Nat), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Nat.ofDigits.{0} Nat Nat.semiring b L)) (Nat.ofDigits.{0} Int Int.semiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) L)
+but is expected to have type
+  forall (b : Nat) (L : List.{0} Nat), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Nat.ofDigits.{0} Nat Nat.semiring b L)) (Nat.ofDigits.{0} Int Int.instSemiringInt (Nat.cast.{0} Int Int.instNatCastInt b) L)
+Case conversion may be inaccurate. Consider using '#align nat.coe_int_of_digits Nat.coe_int_ofDigitsₓ'. -/
 @[norm_cast]
 theorem coe_int_ofDigits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ) = ofDigits (b : ℤ) L :=
   by
@@ -246,13 +308,16 @@ theorem coe_int_ofDigits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digits_zero_of_eq_zero /-
 theorem digits_zero_of_eq_zero {b : ℕ} (h : b ≠ 0) :
     ∀ {L : List ℕ} (h0 : ofDigits b L = 0), ∀ l ∈ L, l = 0
   | a::L, h0, l, Or.inl rfl => Nat.eq_zero_of_add_eq_zero_right h0
   | a::L, h0, l, Or.inr hL =>
     digits_zero_of_eq_zero (mul_right_injective₀ h (Nat.eq_zero_of_add_eq_zero_left h0)) _ hL
 #align nat.digits_zero_of_eq_zero Nat.digits_zero_of_eq_zero
+-/
 
+#print Nat.digits_ofDigits /-
 theorem digits_ofDigits (b : ℕ) (h : 1 < b) (L : List ℕ) (w₁ : ∀ l ∈ L, l < b)
     (w₂ : ∀ h : L ≠ [], L.getLast h ≠ 0) : digits b (ofDigits b L) = L :=
   by
@@ -280,7 +345,9 @@ theorem digits_ofDigits (b : ℕ) (h : 1 < b) (L : List ℕ) (w₁ : ∀ l ∈ L
         rw [List.getLast_cons h']
         exact List.getLast_mem h'
 #align nat.digits_of_digits Nat.digits_ofDigits
+-/
 
+#print Nat.ofDigits_digits /-
 theorem ofDigits_digits (b n : ℕ) : ofDigits b (digits b n) = n :=
   by
   cases' b with b
@@ -304,13 +371,16 @@ theorem ofDigits_digits (b n : ℕ) : ofDigits b (digits b n) = n :=
         rw [h _ (Nat.div_lt_self' n b)]
         rw [Nat.mod_add_div]
 #align nat.of_digits_digits Nat.ofDigits_digits
+-/
 
+#print Nat.ofDigits_one /-
 theorem ofDigits_one (L : List ℕ) : ofDigits 1 L = L.Sum :=
   by
   induction' L with d L ih
   · rfl
   · simp [of_digits, List.sum_cons, ih]
 #align nat.of_digits_one Nat.ofDigits_one
+-/
 
 /-!
 ### Properties
@@ -319,6 +389,7 @@ This section contains various lemmas of properties relating to `digits` and `of_
 -/
 
 
+#print Nat.digits_eq_nil_iff_eq_zero /-
 theorem digits_eq_nil_iff_eq_zero {b n : ℕ} : digits b n = [] ↔ n = 0 :=
   by
   constructor
@@ -329,12 +400,16 @@ theorem digits_eq_nil_iff_eq_zero {b n : ℕ} : digits b n = [] ↔ n = 0 :=
   · rintro rfl
     simp
 #align nat.digits_eq_nil_iff_eq_zero Nat.digits_eq_nil_iff_eq_zero
+-/
 
+#print Nat.digits_ne_nil_iff_ne_zero /-
 theorem digits_ne_nil_iff_ne_zero {b n : ℕ} : digits b n ≠ [] ↔ n ≠ 0 :=
   not_congr digits_eq_nil_iff_eq_zero
 #align nat.digits_ne_nil_iff_ne_zero Nat.digits_ne_nil_iff_ne_zero
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.digits_eq_cons_digits_div /-
 theorem digits_eq_cons_digits_div {b n : ℕ} (h : 1 < b) (w : n ≠ 0) :
     digits b n = (n % b)::digits b (n / b) :=
   by
@@ -345,7 +420,9 @@ theorem digits_eq_cons_digits_div {b n : ℕ} (h : 1 < b) (w : n ≠ 0) :
   · norm_num at w
   simp
 #align nat.digits_eq_cons_digits_div Nat.digits_eq_cons_digits_div
+-/
 
+#print Nat.digits_getLast /-
 theorem digits_getLast {b : ℕ} (m : ℕ) (h : 1 < b) (p q) :
     (digits b m).getLast p = (digits b (m / b)).getLast q :=
   by
@@ -354,16 +431,22 @@ theorem digits_getLast {b : ℕ} (m : ℕ) (h : 1 < b) (p q) :
   simp only [digits_eq_cons_digits_div h hm]
   rw [List.getLast_cons]
 #align nat.digits_last Nat.digits_getLast
+-/
 
+#print Nat.digits.injective /-
 theorem digits.injective (b : ℕ) : Function.Injective b.digits :=
   Function.LeftInverse.injective (ofDigits_digits b)
 #align nat.digits.injective Nat.digits.injective
+-/
 
+#print Nat.digits_inj_iff /-
 @[simp]
 theorem digits_inj_iff {b n m : ℕ} : b.digits n = b.digits m ↔ n = m :=
   (digits.injective b).eq_iff
 #align nat.digits_inj_iff Nat.digits_inj_iff
+-/
 
+#print Nat.digits_len /-
 theorem digits_len (b n : ℕ) (hb : 1 < b) (hn : n ≠ 0) : (b.digits n).length = b.log n + 1 :=
   by
   induction' n using Nat.strong_induction_on with n IH
@@ -378,7 +461,9 @@ theorem digits_len (b n : ℕ) (hb : 1 < b) (hn : n ≠ 0) : (b.digits n).length
     contrapose! h
     exact div_eq_of_lt h
 #align nat.digits_len Nat.digits_len
+-/
 
+#print Nat.getLast_digit_ne_zero /-
 theorem getLast_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
     (digits b m).getLast (digits_ne_nil_iff_ne_zero.mpr hm) ≠ 0 :=
   by
@@ -399,7 +484,9 @@ theorem getLast_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
     · rw [← pos_iff_ne_zero]
       exact Nat.div_pos (le_of_not_lt hnb) (by decide)
 #align nat.last_digit_ne_zero Nat.getLast_digit_ne_zero
+-/
 
+#print Nat.digits_lt_base' /-
 /-- The digits in the base b+2 expansion of n are all less than b+2 -/
 theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b + 2 :=
   by
@@ -415,14 +502,18 @@ theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b 
     exact n.succ.mod_lt (by linarith)
   · exact IH _ (Nat.div_lt_self (Nat.succ_pos _) (by linarith)) hd
 #align nat.digits_lt_base' Nat.digits_lt_base'
+-/
 
+#print Nat.digits_lt_base /-
 /-- The digits in the base b expansion of n are all less than b, if b ≥ 2 -/
 theorem digits_lt_base {b m d : ℕ} (hb : 1 < b) (hd : d ∈ digits b m) : d < b :=
   by
   rcases b with (_ | _ | b) <;> try linarith
   exact digits_lt_base' hd
 #align nat.digits_lt_base Nat.digits_lt_base
+-/
 
+#print Nat.ofDigits_lt_base_pow_length' /-
 /-- an n-digit number in base b + 2 is less than (b + 2)^n -/
 theorem ofDigits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l, x < b + 2) :
     ofDigits (b + 2) l < (b + 2) ^ l.length :=
@@ -437,7 +528,9 @@ theorem ofDigits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l,
     norm_cast
     exact hl hd (List.mem_cons_self _ _)
 #align nat.of_digits_lt_base_pow_length' Nat.ofDigits_lt_base_pow_length'
+-/
 
+#print Nat.ofDigits_lt_base_pow_length /-
 /-- an n-digit number in base b is less than b^n if b > 1 -/
 theorem ofDigits_lt_base_pow_length {b : ℕ} {l : List ℕ} (hb : 1 < b) (hl : ∀ x ∈ l, x < b) :
     ofDigits b l < b ^ l.length :=
@@ -445,26 +538,34 @@ theorem ofDigits_lt_base_pow_length {b : ℕ} {l : List ℕ} (hb : 1 < b) (hl : 
   rcases b with (_ | _ | b) <;> try linarith
   exact of_digits_lt_base_pow_length' hl
 #align nat.of_digits_lt_base_pow_length Nat.ofDigits_lt_base_pow_length
+-/
 
+#print Nat.lt_base_pow_length_digits' /-
 /-- Any number m is less than (b+2)^(number of digits in the base b + 2 representation of m) -/
 theorem lt_base_pow_length_digits' {b m : ℕ} : m < (b + 2) ^ (digits (b + 2) m).length :=
   by
   convert of_digits_lt_base_pow_length' fun _ => digits_lt_base'
   rw [of_digits_digits (b + 2) m]
 #align nat.lt_base_pow_length_digits' Nat.lt_base_pow_length_digits'
+-/
 
+#print Nat.lt_base_pow_length_digits /-
 /-- Any number m is less than b^(number of digits in the base b representation of m) -/
 theorem lt_base_pow_length_digits {b m : ℕ} (hb : 1 < b) : m < b ^ (digits b m).length :=
   by
   rcases b with (_ | _ | b) <;> try linarith
   exact lt_base_pow_length_digits'
 #align nat.lt_base_pow_length_digits Nat.lt_base_pow_length_digits
+-/
 
+#print Nat.ofDigits_digits_append_digits /-
 theorem ofDigits_digits_append_digits {b m n : ℕ} :
     ofDigits b (digits b n ++ digits b m) = n + b ^ (digits b n).length * m := by
   rw [of_digits_append, of_digits_digits, of_digits_digits]
 #align nat.of_digits_digits_append_digits Nat.ofDigits_digits_append_digits
+-/
 
+#print Nat.digits_len_le_digits_len_succ /-
 theorem digits_len_le_digits_len_succ (b n : ℕ) : (digits b n).length ≤ (digits b (n + 1)).length :=
   by
   rcases Decidable.eq_or_ne n 0 with (rfl | hn)
@@ -473,11 +574,15 @@ theorem digits_len_le_digits_len_succ (b n : ℕ) : (digits b n).length ≤ (dig
   · interval_cases <;> simp [digits_zero_succ', hn]
   simpa [digits_len, hb, hn] using log_mono_right (le_succ _)
 #align nat.digits_len_le_digits_len_succ Nat.digits_len_le_digits_len_succ
+-/
 
+#print Nat.le_digits_len_le /-
 theorem le_digits_len_le (b n m : ℕ) (h : n ≤ m) : (digits b n).length ≤ (digits b m).length :=
   monotone_nat_of_le_succ (digits_len_le_digits_len_succ b) h
 #align nat.le_digits_len_le Nat.le_digits_len_le
+-/
 
+#print Nat.pow_length_le_mul_ofDigits /-
 theorem pow_length_le_mul_ofDigits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2 : l.getLast hl ≠ 0) :
     (b + 2) ^ l.length ≤ (b + 2) * ofDigits (b + 2) l :=
   by
@@ -490,7 +595,9 @@ theorem pow_length_le_mul_ofDigits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2
   convert Nat.mul_le_mul_left _ this
   rw [mul_one]
 #align nat.pow_length_le_mul_of_digits Nat.pow_length_le_mul_ofDigits
+-/
 
+#print Nat.base_pow_length_digits_le' /-
 /-- Any non-zero natural number `m` is greater than
 (b+2)^((number of digits in the base (b+2) representation of m) - 1)
 -/
@@ -501,7 +608,9 @@ theorem base_pow_length_digits_le' (b m : ℕ) (hm : m ≠ 0) :
   convert pow_length_le_mul_of_digits this (last_digit_ne_zero _ hm)
   rwa [of_digits_digits]
 #align nat.base_pow_length_digits_le' Nat.base_pow_length_digits_le'
+-/
 
+#print Nat.base_pow_length_digits_le /-
 /-- Any non-zero natural number `m` is greater than
 b^((number of digits in the base b representation of m) - 1)
 -/
@@ -511,10 +620,12 @@ theorem base_pow_length_digits_le (b m : ℕ) (hb : 1 < b) :
   rcases b with (_ | _ | b) <;> try linarith
   exact base_pow_length_digits_le' b m
 #align nat.base_pow_length_digits_le Nat.base_pow_length_digits_le
+-/
 
 /-! ### Binary -/
 
 
+#print Nat.digits_two_eq_bits /-
 theorem digits_two_eq_bits (n : ℕ) : digits 2 n = n.bits.map fun b => cond b 1 0 :=
   by
   induction' n using Nat.binaryRecFromOne with b n h ih
@@ -527,10 +638,17 @@ theorem digits_two_eq_bits (n : ℕ) : digits 2 n = n.bits.map fun b => cond b 1
     · simpa [pos_iff_ne_zero, bit_eq_zero_iff]
   · simpa [Nat.bit, Nat.bit1_val n, add_comm, digits_add 2 one_lt_two 1 n]
 #align nat.digits_two_eq_bits Nat.digits_two_eq_bits
+-/
 
 /-! ### Modular Arithmetic -/
 
 
+/- warning: nat.dvd_of_digits_sub_of_digits -> Nat.dvd_ofDigits_sub_ofDigits is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] {a : α} {b : α} {k : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1))))))) a b)) -> (forall (L : List.{0} Nat), Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1))))))) (Nat.ofDigits.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) a L) (Nat.ofDigits.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) b L)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] {a : α} {b : α} {k : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (CommRing.toRing.{u1} α _inst_1))) a b)) -> (forall (L : List.{0} Nat), Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α (CommRing.toNonUnitalCommRing.{u1} α _inst_1)))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (CommRing.toRing.{u1} α _inst_1))) (Nat.ofDigits.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) a L) (Nat.ofDigits.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) b L)))
+Case conversion may be inaccurate. Consider using '#align nat.dvd_of_digits_sub_of_digits Nat.dvd_ofDigits_sub_ofDigitsₓ'. -/
 -- This is really a theorem about polynomials.
 theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : k ∣ a - b)
     (L : List ℕ) : k ∣ ofDigits a L - ofDigits b L :=
@@ -542,6 +660,7 @@ theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : 
     exact dvd_mul_sub_mul h ih
 #align nat.dvd_of_digits_sub_of_digits Nat.dvd_ofDigits_sub_ofDigits
 
+#print Nat.ofDigits_modeq' /-
 theorem ofDigits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List ℕ) :
     ofDigits b L ≡ ofDigits b' L [MOD k] :=
   by
@@ -552,15 +671,26 @@ theorem ofDigits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List 
     conv_lhs => rw [Nat.add_mod, Nat.mul_mod, h, ih]
     conv_rhs => rw [Nat.add_mod, Nat.mul_mod]
 #align nat.of_digits_modeq' Nat.ofDigits_modeq'
+-/
 
+#print Nat.ofDigits_modEq /-
 theorem ofDigits_modEq (b k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [MOD k] :=
   ofDigits_modeq' b (b % k) k (b.mod_modEq k).symm L
 #align nat.of_digits_modeq Nat.ofDigits_modEq
+-/
 
+#print Nat.ofDigits_mod /-
 theorem ofDigits_mod (b k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b % k) L % k :=
   ofDigits_modEq b k L
 #align nat.of_digits_mod Nat.ofDigits_mod
+-/
 
+/- warning: nat.of_digits_zmodeq' -> Nat.ofDigits_zmodeq' is a dubious translation:
+lean 3 declaration is
+  forall (b : Int) (b' : Int) (k : Nat), (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k) b b') -> (forall (L : List.{0} Nat), Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k) (Nat.ofDigits.{0} Int Int.semiring b L) (Nat.ofDigits.{0} Int Int.semiring b' L))
+but is expected to have type
+  forall (b : Int) (b' : Int) (k : Nat), (Int.ModEq (Nat.cast.{0} Int Int.instNatCastInt k) b b') -> (forall (L : List.{0} Nat), Int.ModEq (Nat.cast.{0} Int Int.instNatCastInt k) (Nat.ofDigits.{0} Int Int.instSemiringInt b L) (Nat.ofDigits.{0} Int Int.instSemiringInt b' L))
+Case conversion may be inaccurate. Consider using '#align nat.of_digits_zmodeq' Nat.ofDigits_zmodeq'ₓ'. -/
 theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : List ℕ) :
     ofDigits b L ≡ ofDigits b' L [ZMOD k] :=
   by
@@ -572,14 +702,27 @@ theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Lis
     conv_rhs => rw [Int.add_emod, Int.mul_emod]
 #align nat.of_digits_zmodeq' Nat.ofDigits_zmodeq'
 
+/- warning: nat.of_digits_zmodeq -> Nat.ofDigits_zmodeq is a dubious translation:
+lean 3 declaration is
+  forall (b : Int) (k : Nat) (L : List.{0} Nat), Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k) (Nat.ofDigits.{0} Int Int.semiring b L) (Nat.ofDigits.{0} Int Int.semiring (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k)) L)
+but is expected to have type
+  forall (b : Int) (k : Nat) (L : List.{0} Nat), Int.ModEq (Nat.cast.{0} Int Int.instNatCastInt k) (Nat.ofDigits.{0} Int Int.instSemiringInt b L) (Nat.ofDigits.{0} Int Int.instSemiringInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) b (Nat.cast.{0} Int Int.instNatCastInt k)) L)
+Case conversion may be inaccurate. Consider using '#align nat.of_digits_zmodeq Nat.ofDigits_zmodeqₓ'. -/
 theorem ofDigits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [ZMOD k] :=
   ofDigits_zmodeq' b (b % k) k (b.mod_modEq ↑k).symm L
 #align nat.of_digits_zmodeq Nat.ofDigits_zmodeq
 
+/- warning: nat.of_digits_zmod -> Nat.ofDigits_zmod is a dubious translation:
+lean 3 declaration is
+  forall (b : Int) (k : Nat) (L : List.{0} Nat), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Nat.ofDigits.{0} Int Int.semiring b L) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Nat.ofDigits.{0} Int Int.semiring (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k)) L) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k))
+but is expected to have type
+  forall (b : Int) (k : Nat) (L : List.{0} Nat), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Nat.ofDigits.{0} Int Int.instSemiringInt b L) (Nat.cast.{0} Int Int.instNatCastInt k)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Nat.ofDigits.{0} Int Int.instSemiringInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) b (Nat.cast.{0} Int Int.instNatCastInt k)) L) (Nat.cast.{0} Int Int.instNatCastInt k))
+Case conversion may be inaccurate. Consider using '#align nat.of_digits_zmod Nat.ofDigits_zmodₓ'. -/
 theorem ofDigits_zmod (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b % k) L % k :=
   ofDigits_zmodeq b k L
 #align nat.of_digits_zmod Nat.ofDigits_zmod
 
+#print Nat.modEq_digits_sum /-
 theorem modEq_digits_sum (b b' : ℕ) (h : b' % b = 1) (n : ℕ) : n ≡ (digits b' n).Sum [MOD b] :=
   by
   rw [← of_digits_one]
@@ -590,15 +733,26 @@ theorem modEq_digits_sum (b b' : ℕ) (h : b' % b = 1) (n : ℕ) : n ≡ (digits
   convert of_digits_modeq _ _ _
   exact h.symm
 #align nat.modeq_digits_sum Nat.modEq_digits_sum
+-/
 
+#print Nat.modEq_three_digits_sum /-
 theorem modEq_three_digits_sum (n : ℕ) : n ≡ (digits 10 n).Sum [MOD 3] :=
   modEq_digits_sum 3 10 (by norm_num) n
 #align nat.modeq_three_digits_sum Nat.modEq_three_digits_sum
+-/
 
+#print Nat.modEq_nine_digits_sum /-
 theorem modEq_nine_digits_sum (n : ℕ) : n ≡ (digits 10 n).Sum [MOD 9] :=
   modEq_digits_sum 9 10 (by norm_num) n
 #align nat.modeq_nine_digits_sum Nat.modEq_nine_digits_sum
+-/
 
+/- warning: nat.zmodeq_of_digits_digits -> Nat.zmodeq_ofDigits_digits is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat) (b' : Nat) (c : Int), (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b') c) -> (forall (n : Nat), Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (Nat.ofDigits.{0} Int Int.semiring c (Nat.digits b' n)))
+but is expected to have type
+  forall (b : Nat) (b' : Nat) (c : Int), (Int.ModEq (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt b') c) -> (forall (n : Nat), Int.ModEq (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt n) (Nat.ofDigits.{0} Int Int.instSemiringInt c (Nat.digits b' n)))
+Case conversion may be inaccurate. Consider using '#align nat.zmodeq_of_digits_digits Nat.zmodeq_ofDigits_digitsₓ'. -/
 theorem zmodeq_ofDigits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (n : ℕ) :
     n ≡ ofDigits c (digits b' n) [ZMOD b] :=
   by
@@ -610,6 +764,12 @@ theorem zmodeq_ofDigits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (n
   apply of_digits_zmodeq' _ _ _ h
 #align nat.zmodeq_of_digits_digits Nat.zmodeq_ofDigits_digits
 
+/- warning: nat.of_digits_neg_one -> Nat.ofDigits_neg_one is a dubious translation:
+lean 3 declaration is
+  forall (L : List.{0} Nat), Eq.{1} Int (Nat.ofDigits.{0} Int Int.semiring (Neg.neg.{0} Int Int.hasNeg (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) L) (List.alternatingSum.{0} Int Int.hasZero Int.hasAdd Int.hasNeg (List.map.{0, 0} Nat Int (fun (n : Nat) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) L))
+but is expected to have type
+  forall (L : List.{0} Nat), Eq.{1} Int (Nat.ofDigits.{0} Int Int.instSemiringInt (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) L) (List.alternatingSum.{0} Int (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.instAddInt Int.instNegInt (List.map.{0, 0} Nat Int (fun (n : Nat) => Nat.cast.{0} Int Int.instNatCastInt n) L))
+Case conversion may be inaccurate. Consider using '#align nat.of_digits_neg_one Nat.ofDigits_neg_oneₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ofDigits_neg_one :
@@ -622,32 +782,46 @@ theorem ofDigits_neg_one :
     ring
 #align nat.of_digits_neg_one Nat.ofDigits_neg_one
 
+#print Nat.modEq_eleven_digits_sum /-
 theorem modEq_eleven_digits_sum (n : ℕ) :
     n ≡ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum [ZMOD 11] :=
   by
   have t := zmodeq_of_digits_digits 11 10 (-1 : ℤ) (by unfold Int.ModEq <;> norm_num) n
   rwa [of_digits_neg_one] at t
 #align nat.modeq_eleven_digits_sum Nat.modEq_eleven_digits_sum
+-/
 
 /-! ## Divisibility  -/
 
 
+#print Nat.dvd_iff_dvd_digits_sum /-
 theorem dvd_iff_dvd_digits_sum (b b' : ℕ) (h : b' % b = 1) (n : ℕ) :
     b ∣ n ↔ b ∣ (digits b' n).Sum := by
   rw [← of_digits_one]
   conv_lhs => rw [← of_digits_digits b' n]
   rw [Nat.dvd_iff_mod_eq_zero, Nat.dvd_iff_mod_eq_zero, of_digits_mod, h]
 #align nat.dvd_iff_dvd_digits_sum Nat.dvd_iff_dvd_digits_sum
+-/
 
+#print Nat.three_dvd_iff /-
 /-- **Divisibility by 3 Rule** -/
 theorem three_dvd_iff (n : ℕ) : 3 ∣ n ↔ 3 ∣ (digits 10 n).Sum :=
   dvd_iff_dvd_digits_sum 3 10 (by norm_num) n
 #align nat.three_dvd_iff Nat.three_dvd_iff
+-/
 
+#print Nat.nine_dvd_iff /-
 theorem nine_dvd_iff (n : ℕ) : 9 ∣ n ↔ 9 ∣ (digits 10 n).Sum :=
   dvd_iff_dvd_digits_sum 9 10 (by norm_num) n
 #align nat.nine_dvd_iff Nat.nine_dvd_iff
+-/
 
+/- warning: nat.dvd_iff_dvd_of_digits -> Nat.dvd_iff_dvd_ofDigits is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat) (b' : Nat) (c : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b') c)) -> (forall (n : Nat), Iff (Dvd.Dvd.{0} Nat Nat.hasDvd b n) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) (Nat.ofDigits.{0} Int Int.semiring c (Nat.digits b' n))))
+but is expected to have type
+  forall (b : Nat) (b' : Nat) (c : Int), (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt b) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b') c)) -> (forall (n : Nat), Iff (Dvd.dvd.{0} Nat Nat.instDvdNat b n) (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.ofDigits.{0} Int Int.instSemiringInt c (Nat.digits b' n))))
+Case conversion may be inaccurate. Consider using '#align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_ofDigitsₓ'. -/
 theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ) - c) (n : ℕ) :
     b ∣ n ↔ (b : ℤ) ∣ ofDigits c (digits b' n) :=
   by
@@ -656,6 +830,12 @@ theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ
     dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modEq_iff_dvd.2 h).symm _).symm.Dvd
 #align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_ofDigits
 
+/- warning: nat.eleven_dvd_iff -> Nat.eleven_dvd_iff is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat}, Iff (Dvd.Dvd.{0} Nat Nat.hasDvd (OfNat.ofNat.{0} Nat 11 (OfNat.mk.{0} Nat 11 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) n) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (OfNat.ofNat.{0} Int 11 (OfNat.mk.{0} Int 11 (bit1.{0} Int Int.hasOne Int.hasAdd (bit1.{0} Int Int.hasOne Int.hasAdd (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne)))))) (List.alternatingSum.{0} Int Int.hasZero Int.hasAdd Int.hasNeg (List.map.{0, 0} Nat Int (fun (n : Nat) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (Nat.digits (OfNat.ofNat.{0} Nat 10 (OfNat.mk.{0} Nat 10 (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) n))))
+but is expected to have type
+  forall {n : Nat}, Iff (Dvd.dvd.{0} Nat Nat.instDvdNat (OfNat.ofNat.{0} Nat 11 (instOfNatNat 11)) n) (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 11 (instOfNatInt 11)) (List.alternatingSum.{0} Int (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.instAddInt Int.instNegInt (List.map.{0, 0} Nat Int (fun (n : Nat) => Nat.cast.{0} Int Int.instNatCastInt n) (Nat.digits (OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)) n))))
+Case conversion may be inaccurate. Consider using '#align nat.eleven_dvd_iff Nat.eleven_dvd_iffₓ'. -/
 theorem eleven_dvd_iff :
     11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum :=
   by
@@ -664,6 +844,7 @@ theorem eleven_dvd_iff :
   exact t
 #align nat.eleven_dvd_iff Nat.eleven_dvd_iff
 
+#print Nat.eleven_dvd_of_palindrome /-
 theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digits 10 n).length) :
     11 ∣ n := by
   let dig := (digits 10 n).map (coe : ℕ → ℤ)
@@ -673,6 +854,7 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
   rw [(p.map _).reverse_eq, pow_succ, h.neg_one_pow, mul_one, neg_one_zsmul] at this
   exact eq_zero_of_neg_eq this.symm
 #align nat.eleven_dvd_of_palindrome Nat.eleven_dvd_of_palindrome
+-/
 
 /-! ### `norm_digits` tactic -/
 
@@ -680,6 +862,7 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
 namespace NormDigits
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.NormDigits.digits_succ /-
 theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b)
     (h : Nat.digits b m = l ∧ 1 < b ∧ 0 < m) : (Nat.digits b n = r::l) ∧ 1 < b ∧ 0 < n :=
   by
@@ -690,7 +873,9 @@ theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b)
   obtain ⟨rfl, rfl⟩ := (Nat.div_mod_unique b0).2 ⟨e, hr⟩
   subst h; exact Nat.digits_def' b2 n0
 #align nat.norm_digits.digits_succ Nat.NormDigits.digits_succ
+-/
 
+#print Nat.NormDigits.digits_one /-
 theorem digits_one (b n) (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 1 < b ∧ 0 < n :=
   by
   have b2 : 1 < b := by linarith
@@ -698,6 +883,7 @@ theorem digits_one (b n) (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 1 
   rw [Nat.digits_def' b2 n0, Nat.mod_eq_of_lt nb,
     (Nat.div_eq_zero_iff ((zero_le n).trans_lt nb)).2 nb, Nat.digits_zero]
 #align nat.norm_digits.digits_one Nat.NormDigits.digits_one
+-/
 
 open Tactic
 

@@ -128,7 +128,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : forall (x : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)] (f : forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> β) (g : forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> β), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> β) (Set.restrict.{u2, u1} α (fun (a : α) => β) s (fun (a : α) => dite.{succ u1} β (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (_inst_1 a) (fun (h : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) => f a h) (fun (h : Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) => g a h))) (fun (a : Set.Elem.{u2} α s) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a) (Subtype.property.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a))
 Case conversion may be inaccurate. Consider using '#align set.restrict_dite Set.restrict_diteₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s, β)
     (g : ∀ (a) (_ : a ∉ s), β) :
@@ -142,7 +142,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : forall (x : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)] (f : forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> β) (g : forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> β), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) -> β) (Set.restrict.{u2, u1} α (fun (a : α) => β) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) (fun (a : α) => dite.{succ u1} β (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (_inst_1 a) (fun (h : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) => f a h) (fun (h : Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) => g a h))) (fun (a : Set.Elem.{u2} α (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) => g (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) a) (Subtype.property.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) a))
 Case conversion may be inaccurate. Consider using '#align set.restrict_dite_compl Set.restrict_dite_complₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s, β)
     (g : ∀ (a) (_ : a ∉ s), β) :
@@ -2126,7 +2126,7 @@ Case conversion may be inaccurate. Consider using '#align set.left_inv_on.inj_on
 theorem LeftInvOn.injOn (h : LeftInvOn f₁' f s) : InjOn f s := fun x₁ h₁ x₂ h₂ heq =>
   calc
     x₁ = f₁' (f x₁) := Eq.symm <| h h₁
-    _ = f₁' (f x₂) := congr_arg f₁' HEq
+    _ = f₁' (f x₂) := (congr_arg f₁' HEq)
     _ = x₂ := h h₂
     
 #align set.left_inv_on.inj_on Set.LeftInvOn.injOn
@@ -2637,7 +2637,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u2} (Set.{u2} α) (fun (s' : Set.{u2} α) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s' s) (fun (H : HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s' s) => Set.BijOn.{u2, u1} α β f s' t)))
 Case conversion may be inaccurate. Consider using '#align set.surj_on_iff_exists_bij_on_subset Set.surjOn_iff_exists_bijOn_subsetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
 theorem surjOn_iff_exists_bijOn_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t :=
   by
   constructor
@@ -2854,7 +2854,7 @@ theorem piecewise_eqOn_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ)
   piecewise_eq_of_not_mem _ _ _
 #align set.piecewise_eq_on_compl Set.piecewise_eqOn_compl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print Set.piecewise_le /-
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g : ∀ i, δ i} (h₁ : ∀ i ∈ s, f₁ i ≤ g i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g i) :
@@ -2862,7 +2862,7 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} 
 #align set.piecewise_le Set.piecewise_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print Set.le_piecewise /-
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g : ∀ i, δ i} (h₁ : ∀ i ∈ s, g i ≤ f₁ i) (h₂ : ∀ (i) (_ : i ∉ s), g i ≤ f₂ i) :
@@ -2871,7 +2871,7 @@ theorem le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} 
 #align set.le_piecewise Set.le_piecewise
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print Set.piecewise_le_piecewise /-
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α}
     [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i ∈ s, f₁ i ≤ g₁ i)
@@ -3050,7 +3050,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {f : α -> β} {g : α -> β}, Iff (Function.Injective.{succ u2, succ u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j))) (And (Set.InjOn.{u2, u1} α β f s) (And (Set.InjOn.{u2, u1} α β g (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (forall (y : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s)) -> (Ne.{succ u1} β (f x) (g y))))))
 Case conversion may be inaccurate. Consider using '#align set.injective_piecewise_iff Set.injective_piecewise_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » s) -/
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔
       InjOn f s ∧ InjOn g (sᶜ) ∧ ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y :=

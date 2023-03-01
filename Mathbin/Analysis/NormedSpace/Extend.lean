@@ -132,7 +132,7 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
       _ = ‖lm (t • x)‖ := by rw [← smul_eq_mul, lm.map_smul]
       _ = ‖(fr (t • x) : 𝕜)‖ := by rw [h1]
       _ = ‖fr (t • x)‖ := by rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]
-      _ ≤ ‖fr‖ * ‖t • x‖ := ContinuousLinearMap.le_op_norm _ _
+      _ ≤ ‖fr‖ * ‖t • x‖ := (ContinuousLinearMap.le_op_norm _ _)
       _ = ‖fr‖ * (‖t‖ * ‖x‖) := by rw [norm_smul]
       _ ≤ ‖fr‖ * ‖x‖ := by rw [norm_eq_abs, ht, one_mul]
       

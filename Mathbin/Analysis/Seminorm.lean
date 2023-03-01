@@ -495,9 +495,9 @@ section Classical
 
 open Classical
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
 /-- We define the supremum of an arbitrary subset of `seminorm 𝕜 E` as follows:
 * if `s` is `bdd_above` *as a set of functions `E → ℝ`* (that is, if `s` is pointwise bounded
 above), we take the pointwise supremum of all elements of `s`, and we prove that it is indeed a
@@ -521,7 +521,7 @@ noncomputable instance : SupSet (Seminorm 𝕜 E)
         map_zero' := by
           rw [supᵢ_apply, ← @Real.csupᵢ_const_zero s]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact map_zero i.1
         add_le' := fun x y => by
           rcases h with ⟨q, hq⟩
@@ -538,14 +538,14 @@ noncomputable instance : SupSet (Seminorm 𝕜 E)
         neg' := fun x => by
           simp only [supᵢ_apply]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact i.1.neg' _
         smul' := fun a x => by
           simp only [supᵢ_apply]
           rw [← smul_eq_mul,
             Real.smul_supᵢ_of_nonneg (norm_nonneg a) fun i : s => (i : Seminorm 𝕜 E) x]
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]]"
           exact i.1.smul' a x }
     else ⊥
 

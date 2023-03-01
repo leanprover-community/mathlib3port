@@ -339,7 +339,7 @@ theorem gcd_a_modEq (a b : ℕ) : (a : ℤ) * Nat.gcdA a b ≡ Nat.gcd a b [ZMOD
 theorem modEq_add_fac {a b n : ℤ} (c : ℤ) (ha : a ≡ b [ZMOD n]) : a + n * c ≡ b [ZMOD n] :=
   calc
     a + n * c ≡ b + n * c [ZMOD n] := ha.add_right _
-    _ ≡ b + 0 [ZMOD n] := (dvd_mul_right _ _).modEq_zero_int.add_left _
+    _ ≡ b + 0 [ZMOD n] := ((dvd_mul_right _ _).modEq_zero_int.add_left _)
     _ ≡ b [ZMOD n] := by rw [add_zero]
     
 #align int.modeq_add_fac Int.modEq_add_fac

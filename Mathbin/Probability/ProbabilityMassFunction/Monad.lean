@@ -165,12 +165,12 @@ theorem toOuterMeasure_bind_apply :
   calc
     (p.bind f).toOuterMeasure s = ∑' b, if b ∈ s then ∑' a, p a * f a b else 0 := by
       simp [to_outer_measure_apply, Set.indicator_apply]
-    _ = ∑' (b) (a), p a * if b ∈ s then f a b else 0 := tsum_congr fun b => by split_ifs <;> simp
+    _ = ∑' (b) (a), p a * if b ∈ s then f a b else 0 := (tsum_congr fun b => by split_ifs <;> simp)
     _ = ∑' (a) (b), p a * if b ∈ s then f a b else 0 :=
-      tsum_comm' ENNReal.summable (fun _ => ENNReal.summable) fun _ => ENNReal.summable
-    _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 := tsum_congr fun a => ENNReal.tsum_mul_left
+      (tsum_comm' ENNReal.summable (fun _ => ENNReal.summable) fun _ => ENNReal.summable)
+    _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 := (tsum_congr fun a => ENNReal.tsum_mul_left)
     _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 :=
-      tsum_congr fun a => (congr_arg fun x => p a * x) <| tsum_congr fun b => by split_ifs <;> rfl
+      (tsum_congr fun a => (congr_arg fun x => p a * x) <| tsum_congr fun b => by split_ifs <;> rfl)
     _ = ∑' a, p a * (f a).toOuterMeasure s :=
       tsum_congr fun a => by simp only [to_outer_measure_apply, Set.indicator_apply]
     
@@ -309,8 +309,8 @@ section Measure
 
 variable (s : Set β)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b a) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b a) -/
 @[simp]
 theorem toOuterMeasure_bindOnSupport_apply :
     (p.bindOnSupport f).toOuterMeasure s =
@@ -324,7 +324,7 @@ theorem toOuterMeasure_bindOnSupport_apply :
     _ = ∑' (a) (b), ite (b ∈ s) (p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
       ENNReal.tsum_comm
     _ = ∑' a, p a * ∑' b, ite (b ∈ s) (dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
-      tsum_congr fun a => by simp only [← ENNReal.tsum_mul_left, mul_ite, mul_zero]
+      (tsum_congr fun a => by simp only [← ENNReal.tsum_mul_left, mul_ite, mul_zero])
     _ = ∑' a, p a * dite (p a = 0) (fun h => 0) fun h => ∑' b, ite (b ∈ s) (f a h b) 0 :=
       tsum_congr fun a => by split_ifs with ha <;> simp only [if_t_t, tsum_zero, eq_self_iff_true]
     

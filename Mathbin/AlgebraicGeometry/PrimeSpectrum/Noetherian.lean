@@ -26,7 +26,7 @@ variable (R : Type u) [CommRing R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_primeSpectrum_prod_le (I : Ideal R) :
@@ -59,7 +59,7 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
 #align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_primeSpectrum_prod_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/

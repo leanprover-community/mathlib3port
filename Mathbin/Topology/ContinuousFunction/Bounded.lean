@@ -435,7 +435,7 @@ def comp (G : β → γ) {C : ℝ≥0} (H : LipschitzWith C G) (f : α →ᵇ β
     ⟨max C 0 * D, fun x y =>
       calc
         dist (G (f x)) (G (f y)) ≤ C * dist (f x) (f y) := H.dist_le_mul _ _
-        _ ≤ max C 0 * dist (f x) (f y) := mul_le_mul_of_nonneg_right (le_max_left C 0) dist_nonneg
+        _ ≤ max C 0 * dist (f x) (f y) := (mul_le_mul_of_nonneg_right (le_max_left C 0) dist_nonneg)
         _ ≤ max C 0 * D := mul_le_mul_of_nonneg_left (hD _ _) (le_max_right C 0)
         ⟩⟩
 #align bounded_continuous_function.comp BoundedContinuousFunction.comp
@@ -516,7 +516,7 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
       lift x to (range fᶜ : Set δ) using hx
       calc
         dist (h₁ x) (h₂ x) = dist (h₁.restrict (range fᶜ) x) (h₂.restrict (range fᶜ) x) := rfl
-        _ ≤ dist (h₁.restrict (range fᶜ)) (h₂.restrict (range fᶜ)) := dist_coe_le_dist x
+        _ ≤ dist (h₁.restrict (range fᶜ)) (h₂.restrict (range fᶜ)) := (dist_coe_le_dist x)
         _ ≤ _ := le_max_right _ _
         
   · refine' (dist_le dist_nonneg).2 fun x => _
@@ -544,7 +544,7 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » U) -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
@@ -600,7 +600,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
   calc
     dist (f x) (g x) ≤ dist (f x) (f x') + dist (g x) (g x') + dist (f x') (g x') :=
       dist_triangle4_right _ _ _ _
-    _ ≤ ε₂ + ε₂ + ε₁ / 2 := le_of_lt (add_lt_add (add_lt_add _ _) _)
+    _ ≤ ε₂ + ε₂ + ε₁ / 2 := (le_of_lt (add_lt_add (add_lt_add _ _) _))
     _ = ε₁ := by rw [add_halves, add_halves]
     
   · exact (hU x').2.2 _ hx' _ (hU x').1 hf
@@ -611,7 +611,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) :=
         dist_triangle_right _ _ _
       _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by rw [F_f_g]
-      _ < ε₂ + ε₂ := add_lt_add (hF (f x')).2 (hF (g x')).2
+      _ < ε₂ + ε₂ := (add_lt_add (hF (f x')).2 (hF (g x')).2)
       _ = ε₁ / 2 := add_halves _
       
 #align bounded_continuous_function.arzela_ascoli₁ BoundedContinuousFunction.arzela_ascoli₁
@@ -879,7 +879,7 @@ theorem dist_le_two_norm' {f : γ → β} {C : ℝ} (hC : ∀ x, ‖f x‖ ≤ C
     dist (f x) (f y) ≤ 2 * C :=
   calc
     dist (f x) (f y) ≤ ‖f x‖ + ‖f y‖ := dist_le_norm_add_norm _ _
-    _ ≤ C + C := add_le_add (hC x) (hC y)
+    _ ≤ C + C := (add_le_add (hC x) (hC y))
     _ = 2 * C := (two_mul _).symm
     
 #align bounded_continuous_function.dist_le_two_norm' BoundedContinuousFunction.dist_le_two_norm'

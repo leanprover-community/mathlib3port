@@ -192,7 +192,7 @@ theorem rightInv_coeff_one (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
     p.right_inv i 1 = (continuousMultilinearCurryFin1 𝕜 F E).symm i.symm := by rw [right_inv]
 #align formal_multilinear_series.right_inv_coeff_one FormalMultilinearSeries.rightInv_coeff_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]] -/
 /-- The right inverse does not depend on the zeroth coefficient of a formal multilinear
 series. -/
 theorem rightInv_removeZero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) :
@@ -206,7 +206,7 @@ theorem rightInv_removeZero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
   simp only [right_inv, neg_inj]
   rw [remove_zero_comp_of_pos _ _ (add_pos_of_nonneg_of_pos n.zero_le zero_lt_two)]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr i.symm.to_continuous_linear_map.comp_continuous_multilinear_map (p.comp (λ k, _) _)]]"
   by_cases hk : k < n + 2 <;> simp [hk, IH]
 #align formal_multilinear_series.right_inv_remove_zero FormalMultilinearSeries.rightInv_removeZero
 
@@ -611,9 +611,9 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
     calc
       ‖p.right_inv i n‖ * ↑a' ^ n = a ^ n * ‖p.right_inv i n‖ := mul_comm _ _
       _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖ :=
-        haveI : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ‖p.right_inv i k‖ := fun k hk =>
+        (haveI : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ‖p.right_inv i k‖ := fun k hk =>
           mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
-        single_le_sum this (by simp [one_le_n])
+        single_le_sum this (by simp [one_le_n]))
       _ ≤ (I + 1) * a := IRec (n + 1) (by decide)
       
 #align formal_multilinear_series.radius_right_inv_pos_of_radius_pos FormalMultilinearSeries.radius_rightInv_pos_of_radius_pos

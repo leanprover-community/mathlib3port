@@ -1633,7 +1633,7 @@ theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : End K V} {
   calc
     (f ^ m).ker = (f ^ (k + (m - k))).ker := by rw [add_tsub_cancel_of_le (h_k_le.trans hm)]
     _ = (f ^ k).ker := by rw [ker_pow_constant hk _]
-    _ = (f ^ (k + (finrank K V - k))).ker := ker_pow_constant hk (finrank K V - k)
+    _ = (f ^ (k + (finrank K V - k))).ker := (ker_pow_constant hk (finrank K V - k))
     _ = (f ^ finrank K V).ker := by rw [add_tsub_cancel_of_le h_k_le]
     
 #align module.End.ker_pow_eq_ker_pow_finrank_of_le Module.End.ker_pow_eq_ker_pow_finrank_of_le
@@ -1665,7 +1665,7 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim (K V : Type u) [DivisionRing K]
   let hs := Basis.ofVectorSpace K V
   calc
     (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩
-    _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFinite⟩
+    _ = (#s → K) := (Quotient.sound ⟨Finsupp.equivFunOnFinite⟩)
     _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
     
 #align cardinal_mk_eq_cardinal_mk_field_pow_dim cardinal_mk_eq_cardinal_mk_field_pow_dim

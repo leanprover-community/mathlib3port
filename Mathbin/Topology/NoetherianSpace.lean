@@ -178,7 +178,7 @@ theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continu
     fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
 #align topological_space.noetherian_space.range TopologicalSpace.NoetherianSpace.range
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print TopologicalSpace.noetherianSpace_set_iff /-
 theorem noetherianSpace_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
   by

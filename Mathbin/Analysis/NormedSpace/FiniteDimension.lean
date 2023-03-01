@@ -346,17 +346,17 @@ theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u :
     calc
       ‖u e‖₊ = ‖u (∑ i, v.equiv_fun e i • v i)‖₊ := by rw [v.sum_equiv_fun]
       _ = ‖∑ i, v.equiv_fun e i • (u <| v i)‖₊ := by simp [u.map_sum, LinearMap.map_smul]
-      _ ≤ ∑ i, ‖v.equiv_fun e i • (u <| v i)‖₊ := nnnorm_sum_le _ _
+      _ ≤ ∑ i, ‖v.equiv_fun e i • (u <| v i)‖₊ := (nnnorm_sum_le _ _)
       _ = ∑ i, ‖v.equiv_fun e i‖₊ * ‖u (v i)‖₊ := by simp only [nnnorm_smul]
       _ ≤ ∑ i, ‖v.equiv_fun e i‖₊ * M :=
-        Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (zero_le _)
+        (Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (zero_le _))
       _ = (∑ i, ‖v.equiv_fun e i‖₊) * M := finset.sum_mul.symm
       _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) * M :=
-        suffices _ from mul_le_mul_of_nonneg_right this (zero_le M)
+        (suffices _ from mul_le_mul_of_nonneg_right this (zero_le M)
         calc
           (∑ i, ‖v.equiv_fun e i‖₊) ≤ Fintype.card ι • ‖φ e‖₊ := Pi.sum_nnnorm_apply_le_nnnorm _
           _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) := nsmul_le_nsmul_of_le_right (φ.le_op_nnnorm e) _
-          
+          )
       _ = Fintype.card ι • ‖φ‖₊ * M * ‖e‖₊ := by simp only [smul_mul_assoc, mul_right_comm]
       
 #align basis.op_nnnorm_le Basis.op_nnnorm_le
@@ -652,7 +652,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
       rw [← nsmul_eq_mul]
       apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintype.card ι)) fun t => _
       simp_rw [LinearMap.coe_comp, LinearEquiv.coe_toLinearMap, Function.comp_apply,
-        LinearMap.coe_to_continuous_linear_map', LinearEquiv.piRing_symmApply]
+        LinearMap.coe_to_continuous_linear_map', LinearEquiv.piRing_symm_apply]
       apply le_trans (norm_sum_le _ _)
       rw [smul_mul_assoc]
       refine' Finset.sum_le_card_nsmul _ _ _ fun i hi => _

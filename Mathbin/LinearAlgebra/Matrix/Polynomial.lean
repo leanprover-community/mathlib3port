@@ -54,8 +54,8 @@ theorem natDegree_det_x_add_c_le (A B : Matrix n n α) :
       · rw [sg, one_smul]
       · rw [sg, Units.neg_smul, one_smul, nat_degree_neg]
     _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
-      nat_degree_prod_le (Finset.univ : Finset n) fun i : n => (X • A.map C + B.map C) (g i) i
-    _ ≤ finset.univ.card • 1 := Finset.sum_le_card_nsmul _ _ 1 fun (i : n) _ => _
+      (nat_degree_prod_le (Finset.univ : Finset n) fun i : n => (X • A.map C + B.map C) (g i) i)
+    _ ≤ finset.univ.card • 1 := (Finset.sum_le_card_nsmul _ _ 1 fun (i : n) _ => _)
     _ ≤ Fintype.card n := by simpa
     
   calc
@@ -63,10 +63,10 @@ theorem natDegree_det_x_add_c_le (A B : Matrix n n α) :
         nat_degree ((X : α[X]) * C (A (g i) i) + C (B (g i) i)) :=
       by simp
     _ ≤ max (nat_degree ((X : α[X]) * C (A (g i) i))) (nat_degree (C (B (g i) i))) :=
-      nat_degree_add_le _ _
+      (nat_degree_add_le _ _)
     _ = nat_degree ((X : α[X]) * C (A (g i) i)) :=
-      max_eq_left ((nat_degree_C _).le.trans (zero_le _))
-    _ ≤ nat_degree (X : α[X]) := nat_degree_mul_C_le _ _
+      (max_eq_left ((nat_degree_C _).le.trans (zero_le _)))
+    _ ≤ nat_degree (X : α[X]) := (nat_degree_mul_C_le _ _)
     _ ≤ 1 := nat_degree_X_le
     
 #align polynomial.nat_degree_det_X_add_C_le Polynomial.natDegree_det_x_add_c_le

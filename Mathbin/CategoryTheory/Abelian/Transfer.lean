@@ -95,8 +95,8 @@ def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokerne
   calc
     G.obj (cokernel (F.map f)) ≅ cokernel (G.map (F.map f)) :=
       (as_iso (cokernel_comparison _ G)).symm
-    _ ≅ cokernel (_ ≫ f ≫ _) := cokernel_iso_of_eq (nat_iso.naturality_2 i f).symm
-    _ ≅ cokernel (f ≫ _) := cokernel_epi_comp _ _
+    _ ≅ cokernel (_ ≫ f ≫ _) := (cokernel_iso_of_eq (nat_iso.naturality_2 i f).symm)
+    _ ≅ cokernel (f ≫ _) := (cokernel_epi_comp _ _)
     _ ≅ cokernel f := cokernel_comp_is_iso _ _
     
 #align category_theory.abelian_of_adjunction.cokernel_iso CategoryTheory.AbelianOfAdjunction.cokernelIso
@@ -112,19 +112,19 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) :
     kernel (G.map (cokernel.π (F.map f))) ≅
         kernel (cokernel.π (G.map (F.map f)) ≫ cokernel_comparison (F.map f) G) :=
       kernel_iso_of_eq (π_comp_cokernel_comparison _ _).symm
-    _ ≅ kernel (cokernel.π (G.map (F.map f))) := kernel_comp_mono _ _
+    _ ≅ kernel (cokernel.π (G.map (F.map f))) := (kernel_comp_mono _ _)
     _ ≅ kernel (cokernel.π (_ ≫ f ≫ _) ≫ (cokernel_iso_of_eq _).Hom) :=
-      kernel_iso_of_eq (π_comp_cokernel_iso_of_eq_hom (nat_iso.naturality_2 i f)).symm
-    _ ≅ kernel (cokernel.π (_ ≫ f ≫ _)) := kernel_comp_mono _ _
+      (kernel_iso_of_eq (π_comp_cokernel_iso_of_eq_hom (nat_iso.naturality_2 i f)).symm)
+    _ ≅ kernel (cokernel.π (_ ≫ f ≫ _)) := (kernel_comp_mono _ _)
     _ ≅ kernel (cokernel.π (f ≫ i.inv.app Y) ≫ (cokernel_epi_comp (i.hom.app X) _).inv) :=
-      kernel_iso_of_eq (by simp only [cokernel.π_desc, cokernel_epi_comp_inv])
-    _ ≅ kernel (cokernel.π (f ≫ _)) := kernel_comp_mono _ _
+      (kernel_iso_of_eq (by simp only [cokernel.π_desc, cokernel_epi_comp_inv]))
+    _ ≅ kernel (cokernel.π (f ≫ _)) := (kernel_comp_mono _ _)
     _ ≅ kernel (inv (i.inv.app Y) ≫ cokernel.π f ≫ (cokernel_comp_is_iso f (i.inv.app Y)).inv) :=
-      kernel_iso_of_eq
+      (kernel_iso_of_eq
         (by
           simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc,
-            nat_iso.inv_inv_app])
-    _ ≅ kernel (cokernel.π f ≫ _) := kernel_is_iso_comp _ _
+            nat_iso.inv_inv_app]))
+    _ ≅ kernel (cokernel.π f ≫ _) := (kernel_is_iso_comp _ _)
     _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
     
 #align category_theory.abelian_of_adjunction.coimage_iso_image_aux CategoryTheory.AbelianOfAdjunction.coimageIsoImageAux
@@ -142,13 +142,13 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
     abelian.coimage f ≅ cokernel (kernel.ι f) := iso.refl _
     _ ≅ G.obj (cokernel (F.map (kernel.ι f))) := (cokernel_iso _ _ i adj _).symm
     _ ≅ G.obj (cokernel (kernel_comparison f F ≫ kernel.ι (F.map f))) :=
-      G.map_iso (cokernel_iso_of_eq (by simp))
-    _ ≅ G.obj (cokernel (kernel.ι (F.map f))) := G.map_iso (cokernel_epi_comp _ _)
-    _ ≅ G.obj (abelian.coimage (F.map f)) := iso.refl _
-    _ ≅ G.obj (abelian.image (F.map f)) := G.map_iso (abelian.coimage_iso_image _)
-    _ ≅ G.obj (kernel (cokernel.π (F.map f))) := iso.refl _
-    _ ≅ kernel (G.map (cokernel.π (F.map f))) := preserves_kernel.iso _ _
-    _ ≅ kernel (cokernel.π f) := coimage_iso_image_aux F G i adj f
+      (G.map_iso (cokernel_iso_of_eq (by simp)))
+    _ ≅ G.obj (cokernel (kernel.ι (F.map f))) := (G.map_iso (cokernel_epi_comp _ _))
+    _ ≅ G.obj (abelian.coimage (F.map f)) := (iso.refl _)
+    _ ≅ G.obj (abelian.image (F.map f)) := (G.map_iso (abelian.coimage_iso_image _))
+    _ ≅ G.obj (kernel (cokernel.π (F.map f))) := (iso.refl _)
+    _ ≅ kernel (G.map (cokernel.π (F.map f))) := (preserves_kernel.iso _ _)
+    _ ≅ kernel (cokernel.π f) := (coimage_iso_image_aux F G i adj f)
     _ ≅ abelian.image f := iso.refl _
     
 #align category_theory.abelian_of_adjunction.coimage_iso_image CategoryTheory.AbelianOfAdjunction.coimageIsoImage

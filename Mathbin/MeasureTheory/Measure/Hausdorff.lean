@@ -200,7 +200,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
   suffices : μ (⋃ n, S n) ≤ ⨆ n, μ (S n)
   calc
     μ (s ∩ t) + μ (s \ t) = μ (s ∩ t) + μ (⋃ n, S n) := by rw [Union_S]
-    _ ≤ μ (s ∩ t) + ⨆ n, μ (S n) := add_le_add le_rfl this
+    _ ≤ μ (s ∩ t) + ⨆ n, μ (S n) := (add_le_add le_rfl this)
     _ = ⨆ n, μ (s ∩ t) + μ (S n) := ENNReal.add_supᵢ
     _ ≤ μ s := supᵢ_le hSs
     
@@ -565,7 +565,7 @@ theorem mkMetric_le_liminf_tsum {β : Type _} {ι : β → Type _} [∀ n, Count
     calc
       (∑' j : ℕ, ⨆ h : (u j).Nonempty, m (diam (u j))) = _ :=
         tsum_unionᵢ_decode₂ (fun t : Set X => ⨆ h : t.Nonempty, m (diam t)) (by simp) _
-      _ ≤ ∑' i : ι n, m (diam (t n i)) := ENNReal.tsum_le_tsum fun b => supᵢ_le fun htb => le_rfl
+      _ ≤ ∑' i : ι n, m (diam (t n i)) := (ENNReal.tsum_le_tsum fun b => supᵢ_le fun htb => le_rfl)
       _ ≤ c := hn.le
       
 #align measure_theory.measure.mk_metric_le_liminf_tsum MeasureTheory.Measure.mkMetric_le_liminf_tsum
@@ -744,7 +744,7 @@ open Measure
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /-- In the space `ι → ℝ`, Hausdorff measure coincides exactly with Lebesgue measure. -/
 @[simp]
 theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :

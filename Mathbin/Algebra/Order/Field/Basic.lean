@@ -252,7 +252,7 @@ theorem le_div_iff (hc : 0 < c) : a ≤ b / c ↔ a * c ≤ b :=
   ⟨fun h => div_mul_cancel b (ne_of_lt hc).symm ▸ mul_le_mul_of_nonneg_right h hc.le, fun h =>
     calc
       a = a * c * (1 / c) := mul_mul_div a (ne_of_lt hc).symm
-      _ ≤ b * (1 / c) := mul_le_mul_of_nonneg_right h (one_div_pos.2 hc).le
+      _ ≤ b * (1 / c) := (mul_le_mul_of_nonneg_right h (one_div_pos.2 hc).le)
       _ = b / c := (div_eq_mul_one_div b c).symm
       ⟩
 #align le_div_iff le_div_iff
@@ -281,7 +281,7 @@ theorem div_le_iff (hb : 0 < b) : a / b ≤ c ↔ a ≤ c * b :=
     fun h =>
     calc
       a / b = a * (1 / b) := div_eq_mul_one_div a b
-      _ ≤ c * b * (1 / b) := mul_le_mul_of_nonneg_right h (one_div_pos.2 hb).le
+      _ ≤ c * b * (1 / b) := (mul_le_mul_of_nonneg_right h (one_div_pos.2 hb).le)
       _ = c * b / b := (div_eq_mul_one_div (c * b) b).symm
       _ = c := by refine' (div_eq_iff (ne_of_gt hb)).mpr rfl
       ⟩
@@ -1538,7 +1538,7 @@ theorem div_le_iff_of_neg (hc : c < 0) : b / c ≤ a ↔ a * c ≤ b :=
   ⟨fun h => div_mul_cancel b (ne_of_lt hc) ▸ mul_le_mul_of_nonpos_right h hc.le, fun h =>
     calc
       a = a * c * (1 / c) := mul_mul_div a (ne_of_lt hc)
-      _ ≥ b * (1 / c) := mul_le_mul_of_nonpos_right h (one_div_neg.2 hc).le
+      _ ≥ b * (1 / c) := (mul_le_mul_of_nonpos_right h (one_div_neg.2 hc).le)
       _ = b / c := (div_eq_mul_one_div b c).symm
       ⟩
 #align div_le_iff_of_neg div_le_iff_of_neg

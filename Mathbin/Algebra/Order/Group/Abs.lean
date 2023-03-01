@@ -302,7 +302,7 @@ theorem neg_abs_le_self (a : α) : -|a| ≤ a :=
   ·
     calc
       -|a| = -a := congr_arg Neg.neg (abs_of_nonneg h)
-      _ ≤ 0 := neg_nonpos.mpr h
+      _ ≤ 0 := (neg_nonpos.mpr h)
       _ ≤ a := h
       
   ·

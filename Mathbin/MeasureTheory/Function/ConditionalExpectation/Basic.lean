@@ -1431,7 +1431,7 @@ theorem set_integral_condexpL2_indicator (hs : measurable_set[m] s) (ht : Measur
     (∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ) =
         ∫ x in s, indicatorConstLp 2 ht hμt (1 : ℝ) x ∂μ :=
       @integral_condexpL2_eq α _ ℝ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
-    _ = (μ (t ∩ s)).toReal • 1 := set_integral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ)
+    _ = (μ (t ∩ s)).toReal • 1 := (set_integral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ))
     _ = (μ (t ∩ s)).toReal := by rw [smul_eq_mul, mul_one]
     
 #align measure_theory.set_integral_condexp_L2_indicator MeasureTheory.set_integral_condexpL2_indicator
@@ -1445,7 +1445,7 @@ theorem set_integral_condexpIndSmul (hs : measurable_set[m] s) (ht : MeasurableS
       set_integral_congr_ae (hm s hs)
         ((condexpIndSmul_ae_eq_smul hm ht hμt x).mono fun x hx hxs => hx)
     _ = (∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a ∂μ) • x :=
-      integral_smul_const _ x
+      (integral_smul_const _ x)
     _ = (μ (t ∩ s)).toReal • x := by rw [set_integral_condexp_L2_indicator hs ht hμs hμt]
     
 #align measure_theory.set_integral_condexp_ind_smul MeasureTheory.set_integral_condexpIndSmul
@@ -2366,7 +2366,7 @@ theorem condexp_neg (f : α → F') : μ[-f|m] =ᵐ[μ] -μ[f|m] := by
   letI : Module ℝ (α → F') := @Pi.module α (fun _ => F') ℝ _ _ fun _ => inferInstance <;>
     calc
       μ[-f|m] = μ[(-1 : ℝ) • f|m] := by rw [neg_one_smul ℝ f]
-      _ =ᵐ[μ] (-1 : ℝ) • μ[f|m] := condexp_smul (-1) f
+      _ =ᵐ[μ] (-1 : ℝ) • μ[f|m] := (condexp_smul (-1) f)
       _ = -μ[f|m] := neg_one_smul ℝ (μ[f|m])
       
 #align measure_theory.condexp_neg MeasureTheory.condexp_neg

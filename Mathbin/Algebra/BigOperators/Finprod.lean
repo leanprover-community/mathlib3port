@@ -201,7 +201,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} {α : Sort.{u2}} [_inst_1 : CommMonoid.{u1} M] (f : α -> M) (a : α), (forall (x : α), (Ne.{u2} α x a) -> (Eq.{succ u1} M (f x) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (finprod.{u1, u2} M α _inst_1 (fun (x : α) => f x)) (f a))
 Case conversion may be inaccurate. Consider using '#align finprod_eq_single finprod_eq_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) :
     (∏ᶠ x, f x) = f a :=
@@ -616,7 +616,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] (f : α -> M) (a : α) [_inst_3 : DecidableEq.{succ u2} α] (hf : Set.Finite.{u2} α (Function.mulSupport.{u2, u1} α M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)) f)), Eq.{succ u1} M (finprod.{u1, succ u2} M α _inst_1 (fun (i : α) => finprod.{u1, 0} M (Ne.{succ u2} α i a) _inst_1 (fun (H : Ne.{succ u2} α i a) => f i))) (Finset.prod.{u1, u2} M α _inst_1 (Finset.erase.{u2} α (fun (a : α) (b : α) => _inst_3 a b) (Set.Finite.toFinset.{u2} α (Function.mulSupport.{u2, u1} α M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)) f) hf) a) (fun (i : α) => f i))
 Case conversion may be inaccurate. Consider using '#align finprod_cond_ne finprod_cond_neₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
     (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.eraseₓ a, f i :=
@@ -1192,7 +1192,7 @@ theorem finprod_mem_singleton : (∏ᶠ i ∈ ({a} : Set α), f i) = f a := by
 #align finsum_mem_singleton finsum_mem_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr = » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr = » a) -/
 #print finprod_cond_eq_left /-
 @[simp, to_additive]
 theorem finprod_cond_eq_left : (∏ᶠ (i) (_ : i = a), f i) = f a :=
@@ -1594,7 +1594,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {f : α -> M} (a : α), (Set.Finite.{u2} α (Function.mulSupport.{u2, u1} α M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)) f)) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)))) (f a) (finprod.{u1, succ u2} M α _inst_1 (fun (i : α) => finprod.{u1, 0} M (Ne.{succ u2} α i a) _inst_1 (fun (H : Ne.{succ u2} α i a) => f i)))) (finprod.{u1, succ u2} M α _inst_1 (fun (i : α) => f i)))
 Case conversion may be inaccurate. Consider using '#align mul_finprod_cond_ne mul_finprod_cond_neₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
     (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by

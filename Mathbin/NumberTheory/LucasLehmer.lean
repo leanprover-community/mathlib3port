@@ -432,7 +432,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
       lt_irrefl 2
         (calc
           2 ≤ p' + 2 := Nat.le_add_left _ _
-          _ < 2 ^ (p' + 2) := Nat.lt_two_pow _
+          _ < 2 ^ (p' + 2) := (Nat.lt_two_pow _)
           _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
           )
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
@@ -573,9 +573,9 @@ theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/
@@ -607,7 +607,7 @@ unsafe def run_test : tactic Unit := do
 
 end LucasLehmer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 /-- We verify that the tactic works to prove `127.prime`. -/
 example : (mersenne 7).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)

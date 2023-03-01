@@ -234,7 +234,7 @@ open CategoryTheory.Bicategory
 namespace Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Coherence tactic for bicategories. -/ unsafe
   def
@@ -263,7 +263,7 @@ namespace Tactic
 
 namespace Bicategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Simp lemmas for rewriting a 2-morphism into a normal form. -/
 unsafe def whisker_simps : tactic Unit :=
   sorry

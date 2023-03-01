@@ -20,7 +20,7 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is

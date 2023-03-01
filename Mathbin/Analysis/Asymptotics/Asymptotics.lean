@@ -446,7 +446,7 @@ theorem IsOWith.trans (hfg : IsOWith c l f g) (hgk : IsOWith c' l g k) (hc : 0 �
   filter_upwards [hfg, hgk]with x hx hx'
   calc
     ‖f x‖ ≤ c * ‖g x‖ := hx
-    _ ≤ c * (c' * ‖k x‖) := mul_le_mul_of_nonneg_left hx' hc
+    _ ≤ c * (c' * ‖k x‖) := (mul_le_mul_of_nonneg_left hx' hc)
     _ = c * c' * ‖k x‖ := (mul_assoc _ _ _).symm
     
 #align asymptotics.is_O_with.trans Asymptotics.IsOWith.trans
@@ -1599,7 +1599,7 @@ theorem IsOWith.of_pow {n : ℕ} {f : α → 𝕜} {g : α → R} (h : IsOWith c
           ‖f x‖ ^ n = ‖f x ^ n‖ := (norm_pow _ _).symm
           _ ≤ c' ^ n * ‖g x ^ n‖ := hx
           _ ≤ c' ^ n * ‖g x‖ ^ n :=
-            mul_le_mul_of_nonneg_left (norm_pow_le' _ hn.bot_lt) (pow_nonneg hc' _)
+            (mul_le_mul_of_nonneg_left (norm_pow_le' _ hn.bot_lt) (pow_nonneg hc' _))
           _ = (c' * ‖g x‖) ^ n := (mul_pow _ _ _).symm
           
 #align asymptotics.is_O_with.of_pow Asymptotics.IsOWith.of_pow

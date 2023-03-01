@@ -154,7 +154,7 @@ theorem norm_le_gronwallBound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 #align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwallBound_of_norm_deriv_right_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -203,7 +203,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0}
     f_bound hfs hg hg' g_bound (fun t ht => trivial) ha
 #align dist_le_of_approx_trajectories_ODE dist_le_of_approx_trajectories_ODE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -247,7 +247,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : �
     hg' (fun t ht => trivial) ha
 #align dist_le_of_trajectories_ODE dist_le_of_trajectories_ODE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/

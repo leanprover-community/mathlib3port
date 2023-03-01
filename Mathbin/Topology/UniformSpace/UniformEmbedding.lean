@@ -737,7 +737,7 @@ theorem uniformContinuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCon
       have : (e ⁻¹' m₁) ×ˢ (e ⁻¹' m₂) ⊆ (fun p : β × β => (f p.1, f p.2)) ⁻¹' s :=
         calc
           _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) (interior t) := preimage_mono hm
-          _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) t := preimage_mono interior_subset
+          _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) t := (preimage_mono interior_subset)
           _ ⊆ preimage (fun p : β × β => (f p.1, f p.2)) s := ts
           
       have : (f '' (e ⁻¹' m₁)) ×ˢ (f '' (e ⁻¹' m₂)) ⊆ s :=
@@ -746,7 +746,7 @@ theorem uniformContinuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCon
               (fun p : β × β => (f p.1, f p.2)) '' (e ⁻¹' m₁) ×ˢ (e ⁻¹' m₂) :=
             prod_image_image_eq
           _ ⊆ (fun p : β × β => (f p.1, f p.2)) '' ((fun p : β × β => (f p.1, f p.2)) ⁻¹' s) :=
-            monotone_image this
+            (monotone_image this)
           _ ⊆ s := image_preimage_subset _ _
           
       have : (a, b) ∈ s := @this (a, b) ⟨ha₁, hb₁⟩

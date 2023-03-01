@@ -660,7 +660,7 @@ def inf {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 #align category_theory.subobject.Inf CategoryTheory.Subobject.inf
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f :=
   by
   fapply le_of_comm
@@ -727,7 +727,7 @@ def sup {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 #align category_theory.subobject.Sup CategoryTheory.Subobject.sup
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem le_sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s :=
   by
   fapply le_of_comm

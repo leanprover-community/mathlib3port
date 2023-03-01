@@ -484,18 +484,18 @@ def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ 
           (calc
             𝟭 C ⋙ F ≅ F := Functor.leftUnitor _
             _ ≅ F ⋙ 𝟭 D := (Functor.rightUnitor _).symm
-            _ ≅ F ⋙ shiftFunctor D (0 : A) := isoWhiskerLeft F (shiftFunctorZero D A).symm
+            _ ≅ F ⋙ shiftFunctor D (0 : A) := (isoWhiskerLeft F (shiftFunctorZero D A).symm)
             _ ≅ s 0 ⋙ F := (i 0).symm
             )
       μ := fun a b =>
         natIsoOfCompFullyFaithful F
           (calc
             (s a ⋙ s b) ⋙ F ≅ s a ⋙ s b ⋙ F := Functor.associator _ _ _
-            _ ≅ s a ⋙ F ⋙ shiftFunctor D b := isoWhiskerLeft _ (i b)
+            _ ≅ s a ⋙ F ⋙ shiftFunctor D b := (isoWhiskerLeft _ (i b))
             _ ≅ (s a ⋙ F) ⋙ shiftFunctor D b := (Functor.associator _ _ _).symm
-            _ ≅ (F ⋙ shiftFunctor D a) ⋙ shiftFunctor D b := isoWhiskerRight (i a) _
-            _ ≅ F ⋙ shiftFunctor D a ⋙ shiftFunctor D b := Functor.associator _ _ _
-            _ ≅ F ⋙ shiftFunctor D (a + b) := isoWhiskerLeft _ (shiftFunctorAdd D a b).symm
+            _ ≅ (F ⋙ shiftFunctor D a) ⋙ shiftFunctor D b := (isoWhiskerRight (i a) _)
+            _ ≅ F ⋙ shiftFunctor D a ⋙ shiftFunctor D b := (Functor.associator _ _ _)
+            _ ≅ F ⋙ shiftFunctor D (a + b) := (isoWhiskerLeft _ (shiftFunctorAdd D a b).symm)
             _ ≅ s (a + b) ⋙ F := (i (a + b)).symm
             )
       associativity := by

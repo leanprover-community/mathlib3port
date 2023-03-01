@@ -460,7 +460,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {b : Bool} (a : Lists'.{u1} α b) (l : Lists'.{u1} α Bool.true), LT.lt.{0} Nat instLTNat (SizeOf.sizeOf.{succ u1} (Sigma.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b)) (Sigma._sizeOf_inst.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b) Bool._sizeOf_inst (fun (a : Bool) => Lists'._sizeOf_inst.{u1} α a (instSizeOf.{succ u1} α))) (Sigma.mk.{0, u1} Bool (fun (b : Bool) => Lists'.{u1} α b) b a)) (SizeOf.sizeOf.{succ u1} (Lists'.{u1} α Bool.true) (Lists'._sizeOf_inst.{u1} α Bool.true (instSizeOf.{succ u1} α)) (Lists'.cons'.{u1} α b a l))
 Case conversion may be inaccurate. Consider using '#align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
     SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) :=
   by
@@ -469,16 +469,16 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
   apply sizeof_pos
 #align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- warning: lists.mem.decidable -> Lists.mem.decidable is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : Lists.{u1} α) (l : Lists'.{u1} α Bool.true), Decidable (Membership.Mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.hasMem.{u1} α Bool.true) a l)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : Lists.{u1} α) (l : Lists'.{u1} α Bool.true), Decidable (Membership.mem.{u1, u1} (Lists.{u1} α) (Lists'.{u1} α Bool.true) (Lists'.instMembershipListsLists'.{u1} α Bool.true) a l)
 Case conversion may be inaccurate. Consider using '#align lists.mem.decidable Lists.mem.decidableₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 #print Lists.Equiv.decidable /-
 mutual
   @[instance]

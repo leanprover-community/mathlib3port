@@ -372,7 +372,7 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Finite ι] {b : ι
 
 variable {M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
     (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
@@ -497,7 +497,7 @@ noncomputable def Submodule.smithNormalFormOfLe [Finite ι] (b : Basis ι R M) (
     ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Fin.castLe hno).toEmbedding, a,
       fun i => _⟩
   ext
-  simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symmApply,
+  simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symm_apply,
     Submodule.coe_smul_of_tower, RelEmbedding.coeFn_toEmbedding]
 #align submodule.smith_normal_form_of_le Submodule.smithNormalFormOfLe
 

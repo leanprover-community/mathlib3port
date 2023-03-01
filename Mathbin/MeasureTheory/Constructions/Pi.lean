@@ -385,7 +385,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
           measure.pi μ (pi univ fun i => to_measurable (μ i) ((hμ i).Set (e n i))) :=
         measure_mono (pi_mono fun i hi => subset_to_measurable _ _)
       _ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) :=
-        pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _
+        (pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _)
       _ = ∏ i, μ i ((hμ i).Set (e n i)) := by simp only [measure_to_measurable]
       _ < ∞ := ENNReal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       

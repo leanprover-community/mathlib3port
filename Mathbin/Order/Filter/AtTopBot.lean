@@ -2917,7 +2917,7 @@ theorem map_div_atTop_eq_nat (k : ℕ) (hk : 0 < k) : map (fun a => a / k) atTop
     (fun a b _ =>
       calc
         a / k ≤ b ↔ a / k < b + 1 := by rw [← Nat.succ_eq_add_one, Nat.lt_succ_iff]
-        _ ↔ a < (b + 1) * k := Nat.div_lt_iff_lt_mul hk
+        _ ↔ a < (b + 1) * k := (Nat.div_lt_iff_lt_mul hk)
         _ ↔ _ := by
           cases k
           exact (lt_irrefl _ hk).elim
@@ -3376,7 +3376,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_1 : CommMonoid.{u3} α] {g : γ -> β}, (Function.Injective.{succ u2, succ u1} γ β g) -> (forall {f : β -> α}, (forall (x : β), (Not (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x (Set.range.{u1, succ u2} β γ g))) -> (Eq.{succ u3} α (f x) (OfNat.ofNat.{u3} α 1 (One.toOfNat1.{u3} α (Monoid.toOne.{u3} α (CommMonoid.toMonoid.{u3} α _inst_1)))))) -> (Eq.{succ u3} (Filter.{u3} α) (Filter.map.{u2, u3} (Finset.{u2} γ) α (fun (s : Finset.{u2} γ) => Finset.prod.{u3, u2} α γ _inst_1 s (fun (i : γ) => f (g i))) (Filter.atTop.{u2} (Finset.{u2} γ) (PartialOrder.toPreorder.{u2} (Finset.{u2} γ) (Finset.partialOrder.{u2} γ)))) (Filter.map.{u1, u3} (Finset.{u1} β) α (fun (s : Finset.{u1} β) => Finset.prod.{u3, u1} α β _inst_1 s (fun (i : β) => f i)) (Filter.atTop.{u1} (Finset.{u1} β) (PartialOrder.toPreorder.{u1} (Finset.{u1} β) (Finset.partialOrder.{u1} β))))))
 Case conversion may be inaccurate. Consider using '#align function.injective.map_at_top_finset_prod_eq Function.Injective.map_atTop_finset_prod_eqₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.

@@ -995,11 +995,11 @@ def Simps.apply (h : r ≃r s) : α → β :=
 #align rel_iso.simps.apply RelIso.Simps.apply
 -/
 
-#print RelIso.Simps.symmApply /-
+#print RelIso.Simps.symm_apply /-
 /-- See Note [custom simps projection]. -/
-def Simps.symmApply (h : r ≃r s) : β → α :=
+def Simps.symm_apply (h : r ≃r s) : β → α :=
   h.symm
-#align rel_iso.simps.symm_apply RelIso.Simps.symmApply
+#align rel_iso.simps.symm_apply RelIso.Simps.symm_apply
 -/
 
 initialize_simps_projections RelIso (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply,

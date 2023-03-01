@@ -156,7 +156,7 @@ def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q :=
      * `f ⟨0,1⟩ ⟨0,1⟩ = -1`
     -/
   let f : M × R →ₗ[R] M × R →ₗ[R] CliffordAlgebra Q :=
-    ((Algebra.lmul R (CliffordAlgebra Q)).toLinearMap.comp <|
+    ((LinearMap.Algebra.lmul R (CliffordAlgebra Q)).toLinearMap.comp <|
           (ι Q).comp (LinearMap.fst _ _ _) +
             (Algebra.linearMap R _).comp (LinearMap.snd _ _ _)).compl₂
       ((ι Q).comp (LinearMap.fst _ _ _) - (Algebra.linearMap R _).comp (LinearMap.snd _ _ _))

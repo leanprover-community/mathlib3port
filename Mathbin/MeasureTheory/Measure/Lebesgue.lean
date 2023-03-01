@@ -285,7 +285,7 @@ theorem volume_pi_le_prod_diam (s : Set (ι → ℝ)) :
     volume s ≤ volume (pi univ fun i => closure (Function.eval i '' s)) :=
       volume.mono <|
         Subset.trans (subset_pi_eval_image univ s) <| pi_mono fun i hi => subset_closure
-    _ = ∏ i, volume (closure <| Function.eval i '' s) := volume_pi_pi _
+    _ = ∏ i, volume (closure <| Function.eval i '' s) := (volume_pi_pi _)
     _ ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) :=
       Finset.prod_le_prod' fun i hi => (volume_le_diam _).trans_eq (Emetric.diam_closure _)
     
@@ -295,7 +295,7 @@ theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ Emetric.diam
   calc
     volume s ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) := volume_pi_le_prod_diam s
     _ ≤ ∏ i : ι, (1 : ℝ≥0) * Emetric.diam s :=
-      Finset.prod_le_prod' fun i hi => (LipschitzWith.eval i).ediam_image_le s
+      (Finset.prod_le_prod' fun i hi => (LipschitzWith.eval i).ediam_image_le s)
     _ = Emetric.diam s ^ Fintype.card ι := by
       simp only [ENNReal.coe_one, one_mul, Finset.prod_const, Fintype.card]
     

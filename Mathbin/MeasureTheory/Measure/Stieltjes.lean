@@ -259,12 +259,12 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
     of_real (f b - f a) = of_real (f b - f a' + (f a' - f a)) := by rw [sub_add_sub_cancel]
     _ ≤ of_real (f b - f a') + of_real (f a' - f a) := ENNReal.ofReal_add_le
     _ ≤ (∑' i, of_real (f (g i).2 - f (g i).1)) + of_real δ :=
-      add_le_add (f.length_subadditive_Icc_Ioo I_subset) (ENNReal.ofReal_le_ofReal ha'.le)
+      (add_le_add (f.length_subadditive_Icc_Ioo I_subset) (ENNReal.ofReal_le_ofReal ha'.le))
     _ ≤ (∑' i, f.length (s i) + ε' i) + δ :=
-      add_le_add (ENNReal.tsum_le_tsum fun i => (hg i).2.le)
-        (by simp only [ENNReal.ofReal_coe_nnreal, le_rfl])
+      (add_le_add (ENNReal.tsum_le_tsum fun i => (hg i).2.le)
+        (by simp only [ENNReal.ofReal_coe_nnreal, le_rfl]))
     _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by rw [ENNReal.tsum_add]
-    _ ≤ (∑' i, f.length (s i)) + δ + δ := add_le_add (add_le_add le_rfl hε.le) le_rfl
+    _ ≤ (∑' i, f.length (s i)) + δ + δ := (add_le_add (add_le_add le_rfl hε.le) le_rfl)
     _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, ENNReal.add_halves]
     
 #align stieltjes_function.outer_Ioc StieltjesFunction.outer_Ioc

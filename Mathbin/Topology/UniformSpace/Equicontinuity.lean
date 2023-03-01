@@ -149,7 +149,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {X : Type.{u2}} {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_4 : UniformSpace.{u1} α] {F : ι -> X -> α} {x₀ : X}, Iff (EquicontinuousAt.{u3, u2, u1} ι X α _inst_1 _inst_4 F x₀) (forall (U : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_4)) -> (Exists.{succ u2} (Set.{u2} X) (fun (V : Set.{u2} X) => And (Membership.mem.{u2, u2} (Set.{u2} X) (Filter.{u2} X) (instMembershipSetFilter.{u2} X) V (nhds.{u2} X _inst_1 x₀)) (forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x V) -> (forall (y : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) y V) -> (forall (i : ι), Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (F i x) (F i y)) U))))))
 Case conversion may be inaccurate. Consider using '#align equicontinuous_at_iff_pair equicontinuousAt_iff_pairₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » V) -/
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/
 theorem equicontinuousAt_iff_pair {F : ι → X → α} {x₀ : X} :
@@ -524,14 +524,14 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {X : Type.{u1}} {α : Type.{u4}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_4 : UniformSpace.{u4} α] [_inst_5 : UniformSpace.{u3} β] {F : ι -> X -> α} {u : α -> β}, (UniformInducing.{u4, u3} α β _inst_4 _inst_5 u) -> (Iff (Equicontinuous.{u2, u1, u4} ι X α _inst_1 _inst_4 F) (Equicontinuous.{u2, u1, u3} ι X β _inst_1 _inst_5 (Function.comp.{succ u2, max (succ u4) (succ u1), max (succ u3) (succ u1)} ι (X -> α) (X -> β) ((fun (x._@.Mathlib.Topology.UniformSpace.Equicontinuity._hyg.3235 : α -> β) (x._@.Mathlib.Topology.UniformSpace.Equicontinuity._hyg.3237 : X -> α) => Function.comp.{succ u1, succ u4, succ u3} X α β x._@.Mathlib.Topology.UniformSpace.Equicontinuity._hyg.3235 x._@.Mathlib.Topology.UniformSpace.Equicontinuity._hyg.3237) u) F)))
 Case conversion may be inaccurate. Consider using '#align uniform_inducing.equicontinuous_iff UniformInducing.equicontinuous_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 /-- Given `u : α → β` a uniform inducing map, a family `𝓕 : ι → X → α` is equicontinuous iff the
 family `𝓕'`, obtained by precomposing each function of `𝓕` by `u`, is equicontinuous. -/
 theorem UniformInducing.equicontinuous_iff {F : ι → X → α} {u : α → β} (hu : UniformInducing u) :
     Equicontinuous F ↔ Equicontinuous ((· ∘ ·) u ∘ F) :=
   by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   rw [hu.equicontinuous_at_iff]
 #align uniform_inducing.equicontinuous_iff UniformInducing.equicontinuous_iff
 

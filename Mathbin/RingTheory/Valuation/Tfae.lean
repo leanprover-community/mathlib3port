@@ -192,7 +192,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
       · rwa [Submodule.span_le, Set.singleton_subset_iff]
 #align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdeal_isPrincipal_of_isDedekindDomain
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 theorem DiscreteValuationRing.tFAE [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) :
     TFAE

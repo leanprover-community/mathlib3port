@@ -181,7 +181,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
         have I : 0 < δ := by norm_num [δ]
         simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finset.sum_const, nsmul_eq_mul,
           div_pow, mul_assoc]
-      _ ≤ μ (ball (0 : E) ρ) := measure_mono A_subset
+      _ ≤ μ (ball (0 : E) ρ) := (measure_mono A_subset)
       _ = ENNReal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) := by
         simp only [μ.add_haar_ball_of_pos _ ρpos]
       
@@ -464,8 +464,8 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
     have C : a.r j ≤ 4 :=
       calc
         a.r j ≤ τ * a.r i := H.2
-        _ ≤ τ * 2 := mul_le_mul_of_nonneg_left I τpos.le
-        _ ≤ 5 / 4 * 2 := mul_le_mul_of_nonneg_right (by linarith only [hδ1, hδ2]) zero_le_two
+        _ ≤ τ * 2 := (mul_le_mul_of_nonneg_left I τpos.le)
+        _ ≤ 5 / 4 * 2 := (mul_le_mul_of_nonneg_right (by linarith only [hδ1, hδ2]) zero_le_two)
         _ ≤ 4 := by norm_num
         
     calc
@@ -475,7 +475,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         refine' mul_le_of_le_one_left δnonneg _
         linarith only [C]
       _ = (1 - δ / 4) * a.r j := by ring
-      _ ≤ (1 - δ / 4) * (τ * a.r i) := mul_le_mul_of_nonneg_left H.2 D
+      _ ≤ (1 - δ / 4) * (τ * a.r i) := (mul_le_mul_of_nonneg_left H.2 D)
       _ ≤ 1 * a.r i := by
         rw [← mul_assoc]
         apply mul_le_mul_of_nonneg_right J (a.rpos _).le
@@ -552,7 +552,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
             _ = a.r i * (τ - 1) := by ring
             _ ≤ s * (τ - 1) := mul_le_mul_of_nonneg_right A (sub_nonneg.2 hτ)
             
-      _ ≤ s * (δ / 2) := mul_le_mul_of_nonneg_left (by linarith only [δnonneg, hδ1]) spos.le
+      _ ≤ s * (δ / 2) := (mul_le_mul_of_nonneg_left (by linarith only [δnonneg, hδ1]) spos.le)
       _ = s / 2 * δ := by ring
       
   have invs_nonneg : 0 ≤ 2 / s := div_nonneg zero_le_two (zero_le_two.trans hi.le)
@@ -562,7 +562,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       field_simp [spos.ne']
       ring
     _ ≤ 2 / s * ‖d - a.c i‖ :=
-      mul_le_mul_of_nonneg_left (by linarith only [hcrj, I, J, hi]) invs_nonneg
+      (mul_le_mul_of_nonneg_left (by linarith only [hcrj, I, J, hi]) invs_nonneg)
     _ = ‖(2 / s) • a.c i - (2 / ‖a.c j‖) • a.c j‖ :=
       by
       conv_lhs => rw [norm_sub_rev, ← abs_of_nonneg invs_nonneg]

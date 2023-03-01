@@ -66,14 +66,14 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   intro y le_y y_lt
   calc
     ‖g i y‖ = ‖g i (y + x) - g i x‖ := by rw [ContinuousLinearMap.map_add, add_sub_cancel]
-    _ ≤ ‖g i (y + x)‖ + ‖g i x‖ := norm_sub_le _ _
+    _ ≤ ‖g i (y + x)‖ + ‖g i x‖ := (norm_sub_le _ _)
     _ ≤ m + m :=
-      add_le_add (real_norm_le (y + x) (by rwa [add_comm, add_mem_ball_iff_norm]) i)
-        (real_norm_le x (Metric.mem_ball_self ε_pos) i)
+      (add_le_add (real_norm_le (y + x) (by rwa [add_comm, add_mem_ball_iff_norm]) i)
+        (real_norm_le x (Metric.mem_ball_self ε_pos) i))
     _ = (m + m : ℕ) := (m.cast_add m).symm
     _ ≤ (m + m : ℕ) * (‖y‖ / (ε / ‖k‖)) :=
-      le_mul_of_one_le_right (Nat.cast_nonneg _)
-        ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)
+      (le_mul_of_one_le_right (Nat.cast_nonneg _)
+        ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y))
     _ = (m + m : ℕ) / (ε / ‖k‖) * ‖y‖ := (mul_comm_div _ _ _).symm
     
 #align banach_steinhaus banach_steinhaus

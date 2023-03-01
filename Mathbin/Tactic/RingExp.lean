@@ -1001,7 +1001,7 @@ theorem mul_p_pf_sum {pps p ps qs ppsqs : α} :
     pps = p + ps → p * qs + ps * qs = ppsqs → pps * qs = ppsqs := fun pps_pf ppsqs_pf =>
   calc
     pps * qs = (p + ps) * qs := by rw [pps_pf]
-    _ = p * qs + ps * qs := add_mul _ _ _
+    _ = p * qs + ps * qs := (add_mul _ _ _)
     _ = ppsqs := ppsqs_pf
     
 #align tactic.ring_exp.mul_p_pf_sum Tactic.RingExp.mul_p_pf_sum
@@ -1037,7 +1037,7 @@ theorem mul_pf_sum {ps qqs q qs psqqs : α} :
     qqs = q + qs → ps * q + ps * qs = psqqs → ps * qqs = psqqs := fun qs_pf psqqs_pf =>
   calc
     ps * qqs = ps * (q + qs) := by rw [qs_pf]
-    _ = ps * q + ps * qs := mul_add _ _ _
+    _ = ps * q + ps * qs := (mul_add _ _ _)
     _ = psqqs := psqqs_pf
     
 #align tactic.ring_exp.mul_pf_sum Tactic.RingExp.mul_pf_sum
@@ -1072,7 +1072,7 @@ theorem pow_e_pf_exp {pps p : α} {ps qs psqs : ℕ} :
     pps = p ^ ps → ps * qs = psqs → pps ^ qs = p ^ psqs := fun pps_pf psqs_pf =>
   calc
     pps ^ qs = (p ^ ps) ^ qs := by rw [pps_pf]
-    _ = p ^ (ps * qs) := symm (pow_mul _ _ _)
+    _ = p ^ (ps * qs) := (symm (pow_mul _ _ _))
     _ = p ^ psqs := by rw [psqs_pf]
     
 #align tactic.ring_exp.pow_e_pf_exp Tactic.RingExp.pow_e_pf_exp
@@ -1121,7 +1121,7 @@ theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
   fun pps_pf pqs_pf psqs_pf =>
   calc
     pps ^ qs = (p * ps) ^ qs := by rw [pps_pf]
-    _ = p ^ qs * ps ^ qs := mul_pow _ _ _
+    _ = p ^ qs * ps ^ qs := (mul_pow _ _ _)
     _ = pqs * psqs := by rw [pqs_pf, psqs_pf]
     
 #align tactic.ring_exp.pow_pp_pf_prod Tactic.RingExp.pow_pp_pf_prod
@@ -1185,7 +1185,7 @@ theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} :
     qs = succ qs' → ps * ps ^ qs' = pqqs → ps ^ qs = pqqs := fun qs_pf pqqs_pf =>
   calc
     ps ^ qs = ps ^ succ qs' := by rw [qs_pf]
-    _ = ps * ps ^ qs' := pow_succ _ _
+    _ = ps * ps ^ qs' := (pow_succ _ _)
     _ = pqqs := by rw [pqqs_pf]
     
 #align tactic.ring_exp.pow_p_pf_succ Tactic.RingExp.pow_p_pf_succ
@@ -1255,7 +1255,7 @@ theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} :
     qqs = q + qs → ps ^ q * ps ^ qs = psqqs → ps ^ qqs = psqqs := fun qqs_pf psqqs_pf =>
   calc
     ps ^ qqs = ps ^ (q + qs) := by rw [qqs_pf]
-    _ = ps ^ q * ps ^ qs := pow_add _ _ _
+    _ = ps ^ q * ps ^ qs := (pow_add _ _ _)
     _ = psqqs := psqqs_pf
     
 #align tactic.ring_exp.pow_pf_sum Tactic.RingExp.pow_pf_sum

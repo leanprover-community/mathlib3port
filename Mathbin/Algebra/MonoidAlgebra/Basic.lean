@@ -354,11 +354,11 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
         _ = ∑ p in (f.support ×ˢ g.support).filterₓ fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
           (Finset.sum_filter _ _).symm
         _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1 * g p.2 :=
-          sum_congr
+          (sum_congr
             (by
               ext
               simp only [mem_filter, mem_product, hs, and_comm'])
-            fun _ _ => rfl
+            fun _ _ => rfl)
         _ = ∑ p in s, f p.1 * g p.2 :=
           sum_subset (filter_subset _ _) fun p hps hp =>
             by
@@ -463,7 +463,7 @@ theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
       calc
         (f * single x r) z = Sum f fun a b => if a = y then b * r else 0 := by
           simp only [mul_apply, A, H]
-        _ = if y ∈ f.support then f y * r else 0 := f.support.sum_ite_eq' _ _
+        _ = if y ∈ f.support then f y * r else 0 := (f.support.sum_ite_eq' _ _)
         _ = f y * r := by split_ifs with h <;> simp at h <;> simp [h]
         
 #align monoid_algebra.mul_single_apply_aux MonoidAlgebra.mul_single_apply_aux
@@ -481,7 +481,7 @@ theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
         (single x r * f) y = Sum f fun a b => ite (x * a = y) (r * b) 0 :=
           (mul_apply _ _ _).trans <| sum_single_index this
         _ = f.sum fun a b => ite (a = z) (r * b) 0 := by simp only [H]
-        _ = if z ∈ f.support then r * f z else 0 := f.support.sum_ite_eq' _ _
+        _ = if z ∈ f.support then r * f z else 0 := (f.support.sum_ite_eq' _ _)
         _ = _ := by split_ifs with h <;> simp at h <;> simp [h]
         
 #align monoid_algebra.single_mul_apply_aux MonoidAlgebra.single_mul_apply_aux

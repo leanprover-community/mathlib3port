@@ -345,7 +345,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {s : Set.{u2} α} {f : Finsupp.{u2, u1} α M _inst_1}, Iff (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Finset.toSet.{u2} α (Finsupp.support.{u2, u1} α M _inst_1 f)) s) (forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) f a) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1))))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_subset_iff Finsupp.support_subset_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 :=
   by
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
@@ -732,7 +732,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {f : Finsupp.{u2, u1} α M _inst_1} {a : α}, Iff (Eq.{succ u2} (Finset.{u2} α) (Finsupp.support.{u2, u1} α M _inst_1 f) (Singleton.singleton.{u2, u2} α (Finset.{u2} α) (Finset.instSingletonFinset.{u2} α) a)) (Exists.{succ u1} M (fun (b : M) => Exists.{0} (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) (fun (H : Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) => Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M _inst_1) f (Finsupp.single.{u2, u1} α M _inst_1 a b))))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_eq_singleton' Finsupp.support_eq_singleton'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem support_eq_singleton' {f : α →₀ M} {a : α} :
     f.support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
@@ -757,7 +757,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {f : Finsupp.{u2, u1} α M _inst_1}, Iff (Eq.{1} Nat (Finset.card.{u2} α (Finsupp.support.{u2, u1} α M _inst_1 f)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Exists.{succ u2} α (fun (a : α) => Exists.{succ u1} M (fun (b : M) => Exists.{0} (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) (fun (H : Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) => Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M _inst_1) f (Finsupp.single.{u2, u1} α M _inst_1 a b)))))
 Case conversion may be inaccurate. Consider using '#align finsupp.card_support_eq_one' Finsupp.card_support_eq_one'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem card_support_eq_one' {f : α →₀ M} :
     card f.support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']

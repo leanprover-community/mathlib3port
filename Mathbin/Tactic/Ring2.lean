@@ -534,7 +534,7 @@ open Tactic.Ring2
 -- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `ring2` solves equations in the language of rings.

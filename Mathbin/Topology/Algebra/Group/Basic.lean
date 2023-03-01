@@ -2144,8 +2144,8 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G :=
   refine' ⟨closure U, mem_of_superset hU subset_closure, isClosed_closure, _⟩
   calc
     closure U ⊆ closure U * interior V := subset_mul_left _ (mem_interior_iff_mem_nhds.2 hV)
-    _ = U * interior V := is_open_interior.closure_mul U
-    _ ⊆ U * V := mul_subset_mul_left interior_subset
+    _ = U * interior V := (is_open_interior.closure_mul U)
+    _ ⊆ U * V := (mul_subset_mul_left interior_subset)
     _ ⊆ s := hUV
     
 #align topological_group.regular_space TopologicalGroup.regularSpace
@@ -2409,10 +2409,10 @@ theorem local_isCompact_isClosed_nhds_of_group [LocallyCompactSpace G] {U : Set 
     calc
       closure V = {(1 : G)} * closure V := by simp only [singleton_mul, one_mul, image_id']
       _ ⊆ interior V * closure V :=
-        mul_subset_mul_right
-          (by simpa only [singleton_subset_iff] using mem_interior_iff_mem_nhds.2 Vnhds)
-      _ = interior V * V := is_open_interior.mul_closure _
-      _ ⊆ V * V := mul_subset_mul_right interior_subset
+        (mul_subset_mul_right
+          (by simpa only [singleton_subset_iff] using mem_interior_iff_mem_nhds.2 Vnhds))
+      _ = interior V * V := (is_open_interior.mul_closure _)
+      _ ⊆ V * V := (mul_subset_mul_right interior_subset)
       _ ⊆ L := by
         rintro x ⟨y, z, yv, zv, rfl⟩
         exact hV _ yv _ zv

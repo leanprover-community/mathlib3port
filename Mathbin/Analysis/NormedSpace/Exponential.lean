@@ -112,7 +112,7 @@ theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂)
   funext expSeries_sum_eq
 #align exp_eq_tsum exp_eq_tsum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 :=
   by

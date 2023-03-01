@@ -337,7 +337,7 @@ theorem circumsphere_eq_of_dist_of_oangle (t : Triangle ℝ P) {i₁ i₂ i₃ :
     (t.dist_div_sin_oangle_div_two_eq_circumradius h₁₂ h₁₃ h₂₃).symm
 #align affine.triangle.circumsphere_eq_of_dist_of_oangle Affine.Triangle.circumsphere_eq_of_dist_of_oangle
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ⟨«expr +ᵥ »(«expr • »(«expr / »(«expr ⁻¹»((_ : exprℝ())), 2), _), _), «expr / »(«expr / »(_, _), 2)⟩]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ⟨«expr +ᵥ »(«expr • »(«expr / »(«expr ⁻¹»((_ : exprℝ())), 2), _), _), «expr / »(«expr / »(_, _), 2)⟩]] -/
 /-- If two triangles have two points the same, and twice the angle at the third point the same,
 they have the same circumsphere. -/
 theorem circumsphere_eq_circumsphere_of_eq_of_eq_of_two_zsmul_oangle_eq {t₁ t₂ : Triangle ℝ P}
@@ -351,7 +351,7 @@ theorem circumsphere_eq_circumsphere_of_eq_of_eq_of_two_zsmul_oangle_eq {t₁ t�
   rw [t₁.circumsphere_eq_of_dist_of_oangle h₁₂ h₁₃ h₂₃,
     t₂.circumsphere_eq_of_dist_of_oangle h₁₂ h₁₃ h₂₃]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ⟨«expr +ᵥ »(«expr • »(«expr / »(«expr ⁻¹»((_ : exprℝ())), 2), _), _), «expr / »(«expr / »(_, _), 2)⟩]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ⟨«expr +ᵥ »(«expr • »(«expr / »(«expr ⁻¹»((_ : exprℝ())), 2), _), _), «expr / »(«expr / »(_, _), 2)⟩]]"
   · exact Real.Angle.tan_eq_of_two_zsmul_eq h₂
   · rw [h₁, h₃]
   · rw [h₁, h₃]

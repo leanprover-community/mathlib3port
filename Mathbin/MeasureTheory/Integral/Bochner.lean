@@ -250,8 +250,8 @@ theorem norm_weightedSmul_le (s : Set α) : ‖(weightedSmul μ s : F →L[ℝ] 
     ‖(weightedSmul μ s : F →L[ℝ] F)‖ = ‖(μ s).toReal‖ * ‖ContinuousLinearMap.id ℝ F‖ :=
       norm_smul _ _
     _ ≤ ‖(μ s).toReal‖ :=
-      (mul_le_mul_of_nonneg_left norm_id_le (norm_nonneg _)).trans (mul_one _).le
-    _ = abs (μ s).toReal := Real.norm_eq_abs _
+      ((mul_le_mul_of_nonneg_left norm_id_le (norm_nonneg _)).trans (mul_one _).le)
+    _ = abs (μ s).toReal := (Real.norm_eq_abs _)
     _ = (μ s).toReal := abs_eq_self.mpr ENNReal.toReal_nonneg
     
 #align measure_theory.norm_weighted_smul_le MeasureTheory.norm_weightedSmul_le
@@ -782,8 +782,8 @@ theorem norm_Integral_le_one : ‖Integral‖ ≤ 1 :=
 theorem norm_integral_le (f : α →₁[μ] E) : ‖integral f‖ ≤ ‖f‖ :=
   calc
     ‖integral f‖ = ‖Integral f‖ := by simp only [integral]
-    _ ≤ ‖Integral‖ * ‖f‖ := le_op_norm _ _
-    _ ≤ 1 * ‖f‖ := mul_le_mul_of_nonneg_right norm_Integral_le_one <| norm_nonneg _
+    _ ≤ ‖Integral‖ * ‖f‖ := (le_op_norm _ _)
+    _ ≤ 1 * ‖f‖ := (mul_le_mul_of_nonneg_right norm_Integral_le_one <| norm_nonneg _)
     _ = ‖f‖ := one_mul _
     
 #align measure_theory.L1.norm_integral_le MeasureTheory.L1.norm_integral_le
@@ -1651,8 +1651,8 @@ theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AeMeasura
       congr 1
       exact measure.map_congr hφ.ae_eq_mk
     _ = ∫ x, g (hφ.mk φ x) ∂μ :=
-      integral_map_of_stronglyMeasurable hφ.measurable_mk hfm.stronglyMeasurable_mk
-    _ = ∫ x, g (φ x) ∂μ := integral_congr_ae (hφ.ae_eq_mk.symm.fun_comp _)
+      (integral_map_of_stronglyMeasurable hφ.measurable_mk hfm.stronglyMeasurable_mk)
+    _ = ∫ x, g (φ x) ∂μ := (integral_congr_ae (hφ.ae_eq_mk.symm.fun_comp _))
     _ = ∫ x, f (φ x) ∂μ := integral_congr_ae <| ae_eq_comp hφ hfm.ae_eq_mk.symm
     
 #align measure_theory.integral_map MeasureTheory.integral_map

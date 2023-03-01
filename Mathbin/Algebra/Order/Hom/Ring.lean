@@ -691,16 +691,16 @@ protected def symm (e : α ≃+*o β) : β ≃+*o α :=
     erw [← map_le_map_iff e, e.1.apply_symm_apply, e.1.apply_symm_apply]⟩
 #align order_ring_iso.symm OrderRingIso.symm
 
-/- warning: order_ring_iso.simps.symm_apply -> OrderRingIso.Simps.symmApply is a dubious translation:
+/- warning: order_ring_iso.simps.symm_apply -> OrderRingIso.Simps.symm_apply is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : Add.{u1} α] [_inst_3 : LE.{u1} α] [_inst_4 : Mul.{u2} β] [_inst_5 : Add.{u2} β] [_inst_6 : LE.{u2} β], (OrderRingIso.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6) -> β -> α
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : Add.{u1} α] [_inst_3 : LE.{u1} α] [_inst_4 : Mul.{u2} β] [_inst_5 : Add.{u2} β] [_inst_6 : LE.{u2} β], (OrderRingIso.{u1, u2} α β _inst_1 _inst_4 _inst_2 _inst_5 _inst_3 _inst_6) -> β -> α
-Case conversion may be inaccurate. Consider using '#align order_ring_iso.simps.symm_apply OrderRingIso.Simps.symmApplyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align order_ring_iso.simps.symm_apply OrderRingIso.Simps.symm_applyₓ'. -/
 /-- See Note [custom simps projection] -/
-def Simps.symmApply (e : α ≃+*o β) : β → α :=
+def Simps.symm_apply (e : α ≃+*o β) : β → α :=
   e.symm
-#align order_ring_iso.simps.symm_apply OrderRingIso.Simps.symmApply
+#align order_ring_iso.simps.symm_apply OrderRingIso.Simps.symm_apply
 
 /- warning: order_ring_iso.symm_symm -> OrderRingIso.symm_symm is a dubious translation:
 lean 3 declaration is

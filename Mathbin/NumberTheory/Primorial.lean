@@ -104,10 +104,11 @@ theorem primorial_le_4_pow (n : ℕ) : n# ≤ 4 ^ n :=
     · decide
     calc
       (m + m + 1)# = (m + 1 + m)# := by rw [add_right_comm]
-      _ ≤ (m + 1)# * choose (m + 1 + m) (m + 1) := primorial_add_le m.le_succ
+      _ ≤ (m + 1)# * choose (m + 1 + m) (m + 1) := (primorial_add_le m.le_succ)
       _ = (m + 1)# * choose (2 * m + 1) m := by rw [choose_symm_add, two_mul, add_right_comm]
       _ ≤ 4 ^ (m + 1) * 4 ^ m :=
-        mul_le_mul' (ihn _ <| succ_lt_succ <| (lt_add_iff_pos_left _).2 hm) (choose_middle_le_pow _)
+        (mul_le_mul' (ihn _ <| succ_lt_succ <| (lt_add_iff_pos_left _).2 hm)
+          (choose_middle_le_pow _))
       _ ≤ 4 ^ (m + m + 1) := by rw [← pow_add, add_right_comm]
       
   · rcases Decidable.eq_or_ne n 1 with (rfl | hn)
@@ -115,7 +116,7 @@ theorem primorial_le_4_pow (n : ℕ) : n# ≤ 4 ^ n :=
     ·
       calc
         (n + 1)# = n# := primorial_succ hn ho
-        _ ≤ 4 ^ n := ihn n n.lt_succ_self
+        _ ≤ 4 ^ n := (ihn n n.lt_succ_self)
         _ ≤ 4 ^ (n + 1) := pow_le_pow_of_le_right four_pos n.le_succ
         
 #align primorial_le_4_pow primorial_le_4_pow

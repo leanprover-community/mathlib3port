@@ -154,7 +154,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     
 #align box_integral.norm_volume_sub_integral_face_upper_sub_lower_smul_le BoxIntegral.norm_volume_sub_integral_face_upper_sub_lower_smul_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -214,7 +214,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         rw [← dist_eq_norm]
         calc
           dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) := dist_triangle_right _ _ _
-          _ ≤ ε / 2 / 2 + ε / 2 / 2 := add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂)
+          _ ≤ ε / 2 / 2 + ε / 2 / 2 := (add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂))
           _ = ε / 2 := add_halves _
           
       · have :
@@ -250,8 +250,8 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         intro j
         calc
           dist (J.upper j) (J.lower j) ≤ dist J.upper J.lower := dist_le_pi_dist _ _ _
-          _ ≤ dist J.upper x + dist J.lower x := dist_triangle_right _ _ _
-          _ ≤ δ + δ := add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)
+          _ ≤ dist J.upper x + dist J.lower x := (dist_triangle_right _ _ _)
+          _ ≤ δ + δ := (add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc))
           _ = 2 * δ := (two_mul δ).symm
           
       calc
@@ -270,10 +270,10 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         J.upper (i.succ_above j) - J.lower (i.succ_above j) ≤
             dist (J.upper (i.succ_above j)) (J.lower (i.succ_above j)) :=
           le_abs_self _
-        _ ≤ dist J.upper J.lower := dist_le_pi_dist J.upper J.lower (i.succ_above j)
-        _ ≤ dist J.upper x + dist J.lower x := dist_triangle_right _ _ _
-        _ ≤ δ + δ := add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc)
-        _ ≤ 1 / 2 + 1 / 2 := add_le_add hδ12 hδ12
+        _ ≤ dist J.upper J.lower := (dist_le_pi_dist J.upper J.lower (i.succ_above j))
+        _ ≤ dist J.upper x + dist J.lower x := (dist_triangle_right _ _ _)
+        _ ≤ δ + δ := (add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc))
+        _ ≤ 1 / 2 + 1 / 2 := (add_le_add hδ12 hδ12)
         _ = 1 := add_halves 1
         
   · intro c x hx ε ε0

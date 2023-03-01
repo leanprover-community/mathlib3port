@@ -334,7 +334,7 @@ theorem compAlongComposition_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜 E
     ‖f.compAlongComposition p c v‖ ≤ (‖f‖ * ∏ i, ‖p (c.blocksFun i)‖) * ∏ i : Fin n, ‖v i‖ :=
   calc
     ‖f.compAlongComposition p c v‖ = ‖f (p.applyComposition c v)‖ := rfl
-    _ ≤ ‖f‖ * ∏ i, ‖p.applyComposition c v i‖ := ContinuousMultilinearMap.le_op_norm _ _
+    _ ≤ ‖f‖ * ∏ i, ‖p.applyComposition c v i‖ := (ContinuousMultilinearMap.le_op_norm _ _)
     _ ≤ ‖f‖ * ∏ i, ‖p (c.blocksFun i)‖ * ∏ j : Fin (c.blocksFun i), ‖(v ∘ c.Embedding i) j‖ :=
       by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
@@ -524,7 +524,7 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
     calc
       (∏ i, ‖p (c.blocks_fun i)‖₊) * rp ^ n = ∏ i, ‖p (c.blocks_fun i)‖₊ * rp ^ c.blocks_fun i := by
         simp only [Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, c.sum_blocks_fun]
-      _ ≤ ∏ i : Fin c.length, Cp := Finset.prod_le_prod' fun i _ => hCp _
+      _ ≤ ∏ i : Fin c.length, Cp := (Finset.prod_le_prod' fun i _ => hCp _)
       _ = Cp ^ c.length := by simp
       _ ≤ Cp ^ n := pow_le_pow hCp1 c.length_le
       
@@ -536,7 +536,7 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
         by
         simp only [r, mul_pow]
         ring
-      _ ≤ Cq * Cp ^ n * r0 ^ n := mul_le_mul' (mul_le_mul' A B) le_rfl
+      _ ≤ Cq * Cp ^ n * r0 ^ n := (mul_le_mul' (mul_le_mul' A B) le_rfl)
       _ = Cq / 4 ^ n := by
         simp only [r0]
         field_simp [mul_pow, (zero_lt_one.trans_le hCp1).ne']

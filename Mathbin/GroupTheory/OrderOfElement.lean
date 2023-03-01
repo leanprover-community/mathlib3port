@@ -1380,7 +1380,7 @@ theorem orderOf_dvd_card_univ : orderOf x ∣ Fintype.card G := by
         Fintype.card G = @Fintype.card _ ft_prod :=
           @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
         _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) :=
-          congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
+          (congr_arg (@Fintype.card _) <| Subsingleton.elim _ _)
         _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
           @Fintype.card_prod _ _ ft_cosets ft_s
         

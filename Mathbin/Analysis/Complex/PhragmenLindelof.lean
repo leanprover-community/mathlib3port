@@ -851,7 +851,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       contrapose! hz
       calc
         x₀ ≤ x₀ - z.re := (le_sub_self_iff _).2 hz
-        _ ≤ |x₀ - z.re| := le_abs_self _
+        _ ≤ |x₀ - z.re| := (le_abs_self _)
         _ = |(z - x₀).re| := by rw [sub_re, of_real_re, _root_.abs_sub_comm]
         _ ≤ abs (z - x₀) := abs_re_le_abs _
         

@@ -652,7 +652,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -1140,7 +1140,7 @@ theorem zpow_ofNat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
   | n + 1 =>
     calc
       a ^ (↑(n + 1) : ℤ) = a * a ^ (n : ℤ) := DivInvMonoid.zpow_succ' _ _
-      _ = a * a ^ n := congr_arg ((· * ·) a) (zpow_ofNat n)
+      _ = a * a ^ n := (congr_arg ((· * ·) a) (zpow_ofNat n))
       _ = a ^ (n + 1) := (pow_succ _ _).symm
       
 #align zpow_coe_nat zpow_ofNat

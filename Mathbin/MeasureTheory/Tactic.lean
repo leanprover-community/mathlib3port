@@ -48,7 +48,7 @@ attribute [measurability]
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -69,7 +69,7 @@ unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 #align tactic.apply_measurable.comp tactic.apply_measurable.comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -103,8 +103,8 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | _ => skip
 #align tactic.goal_is_not_measurable tactic.goal_is_not_measurable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/

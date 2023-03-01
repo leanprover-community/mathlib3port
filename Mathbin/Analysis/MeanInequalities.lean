@@ -267,7 +267,7 @@ theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.IsConjugateExponent q)
     a * b ≤ |a| ^ p / p + |b| ^ q / q :=
   calc
     a * b ≤ |a * b| := le_abs_self (a * b)
-    _ = |a| * |b| := abs_mul a b
+    _ = |a| * |b| := (abs_mul a b)
     _ ≤ |a| ^ p / p + |b| ^ q / q :=
       Real.young_inequality_of_nonneg (abs_nonneg a) (abs_nonneg b) hpq
     
@@ -373,7 +373,7 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjuga
         congr with i
         rw [mul_comm]
       _ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
-        inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm hG_zero
+        (inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm hG_zero)
       _ = (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := mul_comm _ _
       
   let f' i := f i / (∑ i in s, f i ^ p) ^ (1 / p)

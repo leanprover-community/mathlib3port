@@ -113,7 +113,7 @@ variable {f : E → F} (K : Set (E →L[𝕜] F))
 
 namespace FderivMeasurableAux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » ball[metric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » ball[metric.ball] x r') -/
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/
@@ -185,13 +185,13 @@ theorem mem_a_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : E} (hx : Differen
       simp only [ContinuousLinearMap.map_sub]
       abel
     _ ≤ ‖f z - f x - (fderiv 𝕜 f x) (z - x)‖ + ‖f y - f x - (fderiv 𝕜 f x) (y - x)‖ :=
-      norm_sub_le _ _
+      (norm_sub_le _ _)
     _ ≤ ε / 2 * ‖z - x‖ + ε / 2 * ‖y - x‖ :=
-      add_le_add (hR _ (lt_trans (mem_ball.1 hz) hr.2)) (hR _ (lt_trans (mem_ball.1 hy) hr.2))
+      (add_le_add (hR _ (lt_trans (mem_ball.1 hz) hr.2)) (hR _ (lt_trans (mem_ball.1 hy) hr.2)))
     _ ≤ ε / 2 * r + ε / 2 * r :=
-      add_le_add
+      (add_le_add
         (mul_le_mul_of_nonneg_left (le_of_lt (mem_ball_iff_norm.1 hz)) (le_of_lt (half_pos hε)))
-        (mul_le_mul_of_nonneg_left (le_of_lt (mem_ball_iff_norm.1 hy)) (le_of_lt (half_pos hε)))
+        (mul_le_mul_of_nonneg_left (le_of_lt (mem_ball_iff_norm.1 hy)) (le_of_lt (half_pos hε))))
     _ = ε * r := by ring
     
 #align fderiv_measurable_aux.mem_A_of_differentiable FderivMeasurableAux.mem_a_of_differentiable
@@ -207,7 +207,7 @@ theorem norm_sub_le_of_mem_a {c : 𝕜} (hc : 1 < ‖c‖) {r ε : ℝ} (hε : 0
   calc
     ‖(L₁ - L₂) y‖ = ‖f (x + y) - f x - L₂ (x + y - x) - (f (x + y) - f x - L₁ (x + y - x))‖ := by
       simp
-    _ ≤ ‖f (x + y) - f x - L₂ (x + y - x)‖ + ‖f (x + y) - f x - L₁ (x + y - x)‖ := norm_sub_le _ _
+    _ ≤ ‖f (x + y) - f x - L₂ (x + y - x)‖ + ‖f (x + y) - f x - L₁ (x + y - x)‖ := (norm_sub_le _ _)
     _ ≤ ε * r + ε * r := by
       apply add_le_add
       · apply le_of_mem_A h₂
@@ -217,7 +217,7 @@ theorem norm_sub_le_of_mem_a {c : 𝕜} (hc : 1 < ‖c‖) {r ε : ℝ} (hε : 0
         · simp only [le_of_lt (half_pos hr), mem_closed_ball, dist_self]
         · simp only [dist_eq_norm, add_sub_cancel', mem_closed_ball, ylt.le]
     _ = 2 * ε * r := by ring
-    _ ≤ 2 * ε * (2 * ‖c‖ * ‖y‖) := mul_le_mul_of_nonneg_left ley (mul_nonneg (by norm_num) hε.le)
+    _ ≤ 2 * ε * (2 * ‖c‖ * ‖y‖) := (mul_le_mul_of_nonneg_left ley (mul_nonneg (by norm_num) hε.le))
     _ = 4 * ‖c‖ * ε * ‖y‖ := by ring
     
 #align fderiv_measurable_aux.norm_sub_le_of_mem_A FderivMeasurableAux.norm_sub_le_of_mem_a
@@ -304,7 +304,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
         congr 1
         abel
       _ ≤ ‖L e p q - L e p r‖ + ‖L e p r - L e' p' r‖ + ‖L e' p' r - L e' p' q'‖ :=
-        le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
+        (le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _))
       _ ≤ 4 * ‖c‖ * (1 / 2) ^ e + 4 * ‖c‖ * (1 / 2) ^ e + 4 * ‖c‖ * (1 / 2) ^ e := by
         apply_rules [add_le_add]
       _ = 12 * ‖c‖ * (1 / 2) ^ e := by ring
@@ -322,7 +322,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     calc
       ‖L0 e - L0 e'‖ ≤ 12 * ‖c‖ * (1 / 2) ^ e := M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he'
       _ < 12 * ‖c‖ * (ε / (12 * ‖c‖)) :=
-        mul_lt_mul' le_rfl he (le_of_lt P) (mul_pos (by norm_num) cpos)
+        (mul_lt_mul' le_rfl he (le_of_lt P) (mul_pos (by norm_num) cpos))
       _ = ε := by
         field_simp [(by norm_num : (12 : ℝ) ≠ 0), ne_of_gt cpos]
         ring
@@ -398,13 +398,13 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
       ‖f (x + y) - f x - f' y‖ = ‖f (x + y) - f x - L e (n e) m y + (L e (n e) m - f') y‖ :=
         congr_arg _ (by simp)
       _ ≤ 4 * (1 / 2) ^ e * ‖y‖ + 12 * ‖c‖ * (1 / 2) ^ e * ‖y‖ :=
-        norm_add_le_of_le J2
-          ((le_op_norm _ _).trans (mul_le_mul_of_nonneg_right (Lf' _ _ m_ge) (norm_nonneg _)))
+        (norm_add_le_of_le J2
+          ((le_op_norm _ _).trans (mul_le_mul_of_nonneg_right (Lf' _ _ m_ge) (norm_nonneg _))))
       _ = (4 + 12 * ‖c‖) * ‖y‖ * (1 / 2) ^ e := by ring
       _ ≤ (4 + 12 * ‖c‖) * ‖y‖ * (ε / (4 + 12 * ‖c‖)) :=
-        mul_le_mul_of_nonneg_left he.le
+        (mul_le_mul_of_nonneg_left he.le
           (mul_nonneg (add_nonneg (by norm_num) (mul_nonneg (by norm_num) (norm_nonneg _)))
-            (norm_nonneg _))
+            (norm_nonneg _)))
       _ = ε * ‖y‖ := by
         field_simp [ne_of_gt Pos]
         ring
@@ -501,7 +501,7 @@ variable {f : ℝ → F} (K : Set F)
 
 namespace RightDerivMeasurableAux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » Icc[set.Icc] x «expr + »(x, r')) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » Icc[set.Icc] x «expr + »(x, r')) -/
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `h ↦ h • L`, up to an error `ε`. We tweak the definition to
 make sure that this is open on the right. -/
@@ -594,10 +594,10 @@ theorem mem_a_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
     _ ≤
         ‖f z - f x - (z - x) • derivWithin f (Ici x) x‖ +
           ‖f y - f x - (y - x) • derivWithin f (Ici x) x‖ :=
-      norm_sub_le _ _
+      (norm_sub_le _ _)
     _ ≤ ε / 2 * ‖z - x‖ + ε / 2 * ‖y - x‖ :=
-      add_le_add (hm ⟨hz.1, hz.2.trans_lt (by linarith [hr.2])⟩)
-        (hm ⟨hy.1, hy.2.trans_lt (by linarith [hr.2])⟩)
+      (add_le_add (hm ⟨hz.1, hz.2.trans_lt (by linarith [hr.2])⟩)
+        (hm ⟨hy.1, hy.2.trans_lt (by linarith [hr.2])⟩))
     _ ≤ ε / 2 * r + ε / 2 * r := by
       apply add_le_add
       · apply mul_le_mul_of_nonneg_left _ (le_of_lt (half_pos hε))
@@ -621,7 +621,7 @@ theorem norm_sub_le_of_mem_a {r x : ℝ} (hr : 0 < r) (ε : ℝ) {L₁ L₂ : F}
     _ ≤
         ‖f (x + r / 2) - f x - (x + r / 2 - x) • L₂‖ +
           ‖f (x + r / 2) - f x - (x + r / 2 - x) • L₁‖ :=
-      norm_sub_le _ _
+      (norm_sub_le _ _)
     _ ≤ ε * r + ε * r := by
       apply add_le_add
       · apply le_of_mem_A h₂ <;> simp [(half_pos hr).le]
@@ -710,7 +710,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
         congr 1
         abel
       _ ≤ ‖L e p q - L e p r‖ + ‖L e p r - L e' p' r‖ + ‖L e' p' r - L e' p' q'‖ :=
-        le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
+        (le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _))
       _ ≤ 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e := by apply_rules [add_le_add]
       _ = 12 * (1 / 2) ^ e := by ring
       
@@ -726,7 +726,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     rw [dist_comm, dist_eq_norm]
     calc
       ‖L0 e - L0 e'‖ ≤ 12 * (1 / 2) ^ e := M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he'
-      _ < 12 * (ε / 12) := mul_lt_mul' le_rfl he (le_of_lt P) (by norm_num)
+      _ < 12 * (ε / 12) := (mul_lt_mul' le_rfl he (le_of_lt P) (by norm_num))
       _ = ε := by
         field_simp [(by norm_num : (12 : ℝ) ≠ 0)]
         ring
@@ -792,7 +792,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
           field_simp
           ring
         _ ≤ 4 * (1 / 2) ^ e * (y - x) :=
-          mul_le_mul_of_nonneg_left (le_of_lt hk) (mul_nonneg (by norm_num) (le_of_lt P))
+          (mul_le_mul_of_nonneg_left (le_of_lt hk) (mul_nonneg (by norm_num) (le_of_lt P)))
         _ = 4 * (1 / 2) ^ e * ‖y - x‖ := by rw [Real.norm_of_nonneg yzero.le]
         
     calc
@@ -800,13 +800,13 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
           ‖f y - f x - (y - x) • L e (n e) m + (y - x) • (L e (n e) m - f')‖ :=
         by simp only [smul_sub, sub_add_sub_cancel]
       _ ≤ 4 * (1 / 2) ^ e * ‖y - x‖ + ‖y - x‖ * (12 * (1 / 2) ^ e) :=
-        norm_add_le_of_le J
+        (norm_add_le_of_le J
           (by
             rw [norm_smul]
-            exact mul_le_mul_of_nonneg_left (Lf' _ _ m_ge) (norm_nonneg _))
+            exact mul_le_mul_of_nonneg_left (Lf' _ _ m_ge) (norm_nonneg _)))
       _ = 16 * ‖y - x‖ * (1 / 2) ^ e := by ring
       _ ≤ 16 * ‖y - x‖ * (ε / 16) :=
-        mul_le_mul_of_nonneg_left he.le (mul_nonneg (by norm_num) (norm_nonneg _))
+        (mul_le_mul_of_nonneg_left he.le (mul_nonneg (by norm_num) (norm_nonneg _)))
       _ = ε * ‖y - x‖ := by ring
       
   rw [← this.deriv_within (uniqueDiffOn_Ici x x le_rfl)] at f'K

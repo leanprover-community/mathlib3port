@@ -743,7 +743,7 @@ theorem mul_le_of_le_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     (ha : a ≤ 1) : b * a ≤ c :=
   calc
     b * a ≤ b * 1 := mul_le_mul_left' ha b
-    _ = b := mul_one b
+    _ = b := (mul_one b)
     _ ≤ c := hbc
     
 #align mul_le_of_le_of_le_one mul_le_of_le_of_le_one
@@ -760,7 +760,7 @@ theorem mul_lt_of_le_of_lt_one [CovariantClass α α (· * ·) (· < ·)] {a b c
     (ha : a < 1) : b * a < c :=
   calc
     b * a < b * 1 := mul_lt_mul_left' ha b
-    _ = b := mul_one b
+    _ = b := (mul_one b)
     _ ≤ c := hbc
     
 #align mul_lt_of_le_of_lt_one mul_lt_of_le_of_lt_one
@@ -777,7 +777,7 @@ theorem mul_lt_of_lt_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     (ha : a ≤ 1) : b * a < c :=
   calc
     b * a ≤ b * 1 := mul_le_mul_left' ha b
-    _ = b := mul_one b
+    _ = b := (mul_one b)
     _ < c := hbc
     
 #align mul_lt_of_lt_of_le_one mul_lt_of_lt_of_le_one
@@ -794,7 +794,7 @@ theorem mul_lt_of_lt_of_lt_one [CovariantClass α α (· * ·) (· < ·)] {a b c
     (ha : a < 1) : b * a < c :=
   calc
     b * a < b * 1 := mul_lt_mul_left' ha b
-    _ = b := mul_one b
+    _ = b := (mul_one b)
     _ < c := hbc
     
 #align mul_lt_of_lt_of_lt_one mul_lt_of_lt_of_lt_one
@@ -1071,7 +1071,7 @@ theorem mul_le_of_le_one_of_le [CovariantClass α α (swap (· * ·)) (· ≤ ·
     (hbc : b ≤ c) : a * b ≤ c :=
   calc
     a * b ≤ 1 * b := mul_le_mul_right' ha b
-    _ = b := one_mul b
+    _ = b := (one_mul b)
     _ ≤ c := hbc
     
 #align mul_le_of_le_one_of_le mul_le_of_le_one_of_le
@@ -1088,7 +1088,7 @@ theorem mul_lt_of_lt_one_of_le [CovariantClass α α (swap (· * ·)) (· < ·)]
     (hbc : b ≤ c) : a * b < c :=
   calc
     a * b < 1 * b := mul_lt_mul_right' ha b
-    _ = b := one_mul b
+    _ = b := (one_mul b)
     _ ≤ c := hbc
     
 #align mul_lt_of_lt_one_of_le mul_lt_of_lt_one_of_le
@@ -1105,7 +1105,7 @@ theorem mul_lt_of_le_one_of_lt [CovariantClass α α (swap (· * ·)) (· ≤ ·
     (hb : b < c) : a * b < c :=
   calc
     a * b ≤ 1 * b := mul_le_mul_right' ha b
-    _ = b := one_mul b
+    _ = b := (one_mul b)
     _ < c := hb
     
 #align mul_lt_of_le_one_of_lt mul_lt_of_le_one_of_lt
@@ -1122,7 +1122,7 @@ theorem mul_lt_of_lt_one_of_lt [CovariantClass α α (swap (· * ·)) (· < ·)]
     (hb : b < c) : a * b < c :=
   calc
     a * b < 1 * b := mul_lt_mul_right' ha b
-    _ = b := one_mul b
+    _ = b := (one_mul b)
     _ < c := hb
     
 #align mul_lt_of_lt_one_of_lt mul_lt_of_lt_one_of_lt

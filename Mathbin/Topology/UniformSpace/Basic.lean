@@ -769,12 +769,12 @@ theorem comp_le_uniformity3 : ((𝓤 α).lift' fun s : Set (α × α) => s ○ (
       exact fun x => monotone_const.comp_rel <| monotone_id.comp_rel monotone_id
       exact fun x => monotone_id.comp_rel monotone_const
     _ ≤ (𝓤 α).lift fun s => (𝓤 α).lift' fun t : Set (α × α) => s ○ t :=
-      lift_mono' fun s hs =>
+      (lift_mono' fun s hs =>
         @uniformity_lift_le_comp α _ _ (𝓟 ∘ (· ○ ·) s) <|
-          monotone_principal.comp (monotone_const.compRel monotone_id)
+          monotone_principal.comp (monotone_const.compRel monotone_id))
     _ = (𝓤 α).lift' fun s : Set (α × α) => s ○ s :=
-      lift_lift'_same_eq_lift' (fun s => monotone_const.compRel monotone_id) fun s =>
-        monotone_id.compRel monotone_const
+      (lift_lift'_same_eq_lift' (fun s => monotone_const.compRel monotone_id) fun s =>
+        monotone_id.compRel monotone_const)
     _ ≤ 𝓤 α := comp_le_uniformity
     
 #align comp_le_uniformity3 comp_le_uniformity3
@@ -1311,7 +1311,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {d : Set.{u1} (Prod.{u1, u1} α α)} (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (t : Set.{u1} (Prod.{u1, u1} α α)) => And (IsOpen.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) t) (And (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) s t) (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) t (setOf.{u1} (Prod.{u1, u1} α α) (fun (p : Prod.{u1, u1} α α) => Exists.{succ u1} α (fun (x : α) => Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α (Prod.fst.{u1, u1} α α p) x) d) (And (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s) (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α y (Prod.snd.{u1, u1} α α p)) d))))))))))
 Case conversion may be inaccurate. Consider using '#align nhdset_of_mem_uniformity nhdset_of_mem_uniformityₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α),
       IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
@@ -1455,9 +1455,9 @@ theorem closure_eq_inter_uniformity {t : Set (α × α)} : closure t = ⋂ d ∈
   calc
     closure t = ⋂ (V) (hV : V ∈ 𝓤 α ∧ SymmetricRel V), V ○ t ○ V := closure_eq_uniformity t
     _ = ⋂ V ∈ 𝓤 α, V ○ t ○ V :=
-      Eq.symm <|
+      (Eq.symm <|
         UniformSpace.hasBasis_symmetric.binterᵢ_mem fun V₁ V₂ hV =>
-          compRel_mono (compRel_mono hV Subset.rfl) hV
+          compRel_mono (compRel_mono hV Subset.rfl) hV)
     _ = ⋂ V ∈ 𝓤 α, V ○ (t ○ V) := by simp only [compRel_assoc]
     
 #align closure_eq_inter_uniformity closure_eq_inter_uniformity
@@ -1718,7 +1718,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {p : γ -> Prop} {s : γ -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, succ u3} (Prod.{u1, u1} α α) γ (uniformity.{u1} α _inst_1) p s) -> (forall {q : δ -> Prop} {t : δ -> (Set.{u2} (Prod.{u2, u2} β β))}, (Filter.HasBasis.{u2, succ u4} (Prod.{u2, u2} β β) δ (uniformity.{u2} β _inst_2) q t) -> (forall {f : α -> β} {S : Set.{u1} α}, Iff (UniformContinuousOn.{u1, u2} α β _inst_1 _inst_2 f S) (forall (i : δ), (q i) -> (Exists.{succ u3} γ (fun (j : γ) => And (p j) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x S) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y S) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s j)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β (f x) (f y)) (t i)))))))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniform_continuous_on_iff Filter.HasBasis.uniformContinuousOn_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » S) -/
 theorem Filter.HasBasis.uniformContinuousOn_iff [UniformSpace β] {p : γ → Prop}
     {s : γ → Set (α × α)} (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)}
     (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :

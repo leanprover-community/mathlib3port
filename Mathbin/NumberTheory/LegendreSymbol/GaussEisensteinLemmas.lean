@@ -143,9 +143,10 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
     _ =
         ∏ x in Ico 1 (p / 2).succ,
           (if (a * x : ZMod p).val ≤ p / 2 then 1 else -1) * (a * x : ZMod p).valMinAbs.natAbs :=
-      prod_congr rfl fun _ _ => by
+      (prod_congr rfl fun _ _ =>
+        by
         simp only [nat_cast_nat_abs_val_min_abs]
-        split_ifs <;> simp
+        split_ifs <;> simp)
     _ =
         (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
           ∏ x in Ico 1 (p / 2).succ, (a * x : ZMod p).valMinAbs.natAbs :=

@@ -185,7 +185,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
     calc
       (r ≫ y) ≫ v = g' ≫ z ≫ v := by rw [pushout.condition, category.assoc]
       _ = g' ≫ h' ≫ w := by rw [hzv]
-      _ = 0 ≫ w := hg'h'.w_assoc _
+      _ = 0 ≫ w := (hg'h'.w_assoc _)
       _ = 0 := HasZeroMorphisms.zero_comp _ _
       
 #align category_theory.abelian.epi_of_epi_of_epi_of_mono CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono

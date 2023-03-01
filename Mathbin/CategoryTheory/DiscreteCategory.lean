@@ -116,7 +116,7 @@ instance [Subsingleton α] : Subsingleton (Discrete α) :=
     ext
     apply Subsingleton.elim⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/
 unsafe def _root_.tactic.discrete_cases : tactic Unit :=
   sorry
@@ -185,7 +185,7 @@ variable {C : Type u₂} [Category.{v₂} C]
 instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
   ⟨⟨eqToHom (eq_of_hom f).symm, by tidy⟩⟩
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 #print CategoryTheory.Discrete.functor /-
 /-- Any function `I → C` gives a functor `discrete I ⥤ C`.
 -/
@@ -195,7 +195,7 @@ def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C
   map X Y f :=
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
     cases f
     exact 𝟙 (F X)
 #align category_theory.discrete.functor CategoryTheory.Discrete.functor
@@ -240,7 +240,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, (forall (i : CategoryTheory.Discrete.{u2} I), Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G) i)) -> (Quiver.Hom.{max (succ u2) (succ u1), max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1))) F G)
 Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_trans CategoryTheory.Discrete.natTransₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- For functors out of a discrete category,
 a natural transformation is just a collection of maps,
 as the naturality squares are trivial.
@@ -252,7 +252,7 @@ def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F
   naturality' X Y g :=
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
     cases g
     simp
 #align category_theory.discrete.nat_trans CategoryTheory.Discrete.natTrans
@@ -263,7 +263,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, (forall (i : CategoryTheory.Discrete.{u2} I), CategoryTheory.Iso.{u1, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G) i)) -> (CategoryTheory.Iso.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) F G)
 Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_iso CategoryTheory.Discrete.natIsoₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- For functors out of a discrete category,
 a natural isomorphism is just a collection of isomorphisms,
 as the naturality squares are trivial.
@@ -273,7 +273,7 @@ def natIso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.o
   NatIso.ofComponents f fun X Y g =>
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
     cases g
     simp
 #align category_theory.discrete.nat_iso CategoryTheory.Discrete.natIso
@@ -295,7 +295,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, CategoryTheory.Iso.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) F (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I (Function.comp.{succ u2, succ u2, succ u3} I (CategoryTheory.Discrete.{u2} I) C (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F)) (CategoryTheory.Discrete.mk.{u2} I)))
 Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_iso_functor CategoryTheory.Discrete.natIsoFunctorₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
   `discrete.functor (F.obj)`. -/
 @[simp]
@@ -303,7 +303,7 @@ def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functo
   natIso fun i =>
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
     rfl
 #align category_theory.discrete.nat_iso_functor CategoryTheory.Discrete.natIsoFunctor
 
@@ -326,8 +326,8 @@ lean 3 declaration is
 but is expected to have type
   forall {I : Type.{u1}} {J : Type.{u2}}, (Equiv.{succ u1, succ u2} I J) -> (CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Discrete.{u2} J) (CategoryTheory.discreteCategory.{u1} I) (CategoryTheory.discreteCategory.{u2} J))
 Case conversion may be inaccurate. Consider using '#align category_theory.discrete.equivalence CategoryTheory.Discrete.equivalenceₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- We can promote a type-level `equiv` to
 an equivalence between the corresponding `discrete` categories.
 -/
@@ -341,14 +341,14 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
       eqToIso
         (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
           simp)
   counitIso :=
     Discrete.natIso fun j =>
       eqToIso
         (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
           simp)
 #align category_theory.discrete.equivalence CategoryTheory.Discrete.equivalence
 
@@ -382,9 +382,9 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u1}), CategoryTheory.Equivalence.{u1, u1, u1, u1} (Opposite.{succ u1} (CategoryTheory.Discrete.{u1} α)) (CategoryTheory.Discrete.{u1} α) (CategoryTheory.Category.opposite.{u1, u1} (CategoryTheory.Discrete.{u1} α) (CategoryTheory.discreteCategory.{u1} α)) (CategoryTheory.discreteCategory.{u1} α)
 Case conversion may be inaccurate. Consider using '#align category_theory.discrete.opposite CategoryTheory.Discrete.oppositeₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.op_induction' -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.op_induction' -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- A discrete category is equivalent to its opposite category. -/
 @[simps functor_obj_as inverse_obj]
 protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
@@ -395,7 +395,7 @@ protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
       (discrete.nat_iso fun X =>
         by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
         simp [F])
   refine'
     nat_iso.of_components
@@ -404,7 +404,7 @@ protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
         run_tac
           tactic.op_induction'
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
         simp [F])
       _
   tidy

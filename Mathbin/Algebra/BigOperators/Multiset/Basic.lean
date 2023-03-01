@@ -214,7 +214,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {m : Multiset.{u2} ι} {f : ι -> α} [_inst_2 : DecidableEq.{succ u2} ι] (i : ι), (forall (i' : ι), (Ne.{succ u2} ι i' i) -> (Membership.mem.{u2, u2} ι (Multiset.{u2} ι) (Multiset.instMembershipMultiset.{u2} ι) i' m) -> (Eq.{succ u1} α (f i') (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))) -> (Eq.{succ u1} α (Multiset.prod.{u1} α _inst_1 (Multiset.map.{u2, u1} ι α f m)) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (f i) (Multiset.count.{u2} ι (fun (a : ι) (b : ι) => _inst_2 a b) i m)))
 Case conversion may be inaccurate. Consider using '#align multiset.prod_map_eq_pow_single Multiset.prod_map_eq_pow_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i' «expr ≠ » i) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
     (hf : ∀ (i') (_ : i' ≠ i), i' ∈ m → f i' = 1) : (m.map f).Prod = f i ^ m.count i :=
@@ -230,7 +230,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {s : Multiset.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] (a : α), (forall (a' : α), (Ne.{succ u1} α a' a) -> (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' s) -> (Eq.{succ u1} α a' (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))) -> (Eq.{succ u1} α (Multiset.prod.{u1} α _inst_1 s) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a (Multiset.count.{u1} α (fun (a : α) (b : α) => _inst_2 a b) a s)))
 Case conversion may be inaccurate. Consider using '#align multiset.prod_eq_pow_single Multiset.prod_eq_pow_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ s → a' = 1) :
     s.Prod = a ^ s.count a :=

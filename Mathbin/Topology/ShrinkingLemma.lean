@@ -51,7 +51,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X], (ι -> (Set.{u2} X)) -> (Set.{u2} X) -> Sort.{max (succ u1) (succ u2)}
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement ShrinkingLemma.PartialRefinementₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » carrier) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » carrier) -/
 -- the trivial refinement needs `u` to be a covering
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
@@ -237,7 +237,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} (s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)), (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.979 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.981 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.979 x._@.Mathlib.Topology.ShrinkingLemma._hyg.981) s) -> (Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) -> (forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x u) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (_inst_2 i))))) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => _inst_2 i))) -> (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.chain_Sup ShrinkingLemma.PartialRefinement.chainSupₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
 /-- Least upper bound of a nonempty chain of partial refinements. -/
 def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s :=
@@ -280,9 +280,9 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] {u : ι -> (Set.{u1} X)} {s : Set.{u1} X} (v : ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s), (IsClosed.{u1} X _inst_1 s) -> (forall (i : ι), (Not (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i (ShrinkingLemma.PartialRefinement.carrier.{u2, u1} ι X _inst_1 u s v))) -> (Exists.{max (succ u2) (succ u1)} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (fun (v' : ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) => LT.lt.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (Preorder.toLT.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (PartialOrder.toPreorder.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u2, u1} ι X _inst_1 u s))) v v')))
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.exists_gt ShrinkingLemma.PartialRefinement.exists_gtₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.carrier) :

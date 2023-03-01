@@ -63,7 +63,7 @@ variable (d d' : Module.Dual R M)
 @[simps]
 def contractLeftAux (d : Module.Dual R M) :
     M →ₗ[R] CliffordAlgebra Q × CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
-  haveI v_mul := (Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
+  haveI v_mul := (LinearMap.Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
   d.smul_right (LinearMap.fst _ (CliffordAlgebra Q) (CliffordAlgebra Q)) -
     v_mul.compl₂ (LinearMap.snd _ (CliffordAlgebra Q) _)
 #align clifford_algebra.contract_left_aux CliffordAlgebra.contractLeftAux
@@ -241,7 +241,7 @@ local infixl:70 "⌊" => contractRight
 /-- Auxiliary construction for `clifford_algebra.change_form` -/
 @[simps]
 def changeFormAux (B : BilinForm R M) : M →ₗ[R] CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
-  haveI v_mul := (Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
+  haveI v_mul := (LinearMap.Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
   v_mul - contract_left ∘ₗ B.to_lin
 #align clifford_algebra.change_form_aux CliffordAlgebra.changeFormAux
 

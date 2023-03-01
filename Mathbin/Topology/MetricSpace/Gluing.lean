@@ -220,7 +220,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by
           rw [dist_comm z] <;> linarith
         _ ≤ dist x (Φ p) + (dist y (Ψ p) + dist y (Ψ q)) + dist z (Φ q) + 2 * ε :=
-          add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl
+          (add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl)
         _ ≤ (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε + ((⨅ p, dist z (Φ p) + dist y (Ψ p)) + ε) + δ :=
           by linarith
         
@@ -240,7 +240,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by
           rw [dist_comm z] <;> linarith
         _ ≤ dist x (Ψ p) + (dist y (Φ p) + dist y (Φ q)) + dist z (Ψ q) + 2 * ε :=
-          add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl
+          (add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl)
         _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ :=
           by linarith
         
@@ -728,7 +728,7 @@ def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n
       _ ≤
           dist (le_rec_on hx f x.2 : X m) (le_rec_on hy f y.2 : X m) +
             dist (le_rec_on hy f y.2 : X m) (le_rec_on hz f z.2 : X m) :=
-        dist_triangle _ _ _
+        (dist_triangle _ _ _)
       _ = inductive_limit_dist f x y + inductive_limit_dist f y z := by
         rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y z m hy hz]
       

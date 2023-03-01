@@ -42,7 +42,7 @@ section
 
 parameter {d : ℤ}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 instance : DecidableEq (ℤ√d) := by
   run_tac
     tactic.mk_dec_eq_instance

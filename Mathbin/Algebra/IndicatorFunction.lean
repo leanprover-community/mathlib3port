@@ -1223,7 +1223,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} {g : α -> M} [_inst_2 : LE.{u1} M], (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M _inst_2 (f a) (g a))) -> (forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (LE.le.{u1} M _inst_2 (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (g a))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f) g)
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le' Set.mulIndicator_le'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[to_additive]
 theorem mulIndicator_le' (hfg : ∀ a ∈ s, f a ≤ g a) (hg : ∀ (a) (_ : a ∉ s), 1 ≤ g a) :
     mulIndicator s f ≤ g := fun a => mulIndicator_apply_le' (hfg _) (hg _)
@@ -1249,7 +1249,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} {g : α -> M} [_inst_2 : LE.{u1} M], (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M _inst_2 (f a) (g a))) -> (forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (LE.le.{u1} M _inst_2 (f a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) f (Set.mulIndicator.{u2, u1} α M _inst_1 s g))
 Case conversion may be inaccurate. Consider using '#align set.le_mul_indicator Set.le_mulIndicatorₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[to_additive]
 theorem le_mulIndicator (hfg : ∀ a ∈ s, f a ≤ g a) (hf : ∀ (a) (_ : a ∉ s), f a ≤ 1) :
     f ≤ mulIndicator s g := fun a => le_mulIndicator_apply (hfg _) (hf _)
@@ -1339,7 +1339,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} [_inst_2 : Preorder.{u1} M], (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (f x))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u1} M _inst_2)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f) f)
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_self' Set.mulIndicator_le_self'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mulIndicator_le_self' (hf : ∀ (x) (_ : x ∉ s), 1 ≤ f x) : mulIndicator s f ≤ f :=
   mulIndicator_le' (fun _ _ => le_rfl) hf

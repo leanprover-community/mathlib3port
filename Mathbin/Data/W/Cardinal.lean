@@ -78,7 +78,7 @@ theorem cardinal_mk_le_max_aleph0_of_finite [∀ a, Finite (β a)] : (#WType β)
     cardinal_mk_le_of_le <|
       calc
         (Cardinal.sum fun a => m ^ (#β a)) ≤ (#α) * ⨆ a, m ^ (#β a) := Cardinal.sum_le_supᵢ _
-        _ ≤ m * ⨆ a, m ^ (#β a) := mul_le_mul' (le_max_left _ _) le_rfl
+        _ ≤ m * ⨆ a, m ^ (#β a) := (mul_le_mul' (le_max_left _ _) le_rfl)
         _ = m :=
           mul_eq_left.{u} (le_max_right _ _)
               (csupᵢ_le' fun i => pow_le (le_max_right _ _) (lt_aleph0_of_finite _)) <|

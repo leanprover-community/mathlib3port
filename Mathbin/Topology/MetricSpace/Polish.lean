@@ -395,11 +395,11 @@ theorem completeSpace_completeCopy [CompleteSpace α] (hs : IsOpen s) (h's : s�
       _ ≤
           dist (1 / inf_dist (u n).1 (sᶜ)) (1 / inf_dist (u 0).1 (sᶜ)) +
             dist (1 / inf_dist (u 0).1 (sᶜ)) 0 :=
-        dist_triangle _ _ _
+        (dist_triangle _ _ _)
       _ ≤
           dist (u n).1 (u 0).1 + dist (1 / inf_dist (u n).1 (sᶜ)) (1 / inf_dist (u 0).1 (sᶜ)) +
             dist (1 / inf_dist (u 0).1 (sᶜ)) 0 :=
-        add_le_add (le_add_of_nonneg_left dist_nonneg) le_rfl
+        (add_le_add (le_add_of_nonneg_left dist_nonneg) le_rfl)
       _ = dist (u n) (u 0) + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 := rfl
       _ < (1 / 2) ^ 0 + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 :=
         add_lt_add_right (hu 0 n 0 (zero_le _) le_rfl) _

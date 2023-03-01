@@ -389,7 +389,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T1Space.{u1} α _inst_1] {s : TopologicalSpace.Opens.{u1} α _inst_1}, Iff (IsCoatom.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} α _inst_1)))) (BoundedOrder.toOrderTop.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (Preorder.toLE.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} α _inst_1))) s) (Exists.{succ u1} α (fun (x : α) => Eq.{succ u1} (TopologicalSpace.Opens.{u1} α _inst_1) s (TopologicalSpace.Closeds.compl.{u1} α _inst_1 (TopologicalSpace.Closeds.singleton.{u1} α _inst_1 _inst_3 x))))
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.is_coatom_iff TopologicalSpace.Opens.isCoatom_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
 /-- in a `t1_space`, coatoms of `opens α` are precisely complements of singletons:
 `(closeds.singleton x).compl`. -/
 theorem Opens.isCoatom_iff [T1Space α] {s : Opens α} :
@@ -399,7 +399,7 @@ theorem Opens.isCoatom_iff [T1Space α] {s : Opens α} :
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
   rw [(closeds.compl_order_iso α).isAtom_iff, closeds.is_atom_iff]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm
 #align topological_space.opens.is_coatom_iff TopologicalSpace.Opens.isCoatom_iff
 

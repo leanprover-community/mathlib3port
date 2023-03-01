@@ -36,7 +36,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
   reset_instance_cache
 #align tactic.nontriviality_by_elim tactic.nontriviality_by_elim
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

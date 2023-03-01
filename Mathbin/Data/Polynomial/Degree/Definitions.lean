@@ -636,7 +636,7 @@ theorem degree_le_zero_iff : degree p ≤ 0 ↔ p = c (coeff p 0) :=
 theorem degree_add_le (p q : R[X]) : degree (p + q) ≤ max (degree p) (degree q) :=
   calc
     degree (p + q) = (p + q).support.sup some := rfl
-    _ ≤ (p.support ∪ q.support).sup some := sup_mono support_add
+    _ ≤ (p.support ∪ q.support).sup some := (sup_mono support_add)
     _ = p.support.sup some ⊔ q.support.sup some := sup_union
     
 #align polynomial.degree_add_le Polynomial.degree_add_le
@@ -780,7 +780,7 @@ theorem degree_mul_le (p q : R[X]) : degree (p * q) ≤ degree p + degree q :=
     _ ≤
         p.support.sup fun i =>
           q.support.sup fun j => degree (c (coeff p i * coeff q j) * x ^ (i + j)) :=
-      Finset.sup_mono_fun fun i hi => degree_sum_le _ _
+      (Finset.sup_mono_fun fun i hi => degree_sum_le _ _)
     _ ≤ degree p + degree q :=
       by
       refine'
@@ -1333,7 +1333,7 @@ theorem degree_sub_lt (hd : degree p = degree q) (hp0 : p ≠ 0)
         lhs
         rw [← hp, ← hq, hlc, hd', add_sub_add_left_eq_sub, sub_eq_add_neg]
     _ ≤ max (degree (erase (natDegree q) p)) (degree (erase (natDegree q) q)) :=
-      degree_neg (erase (natDegree q) q) ▸ degree_add_le _ _
+      (degree_neg (erase (natDegree q) q) ▸ degree_add_le _ _)
     _ < degree p := max_lt_iff.2 ⟨hd' ▸ degree_erase_lt hp0, hd.symm ▸ degree_erase_lt hq0⟩
     
 #align polynomial.degree_sub_lt Polynomial.degree_sub_lt
@@ -1384,7 +1384,7 @@ theorem degree_x_add_c (a : R) : degree (x + c a) = 1 :=
   have : degree (c a) < degree (x : R[X]) :=
     calc
       degree (c a) ≤ 0 := degree_c_le
-      _ < 1 := WithBot.some_lt_some.mpr zero_lt_one
+      _ < 1 := (WithBot.some_lt_some.mpr zero_lt_one)
       _ = degree x := degree_x.symm
       
   rw [degree_add_eq_left_of_degree_lt this, degree_X]

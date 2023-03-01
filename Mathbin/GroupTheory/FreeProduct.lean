@@ -733,7 +733,7 @@ theorem lift_word_ping_pong {i j k} (w : Neword H i j) (hk : j ≠ k) : lift f w
     calc
       lift f (neword.append w₁ hne w₂).Prod • X m = lift f w₁.prod • lift f w₂.prod • X m := by
         simp [MulAction.mul_smul]
-      _ ⊆ lift f w₁.prod • X k := set_smul_subset_set_smul_iff.mpr (hIw₂ hm)
+      _ ⊆ lift f w₁.prod • X k := (set_smul_subset_set_smul_iff.mpr (hIw₂ hm))
       _ ⊆ X i := hIw₁ hne
       
 #align free_product.lift_word_ping_pong FreeProduct.lift_word_ping_pong
@@ -980,9 +980,9 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
           · intro n hle hi
             calc
               a i ^ (n + 1) • Y iᶜ = (a i ^ n * a i) • Y iᶜ := by rw [zpow_add, zpow_one]
-              _ = a i ^ n • a i • Y iᶜ := MulAction.mul_smul _ _ _
-              _ ⊆ a i ^ n • X i := smul_set_mono <| hX i
-              _ ⊆ a i ^ n • Y iᶜ := smul_set_mono (hXYdisj i i).subset_compl_right
+              _ = a i ^ n • a i • Y iᶜ := (MulAction.mul_smul _ _ _)
+              _ ⊆ a i ^ n • X i := (smul_set_mono <| hX i)
+              _ ⊆ a i ^ n • Y iᶜ := (smul_set_mono (hXYdisj i i).subset_compl_right)
               _ ⊆ X i := hi
               
         _ ⊆ X' i := Set.subset_union_left _ _
@@ -1000,9 +1000,9 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
           · intro n hle hi
             calc
               a i ^ (n - 1) • X iᶜ = (a i ^ n * (a i)⁻¹) • X iᶜ := by rw [zpow_sub, zpow_one]
-              _ = a i ^ n • (a i)⁻¹ • X iᶜ := MulAction.mul_smul _ _ _
-              _ ⊆ a i ^ n • Y i := smul_set_mono <| hY i
-              _ ⊆ a i ^ n • X iᶜ := smul_set_mono (hXYdisj i i).symm.subset_compl_right
+              _ = a i ^ n • (a i)⁻¹ • X iᶜ := (MulAction.mul_smul _ _ _)
+              _ ⊆ a i ^ n • Y i := (smul_set_mono <| hY i)
+              _ ⊆ a i ^ n • X iᶜ := (smul_set_mono (hXYdisj i i).symm.subset_compl_right)
               _ ⊆ Y i := hi
               
         _ ⊆ X' i := Set.subset_union_right _ _

@@ -300,7 +300,7 @@ protected theorem gc : GaloisConnection lower_adjoint fun 𝓕 => UniformFun.fil
         ∀ U ∈ 𝓕,
           { uvx : ((α →ᵤ β) × (α →ᵤ β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U } ∈
             𝓐 ×ᶠ (⊤ : Filter α) :=
-      forall₂_congr fun U hU => mem_prod_top.symm
+      (forall₂_congr fun U hU => mem_prod_top.symm)
     _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
     
 #align uniform_fun.gc UniformFun.gc

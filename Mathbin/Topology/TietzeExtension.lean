@@ -93,7 +93,7 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
       · simp only [neg_div] at *
         calc
           dist (g (e x)) (f x) ≤ |g (e x)| + |f x| := dist_le_norm_add_norm _ _
-          _ ≤ ‖f‖ / 3 + ‖f‖ / 3 := add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩)
+          _ ≤ ‖f‖ / 3 + ‖f‖ / 3 := (add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩))
           _ = 2 / 3 * ‖f‖ := by linarith
           
       ·
@@ -132,9 +132,9 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
     calc
       dist (g n) (g (n + 1)) = ‖F (f - (g n).comp_continuous e)‖ := by
         rw [g_succ, dist_eq_norm', add_sub_cancel']
-      _ ≤ ‖f - (g n).comp_continuous e‖ / 3 := hF_norm _
+      _ ≤ ‖f - (g n).comp_continuous e‖ / 3 := (hF_norm _)
       _ = 1 / 3 * dist ((g n).comp_continuous e) f := by rw [dist_eq_norm', one_div, div_eq_inv_mul]
-      _ ≤ 1 / 3 * ((2 / 3) ^ n * ‖f‖) := mul_le_mul_of_nonneg_left (hgf n) (by norm_num1)
+      _ ≤ 1 / 3 * ((2 / 3) ^ n * ‖f‖) := (mul_le_mul_of_nonneg_left (hgf n) (by norm_num1))
       _ = 1 / 3 * ‖f‖ * (2 / 3) ^ n := by ac_rfl
       
   have hg_cau : CauchySeq g := cauchySeq_of_le_geometric _ _ (by norm_num1) hg_dist
@@ -320,7 +320,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
       · have hay : a < (g - dg) y := by
           calc
             a = c - (b - c) := by rw [← hsub, sub_sub_cancel]
-            _ < g y - (b - c) := sub_lt_sub_right hc _
+            _ < g y - (b - c) := (sub_lt_sub_right hc _)
             _ ≤ g y - dg y := sub_le_sub_left (dgmem _).2 _
             
         rcases ha.exists_between hay with ⟨_, ⟨x, rfl⟩, ha, hxy⟩

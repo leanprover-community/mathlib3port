@@ -500,12 +500,12 @@ instance : Inf (LieSubalgebra R L) :=
     { (K ⊓ K' : Submodule R L) with
       lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 instance : InfSet (LieSubalgebra R L) :=
   ⟨fun S =>
     {
       infₛ
-        "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy =>
         by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.infₛ_coe, mem_set_of_eq,
@@ -518,12 +518,12 @@ theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
   rfl
 #align lie_subalgebra.inf_coe LieSubalgebra.inf_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 @[simp]
 theorem infₛ_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(infₛ S) : Submodule R L) =
       infₛ
-        "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 #align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.infₛ_coe_to_submodule
 

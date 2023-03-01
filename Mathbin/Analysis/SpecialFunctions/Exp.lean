@@ -43,7 +43,7 @@ theorem exp_bound_sq (x z : ℂ) (hz : ‖z‖ ≤ 1) :
       congr
       rw [exp_add]
       ring
-    _ = ‖exp x‖ * ‖exp z - 1 - z‖ := norm_mul _ _
+    _ = ‖exp x‖ * ‖exp z - 1 - z‖ := (norm_mul _ _)
     _ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=
       mul_le_mul_of_nonneg_left (abs_exp_sub_one_sub_id_le hz) (norm_nonneg _)
     
@@ -65,9 +65,9 @@ theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) 
     exact (norm_sub_norm_le _ _).trans this
   calc
     ‖exp y - exp x‖ = ‖exp (x + (y - x)) - exp x‖ := by nth_rw 1 [hy_eq]
-    _ ≤ ‖y - x‖ * ‖exp x‖ + ‖exp x‖ * ‖y - x‖ ^ 2 := h_sq (y - x) (hyx.le.trans hr_le)
+    _ ≤ ‖y - x‖ * ‖exp x‖ + ‖exp x‖ * ‖y - x‖ ^ 2 := (h_sq (y - x) (hyx.le.trans hr_le))
     _ ≤ ‖y - x‖ * ‖exp x‖ + ‖exp x‖ * (r * ‖y - x‖) :=
-      add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _
+      (add_le_add_left (mul_le_mul le_rfl hyx_sq_le (sq_nonneg _) (norm_nonneg _)) _)
     _ = (1 + r) * ‖exp x‖ * ‖y - x‖ := by ring
     
 #align complex.locally_lipschitz_exp Complex.locally_lipschitz_exp
@@ -232,8 +232,8 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
     x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _
     _ ≤ exp ⌈x⌉₊ / (exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
     _ ≤ exp (x + 1) / (exp 1 * C) :=
-      div_le_div_of_le (mul_pos (exp_pos _) hC₀).le
-        (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le)
+      (div_le_div_of_le (mul_pos (exp_pos _) hC₀).le
+        (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le))
     _ = exp x / C := by rw [add_comm, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
     
 #align real.tendsto_exp_div_pow_at_top Real.tendsto_exp_div_pow_atTop

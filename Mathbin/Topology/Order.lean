@@ -1024,7 +1024,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (a : α) (f : Filter.{u1} α) (t : TopologicalSpace.{u1} α), Iff (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α))) t (nhdsAdjoint.{u1} α a f)) (And (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α t a) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a) f)) (forall (b : α), (Ne.{succ u1} α b a) -> (Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α t b) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α b))))
 Case conversion may be inaccurate. Consider using '#align le_nhds_adjoint_iff' le_nhdsAdjoint_iff'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem le_nhdsAdjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b :=
   by

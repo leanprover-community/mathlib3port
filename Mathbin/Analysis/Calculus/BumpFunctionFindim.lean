@@ -172,7 +172,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
         by
         rw [norm_smul, Real.norm_of_nonneg]
         positivity
-      _ ≤ M⁻¹ * δ n * M := mul_le_mul_of_nonneg_left ((hR i x).trans (IR i hi)) (by positivity)
+      _ ≤ M⁻¹ * δ n * M := (mul_le_mul_of_nonneg_left ((hR i x).trans (IR i hi)) (by positivity))
       _ = δ n := by field_simp [M_pos.ne']
       
   choose r rpos hr using this

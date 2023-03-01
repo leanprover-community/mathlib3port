@@ -1556,7 +1556,7 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
       apply disjoint_left.2 fun x hx h'x => lt_irrefl (f x) _
       calc
         f x < t ^ (i + 1) := hx.2.2
-        _ ≤ t ^ j := ENNReal.zpow_le_of_le (ENNReal.one_le_coe_iff.2 ht.le) h
+        _ ≤ t ^ j := (ENNReal.zpow_le_of_le (ENNReal.one_le_coe_iff.2 ht.le) h)
         _ ≤ f x := h'x.2.1
         
     · intro n

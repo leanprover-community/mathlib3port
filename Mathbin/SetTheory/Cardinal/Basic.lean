@@ -3347,7 +3347,7 @@ theorem exists_not_mem_of_length_lt {α : Type _} (l : List α) (h : ↑l.length
   contrapose! h
   calc
     (#α) = (#(Set.univ : Set α)) := mk_univ.symm
-    _ ≤ (#l.to_finset) := mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x)
+    _ ≤ (#l.to_finset) := (mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x))
     _ = l.to_finset.card := Cardinal.mk_coe_finset
     _ ≤ l.length := cardinal.nat_cast_le.mpr (List.toFinset_card_le l)
     

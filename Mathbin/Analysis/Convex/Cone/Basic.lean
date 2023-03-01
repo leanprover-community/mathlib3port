@@ -607,7 +607,7 @@ theorem salient_positive : Salient (positive 𝕜 E) := fun x xs hx hx' =>
   lt_irrefl (0 : E)
     (calc
       0 < x := lt_of_le_of_ne xs hx.symm
-      _ ≤ x + -x := le_add_of_nonneg_right hx'
+      _ ≤ x + -x := (le_add_of_nonneg_right hx')
       _ = 0 := add_neg_self x
       )
 #align convex_cone.salient_positive ConvexCone.salient_positive
@@ -1062,7 +1062,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
     calc
       0 < ⟪b - z, b - z⟫_ℝ := lt_of_not_le ((Iff.not real_inner_self_nonpos).2 hbz)
       _ = ⟪b - z, b - z⟫_ℝ + 0 := (add_zero _).symm
-      _ ≤ ⟪b - z, b - z⟫_ℝ + ⟪b - z, z⟫_ℝ := add_le_add rfl.ge hinner₀
+      _ ≤ ⟪b - z, b - z⟫_ℝ + ⟪b - z, z⟫_ℝ := (add_le_add rfl.ge hinner₀)
       _ = ⟪b - z, b - z + z⟫_ℝ := inner_add_right.symm
       _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
       

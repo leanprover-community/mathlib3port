@@ -567,7 +567,7 @@ theorem Monotone.forall_le_of_antitone {β : Type _} [Preorder β] {f g : α →
     (hg : Antitone g) (h : f ≤ g) (m n : α) : f m ≤ g n :=
   calc
     f m ≤ f (m ⊔ n) := hf le_sup_left
-    _ ≤ g (m ⊔ n) := h _
+    _ ≤ g (m ⊔ n) := (h _)
     _ ≤ g n := hg le_sup_right
     
 #align monotone.forall_le_of_antitone Monotone.forall_le_of_antitone
@@ -1461,9 +1461,9 @@ theorem le_of_inf_le_sup_le (h₁ : x ⊓ z ≤ y ⊓ z) (h₂ : x ⊔ z ≤ y �
   calc
     x ≤ y ⊓ z ⊔ x := le_sup_right
     _ = (y ⊔ x) ⊓ (x ⊔ z) := by rw [sup_inf_right, @sup_comm _ _ x]
-    _ ≤ (y ⊔ x) ⊓ (y ⊔ z) := inf_le_inf_left _ h₂
+    _ ≤ (y ⊔ x) ⊓ (y ⊔ z) := (inf_le_inf_left _ h₂)
     _ = y ⊔ x ⊓ z := sup_inf_left.symm
-    _ ≤ y ⊔ y ⊓ z := sup_le_sup_left h₁ _
+    _ ≤ y ⊔ y ⊓ z := (sup_le_sup_left h₁ _)
     _ ≤ _ := sup_le (le_refl y) inf_le_left
     
 #align le_of_inf_le_sup_le le_of_inf_le_sup_le

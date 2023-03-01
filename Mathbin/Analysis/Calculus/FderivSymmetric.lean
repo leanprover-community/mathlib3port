@@ -148,8 +148,8 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
           simp only [norm_smul, Real.norm_eq_abs, hpos.le, abs_of_nonneg, abs_mul, ht.left,
             mul_assoc]
         _ ≤ h * ‖v‖ + 1 * (h * ‖w‖) :=
-          add_le_add le_rfl
-            (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _)))
+          (add_le_add le_rfl
+            (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _))))
         _ = h * (‖v‖ + ‖w‖) := by ring
         
     calc
@@ -161,7 +161,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
           ContinuousLinearMap.add_apply, Pi.smul_apply, smul_sub, smul_add, smul_smul, ← sub_sub,
           ContinuousLinearMap.coe_smul', Pi.sub_apply, ContinuousLinearMap.map_smul, this]
       _ ≤ ‖f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)‖ * ‖h • w‖ :=
-        ContinuousLinearMap.le_op_norm _ _
+        (ContinuousLinearMap.le_op_norm _ _)
       _ ≤ ε * ‖h • v + (t * h) • w‖ * ‖h • w‖ :=
         by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)

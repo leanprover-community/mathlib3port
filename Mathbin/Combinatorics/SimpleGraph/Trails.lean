@@ -105,7 +105,7 @@ theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsT
 
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
     e ∈ p.edges ↔ e ∈ G.edgeSetEmbedding :=
-  ⟨fun h => p.edges_subset_edgeSetEmbedding h, fun he => by simpa using (h e he).ge⟩
+  ⟨fun h => p.edges_subset_edgeSet h, fun he => by simpa using (h e he).ge⟩
 #align simple_graph.walk.is_eulerian.mem_edges_iff SimpleGraph.Walk.IsEulerian.mem_edges_iff
 
 /-- The edge set of an Eulerian graph is finite. -/

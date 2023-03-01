@@ -657,7 +657,7 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq (h : Integrab
         dist (integral_sum f vol π) (∑ J in π₀.boxes, integral_sum f vol (πi J)) +
           dist (∑ J in π₀.boxes, integral_sum f vol (πi J)) (∑ J in π₀.boxes, integral J l f vol) :=
       dist_triangle _ _ _
-    _ ≤ ε + δ' + ∑ J in π₀.boxes, δ' := add_le_add this (dist_sum_sum_le_of_le _ hπiδ')
+    _ ≤ ε + δ' + ∑ J in π₀.boxes, δ' := (add_le_add this (dist_sum_sum_le_of_le _ hπiδ'))
     _ = ε + δ := by
       field_simp [H0.ne']
       ring

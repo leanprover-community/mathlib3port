@@ -371,7 +371,7 @@ protected theorem tmp_closedBall_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b
   rw [mem_closedBall_zero_iff] at hf hx⊢
   calc
     ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
-    _ ≤ a / b * b := mul_le_mul hf hx (norm_nonneg _) (div_pos ha hb).le
+    _ ≤ a / b * b := (mul_le_mul hf hx (norm_nonneg _) (div_pos ha hb).le)
     _ = a := div_mul_cancel a hb.ne.symm
     
 #align continuous_linear_map.tmp_closed_ball_div_subset ContinuousLinearMap.tmp_closedBall_div_subset
@@ -1372,7 +1372,7 @@ theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E
   refine' LinearMap.bound_of_shell _ r_pos hk (fun x hko hxo => _) _
   calc
     ‖f x‖ ≤ c := h _ (mem_ball_zero_iff.mpr hxo)
-    _ ≤ c * (‖x‖ * ‖k‖ / r) := le_mul_of_one_le_right _ _
+    _ ≤ c * (‖x‖ * ‖k‖ / r) := (le_mul_of_one_le_right _ _)
     _ = _ := by ring
     
   · exact le_trans (norm_nonneg _) (h 0 (by simp [r_pos]))
@@ -1468,7 +1468,7 @@ theorem antilipschitz_of_uniformEmbedding (f : E →L[𝕜] Fₗ) (hf : UniformE
     calc
       ‖x‖ = ‖d‖⁻¹ * ‖d • x‖ := by
         rwa [← norm_inv, ← norm_smul, ← mul_smul, inv_mul_cancel, one_smul]
-      _ ≤ ‖d‖⁻¹ * 1 := mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))
+      _ ≤ ‖d‖⁻¹ * 1 := (mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _)))
       _ ≤ δ⁻¹ * ‖c‖ * ‖f x‖ := by rwa [mul_one]
       
 #align continuous_linear_map.antilipschitz_of_uniform_embedding ContinuousLinearMap.antilipschitz_of_uniformEmbedding
@@ -1714,7 +1714,7 @@ theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
       rw [Eq]
       calc
         ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
-        _ ≤ ‖f‖ * (N * ‖e x‖) := mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
+        _ ≤ ‖f‖ * (N * ‖e x‖) := (mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _))
         _ ≤ N * ‖f‖ * ‖e x‖ := by rw [mul_comm ↑N ‖f‖, mul_assoc]
         
   · have he : ∀ x : E, x = 0 := by
@@ -1809,7 +1809,7 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
   · apply op_norm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) fun x => _
     calc
       ‖c x • f‖ = ‖c x‖ * ‖f‖ := norm_smul _ _
-      _ ≤ ‖c‖ * ‖x‖ * ‖f‖ := mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)
+      _ ≤ ‖c‖ * ‖x‖ * ‖f‖ := (mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _))
       _ = ‖c‖ * ‖f‖ * ‖x‖ := by ring
       
   · by_cases h : f = 0

@@ -335,22 +335,22 @@ theorem BinaryCofan.mk_inr {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (Binary
   rfl
 #align category_theory.limits.binary_cofan.mk_inr CategoryTheory.Limits.BinaryCofan.mk_inr
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryFanMk {X Y : C} (c : BinaryFan X Y) : c ≅ BinaryFan.mk c.fst c.snd :=
   Cones.ext (Iso.refl _) fun j => by
     trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]" <;>
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]" <;>
         cases j <;>
       tidy
 #align category_theory.limits.iso_binary_fan_mk CategoryTheory.Limits.isoBinaryFanMk
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.inl c.inr :=
   Cocones.ext (Iso.refl _) fun j => by
     trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]" <;>
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]" <;>
         cases j <;>
       tidy
 #align category_theory.limits.iso_binary_cofan_mk CategoryTheory.Limits.isoBinaryCofanMk

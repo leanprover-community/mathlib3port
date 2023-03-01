@@ -252,8 +252,8 @@ theorem quotient_norm_add_le (S : AddSubgroup M) (x y : M ⧸ S) : ‖x + y‖ �
   obtain ⟨n, rfl, hn : ‖n‖ < ‖mk' S n‖ + ε / 2⟩ := norm_mk_lt y hε
   calc
     ‖mk' S m + mk' S n‖ = ‖mk' S (m + n)‖ := by rw [(mk' S).map_add]
-    _ ≤ ‖m + n‖ := quotient_norm_mk_le S (m + n)
-    _ ≤ ‖m‖ + ‖n‖ := norm_add_le _ _
+    _ ≤ ‖m + n‖ := (quotient_norm_mk_le S (m + n))
+    _ ≤ ‖m‖ + ‖n‖ := (norm_add_le _ _)
     _ ≤ ‖mk' S m‖ + ‖mk' S n‖ + ε := by linarith
     
 #align quotient_norm_add_le quotient_norm_add_le
@@ -433,7 +433,7 @@ theorem norm_normedMk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
   calc
     ‖S.normed_mk‖ ≥ ‖S.normed_mk m‖ / ‖m‖ := ratio_le_op_norm S.normed_mk m
     _ = ‖y‖ / ‖m‖ := by rw [normed_mk.apply, hm]
-    _ ≥ (1 + min ε (1 / 2) / (1 - min ε (1 / 2)))⁻¹ := le_of_lt hlt
+    _ ≥ (1 + min ε (1 / 2) / (1 - min ε (1 / 2)))⁻¹ := (le_of_lt hlt)
     _ = 1 - min ε (1 / 2) := by field_simp [(ne_of_lt hδ).symm]
     
 #align add_subgroup.norm_normed_mk AddSubgroup.norm_normedMk
@@ -547,7 +547,7 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     rw [lift_mk]
     calc
       ‖f x‖ ≤ c * ‖x‖ := f.le_of_op_norm_le fb x
-      _ ≤ c * (‖S.normed_mk x‖ + ε / c) := (mul_le_mul_left _).mpr Hx.le
+      _ ≤ c * (‖S.normed_mk x‖ + ε / c) := ((mul_le_mul_left _).mpr Hx.le)
       _ = c * _ + ε := _
       
     · exact_mod_cast hc

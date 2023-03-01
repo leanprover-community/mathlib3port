@@ -1780,7 +1780,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.mem.{u2, u1} α β _inst_1 a s) -> (forall (b : α), (Membership.mem.{u2, u1} α β _inst_1 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Membership.mem.{u2, u1} α β _inst_1 b s) -> (p a b))
 Case conversion may be inaccurate. Consider using '#align ball_mem_comm ball_mem_commₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
     (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
@@ -2459,13 +2459,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u1}} [p : DecidableEq.{u1} α] (_inst_1 : α) {a : α -> Prop}, Iff (And (a _inst_1) (forall (b : α), (Ne.{u1} α b _inst_1) -> (a b))) (forall (b : α), a b)
 Case conversion may be inaccurate. Consider using '#align decidable.and_forall_ne Decidable.and_forall_neₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
     (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
   simp only [← @forall_eq _ p a, ← forall_and, ← or_imp, Decidable.em, forall_const]
 #align decidable.and_forall_ne Decidable.and_forall_ne
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print and_forall_ne /-
 theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b :=
   Decidable.and_forall_ne a

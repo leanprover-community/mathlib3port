@@ -72,10 +72,10 @@ variable (R)
 
 /-- The norm of an element `s` of an `R`-algebra is the determinant of `(*) s`. -/
 noncomputable def norm : S →* R :=
-  LinearMap.det.comp (lmul R S).toRingHom.toMonoidHom
+  LinearMap.det.comp (LinearMap.Algebra.lmul R S).toRingHom.toMonoidHom
 #align algebra.norm Algebra.norm
 
-theorem norm_apply (x : S) : norm R x = LinearMap.det (lmul R S x) :=
+theorem norm_apply (x : S) : norm R x = LinearMap.det (LinearMap.Algebra.lmul R S x) :=
   rfl
 #align algebra.norm_apply Algebra.norm_apply
 

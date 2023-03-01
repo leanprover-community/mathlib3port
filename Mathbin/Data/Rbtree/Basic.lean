@@ -14,7 +14,7 @@ import Mathbin.Tactic.Interactive
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 #align tactic.interactive.blast_disjs tactic.interactive.blast_disjs
@@ -45,7 +45,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
     is_searchable (black_node l v r) lo hi
 #align rbnode.is_searchable Rbnode.IsSearchable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 #align rbnode.is_searchable_tactic rbnode.is_searchable_tactic
@@ -71,7 +71,7 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] :
     apply trans_of lt h₁ h₂
 #align rbnode.lo_lt_hi Rbnode.lo_lt_hi
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem isSearchable_of_isSearchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : IsSearchable lt t lo (some hi)),
       IsSearchable lt t lo (some hi') :=
@@ -87,7 +87,7 @@ theorem isSearchable_of_isSearchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     all_goals apply t_ih_rchild hc hs_hs₂
 #align rbnode.is_searchable_of_is_searchable_of_incomp Rbnode.isSearchable_of_isSearchable_of_incomp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem isSearchable_of_incomp_of_isSearchable [IsStrictWeakOrder α lt] {t} :
     ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : IsSearchable lt t (some lo) hi),
       IsSearchable lt t (some lo') hi :=
@@ -103,7 +103,7 @@ theorem isSearchable_of_incomp_of_isSearchable [IsStrictWeakOrder α lt] {t} :
     all_goals apply t_ih_lchild hc hs_hs₁
 #align rbnode.is_searchable_of_incomp_of_is_searchable Rbnode.isSearchable_of_incomp_of_isSearchable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem isSearchable_some_low_of_isSearchable_of_lt {t} [IsTrans α lt] :
     ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : IsSearchable lt t (some lo) hi),
       IsSearchable lt t (some lo') hi :=
@@ -117,7 +117,7 @@ theorem isSearchable_some_low_of_isSearchable_of_lt {t} [IsTrans α lt] :
   all_goals apply t_ih_lchild hlt hs_hs₁
 #align rbnode.is_searchable_some_low_of_is_searchable_of_lt Rbnode.isSearchable_some_low_of_isSearchable_of_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem isSearchable_none_low_of_isSearchable_some_low {t} :
     ∀ {y hi} (hlt : IsSearchable lt t (some y) hi), IsSearchable lt t none hi :=
   by
@@ -128,7 +128,7 @@ theorem isSearchable_none_low_of_isSearchable_some_low {t} :
   all_goals apply t_ih_lchild hlt_hs₁
 #align rbnode.is_searchable_none_low_of_is_searchable_some_low Rbnode.isSearchable_none_low_of_isSearchable_some_low
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem isSearchable_some_high_of_isSearchable_of_lt {t} [IsTrans α lt] :
     ∀ {lo hi hi'} (hlt : lt hi hi') (hs : IsSearchable lt t lo (some hi)),
       IsSearchable lt t lo (some hi') :=
@@ -143,7 +143,7 @@ theorem isSearchable_some_high_of_isSearchable_of_lt {t} [IsTrans α lt] :
   all_goals apply t_ih_rchild hlt hs_hs₂
 #align rbnode.is_searchable_some_high_of_is_searchable_of_lt Rbnode.isSearchable_some_high_of_isSearchable_of_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem isSearchable_none_high_of_isSearchable_some_high {t} :
     ∀ {lo y} (hlt : IsSearchable lt t lo (some y)), IsSearchable lt t lo none :=
   by

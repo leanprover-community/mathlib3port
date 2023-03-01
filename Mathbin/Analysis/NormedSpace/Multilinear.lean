@@ -189,7 +189,7 @@ theorem norm_image_sub_le_of_bound' {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ‖f m�
       _ ≤
           (C * ∑ i in s, ∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖) +
             C * ∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖ :=
-        add_le_add Hrec I
+        (add_le_add Hrec I)
       _ = C * ∑ i in insert i s, ∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖ := by
         simp [his, add_comm, left_distrib]
       
@@ -233,7 +233,7 @@ theorem norm_image_sub_le_of_bound {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ‖f m�
     ‖f m₁ - f m₂‖ ≤ C * ∑ i, ∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖ :=
       f.norm_image_sub_le_of_bound' hC H m₁ m₂
     _ ≤ C * ∑ i, ‖m₁ - m₂‖ * max ‖m₁‖ ‖m₂‖ ^ (Fintype.card ι - 1) :=
-      mul_le_mul_of_nonneg_left (sum_le_sum fun i hi => A i) hC
+      (mul_le_mul_of_nonneg_left (sum_le_sum fun i hi => A i) hC)
     _ = C * Fintype.card ι * max ‖m₁‖ ‖m₂‖ ^ (Fintype.card ι - 1) * ‖m₁ - m₂‖ :=
       by
       rw [sum_const, card_univ, nsmul_eq_mul]
@@ -383,10 +383,10 @@ theorem unit_le_op_norm (h : ‖m‖ ≤ 1) : ‖f m‖ ≤ ‖f‖ :=
   calc
     ‖f m‖ ≤ ‖f‖ * ∏ i, ‖m i‖ := f.le_op_norm m
     _ ≤ ‖f‖ * ∏ i : ι, 1 :=
-      mul_le_mul_of_nonneg_left
+      (mul_le_mul_of_nonneg_left
         (prod_le_prod (fun i hi => norm_nonneg _) fun i hi =>
           le_trans (norm_le_pi_norm (_ : ∀ i, E i) _) h)
-        (op_norm_nonneg f)
+        (op_norm_nonneg f))
     _ = ‖f‖ := by simp
     
 #align continuous_multilinear_map.unit_le_op_norm ContinuousMultilinearMap.unit_le_op_norm
@@ -675,7 +675,7 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
     _ ≤
         ‖q.1‖ * Fintype.card ι * max ‖q.2‖ ‖p.2‖ ^ (Fintype.card ι - 1) * ‖q.2 - p.2‖ +
           ‖q.1 - p.1‖ * ∏ i, ‖p.2 i‖ :=
-      add_le_add (norm_image_sub_le _ _ _) ((q.1 - p.1).le_op_norm p.2)
+      (add_le_add (norm_image_sub_le _ _ _) ((q.1 - p.1).le_op_norm p.2))
     _ ≤
         (‖p‖ + 1) * Fintype.card ι * (‖p‖ + 1) ^ (Fintype.card ι - 1) * ‖q - p‖ +
           ‖q - p‖ * ∏ i, ‖p.2 i‖ :=
@@ -768,7 +768,7 @@ instance [CompleteSpace G] : CompleteSpace (ContinuousMultilinearMap 𝕜 E G) :
         ‖f n‖ = ‖f n - f 0 + f 0‖ := by
           congr 1
           abel
-        _ ≤ ‖f n - f 0‖ + ‖f 0‖ := norm_add_le _ _
+        _ ≤ ‖f n - f 0‖ + ‖f 0‖ := (norm_add_le _ _)
         _ ≤ b 0 + ‖f 0‖ := by
           apply add_le_add_right
           simpa [dist_eq_norm] using b_bound n 0 0 (zero_le _) (zero_le _)
@@ -1137,9 +1137,9 @@ theorem norm_comp_continuous_linear_le (g : ContinuousMultilinearMap 𝕜 E₁ G
     calc
       ‖g fun i => f i (m i)‖ ≤ ‖g‖ * ∏ i, ‖f i (m i)‖ := g.le_op_norm _
       _ ≤ ‖g‖ * ∏ i, ‖f i‖ * ‖m i‖ :=
-        mul_le_mul_of_nonneg_left
+        (mul_le_mul_of_nonneg_left
           (prod_le_prod (fun _ _ => norm_nonneg _) fun i hi => (f i).le_op_norm (m i))
-          (norm_nonneg g)
+          (norm_nonneg g))
       _ = (‖g‖ * ∏ i, ‖f i‖) * ∏ i, ‖m i‖ := by rw [prod_mul_distrib, mul_assoc]
       
 #align continuous_multilinear_map.norm_comp_continuous_linear_le ContinuousMultilinearMap.norm_comp_continuous_linear_le
@@ -1205,7 +1205,7 @@ theorem ContinuousLinearMap.norm_map_tail_le
   calc
     ‖f (m 0) (tail m)‖ ≤ ‖f (m 0)‖ * ∏ i, ‖(tail m) i‖ := (f (m 0)).le_op_norm _
     _ ≤ ‖f‖ * ‖m 0‖ * ∏ i, ‖(tail m) i‖ :=
-      mul_le_mul_of_nonneg_right (f.le_op_norm _) (prod_nonneg fun i hi => norm_nonneg _)
+      (mul_le_mul_of_nonneg_right (f.le_op_norm _) (prod_nonneg fun i hi => norm_nonneg _))
     _ = ‖f‖ * (‖m 0‖ * ∏ i, ‖(tail m) i‖) := by ring
     _ = ‖f‖ * ∏ i, ‖m i‖ := by
       rw [prod_univ_succ]
@@ -1219,8 +1219,8 @@ theorem ContinuousMultilinearMap.norm_map_init_le
   calc
     ‖f (init m) (m (last n))‖ ≤ ‖f (init m)‖ * ‖m (last n)‖ := (f (init m)).le_op_norm _
     _ ≤ (‖f‖ * ∏ i, ‖(init m) i‖) * ‖m (last n)‖ :=
-      mul_le_mul_of_nonneg_right (f.le_op_norm _) (norm_nonneg _)
-    _ = ‖f‖ * ((∏ i, ‖(init m) i‖) * ‖m (last n)‖) := mul_assoc _ _ _
+      (mul_le_mul_of_nonneg_right (f.le_op_norm _) (norm_nonneg _))
+    _ = ‖f‖ * ((∏ i, ‖(init m) i‖) * ‖m (last n)‖) := (mul_assoc _ _ _)
     _ = ‖f‖ * ∏ i, ‖m i‖ := by
       rw [prod_univ_cast_succ]
       rfl

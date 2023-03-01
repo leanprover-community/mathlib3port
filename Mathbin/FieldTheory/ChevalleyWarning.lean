@@ -85,7 +85,7 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
     (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) =
         ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
       (e.sum_comp _).symm
-    _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := Fintype.sum_congr _ _ _
+    _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := (Fintype.sum_congr _ _ _)
     _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by rw [mul_sum]
     _ = 0 := by rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
     
@@ -102,7 +102,7 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
       rfl
     _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [Equiv.subtypeEquivCodomain_symm_apply_eq]
-    _ = a ^ d i * ∏ j, x₀ j ^ d j := congr_arg _ (Fintype.prod_congr _ _ _)
+    _ = a ^ d i * ∏ j, x₀ j ^ d j := (congr_arg _ (Fintype.prod_congr _ _ _))
     -- see below
         _ =
         (∏ j, x₀ j ^ d j) * a ^ d i :=
@@ -170,7 +170,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
   show F.total_degree < (q - 1) * Fintype.card σ
   calc
     F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree := total_degree_finset_prod s _
-    _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := sum_le_sum fun i hi => _
+    _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := (sum_le_sum fun i hi => _)
     -- see ↓
         _ =
         (q - 1) * ∑ i in s, (f i).totalDegree :=

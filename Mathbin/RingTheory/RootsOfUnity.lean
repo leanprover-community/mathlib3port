@@ -272,7 +272,7 @@ theorem card_rootsOfUnity : Fintype.card (rootsOfUnity k R) ≤ k :=
   calc
     Fintype.card (rootsOfUnity k R) = Fintype.card { x // x ∈ nthRoots k (1 : R) } :=
       Fintype.card_congr (rootsOfUnityEquivNthRoots R k)
-    _ ≤ (nthRoots k (1 : R)).attach.card := Multiset.card_le_of_le (Multiset.dedup_le _)
+    _ ≤ (nthRoots k (1 : R)).attach.card := (Multiset.card_le_of_le (Multiset.dedup_le _))
     _ = (nthRoots k (1 : R)).card := Multiset.card_attach
     _ ≤ k := card_nthRoots k 1
     
@@ -874,7 +874,7 @@ theorem card_roots_of_unity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
   calc
     Fintype.card (rootsOfUnity n R) = Fintype.card (Subgroup.zpowers ζ) :=
       Fintype.card_congr <| by rw [h.zpowers_eq]
-    _ = Fintype.card (ZMod n) := Fintype.card_congr e.to_equiv.symm
+    _ = Fintype.card (ZMod n) := (Fintype.card_congr e.to_equiv.symm)
     _ = n := ZMod.card n
     
 #align is_primitive_root.card_roots_of_unity' IsPrimitiveRoot.card_roots_of_unity'
@@ -1218,9 +1218,9 @@ theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree
   -- minimal polynomial of `μ` sent to `K[X]`
   calc
     n.totient = (primitiveRoots n K).card := h.card_primitiveRoots.symm
-    _ ≤ P_K.roots.toFinset.card := Finset.card_le_of_subset (is_roots_of_minpoly h)
-    _ ≤ P_K.roots.card := Multiset.toFinset_card_le _
-    _ ≤ P_K.natDegree := card_roots' _
+    _ ≤ P_K.roots.toFinset.card := (Finset.card_le_of_subset (is_roots_of_minpoly h))
+    _ ≤ P_K.roots.card := (Multiset.toFinset_card_le _)
+    _ ≤ P_K.natDegree := (card_roots' _)
     _ ≤ P.natDegree := natDegree_map_le _ _
     
 #align is_primitive_root.totient_le_degree_minpoly IsPrimitiveRoot.totient_le_degree_minpoly

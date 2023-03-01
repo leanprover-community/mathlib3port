@@ -1556,7 +1556,7 @@ theorem mk_list_eq_mk (α : Type u) [Infinite α] : (#List α) = (#α) :=
     le_antisymm ⟨⟨fun x => [x], fun x y H => (List.cons.inj H).1⟩⟩ <|
       calc
         (#List α) = sum fun n : ℕ => (#α) ^ (n : Cardinal.{u}) := mk_list_eq_sum_pow α
-        _ ≤ sum fun n : ℕ => #α := sum_le_sum _ _ fun n => pow_le H1 <| nat_lt_aleph0 n
+        _ ≤ sum fun n : ℕ => #α := (sum_le_sum _ _ fun n => pow_le H1 <| nat_lt_aleph0 n)
         _ = (#α) := by simp [H1]
         
 #align cardinal.mk_list_eq_mk Cardinal.mk_list_eq_mk
@@ -1623,7 +1623,7 @@ theorem mk_finsupp_lift_of_infinite (α : Type u) (β : Type v) [Infinite α] [Z
   ·
     calc
       (#α →₀ β) ≤ (#Finset (α × β)) := mk_le_of_injective (Finsupp.graph_injective α β)
-      _ = (#α × β) := mk_finset_of_infinite _
+      _ = (#α × β) := (mk_finset_of_infinite _)
       _ = max (lift.{v} (#α)) (lift.{u} (#β)) := by
         rw [mk_prod, mul_eq_max_of_aleph_0_le_left] <;> simp
       

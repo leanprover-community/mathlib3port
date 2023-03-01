@@ -887,17 +887,17 @@ theorem add_mk_self (a b c) : (mk a b : Localization M) + mk c b = mk (a + c) b 
   ring
 #align localization.add_mk_self Localization.add_mk_self
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def tac :=
   sorry
 #align localization.tac localization.tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.677500921.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.677500921.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.677500921.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.677500921.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.677500921.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.677500921.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.677500921.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.677500921.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.677500921.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.677500921.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.677500921.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.677500921.tac -/
 instance : CommSemiring (Localization M) :=
   { Localization.commMonoidWithZero M with
     zero := 0
@@ -1158,7 +1158,7 @@ theorem sub_mk (a c) (b d) : (mk a b : Localization M) - mk c d = mk (d * a - b 
   calc
     mk a b - mk c d = mk a b + -mk c d := sub_eq_add_neg _ _
     _ = mk a b + mk (-c) d := by rw [neg_mk]
-    _ = mk (b * -c + d * a) (b * d) := add_mk _ _ _ _
+    _ = mk (b * -c + d * a) (b * d) := (add_mk _ _ _ _)
     _ = mk (d * a - b * c) (b * d) := by congr <;> ring
     
 #align localization.sub_mk Localization.sub_mk

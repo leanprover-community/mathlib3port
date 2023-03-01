@@ -1642,9 +1642,9 @@ theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[
   have hf' : 0 ≤ᵐ[μ.restrict (Ι a b)] f := ae_mono (Measure.restrict_mono h le_rfl) hf
   calc
     |∫ x in a..b, f x ∂μ| = |∫ x in Ι a b, f x ∂μ| := abs_integral_eq_abs_integral_uIoc f
-    _ = ∫ x in Ι a b, f x ∂μ := abs_of_nonneg (MeasureTheory.integral_nonneg_of_ae hf')
-    _ ≤ ∫ x in Ι c d, f x ∂μ := set_integral_mono_set hfi.def hf h.EventuallyLe
-    _ ≤ |∫ x in Ι c d, f x ∂μ| := le_abs_self _
+    _ = ∫ x in Ι a b, f x ∂μ := (abs_of_nonneg (MeasureTheory.integral_nonneg_of_ae hf'))
+    _ ≤ ∫ x in Ι c d, f x ∂μ := (set_integral_mono_set hfi.def hf h.EventuallyLe)
+    _ ≤ |∫ x in Ι c d, f x ∂μ| := (le_abs_self _)
     _ = |∫ x in c..d, f x ∂μ| := (abs_integral_eq_abs_integral_uIoc f).symm
     
 #align interval_integral.abs_integral_mono_interval intervalIntegral.abs_integral_mono_interval
@@ -2387,7 +2387,7 @@ theorem integral_hasFderivWithinAt (hf : IntervalIntegrable f volume a b)
     (hb.mono_left inf_le_left)
 #align interval_integral.integral_has_fderiv_within_at intervalIntegral.integral_hasFderivWithinAt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic closing goals `unique_diff_within_at ℝ s a` where
 `s ∈ {Iic a, Ici a, univ}`. -/
 unsafe def unique_diff_within_at_Ici_Iic_univ : tactic Unit :=
@@ -2629,7 +2629,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
     refine' ⟨x, _, Ioc_subset_Ioc le_rfl (min_le_left _ _) h'x⟩
     calc
       g x - g a = g t - g a + (g x - g t) := by abel
-      _ ≤ (∫ w in a..t, (G' w).toReal) + ∫ w in t..x, (G' w).toReal := add_le_add ht.1 hx
+      _ ≤ (∫ w in a..t, (G' w).toReal) + ∫ w in t..x, (G' w).toReal := (add_le_add ht.1 hx)
       _ = ∫ w in a..x, (G' w).toReal :=
         by
         apply integral_add_adjacent_intervals

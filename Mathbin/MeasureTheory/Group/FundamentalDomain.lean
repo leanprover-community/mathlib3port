@@ -94,7 +94,7 @@ theorem mk' (h_meas : NullMeasurableSet s μ) (h_exists : ∀ x : α, ∃! g : G
 #align measure_theory.is_fundamental_domain.mk' MeasureTheory.IsFundamentalDomain.mk'
 #align measure_theory.is_add_fundamental_domain.mk' MeasureTheory.IsAddFundamentalDomain.mk'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- For `s` to be a fundamental domain, it's enough to check `ae_disjoint (g • s) s` for `g ≠ 1`. -/
 @[to_additive
       "For `s` to be a fundamental domain, it's enough to check `ae_disjoint (g +ᵥ s) s` for\n`g ≠ 0`."]
@@ -107,7 +107,7 @@ theorem mk'' (h_meas : NullMeasurableSet s μ) (h_ae_covers : ∀ᵐ x ∂μ, �
 #align measure_theory.is_fundamental_domain.mk'' MeasureTheory.IsFundamentalDomain.mk''
 #align measure_theory.is_add_fundamental_domain.mk'' MeasureTheory.IsAddFundamentalDomain.mk''
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- If a measurable space has a finite measure `μ` and a countable group `G` acts
 quasi-measure-preservingly, then to show that a set `s` is a fundamental domain, it is sufficient
 to check that its translates `g • s` are (almost) disjoint and that the sum `∑' g, μ (g • s)` is
@@ -423,15 +423,15 @@ protected theorem set_integral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFund
       (∫ x in s, f x ∂μ) = ∫ x in ⋃ g : G, g • t, f x ∂μ.restrict s := by
         rw [restrict_congr_set (hac ht.Union_smul_ae_eq), restrict_univ]
       _ = ∑' g : G, ∫ x in g • t, f x ∂μ.restrict s :=
-        integral_Union_ae (fun g => (ht.null_measurable_set_smul g).monoAc hac)
-          (ht.pairwise_ae_disjoint_of_ac hac) hfs.integrable.integrable_on
+        (integral_Union_ae (fun g => (ht.null_measurable_set_smul g).monoAc hac)
+          (ht.pairwise_ae_disjoint_of_ac hac) hfs.integrable.integrable_on)
       _ = ∑' g : G, ∫ x in s ∩ g • t, f x ∂μ := by simp only [ht.restrict_restrict, inter_comm]
       _ = ∑' g : G, ∫ x in s ∩ g⁻¹ • t, f x ∂μ := ((Equiv.inv G).tsum_eq _).symm
       _ = ∑' g : G, ∫ x in g⁻¹ • (g • s ∩ t), f x ∂μ := by simp only [smul_set_inter, inv_smul_smul]
       _ = ∑' g : G, ∫ x in g • s ∩ t, f (g⁻¹ • x) ∂μ :=
-        tsum_congr fun g =>
+        (tsum_congr fun g =>
           (measure_preserving_smul g⁻¹ μ).set_integral_image_emb (measurableEmbedding_const_smul _)
-            _ _
+            _ _)
       _ = ∑' g : G, ∫ x in g • s, f x ∂μ.restrict t := by simp only [hf, hs.restrict_restrict]
       _ = ∫ x in ⋃ g : G, g • s, f x ∂μ.restrict t :=
         (integral_Union_ae (fun g => (hs.null_measurable_set_smul g).monoAc hac)
@@ -454,14 +454,14 @@ theorem measure_le_of_pairwise_disjoint (hs : IsFundamentalDomain G s μ)
   calc
     μ t = ∑' g : G, μ (g • t ∩ s) := hs.measure_eq_tsum t
     _ = μ (⋃ g : G, g • t ∩ s) :=
-      Eq.symm <| measure_Union₀ hd fun g => (ht.smul _).inter hs.NullMeasurableSet
+      (Eq.symm <| measure_Union₀ hd fun g => (ht.smul _).inter hs.NullMeasurableSet)
     _ ≤ μ s := measure_mono (unionᵢ_subset fun g => inter_subset_right _ _)
     
 #align measure_theory.is_fundamental_domain.measure_le_of_pairwise_disjoint MeasureTheory.IsFundamentalDomain.measure_le_of_pairwise_disjoint
 #align measure_theory.is_add_fundamental_domain.measure_le_of_pairwise_disjoint MeasureTheory.IsAddFundamentalDomain.measure_le_of_pairwise_disjoint
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 /-- If the action of a countable group `G` admits an invariant measure `μ` with a fundamental domain
 `s`, then every null-measurable set `t` of measure strictly greater than `μ s` contains two
 points `x y` such that `g • x = y` for some `g ≠ 1`. -/

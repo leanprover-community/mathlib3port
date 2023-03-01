@@ -187,7 +187,7 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B �
 #align smooth_fiberwise_linear.locality_aux₁ SmoothFiberwiseLinear.locality_aux₁
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr (_, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr (_, _)]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Let `e` be a local homeomorphism of `B × F` whose source is `U ×ˢ univ`, for some set `U` in
@@ -270,7 +270,7 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B �
     -- using rw on the next line seems to cause a timeout in kernel type-checking
     refine' (heuφ ⟨p.fst, hp.1⟩ ⟨hux _, hp.2⟩).trans _
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr (_, _)]]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr (_, _)]]"
     rw [hΦφ]
     apply hux
 #align smooth_fiberwise_linear.locality_aux₂ SmoothFiberwiseLinear.locality_aux₂

@@ -894,7 +894,7 @@ lean 3 declaration is
 but is expected to have type
   forall (p : Prop), (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (forall (p' : autoParam.{1} (SlimCheck.Decorations.DecorationsOf p) _auto._@.Mathlib.Testing.SlimCheck.Testable._hyg.6283) [_inst_2 : SlimCheck.Testable p'], IO PUnit.{1})
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.check SlimCheck.Testable.checkₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_decorations -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_decorations -/
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testable.check (p : Prop) (cfg : SlimCheckCfg := { })
     (p' : Tactic.DecorationsOf p := by

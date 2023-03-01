@@ -1134,7 +1134,7 @@ theorem Filter.Tendsto.op_one_isBoundedUnder_le' {f : α → E} {g : α → F} {
   calc
     A * ‖f i‖ * ‖g i‖ ≤ A * δ * C :=
       mul_le_mul (mul_le_mul_of_nonneg_left hf.le hA) hg (norm_nonneg' _) (mul_nonneg hA δ₀.le)
-    _ = A * C * δ := mul_right_comm _ _ _
+    _ = A * C * δ := (mul_right_comm _ _ _)
     _ < ε := hδ
     
 #align filter.tendsto.op_one_is_bounded_under_le' Filter.Tendsto.op_one_isBoundedUnder_le'
@@ -1853,7 +1853,7 @@ theorem mul' (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
   calc
     edist (f x * g x) (f y * g y) ≤ edist (f x) (f y) + edist (g x) (g y) :=
       edist_mul_mul_le _ _ _ _
-    _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
+    _ ≤ Kf * edist x y + Kg * edist x y := (add_le_add (hf x y) (hg x y))
     _ = (Kf + Kg) * edist x y := (add_mul _ _ _).symm
     
 #align lipschitz_with.mul' LipschitzWith.mul'

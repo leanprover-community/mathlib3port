@@ -172,6 +172,7 @@ Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_cent
 instance CommSemigroup.isCentralScalar [CommSemigroup α] : IsCentralScalar α α :=
   ⟨fun r m => mul_comm _ _⟩
 #align comm_semigroup.is_central_scalar CommSemigroup.isCentralScalar
+#align add_comm_semigroup.is_central_scalar AddCommSemigroup.isCentralVAdd
 
 /- warning: monoid.to_opposite_mul_action -> Monoid.toOppositeMulAction is a dubious translation:
 lean 3 declaration is

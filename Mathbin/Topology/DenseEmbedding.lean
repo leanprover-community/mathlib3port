@@ -504,7 +504,7 @@ theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop
   have : univ ⊆ { b | p b } :=
     calc
       univ = closure (range e) := he.closure_range.symm
-      _ ⊆ closure { b | p b } := closure_mono <| range_subset_iff.mpr h
+      _ ⊆ closure { b | p b } := (closure_mono <| range_subset_iff.mpr h)
       _ = _ := hp.closure_eq
       
   fun b => this trivial

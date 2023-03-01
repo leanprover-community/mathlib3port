@@ -378,14 +378,14 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
           u.uniformity.lift'
             ((image fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) ∘ fun s : Set (α × α) =>
               compRel s (compRel s s)) :=
-        lift'_mono' fun s hs ⟨a, b⟩ ⟨c, ⟨⟨a₁, a₂⟩, ha, a_eq⟩, ⟨⟨b₁, b₂⟩, hb, b_eq⟩⟩ =>
+        (lift'_mono' fun s hs ⟨a, b⟩ ⟨c, ⟨⟨a₁, a₂⟩, ha, a_eq⟩, ⟨⟨b₁, b₂⟩, hb, b_eq⟩⟩ =>
           by
           simp at a_eq
           simp at b_eq
           have h : ⟦a₂⟧ = ⟦b₁⟧ := by rw [a_eq.right, b_eq.left]
           have h : (a₂, b₁) ∈ 𝓢 α := Quotient.exact h
           simp [Function.comp, Set.image, compRel, and_comm, and_left_comm, and_assoc]
-          exact ⟨a₁, a_eq.left, b₂, b_eq.right, a₂, ha, b₁, h s hs, hb⟩
+          exact ⟨a₁, a_eq.left, b₂, b_eq.right, a₂, ha, b₁, h s hs, hb⟩)
       _ =
           map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧))
             (u.uniformity.lift' fun s : Set (α × α) => compRel s (compRel s s)) :=

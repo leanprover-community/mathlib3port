@@ -264,7 +264,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       _ = ‖f (z + v) - f z - f' (z + v - z)‖ := by
         simp only [ContinuousLinearMap.NonlinearRightInverse.right_inv, add_sub_cancel',
           sub_add_cancel]
-      _ ≤ c * ‖z + v - z‖ := hf _ (hε hgz) _ (hε hz)
+      _ ≤ c * ‖z + v - z‖ := (hf _ (hε hgz) _ (hε hz))
       _ ≤ c * (f'symm.nnnorm * dist (f z) y) :=
         by
         apply mul_le_mul_of_nonneg_left _ (NNReal.coe_nonneg c)
@@ -322,12 +322,12 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
           dist (f b) y :=
       calc
         dist (g (u n)) b ≤ dist (g (u n)) (u n) + dist (u n) b := dist_triangle _ _ _
-        _ ≤ f'symm.nnnorm * dist (f (u n)) y + dist (u n) b := add_le_add (A _) le_rfl
+        _ ≤ f'symm.nnnorm * dist (f (u n)) y + dist (u n) b := (add_le_add (A _) le_rfl)
         _ ≤
             f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) +
               f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n) / (1 - c * f'symm.nnnorm) *
                 dist (f b) y :=
-          add_le_add (mul_le_mul_of_nonneg_left IH.1 (NNReal.coe_nonneg _)) IH.2
+          (add_le_add (mul_le_mul_of_nonneg_left IH.1 (NNReal.coe_nonneg _)) IH.2)
         _ =
             f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n.succ) / (1 - c * f'symm.nnnorm) *
               dist (f b) y :=
@@ -340,7 +340,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       dist (f (g (u n))) y ≤ c * f'symm.nnnorm * dist (f (u n)) y :=
         B _ (C n _ IH.2) (C n.succ _ Ign)
       _ ≤ c * f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
-        mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _))
+        (mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)))
       _ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y := by ring
       
   -- Deduce from the inductive bound that `uₙ` is a Cauchy sequence, therefore converging.
@@ -351,9 +351,9 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       intro n
       calc
         dist (u n) (u (n + 1)) = dist (g (u n)) (u n) := by rw [usucc, dist_comm]
-        _ ≤ f'symm.nnnorm * dist (f (u n)) y := A _
+        _ ≤ f'symm.nnnorm * dist (f (u n)) y := (A _)
         _ ≤ f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
-          mul_le_mul_of_nonneg_left (D n).1 (NNReal.coe_nonneg _)
+          (mul_le_mul_of_nonneg_left (D n).1 (NNReal.coe_nonneg _))
         _ = f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n := by ring
         
     cauchySeq_of_le_geometric _ _ Icf' this
@@ -396,7 +396,7 @@ theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRi
       (subset.refl _)
 #align approximates_linear_on.open_image ApproximatesLinearOn.open_image
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem image_mem_nhds (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse)
     {x : E} (hs : s ∈ 𝓝 x) (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : f '' s ∈ 𝓝 (f x) :=
   by
@@ -506,7 +506,7 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
       congr 2
       simp only [ContinuousLinearEquiv.apply_symm_apply, ContinuousLinearEquiv.map_sub]
       abel
-    _ ≤ N * (c * ‖y' - x'‖) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (NNReal.coe_nonneg _)
+    _ ≤ N * (c * ‖y' - x'‖) := (mul_le_mul_of_nonneg_left (hf _ y's _ x's) (NNReal.coe_nonneg _))
     _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0) * ‖A y' - A x'‖)) :=
       by
       apply_rules [mul_le_mul_of_nonneg_left, NNReal.coe_nonneg]

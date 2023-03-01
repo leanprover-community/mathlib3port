@@ -669,7 +669,7 @@ theorem totalDegree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree 
   rw [pow_succ]
   calc
     total_degree (a * a ^ n) ≤ a.total_degree + (a ^ n).totalDegree := total_degree_mul _ _
-    _ ≤ a.total_degree + n * a.total_degree := add_le_add_left ih _
+    _ ≤ a.total_degree + n * a.total_degree := (add_le_add_left ih _)
     _ = (n + 1) * a.total_degree := by rw [add_mul, one_mul, add_comm]
     
 #align mv_polynomial.total_degree_pow MvPolynomial.totalDegree_pow
@@ -726,7 +726,7 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ)
   calc
     n * Fintype.card σ = ∑ s : σ, n := by
       rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_comm, Finset.card_univ]
-    _ ≤ ∑ s, d s := Finset.sum_le_sum fun s _ => h s
+    _ ≤ ∑ s, d s := (Finset.sum_le_sum fun s _ => h s)
     _ ≤ d.sum fun i e => e := by
       rw [Finsupp.sum_fintype]
       intros
@@ -833,7 +833,7 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
     (hp : p₁ = p₂) : f₁ p₁ = f₂ p₂ :=
   calc
     f₁ p₁ = eval₂Hom (f₁.comp c) (f₁ ∘ x) p₁ := RingHom.congr_fun (by ext <;> simp) _
-    _ = eval₂Hom (f₂.comp c) (f₂ ∘ x) p₂ := eval₂Hom_congr' hC hv hp
+    _ = eval₂Hom (f₂.comp c) (f₂ ∘ x) p₂ := (eval₂Hom_congr' hC hv hp)
     _ = f₂ p₂ := RingHom.congr_fun (by ext <;> simp) _
     
 #align mv_polynomial.hom_congr_vars MvPolynomial.hom_congr_vars
@@ -859,7 +859,7 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     (bind₁ f φ).vars = (φ.support.sum fun x : σ →₀ ℕ => (bind₁ f) (monomial x (coeff x φ))).vars :=
       by rw [← AlgHom.map_sum, ← φ.as_sum]
     _ ≤ φ.support.bUnion fun i : σ →₀ ℕ => ((bind₁ f) (monomial i (coeff i φ))).vars :=
-      vars_sum_subset _ _
+      (vars_sum_subset _ _)
     _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ) * ∏ i in d.support, f i ^ d i).vars := by
       simp only [bind₁_monomial]
     _ ≤ φ.support.bUnion fun d : σ →₀ ℕ => d.support.bUnion fun i => (f i).vars := _
@@ -877,7 +877,7 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
         vars_mul _ _
       _ ≤ (∏ i : σ in d.support, f i ^ d i).vars := by
         simp only [Finset.empty_union, vars_C, Finset.le_iff_subset, Finset.Subset.refl]
-      _ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars := vars_prod _
+      _ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars := (vars_prod _)
       _ ≤ d.support.bUnion fun i : σ => (f i).vars := _
       
     apply Finset.bunionᵢ_mono

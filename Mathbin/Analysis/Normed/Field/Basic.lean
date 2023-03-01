@@ -233,7 +233,7 @@ instance Prod.nonUnitalSemiNormedRing [NonUnitalSemiNormedRing β] :
         ‖x * y‖ = ‖(x.1 * y.1, x.2 * y.2)‖ := rfl
         _ = max ‖x.1 * y.1‖ ‖x.2 * y.2‖ := rfl
         _ ≤ max (‖x.1‖ * ‖y.1‖) (‖x.2‖ * ‖y.2‖) :=
-          max_le_max (norm_mul_le x.1 y.1) (norm_mul_le x.2 y.2)
+          (max_le_max (norm_mul_le x.1 y.1) (norm_mul_le x.2 y.2))
         _ = max (‖x.1‖ * ‖y.1‖) (‖y.2‖ * ‖x.2‖) := by simp [mul_comm]
         _ ≤ max ‖x.1‖ ‖x.2‖ * max ‖y.2‖ ‖y.1‖ := by
           apply max_mul_mul_le_max_mul_max <;> simp [norm_nonneg]

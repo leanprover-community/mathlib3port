@@ -189,7 +189,7 @@ theorem log_stirlingSeq_bounded_aux :
       rfl
     _ = ∑ k in range n, log_stirling_seq' k - log_stirling_seq' (k + 1) := by
       rw [← sum_range_sub' log_stirling_seq' n]
-    _ ≤ ∑ k in range n, 1 / 4 * (1 / k.succ ^ 2) := sum_le_sum fun k _ => h₁ k
+    _ ≤ ∑ k in range n, 1 / 4 * (1 / k.succ ^ 2) := (sum_le_sum fun k _ => h₁ k)
     _ = 1 / 4 * ∑ k in range n, 1 / k.succ ^ 2 := by rw [mul_sum]
     _ ≤ 1 / 4 * d := mul_le_mul_of_nonneg_left h₂ <| by positivity
     

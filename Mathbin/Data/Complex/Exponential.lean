@@ -287,7 +287,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
     have hKN : N < K :=
       calc
         N ≤ max N M := le_max_left _ _
-        _ < max N M + 1 := Nat.lt_succ_self _
+        _ < max N M + 1 := (Nat.lt_succ_self _)
         _ < K := hNMK
         
     have hsumlesum :
@@ -1659,7 +1659,8 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
       refine' congr_arg abs (sum_congr rfl fun m hm => _)
       rw [mem_filter, mem_range] at hm
       rw [← mul_div_assoc, ← pow_add, add_tsub_cancel_of_le hm.2]
-    _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs (x ^ n * (_ / m !)) := abv_sum_le_sum_abv _ _
+    _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs (x ^ n * (_ / m !)) :=
+      (abv_sum_le_sum_abv _ _)
     _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs x ^ n * (1 / m !) :=
       by
       refine' sum_le_sum fun m hm => _
@@ -1719,7 +1720,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
 theorem abs_exp_sub_one_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2 * abs x :=
   calc
     abs (exp x - 1) = abs (exp x - ∑ m in range 1, x ^ m / m !) := by simp [sum_range_succ]
-    _ ≤ abs x ^ 1 * (Nat.succ 1 * (1! * (1 : ℕ))⁻¹) := exp_bound hx (by decide)
+    _ ≤ abs x ^ 1 * (Nat.succ 1 * (1! * (1 : ℕ))⁻¹) := (exp_bound hx (by decide))
     _ = 2 * abs x := by simp [two_mul, mul_two, mul_add, mul_comm]
     
 #align complex.abs_exp_sub_one_le Complex.abs_exp_sub_one_le
@@ -1728,8 +1729,8 @@ theorem abs_exp_sub_one_sub_id_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1 
   calc
     abs (exp x - 1 - x) = abs (exp x - ∑ m in range 2, x ^ m / m !) := by
       simp [sub_eq_add_neg, sum_range_succ_comm, add_assoc]
-    _ ≤ abs x ^ 2 * (Nat.succ 2 * (2! * (2 : ℕ))⁻¹) := exp_bound hx (by decide)
-    _ ≤ abs x ^ 2 * 1 := mul_le_mul_of_nonneg_left (by norm_num) (sq_nonneg (abs x))
+    _ ≤ abs x ^ 2 * (Nat.succ 2 * (2! * (2 : ℕ))⁻¹) := (exp_bound hx (by decide))
+    _ ≤ abs x ^ 2 * 1 := (mul_le_mul_of_nonneg_left (by norm_num) (sq_nonneg (abs x)))
     _ = abs x ^ 2 := by rw [mul_one]
     
 #align complex.abs_exp_sub_one_sub_id_le Complex.abs_exp_sub_one_sub_id_le
@@ -1847,12 +1848,12 @@ theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x|
           (((Complex.exp (x * i) - ∑ m in range 4, (x * i) ^ m / m !) +
               (Complex.exp (-x * i) - ∑ m in range 4, (-x * i) ^ m / m !)) /
             2) :=
-      congr_arg abs
+      (congr_arg abs
         (congr_arg (fun x : ℂ => x / 2)
           (by
             simp only [sum_range_succ]
             simp [pow_succ]
-            apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring))
+            apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring)))
     _ ≤
         abs ((Complex.exp (x * i) - ∑ m in range 4, (x * i) ^ m / m !) / 2) +
           abs ((Complex.exp (-x * i) - ∑ m in range 4, (-x * i) ^ m / m !) / 2) :=
@@ -1864,8 +1865,8 @@ theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x|
     _ ≤
         Complex.abs (x * i) ^ 4 * (Nat.succ 4 * (4! * (4 : ℕ))⁻¹) / 2 +
           Complex.abs (-x * i) ^ 4 * (Nat.succ 4 * (4! * (4 : ℕ))⁻¹) / 2 :=
-      add_le_add ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
-        ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
+      (add_le_add ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
+        ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide))))
     _ ≤ |x| ^ 4 * (5 / 96) := by
       norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
     
@@ -1884,12 +1885,12 @@ theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x|
                 (Complex.exp (x * i) - ∑ m in range 4, (x * i) ^ m / m !)) *
               i /
             2) :=
-      congr_arg abs
+      (congr_arg abs
         (congr_arg (fun x : ℂ => x / 2)
           (by
             simp only [sum_range_succ]
             simp [pow_succ]
-            apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring))
+            apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring)))
     _ ≤
         abs ((Complex.exp (-x * i) - ∑ m in range 4, (-x * i) ^ m / m !) * i / 2) +
           abs (-((Complex.exp (x * i) - ∑ m in range 4, (x * i) ^ m / m !) * i) / 2) :=
@@ -1901,8 +1902,8 @@ theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x|
     _ ≤
         Complex.abs (x * i) ^ 4 * (Nat.succ 4 * (4! * (4 : ℕ))⁻¹) / 2 +
           Complex.abs (-x * i) ^ 4 * (Nat.succ 4 * (4! * (4 : ℕ))⁻¹) / 2 :=
-      add_le_add ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
-        ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
+      (add_le_add ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide)))
+        ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide))))
     _ ≤ |x| ^ 4 * (5 / 96) := by
       norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
     
@@ -1979,15 +1980,15 @@ theorem cos_one_pos : 0 < cos 1 :=
 theorem cos_two_neg : cos 2 < 0 :=
   calc
     cos 2 = cos (2 * 1) := congr_arg cos (mul_one _).symm
-    _ = _ := Real.cos_two_mul 1
+    _ = _ := (Real.cos_two_mul 1)
     _ ≤ 2 * (2 / 3) ^ 2 - 1 :=
-      sub_le_sub_right
+      (sub_le_sub_right
         (mul_le_mul_of_nonneg_left
           (by
             rw [sq, sq]
             exact mul_self_le_mul_self (le_of_lt cos_one_pos) cos_one_le)
           zero_le_two)
-        _
+        _)
     _ < 0 := by norm_num
     
 #align real.cos_two_neg Real.cos_two_neg

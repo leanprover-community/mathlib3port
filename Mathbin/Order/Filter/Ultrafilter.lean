@@ -902,7 +902,7 @@ theorem ofComapInfPrincipal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal 
     Filter.map m (of f) ≤ Filter.map m f := map_mono (of_le _)
     _ ≤ (Filter.map m <| Filter.comap m g) ⊓ Filter.map m (𝓟 s) := map_inf_le
     _ = (Filter.map m <| Filter.comap m g) ⊓ (𝓟 <| m '' s) := by rw [map_principal]
-    _ ≤ g ⊓ (𝓟 <| m '' s) := inf_le_inf_right _ map_comap_le
+    _ ≤ g ⊓ (𝓟 <| m '' s) := (inf_le_inf_right _ map_comap_le)
     _ = g := inf_of_le_left (le_principal_iff.mpr h)
     
 #align ultrafilter.of_comap_inf_principal_eq_of_map Ultrafilter.ofComapInfPrincipal_eq_of_map

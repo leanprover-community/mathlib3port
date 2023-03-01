@@ -353,7 +353,7 @@ theorem sat_empty : Clause.Sat ([], []) :=
   ⟨fun _ => 0, ⟨by decide, by decide⟩⟩
 #align omega.sat_empty Omega.sat_empty
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.rotate -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.rotate -/
 theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
   | [], ([], les), h => h
   | e :: _, ([], les), h => by cases e <;> simp only [eq_elim] <;> apply sat_empty

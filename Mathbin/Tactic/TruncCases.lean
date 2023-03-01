@@ -48,7 +48,7 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
   return e
 #align tactic.trunc_cases_nondependent tactic.trunc_cases_nondependent
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr := do
   let-- If all else fails, just use the general induction principle.

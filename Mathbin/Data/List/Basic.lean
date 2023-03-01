@@ -3633,7 +3633,7 @@ theorem drop_drop (n : ℕ) : ∀ (m) (l : List α), drop n (drop m l) = drop (n
   | m + 1, a :: l =>
     calc
       drop n (drop (m + 1) (a :: l)) = drop n (drop m l) := rfl
-      _ = drop (n + m) l := drop_drop m l
+      _ = drop (n + m) l := (drop_drop m l)
       _ = drop (n + (m + 1)) (a :: l) := rfl
       
 #align list.drop_drop List.drop_drop
@@ -6216,7 +6216,7 @@ theorem diff_sublist : ∀ l₁ l₂ : List α, l₁.diffₓ l₂ <+ l₁
   | l₁, a :: l₂ =>
     calc
       l₁.diffₓ (a :: l₂) = (l₁.eraseₓ a).diffₓ l₂ := diff_cons _ _ _
-      _ <+ l₁.eraseₓ a := diff_sublist _ _
+      _ <+ l₁.eraseₓ a := (diff_sublist _ _)
       _ <+ l₁ := List.erase_sublist _ _
       
 #align list.diff_sublist List.diff_sublist

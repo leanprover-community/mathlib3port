@@ -149,7 +149,7 @@ protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪
   rel_sup_add m m.Empty (· ≤ ·) m.unionᵢ_nat s₁ s₂
 #align measure_theory.outer_measure.union MeasureTheory.OuterMeasure.union
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α)
@@ -183,7 +183,7 @@ theorem unionᵢ_of_tendsto_zero {ι} (m : OuterMeasure α) {s : ι → Set α} 
   have A : ∀ k, m S ≤ M + m (S \ s k) := fun k =>
     calc
       m S = m (s k ∪ S \ s k) := by rw [union_diff_self, union_eq_self_of_subset_left hsS]
-      _ ≤ m (s k) + m (S \ s k) := m.union _ _
+      _ ≤ m (s k) + m (S \ s k) := (m.union _ _)
       _ ≤ M + m (S \ s k) := add_le_add_right (le_supᵢ _ k) _
       
   have B : tendsto (fun k => M + m (S \ s k)) l (𝓝 (M + 0)) := tendsto_const_nhds.add h0
@@ -225,7 +225,7 @@ theorem diff_null (m : OuterMeasure α) (s : Set α) {t : Set α} (ht : m t = 0)
   refine' le_antisymm (m.mono <| diff_subset _ _) _
   calc
     m s ≤ m (s ∩ t) + m (s \ t) := le_inter_add_diff _
-    _ ≤ m t + m (s \ t) := add_le_add_right (m.mono <| inter_subset_right _ _) _
+    _ ≤ m t + m (s \ t) := (add_le_add_right (m.mono <| inter_subset_right _ _) _)
     _ = m (s \ t) := by rw [ht, zero_add]
     
 #align measure_theory.outer_measure.diff_null MeasureTheory.OuterMeasure.diff_null
@@ -723,7 +723,7 @@ theorem ofFunction_eq_supₛ : OuterMeasure.ofFunction m m_empty = supₛ { μ |
   (@isGreatest_ofFunction α m m_empty).IsLUB.supₛ_eq.symm
 #align measure_theory.outer_measure.of_function_eq_Sup MeasureTheory.OuterMeasure.ofFunction_eq_supₛ
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -761,8 +761,8 @@ theorem ofFunction_union_of_top_of_nonempty_inter {s t : Set α}
       (@tsum_union_disjoint _ _ _ _ _ (fun i => μ (f i)) _ _ _ hd ENNReal.summable
           ENNReal.summable).symm
     _ ≤ ∑' i, μ (f i) :=
-      tsum_le_tsum_of_inj coe Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl)
-        ENNReal.summable ENNReal.summable
+      (tsum_le_tsum_of_inj coe Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl)
+        ENNReal.summable ENNReal.summable)
     _ ≤ ∑' i, m (f i) := ENNReal.tsum_le_tsum fun i => of_function_le _
     
 #align measure_theory.outer_measure.of_function_union_of_top_of_nonempty_inter MeasureTheory.OuterMeasure.ofFunction_union_of_top_of_nonempty_inter

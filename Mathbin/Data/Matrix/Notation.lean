@@ -54,8 +54,8 @@ variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
 unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}]
@@ -63,11 +63,11 @@ unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [refl
     has_reflect (Matrix m' n' α) := fun m =>
   (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
       ((by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         q(_) q(_) q(_)) <|
     by
@@ -441,22 +441,22 @@ section One
 variable [Zero α] [One α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem one_fin_two :
     (1 : Matrix (Fin 2) (Fin 2) α) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_two Matrix.one_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem one_fin_three :
     (1 : Matrix (Fin 3) (Fin 3) α) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
@@ -465,59 +465,59 @@ theorem one_fin_three :
 end One
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
     A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
     «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" ⬝
         «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
 #align matrix.mul_fin_two Matrix.mul_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem mul_fin_three [AddCommMonoid α] [Mul α]
     (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
     «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" ⬝
         «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]

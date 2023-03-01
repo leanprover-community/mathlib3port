@@ -182,7 +182,7 @@ theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I�
       Finset.sum_congr rfl fun J hJ => (f.sum_partition_boxes _ (is_partition_split_many _ _)).symm
     _ = ∑ J in (π₁.bUnion fun J => split_many J s).boxes, f J := (sum_bUnion_boxes _ _ _).symm
     _ = ∑ J in (π₂.bUnion fun J => split_many J s).boxes, f J := by rw [h₁, h₂]
-    _ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' := sum_bUnion_boxes _ _ _
+    _ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' := (sum_bUnion_boxes _ _ _)
     _ = ∑ J in π₂.boxes, f J :=
       Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
     

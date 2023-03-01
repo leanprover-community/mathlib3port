@@ -763,7 +763,7 @@ theorem parallelogram_law {x y : E} : ⟪x + y, x + y⟫ + ⟪x - y, x - y⟫ = 
   simp [inner_add_add_self, inner_sub_sub_self, two_mul, sub_eq_add_neg, add_comm, add_left_comm]
 #align parallelogram_law parallelogram_law
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.field_simp.ne_zero -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.field_simp.ne_zero -/
 /-- Cauchy–Schwarz inequality. This proof follows "Proof 2" on Wikipedia. -/
 theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ re ⟪x, x⟫ * re ⟪y, y⟫ :=
   by
@@ -1069,8 +1069,8 @@ theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ �
   rw [Set.unionₛ_eq_unionᵢ] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
 #align orthonormal_sUnion_of_directed orthonormalSUnionOfDirected
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (w «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » w) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » w) -/
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
@@ -1330,11 +1330,11 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
         sqrt (‖(R / ‖x‖) ^ 2 • x - (R / ‖y‖) ^ 2 • y‖ ^ 2) :=
       by rw [dist_eq_norm, sqrt_sq (norm_nonneg _)]
     _ = sqrt ((R ^ 2 / (‖x‖ * ‖y‖)) ^ 2 * ‖x - y‖ ^ 2) :=
-      congr_arg sqrt <|
+      (congr_arg sqrt <|
         by
         field_simp [sq, norm_sub_mul_self_real, norm_smul, real_inner_smul_left, inner_smul_right,
           Real.norm_of_nonneg (mul_self_nonneg _)]
-        ring
+        ring)
     _ = R ^ 2 / (‖x‖ * ‖y‖) * dist x y := by
       rw [sqrt_mul (sq_nonneg _), sqrt_sq (norm_nonneg _),
         sqrt_sq (div_nonneg (sq_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))),
@@ -2012,8 +2012,8 @@ theorem innerSL_apply_norm {x : E} : ‖(innerSL x : E →L[𝕜] 𝕜)‖ = ‖
   · refine' (mul_le_mul_right h).mp _
     calc
       ‖x‖ * ‖x‖ = ‖x‖ ^ 2 := by ring
-      _ = re ⟪x, x⟫ := norm_sq_eq_inner _
-      _ ≤ abs ⟪x, x⟫ := re_le_abs _
+      _ = re ⟪x, x⟫ := (norm_sq_eq_inner _)
+      _ ≤ abs ⟪x, x⟫ := (re_le_abs _)
       _ = ‖innerSL x x‖ := by
         rw [← IsROrC.norm_eq_abs]
         rfl
@@ -2056,7 +2056,7 @@ theorem toSesqForm_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqForm 
   have h₂ := @norm_inner_le_norm 𝕜 E' _ _ v (f x)
   calc
     ‖⟪v, f x⟫‖ ≤ ‖v‖ * ‖f x‖ := h₂
-    _ ≤ ‖v‖ * (‖f‖ * ‖x‖) := mul_le_mul_of_nonneg_left h₁ (norm_nonneg v)
+    _ ≤ ‖v‖ * (‖f‖ * ‖x‖) := (mul_le_mul_of_nonneg_left h₁ (norm_nonneg v))
     _ = ‖f‖ * ‖v‖ * ‖x‖ := by ring
     
 #align continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.toSesqForm_apply_norm_le
@@ -2241,7 +2241,7 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
     ⟪V i v, l.Sum fun j => V j⟫ = l.Sum fun j => fun w => ⟪V i v, V j w⟫ :=
       Dfinsupp.inner_sum (fun j => V j) l (V i v)
     _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 :=
-      congr_arg l.Sum <| funext fun j => funext <| hV.eq_ite v
+      (congr_arg l.Sum <| funext fun j => funext <| hV.eq_ite v)
     _ = ⟪v, l i⟫ :=
       by
       simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff,
@@ -2259,7 +2259,7 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
   classical calc
       ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by rw [inner_sum]
       _ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
-        congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)
+        (congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j))
       _ = ⟪v, l i⟫ := by
         simp only [Finset.sum_ite_eq, Finset.mem_univ, (V i).inner_map_map, if_true]
       

@@ -325,7 +325,7 @@ instance : Add (NormedAddGroupHom V₁ V₂) :=
     (f.toAddMonoidHom + g.toAddMonoidHom).mkNormedAddGroupHom (‖f‖ + ‖g‖) fun v =>
       calc
         ‖f v + g v‖ ≤ ‖f v‖ + ‖g v‖ := norm_add_le _ _
-        _ ≤ ‖f‖ * ‖v‖ + ‖g‖ * ‖v‖ := add_le_add (le_op_norm f v) (le_op_norm g v)
+        _ ≤ ‖f‖ * ‖v‖ + ‖g‖ * ‖v‖ := (add_le_add (le_op_norm f v) (le_op_norm g v))
         _ = (‖f‖ + ‖g‖) * ‖v‖ := by rw [add_mul]
         ⟩
 
@@ -646,7 +646,7 @@ protected def comp (g : NormedAddGroupHom V₂ V₃) (f : NormedAddGroupHom V₁
   (g.toAddMonoidHom.comp f.toAddMonoidHom).mkNormedAddGroupHom (‖g‖ * ‖f‖) fun v =>
     calc
       ‖g (f v)‖ ≤ ‖g‖ * ‖f v‖ := le_op_norm _ _
-      _ ≤ ‖g‖ * (‖f‖ * ‖v‖) := mul_le_mul_of_nonneg_left (le_op_norm _ _) (op_norm_nonneg _)
+      _ ≤ ‖g‖ * (‖f‖ * ‖v‖) := (mul_le_mul_of_nonneg_left (le_op_norm _ _) (op_norm_nonneg _))
       _ = ‖g‖ * ‖f‖ * ‖v‖ := by rw [mul_assoc]
       
 #align normed_add_group_hom.comp NormedAddGroupHom.comp

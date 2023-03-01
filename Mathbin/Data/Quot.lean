@@ -64,7 +64,7 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
     Quot.inductionOn qb fun b =>
       calc
         HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by simp [hEq_self_iff_true]
-        HEq _ (f a₂ b) := ca pa
+        HEq _ (f a₂ b) := (ca pa)
         HEq _ (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _)) := by simp [hEq_self_iff_true]
         
 #align quot.hrec_on₂ Quot.hrecOn₂

@@ -67,7 +67,7 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
     ‖deriv f c‖ = ‖(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z‖ :=
       congr_arg norm (deriv_eq_smul_circle_integral hR hf)
     _ ≤ R * (C / (R * R)) :=
-      circleIntegral.norm_two_pi_i_inv_smul_integral_le_of_norm_le_const hR.le this
+      (circleIntegral.norm_two_pi_i_inv_smul_integral_le_of_norm_le_const hR.le this)
     _ = C / R := by rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
     
 #align complex.norm_deriv_le_aux Complex.norm_deriv_le_aux

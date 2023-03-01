@@ -822,7 +822,8 @@ theorem snorm_sub_le {f g : α → E} (hf : AeStronglyMeasurable f μ) (hg : AeS
       rw [norm_norm]
       exact norm_add_le _ _
     _ = snorm (fun x => ‖f x‖ + ‖g x‖) p μ := by simp_rw [norm_neg]
-    _ ≤ snorm (fun x => ‖f x‖) p μ + snorm (fun x => ‖g x‖) p μ := snorm_add_le hf.norm hg.norm hp1
+    _ ≤ snorm (fun x => ‖f x‖) p μ + snorm (fun x => ‖g x‖) p μ :=
+      (snorm_add_le hf.norm hg.norm hp1)
     _ = snorm f p μ + snorm g p μ := by rw [← snorm_norm f, ← snorm_norm g]
     
 #align measure_theory.snorm_sub_le MeasureTheory.snorm_sub_le
@@ -1569,7 +1570,7 @@ theorem ae_bdd_liminf_atTop_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α �
       (ha a le_rfl).trans ((ENNReal.rpow_one_div_le_iff (ENNReal.toReal_pos hp hp')).1 (hbdd _))
 #align measure_theory.ae_bdd_liminf_at_top_rpow_of_snorm_bdd MeasureTheory.ae_bdd_liminf_atTop_rpow_of_snorm_bdd
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem ae_bdd_liminf_atTop_of_snorm_bdd {p : ℝ≥0∞} (hp : p ≠ 0) {f : ℕ → α → E}
     (hfmeas : ∀ n, Measurable (f n)) (hbdd : ∀ n, snorm (f n) p μ ≤ R) :
     ∀ᵐ x ∂μ, liminf (fun n => (‖f n x‖₊ : ℝ≥0∞)) atTop < ∞ :=
@@ -2612,7 +2613,7 @@ theorem snorm'_lim_eq_lintegral_liminf {ι} [Nonempty ι] [LinearOrder ι] {f : 
   exact (continuous_nnnorm.tendsto (f_lim a)).comp ha
 #align measure_theory.Lp.snorm'_lim_eq_lintegral_liminf MeasureTheory.lp.snorm'_lim_eq_lintegral_liminf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem snorm'_lim_le_liminf_snorm' {E} [NormedAddCommGroup E] {f : ℕ → α → E} {p : ℝ}
     (hp_pos : 0 < p) (hf : ∀ n, AeStronglyMeasurable (f n) μ) {f_lim : α → E}
     (h_lim : ∀ᵐ x : α ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (f_lim x))) :
@@ -2815,7 +2816,7 @@ private theorem lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum {f : ℕ → α �
   rwa [h_nnnorm_nonneg] at hn
 #align measure_theory.Lp.lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum measure_theory.Lp.lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 private theorem lintegral_rpow_tsum_coe_nnnorm_sub_le_tsum {f : ℕ → α → E}
     (hf : ∀ n, AeStronglyMeasurable (f n) μ) {p : ℝ} (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞}
     (h :

@@ -156,7 +156,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   exact (add_left_cancel hT).symm
 #align measure_theory.fin_meas_additive.map_empty_eq_zero MeasureTheory.FinMeasAdditive.map_empty_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
 theorem map_unionᵢ_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
     (h_add : FinMeasAdditive μ T) {ι} (S : ι → Set α) (sι : Finset ι)
     (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀ i ∈ sι, μ (S i) ≠ ∞)
@@ -495,7 +495,7 @@ theorem setToSimpleFunc_add (T : Set α → E →L[ℝ] F) (h_add : FinMeasAddit
       rw [add_eq_map₂, map_set_to_simple_func T h_add hp_pair]
       simp
     _ = ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst + T (pair f g ⁻¹' {x}) x.snd :=
-      Finset.sum_congr rfl fun a ha => ContinuousLinearMap.map_add _ _ _
+      (Finset.sum_congr rfl fun a ha => ContinuousLinearMap.map_add _ _ _)
     _ =
         (∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst) +
           ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.snd :=
@@ -540,7 +540,7 @@ theorem setToSimpleFunc_smul_real (T : Set α → E →L[ℝ] F) (h_add : FinMea
       rw [smul_eq_map c f, map_set_to_simple_func T h_add hf]
       rw [smul_zero]
     _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x :=
-      Finset.sum_congr rfl fun b hb => by rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b]
+      (Finset.sum_congr rfl fun b hb => by rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b])
     _ = c • setToSimpleFunc T f := by simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 #align measure_theory.simple_func.set_to_simple_func_smul_real MeasureTheory.SimpleFunc.setToSimpleFunc_smul_real
@@ -554,7 +554,7 @@ theorem setToSimpleFunc_smul {E} [NormedAddCommGroup E] [NormedField 𝕜] [Norm
       by
       rw [smul_eq_map c f, map_set_to_simple_func T h_add hf]
       rw [smul_zero]
-    _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x := Finset.sum_congr rfl fun b hb => by rw [h_smul]
+    _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x := (Finset.sum_congr rfl fun b hb => by rw [h_smul])
     _ = c • setToSimpleFunc T f := by simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 #align measure_theory.simple_func.set_to_simple_func_smul MeasureTheory.SimpleFunc.setToSimpleFunc_smul
@@ -639,9 +639,9 @@ theorem norm_setToSimpleFunc_le_sum_mul_norm (T : Set α → F →L[ℝ] F') {C 
     ‖f.setToSimpleFunc T‖ ≤ ∑ x in f.range, ‖T (f ⁻¹' {x})‖ * ‖x‖ :=
       norm_setToSimpleFunc_le_sum_op_norm T f
     _ ≤ ∑ x in f.range, C * (μ (f ⁻¹' {x})).toReal * ‖x‖ :=
-      sum_le_sum fun b hb =>
+      (sum_le_sum fun b hb =>
         mul_le_mul_of_nonneg_right (hT_norm _ <| SimpleFunc.measurableSet_fiber _ _) <|
-          norm_nonneg _
+          norm_nonneg _)
     _ ≤ C * ∑ x in f.range, (μ (f ⁻¹' {x})).toReal * ‖x‖ := by simp_rw [mul_sum, ← mul_assoc]
     
 #align measure_theory.simple_func.norm_set_to_simple_func_le_sum_mul_norm MeasureTheory.SimpleFunc.norm_setToSimpleFunc_le_sum_mul_norm
@@ -1766,7 +1766,8 @@ theorem continuous_L1_toL1 {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ �
       rw [snorm_smul_measure_of_ne_zero hc'0, smul_eq_mul]
       simp
     _ = c'.to_real * (snorm (⇑g - ⇑f) 1 μ).toReal := to_real_mul
-    _ ≤ c'.to_real * (ε / 2 / c'.to_real) := mul_le_mul le_rfl hfg.le to_real_nonneg to_real_nonneg
+    _ ≤ c'.to_real * (ε / 2 / c'.to_real) :=
+      (mul_le_mul le_rfl hfg.le to_real_nonneg to_real_nonneg)
     _ = ε / 2 := by
       refine' mul_div_cancel' (ε / 2) _
       rw [Ne.def, to_real_eq_zero_iff]

@@ -160,7 +160,7 @@ theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1)
       apply lf_of_lt
       calc
         0 ≈ 0 + 0 := (add_zero_equiv 0).symm
-        _ ≤ pow_half n.succ + 0 := add_le_add_right (zero_le_pow_half _) _
+        _ ≤ pow_half n.succ + 0 := (add_le_add_right (zero_le_pow_half _) _)
         _ < pow_half n.succ + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
         
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt

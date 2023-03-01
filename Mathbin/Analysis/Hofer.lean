@@ -84,7 +84,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
       calc
         d (u 0) (u (n + 1)) ≤ ∑ i in r, d (u i) (u <| i + 1) := dist_le_range_sum_dist u (n + 1)
         _ ≤ ∑ i in r, ε / 2 ^ i :=
-          sum_le_sum fun i i_in => (IH i <| nat.lt_succ_iff.mp <| finset.mem_range.mp i_in).1
+          (sum_le_sum fun i i_in => (IH i <| nat.lt_succ_iff.mp <| finset.mem_range.mp i_in).1)
         _ = ∑ i in r, (1 / 2) ^ i * ε := by
           congr with i
           field_simp

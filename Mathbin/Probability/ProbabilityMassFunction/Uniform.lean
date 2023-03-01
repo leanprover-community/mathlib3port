@@ -93,15 +93,15 @@ theorem toOuterMeasure_uniformOfFinset_apply :
     (uniformOfFinset s hs).toOuterMeasure t = ∑' x, if x ∈ t then uniformOfFinset s hs x else 0 :=
       toOuterMeasure_apply (uniformOfFinset s hs) t
     _ = ∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
-      tsum_congr fun x => by
-        simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, ENNReal.coe_nat]
+      (tsum_congr fun x => by
+        simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, ENNReal.coe_nat])
     _ = ∑ x in s.filterₓ (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
-      tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h)
+      (tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h))
     _ = ∑ x in s.filterₓ (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
-      Finset.sum_congr rfl fun x hx =>
+      (Finset.sum_congr rfl fun x hx =>
         by
         let this : x ∈ s ∧ x ∈ t := by simpa using hx
-        simp only [this, and_self_iff, if_true]
+        simp only [this, and_self_iff, if_true])
     _ = (s.filterₓ (· ∈ t)).card / s.card :=
       by
       have : (s.card : ℝ≥0∞) ≠ 0 :=
@@ -172,9 +172,9 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
         (∑' b : α, (s.count b : ℝ≥0∞) / s.card) = s.card⁻¹ * ∑' b, s.count b := by
           simp_rw [ENNReal.div_eq_inv_mul, ENNReal.tsum_mul_left]
         _ = s.card⁻¹ * ∑ b in s.toFinset, (s.count b : ℝ≥0∞) :=
-          congr_arg (fun x => s.card⁻¹ * x)
+          (congr_arg (fun x => s.card⁻¹ * x)
             (tsum_eq_sum fun a ha =>
-              Nat.cast_eq_zero.2 <| by rwa [Multiset.count_eq_zero, ← Multiset.mem_toFinset])
+              Nat.cast_eq_zero.2 <| by rwa [Multiset.count_eq_zero, ← Multiset.mem_toFinset]))
         _ = 1 := by
           rw [← Nat.cast_sum, Multiset.toFinset_sum_count_eq s,
             ENNReal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))

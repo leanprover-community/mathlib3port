@@ -153,9 +153,9 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         apply this
         calc
           edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
-          _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := ENNReal.add_lt_add hz hyx
+          _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := (ENNReal.add_lt_add hz hyx)
           _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
-            add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith)
+            (add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith))
           _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
           
       -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
@@ -172,12 +172,12 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         calc
           edist z' y' ≤ edist z' x + edist x y' := edist_triangle _ _ _
           _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
-            add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
+            (add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _))
           _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
             apply_rules [ENNReal.add_lt_add]
           _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
           _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-            mul_le_mul' le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
+            (mul_le_mul' le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl))
           _ = 3 * 2⁻¹ ^ m := by rw [mul_add, h2pow, bit1, add_mul, one_mul]
           
       -- Finally, we glue `Hgt` and `Hle`

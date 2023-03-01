@@ -64,11 +64,11 @@ theorem continuous_infEdist_Hausdorff_edist :
     inf_edist x s ≤ inf_edist x t + Hausdorff_edist (t : Set α) s :=
       inf_edist_le_inf_edist_add_Hausdorff_edist
     _ ≤ inf_edist y t + edist x y + Hausdorff_edist (t : Set α) s :=
-      add_le_add_right inf_edist_le_inf_edist_add_edist _
+      (add_le_add_right inf_edist_le_inf_edist_add_edist _)
     _ = inf_edist y t + (edist x y + Hausdorff_edist (s : Set α) t) := by
       rw [add_assoc, Hausdorff_edist_comm]
     _ ≤ inf_edist y t + (edist (x, s) (y, t) + edist (x, s) (y, t)) :=
-      add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _
+      (add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _)
     _ = inf_edist y t + 2 * edist (x, s) (y, t) := by rw [← mul_two, mul_comm]
     
 #align emetric.continuous_inf_edist_Hausdorff_edist Emetric.continuous_infEdist_Hausdorff_edist
@@ -185,7 +185,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
       ⟨y, hy,
         calc
           edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
-          _ ≤ B n + B n := add_le_add (le_of_lt Dxz) (le_of_lt Dzy)
+          _ ≤ B n + B n := (add_le_add (le_of_lt Dxz) (le_of_lt Dzy))
           _ = 2 * B n := (two_mul _).symm
           ⟩
   -- Deduce from the above inequalities that the distance between `s n` and `t0` is at most `2 B n`.
@@ -202,7 +202,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   exact ⟨N, fun n hn => lt_of_le_of_lt (main n) (hN n hn)⟩
 #align emetric.closeds.complete_space Emetric.Closeds.completeSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ⊆ » s) -/
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -309,7 +309,7 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
     have : edist x y < ε :=
       calc
         edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
-        _ < ε / 2 + ε / 2 := ENNReal.add_lt_add Dxz Dzy
+        _ < ε / 2 + ε / 2 := (ENNReal.add_lt_add Dxz Dzy)
         _ = ε := ENNReal.add_halves _
         
     exact mem_bUnion hy this
@@ -375,7 +375,7 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
         exists F z, mem_image_of_mem _ za
         calc
           edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _
-          _ < δ / 2 + δ / 2 := ENNReal.add_lt_add Dxz (Fspec z).2
+          _ < δ / 2 + δ / 2 := (ENNReal.add_lt_add Dxz (Fspec z).2)
           _ = δ := ENNReal.add_halves _
           
       -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`

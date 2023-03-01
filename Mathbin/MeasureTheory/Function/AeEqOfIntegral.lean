@@ -102,7 +102,7 @@ theorem ae_eq_zero_of_forall_dual_of_isSeparable [NormedAddCommGroup E] [NormedS
     apply lt_irrefl ‖s x x‖
     calc
       ‖s x x‖ = ‖s x (x - a)‖ := by simp only [h, sub_zero, ContinuousLinearMap.map_sub]
-      _ ≤ 1 * ‖(x : E) - a‖ := ContinuousLinearMap.le_of_op_norm_le _ (hs x).1 _
+      _ ≤ 1 * ‖(x : E) - a‖ := (ContinuousLinearMap.le_of_op_norm_le _ (hs x).1 _)
       _ < ‖a‖ / 2 := by
         rw [one_mul]
         rwa [dist_eq_norm'] at hx
@@ -196,7 +196,8 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
         (∫⁻ x in s, g x ∂μ) + ε * μ s = (∫⁻ x in s, g x ∂μ) + ∫⁻ x in s, ε ∂μ := by
           simp only [lintegral_const, Set.univ_inter, MeasurableSet.univ, measure.restrict_apply]
         _ = ∫⁻ x in s, g x + ε ∂μ := (lintegral_add_right _ measurable_const).symm
-        _ ≤ ∫⁻ x in s, f x ∂μ := set_lintegral_mono (hg.add measurable_const) hf fun x hx => hx.1.1
+        _ ≤ ∫⁻ x in s, f x ∂μ :=
+          (set_lintegral_mono (hg.add measurable_const) hf fun x hx => hx.1.1)
         _ ≤ (∫⁻ x in s, g x ∂μ) + 0 := by
           rw [add_zero]
           exact h s s_meas s_lt_top
@@ -239,7 +240,7 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
   refine' le_antisymm _ bot_le
   calc
     μ ({ x : α | (fun x : α => f x ≤ g x) x }ᶜ) ≤ μ (⋃ n, s n) := measure_mono B
-    _ ≤ ∑' n, μ (s n) := measure_Union_le _
+    _ ≤ ∑' n, μ (s n) := (measure_Union_le _)
     _ = 0 := by simp only [μs, tsum_zero]
     
 #align measure_theory.ae_le_of_forall_set_lintegral_le_of_sigma_finite MeasureTheory.ae_le_of_forall_set_lintegral_le_of_sigmaFinite
@@ -282,7 +283,7 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_stronglyMeasurable (hfm : Str
         simpa only [nnnorm, abs_of_neg hb_neg, abs_of_neg (hx.trans_lt hb_neg), Real.norm_eq_abs,
           Subtype.mk_le_mk, neg_le_neg_iff, Set.mem_setOf_eq, ENNReal.coe_le_coe] using hx
       _ ≤ (∫⁻ x, ‖f x‖₊ ∂μ) / c :=
-        meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos ENNReal.coe_ne_top
+        (meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos ENNReal.coe_ne_top)
       _ < ∞ := ENNReal.div_lt_top (ne_of_lt hf.2) c_pos
       
   have h_int_gt : (∫ x in s, f x ∂μ) ≤ b * (μ s).toReal :=

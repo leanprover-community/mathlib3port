@@ -706,10 +706,10 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
         calc
           |x * y - r * s| = |x * (y - s) + (x - r) * s| := by
             rw [mul_sub, sub_mul, add_sub, sub_add_cancel]
-          _ ≤ |x * (y - s)| + |(x - r) * s| := abs_add _ _
+          _ ≤ |x * (y - s)| + |(x - r) * s| := (abs_add _ _)
           _ ≤ |x| * |y - s| + |x - r| * |s| := by simp only [abs_mul]
           _ ≤ |x| * (d / t / 2 : ℝ) + (d / |s| / 2 : ℝ) * |s| :=
-            add_le_add
+            (add_le_add
               (mul_le_mul_of_nonneg_left
                   (le_of_lt <|
                     hys' _ <|
@@ -717,7 +717,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
                 abs_nonneg _)
               (mul_le_mul_of_nonneg_right
                   (le_of_lt <| hxr' _ <| half_pos <| div_pos hd <| abs_pos.2 hs) <|
-                abs_nonneg _)
+                abs_nonneg _))
           _ = (d / 2 * (|x| / t) + d / 2 : ℝ*) :=
             by
             push_cast [-Filter.Germ.const_div]
@@ -726,10 +726,10 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
             have : (2 : ℝ*) ≠ 0 := two_ne_zero
             field_simp [*, add_mul, mul_add, mul_assoc, mul_comm, mul_left_comm]
           _ < (d / 2 * 1 + d / 2 : ℝ*) :=
-            add_lt_add_right
+            (add_lt_add_right
               (mul_lt_mul_of_pos_left ((div_lt_one <| lt_of_le_of_lt (abs_nonneg x) ht).mpr ht) <|
                 half_pos <| coe_pos.2 hd)
-              _
+              _)
           _ = (d : ℝ*) := by rw [mul_one, add_halves]
           
 #align hyperreal.is_st_mul' hyperreal.is_st_mul'

@@ -56,8 +56,8 @@ def cechNerve : SimplicialObject C
     where
   obj n := widePullback.{0} f.right (fun i : Fin (n.unop.len + 1) => f.left) fun i => f.Hom
   map m n g :=
-    widePullback.lift (widePullback.base _)
-      (fun i => (widePullback.π fun i => f.Hom) <| g.unop.toOrderHom i) fun j => by simp
+    WidePullback.lift (WidePullback.base _)
+      (fun i => (WidePullback.π fun i => f.Hom) <| g.unop.toOrderHom i) fun j => by simp
   map_id' x := by
     ext ⟨⟩
     · simpa
@@ -76,7 +76,7 @@ def mapCechNerve {f g : Arrow C}
     f.cechNerve ⟶ g.cechNerve
     where
   app n :=
-    widePullback.lift (widePullback.base _ ≫ F.right) (fun i => widePullback.π _ i ≫ F.left)
+    WidePullback.lift (WidePullback.base _ ≫ F.right) (fun i => WidePullback.π _ i ≫ F.left)
       fun j => by simp
   naturality' x y f := by
     ext ⟨⟩
@@ -91,7 +91,7 @@ def augmentedCechNerve : SimplicialObject.Augmented C
   left := f.cechNerve
   right := f.right
   Hom :=
-    { app := fun i => widePullback.base _
+    { app := fun i => WidePullback.base _
       naturality' := fun x y f => by
         dsimp
         simp }
@@ -159,7 +159,7 @@ def augmentedCechNerve : Arrow C ⥤ SimplicialObject.Augmented C
 def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
     (G : X ⟶ F.augmentedCechNerve) : Augmented.toArrow.obj X ⟶ F
     where
-  left := G.left.app _ ≫ widePullback.π (fun i => F.Hom) 0
+  left := G.left.app _ ≫ WidePullback.π (fun i => F.Hom) 0
   right := G.right
   w' := by
     have := G.w
@@ -174,7 +174,7 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
     where
   left :=
     { app := fun x =>
-        Limits.widePullback.lift (X.Hom.app _ ≫ G.right)
+        Limits.WidePullback.lift (X.Hom.app _ ≫ G.right)
           (fun i => X.left.map (SimplexCategory.const x.unop i).op ≫ G.left) fun i =>
           by
           dsimp
@@ -270,8 +270,8 @@ def cechConerve : CosimplicialObject C
     where
   obj n := widePushout f.left (fun i : Fin (n.len + 1) => f.right) fun i => f.Hom
   map m n g :=
-    widePushout.desc (widePushout.head _)
-      (fun i => (widePushout.ι fun i => f.Hom) <| g.toOrderHom i) fun i => by
+    WidePushout.desc (WidePushout.head _)
+      (fun i => (WidePushout.ι fun i => f.Hom) <| g.toOrderHom i) fun i => by
       rw [wide_pushout.arrow_ι fun i => f.hom]
   map_id' x := by
     ext ⟨⟩
@@ -291,7 +291,7 @@ def mapCechConerve {f g : Arrow C}
     f.cechConerve ⟶ g.cechConerve
     where
   app n :=
-    widePushout.desc (F.left ≫ widePushout.head _) (fun i => F.right ≫ widePushout.ι _ i) fun i =>
+    WidePushout.desc (F.left ≫ WidePushout.head _) (fun i => F.right ≫ WidePushout.ι _ i) fun i =>
       by rw [← arrow.w_assoc F, wide_pushout.arrow_ι fun i => g.hom]
   naturality' x y f := by
     ext
@@ -306,7 +306,7 @@ def augmentedCechConerve : CosimplicialObject.Augmented C
   left := f.left
   right := f.cechConerve
   Hom :=
-    { app := fun i => widePushout.head _
+    { app := fun i => WidePushout.head _
       naturality' := fun x y f => by
         dsimp
         simp }
@@ -379,7 +379,7 @@ def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
     (G : F.augmentedCechConerve ⟶ X) : F ⟶ Augmented.toArrow.obj X
     where
   left := G.left
-  right := (widePushout.ι (fun i => F.Hom) 0 ≫ G.right.app (SimplexCategory.mk 0) : _)
+  right := (WidePushout.ι (fun i => F.Hom) 0 ≫ G.right.app (SimplexCategory.mk 0) : _)
   w' := by
     have := G.w
     apply_fun fun e => e.app (SimplexCategory.mk 0)  at this
@@ -395,7 +395,7 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
   left := G.left
   right :=
     { app := fun x =>
-        Limits.widePushout.desc (G.left ≫ X.Hom.app _)
+        Limits.WidePushout.desc (G.left ≫ X.Hom.app _)
           (fun i => G.right ≫ X.right.map (SimplexCategory.const x i))
           (by
             rintro j
@@ -476,8 +476,8 @@ abbrev cechConerveAdjunction : augmentedCechConerve ⊣ (Augmented.toArrow : _ �
 
 end CosimplicialObject
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /-- Given an object `X : C`, the natural simplicial object sending `[n]` to `Xⁿ⁺¹`. -/
 def cechNerveTerminalFrom {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X : C) :
     SimplicialObject C where
@@ -486,12 +486,12 @@ def cechNerveTerminalFrom {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X
   map_id' f :=
     limit.hom_ext fun j => by
       trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]" <;>
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]" <;>
         simpa only [limit.lift_π, category.id_comp]
   map_comp' m n o f g :=
     limit.hom_ext fun j => by
       trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]" <;>
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]" <;>
         simpa only [category.assoc, limit.lift_π, fan.mk_π_app]
 #align category_theory.cech_nerve_terminal_from CategoryTheory.cechNerveTerminalFrom
 
@@ -556,7 +556,7 @@ def iso (X : C) : (Arrow.mk (terminal.from X)).cechNerve ≅ cechNerveTerminalFr
         ((limit.isLimit _).conePointUniqueUpToIso
             (wideCospan.limitCone (Fin (m.unop.len + 1)) X).2).symm)
       fun m n f =>
-      widePullback.hom_ext _ _ _
+      WidePullback.hom_ext _ _ _
         (by
           intro j
           simp only [category.assoc]

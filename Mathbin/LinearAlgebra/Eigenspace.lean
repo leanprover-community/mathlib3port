@@ -576,7 +576,7 @@ theorem pos_finrank_generalizedEigenspace_of_hasEigenvalue [FiniteDimensional K 
     0 < finrank K (f.generalizedEigenspace μ k) :=
   calc
     0 = finrank K (⊥ : Submodule K V) := by rw [finrank_bot]
-    _ < finrank K (f.eigenspace μ) := Submodule.finrank_lt_finrank_of_lt (bot_lt_iff_ne_bot.2 hx)
+    _ < finrank K (f.eigenspace μ) := (Submodule.finrank_lt_finrank_of_lt (bot_lt_iff_ne_bot.2 hx))
     _ ≤ finrank K (f.generalizedEigenspace μ k) :=
       Submodule.finrank_mono ((f.generalizedEigenspace μ).Monotone (Nat.succ_le_of_lt hk))
     
@@ -589,7 +589,7 @@ theorem map_generalizedEigenrange_le {f : End K V} {μ : K} {n : ℕ} :
     Submodule.map f (f.generalizedEigenrange μ n) = (f * (f - algebraMap _ _ μ) ^ n).range :=
       (LinearMap.range_comp _ _).symm
     _ = ((f - algebraMap _ _ μ) ^ n * f).range := by rw [Algebra.mul_sub_algebraMap_pow_commutes]
-    _ = Submodule.map ((f - algebraMap _ _ μ) ^ n) f.range := LinearMap.range_comp _ _
+    _ = Submodule.map ((f - algebraMap _ _ μ) ^ n) f.range := (LinearMap.range_comp _ _)
     _ ≤ f.generalizedEigenrange μ n := LinearMap.map_le_range
     
 #align module.End.map_generalized_eigenrange_le Module.End.map_generalizedEigenrange_le

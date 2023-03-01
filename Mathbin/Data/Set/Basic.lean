@@ -2043,7 +2043,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) (fun (H : Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s) t)))
 Case conversion may be inaccurate. Consider using '#align set.ssubset_iff_insert Set.ssubset_iff_insertₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t :=
   by
   simp only [insert_subset, exists_and_right, ssubset_def, not_subset]
@@ -4507,7 +4507,7 @@ instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsi
 /-! ### Nontrivial -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial /-
 /-- A set `s` is `nontrivial` if it has at least two distinct elements. -/
 protected def Nontrivial (s : Set α) : Prop :=
@@ -4624,7 +4624,7 @@ theorem nontrivial_of_lt [Preorder α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy 
 #align set.nontrivial_of_lt Set.nontrivial_of_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.nontrivial_of_exists_lt /-
 theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y) :
     s.Nontrivial :=
@@ -4633,7 +4633,7 @@ theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : 
 #align set.nontrivial_of_exists_lt Set.nontrivial_of_exists_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial.exists_lt /-
 theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
     ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
@@ -4642,7 +4642,7 @@ theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
 #align set.nontrivial.exists_lt Set.Nontrivial.exists_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.nontrivial_iff_exists_lt /-
 theorem nontrivial_iff_exists_lt [LinearOrder α] :
     s.Nontrivial ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
@@ -4898,7 +4898,7 @@ section LinearOrder
 
 variable [LinearOrder α] [LinearOrder β] {f : α → β}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
@@ -4912,7 +4912,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
 #align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/

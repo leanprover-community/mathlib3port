@@ -66,8 +66,8 @@ theorem of_isO_im_re_rpow (hre : Tendsto re l atTop) (r : ℝ) (hr : im =O[l] fu
       calc
         (fun z : ℂ => z.im ^ n) =O[l] fun z => (z.re ^ r) ^ n := hr.pow n
         _ =ᶠ[l] fun z => z.re ^ (r * n) :=
-          (hre.eventually_ge_atTop 0).mono fun z hz => by
-            simp only [Real.rpow_mul hz r n, Real.rpow_nat_cast]
+          ((hre.eventually_ge_atTop 0).mono fun z hz => by
+            simp only [Real.rpow_mul hz r n, Real.rpow_nat_cast])
         _ =o[l] fun z => Real.exp z.re := (isOCat_rpow_exp_atTop _).comp_tendsto hre
         ⟩
 #align complex.is_exp_cmp_filter.of_is_O_im_re_rpow Complex.IsExpCmpFilter.of_isO_im_re_rpow
@@ -114,7 +114,7 @@ theorem isOCat_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
   flip IsOCat.of_pow two_ne_zero <|
     calc
       (fun z : ℂ => (z.im ^ n) ^ 2) = fun z => z.im ^ (2 * n) := by simp only [pow_mul']
-      _ =O[l] fun z => Real.exp z.re := hl.isO_im_pow_re _
+      _ =O[l] fun z => Real.exp z.re := (hl.isO_im_pow_re _)
       _ = fun z => Real.exp z.re ^ 1 := by simp only [pow_one]
       _ =o[l] fun z => Real.exp z.re ^ 2 :=
         (isOCat_pow_pow_atTop_of_lt one_lt_two).comp_tendsto <|
@@ -174,7 +174,7 @@ theorem isOCat_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b)
     (fun z => z ^ a) =Θ[l] fun z => abs z ^ re a :=
       isTheta_cpow_const_rpow fun _ _ => hl.eventually_ne
     _ =ᶠ[l] fun z => Real.exp (re a * Real.log (abs z)) :=
-      hl.eventually_ne.mono fun z hz => by simp only [Real.rpow_def_of_pos, abs.pos hz, mul_comm]
+      (hl.eventually_ne.mono fun z hz => by simp only [Real.rpow_def_of_pos, abs.pos hz, mul_comm])
     _ =o[l] fun z => exp (b * z) :=
       IsOCat.of_norm_right <|
         by
@@ -195,8 +195,8 @@ theorem isOCat_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁
         simp only
         rw [mul_right_comm, ← cpow_add _ _ hz, add_sub_cancel'_right]
     _ =o[l] fun z => z ^ a₂ * exp (b₁ * z) * exp (↑(b₂ - b₁) * z) :=
-      (isO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_isOCat <|
-        hl.isOCat_cpow_exp _ (sub_pos.2 hb)
+      ((isO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_isOCat <|
+        hl.isOCat_cpow_exp _ (sub_pos.2 hb))
     _ =ᶠ[l] fun z => z ^ a₂ * exp (b₂ * z) := by
       simp only [of_real_sub, sub_mul, mul_assoc, ← exp_add, add_sub_cancel'_right]
     

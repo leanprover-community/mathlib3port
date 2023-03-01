@@ -757,7 +757,7 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
       dist (g x) (g y) ≤ dist (g x) (u (x.1 n)) + dist (g y) (u (x.1 n)) :=
         dist_triangle_right _ _ _
       _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by rw [← B]
-      _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A x n) (A y n)
+      _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := (add_le_add (A x n) (A y n))
       _ = 4 * (1 / 2) ^ (n + 1) := by ring
       
   have g_surj : surjective g := by
@@ -969,7 +969,7 @@ protected def metricSpace : MetricSpace (∀ i, F i)
             apply (hxy i _).le
             simpa using hi
           _ ≤ ε / 2 + ε / 2 :=
-            add_le_add_right (by simpa only [Finset.sum_const, nsmul_eq_mul] using hδ) _
+            (add_le_add_right (by simpa only [Finset.sum_const, nsmul_eq_mul] using hδ) _)
           _ = ε := add_halves _
           
     · simp only [le_infᵢ_iff, le_principal_iff]

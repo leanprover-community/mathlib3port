@@ -330,7 +330,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
       _ ≤
           @Fintype.card (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α)
             (Fintype.ofFinset _ fun _ => Iff.rfl) :=
-        @Fintype.card_le_of_injective (zpowers a)
+        (@Fintype.card_le_of_injective (zpowers a)
           (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α) (id _) (id _)
           (fun b =>
             ⟨b.1,
@@ -339,7 +339,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
                   let ⟨i, hi⟩ := b.2
                   rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
                     pow_orderOf_eq_one, one_zpow]⟩⟩)
-          fun _ _ h => Subtype.eq (Subtype.mk.inj h)
+          fun _ _ h => Subtype.eq (Subtype.mk.inj h))
       _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
       )
 #align card_pow_eq_one_eq_order_of_aux card_pow_eq_one_eq_order_of_aux
@@ -409,7 +409,7 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
       · simp [h1]
       · simp [card_order_of_eq_totient_aux₁ hn hmc h1]
     _ < ∑ m in c.divisors, φ m :=
-      sum_erase_lt_of_pos (mem_divisors.2 ⟨hd, hc0.ne'⟩) (totient_pos (pos_of_dvd_of_pos hd hc0))
+      (sum_erase_lt_of_pos (mem_divisors.2 ⟨hd, hc0.ne'⟩) (totient_pos (pos_of_dvd_of_pos hd hc0)))
     _ = c := sum_totient _
     
 #align card_order_of_eq_totient_aux₂ card_orderOf_eq_totient_aux₂

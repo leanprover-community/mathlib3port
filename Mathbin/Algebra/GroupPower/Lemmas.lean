@@ -448,7 +448,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_strict_mono_right
 theorem zpow_strictMono_right (ha : 1 < a) : StrictMono fun n : ℤ => a ^ n := fun m n h =>
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
-    _ < a ^ m * a ^ (n - m) := mul_lt_mul_left' (one_lt_zpow' ha <| sub_pos_of_lt h) _
+    _ < a ^ m * a ^ (n - m) := (mul_lt_mul_left' (one_lt_zpow' ha <| sub_pos_of_lt h) _)
     _ = a ^ n := by
       rw [← zpow_add]
       simp
@@ -466,7 +466,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_mono_right zpow_m
 theorem zpow_mono_right (ha : 1 ≤ a) : Monotone fun n : ℤ => a ^ n := fun m n h =>
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
-    _ ≤ a ^ m * a ^ (n - m) := mul_le_mul_left' (one_le_zpow ha <| sub_nonneg_of_le h) _
+    _ ≤ a ^ m * a ^ (n - m) := (mul_le_mul_left' (one_le_zpow ha <| sub_nonneg_of_le h) _)
     _ = a ^ n := by
       rw [← zpow_add]
       simp
@@ -933,7 +933,8 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a * a) (Hsq' : 0 ≤ (1 + a) * (1 + a))
         by
         simp [add_mul, mul_add, bit0, mul_assoc, (n.cast_commute (_ : R)).and_left_comm]
         ac_rfl
-      _ ≤ (1 + a) * (1 + a) * (1 + a) ^ n := mul_le_mul_of_nonneg_left (one_add_mul_le_pow' n) Hsq'
+      _ ≤ (1 + a) * (1 + a) * (1 + a) ^ n :=
+        (mul_le_mul_of_nonneg_left (one_add_mul_le_pow' n) Hsq')
       _ = (1 + a) ^ (n + 2) := by simp only [pow_succ, mul_assoc]
       
 #align one_add_mul_le_pow' one_add_mul_le_pow'

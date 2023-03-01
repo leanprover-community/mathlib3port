@@ -408,7 +408,7 @@ noncomputable def Sylow.equivQuotientNormalizer [Fact p.Prime] [Fintype (Sylow p
   calc
     Sylow p G ≃ (⊤ : Set (Sylow p G)) := (Equiv.Set.univ (Sylow p G)).symm
     _ ≃ orbit G P := by rw [P.orbit_eq_top]
-    _ ≃ G ⧸ stabilizer G P := orbitEquivQuotientStabilizer G P
+    _ ≃ G ⧸ stabilizer G P := (orbitEquivQuotientStabilizer G P)
     _ ≃ G ⧸ (P : Subgroup G).normalizer := by rw [P.stabilizer_eq_normalizer]
     
 #align sylow.equiv_quotient_normalizer Sylow.equivQuotientNormalizer
@@ -827,7 +827,7 @@ noncomputable def directProductOfNormal [Fintype G]
         congr 1 with ⟨p, hp⟩
         exact @card_eq_multiplicity _ _ _ p ⟨Nat.prime_of_mem_factorization hp⟩ (P p)
       _ = ∏ p in ps, p ^ (card G).factorization p :=
-        Finset.prod_finset_coe (fun p => p ^ (card G).factorization p) _
+        (Finset.prod_finset_coe (fun p => p ^ (card G).factorization p) _)
       _ = (card G).factorization.Prod pow := rfl
       _ = card G := Nat.factorization_prod_pow_eq_self Fintype.card_ne_zero
       

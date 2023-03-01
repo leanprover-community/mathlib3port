@@ -127,14 +127,14 @@ instance : Epi (Abelian.factorThruImage f) :=
     have fh : f ≫ h = 0
     calc
       f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl
-      _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := ht ▸ rfl
+      _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := (ht ▸ rfl)
       _ = t ≫ u ≫ h := by
         simp only [category.assoc] <;>
           conv_lhs =>
             congr
             skip
             rw [← category.assoc]
-      _ = t ≫ 0 := hu.w ▸ rfl
+      _ = t ≫ 0 := (hu.w ▸ rfl)
       _ = 0 := has_zero_morphisms.comp_zero _ _
       
     -- h factors through the cokernel of f via some l.
@@ -173,7 +173,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
     have hf : h ≫ f = 0
     calc
       h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl
-      _ = h ≫ p ≫ cokernel.π g ≫ t := ht ▸ rfl
+      _ = h ≫ p ≫ cokernel.π g ≫ t := (ht ▸ rfl)
       _ = h ≫ u ≫ t := by
         simp only [category.assoc] <;>
           conv_lhs =>

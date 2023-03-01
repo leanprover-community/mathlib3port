@@ -193,7 +193,7 @@ theorem gnpowRec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 #align graded_monoid.gmonoid.gnpow_rec_zero GradedMonoid.GMonoid.gnpowRec_zero
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -212,7 +212,7 @@ theorem gnpowRec_succ (n : ℕ) (a : GradedMonoid A) :
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 #align graded_monoid.gmonoid.gnpow_rec_succ GradedMonoid.GMonoid.gnpowRec_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -222,8 +222,8 @@ unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
 end Gmonoid
 
 #print GradedMonoid.GMonoid /-
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_zero_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_succ_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_zero_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic gmonoid.apply_gnpow_rec_succ_tac -/
 /-- A graded version of `monoid`.
 
 Like `monoid.npow`, this has an optional `gmonoid.gnpow` field to allow definitional control of

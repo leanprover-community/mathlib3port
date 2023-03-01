@@ -134,7 +134,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
             congr 1
             simp only [x, f.map_sub]
             abel
-          _ ≤ ‖f x₁ - (a + d • y)‖ + ‖f x₂ - a‖ := norm_sub_le _ _
+          _ ≤ ‖f x₁ - (a + d • y)‖ + ‖f x₂ - a‖ := (norm_sub_le _ _)
           _ ≤ δ + δ := by
             apply add_le_add
             · rw [← dist_eq_norm, dist_comm]
@@ -226,10 +226,10 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
     calc
       ‖x‖ ≤ ∑' n, ‖u n‖ := norm_tsum_le_tsum_norm sNu
       _ ≤ ∑' n, (1 / 2) ^ n * (C * ‖y‖) :=
-        tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two)
+        (tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two))
       _ = (∑' n, (1 / 2) ^ n) * (C * ‖y‖) := tsum_mul_right
       _ = 2 * C * ‖y‖ := by rw [tsum_geometric_two, mul_assoc]
-      _ ≤ 2 * C * ‖y‖ + ‖y‖ := le_add_of_nonneg_right (norm_nonneg y)
+      _ ≤ 2 * C * ‖y‖ + ‖y‖ := (le_add_of_nonneg_right (norm_nonneg y))
       _ = (2 * C + 1) * ‖y‖ := by ring
       
   have fsumeq : ∀ n : ℕ, f (∑ i in Finset.range n, u i) = y - (h^[n]) y :=

@@ -104,7 +104,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     rw [← Finset.card_pos]
     calc
       0 < 1 := Nat.one_pos
-      _ ≤ (Finset.bunionᵢ {x} t).card := ht {x}
+      _ ≤ (Finset.bunionᵢ {x} t).card := (ht {x})
       _ = (t x).card := by rw [Finset.singleton_bunionᵢ]
       
   choose y hy using tx_ne
@@ -204,7 +204,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     apply Nat.le_of_lt_succ
     calc
       Fintype.card s = s.card := Fintype.card_coe _
-      _ < Fintype.card ι := (card_lt_iff_ne_univ _).mpr hns
+      _ < Fintype.card ι := ((card_lt_iff_ne_univ _).mpr hns)
       _ = n.succ := hn
       
   rcases ih t' card_ι'_le (hall_cond_of_restrict ht) with ⟨f', hf', hsf'⟩

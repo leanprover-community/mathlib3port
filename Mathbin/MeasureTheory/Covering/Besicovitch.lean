@@ -986,8 +986,8 @@ theorem exists_disjoint_closedBall_covering_ae (μ : Measure α) [SigmaFinite μ
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
 #align besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closedBall_covering_ae
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (U «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ⊇ » s') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ⊇ » s') -/
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/
@@ -1170,7 +1170,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
       _ ≤
           (∑' x : t0, μ (closed_ball x (r x))) +
             ∑ i : Fin N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
-        add_le_add le_rfl (ENNReal.tsum_unionᵢ_le (fun x => μ (closed_ball x (r x))) _)
+        (add_le_add le_rfl (ENNReal.tsum_unionᵢ_le (fun x => μ (closed_ball x (r x))) _))
       _ ≤ μ s + ε / 2 + ∑ i : Fin N, ε / 2 / N :=
         by
         refine' add_le_add A _

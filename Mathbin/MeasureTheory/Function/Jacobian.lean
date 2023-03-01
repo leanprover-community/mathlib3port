@@ -171,7 +171,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFderivWithinAt [SecondCou
         congr 1
         simp only [ContinuousLinearMap.coe_sub', map_sub, Pi.sub_apply]
         abel
-      _ ≤ ‖f y - f x - (f' x) (y - x)‖ + ‖(f' x - f' z) (y - x)‖ := norm_add_le _ _
+      _ ≤ ‖f y - f x - (f' x) (y - x)‖ + ‖(f' x - f' z) (y - x)‖ := (norm_add_le _ _)
       _ ≤ ε * ‖y - x‖ + ‖f' x - f' z‖ * ‖y - x‖ :=
         by
         refine' add_le_add (hδ _) (ContinuousLinearMap.le_op_norm _ _)
@@ -224,7 +224,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFderivWithinAt [SecondCou
     refine' yM.2 _ ⟨hx.1, _⟩
     calc
       dist x y ≤ dist x (d p) + dist y (d p) := dist_triangle_right _ _ _
-      _ ≤ u n / 3 + u n / 3 := add_le_add hx.2.2 hy.2.2
+      _ ≤ u n / 3 + u n / 3 := (add_le_add hx.2.2 hy.2.2)
       _ < u n := by linarith [u_pos n]
       
   -- the sets `K n z p` are also closed, again by design.
@@ -416,9 +416,9 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
         apply measure_mono
         rw [← image_Union, ← inter_Union]
         exact image_subset _ (subset_inter (subset.refl _) st)
-      _ ≤ ∑' x : t, μ (f '' (s ∩ closed_ball x (r x))) := measure_Union_le _
+      _ ≤ ∑' x : t, μ (f '' (s ∩ closed_ball x (r x))) := (measure_Union_le _)
       _ ≤ ∑' x : t, m * μ (closed_ball x (r x)) :=
-        ENNReal.tsum_le_tsum fun x => I x (r x) (ts x.2) (rpos x x.2).le
+        (ENNReal.tsum_le_tsum fun x => I x (r x) (ts x.2) (rpos x x.2).le)
       _ ≤ m * (μ s + a) := by
         rw [ENNReal.tsum_mul_left]
         exact mul_le_mul_left' μt _
@@ -573,7 +573,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
   have norm_a : ‖a‖ ≤ ‖z‖ + ε :=
     calc
       ‖a‖ = ‖z + (a - z)‖ := by simp only [add_sub_cancel'_right]
-      _ ≤ ‖z‖ + ‖a - z‖ := norm_add_le _ _
+      _ ≤ ‖z‖ + ‖a - z‖ := (norm_add_le _ _)
       _ ≤ ‖z‖ + ε := add_le_add_left (mem_closedBall_iff_norm.1 az) _
       
   -- use the approximation properties to control `(f' x - A) a`, and then `(f' x - A) z` as `z` is
@@ -587,8 +587,8 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
         congr 1
         simp only [ya, add_sub_cancel', sub_sub_sub_cancel_left, ContinuousLinearMap.coe_sub',
           eq_self_iff_true, sub_left_inj, Pi.sub_apply, ContinuousLinearMap.map_smul, smul_sub]
-      _ ≤ ‖f y - f x - A (y - x)‖ + ‖f y - f x - (f' x) (y - x)‖ := norm_sub_le _ _
-      _ ≤ δ * ‖y - x‖ + ε * ‖y - x‖ := add_le_add (hf _ ys _ xs) (hρ ⟨rρ hy, ys⟩)
+      _ ≤ ‖f y - f x - A (y - x)‖ + ‖f y - f x - (f' x) (y - x)‖ := (norm_sub_le _ _)
+      _ ≤ δ * ‖y - x‖ + ε * ‖y - x‖ := (add_le_add (hf _ ys _ xs) (hρ ⟨rρ hy, ys⟩))
       _ = r * (δ + ε) * ‖a‖ :=
         by
         simp only [ya, add_sub_cancel', norm_smul, Real.norm_eq_abs, abs_of_nonneg rpos.le]
@@ -604,7 +604,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
         congr 1
         simp only [ContinuousLinearMap.coe_sub', map_sub, Pi.sub_apply]
         abel
-      _ ≤ ‖(f' x - A) a‖ + ‖(f' x - A) (z - a)‖ := norm_add_le _ _
+      _ ≤ ‖(f' x - A) a‖ + ‖(f' x - A) (z - a)‖ := (norm_add_le _ _)
       _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ‖z - a‖ :=
         by
         apply add_le_add
@@ -661,7 +661,7 @@ theorem add_haar_image_eq_zero_of_differentiableOn_of_add_haar_eq_zero (hf : Dif
       apply measure_mono
       rw [← image_Union, ← inter_Union]
       exact image_subset f (subset_inter subset.rfl t_cover)
-    _ ≤ ∑' n, μ (f '' (s ∩ t n)) := measure_Union_le _
+    _ ≤ ∑' n, μ (f '' (s ∩ t n)) := (measure_Union_le _)
     _ ≤ ∑' n, (Real.toNNReal (|(A n).det|) + 1 : ℝ≥0) * μ (s ∩ t n) :=
       by
       apply ENNReal.tsum_le_tsum fun n => _
@@ -712,7 +712,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
       apply measure_mono
       rw [← image_Union, ← inter_Union]
       exact image_subset f (subset_inter subset.rfl t_cover)
-    _ ≤ ∑' n, μ (f '' (s ∩ t n)) := measure_Union_le _
+    _ ≤ ∑' n, μ (f '' (s ∩ t n)) := (measure_Union_le _)
     _ ≤ ∑' n, (Real.toNNReal (|(A n).det|) + ε : ℝ≥0) * μ (s ∩ t n) :=
       by
       apply ENNReal.tsum_le_tsum fun n => _
@@ -942,7 +942,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       apply measure_mono
       rw [← image_Union, ← inter_Union]
       exact image_subset f (subset_inter subset.rfl t_cover)
-    _ ≤ ∑' n, μ (f '' (s ∩ t n)) := measure_Union_le _
+    _ ≤ ∑' n, μ (f '' (s ∩ t n)) := (measure_Union_le _)
     _ ≤ ∑' n, (ENNReal.ofReal (|(A n).det|) + ε) * μ (s ∩ t n) :=
       by
       apply ENNReal.tsum_le_tsum fun n => _
@@ -963,7 +963,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
             by
             congr 1
             abel
-          _ ≤ |(f' x).det| + |(f' x).det - (A n).det| := abs_sub _ _
+          _ ≤ |(f' x).det| + |(f' x).det - (A n).det| := (abs_sub _ _)
           _ ≤ |(f' x).det| + ε := add_le_add le_rfl ((hδ (A n)).2.1 _ hx)
           
       calc
@@ -1128,7 +1128,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
             by
             congr 1
             abel
-          _ ≤ |(A n).det| + |(f' x).det - (A n).det| := abs_add _ _
+          _ ≤ |(A n).det| + |(f' x).det - (A n).det| := (abs_add _ _)
           _ ≤ |(A n).det| + ε := add_le_add le_rfl ((hδ (A n)).2.1 _ hx)
           
       calc

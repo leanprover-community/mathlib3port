@@ -166,17 +166,17 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
     _ =
         ∑ p in (@univ (n → n) _).filterₓ Bijective,
           ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i :=
-      Eq.symm <|
+      (Eq.symm <|
         sum_subset (filter_subset _ _) fun f _ hbij =>
-          det_mul_aux <| by simpa only [true_and_iff, mem_filter, mem_univ] using hbij
+          det_mul_aux <| by simpa only [true_and_iff, mem_filter, mem_univ] using hbij)
     _ = ∑ τ : Perm n, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (τ i) * N (τ i) i :=
-      sum_bij (fun p h => Equiv.ofBijective p (mem_filter.1 h).2) (fun _ _ => mem_univ _)
+      (sum_bij (fun p h => Equiv.ofBijective p (mem_filter.1 h).2) (fun _ _ => mem_univ _)
         (fun _ _ => rfl) (fun _ _ _ _ h => by injection h) fun b _ =>
-        ⟨b, mem_filter.2 ⟨mem_univ _, b.Bijective⟩, coe_fn_injective rfl⟩
+        ⟨b, mem_filter.2 ⟨mem_univ _, b.Bijective⟩, coe_fn_injective rfl⟩)
     _ = ∑ σ : Perm n, ∑ τ : Perm n, (∏ i, N (σ i) i) * ε τ * ∏ j, M (τ j) (σ j) := by
       simp only [mul_comm, mul_left_comm, prod_mul_distrib, mul_assoc]
     _ = ∑ σ : Perm n, ∑ τ : Perm n, (∏ i, N (σ i) i) * (ε σ * ε τ) * ∏ i, M (τ i) i :=
-      sum_congr rfl fun σ _ =>
+      (sum_congr rfl fun σ _ =>
         Fintype.sum_equiv (Equiv.mulRight σ⁻¹) _ _ fun τ =>
           by
           have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j :=
@@ -192,7 +192,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
               _ = ε τ := by simp only [inv_mul_cancel_right]
               
           simp_rw [Equiv.coe_mulRight, h]
-          simp only [this]
+          simp only [this])
     _ = det M * det N := by simp only [det_apply', Finset.mul_sum, mul_comm, mul_left_comm]
     
 #align matrix.det_mul Matrix.det_mul
@@ -288,7 +288,7 @@ theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPEquiv.toMatrix : Matri
 theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n * det A :=
   calc
     det (c • A) = det (Matrix.mul (diagonal fun _ => c) A) := by rw [smul_eq_diagonal_mul]
-    _ = det (diagonal fun _ => c) * det A := det_mul _ _
+    _ = det (diagonal fun _ => c) * det A := (det_mul _ _)
     _ = c ^ Fintype.card n * det A := by simp [card_univ]
     
 #align matrix.det_smul Matrix.det_smul
@@ -446,7 +446,7 @@ theorem det_eq_of_eq_mul_det_one {A B : Matrix n n R} (C : Matrix n n R) (hC : d
     (hA : A = B ⬝ C) : det A = det B :=
   calc
     det A = det (B ⬝ C) := congr_arg _ hA
-    _ = det B * det C := det_mul _ _
+    _ = det B * det C := (det_mul _ _)
     _ = det B := by rw [hC, mul_one]
     
 #align matrix.det_eq_of_eq_mul_det_one Matrix.det_eq_of_eq_mul_det_one
@@ -455,7 +455,7 @@ theorem det_eq_of_eq_det_one_mul {A B : Matrix n n R} (C : Matrix n n R) (hC : d
     (hA : A = C ⬝ B) : det A = det B :=
   calc
     det A = det (C ⬝ B) := congr_arg _ hA
-    _ = det C * det B := det_mul _ _
+    _ = det C * det B := (det_mul _ _)
     _ = det B := by rw [hC, one_mul]
     
 #align matrix.det_eq_of_eq_det_one_mul Matrix.det_eq_of_eq_det_one_mul
@@ -826,11 +826,11 @@ theorem det_fin_one (A : Matrix (Fin 1) (Fin 1) R) : det A = A 0 0 :=
 #align matrix.det_fin_one Matrix.det_fin_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem det_fin_one_of (a : R) :
     det
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
       a :=
   det_fin_one _
 #align matrix.det_fin_one_of Matrix.det_fin_one_of
@@ -843,12 +843,12 @@ theorem det_fin_two (A : Matrix (Fin 2) (Fin 2) R) : det A = A 0 0 * A 1 1 - A 0
 #align matrix.det_fin_two Matrix.det_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem det_fin_two_of (a b c d : R) :
     Matrix.det
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
       a * d - b * c :=
   det_fin_two _
 #align matrix.det_fin_two_of Matrix.det_fin_two_of

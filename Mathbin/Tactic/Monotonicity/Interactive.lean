@@ -35,7 +35,7 @@ unsafe inductive mono_function (elab : Bool := true)
   | assoc_comm : expr elab → expr elab → mono_function
 #align tactic.interactive.mono_function tactic.interactive.mono_function
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 unsafe instance : DecidableEq mono_function := by
   run_tac
     mk_dec_eq_instance
@@ -657,10 +657,10 @@ add_tactic_doc
     declNames := [`tactic.interactive.mono]
     tags := ["monotonicity"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 

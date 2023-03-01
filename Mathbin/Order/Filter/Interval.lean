@@ -134,7 +134,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {_inst_1 : Set.{u1} α} {s : Set.{u1} α} {t : α -> α -> (Set.{u1} α)}, Iff (Filter.TendstoIxxClass.{u1} α t (Filter.principal.{u1} α _inst_1) (Filter.principal.{u1} α s)) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x _inst_1) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y _inst_1) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (t x y) s)))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_Ixx_class_principal Filter.tendstoIxxClass_principalₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem tendstoIxxClass_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), Ixx x y ⊆ t :=
   Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ <| by

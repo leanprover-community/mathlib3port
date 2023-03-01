@@ -174,7 +174,7 @@ theorem HasConstantSpeedOnWith.Icc_Icc {x y z : ℝ} (hfs : HasConstantSpeedOnWi
       inf_of_le_right vz]
 #align has_constant_speed_on_with.Icc_Icc HasConstantSpeedOnWith.Icc_Icc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
   by
@@ -209,8 +209,8 @@ theorem HasConstantSpeedOnWith.ratio {l' : ℝ≥0} (hl' : l' ≠ 0) {φ : ℝ �
     (y - x) * l = l * (y - x) := by rw [mul_comm]
     _ = variationOnFromTo (f ∘ φ) s x y := (hfφ.2 xs ys).symm
     _ = variationOnFromTo f (φ '' s) (φ x) (φ y) :=
-      variationOnFromTo.comp_eq_of_monotoneOn f φ φm xs ys
-    _ = l' * (φ y - φ x) := hf.2 ⟨x, xs, rfl⟩ ⟨y, ys, rfl⟩
+      (variationOnFromTo.comp_eq_of_monotoneOn f φ φm xs ys)
+    _ = l' * (φ y - φ x) := (hf.2 ⟨x, xs, rfl⟩ ⟨y, ys, rfl⟩)
     _ = (φ y - φ x) * l' := by rw [mul_comm]
     
 #align has_constant_speed_on_with.ratio HasConstantSpeedOnWith.ratio

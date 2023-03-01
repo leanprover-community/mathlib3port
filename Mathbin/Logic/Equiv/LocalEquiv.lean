@@ -115,8 +115,8 @@ def mfld_cfg : SimpsCfg where
 
 namespace Tactic.Interactive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       A very basic tactic to show that sets showing up in manifolds coincide or are included in
@@ -184,11 +184,11 @@ protected def symm : LocalEquiv β α where
 instance : CoeFun (LocalEquiv α β) fun _ => α → β :=
   ⟨LocalEquiv.toFun⟩
 
-#print LocalEquiv.Simps.symmApply /-
+#print LocalEquiv.Simps.symm_apply /-
 /-- See Note [custom simps projection] -/
-def Simps.symmApply (e : LocalEquiv α β) : β → α :=
+def Simps.symm_apply (e : LocalEquiv α β) : β → α :=
   e.symm
-#align local_equiv.simps.symm_apply LocalEquiv.Simps.symmApply
+#align local_equiv.simps.symm_apply LocalEquiv.Simps.symm_apply
 -/
 
 initialize_simps_projections LocalEquiv (toFun → apply, invFun → symm_apply)

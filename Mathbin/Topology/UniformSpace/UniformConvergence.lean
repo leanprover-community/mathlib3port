@@ -1087,7 +1087,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Type.{u3}} [_inst_1 : UniformSpace.{u2} β] {s : Set.{u1} α} [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LocallyCompactSpace.{u1} α _inst_2] (G : ι -> α -> β) (g : α -> β) (p : Filter.{u3} ι), (IsOpen.{u1} α _inst_2 s) -> (List.TFAE (List.cons.{0} Prop (TendstoLocallyUniformlyOn.{u1, u2, u3} α β ι _inst_1 _inst_2 G g p s) (List.cons.{0} Prop (forall (K : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) K s) -> (IsCompact.{u1} α _inst_2 K) -> (TendstoUniformlyOn.{u1, u2, u3} α β ι _inst_1 G g p K)) (List.cons.{0} Prop (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (v : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) v (nhdsWithin.{u1} α _inst_2 x s)) (TendstoUniformlyOn.{u1, u2, u3} α β ι _inst_1 G g p v)))) (List.nil.{0} Prop)))))
 Case conversion may be inaccurate. Consider using '#align tendsto_locally_uniformly_on_tfae tendstoLocallyUniformlyOn_TFAEₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 theorem tendstoLocallyUniformlyOn_TFAE [LocallyCompactSpace α] (G : ι → α → β) (g : α → β)
     (p : Filter ι) (hs : IsOpen s) :
     TFAE
@@ -1109,7 +1109,7 @@ theorem tendstoLocallyUniformlyOn_TFAE [LocallyCompactSpace α] (G : ι → α �
   tfae_finish
 #align tendsto_locally_uniformly_on_tfae tendstoLocallyUniformlyOn_TFAE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 #print tendstoLocallyUniformlyOn_iff_forall_isCompact /-
 theorem tendstoLocallyUniformlyOn_iff_forall_isCompact [LocallyCompactSpace α] (hs : IsOpen s) :
     TendstoLocallyUniformlyOn F f p s ↔

@@ -112,7 +112,7 @@ class SBtw (α : Type _) where
 export SBtw (Sbtw)
 
 #print CircularPreorder /-
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic order_laws_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic order_laws_tac -/
 /-- A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive and cyclic. `sbtw` is transitive.
 -/

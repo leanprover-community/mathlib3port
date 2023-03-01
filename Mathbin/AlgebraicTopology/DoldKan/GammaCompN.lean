@@ -72,9 +72,9 @@ def n₁Γ₀ : Γ₀ ⋙ n₁ ≅ toKaroubi (ChainComplex C ℕ) :=
   calc
     Γ₀ ⋙ n₁ ≅ Γ₀' ⋙ Split.forget C ⋙ n₁ := Functor.associator _ _ _
     _ ≅ Γ₀' ⋙ Split.nondegComplexFunctor ⋙ toKaroubi _ :=
-      isoWhiskerLeft Γ₀' Split.toKaroubiNondegComplexFunctorIsoN₁.symm
+      (isoWhiskerLeft Γ₀' Split.toKaroubiNondegComplexFunctorIsoN₁.symm)
     _ ≅ (Γ₀' ⋙ Split.nondegComplexFunctor) ⋙ toKaroubi _ := (Functor.associator _ _ _).symm
-    _ ≅ 𝟭 _ ⋙ toKaroubi (ChainComplex C ℕ) := isoWhiskerRight Γ₀'CompNondegComplexFunctor _
+    _ ≅ 𝟭 _ ⋙ toKaroubi (ChainComplex C ℕ) := (isoWhiskerRight Γ₀'CompNondegComplexFunctor _)
     _ ≅ toKaroubi (ChainComplex C ℕ) := Functor.leftUnitor _
     
 #align algebraic_topology.dold_kan.N₁Γ₀ AlgebraicTopology.DoldKan.n₁Γ₀

@@ -205,7 +205,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
     φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filterₓ (coprime (p ^ (n + 1)))).card :=
       totient_eq_card_coprime _
     _ = (range (p ^ (n + 1)) \ (range (p ^ n)).image (· * p)).card :=
-      congr_arg card
+      (congr_arg card
         (by
           rw [sdiff_eq_filter]
           apply filter_congr
@@ -217,7 +217,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
             exact hap (dvd_mul_left _ _)
           · rintro h ⟨b, rfl⟩
             rw [pow_succ] at ha
-            exact h b (lt_of_mul_lt_mul_left ha (zero_le _)) (mul_comm _ _))
+            exact h b (lt_of_mul_lt_mul_left ha (zero_le _)) (mul_comm _ _)))
     _ = _ := by
       have h1 : Function.Injective (· * p) := mul_left_injective₀ hp.NeZero
       have h2 : (range (p ^ n)).image (· * p) ⊆ range (p ^ (n + 1)) := fun a =>

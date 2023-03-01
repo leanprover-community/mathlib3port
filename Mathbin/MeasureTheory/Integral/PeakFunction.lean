@@ -165,7 +165,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
       conv_lhs => rw [← diff_union_inter s u]
       rw [integral_union (disjoint_sdiff_inter _ _) (hs.inter u_open.measurable_set)
           (h''i.mono_set (diff_subset _ _)) (h''i.mono_set (inter_subset_left _ _))]
-    _ ≤ ‖∫ x in s \ u, φ i x • g x ∂μ‖ + ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ := norm_add_le _ _
+    _ ≤ ‖∫ x in s \ u, φ i x • g x ∂μ‖ + ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ := (norm_add_le _ _)
     _ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ := add_le_add C B
     
 #align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux

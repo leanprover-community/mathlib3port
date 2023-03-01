@@ -982,20 +982,20 @@ instance : IsLawfulTraversable.{u} (flip Vector n)
   id_map := by intros <;> cases x <;> simp! [(· <$> ·)]
   comp_map := by intros <;> cases x <;> simp! [(· <$> ·)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v
     ((by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.nil.{u}).subst
       q(α))
     fun n x xs ih =>
     (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.cons.{u}).subst₄
       q(α) q(n) q(x) ih
 #align vector.reflect vector.reflect

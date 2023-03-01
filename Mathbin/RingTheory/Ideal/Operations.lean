@@ -973,7 +973,7 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   hJ.IsRadical.radical_le_iff
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » m) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » m) -/
 theorem radical_eq_infₛ (I : Ideal R) : radical I = infₛ { J : Ideal R | I ≤ J ∧ IsPrime J } :=
   le_antisymm (le_infₛ fun J hJ => hJ.2.radical_le_iff.2 hJ.1) fun r hr =>
     by_contradiction fun hri =>
@@ -2023,7 +2023,7 @@ variable {ι R S : Type _} [CommSemiring R] [CommRing S] [IsDomain S] [Algebra R
 noncomputable def basisSpanSingleton (b : Basis ι R S) {x : S} (hx : x ≠ 0) :
     Basis ι R (span ({x} : Set S)) :=
   b.map <|
-    LinearEquiv.ofInjective (Algebra.lmul R S x) (LinearMap.mul_injective hx) ≪≫ₗ
+    LinearEquiv.ofInjective (LinearMap.Algebra.lmul R S x) (LinearMap.mul_injective hx) ≪≫ₗ
         LinearEquiv.ofEq _ _
           (by
             ext
@@ -2036,13 +2036,13 @@ theorem basisSpanSingleton_apply (b : Basis ι R S) {x : S} (hx : x ≠ 0) (i : 
     (basisSpanSingleton b hx i : S) = x * b i := by
   simp only [basis_span_singleton, Basis.map_apply, LinearEquiv.trans_apply,
     Submodule.restrictScalarsEquiv_apply, LinearEquiv.ofInjective_apply, LinearEquiv.coe_ofEq_apply,
-    LinearEquiv.restrictScalars_apply, Algebra.coe_lmul_eq_mul, LinearMap.mul_apply']
+    LinearEquiv.restrictScalars_apply, LinearMap.Algebra.coe_lmul_eq_mul, LinearMap.mul_apply']
 #align ideal.basis_span_singleton_apply Ideal.basisSpanSingleton_apply
 
 @[simp]
 theorem constr_basisSpanSingleton {N : Type _} [Semiring N] [Module N S] [SMulCommClass R N S]
     (b : Basis ι R S) {x : S} (hx : x ≠ 0) :
-    b.constr N (coe ∘ basisSpanSingleton b hx) = Algebra.lmul R S x :=
+    b.constr N (coe ∘ basisSpanSingleton b hx) = LinearMap.Algebra.lmul R S x :=
   b.ext fun i => by
     erw [Basis.constr_basis, Function.comp_apply, basis_span_singleton_apply, LinearMap.mul_apply']
 #align ideal.constr_basis_span_singleton Ideal.constr_basisSpanSingleton

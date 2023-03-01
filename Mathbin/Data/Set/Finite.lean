@@ -956,11 +956,11 @@ instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) 
 #align finite.set.finite_image Finite.Set.finite_image
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {(f x) | x : α} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {(f x) | x : α} -/
 #print Finite.Set.finite_replacement /-
 instance finite_replacement [Finite α] (f : α → β) :
     Finite
-      "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {(f x) | x : α}" :=
+      "./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 #align finite.set.finite_replacement Finite.Set.finite_replacement
 -/
@@ -1697,8 +1697,8 @@ theorem card_image_of_inj_on {s : Set α} [Fintype s] {f : α → β} [Fintype (
   calc
     Fintype.card (f '' s) = (s.to_finset.image f).card := Fintype.card_of_finset' _ (by simp)
     _ = s.to_finset.card :=
-      Finset.card_image_of_injOn fun x hx y hy hxy =>
-        H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy
+      (Finset.card_image_of_injOn fun x hx y hy hxy =>
+        H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy)
     _ = Fintype.card s := (Fintype.card_of_finset' _ fun a => mem_to_finset).symm
     
 #align set.card_image_of_inj_on Set.card_image_of_inj_on
@@ -2352,7 +2352,7 @@ theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z �
 #align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
 #print Set.finite_of_forall_not_lt_lt /-
 /-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
 theorem Set.finite_of_forall_not_lt_lt {s : Set α}

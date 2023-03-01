@@ -345,7 +345,7 @@ theorem HasFderivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
   rw [add_sub_cancel'] at hyC
   calc
     ‖f' y‖ ≤ ‖f (x₀ + y) - f x₀‖ + ‖f (x₀ + y) - f x₀ - f' y‖ := norm_le_insert _ _
-    _ ≤ C * ‖y‖ + ε * ‖y‖ := add_le_add hyC hy
+    _ ≤ C * ‖y‖ + ε * ‖y‖ := (add_le_add hyC hy)
     _ = (C + ε) * ‖y‖ := (add_mul _ _ _).symm
     
 #align has_fderiv_at.le_of_lip' HasFderivAt.le_of_lip'
@@ -1275,7 +1275,7 @@ example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (
     (fun x' : E => g' (f x' - f x) - g'.comp f' (x' - x)) =ᶠ[L] fun x' =>
         g' (f x' - f x - f' (x' - x)) :=
       eventually_of_forall fun x' => by simp
-    _ =O[L] fun x' => f x' - f x - f' (x' - x) := g'.is_O_comp _ _
+    _ =O[L] fun x' => f x' - f x - f' (x' - x) := (g'.is_O_comp _ _)
     _ =o[L] fun x' => x' - x := hf
     
 

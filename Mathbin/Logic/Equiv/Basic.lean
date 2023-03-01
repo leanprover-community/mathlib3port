@@ -1404,7 +1404,7 @@ theorem sumProdDistrib_symm_apply_right {α β γ} (b : β × γ) :
 def prodSumDistrib (α β γ : Sort _) : α × Sum β γ ≃ Sum (α × β) (α × γ) :=
   calc
     α × Sum β γ ≃ Sum β γ × α := prodComm _ _
-    _ ≃ Sum (β × α) (γ × α) := sumProdDistrib _ _ _
+    _ ≃ Sum (β × α) (γ × α) := (sumProdDistrib _ _ _)
     _ ≃ Sum (α × β) (α × γ) := sumCongr (prodComm _ _) (prodComm _ _)
     
 #align equiv.prod_sum_distrib Equiv.prodSumDistrib

@@ -271,13 +271,13 @@ section
 
 variable {γ : Type _} [LinearOrder γ]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
 theorem lowerSemicontinuous_iff_isClosed_preimage {f : α → γ} :
     LowerSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' Iic y) :=
   by
   rw [lowerSemicontinuous_iff_isOpen_preimage]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
   rw [← isOpen_compl_iff, ← preimage_compl, compl_Iic]
 #align lower_semicontinuous_iff_is_closed_preimage lowerSemicontinuous_iff_isClosed_preimage
 
@@ -821,13 +821,13 @@ section
 
 variable {γ : Type _} [LinearOrder γ]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
 theorem upperSemicontinuous_iff_isClosed_preimage {f : α → γ} :
     UpperSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' Ici y) :=
   by
   rw [upperSemicontinuous_iff_isOpen_preimage]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
   rw [← isOpen_compl_iff, ← preimage_compl, compl_Ici]
 #align upper_semicontinuous_iff_is_closed_preimage upperSemicontinuous_iff_isClosed_preimage
 

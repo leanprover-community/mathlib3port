@@ -58,7 +58,7 @@ theorem equicontinuousAt_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → β
   nhds_basis_ball.equicontinuousAt_iff uniformity_basis_dist
 #align metric.equicontinuous_at_iff Metric.equicontinuousAt_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
 /-- Reformulation of `equicontinuous_at_iff_pair` for families of functions taking values in a
 (pseudo) metric space. -/
 protected theorem equicontinuousAt_iff_pair {ι : Type _} [TopologicalSpace β] {F : ι → β → α}
@@ -117,7 +117,7 @@ theorem uniformEquicontinuous_of_continuity_modulus {ι : Type _} [PseudoMetricS
   refine' ⟨δ, δ0, fun x y hxy i => _⟩
   calc
     dist (F i x) (F i y) ≤ b (dist x y) := H x y i
-    _ ≤ |b (dist x y)| := le_abs_self _
+    _ ≤ |b (dist x y)| := (le_abs_self _)
     _ = dist (b (dist x y)) 0 := by simp [Real.dist_eq]
     _ < ε := hδ (by simpa only [Real.dist_eq, tsub_zero, abs_dist] using hxy)
     

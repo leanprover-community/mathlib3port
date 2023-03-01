@@ -93,14 +93,14 @@ variable (R S)
 /-- The trace of an element `s` of an `R`-algebra is the trace of `(*) s`,
 as an `R`-linear map. -/
 noncomputable def trace : S →ₗ[R] R :=
-  (LinearMap.trace R S).comp (lmul R S).toLinearMap
+  (LinearMap.trace R S).comp (LinearMap.Algebra.lmul R S).toLinearMap
 #align algebra.trace Algebra.trace
 
 variable {S}
 
 -- Not a `simp` lemma since there are more interesting ways to rewrite `trace R S x`,
 -- for example `trace_trace`
-theorem trace_apply (x) : trace R S x = LinearMap.trace R S (lmul R S x) :=
+theorem trace_apply (x) : trace R S x = LinearMap.trace R S (LinearMap.Algebra.lmul R S x) :=
   rfl
 #align algebra.trace_apply Algebra.trace_apply
 
@@ -192,7 +192,7 @@ variable (R S)
 /-- The `trace_form` maps `x y : S` to the trace of `x * y`.
 It is a symmetric bilinear form and is nondegenerate if the extension is separable. -/
 noncomputable def traceForm : BilinForm R S :=
-  (LinearMap.compr₂ (lmul R S).toLinearMap (trace R S)).toBilin
+  (LinearMap.compr₂ (LinearMap.Algebra.lmul R S).toLinearMap (trace R S)).toBilin
 #align algebra.trace_form Algebra.traceForm
 
 variable {S}

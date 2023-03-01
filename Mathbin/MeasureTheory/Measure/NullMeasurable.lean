@@ -234,7 +234,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)]
   hs.insert a
 #align measure_theory.null_measurable_set.insert MeasureTheory.NullMeasurableSet.insert
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   by
@@ -255,7 +255,7 @@ theorem compl_toMeasurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurab
   by simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 #align measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_toMeasurable_compl_ae_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨toMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_toMeasurable _ _,
@@ -298,7 +298,7 @@ theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDi
   rcases exists_subordinate_pairwise_disjoint h hd with ⟨t, ht_sub, ht_eq, htm, htd⟩
   calc
     μ (⋃ i, f i) = μ (⋃ i, t i) := measure_congr (EventuallyEq.countable_unionᵢ ht_eq)
-    _ = ∑' i, μ (t i) := measure_Union htd htm
+    _ = ∑' i, μ (t i) := (measure_Union htd htm)
     _ = ∑' i, μ (f i) := tsum_congr fun i => measure_congr (ht_eq _).symm
     
 #align measure_theory.measure_Union₀ MeasureTheory.measure_Union₀
@@ -324,7 +324,7 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
       _ = μ (s' ∩ t ∪ s' \ t) :=
         (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <|
             (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm
-      _ = μ s' := congr_arg μ (inter_union_diff _ _)
+      _ = μ s' := (congr_arg μ (inter_union_diff _ _))
       _ = μ s := hs'
       
   ·

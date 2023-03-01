@@ -146,7 +146,7 @@ theorem edist_le_Ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
   · intro n hn hrec
     calc
       edist (f m) (f (n + 1)) ≤ edist (f m) (f n) + edist (f n) (f (n + 1)) := edist_triangle _ _ _
-      _ ≤ (∑ i in Finset.Ico m n, _) + _ := add_le_add hrec le_rfl
+      _ ≤ (∑ i in Finset.Ico m n, _) + _ := (add_le_add hrec le_rfl)
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
       
@@ -289,7 +289,7 @@ namespace Emetric
 instance (priority := 900) : IsCountablyGenerated (𝓤 α) :=
   isCountablyGenerated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infᵢ⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection {a b «expr ∈ » s} -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection {a b «expr ∈ » s} -/
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniformContinuousOn_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -333,7 +333,7 @@ theorem controlled_of_uniformEmbedding [PseudoEmetricSpace β] {f : α → β} :
   exact ⟨uniformContinuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 #align emetric.controlled_of_uniform_embedding Emetric.controlled_of_uniformEmbedding
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 /-- ε-δ characterization of Cauchy sequences on pseudoemetric spaces -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ f ≠ ⊥ ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), edist x y < ε := by
@@ -632,8 +632,8 @@ theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) :
   fun z zx =>
   calc
     edist z y ≤ edist z x + edist x y := edist_triangle _ _ _
-    _ = edist x y + edist z x := add_comm _ _
-    _ < edist x y + ε₁ := ENNReal.add_lt_add_left h' zx
+    _ = edist x y + edist z x := (add_comm _ _)
+    _ < edist x y + ε₁ := (ENNReal.add_lt_add_left h' zx)
     _ ≤ ε₂ := h
     
 #align emetric.ball_subset Emetric.ball_subset
@@ -786,7 +786,7 @@ theorem inseparable_iff : Inseparable x y ↔ edist x y = 0 := by
   simp [inseparable_iff_mem_closure, mem_closure_iff, edist_comm, forall_lt_iff_le']
 #align emetric.inseparable_iff Emetric.inseparable_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudoemetric space, Cauchy sequences are characterized by the fact that, eventually,
 the pseudoedistance between its elements is arbitrarily small -/
@@ -817,7 +817,7 @@ theorem totallyBounded_iff {s : Set α} :
     ⟨t, ft, h.trans <| unionᵢ₂_mono fun y yt z => hε⟩⟩
 #align emetric.totally_bounded_iff Emetric.totallyBounded_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totallyBounded_iff' {s : Set α} :
     TotallyBounded s ↔ ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   ⟨fun H ε ε0 => (totallyBounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
@@ -828,7 +828,7 @@ theorem totallyBounded_iff' {s : Set α} :
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- For a set `s` in a pseudo emetric space, if for every `ε > 0` there exists a countable
 set that is `ε`-dense in `s`, then there exists a countable subset `t ⊆ s` that is dense in `s`. -/
 theorem subset_countable_closure_of_almost_dense_set (s : Set α)
@@ -848,7 +848,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     · refine' ⟨y, hys, fun z hz => _⟩
       calc
         edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
-        _ ≤ r + r := add_le_add hz.1 hxy
+        _ ≤ r + r := (add_le_add hz.1 hxy)
         _ = r * 2 := (mul_two r).symm
         
   choose f hfs hf
@@ -865,7 +865,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     
 #align emetric.subset_countable_closure_of_almost_dense_set Emetric.subset_countable_closure_of_almost_dense_set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a
 countable set.  -/
 theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
@@ -1023,7 +1023,7 @@ theorem diam_closedBall {r : ℝ≥0∞} : diam (closedBall x r) ≤ 2 * r :=
   diam_le fun a ha b hb =>
     calc
       edist a b ≤ edist a x + edist b x := edist_triangle_right _ _ _
-      _ ≤ r + r := add_le_add ha hb
+      _ ≤ r + r := (add_le_add ha hb)
       _ = 2 * r := (two_mul r).symm
       
 #align emetric.diam_closed_ball Emetric.diam_closedBall
@@ -1199,7 +1199,7 @@ end Pi
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in an emetric space is separable, i.e., it is the closure of a countable set. -/
 theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
     ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s = closure t :=

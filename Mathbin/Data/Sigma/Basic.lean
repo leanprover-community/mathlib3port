@@ -309,7 +309,7 @@ theorem Prod.toSigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ 
   rfl
 #align prod.to_sigma_mk Prod.toSigma_mk
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 -- we generate this manually as `@[derive has_reflect]` fails
 @[instance]
 protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u}
@@ -317,7 +317,7 @@ protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{
     [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) := fun ⟨a, b⟩ =>
   (by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
         reflected _ @Sigma.mk.{u, v}).subst₄
     q(α) q(β) q(a) q(b)
 #align sigma.reflect sigma.reflect

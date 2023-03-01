@@ -256,7 +256,7 @@ theorem isSheafOpensLeCover_iff_isSheafPairwiseIntersections :
             IsLimit ((F.mapCone (opensLeCoverCocone U).op).whisker (pairwiseToOpensLeCover U).op) :=
           (Functor.Initial.isLimitWhiskerEquiv (pairwiseToOpensLeCover U).op _).symm
         _ ≃ IsLimit (F.mapCone ((opensLeCoverCocone U).op.whisker (pairwiseToOpensLeCover U).op)) :=
-          IsLimit.equivIsoLimit F.mapConeWhisker.symm
+          (IsLimit.equivIsoLimit F.mapConeWhisker.symm)
         _ ≃
             IsLimit
               ((Cones.postcomposeEquivalence _).Functor.obj
@@ -267,7 +267,7 @@ theorem isSheafOpensLeCover_iff_isSheafPairwiseIntersections :
               (F.mapCone
                 ((Cones.postcomposeEquivalence _).Functor.obj
                   ((opensLeCoverCocone U).op.whisker (pairwiseToOpensLeCover U).op))) :=
-          IsLimit.equivIsoLimit (Functor.mapConePostcomposeEquivalenceFunctor _).symm
+          (IsLimit.equivIsoLimit (Functor.mapConePostcomposeEquivalenceFunctor _).symm)
         _ ≃ IsLimit (F.mapCone (Pairwise.cocone U).op) :=
           IsLimit.equivIsoLimit ((Cones.functoriality _ _).mapIso (pairwiseCoconeIso U : _).symm)
         

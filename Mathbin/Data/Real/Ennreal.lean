@@ -435,7 +435,7 @@ lean 3 declaration is
 but is expected to have type
   forall {p : ENNReal -> Prop}, Iff (forall (a : ENNReal), (Ne.{1} ENNReal a (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) -> (p a)) (forall (r : NNReal), p (ENNReal.some r))
 Case conversion may be inaccurate. Consider using '#align ennreal.forall_ne_top ENNReal.forall_ne_topₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0, p r :=
   Option.ball_ne_none
 #align ennreal.forall_ne_top ENNReal.forall_ne_top
@@ -446,7 +446,7 @@ lean 3 declaration is
 but is expected to have type
   forall {p : ENNReal -> Prop}, Iff (Exists.{1} ENNReal (fun (a : ENNReal) => Exists.{0} (Ne.{1} ENNReal a (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) (fun (H : Ne.{1} ENNReal a (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) => p a))) (Exists.{1} NNReal (fun (r : NNReal) => p (ENNReal.some r)))
 Case conversion may be inaccurate. Consider using '#align ennreal.exists_ne_top ENNReal.exists_ne_top'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem exists_ne_top' {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
 #align ennreal.exists_ne_top ENNReal.exists_ne_top'
@@ -877,7 +877,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : ENNReal -> α), Eq.{succ u1} α (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ENNReal (fun (x : ENNReal) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Ne.{1} ENNReal x (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) (fun (H : Ne.{1} ENNReal x (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) => f x))) (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) NNReal (fun (x : NNReal) => f (ENNReal.some x)))
 Case conversion may be inaccurate. Consider using '#align ennreal.infi_ne_top ENNReal.infᵢ_ne_topₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem infᵢ_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0, f x := by rw [infᵢ_subtype', cinfi_ne_top]
 #align ennreal.infi_ne_top ENNReal.infᵢ_ne_top
@@ -898,7 +898,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : ENNReal -> α), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ENNReal (fun (x : ENNReal) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Ne.{1} ENNReal x (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) (fun (H : Ne.{1} ENNReal x (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) => f x))) (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) NNReal (fun (x : NNReal) => f (ENNReal.some x)))
 Case conversion may be inaccurate. Consider using '#align ennreal.supr_ne_top ENNReal.supᵢ_ne_topₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem supᵢ_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0, f x :=
   @infᵢ_ne_top αᵒᵈ _ _

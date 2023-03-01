@@ -244,7 +244,7 @@ theorem Tendsto.const_mul_atTop' (hr : 0 < r) (hf : Tendsto f l atTop) :
     b ≤ 1 * max b 0 := by
       rw [one_mul]
       exact le_max_left _ _
-    _ ≤ r * n * max b 0 := mul_le_mul_of_nonneg_right hn (le_max_right _ _)
+    _ ≤ r * n * max b 0 := (mul_le_mul_of_nonneg_right hn (le_max_right _ _))
     _ = r * (n * max b 0) := by rw [mul_assoc]
     _ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_lt hr)
     
@@ -271,7 +271,7 @@ theorem Tendsto.atTop_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) :
     b ≤ max b 0 * 1 := by
       rw [mul_one]
       exact le_max_left _ _
-    _ ≤ max b 0 * (n * r) := mul_le_mul_of_nonneg_left hn' (le_max_right _ _)
+    _ ≤ max b 0 * (n * r) := (mul_le_mul_of_nonneg_left hn' (le_max_right _ _))
     _ = max b 0 * n * r := by rw [mul_assoc]
     _ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_lt hr)
     

@@ -216,14 +216,14 @@ theorem normSq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
             ℂ).normSq :=
       congr_arg _ <| by apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * i).normSq :=
-      have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
+      (have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
       normSq_le_normSq_of_re_le_of_im_le
         (by
           rw [to_complex_div_re] <;> simp [norm_sq, this] <;>
             simpa using abs_sub_round (x / y : ℂ).re)
         (by
           rw [to_complex_div_im] <;> simp [norm_sq, this] <;>
-            simpa using abs_sub_round (x / y : ℂ).im)
+            simpa using abs_sub_round (x / y : ℂ).im))
     _ < 1 := by simp [norm_sq] <;> norm_num
     
 #align gaussian_int.norm_sq_div_sub_div_lt_one GaussianInt.normSq_div_sub_div_lt_one
@@ -243,7 +243,7 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
       _ = (y : ℂ).normSq * (x / y - (x / y : ℤ[i]) : ℂ).normSq := by
         rw [← norm_sq_mul, mul_sub, mul_div_cancel' _ this]
       _ < (y : ℂ).normSq * 1 :=
-        mul_lt_mul_of_pos_left (normSq_div_sub_div_lt_one _ _) (normSq_pos.2 this)
+        (mul_lt_mul_of_pos_left (normSq_div_sub_div_lt_one _ _) (normSq_pos.2 this))
       _ = Zsqrtd.norm y := by simp
       
 #align gaussian_int.norm_mod_lt GaussianInt.norm_mod_lt

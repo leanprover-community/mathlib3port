@@ -96,11 +96,11 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_filter {f : �
   refine' hlt.not_le (sub_le_iff_le_add'.1 _)
   calc
     ‖f d‖ - ‖f c‖ ≤ ‖f d - f c‖ := norm_sub_norm_le _ _
-    _ = ‖∫ x in c..d, deriv f x‖ := congr_arg _ (integral_deriv_eq_sub hfd hfi).symm
-    _ = ‖∫ x in Ι c d, deriv f x‖ := norm_integral_eq_norm_integral_Ioc _
-    _ ≤ ∫ x in Ι c d, ‖deriv f x‖ := norm_integral_le_integral_norm _
+    _ = ‖∫ x in c..d, deriv f x‖ := (congr_arg _ (integral_deriv_eq_sub hfd hfi).symm)
+    _ = ‖∫ x in Ι c d, deriv f x‖ := (norm_integral_eq_norm_integral_Ioc _)
+    _ ≤ ∫ x in Ι c d, ‖deriv f x‖ := (norm_integral_le_integral_norm _)
     _ ≤ ∫ x in Ι c d, C * ‖g x‖ :=
-      set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurableSet_uIoc hg
+      (set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurableSet_uIoc hg)
     _ ≤ ∫ x in Ι a b, C * ‖g x‖ :=
       set_integral_mono_set hgi.def (ae_of_all _ fun x => mul_nonneg hC₀ (norm_nonneg _))
         hsub'.eventually_le

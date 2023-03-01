@@ -123,7 +123,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
 #align nat.prime.eq_one_or_self_of_dvd Nat.Prime.eq_one_or_self_of_dvd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m «expr ∣ » p) -/
 #print Nat.prime_def_lt'' /-
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p), m = 1 ∨ m = p :=
   by
@@ -529,7 +529,7 @@ theorem minFac_sq_le_self {n : ℕ} (w : 0 < n) (h : ¬Prime n) : minFac n ^ 2 �
   have t : minFac n ≤ n / minFac n := minFac_le_div w h
   calc
     minFac n ^ 2 = minFac n * minFac n := sq (minFac n)
-    _ ≤ n / minFac n * minFac n := Nat.mul_le_mul_right (minFac n) t
+    _ ≤ n / minFac n * minFac n := (Nat.mul_le_mul_right (minFac n) t)
     _ ≤ n := div_mul_le_self n (minFac n)
     
 #align nat.min_fac_sq_le_self Nat.minFac_sq_le_self
@@ -768,7 +768,7 @@ theorem Prime.pow_not_prime {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun 
     lt_irrefl x <|
       calc
         x = x ^ 1 := (pow_one _).symm
-        _ < x ^ n := Nat.pow_right_strictMono (hxn.symm ▸ hp.two_le) hn
+        _ < x ^ n := (Nat.pow_right_strictMono (hxn.symm ▸ hp.two_le) hn)
         _ = x := hxn.symm
         
 #align nat.prime.pow_not_prime Nat.Prime.pow_not_prime

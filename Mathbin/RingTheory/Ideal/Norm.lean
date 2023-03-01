@@ -335,7 +335,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
                 (↑(AddEquiv.toIntLinearEquiv ↑e) : S →ₗ[ℤ] I))).natAbs :=
         rfl
       _ = (LinearMap.det ((Submodule.subtype I).restrictScalars ℤ ∘ₗ _)).natAbs :=
-        int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _)
+        (int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _))
       _ = abs_norm I := this
       
   have ha : ∀ i, f (b' i) = a i • b' i := by
@@ -362,7 +362,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
       rw [LinearMap.det_toMatrix]
     _ = Int.natAbs (Matrix.diagonal a).det := _
     _ = Int.natAbs (∏ i, a i) := by rw [Matrix.det_diagonal]
-    _ = ∏ i, Int.natAbs (a i) := map_prod Int.natAbsHom a Finset.univ
+    _ = ∏ i, Int.natAbs (a i) := (map_prod Int.natAbsHom a Finset.univ)
     _ = Fintype.card (S ⧸ I) := _
     _ = abs_norm I := (Submodule.cardQuot_apply _).symm
     
@@ -403,8 +403,8 @@ theorem absNorm_span_singleton (r : S) : absNorm (span ({r} : Set S)) = (Algebra
   rw [Algebra.norm_apply]
   by_cases hr : r = 0
   ·
-    simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.absNorm_bot,
-      LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
+    simp only [hr, Ideal.span_zero, LinearMap.Algebra.coe_lmul_eq_mul, eq_self_iff_true,
+      Ideal.absNorm_bot, LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
   letI := Ideal.fintypeQuotientOfFreeOfNeBot (span {r}) (mt span_singleton_eq_bot.mp hr)
   let b := Module.Free.chooseBasis ℤ S
   rw [← nat_abs_det_equiv _ (b.equiv (basis_span_singleton b hr) (Equiv.refl _))]

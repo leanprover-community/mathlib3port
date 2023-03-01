@@ -113,7 +113,7 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
 #align finset.erase_mem_shadow Finset.erase_mem_shadow
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.mem_shadow_iff_insert_mem /-
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
@@ -258,7 +258,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) (fun (x._@.Mathlib.Combinatorics.SetFamily.Shadow._hyg.2641 : Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) => Eq.{succ u1} (Finset.{u1} α) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a t) s)))))
 Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff Finset.mem_upShadow_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » t) -/
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
 theorem mem_upShadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by

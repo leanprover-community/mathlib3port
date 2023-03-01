@@ -48,7 +48,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
       rintro - ⟨r, s, r_in, s_in, rfl⟩
       calc
         (v (r * s) : Γ₀) = v r * v s := Valuation.map_mul _ _ _
-        _ < γ₀ * γ₀ := mul_lt_mul₀ r_in s_in
+        _ < γ₀ * γ₀ := (mul_lt_mul₀ r_in s_in)
         _ ≤ γ := by exact_mod_cast h
         
     leftMul := by
@@ -161,7 +161,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (toUniformSpace_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topologicalRing
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔
       F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=

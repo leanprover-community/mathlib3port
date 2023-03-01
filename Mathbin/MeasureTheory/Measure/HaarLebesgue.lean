@@ -837,7 +837,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
           μ (s ∩ ({x} + r • (t ∩ closed_ball 0 n)) ∪ s ∩ ({x} + r • (t \ closed_ball 0 n))) :=
         by rw [← inter_union_distrib_left, ← add_union, ← smul_set_union, inter_union_diff]
       _ ≤ μ (s ∩ ({x} + r • (t ∩ closed_ball 0 n))) + μ (s ∩ ({x} + r • (t \ closed_ball 0 n))) :=
-        measure_union_le _ _
+        (measure_union_le _ _)
       _ ≤ μ (s ∩ ({x} + r • (t ∩ closed_ball 0 n))) + μ ({x} + r • (t \ closed_ball 0 n)) :=
         add_le_add le_rfl (measure_mono (inter_subset_right _ _))
       

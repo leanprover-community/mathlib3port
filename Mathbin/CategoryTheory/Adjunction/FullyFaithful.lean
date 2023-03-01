@@ -234,9 +234,9 @@ def Adjunction.restrictFullyFaithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' �
     { homEquiv := fun X Y =>
         calc
           (L.obj X ⟶ Y) ≃ (iD.obj (L.obj X) ⟶ iD.obj Y) := equivOfFullyFaithful iD
-          _ ≃ (L'.obj (iC.obj X) ⟶ iD.obj Y) := Iso.homCongr (comm1.symm.app X) (Iso.refl _)
-          _ ≃ (iC.obj X ⟶ R'.obj (iD.obj Y)) := adj.homEquiv _ _
-          _ ≃ (iC.obj X ⟶ iC.obj (R.obj Y)) := Iso.homCongr (Iso.refl _) (comm2.app Y)
+          _ ≃ (L'.obj (iC.obj X) ⟶ iD.obj Y) := (Iso.homCongr (comm1.symm.app X) (Iso.refl _))
+          _ ≃ (iC.obj X ⟶ R'.obj (iD.obj Y)) := (adj.homEquiv _ _)
+          _ ≃ (iC.obj X ⟶ iC.obj (R.obj Y)) := (Iso.homCongr (Iso.refl _) (comm2.app Y))
           _ ≃ (X ⟶ R.obj Y) := (equivOfFullyFaithful iC).symm
           
       homEquiv_naturality_left_symm := fun X' X Y f g =>

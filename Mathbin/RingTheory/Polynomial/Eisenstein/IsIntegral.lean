@@ -201,7 +201,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
         norm K
           (p • (z * B.gen ^ n) -
             ∑ x : ℕ in (range (Q.nat_degree + 1)).eraseₓ 0, p • Q.coeff x • f (x + n)) :=
-      congr_arg (norm K) (eq_sub_of_add_eq _)
+      (congr_arg (norm K) (eq_sub_of_add_eq _))
     _ = _ := _
     
   · simp only [Algebra.smul_def, algebra_map_apply R K L, Algebra.norm_algebraMap, _root_.map_mul,

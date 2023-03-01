@@ -368,9 +368,9 @@ theorem circleIntegral_eq_of_differentiable_on_annulus_off_countable {c : ℂ} {
     (∮ z in C(c, R), f z) = ∮ z in C(c, R), (z - c)⁻¹ • (z - c) • f z :=
       (circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _).symm
     _ = ∮ z in C(c, r), (z - c)⁻¹ • (z - c) • f z :=
-      circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable h0 hle hs
+      (circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable h0 hle hs
         ((continuousOn_id.sub continuousOn_const).smul hc) fun z hz =>
-        (differentiableAt_id.sub_const _).smul (hd z hz)
+        (differentiableAt_id.sub_const _).smul (hd z hz))
     _ = ∮ z in C(c, r), f z := circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _
     
 #align complex.circle_integral_eq_of_differentiable_on_annulus_off_countable Complex.circleIntegral_eq_of_differentiable_on_annulus_off_countable
@@ -461,9 +461,9 @@ theorem circleIntegral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0 
     (∮ z in C(c, R), f z) = ∮ z in C(c, R), (z - c)⁻¹ • (z - c) • f z :=
       (circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _).symm
     _ = (2 * ↑π * I : ℂ) • (c - c) • f c :=
-      circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable h0 hs
+      (circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable h0 hs
         ((continuous_on_id.sub continuousOn_const).smul hc) fun z hz =>
-        (differentiable_at_id.sub_const _).smul (hd z hz)
+        (differentiable_at_id.sub_const _).smul (hd z hz))
     _ = 0 := by rw [sub_self, zero_smul, smul_zero]
     
 #align complex.circle_integral_eq_zero_of_differentiable_on_off_countable Complex.circleIntegral_eq_zero_of_differentiable_on_off_countable

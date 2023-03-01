@@ -384,8 +384,8 @@ theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y ⊓ z ≤ x ⊓ z
         
     calc
       y ≤ (x ⊔ z) ⊓ y := le_inf h le_rfl
-      _ = x ⊔ z ⊓ y := sup_inf_assoc_of_le _ hxy
-      _ ≤ x ⊔ z ⊓ x := sup_le_sup_left (by rw [inf_comm, @inf_comm _ _ z] <;> exact hinf) _
+      _ = x ⊔ z ⊓ y := (sup_inf_assoc_of_le _ hxy)
+      _ ≤ x ⊔ z ⊓ x := (sup_le_sup_left (by rw [inf_comm, @inf_comm _ _ z] <;> exact hinf) _)
       _ ≤ x := sup_le le_rfl inf_le_right
       
 #align eq_of_le_of_inf_le_of_sup_le eq_of_le_of_inf_le_of_sup_le

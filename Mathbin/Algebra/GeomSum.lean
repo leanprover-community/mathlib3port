@@ -221,9 +221,9 @@ theorem geom_sum₂_self {α : Type _} [CommRing α] (x : α) (n : ℕ) :
         ∑ i in Finset.range n, x ^ (i + (n - 1 - i)) :=
       by simp_rw [← pow_add]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
-      Finset.sum_congr rfl fun i hi =>
-        congr_arg _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| Finset.mem_range.1 hi
-    _ = (Finset.range n).card • x ^ (n - 1) := Finset.sum_const _
+      (Finset.sum_congr rfl fun i hi =>
+        congr_arg _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| Finset.mem_range.1 hi)
+    _ = (Finset.range n).card • x ^ (n - 1) := (Finset.sum_const _)
     _ = n * x ^ (n - 1) := by rw [Finset.card_range, nsmul_eq_mul]
     
 #align geom_sum₂_self geom_sum₂_self
@@ -735,7 +735,7 @@ theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) :
       by
       rw [range_eq_Ico, ← Nat.Ico_insert_succ_left (Nat.succ_pos _), sum_insert]
       exact fun h => zero_lt_one.not_le (mem_Ico.1 h).1
-    _ ≤ a * b / (b - 1) := Nat.geom_sum_le hb a _
+    _ ≤ a * b / (b - 1) := (Nat.geom_sum_le hb a _)
     _ = (a * 1 + a * (b - 1)) / (b - 1) := by
       rw [← mul_add, add_tsub_cancel_of_le (one_le_two.trans hb)]
     _ = a + a / (b - 1) := by rw [mul_one, Nat.add_mul_div_right _ _ (tsub_pos_of_lt hb), add_comm]

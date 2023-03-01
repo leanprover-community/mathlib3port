@@ -52,7 +52,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {f : Filter.{u2} α}, Iff (Cauchy.{u2} α _inst_1 f) (And (Filter.NeBot.{u2} α f) (forall (i : ι), (p i) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) t f) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x t) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (s i)))))))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_iff Filter.HasBasis.cauchy_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
     {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), (x, y) ∈ s i :=
@@ -67,7 +67,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s)))))))
 Case conversion may be inaccurate. Consider using '#align cauchy_iff' cauchy_iff'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 theorem cauchy_iff' {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
@@ -225,7 +225,7 @@ theorem Cauchy.map [UniformSpace β] {f : Filter α} {m : α → β} (hf : Cauch
   ⟨hf.1.map _,
     calc
       map m f ×ᶠ map m f = map (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) := Filter.prod_map_map_eq
-      _ ≤ map (fun p : α × α => (m p.1, m p.2)) (𝓤 α) := map_mono hf.right
+      _ ≤ map (fun p : α × α => (m p.1, m p.2)) (𝓤 α) := (map_mono hf.right)
       _ ≤ 𝓤 β := hm
       ⟩
 #align cauchy.map Cauchy.map
@@ -244,7 +244,7 @@ theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cau
     calc
       comap m f ×ᶠ comap m f = comap (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) :=
         Filter.prod_comap_comap_eq
-      _ ≤ comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) := comap_mono hf.right
+      _ ≤ comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) := (comap_mono hf.right)
       _ ≤ 𝓤 α := hm
       ⟩
 #align cauchy.comap Cauchy.comap
@@ -469,7 +469,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Sort.{u1}} [_inst_2 : Nonempty.{succ u3} β] [_inst_3 : SemilatticeSup.{u3} β] {u : β -> α} {p : γ -> Prop} {s : γ -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) γ (uniformity.{u2} α _inst_1) p s) -> (Iff (CauchySeq.{u2, u3} α β _inst_1 _inst_3 u) (forall (i : γ), (p i) -> (Exists.{succ u3} β (fun (N : β) => forall (m : β), (LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) N m) -> (forall (n : β), (LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) N n) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α (u m) (u n)) (s i)))))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_seq_iff Filter.HasBasis.cauchySeq_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Filter.HasBasis.cauchySeq_iff {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
@@ -574,7 +574,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsComplete.{u2} α _inst_1 (s i)) -> (forall {U : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) U (uniformity.{u2} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (s i)) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y (s j)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) U) -> (Eq.{u1} ι i j))) -> (IsComplete.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i))))
 Case conversion may be inaccurate. Consider using '#align is_complete_Union_separated isComplete_unionᵢ_separatedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » S) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isComplete_unionᵢ_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i))
     {U : Set (α × α)} (hU : U ∈ 𝓤 α) (hd : ∀ (i j : ι), ∀ x ∈ s i, ∀ y ∈ s j, (x, y) ∈ U → i = j) :
@@ -754,7 +754,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.5631 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
 Case conversion may be inaccurate. Consider using '#align totally_bounded.exists_subset TotallyBounded.exists_subsetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)}
     (hU : U ∈ 𝓤 α) : ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } :=
   by
@@ -780,7 +780,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.6559 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
 Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset totallyBounded_iff_subsetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totallyBounded_iff_subset {s : Set α} :
     TotallyBounded s ↔
       ∀ d ∈ 𝓤 α, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=

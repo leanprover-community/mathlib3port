@@ -64,7 +64,7 @@ theorem lucas_primality (p : ℕ) (a : ZMod p) (ha : a ^ (p - 1) = 1)
   let a' : (ZMod p)ˣ := Units.mkOfMulEqOne a (a ^ (p - 2)) (by rw [← pow_succ, hp', ha])
   calc
     p - 1 = orderOf a := order_of_a.symm
-    _ = orderOf a' := orderOf_injective (Units.coeHom (ZMod p)) Units.ext a'
+    _ = orderOf a' := (orderOf_injective (Units.coeHom (ZMod p)) Units.ext a')
     _ ≤ Fintype.card (ZMod p)ˣ := orderOf_le_card_univ
     
 #align lucas_primality lucas_primality

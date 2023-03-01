@@ -717,8 +717,8 @@ def finProdFinEquiv : Fin m × Fin n ≃ Fin (m * n)
     ⟨x.2 + n * x.1,
       calc
         x.2.1 + n * x.1.1 + 1 = x.1.1 * n + x.2.1 + 1 := by ac_rfl
-        _ ≤ x.1.1 * n + n := Nat.add_le_add_left x.2.2 _
-        _ = (x.1.1 + 1) * n := Eq.symm <| Nat.succ_mul _ _
+        _ ≤ x.1.1 * n + n := (Nat.add_le_add_left x.2.2 _)
+        _ = (x.1.1 + 1) * n := (Eq.symm <| Nat.succ_mul _ _)
         _ ≤ m * n := Nat.mul_le_mul_right _ x.1.2
         ⟩
   invFun x := (x.divNat, x.modNat)

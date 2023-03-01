@@ -40,7 +40,7 @@ theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n :=
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
     _ ≤ a ^ m * a ^ k :=
-      mul_le_mul_of_nonneg_left (one_le_pow_of_one_le ha _) (zpow_nonneg ha₀.le _)
+      (mul_le_mul_of_nonneg_left (one_le_pow_of_one_le ha _) (zpow_nonneg ha₀.le _))
     _ = a ^ n := by rw [← zpow_ofNat, ← zpow_add₀ ha₀.ne', hk, add_sub_cancel'_right]
     
 #align zpow_le_of_le zpow_le_of_le
@@ -108,7 +108,7 @@ theorem zpow_strictAnti (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti ((· ^ ·) a 
   strictAnti_int_of_succ_lt fun n =>
     calc
       a ^ (n + 1) = a ^ n * a := zpow_add_one₀ h₀.ne' _
-      _ < a ^ n * 1 := (mul_lt_mul_left <| zpow_pos_of_pos h₀ _).2 h₁
+      _ < a ^ n * 1 := ((mul_lt_mul_left <| zpow_pos_of_pos h₀ _).2 h₁)
       _ = a ^ n := mul_one _
       
 #align zpow_strict_anti zpow_strictAnti

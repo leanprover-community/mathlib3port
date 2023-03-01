@@ -372,11 +372,11 @@ required for a half-adjoint equivalence. See `equivalence.mk`. -/
 def adjointifyη : 𝟭 C ≅ F ⋙ G :=
   calc
     𝟭 C ≅ F ⋙ G := η
-    _ ≅ F ⋙ 𝟭 D ⋙ G := isoWhiskerLeft F (leftUnitor G).symm
-    _ ≅ F ⋙ (G ⋙ F) ⋙ G := isoWhiskerLeft F (isoWhiskerRight ε.symm G)
-    _ ≅ F ⋙ G ⋙ F ⋙ G := isoWhiskerLeft F (associator G F G)
+    _ ≅ F ⋙ 𝟭 D ⋙ G := (isoWhiskerLeft F (leftUnitor G).symm)
+    _ ≅ F ⋙ (G ⋙ F) ⋙ G := (isoWhiskerLeft F (isoWhiskerRight ε.symm G))
+    _ ≅ F ⋙ G ⋙ F ⋙ G := (isoWhiskerLeft F (associator G F G))
     _ ≅ (F ⋙ G) ⋙ F ⋙ G := (associator F G (F ⋙ G)).symm
-    _ ≅ 𝟭 C ⋙ F ⋙ G := isoWhiskerRight η.symm (F ⋙ G)
+    _ ≅ 𝟭 C ⋙ F ⋙ G := (isoWhiskerRight η.symm (F ⋙ G))
     _ ≅ F ⋙ G := leftUnitor (F ⋙ G)
     
 #align category_theory.equivalence.adjointify_η CategoryTheory.Equivalence.adjointifyη

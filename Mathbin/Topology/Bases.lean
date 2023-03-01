@@ -247,7 +247,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, (IsOpen.{u1} α t u) -> (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (S : Set.{u1} (Set.{u1} α)) => And (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) S B) (Eq.{succ u1} (Set.{u1} α) u (Set.unionₛ.{u1} α S)))))
 Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.open_eq_sUnion TopologicalSpace.IsTopologicalBasis.open_eq_unionₛₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (S «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (S «expr ⊆ » B) -/
 theorem IsTopologicalBasis.open_eq_unionₛ {B : Set (Set α)} (hB : IsTopologicalBasis B) {u : Set α}
     (ou : IsOpen u) : ∃ (S : _)(_ : S ⊆ B), u = ⋃₀ S :=
   ⟨{ s ∈ B | s ⊆ u }, fun s h => h.1, hB.open_eq_unionₛ' ou⟩
@@ -259,7 +259,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] {B : Set.{u1} (Set.{u1} α)}, (TopologicalSpace.IsTopologicalBasis.{u1} α t B) -> (forall {u : Set.{u1} α}, Iff (IsOpen.{u1} α t u) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (S : Set.{u1} (Set.{u1} α)) => And (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet.{u1} (Set.{u1} α)) S B) (Eq.{succ u1} (Set.{u1} α) u (Set.unionₛ.{u1} α S)))))
 Case conversion may be inaccurate. Consider using '#align topological_space.is_topological_basis.open_iff_eq_sUnion TopologicalSpace.IsTopologicalBasis.open_iff_eq_unionₛₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (S «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (S «expr ⊆ » B) -/
 theorem IsTopologicalBasis.open_iff_eq_unionₛ {B : Set (Set α)} (hB : IsTopologicalBasis B)
     {u : Set α} : IsOpen u ↔ ∃ (S : _)(_ : S ⊆ B), u = ⋃₀ S :=
   ⟨hB.open_eq_unionₛ, fun ⟨S, hSB, hu⟩ => hu.symm ▸ isOpen_unionₛ fun s hs => hB.IsOpen (hSB hs)⟩
@@ -729,7 +729,7 @@ protected theorem DenseRange.separableSpace {α β : Type _} [TopologicalSpace �
   ⟨⟨f '' s, Countable.image s_cnt f, h.dense_image h' s_dense⟩⟩
 #align dense_range.separable_space DenseRange.separableSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] {s : Set α}
     [SeparableSpace s] (hs : Dense s) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ Dense t :=
   let ⟨t, htc, htd⟩ := exists_countable_dense s
@@ -743,7 +743,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] {s : Set.{u1} α} [_inst_3 : TopologicalSpace.SeparableSpace.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1)], (Dense.{u1} α _inst_1 s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Countable.{u1} α t) (And (Dense.{u1} α _inst_1 t) (And (forall (x : α), (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)) (forall (x : α), (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)))))))
 Case conversion may be inaccurate. Consider using '#align dense.exists_countable_dense_subset_bot_top Dense.exists_countable_dense_subset_bot_topₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Let `s` be a dense set in a topological space `α` with partial order structure. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` contains bottom/top element of `α` when they exist and belong
@@ -1079,7 +1079,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [t : TopologicalSpace.{u1} α] [_inst_1 : TopologicalSpace.SecondCountableTopology.{u1} α t] {f : α -> (Set.{u1} α)} {s : Set.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (f x) (nhdsWithin.{u1} α t x s))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Countable.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) (fun (h._@.Mathlib.Topology.Bases._hyg.7190 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) => f x)))))))
 Case conversion may be inaccurate. Consider using '#align topological_space.countable_cover_nhds_within TopologicalSpace.countable_cover_nhdsWithinₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem countable_cover_nhdsWithin [SecondCountableTopology α] {f : α → Set α} {s : Set α}
     (hf : ∀ x ∈ s, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ ⋃ x ∈ t, f x :=
   by

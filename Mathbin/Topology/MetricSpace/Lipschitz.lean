@@ -238,7 +238,7 @@ protected theorem comp {Kf Kg : ℝ≥0} {f : β → γ} {g : α → β} (hf : L
     (hg : LipschitzWith Kg g) : LipschitzWith (Kf * Kg) (f ∘ g) := fun x y =>
   calc
     edist (f (g x)) (f (g y)) ≤ Kf * edist (g x) (g y) := hf _ _
-    _ ≤ Kf * (Kg * edist x y) := ENNReal.mul_left_mono (hg _ _)
+    _ ≤ Kf * (Kg * edist x y) := (ENNReal.mul_left_mono (hg _ _))
     _ = (Kf * Kg : ℝ≥0) * edist x y := by rw [← mul_assoc, ENNReal.coe_mul]
     
 #align lipschitz_with.comp LipschitzWith.comp
@@ -629,7 +629,7 @@ theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEmetricSpace α] [
   calc
     edist (f (a, b)) (f (x, y)) ≤ edist (f (a, b)) (f (x, b)) + edist (f (x, b)) (f (x, y)) :=
       edist_triangle _ _ _
-    _ < ε / 2 + ε / 2 := ENNReal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby
+    _ < ε / 2 + ε / 2 := (ENNReal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby)
     _ = ε := ENNReal.add_halves ε
     
 #align continuous_on_prod_of_continuous_on_lipschitz_on continuousOn_prod_of_continuousOn_lipschitz_on

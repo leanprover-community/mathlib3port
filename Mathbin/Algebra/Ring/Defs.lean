@@ -631,7 +631,7 @@ Case conversion may be inaccurate. Consider using '#align mul_add_eq_mul_add_iff
 theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b) * e + c = d :=
   calc
     a * e + c = b * e + d ↔ a * e + c = d + b * e := by simp [add_comm]
-    _ ↔ a * e + c - b * e = d := Iff.intro (fun h => by rw [h]; simp) fun h => by rw [← h]; simp
+    _ ↔ a * e + c - b * e = d := (Iff.intro (fun h => by rw [h]; simp) fun h => by rw [← h]; simp)
     _ ↔ (a - b) * e + c = d := by simp [sub_mul, sub_add_eq_add_sub]
     
 #align mul_add_eq_mul_add_iff_sub_mul_add_eq mul_add_eq_mul_add_iff_sub_mul_add_eq

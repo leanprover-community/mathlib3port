@@ -9,7 +9,7 @@ Authors: Leonardo de Moura
 ! if you have ported upstream changes.
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def rbtree.default_lt : tactic Unit :=
   sorry
 #align rbtree.default_lt rbtree.default_lt

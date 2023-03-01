@@ -108,18 +108,18 @@ theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
           f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
       by simp [eval₂_eq_sum, sum_def]
     _ = p.support.Sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
-      Finset.sum_subset (support_scaleRoots_le p s) fun i hi hi' =>
+      (Finset.sum_subset (support_scaleRoots_le p s) fun i hi hi' =>
         by
         let this : coeff p i * s ^ (p.natDegree - i) = 0 := by simpa using hi'
-        simp [this]
+        simp [this])
     _ = p.support.Sum fun i : ℕ => f (p.coeff i) * f s ^ (p.natDegree - i + i) * r ^ i :=
-      Finset.sum_congr rfl fun i hi => by
-        simp_rw [f.map_mul, f.map_pow, pow_add, mul_pow, mul_assoc]
+      (Finset.sum_congr rfl fun i hi => by
+        simp_rw [f.map_mul, f.map_pow, pow_add, mul_pow, mul_assoc])
     _ = p.support.Sum fun i : ℕ => f s ^ p.natDegree * (f (p.coeff i) * r ^ i) :=
-      Finset.sum_congr rfl fun i hi =>
+      (Finset.sum_congr rfl fun i hi =>
         by
         rw [mul_assoc, mul_left_comm, tsub_add_cancel_of_le]
-        exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
+        exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi))
     _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.natDegree * eval₂ f r p := by simp [eval₂_eq_sum, sum_def]
     

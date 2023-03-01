@@ -393,11 +393,11 @@ theorem adjugate_fin_one (A : Matrix (Fin 1) (Fin 1) α) : adjugate A = 1 :=
 #align matrix.adjugate_fin_one Matrix.adjugate_fin_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     adjugate A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   rw [adjugate_apply, det_fin_two]
@@ -412,16 +412,16 @@ theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
 #align matrix.adjugate_fin_two Matrix.adjugate_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem adjugate_fin_two_of (a b c d : α) :
     adjugate
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   adjugate_fin_two _
 #align matrix.adjugate_fin_two_of Matrix.adjugate_fin_two_of
 

@@ -132,14 +132,14 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
   nonneg_of_mul_nonneg_right this zero_lt_two
 #align pseudo_metric_space.dist_nonneg' pseudo_metric_space.dist_nonneg'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
   tactic.intros >> sorry
 #align pseudo_metric_space.edist_dist_tac pseudo_metric_space.edist_dist_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
 /-- Pseudo metric and Metric spaces
 
 A pseudo metric space is endowed with a distance for which the requirement `d(x,y)=0 → x = y` might
@@ -288,7 +288,7 @@ theorem dist_le_Ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
   · intro n hn hrec
     calc
       dist (f m) (f (n + 1)) ≤ dist (f m) (f n) + dist _ _ := dist_triangle _ _ _
-      _ ≤ (∑ i in Finset.Ico m n, _) + _ := add_le_add hrec le_rfl
+      _ ≤ (∑ i in Finset.Ico m n, _) + _ := (add_le_add hrec le_rfl)
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
       
@@ -656,7 +656,7 @@ theorem closedBall_eq_bInter_ball : closedBall x ε = ⋂ δ > ε, ball x δ := 
 theorem ball_subset_ball' (h : ε₁ + dist x y ≤ ε₂) : ball x ε₁ ⊆ ball y ε₂ := fun z hz =>
   calc
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
-    _ < ε₁ + dist x y := add_lt_add_right hz _
+    _ < ε₁ + dist x y := (add_lt_add_right hz _)
     _ ≤ ε₂ := h
     
 #align metric.ball_subset_ball' Metric.ball_subset_ball'
@@ -669,7 +669,7 @@ theorem closedBall_subset_closed_ball' (h : ε₁ + dist x y ≤ ε₂) :
     closedBall x ε₁ ⊆ closedBall y ε₂ := fun z hz =>
   calc
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
-    _ ≤ ε₁ + dist x y := add_le_add_right hz _
+    _ ≤ ε₁ + dist x y := (add_le_add_right hz _)
     _ ≤ ε₂ := h
     
 #align metric.closed_ball_subset_closed_ball' Metric.closedBall_subset_closed_ball'
@@ -682,7 +682,7 @@ theorem closedBall_subset_ball' (h : ε₁ + dist x y < ε₂) : closedBall x ε
   fun z hz =>
   calc
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
-    _ ≤ ε₁ + dist x y := add_le_add_right hz _
+    _ ≤ ε₁ + dist x y := (add_le_add_right hz _)
     _ < ε₂ := h
     
 #align metric.closed_ball_subset_ball' Metric.closedBall_subset_ball'
@@ -898,14 +898,14 @@ theorem uniformContinuous_iff [PseudoMetricSpace β] {f : α → β} :
   uniformity_basis_dist.uniformContinuous_iff uniformity_basis_dist
 #align metric.uniform_continuous_iff Metric.uniformContinuous_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀ ε > 0, ∃ δ > 0, ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniformContinuousOn_iff Metric.uniformity_basis_dist
 #align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀ ε > 0, ∃ δ > 0, ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
@@ -971,7 +971,7 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
 #align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretization
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   by
@@ -1030,7 +1030,7 @@ theorem tendstoUniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α
   simp
 #align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
@@ -1619,7 +1619,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
@@ -1673,7 +1673,7 @@ theorem cauchySeq_of_le_tendsto_0' {s : β → α} (b : β → ℝ)
     (h₀.Eventually (gt_mem_nhds ε0)).exists.imp fun N hN n hn =>
       calc
         dist (s n) (s N) = dist (s N) (s n) := dist_comm _ _
-        _ ≤ b N := h _ _ hn
+        _ ≤ b N := (h _ _ hn)
         _ < ε := hN
         
 #align cauchy_seq_of_le_tendsto_0' cauchySeq_of_le_tendsto_0'
@@ -2120,7 +2120,7 @@ theorem TopologicalSpace.IsSeparable.separableSpace {s : Set α} (hs : IsSeparab
     simp only [A, dif_pos]
     calc
       dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _
-      _ < r / 2 + r / 2 := add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn)
+      _ < r / 2 + r / 2 := (add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn))
       _ = r := add_halves _
       
 #align topological_space.is_separable.separable_space TopologicalSpace.IsSeparable.separableSpace
@@ -2314,7 +2314,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
 theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : Set α}
@@ -2408,7 +2408,7 @@ instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyC
     isCompact_closedBall _ _
 #align locally_compact_of_proper locally_compact_of_proper
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
@@ -2521,7 +2521,7 @@ theorem lebesgue_number_lemma_of_metric_unionₛ {s : Set α} {c : Set (Set α)}
 
 namespace Metric
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
@@ -2996,7 +2996,7 @@ theorem diam_le_of_subset_closedBall {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closedB
   diam_le_of_forall_dist_le (mul_nonneg zero_le_two hr) fun a ha b hb =>
     calc
       dist a b ≤ dist a x + dist b x := dist_triangle_right _ _ _
-      _ ≤ r + r := add_le_add (h ha) (h hb)
+      _ ≤ r + r := (add_le_add (h ha) (h hb))
       _ = 2 * r := by simp [mul_two, mul_comm]
       
 #align metric.diam_le_of_subset_closed_ball Metric.diam_le_of_subset_closedBall

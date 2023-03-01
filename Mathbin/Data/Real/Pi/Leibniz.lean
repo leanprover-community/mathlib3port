@@ -160,7 +160,7 @@ theorem tendsto_sum_pi_div_four :
   calc
     |f 1 - f 0| = |f 1 - f U + (f U - f 0)| := by ring_nf
     _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) :=
-      le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)
+      (le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2))
     _ = 1 - U + U ^ (2 * k) * U := by ring
     _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) :=
       by

@@ -299,12 +299,12 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
         f.Sum fun n a =>
           g.Sum fun m b =>
             n • (c a * x ^ (n - 1)) * (c b * x ^ m) + c a * x ^ n * m • (c b * x ^ (m - 1)) :=
-      sum_congr rfl fun n hn =>
+      (sum_congr rfl fun n hn =>
         sum_congr rfl fun m hm => by
           cases n <;> cases m <;>
               simp_rw [add_smul, mul_smul_comm, smul_mul_assoc, X_pow_mul_assoc, ← mul_assoc, ←
                 C_mul, mul_assoc, ← pow_add] <;>
-            simp only [Nat.add_succ, Nat.succ_add, Nat.succ_sub_one, zero_smul, add_comm]
+            simp only [Nat.add_succ, Nat.succ_add, Nat.succ_sub_one, zero_smul, add_comm])
     _ = derivative f * g + f * derivative g :=
       by
       conv =>

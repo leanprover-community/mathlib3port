@@ -412,7 +412,7 @@ theorem irreducible_iff_prime_of_exists_unique_irreducible_factors [CancelCommMo
           calc
             Multiset.prod (p ::ₘ fx) ~ᵤ a * b := by
               rw [hx, Multiset.prod_cons] <;> exact hfx.2.mul_left _
-            _ ~ᵤ fa.Prod * fb.Prod := hfa.2.symm.mul_mul hfb.2.symm
+            _ ~ᵤ fa.Prod * fb.Prod := (hfa.2.symm.mul_mul hfb.2.symm)
             _ = _ := by rw [Multiset.prod_add]
             
         exact
@@ -624,7 +624,7 @@ theorem normalizedFactors_irreducible {a : α} (ha : Irreducible a) :
   rwa [← normalize_normalized_factor p p_mem, normalize_eq_normalize_iff, dvd_dvd_iff_associated]
 #align unique_factorization_monoid.normalized_factors_irreducible UniqueFactorizationMonoid.normalizedFactors_irreducible
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
 theorem normalizedFactors_eq_of_dvd (a : α) :
     ∀ (p) (_ : p ∈ normalizedFactors a) (q) (_ : q ∈ normalizedFactors a), p ∣ q → p = q :=
   by
@@ -923,7 +923,7 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
   simpa [mul_comm b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 #align unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors UniqueFactorizationMonoid.dvd_of_dvd_mul_right_of_no_prime_factors
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » (0 : R)) -/
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
 theorem exists_reduced_factors :
@@ -1074,7 +1074,7 @@ variable {β : Type _} [CancelCommMonoidWithZero β]
 
 open BigOperators
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
 theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α} (i : α → ℕ) (p : α)
     (hps : p ∉ s) (is_prime : ∀ q ∈ insert p s, Prime q)
     (is_coprime : ∀ (q) (_ : q ∈ insert p s) (q') (_ : q' ∈ insert p s), q ∣ q' → q = q') :
@@ -1093,7 +1093,7 @@ theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α
   exact IsCoprime _ (Finset.mem_insert_self p s) _ (Finset.mem_insert_of_mem q_mem) this
 #align unique_factorization_monoid.prime_pow_coprime_prod_of_coprime_insert UniqueFactorizationMonoid.prime_pow_coprime_prod_of_coprime_insert
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 /-- If `P` holds for units and powers of primes,
 and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
 then `P` holds on a product of powers of distinct primes. -/
@@ -1138,8 +1138,8 @@ theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}
   · apply normalized_factors_eq_of_dvd
 #align unique_factorization_monoid.induction_on_coprime UniqueFactorizationMonoid.induction_on_coprime
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p q «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 /-- If `f` maps `p ^ i` to `(f p) ^ i` for primes `p`, and `f`
 is multiplicative on coprime elements, then `f` is multiplicative on all products of primes. -/
 @[elab_as_elim]

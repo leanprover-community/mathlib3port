@@ -450,7 +450,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {B : Set.{u1} (TopologicalSpace.Opens.{u1} α _inst_1)}, Iff (TopologicalSpace.Opens.IsBasis.{u1} α _inst_1 B) (forall (U : TopologicalSpace.Opens.{u1} α _inst_1), Exists.{succ u1} (Set.{u1} (TopologicalSpace.Opens.{u1} α _inst_1)) (fun (Us : Set.{u1} (TopologicalSpace.Opens.{u1} α _inst_1)) => And (HasSubset.Subset.{u1} (Set.{u1} (TopologicalSpace.Opens.{u1} α _inst_1)) (Set.instHasSubsetSet.{u1} (TopologicalSpace.Opens.{u1} α _inst_1)) Us B) (Eq.{succ u1} (TopologicalSpace.Opens.{u1} α _inst_1) U (SupSet.supₛ.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} α _inst_1))) Us))))
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.is_basis_iff_cover TopologicalSpace.Opens.isBasis_iff_coverₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = supₛ Us :=
   by

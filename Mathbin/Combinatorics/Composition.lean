@@ -382,7 +382,7 @@ def embedding (i : Fin c.length) : Fin (c.blocksFun i) ↪o Fin n :=
     Fin.castLe <|
       calc
         c.sizeUpTo i + c.blocksFun i = c.sizeUpTo (i + 1) := (c.sizeUpTo_succ _).symm
-        _ ≤ c.sizeUpTo c.length := monotone_sum_take _ i.2
+        _ ≤ c.sizeUpTo c.length := (monotone_sum_take _ i.2)
         _ = n := c.sizeUpTo_length
         
 #align composition.embedding Composition.embedding
@@ -524,7 +524,7 @@ theorem disjoint_range {i₁ i₂ : Fin c.length} (h : i₁ ≠ i₂) :
     apply lt_irrefl (x : ℕ)
     calc
       (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2
-      _ ≤ c.size_up_to (i₂ : ℕ) := monotone_sum_take _ A
+      _ ≤ c.size_up_to (i₂ : ℕ) := (monotone_sum_take _ A)
       _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
       
 #align composition.disjoint_range Composition.disjoint_range

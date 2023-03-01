@@ -64,7 +64,7 @@ def add (x : Rˣ) (t : R) (h : ‖t‖ < ‖(↑x⁻¹ : R)‖⁻¹) : Rˣ :=
           have hpos : 0 < ‖(↑x⁻¹ : R)‖ := Units.norm_pos x⁻¹
           calc
             ‖-(↑x⁻¹ * t)‖ = ‖↑x⁻¹ * t‖ := by rw [norm_neg]
-            _ ≤ ‖(↑x⁻¹ : R)‖ * ‖t‖ := norm_mul_le ↑x⁻¹ _
+            _ ≤ ‖(↑x⁻¹ : R)‖ * ‖t‖ := (norm_mul_le ↑x⁻¹ _)
             _ < ‖(↑x⁻¹ : R)‖ * ‖(↑x⁻¹ : R)‖⁻¹ := by nlinarith only [h, hpos]
             _ = 1 := mul_inv_cancel (ne_of_gt hpos)
             ))

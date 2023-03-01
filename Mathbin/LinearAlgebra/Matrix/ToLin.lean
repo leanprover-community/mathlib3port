@@ -735,23 +735,23 @@ theorem Matrix.toLinAlgEquiv_mul (A B : Matrix n n R) :
 #align matrix.to_lin_alg_equiv_mul Matrix.toLinAlgEquiv_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem Matrix.toLin_finTwoProd_apply (a b c d : R) (x : R × R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation")
         x =
       (a * x.fst + b * x.snd, c * x.fst + d * x.snd) :=
   by simp [Matrix.toLin_apply, Matrix.mulVec, Matrix.dotProduct]
 #align matrix.to_lin_fin_two_prod_apply Matrix.toLin_finTwoProd_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem Matrix.toLin_finTwoProd (a b c d : R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
       (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod
         (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _
@@ -778,7 +778,7 @@ variable {R S : Type _} [CommRing R] [Ring S] [Algebra R S]
 variable {m : Type _} [Fintype m] [DecidableEq m] (b : Basis m R S)
 
 theorem toMatrix_lmul' (x : S) (i j) :
-    LinearMap.toMatrix b b (lmul R S x) i j = b.repr (x * b j) i := by
+    LinearMap.toMatrix b b (LinearMap.Algebra.lmul R S x) i j = b.repr (x * b j) i := by
   simp only [LinearMap.toMatrix_apply', coe_lmul_eq_mul, LinearMap.mul_apply']
 #align algebra.to_matrix_lmul' Algebra.toMatrix_lmul'
 
@@ -797,7 +797,7 @@ such as the trace form or norm map for algebras.
 -/
 noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
     where
-  toFun x := LinearMap.toMatrix b b (Algebra.lmul R S x)
+  toFun x := LinearMap.toMatrix b b (LinearMap.Algebra.lmul R S x)
   map_zero' := by rw [AlgHom.map_zero, LinearEquiv.map_zero]
   map_one' := by rw [AlgHom.map_one, LinearMap.toMatrix_one]
   map_add' x y := by rw [AlgHom.map_add, LinearEquiv.map_add]
@@ -808,7 +808,8 @@ noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
       Algebra.id.map_eq_self]
 #align algebra.left_mul_matrix Algebra.leftMulMatrix
 
-theorem leftMulMatrix_apply (x : S) : leftMulMatrix b x = LinearMap.toMatrix b b (lmul R S x) :=
+theorem leftMulMatrix_apply (x : S) :
+    leftMulMatrix b x = LinearMap.toMatrix b b (LinearMap.Algebra.lmul R S x) :=
   rfl
 #align algebra.left_mul_matrix_apply Algebra.leftMulMatrix_apply
 
@@ -831,8 +832,8 @@ theorem toMatrix_lmul_eq (x : S) :
 
 theorem leftMulMatrix_injective : Function.Injective (leftMulMatrix b) := fun x x' h =>
   calc
-    x = Algebra.lmul R S x 1 := (mul_one x).symm
-    _ = Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).Injective h]
+    x = LinearMap.Algebra.lmul R S x 1 := (mul_one x).symm
+    _ = LinearMap.Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).Injective h]
     _ = x' := mul_one x'
     
 #align algebra.left_mul_matrix_injective Algebra.leftMulMatrix_injective

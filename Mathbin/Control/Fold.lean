@@ -290,7 +290,7 @@ theorem foldMap_hom [Monoid α] [Monoid β] (f : α →* β) (g : γ → α) (x 
   calc
     f (foldMap g x) = f (traverse (Const.mk' ∘ g) x) := rfl
     _ = (mapFold f).app _ (traverse (Const.mk' ∘ g) x) := rfl
-    _ = traverse ((mapFold f).app _ ∘ Const.mk' ∘ g) x := naturality (mapFold f) _ _
+    _ = traverse ((mapFold f).app _ ∘ Const.mk' ∘ g) x := (naturality (mapFold f) _ _)
     _ = foldMap (f ∘ g) x := rfl
     
 #align traversable.fold_map_hom Traversable.foldMap_hom

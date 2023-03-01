@@ -708,7 +708,7 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem diagonal_dotProduct (i : m) : diagonal v i ⬝ᵥ w = v i * w i :=
   by
@@ -717,7 +717,7 @@ theorem diagonal_dotProduct (i : m) : diagonal v i ⬝ᵥ w = v i * w i :=
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.diagonal_dot_product Matrix.diagonal_dotProduct
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dotProduct_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i :=
   by
@@ -726,7 +726,7 @@ theorem dotProduct_diagonal (i : m) : v ⬝ᵥ diagonal w i = v i * w i :=
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.dot_product_diagonal Matrix.dotProduct_diagonal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dotProduct_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i * w i :=
   by
@@ -735,7 +735,7 @@ theorem dotProduct_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonal w j i) = v i 
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.dot_product_diagonal' Matrix.dotProduct_diagonal'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem single_dotProduct (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i :=
   by
@@ -744,7 +744,7 @@ theorem single_dotProduct (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i :=
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 #align matrix.single_dot_product Matrix.single_dotProduct
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 @[simp]
 theorem dotProduct_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x :=
   by

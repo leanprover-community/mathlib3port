@@ -228,12 +228,12 @@ def MdifferentiableAt (f : M → M') (x : M) :=
     DifferentiableWithinAt 𝕜 (writtenInExtChartAt I I' x f) (range I) ((extChartAt I x) x)
 #align mdifferentiable_at MdifferentiableAt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 theorem mdifferentiableAt_iff_liftPropAt (f : M → M') (x : M) :
     MdifferentiableAt I I' f x ↔ LiftPropAt (DifferentiableWithinAtProp I I') f x :=
   by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   · rw [continuousWithinAt_univ]
   · simp [DifferentiableWithinAtProp, Set.univ_inter]
 #align mdifferentiable_at_iff_lift_prop_at mdifferentiableAt_iff_liftPropAt

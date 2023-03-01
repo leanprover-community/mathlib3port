@@ -47,7 +47,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) :
   refine' lt_of_le_of_lt (mul_le_mul_of_nonneg_left _ (abs_nonneg a)) ((lt_div_iff hx).1 h)
   calc
     |b| = |b - x + x| := by rw [sub_add_cancel b x]
-    _ ≤ |b - x| + |x| := abs_add (b - x) x
+    _ ≤ |b - x| + |x| := (abs_add (b - x) x)
     _ ≤ 2 * (1 + |x|) := by linarith
     
 #align mul_tendsto_nhds_zero_right mul_tendsto_nhds_zero_right
@@ -77,8 +77,8 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
     refine' ⟨i / |x₀|, div_pos hi (abs_pos.2 hx₀), fun x hx => hit _⟩
     calc
       |x₀ * x - x₀| = |x₀ * (x - 1)| := congr_arg abs (by ring_nf)
-      _ = |x₀| * |x - 1| := abs_mul x₀ (x - 1)
-      _ < |x₀| * (i / |x₀|) := mul_lt_mul' le_rfl hx (by positivity) (abs_pos.2 hx₀)
+      _ = |x₀| * |x - 1| := (abs_mul x₀ (x - 1))
+      _ < |x₀| * (i / |x₀|) := (mul_lt_mul' le_rfl hx (by positivity) (abs_pos.2 hx₀))
       _ = |x₀| * i / |x₀| := by ring
       _ = i := mul_div_cancel_left i fun h => hx₀ (abs_eq_zero.1 h)
       
@@ -87,9 +87,9 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
     have : |x / x₀ - 1| < i
     calc
       |x / x₀ - 1| = |x / x₀ - x₀ / x₀| := by rw [div_self hx₀]
-      _ = |(x - x₀) / x₀| := congr_arg abs (sub_div x x₀ x₀).symm
-      _ = |x - x₀| / |x₀| := abs_div (x - x₀) x₀
-      _ < i * |x₀| / |x₀| := div_lt_div_of_lt (abs_pos.2 hx₀) hx
+      _ = |(x - x₀) / x₀| := (congr_arg abs (sub_div x x₀ x₀).symm)
+      _ = |x - x₀| / |x₀| := (abs_div (x - x₀) x₀)
+      _ < i * |x₀| / |x₀| := (div_lt_div_of_lt (abs_pos.2 hx₀) hx)
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
       
     specialize hit (x / x₀) this
@@ -119,7 +119,7 @@ theorem mul_tendsto_nhds_one_nhds_one :
   ·
     calc
       1 - ε = 1 - ε / 2 - ε / 2 := by ring_nf
-      _ ≤ 1 - ε / 2 - ε / 2 + ε / 2 * (ε / 2) := le_add_of_nonneg_right (by positivity)
+      _ ≤ 1 - ε / 2 - ε / 2 + ε / 2 * (ε / 2) := (le_add_of_nonneg_right (by positivity))
       _ = (1 - ε / 2) * (1 - ε / 2) := by ring_nf
       _ ≤ (1 - ε / 4) * (1 - ε / 4) := mul_le_mul (by linarith) (by linarith) (by linarith) hε'
       
@@ -128,11 +128,11 @@ theorem mul_tendsto_nhds_one_nhds_one :
       (1 + ε / 4) * (1 + ε / 4) = 1 + ε / 2 + ε / 4 * (ε / 4) := by ring_nf
       _ = 1 + ε / 2 + ε * ε / 16 := by ring_nf
       _ ≤ 1 + ε / 2 + ε / 2 :=
-        add_le_add_left
+        (add_le_add_left
           (div_le_div (le_of_lt hε.1)
             (le_trans ((mul_le_mul_left hε.1).2 hε.2) (le_of_eq <| mul_one ε)) zero_lt_two
             (by linarith))
-          (1 + ε / 2)
+          (1 + ε / 2))
       _ ≤ 1 + ε := by ring_nf
       
 #align mul_tendsto_nhds_one_nhds_one mul_tendsto_nhds_one_nhds_one
@@ -168,7 +168,7 @@ instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :
       _ = map ((fun x => x₀ * x) ∘ fun x => x * y₀) (map (uncurry (· * ·)) (𝓝 1 ×ᶠ 𝓝 1)) := by
         rw [key, ← Filter.map_map]
       _ ≤ map ((fun x : α => x₀ * x) ∘ fun x => x * y₀) (𝓝 1) :=
-        map_mono mul_tendsto_nhds_one_nhds_one
+        (map_mono mul_tendsto_nhds_one_nhds_one)
       _ = 𝓝 (x₀ * y₀) := by
         rw [← Filter.map_map, ← nhds_eq_map_mul_right_nhds_one hy₀,
           nhds_eq_map_mul_left_nhds_one hy₀, Filter.map_map, key₂, ←

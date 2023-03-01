@@ -217,7 +217,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) -> (IsUnit.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align is_unit_of_dvd_one isUnit_of_dvd_oneₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∣ » 1) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∣ » 1) -/
 theorem isUnit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 #align is_unit_of_dvd_one isUnit_of_dvd_one

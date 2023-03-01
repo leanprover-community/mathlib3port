@@ -114,7 +114,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         · apply mul_le_mul_of_nonneg_right _ lnonneg
           linarith only [IcN]
       _ ≤ ε * ((1 + ε) * c (N - 1)) + ε * c (N - 1) * l :=
-        add_le_add (mul_le_mul_of_nonneg_left IcN εpos.le) le_rfl
+        (add_le_add (mul_le_mul_of_nonneg_left IcN εpos.le) le_rfl)
       _ = ε * (1 + ε + l) * c (N - 1) := by ring
       _ ≤ ε * (1 + ε + l) * n :=
         by
@@ -177,7 +177,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         have := (ha _ aN').1
         rwa [B] at this
       _ = c (N - 1) * l - u (c (N - 1)) + ε * c (N - 1) * l := by ring
-      _ ≤ ε * c (N - 1) + ε * c (N - 1) * l := add_le_add (ha _ aN').2 le_rfl
+      _ ≤ ε * c (N - 1) + ε * c (N - 1) * l := (add_le_add (ha _ aN').2 le_rfl)
       _ = ε * (1 + l) * c (N - 1) := by ring
       _ ≤ ε * (1 + l) * n :=
         by
@@ -231,7 +231,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       
 #align tendsto_div_of_monotone_of_exists_subseq_tendsto_div tendsto_div_of_monotone_of_exists_subseq_tendsto_div
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.field_simp.ne_zero -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.field_simp.ne_zero -/
 /-- If a monotone sequence `u` is such that `u ⌊c^n⌋₊ / ⌊c^n⌋₊` converges to a limit `l` for all
 `c > 1`, then `u n / n` tends to `l`. It is even enough to have the assumption for a sequence of
 `c`s converging to `1`. -/

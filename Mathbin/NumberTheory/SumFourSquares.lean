@@ -68,10 +68,10 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
               Int.natAbs_sq, Int.natAbs_sq, Int.ofNat_one, hk, Int.ofNat_mul,
               Int.natAbs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=
-            add_le_add
+            (add_le_add
               (add_le_add (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
                 (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
-              le_rfl
+              le_rfl)
           _ < (p / 2) ^ 2 + (p / 2) ^ 2 + (p % 2) ^ 2 + (2 * (p / 2) ^ 2 + 4 * (p / 2) * (p % 2)) :=
             by
             rw [hp1, one_pow, mul_one] <;>
@@ -184,20 +184,20 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
               (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
             hnat_abs
           _ ≤ ((m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 : ℕ) :=
-            Int.ofNat_le.2 <|
+            (Int.ofNat_le.2 <|
               add_le_add
                 (add_le_add
                   (add_le_add (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
                     (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
                   (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
-                (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
+                (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
           _ = 4 * (m / 2 : ℕ) ^ 2 := by
             simp only [bit0_mul, one_mul, two_smul, Nat.cast_add, Nat.cast_pow, add_assoc]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
-            (lt_add_iff_pos_right _).2
+            ((lt_add_iff_pos_right _).2
               (by
                 rw [hm2, Int.ofNat_one, one_pow, mul_one]
-                exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one)
+                exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one))
           _ = m ^ 2 := by
             conv_rhs => rw [← Nat.mod_add_div m 2]
             simp [-Nat.mod_add_div, mul_add, add_mul, bit0, bit1, mul_comm, mul_assoc,

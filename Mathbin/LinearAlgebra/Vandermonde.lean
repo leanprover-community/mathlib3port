@@ -114,9 +114,9 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
         (∏ i : Fin n, v (Fin.succ i) - v 0) *
           det fun i j : Fin n =>
             ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
-      det_mul_column (fun i => v (Fin.succ i) - v 0) _
+      (det_mul_column (fun i => v (Fin.succ i) - v 0) _)
     _ = (∏ i : Fin n, v (Fin.succ i) - v 0) * det fun i j : Fin n => v (Fin.succ i) ^ (j : ℕ) :=
-      congr_arg ((· * ·) _) _
+      (congr_arg ((· * ·) _) _)
     _ = ∏ i : Fin n.succ, ∏ j in Ioi i, v j - v i := by
       simp_rw [ih (v ∘ Fin.succ), Fin.prod_univ_succ, Fin.prod_Ioi_zero, Fin.prod_Ioi_succ]
     

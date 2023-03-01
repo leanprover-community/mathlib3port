@@ -146,7 +146,7 @@ instance (priority := 100) [MulOneClass M] [MulOneClass N] [MulEquivClass F M N]
     map_one := fun e =>
       calc
         e 1 = e 1 * 1 := (mul_one _).symm
-        _ = e 1 * e (inv e (1 : N) : M) := congr_arg _ (right_inv e 1).symm
+        _ = e 1 * e (inv e (1 : N) : M) := (congr_arg _ (right_inv e 1).symm)
         _ = e (inv e (1 : N)) := by rw [← map_mul, one_mul]
         _ = 1 := right_inv e 1
          }
@@ -371,15 +371,15 @@ theorem invFun_eq_symm {f : M ≃* N} : f.invFun = f.symm :=
 #align mul_equiv.inv_fun_eq_symm MulEquiv.invFun_eq_symm
 #align add_equiv.neg_fun_eq_symm AddEquiv.invFun_eq_symm
 
-#print MulEquiv.Simps.symmApply /-
+#print MulEquiv.Simps.symm_apply /-
 -- we don't hyperlink the note in the additive version, since that breaks syntax highlighting
 -- in the whole file.
 /-- See Note [custom simps projection] -/
 @[to_additive "See Note custom simps projection"]
-def Simps.symmApply (e : M ≃* N) : N → M :=
+def Simps.symm_apply (e : M ≃* N) : N → M :=
   e.symm
-#align mul_equiv.simps.symm_apply MulEquiv.Simps.symmApply
-#align add_equiv.simps.symm_apply AddEquiv.Simps.symmApply
+#align mul_equiv.simps.symm_apply MulEquiv.Simps.symm_apply
+#align add_equiv.simps.symm_apply AddEquiv.Simps.symm_apply
 -/
 
 initialize_simps_projections AddEquiv (toFun → apply, invFun → symm_apply)

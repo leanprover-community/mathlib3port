@@ -125,7 +125,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
       by
       calc
         ‖f‖ ^ 2 = ‖f‖ ^ (2 : ℝ≥0∞).toReal := by norm_cast
-        _ = ∑' i, ‖f i‖ ^ (2 : ℝ≥0∞).toReal := lp.norm_rpow_eq_tsum _ f
+        _ = ∑' i, ‖f i‖ ^ (2 : ℝ≥0∞).toReal := (lp.norm_rpow_eq_tsum _ f)
         _ = ∑' i, ‖f i‖ ^ 2 := by norm_cast
         _ = ∑' i, re ⟪f i, f i⟫ := by simp only [norm_sq_eq_inner]
         _ = re (∑' i, ⟪f i, f i⟫) := (is_R_or_C.re_clm.map_tsum _).symm
@@ -146,7 +146,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = ∑' i, ⟪(f₁ + f₂) i, g i⟫ := _
         _ = ∑' i, ⟪f₁ i, g i⟫ + ⟪f₂ i, g i⟫ := by
           simp only [inner_add_left, Pi.add_apply, coe_fn_add]
-        _ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ := tsum_add _ _
+        _ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ := (tsum_add _ _)
         _ = _ := by congr
         
       · congr

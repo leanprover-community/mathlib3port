@@ -279,14 +279,14 @@ Case conversion may be inaccurate. Consider using '#align nat.lor_zero Nat.lor'_
 theorem lor'_zero (n : ℕ) : lor n 0 = n := by simp [lor]
 #align nat.lor_zero Nat.lor'_zero
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
   sorry
 #align nat.bitwise_assoc_tac nat.bitwise_assoc_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 #print Nat.lxor'_assoc /-
 theorem lxor'_assoc (n m k : ℕ) : lxor' (lxor' n m) k = lxor' n (lxor' m k) := by
   run_tac
@@ -300,7 +300,7 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Nat) (m : Nat) (k : Nat), Eq.{1} Nat (Nat.land' (Nat.land' n m) k) (Nat.land' n (Nat.land' m k))
 Case conversion may be inaccurate. Consider using '#align nat.land_assoc Nat.land'_assocₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem land'_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
   run_tac
     bitwise_assoc_tac
@@ -312,7 +312,7 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Nat) (m : Nat) (k : Nat), Eq.{1} Nat (Nat.lor' (Nat.lor' n m) k) (Nat.lor' n (Nat.lor' m k))
 Case conversion may be inaccurate. Consider using '#align nat.lor_assoc Nat.lor'_assocₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem lor'_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
   run_tac
     bitwise_assoc_tac

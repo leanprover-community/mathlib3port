@@ -79,7 +79,7 @@ theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖ = ‖s�
     calc
       ‖s‖ * ‖x‖ = ‖s‖ * ‖s⁻¹ • s • x‖ := by rw [inv_smul_smul₀ h]
       _ ≤ ‖s‖ * (‖s⁻¹‖ * ‖s • x‖) :=
-        mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _)
+        (mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _))
       _ = ‖s • x‖ := by rw [norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mul]
       
 #align norm_smul norm_smul

@@ -346,7 +346,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
         rw [← ENNReal.ofReal_add]
         apply of_real_le_of_real
         · apply norm_sub_le; · exact norm_nonneg _; · exact norm_nonneg _
-      _ ≤ ENNReal.ofReal (bound a) + ENNReal.ofReal (bound a) := add_le_add h₁ h₂
+      _ ≤ ENNReal.ofReal (bound a) + ENNReal.ofReal (bound a) := (add_le_add h₁ h₂)
       _ = b a := by rw [← two_mul]
       
   -- On the other hand, `F n a --> f a` implies that `‖F n a - f a‖ --> 0`
@@ -673,7 +673,7 @@ theorem Integrable.add' {f g : α → β} (hf : Integrable f μ) (hg : Integrabl
   calc
     (∫⁻ a, ‖f a + g a‖₊ ∂μ) ≤ ∫⁻ a, ‖f a‖₊ + ‖g a‖₊ ∂μ :=
       lintegral_mono fun a => by exact_mod_cast nnnorm_add_le _ _
-    _ = _ := lintegral_nnnorm_add_left hf.AeStronglyMeasurable _
+    _ = _ := (lintegral_nnnorm_add_left hf.AeStronglyMeasurable _)
     _ < ∞ := add_lt_top.2 ⟨hf.HasFiniteIntegral, hg.HasFiniteIntegral⟩
     
 #align measure_theory.integrable.add' MeasureTheory.Integrable.add'
@@ -885,7 +885,7 @@ theorem integrable_withDensity_iff_integrable_coe_smul₀ {f : α → ℝ≥0} (
       filter_upwards [hf.ae_eq_mk]with x hx
       simp [hx]
     _ ↔ Integrable (fun x => (hf.mk f x : ℝ) • g x) μ :=
-      integrable_withDensity_iff_integrable_coe_smul hf.measurable_mk
+      (integrable_withDensity_iff_integrable_coe_smul hf.measurable_mk)
     _ ↔ Integrable (fun x => (f x : ℝ) • g x) μ :=
       by
       apply integrable_congr

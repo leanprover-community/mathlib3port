@@ -260,7 +260,7 @@ theorem exists_mem_nhdsWithin_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (h
   rcases countable_cover_nhds_within htx with ⟨S, hSs, hSc, hSU⟩
   calc
     dimH s ≤ dimH (⋃ x ∈ S, t x) := dimH_mono hSU
-    _ = ⨆ x ∈ S, dimH (t x) := dimH_bUnion hSc _
+    _ = ⨆ x ∈ S, dimH (t x) := (dimH_bUnion hSc _)
     _ ≤ r := supᵢ₂_le fun x hx => htr x <| hSs hx
     
 #align exists_mem_nhds_within_lt_dimH_of_lt_dimH exists_mem_nhdsWithin_lt_dimH_of_lt_dimH
@@ -581,7 +581,7 @@ real normed space is at most the dimension of its domain as a vector space over 
 theorem ContDiff.dimH_range_le {f : E → F} (h : ContDiff ℝ 1 f) : dimH (range f) ≤ finrank ℝ E :=
   calc
     dimH (range f) = dimH (f '' univ) := by rw [image_univ]
-    _ ≤ dimH (univ : Set E) := h.ContDiffOn.dimH_image_le convex_univ Subset.rfl
+    _ ≤ dimH (univ : Set E) := (h.ContDiffOn.dimH_image_le convex_univ Subset.rfl)
     _ = finrank ℝ E := Real.dimH_univ_eq_finrank E
     
 #align cont_diff.dimH_range_le ContDiff.dimH_range_le

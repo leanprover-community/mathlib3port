@@ -102,12 +102,12 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
 #align polar_coord polarCoord
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem hasFderivAt_polarCoord_symm (p : ℝ × ℝ) :
     HasFderivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
           («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap
+            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation")).toContinuousLinearMap
       p :=
   by
   rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
@@ -139,7 +139,7 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
 #align polar_coord_source_ae_eq_univ polarCoord_source_ae_eq_univ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : ℝ × ℝ → E) :
     (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p :=
@@ -147,7 +147,7 @@ theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [Norme
   set B : ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ × ℝ := fun p =>
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
     hB
   have A : ∀ p ∈ polar_coord.symm.source, HasFderivAt polar_coord.symm (B p) p := fun p hp =>
     hasFderivAt_polarCoord_symm p

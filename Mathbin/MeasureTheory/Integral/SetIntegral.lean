@@ -181,8 +181,8 @@ theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicator s f x ∂�
     (∫ x, indicator s f x ∂μ) = (∫ x in s, indicator s f x ∂μ) + ∫ x in sᶜ, indicator s f x ∂μ :=
       (integral_add_compl hs (hfi.integrable_indicator hs)).symm
     _ = (∫ x in s, f x ∂μ) + ∫ x in sᶜ, 0 ∂μ :=
-      congr_arg₂ (· + ·) (integral_congr_ae (indicator_ae_eq_restrict hs))
-        (integral_congr_ae (indicator_ae_eq_restrict_compl hs))
+      (congr_arg₂ (· + ·) (integral_congr_ae (indicator_ae_eq_restrict hs))
+        (integral_congr_ae (indicator_ae_eq_restrict_compl hs)))
     _ = ∫ x in s, f x ∂μ := by simp
     
 #align measure_theory.integral_indicator MeasureTheory.integral_indicator
@@ -518,7 +518,7 @@ theorem integral_indicatorConstLp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt 
   calc
     (∫ a, indicatorConstLp p ht hμt x a ∂μ) = ∫ a in univ, indicatorConstLp p ht hμt x a ∂μ := by
       rw [integral_univ]
-    _ = (μ (t ∩ univ)).toReal • x := set_integral_indicatorConstLp MeasurableSet.univ ht hμt x
+    _ = (μ (t ∩ univ)).toReal • x := (set_integral_indicatorConstLp MeasurableSet.univ ht hμt x)
     _ = (μ t).toReal • x := by rw [inter_univ]
     
 #align measure_theory.integral_indicator_const_Lp MeasureTheory.integral_indicatorConstLp
@@ -839,7 +839,7 @@ section TendstoMono
 variable {μ : Measure α} [NormedAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α}
   {f : α → E}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident a], ["using", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
 theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) :
     Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) :=
@@ -860,7 +860,7 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
   ·
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident a], [\"using\", expr le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
 #align antitone.tendsto_set_integral Antitone.tendsto_set_integral
 
 end TendstoMono
@@ -1309,7 +1309,7 @@ theorem integral_withDensity_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeMe
       apply with_density_congr_ae
       filter_upwards [hf.ae_eq_mk]with x hx
       rw [hx]
-    _ = ∫ a, f' a • g a ∂μ := integral_withDensity_eq_integral_smul hf.measurable_mk _
+    _ = ∫ a, f' a • g a ∂μ := (integral_withDensity_eq_integral_smul hf.measurable_mk _)
     _ = ∫ a, f a • g a ∂μ := by
       apply integral_congr_ae
       filter_upwards [hf.ae_eq_mk]with x hx

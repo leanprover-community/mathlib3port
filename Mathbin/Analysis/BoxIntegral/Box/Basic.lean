@@ -540,7 +540,7 @@ theorem diam_icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.
   diam_le_of_forall_dist_le this fun x hx y hy =>
     calc
       dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
-      _ ≤ I.distortion * (I.upper i - I.lower i) := I.dist_le_distortion_mul i
+      _ ≤ I.distortion * (I.upper i - I.lower i) := (I.dist_le_distortion_mul i)
       _ ≤ c * (I.upper i - I.lower i) :=
         mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
       

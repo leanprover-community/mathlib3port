@@ -82,8 +82,8 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
     exact
       calc
         edist z x ≤ edist z y + edist y x := edist_triangle _ _ _
-        _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := add_le_add hz (le_of_lt xy)
-        _ ≤ δ / 2 + δ / 2 := add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl
+        _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := (add_le_add hz (le_of_lt xy))
+        _ ≤ δ / 2 + δ / 2 := (add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl)
         _ = δ := ENNReal.add_halves δ
         
     show z ∈ f n
@@ -296,15 +296,15 @@ theorem eventually_residual {p : α → Prop} :
     (∀ᶠ x in residual α, p x) ↔ ∀ᶠ x in ⨅ (t : Set α) (ht : IsGδ t ∧ Dense t), 𝓟 t, p x := by
       simp only [residual, infᵢ_and]
     _ ↔ ∃ (t : Set α)(ht : IsGδ t ∧ Dense t), ∀ᶠ x in 𝓟 t, p x :=
-      mem_binfᵢ_of_directed
+      (mem_binfᵢ_of_directed
         (fun t₁ h₁ t₂ h₂ =>
           ⟨t₁ ∩ t₂, ⟨h₁.1.inter h₂.1, Dense.inter_of_Gδ h₁.1 h₂.1 h₁.2 h₂.2⟩, by simp⟩)
-        ⟨univ, isGδ_univ, dense_univ⟩
+        ⟨univ, isGδ_univ, dense_univ⟩)
     _ ↔ _ := by simp [and_assoc']
     
 #align eventually_residual eventually_residual
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|

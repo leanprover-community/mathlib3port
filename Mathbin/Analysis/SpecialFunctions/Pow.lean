@@ -164,7 +164,7 @@ theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ
   · rw [lt_div_iff hn']
     calc
       -π * n ≤ -π * 1 := mul_le_mul_of_nonpos_left hn1 (neg_nonpos.2 real.pi_pos.le)
-      _ = -π := mul_one _
+      _ = -π := (mul_one _)
       _ < im (log x) := neg_pi_lt_log_im _
       
   · rw [div_le_iff hn']
@@ -555,7 +555,7 @@ theorem isO_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|) :
     (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
       isO_of_le _ fun x => (abs_cpow_le _ _).trans (le_abs_self _)
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
-      (isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl)
+      ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl))
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
     
 #align complex.is_O_cpow_rpow Complex.isO_cpow_rpow
@@ -567,7 +567,7 @@ theorem isTheta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).
     (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
       isTheta_of_norm_eventually_eq' <| hl.mono fun x => abs_cpow_of_imp
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
-      (isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl_im)
+      ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl_im))
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
     
 #align complex.is_Theta_cpow_rpow Complex.isTheta_cpow_rpow
@@ -1313,7 +1313,7 @@ theorem tendsto_exp_mul_div_rpow_atTop (s : ℝ) (b : ℝ) (hb : 0 < b) :
     *]
 #align tendsto_exp_mul_div_rpow_at_top tendsto_exp_mul_div_rpow_atTop
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident x],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x],
   ["using", expr by simp [] [] [] ["[", expr exp_neg, ",", expr inv_div, ",", expr div_eq_mul_inv _
     (exp _), "]"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
 /-- The function `x ^ s * exp (-b * x)` tends to `0` at `+∞`, for any real `s` and `b > 0`. -/
@@ -1322,7 +1322,7 @@ theorem tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 < 
   by
   refine' (tendsto_exp_mul_div_rpow_atTop s b hb).inv_tendsto_atTop.congr' _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
 #align tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0
 
 namespace Asymptotics
@@ -1336,7 +1336,7 @@ theorem IsOWith.rpow (h : IsOWith c l f g) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0
   filter_upwards [hg, h.bound]with x hgx hx
   calc
     |f x ^ r| ≤ |f x| ^ r := abs_rpow_le_abs_rpow _ _
-    _ ≤ (c * |g x|) ^ r := rpow_le_rpow (abs_nonneg _) hx hr
+    _ ≤ (c * |g x|) ^ r := (rpow_le_rpow (abs_nonneg _) hx hr)
     _ = c ^ r * |g x ^ r| := by rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
     
 #align asymptotics.is_O_with.rpow Asymptotics.IsOWith.rpow
@@ -1388,7 +1388,7 @@ theorem isOCat_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[atTop] fun x => x 
   calc
     log =O[atTop] fun x => r * log x := isO_self_const_mul _ hr.ne' _ _
     _ =ᶠ[atTop] fun x => log (x ^ r) :=
-      (eventually_gt_atTop 0).mono fun x hx => (log_rpow hx _).symm
+      ((eventually_gt_atTop 0).mono fun x hx => (log_rpow hx _).symm)
     _ =o[atTop] fun x => x ^ r := isOCat_log_id_atTop.comp_tendsto (tendsto_rpow_atTop hr)
     
 #align is_o_log_rpow_at_top isOCat_log_rpow_atTop
@@ -1407,8 +1407,8 @@ theorem isOCat_log_rpow_rpow_atTop {s : ℝ} (r : ℝ) (hs : 0 < s) :
           simp [norm_eq_abs, abs_rpow_of_nonneg, abs_rpow_of_nonneg hx₀,
             rpow_le_rpow_of_exponent_le (hx.trans (le_abs_self _))]
     _ =o[atTop] fun x => (x ^ (s / r')) ^ r' :=
-      (isOCat_log_rpow_atTop H).rpow hr <|
-        (tendsto_rpow_atTop H).Eventually <| eventually_ge_atTop 0
+      ((isOCat_log_rpow_atTop H).rpow hr <|
+        (tendsto_rpow_atTop H).Eventually <| eventually_ge_atTop 0)
     _ =ᶠ[atTop] fun x => x ^ s :=
       (eventually_ge_atTop 0).mono fun x hx => by simp only [← rpow_mul hx, div_mul_cancel _ hr.ne']
     
