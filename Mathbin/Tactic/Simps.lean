@@ -116,13 +116,11 @@ unsafe instance : has_to_format parsed_projection_data :=
 
 end
 
-#print ProjectionRule /-
 /-- The type of rules that specify how metadata for projections in changes.
   See `initialize_simps_projection`. -/
 abbrev ProjectionRule :=
   Sum (Name × Name) Name × Bool
 #align projection_rule ProjectionRule
--/
 
 /-- The `@[_simps_str]` attribute specifies the preferred projections of the given structure,
 used by the `@[simps]` attribute.

@@ -125,9 +125,9 @@ def [anonymous] (u : αˣ) : α :=
   ↑u⁻¹
 #align units.simps.coe_inv [anonymous]
 
-initialize_simps_projections Units (val → coe as_prefix, inv → coe_inv as_prefix)
+initialize_simps_projections Units (val → coe, as_prefix coe, inv → coe_inv, as_prefix coe_inv)
 
-initialize_simps_projections AddUnits (val → coe as_prefix, neg → coe_neg as_prefix)
+initialize_simps_projections AddUnits (val → coe, as_prefix coe, neg → coe_neg, as_prefix coe_neg)
 
 /- warning: units.coe_mk -> Units.val_mk is a dubious translation:
 lean 3 declaration is
