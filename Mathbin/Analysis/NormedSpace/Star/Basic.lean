@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.basic
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.NormedSpace.LinearIsometry
 import Mathbin.Algebra.Star.SelfAdjoint
 import Mathbin.Algebra.Star.Unitary
+import Mathbin.Topology.Algebra.StarSubalgebra
 
 /-!
 # Normed star rings and algebras
@@ -320,4 +321,18 @@ theorem starₗᵢ_apply {x : E} : starₗᵢ 𝕜 x = star x :=
 #align starₗᵢ_apply starₗᵢ_apply
 
 end starₗᵢ
+
+namespace StarSubalgebra
+
+instance toNormedAlgebra {𝕜 A : Type _} [NormedField 𝕜] [StarRing 𝕜] [SemiNormedRing A] [StarRing A]
+    [NormedAlgebra 𝕜 A] [StarModule 𝕜 A] (S : StarSubalgebra 𝕜 A) : NormedAlgebra 𝕜 S :=
+  @NormedAlgebra.induced _ 𝕜 S A _ (SubringClass.toRing S) S.Algebra _ _ _ S.Subtype
+#align star_subalgebra.to_normed_algebra StarSubalgebra.toNormedAlgebra
+
+instance to_cstarRing {R A} [CommRing R] [StarRing R] [NormedRing A] [StarRing A] [CstarRing A]
+    [Algebra R A] [StarModule R A] (S : StarSubalgebra R A) : CstarRing S
+    where norm_star_mul_self x := @CstarRing.norm_star_mul_self A _ _ _ x
+#align star_subalgebra.to_cstar_ring StarSubalgebra.to_cstarRing
+
+end StarSubalgebra
 

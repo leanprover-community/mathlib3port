@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gluing
-! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
+! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -538,7 +538,7 @@ their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
 protected def metricSpace : MetricSpace (Σi, E i) :=
   by
-  refine' MetricSpace.ofMetrizable sigma.dist _ _ sigma.dist_triangle sigma.is_open_iff _
+  refine' MetricSpace.ofDistTopology sigma.dist _ _ sigma.dist_triangle sigma.is_open_iff _
   · rintro ⟨i, x⟩
     simp [sigma.dist]
   · rintro ⟨i, x⟩ ⟨j, y⟩

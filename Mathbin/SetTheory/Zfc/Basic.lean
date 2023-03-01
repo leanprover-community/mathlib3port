@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d7feae342946021379fc1e5025856afbce1de5dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1479,6 +1479,14 @@ theorem mem_univ_hom (x : SetCat.{u}) : univ.{u} x :=
   trivial
 #align Class.mem_univ_hom Class.mem_univ_hom
 
+theorem eq_univ_iff_forall {A : Class.{u}} : A = univ ↔ ∀ x : SetCat, A x :=
+  Set.eq_univ_iff_forall
+#align Class.eq_univ_iff_forall Class.eq_univ_iff_forall
+
+theorem eq_univ_of_forall {A : Class.{u}} : (∀ x : SetCat, A x) → A = univ :=
+  Set.eq_univ_of_forall
+#align Class.eq_univ_of_forall Class.eq_univ_of_forall
+
 theorem mem_wf : @WellFounded Class.{u} (· ∈ ·) :=
   ⟨by
     have H : ∀ x : SetCat.{u}, @Acc Class.{u} (· ∈ ·) ↑x :=
@@ -1657,6 +1665,19 @@ theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = (∅ : Class.{u}) :=
   ext
   simp
 #align Class.sUnion_empty Class.sUnion_empty
+
+/-- An induction principle for sets. If every subset of a class is a member, then the class is
+  universal. -/
+theorem eq_univ_of_powerset_subset {A : Class} (hA : powerset A ⊆ A) : A = univ :=
+  eq_univ_of_forall
+    (by
+      by_contra' hnA
+      exact
+        WellFounded.min_mem SetCat.mem_wf _ hnA
+          (hA fun x hx =>
+            Classical.not_not.1 fun hB =>
+              WellFounded.not_lt_min SetCat.mem_wf _ hnA hB <| (mem_hom_right _ _).1 hx))
+#align Class.eq_univ_of_powerset_subset Class.eq_univ_of_powerset_subset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/

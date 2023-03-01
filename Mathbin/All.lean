@@ -123,6 +123,7 @@ import Mathbin.Algebra.DirectSum.Ring
 import Mathbin.Algebra.Divisibility.Basic
 import Mathbin.Algebra.Divisibility.Units
 import Mathbin.Algebra.DualNumber
+import Mathbin.Algebra.DualQuaternion
 import Mathbin.Algebra.EuclideanDomain.Basic
 import Mathbin.Algebra.EuclideanDomain.Defs
 import Mathbin.Algebra.EuclideanDomain.Instances
@@ -685,6 +686,7 @@ import Mathbin.Analysis.NormedSpace.Ray
 import Mathbin.Analysis.NormedSpace.RieszLemma
 import Mathbin.Analysis.NormedSpace.Spectrum
 import Mathbin.Analysis.NormedSpace.Star.Basic
+import Mathbin.Analysis.NormedSpace.Star.ContinuousFunctionalCalculus
 import Mathbin.Analysis.NormedSpace.Star.Exponential
 import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
 import Mathbin.Analysis.NormedSpace.Star.Matrix
@@ -1138,6 +1140,7 @@ import Mathbin.Combinatorics.SimpleGraph.DegreeSum
 import Mathbin.Combinatorics.SimpleGraph.Density
 import Mathbin.Combinatorics.SimpleGraph.Ends.Defs
 import Mathbin.Combinatorics.SimpleGraph.Ends.Properties
+import Mathbin.Combinatorics.SimpleGraph.Finsubgraph
 import Mathbin.Combinatorics.SimpleGraph.Hasse
 import Mathbin.Combinatorics.SimpleGraph.IncMatrix
 import Mathbin.Combinatorics.SimpleGraph.Matching

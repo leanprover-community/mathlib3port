@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_invariant_forms
-! leanprover-community/mathlib commit 32d096dc3c4bb9df248d66874f0489eef1f70419
+! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,6 +27,10 @@ noncomputable section
 
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
+
+-- mathport name: «expr↑ₘ[ ]»
+-- like `↑ₘ`, but allows the user to specify the ring `R`. Useful to help Lean elaborate.
+local notation "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
 -- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
@@ -109,7 +113,7 @@ theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) :
 #align slash_invariant_form.slash_action_eqn SlashInvariantForm.slash_action_eqn
 
 theorem slash_action_eqn' (k : ℤ) (Γ : Subgroup SL(2, ℤ)) [SlashInvariantFormClass F Γ k] (f : F)
-    (γ : Γ) (z : ℍ) : f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z :=
+    (γ : Γ) (z : ℍ) : f (γ • z) = ((↑ₘ[ℤ] γ 1 0 : ℂ) * z + (↑ₘ[ℤ] γ 1 1 : ℂ)) ^ k * f z :=
   by
   rw [← ModularForm.slash_action_eq'_iff]
   simp

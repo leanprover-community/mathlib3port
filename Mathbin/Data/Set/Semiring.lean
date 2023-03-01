@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.semiring
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
+! leanprover-community/mathlib commit a51ce54990930d581a2cb15d5299b906b5e4fb4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.Order.Kleene
 import Mathbin.Data.Set.Pointwise.Smul
 
 /-!
@@ -114,6 +115,34 @@ instance : AddCommMonoid (SetSemiring α)
   add_zero := union_empty
   add_comm := union_comm
 
+theorem zero_def : (0 : SetSemiring α) = Set.up ∅ :=
+  rfl
+#align set_semiring.zero_def SetSemiring.zero_def
+
+@[simp]
+theorem down_zero : (0 : SetSemiring α).down = ∅ :=
+  rfl
+#align set_semiring.down_zero SetSemiring.down_zero
+
+@[simp]
+theorem Set.up_empty : (∅ : Set α).up = 0 :=
+  rfl
+#align set.up_empty Set.up_empty
+
+theorem add_def (s t : SetSemiring α) : s + t = (s.down ∪ t.down).up :=
+  rfl
+#align set_semiring.add_def SetSemiring.add_def
+
+@[simp]
+theorem down_add (s t : SetSemiring α) : (s + t).down = s.down ∪ t.down :=
+  rfl
+#align set_semiring.down_add SetSemiring.down_add
+
+@[simp]
+theorem Set.up_union (s t : Set α) : (s ∪ t).up = s.up + t.up :=
+  rfl
+#align set.up_union Set.up_union
+
 /- warning: set_semiring.covariant_class_add -> SetSemiring.covariantClass_add is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}}, CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (HAdd.hAdd.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHAdd.{u1} (SetSemiring.{u1} α) (AddZeroClass.toHasAdd.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.addCommMonoid.{u1} α)))))) (LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (SetSemiring.partialOrder.{u1} α))))
@@ -131,13 +160,27 @@ section Mul
 variable [Mul α]
 
 instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
-  {
+  {-- reducibility linter complains if we use `(s.down * t.down).up`
     SetSemiring.addCommMonoid with
     mul := fun s t => (image2 (· * ·) s.down t.down).up
     zero_mul := fun s => empty_mul
     mul_zero := fun s => mul_empty
     left_distrib := fun _ _ _ => mul_union
     right_distrib := fun _ _ _ => union_mul }
+
+theorem mul_def (s t : SetSemiring α) : s * t = (s.down * t.down).up :=
+  rfl
+#align set_semiring.mul_def SetSemiring.mul_def
+
+@[simp]
+theorem down_mul (s t : SetSemiring α) : (s + t).down = s.down ∪ t.down :=
+  rfl
+#align set_semiring.down_mul SetSemiring.down_mul
+
+@[simp]
+theorem Set.up_mul (s t : Set α) : (s * t).up = s.up * t.up :=
+  rfl
+#align set.up_mul Set.up_mul
 
 instance : NoZeroDivisors (SetSemiring α) :=
   ⟨fun a b ab =>
@@ -168,6 +211,28 @@ instance covariantClass_mul_right :
 
 end Mul
 
+section One
+
+variable [One α]
+
+instance : One (SetSemiring α) where one := Set.up 1
+
+theorem one_def : (1 : SetSemiring α) = Set.up 1 :=
+  rfl
+#align set_semiring.one_def SetSemiring.one_def
+
+@[simp]
+theorem down_one : (1 : SetSemiring α).down = 1 :=
+  rfl
+#align set_semiring.down_one SetSemiring.down_one
+
+@[simp]
+theorem Set.up_one : (1 : Set α).up = 1 :=
+  rfl
+#align set.up_one Set.up_one
+
+end One
+
 instance [MulOneClass α] : NonAssocSemiring (SetSemiring α) :=
   { SetSemiring.nonUnitalNonAssocSemiring,
     Set.mulOneClass with
@@ -177,14 +242,17 @@ instance [MulOneClass α] : NonAssocSemiring (SetSemiring α) :=
 instance [Semigroup α] : NonUnitalSemiring (SetSemiring α) :=
   { SetSemiring.nonUnitalNonAssocSemiring, Set.semigroup with }
 
-instance [Monoid α] : Semiring (SetSemiring α) :=
-  { SetSemiring.nonAssocSemiring, SetSemiring.nonUnitalSemiring with }
+instance [Monoid α] : IdemSemiring (SetSemiring α) :=
+  { SetSemiring.nonAssocSemiring, SetSemiring.nonUnitalSemiring, Set.completeBooleanAlgebra with }
 
 instance [CommSemigroup α] : NonUnitalCommSemiring (SetSemiring α) :=
   { SetSemiring.nonUnitalSemiring, Set.commSemigroup with }
 
+instance [CommMonoid α] : IdemCommSemiring (SetSemiring α) :=
+  { SetSemiring.idemSemiring, Set.commMonoid with }
+
 instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
-  { SetSemiring.semiring, Set.commMonoid, SetSemiring.partialOrder _, SetSemiring.orderBot _,
+  { SetSemiring.idemSemiring, Set.commMonoid,
     SetSemiring.noZeroDivisors with
     add_le_add_left := fun a b => add_le_add_left
     exists_add_of_le := fun a b ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩

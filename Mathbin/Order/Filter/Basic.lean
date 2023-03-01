@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit 24e75f1ee89ff37e99581084704f3f6a950db2ea
+! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -5081,6 +5081,17 @@ theorem tendsto_infᵢ' {f : α → β} {x : ι → Filter α} {y : Filter β} (
   hi.mono_left <| infᵢ_le _ _
 #align filter.tendsto_infi' Filter.tendsto_infᵢ'
 
+/- warning: filter.tendsto_infi_infi -> Filter.tendsto_infᵢ_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (infᵢ.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι x) (infᵢ.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι y))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (infᵢ.{u1, u3} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι x) (infᵢ.{u2, u3} (Filter.{u2} β) (CompleteLattice.toInfSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι y))
+Case conversion may be inaccurate. Consider using '#align filter.tendsto_infi_infi Filter.tendsto_infᵢ_infᵢₓ'. -/
+theorem tendsto_infᵢ_infᵢ {f : α → β} {x : ι → Filter α} {y : ι → Filter β}
+    (h : ∀ i, Tendsto f (x i) (y i)) : Tendsto f (infᵢ x) (infᵢ y) :=
+  tendsto_infᵢ.2 fun i => tendsto_infᵢ' i (h i)
+#align filter.tendsto_infi_infi Filter.tendsto_infᵢ_infᵢ
+
 /- warning: filter.tendsto_sup -> Filter.tendsto_sup is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {x₁ : Filter.{u1} α} {x₂ : Filter.{u1} α} {y : Filter.{u2} β}, Iff (Filter.Tendsto.{u1, u2} α β f (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) x₁ x₂) y) (And (Filter.Tendsto.{u1, u2} α β f x₁ y) (Filter.Tendsto.{u1, u2} α β f x₂ y))
@@ -5113,6 +5124,17 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto_supr Fi
 theorem tendsto_supᵢ {f : α → β} {x : ι → Filter α} {y : Filter β} :
     Tendsto f (⨆ i, x i) y ↔ ∀ i, Tendsto f (x i) y := by simp only [tendsto, map_supᵢ, supᵢ_le_iff]
 #align filter.tendsto_supr Filter.tendsto_supᵢ
+
+/- warning: filter.tendsto_supr_supr -> Filter.tendsto_supᵢ_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (supᵢ.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι x) (supᵢ.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι y))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {x : ι -> (Filter.{u1} α)} {y : ι -> (Filter.{u2} β)}, (forall (i : ι), Filter.Tendsto.{u1, u2} α β f (x i) (y i)) -> (Filter.Tendsto.{u1, u2} α β f (supᵢ.{u1, u3} (Filter.{u1} α) (CompleteLattice.toSupSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) ι x) (supᵢ.{u2, u3} (Filter.{u2} β) (CompleteLattice.toSupSet.{u2} (Filter.{u2} β) (Filter.instCompleteLatticeFilter.{u2} β)) ι y))
+Case conversion may be inaccurate. Consider using '#align filter.tendsto_supr_supr Filter.tendsto_supᵢ_supᵢₓ'. -/
+theorem tendsto_supᵢ_supᵢ {f : α → β} {x : ι → Filter α} {y : ι → Filter β}
+    (h : ∀ i, Tendsto f (x i) (y i)) : Tendsto f (supᵢ x) (supᵢ y) :=
+  tendsto_supᵢ.2 fun i => (h i).mono_right <| le_supᵢ _ _
+#align filter.tendsto_supr_supr Filter.tendsto_supᵢ_supᵢ
 
 #print Filter.tendsto_principal /-
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compare_reals
-! leanprover-community/mathlib commit 9f972c7eb9598ebf4159c65e7a7a776961d2d6f0
+! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,28 +61,16 @@ open Set Function Filter CauSeq UniformSpace
 /-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
 theorem Rat.uniformSpace_eq :
-    IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace :=
+    (AbsoluteValue.abs : AbsoluteValue ℚ ℚ).UniformSpace = PseudoMetricSpace.toUniformSpace :=
   by
   ext s
-  erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
-  constructor <;> rintro ⟨ε, ε_pos, h⟩
-  · use ε, by exact_mod_cast ε_pos
-    intro a b hab
-    apply h
-    rw [Rat.dist_eq, abs_sub_comm] at hab
-    exact_mod_cast hab
-  · obtain ⟨ε', h', h''⟩ : ∃ ε' : ℚ, 0 < ε' ∧ (ε' : ℝ) < ε
-    exact exists_pos_rat_lt ε_pos
-    use ε', h'
-    intro a b hab
-    apply h
-    rw [Rat.dist_eq, abs_sub_comm]
-    refine' lt_trans _ h''
-    exact_mod_cast hab
+  rw [(AbsoluteValue.hasBasis_uniformity _).mem_iff, metric.uniformity_basis_dist_rat.mem_iff]
+  simp only [Rat.dist_eq, AbsoluteValue.abs_apply, ← Rat.cast_sub, ← Rat.cast_abs, Rat.cast_lt,
+    abs_sub_comm]
 #align rat.uniform_space_eq Rat.uniformSpace_eq
 
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
-def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
+def rationalCauSeqPkg : @AbstractCompletion ℚ <| (@AbsoluteValue.abs ℚ _).UniformSpace
     where
   Space := ℝ
   coe := (coe : ℚ → ℝ)
@@ -106,7 +94,7 @@ def Q :=
 #align compare_reals.Q CompareReals.Q
 
 instance : UniformSpace Q :=
-  IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
+  (@AbsoluteValue.abs ℚ _).UniformSpace
 
 /-- Real numbers constructed as in Bourbaki. -/
 def Bourbakiℝ : Type :=

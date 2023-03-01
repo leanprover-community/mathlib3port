@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle
-! leanprover-community/mathlib commit 5be98b9519379fd4434bb72c5e4120b870b8ff94
+! leanprover-community/mathlib commit 87ecf9614fedda186a792c38ee571904f548df29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,7 @@ import Mathbin.Geometry.Manifold.ContMdiff
 
 This file will eventually contain the definition of a smooth vector bundle. For now, it contains
 preliminaries regarding an associated `structure_groupoid`, the groupoid of
-`smooth_fibrewise_linear` functions. When a (topological) vector bundle is smooth, then the
+`smooth_fiberwise_linear` functions. When a (topological) vector bundle is smooth, then the
 composition of charts associated to the vector bundle belong to this groupoid.
 -/
 
@@ -25,7 +25,7 @@ open Set TopologicalSpace
 
 open Manifold Topology
 
-/-! ### The groupoid of smooth, fibrewise-linear maps -/
+/-! ### The groupoid of smooth, fiberwise-linear maps -/
 
 
 variable {𝕜 B F : Type _} [TopologicalSpace B]
@@ -41,7 +41,7 @@ variable {φ φ' : B → F ≃L[𝕜] F} {U U' : Set B}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- For `B` a topological space and `F` a `𝕜`-normed space, a map from `U : set B` to `F ≃L[𝕜] F`
-determines a local homeomorphism from `B × F` to itself by its action fibrewise. -/
+determines a local homeomorphism from `B × F` to itself by its action fiberwise. -/
 def localHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
     (hφ : ContinuousOn (fun x => φ x : B → F →L[𝕜] F) U)
     (h2φ : ContinuousOn (fun x => (φ x).symm : B → F →L[𝕜] F) U) : LocalHomeomorph (B × F) (B × F)
@@ -91,7 +91,7 @@ theorem source_trans_localHomeomorph (hU : IsOpen U)
           FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ').source =
       (U ∩ U') ×ˢ univ :=
   by
-  dsimp [FiberwiseLinear.localHomeomorph]
+  dsimp only [FiberwiseLinear.localHomeomorph]
   mfld_set_tac
 #align fiberwise_linear.source_trans_local_homeomorph FiberwiseLinear.source_trans_localHomeomorph
 
@@ -107,7 +107,7 @@ theorem target_trans_localHomeomorph (hU : IsOpen U)
           FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ').target =
       (U ∩ U') ×ˢ univ :=
   by
-  dsimp [FiberwiseLinear.localHomeomorph]
+  dsimp only [FiberwiseLinear.localHomeomorph]
   mfld_set_tac
 #align fiberwise_linear.target_trans_local_homeomorph FiberwiseLinear.target_trans_localHomeomorph
 
@@ -122,13 +122,13 @@ variable {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB] {HB : Type 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Let `e` be a local homeomorphism of `B × F`.  Suppose that at every point `p` in the source of
-`e`, there is some neighbourhood `s` of `p` on which `e` is equal to a bi-smooth fibrewise linear
+`e`, there is some neighbourhood `s` of `p` on which `e` is equal to a bi-smooth fiberwise linear
 local homeomorphism.
 
 Then the source of `e` is of the form `U ×ˢ univ`, for some set `U` in `B`, and, at any point `x` in
 `U`, admits a neighbourhood `u` of `x` such that `e` is equal on `u ×ˢ univ` to some bi-smooth
-fibrewise linear local homeomorphism. -/
-theorem SmoothFibrewiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B × F))
+fiberwise linear local homeomorphism. -/
+theorem SmoothFiberwiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B × F))
     (h :
       ∀ p ∈ e.source,
         ∃ s : Set (B × F),
@@ -148,7 +148,12 @@ theorem SmoothFibrewiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B �
             (FiberwiseLinear.localHomeomorph φ hu hφ.ContinuousOn h2φ.ContinuousOn) :=
   by
   rw [SetCoe.forall'] at h
-  choose s hs hsp φ u hu hφ h2φ heφ using h
+  -- choose s hs hsp φ u hu hφ h2φ heφ using h,
+  -- the following 2 lines should be `choose s hs hsp φ u hu hφ h2φ heφ using h,`
+  -- `choose` produces a proof term that takes a long time to type-check by the kernel (it seems)
+  -- porting note: todo: try using `choose` again in Lean 4
+  simp only [Classical.skolem, ← exists_prop] at h
+  rcases h with ⟨s, hs, hsp, φ, u, hu, hφ, h2φ, heφ⟩
   have hesu : ∀ p : e.source, e.source ∩ s p = u p ×ˢ univ :=
     by
     intro p
@@ -179,7 +184,7 @@ theorem SmoothFibrewiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B �
     refine' ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
   · rw [← hesu, e.restr_source_inter]
     exact heφ ⟨p, hp⟩
-#align smooth_fibrewise_linear.locality_aux₁ SmoothFibrewiseLinear.locality_aux₁
+#align smooth_fiberwise_linear.locality_aux₁ SmoothFiberwiseLinear.locality_aux₁
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr (_, _)]] -/
@@ -187,16 +192,16 @@ theorem SmoothFibrewiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Let `e` be a local homeomorphism of `B × F` whose source is `U ×ˢ univ`, for some set `U` in
 `B`, and which, at any point `x` in `U`, admits a neighbourhood `u` of `x` such that `e` is equal on
-`u ×ˢ univ` to some bi-smooth fibrewise linear local homeomorphism.  Then `e` itself is equal to
-some bi-smooth fibrewise linear local homeomorphism.
+`u ×ˢ univ` to some bi-smooth fiberwise linear local homeomorphism.  Then `e` itself is equal to
+some bi-smooth fiberwise linear local homeomorphism.
 
 This is the key mathematical point of the `locality` condition in the construction of the
-`structure_groupoid` of bi-smooth fibrewise linear local homeomorphisms.  The proof is by gluing
-together the various bi-smooth fibrewise linear local homeomorphism which exist locally.
+`structure_groupoid` of bi-smooth fiberwise linear local homeomorphisms.  The proof is by gluing
+together the various bi-smooth fiberwise linear local homeomorphism which exist locally.
 
 The `U` in the conclusion is the same `U` as in the hypothesis. We state it like this, because this
 is exactly what we need for `smooth_fiberwise_linear`. -/
-theorem SmoothFibrewiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B × F)) (U : Set B)
+theorem SmoothFiberwiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B × F)) (U : Set B)
     (hU : e.source = U ×ˢ univ)
     (h :
       ∀ x ∈ U,
@@ -268,12 +273,12 @@ theorem SmoothFibrewiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B �
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr (_, _)]]"
     rw [hΦφ]
     apply hux
-#align smooth_fibrewise_linear.locality_aux₂ SmoothFibrewiseLinear.locality_aux₂
+#align smooth_fiberwise_linear.locality_aux₂ SmoothFiberwiseLinear.locality_aux₂
 
 variable (F B IB)
 
 /-- For `B` a manifold and `F` a normed space, the groupoid on `B × F` consisting of local
-homeomorphisms which are bi-smooth and fibrewise linear, and induce the identity on `B`.
+homeomorphisms which are bi-smooth and fiberwise linear, and induce the identity on `B`.
 When a (topological) vector bundle is smooth, then the composition of charts associated
 to the vector bundle belong to this groupoid. -/
 def smoothFiberwiseLinear : StructureGroupoid (B × F)
@@ -322,8 +327,8 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     -- the hard work has been extracted to `locality_aux₁` and `locality_aux₂`
     simp_rw [mem_Union]
     intro e he
-    obtain ⟨U, hU, h⟩ := SmoothFibrewiseLinear.locality_aux₁ e he
-    exact SmoothFibrewiseLinear.locality_aux₂ e U hU h
+    obtain ⟨U, hU, h⟩ := SmoothFiberwiseLinear.locality_aux₁ e he
+    exact SmoothFiberwiseLinear.locality_aux₂ e U hU h
   eq_on_source' := by
     simp_rw [mem_Union]
     rintro e e' ⟨φ, U, hU, hφ, h2φ, heφ⟩ hee'

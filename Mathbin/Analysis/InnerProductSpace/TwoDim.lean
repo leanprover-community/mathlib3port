@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.two_dim
-! leanprover-community/mathlib commit e99e8c8934985b3bed8c6badbd333043a18c49c9
+! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -470,16 +470,14 @@ theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
     let b : ℝ := (o.basis_right_angle_rotation x hx).repr y 1
     suffices 0 ≤ a * ‖x‖ ^ 2 ∧ b * ‖x‖ ^ 2 = 0 → SameRay ℝ x (a • x + b • J x)
       by
-      -- TODO trace the `dsimp` lemmas in this block to make a single `simp only`
       rw [← (o.basis_right_angle_rotation x hx).sum_repr y]
-      simp only [Fin.sum_univ_succ, coe_basis_right_angle_rotation]
-      dsimp
-      simp only [o.area_form_apply_self, map_smul, map_add, map_zero, inner_smul_left,
-        inner_smul_right, inner_add_left, inner_add_right, inner_zero_right, LinearMap.add_apply,
-        Matrix.cons_val_one]
-      dsimp
-      simp only [o.area_form_right_angle_rotation_right, mul_zero, add_zero, zero_add, neg_zero,
-        o.inner_right_angle_rotation_right, o.area_form_apply_self, real_inner_self_eq_norm_sq]
+      simp only [Fin.sum_univ_succ, coe_basis_right_angle_rotation, Matrix.cons_val_zero,
+        Fin.succ_zero_eq_one', Fintype.univ_of_isEmpty, Finset.sum_empty, o.area_form_apply_self,
+        map_smul, map_add, map_zero, inner_smul_left, inner_smul_right, inner_add_left,
+        inner_add_right, inner_zero_right, LinearMap.add_apply, Matrix.cons_val_one,
+        Matrix.head_cons, Algebra.id.smul_eq_mul, o.area_form_right_angle_rotation_right, mul_zero,
+        add_zero, zero_add, neg_zero, o.inner_right_angle_rotation_right, o.area_form_apply_self,
+        real_inner_self_eq_norm_sq]
       exact this
     rintro ⟨ha, hb⟩
     have hx' : 0 < ‖x‖ := by simpa using hx

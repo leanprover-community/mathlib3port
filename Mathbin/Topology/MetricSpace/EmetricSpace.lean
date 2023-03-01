@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_space
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,11 +46,7 @@ in terms of the elements of the uniformity. -/
 theorem uniformity_dist_of_mem_uniformity [LinearOrder β] {U : Filter (α × α)} (z : β)
     (D : α → α → β) (H : ∀ s, s ∈ U ↔ ∃ ε > z, ∀ {a b : α}, D a b < ε → (a, b) ∈ s) :
     U = ⨅ ε > z, 𝓟 { p : α × α | D p.1 p.2 < ε } :=
-  le_antisymm
-    (le_infᵢ fun ε => le_infᵢ fun ε0 => le_principal_iff.2 <| (H _).2 ⟨ε, ε0, fun a b => id⟩)
-    fun r ur =>
-    let ⟨ε, ε0, h⟩ := (H _).1 ur
-    mem_infᵢ_of_mem ε <| mem_infᵢ_of_mem ε0 <| mem_principal.2 fun ⟨a, b⟩ => h
+  HasBasis.eq_binfᵢ ⟨fun s => by simp only [H, subset_def, Prod.forall, mem_set_of]⟩
 #align uniformity_dist_of_mem_uniformity uniformity_dist_of_mem_uniformity
 
 /-- `has_edist α` means that `α` is equipped with an extended distance. -/
@@ -61,36 +57,12 @@ class HasEdist (α : Type _) where
 export HasEdist (edist)
 
 /-- Creating a uniform space from an extended distance. -/
-def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x : α, edist x x = 0)
+noncomputable def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x : α, edist x x = 0)
     (edist_comm : ∀ x y : α, edist x y = edist y x)
     (edist_triangle : ∀ x y z : α, edist x z ≤ edist x y + edist y z) : UniformSpace α :=
-  UniformSpace.ofCore
-    { uniformity := ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε }
-      refl :=
-        le_infᵢ fun ε =>
-          le_infᵢ <| by
-            simp (config := { contextual := true }) [Set.subset_def, idRel, edist_self, (· > ·)]
-      comp :=
-        le_infᵢ fun ε =>
-          le_infᵢ fun h =>
-            have : (2 : ℝ≥0∞) = (2 : ℕ) := by simp
-            have A : 0 < ε / 2 :=
-              ENNReal.div_pos_iff.2 ⟨ne_of_gt h, by convert ENNReal.nat_ne_top 2⟩
-            lift'_le (mem_infᵢ_of_mem (ε / 2) <| mem_infᵢ_of_mem A (Subset.refl _)) <|
-              by
-              have : ∀ a b c : α, edist a c < ε / 2 → edist c b < ε / 2 → edist a b < ε :=
-                fun a b c hac hcb =>
-                calc
-                  edist a b ≤ edist a c + edist c b := edist_triangle _ _ _
-                  _ < ε / 2 + ε / 2 := ENNReal.add_lt_add hac hcb
-                  _ = ε := by rw [ENNReal.add_halves]
-                  
-              simpa [compRel]
-      symm :=
-        tendsto_infᵢ.2 fun ε =>
-          tendsto_infᵢ.2 fun h =>
-            tendsto_infᵢ' ε <|
-              tendsto_infᵢ' h <| tendsto_principal_principal.2 <| by simp [edist_comm] }
+  UniformSpace.ofFun edist edist_self edist_comm edist_triangle fun ε ε0 =>
+    ⟨ε / 2, ENNReal.half_pos ε0.lt.ne', fun _ h₁ _ h₂ =>
+      (ENNReal.add_lt_add h₁ h₂).trans_eq (ENNReal.add_halves _)⟩
 #align uniform_space_of_edist uniformSpaceOfEdist
 
 -- the uniform structure is embedded in the emetric space structure
@@ -208,14 +180,15 @@ theorem uniformity_pseudoedist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edi
   PseudoEmetricSpace.uniformity_edist
 #align uniformity_pseudoedist uniformity_pseudoedist
 
+theorem uniformSpace_edist :
+    ‹PseudoEmetricSpace α›.toUniformSpace =
+      uniformSpaceOfEdist edist edist_self edist_comm edist_triangle :=
+  uniformSpace_eq uniformity_pseudoedist
+#align uniform_space_edist uniformSpace_edist
+
 theorem uniformity_basis_edist :
     (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 < ε } :=
-  (@uniformity_pseudoedist α _).symm ▸
-    hasBasis_binfᵢ_principal
-      (fun r hr p hp =>
-        ⟨min r p, lt_min hr hp, fun x hx => lt_of_lt_of_le hx (min_le_left _ _), fun x hx =>
-          lt_of_lt_of_le hx (min_le_right _ _)⟩)
-      ⟨1, zero_lt_one⟩
+  (@uniformSpace_edist α _).symm ▸ UniformSpace.hasBasis_ofFun ⟨1, one_pos⟩ _ _ _ _ _
 #align uniformity_basis_edist uniformity_basis_edist
 
 /-- Characterization of the elements of the uniformity in terms of the extended distance -/
@@ -453,17 +426,7 @@ def PseudoEmetricSpace.induced {α β} (f : α → β) (m : PseudoEmetricSpace �
   edist_comm x y := edist_comm _ _
   edist_triangle x y z := edist_triangle _ _ _
   toUniformSpace := UniformSpace.comap f m.toUniformSpace
-  uniformity_edist :=
-    by
-    apply @uniformity_dist_of_mem_uniformity _ _ _ _ _ fun x y => edist (f x) (f y)
-    refine' fun s => mem_comap.trans _
-    constructor <;> intro H
-    · rcases H with ⟨r, ru, rs⟩
-      rcases mem_uniformity_edist.1 ru with ⟨ε, ε0, hε⟩
-      refine' ⟨ε, ε0, fun a b h => rs (hε _)⟩
-      exact h
-    · rcases H with ⟨ε, ε0, hε⟩
-      exact ⟨_, edist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩
+  uniformity_edist := (uniformity_basis_edist.comap _).eq_binfᵢ
 #align pseudo_emetric_space.induced PseudoEmetricSpace.induced
 
 /-- Pseudoemetric space instance on subsets of pseudoemetric spaces -/
@@ -1179,17 +1142,7 @@ def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m 
   edist_comm x y := edist_comm _ _
   edist_triangle x y z := edist_triangle _ _ _
   toUniformSpace := UniformSpace.comap f m.toUniformSpace
-  uniformity_edist :=
-    by
-    apply @uniformity_dist_of_mem_uniformity _ _ _ _ _ fun x y => edist (f x) (f y)
-    refine' fun s => mem_comap.trans _
-    constructor <;> intro H
-    · rcases H with ⟨r, ru, rs⟩
-      rcases mem_uniformity_edist.1 ru with ⟨ε, ε0, hε⟩
-      refine' ⟨ε, ε0, fun a b h => rs (hε _)⟩
-      exact h
-    · rcases H with ⟨ε, ε0, hε⟩
-      exact ⟨_, edist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩
+  uniformity_edist := (uniformity_basis_edist.comap _).eq_binfᵢ
 #align emetric_space.induced EmetricSpace.induced
 
 /-- Emetric space instance on subsets of emetric spaces -/

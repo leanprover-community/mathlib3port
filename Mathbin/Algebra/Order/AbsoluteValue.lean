@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.order.absolute_value
-! leanprover-community/mathlib commit 7ea604785a41a0681eac70c5a82372493dbefc68
+! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,8 +46,6 @@ structure AbsoluteValue (R S : Type _) [Semiring R] [OrderedSemiring S] extends 
 namespace AbsoluteValue
 
 attribute [nolint doc_blame] AbsoluteValue.toMulHom
-
-initialize_simps_projections AbsoluteValue (to_mul_hom_to_fun → apply)
 
 section OrderedSemiring
 
@@ -122,6 +120,15 @@ Case conversion may be inaccurate. Consider using '#align absolute_value.ext Abs
 theorem ext ⦃f g : AbsoluteValue R S⦄ : (∀ x, f x = g x) → f = g :=
   FunLike.ext _ _
 #align absolute_value.ext AbsoluteValue.ext
+
+#print AbsoluteValue.Simps.apply /-
+/-- See Note [custom simps projection]. -/
+def Simps.apply (f : AbsoluteValue R S) : R → S :=
+  f
+#align absolute_value.simps.apply AbsoluteValue.Simps.apply
+-/
+
+initialize_simps_projections AbsoluteValue (to_mul_hom_to_fun → apply)
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/

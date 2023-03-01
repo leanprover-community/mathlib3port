@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_actions
-! leanprover-community/mathlib commit ae690b0c236e488a0043f6faa8ce3546e7f2f9c5
+! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,6 +27,10 @@ open UpperHalfPlane
 
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
+
+-- mathport name: «expr↑ₘ[ ]»
+-- like `↑ₘ`, but allows the user to specify the ring `R`. Useful to help Lean elaborate.
+local notation "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
 -- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
@@ -177,7 +181,7 @@ theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ)∣[(0 : ℤ),A] = 
   if for every matrix `γ ∈ Γ` we have `f(γ • z)= (c*z+d)^k f(z)` where `γ= ![![a, b], ![c, d]]`,
   and it acts on `ℍ` via Möbius transformations. -/
 theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → ℂ) (γ : Γ) (z : ℍ) :
-    (f∣[k,γ]) z = f z ↔ f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z :=
+    (f∣[k,γ]) z = f z ↔ f (γ • z) = ((↑ₘ[ℤ] γ 1 0 : ℂ) * z + (↑ₘ[ℤ] γ 1 1 : ℂ)) ^ k * f z :=
   by
   simp only [subgroup_slash, ModularForm.slash]
   convert inv_mul_eq_iff_eq_mul₀ _ using 2

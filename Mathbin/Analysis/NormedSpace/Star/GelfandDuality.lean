@@ -4,7 +4,7 @@ Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.gelfand_duality
-! leanprover-community/mathlib commit 43afc5ad87891456c57b5a183e3e617d67c2b1db
+! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,14 +106,24 @@ theorem WeakDual.characterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
         (haM (mem_span_singleton.mpr ⟨1, (mul_one a).symm⟩))⟩
 #align weak_dual.character_space.exists_apply_eq_zero WeakDual.characterSpace.exists_apply_eq_zero
 
+theorem WeakDual.characterSpace.mem_spectrum_iff_exists {a : A} {z : ℂ} :
+    z ∈ spectrum ℂ a ↔ ∃ f : characterSpace ℂ A, f a = z :=
+  by
+  refine' ⟨fun hz => _, _⟩
+  · obtain ⟨f, hf⟩ := WeakDual.characterSpace.exists_apply_eq_zero hz
+    simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id,
+      RingHom.id_apply] at hf
+    exact (ContinuousMap.spectrum_eq_range (gelfand_transform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
+  · rintro ⟨f, rfl⟩
+    exact AlgHom.apply_mem_spectrum f a
+#align weak_dual.character_space.mem_spectrum_iff_exists WeakDual.characterSpace.mem_spectrum_iff_exists
+
 /-- The Gelfand transform is spectrum-preserving. -/
 theorem spectrum.gelfandTransform_eq (a : A) : spectrum ℂ (gelfandTransform ℂ A a) = spectrum ℂ a :=
   by
-  refine' Set.Subset.antisymm (AlgHom.spectrum_apply_subset (gelfand_transform ℂ A) a) fun z hz => _
-  obtain ⟨f, hf⟩ := WeakDual.characterSpace.exists_apply_eq_zero hz
-  simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply] at
-    hf
-  exact (ContinuousMap.spectrum_eq_range (gelfand_transform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
+  ext z
+  rw [ContinuousMap.spectrum_eq_range, WeakDual.characterSpace.mem_spectrum_iff_exists]
+  exact Iff.rfl
 #align spectrum.gelfand_transform_eq spectrum.gelfandTransform_eq
 
 instance [Nontrivial A] : Nonempty (characterSpace ℂ A) :=

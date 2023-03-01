@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
+! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,44 +60,12 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {X ι : Type _}
 
-/-- Construct a uniform structure core from a distance function and metric space axioms.
-This is a technical construction that can be immediately used to construct a uniform structure
-from a distance function and metric space axioms but is also useful when discussing
-metrizable topologies, see `pseudo_metric_space.of_metrizable`. -/
-def UniformSpace.coreOfDist {α : Type _} (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
-    (dist_comm : ∀ x y : α, dist x y = dist y x)
-    (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z) : UniformSpace.Core α
-    where
-  uniformity := ⨅ ε > 0, 𝓟 { p : α × α | dist p.1 p.2 < ε }
-  refl :=
-    le_infᵢ fun ε =>
-      le_infᵢ <| by
-        simp (config := { contextual := true }) [Set.subset_def, idRel, dist_self, (· > ·)]
-  comp :=
-    le_infᵢ fun ε =>
-      le_infᵢ fun h =>
-        lift'_le
-            (mem_infᵢ_of_mem (ε / 2) <| mem_infᵢ_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <|
-          by
-          have : ∀ a b c : α, dist a c < ε / 2 → dist c b < ε / 2 → dist a b < ε :=
-            fun a b c hac hcb =>
-            calc
-              dist a b ≤ dist a c + dist c b := dist_triangle _ _ _
-              _ < ε / 2 + ε / 2 := add_lt_add hac hcb
-              _ = ε := by rw [div_add_div_same, add_self_div_two]
-              
-          simpa [compRel]
-  symm :=
-    tendsto_infᵢ.2 fun ε =>
-      tendsto_infᵢ.2 fun h =>
-        tendsto_infᵢ' ε <| tendsto_infᵢ' h <| tendsto_principal_principal.2 <| by simp [dist_comm]
-#align uniform_space.core_of_dist UniformSpace.coreOfDist
-
 /-- Construct a uniform structure from a distance function and metric space axioms -/
 def uniformSpaceOfDist (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
     (dist_comm : ∀ x y : α, dist x y = dist y x)
     (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z) : UniformSpace α :=
-  UniformSpace.ofCore (UniformSpace.coreOfDist dist dist_self dist_comm dist_triangle)
+  UniformSpace.ofFun dist dist_self dist_comm dist_triangle fun ε ε0 =>
+    ⟨ε / 2, half_pos ε0, fun x hx y hy => add_halves ε ▸ add_lt_add hx hy⟩
 #align uniform_space_of_dist uniformSpaceOfDist
 
 /-- This is an internal lemma used to construct a bornology from a metric in `bornology.of_dist`. -/
@@ -242,7 +210,7 @@ instance (priority := 200) PseudoMetricSpace.toHasEdist : HasEdist α :=
 /-- Construct a pseudo-metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
-def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : α → α → ℝ)
+def PseudoMetricSpace.ofDistTopology {α : Type u} [TopologicalSpace α] (dist : α → α → ℝ)
     (dist_self : ∀ x : α, dist x x = 0) (dist_comm : ∀ x y : α, dist x y = dist y x)
     (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z)
     (H : ∀ s : Set α, IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s) :
@@ -252,31 +220,17 @@ def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : �
     dist_comm
     dist_triangle
     toUniformSpace :=
-      { UniformSpace.coreOfDist dist dist_self dist_comm dist_triangle with
-        isOpen_uniformity := by
-          dsimp only [UniformSpace.coreOfDist]
-          intro s
-          change IsOpen s ↔ _
-          rw [H s]
-          refine' forall₂_congr fun x x_in => _
-          erw [(has_basis_binfi_principal _ nonempty_Ioi).mem_iff]
-          · refine' exists₂_congr fun ε ε_pos => _
-            simp only [Prod.forall, set_of_subset_set_of]
-            constructor
-            · rintro h _ y H rfl
-              exact h y H
-            · intro h y hxy
-              exact h _ _ hxy rfl
-          ·
-            exact fun r (hr : 0 < r) p (hp : 0 < p) =>
-              ⟨min r p, lt_min hr hp, fun x (hx : dist _ _ < _) =>
-                lt_of_lt_of_le hx (min_le_left r p), fun x (hx : dist _ _ < _) =>
-                lt_of_lt_of_le hx (min_le_right r p)⟩
-          · infer_instance }
+      { isOpen_uniformity := fun s =>
+          (H s).trans <|
+            forall₂_congr fun x _ =>
+              ((UniformSpace.hasBasis_ofFun (exists_gt (0 : ℝ)) dist _ _ _ _).comap
+                        (Prod.mk x)).mem_iff.symm.trans
+                mem_comap_prod_mk
+        toCore := (uniformSpaceOfDist dist dist_self dist_comm dist_triangle).toCore }
     uniformity_dist := rfl
     toBornology := Bornology.ofDist dist dist_self dist_comm dist_triangle
     cobounded_sets := rfl }
-#align pseudo_metric_space.of_metrizable PseudoMetricSpace.ofMetrizable
+#align pseudo_metric_space.of_dist_topology PseudoMetricSpace.ofDistTopology
 
 @[simp]
 theorem dist_self (x : α) : dist x x = 0 :=
@@ -831,14 +785,17 @@ theorem isBounded_iff_nndist {s : Set α} :
     NNReal.coe_mk, exists_prop]
 #align metric.is_bounded_iff_nndist Metric.isBounded_iff_nndist
 
+theorem toUniformSpace_eq :
+    ‹PseudoMetricSpace α›.toUniformSpace =
+      uniformSpaceOfDist dist dist_self dist_comm dist_triangle :=
+  uniformSpace_eq PseudoMetricSpace.uniformity_dist
+#align metric.to_uniform_space_eq Metric.toUniformSpace_eq
+
 theorem uniformity_basis_dist :
     (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } :=
   by
-  rw [← pseudo_metric_space.uniformity_dist.symm]
-  refine' has_basis_binfi_principal _ nonempty_Ioi
-  exact fun r (hr : 0 < r) p (hp : 0 < p) =>
-    ⟨min r p, lt_min hr hp, fun x (hx : dist _ _ < _) => lt_of_lt_of_le hx (min_le_left r p),
-      fun x (hx : dist _ _ < _) => lt_of_lt_of_le hx (min_le_right r p)⟩
+  rw [to_uniform_space_eq]
+  exact UniformSpace.hasBasis_ofFun (exists_gt _) _ _ _ _ _
 #align metric.uniformity_basis_dist Metric.uniformity_basis_dist
 
 /-- Given `f : β → ℝ`, if `f` sends `{i | p i}` to a set of positive numbers
@@ -858,6 +815,13 @@ protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β �
     exact ⟨i, hi, fun x (hx : _ < _) => hε <| lt_of_lt_of_le hx H⟩
   · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
 #align metric.mk_uniformity_basis Metric.mk_uniformity_basis
+
+theorem uniformity_basis_dist_rat :
+    (𝓤 α).HasBasis (fun r : ℚ => 0 < r) fun r => { p : α × α | dist p.1 p.2 < r } :=
+  Metric.mk_uniformity_basis (fun _ => Rat.cast_pos.2) fun ε hε =>
+    let ⟨r, hr0, hrε⟩ := exists_rat_btwn hε
+    ⟨r, Rat.cast_pos.1 hr0, hrε.le⟩
+#align metric.uniformity_basis_dist_rat Metric.uniformity_basis_dist_rat
 
 theorem uniformity_basis_dist_inv_nat_succ :
     (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / (↑n + 1) } :=
@@ -1792,11 +1756,7 @@ def PseudoMetricSpace.induced {α β} (f : α → β) (m : PseudoMetricSpace β)
   edist x y := edist (f x) (f y)
   edist_dist x y := edist_dist _ _
   toUniformSpace := UniformSpace.comap f m.toUniformSpace
-  uniformity_dist :=
-    by
-    apply @uniformity_dist_of_mem_uniformity _ _ _ _ _ fun x y => dist (f x) (f y)
-    refine' compl_surjective.forall.2 fun s => compl_mem_comap.trans <| mem_uniformity_dist.trans _
-    simp only [mem_compl_iff, @imp_not_comm _ (_ ∈ _), ← Prod.forall', Prod.mk.eta, ball_image_iff]
+  uniformity_dist := (uniformity_basis_dist.comap _).eq_binfᵢ
   toBornology := Bornology.induced f
   cobounded_sets :=
     Set.ext <|
@@ -3163,14 +3123,14 @@ theorem MetricSpace.ext {α : Type _} {m m' : MetricSpace α} (h : m.toHasDist =
 /-- Construct a metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
-def MetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : α → α → ℝ)
+def MetricSpace.ofDistTopology {α : Type u} [TopologicalSpace α] (dist : α → α → ℝ)
     (dist_self : ∀ x : α, dist x x = 0) (dist_comm : ∀ x y : α, dist x y = dist y x)
     (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z)
     (H : ∀ s : Set α, IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s)
     (eq_of_dist_eq_zero : ∀ x y : α, dist x y = 0 → x = y) : MetricSpace α :=
-  { PseudoMetricSpace.ofMetrizable dist dist_self dist_comm dist_triangle H with
+  { PseudoMetricSpace.ofDistTopology dist dist_self dist_comm dist_triangle H with
     eq_of_dist_eq_zero }
-#align metric_space.of_metrizable MetricSpace.ofMetrizable
+#align metric_space.of_dist_topology MetricSpace.ofDistTopology
 
 variable {γ : Type w} [MetricSpace γ]
 
