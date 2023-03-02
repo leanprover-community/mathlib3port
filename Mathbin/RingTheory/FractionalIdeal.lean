@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.fractional_ideal
-! leanprover-community/mathlib commit 6010cf523816335f7bae7f8584cb2edaace73940
+! leanprover-community/mathlib commit ed90a7d327c3a5caf65a6faf7e8a0d63c4605df7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -605,6 +605,16 @@ instance : CommSemiring (FractionalIdeal S P) :=
   Function.Injective.commSemiring coe Subtype.coe_injective coe_zero coe_one coe_add coe_mul
     (fun _ _ => coe_nsmul _ _) coe_pow coe_nat_cast
 
+variable (S P)
+
+/-- `fractional_ideal.submodule.has_coe` as a bundled `ring_hom`. -/
+@[simps]
+def coeSubmoduleHom : FractionalIdeal S P →+* Submodule R P :=
+  ⟨coe, coe_one, coe_mul, coe_zero, coe_add⟩
+#align fractional_ideal.coe_submodule_hom FractionalIdeal.coeSubmoduleHom
+
+variable {S P}
+
 section Order
 
 theorem add_le_add_left {I J : FractionalIdeal S P} (hIJ : I ≤ J) (J' : FractionalIdeal S P) :
@@ -868,24 +878,11 @@ theorem coe_ideal_fg (inj : Function.Injective (algebraMap R P)) (I : Ideal R) :
 variable {S}
 
 theorem fg_unit (I : (FractionalIdeal S P)ˣ) : Fg (I : Submodule R P) :=
-  by
-  have : (1 : P) ∈ (I * ↑I⁻¹ : FractionalIdeal S P) :=
-    by
-    rw [Units.mul_inv]
-    exact one_mem_one _
-  obtain ⟨T, T', hT, hT', one_mem⟩ := mem_span_mul_finite_of_mem_mul this
-  refine' ⟨T, Submodule.span_eq_of_le _ hT _⟩
-  rw [← one_mul ↑I, ← mul_one (span R ↑T)]
-  conv_rhs => rw [← coe_one, ← Units.mul_inv I, coe_mul, mul_comm ↑↑I, ← mul_assoc]
-  refine'
-    Submodule.mul_le_mul_left (le_trans _ (Submodule.mul_le_mul_right (submodule.span_le.mpr hT')))
-  rwa [Submodule.one_le, Submodule.span_mul_span]
+  Submodule.fg_unit <| Units.map (coeSubmoduleHom S P).toMonoidHom I
 #align fractional_ideal.fg_unit FractionalIdeal.fg_unit
 
 theorem fg_of_isUnit (I : FractionalIdeal S P) (h : IsUnit I) : Fg (I : Submodule R P) :=
-  by
-  rcases h with ⟨I, rfl⟩
-  exact fg_unit I
+  fg_unit h.Unit
 #align fractional_ideal.fg_of_is_unit FractionalIdeal.fg_of_isUnit
 
 theorem Ideal.fg_of_isUnit (inj : Function.Injective (algebraMap R P)) (I : Ideal R)

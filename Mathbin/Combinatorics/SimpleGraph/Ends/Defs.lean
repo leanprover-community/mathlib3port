@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anand Rao, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.ends.defs
-! leanprover-community/mathlib commit db53863fb135228820ee0b08e8dce9349a3d911b
+! leanprover-community/mathlib commit 8195826f5c428fc283510bc67303dd4472d78498
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.CategoryTheory.MittagLeffler
+import Mathbin.CategoryTheory.CofilteredSystem
 import Mathbin.Combinatorics.SimpleGraph.Connectivity
 import Mathbin.Data.SetLike.Basic
 
@@ -29,7 +29,7 @@ namespace SimpleGraph
 /-- The components outside a given set of vertices `K` -/
 @[reducible]
 def ComponentCompl :=
-  (G.induce (Kᶜ)).ConnectedComponent
+  (G.induce (Kᶜ)).connectedComponent
 #align simple_graph.component_compl SimpleGraph.ComponentCompl
 
 variable {G} {K L M}

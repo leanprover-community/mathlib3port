@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.filtered
-! leanprover-community/mathlib commit 14e80e85cbca5872a329fbfd3d1f3fd64e306934
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Category.Ulift
 
 /-!
 # Filtered categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A category is filtered if every finite diagram admits a cocone.
 We give a simple characterisation of this condition as

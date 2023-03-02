@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_space
-! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
+! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,17 +309,9 @@ theorem uniformEmbedding_iff [PseudoEmetricSpace β] {f : α → β} :
       Function.Injective f ∧
         UniformContinuous f ∧
           ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, edist (f a) (f b) < ε → edist a b < δ :=
-  uniformEmbedding_def'.trans <|
-    and_congr Iff.rfl <|
-      and_congr Iff.rfl
-        ⟨fun H δ δ0 =>
-          let ⟨t, tu, ht⟩ := H _ (edist_mem_uniformity δ0)
-          let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 tu
-          ⟨ε, ε0, fun a b h => ht _ _ (hε h)⟩,
-          fun H s su =>
-          let ⟨δ, δ0, hδ⟩ := mem_uniformity_edist.1 su
-          let ⟨ε, ε0, hε⟩ := H _ δ0
-          ⟨_, edist_mem_uniformity ε0, fun a b h => hδ (hε h)⟩⟩
+  by
+  simp only [uniformity_basis_edist.uniform_embedding_iff uniformity_basis_edist, exists_prop]
+  rfl
 #align emetric.uniform_embedding_iff Emetric.uniformEmbedding_iff
 
 /-- If a map between pseudoemetric spaces is a uniform embedding then the edistance between `f x`
@@ -328,9 +320,7 @@ theorem controlled_of_uniformEmbedding [PseudoEmetricSpace β] {f : α → β} :
     UniformEmbedding f →
       (∀ ε > 0, ∃ δ > 0, ∀ {a b : α}, edist a b < δ → edist (f a) (f b) < ε) ∧
         ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, edist (f a) (f b) < ε → edist a b < δ :=
-  by
-  intro h
-  exact ⟨uniformContinuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
+  fun h => ⟨uniformContinuous_iff.1 (uniformEmbedding_iff.1 h).2.1, (uniformEmbedding_iff.1 h).2.2⟩
 #align emetric.controlled_of_uniform_embedding Emetric.controlled_of_uniformEmbedding
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » t) -/
@@ -1078,29 +1068,6 @@ theorem eq_of_forall_edist_le {x y : γ} (h : ∀ ε > 0, edist x y ≤ ε) : x 
   eq_of_edist_eq_zero (eq_of_le_of_forall_le_of_dense bot_le h)
 #align eq_of_forall_edist_le eq_of_forall_edist_le
 
-/-- A map between emetric spaces is a uniform embedding if and only if the edistance between `f x`
-and `f y` is controlled in terms of the distance between `x` and `y` and conversely. -/
-theorem uniformEmbedding_iff' [EmetricSpace β] {f : γ → β} :
-    UniformEmbedding f ↔
-      (∀ ε > 0, ∃ δ > 0, ∀ {a b : γ}, edist a b < δ → edist (f a) (f b) < ε) ∧
-        ∀ δ > 0, ∃ ε > 0, ∀ {a b : γ}, edist (f a) (f b) < ε → edist a b < δ :=
-  by
-  constructor
-  · intro h
-    exact
-      ⟨Emetric.uniformContinuous_iff.1 (uniform_embedding_iff.1 h).2.1,
-        (uniform_embedding_iff.1 h).2.2⟩
-  · rintro ⟨h₁, h₂⟩
-    refine' uniform_embedding_iff.2 ⟨_, Emetric.uniformContinuous_iff.2 h₁, h₂⟩
-    intro x y hxy
-    have : edist x y ≤ 0 := by
-      refine' le_of_forall_lt' fun δ δpos => _
-      rcases h₂ δ δpos with ⟨ε, εpos, hε⟩
-      have : edist (f x) (f y) < ε := by simpa [hxy]
-      exact hε this
-    simpa using this
-#align uniform_embedding_iff' uniformEmbedding_iff'
-
 -- see Note [lower instance priority]
 /-- An emetric space is separated -/
 instance (priority := 100) to_separated : SeparatedSpace γ :=
@@ -1108,12 +1075,24 @@ instance (priority := 100) to_separated : SeparatedSpace γ :=
     eq_of_forall_edist_le fun ε ε0 => le_of_lt (h _ (edist_mem_uniformity ε0))
 #align to_separated to_separated
 
+/-- A map between emetric spaces is a uniform embedding if and only if the edistance between `f x`
+and `f y` is controlled in terms of the distance between `x` and `y` and conversely. -/
+theorem Emetric.uniformEmbedding_iff' [EmetricSpace β] {f : γ → β} :
+    UniformEmbedding f ↔
+      (∀ ε > 0, ∃ δ > 0, ∀ {a b : γ}, edist a b < δ → edist (f a) (f b) < ε) ∧
+        ∀ δ > 0, ∃ ε > 0, ∀ {a b : γ}, edist (f a) (f b) < ε → edist a b < δ :=
+  by
+  simp only [uniformEmbedding_iff_uniformInducing,
+    uniformity_basis_edist.uniform_inducing_iff uniformity_basis_edist, exists_prop]
+  rfl
+#align emetric.uniform_embedding_iff' Emetric.uniformEmbedding_iff'
+
 /-- If a `pseudo_emetric_space` is a T₀ space, then it is an `emetric_space`. -/
-def Emetric.ofT0PseudoEmetricSpace (α : Type _) [PseudoEmetricSpace α] [T0Space α] :
+def EmetricSpace.ofT0PseudoEmetricSpace (α : Type _) [PseudoEmetricSpace α] [T0Space α] :
     EmetricSpace α :=
   { ‹PseudoEmetricSpace α› with
-    eq_of_edist_eq_zero := fun x y hdist => Inseparable.eq <| Emetric.inseparable_iff.2 hdist }
-#align emetric.of_t0_pseudo_emetric_space Emetric.ofT0PseudoEmetricSpace
+    eq_of_edist_eq_zero := fun x y hdist => (Emetric.inseparable_iff.2 hdist).Eq }
+#align emetric_space.of_t0_pseudo_emetric_space EmetricSpace.ofT0PseudoEmetricSpace
 
 /-- Auxiliary function to replace the uniformity on an emetric space with
 a uniformity which is equal to the original one, but maybe not defeq.
@@ -1246,7 +1225,7 @@ theorem UniformSpace.SeparationQuotient.edist_mk [PseudoEmetricSpace X] (x y : X
 #align uniform_space.separation_quotient.edist_mk UniformSpace.SeparationQuotient.edist_mk
 
 instance [PseudoEmetricSpace X] : EmetricSpace (UniformSpace.SeparationQuotient X) :=
-  @Emetric.ofT0PseudoEmetricSpace (UniformSpace.SeparationQuotient X)
+  @EmetricSpace.ofT0PseudoEmetricSpace (UniformSpace.SeparationQuotient X)
     { edist_self := fun x => Quotient.inductionOn' x edist_self
       edist_comm := fun x y => Quotient.inductionOn₂' x y edist_comm
       edist_triangle := fun x y z => Quotient.inductionOn₃' x y z edist_triangle

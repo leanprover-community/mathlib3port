@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.cantor_normal_form
-! leanprover-community/mathlib commit f1e061e3caef3022f0daa99d670ecf2c30e0b5c6
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.SetTheory.Ordinal.Exponential
 
 /-!
 # Cantor Normal Form
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The Cantor normal form of an ordinal is generally defined as its base `ω` expansion, with its
 non-zero exponents in decreasing order. Here, we more generally define a base `b` expansion

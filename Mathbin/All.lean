@@ -813,6 +813,7 @@ import Mathbin.CategoryTheory.Closed.Ideal
 import Mathbin.CategoryTheory.Closed.Monoidal
 import Mathbin.CategoryTheory.Closed.Types
 import Mathbin.CategoryTheory.Closed.Zero
+import Mathbin.CategoryTheory.CofilteredSystem
 import Mathbin.CategoryTheory.CommSq
 import Mathbin.CategoryTheory.Comma
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
@@ -967,7 +968,6 @@ import Mathbin.CategoryTheory.Linear.Yoneda
 import Mathbin.CategoryTheory.Localization.Construction
 import Mathbin.CategoryTheory.Localization.Opposite
 import Mathbin.CategoryTheory.Localization.Predicate
-import Mathbin.CategoryTheory.MittagLeffler
 import Mathbin.CategoryTheory.Monad.Adjunction
 import Mathbin.CategoryTheory.Monad.Algebra
 import Mathbin.CategoryTheory.Monad.Basic

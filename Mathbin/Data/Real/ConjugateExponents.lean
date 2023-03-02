@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.conjugate_exponents
-! leanprover-community/mathlib commit 52e2fbbd9b519e6981e4b53aedb26a2d52548d3a
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Real.Ennreal
 
 /-!
 # Real conjugate exponents
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 `p.is_conjugate_exponent q` registers the fact that the real numbers `p` and `q` are `> 1` and
 satisfy `1/p + 1/q = 1`. This property shows up often in analysis, especially when dealing with

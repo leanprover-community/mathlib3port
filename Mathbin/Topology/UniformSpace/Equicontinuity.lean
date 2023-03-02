@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equicontinuity
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.UniformSpace.UniformConvergenceTopology
 
 /-!
 # Equicontinuity of a family of functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `X` be a topological space and `α` a `uniform_space`. A family of functions `F : ι → X → α`
 is said to be *equicontinuous at a point `x₀ : X`* when, for any entourage `U` in `α`, there is a

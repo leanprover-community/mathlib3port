@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,6 +251,33 @@ theorem Inseparable.eq [T0Space α] {x y : α} (h : Inseparable x y) : x = y :=
   T0Space.t0 h
 #align inseparable.eq Inseparable.eq
 -/
+
+/- warning: inducing.injective -> Inducing.injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : T0Space.{u1} α _inst_1] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_2 f) -> (Function.Injective.{succ u1, succ u2} α β f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_3 f) -> (Function.Injective.{succ u1, succ u2} α β f)
+Case conversion may be inaccurate. Consider using '#align inducing.injective Inducing.injectiveₓ'. -/
+protected theorem Inducing.injective [TopologicalSpace β] [T0Space α] {f : α → β}
+    (hf : Inducing f) : Injective f := fun x y h =>
+  Inseparable.eq <| hf.inseparable_iff.1 <| h ▸ Inseparable.refl _
+#align inducing.injective Inducing.injective
+
+/- warning: inducing.embedding -> Inducing.embedding is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : T0Space.{u1} α _inst_1] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_2 f) -> (Embedding.{u1, u2} α β _inst_1 _inst_2 f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_3 f) -> (Embedding.{u1, u2} α β _inst_1 _inst_3 f)
+Case conversion may be inaccurate. Consider using '#align inducing.embedding Inducing.embeddingₓ'. -/
+protected theorem Inducing.embedding [TopologicalSpace β] [T0Space α] {f : α → β}
+    (hf : Inducing f) : Embedding f :=
+  ⟨hf, hf.Injective⟩
+#align inducing.embedding Inducing.embedding
+
+theorem embedding_iff_inducing [TopologicalSpace β] [T0Space α] {f : α → β} :
+    Embedding f ↔ Inducing f :=
+  ⟨Embedding.to_inducing, Inducing.embedding⟩
+#align embedding_iff_inducing embedding_iff_inducing
 
 #print t0Space_iff_nhds_injective /-
 theorem t0Space_iff_nhds_injective (α : Type u) [TopologicalSpace α] :

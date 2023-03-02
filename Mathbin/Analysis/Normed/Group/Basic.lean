@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 335232c774b3d0513ab1531582779dc25d6fdc9a
+! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1246,7 +1246,7 @@ theorem SeminormedCommGroup.mem_closure_iff : a ∈ closure s ↔ ∀ ε, 0 < ε
 theorem norm_le_zero_iff''' [T0Space E] {a : E} : ‖a‖ ≤ 0 ↔ a = 1 :=
   by
   letI : NormedGroup E :=
-    { ‹SeminormedGroup E› with toMetricSpace := Metric.ofT0PseudoMetricSpace E }
+    { ‹SeminormedGroup E› with toMetricSpace := MetricSpace.ofT0PseudoMetricSpace E }
   rw [← dist_one_right, dist_le_zero]
 #align norm_le_zero_iff''' norm_le_zero_iff'''
 #align norm_le_zero_iff' norm_le_zero_iff'

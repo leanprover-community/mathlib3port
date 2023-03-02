@@ -1,10 +1,10 @@
 /-
 Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
+Authors: Alexander Bentkamp, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit c5773405394e073885e2a144c9ca14637e8eb963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,9 +35,11 @@ define `clopen_segment`/`convex.Ico`/`convex.Ioc`?
 -/
 
 
-variable {𝕜 E F : Type _}
+variable {𝕜 E F G ι : Type _} {π : ι → Type _}
 
-open Set
+open Function Set
+
+open Pointwise
 
 section OrderedSemiring
 
@@ -168,7 +170,8 @@ open Convex
 
 section OrderedRing
 
-variable (𝕜) [OrderedRing 𝕜] [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F]
+variable (𝕜) [OrderedRing 𝕜] [AddCommGroup E] [AddCommGroup F] [AddCommGroup G] [Module 𝕜 E]
+  [Module 𝕜 F]
 
 section DenselyOrdered
 
@@ -236,32 +239,41 @@ theorem openSegment_eq_image_lineMap (x y : E) :
   exact AffineMap.lineMap_apply_module _ _ _
 #align open_segment_eq_image_line_map openSegment_eq_image_lineMap
 
-theorem segment_image (f : E →ₗ[𝕜] F) (a b : E) : f '' [a -[𝕜] b] = [f a -[𝕜] f b] :=
+@[simp]
+theorem image_segment (f : E →ᵃ[𝕜] F) (a b : E) : f '' [a -[𝕜] b] = [f a -[𝕜] f b] :=
   Set.ext fun x => by
-    simp_rw [segment_eq_image, mem_image, exists_exists_and_eq_and, map_add, map_smul]
-#align segment_image segment_image
+    simp_rw [segment_eq_image_lineMap, mem_image, exists_exists_and_eq_and, AffineMap.apply_lineMap]
+#align image_segment image_segment
 
 @[simp]
-theorem openSegment_image (f : E →ₗ[𝕜] F) (a b : E) :
+theorem image_openSegment (f : E →ᵃ[𝕜] F) (a b : E) :
     f '' openSegment 𝕜 a b = openSegment 𝕜 (f a) (f b) :=
   Set.ext fun x => by
-    simp_rw [openSegment_eq_image, mem_image, exists_exists_and_eq_and, map_add, map_smul]
-#align open_segment_image openSegment_image
+    simp_rw [openSegment_eq_image_lineMap, mem_image, exists_exists_and_eq_and,
+      AffineMap.apply_lineMap]
+#align image_open_segment image_openSegment
 
-theorem mem_segment_translate (a : E) {x b c} : a + x ∈ [a + b -[𝕜] a + c] ↔ x ∈ [b -[𝕜] c] :=
-  by
-  rw [segment_eq_image', segment_eq_image']
-  refine' exists_congr fun θ => and_congr Iff.rfl _
-  simp only [add_sub_add_left_eq_sub, add_assoc, add_right_inj]
+@[simp]
+theorem vadd_segment [AddTorsor G E] [VAddCommClass G E E] (a : G) (b c : E) :
+    a +ᵥ [b -[𝕜] c] = [a +ᵥ b -[𝕜] a +ᵥ c] :=
+  image_segment 𝕜 ⟨_, LinearMap.id, fun _ _ => vadd_comm _ _ _⟩ b c
+#align vadd_segment vadd_segment
+
+@[simp]
+theorem vadd_openSegment [AddTorsor G E] [VAddCommClass G E E] (a : G) (b c : E) :
+    a +ᵥ openSegment 𝕜 b c = openSegment 𝕜 (a +ᵥ b) (a +ᵥ c) :=
+  image_openSegment 𝕜 ⟨_, LinearMap.id, fun _ _ => vadd_comm _ _ _⟩ b c
+#align vadd_open_segment vadd_openSegment
+
+@[simp]
+theorem mem_segment_translate (a : E) {x b c} : a + x ∈ [a + b -[𝕜] a + c] ↔ x ∈ [b -[𝕜] c] := by
+  simp_rw [← vadd_eq_add, ← vadd_segment, vadd_mem_vadd_set_iff]
 #align mem_segment_translate mem_segment_translate
 
 @[simp]
 theorem mem_openSegment_translate (a : E) {x b c : E} :
-    a + x ∈ openSegment 𝕜 (a + b) (a + c) ↔ x ∈ openSegment 𝕜 b c :=
-  by
-  rw [openSegment_eq_image', openSegment_eq_image']
-  refine' exists_congr fun θ => and_congr Iff.rfl _
-  simp only [add_sub_add_left_eq_sub, add_assoc, add_right_inj]
+    a + x ∈ openSegment 𝕜 (a + b) (a + c) ↔ x ∈ openSegment 𝕜 b c := by
+  simp_rw [← vadd_eq_add, ← vadd_openSegment, vadd_mem_vadd_set_iff]
 #align mem_open_segment_translate mem_openSegment_translate
 
 theorem segment_translate_preimage (a b c : E) :
@@ -600,4 +612,107 @@ theorem Convex.mem_Ico (h : x < y) :
 #align convex.mem_Ico Convex.mem_Ico
 
 end LinearOrderedField
+
+namespace Prod
+
+variable [OrderedSemiring 𝕜] [AddCommMonoid E] [AddCommMonoid F] [Module 𝕜 E] [Module 𝕜 F]
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem segment_subset (x y : E × F) : segment 𝕜 x y ⊆ segment 𝕜 x.1 y.1 ×ˢ segment 𝕜 x.2 y.2 :=
+  by
+  rintro z ⟨a, b, ha, hb, hab, hz⟩
+  exact ⟨⟨a, b, ha, hb, hab, congr_arg Prod.fst hz⟩, a, b, ha, hb, hab, congr_arg Prod.snd hz⟩
+#align prod.segment_subset Prod.segment_subset
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem openSegment_subset (x y : E × F) :
+    openSegment 𝕜 x y ⊆ openSegment 𝕜 x.1 y.1 ×ˢ openSegment 𝕜 x.2 y.2 :=
+  by
+  rintro z ⟨a, b, ha, hb, hab, hz⟩
+  exact ⟨⟨a, b, ha, hb, hab, congr_arg Prod.fst hz⟩, a, b, ha, hb, hab, congr_arg Prod.snd hz⟩
+#align prod.open_segment_subset Prod.openSegment_subset
+
+theorem image_mk_segment_left (x₁ x₂ : E) (y : F) :
+    (fun x => (x, y)) '' [x₁ -[𝕜] x₂] = [(x₁, y) -[𝕜] (x₂, y)] :=
+  by
+  ext ⟨x', y'⟩
+  simp_rw [Set.mem_image, segment, Set.mem_setOf, Prod.smul_mk, Prod.mk_add_mk, Prod.mk.inj_iff, ←
+    exists_and_right, @exists_comm E, exists_eq_left']
+  refine' exists₅_congr fun a b ha hb hab => _
+  rw [Convex.combo_self hab]
+#align prod.image_mk_segment_left Prod.image_mk_segment_left
+
+theorem image_mk_segment_right (x : E) (y₁ y₂ : F) :
+    (fun y => (x, y)) '' [y₁ -[𝕜] y₂] = [(x, y₁) -[𝕜] (x, y₂)] :=
+  by
+  ext ⟨x', y'⟩
+  simp_rw [Set.mem_image, segment, Set.mem_setOf, Prod.smul_mk, Prod.mk_add_mk, Prod.mk.inj_iff, ←
+    exists_and_right, @exists_comm F, exists_eq_left']
+  refine' exists₅_congr fun a b ha hb hab => _
+  rw [Convex.combo_self hab]
+#align prod.image_mk_segment_right Prod.image_mk_segment_right
+
+theorem image_mk_openSegment_left (x₁ x₂ : E) (y : F) :
+    (fun x => (x, y)) '' openSegment 𝕜 x₁ x₂ = openSegment 𝕜 (x₁, y) (x₂, y) :=
+  by
+  ext ⟨x', y'⟩
+  simp_rw [Set.mem_image, openSegment, Set.mem_setOf, Prod.smul_mk, Prod.mk_add_mk, Prod.mk.inj_iff,
+    ← exists_and_right, @exists_comm E, exists_eq_left']
+  refine' exists₅_congr fun a b ha hb hab => _
+  rw [Convex.combo_self hab]
+#align prod.image_mk_open_segment_left Prod.image_mk_openSegment_left
+
+@[simp]
+theorem image_mk_openSegment_right (x : E) (y₁ y₂ : F) :
+    (fun y => (x, y)) '' openSegment 𝕜 y₁ y₂ = openSegment 𝕜 (x, y₁) (x, y₂) :=
+  by
+  ext ⟨x', y'⟩
+  simp_rw [Set.mem_image, openSegment, Set.mem_setOf, Prod.smul_mk, Prod.mk_add_mk, Prod.mk.inj_iff,
+    ← exists_and_right, @exists_comm F, exists_eq_left']
+  refine' exists₅_congr fun a b ha hb hab => _
+  rw [Convex.combo_self hab]
+#align prod.image_mk_open_segment_right Prod.image_mk_openSegment_right
+
+end Prod
+
+namespace Pi
+
+variable [OrderedSemiring 𝕜] [∀ i, AddCommMonoid (π i)] [∀ i, Module 𝕜 (π i)] {s : Set ι}
+
+theorem segment_subset (x y : ∀ i, π i) : segment 𝕜 x y ⊆ s.pi fun i => segment 𝕜 (x i) (y i) :=
+  by
+  rintro z ⟨a, b, ha, hb, hab, hz⟩ i -
+  exact ⟨a, b, ha, hb, hab, congr_fun hz i⟩
+#align pi.segment_subset Pi.segment_subset
+
+theorem openSegment_subset (x y : ∀ i, π i) :
+    openSegment 𝕜 x y ⊆ s.pi fun i => openSegment 𝕜 (x i) (y i) :=
+  by
+  rintro z ⟨a, b, ha, hb, hab, hz⟩ i -
+  exact ⟨a, b, ha, hb, hab, congr_fun hz i⟩
+#align pi.open_segment_subset Pi.openSegment_subset
+
+variable [DecidableEq ι]
+
+theorem image_update_segment (i : ι) (x₁ x₂ : π i) (y : ∀ i, π i) :
+    update y i '' [x₁ -[𝕜] x₂] = [update y i x₁ -[𝕜] update y i x₂] :=
+  by
+  ext z
+  simp_rw [Set.mem_image, segment, Set.mem_setOf, ← update_smul, ← update_add, update_eq_iff, ←
+    exists_and_right, @exists_comm (π i), exists_eq_left']
+  refine' exists₅_congr fun a b ha hb hab => _
+  rw [Convex.combo_self hab]
+#align pi.image_update_segment Pi.image_update_segment
+
+theorem image_update_openSegment (i : ι) (x₁ x₂ : π i) (y : ∀ i, π i) :
+    update y i '' openSegment 𝕜 x₁ x₂ = openSegment 𝕜 (update y i x₁) (update y i x₂) :=
+  by
+  ext z
+  simp_rw [Set.mem_image, openSegment, Set.mem_setOf, ← update_smul, ← update_add, update_eq_iff, ←
+    exists_and_right, @exists_comm (π i), exists_eq_left']
+  refine' exists₅_congr fun a b ha hb hab => _
+  rw [Convex.combo_self hab]
+#align pi.image_update_open_segment Pi.image_update_openSegment
+
+end Pi
 

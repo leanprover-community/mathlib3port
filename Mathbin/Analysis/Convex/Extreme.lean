@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.extreme
-! leanprover-community/mathlib commit 0da544672fd2b9b9d17c733798caef598c533f65
+! leanprover-community/mathlib commit c5773405394e073885e2a144c9ca14637e8eb963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,21 +40,21 @@ See chapter 8 of [Barry Simon, *Convexity*][simon2011]
 
 ## TODO
 
-Define intrinsic frontier and prove lemmas related to extreme sets and points.
+Prove lemmas relating extreme sets and points to the intrinsic frontier.
 
 More not-yet-PRed stuff is available on the branch `sperner_again`.
 -/
 
 
-open Classical Affine
+open Function Set
 
-open Set
+open Affine Classical
 
-variable (𝕜 : Type _) {E : Type _}
+variable {𝕜 E F ι : Type _} {π : ι → Type _}
 
 section SMul
 
-variable [OrderedSemiring 𝕜] [AddCommMonoid E] [SMul 𝕜 E]
+variable (𝕜) [OrderedSemiring 𝕜] [AddCommMonoid E] [SMul 𝕜 E]
 
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
@@ -112,7 +112,7 @@ protected theorem IsExtreme.mono (hAC : IsExtreme 𝕜 A C) (hBA : B ⊆ A) (hCB
   ⟨hCB, fun x₁ hx₁B x₂ hx₂B x hxC hx => hAC.2 (hBA hx₁B) (hBA hx₂B) hxC hx⟩
 #align is_extreme.mono IsExtreme.mono
 
-theorem isExtreme_interᵢ {ι : Type _} [Nonempty ι] {F : ι → Set E}
+theorem isExtreme_interᵢ {ι : Sort _} [Nonempty ι] {F : ι → Set E}
     (hAF : ∀ i : ι, IsExtreme 𝕜 A (F i)) : IsExtreme 𝕜 A (⋂ i : ι, F i) :=
   by
   obtain i := Classical.arbitrary ι
@@ -122,13 +122,10 @@ theorem isExtreme_interᵢ {ι : Type _} [Nonempty ι] {F : ι → Set E}
   exact ⟨fun i => (h i).1, fun i => (h i).2⟩
 #align is_extreme_Inter isExtreme_interᵢ
 
-theorem isExtreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
+theorem isExtreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hA : ∀ B ∈ F, IsExtreme 𝕜 A B) :
     IsExtreme 𝕜 A (⋂ B ∈ F, B) := by
-  obtain ⟨B, hB⟩ := hF
-  refine' ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
-  simp_rw [mem_Inter₂] at hxF⊢
-  have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
-  exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
+  haveI := hF.to_subtype
+  simpa only [Inter_subtype] using isExtreme_interᵢ fun i : F => hA _ i.2
 #align is_extreme_bInter isExtreme_bInter
 
 theorem isExtreme_interₛ {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
@@ -141,11 +138,11 @@ theorem isExtreme_interₛ {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ 
 #align is_extreme_sInter isExtreme_interₛ
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
-theorem extremePoints_def :
+theorem mem_extremePoints :
     x ∈ A.extremePoints 𝕜 ↔
       x ∈ A ∧ ∀ (x₁) (_ : x₁ ∈ A) (x₂) (_ : x₂ ∈ A), x ∈ openSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
-#align extreme_points_def extremePoints_def
+#align mem_extreme_points mem_extremePoints
 
 /-- x is an extreme point to A iff {x} is an extreme set of A. -/
 theorem mem_extremePoints_iff_extreme_singleton : x ∈ A.extremePoints 𝕜 ↔ IsExtreme 𝕜 A {x} :=
@@ -192,12 +189,66 @@ end SMul
 
 section OrderedSemiring
 
-variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroup E] [Module 𝕜 E] {A B : Set E} {x : E}
+variable [OrderedSemiring 𝕜] [AddCommGroup E] [AddCommGroup F] [∀ i, AddCommGroup (π i)]
+  [Module 𝕜 E] [Module 𝕜 F] [∀ i, Module 𝕜 (π i)] {A B : Set E} {x : E}
 
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
   convex_iff_openSegment_subset.2 fun x₁ ⟨hx₁A, hx₁B⟩ x₂ ⟨hx₂A, hx₂B⟩ x hx =>
     ⟨hA.openSegment_subset hx₁A hx₂A hx, fun hxB => hx₁B (hAB.2 hx₁A hx₂A hxB hx).1⟩
 #align is_extreme.convex_diff IsExtreme.convex_diff
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem extremePoints_prod (s : Set E) (t : Set F) :
+    (s ×ˢ t).extremePoints 𝕜 = s.extremePoints 𝕜 ×ˢ t.extremePoints 𝕜 :=
+  by
+  ext
+  refine' (and_congr_right fun hx => ⟨fun h => _, fun h => _⟩).trans (and_and_and_comm _ _ _ _)
+  constructor
+  · rintro x₁ hx₁ x₂ hx₂ hx_fst
+    refine'
+      (h (mk_mem_prod hx₁ hx.2) (mk_mem_prod hx₂ hx.2) _).imp (congr_arg Prod.fst)
+        (congr_arg Prod.fst)
+    rw [← Prod.image_mk_openSegment_left]
+    exact ⟨_, hx_fst, Prod.mk.eta⟩
+  · rintro x₁ hx₁ x₂ hx₂ hx_snd
+    refine'
+      (h (mk_mem_prod hx.1 hx₁) (mk_mem_prod hx.1 hx₂) _).imp (congr_arg Prod.snd)
+        (congr_arg Prod.snd)
+    rw [← Prod.image_mk_openSegment_right]
+    exact ⟨_, hx_snd, Prod.mk.eta⟩
+  · rintro x₁ hx₁ x₂ hx₂ ⟨a, b, ha, hb, hab, hx'⟩
+    simp_rw [Prod.ext_iff]
+    exact
+      (and_and_and_comm _ _ _ _).1
+        ⟨h.1 hx₁.1 hx₂.1 ⟨a, b, ha, hb, hab, congr_arg Prod.fst hx'⟩,
+          h.2 hx₁.2 hx₂.2 ⟨a, b, ha, hb, hab, congr_arg Prod.snd hx'⟩⟩
+#align extreme_points_prod extremePoints_prod
+
+@[simp]
+theorem extremePoints_pi (s : ∀ i, Set (π i)) :
+    (univ.pi s).extremePoints 𝕜 = univ.pi fun i => (s i).extremePoints 𝕜 :=
+  by
+  ext
+  simp only [mem_extremePoints, mem_pi, mem_univ, true_imp_iff, @forall_and ι]
+  refine' and_congr_right fun hx => ⟨fun h i => _, fun h => _⟩
+  · rintro x₁ hx₁ x₂ hx₂ hi
+    refine'
+      (h (update x i x₁) _ (update x i x₂) _ _).imp (fun h₁ => by rw [← h₁, update_same]) fun h₂ =>
+        by rw [← h₂, update_same]
+    iterate 2 
+      rintro j
+      obtain rfl | hji := eq_or_ne j i
+      · rwa [update_same]
+      · rw [update_noteq hji]
+        exact hx _
+    rw [← Pi.image_update_openSegment]
+    exact ⟨_, hi, update_eq_self _ _⟩
+  · rintro x₁ hx₁ x₂ hx₂ ⟨a, b, ha, hb, hab, hx'⟩
+    simp_rw [funext_iff, ← forall_and]
+    exact fun i => h _ _ (hx₁ _) _ (hx₂ _) ⟨a, b, ha, hb, hab, congr_fun hx' _⟩
+#align extreme_points_pi extremePoints_pi
 
 end OrderedSemiring
 

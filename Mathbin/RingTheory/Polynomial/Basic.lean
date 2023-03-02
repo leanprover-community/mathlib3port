@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.basic
-! leanprover-community/mathlib commit b1d911acd60ab198808e853292106ee352b648ea
+! leanprover-community/mathlib commit dfb0adb7c805b3f4fbfd283d16f71f7baccb88e6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1133,7 +1133,7 @@ theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime (f : M →ₗ[R] M) {p q : R[X
     ⟨aeval f (q * q') v, LinearMap.mem_ker.1 h_eval₂_pqq', aeval f (p * p') v,
       LinearMap.mem_ker.1 h_eval₂_qpp', _⟩
   rw [add_comm, mul_comm p p', mul_comm q q']
-  simpa using congr_arg (fun p : R[X] => aeval f p v) hpq'
+  simpa only [map_add, map_mul, aeval_one] using congr_arg (fun p : R[X] => aeval f p v) hpq'
 #align polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime Polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime
 
 end Polynomial

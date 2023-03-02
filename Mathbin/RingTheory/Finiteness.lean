@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit 71150516f28d9826c7341f8815b31f7d8770c212
+! leanprover-community/mathlib commit ed90a7d327c3a5caf65a6faf7e8a0d63c4605df7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,6 +159,26 @@ theorem Subalgebra.fg_bot_toSubmodule {R A : Type _} [CommSemiring R] [Semiring 
     (⊥ : Subalgebra R A).toSubmodule.Fg :=
   ⟨{1}, by simp [Algebra.toSubmodule_bot]⟩
 #align subalgebra.fg_bot_to_submodule Subalgebra.fg_bot_toSubmodule
+
+theorem fg_unit {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (I : (Submodule R A)ˣ) :
+    (I : Submodule R A).Fg :=
+  by
+  have : (1 : A) ∈ (I * ↑I⁻¹ : Submodule R A) :=
+    by
+    rw [I.mul_inv]
+    exact one_le.mp le_rfl
+  obtain ⟨T, T', hT, hT', one_mem⟩ := mem_span_mul_finite_of_mem_mul this
+  refine' ⟨T, span_eq_of_le _ hT _⟩
+  rw [← one_mul ↑I, ← mul_one (span R ↑T)]
+  conv_rhs => rw [← I.inv_mul, ← mul_assoc]
+  refine' mul_le_mul_left (le_trans _ <| mul_le_mul_right <| span_le.mpr hT')
+  rwa [one_le, span_mul_span]
+#align submodule.fg_unit Submodule.fg_unit
+
+theorem fg_of_isUnit {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] {I : Submodule R A}
+    (hI : IsUnit I) : I.Fg :=
+  fg_unit hI.Unit
+#align submodule.fg_of_is_unit Submodule.fg_of_isUnit
 
 theorem fg_span {s : Set M} (hs : s.Finite) : Fg (span R s) :=
   ⟨hs.toFinset, by rw [hs.coe_to_finset]⟩
@@ -624,16 +644,6 @@ instance Module.Finite.tensorProduct [CommSemiring R] [AddCommMonoid M] [Module 
     Module.Finite R (TensorProduct R M N)
     where out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.zipWith _ hN.out)
 #align module.finite.tensor_product Module.Finite.tensorProduct
-
-namespace Algebra
-
-variable [CommRing R] [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
-
-variable [AddCommGroup M] [Module R M]
-
-variable [AddCommGroup N] [Module R N]
-
-end Algebra
 
 end ModuleAndAlgebra
 

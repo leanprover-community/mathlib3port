@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit e1a7bdeb4fd826b7e71d130d34988f0a2d26a177
+! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -916,17 +916,9 @@ theorem uniformEmbedding_iff [PseudoMetricSpace β] {f : α → β} :
     UniformEmbedding f ↔
       Function.Injective f ∧
         UniformContinuous f ∧ ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
-  uniformEmbedding_def'.trans <|
-    and_congr Iff.rfl <|
-      and_congr Iff.rfl
-        ⟨fun H δ δ0 =>
-          let ⟨t, tu, ht⟩ := H _ (dist_mem_uniformity δ0)
-          let ⟨ε, ε0, hε⟩ := mem_uniformity_dist.1 tu
-          ⟨ε, ε0, fun a b h => ht _ _ (hε h)⟩,
-          fun H s su =>
-          let ⟨δ, δ0, hδ⟩ := mem_uniformity_dist.1 su
-          let ⟨ε, ε0, hε⟩ := H _ δ0
-          ⟨_, dist_mem_uniformity ε0, fun a b h => hδ (hε h)⟩⟩
+  by
+  simp only [uniformity_basis_dist.uniform_embedding_iff uniformity_basis_dist, exists_prop]
+  rfl
 #align metric.uniform_embedding_iff Metric.uniformEmbedding_iff
 
 /-- If a map between pseudometric spaces is a uniform embedding then the distance between `f x`
@@ -937,7 +929,7 @@ theorem controlled_of_uniformEmbedding [PseudoMetricSpace β] {f : α → β} :
         ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
   by
   intro h
-  exact ⟨uniformContinuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
+  exact ⟨uniformContinuous_iff.1 (uniformEmbedding_iff.1 h).2.1, (uniformEmbedding_iff.1 h).2.2⟩
 #align metric.controlled_of_uniform_embedding Metric.controlled_of_uniformEmbedding
 
 theorem totallyBounded_iff {s : Set α} :
@@ -3208,6 +3200,12 @@ theorem subsingleton_sphere (x : γ) {r : ℝ} (hr : r ≤ 0) : (sphere x r).Sub
   (subsingleton_closedBall x hr).anti sphere_subset_closedBall
 #align metric.subsingleton_sphere Metric.subsingleton_sphere
 
+-- see Note [lower instance priority]
+instance (priority := 100) MetricSpace.to_separated : SeparatedSpace γ :=
+  separated_def.2 fun x y h =>
+    eq_of_forall_dist_le fun ε ε0 => le_of_lt (h _ (dist_mem_uniformity ε0))
+#align metric_space.to_separated MetricSpace.to_separated
+
 /-- A map between metric spaces is a uniform embedding if and only if the distance between `f x`
 and `f y` is controlled in terms of the distance between `x` and `y` and conversely. -/
 theorem uniformEmbedding_iff' [MetricSpace β] {f : γ → β} :
@@ -3215,37 +3213,23 @@ theorem uniformEmbedding_iff' [MetricSpace β] {f : γ → β} :
       (∀ ε > 0, ∃ δ > 0, ∀ {a b : γ}, dist a b < δ → dist (f a) (f b) < ε) ∧
         ∀ δ > 0, ∃ ε > 0, ∀ {a b : γ}, dist (f a) (f b) < ε → dist a b < δ :=
   by
-  constructor
-  · intro h
-    exact ⟨uniformContinuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
-  · rintro ⟨h₁, h₂⟩
-    refine' uniform_embedding_iff.2 ⟨_, uniformContinuous_iff.2 h₁, h₂⟩
-    intro x y hxy
-    have : dist x y ≤ 0 := by
-      refine' le_of_forall_lt' fun δ δpos => _
-      rcases h₂ δ δpos with ⟨ε, εpos, hε⟩
-      have : dist (f x) (f y) < ε := by simpa [hxy]
-      exact hε this
-    simpa using this
+  simp only [uniformEmbedding_iff_uniformInducing,
+    uniformity_basis_dist.uniform_inducing_iff uniformity_basis_dist, exists_prop]
+  rfl
 #align metric.uniform_embedding_iff' Metric.uniformEmbedding_iff'
 
--- see Note [lower instance priority]
-instance (priority := 100) MetricSpace.to_separated : SeparatedSpace γ :=
-  separated_def.2 fun x y h =>
-    eq_of_forall_dist_le fun ε ε0 => le_of_lt (h _ (dist_mem_uniformity ε0))
-#align metric_space.to_separated MetricSpace.to_separated
-
 /-- If a `pseudo_metric_space` is a T₀ space, then it is a `metric_space`. -/
-def ofT0PseudoMetricSpace (α : Type _) [PseudoMetricSpace α] [T0Space α] : MetricSpace α :=
+def MetricSpace.ofT0PseudoMetricSpace (α : Type _) [PseudoMetricSpace α] [T0Space α] :
+    MetricSpace α :=
   { ‹PseudoMetricSpace α› with
     eq_of_dist_eq_zero := fun x y hdist => Inseparable.eq <| Metric.inseparable_iff.2 hdist }
-#align metric.of_t0_pseudo_metric_space Metric.ofT0PseudoMetricSpace
+#align metric_space.of_t0_pseudo_metric_space MetricSpace.ofT0PseudoMetricSpace
 
 -- see Note [lower instance priority]
 /-- A metric space induces an emetric space -/
 instance (priority := 100) MetricSpace.toEmetricSpace : EmetricSpace γ :=
-  Emetric.ofT0PseudoEmetricSpace γ
-#align metric.metric_space.to_emetric_space Metric.MetricSpace.toEmetricSpace
+  EmetricSpace.ofT0PseudoEmetricSpace γ
+#align metric_space.to_emetric_space MetricSpace.toEmetricSpace
 
 theorem isClosed_of_pairwise_le_dist {s : Set γ} {ε : ℝ} (hε : 0 < ε)
     (hs : s.Pairwise fun x y => ε ≤ dist x y) : IsClosed s :=
@@ -3310,18 +3294,14 @@ of the edistance to reals. -/
 def EmetricSpace.toMetricSpaceOfDist {α : Type u} [e : EmetricSpace α] (dist : α → α → ℝ)
     (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤) (h : ∀ x y, dist x y = ENNReal.toReal (edist x y)) :
     MetricSpace α :=
-  {
-    PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top
-      h with
-    dist
-    eq_of_dist_eq_zero := fun x y hxy => by
-      simpa [h, ENNReal.toReal_eq_zero_iff, edist_ne_top x y] using hxy }
+  @MetricSpace.ofT0PseudoMetricSpace α
+    (PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h) _
 #align emetric_space.to_metric_space_of_dist EmetricSpace.toMetricSpaceOfDist
 
 /-- One gets a metric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the metric space and the emetric space. -/
-def EmetricSpace.toMetricSpace {α : Type u} [e : EmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) :
+def EmetricSpace.toMetricSpace {α : Type u} [EmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) :
     MetricSpace α :=
   EmetricSpace.toMetricSpaceOfDist (fun x y => ENNReal.toReal (edist x y)) h fun x y => rfl
 #align emetric_space.to_metric_space EmetricSpace.toMetricSpace
@@ -3380,6 +3360,7 @@ instance : MetricSpace Empty where
   dist _ _ := 0
   dist_self _ := rfl
   dist_comm _ _ := rfl
+  edist _ _ := 0
   eq_of_dist_eq_zero _ _ _ := Subsingleton.elim _ _
   dist_triangle _ _ _ := show (0 : ℝ) ≤ 0 + 0 by rw [add_zero]
   toUniformSpace := Empty.uniformSpace
@@ -3389,6 +3370,7 @@ instance : MetricSpace PUnit.{u + 1} where
   dist _ _ := 0
   dist_self _ := rfl
   dist_comm _ _ := rfl
+  edist _ _ := 0
   eq_of_dist_eq_zero _ _ _ := Subsingleton.elim _ _
   dist_triangle _ _ _ := show (0 : ℝ) ≤ 0 + 0 by rw [add_zero]
   toUniformSpace := PUnit.uniformSpace

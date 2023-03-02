@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hunter Monroe, Kyle Miller, Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.subgraph
-! leanprover-community/mathlib commit d6e84a0d3db8910c99b3aa0c56be88fa8bab6f80
+! leanprover-community/mathlib commit c6ef6387ede9983aee397d442974e61f89dfd87b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Combinatorics.SimpleGraph.Basic
 
 /-!
 # Subgraphs of a simple graph
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A subgraph of a simple graph consists of subsets of the graph's vertices and edges such that the
 endpoints of each edge are present in the vertex subset. The edge subset is formalized as a
@@ -70,7 +73,7 @@ structure Subgraph {V : Type u} (G : SimpleGraph V) where
 #align simple_graph.subgraph SimpleGraph.Subgraph
 -/
 
-variable {V : Type u} {W : Type v}
+variable {ι : Sort _} {V : Type u} {W : Type v}
 
 #print SimpleGraph.singletonSubgraph /-
 /-- The one-vertex subgraph. -/
@@ -102,7 +105,7 @@ def subgraphOfAdj (G : SimpleGraph V) {v w : V} (hvw : G.Adj v w) : G.Subgraph
 
 namespace Subgraph
 
-variable {G : SimpleGraph V}
+variable {G : SimpleGraph V} {G₁ G₂ : G.Subgraph} {a b : V}
 
 #print SimpleGraph.Subgraph.loopless /-
 protected theorem loopless (G' : Subgraph G) : Irreflexive G'.Adj := fun v h =>
@@ -212,6 +215,11 @@ theorem Adj.of_spanningCoe {G' : Subgraph G} {u v : G'.verts} (h : G'.spanningCo
   G'.adj_sub h
 #align simple_graph.subgraph.adj.of_spanning_coe SimpleGraph.Subgraph.Adj.of_spanningCoe
 -/
+
+@[simp]
+theorem spanningCoe_inj : G₁.spanningCoe = G₂.spanningCoe ↔ G₁.Adj = G₂.Adj := by
+  simp [subgraph.spanning_coe]
+#align simple_graph.subgraph.spanning_coe_inj SimpleGraph.Subgraph.spanningCoe_inj
 
 #print SimpleGraph.Subgraph.spanningCoeEquivCoeOfSpanning /-
 /-- `spanning_coe` is equivalent to `coe` for a subgraph that `is_spanning`.  -/
@@ -378,84 +386,238 @@ theorem copy_eq (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.verts) (adj' : V 
 #align simple_graph.subgraph.copy_eq SimpleGraph.Subgraph.copy_eq
 -/
 
-#print SimpleGraph.Subgraph.union /-
 /-- The union of two subgraphs. -/
-def union (x y : Subgraph G) : Subgraph G
-    where
-  verts := x.verts ∪ y.verts
-  Adj := x.Adj ⊔ y.Adj
-  adj_sub v w h := Or.cases_on h (fun h => x.adj_sub h) fun h => y.adj_sub h
-  edge_vert v w h := Or.cases_on h (fun h => Or.inl (x.edge_vert h)) fun h => Or.inr (y.edge_vert h)
-  symm v w h := by rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm]
-#align simple_graph.subgraph.union SimpleGraph.Subgraph.union
--/
+instance : Sup G.Subgraph :=
+  ⟨fun G₁ G₂ =>
+    { verts := G₁.verts ∪ G₂.verts
+      Adj := G₁.Adj ⊔ G₂.Adj
+      adj_sub := fun a b hab => Or.elim hab (fun h => G₁.adj_sub h) fun h => G₂.adj_sub h
+      edge_vert := fun a b => Or.imp (fun h => G₁.edge_vert h) fun h => G₂.edge_vert h
+      symm := fun a b => Or.imp G₁.adj_symm G₂.adj_symm }⟩
 
-#print SimpleGraph.Subgraph.inter /-
 /-- The intersection of two subgraphs. -/
-def inter (x y : Subgraph G) : Subgraph G
-    where
-  verts := x.verts ∩ y.verts
-  Adj := x.Adj ⊓ y.Adj
-  adj_sub v w h := x.adj_sub h.1
-  edge_vert v w h := ⟨x.edge_vert h.1, y.edge_vert h.2⟩
-  symm v w h := by rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm]
-#align simple_graph.subgraph.inter SimpleGraph.Subgraph.inter
--/
+instance : Inf G.Subgraph :=
+  ⟨fun G₁ G₂ =>
+    { verts := G₁.verts ∩ G₂.verts
+      Adj := G₁.Adj ⊓ G₂.Adj
+      adj_sub := fun a b hab => G₁.adj_sub hab.1
+      edge_vert := fun a b => And.imp (fun h => G₁.edge_vert h) fun h => G₂.edge_vert h
+      symm := fun a b => And.imp G₁.adj_symm G₂.adj_symm }⟩
 
-#print SimpleGraph.Subgraph.top /-
 /-- The `top` subgraph is `G` as a subgraph of itself. -/
-def top : Subgraph G where
-  verts := Set.univ
-  Adj := G.Adj
-  adj_sub v w h := h
-  edge_vert v w h := Set.mem_univ v
-  symm := G.symm
-#align simple_graph.subgraph.top SimpleGraph.Subgraph.top
--/
+instance : Top G.Subgraph :=
+  ⟨{  verts := Set.univ
+      Adj := G.Adj
+      adj_sub := fun v w h => h
+      edge_vert := fun v w h => Set.mem_univ v
+      symm := G.symm }⟩
 
-#print SimpleGraph.Subgraph.bot /-
 /-- The `bot` subgraph is the subgraph with no vertices or edges. -/
-def bot : Subgraph G where
-  verts := ∅
-  Adj := ⊥
-  adj_sub v w h := False.ndrec _ h
-  edge_vert v w h := False.ndrec _ h
-  symm u v h := h
-#align simple_graph.subgraph.bot SimpleGraph.Subgraph.bot
--/
+instance : Bot G.Subgraph :=
+  ⟨{  verts := ∅
+      Adj := ⊥
+      adj_sub := fun v w h => False.ndrec _ h
+      edge_vert := fun v w h => False.ndrec _ h
+      symm := fun u v h => h }⟩
 
-#print SimpleGraph.Subgraph.IsSubgraph /-
-/-- The relation that one subgraph is a subgraph of another. -/
-def IsSubgraph (x y : Subgraph G) : Prop :=
-  x.verts ⊆ y.verts ∧ ∀ ⦃v w : V⦄, x.Adj v w → y.Adj v w
-#align simple_graph.subgraph.is_subgraph SimpleGraph.Subgraph.IsSubgraph
--/
+instance : SupSet G.Subgraph :=
+  ⟨fun s =>
+    { verts := ⋃ G' ∈ s, verts G'
+      Adj := fun a b => ∃ G' ∈ s, Adj G' a b
+      adj_sub := by
+        rintro a b ⟨G', -, hab⟩
+        exact G'.adj_sub hab
+      edge_vert := by
+        rintro a b ⟨G', hG', hab⟩
+        exact Set.mem_unionᵢ₂_of_mem hG' (G'.edge_vert hab)
+      symm := fun a b => Exists₂.imp fun _ _ => Adj.symm }⟩
 
-instance : Lattice (Subgraph G) where
-  le := IsSubgraph
-  sup := union
-  inf := inter
-  le_refl x := ⟨rfl.Subset, fun _ _ h => h⟩
-  le_trans x y z hxy hyz := ⟨hxy.1.trans hyz.1, fun _ _ h => hyz.2 (hxy.2 h)⟩
-  le_antisymm := by
-    intro x y hxy hyx
-    ext1 v
-    exact Set.Subset.antisymm hxy.1 hyx.1
-    ext (v w)
-    exact Iff.intro (fun h => hxy.2 h) fun h => hyx.2 h
-  sup_le x y z hxy hyz :=
-    ⟨Set.union_subset hxy.1 hyz.1, fun v w h => h.casesOn (fun h => hxy.2 h) fun h => hyz.2 h⟩
-  le_sup_left x y := ⟨Set.subset_union_left x.verts y.verts, fun v w h => Or.inl h⟩
-  le_sup_right x y := ⟨Set.subset_union_right x.verts y.verts, fun v w h => Or.inr h⟩
-  le_inf x y z hxy hyz := ⟨Set.subset_inter hxy.1 hyz.1, fun v w h => ⟨hxy.2 h, hyz.2 h⟩⟩
-  inf_le_left x y := ⟨Set.inter_subset_left x.verts y.verts, fun v w h => h.1⟩
-  inf_le_right x y := ⟨Set.inter_subset_right x.verts y.verts, fun v w h => h.2⟩
+instance : InfSet G.Subgraph :=
+  ⟨fun s =>
+    { verts := ⋂ G' ∈ s, verts G'
+      Adj := fun a b => (∀ ⦃G'⦄, G' ∈ s → Adj G' a b) ∧ G.Adj a b
+      adj_sub := fun a b => And.right
+      edge_vert := fun a b hab => Set.mem_interᵢ₂_of_mem fun G' hG' => G'.edge_vert <| hab.1 hG'
+      symm := fun _ _ => And.imp (forall₂_imp fun _ _ => Adj.symm) G.adj_symm }⟩
+
+/- warning: simple_graph.subgraph.sup_adj -> SimpleGraph.Subgraph.sup_adj is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G₁ : SimpleGraph.Subgraph.{u1} V G} {G₂ : SimpleGraph.Subgraph.{u1} V G} {a : V} {b : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) G₁ G₂) a b) (Or (SimpleGraph.Subgraph.Adj.{u1} V G G₁ a b) (SimpleGraph.Subgraph.Adj.{u1} V G G₂ a b))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G₁ : SimpleGraph.Subgraph.{u1} V G} {G₂ : SimpleGraph.Subgraph.{u1} V G} {a : V} {b : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) G₁ G₂) a b) (Or (SimpleGraph.Subgraph.Adj.{u1} V G G₁ a b) (SimpleGraph.Subgraph.Adj.{u1} V G G₂ a b))
+Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.sup_adj SimpleGraph.Subgraph.sup_adjₓ'. -/
+@[simp]
+theorem sup_adj : (G₁ ⊔ G₂).Adj a b ↔ G₁.Adj a b ∨ G₂.Adj a b :=
+  Iff.rfl
+#align simple_graph.subgraph.sup_adj SimpleGraph.Subgraph.sup_adj
+
+/- warning: simple_graph.subgraph.inf_adj -> SimpleGraph.Subgraph.inf_adj is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G₁ : SimpleGraph.Subgraph.{u1} V G} {G₂ : SimpleGraph.Subgraph.{u1} V G} {a : V} {b : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasInf.{u1} V G) G₁ G₂) a b) (And (SimpleGraph.Subgraph.Adj.{u1} V G G₁ a b) (SimpleGraph.Subgraph.Adj.{u1} V G G₂ a b))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G₁ : SimpleGraph.Subgraph.{u1} V G} {G₂ : SimpleGraph.Subgraph.{u1} V G} {a : V} {b : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)) G₁ G₂) a b) (And (SimpleGraph.Subgraph.Adj.{u1} V G G₁ a b) (SimpleGraph.Subgraph.Adj.{u1} V G G₂ a b))
+Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.inf_adj SimpleGraph.Subgraph.inf_adjₓ'. -/
+@[simp]
+theorem inf_adj : (G₁ ⊓ G₂).Adj a b ↔ G₁.Adj a b ∧ G₂.Adj a b :=
+  Iff.rfl
+#align simple_graph.subgraph.inf_adj SimpleGraph.Subgraph.inf_adj
+
+@[simp]
+theorem top_adj : (⊤ : Subgraph G).Adj a b ↔ G.Adj a b :=
+  Iff.rfl
+#align simple_graph.subgraph.top_adj SimpleGraph.Subgraph.top_adj
+
+/- warning: simple_graph.subgraph.not_bot_adj -> SimpleGraph.Subgraph.not_bot_adj is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {a : V} {b : V}, Not (SimpleGraph.Subgraph.Adj.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasBot.{u1} V G)) a b)
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {a : V} {b : V}, Not (SimpleGraph.Subgraph.Adj.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))) a b)
+Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.not_bot_adj SimpleGraph.Subgraph.not_bot_adjₓ'. -/
+@[simp]
+theorem not_bot_adj : ¬(⊥ : Subgraph G).Adj a b :=
+  not_false
+#align simple_graph.subgraph.not_bot_adj SimpleGraph.Subgraph.not_bot_adj
+
+/- warning: simple_graph.subgraph.verts_sup -> SimpleGraph.Subgraph.verts_sup is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (G₁ : SimpleGraph.Subgraph.{u1} V G) (G₂ : SimpleGraph.Subgraph.{u1} V G), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) G₁ G₂)) (Union.union.{u1} (Set.{u1} V) (Set.hasUnion.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G₁) (SimpleGraph.Subgraph.verts.{u1} V G G₂))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G₁ : SimpleGraph.Subgraph.{u1} V G} {G₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) G₁ G₂)) (Union.union.{u1} (Set.{u1} V) (Set.instUnionSet.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G₁) (SimpleGraph.Subgraph.verts.{u1} V G G₂))
+Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.verts_sup SimpleGraph.Subgraph.verts_supₓ'. -/
+@[simp]
+theorem verts_sup (G₁ G₂ : G.Subgraph) : (G₁ ⊔ G₂).verts = G₁.verts ∪ G₂.verts :=
+  rfl
+#align simple_graph.subgraph.verts_sup SimpleGraph.Subgraph.verts_sup
+
+/- warning: simple_graph.subgraph.verts_inf -> SimpleGraph.Subgraph.verts_inf is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (G₁ : SimpleGraph.Subgraph.{u1} V G) (G₂ : SimpleGraph.Subgraph.{u1} V G), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasInf.{u1} V G) G₁ G₂)) (Inter.inter.{u1} (Set.{u1} V) (Set.hasInter.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G₁) (SimpleGraph.Subgraph.verts.{u1} V G G₂))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G₁ : SimpleGraph.Subgraph.{u1} V G} {G₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)) G₁ G₂)) (Inter.inter.{u1} (Set.{u1} V) (Set.instInterSet.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G₁) (SimpleGraph.Subgraph.verts.{u1} V G G₂))
+Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.verts_inf SimpleGraph.Subgraph.verts_infₓ'. -/
+@[simp]
+theorem verts_inf (G₁ G₂ : G.Subgraph) : (G₁ ⊓ G₂).verts = G₁.verts ∩ G₂.verts :=
+  rfl
+#align simple_graph.subgraph.verts_inf SimpleGraph.Subgraph.verts_inf
+
+@[simp]
+theorem verts_top : (⊤ : G.Subgraph).verts = Set.univ :=
+  rfl
+#align simple_graph.subgraph.verts_top SimpleGraph.Subgraph.verts_top
+
+@[simp]
+theorem verts_bot : (⊥ : G.Subgraph).verts = ∅ :=
+  rfl
+#align simple_graph.subgraph.verts_bot SimpleGraph.Subgraph.verts_bot
+
+@[simp]
+theorem supₛ_adj {s : Set G.Subgraph} : (supₛ s).Adj a b ↔ ∃ G ∈ s, Adj G a b :=
+  Iff.rfl
+#align simple_graph.subgraph.Sup_adj SimpleGraph.Subgraph.supₛ_adj
+
+@[simp]
+theorem infₛ_adj {s : Set G.Subgraph} : (infₛ s).Adj a b ↔ (∀ G' ∈ s, Adj G' a b) ∧ G.Adj a b :=
+  Iff.rfl
+#align simple_graph.subgraph.Inf_adj SimpleGraph.Subgraph.infₛ_adj
+
+@[simp]
+theorem supᵢ_adj {f : ι → G.Subgraph} : (⨆ i, f i).Adj a b ↔ ∃ i, (f i).Adj a b := by simp [supᵢ]
+#align simple_graph.subgraph.supr_adj SimpleGraph.Subgraph.supᵢ_adj
+
+@[simp]
+theorem infᵢ_adj {f : ι → G.Subgraph} : (⨅ i, f i).Adj a b ↔ (∀ i, (f i).Adj a b) ∧ G.Adj a b := by
+  simp [infᵢ]
+#align simple_graph.subgraph.infi_adj SimpleGraph.Subgraph.infᵢ_adj
+
+theorem infₛ_adj_of_nonempty {s : Set G.Subgraph} (hs : s.Nonempty) :
+    (infₛ s).Adj a b ↔ ∀ G' ∈ s, Adj G' a b :=
+  infₛ_adj.trans <|
+    and_iff_left_of_imp <| by
+      obtain ⟨G', hG'⟩ := hs
+      exact fun h => G'.adj_sub (h _ hG')
+#align simple_graph.subgraph.Inf_adj_of_nonempty SimpleGraph.Subgraph.infₛ_adj_of_nonempty
+
+theorem infᵢ_adj_of_nonempty [Nonempty ι] {f : ι → G.Subgraph} :
+    (⨅ i, f i).Adj a b ↔ ∀ i, (f i).Adj a b := by
+  simp [infᵢ, Inf_adj_of_nonempty (Set.range_nonempty _)]
+#align simple_graph.subgraph.infi_adj_of_nonempty SimpleGraph.Subgraph.infᵢ_adj_of_nonempty
+
+@[simp]
+theorem verts_supₛ (s : Set G.Subgraph) : (supₛ s).verts = ⋃ G' ∈ s, verts G' :=
+  rfl
+#align simple_graph.subgraph.verts_Sup SimpleGraph.Subgraph.verts_supₛ
+
+@[simp]
+theorem verts_infₛ (s : Set G.Subgraph) : (infₛ s).verts = ⋂ G' ∈ s, verts G' :=
+  rfl
+#align simple_graph.subgraph.verts_Inf SimpleGraph.Subgraph.verts_infₛ
+
+@[simp]
+theorem verts_supᵢ {f : ι → G.Subgraph} : (⨆ i, f i).verts = ⋃ i, (f i).verts := by simp [supᵢ]
+#align simple_graph.subgraph.verts_supr SimpleGraph.Subgraph.verts_supᵢ
+
+@[simp]
+theorem verts_infᵢ {f : ι → G.Subgraph} : (⨅ i, f i).verts = ⋂ i, (f i).verts := by simp [infᵢ]
+#align simple_graph.subgraph.verts_infi SimpleGraph.Subgraph.verts_infᵢ
+
+/-- For subgraphs `G₁`, `G₂`, `G₁ ≤ G₂` iff `G₁.verts ⊆ G₂.verts` and
+`∀ a b, G₁.adj a b → G₂.adj a b`. -/
+instance : DistribLattice G.Subgraph :=
+  {
+    show DistribLattice G.Subgraph from
+      Function.Injective.distribLattice (fun G' => (G'.verts, G'.spanningCoe))
+        (fun G₁ G₂ h => by
+          rw [Prod.ext_iff] at h
+          exact ext _ _ h.1 (spanning_coe_inj.1 h.2))
+        (fun _ _ => rfl) fun _ _ => rfl with
+    le := fun x y => x.verts ⊆ y.verts ∧ ∀ ⦃v w : V⦄, x.Adj v w → y.Adj v w }
 
 instance : BoundedOrder (Subgraph G) where
-  top := top
-  bot := bot
+  top := ⊤
+  bot := ⊥
   le_top x := ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩
   bot_le x := ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩
+
+-- Note that subgraphs do not form a Boolean algebra, because of `verts`.
+instance : CompleteDistribLattice G.Subgraph :=
+  { Subgraph.distribLattice with
+    le := (· ≤ ·)
+    sup := (· ⊔ ·)
+    inf := (· ⊓ ·)
+    top := ⊤
+    bot := ⊥
+    le_top := fun G' => ⟨Set.subset_univ _, fun a b => G'.adj_sub⟩
+    bot_le := fun G' => ⟨Set.empty_subset _, fun a b => False.elim⟩
+    supₛ := supₛ
+    le_sup := fun s G' hG' => ⟨Set.subset_unionᵢ₂ G' hG', fun a b hab => ⟨G', hG', hab⟩⟩
+    sup_le := fun s G' hG' =>
+      ⟨Set.unionᵢ₂_subset fun H hH => (hG' _ hH).1,
+        by
+        rintro a b ⟨H, hH, hab⟩
+        exact (hG' _ hH).2 hab⟩
+    infₛ := infₛ
+    inf_le := fun s G' hG' => ⟨Set.interᵢ₂_subset G' hG', fun a b hab => hab.1 hG'⟩
+    le_inf := fun s G' hG' =>
+      ⟨Set.subset_interᵢ₂ fun H hH => (hG' _ hH).1, fun a b hab =>
+        ⟨fun H hH => (hG' _ hH).2 hab, G'.adj_sub hab⟩⟩
+    inf_sup_le_supᵢ_inf := fun G' s =>
+      by
+      refine' ⟨_, fun a b hab => _⟩
+      · simp only [verts_inf, verts_Sup, verts_supr, Set.le_eq_subset]
+        exact (Set.inter_unionᵢ₂ _ _).Subset
+      ·
+        simpa only [spanning_coe_adj, exists_prop, Sup_adj, and_imp, forall_exists_index, supr_adj,
+          inf_adj, ← exists_and_right, exists_and_left, and_assoc', and_self_right] using hab
+    infᵢ_sup_le_sup_inf := fun G' s =>
+      by
+      refine' ⟨_, fun a b hab => _⟩
+      · simp only [Set.le_eq_subset, verts_infi, verts_sup, verts_Inf]
+        exact (Set.union_interᵢ₂ _ _).Superset
+      simp only [spanning_coe_adj, sup_adj, Inf_adj, sup_adj, Inf_adj, infi_adj] at hab⊢
+      have : (∀ G'' ∈ s, adj G' a b ∨ adj G'' a b) ∧ G.adj a b :=
+        (and_congr_left fun h => forall_congr' fun H => _).1 hab
+      simpa [forall_or_left, or_and_right, and_iff_left_of_imp G'.adj_sub] using this
+      exact and_iff_left h }
 
 #print SimpleGraph.Subgraph.subgraphInhabited /-
 @[simps]
@@ -464,124 +626,69 @@ instance subgraphInhabited : Inhabited (Subgraph G) :=
 #align simple_graph.subgraph.subgraph_inhabited SimpleGraph.Subgraph.subgraphInhabited
 -/
 
-/- warning: simple_graph.subgraph.top_verts -> SimpleGraph.Subgraph.top_verts is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) (Set.univ.{u1} V)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) (Set.univ.{u1} V)
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.top_verts SimpleGraph.Subgraph.top_vertsₓ'. -/
--- TODO simp lemmas for the other lattice operations on subgraphs
-@[simp]
-theorem top_verts : (⊤ : Subgraph G).verts = Set.univ :=
-  rfl
-#align simple_graph.subgraph.top_verts SimpleGraph.Subgraph.top_verts
-
-/- warning: simple_graph.subgraph.top_adj_iff -> SimpleGraph.Subgraph.top_adj_iff is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))) v w) (SimpleGraph.Adj.{u1} V G v w)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))) v w) (SimpleGraph.Adj.{u1} V G v w)
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.top_adj_iff SimpleGraph.Subgraph.top_adj_iffₓ'. -/
-@[simp]
-theorem top_adj_iff {v w : V} : (⊤ : Subgraph G).Adj v w ↔ G.Adj v w :=
-  Iff.rfl
-#align simple_graph.subgraph.top_adj_iff SimpleGraph.Subgraph.top_adj_iff
-
-/- warning: simple_graph.subgraph.bot_verts -> SimpleGraph.Subgraph.bot_verts is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} V) (Set.hasEmptyc.{u1} V))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} V) (Set.instEmptyCollectionSet.{u1} V))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.bot_verts SimpleGraph.Subgraph.bot_vertsₓ'. -/
-@[simp]
-theorem bot_verts : (⊥ : Subgraph G).verts = ∅ :=
-  rfl
-#align simple_graph.subgraph.bot_verts SimpleGraph.Subgraph.bot_verts
-
-/- warning: simple_graph.subgraph.not_bot_adj -> SimpleGraph.Subgraph.not_bot_adj is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Not (SimpleGraph.Subgraph.Adj.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))) v w)
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V}, Not (SimpleGraph.Subgraph.Adj.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))) v w)
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.not_bot_adj SimpleGraph.Subgraph.not_bot_adjₓ'. -/
-@[simp]
-theorem not_bot_adj {v w : V} : ¬(⊥ : Subgraph G).Adj v w :=
-  not_false
-#align simple_graph.subgraph.not_bot_adj SimpleGraph.Subgraph.not_bot_adj
-
-/- warning: simple_graph.subgraph.inf_adj -> SimpleGraph.Subgraph.inf_adj is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G} {v : V} {w : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toHasInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H₁ H₂) v w) (And (SimpleGraph.Subgraph.Adj.{u1} V G H₁ v w) (SimpleGraph.Subgraph.Adj.{u1} V G H₂ v w))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G} {v : V} {w : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)) H₁ H₂) v w) (And (SimpleGraph.Subgraph.Adj.{u1} V G H₁ v w) (SimpleGraph.Subgraph.Adj.{u1} V G H₂ v w))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.inf_adj SimpleGraph.Subgraph.inf_adjₓ'. -/
-@[simp]
-theorem inf_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁ ⊓ H₂).Adj v w ↔ H₁.Adj v w ∧ H₂.Adj v w :=
-  Iff.rfl
-#align simple_graph.subgraph.inf_adj SimpleGraph.Subgraph.inf_adj
-
-/- warning: simple_graph.subgraph.sup_adj -> SimpleGraph.Subgraph.sup_adj is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G} {v : V} {w : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toHasSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H₁ H₂) v w) (Or (SimpleGraph.Subgraph.Adj.{u1} V G H₁ v w) (SimpleGraph.Subgraph.Adj.{u1} V G H₂ v w))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G} {v : V} {w : V}, Iff (SimpleGraph.Subgraph.Adj.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) H₁ H₂) v w) (Or (SimpleGraph.Subgraph.Adj.{u1} V G H₁ v w) (SimpleGraph.Subgraph.Adj.{u1} V G H₂ v w))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.sup_adj SimpleGraph.Subgraph.sup_adjₓ'. -/
-@[simp]
-theorem sup_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁ ⊔ H₂).Adj v w ↔ H₁.Adj v w ∨ H₂.Adj v w :=
-  Iff.rfl
-#align simple_graph.subgraph.sup_adj SimpleGraph.Subgraph.sup_adj
-
-/- warning: simple_graph.subgraph.verts_sup -> SimpleGraph.Subgraph.verts_sup is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toHasSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H H')) (Union.union.{u1} (Set.{u1} V) (Set.hasUnion.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G H) (SimpleGraph.Subgraph.verts.{u1} V G H'))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) H H')) (Union.union.{u1} (Set.{u1} V) (Set.instUnionSet.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G H) (SimpleGraph.Subgraph.verts.{u1} V G H'))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.verts_sup SimpleGraph.Subgraph.verts_supₓ'. -/
-@[simp]
-theorem verts_sup {H H' : G.Subgraph} : (H ⊔ H').verts = H.verts ∪ H'.verts :=
-  rfl
-#align simple_graph.subgraph.verts_sup SimpleGraph.Subgraph.verts_sup
-
-/- warning: simple_graph.subgraph.verts_inf -> SimpleGraph.Subgraph.verts_inf is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toHasInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H H')) (Inter.inter.{u1} (Set.{u1} V) (Set.hasInter.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G H) (SimpleGraph.Subgraph.verts.{u1} V G H'))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)) H H')) (Inter.inter.{u1} (Set.{u1} V) (Set.instInterSet.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G H) (SimpleGraph.Subgraph.verts.{u1} V G H'))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.verts_inf SimpleGraph.Subgraph.verts_infₓ'. -/
-@[simp]
-theorem verts_inf {H H' : G.Subgraph} : (H ⊓ H').verts = H.verts ∩ H'.verts :=
-  rfl
-#align simple_graph.subgraph.verts_inf SimpleGraph.Subgraph.verts_inf
-
 /- warning: simple_graph.subgraph.neighbor_set_sup -> SimpleGraph.Subgraph.neighborSet_sup is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G} (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toHasSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H H') v) (Union.union.{u1} (Set.{u1} V) (Set.hasUnion.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G H v) (SimpleGraph.Subgraph.neighborSet.{u1} V G H' v))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G} (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) H H') v) (Union.union.{u1} (Set.{u1} V) (Set.hasUnion.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G H v) (SimpleGraph.Subgraph.neighborSet.{u1} V G H' v))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G} (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) H H') v) (Union.union.{u1} (Set.{u1} V) (Set.instUnionSet.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G H v) (SimpleGraph.Subgraph.neighborSet.{u1} V G H' v))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.neighbor_set_sup SimpleGraph.Subgraph.neighborSet_supₓ'. -/
+@[simp]
 theorem neighborSet_sup {H H' : G.Subgraph} (v : V) :
     (H ⊔ H').neighborSet v = H.neighborSet v ∪ H'.neighborSet v :=
-  by
-  ext w
-  simp
+  rfl
 #align simple_graph.subgraph.neighbor_set_sup SimpleGraph.Subgraph.neighborSet_sup
 
 /- warning: simple_graph.subgraph.neighbor_set_inf -> SimpleGraph.Subgraph.neighborSet_inf is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G} (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toHasInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H H') v) (Inter.inter.{u1} (Set.{u1} V) (Set.hasInter.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G H v) (SimpleGraph.Subgraph.neighborSet.{u1} V G H' v))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G} (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasInf.{u1} V G) H H') v) (Inter.inter.{u1} (Set.{u1} V) (Set.hasInter.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G H v) (SimpleGraph.Subgraph.neighborSet.{u1} V G H' v))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G} (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)) H H') v) (Inter.inter.{u1} (Set.{u1} V) (Set.instInterSet.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G H v) (SimpleGraph.Subgraph.neighborSet.{u1} V G H' v))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.neighbor_set_inf SimpleGraph.Subgraph.neighborSet_infₓ'. -/
+@[simp]
 theorem neighborSet_inf {H H' : G.Subgraph} (v : V) :
     (H ⊓ H').neighborSet v = H.neighborSet v ∩ H'.neighborSet v :=
-  by
-  ext w
-  simp
+  rfl
 #align simple_graph.subgraph.neighbor_set_inf SimpleGraph.Subgraph.neighborSet_inf
+
+@[simp]
+theorem neighborSet_top (v : V) : (⊤ : G.Subgraph).neighborSet v = G.neighborSet v :=
+  rfl
+#align simple_graph.subgraph.neighbor_set_top SimpleGraph.Subgraph.neighborSet_top
+
+@[simp]
+theorem neighborSet_bot (v : V) : (⊥ : G.Subgraph).neighborSet v = ∅ :=
+  rfl
+#align simple_graph.subgraph.neighbor_set_bot SimpleGraph.Subgraph.neighborSet_bot
+
+@[simp]
+theorem neighborSet_supₛ (s : Set G.Subgraph) (v : V) :
+    (supₛ s).neighborSet v = ⋃ G' ∈ s, neighborSet G' v :=
+  by
+  ext
+  simp
+#align simple_graph.subgraph.neighbor_set_Sup SimpleGraph.Subgraph.neighborSet_supₛ
+
+@[simp]
+theorem neighborSet_infₛ (s : Set G.Subgraph) (v : V) :
+    (infₛ s).neighborSet v = (⋂ G' ∈ s, neighborSet G' v) ∩ G.neighborSet v :=
+  by
+  ext
+  simp
+#align simple_graph.subgraph.neighbor_set_Inf SimpleGraph.Subgraph.neighborSet_infₛ
+
+@[simp]
+theorem neighborSet_supᵢ (f : ι → G.Subgraph) (v : V) :
+    (⨆ i, f i).neighborSet v = ⋃ i, (f i).neighborSet v := by simp [supᵢ]
+#align simple_graph.subgraph.neighbor_set_supr SimpleGraph.Subgraph.neighborSet_supᵢ
+
+@[simp]
+theorem neighborSet_infᵢ (f : ι → G.Subgraph) (v : V) :
+    (⨅ i, f i).neighborSet v = (⋂ i, (f i).neighborSet v) ∩ G.neighborSet v := by simp [infᵢ]
+#align simple_graph.subgraph.neighbor_set_infi SimpleGraph.Subgraph.neighborSet_infᵢ
 
 /- warning: simple_graph.subgraph.edge_set_top -> SimpleGraph.Subgraph.edgeSet_top is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasTop.{u1} V G))) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V))) (SimpleGraph.{u1} V) (fun (_x : SimpleGraph.{u1} V) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : SimpleGraph.{u1} V) => Set.{u1} (Sym2.{u1} V)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V))) (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)))) (RelEmbedding.toEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : SimpleGraph.{u1} V) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : SimpleGraph.{u1} V) => LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instLESimpleGraph.{u1} V) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (Sym2.{u1} V)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (Sym2.{u1} V)) => LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instLESet.{u1} (Sym2.{u1} V)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (SimpleGraph.edgeSetEmbedding.{u1} V)) G)
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.edge_set_top SimpleGraph.Subgraph.edgeSet_topₓ'. -/
@@ -592,7 +699,7 @@ theorem edgeSet_top : (⊤ : Subgraph G).edgeSetEmbedding = G.edgeSetEmbedding :
 
 /- warning: simple_graph.subgraph.edge_set_bot -> SimpleGraph.Subgraph.edgeSet_bot is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasEmptyc.{u1} (Sym2.{u1} V)))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasBot.{u1} V G))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasEmptyc.{u1} (Sym2.{u1} V)))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instEmptyCollectionSet.{u1} (Sym2.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.edge_set_bot SimpleGraph.Subgraph.edgeSet_botₓ'. -/
@@ -603,7 +710,7 @@ theorem edgeSet_bot : (⊥ : Subgraph G).edgeSetEmbedding = ∅ :=
 
 /- warning: simple_graph.subgraph.edge_set_inf -> SimpleGraph.Subgraph.edgeSet_inf is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toHasInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H₁ H₂)) (Inter.inter.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasInter.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasInf.{u1} V G) H₁ H₂)) (Inter.inter.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasInter.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Inf.inf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)) H₁ H₂)) (Inter.inter.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instInterSet.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.edge_set_inf SimpleGraph.Subgraph.edgeSet_infₓ'. -/
@@ -615,7 +722,7 @@ theorem edgeSet_inf {H₁ H₂ : Subgraph G} :
 
 /- warning: simple_graph.subgraph.edge_set_sup -> SimpleGraph.Subgraph.edgeSet_sup is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toHasSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H₁ H₂)) (Union.union.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasUnion.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) H₁ H₂)) (Union.union.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasUnion.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) H₁ H₂)) (Union.union.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instUnionSet.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.edge_set_sup SimpleGraph.Subgraph.edgeSet_supₓ'. -/
@@ -625,22 +732,46 @@ theorem edgeSet_sup {H₁ H₂ : Subgraph G} :
   Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_sup SimpleGraph.Subgraph.edgeSet_sup
 
-/- warning: simple_graph.subgraph.spanning_coe_top -> SimpleGraph.Subgraph.spanningCoe_top is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) G
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) G
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.spanning_coe_top SimpleGraph.Subgraph.spanningCoe_topₓ'. -/
+@[simp]
+theorem edgeSet_supₛ (s : Set G.Subgraph) : (supₛ s).edgeSetEmbedding = ⋃ G' ∈ s, edgeSet G' :=
+  by
+  ext e
+  induction e using Sym2.ind
+  simp
+#align simple_graph.subgraph.edge_set_Sup SimpleGraph.Subgraph.edgeSet_supₛ
+
+@[simp]
+theorem edgeSet_infₛ (s : Set G.Subgraph) :
+    (infₛ s).edgeSetEmbedding = (⋂ G' ∈ s, edgeSet G') ∩ G.edgeSetEmbedding :=
+  by
+  ext e
+  induction e using Sym2.ind
+  simp
+#align simple_graph.subgraph.edge_set_Inf SimpleGraph.Subgraph.edgeSet_infₛ
+
+@[simp]
+theorem edgeSet_supᵢ (f : ι → G.Subgraph) :
+    (⨆ i, f i).edgeSetEmbedding = ⋃ i, (f i).edgeSetEmbedding := by simp [supᵢ]
+#align simple_graph.subgraph.edge_set_supr SimpleGraph.Subgraph.edgeSet_supᵢ
+
+@[simp]
+theorem edgeSet_infᵢ (f : ι → G.Subgraph) :
+    (⨅ i, f i).edgeSetEmbedding = (⋂ i, (f i).edgeSetEmbedding) ∩ G.edgeSetEmbedding := by
+  simp [infᵢ]
+#align simple_graph.subgraph.edge_set_infi SimpleGraph.Subgraph.edgeSet_infᵢ
+
+#print SimpleGraph.Subgraph.spanningCoe_top /-
 @[simp]
 theorem spanningCoe_top : (⊤ : Subgraph G).spanningCoe = G :=
   by
   ext
   rfl
 #align simple_graph.subgraph.spanning_coe_top SimpleGraph.Subgraph.spanningCoe_top
+-/
 
 /- warning: simple_graph.subgraph.spanning_coe_bot -> SimpleGraph.Subgraph.spanningCoe_bot is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasBot.{u1} V G))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.spanning_coe_bot SimpleGraph.Subgraph.spanningCoe_botₓ'. -/
@@ -664,7 +795,7 @@ def SimpleGraph.toSubgraph (H : SimpleGraph V) (h : H ≤ G) : G.Subgraph
 
 /- warning: simple_graph.subgraph.support_mono -> SimpleGraph.Subgraph.support_mono is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) H H') -> (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) (SimpleGraph.Subgraph.support.{u1} V G H) (SimpleGraph.Subgraph.support.{u1} V G H'))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) H H') -> (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) (SimpleGraph.Subgraph.support.{u1} V G H) (SimpleGraph.Subgraph.support.{u1} V G H'))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) H H') -> (HasSubset.Subset.{u1} (Set.{u1} V) (Set.instHasSubsetSet.{u1} V) (SimpleGraph.Subgraph.support.{u1} V G H) (SimpleGraph.Subgraph.support.{u1} V G H'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.support_mono SimpleGraph.Subgraph.support_monoₓ'. -/
@@ -681,7 +812,7 @@ theorem SimpleGraph.toSubgraph.isSpanning (H : SimpleGraph V) (h : H ≤ G) :
 
 /- warning: simple_graph.subgraph.spanning_coe_le_of_le -> SimpleGraph.Subgraph.spanningCoe_le_of_le is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) H H') -> (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G H) (SimpleGraph.Subgraph.spanningCoe.{u1} V G H'))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) H H') -> (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G H) (SimpleGraph.Subgraph.spanningCoe.{u1} V G H'))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) H H') -> (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instLESimpleGraph.{u1} V) (SimpleGraph.Subgraph.spanningCoe.{u1} V G H) (SimpleGraph.Subgraph.spanningCoe.{u1} V G H'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.spanning_coe_le_of_le SimpleGraph.Subgraph.spanningCoe_le_of_leₓ'. -/
@@ -689,12 +820,7 @@ theorem spanningCoe_le_of_le {H H' : Subgraph G} (h : H ≤ H') : H.spanningCoe 
   h.2
 #align simple_graph.subgraph.spanning_coe_le_of_le SimpleGraph.Subgraph.spanningCoe_le_of_le
 
-/- warning: simple_graph.subgraph.top_equiv -> SimpleGraph.Subgraph.topEquiv is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, SimpleGraph.Iso.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))))) V (SimpleGraph.Subgraph.coe.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) G
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, SimpleGraph.Iso.{u1, u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))))) V (SimpleGraph.Subgraph.coe.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) G
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.top_equiv SimpleGraph.Subgraph.topEquivₓ'. -/
+#print SimpleGraph.Subgraph.topEquiv /-
 /-- The top of the `subgraph G` lattice is equivalent to the graph itself. -/
 def topEquiv : (⊤ : Subgraph G).coe ≃g G
     where
@@ -704,10 +830,11 @@ def topEquiv : (⊤ : Subgraph G).coe ≃g G
   right_inv v := rfl
   map_rel_iff' a b := Iff.rfl
 #align simple_graph.subgraph.top_equiv SimpleGraph.Subgraph.topEquiv
+-/
 
 /- warning: simple_graph.subgraph.bot_equiv -> SimpleGraph.Subgraph.botEquiv is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, SimpleGraph.Iso.{u1, 0} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))))) Empty (SimpleGraph.Subgraph.coe.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))) (Bot.bot.{0} (SimpleGraph.{0} Empty) (BooleanAlgebra.toHasBot.{0} (SimpleGraph.{0} Empty) (SimpleGraph.booleanAlgebra.{0} Empty)))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, SimpleGraph.Iso.{u1, 0} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasBot.{u1} V G)))) Empty (SimpleGraph.Subgraph.coe.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasBot.{u1} V G))) (Bot.bot.{0} (SimpleGraph.{0} Empty) (CompleteLattice.toHasBot.{0} (SimpleGraph.{0} Empty) (Order.Coframe.toCompleteLattice.{0} (SimpleGraph.{0} Empty) (CompleteDistribLattice.toCoframe.{0} (SimpleGraph.{0} Empty) (CompleteBooleanAlgebra.toCompleteDistribLattice.{0} (SimpleGraph.{0} Empty) (SimpleGraph.completeBooleanAlgebra.{0} Empty))))))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V}, SimpleGraph.Iso.{u1, 0} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))))) Empty (SimpleGraph.Subgraph.coe.{u1} V G (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))) (Bot.bot.{0} (SimpleGraph.{0} Empty) (BooleanAlgebra.toBot.{0} (SimpleGraph.{0} Empty) (SimpleGraph.instBooleanAlgebraSimpleGraph.{0} Empty)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.bot_equiv SimpleGraph.Subgraph.botEquivₓ'. -/
@@ -724,7 +851,7 @@ def botEquiv : (⊥ : Subgraph G).coe ≃g (⊥ : SimpleGraph Empty)
 
 /- warning: simple_graph.subgraph.edge_set_mono -> SimpleGraph.Subgraph.edgeSet_mono is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) H₁ H₂) -> (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) H₁ H₂) -> (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) H₁ H₂) -> (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instLESet.{u1} (Sym2.{u1} V)) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.edge_set_mono SimpleGraph.Subgraph.edgeSet_monoₓ'. -/
@@ -734,7 +861,7 @@ theorem edgeSet_mono {H₁ H₂ : Subgraph G} (h : H₁ ≤ H₂) :
 
 /- warning: disjoint.edge_set -> Disjoint.edgeSet is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, (Disjoint.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)) H₁ H₂) -> (Disjoint.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Sym2.{u1} V)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.completeBooleanAlgebra.{u1} (Sym2.{u1} V))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (Sym2.{u1} V)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.booleanAlgebra.{u1} (Sym2.{u1} V)))) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, (Disjoint.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)) H₁ H₂) -> (Disjoint.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Sym2.{u1} V)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.completeBooleanAlgebra.{u1} (Sym2.{u1} V))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (Sym2.{u1} V)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.booleanAlgebra.{u1} (Sym2.{u1} V)))) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {H₁ : SimpleGraph.Subgraph.{u1} V G} {H₂ : SimpleGraph.Subgraph.{u1} V G}, (Disjoint.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)) H₁ H₂) -> (Disjoint.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Sym2.{u1} V)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instCompleteBooleanAlgebraSet.{u1} (Sym2.{u1} V))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (Sym2.{u1} V)) (Preorder.toLE.{u1} (Set.{u1} (Sym2.{u1} V)) (PartialOrder.toPreorder.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Sym2.{u1} V)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instCompleteBooleanAlgebraSet.{u1} (Sym2.{u1} V))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (Sym2.{u1} V)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Sym2.{u1} V)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instCompleteBooleanAlgebraSet.{u1} (Sym2.{u1} V))))))) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₁) (SimpleGraph.Subgraph.edgeSet.{u1} V G H₂))
 Case conversion may be inaccurate. Consider using '#align disjoint.edge_set Disjoint.edgeSetₓ'. -/
@@ -764,7 +891,7 @@ protected def map {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph) : G'.Sub
 
 /- warning: simple_graph.subgraph.map_monotone -> SimpleGraph.Subgraph.map_monotone is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G'), Monotone.{u1, u2} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.{u2} W G') (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G)))) (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.lattice.{u2} W G')))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f)
+  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G'), Monotone.{u1, u2} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.{u2} W G') (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G)))))) (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteSemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteLattice.toCompleteSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.completeDistribLattice.{u2} W G')))))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f)
 but is expected to have type
   forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G'), Monotone.{u1, u2} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.{u2} W G') (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)))) (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.instLatticeSubgraph.{u2} W G')))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f)
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.map_monotone SimpleGraph.Subgraph.map_monotoneₓ'. -/
@@ -782,7 +909,7 @@ theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.m
 
 /- warning: simple_graph.subgraph.map_sup -> SimpleGraph.Subgraph.map_sup is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G') {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toHasSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) H H')) (Sup.sup.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeSup.toHasSup.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeSup.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.lattice.{u2} W G'))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H'))
+  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G') {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) H H')) (Sup.sup.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.hasSup.{u2} W G') (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H'))
 but is expected to have type
   forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G') {H : SimpleGraph.Subgraph.{u1} V G} {H' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) H H')) (Sup.sup.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeSup.toSup.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeSup.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.instLatticeSubgraph.{u2} W G'))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.map_sup SimpleGraph.Subgraph.map_supₓ'. -/
@@ -819,7 +946,7 @@ protected def comap {G' : SimpleGraph W} (f : G →g G') (H : G'.Subgraph) : G.S
 
 /- warning: simple_graph.subgraph.comap_monotone -> SimpleGraph.Subgraph.comap_monotone is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G'), Monotone.{u2, u1} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.lattice.{u2} W G')))) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G)))) (SimpleGraph.Subgraph.comap.{u1, u2} V W G G' f)
+  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G'), Monotone.{u2, u1} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteSemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteLattice.toCompleteSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.completeDistribLattice.{u2} W G')))))) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G)))))) (SimpleGraph.Subgraph.comap.{u1, u2} V W G G' f)
 but is expected to have type
   forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G'), Monotone.{u2, u1} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.instLatticeSubgraph.{u2} W G')))) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G)))) (SimpleGraph.Subgraph.comap.{u1, u2} V W G G' f)
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.comap_monotone SimpleGraph.Subgraph.comap_monotoneₓ'. -/
@@ -838,7 +965,7 @@ theorem comap_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph
 
 /- warning: simple_graph.subgraph.map_le_iff_le_comap -> SimpleGraph.Subgraph.map_le_iff_le_comap is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G') (H : SimpleGraph.Subgraph.{u1} V G) (H' : SimpleGraph.Subgraph.{u2} W G'), Iff (LE.le.{u2} (SimpleGraph.Subgraph.{u2} W G') (Preorder.toLE.{u2} (SimpleGraph.Subgraph.{u2} W G') (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.lattice.{u2} W G'))))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H) H') (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) H (SimpleGraph.Subgraph.comap.{u1, u2} V W G G' f H'))
+  forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G') (H : SimpleGraph.Subgraph.{u1} V G) (H' : SimpleGraph.Subgraph.{u2} W G'), Iff (LE.le.{u2} (SimpleGraph.Subgraph.{u2} W G') (Preorder.toLE.{u2} (SimpleGraph.Subgraph.{u2} W G') (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteSemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteLattice.toCompleteSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.Subgraph.{u2} W G') (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.completeDistribLattice.{u2} W G'))))))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H) H') (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) H (SimpleGraph.Subgraph.comap.{u1, u2} V W G G' f H'))
 but is expected to have type
   forall {V : Type.{u1}} {W : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W G G') (H : SimpleGraph.Subgraph.{u1} V G) (H' : SimpleGraph.Subgraph.{u2} W G'), Iff (LE.le.{u2} (SimpleGraph.Subgraph.{u2} W G') (Preorder.toLE.{u2} (SimpleGraph.Subgraph.{u2} W G') (PartialOrder.toPreorder.{u2} (SimpleGraph.Subgraph.{u2} W G') (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.Subgraph.{u2} W G') (Lattice.toSemilatticeInf.{u2} (SimpleGraph.Subgraph.{u2} W G') (SimpleGraph.Subgraph.instLatticeSubgraph.{u2} W G'))))) (SimpleGraph.Subgraph.map.{u1, u2} V W G G' f H) H') (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) H (SimpleGraph.Subgraph.comap.{u1, u2} V W G G' f H'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.map_le_iff_le_comap SimpleGraph.Subgraph.map_le_iff_le_comapₓ'. -/
@@ -862,7 +989,7 @@ theorem map_le_iff_le_comap {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph
 
 /- warning: simple_graph.subgraph.inclusion -> SimpleGraph.Subgraph.inclusion is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) x y) -> (SimpleGraph.Hom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) x y) -> (SimpleGraph.Hom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) x y) -> (SimpleGraph.Hom.{u1, u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.inclusion SimpleGraph.Subgraph.inclusionₓ'. -/
@@ -877,7 +1004,7 @@ def inclusion {x y : Subgraph G} (h : x ≤ y) : x.coe →g y.coe
 
 /- warning: simple_graph.subgraph.inclusion.injective -> SimpleGraph.Subgraph.inclusion.injective is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G} (h : LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) x y), Function.Injective.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (coeFn.{succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y)) (fun (_x : RelHom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (SimpleGraph.Subgraph.coe.{u1} V G x)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G y))) => (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) -> (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y))) (RelHom.hasCoeToFun.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (SimpleGraph.Subgraph.coe.{u1} V G x)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G y))) (SimpleGraph.Subgraph.inclusion.{u1} V G x y h))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G} (h : LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) x y), Function.Injective.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (coeFn.{succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y)) (fun (_x : RelHom.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (SimpleGraph.Subgraph.coe.{u1} V G x)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G y))) => (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) -> (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y))) (RelHom.hasCoeToFun.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G x)) (SimpleGraph.Subgraph.coe.{u1} V G x)) (SimpleGraph.Adj.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G y))) (SimpleGraph.Subgraph.inclusion.{u1} V G x y h))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G} (h : LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) x y), Function.Injective.{succ u1, succ u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (FunLike.coe.{succ u1, succ u1, succ u1} (SimpleGraph.Hom.{u1, u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (fun (_x : Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) => Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (SimpleGraph.Hom.{u1, u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G x) (SimpleGraph.Subgraph.coe.{u1} V G y)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Adj.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (SimpleGraph.Subgraph.coe.{u1} V G x)) (SimpleGraph.Adj.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G y)) (RelHom.instRelHomClassRelHom.{u1, u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Adj.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G x)) (SimpleGraph.Subgraph.coe.{u1} V G x)) (SimpleGraph.Adj.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G y)) (SimpleGraph.Subgraph.coe.{u1} V G y)))) (SimpleGraph.Subgraph.inclusion.{u1} V G x y h))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.inclusion.injective SimpleGraph.Subgraph.inclusion.injectiveₓ'. -/
@@ -920,7 +1047,7 @@ theorem spanningHom.injective {x : Subgraph G} : Function.Injective x.spanningHo
 
 /- warning: simple_graph.subgraph.neighbor_set_subset_of_subgraph -> SimpleGraph.Subgraph.neighborSet_subset_of_subgraph is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) x y) -> (forall (v : V), HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G x v) (SimpleGraph.Subgraph.neighborSet.{u1} V G y v))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) x y) -> (forall (v : V), HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G x v) (SimpleGraph.Subgraph.neighborSet.{u1} V G y v))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {x : SimpleGraph.Subgraph.{u1} V G} {y : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) x y) -> (forall (v : V), HasSubset.Subset.{u1} (Set.{u1} V) (Set.instHasSubsetSet.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G x v) (SimpleGraph.Subgraph.neighborSet.{u1} V G y v))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.neighbor_set_subset_of_subgraph SimpleGraph.Subgraph.neighborSet_subset_of_subgraphₓ'. -/
@@ -945,7 +1072,7 @@ instance finiteAt {G' : Subgraph G} (v : G'.verts) [DecidableRel G'.Adj]
 
 /- warning: simple_graph.subgraph.finite_at_of_subgraph -> SimpleGraph.Subgraph.finiteAtOfSubgraph is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} [_inst_1 : DecidableRel.{succ u1} V (SimpleGraph.Subgraph.Adj.{u1} V G G')], (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) G' G'') -> (forall (v : coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) [hf : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G'' ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeSubtype.{succ u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (SimpleGraph.Subgraph.verts.{u1} V G G')))))) v)))], Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G' ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeSubtype.{succ u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (SimpleGraph.Subgraph.verts.{u1} V G G')))))) v))))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} [_inst_1 : DecidableRel.{succ u1} V (SimpleGraph.Subgraph.Adj.{u1} V G G')], (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) G' G'') -> (forall (v : coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) [hf : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G'' ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeSubtype.{succ u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (SimpleGraph.Subgraph.verts.{u1} V G G')))))) v)))], Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G' ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.verts.{u1} V G G')) V (coeSubtype.{succ u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (SimpleGraph.Subgraph.verts.{u1} V G G')))))) v))))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} [_inst_1 : DecidableRel.{succ u1} V (SimpleGraph.Subgraph.Adj.{u1} V G G')], (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) G' G'') -> (forall (v : Set.Elem.{u1} V (SimpleGraph.Subgraph.verts.{u1} V G G')) [hf : Fintype.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.neighborSet.{u1} V G G'' (Subtype.val.{succ u1} V (fun (x : V) => Membership.mem.{u1, u1} V (Set.{u1} V) (Set.instMembershipSet.{u1} V) x (SimpleGraph.Subgraph.verts.{u1} V G G')) v)))], Fintype.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.neighborSet.{u1} V G G' (Subtype.val.{succ u1} V (fun (x : V) => Membership.mem.{u1, u1} V (Set.{u1} V) (Set.instMembershipSet.{u1} V) x (SimpleGraph.Subgraph.verts.{u1} V G G')) v))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.finite_at_of_subgraph SimpleGraph.Subgraph.finiteAtOfSubgraphₓ'. -/
@@ -1001,7 +1128,7 @@ theorem degree_le (G' : Subgraph G) (v : V) [Fintype (G'.neighborSet v)]
 
 /- warning: simple_graph.subgraph.degree_le' -> SimpleGraph.Subgraph.degree_le' is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (G' : SimpleGraph.Subgraph.{u1} V G) (G'' : SimpleGraph.Subgraph.{u1} V G), (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) G' G'') -> (forall (v : V) [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G' v))] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G'' v))], LE.le.{0} Nat Nat.hasLe (SimpleGraph.Subgraph.degree.{u1} V G G' v _inst_1) (SimpleGraph.Subgraph.degree.{u1} V G G'' v _inst_2))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (G' : SimpleGraph.Subgraph.{u1} V G) (G'' : SimpleGraph.Subgraph.{u1} V G), (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) G' G'') -> (forall (v : V) [_inst_1 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G' v))] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.Subgraph.neighborSet.{u1} V G G'' v))], LE.le.{0} Nat Nat.hasLe (SimpleGraph.Subgraph.degree.{u1} V G G' v _inst_1) (SimpleGraph.Subgraph.degree.{u1} V G G'' v _inst_2))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (G' : SimpleGraph.Subgraph.{u1} V G) (G'' : SimpleGraph.Subgraph.{u1} V G), (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) G' G'') -> (forall (v : V) [_inst_1 : Fintype.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.neighborSet.{u1} V G G' v))] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} V (SimpleGraph.Subgraph.neighborSet.{u1} V G G'' v))], LE.le.{0} Nat instLENat (SimpleGraph.Subgraph.degree.{u1} V G G' v _inst_1) (SimpleGraph.Subgraph.degree.{u1} V G G'' v _inst_2))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.degree_le' SimpleGraph.Subgraph.degree_le'ₓ'. -/
@@ -1056,7 +1183,7 @@ instance nonempty_singletonSubgraph_verts (v : V) : Nonempty (G.singletonSubgrap
 
 /- warning: simple_graph.singleton_subgraph_le_iff -> SimpleGraph.singletonSubgraph_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (v : V) (H : SimpleGraph.Subgraph.{u1} V G), Iff (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.singletonSubgraph.{u1} V G v) H) (Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) v (SimpleGraph.Subgraph.verts.{u1} V G H))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (v : V) (H : SimpleGraph.Subgraph.{u1} V G), Iff (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.singletonSubgraph.{u1} V G v) H) (Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) v (SimpleGraph.Subgraph.verts.{u1} V G H))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (v : V) (H : SimpleGraph.Subgraph.{u1} V G), Iff (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.singletonSubgraph.{u1} V G v) H) (Membership.mem.{u1, u1} V (Set.{u1} V) (Set.instMembershipSet.{u1} V) v (SimpleGraph.Subgraph.verts.{u1} V G H))
 Case conversion may be inaccurate. Consider using '#align simple_graph.singleton_subgraph_le_iff SimpleGraph.singletonSubgraph_le_iffₓ'. -/
@@ -1217,7 +1344,7 @@ theorem neighborSet_subgraphOfAdj [DecidableEq V] {u v w : V} (hvw : G.Adj v w) 
 
 /- warning: simple_graph.singleton_subgraph_fst_le_subgraph_of_adj -> SimpleGraph.singletonSubgraph_fst_le_subgraphOfAdj is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {h : SimpleGraph.Adj.{u1} V G u v}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.singletonSubgraph.{u1} V G u) (SimpleGraph.subgraphOfAdj.{u1} V G u v h)
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {h : SimpleGraph.Adj.{u1} V G u v}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.singletonSubgraph.{u1} V G u) (SimpleGraph.subgraphOfAdj.{u1} V G u v h)
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {h : SimpleGraph.Adj.{u1} V G u v}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.singletonSubgraph.{u1} V G u) (SimpleGraph.subgraphOfAdj.{u1} V G u v h)
 Case conversion may be inaccurate. Consider using '#align simple_graph.singleton_subgraph_fst_le_subgraph_of_adj SimpleGraph.singletonSubgraph_fst_le_subgraphOfAdjₓ'. -/
@@ -1227,7 +1354,7 @@ theorem singletonSubgraph_fst_le_subgraphOfAdj {u v : V} {h : G.Adj u v} :
 
 /- warning: simple_graph.singleton_subgraph_snd_le_subgraph_of_adj -> SimpleGraph.singletonSubgraph_snd_le_subgraphOfAdj is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {h : SimpleGraph.Adj.{u1} V G u v}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.singletonSubgraph.{u1} V G v) (SimpleGraph.subgraphOfAdj.{u1} V G u v h)
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {h : SimpleGraph.Adj.{u1} V G u v}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.singletonSubgraph.{u1} V G v) (SimpleGraph.subgraphOfAdj.{u1} V G u v h)
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {h : SimpleGraph.Adj.{u1} V G u v}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.singletonSubgraph.{u1} V G v) (SimpleGraph.subgraphOfAdj.{u1} V G u v h)
 Case conversion may be inaccurate. Consider using '#align simple_graph.singleton_subgraph_snd_le_subgraph_of_adj SimpleGraph.singletonSubgraph_snd_le_subgraphOfAdjₓ'. -/
@@ -1375,7 +1502,7 @@ theorem coe_deleteEdges_eq (s : Set (Sym2 V)) :
 
 /- warning: simple_graph.subgraph.delete_edges_le -> SimpleGraph.Subgraph.deleteEdges_le is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} (s : Set.{u1} (Sym2.{u1} V)), LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s) G'
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} (s : Set.{u1} (Sym2.{u1} V)), LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s) G'
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} (s : Set.{u1} (Sym2.{u1} V)), LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s) G'
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.delete_edges_le SimpleGraph.Subgraph.deleteEdges_leₓ'. -/
@@ -1385,7 +1512,7 @@ theorem deleteEdges_le : G'.deleteEdges s ≤ G' := by
 
 /- warning: simple_graph.subgraph.delete_edges_le_of_le -> SimpleGraph.Subgraph.deleteEdges_le_of_le is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} (Sym2.{u1} V)} {s' : Set.{u1} (Sym2.{u1} V)}, (HasSubset.Subset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSubset.{u1} (Sym2.{u1} V)) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s') (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} (Sym2.{u1} V)} {s' : Set.{u1} (Sym2.{u1} V)}, (HasSubset.Subset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSubset.{u1} (Sym2.{u1} V)) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s') (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} (Sym2.{u1} V)} {s' : Set.{u1} (Sym2.{u1} V)}, (HasSubset.Subset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instHasSubsetSet.{u1} (Sym2.{u1} V)) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s') (SimpleGraph.Subgraph.deleteEdges.{u1} V G G' s))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.delete_edges_le_of_le SimpleGraph.Subgraph.deleteEdges_le_of_leₓ'. -/
@@ -1461,18 +1588,14 @@ def induce (G' : G.Subgraph) (s : Set V) : G.Subgraph
 #align simple_graph.subgraph.induce SimpleGraph.Subgraph.induce
 -/
 
-/- warning: simple_graph.induce_eq_coe_induce_top -> SimpleGraph.induce_eq_coe_induce_top is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (s : Set.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) s)) (SimpleGraph.induce.{u1} V s G) (SimpleGraph.Subgraph.coe.{u1} V G (SimpleGraph.Subgraph.induce.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))) s))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (s : Set.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} (Set.Elem.{u1} V s)) (SimpleGraph.induce.{u1} V s G) (SimpleGraph.Subgraph.coe.{u1} V G (SimpleGraph.Subgraph.induce.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))) s))
-Case conversion may be inaccurate. Consider using '#align simple_graph.induce_eq_coe_induce_top SimpleGraph.induce_eq_coe_induce_topₓ'. -/
+#print SimpleGraph.induce_eq_coe_induce_top /-
 theorem SimpleGraph.induce_eq_coe_induce_top (s : Set V) :
     G.induce s = ((⊤ : G.Subgraph).induce s).coe :=
   by
   ext (v w)
   simp
 #align simple_graph.induce_eq_coe_induce_top SimpleGraph.induce_eq_coe_induce_top
+-/
 
 section Induce
 
@@ -1480,7 +1603,7 @@ variable {G' G'' : G.Subgraph} {s s' : Set V}
 
 /- warning: simple_graph.subgraph.induce_mono -> SimpleGraph.Subgraph.induce_mono is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) G' G'') -> (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G'' s'))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) G' G'') -> (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G'' s'))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) G' G'') -> (HasSubset.Subset.{u1} (Set.{u1} V) (Set.instHasSubsetSet.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G'' s'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.induce_mono SimpleGraph.Subgraph.induce_monoₓ'. -/
@@ -1495,7 +1618,7 @@ theorem induce_mono (hg : G' ≤ G'') (hs : s ⊆ s') : G'.induce s ≤ G''.indu
 
 /- warning: simple_graph.subgraph.induce_mono_left -> SimpleGraph.Subgraph.induce_mono_left is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) G' G'') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G'' s))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) G' G'') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G'' s))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) G' G'') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G'' s))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.induce_mono_left SimpleGraph.Subgraph.induce_mono_leftₓ'. -/
@@ -1506,7 +1629,7 @@ theorem induce_mono_left (hg : G' ≤ G'') : G'.induce s ≤ G''.induce s :=
 
 /- warning: simple_graph.subgraph.induce_mono_right -> SimpleGraph.Subgraph.induce_mono_right is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G' s'))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G' s'))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (HasSubset.Subset.{u1} (Set.{u1} V) (Set.instHasSubsetSet.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.induce.{u1} V G G' s) (SimpleGraph.Subgraph.induce.{u1} V G G' s'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.induce_mono_right SimpleGraph.Subgraph.induce_mono_rightₓ'. -/
@@ -1517,7 +1640,7 @@ theorem induce_mono_right (hs : s ⊆ s') : G'.induce s ≤ G'.induce s' :=
 
 /- warning: simple_graph.subgraph.induce_empty -> SimpleGraph.Subgraph.induce_empty is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.induce.{u1} V G G' (EmptyCollection.emptyCollection.{u1} (Set.{u1} V) (Set.hasEmptyc.{u1} V))) (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toHasBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G))))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.induce.{u1} V G G' (EmptyCollection.emptyCollection.{u1} (Set.{u1} V) (Set.hasEmptyc.{u1} V))) (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasBot.{u1} V G))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G}, Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.induce.{u1} V G G' (EmptyCollection.emptyCollection.{u1} (Set.{u1} V) (Set.instEmptyCollectionSet.{u1} V))) (Bot.bot.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderBot.toBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderBot.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.induce_empty SimpleGraph.Subgraph.induce_emptyₓ'. -/
@@ -1537,22 +1660,13 @@ theorem induce_self_verts : G'.induce G'.verts = G' :=
 #align simple_graph.subgraph.induce_self_verts SimpleGraph.Subgraph.induce_self_verts
 -/
 
-/- warning: simple_graph.subgraph.singleton_subgraph_eq_induce -> SimpleGraph.Subgraph.singletonSubgraph_eq_induce is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V}, Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.singletonSubgraph.{u1} V G v) (SimpleGraph.Subgraph.induce.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))) (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.hasSingleton.{u1} V) v))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V}, Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.singletonSubgraph.{u1} V G v) (SimpleGraph.Subgraph.induce.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))) (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.instSingletonSet.{u1} V) v))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.singleton_subgraph_eq_induce SimpleGraph.Subgraph.singletonSubgraph_eq_induceₓ'. -/
+#print SimpleGraph.Subgraph.singletonSubgraph_eq_induce /-
 theorem singletonSubgraph_eq_induce {v : V} : G.singletonSubgraph v = (⊤ : G.Subgraph).induce {v} :=
   by ext <;> simp (config := { contextual := true }) [-Set.bot_eq_empty, Prop.bot_eq_false]
 #align simple_graph.subgraph.singleton_subgraph_eq_induce SimpleGraph.Subgraph.singletonSubgraph_eq_induce
+-/
 
-/- warning: simple_graph.subgraph.subgraph_of_adj_eq_induce -> SimpleGraph.Subgraph.subgraphOfAdj_eq_induce is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V} (hvw : SimpleGraph.Adj.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.subgraphOfAdj.{u1} V G v w hvw) (SimpleGraph.Subgraph.induce.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toHasTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.boundedOrder.{u1} V G)))) (Insert.insert.{u1, u1} V (Set.{u1} V) (Set.hasInsert.{u1} V) v (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.hasSingleton.{u1} V) w)))
-but is expected to have type
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {v : V} {w : V} (hvw : SimpleGraph.Adj.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.subgraphOfAdj.{u1} V G v w hvw) (SimpleGraph.Subgraph.induce.{u1} V G (Top.top.{u1} (SimpleGraph.Subgraph.{u1} V G) (OrderTop.toTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (BoundedOrder.toOrderTop.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.instBoundedOrderSubgraphToLEToPreorderToPartialOrderToSemilatticeInfInstLatticeSubgraph.{u1} V G)))) (Insert.insert.{u1, u1} V (Set.{u1} V) (Set.instInsertSet.{u1} V) v (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.instSingletonSet.{u1} V) w)))
-Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.subgraph_of_adj_eq_induce SimpleGraph.Subgraph.subgraphOfAdj_eq_induceₓ'. -/
+#print SimpleGraph.Subgraph.subgraphOfAdj_eq_induce /-
 theorem subgraphOfAdj_eq_induce {v w : V} (hvw : G.Adj v w) :
     G.subgraphOfAdj hvw = (⊤ : G.Subgraph).induce {v, w} :=
   by
@@ -1563,9 +1677,10 @@ theorem subgraphOfAdj_eq_induce {v w : V} (hvw : G.Adj v w) :
       simp only [subgraph_of_adj_adj, Quotient.eq', Sym2.rel_iff] at h
       obtain ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ := h <;> simp [hvw, hvw.symm]
     · intro h
-      simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj_iff] at h
+      simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj] at h
       obtain ⟨rfl | rfl, rfl | rfl, ha⟩ := h <;> first |exact (ha.ne rfl).elim|simp
 #align simple_graph.subgraph.subgraph_of_adj_eq_induce SimpleGraph.Subgraph.subgraphOfAdj_eq_induce
+-/
 
 end Induce
 
@@ -1619,7 +1734,7 @@ theorem deleteVerts_empty : G'.deleteVerts ∅ = G' := by simp [delete_verts]
 
 /- warning: simple_graph.subgraph.delete_verts_le -> SimpleGraph.Subgraph.deleteVerts_le is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s) G'
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s) G'
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V}, LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s) G'
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.delete_verts_le SimpleGraph.Subgraph.deleteVerts_leₓ'. -/
@@ -1628,7 +1743,7 @@ theorem deleteVerts_le : G'.deleteVerts s ≤ G' := by constructor <;> simp [Set
 
 /- warning: simple_graph.subgraph.delete_verts_mono -> SimpleGraph.Subgraph.deleteVerts_mono is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {s : Set.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) G' G'') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G'' s))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {s : Set.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) G' G'') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G'' s))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {s : Set.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {G'' : SimpleGraph.Subgraph.{u1} V G}, (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) G' G'') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G'' s))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.delete_verts_mono SimpleGraph.Subgraph.deleteVerts_monoₓ'. -/
@@ -1640,7 +1755,7 @@ theorem deleteVerts_mono {G' G'' : G.Subgraph} (h : G' ≤ G'') :
 
 /- warning: simple_graph.subgraph.delete_verts_anti -> SimpleGraph.Subgraph.deleteVerts_anti is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s') (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (HasSubset.Subset.{u1} (Set.{u1} V) (Set.hasSubset.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.Subgraph.{u1} V G) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.completeDistribLattice.{u1} V G))))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s') (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.Subgraph.{u1} V G} {s : Set.{u1} V} {s' : Set.{u1} V}, (HasSubset.Subset.{u1} (Set.{u1} V) (Set.instHasSubsetSet.{u1} V) s s') -> (LE.le.{u1} (SimpleGraph.Subgraph.{u1} V G) (Preorder.toLE.{u1} (SimpleGraph.Subgraph.{u1} V G) (PartialOrder.toPreorder.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))))) (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s') (SimpleGraph.Subgraph.deleteVerts.{u1} V G G' s))
 Case conversion may be inaccurate. Consider using '#align simple_graph.subgraph.delete_verts_anti SimpleGraph.Subgraph.deleteVerts_antiₓ'. -/

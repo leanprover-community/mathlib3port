@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit d7feae342946021379fc1e5025856afbce1de5dd
+! leanprover-community/mathlib commit 8f66c29c3911ef7d3ea2e254597a2d58204a7844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1246,6 +1246,31 @@ theorem toSet_image (f : SetCat → SetCat) [H : Definable 1 f] (x : SetCat) :
   ext
   simp
 #align Set.to_set_image SetCat.toSet_image
+
+/-- The range of an indexed family of sets. The universes allow for a more general index type
+  without manual use of `ulift`. -/
+noncomputable def range {α : Type u} (f : α → SetCat.{max u v}) : SetCat.{max u v} :=
+  ⟦⟨ULift α, Quotient.out ∘ f ∘ ULift.down⟩⟧
+#align Set.range SetCat.range
+
+@[simp]
+theorem mem_range {α : Type u} {f : α → SetCat.{max u v}} {x : SetCat.{max u v}} :
+    x ∈ range f ↔ x ∈ Set.range f :=
+  Quotient.inductionOn x fun y => by
+    constructor
+    · rintro ⟨z, hz⟩
+      exact ⟨z.down, Quotient.eq_mk_iff_out.2 hz.symm⟩
+    · rintro ⟨z, hz⟩
+      use z
+      simpa [hz] using PSet.Equiv.symm (Quotient.mk_out y)
+#align Set.mem_range SetCat.mem_range
+
+@[simp]
+theorem toSet_range {α : Type u} (f : α → SetCat.{max u v}) : (range f).toSet = Set.range f :=
+  by
+  ext
+  simp
+#align Set.to_set_range SetCat.toSet_range
 
 /-- Kuratowski ordered pair -/
 def pair (x y : SetCat.{u}) : SetCat.{u} :=

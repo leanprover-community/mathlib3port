@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.partition
-! leanprover-community/mathlib commit 2303b3e299f1c75b07bceaaac130ce23044d1386
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Combinatorics.SimpleGraph.Coloring
 
 /-!
 # Graph partitions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module provides an interface for dealing with partitions on simple graphs. A partition of
 a graph `G`, with vertices `V`, is a set `P` of disjoint nonempty subsets of `V` such that:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module order.game_add
-! leanprover-community/mathlib commit 7b1d4abc172ea1bcf200d11041d61a4fba058023
+! leanprover-community/mathlib commit fee218fb033b2fd390c447f8be27754bc9093be9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,6 +21,8 @@ This file defines, given relations `rα : α → α → Prop` and `rβ : β → 
 `prod.game_add` on pairs, such that `game_add rα rβ x y` iff `x` can be reached from `y` by
 decreasing either entry (with respect to `rα` and `rβ`). It is so called since it models the
 subsequency relation on the addition of combinatorial games.
+
+We also define `sym2.game_add`, which is the unordered pair analog of `prod.game_add`.
 
 ## Main definitions and results
 
@@ -51,7 +53,9 @@ variable (rα rβ)
   that `a₂ ⟶ a₁` is a valid move in game `α`, and `rβ b₁ b₂` means that `b₂ ⟶ b₁` is a valid move
   in game `β`, then `game_add rα rβ` specifies the valid moves in the juxtaposition of `α` and `β`:
   the player is free to choose one of the games and make a move in it, while leaving the other game
-  unchanged. -/
+  unchanged.
+
+  See `sym2.game_add` for the unordered pair analog. -/
 inductive GameAdd : α × β → α × β → Prop
   | fst {a₁ a₂ b} : rα a₁ a₂ → game_add (a₁, b) (a₂, b)
   | snd {a b₁ b₂} : rβ b₁ b₂ → game_add (a, b₁) (a, b₂)
@@ -170,7 +174,10 @@ end Prod
 
 namespace Sym2
 
-/-- `sym2.game_add rα x y` means that `x` can be reached from `y` by decreasing either entry. -/
+/-- `sym2.game_add rα x y` means that `x` can be reached from `y` by decreasing either entry with
+  respect to the relation `rα`.
+
+  See `prod.game_add` for the ordered pair analog. -/
 def GameAdd (rα : α → α → Prop) : Sym2 α → Sym2 α → Prop :=
   Sym2.lift₂
     ⟨fun a₁ b₁ a₂ b₂ => Prod.GameAdd rα rα (a₁, b₁) (a₂, b₂) ∨ Prod.GameAdd rα rα (b₁, a₁) (a₂, b₂),

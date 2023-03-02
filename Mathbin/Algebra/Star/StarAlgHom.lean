@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.star_alg_hom
-! leanprover-community/mathlib commit 3c72a10e5b1c2b9fa755d858f2e04d964a4c5375
+! leanprover-community/mathlib commit 35882ddc66524b6980532a123a4ad4166db34c81
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -356,7 +356,7 @@ instance : CoeFun (A →⋆ₐ[R] B) fun _ => A → B :=
   FunLike.hasCoeToFun
 
 @[simp, protected]
-theorem coe_coe {F : Type} [StarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆ₐ[R] B) = f :=
+theorem coe_coe {F : Type _} [StarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆ₐ[R] B) = f :=
   rfl
 #align star_alg_hom.coe_coe StarAlgHom.coe_coe
 

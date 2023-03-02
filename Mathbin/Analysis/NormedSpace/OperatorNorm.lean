@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1352,8 +1352,10 @@ variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [Nontr
   [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [NormedSpace 𝕜₃ G] [NormedSpace 𝕜 Fₗ] (c : 𝕜)
   {σ₁₂ : 𝕜 →+* 𝕜₂} {σ₂₃ : 𝕜₂ →+* 𝕜₃} (f g : E →SL[σ₁₂] F) (x y z : E)
 
-theorem LinearMap.bound_of_shell [RingHomIsometric σ₁₂] (f : E →ₛₗ[σ₁₂] F) {ε C : ℝ} (ε_pos : 0 < ε)
-    {c : 𝕜} (hc : 1 < ‖c‖) (hf : ∀ x, ε / ‖c‖ ≤ ‖x‖ → ‖x‖ < ε → ‖f x‖ ≤ C * ‖x‖) (x : E) :
+namespace LinearMap
+
+theorem bound_of_shell [RingHomIsometric σ₁₂] (f : E →ₛₗ[σ₁₂] F) {ε C : ℝ} (ε_pos : 0 < ε) {c : 𝕜}
+    (hc : 1 < ‖c‖) (hf : ∀ x, ε / ‖c‖ ≤ ‖x‖ → ‖x‖ < ε → ‖f x‖ ≤ C * ‖x‖) (x : E) :
     ‖f x‖ ≤ C * ‖x‖ := by
   by_cases hx : x = 0; · simp [hx]
   exact
@@ -1363,13 +1365,13 @@ theorem LinearMap.bound_of_shell [RingHomIsometric σ₁₂] (f : E →ₛₗ[σ
 /-- `linear_map.bound_of_ball_bound'` is a version of this lemma over a field satisfying `is_R_or_C`
 that produces a concrete bound.
 -/
-theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] Fₗ)
+theorem bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] Fₗ)
     (h : ∀ z ∈ Metric.ball (0 : E) r, ‖f z‖ ≤ c) : ∃ C, ∀ z : E, ‖f z‖ ≤ C * ‖z‖ :=
   by
   cases' @NontriviallyNormedField.non_trivial 𝕜 _ with k hk
   use c * (‖k‖ / r)
   intro z
-  refine' LinearMap.bound_of_shell _ r_pos hk (fun x hko hxo => _) _
+  refine' bound_of_shell _ r_pos hk (fun x hko hxo => _) _
   calc
     ‖f x‖ ≤ c := h _ (mem_ball_zero_iff.mpr hxo)
     _ ≤ c * (‖x‖ * ‖k‖ / r) := (le_mul_of_one_le_right _ _)
@@ -1379,6 +1381,35 @@ theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E
   · rw [div_le_iff (zero_lt_one.trans hk)] at hko
     exact (one_le_div r_pos).mpr hko
 #align linear_map.bound_of_ball_bound LinearMap.bound_of_ball_bound
+
+theorem antilipschitz_of_comap_nhds_le [h : RingHomIsometric σ₁₂] (f : E →ₛₗ[σ₁₂] F)
+    (hf : (𝓝 0).comap f ≤ 𝓝 0) : ∃ K, AntilipschitzWith K f :=
+  by
+  rcases((nhds_basis_ball.comap _).le_basis_iffₓ nhds_basis_ball).1 hf 1 one_pos with ⟨ε, ε0, hε⟩
+  simp only [Set.subset_def, Set.mem_preimage, mem_ball_zero_iff] at hε
+  lift ε to ℝ≥0 using ε0.le
+  rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
+  refine' ⟨ε⁻¹ * ‖c‖₊, AddMonoidHomClass.antilipschitz_of_bound f fun x => _⟩
+  by_cases hx : f x = 0
+  · rw [← hx] at hf
+    obtain rfl : x = 0 :=
+      Specializes.eq
+        (specializes_iff_pure.2 <|
+          ((Filter.tendsto_pure_pure _ _).mono_right (pure_le_nhds _)).le_comap.trans hf)
+    exact norm_zero.trans_le (mul_nonneg (NNReal.coe_nonneg _) (norm_nonneg _))
+  have hc₀ : c ≠ 0 := norm_pos_iff.1 (one_pos.trans hc)
+  rw [← h.1] at hc
+  rcases rescale_to_shell_zpow hc ε0 hx with ⟨n, -, hlt, -, hle⟩
+  simp only [← map_zpow₀, h.1, ← map_smulₛₗ] at hlt hle
+  calc
+    ‖x‖ = ‖c ^ n‖⁻¹ * ‖c ^ n • x‖ := by
+      rwa [← norm_inv, ← norm_smul, inv_smul_smul₀ (zpow_ne_zero _ _)]
+    _ ≤ ‖c ^ n‖⁻¹ * 1 := (mul_le_mul_of_nonneg_left (hε _ hlt).le (inv_nonneg.2 (norm_nonneg _)))
+    _ ≤ ε⁻¹ * ‖c‖ * ‖f x‖ := by rwa [mul_one]
+    
+#align linear_map.antilipschitz_of_comap_nhds_le LinearMap.antilipschitz_of_comap_nhds_le
+
+end LinearMap
 
 namespace ContinuousLinearMap
 
@@ -1439,39 +1470,12 @@ theorem homothety_norm [RingHomIsometric σ₁₂] [Nontrivial E] (f : E →SL[�
 
 variable (f)
 
-/-- If a continuous linear map is a uniform embedding, then it is expands the distances
+/-- If a continuous linear map is a topology embedding, then it is expands the distances
 by a positive factor.-/
-theorem antilipschitz_of_uniformEmbedding (f : E →L[𝕜] Fₗ) (hf : UniformEmbedding f) :
+theorem antilipschitz_of_embedding (f : E →L[𝕜] Fₗ) (hf : Embedding f) :
     ∃ K, AntilipschitzWith K f :=
-  by
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ {x y : E}, dist (f x) (f y) < ε → dist x y < 1
-  exact (uniform_embedding_iff.1 hf).2.2 1 zero_lt_one
-  let δ := ε / 2
-  have δ_pos : δ > 0 := half_pos εpos
-  have H : ∀ {x}, ‖f x‖ ≤ δ → ‖x‖ ≤ 1 := by
-    intro x hx
-    have : dist x 0 ≤ 1 := by
-      refine' (hε _).le
-      rw [f.map_zero, dist_zero_right]
-      exact hx.trans_lt (half_lt_self εpos)
-    simpa using this
-  rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-  refine' ⟨⟨δ⁻¹, _⟩ * ‖c‖₊, AddMonoidHomClass.antilipschitz_of_bound f fun x => _⟩
-  exact inv_nonneg.2 (le_of_lt δ_pos)
-  by_cases hx : f x = 0
-  · have : f x = f 0 := by simp [hx]
-    have : x = 0 := (uniform_embedding_iff.1 hf).1 this
-    simp [this]
-  · rcases rescale_to_shell hc δ_pos hx with ⟨d, hd, dxlt, ledx, dinv⟩
-    rw [← f.map_smul d] at dxlt
-    have : ‖d • x‖ ≤ 1 := H dxlt.le
-    calc
-      ‖x‖ = ‖d‖⁻¹ * ‖d • x‖ := by
-        rwa [← norm_inv, ← norm_smul, ← mul_smul, inv_mul_cancel, one_smul]
-      _ ≤ ‖d‖⁻¹ * 1 := (mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _)))
-      _ ≤ δ⁻¹ * ‖c‖ * ‖f x‖ := by rwa [mul_one]
-      
-#align continuous_linear_map.antilipschitz_of_uniform_embedding ContinuousLinearMap.antilipschitz_of_uniformEmbedding
+  f.toLinearMap.antilipschitz_of_comap_nhds_le <| map_zero f ▸ (hf.nhds_eq_comap 0).ge
+#align continuous_linear_map.antilipschitz_of_embedding ContinuousLinearMap.antilipschitz_of_embedding
 
 section Completeness
 

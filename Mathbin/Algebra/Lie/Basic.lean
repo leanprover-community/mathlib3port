@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.basic
-! leanprover-community/mathlib commit 6d584f1709bedbed9175bd9350df46599bdd7213
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.NoncommRing
 
 /-!
 # Lie algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines Lie rings and Lie algebras over a commutative ring together with their
 modules, morphisms and equivalences, as well as various lemmas to make these definitions usable.

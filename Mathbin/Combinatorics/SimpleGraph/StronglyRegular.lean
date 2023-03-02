@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.strongly_regular
-! leanprover-community/mathlib commit 2b35fc7bea4640cb75e477e83f32fbd538920822
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Set.Finite
 
 /-!
 # Strongly regular graphs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main definitions
 
@@ -66,7 +69,7 @@ variable {G} {n k ℓ μ : ℕ}
 
 /- warning: simple_graph.bot_strongly_regular -> SimpleGraph.bot_strongly_regular is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {ℓ : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) ℓ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {ℓ : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) ℓ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] {_inst_2 : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) _inst_2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
 Case conversion may be inaccurate. Consider using '#align simple_graph.bot_strongly_regular SimpleGraph.bot_strongly_regularₓ'. -/

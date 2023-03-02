@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 13cd3e89b30352d5b1b7349f5537ea18ba878e40
+! leanprover-community/mathlib commit e876965f7ee86f683b44e2f462ab5bfb47f993b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2663,28 +2663,28 @@ def connectedComponentMk (v : V) : G.ConnectedComponent :=
 #align simple_graph.connected_component_mk SimpleGraph.connectedComponentMk
 -/
 
+variable {V' G G' G''}
+
+namespace connectedComponent
+
 #print SimpleGraph.ConnectedComponent.inhabited /-
 @[simps]
-instance ConnectedComponent.inhabited [Inhabited V] : Inhabited G.ConnectedComponent :=
+instance inhabited [Inhabited V] : Inhabited G.ConnectedComponent :=
   ⟨G.connectedComponentMk default⟩
 #align simple_graph.connected_component.inhabited SimpleGraph.ConnectedComponent.inhabited
 -/
 
-section connectedComponent
-
-variable {G}
-
 #print SimpleGraph.ConnectedComponent.ind /-
 @[elab_as_elim]
-protected theorem ConnectedComponent.ind {β : G.ConnectedComponent → Prop}
-    (h : ∀ v : V, β (G.connectedComponentMk v)) (c : G.ConnectedComponent) : β c :=
+protected theorem ind {β : G.ConnectedComponent → Prop} (h : ∀ v : V, β (G.connectedComponentMk v))
+    (c : G.ConnectedComponent) : β c :=
   Quot.ind h c
 #align simple_graph.connected_component.ind SimpleGraph.ConnectedComponent.ind
 -/
 
 #print SimpleGraph.ConnectedComponent.ind₂ /-
 @[elab_as_elim]
-protected theorem ConnectedComponent.ind₂ {β : G.ConnectedComponent → G.ConnectedComponent → Prop}
+protected theorem ind₂ {β : G.ConnectedComponent → G.ConnectedComponent → Prop}
     (h : ∀ v w : V, β (G.connectedComponentMk v) (G.connectedComponentMk w))
     (c d : G.ConnectedComponent) : β c d :=
   Quot.induction_on₂ c d h
@@ -2692,14 +2692,14 @@ protected theorem ConnectedComponent.ind₂ {β : G.ConnectedComponent → G.Con
 -/
 
 #print SimpleGraph.ConnectedComponent.sound /-
-protected theorem ConnectedComponent.sound {v w : V} :
+protected theorem sound {v w : V} :
     G.Reachable v w → G.connectedComponentMk v = G.connectedComponentMk w :=
   Quot.sound
 #align simple_graph.connected_component.sound SimpleGraph.ConnectedComponent.sound
 -/
 
 #print SimpleGraph.ConnectedComponent.exact /-
-protected theorem ConnectedComponent.exact {v w : V} :
+protected theorem exact {v w : V} :
     G.connectedComponentMk v = G.connectedComponentMk w → G.Reachable v w :=
   @Quotient.exact _ G.reachableSetoid _ _
 #align simple_graph.connected_component.exact SimpleGraph.ConnectedComponent.exact
@@ -2707,7 +2707,7 @@ protected theorem ConnectedComponent.exact {v w : V} :
 
 #print SimpleGraph.ConnectedComponent.eq /-
 @[simp]
-protected theorem ConnectedComponent.eq {v w : V} :
+protected theorem eq {v w : V} :
     G.connectedComponentMk v = G.connectedComponentMk w ↔ G.Reachable v w :=
   @Quotient.eq' _ G.reachableSetoid _ _
 #align simple_graph.connected_component.eq SimpleGraph.ConnectedComponent.eq
@@ -2716,7 +2716,7 @@ protected theorem ConnectedComponent.eq {v w : V} :
 #print SimpleGraph.ConnectedComponent.lift /-
 /-- The `connected_component` specialization of `quot.lift`. Provides the stronger
 assumption that the vertices are connected by a path. -/
-protected def ConnectedComponent.lift {β : Sort _} (f : V → β)
+protected def lift {β : Sort _} (f : V → β)
     (h : ∀ (v w : V) (p : G.Walk v w), p.IsPath → f v = f w) : G.ConnectedComponent → β :=
   Quot.lift f fun v w (h' : G.Reachable v w) => h'.elim_path fun hp => h v w hp hp.2
 #align simple_graph.connected_component.lift SimpleGraph.ConnectedComponent.lift
@@ -2729,81 +2729,84 @@ but is expected to have type
   forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {β : Sort.{u1}} {f : V -> β} {h : forall (v : V) (w : V) (p : SimpleGraph.Walk.{u2} V G v w), (SimpleGraph.Walk.IsPath.{u2} V G v w p) -> (Eq.{u1} β (f v) (f w))} {v : V}, Eq.{u1} β (SimpleGraph.ConnectedComponent.lift.{u2, u1} V G β f h (SimpleGraph.connectedComponentMk.{u2} V G v)) (f v)
 Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.lift_mk SimpleGraph.ConnectedComponent.lift_mkₓ'. -/
 @[simp]
-protected theorem ConnectedComponent.lift_mk {β : Sort _} {f : V → β}
+protected theorem lift_mk {β : Sort _} {f : V → β}
     {h : ∀ (v w : V) (p : G.Walk v w), p.IsPath → f v = f w} {v : V} :
     ConnectedComponent.lift f h (G.connectedComponentMk v) = f v :=
   rfl
 #align simple_graph.connected_component.lift_mk SimpleGraph.ConnectedComponent.lift_mk
 
 #print SimpleGraph.ConnectedComponent.exists /-
-protected theorem ConnectedComponent.exists {p : G.ConnectedComponent → Prop} :
+protected theorem exists {p : G.ConnectedComponent → Prop} :
     (∃ c : G.ConnectedComponent, p c) ↔ ∃ v, p (G.connectedComponentMk v) :=
   (surjective_quot_mk G.Reachable).exists
 #align simple_graph.connected_component.exists SimpleGraph.ConnectedComponent.exists
 -/
 
 #print SimpleGraph.ConnectedComponent.forall /-
-protected theorem ConnectedComponent.forall {p : G.ConnectedComponent → Prop} :
+protected theorem forall {p : G.ConnectedComponent → Prop} :
     (∀ c : G.ConnectedComponent, p c) ↔ ∀ v, p (G.connectedComponentMk v) :=
   (surjective_quot_mk G.Reachable).forall
 #align simple_graph.connected_component.forall SimpleGraph.ConnectedComponent.forall
 -/
 
 #print SimpleGraph.Preconnected.subsingleton_connectedComponent /-
-theorem Preconnected.subsingleton_connectedComponent (h : G.Preconnected) :
+theorem SimpleGraph.Preconnected.subsingleton_connectedComponent (h : G.Preconnected) :
     Subsingleton G.ConnectedComponent :=
   ⟨ConnectedComponent.ind₂ fun v w => ConnectedComponent.sound (h v w)⟩
 #align simple_graph.preconnected.subsingleton_connected_component SimpleGraph.Preconnected.subsingleton_connectedComponent
 -/
 
-#print SimpleGraph.ConnectedComponent.map /-
+/- warning: simple_graph.connected_component.map -> SimpleGraph.ConnectedComponent.map is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'}, (SimpleGraph.Hom.{u1, u2} V V' G G') -> (SimpleGraph.ConnectedComponent.{u1} V G) -> (SimpleGraph.ConnectedComponent.{u2} V' G')
+but is expected to have type
+  forall {V : Type.{u1}} {V' : SimpleGraph.{u1} V} {G : Type.{u2}} {G' : SimpleGraph.{u2} G}, (SimpleGraph.Hom.{u1, u2} V G V' G') -> (SimpleGraph.ConnectedComponent.{u1} V V') -> (SimpleGraph.ConnectedComponent.{u2} G G')
+Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.map SimpleGraph.ConnectedComponent.mapₓ'. -/
 /-- The map on connected components induced by a graph homomorphism. -/
-def ConnectedComponent.map {V : Type _} {G : SimpleGraph V} {V' : Type _} {G' : SimpleGraph V'}
-    (φ : G →g G') (C : G.ConnectedComponent) : G'.ConnectedComponent :=
+def map (φ : G →g G') (C : G.ConnectedComponent) : G'.ConnectedComponent :=
   C.lift (fun v => G'.connectedComponentMk (φ v)) fun v w p _ =>
     ConnectedComponent.eq.mpr (p.map φ).Reachable
 #align simple_graph.connected_component.map SimpleGraph.ConnectedComponent.map
--/
 
 /- warning: simple_graph.connected_component.map_mk -> SimpleGraph.ConnectedComponent.map_mk is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {V' : Type.{u2}} {G' : SimpleGraph.{u2} V'} (φ : SimpleGraph.Hom.{u1, u2} V V' G G') (v : V), Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.ConnectedComponent.map.{u1, u2} V G V' G' φ (SimpleGraph.connectedComponentMk.{u1} V G v)) (SimpleGraph.connectedComponentMk.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Hom.{u1, u2} V V' G G') (fun (_x : RelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelHom.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ v))
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} (φ : SimpleGraph.Hom.{u1, u2} V V' G G') (v : V), Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' φ (SimpleGraph.connectedComponentMk.{u1} V G v)) (SimpleGraph.connectedComponentMk.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Hom.{u1, u2} V V' G G') (fun (_x : RelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelHom.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ v))
 but is expected to have type
-  forall {V : Type.{u2}} {G : SimpleGraph.{u2} V} {V' : Type.{u1}} {G' : SimpleGraph.{u1} V'} (φ : SimpleGraph.Hom.{u2, u1} V V' G G') (v : V), Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V' G') (SimpleGraph.ConnectedComponent.map.{u2, u1} V G V' G' φ (SimpleGraph.connectedComponentMk.{u2} V G v)) (SimpleGraph.connectedComponentMk.{u1} V' G' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (SimpleGraph.Hom.{u2, u1} V V' G G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : V) => V') _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (SimpleGraph.Hom.{u2, u1} V V' G G') V V' (SimpleGraph.Adj.{u2} V G) (SimpleGraph.Adj.{u1} V' G') (RelHom.instRelHomClassRelHom.{u2, u1} V V' (SimpleGraph.Adj.{u2} V G) (SimpleGraph.Adj.{u1} V' G'))) φ v))
+  forall {V : Type.{u2}} {V' : SimpleGraph.{u2} V} {G : Type.{u1}} {G' : SimpleGraph.{u1} G} (φ : SimpleGraph.Hom.{u2, u1} V G V' G') (v : V), Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} G G') (SimpleGraph.ConnectedComponent.map.{u2, u1} V V' G G' φ (SimpleGraph.connectedComponentMk.{u2} V V' v)) (SimpleGraph.connectedComponentMk.{u1} G G' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (SimpleGraph.Hom.{u2, u1} V G V' G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : V) => G) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (SimpleGraph.Hom.{u2, u1} V G V' G') V G (SimpleGraph.Adj.{u2} V V') (SimpleGraph.Adj.{u1} G G') (RelHom.instRelHomClassRelHom.{u2, u1} V G (SimpleGraph.Adj.{u2} V V') (SimpleGraph.Adj.{u1} G G'))) φ v))
 Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.map_mk SimpleGraph.ConnectedComponent.map_mkₓ'. -/
 @[simp]
-theorem ConnectedComponent.map_mk {V : Type _} {G : SimpleGraph V} {V' : Type _}
-    {G' : SimpleGraph V'} (φ : G →g G') (v : V) :
+theorem map_mk (φ : G →g G') (v : V) :
     (G.connectedComponentMk v).map φ = G'.connectedComponentMk (φ v) :=
   rfl
 #align simple_graph.connected_component.map_mk SimpleGraph.ConnectedComponent.map_mk
 
-#print SimpleGraph.ConnectedComponent.map_id /-
+/- warning: simple_graph.connected_component.map_id -> SimpleGraph.ConnectedComponent.map_id is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (C : SimpleGraph.ConnectedComponent.{u1} V G), Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.ConnectedComponent.map.{u1, u1} V V G G (SimpleGraph.Hom.id.{u1} V G) C) C
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} (C : SimpleGraph.ConnectedComponent.{u1} V G), Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.ConnectedComponent.map.{u1, u1} V G V G (SimpleGraph.Hom.id.{u1} V G) C) C
+Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.map_id SimpleGraph.ConnectedComponent.map_idₓ'. -/
 @[simp]
-theorem ConnectedComponent.map_id (C : ConnectedComponent G) : C.map Hom.id = C :=
+theorem map_id (C : ConnectedComponent G) : C.map Hom.id = C :=
   by
   refine' C.ind _
   exact fun _ => rfl
 #align simple_graph.connected_component.map_id SimpleGraph.ConnectedComponent.map_id
--/
 
 /- warning: simple_graph.connected_component.map_comp -> SimpleGraph.ConnectedComponent.map_comp is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {V' : Type.{u2}} {G' : SimpleGraph.{u2} V'} {V'' : Type.{u3}} {G'' : SimpleGraph.{u3} V''} (C : SimpleGraph.ConnectedComponent.{u1} V G) (φ : SimpleGraph.Hom.{u1, u2} V V' G G') (ψ : SimpleGraph.Hom.{u2, u3} V' V'' G' G''), Eq.{succ u3} (SimpleGraph.ConnectedComponent.{u3} V'' G'') (SimpleGraph.ConnectedComponent.map.{u2, u3} V' G' V'' G'' ψ (SimpleGraph.ConnectedComponent.map.{u1, u2} V G V' G' φ C)) (SimpleGraph.ConnectedComponent.map.{u1, u3} V G V'' G'' (SimpleGraph.Hom.comp.{u1, u2, u3} V V' V'' G G' G'' ψ φ) C)
+  forall {V : Type.{u1}} {V' : Type.{u2}} {V'' : Type.{u3}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {G'' : SimpleGraph.{u3} V''} (C : SimpleGraph.ConnectedComponent.{u1} V G) (φ : SimpleGraph.Hom.{u1, u2} V V' G G') (ψ : SimpleGraph.Hom.{u2, u3} V' V'' G' G''), Eq.{succ u3} (SimpleGraph.ConnectedComponent.{u3} V'' G'') (SimpleGraph.ConnectedComponent.map.{u2, u3} V' V'' G' G'' ψ (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' φ C)) (SimpleGraph.ConnectedComponent.map.{u1, u3} V V'' G G'' (SimpleGraph.Hom.comp.{u1, u2, u3} V V' V'' G G' G'' ψ φ) C)
 but is expected to have type
-  forall {V : Type.{u3}} {G : SimpleGraph.{u3} V} {V' : Type.{u2}} {G' : SimpleGraph.{u2} V'} {V'' : Type.{u1}} {G'' : SimpleGraph.{u1} V''} (C : SimpleGraph.ConnectedComponent.{u3} V G) (φ : SimpleGraph.Hom.{u3, u2} V V' G G') (ψ : SimpleGraph.Hom.{u2, u1} V' V'' G' G''), Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V'' G'') (SimpleGraph.ConnectedComponent.map.{u2, u1} V' G' V'' G'' ψ (SimpleGraph.ConnectedComponent.map.{u3, u2} V G V' G' φ C)) (SimpleGraph.ConnectedComponent.map.{u3, u1} V G V'' G'' (SimpleGraph.Hom.comp.{u3, u2, u1} V V' V'' G G' G'' ψ φ) C)
+  forall {V : Type.{u3}} {V' : SimpleGraph.{u3} V} {V'' : Type.{u2}} {G : SimpleGraph.{u2} V''} {G' : Type.{u1}} {G'' : SimpleGraph.{u1} G'} (C : SimpleGraph.ConnectedComponent.{u3} V V') (φ : SimpleGraph.Hom.{u3, u2} V V'' V' G) (ψ : SimpleGraph.Hom.{u2, u1} V'' G' G G''), Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} G' G'') (SimpleGraph.ConnectedComponent.map.{u2, u1} V'' G G' G'' ψ (SimpleGraph.ConnectedComponent.map.{u3, u2} V V' V'' G φ C)) (SimpleGraph.ConnectedComponent.map.{u3, u1} V V' G' G'' (SimpleGraph.Hom.comp.{u3, u2, u1} V V'' G' V' G G'' ψ φ) C)
 Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.map_comp SimpleGraph.ConnectedComponent.map_compₓ'. -/
 @[simp]
-theorem ConnectedComponent.map_comp {V' : Type _} {G' : SimpleGraph V'} {V'' : Type _}
-    {G'' : SimpleGraph V''} (C : G.ConnectedComponent) (φ : G →g G') (ψ : G' →g G'') :
+theorem map_comp (C : G.ConnectedComponent) (φ : G →g G') (ψ : G' →g G'') :
     (C.map φ).map ψ = C.map (ψ.comp φ) := by
   refine' C.ind _
   exact fun _ => rfl
 #align simple_graph.connected_component.map_comp SimpleGraph.ConnectedComponent.map_comp
 
 end connectedComponent
-
-variable {G}
 
 #print SimpleGraph.Subgraph.Connected /-
 /-- A subgraph is connected if it is connected as a simple graph. -/
@@ -2908,7 +2911,7 @@ theorem edgeSet_toSubgraph (p : G.Walk u v) : p.toSubgraph.edgeSetEmbedding = { 
 
 /- warning: simple_graph.walk.to_subgraph_append -> SimpleGraph.Walk.toSubgraph_append is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (q : SimpleGraph.Walk.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u w (SimpleGraph.Walk.append.{u1} V G u v w p q)) (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toHasSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.lattice.{u1} V G))) (SimpleGraph.Walk.toSubgraph.{u1} V G u v p) (SimpleGraph.Walk.toSubgraph.{u1} V G v w q))
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (q : SimpleGraph.Walk.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u w (SimpleGraph.Walk.append.{u1} V G u v w p q)) (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.hasSup.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u v p) (SimpleGraph.Walk.toSubgraph.{u1} V G v w q))
 but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} {u : V} {v : V} {w : V} (p : SimpleGraph.Walk.{u1} V G u v) (q : SimpleGraph.Walk.{u1} V G v w), Eq.{succ u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Walk.toSubgraph.{u1} V G u w (SimpleGraph.Walk.append.{u1} V G u v w p q)) (Sup.sup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SemilatticeSup.toSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (Lattice.toSemilatticeSup.{u1} (SimpleGraph.Subgraph.{u1} V G) (SimpleGraph.Subgraph.instLatticeSubgraph.{u1} V G))) (SimpleGraph.Walk.toSubgraph.{u1} V G u v p) (SimpleGraph.Walk.toSubgraph.{u1} V G v w q))
 Case conversion may be inaccurate. Consider using '#align simple_graph.walk.to_subgraph_append SimpleGraph.Walk.toSubgraph_appendₓ'. -/

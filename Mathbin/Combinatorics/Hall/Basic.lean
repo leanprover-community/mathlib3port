@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.hall.basic
-! leanprover-community/mathlib commit 2987594a0b88ccb096b11b0f4b17923a9e11df02
+! leanprover-community/mathlib commit 8195826f5c428fc283510bc67303dd4472d78498
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.Hall.Finite
-import Mathbin.Topology.Category.Top.Limits
+import Mathbin.CategoryTheory.CofilteredSystem
 import Mathbin.Data.Rel
 
 /-!
@@ -32,7 +32,7 @@ The theorem can be generalized to remove the constraint that `ι` be a `fintype`
 As observed in [Halpern1966], one may use the constrained version of the theorem
 in a compactness argument to remove this constraint.
 The formulation of compactness we use is that inverse limits of nonempty finite sets
-are nonempty (`nonempty_sections_of_fintype_inverse_system`), which uses the
+are nonempty (`nonempty_sections_of_finite_inverse_system`), which uses the
 Tychonoff theorem.
 The core of this module is constructing the inverse system: for every finite subset `ι'` of
 `ι`, we can consider the matchings on the restriction of the indexed family `t` to `ι'`.
@@ -99,8 +99,8 @@ def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (F
   map ι' ι'' g f := hallMatchingsOn.restrict t (CategoryTheory.leOfHom g.unop) f
 #align hall_matchings_functor hallMatchingsFunctor
 
-noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α)
-    (ι' : Finset ι) : Fintype (hallMatchingsOn t ι') := by
+instance hallMatchingsOn.finite {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
+    Finite (hallMatchingsOn t ι') := by
   classical
     rw [hallMatchingsOn]
     let g : hallMatchingsOn t ι' → ι' → ι'.bUnion t :=
@@ -109,12 +109,12 @@ noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
       refine' ⟨f.val i, _⟩
       rw [mem_bUnion]
       exact ⟨i, i.property, f.property.2 i⟩
-    apply Fintype.ofInjective g
+    apply Finite.of_injective g
     intro f f' h
     simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h
     ext a
     exact h a
-#align hall_matchings_on.fintype hallMatchingsOn.fintype
+#align hall_matchings_on.finite hallMatchingsOn.finite
 
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α`.  It states that there is a
@@ -137,13 +137,13 @@ theorem Finset.all_card_le_bunionᵢ_card_iff_exists_injective {ι : Type u} {α
     haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       hallMatchingsOn.nonempty t h ι'.unop
     classical
-      haveI : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') :=
+      haveI : ∀ ι' : (Finset ι)ᵒᵖ, Finite ((hallMatchingsFunctor t).obj ι') :=
         by
         intro ι'
         rw [hallMatchingsFunctor]
         infer_instance
       -- Apply the compactness argument
-      obtain ⟨u, hu⟩ := nonempty_sections_of_fintype_inverse_system (hallMatchingsFunctor t)
+      obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (hallMatchingsFunctor t)
       -- Interpret the resulting section of the inverse limit
       refine' ⟨_, _, _⟩
       ·-- Build the matching function from the section

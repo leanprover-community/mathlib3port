@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Alena Gusakov, Hunter Monroe
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.basic
-! leanprover-community/mathlib commit db53863fb135228820ee0b08e8dce9349a3d911b
+! leanprover-community/mathlib commit c6ef6387ede9983aee397d442974e61f89dfd87b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Sym.Sym2
 
 /-!
 # Simple graphs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module defines simple graphs on a vertex type `V` as an
 irreflexive symmetric relation.
@@ -45,8 +48,9 @@ finitely many vertices.
   graph isomorphisms. Note that a graph embedding is a stronger notion than an
   injective graph homomorphism, since its image is an induced subgraph.
 
-* `boolean_algebra` instance: Under the subgraph relation, `simple_graph` forms a `boolean_algebra`.
-  In other words, this is the lattice of spanning subgraphs of the complete graph.
+* `complete_boolean_algebra` instance: Under the subgraph relation, `simple_graph` forms a
+  `complete_boolean_algebra`. In other words, this is the complete lattice of spanning subgraphs of
+  the complete graph.
 
 ## Notations
 
@@ -69,8 +73,6 @@ finitely many vertices.
 * If the vertex type of a graph is finite, we refer to its cardinality as `card_verts`.
 
 ## Todo
-
-* Upgrade `simple_graph.boolean_algebra` to a `complete_boolean_algebra`.
 
 * This is the simplest notion of an unoriented graph.  This should
   eventually fit into a more complete combinatorics hierarchy which
@@ -157,7 +159,7 @@ def completeBipartiteGraph (V W : Type _) : SimpleGraph (Sum V W)
 
 namespace SimpleGraph
 
-variable {𝕜 : Type _} {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V)
+variable {ι : Sort _} {𝕜 : Type _} {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V)
   (G' : SimpleGraph W) {a b c u v w : V} {e : Sym2 V}
 
 #print SimpleGraph.irrefl /-
@@ -211,6 +213,18 @@ theorem ne_of_adj_of_not_adj {v w x : V} (h : G.Adj v x) (hn : ¬G.Adj w x) : v 
   hn (h' ▸ h)
 #align simple_graph.ne_of_adj_of_not_adj SimpleGraph.ne_of_adj_of_not_adj
 -/
+
+theorem adj_injective : Injective (Adj : SimpleGraph V → V → V → Prop) := fun G H h =>
+  by
+  cases G
+  cases H
+  congr
+#align simple_graph.adj_injective SimpleGraph.adj_injective
+
+@[simp]
+theorem adj_inj {G H : SimpleGraph V} : G.Adj = H.Adj ↔ G = H :=
+  adj_injective.eq_iff
+#align simple_graph.adj_inj SimpleGraph.adj_inj
 
 section Order
 
@@ -300,8 +314,61 @@ theorem sdiff_adj (x y : SimpleGraph V) (v w : V) : (x \ y).Adj v w ↔ x.Adj v 
   Iff.rfl
 #align simple_graph.sdiff_adj SimpleGraph.sdiff_adj
 
-instance : BooleanAlgebra (SimpleGraph V) :=
-  { PartialOrder.lift Adj ext with
+instance : SupSet (SimpleGraph V) :=
+  ⟨fun s =>
+    { Adj := fun a b => ∃ G ∈ s, Adj G a b
+      symm := fun a b => Exists₂.imp fun _ _ => Adj.symm
+      loopless := by
+        rintro a ⟨G, hG, ha⟩
+        exact ha.ne rfl }⟩
+
+instance : InfSet (SimpleGraph V) :=
+  ⟨fun s =>
+    { Adj := fun a b => (∀ ⦃G⦄, G ∈ s → Adj G a b) ∧ a ≠ b
+      symm := fun _ _ => And.imp (forall₂_imp fun _ _ => Adj.symm) Ne.symm
+      loopless := fun a h => h.2 rfl }⟩
+
+@[simp]
+theorem supₛ_adj {s : Set (SimpleGraph V)} {a b : V} : (supₛ s).Adj a b ↔ ∃ G ∈ s, Adj G a b :=
+  Iff.rfl
+#align simple_graph.Sup_adj SimpleGraph.supₛ_adj
+
+@[simp]
+theorem infₛ_adj {s : Set (SimpleGraph V)} : (infₛ s).Adj a b ↔ (∀ G ∈ s, Adj G a b) ∧ a ≠ b :=
+  Iff.rfl
+#align simple_graph.Inf_adj SimpleGraph.infₛ_adj
+
+@[simp]
+theorem supᵢ_adj {f : ι → SimpleGraph V} : (⨆ i, f i).Adj a b ↔ ∃ i, (f i).Adj a b := by simp [supᵢ]
+#align simple_graph.supr_adj SimpleGraph.supᵢ_adj
+
+@[simp]
+theorem infᵢ_adj {f : ι → SimpleGraph V} : (⨅ i, f i).Adj a b ↔ (∀ i, (f i).Adj a b) ∧ a ≠ b := by
+  simp [infᵢ]
+#align simple_graph.infi_adj SimpleGraph.infᵢ_adj
+
+theorem infₛ_adj_of_nonempty {s : Set (SimpleGraph V)} (hs : s.Nonempty) :
+    (infₛ s).Adj a b ↔ ∀ G ∈ s, Adj G a b :=
+  infₛ_adj.trans <|
+    and_iff_left_of_imp <| by
+      obtain ⟨G, hG⟩ := hs
+      exact fun h => (h _ hG).Ne
+#align simple_graph.Inf_adj_of_nonempty SimpleGraph.infₛ_adj_of_nonempty
+
+theorem infᵢ_adj_of_nonempty [Nonempty ι] {f : ι → SimpleGraph V} :
+    (⨅ i, f i).Adj a b ↔ ∀ i, (f i).Adj a b := by
+  simp [infᵢ, Inf_adj_of_nonempty (Set.range_nonempty _)]
+#align simple_graph.infi_adj_of_nonempty SimpleGraph.infᵢ_adj_of_nonempty
+
+/-- For graphs `G`, `H`, `G ≤ H` iff `∀ a b, G.adj a b → H.adj a b`. -/
+instance : DistribLattice (SimpleGraph V) :=
+  {
+    show DistribLattice (SimpleGraph V) from
+      adj_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl with
+    le := fun G H => ∀ ⦃a b⦄, G.Adj a b → H.Adj a b }
+
+instance : CompleteBooleanAlgebra (SimpleGraph V) :=
+  { SimpleGraph.distribLattice with
     le := (· ≤ ·)
     sup := (· ⊔ ·)
     inf := (· ⊓ ·)
@@ -311,28 +378,38 @@ instance : BooleanAlgebra (SimpleGraph V) :=
     bot := emptyGraph V
     le_top := fun x v w h => x.ne_of_adj h
     bot_le := fun x v w h => h.elim
-    sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h
     sdiff_eq := fun x y => by
       ext (v w)
       refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
       rintro rfl
       exact x.irrefl h.1
-    le_sup_left := fun x y v w h => Or.inl h
-    le_sup_right := fun x y v w h => Or.inr h
-    le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩
-    le_sup_inf := fun a b c v w h =>
-      Or.dcases_on h.2 Or.inl <| Or.dcases_on h.1 (fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩
     inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1
     top_le_sup_compl := fun a v w ne => by
       by_cases a.adj v w
       exact Or.inl h
       exact Or.inr ⟨Ne, h⟩
-    inf_le_left := fun x y v w h => h.1
-    inf_le_right := fun x y v w h => h.2 }
+    supₛ := supₛ
+    le_sup := fun s G hG a b hab => ⟨G, hG, hab⟩
+    sup_le := fun s G hG a b => by
+      rintro ⟨H, hH, hab⟩
+      exact hG _ hH hab
+    infₛ := infₛ
+    inf_le := fun s G hG a b hab => hab.1 hG
+    le_inf := fun s G hG a b hab => ⟨fun H hH => hG _ hH hab, hab.Ne⟩
+    inf_sup_le_supᵢ_inf := fun G s a b hab => by
+      simpa only [exists_prop, Sup_adj, and_imp, forall_exists_index, Inf_adj, supr_adj, inf_adj, ←
+        exists_and_right, exists_and_left, and_assoc', and_self_right] using hab
+    infᵢ_sup_le_sup_inf := fun G s a b hab =>
+      by
+      simp only [sup_adj, Inf_adj, infi_adj] at hab⊢
+      have : (∀ G' ∈ s, adj G a b ∨ adj G' a b) ∧ a ≠ b :=
+        (and_congr_left fun h => forall_congr' fun H => _).1 hab
+      simpa [forall_or_left, or_and_right, and_iff_left_of_imp adj.ne] using this
+      exact and_iff_left h }
 
 /- warning: simple_graph.top_adj -> SimpleGraph.top_adj is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} (v : V) (w : V), Iff (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v w) (Ne.{succ u1} V v w)
+  forall {V : Type.{u1}} (v : V) (w : V), Iff (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v w) (Ne.{succ u1} V v w)
 but is expected to have type
   forall {V : Type.{u1}} (v : V) (w : V), Iff (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v w) (Ne.{succ u1} V v w)
 Case conversion may be inaccurate. Consider using '#align simple_graph.top_adj SimpleGraph.top_adjₓ'. -/
@@ -343,7 +420,7 @@ theorem top_adj (v w : V) : (⊤ : SimpleGraph V).Adj v w ↔ v ≠ w :=
 
 /- warning: simple_graph.bot_adj -> SimpleGraph.bot_adj is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} (v : V) (w : V), Iff (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v w) False
+  forall {V : Type.{u1}} (v : V) (w : V), Iff (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v w) False
 but is expected to have type
   forall {V : Type.{u1}} (v : V) (w : V), Iff (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v w) False
 Case conversion may be inaccurate. Consider using '#align simple_graph.bot_adj SimpleGraph.bot_adjₓ'. -/
@@ -354,7 +431,7 @@ theorem bot_adj (v w : V) : (⊥ : SimpleGraph V).Adj v w ↔ False :=
 
 /- warning: simple_graph.complete_graph_eq_top -> SimpleGraph.completeGraph_eq_top is a dubious translation:
 lean 3 declaration is
-  forall (V : Type.{u1}), Eq.{succ u1} (SimpleGraph.{u1} V) (completeGraph.{u1} V) (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))
+  forall (V : Type.{u1}), Eq.{succ u1} (SimpleGraph.{u1} V) (completeGraph.{u1} V) (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 but is expected to have type
   forall (V : Type.{u1}), Eq.{succ u1} (SimpleGraph.{u1} V) (completeGraph.{u1} V) (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.complete_graph_eq_top SimpleGraph.completeGraph_eq_topₓ'. -/
@@ -365,7 +442,7 @@ theorem completeGraph_eq_top (V : Type u) : completeGraph V = ⊤ :=
 
 /- warning: simple_graph.empty_graph_eq_bot -> SimpleGraph.emptyGraph_eq_bot is a dubious translation:
 lean 3 declaration is
-  forall (V : Type.{u1}), Eq.{succ u1} (SimpleGraph.{u1} V) (emptyGraph.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))
+  forall (V : Type.{u1}), Eq.{succ u1} (SimpleGraph.{u1} V) (emptyGraph.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 but is expected to have type
   forall (V : Type.{u1}), Eq.{succ u1} (SimpleGraph.{u1} V) (emptyGraph.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.empty_graph_eq_bot SimpleGraph.emptyGraph_eq_botₓ'. -/
@@ -384,7 +461,7 @@ variable (V) (H : SimpleGraph V) [DecidableRel G.Adj] [DecidableRel H.Adj]
 
 /- warning: simple_graph.bot.adj_decidable -> SimpleGraph.Bot.adjDecidable is a dubious translation:
 lean 3 declaration is
-  forall (V : Type.{u1}), DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))))
+  forall (V : Type.{u1}), DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))
 but is expected to have type
   forall (V : Type.{u1}), DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.bot.adj_decidable SimpleGraph.Bot.adjDecidableₓ'. -/
@@ -422,7 +499,7 @@ variable [DecidableEq V]
 
 /- warning: simple_graph.top.adj_decidable -> SimpleGraph.Top.adjDecidable is a dubious translation:
 lean 3 declaration is
-  forall (V : Type.{u1}) [_inst_3 : DecidableEq.{succ u1} V], DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))))
+  forall (V : Type.{u1}) [_inst_3 : DecidableEq.{succ u1} V], DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))
 but is expected to have type
   forall (V : Type.{u1}) [_inst_3 : DecidableEq.{succ u1} V], DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.top.adj_decidable SimpleGraph.Top.adjDecidableₓ'. -/
@@ -535,7 +612,7 @@ theorem edgeSet_subset_edgeSet : G₁.edgeSetEmbedding ⊆ G₂.edgeSetEmbedding
 
 /- warning: simple_graph.edge_set_ssubset_edge_set -> SimpleGraph.edgeSet_sSubset_edgeSet is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSsubset.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))))))) G₁ G₂)
+  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSsubset.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))) G₁ G₂)
 but is expected to have type
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instHasSSubsetSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G₁) (SimpleGraph.edgeSet.{u1} V G₂)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))))))) G₁ G₂)
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_ssubset_edge_set SimpleGraph.edgeSet_sSubset_edgeSetₓ'. -/
@@ -565,7 +642,7 @@ alias edge_set_subset_edge_set ↔ _ edge_set_mono
 
 /- warning: simple_graph.edge_set_strict_mono -> SimpleGraph.edgeSet_strict_mono is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))))))) G₁ G₂) -> (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSsubset.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))
+  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))) G₁ G₂) -> (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSsubset.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))
 but is expected to have type
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))))))) G₁ G₂) -> (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instHasSSubsetSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G₁) (SimpleGraph.edgeSet.{u1} V G₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_strict_mono SimpleGraph.edgeSet_strict_monoₓ'. -/
@@ -578,7 +655,7 @@ variable (G₁ G₂)
 
 /- warning: simple_graph.edge_set_bot -> SimpleGraph.edgeSet_bot is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasEmptyc.{u1} (Sym2.{u1} V)))
+  forall {V : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasEmptyc.{u1} (Sym2.{u1} V)))
 but is expected to have type
   forall {V : Type.{u1}}, Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instEmptyCollectionSet.{u1} (Sym2.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_bot SimpleGraph.edgeSet_botₓ'. -/
@@ -713,7 +790,7 @@ instance fintypeEdgeSet [DecidableEq V] [Fintype V] [DecidableRel G.Adj] :
 
 /- warning: simple_graph.fintype_edge_set_bot -> SimpleGraph.fintypeEdgeSetBot is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}}, Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))))
+  forall {V : Type.{u1}}, Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))))
 but is expected to have type
   forall {V : Type.{u1}}, Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.fintype_edge_set_bot SimpleGraph.fintypeEdgeSetBotₓ'. -/
@@ -814,7 +891,7 @@ theorem fromEdgeSet_edgeSet : fromEdgeSet G.edgeSetEmbedding = G :=
 
 /- warning: simple_graph.from_edge_set_empty -> SimpleGraph.fromEdgeSet_empty is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasEmptyc.{u1} (Sym2.{u1} V)))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))
+  forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasEmptyc.{u1} (Sym2.{u1} V)))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 but is expected to have type
   forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instEmptyCollectionSet.{u1} (Sym2.{u1} V)))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_empty SimpleGraph.fromEdgeSet_emptyₓ'. -/
@@ -827,7 +904,7 @@ theorem fromEdgeSet_empty : fromEdgeSet (∅ : Set (Sym2 V)) = ⊥ :=
 
 /- warning: simple_graph.from_edge_set_univ -> SimpleGraph.fromEdgeSet_univ is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (Set.univ.{u1} (Sym2.{u1} V))) (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))
+  forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (Set.univ.{u1} (Sym2.{u1} V))) (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 but is expected to have type
   forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (Set.univ.{u1} (Sym2.{u1} V))) (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_univ SimpleGraph.fromEdgeSet_univₓ'. -/
@@ -1075,7 +1152,7 @@ theorem dartOfNeighborSet_injective (v : V) : Function.Injective (G.dartOfNeighb
 
 /- warning: simple_graph.nonempty_dart_top -> SimpleGraph.nonempty_dart_top is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Nontrivial.{u1} V], Nonempty.{succ u1} (SimpleGraph.Dart.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))))
+  forall {V : Type.{u1}} [_inst_1 : Nontrivial.{u1} V], Nonempty.{succ u1} (SimpleGraph.Dart.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Nontrivial.{u1} V], Nonempty.{succ u1} (SimpleGraph.Dart.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.nonempty_dart_top SimpleGraph.nonempty_dart_topₓ'. -/
@@ -1263,7 +1340,7 @@ theorem edgeFinset_subset_edgeFinset : G₁.edgeFinset ⊆ G₂.edgeFinset ↔ G
 
 /- warning: simple_graph.edge_finset_ssubset_edge_finset -> SimpleGraph.edgeFinset_sSubset_edgeFinset is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁))] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasSsubset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))))))) G₁ G₂)
+  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁))] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasSsubset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))) G₁ G₂)
 but is expected to have type
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₁))] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₂))], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.instHasSSubsetFinset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))))))) G₁ G₂)
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_finset_ssubset_edge_finset SimpleGraph.edgeFinset_sSubset_edgeFinsetₓ'. -/
@@ -1283,7 +1360,7 @@ alias edge_finset_subset_edge_finset ↔ _ edge_finset_mono
 
 /- warning: simple_graph.edge_finset_strict_mono -> SimpleGraph.edgeFinset_strict_mono is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁))] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))], (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))))))) G₁ G₂) -> (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasSsubset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3))
+  forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁))] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))], (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))) G₁ G₂) -> (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasSsubset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3))
 but is expected to have type
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₁))] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₂))], (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))))))) G₁ G₂) -> (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.instHasSSubsetFinset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_finset_strict_mono SimpleGraph.edgeFinset_strict_monoₓ'. -/
@@ -1294,7 +1371,7 @@ attribute [mono] edge_finset_mono edge_finset_strict_mono
 
 /- warning: simple_graph.edge_finset_bot -> SimpleGraph.edgeFinset_bot is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}}, Eq.{succ u1} (Finset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) (SimpleGraph.fintypeEdgeSetBot.{u1} V)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasEmptyc.{u1} (Sym2.{u1} V)))
+  forall {V : Type.{u1}}, Eq.{succ u1} (Finset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (SimpleGraph.fintypeEdgeSetBot.{u1} V)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasEmptyc.{u1} (Sym2.{u1} V)))
 but is expected to have type
   forall {V : Type.{u1}}, Eq.{succ u1} (Finset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) (SimpleGraph.fintypeEdgeSetBot.{u1} V)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.instEmptyCollectionFinset.{u1} (Sym2.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_finset_bot SimpleGraph.edgeFinset_botₓ'. -/
@@ -1517,7 +1594,7 @@ instance decidableMemCommonNeighbors [DecidableRel G.Adj] (v w : V) :
 
 /- warning: simple_graph.common_neighbors_top_eq -> SimpleGraph.commonNeighbors_top_eq is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {v : V} {w : V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v w) (SDiff.sdiff.{u1} (Set.{u1} V) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} V) (Set.booleanAlgebra.{u1} V)) (Set.univ.{u1} V) (Insert.insert.{u1, u1} V (Set.{u1} V) (Set.hasInsert.{u1} V) v (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.hasSingleton.{u1} V) w)))
+  forall {V : Type.{u1}} {v : V} {w : V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v w) (SDiff.sdiff.{u1} (Set.{u1} V) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} V) (Set.booleanAlgebra.{u1} V)) (Set.univ.{u1} V) (Insert.insert.{u1, u1} V (Set.{u1} V) (Set.hasInsert.{u1} V) v (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.hasSingleton.{u1} V) w)))
 but is expected to have type
   forall {V : Type.{u1}} {v : V} {w : V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v w) (SDiff.sdiff.{u1} (Set.{u1} V) (Set.instSDiffSet.{u1} V) (Set.univ.{u1} V) (Insert.insert.{u1, u1} V (Set.{u1} V) (Set.instInsertSet.{u1} V) v (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.instSingletonSet.{u1} V) w)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.common_neighbors_top_eq SimpleGraph.commonNeighbors_top_eqₓ'. -/
@@ -1631,7 +1708,7 @@ theorem deleteEdges_eq_sdiff_fromEdgeSet (s : Set (Sym2 V)) : G.deleteEdges s = 
 
 /- warning: simple_graph.compl_eq_delete_edges -> SimpleGraph.compl_eq_deleteEdges is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasCompl.{u1} V) G) (SimpleGraph.deleteEdges.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G))
+  forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasCompl.{u1} V) G) (SimpleGraph.deleteEdges.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G))
 but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instHasComplSimpleGraph.{u1} V) G) (SimpleGraph.deleteEdges.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) (SimpleGraph.edgeSet.{u1} V G))
 Case conversion may be inaccurate. Consider using '#align simple_graph.compl_eq_delete_edges SimpleGraph.compl_eq_deleteEdgesₓ'. -/
@@ -1666,7 +1743,7 @@ theorem deleteEdges_empty_eq : G.deleteEdges ∅ = G :=
 
 /- warning: simple_graph.delete_edges_univ_eq -> SimpleGraph.deleteEdges_univ_eq is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G (Set.univ.{u1} (Sym2.{u1} V))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))
+  forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G (Set.univ.{u1} (Sym2.{u1} V))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G (Set.univ.{u1} (Sym2.{u1} V))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_univ_eq SimpleGraph.deleteEdges_univ_eqₓ'. -/
@@ -1832,7 +1909,7 @@ theorem map_adj (f : V ↪ W) (G : SimpleGraph V) (u v : W) :
 
 /- warning: simple_graph.map_monotone -> SimpleGraph.map_monotone is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} (f : Function.Embedding.{succ u1, succ u2} V W), Monotone.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.{u2} W) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))))))) (PartialOrder.toPreorder.{u2} (SimpleGraph.{u2} W) (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.{u2} W) (Lattice.toSemilatticeInf.{u2} (SimpleGraph.{u2} W) (GeneralizedCoheytingAlgebra.toLattice.{u2} (SimpleGraph.{u2} W) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (SimpleGraph.{u2} W) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (SimpleGraph.{u2} W) (SimpleGraph.booleanAlgebra.{u2} W))))))) (SimpleGraph.map.{u1, u2} V W f)
+  forall {V : Type.{u1}} {W : Type.{u2}} (f : Function.Embedding.{succ u1, succ u2} V W), Monotone.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.{u2} W) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (PartialOrder.toPreorder.{u2} (SimpleGraph.{u2} W) (CompleteSemilatticeInf.toPartialOrder.{u2} (SimpleGraph.{u2} W) (CompleteLattice.toCompleteSemilatticeInf.{u2} (SimpleGraph.{u2} W) (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.{u2} W) (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.{u2} W) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (SimpleGraph.{u2} W) (SimpleGraph.completeBooleanAlgebra.{u2} W))))))) (SimpleGraph.map.{u1, u2} V W f)
 but is expected to have type
   forall {V : Type.{u1}} {W : Type.{u2}} (f : Function.Embedding.{succ u1, succ u2} V W), Monotone.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.{u2} W) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))))))) (PartialOrder.toPreorder.{u2} (SimpleGraph.{u2} W) (SemilatticeInf.toPartialOrder.{u2} (SimpleGraph.{u2} W) (Lattice.toSemilatticeInf.{u2} (SimpleGraph.{u2} W) (GeneralizedCoheytingAlgebra.toLattice.{u2} (SimpleGraph.{u2} W) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (SimpleGraph.{u2} W) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (SimpleGraph.{u2} W) (BooleanAlgebra.toBiheytingAlgebra.{u2} (SimpleGraph.{u2} W) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u2} W)))))))) (SimpleGraph.map.{u1, u2} V W f)
 Case conversion may be inaccurate. Consider using '#align simple_graph.map_monotone SimpleGraph.map_monotoneₓ'. -/
@@ -2175,7 +2252,7 @@ theorem neighborFinset_compl [DecidableEq V] [DecidableRel G.Adj] (v : V) :
 
 /- warning: simple_graph.complete_graph_degree -> SimpleGraph.complete_graph_degree is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] (v : V), Eq.{1} Nat (SimpleGraph.degree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v (SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] (v : V), Eq.{1} Nat (SimpleGraph.degree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v (SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] (v : V), Eq.{1} Nat (SimpleGraph.degree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v (SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.complete_graph_degree SimpleGraph.complete_graph_degreeₓ'. -/
@@ -2187,7 +2264,7 @@ theorem complete_graph_degree [DecidableEq V] (v : V) :
 
 /- warning: simple_graph.bot_degree -> SimpleGraph.bot_degree is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] (v : V), Eq.{1} Nat (SimpleGraph.degree.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v (SimpleGraph.neighborSetFintype.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) v)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] (v : V), Eq.{1} Nat (SimpleGraph.degree.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v (SimpleGraph.neighborSetFintype.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) v)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] (v : V), Eq.{1} Nat (SimpleGraph.degree.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v (SimpleGraph.neighborSetFintype.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) v)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
 Case conversion may be inaccurate. Consider using '#align simple_graph.bot_degree SimpleGraph.bot_degreeₓ'. -/
@@ -2199,7 +2276,7 @@ theorem bot_degree (v : V) : (⊥ : SimpleGraph V).degree v = 0 :=
 
 /- warning: simple_graph.is_regular_of_degree.top -> SimpleGraph.IsRegularOfDegree.top is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V], SimpleGraph.IsRegularOfDegree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) (fun (v : V) => SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V], SimpleGraph.IsRegularOfDegree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (fun (v : V) => SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V], SimpleGraph.IsRegularOfDegree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) (fun (v : V) => SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.is_regular_of_degree.top SimpleGraph.IsRegularOfDegree.topₓ'. -/
@@ -2381,7 +2458,7 @@ theorem Adj.card_commonNeighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.A
 
 /- warning: simple_graph.card_common_neighbors_top -> SimpleGraph.card_commonNeighbors_top is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {v : V} {w : V}, (Ne.{succ u1} V v w) -> (Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v w)) (Subtype.fintype.{u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) v w)) (fun (a : V) => SimpleGraph.decidableMemCommonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v w a) _inst_1)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {v : V} {w : V}, (Ne.{succ u1} V v w) -> (Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v w)) (Subtype.fintype.{u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v w)) (fun (a : V) => SimpleGraph.decidableMemCommonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v w a) _inst_1)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {v : V} {w : V}, (Ne.{succ u1} V v w) -> (Eq.{1} Nat (Fintype.card.{u1} (Set.Elem.{u1} V (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v w)) (Subtype.fintype.{u1} V (fun (x : V) => Membership.mem.{u1, u1} V (Set.{u1} V) (Set.instMembershipSet.{u1} V) x (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) v w)) (fun (a : V) => SimpleGraph.decidableMemCommonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v w a) _inst_1)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.card_common_neighbors_top SimpleGraph.card_commonNeighbors_topₓ'. -/
@@ -2532,7 +2609,7 @@ theorem mapEdgeSet.injective (hinj : Function.Injective f) : Function.Injective 
 
 /- warning: simple_graph.hom.injective_of_top_hom -> SimpleGraph.Hom.injective_of_top_hom is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {W : Type.{u2}} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) G'), Function.Injective.{succ u1, succ u2} V W (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) G') (fun (_x : RelHom.{u1, u2} V W (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))) (SimpleGraph.Adj.{u2} W G')) => V -> W) (RelHom.hasCoeToFun.{u1, u2} V W (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V)))) (SimpleGraph.Adj.{u2} W G')) f)
+  forall {V : Type.{u1}} {W : Type.{u2}} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) G'), Function.Injective.{succ u1, succ u2} V W (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) G') (fun (_x : RelHom.{u1, u2} V W (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (SimpleGraph.Adj.{u2} W G')) => V -> W) (RelHom.hasCoeToFun.{u1, u2} V W (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (SimpleGraph.Adj.{u2} W G')) f)
 but is expected to have type
   forall {V : Type.{u1}} {W : Type.{u2}} {G' : SimpleGraph.{u2} W} (f : SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) G'), Function.Injective.{succ u1, succ u2} V W (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) G') V (fun (_x : V) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : V) => W) _x) (RelHomClass.toFunLike.{max u1 u2, u1, u2} (SimpleGraph.Hom.{u1, u2} V W (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) G') V W (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))) (SimpleGraph.Adj.{u2} W G') (RelHom.instRelHomClassRelHom.{u1, u2} V W (SimpleGraph.Adj.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))) (SimpleGraph.Adj.{u2} W G'))) f)
 Case conversion may be inaccurate. Consider using '#align simple_graph.hom.injective_of_top_hom SimpleGraph.Hom.injective_of_top_homₓ'. -/
@@ -2690,7 +2767,7 @@ protected def spanningCoe {s : Set V} (G : SimpleGraph s) : G ↪g G.spanningCoe
 
 /- warning: simple_graph.embedding.complete_graph -> SimpleGraph.Embedding.completeGraph is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Function.Embedding.{succ u1, succ u2} α β) -> (SimpleGraph.Embedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} α) (SimpleGraph.booleanAlgebra.{u1} α))) (Top.top.{u2} (SimpleGraph.{u2} β) (BooleanAlgebra.toHasTop.{u2} (SimpleGraph.{u2} β) (SimpleGraph.booleanAlgebra.{u2} β))))
+  forall {α : Type.{u1}} {β : Type.{u2}}, (Function.Embedding.{succ u1, succ u2} α β) -> (SimpleGraph.Embedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} α) (SimpleGraph.completeBooleanAlgebra.{u1} α)))))) (Top.top.{u2} (SimpleGraph.{u2} β) (CompleteLattice.toHasTop.{u2} (SimpleGraph.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (SimpleGraph.{u2} β) (SimpleGraph.completeBooleanAlgebra.{u2} β)))))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}}, (Function.Embedding.{succ u1, succ u2} α β) -> (SimpleGraph.Embedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} α) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} α))) (Top.top.{u2} (SimpleGraph.{u2} β) (BooleanAlgebra.toTop.{u2} (SimpleGraph.{u2} β) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u2} β))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.embedding.complete_graph SimpleGraph.Embedding.completeGraphₓ'. -/
@@ -2899,7 +2976,7 @@ protected def map (f : V ≃ W) (G : SimpleGraph V) : G ≃g G.map f.toEmbedding
 
 /- warning: simple_graph.iso.complete_graph -> SimpleGraph.Iso.completeGraph is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Equiv.{succ u1, succ u2} α β) -> (SimpleGraph.Iso.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} α) (SimpleGraph.booleanAlgebra.{u1} α))) (Top.top.{u2} (SimpleGraph.{u2} β) (BooleanAlgebra.toHasTop.{u2} (SimpleGraph.{u2} β) (SimpleGraph.booleanAlgebra.{u2} β))))
+  forall {α : Type.{u1}} {β : Type.{u2}}, (Equiv.{succ u1, succ u2} α β) -> (SimpleGraph.Iso.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} α) (SimpleGraph.completeBooleanAlgebra.{u1} α)))))) (Top.top.{u2} (SimpleGraph.{u2} β) (CompleteLattice.toHasTop.{u2} (SimpleGraph.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (SimpleGraph.{u2} β) (SimpleGraph.completeBooleanAlgebra.{u2} β)))))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}}, (Equiv.{succ u1, succ u2} α β) -> (SimpleGraph.Iso.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} α) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} α))) (Top.top.{u2} (SimpleGraph.{u2} β) (BooleanAlgebra.toTop.{u2} (SimpleGraph.{u2} β) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u2} β))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.iso.complete_graph SimpleGraph.Iso.completeGraphₓ'. -/
@@ -2911,7 +2988,7 @@ protected def completeGraph {α β : Type _} (f : α ≃ β) :
 
 /- warning: simple_graph.iso.to_embedding_complete_graph -> SimpleGraph.Iso.toEmbedding_completeGraph is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β), Eq.{max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} α) (SimpleGraph.booleanAlgebra.{u1} α))) (Top.top.{u2} (SimpleGraph.{u2} β) (BooleanAlgebra.toHasTop.{u2} (SimpleGraph.{u2} β) (SimpleGraph.booleanAlgebra.{u2} β)))) (SimpleGraph.Iso.toEmbedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (BooleanAlgebra.toHasTop.{u1} (SimpleGraph.{u1} α) (SimpleGraph.booleanAlgebra.{u1} α))) (Top.top.{u2} (SimpleGraph.{u2} β) (BooleanAlgebra.toHasTop.{u2} (SimpleGraph.{u2} β) (SimpleGraph.booleanAlgebra.{u2} β))) (SimpleGraph.Iso.completeGraph.{u1, u2} α β f)) (SimpleGraph.Embedding.completeGraph.{u1, u2} α β (Equiv.toEmbedding.{succ u1, succ u2} α β f))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β), Eq.{max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} α) (SimpleGraph.completeBooleanAlgebra.{u1} α)))))) (Top.top.{u2} (SimpleGraph.{u2} β) (CompleteLattice.toHasTop.{u2} (SimpleGraph.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (SimpleGraph.{u2} β) (SimpleGraph.completeBooleanAlgebra.{u2} β))))))) (SimpleGraph.Iso.toEmbedding.{u1, u2} α β (Top.top.{u1} (SimpleGraph.{u1} α) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} α) (SimpleGraph.completeBooleanAlgebra.{u1} α)))))) (Top.top.{u2} (SimpleGraph.{u2} β) (CompleteLattice.toHasTop.{u2} (SimpleGraph.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (SimpleGraph.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (SimpleGraph.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (SimpleGraph.{u2} β) (SimpleGraph.completeBooleanAlgebra.{u2} β)))))) (SimpleGraph.Iso.completeGraph.{u1, u2} α β f)) (SimpleGraph.Embedding.completeGraph.{u1, u2} α β (Equiv.toEmbedding.{succ u1, succ u2} α β f))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (SimpleGraph.Embedding.{u2, u1} α β (Top.top.{u2} (SimpleGraph.{u2} α) (BooleanAlgebra.toTop.{u2} (SimpleGraph.{u2} α) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u2} α))) (Top.top.{u1} (SimpleGraph.{u1} β) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} β) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} β)))) (SimpleGraph.Iso.toEmbedding.{u2, u1} α β (Top.top.{u2} (SimpleGraph.{u2} α) (BooleanAlgebra.toTop.{u2} (SimpleGraph.{u2} α) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u2} α))) (Top.top.{u1} (SimpleGraph.{u1} β) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} β) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} β))) (SimpleGraph.Iso.completeGraph.{u2, u1} α β f)) (SimpleGraph.Embedding.completeGraph.{u2, u1} α β (Equiv.toEmbedding.{succ u2, succ u1} α β f))
 Case conversion may be inaccurate. Consider using '#align simple_graph.iso.to_embedding_complete_graph SimpleGraph.Iso.toEmbedding_completeGraphₓ'. -/

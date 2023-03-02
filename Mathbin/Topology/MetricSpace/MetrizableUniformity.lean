@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable_uniformity
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [Uniform
 /-- A `metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] [T0Space X] : MetricSpace X :=
-  @ofT0PseudoMetricSpace X (UniformSpace.pseudoMetricSpace X) _
+  @MetricSpace.ofT0PseudoMetricSpace X (UniformSpace.pseudoMetricSpace X) _
 #align uniform_space.metric_space UniformSpace.metricSpace
 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/

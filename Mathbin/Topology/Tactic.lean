@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.tactic
-! leanprover-community/mathlib commit 79abf670d5f946912964c232736e97a761f29ebb
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Topology.Basic
 
 /-!
 # Tactics for topology
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Currently we have one domain-specific tactic for topology: `continuity`.
 

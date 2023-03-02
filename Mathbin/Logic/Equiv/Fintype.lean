@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module logic.equiv.fintype
-! leanprover-community/mathlib commit 9407b03373c8cd201df99d6bc5514fc2db44054f
+! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.GroupTheory.Perm.Sign
 import Mathbin.Logic.Equiv.Defs
 
 /-! # Equivalence between fintypes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains some basic results on equivalences where one or both
 sides of the equivalence are `fintype`s.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit 39afa0b340a56b158991e109cf9d1e5396e67f60
+! leanprover-community/mathlib commit 989433cb1ffb03ed63e549ef85da37da12a5a5f6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,14 +175,11 @@ theorem diagonalization_apply_self_apply (v : E) (μ : Eigenvalues T) :
     ∀ w : PiLp 2 fun μ : eigenvalues T => eigenspace T μ,
       T (hT.diagonalization.symm w) = hT.diagonalization.symm fun μ => (μ : 𝕜) • w μ
     by
-    simpa [LinearIsometryEquiv.symm_apply_apply, -is_symmetric.diagonalization_symm_apply] using
+    simpa only [LinearIsometryEquiv.symm_apply_apply, LinearIsometryEquiv.apply_symm_apply] using
       congr_arg (fun w => hT.diagonalization w μ) (this (hT.diagonalization v))
   intro w
-  have hwT : ∀ μ : eigenvalues T, T (w μ) = (μ : 𝕜) • w μ :=
-    by
-    intro μ
-    simpa [mem_eigenspace_iff] using (w μ).Prop
-  simp [hwT]
+  have hwT : ∀ μ, T (w μ) = (μ : 𝕜) • w μ := fun μ => mem_eigenspace_iff.1 (w μ).2
+  simp only [hwT, diagonalization_symm_apply, map_sum, Submodule.coe_smul_of_tower]
 #align linear_map.is_symmetric.diagonalization_apply_self_apply LinearMap.IsSymmetric.diagonalization_apply_self_apply
 
 end Version1
