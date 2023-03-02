@@ -252,32 +252,26 @@ theorem Inseparable.eq [T0Space α] {x y : α} (h : Inseparable x y) : x = y :=
 #align inseparable.eq Inseparable.eq
 -/
 
-/- warning: inducing.injective -> Inducing.injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : T0Space.{u1} α _inst_1] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_2 f) -> (Function.Injective.{succ u1, succ u2} α β f)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_3 f) -> (Function.Injective.{succ u1, succ u2} α β f)
-Case conversion may be inaccurate. Consider using '#align inducing.injective Inducing.injectiveₓ'. -/
+#print Inducing.injective /-
 protected theorem Inducing.injective [TopologicalSpace β] [T0Space α] {f : α → β}
     (hf : Inducing f) : Injective f := fun x y h =>
   Inseparable.eq <| hf.inseparable_iff.1 <| h ▸ Inseparable.refl _
 #align inducing.injective Inducing.injective
+-/
 
-/- warning: inducing.embedding -> Inducing.embedding is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : T0Space.{u1} α _inst_1] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_2 f) -> (Embedding.{u1, u2} α β _inst_1 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T0Space.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] {f : α -> β}, (Inducing.{u1, u2} α β _inst_1 _inst_3 f) -> (Embedding.{u1, u2} α β _inst_1 _inst_3 f)
-Case conversion may be inaccurate. Consider using '#align inducing.embedding Inducing.embeddingₓ'. -/
+#print Inducing.embedding /-
 protected theorem Inducing.embedding [TopologicalSpace β] [T0Space α] {f : α → β}
     (hf : Inducing f) : Embedding f :=
   ⟨hf, hf.Injective⟩
 #align inducing.embedding Inducing.embedding
+-/
 
+#print embedding_iff_inducing /-
 theorem embedding_iff_inducing [TopologicalSpace β] [T0Space α] {f : α → β} :
     Embedding f ↔ Inducing f :=
   ⟨Embedding.to_inducing, Inducing.embedding⟩
 #align embedding_iff_inducing embedding_iff_inducing
+-/
 
 #print t0Space_iff_nhds_injective /-
 theorem t0Space_iff_nhds_injective (α : Type u) [TopologicalSpace α] :
@@ -1946,7 +1940,7 @@ theorem Bornology.relativelyCompact_eq_inCompact [T2Space α] :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] {ι : Type.{u2}} [_inst_5 : Nonempty.{succ u2} ι] {V : ι -> (Set.{u1} α)}, (Directed.{u1, succ u2} (Set.{u1} α) ι (Superset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) V) -> (forall (i : ι), IsCompact.{u1} α _inst_1 (V i)) -> (forall {U : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.interᵢ.{u1, succ u2} α ι (fun (i : ι) => V i))) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x))) -> (Exists.{succ u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (V i) U)))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_4 : T2Space.{u2} α _inst_1] {ι : Type.{u1}} [_inst_5 : Nonempty.{succ u1} ι] {V : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Topology.Separation._hyg.13015 : Set.{u2} α) (x._@.Mathlib.Topology.Separation._hyg.13017 : Set.{u2} α) => Superset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Topology.Separation._hyg.13015 x._@.Mathlib.Topology.Separation._hyg.13017) V) -> (forall (i : ι), IsCompact.{u2} α _inst_1 (V i)) -> (forall {U : Set.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => V i))) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (nhds.{u2} α _inst_1 x))) -> (Exists.{succ u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (V i) U)))
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_4 : T2Space.{u2} α _inst_1] {ι : Type.{u1}} [_inst_5 : Nonempty.{succ u1} ι] {V : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Topology.Separation._hyg.13047 : Set.{u2} α) (x._@.Mathlib.Topology.Separation._hyg.13049 : Set.{u2} α) => Superset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Topology.Separation._hyg.13047 x._@.Mathlib.Topology.Separation._hyg.13049) V) -> (forall (i : ι), IsCompact.{u2} α _inst_1 (V i)) -> (forall {U : Set.{u2} α}, (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => V i))) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (nhds.{u2} α _inst_1 x))) -> (Exists.{succ u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (V i) U)))
 Case conversion may be inaccurate. Consider using '#align exists_subset_nhds_of_is_compact exists_subset_nhds_of_isCompactₓ'. -/
 /-- If `V : ι → set α` is a decreasing family of compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. This is a version of `exists_subset_nhd_of_compact'` where we

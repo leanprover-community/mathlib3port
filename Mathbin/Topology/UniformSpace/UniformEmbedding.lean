@@ -47,16 +47,30 @@ structure UniformInducing (f : α → β) : Prop where
 #align uniform_inducing UniformInducing
 -/
 
+#print UniformInducing.comap_uniformSpace /-
 protected theorem UniformInducing.comap_uniformSpace {f : α → β} (hf : UniformInducing f) :
     ‹UniformSpace β›.comap f = ‹UniformSpace α› :=
   uniformSpace_eq hf.1
 #align uniform_inducing.comap_uniform_space UniformInducing.comap_uniformSpace
+-/
 
+/- warning: uniform_inducing_iff' -> uniformInducing_iff' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, Iff (UniformInducing.{u1, u2} α β _inst_1 _inst_2 f) (And (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (Prod.map.{u1, u2, u1, u2} α β α β f f) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, Iff (UniformInducing.{u1, u2} α β _inst_1 _inst_2 f) (And (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (Prod.map.{u1, u2, u1, u2} α β α β f f) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align uniform_inducing_iff' uniformInducing_iff'ₓ'. -/
 theorem uniformInducing_iff' {f : α → β} :
     UniformInducing f ↔ UniformContinuous f ∧ comap (Prod.map f f) (𝓤 β) ≤ 𝓤 α := by
   rw [uniformInducing_iff, UniformContinuous, tendsto_iff_comap, le_antisymm_iff, and_comm'] <;> rfl
 #align uniform_inducing_iff' uniformInducing_iff'
 
+/- warning: filter.has_basis.uniform_inducing_iff -> Filter.HasBasis.uniformInducing_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {ι : Sort.{u3}} {ι' : Sort.{u4}} {p : ι -> Prop} {p' : ι' -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))} {s' : ι' -> (Set.{u2} (Prod.{u2, u2} β β))}, (Filter.HasBasis.{u1, u3} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (Filter.HasBasis.{u2, u4} (Prod.{u2, u2} β β) ι' (uniformity.{u2} β _inst_2) p' s') -> (forall {f : α -> β}, Iff (UniformInducing.{u1, u2} α β _inst_1 _inst_2 f) (And (forall (i : ι'), (p' i) -> (Exists.{u3} ι (fun (j : ι) => And (p j) (forall (x : α) (y : α), (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s j)) -> (Membership.Mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.hasMem.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β (f x) (f y)) (s' i)))))) (forall (j : ι), (p j) -> (Exists.{u4} ι' (fun (i : ι') => And (p' i) (forall (x : α) (y : α), (Membership.Mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.hasMem.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β (f x) (f y)) (s' i)) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s j))))))))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : UniformSpace.{u3} α] [_inst_2 : UniformSpace.{u4} β] {ι : Sort.{u2}} {ι' : Sort.{u1}} {p : ι -> Prop} {p' : ι' -> Prop} {s : ι -> (Set.{u3} (Prod.{u3, u3} α α))} {s' : ι' -> (Set.{u4} (Prod.{u4, u4} β β))}, (Filter.HasBasis.{u3, u2} (Prod.{u3, u3} α α) ι (uniformity.{u3} α _inst_1) p s) -> (Filter.HasBasis.{u4, u1} (Prod.{u4, u4} β β) ι' (uniformity.{u4} β _inst_2) p' s') -> (forall {f : α -> β}, Iff (UniformInducing.{u3, u4} α β _inst_1 _inst_2 f) (And (forall (i : ι'), (p' i) -> (Exists.{u2} ι (fun (j : ι) => And (p j) (forall (x : α) (y : α), (Membership.mem.{u3, u3} (Prod.{u3, u3} α α) (Set.{u3} (Prod.{u3, u3} α α)) (Set.instMembershipSet.{u3} (Prod.{u3, u3} α α)) (Prod.mk.{u3, u3} α α x y) (s j)) -> (Membership.mem.{u4, u4} (Prod.{u4, u4} β β) (Set.{u4} (Prod.{u4, u4} β β)) (Set.instMembershipSet.{u4} (Prod.{u4, u4} β β)) (Prod.mk.{u4, u4} β β (f x) (f y)) (s' i)))))) (forall (j : ι), (p j) -> (Exists.{u1} ι' (fun (i : ι') => And (p' i) (forall (x : α) (y : α), (Membership.mem.{u4, u4} (Prod.{u4, u4} β β) (Set.{u4} (Prod.{u4, u4} β β)) (Set.instMembershipSet.{u4} (Prod.{u4, u4} β β)) (Prod.mk.{u4, u4} β β (f x) (f y)) (s' i)) -> (Membership.mem.{u3, u3} (Prod.{u3, u3} α α) (Set.{u3} (Prod.{u3, u3} α α)) (Set.instMembershipSet.{u3} (Prod.{u3, u3} α α)) (Prod.mk.{u3, u3} α α x y) (s j))))))))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniform_inducing_iff Filter.HasBasis.uniformInducing_iffₓ'. -/
 protected theorem Filter.HasBasis.uniformInducing_iff {ι ι'} {p : ι → Prop} {p' : ι' → Prop} {s s'}
     (h : (𝓤 α).HasBasis p s) (h' : (𝓤 β).HasBasis p' s') {f : α → β} :
     UniformInducing f ↔
@@ -167,10 +181,12 @@ theorem UniformInducing.denseInducing {f : α → β} (h : UniformInducing f) (h
 #align uniform_inducing.dense_inducing UniformInducing.denseInducing
 -/
 
+#print UniformInducing.injective /-
 protected theorem UniformInducing.injective [T0Space α] {f : α → β} (h : UniformInducing f) :
     Injective f :=
   h.Inducing.Injective
 #align uniform_inducing.injective UniformInducing.injective
+-/
 
 #print UniformEmbedding /-
 /-- A map `f : α → β` between uniform spaces is a *uniform embedding* if it is uniform inducing and
@@ -181,11 +197,23 @@ structure UniformEmbedding (f : α → β) extends UniformInducing f : Prop wher
 #align uniform_embedding UniformEmbedding
 -/
 
+/- warning: uniform_embedding_iff' -> uniformEmbedding_iff' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, Iff (UniformEmbedding.{u1, u2} α β _inst_1 _inst_2 f) (And (Function.Injective.{succ u1, succ u2} α β f) (And (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (Prod.map.{u1, u2, u1, u2} α β α β f f) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {f : α -> β}, Iff (UniformEmbedding.{u1, u2} α β _inst_1 _inst_2 f) (And (Function.Injective.{succ u1, succ u2} α β f) (And (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) (LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (Filter.comap.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (Prod.map.{u1, u2, u1, u2} α β α β f f) (uniformity.{u2} β _inst_2)) (uniformity.{u1} α _inst_1))))
+Case conversion may be inaccurate. Consider using '#align uniform_embedding_iff' uniformEmbedding_iff'ₓ'. -/
 theorem uniformEmbedding_iff' {f : α → β} :
     UniformEmbedding f ↔ Injective f ∧ UniformContinuous f ∧ comap (Prod.map f f) (𝓤 β) ≤ 𝓤 α := by
   rw [uniformEmbedding_iff, and_comm', uniformInducing_iff']
 #align uniform_embedding_iff' uniformEmbedding_iff'
 
+/- warning: filter.has_basis.uniform_embedding_iff' -> Filter.HasBasis.uniformEmbedding_iff' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {ι : Sort.{u3}} {ι' : Sort.{u4}} {p : ι -> Prop} {p' : ι' -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))} {s' : ι' -> (Set.{u2} (Prod.{u2, u2} β β))}, (Filter.HasBasis.{u1, u3} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (Filter.HasBasis.{u2, u4} (Prod.{u2, u2} β β) ι' (uniformity.{u2} β _inst_2) p' s') -> (forall {f : α -> β}, Iff (UniformEmbedding.{u1, u2} α β _inst_1 _inst_2 f) (And (Function.Injective.{succ u1, succ u2} α β f) (And (forall (i : ι'), (p' i) -> (Exists.{u3} ι (fun (j : ι) => And (p j) (forall (x : α) (y : α), (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s j)) -> (Membership.Mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.hasMem.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β (f x) (f y)) (s' i)))))) (forall (j : ι), (p j) -> (Exists.{u4} ι' (fun (i : ι') => And (p' i) (forall (x : α) (y : α), (Membership.Mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.hasMem.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β (f x) (f y)) (s' i)) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s j)))))))))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : UniformSpace.{u3} α] [_inst_2 : UniformSpace.{u4} β] {ι : Sort.{u2}} {ι' : Sort.{u1}} {p : ι -> Prop} {p' : ι' -> Prop} {s : ι -> (Set.{u3} (Prod.{u3, u3} α α))} {s' : ι' -> (Set.{u4} (Prod.{u4, u4} β β))}, (Filter.HasBasis.{u3, u2} (Prod.{u3, u3} α α) ι (uniformity.{u3} α _inst_1) p s) -> (Filter.HasBasis.{u4, u1} (Prod.{u4, u4} β β) ι' (uniformity.{u4} β _inst_2) p' s') -> (forall {f : α -> β}, Iff (UniformEmbedding.{u3, u4} α β _inst_1 _inst_2 f) (And (Function.Injective.{succ u3, succ u4} α β f) (And (forall (i : ι'), (p' i) -> (Exists.{u2} ι (fun (j : ι) => And (p j) (forall (x : α) (y : α), (Membership.mem.{u3, u3} (Prod.{u3, u3} α α) (Set.{u3} (Prod.{u3, u3} α α)) (Set.instMembershipSet.{u3} (Prod.{u3, u3} α α)) (Prod.mk.{u3, u3} α α x y) (s j)) -> (Membership.mem.{u4, u4} (Prod.{u4, u4} β β) (Set.{u4} (Prod.{u4, u4} β β)) (Set.instMembershipSet.{u4} (Prod.{u4, u4} β β)) (Prod.mk.{u4, u4} β β (f x) (f y)) (s' i)))))) (forall (j : ι), (p j) -> (Exists.{u1} ι' (fun (i : ι') => And (p' i) (forall (x : α) (y : α), (Membership.mem.{u4, u4} (Prod.{u4, u4} β β) (Set.{u4} (Prod.{u4, u4} β β)) (Set.instMembershipSet.{u4} (Prod.{u4, u4} β β)) (Prod.mk.{u4, u4} β β (f x) (f y)) (s' i)) -> (Membership.mem.{u3, u3} (Prod.{u3, u3} α α) (Set.{u3} (Prod.{u3, u3} α α)) (Set.instMembershipSet.{u3} (Prod.{u3, u3} α α)) (Prod.mk.{u3, u3} α α x y) (s j)))))))))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniform_embedding_iff' Filter.HasBasis.uniformEmbedding_iff'ₓ'. -/
 theorem Filter.HasBasis.uniformEmbedding_iff' {ι ι'} {p : ι → Prop} {p' : ι' → Prop} {s s'}
     (h : (𝓤 α).HasBasis p s) (h' : (𝓤 β).HasBasis p' s') {f : α → β} :
     UniformEmbedding f ↔
@@ -195,6 +223,12 @@ theorem Filter.HasBasis.uniformEmbedding_iff' {ι ι'} {p : ι → Prop} {p' : �
   by rw [uniformEmbedding_iff, and_comm', h.uniform_inducing_iff h']
 #align filter.has_basis.uniform_embedding_iff' Filter.HasBasis.uniformEmbedding_iff'
 
+/- warning: filter.has_basis.uniform_embedding_iff -> Filter.HasBasis.uniformEmbedding_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : UniformSpace.{u2} β] {ι : Sort.{u3}} {ι' : Sort.{u4}} {p : ι -> Prop} {p' : ι' -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))} {s' : ι' -> (Set.{u2} (Prod.{u2, u2} β β))}, (Filter.HasBasis.{u1, u3} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (Filter.HasBasis.{u2, u4} (Prod.{u2, u2} β β) ι' (uniformity.{u2} β _inst_2) p' s') -> (forall {f : α -> β}, Iff (UniformEmbedding.{u1, u2} α β _inst_1 _inst_2 f) (And (Function.Injective.{succ u1, succ u2} α β f) (And (UniformContinuous.{u1, u2} α β _inst_1 _inst_2 f) (forall (j : ι), (p j) -> (Exists.{u4} ι' (fun (i : ι') => And (p' i) (forall (x : α) (y : α), (Membership.Mem.{u2, u2} (Prod.{u2, u2} β β) (Set.{u2} (Prod.{u2, u2} β β)) (Set.hasMem.{u2} (Prod.{u2, u2} β β)) (Prod.mk.{u2, u2} β β (f x) (f y)) (s' i)) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (s j)))))))))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u4}} [_inst_1 : UniformSpace.{u3} α] [_inst_2 : UniformSpace.{u4} β] {ι : Sort.{u2}} {ι' : Sort.{u1}} {p : ι -> Prop} {p' : ι' -> Prop} {s : ι -> (Set.{u3} (Prod.{u3, u3} α α))} {s' : ι' -> (Set.{u4} (Prod.{u4, u4} β β))}, (Filter.HasBasis.{u3, u2} (Prod.{u3, u3} α α) ι (uniformity.{u3} α _inst_1) p s) -> (Filter.HasBasis.{u4, u1} (Prod.{u4, u4} β β) ι' (uniformity.{u4} β _inst_2) p' s') -> (forall {f : α -> β}, Iff (UniformEmbedding.{u3, u4} α β _inst_1 _inst_2 f) (And (Function.Injective.{succ u3, succ u4} α β f) (And (UniformContinuous.{u3, u4} α β _inst_1 _inst_2 f) (forall (j : ι), (p j) -> (Exists.{u1} ι' (fun (i : ι') => And (p' i) (forall (x : α) (y : α), (Membership.mem.{u4, u4} (Prod.{u4, u4} β β) (Set.{u4} (Prod.{u4, u4} β β)) (Set.instMembershipSet.{u4} (Prod.{u4, u4} β β)) (Prod.mk.{u4, u4} β β (f x) (f y)) (s' i)) -> (Membership.mem.{u3, u3} (Prod.{u3, u3} α α) (Set.{u3} (Prod.{u3, u3} α α)) (Set.instMembershipSet.{u3} (Prod.{u3, u3} α α)) (Prod.mk.{u3, u3} α α x y) (s j)))))))))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniform_embedding_iff Filter.HasBasis.uniformEmbedding_iffₓ'. -/
 theorem Filter.HasBasis.uniformEmbedding_iff {ι ι'} {p : ι → Prop} {p' : ι' → Prop} {s s'}
     (h : (𝓤 α).HasBasis p s) (h' : (𝓤 β).HasBasis p' s') {f : α → β} :
     UniformEmbedding f ↔
@@ -279,10 +313,12 @@ protected theorem UniformInducing.uniformEmbedding [T0Space α] {f : α → β}
 #align uniform_inducing.uniform_embedding UniformInducing.uniformEmbedding
 -/
 
+#print uniformEmbedding_iff_uniformInducing /-
 theorem uniformEmbedding_iff_uniformInducing [T0Space α] {f : α → β} :
     UniformEmbedding f ↔ UniformInducing f :=
   ⟨UniformEmbedding.to_uniformInducing, UniformInducing.uniformEmbedding⟩
 #align uniform_embedding_iff_uniform_inducing uniformEmbedding_iff_uniformInducing
+-/
 
 /- warning: comap_uniformity_of_spaced_out -> comap_uniformity_of_spaced_out is a dubious translation:
 lean 3 declaration is
