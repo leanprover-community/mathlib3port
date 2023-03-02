@@ -32,16 +32,34 @@ variable {α : Type _} [DecidableEq α] {s : Finset α} (P : Finpartition s) (G 
 
 namespace Finpartition
 
+/- warning: finpartition.energy -> Finpartition.energy is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, (Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s) -> (forall (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)], Rat)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, (Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) -> (forall (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)], Rat)
+Case conversion may be inaccurate. Consider using '#align finpartition.energy Finpartition.energyₓ'. -/
 /-- The energy of a partition, also known as index. Auxiliary quantity for Szemerédi's regularity
 lemma.  -/
 def energy : ℚ :=
   (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) / P.parts.card ^ 2
 #align finpartition.energy Finpartition.energy
 
+/- warning: finpartition.energy_nonneg -> Finpartition.energy_nonneg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s) (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)], LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (Finpartition.energy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s P G (fun (a : α) (b : α) => _inst_2 a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)], LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Finpartition.energy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s P G (fun (a : α) (b : α) => _inst_2 a b))
+Case conversion may be inaccurate. Consider using '#align finpartition.energy_nonneg Finpartition.energy_nonnegₓ'. -/
 theorem energy_nonneg : 0 ≤ P.energy G :=
   div_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) <| sq_nonneg _
 #align finpartition.energy_nonneg Finpartition.energy_nonneg
 
+/- warning: finpartition.energy_le_one -> Finpartition.energy_le_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s) (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)], LE.le.{0} Rat Rat.hasLe (Finpartition.energy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s P G (fun (a : α) (b : α) => _inst_2 a b)) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)], LE.le.{0} Rat Rat.instLERat (Finpartition.energy.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s P G (fun (a : α) (b : α) => _inst_2 a b)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))
+Case conversion may be inaccurate. Consider using '#align finpartition.energy_le_one Finpartition.energy_le_oneₓ'. -/
 theorem energy_le_one : P.energy G ≤ 1 :=
   div_le_of_nonneg_of_le_mul (sq_nonneg _) zero_le_one <|
     calc

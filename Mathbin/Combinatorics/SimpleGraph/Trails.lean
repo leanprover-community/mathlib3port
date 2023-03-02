@@ -46,14 +46,17 @@ variable {V : Type _} {G : SimpleGraph V}
 
 namespace Walk
 
+#print SimpleGraph.Walk.IsTrail.edgesFinset /-
 /-- The edges of a trail as a finset, since each edge in a trail appears exactly once. -/
 @[reducible]
 def IsTrail.edgesFinset {u v : V} {p : G.Walk u v} (h : p.IsTrail) : Finset (Sym2 V) :=
   ⟨p.edges, h.edges_nodup⟩
 #align simple_graph.walk.is_trail.edges_finset SimpleGraph.Walk.IsTrail.edgesFinset
+-/
 
 variable [DecidableEq V]
 
+#print SimpleGraph.Walk.IsTrail.even_countp_edges_iff /-
 theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail) (x : V) :
     Even (p.edges.countp fun e => x ∈ e) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=
   by
@@ -84,7 +87,9 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
           cases h'
           simpa using h
 #align simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countp_edges_iff
+-/
 
+#print SimpleGraph.Walk.IsEulerian /-
 /-- An *Eulerian trail* (also known as an "Eulerian path") is a walk
 `p` that visits every edge exactly once.  The lemma `simple_graph.walk.is_eulerian.is_trail` shows
 that these are trails.
@@ -93,7 +98,9 @@ Combine with `p.is_circuit` to get an Eulerian circuit (also known as an "Euleri
 def IsEulerian {u v : V} (p : G.Walk u v) : Prop :=
   ∀ e, e ∈ G.edgeSetEmbedding → p.edges.count e = 1
 #align simple_graph.walk.is_eulerian SimpleGraph.Walk.IsEulerian
+-/
 
+#print SimpleGraph.Walk.IsEulerian.isTrail /-
 theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsTrail :=
   by
   rw [is_trail_def, List.nodup_iff_count_le_one]
@@ -102,12 +109,25 @@ theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsT
   · exact (h e (edges_subset_edge_set _ he)).le
   · simp [he]
 #align simple_graph.walk.is_eulerian.is_trail SimpleGraph.Walk.IsEulerian.isTrail
+-/
 
+/- warning: simple_graph.walk.is_eulerian.mem_edges_iff -> SimpleGraph.Walk.IsEulerian.mem_edges_iff is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (forall {e : Sym2.{u1} V}, Iff (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (forall {e : Sym2.{u1} V}, Iff (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p)) (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V G)))
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian.mem_edges_iff SimpleGraph.Walk.IsEulerian.mem_edges_iffₓ'. -/
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
     e ∈ p.edges ↔ e ∈ G.edgeSetEmbedding :=
   ⟨fun h => p.edges_subset_edgeSet h, fun he => by simpa using (h e he).ge⟩
 #align simple_graph.walk.is_eulerian.mem_edges_iff SimpleGraph.Walk.IsEulerian.mem_edges_iff
 
+/- warning: simple_graph.walk.is_eulerian.fintype_edge_set -> SimpleGraph.Walk.IsEulerian.fintypeEdgeSet is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G)))
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian.fintype_edge_set SimpleGraph.Walk.IsEulerian.fintypeEdgeSetₓ'. -/
 /-- The edge set of an Eulerian graph is finite. -/
 def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) :
     Fintype G.edgeSetEmbedding :=
@@ -115,11 +135,23 @@ def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) :
     simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.fintype_edge_set SimpleGraph.Walk.IsEulerian.fintypeEdgeSet
 
+/- warning: simple_graph.walk.is_trail.is_eulerian_of_forall_mem -> SimpleGraph.Walk.IsTrail.isEulerian_of_forall_mem is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsTrail.{u1} V G u v p) -> (forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p))) -> (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p)
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsTrail.{u1} V G u v p) -> (forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V G)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p))) -> (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p)
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.isEulerian_of_forall_memₓ'. -/
 theorem IsTrail.isEulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)
     (hc : ∀ e, e ∈ G.edgeSetEmbedding → e ∈ p.edges) : p.IsEulerian := fun e he =>
   List.count_eq_one_of_mem h.edges_nodup (hc e he)
 #align simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.isEulerian_of_forall_mem
 
+/- warning: simple_graph.walk.is_eulerian_iff -> SimpleGraph.Walk.isEulerian_iff is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v), Iff (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) (And (SimpleGraph.Walk.IsTrail.{u1} V G u v p) (forall (e : Sym2.{u1} V), (Membership.Mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.hasMem.{u1} (Sym2.{u1} V)) e (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G)) -> (Membership.Mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.hasMem.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p))))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] {u : V} {v : V} (p : SimpleGraph.Walk.{u1} V G u v), Iff (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) (And (SimpleGraph.Walk.IsTrail.{u1} V G u v p) (forall (e : Sym2.{u1} V), (Membership.mem.{u1, u1} (Sym2.{u1} V) (Set.{u1} (Sym2.{u1} V)) (Set.instMembershipSet.{u1} (Sym2.{u1} V)) e (SimpleGraph.edgeSet.{u1} V G)) -> (Membership.mem.{u1, u1} (Sym2.{u1} V) (List.{u1} (Sym2.{u1} V)) (List.instMembershipList.{u1} (Sym2.{u1} V)) e (SimpleGraph.Walk.edges.{u1} V G u v p))))
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.isEulerian_iffₓ'. -/
 theorem isEulerian_iff {u v : V} (p : G.Walk u v) :
     p.IsEulerian ↔ p.IsTrail ∧ ∀ e, e ∈ G.edgeSetEmbedding → e ∈ p.edges :=
   by
@@ -130,6 +162,12 @@ theorem isEulerian_iff {u v : V} (p : G.Walk u v) :
     exact h.is_eulerian_of_forall_mem hl
 #align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.isEulerian_iff
 
+/- warning: simple_graph.walk.is_eulerian.edges_finset_eq -> SimpleGraph.Walk.IsEulerian.edgesFinset_eq is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G))] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v} (h : SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p), Eq.{succ u1} (Finset.{u1} (Sym2.{u1} V)) (SimpleGraph.Walk.IsTrail.edgesFinset.{u1} V G u v p (SimpleGraph.Walk.IsEulerian.isTrail.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p h)) (SimpleGraph.edgeFinset.{u1} V G _inst_2)
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G))] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v} (h : SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p), Eq.{succ u1} (Finset.{u1} (Sym2.{u1} V)) (SimpleGraph.Walk.IsTrail.edgesFinset.{u1} V G u v p (SimpleGraph.Walk.IsEulerian.isTrail.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p h)) (SimpleGraph.edgeFinset.{u1} V G _inst_2)
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian.edges_finset_eq SimpleGraph.Walk.IsEulerian.edgesFinset_eqₓ'. -/
 theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSetEmbedding] {u v : V} {p : G.Walk u v}
     (h : p.IsEulerian) : h.IsTrail.edgesFinset = G.edgeFinset :=
   by
@@ -137,6 +175,7 @@ theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSetEmbedding] {u v : V} {p : G.
   simp [h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.edges_finset_eq SimpleGraph.Walk.IsEulerian.edgesFinset_eq
 
+#print SimpleGraph.Walk.IsEulerian.even_degree_iff /-
 theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEulerian) [Fintype V]
     [DecidableRel G.Adj] : Even (G.degree x) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=
   by
@@ -147,7 +186,14 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
   convert_to _ = (ht.is_trail.edges_finset.filter (Membership.Mem x)).val
   rw [ht.edges_finset_eq, G.incidence_finset_eq_filter x]
 #align simple_graph.walk.is_eulerian.even_degree_iff SimpleGraph.Walk.IsEulerian.even_degree_iff
+-/
 
+/- warning: simple_graph.walk.is_eulerian.card_filter_odd_degree -> SimpleGraph.Walk.IsEulerian.card_filter_odd_degree is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} V] [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (forall {s : Finset.{u1} V}, (Eq.{succ u1} (Finset.{u1} V) s (Finset.filter.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))) (fun (a : V) => Nat.Odd.decidablePred (SimpleGraph.degree.{u1} V G a (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) a))) (Finset.univ.{u1} V _inst_2))) -> (Or (Eq.{1} Nat (Finset.card.{u1} V s) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat (Finset.card.{u1} V s) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} V] [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (forall {s : Finset.{u1} V}, (Eq.{succ u1} (Finset.{u1} V) s (Finset.filter.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))) (fun (a : V) => Nat.instDecidablePredNatOddSemiring (SimpleGraph.degree.{u1} V G a (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) a))) (Finset.univ.{u1} V _inst_2))) -> (Or (Eq.{1} Nat (Finset.card.{u1} V s) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat (Finset.card.{u1} V s) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian.card_filter_odd_degree SimpleGraph.Walk.IsEulerian.card_filter_odd_degreeₓ'. -/
 theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V}
     {p : G.Walk u v} (ht : p.IsEulerian) {s}
     (h : s = (Finset.univ : Finset V).filterₓ fun v => Odd (G.degree v)) :
@@ -166,6 +212,12 @@ theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v 
       simp [hn, imp_iff_not_or]
 #align simple_graph.walk.is_eulerian.card_filter_odd_degree SimpleGraph.Walk.IsEulerian.card_filter_odd_degree
 
+/- warning: simple_graph.walk.is_eulerian.card_odd_degree -> SimpleGraph.Walk.IsEulerian.card_odd_degree is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} V] [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (Or (Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (Subtype.fintype.{u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (fun (a : V) => Set.decidableSetOf.{u1} V a (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))) (Nat.Odd.decidablePred (SimpleGraph.degree.{u1} V G a (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) a)))) _inst_2)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} V) Type.{u1} (Set.hasCoeToSort.{u1} V) (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (Subtype.fintype.{u1} V (fun (x : V) => Membership.Mem.{u1, u1} V (Set.{u1} V) (Set.hasMem.{u1} V) x (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (fun (a : V) => Set.decidableSetOf.{u1} V a (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))) (Nat.Odd.decidablePred (SimpleGraph.degree.{u1} V G a (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) a)))) _inst_2)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} V] [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v}, (SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p) -> (Or (Eq.{1} Nat (Fintype.card.{u1} (Set.Elem.{u1} V (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (Subtype.fintype.{u1} V (fun (x : V) => Membership.mem.{u1, u1} V (Set.{u1} V) (Set.instMembershipSet.{u1} V) x (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (fun (a : V) => Set.decidableSetOf.{u1} V a (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))) (Nat.instDecidablePredNatOddSemiring (SimpleGraph.degree.{u1} V G a (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) a)))) _inst_2)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat (Fintype.card.{u1} (Set.Elem.{u1} V (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (Subtype.fintype.{u1} V (fun (x : V) => Membership.mem.{u1, u1} V (Set.{u1} V) (Set.instMembershipSet.{u1} V) x (setOf.{u1} V (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))))) (fun (a : V) => Set.decidableSetOf.{u1} V a (fun (v : V) => Odd.{0} Nat Nat.semiring (SimpleGraph.degree.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) v))) (Nat.instDecidablePredNatOddSemiring (SimpleGraph.degree.{u1} V G a (SimpleGraph.neighborSetFintype.{u1} V G _inst_2 (fun (a : V) (b : V) => _inst_3 a b) a)))) _inst_2)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
+Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian.card_odd_degree SimpleGraph.Walk.IsEulerian.card_odd_degreeₓ'. -/
 theorem IsEulerian.card_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v}
     (ht : p.IsEulerian) :
     Fintype.card { v : V | Odd (G.degree v) } = 0 ∨ Fintype.card { v : V | Odd (G.degree v) } = 2 :=

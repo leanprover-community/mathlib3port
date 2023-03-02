@@ -38,6 +38,7 @@ open CategoryTheory.Limits
 
 namespace CategoryTheory
 
+#print CategoryTheory.Pairwise /-
 /-- An inductive type representing either a single term of a type `ι`, or a pair of terms.
 We use this as the objects of a category to describe the sheaf condition.
 -/
@@ -45,15 +46,19 @@ inductive Pairwise (ι : Type v)
   | single : ι → Pairwise
   | pair : ι → ι → Pairwise
 #align category_theory.pairwise CategoryTheory.Pairwise
+-/
 
 variable {ι : Type v}
 
 namespace Pairwise
 
+#print CategoryTheory.Pairwise.pairwiseInhabited /-
 instance pairwiseInhabited [Inhabited ι] : Inhabited (Pairwise ι) :=
   ⟨single default⟩
 #align category_theory.pairwise.pairwise_inhabited CategoryTheory.Pairwise.pairwiseInhabited
+-/
 
+#print CategoryTheory.Pairwise.Hom /-
 /-- Morphisms in the category `pairwise ι`. The only non-identity morphisms are
 `left i j : single i ⟶ pair i j` and `right i j : single j ⟶ pair i j`.
 -/
@@ -63,20 +68,26 @@ inductive Hom : Pairwise ι → Pairwise ι → Type v
   | left : ∀ i j, hom (pair i j) (single i)
   | right : ∀ i j, hom (pair i j) (single j)
 #align category_theory.pairwise.hom CategoryTheory.Pairwise.Hom
+-/
 
 open Hom
 
+#print CategoryTheory.Pairwise.homInhabited /-
 instance homInhabited [Inhabited ι] : Inhabited (Hom (single (default : ι)) (single default)) :=
   ⟨id_single default⟩
 #align category_theory.pairwise.hom_inhabited CategoryTheory.Pairwise.homInhabited
+-/
 
+#print CategoryTheory.Pairwise.id /-
 /-- The identity morphism in `pairwise ι`.
 -/
 def id : ∀ o : Pairwise ι, Hom o o
   | single i => id_single i
   | pair i j => id_pair i j
 #align category_theory.pairwise.id CategoryTheory.Pairwise.id
+-/
 
+#print CategoryTheory.Pairwise.comp /-
 /-- Composition of morphisms in `pairwise ι`. -/
 def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} (f : Hom o₁ o₂) (g : Hom o₂ o₃), Hom o₁ o₃
   | _, _, _, id_single i, g => g
@@ -84,6 +95,7 @@ def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} (f : Hom o₁ o₂) (g : Hom o₂ 
   | _, _, _, left i j, id_single _ => left i j
   | _, _, _, right i j, id_single _ => right i j
 #align category_theory.pairwise.comp CategoryTheory.Pairwise.comp
+-/
 
 section
 
@@ -102,13 +114,16 @@ section
 
 variable [SemilatticeInf α]
 
+#print CategoryTheory.Pairwise.diagramObj /-
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
 def diagramObj : Pairwise ι → α
   | single i => U i
   | pair i j => U i ⊓ U j
 #align category_theory.pairwise.diagram_obj CategoryTheory.Pairwise.diagramObj
+-/
 
+#print CategoryTheory.Pairwise.diagramMap /-
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
 def diagramMap : ∀ {o₁ o₂ : Pairwise ι} (f : o₁ ⟶ o₂), diagramObj U o₁ ⟶ diagramObj U o₂
@@ -117,7 +132,9 @@ def diagramMap : ∀ {o₁ o₂ : Pairwise ι} (f : o₁ ⟶ o₂), diagramObj U
   | _, _, left i j => homOfLE inf_le_left
   | _, _, right i j => homOfLE inf_le_right
 #align category_theory.pairwise.diagram_map CategoryTheory.Pairwise.diagramMap
+-/
 
+#print CategoryTheory.Pairwise.diagram /-
 /-- Given a function `U : ι → α` for `[semilattice_inf α]`, we obtain a functor `pairwise ι ⥤ α`,
 sending `single i` to `U i` and `pair i j` to `U i ⊓ U j`,
 and the morphisms to the obvious inequalities.
@@ -127,6 +144,7 @@ def diagram : Pairwise ι ⥤ α where
   obj := diagramObj U
   map X Y f := diagramMap U f
 #align category_theory.pairwise.diagram CategoryTheory.Pairwise.diagram
+-/
 
 end
 
@@ -136,12 +154,19 @@ section
 -- but the appropriate structure has not been defined.
 variable [CompleteLattice α]
 
+/- warning: category_theory.pairwise.cocone_ι_app -> CategoryTheory.Pairwise.coconeιApp is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u1}} (U : ι -> α) [_inst_1 : CompleteLattice.{u1} α] (o : CategoryTheory.Pairwise.{u1} ι), Quiver.Hom.{succ u1, u1} α (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} α (CategoryTheory.Category.toCategoryStruct.{u1, u1} α (Preorder.smallCategory.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (CategoryTheory.Pairwise.diagramObj.{u1} ι α U (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1)) o) (supᵢ.{u1, succ u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι U)
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u1}} (U : ι -> α) [_inst_1 : CompleteLattice.{u1} α] (o : CategoryTheory.Pairwise.{u1} ι), Quiver.Hom.{succ u1, u1} α (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} α (CategoryTheory.Category.toCategoryStruct.{u1, u1} α (Preorder.smallCategory.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (CategoryTheory.Pairwise.diagramObj.{u1} ι α U (Lattice.toSemilatticeInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1)) o) (supᵢ.{u1, succ u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι U)
+Case conversion may be inaccurate. Consider using '#align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιAppₓ'. -/
 /-- Auxiliary definition for `cocone`. -/
 def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supᵢ U
   | single i => homOfLE (le_supᵢ U i)
   | pair i j => homOfLE inf_le_left ≫ homOfLE (le_supᵢ U i)
 #align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιApp
 
+#print CategoryTheory.Pairwise.cocone /-
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `supr U` provides a cocone over `diagram U`.
 -/
@@ -150,7 +175,9 @@ def cocone : Cocone (diagram U) where
   pt := supᵢ U
   ι := { app := coconeιApp U }
 #align category_theory.pairwise.cocone CategoryTheory.Pairwise.cocone
+-/
 
+#print CategoryTheory.Pairwise.coconeIsColimit /-
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
 -/
@@ -162,6 +189,7 @@ def coconeIsColimit : IsColimit (cocone U)
         rintro _ ⟨j, rfl⟩
         exact (s.ι.app (single j)).le)
 #align category_theory.pairwise.cocone_is_colimit CategoryTheory.Pairwise.coconeIsColimit
+-/
 
 end
 
