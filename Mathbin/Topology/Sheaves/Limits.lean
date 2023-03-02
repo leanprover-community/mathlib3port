@@ -30,10 +30,10 @@ variable {C : Type u} [Category.{v} C] {J : Type v} [SmallCategory J]
 namespace TopCat
 
 instance [HasLimits C] (X : TopCat) : HasLimits (Presheaf C X) :=
-  Limits.functor_category_hasLimitsOfSize.{v, v}
+  Limits.functorCategoryHasLimitsOfSize.{v, v}
 
 instance [HasColimits C] (X : TopCat) : HasColimitsOfSize.{v} (Presheaf C X) :=
-  Limits.functor_category_hasColimitsOfSize
+  Limits.functorCategoryHasColimitsOfSize
 
 instance [HasLimits C] (X : TopCat) : CreatesLimits (Sheaf.forget C X) :=
   Sheaf.CategoryTheory.SheafToPresheaf.CategoryTheory.createsLimits.{u, v, v}
