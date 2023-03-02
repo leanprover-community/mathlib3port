@@ -71,16 +71,16 @@ section Order
 
 variable [Zero β] [Preorder β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
-/- warning: indicator_eventually_le_indicator -> indicator_eventuallyLe_indicator is a dubious translation:
+/- warning: indicator_eventually_le_indicator -> indicator_eventuallyLE_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)) f g) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l (Set.indicator.{u1, u2} α β _inst_1 s f) (Set.indicator.{u1, u2} α β _inst_1 s g))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u2} β] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l (Filter.principal.{u1} α s)) f g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l (Set.indicator.{u1, u2} α β _inst_1 s f) (Set.indicator.{u1, u2} α β _inst_1 s g))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Zero.{u1} β] [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {f : α -> β} {g : α -> β} {l : Filter.{u2} α}, (Filter.EventuallyLe.{u2, u1} α β (Preorder.toLE.{u1} β _inst_2) (Inf.inf.{u2} (Filter.{u2} α) (Filter.instInfFilter.{u2} α) l (Filter.principal.{u2} α s)) f g) -> (Filter.EventuallyLe.{u2, u1} α β (Preorder.toLE.{u1} β _inst_2) l (Set.indicator.{u2, u1} α β _inst_1 s f) (Set.indicator.{u2, u1} α β _inst_1 s g))
-Case conversion may be inaccurate. Consider using '#align indicator_eventually_le_indicator indicator_eventuallyLe_indicatorₓ'. -/
-theorem indicator_eventuallyLe_indicator (h : f ≤ᶠ[l ⊓ 𝓟 s] g) :
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Zero.{u1} β] [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {f : α -> β} {g : α -> β} {l : Filter.{u2} α}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β _inst_2) (Inf.inf.{u2} (Filter.{u2} α) (Filter.instInfFilter.{u2} α) l (Filter.principal.{u2} α s)) f g) -> (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β _inst_2) l (Set.indicator.{u2, u1} α β _inst_1 s f) (Set.indicator.{u2, u1} α β _inst_1 s g))
+Case conversion may be inaccurate. Consider using '#align indicator_eventually_le_indicator indicator_eventuallyLE_indicatorₓ'. -/
+theorem indicator_eventuallyLE_indicator (h : f ≤ᶠ[l ⊓ 𝓟 s] g) :
     indicator s f ≤ᶠ[l] indicator s g :=
   (eventually_inf_principal.1 h).mono fun a h => indicator_rel_indicator le_rfl h
-#align indicator_eventually_le_indicator indicator_eventuallyLe_indicator
+#align indicator_eventually_le_indicator indicator_eventuallyLE_indicator
 
 end Order
 

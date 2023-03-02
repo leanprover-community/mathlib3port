@@ -614,13 +614,13 @@ instance [SMul R₁ M] [SMul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R�
     where smul_assoc s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_assoc s t r]
 
-/- warning: localization.smul_comm_class_right -> Localization.sMulCommClass_right is a dubious translation:
+/- warning: localization.smul_comm_class_right -> Localization.smulCommClass_right is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))} {R : Type.{u2}} [_inst_4 : SMul.{u2, u1} R M] [_inst_5 : IsScalarTower.{u2, u1, u1} R M M _inst_4 (Mul.toSMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)))) _inst_4], SMulCommClass.{u2, u1, u1} R (Localization.{u1} M _inst_1 S) (Localization.{u1} M _inst_1 S) (Localization.hasSmul.{u1, u2} M _inst_1 S R _inst_4 _inst_5) (Mul.toSMul.{u1} (Localization.{u1} M _inst_1 S) (Localization.hasMul.{u1} M _inst_1 S))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))} {R : Type.{u2}} [_inst_4 : SMul.{u2, u1} R M] [_inst_5 : IsScalarTower.{u2, u1, u1} R M M _inst_4 (MulAction.toSMul.{u1, u1} M M (CommMonoid.toMonoid.{u1} M _inst_1) (Monoid.toMulAction.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) _inst_4], SMulCommClass.{u2, u1, u1} R (Localization.{u1} M _inst_1 S) (Localization.{u1} M _inst_1 S) (Localization.instSMulLocalization.{u1, u2} M _inst_1 S R _inst_4 _inst_5) (MulAction.toSMul.{u1, u1} (Localization.{u1} M _inst_1 S) (Localization.{u1} M _inst_1 S) (CommMonoid.toMonoid.{u1} (Localization.{u1} M _inst_1 S) (Localization.instCommMonoidLocalization.{u1} M _inst_1 S)) (Monoid.toMulAction.{u1} (Localization.{u1} M _inst_1 S) (CommMonoid.toMonoid.{u1} (Localization.{u1} M _inst_1 S) (Localization.instCommMonoidLocalization.{u1} M _inst_1 S))))
-Case conversion may be inaccurate. Consider using '#align localization.smul_comm_class_right Localization.sMulCommClass_rightₓ'. -/
-instance sMulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
+Case conversion may be inaccurate. Consider using '#align localization.smul_comm_class_right Localization.smulCommClass_rightₓ'. -/
+instance smulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     SMulCommClass R (Localization S) (Localization S)
     where smul_comm s :=
     Localization.ind <|
@@ -628,7 +628,7 @@ instance sMulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
         Localization.ind <|
           Prod.rec fun r₂ x₂ => by
             simp only [smul_mk, smul_eq_mul, mk_mul, mul_comm r₁, smul_mul_assoc]
-#align localization.smul_comm_class_right Localization.sMulCommClass_right
+#align localization.smul_comm_class_right Localization.smulCommClass_right
 
 /- warning: localization.is_scalar_tower_right -> Localization.isScalarTower_right is a dubious translation:
 lean 3 declaration is

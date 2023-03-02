@@ -409,14 +409,14 @@ theorem mem_adicCompletionIntegers {x : v.adicCompletion K} :
 section AlgebraInstances
 
 instance (priority := 100) adicValued.has_uniform_continuous_const_smul' :
-    @HasUniformContinuousConstSmul R K v.adicValued.toUniformSpace _ :=
-  @hasUniformContinuousConstSmul_of_continuous_const_smul R K _ _ _ v.adicValued.toUniformSpace _ _
+    @UniformContinuousConstSMul R K v.adicValued.toUniformSpace _ :=
+  @uniformContinuousConstSMul_of_continuousConstSMul R K _ _ _ v.adicValued.toUniformSpace _ _
 #align is_dedekind_domain.height_one_spectrum.adic_valued.has_uniform_continuous_const_smul' IsDedekindDomain.HeightOneSpectrum.adicValued.has_uniform_continuous_const_smul'
 
-instance adicValued.hasUniformContinuousConstSmul :
-    @HasUniformContinuousConstSmul K K v.adicValued.toUniformSpace _ :=
-  @Ring.hasUniformContinuousConstSmul K _ v.adicValued.toUniformSpace _ _
-#align is_dedekind_domain.height_one_spectrum.adic_valued.has_uniform_continuous_const_smul IsDedekindDomain.HeightOneSpectrum.adicValued.hasUniformContinuousConstSmul
+instance adicValued.uniformContinuousConstSMul :
+    @UniformContinuousConstSMul K K v.adicValued.toUniformSpace _ :=
+  @Ring.uniformContinuousConstSMul K _ v.adicValued.toUniformSpace _ _
+#align is_dedekind_domain.height_one_spectrum.adic_valued.has_uniform_continuous_const_smul IsDedekindDomain.HeightOneSpectrum.adicValued.uniformContinuousConstSMul
 
 instance AdicCompletion.algebra' : Algebra R (v.adicCompletion K) :=
   @UniformSpace.Completion.algebra K _ v.adicValued.toUniformSpace _ _ R _ _

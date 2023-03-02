@@ -216,8 +216,8 @@ theorem le_of_tendsto_of_tendsto {f g : β → α} {b : Filter β} {a₁ a₂ : 
 #align le_of_tendsto_of_tendsto le_of_tendsto_of_tendsto
 -/
 
-alias le_of_tendsto_of_tendsto ← tendsto_le_of_eventuallyLe
-#align tendsto_le_of_eventually_le tendsto_le_of_eventuallyLe
+alias le_of_tendsto_of_tendsto ← tendsto_le_of_eventuallyLE
+#align tendsto_le_of_eventually_le tendsto_le_of_eventuallyLE
 
 #print le_of_tendsto_of_tendsto' /-
 theorem le_of_tendsto_of_tendsto' {f g : β → α} {b : Filter β} {a₁ a₂ : α} [NeBot b]
@@ -1650,9 +1650,9 @@ theorem nhds_bot_basis_Iic [TopologicalSpace α] [LinearOrder α] [OrderBot α] 
 
 /- warning: tendsto_nhds_top_mono -> tendsto_nhds_top_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l f g) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l f g) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l f g) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderTop.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l f g) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Top.top.{u2} β (OrderTop.toTop.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
 Case conversion may be inaccurate. Consider using '#align tendsto_nhds_top_mono tendsto_nhds_top_monoₓ'. -/
 theorem tendsto_nhds_top_mono [TopologicalSpace β] [Preorder β] [OrderTop β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : Tendsto g l (𝓝 ⊤) :=
@@ -1664,9 +1664,9 @@ theorem tendsto_nhds_top_mono [TopologicalSpace β] [Preorder β] [OrderTop β] 
 
 /- warning: tendsto_nhds_bot_mono -> tendsto_nhds_bot_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l g f) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l g f) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l g f) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] [_inst_2 : Preorder.{u2} β] [_inst_3 : OrderBot.{u2} β (Preorder.toLE.{u2} β _inst_2)] [_inst_4 : OrderTopology.{u2} β _inst_1 _inst_2] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.Tendsto.{u1, u2} α β f l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3)))) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) l g f) -> (Filter.Tendsto.{u1, u2} α β g l (nhds.{u2} β _inst_1 (Bot.bot.{u2} β (OrderBot.toBot.{u2} β (Preorder.toLE.{u2} β _inst_2) _inst_3))))
 Case conversion may be inaccurate. Consider using '#align tendsto_nhds_bot_mono tendsto_nhds_bot_monoₓ'. -/
 theorem tendsto_nhds_bot_mono [TopologicalSpace β] [Preorder β] [OrderBot β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊥)) (hg : g ≤ᶠ[l] f) : Tendsto g l (𝓝 ⊥) :=

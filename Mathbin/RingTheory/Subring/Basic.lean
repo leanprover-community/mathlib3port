@@ -2424,27 +2424,27 @@ instance [AddCommMonoid α] [Module R α] (S : Subring R) : Module S α :=
 instance [Semiring α] [MulSemiringAction R α] (S : Subring R) : MulSemiringAction S α :=
   S.toSubmonoid.MulSemiringAction
 
-/- warning: subring.center.smul_comm_class_left -> Subring.center.sMulCommClass_left is a dubious translation:
+/- warning: subring.center.smul_comm_class_left -> Subring.center.smulCommClass_left is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], SMulCommClass.{u1, u1, u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) (Subring.center.{u1} R _inst_1)) R R (Subring.hasSmul.{u1, u1} R _inst_1 R (Mul.toSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) (Subring.center.{u1} R _inst_1)) (Mul.toSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1)))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], SMulCommClass.{u1, u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x (Subring.center.{u1} R _inst_1))) R R (Subring.instSMulSubtypeMemSubringInstMembershipInstSetLikeSubring.{u1, u1} R _inst_1 R (SMulZeroClass.toSMul.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (SMulWithZero.toSMulZeroClass.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MulZeroClass.toSMulWithZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))) (Subring.center.{u1} R _inst_1)) (SMulZeroClass.toSMul.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (SMulWithZero.toSMulZeroClass.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MulZeroClass.toSMulWithZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align subring.center.smul_comm_class_left Subring.center.sMulCommClass_leftₓ'. -/
+Case conversion may be inaccurate. Consider using '#align subring.center.smul_comm_class_left Subring.center.smulCommClass_leftₓ'. -/
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.sMulCommClass_left : SMulCommClass (center R) R R :=
-  Subsemiring.center.sMulCommClass_left
-#align subring.center.smul_comm_class_left Subring.center.sMulCommClass_left
+instance center.smulCommClass_left : SMulCommClass (center R) R R :=
+  Subsemiring.center.smulCommClass_left
+#align subring.center.smul_comm_class_left Subring.center.smulCommClass_left
 
-/- warning: subring.center.smul_comm_class_right -> Subring.center.sMulCommClass_right is a dubious translation:
+/- warning: subring.center.smul_comm_class_right -> Subring.center.smulCommClass_right is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], SMulCommClass.{u1, u1, u1} R (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) (Subring.center.{u1} R _inst_1)) R (Mul.toSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) (Subring.hasSmul.{u1, u1} R _inst_1 R (Mul.toSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) (Subring.center.{u1} R _inst_1))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], SMulCommClass.{u1, u1, u1} R (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x (Subring.center.{u1} R _inst_1))) R (SMulZeroClass.toSMul.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (SMulWithZero.toSMulZeroClass.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MulZeroClass.toSMulWithZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))) (Subring.instSMulSubtypeMemSubringInstMembershipInstSetLikeSubring.{u1, u1} R _inst_1 R (SMulZeroClass.toSMul.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (SMulWithZero.toSMulZeroClass.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (MulZeroClass.toSMulWithZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))) (Subring.center.{u1} R _inst_1))
-Case conversion may be inaccurate. Consider using '#align subring.center.smul_comm_class_right Subring.center.sMulCommClass_rightₓ'. -/
+Case conversion may be inaccurate. Consider using '#align subring.center.smul_comm_class_right Subring.center.smulCommClass_rightₓ'. -/
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.sMulCommClass_right : SMulCommClass R (center R) R :=
-  Subsemiring.center.sMulCommClass_right
-#align subring.center.smul_comm_class_right Subring.center.sMulCommClass_right
+instance center.smulCommClass_right : SMulCommClass R (center R) R :=
+  Subsemiring.center.smulCommClass_right
+#align subring.center.smul_comm_class_right Subring.center.smulCommClass_right
 
 end Subring
 

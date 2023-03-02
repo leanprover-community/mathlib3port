@@ -427,25 +427,25 @@ theorem smul_def {M : Type _} [MulAction ℝ M] (c : ℝ≥0) (x : M) : c • x 
 instance {M N : Type _} [MulAction ℝ M] [MulAction ℝ N] [SMul M N] [IsScalarTower ℝ M N] :
     IsScalarTower ℝ≥0 M N where smul_assoc r := (smul_assoc (r : ℝ) : _)
 
-/- warning: nnreal.smul_comm_class_left -> NNReal.sMulCommClass_left is a dubious translation:
+/- warning: nnreal.smul_comm_class_left -> NNReal.smulCommClass_left is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} Real N Real.monoid] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{0, u1, u2} Real M N (MulAction.toHasSmul.{0, u2} Real N Real.monoid _inst_1) _inst_2], SMulCommClass.{0, u1, u2} NNReal M N (MulAction.toHasSmul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal NNReal.semiring)) (NNReal.mulAction.{u2} N _inst_1)) _inst_2
 but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} Real N Real.instMonoidReal] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{0, u1, u2} Real M N (MulAction.toSMul.{0, u2} Real N Real.instMonoidReal _inst_1) _inst_2], SMulCommClass.{0, u1, u2} NNReal M N (MulAction.toSMul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal instNNRealSemiring)) (NNReal.instMulActionNNRealToMonoidToMonoidWithZeroInstNNRealSemiring.{u2} N _inst_1)) _inst_2
-Case conversion may be inaccurate. Consider using '#align nnreal.smul_comm_class_left NNReal.sMulCommClass_leftₓ'. -/
-instance sMulCommClass_left {M N : Type _} [MulAction ℝ N] [SMul M N] [SMulCommClass ℝ M N] :
+Case conversion may be inaccurate. Consider using '#align nnreal.smul_comm_class_left NNReal.smulCommClass_leftₓ'. -/
+instance smulCommClass_left {M N : Type _} [MulAction ℝ N] [SMul M N] [SMulCommClass ℝ M N] :
     SMulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ) : _)
-#align nnreal.smul_comm_class_left NNReal.sMulCommClass_left
+#align nnreal.smul_comm_class_left NNReal.smulCommClass_left
 
-/- warning: nnreal.smul_comm_class_right -> NNReal.sMulCommClass_right is a dubious translation:
+/- warning: nnreal.smul_comm_class_right -> NNReal.smulCommClass_right is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} Real N Real.monoid] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, 0, u2} M Real N _inst_2 (MulAction.toHasSmul.{0, u2} Real N Real.monoid _inst_1)], SMulCommClass.{u1, 0, u2} M NNReal N _inst_2 (MulAction.toHasSmul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal NNReal.semiring)) (NNReal.mulAction.{u2} N _inst_1))
 but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} Real N Real.instMonoidReal] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, 0, u2} M Real N _inst_2 (MulAction.toSMul.{0, u2} Real N Real.instMonoidReal _inst_1)], SMulCommClass.{u1, 0, u2} M NNReal N _inst_2 (MulAction.toSMul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal instNNRealSemiring)) (NNReal.instMulActionNNRealToMonoidToMonoidWithZeroInstNNRealSemiring.{u2} N _inst_1))
-Case conversion may be inaccurate. Consider using '#align nnreal.smul_comm_class_right NNReal.sMulCommClass_rightₓ'. -/
-instance sMulCommClass_right {M N : Type _} [MulAction ℝ N] [SMul M N] [SMulCommClass M ℝ N] :
+Case conversion may be inaccurate. Consider using '#align nnreal.smul_comm_class_right NNReal.smulCommClass_rightₓ'. -/
+instance smulCommClass_right {M N : Type _} [MulAction ℝ N] [SMul M N] [SMulCommClass M ℝ N] :
     SMulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ) : _)
-#align nnreal.smul_comm_class_right NNReal.sMulCommClass_right
+#align nnreal.smul_comm_class_right NNReal.smulCommClass_right
 
 /-- A `distrib_mul_action` over `ℝ` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
 instance {M : Type _} [AddMonoid M] [DistribMulAction ℝ M] : DistribMulAction ℝ≥0 M :=

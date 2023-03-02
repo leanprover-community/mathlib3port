@@ -178,7 +178,7 @@ def mapRingHom (hf : Continuous f) : Completion α →+* Completion β :=
 section Algebra
 
 variable (A : Type _) [Ring A] [UniformSpace A] [UniformAddGroup A] [TopologicalRing A] (R : Type _)
-  [CommSemiring R] [Algebra R A] [HasUniformContinuousConstSmul R A]
+  [CommSemiring R] [Algebra R A] [UniformContinuousConstSMul R A]
 
 @[simp]
 theorem map_smul_eq_mul_coe (r : R) :

@@ -97,16 +97,16 @@ theorem eventually_countable_ball {ι : Type _} {S : Set ι} (hS : S.Countable)
 #align eventually_countable_ball eventually_countable_ball
 -/
 
-/- warning: eventually_le.countable_Union -> EventuallyLe.countable_unionᵢ is a dubious translation:
+/- warning: eventually_le.countable_Union -> EventuallyLE.countable_unionᵢ is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyLe.{u2, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLe.{u2, 0} α Prop Prop.le l (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
 but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align eventually_le.countable_Union EventuallyLe.countable_unionᵢₓ'. -/
-theorem EventuallyLe.countable_unionᵢ [Countable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
+  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
+Case conversion may be inaccurate. Consider using '#align eventually_le.countable_Union EventuallyLE.countable_unionᵢₓ'. -/
+theorem EventuallyLE.countable_unionᵢ [Countable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋃ i, s i) ≤ᶠ[l] ⋃ i, t i :=
   (eventually_countable_forall.2 h).mono fun x hst hs => mem_unionᵢ.2 <| (mem_unionᵢ.1 hs).imp hst
-#align eventually_le.countable_Union EventuallyLe.countable_unionᵢ
+#align eventually_le.countable_Union EventuallyLE.countable_unionᵢ
 
 /- warning: eventually_eq.countable_Union -> EventuallyEq.countable_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -116,41 +116,41 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eventually_eq.countable_Union EventuallyEq.countable_unionᵢₓ'. -/
 theorem EventuallyEq.countable_unionᵢ [Countable ι] {s t : ι → Set α} (h : ∀ i, s i =ᶠ[l] t i) :
     (⋃ i, s i) =ᶠ[l] ⋃ i, t i :=
-  (EventuallyLe.countable_unionᵢ fun i => (h i).le).antisymm
-    (EventuallyLe.countable_unionᵢ fun i => (h i).symm.le)
+  (EventuallyLE.countable_unionᵢ fun i => (h i).le).antisymm
+    (EventuallyLE.countable_unionᵢ fun i => (h i).symm.le)
 #align eventually_eq.countable_Union EventuallyEq.countable_unionᵢ
 
-#print EventuallyLe.countable_bUnion /-
-theorem EventuallyLe.countable_bUnion {ι : Type _} {S : Set ι} (hS : S.Countable)
+#print EventuallyLE.countable_bUnion /-
+theorem EventuallyLE.countable_bUnion {ι : Type _} {S : Set ι} (hS : S.Countable)
     {s t : ∀ i ∈ S, Set α} (h : ∀ i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) :
     (⋃ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋃ i ∈ S, t i ‹_› :=
   by
   simp only [bUnion_eq_Union]
   haveI := hS.to_encodable
-  exact EventuallyLe.countable_unionᵢ fun i => h i i.2
-#align eventually_le.countable_bUnion EventuallyLe.countable_bUnion
+  exact EventuallyLE.countable_unionᵢ fun i => h i i.2
+#align eventually_le.countable_bUnion EventuallyLE.countable_bUnion
 -/
 
 #print EventuallyEq.countable_bUnion /-
 theorem EventuallyEq.countable_bUnion {ι : Type _} {S : Set ι} (hS : S.Countable)
     {s t : ∀ i ∈ S, Set α} (h : ∀ i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) :
     (⋃ i ∈ S, s i ‹_›) =ᶠ[l] ⋃ i ∈ S, t i ‹_› :=
-  (EventuallyLe.countable_bUnion hS fun i hi => (h i hi).le).antisymm
-    (EventuallyLe.countable_bUnion hS fun i hi => (h i hi).symm.le)
+  (EventuallyLE.countable_bUnion hS fun i hi => (h i hi).le).antisymm
+    (EventuallyLE.countable_bUnion hS fun i hi => (h i hi).symm.le)
 #align eventually_eq.countable_bUnion EventuallyEq.countable_bUnion
 -/
 
-/- warning: eventually_le.countable_Inter -> EventuallyLe.countable_interᵢ is a dubious translation:
+/- warning: eventually_le.countable_Inter -> EventuallyLE.countable_interᵢ is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyLe.{u2, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLe.{u2, 0} α Prop Prop.le l (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} [_inst_1 : CountableInterFilter.{u2} α l] [_inst_2 : Countable.{u1} ι] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u2, 0} α Prop Prop.le l (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
 but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align eventually_le.countable_Inter EventuallyLe.countable_interᵢₓ'. -/
-theorem EventuallyLe.countable_interᵢ [Countable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
+  forall {ι : Sort.{u2}} {α : Type.{u1}} {l : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α l] [_inst_2 : Countable.{u2} ι] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (s i) (t i)) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
+Case conversion may be inaccurate. Consider using '#align eventually_le.countable_Inter EventuallyLE.countable_interᵢₓ'. -/
+theorem EventuallyLE.countable_interᵢ [Countable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋂ i, s i) ≤ᶠ[l] ⋂ i, t i :=
   (eventually_countable_forall.2 h).mono fun x hst hs =>
     mem_interᵢ.2 fun i => hst _ (mem_interᵢ.1 hs i)
-#align eventually_le.countable_Inter EventuallyLe.countable_interᵢ
+#align eventually_le.countable_Inter EventuallyLE.countable_interᵢ
 
 /- warning: eventually_eq.countable_Inter -> EventuallyEq.countable_interᵢ is a dubious translation:
 lean 3 declaration is
@@ -160,27 +160,27 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eventually_eq.countable_Inter EventuallyEq.countable_interᵢₓ'. -/
 theorem EventuallyEq.countable_interᵢ [Countable ι] {s t : ι → Set α} (h : ∀ i, s i =ᶠ[l] t i) :
     (⋂ i, s i) =ᶠ[l] ⋂ i, t i :=
-  (EventuallyLe.countable_interᵢ fun i => (h i).le).antisymm
-    (EventuallyLe.countable_interᵢ fun i => (h i).symm.le)
+  (EventuallyLE.countable_interᵢ fun i => (h i).le).antisymm
+    (EventuallyLE.countable_interᵢ fun i => (h i).symm.le)
 #align eventually_eq.countable_Inter EventuallyEq.countable_interᵢ
 
-#print EventuallyLe.countable_bInter /-
-theorem EventuallyLe.countable_bInter {ι : Type _} {S : Set ι} (hS : S.Countable)
+#print EventuallyLE.countable_bInter /-
+theorem EventuallyLE.countable_bInter {ι : Type _} {S : Set ι} (hS : S.Countable)
     {s t : ∀ i ∈ S, Set α} (h : ∀ i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) :
     (⋂ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋂ i ∈ S, t i ‹_› :=
   by
   simp only [bInter_eq_Inter]
   haveI := hS.to_encodable
-  exact EventuallyLe.countable_interᵢ fun i => h i i.2
-#align eventually_le.countable_bInter EventuallyLe.countable_bInter
+  exact EventuallyLE.countable_interᵢ fun i => h i i.2
+#align eventually_le.countable_bInter EventuallyLE.countable_bInter
 -/
 
 #print EventuallyEq.countable_bInter /-
 theorem EventuallyEq.countable_bInter {ι : Type _} {S : Set ι} (hS : S.Countable)
     {s t : ∀ i ∈ S, Set α} (h : ∀ i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) :
     (⋂ i ∈ S, s i ‹_›) =ᶠ[l] ⋂ i ∈ S, t i ‹_› :=
-  (EventuallyLe.countable_bInter hS fun i hi => (h i hi).le).antisymm
-    (EventuallyLe.countable_bInter hS fun i hi => (h i hi).symm.le)
+  (EventuallyLE.countable_bInter hS fun i hi => (h i hi).le).antisymm
+    (EventuallyLE.countable_bInter hS fun i hi => (h i hi).symm.le)
 #align eventually_eq.countable_bInter EventuallyEq.countable_bInter
 -/
 

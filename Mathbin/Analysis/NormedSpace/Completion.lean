@@ -33,10 +33,10 @@ namespace Completion
 
 variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-instance (priority := 100) NormedSpace.to_hasUniformContinuousConstSmul :
-    HasUniformContinuousConstSmul 𝕜 E :=
+instance (priority := 100) NormedSpace.to_uniformContinuousConstSMul :
+    UniformContinuousConstSMul 𝕜 E :=
   ⟨fun c => (lipschitzWith_smul c).UniformContinuous⟩
-#align uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_hasUniformContinuousConstSmul
+#align uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_uniformContinuousConstSMul
 
 instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with
@@ -101,7 +101,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
         simp only [← coe_mul, norm_coe]
         exact norm_mul_le x y }
 
-instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousConstSmul 𝕜 A] :
+instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSMul 𝕜 A] :
     NormedAlgebra 𝕜 (Completion A) :=
   { Completion.algebra A 𝕜 with
     norm_smul_le := fun r x =>

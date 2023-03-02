@@ -971,25 +971,25 @@ theorem smul_def {M : Type _} [MulAction ℝ≥0∞ M] (c : ℝ≥0) (x : M) : c
 instance {M N : Type _} [MulAction ℝ≥0∞ M] [MulAction ℝ≥0∞ N] [SMul M N] [IsScalarTower ℝ≥0∞ M N] :
     IsScalarTower ℝ≥0 M N where smul_assoc r := (smul_assoc (r : ℝ≥0∞) : _)
 
-/- warning: ennreal.smul_comm_class_left -> ENNReal.sMulCommClass_left is a dubious translation:
+/- warning: ennreal.smul_comm_class_left -> ENNReal.smulCommClass_left is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{0, u1, u2} ENNReal M N (MulAction.toHasSmul.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))) _inst_1) _inst_2], SMulCommClass.{0, u1, u2} NNReal M N (MulAction.toHasSmul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal NNReal.semiring)) (ENNReal.mulAction.{u2} N _inst_1)) _inst_2
 but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{0, u1, u2} ENNReal M N (MulAction.toSMul.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) _inst_1) _inst_2], SMulCommClass.{0, u1, u2} NNReal M N (MulAction.toSMul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal instNNRealSemiring)) (ENNReal.instMulActionNNRealToMonoidToMonoidWithZeroInstNNRealSemiring.{u2} N _inst_1)) _inst_2
-Case conversion may be inaccurate. Consider using '#align ennreal.smul_comm_class_left ENNReal.sMulCommClass_leftₓ'. -/
-instance sMulCommClass_left {M N : Type _} [MulAction ℝ≥0∞ N] [SMul M N] [SMulCommClass ℝ≥0∞ M N] :
+Case conversion may be inaccurate. Consider using '#align ennreal.smul_comm_class_left ENNReal.smulCommClass_leftₓ'. -/
+instance smulCommClass_left {M N : Type _} [MulAction ℝ≥0∞ N] [SMul M N] [SMulCommClass ℝ≥0∞ M N] :
     SMulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ≥0∞) : _)
-#align ennreal.smul_comm_class_left ENNReal.sMulCommClass_left
+#align ennreal.smul_comm_class_left ENNReal.smulCommClass_left
 
-/- warning: ennreal.smul_comm_class_right -> ENNReal.sMulCommClass_right is a dubious translation:
+/- warning: ennreal.smul_comm_class_right -> ENNReal.smulCommClass_right is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, 0, u2} M ENNReal N _inst_2 (MulAction.toHasSmul.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring))))) _inst_1)], SMulCommClass.{u1, 0, u2} M NNReal N _inst_2 (MulAction.toHasSmul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal NNReal.semiring)) (ENNReal.mulAction.{u2} N _inst_1))
 but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulAction.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, 0, u2} M ENNReal N _inst_2 (MulAction.toSMul.{0, u2} ENNReal N (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))) _inst_1)], SMulCommClass.{u1, 0, u2} M NNReal N _inst_2 (MulAction.toSMul.{0, u2} NNReal N (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal instNNRealSemiring)) (ENNReal.instMulActionNNRealToMonoidToMonoidWithZeroInstNNRealSemiring.{u2} N _inst_1))
-Case conversion may be inaccurate. Consider using '#align ennreal.smul_comm_class_right ENNReal.sMulCommClass_rightₓ'. -/
-instance sMulCommClass_right {M N : Type _} [MulAction ℝ≥0∞ N] [SMul M N] [SMulCommClass M ℝ≥0∞ N] :
+Case conversion may be inaccurate. Consider using '#align ennreal.smul_comm_class_right ENNReal.smulCommClass_rightₓ'. -/
+instance smulCommClass_right {M N : Type _} [MulAction ℝ≥0∞ N] [SMul M N] [SMulCommClass M ℝ≥0∞ N] :
     SMulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ≥0∞) : _)
-#align ennreal.smul_comm_class_right ENNReal.sMulCommClass_right
+#align ennreal.smul_comm_class_right ENNReal.smulCommClass_right
 
 /-- A `distrib_mul_action` over `ℝ≥0∞` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
 noncomputable instance {M : Type _} [AddMonoid M] [DistribMulAction ℝ≥0∞ M] :

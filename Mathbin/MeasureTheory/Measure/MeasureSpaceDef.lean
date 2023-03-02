@@ -445,7 +445,7 @@ theorem ae_eq_trans {f g h : α → δ} (h₁ : f =ᵐ[μ] g) (h₂ : g =ᵐ[μ]
 
 theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x) : f ≤ᵐ[μ] g :=
   by
-  rw [Filter.EventuallyLe, ae_iff]
+  rw [Filter.EventuallyLE, ae_iff]
   rw [ae_iff] at h
   refine' measure_mono_null (fun x hx => _) h
   exact not_lt.2 (le_of_lt (not_le.1 hx))
@@ -589,7 +589,7 @@ theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
 #align measure_theory.measure_mono_ae MeasureTheory.measure_mono_ae
 
 alias measure_mono_ae ← _root_.filter.eventually_le.measure_le
-#align filter.eventually_le.measure_le Filter.EventuallyLe.measure_le
+#align filter.eventually_le.measure_le Filter.EventuallyLE.measure_le
 
 /-- If two sets are equal modulo a set of measure zero, then `μ s = μ t`. -/
 theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
@@ -628,7 +628,7 @@ theorem subset_toMeasurable (μ : Measure α) (s : Set α) : s ⊆ toMeasurable 
 #align measure_theory.subset_to_measurable MeasureTheory.subset_toMeasurable
 
 theorem ae_le_toMeasurable : s ≤ᵐ[μ] toMeasurable μ s :=
-  (subset_toMeasurable _ _).EventuallyLe
+  (subset_toMeasurable _ _).EventuallyLE
 #align measure_theory.ae_le_to_measurable MeasureTheory.ae_le_toMeasurable
 
 @[simp]

@@ -203,7 +203,7 @@ theorem tsum_meas_le_meas_unionᵢ_of_disjoint {ι : Type _} [MeasurableSpace α
   by
   rcases show Summable fun i => μ (As i) from ENNReal.summable with ⟨S, hS⟩
   rw [hS.tsum_eq]
-  refine' tendsto_le_of_eventuallyLe hS tendsto_const_nhds (eventually_of_forall _)
+  refine' tendsto_le_of_eventuallyLE hS tendsto_const_nhds (eventually_of_forall _)
   intro s
   rw [← measure_bUnion_finset (fun i hi j hj hij => As_disj hij) fun i _ => As_mble i]
   exact measure_mono (Union₂_subset_Union (fun i : ι => i ∈ s) fun i : ι => As i)
@@ -267,7 +267,7 @@ theorem measure_diff_le_iff_le_add (hs : MeasurableSet s) (hst : s ⊆ t) (hs' :
 
 theorem measure_eq_measure_of_null_diff {s t : Set α} (hst : s ⊆ t) (h_nulldiff : μ (t \ s) = 0) :
     μ s = μ t :=
-  measure_congr (hst.EventuallyLe.antisymm <| ae_le_set.mpr h_nulldiff)
+  measure_congr (hst.EventuallyLE.antisymm <| ae_le_set.mpr h_nulldiff)
 #align measure_theory.measure_eq_measure_of_null_diff MeasureTheory.measure_eq_measure_of_null_diff
 
 theorem measure_eq_measure_of_between_null_diff {s₁ s₂ s₃ : Set α} (h12 : s₁ ⊆ s₂) (h23 : s₂ ⊆ s₃)
@@ -308,7 +308,7 @@ theorem union_ae_eq_left_iff_ae_subset : (s ∪ t : Set α) =ᵐ[μ] s ↔ t ≤
     ⟨fun h => by simpa only [union_diff_left] using (ae_eq_set.mp h).1, fun h =>
       eventually_le_antisymm_iff.mpr
         ⟨by rwa [ae_le_set, union_diff_left],
-          HasSubset.Subset.eventuallyLe <| subset_union_left s t⟩⟩
+          HasSubset.Subset.eventuallyLE <| subset_union_left s t⟩⟩
 #align measure_theory.union_ae_eq_left_iff_ae_subset MeasureTheory.union_ae_eq_left_iff_ae_subset
 
 @[simp]
@@ -328,7 +328,7 @@ theorem ae_eq_of_ae_subset_of_measure_ge (h₁ : s ≤ᵐ[μ] t) (h₂ : μ t �
 /-- If `s ⊆ t`, `μ t ≤ μ s`, `μ t ≠ ∞`, and `s` is measurable, then `s =ᵐ[μ] t`. -/
 theorem ae_eq_of_subset_of_measure_ge (h₁ : s ⊆ t) (h₂ : μ t ≤ μ s) (hsm : MeasurableSet s)
     (ht : μ t ≠ ∞) : s =ᵐ[μ] t :=
-  ae_eq_of_ae_subset_of_measure_ge (HasSubset.Subset.eventuallyLe h₁) h₂ hsm ht
+  ae_eq_of_ae_subset_of_measure_ge (HasSubset.Subset.eventuallyLE h₁) h₂ hsm ht
 #align measure_theory.ae_eq_of_subset_of_measure_ge MeasureTheory.ae_eq_of_subset_of_measure_ge
 
 theorem measure_unionᵢ_congr_of_subset [Countable β] {s : β → Set α} {t : β → Set α}
@@ -2526,7 +2526,7 @@ theorem preimage_mono_ae {s t : Set β} (hf : QuasiMeasurePreserving f μa μb) 
 
 theorem preimage_ae_eq {s t : Set β} (hf : QuasiMeasurePreserving f μa μb) (h : s =ᵐ[μb] t) :
     f ⁻¹' s =ᵐ[μa] f ⁻¹' t :=
-  EventuallyLe.antisymm (hf.preimage_mono_ae h.le) (hf.preimage_mono_ae h.symm.le)
+  EventuallyLE.antisymm (hf.preimage_mono_ae h.le) (hf.preimage_mono_ae h.symm.le)
 #align measure_theory.measure.quasi_measure_preserving.preimage_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.preimage_ae_eq
 
 theorem preimage_iterate_ae_eq {s : Set α} {f : α → α} (hf : QuasiMeasurePreserving f μ μ) (k : ℕ)

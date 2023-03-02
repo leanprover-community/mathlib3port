@@ -295,17 +295,17 @@ theorem EventuallyEq.prod_map {δ} {la : Filter α} {fa ga : α → γ} (ha : fa
   (Eventually.prod_mk ha hb).mono fun x h => Prod.ext h.1 h.2
 #align filter.eventually_eq.prod_map Filter.EventuallyEq.prod_map
 
-/- warning: filter.eventually_le.prod_map -> Filter.EventuallyLe.prod_map is a dubious translation:
+/- warning: filter.eventually_le.prod_map -> Filter.EventuallyLE.prod_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : LE.{u3} γ] [_inst_2 : LE.{u4} δ] {la : Filter.{u1} α} {fa : α -> γ} {ga : α -> γ}, (Filter.EventuallyLe.{u1, u3} α γ _inst_1 la fa ga) -> (forall {lb : Filter.{u2} β} {fb : β -> δ} {gb : β -> δ}, (Filter.EventuallyLe.{u2, u4} β δ _inst_2 lb fb gb) -> (Filter.EventuallyLe.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.hasLe.{u3, u4} γ δ _inst_1 _inst_2) (Filter.prod.{u1, u2} α β la lb) (Prod.map.{u1, u3, u2, u4} α γ β δ fa fb) (Prod.map.{u1, u3, u2, u4} α γ β δ ga gb)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : LE.{u3} γ] [_inst_2 : LE.{u4} δ] {la : Filter.{u1} α} {fa : α -> γ} {ga : α -> γ}, (Filter.EventuallyLE.{u1, u3} α γ _inst_1 la fa ga) -> (forall {lb : Filter.{u2} β} {fb : β -> δ} {gb : β -> δ}, (Filter.EventuallyLE.{u2, u4} β δ _inst_2 lb fb gb) -> (Filter.EventuallyLE.{max u1 u2, max u3 u4} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.hasLe.{u3, u4} γ δ _inst_1 _inst_2) (Filter.prod.{u1, u2} α β la lb) (Prod.map.{u1, u3, u2, u4} α γ β δ fa fb) (Prod.map.{u1, u3, u2, u4} α γ β δ ga gb)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : LE.{u3} γ] [_inst_2 : LE.{u4} δ] {la : Filter.{u2} α} {fa : α -> γ} {ga : α -> γ}, (Filter.EventuallyLe.{u2, u3} α γ _inst_1 la fa ga) -> (forall {lb : Filter.{u1} β} {fb : β -> δ} {gb : β -> δ}, (Filter.EventuallyLe.{u1, u4} β δ _inst_2 lb fb gb) -> (Filter.EventuallyLe.{max u1 u2, max u4 u3} (Prod.{u2, u1} α β) (Prod.{u3, u4} γ δ) (Prod.instLEProd.{u3, u4} γ δ _inst_1 _inst_2) (Filter.prod.{u2, u1} α β la lb) (Prod.map.{u2, u3, u1, u4} α γ β δ fa fb) (Prod.map.{u2, u3, u1, u4} α γ β δ ga gb)))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.prod_map Filter.EventuallyLe.prod_mapₓ'. -/
-theorem EventuallyLe.prod_map {δ} [LE γ] [LE δ] {la : Filter α} {fa ga : α → γ} (ha : fa ≤ᶠ[la] ga)
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : LE.{u3} γ] [_inst_2 : LE.{u4} δ] {la : Filter.{u2} α} {fa : α -> γ} {ga : α -> γ}, (Filter.EventuallyLE.{u2, u3} α γ _inst_1 la fa ga) -> (forall {lb : Filter.{u1} β} {fb : β -> δ} {gb : β -> δ}, (Filter.EventuallyLE.{u1, u4} β δ _inst_2 lb fb gb) -> (Filter.EventuallyLE.{max u1 u2, max u4 u3} (Prod.{u2, u1} α β) (Prod.{u3, u4} γ δ) (Prod.instLEProd.{u3, u4} γ δ _inst_1 _inst_2) (Filter.prod.{u2, u1} α β la lb) (Prod.map.{u2, u3, u1, u4} α γ β δ fa fb) (Prod.map.{u2, u3, u1, u4} α γ β δ ga gb)))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.prod_map Filter.EventuallyLE.prod_mapₓ'. -/
+theorem EventuallyLE.prod_map {δ} [LE γ] [LE δ] {la : Filter α} {fa ga : α → γ} (ha : fa ≤ᶠ[la] ga)
     {lb : Filter β} {fb gb : β → δ} (hb : fb ≤ᶠ[lb] gb) :
     Prod.map fa fb ≤ᶠ[la ×ᶠ lb] Prod.map ga gb :=
   Eventually.prod_mk ha hb
-#align filter.eventually_le.prod_map Filter.EventuallyLe.prod_map
+#align filter.eventually_le.prod_map Filter.EventuallyLE.prod_map
 
 /- warning: filter.eventually.curry -> Filter.Eventually.curry is a dubious translation:
 lean 3 declaration is

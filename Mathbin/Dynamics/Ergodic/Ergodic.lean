@@ -164,7 +164,7 @@ theorem ae_empty_or_univ_of_image_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet
     (hs' : f '' s ≤ᵐ[μ] s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
   by
   replace hs' : s ≤ᵐ[μ] f ⁻¹' s :=
-    (HasSubset.Subset.eventuallyLe (subset_preimage_image f s)).trans
+    (HasSubset.Subset.eventuallyLE (subset_preimage_image f s)).trans
       (hf.quasi_measure_preserving.preimage_mono_ae hs')
   exact ae_empty_or_univ_of_ae_le_preimage' hf hs hs' h_fin
 #align ergodic.ae_empty_or_univ_of_image_ae_le' Ergodic.ae_empty_or_univ_of_image_ae_le'

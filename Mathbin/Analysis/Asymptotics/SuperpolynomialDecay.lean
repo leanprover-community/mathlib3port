@@ -148,13 +148,13 @@ section OrderedCommSemiring
 
 variable [TopologicalSpace β] [OrderedCommSemiring β] [OrderTopology β]
 
-theorem SuperpolynomialDecay.trans_eventuallyLe (hk : 0 ≤ᶠ[l] k) (hg : SuperpolynomialDecay l k g)
+theorem SuperpolynomialDecay.trans_eventuallyLE (hk : 0 ≤ᶠ[l] k) (hg : SuperpolynomialDecay l k g)
     (hg' : SuperpolynomialDecay l k g') (hfg : g ≤ᶠ[l] f) (hfg' : f ≤ᶠ[l] g') :
     SuperpolynomialDecay l k f := fun z =>
   tendsto_of_tendsto_of_tendsto_of_le_of_le' (hg z) (hg' z)
     (hfg.mp (hk.mono fun x hx hx' => mul_le_mul_of_nonneg_left hx' (pow_nonneg hx z)))
     (hfg'.mp (hk.mono fun x hx hx' => mul_le_mul_of_nonneg_left hx' (pow_nonneg hx z)))
-#align asymptotics.superpolynomial_decay.trans_eventually_le Asymptotics.SuperpolynomialDecay.trans_eventuallyLe
+#align asymptotics.superpolynomial_decay.trans_eventually_le Asymptotics.SuperpolynomialDecay.trans_eventuallyLE
 
 end OrderedCommSemiring
 

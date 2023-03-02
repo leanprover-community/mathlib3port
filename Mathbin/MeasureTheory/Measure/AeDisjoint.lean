@@ -88,7 +88,7 @@ theorem monoAe (h : AeDisjoint μ s t) (hu : u ≤ᵐ[μ] s) (hv : v ≤ᵐ[μ] 
 #align measure_theory.ae_disjoint.mono_ae MeasureTheory.AeDisjoint.monoAe
 
 protected theorem mono (h : AeDisjoint μ s t) (hu : u ⊆ s) (hv : v ⊆ t) : AeDisjoint μ u v :=
-  h.monoAe hu.EventuallyLe hv.EventuallyLe
+  h.monoAe hu.EventuallyLE hv.EventuallyLE
 #align measure_theory.ae_disjoint.mono MeasureTheory.AeDisjoint.mono
 
 protected theorem congr (h : AeDisjoint μ s t) (hu : u =ᵐ[μ] s) (hv : v =ᵐ[μ] t) :

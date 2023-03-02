@@ -2779,28 +2779,28 @@ section LE
 
 variable [LE β] {l : Filter α}
 
-#print Filter.EventuallyLe /-
+#print Filter.EventuallyLE /-
 /-- A function `f` is eventually less than or equal to a function `g` at a filter `l`. -/
-def EventuallyLe (l : Filter α) (f g : α → β) : Prop :=
+def EventuallyLE (l : Filter α) (f g : α → β) : Prop :=
   ∀ᶠ x in l, f x ≤ g x
-#align filter.eventually_le Filter.EventuallyLe
+#align filter.eventually_le Filter.EventuallyLE
 -/
 
 -- mathport name: «expr ≤ᶠ[ ] »
-notation:50 f " ≤ᶠ[" l:50 "] " g:50 => EventuallyLe l f g
+notation:50 f " ≤ᶠ[" l:50 "] " g:50 => EventuallyLE l f g
 
-#print Filter.EventuallyLe.congr /-
-theorem EventuallyLe.congr {f f' g g' : α → β} (H : f ≤ᶠ[l] g) (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') :
+#print Filter.EventuallyLE.congr /-
+theorem EventuallyLE.congr {f f' g g' : α → β} (H : f ≤ᶠ[l] g) (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') :
     f' ≤ᶠ[l] g' :=
   H.mp <| hg.mp <| hf.mono fun x hf hg H => by rwa [hf, hg] at H
-#align filter.eventually_le.congr Filter.EventuallyLe.congr
+#align filter.eventually_le.congr Filter.EventuallyLE.congr
 -/
 
-#print Filter.eventuallyLe_congr /-
-theorem eventuallyLe_congr {f f' g g' : α → β} (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') :
+#print Filter.eventuallyLE_congr /-
+theorem eventuallyLE_congr {f f' g g' : α → β} (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') :
     f ≤ᶠ[l] g ↔ f' ≤ᶠ[l] g' :=
   ⟨fun H => H.congr hf hg, fun H => H.congr hf.symm hg.symm⟩
-#align filter.eventually_le_congr Filter.eventuallyLe_congr
+#align filter.eventually_le_congr Filter.eventuallyLE_congr
 -/
 
 end LE
@@ -2815,24 +2815,24 @@ theorem EventuallyEq.le (h : f =ᶠ[l] g) : f ≤ᶠ[l] g :=
 #align filter.eventually_eq.le Filter.EventuallyEq.le
 -/
 
-#print Filter.EventuallyLe.refl /-
+#print Filter.EventuallyLE.refl /-
 @[refl]
-theorem EventuallyLe.refl (l : Filter α) (f : α → β) : f ≤ᶠ[l] f :=
+theorem EventuallyLE.refl (l : Filter α) (f : α → β) : f ≤ᶠ[l] f :=
   EventuallyEq.rfl.le
-#align filter.eventually_le.refl Filter.EventuallyLe.refl
+#align filter.eventually_le.refl Filter.EventuallyLE.refl
 -/
 
-#print Filter.EventuallyLe.rfl /-
-theorem EventuallyLe.rfl : f ≤ᶠ[l] f :=
-  EventuallyLe.refl l f
-#align filter.eventually_le.rfl Filter.EventuallyLe.rfl
+#print Filter.EventuallyLE.rfl /-
+theorem EventuallyLE.rfl : f ≤ᶠ[l] f :=
+  EventuallyLE.refl l f
+#align filter.eventually_le.rfl Filter.EventuallyLE.rfl
 -/
 
-#print Filter.EventuallyLe.trans /-
+#print Filter.EventuallyLE.trans /-
 @[trans]
-theorem EventuallyLe.trans (H₁ : f ≤ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤ᶠ[l] h :=
+theorem EventuallyLE.trans (H₁ : f ≤ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₂.mp <| H₁.mono fun x => le_trans
-#align filter.eventually_le.trans Filter.EventuallyLe.trans
+#align filter.eventually_le.trans Filter.EventuallyLE.trans
 -/
 
 #print Filter.EventuallyEq.trans_le /-
@@ -2842,34 +2842,34 @@ theorem EventuallyEq.trans_le (H₁ : f =ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f �
 #align filter.eventually_eq.trans_le Filter.EventuallyEq.trans_le
 -/
 
-#print Filter.EventuallyLe.trans_eq /-
+#print Filter.EventuallyLE.trans_eq /-
 @[trans]
-theorem EventuallyLe.trans_eq (H₁ : f ≤ᶠ[l] g) (H₂ : g =ᶠ[l] h) : f ≤ᶠ[l] h :=
+theorem EventuallyLE.trans_eq (H₁ : f ≤ᶠ[l] g) (H₂ : g =ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₁.trans H₂.le
-#align filter.eventually_le.trans_eq Filter.EventuallyLe.trans_eq
+#align filter.eventually_le.trans_eq Filter.EventuallyLE.trans_eq
 -/
 
 end Preorder
 
-#print Filter.EventuallyLe.antisymm /-
-theorem EventuallyLe.antisymm [PartialOrder β] {l : Filter α} {f g : α → β} (h₁ : f ≤ᶠ[l] g)
+#print Filter.EventuallyLE.antisymm /-
+theorem EventuallyLE.antisymm [PartialOrder β] {l : Filter α} {f g : α → β} (h₁ : f ≤ᶠ[l] g)
     (h₂ : g ≤ᶠ[l] f) : f =ᶠ[l] g :=
   h₂.mp <| h₁.mono fun x => le_antisymm
-#align filter.eventually_le.antisymm Filter.EventuallyLe.antisymm
+#align filter.eventually_le.antisymm Filter.EventuallyLE.antisymm
 -/
 
-#print Filter.eventuallyLe_antisymm_iff /-
-theorem eventuallyLe_antisymm_iff [PartialOrder β] {l : Filter α} {f g : α → β} :
+#print Filter.eventuallyLE_antisymm_iff /-
+theorem eventuallyLE_antisymm_iff [PartialOrder β] {l : Filter α} {f g : α → β} :
     f =ᶠ[l] g ↔ f ≤ᶠ[l] g ∧ g ≤ᶠ[l] f := by
   simp only [eventually_eq, eventually_le, le_antisymm_iff, eventually_and]
-#align filter.eventually_le_antisymm_iff Filter.eventuallyLe_antisymm_iff
+#align filter.eventually_le_antisymm_iff Filter.eventuallyLE_antisymm_iff
 -/
 
-#print Filter.EventuallyLe.le_iff_eq /-
-theorem EventuallyLe.le_iff_eq [PartialOrder β] {l : Filter α} {f g : α → β} (h : f ≤ᶠ[l] g) :
+#print Filter.EventuallyLE.le_iff_eq /-
+theorem EventuallyLE.le_iff_eq [PartialOrder β] {l : Filter α} {f g : α → β} (h : f ≤ᶠ[l] g) :
     g ≤ᶠ[l] f ↔ g =ᶠ[l] f :=
   ⟨fun h' => h'.antisymm h, EventuallyEq.le⟩
-#align filter.eventually_le.le_iff_eq Filter.EventuallyLe.le_iff_eq
+#align filter.eventually_le.le_iff_eq Filter.EventuallyLE.le_iff_eq
 -/
 
 #print Filter.Eventually.ne_of_lt /-
@@ -2912,139 +2912,139 @@ theorem Eventually.lt_top_iff_ne_top [PartialOrder β] [OrderTop β] {l : Filter
   ⟨Eventually.ne_of_lt, Eventually.lt_top_of_ne⟩
 #align filter.eventually.lt_top_iff_ne_top Filter.Eventually.lt_top_iff_ne_top
 
-/- warning: filter.eventually_le.inter -> Filter.EventuallyLe.inter is a dubious translation:
+/- warning: filter.eventually_le.inter -> Filter.EventuallyLE.inter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t t'))
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t t'))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.inter Filter.EventuallyLe.interₓ'. -/
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s s') (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t t'))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.inter Filter.EventuallyLE.interₓ'. -/
 @[mono]
-theorem EventuallyLe.inter {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
+theorem EventuallyLE.inter {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
     (s ∩ s' : Set α) ≤ᶠ[l] (t ∩ t' : Set α) :=
   h'.mp <| h.mono fun x => And.imp
-#align filter.eventually_le.inter Filter.EventuallyLe.inter
+#align filter.eventually_le.inter Filter.EventuallyLE.inter
 
-/- warning: filter.eventually_le.union -> Filter.EventuallyLe.union is a dubious translation:
+/- warning: filter.eventually_le.union -> Filter.EventuallyLE.union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t t'))
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t t'))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.union Filter.EventuallyLe.unionₓ'. -/
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s' t') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s s') (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t t'))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.union Filter.EventuallyLE.unionₓ'. -/
 @[mono]
-theorem EventuallyLe.union {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
+theorem EventuallyLE.union {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
     (s ∪ s' : Set α) ≤ᶠ[l] (t ∪ t' : Set α) :=
   h'.mp <| h.mono fun x => Or.imp
-#align filter.eventually_le.union Filter.EventuallyLe.union
+#align filter.eventually_le.union Filter.EventuallyLE.union
 
-/- warning: filter.eventually_le.compl -> Filter.EventuallyLe.compl is a dubious translation:
+/- warning: filter.eventually_le.compl -> Filter.EventuallyLE.compl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.compl Filter.EventuallyLe.complₓ'. -/
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.compl Filter.EventuallyLE.complₓ'. -/
 @[mono]
-theorem EventuallyLe.compl {s t : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) :
+theorem EventuallyLE.compl {s t : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) :
     (tᶜ : Set α) ≤ᶠ[l] (sᶜ : Set α) :=
   h.mono fun x => mt
-#align filter.eventually_le.compl Filter.EventuallyLe.compl
+#align filter.eventually_le.compl Filter.EventuallyLE.compl
 
-/- warning: filter.eventually_le.diff -> Filter.EventuallyLe.diff is a dubious translation:
+/- warning: filter.eventually_le.diff -> Filter.EventuallyLE.diff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l t' s') -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t t'))
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l t' s') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t t'))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l t' s') -> (Filter.EventuallyLe.{u1, 0} α Prop Prop.le l (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t t'))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.diff Filter.EventuallyLe.diffₓ'. -/
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {s' : Set.{u1} α} {t' : Set.{u1} α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l s t) -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l t' s') -> (Filter.EventuallyLE.{u1, 0} α Prop Prop.le l (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s s') (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t t'))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.diff Filter.EventuallyLE.diffₓ'. -/
 @[mono]
-theorem EventuallyLe.diff {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : t' ≤ᶠ[l] s') :
+theorem EventuallyLE.diff {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : t' ≤ᶠ[l] s') :
     (s \ s' : Set α) ≤ᶠ[l] (t \ t' : Set α) :=
   h.inter h'.compl
-#align filter.eventually_le.diff Filter.EventuallyLe.diff
+#align filter.eventually_le.diff Filter.EventuallyLE.diff
 
-/- warning: filter.eventually_le.mul_le_mul -> Filter.EventuallyLe.mul_le_mul is a dubious translation:
+/- warning: filter.eventually_le.mul_le_mul -> Filter.EventuallyLE.mul_le_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulZeroClass.{u2} β] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : PosMulMono.{u2} β (MulZeroClass.toHasMul.{u2} β _inst_1) (MulZeroClass.toHasZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] [_inst_4 : MulPosMono.{u2} β (MulZeroClass.toHasMul.{u2} β _inst_1) (MulZeroClass.toHasZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l f₁ f₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l g₁ g₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β _inst_1))))) g₁) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β _inst_1))))) f₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β _inst_1))) f₂ g₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulZeroClass.{u2} β] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : PosMulMono.{u2} β (MulZeroClass.toHasMul.{u2} β _inst_1) (MulZeroClass.toHasZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] [_inst_4 : MulPosMono.{u2} β (MulZeroClass.toHasMul.{u2} β _inst_1) (MulZeroClass.toHasZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β _inst_1))))) g₁) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β _inst_1))))) f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasMul.{u2} β _inst_1))) f₂ g₂))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulZeroClass.{u2} β] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : PosMulMono.{u2} β (MulZeroClass.toMul.{u2} β _inst_1) (MulZeroClass.toZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] [_inst_4 : MulPosMono.{u2} β (MulZeroClass.toMul.{u2} β _inst_1) (MulZeroClass.toZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l f₁ f₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l g₁ g₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MulZeroClass.toZero.{u2} β _inst_1)))) g₁) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MulZeroClass.toZero.{u2} β _inst_1)))) f₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β _inst_1))) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_le_mul Filter.EventuallyLe.mul_le_mulₓ'. -/
-theorem EventuallyLe.mul_le_mul [MulZeroClass β] [PartialOrder β] [PosMulMono β] [MulPosMono β]
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulZeroClass.{u2} β] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : PosMulMono.{u2} β (MulZeroClass.toMul.{u2} β _inst_1) (MulZeroClass.toZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] [_inst_4 : MulPosMono.{u2} β (MulZeroClass.toMul.{u2} β _inst_1) (MulZeroClass.toZero.{u2} β _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2)] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MulZeroClass.toZero.{u2} β _inst_1)))) g₁) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MulZeroClass.toZero.{u2} β _inst_1)))) f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) l (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β _inst_1))) f₁ g₁) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toMul.{u2} β _inst_1))) f₂ g₂))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_le_mul Filter.EventuallyLE.mul_le_mulₓ'. -/
+theorem EventuallyLE.mul_le_mul [MulZeroClass β] [PartialOrder β] [PosMulMono β] [MulPosMono β]
     {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂) (hg : g₁ ≤ᶠ[l] g₂) (hg₀ : 0 ≤ᶠ[l] g₁)
     (hf₀ : 0 ≤ᶠ[l] f₂) : f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
   filter_upwards [hf, hg, hg₀, hf₀]with x using mul_le_mul
-#align filter.eventually_le.mul_le_mul Filter.EventuallyLe.mul_le_mul
+#align filter.eventually_le.mul_le_mul Filter.EventuallyLE.mul_le_mul
 
-#print Filter.EventuallyLe.mul_le_mul' /-
+#print Filter.EventuallyLE.mul_le_mul' /-
 @[to_additive EventuallyLe.add_le_add]
-theorem EventuallyLe.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (· * ·) (· ≤ ·)]
+theorem EventuallyLE.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (· * ·) (· ≤ ·)]
     [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β}
     (hf : f₁ ≤ᶠ[l] f₂) (hg : g₁ ≤ᶠ[l] g₂) : f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
   filter_upwards [hf, hg]with x hfx hgx using mul_le_mul' hfx hgx
-#align filter.eventually_le.mul_le_mul' Filter.EventuallyLe.mul_le_mul'
-#align filter.eventually_le.add_le_add Filter.EventuallyLe.add_le_add
+#align filter.eventually_le.mul_le_mul' Filter.EventuallyLE.mul_le_mul'
+#align filter.eventually_le.add_le_add Filter.EventuallyLE.add_le_add
 -/
 
-/- warning: filter.eventually_le.mul_nonneg -> Filter.EventuallyLe.mul_nonneg is a dubious translation:
+/- warning: filter.eventually_le.mul_nonneg -> Filter.EventuallyLE.mul_nonneg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) f) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) g) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Distrib.toHasMul.{u2} β (NonUnitalNonAssocSemiring.toDistrib.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))) f g))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β (OrderedSemiring.toOrderedAddCommMonoid.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Distrib.toHasMul.{u2} β (NonUnitalNonAssocSemiring.toDistrib.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1))))))) f g))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) f) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) g) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => NonUnitalNonAssocSemiring.toMul.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) f g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_nonneg Filter.EventuallyLe.mul_nonnegₓ'. -/
-theorem EventuallyLe.mul_nonneg [OrderedSemiring β] {l : Filter α} {f g : α → β} (hf : 0 ≤ᶠ[l] f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedSemiring.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedSemiring.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHMul.{max u1 u2} (α -> β) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => NonUnitalNonAssocSemiring.toMul.{u2} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} β (Semiring.toNonAssocSemiring.{u2} β (OrderedSemiring.toSemiring.{u2} β _inst_1)))))) f g))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.mul_nonneg Filter.EventuallyLE.mul_nonnegₓ'. -/
+theorem EventuallyLE.mul_nonneg [OrderedSemiring β] {l : Filter α} {f g : α → β} (hf : 0 ≤ᶠ[l] f)
     (hg : 0 ≤ᶠ[l] g) : 0 ≤ᶠ[l] f * g := by filter_upwards [hf, hg]with x using mul_nonneg
-#align filter.eventually_le.mul_nonneg Filter.EventuallyLe.mul_nonneg
+#align filter.eventually_le.mul_nonneg Filter.EventuallyLE.mul_nonneg
 
 /- warning: filter.eventually_sub_nonneg -> Filter.eventually_sub_nonneg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedRing.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β (OrderedRing.toOrderedAddCommGroup.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} β (NonAssocRing.toNonUnitalNonAssocRing.{u2} β (Ring.toNonAssocRing.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))))))))) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))))))) g f)) (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β (OrderedRing.toOrderedAddCommGroup.{u2} β _inst_1)))) l f g)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedRing.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β (OrderedRing.toOrderedAddCommGroup.{u2} β _inst_1)))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => MulZeroClass.toHasZero.{u2} β (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} β (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} β (NonAssocRing.toNonUnitalNonAssocRing.{u2} β (Ring.toNonAssocRing.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))))))))) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))))))) g f)) (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommGroup.toPartialOrder.{u2} β (OrderedRing.toOrderedAddCommGroup.{u2} β _inst_1)))) l f g)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedRing.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedRing.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β (OrderedRing.toOrderedSemiring.{u2} β _inst_1))))))) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Ring.toSub.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))) g f)) (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedRing.toPartialOrder.{u2} β _inst_1))) l f g)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OrderedRing.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β}, Iff (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedRing.toPartialOrder.{u2} β _inst_1))) l (OfNat.ofNat.{max u1 u2} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.21857 : α) => β) (fun (i : α) => MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (OrderedSemiring.toSemiring.{u2} β (OrderedRing.toOrderedSemiring.{u2} β _inst_1))))))) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Ring.toSub.{u2} β (OrderedRing.toRing.{u2} β _inst_1)))) g f)) (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedRing.toPartialOrder.{u2} β _inst_1))) l f g)
 Case conversion may be inaccurate. Consider using '#align filter.eventually_sub_nonneg Filter.eventually_sub_nonnegₓ'. -/
 theorem eventually_sub_nonneg [OrderedRing β] {l : Filter α} {f g : α → β} :
     0 ≤ᶠ[l] g - f ↔ f ≤ᶠ[l] g :=
   eventually_congr <| eventually_of_forall fun x => sub_nonneg
 #align filter.eventually_sub_nonneg Filter.eventually_sub_nonneg
 
-/- warning: filter.eventually_le.sup -> Filter.EventuallyLe.sup is a dubious translation:
+/- warning: filter.eventually_le.sup -> Filter.EventuallyLE.sup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f₁ f₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g₁ g₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f₁ g₁) (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f₂ g₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f₁ g₁) (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f₂ g₂))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f₁ f₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g₁ g₂) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f₁ g₁) (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f₂ g₂))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.sup Filter.EventuallyLe.supₓ'. -/
-theorem EventuallyLe.sup [SemilatticeSup β] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f₁ : α -> β} {f₂ : α -> β} {g₁ : α -> β} {g₂ : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g₁ g₂) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f₁ g₁) (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f₂ g₂))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.sup Filter.EventuallyLE.supₓ'. -/
+theorem EventuallyLE.sup [SemilatticeSup β] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂)
     (hg : g₁ ≤ᶠ[l] g₂) : f₁ ⊔ g₁ ≤ᶠ[l] f₂ ⊔ g₂ := by
   filter_upwards [hf, hg]with x hfx hgx using sup_le_sup hfx hgx
-#align filter.eventually_le.sup Filter.EventuallyLe.sup
+#align filter.eventually_le.sup Filter.EventuallyLE.sup
 
-/- warning: filter.eventually_le.sup_le -> Filter.EventuallyLe.sup_le is a dubious translation:
+/- warning: filter.eventually_le.sup_le -> Filter.EventuallyLE.sup_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f h) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g h) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g) h)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g) h)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f h) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g h) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g) h)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.sup_le Filter.EventuallyLe.sup_leₓ'. -/
-theorem EventuallyLe.sup_le [SemilatticeSup β] {l : Filter α} {f g h : α → β} (hf : f ≤ᶠ[l] h)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l f h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l g h) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g) h)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.sup_le Filter.EventuallyLE.sup_leₓ'. -/
+theorem EventuallyLE.sup_le [SemilatticeSup β] {l : Filter α} {f g h : α → β} (hf : f ≤ᶠ[l] h)
     (hg : g ≤ᶠ[l] h) : f ⊔ g ≤ᶠ[l] h := by
   filter_upwards [hf, hg]with x hfx hgx using sup_le hfx hgx
-#align filter.eventually_le.sup_le Filter.EventuallyLe.sup_le
+#align filter.eventually_le.sup_le Filter.EventuallyLE.sup_le
 
-/- warning: filter.eventually_le.le_sup_of_le_left -> Filter.EventuallyLe.le_sup_of_le_left is a dubious translation:
+/- warning: filter.eventually_le.le_sup_of_le_left -> Filter.EventuallyLE.le_sup_of_le_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h f) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h f) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_sup_of_le_left Filter.EventuallyLe.le_sup_of_le_leftₓ'. -/
-theorem EventuallyLe.le_sup_of_le_left [SemilatticeSup β] {l : Filter α} {f g h : α → β}
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h f) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_sup_of_le_left Filter.EventuallyLE.le_sup_of_le_leftₓ'. -/
+theorem EventuallyLE.le_sup_of_le_left [SemilatticeSup β] {l : Filter α} {f g h : α → β}
     (hf : h ≤ᶠ[l] f) : h ≤ᶠ[l] f ⊔ g := by filter_upwards [hf]with x hfx using le_sup_of_le_left hfx
-#align filter.eventually_le.le_sup_of_le_left Filter.EventuallyLe.le_sup_of_le_left
+#align filter.eventually_le.le_sup_of_le_left Filter.EventuallyLE.le_sup_of_le_left
 
-/- warning: filter.eventually_le.le_sup_of_le_right -> Filter.EventuallyLe.le_sup_of_le_right is a dubious translation:
+/- warning: filter.eventually_le.le_sup_of_le_right -> Filter.EventuallyLE.le_sup_of_le_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h g) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.hasSup.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toHasSup.{u2} β _inst_1)) f g))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h g) -> (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g))
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_sup_of_le_right Filter.EventuallyLe.le_sup_of_le_rightₓ'. -/
-theorem EventuallyLe.le_sup_of_le_right [SemilatticeSup β] {l : Filter α} {f g h : α → β}
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} β] {l : Filter.{u1} α} {f : α -> β} {g : α -> β} {h : α -> β}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h g) -> (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_1))) l h (Sup.sup.{max u1 u2} (α -> β) (Pi.instSupForAll.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SemilatticeSup.toSup.{u2} β _inst_1)) f g))
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.le_sup_of_le_right Filter.EventuallyLE.le_sup_of_le_rightₓ'. -/
+theorem EventuallyLE.le_sup_of_le_right [SemilatticeSup β] {l : Filter α} {f g h : α → β}
     (hg : h ≤ᶠ[l] g) : h ≤ᶠ[l] f ⊔ g := by
   filter_upwards [hg]with x hgx using le_sup_of_le_right hgx
-#align filter.eventually_le.le_sup_of_le_right Filter.EventuallyLe.le_sup_of_le_right
+#align filter.eventually_le.le_sup_of_le_right Filter.EventuallyLE.le_sup_of_le_right
 
 /- warning: filter.join_le -> Filter.join_le is a dubious translation:
 lean 3 declaration is
@@ -4572,12 +4572,12 @@ theorem eventuallyEq_bind {f : Filter α} {m : α → Filter β} {g₁ g₂ : β
 #align filter.eventually_eq_bind Filter.eventuallyEq_bind
 -/
 
-#print Filter.eventuallyLe_bind /-
+#print Filter.eventuallyLE_bind /-
 @[simp]
-theorem eventuallyLe_bind [LE γ] {f : Filter α} {m : α → Filter β} {g₁ g₂ : β → γ} :
+theorem eventuallyLE_bind [LE γ] {f : Filter α} {m : α → Filter β} {g₁ g₂ : β → γ} :
     g₁ ≤ᶠ[bind f m] g₂ ↔ ∀ᶠ x in f, g₁ ≤ᶠ[m x] g₂ :=
   Iff.rfl
-#align filter.eventually_le_bind Filter.eventuallyLe_bind
+#align filter.eventually_le_bind Filter.eventuallyLE_bind
 -/
 
 #print Filter.mem_bind' /-
@@ -4616,9 +4616,9 @@ theorem bind_le {f : Filter α} {g : α → Filter β} {l : Filter β} (h : ∀�
 
 /- warning: filter.bind_mono -> Filter.bind_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : α -> (Filter.{u2} β)} {g₂ : α -> (Filter.{u2} β)}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (Filter.EventuallyLe.{u1, u2} α (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f₁ g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.bind.{u1, u2} α β f₁ g₁) (Filter.bind.{u1, u2} α β f₂ g₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : α -> (Filter.{u2} β)} {g₂ : α -> (Filter.{u2} β)}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) f₁ g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (Filter.bind.{u1, u2} α β f₁ g₁) (Filter.bind.{u1, u2} α β f₂ g₂))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : α -> (Filter.{u2} β)} {g₂ : α -> (Filter.{u2} β)}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f₁ f₂) -> (Filter.EventuallyLe.{u1, u2} α (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f₁ g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.bind.{u1, u2} α β f₁ g₁) (Filter.bind.{u1, u2} α β f₂ g₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f₁ : Filter.{u1} α} {f₂ : Filter.{u1} α} {g₁ : α -> (Filter.{u2} β)} {g₂ : α -> (Filter.{u2} β)}, (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f₁ f₂) -> (Filter.EventuallyLE.{u1, u2} α (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) f₁ g₁ g₂) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (Filter.bind.{u1, u2} α β f₁ g₁) (Filter.bind.{u1, u2} α β f₂ g₂))
 Case conversion may be inaccurate. Consider using '#align filter.bind_mono Filter.bind_monoₓ'. -/
 @[mono]
 theorem bind_mono {f₁ f₂ : Filter α} {g₁ g₂ : α → Filter β} (hf : f₁ ≤ f₂) (hg : g₁ ≤ᶠ[f₁] g₂) :
@@ -5285,10 +5285,10 @@ theorem Set.EqOn.eventuallyEq_of_mem {α β} {s : Set α} {l : Filter α} {f g :
   h.EventuallyEq.filter_mono <| Filter.le_principal_iff.2 hl
 #align set.eq_on.eventually_eq_of_mem Set.EqOn.eventuallyEq_of_mem
 
-#print HasSubset.Subset.eventuallyLe /-
-theorem HasSubset.Subset.eventuallyLe {α} {l : Filter α} {s t : Set α} (h : s ⊆ t) : s ≤ᶠ[l] t :=
+#print HasSubset.Subset.eventuallyLE /-
+theorem HasSubset.Subset.eventuallyLE {α} {l : Filter α} {s t : Set α} (h : s ⊆ t) : s ≤ᶠ[l] t :=
   Filter.eventually_of_forall h
-#align has_subset.subset.eventually_le HasSubset.Subset.eventuallyLe
+#align has_subset.subset.eventually_le HasSubset.Subset.eventuallyLE
 -/
 
 /- warning: set.maps_to.tendsto -> Set.MapsTo.tendsto is a dubious translation:

@@ -984,19 +984,19 @@ section Eventually
 /-! ### Relation with `eventually` comparisons of two functions -/
 
 
-/- warning: filter.eventually_le.is_max_filter -> Filter.EventuallyLe.isMaxFilter is a dubious translation:
+/- warning: filter.eventually_le.is_max_filter -> Filter.EventuallyLE.isMaxFilter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (IsMaxFilter.{u1, u2} α β _inst_1 g l a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (IsMaxFilter.{u1, u2} α β _inst_1 g l a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u2} α}, (Filter.EventuallyLe.{u2, u1} α β (Preorder.toLE.{u1} β _inst_1) l g f) -> (Eq.{succ u1} β (f a) (g a)) -> (IsMaxFilter.{u2, u1} α β _inst_1 f l a) -> (IsMaxFilter.{u2, u1} α β _inst_1 g l a)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_max_filter Filter.EventuallyLe.isMaxFilterₓ'. -/
-theorem Filter.EventuallyLe.isMaxFilter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u2} α}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β _inst_1) l g f) -> (Eq.{succ u1} β (f a) (g a)) -> (IsMaxFilter.{u2, u1} α β _inst_1 f l a) -> (IsMaxFilter.{u2, u1} α β _inst_1 g l a)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_max_filter Filter.EventuallyLE.isMaxFilterₓ'. -/
+theorem Filter.EventuallyLE.isMaxFilter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (hle : g ≤ᶠ[l] f) (hfga : f a = g a) (h : IsMaxFilter f l a) :
     IsMaxFilter g l a := by
   refine' hle.mp (h.mono fun x hf hgf => _)
   rw [← hfga]
   exact le_trans hgf hf
-#align filter.eventually_le.is_max_filter Filter.EventuallyLe.isMaxFilter
+#align filter.eventually_le.is_max_filter Filter.EventuallyLE.isMaxFilter
 
 /- warning: is_max_filter.congr -> IsMaxFilter.congr is a dubious translation:
 lean 3 declaration is
@@ -1020,17 +1020,17 @@ theorem Filter.EventuallyEq.isMaxFilter_iff {α β : Type _} [Preorder β] {f g 
   ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
 #align filter.eventually_eq.is_max_filter_iff Filter.EventuallyEq.isMaxFilter_iff
 
-/- warning: filter.eventually_le.is_min_filter -> Filter.EventuallyLe.isMinFilter is a dubious translation:
+/- warning: filter.eventually_le.is_min_filter -> Filter.EventuallyLE.isMinFilter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLe.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (IsMinFilter.{u1, u2} α β _inst_1 g l a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (IsMinFilter.{u1, u2} α β _inst_1 g l a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u2} α}, (Filter.EventuallyLe.{u2, u1} α β (Preorder.toLE.{u1} β _inst_1) l f g) -> (Eq.{succ u1} β (f a) (g a)) -> (IsMinFilter.{u2, u1} α β _inst_1 f l a) -> (IsMinFilter.{u2, u1} α β _inst_1 g l a)
-Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_min_filter Filter.EventuallyLe.isMinFilterₓ'. -/
-theorem Filter.EventuallyLe.isMinFilter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u2} α}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β _inst_1) l f g) -> (Eq.{succ u1} β (f a) (g a)) -> (IsMinFilter.{u2, u1} α β _inst_1 f l a) -> (IsMinFilter.{u2, u1} α β _inst_1 g l a)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_min_filter Filter.EventuallyLE.isMinFilterₓ'. -/
+theorem Filter.EventuallyLE.isMinFilter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (hle : f ≤ᶠ[l] g) (hfga : f a = g a) (h : IsMinFilter f l a) :
     IsMinFilter g l a :=
-  @Filter.EventuallyLe.isMaxFilter _ βᵒᵈ _ _ _ _ _ hle hfga h
-#align filter.eventually_le.is_min_filter Filter.EventuallyLe.isMinFilter
+  @Filter.EventuallyLE.isMaxFilter _ βᵒᵈ _ _ _ _ _ hle hfga h
+#align filter.eventually_le.is_min_filter Filter.EventuallyLE.isMinFilter
 
 /- warning: is_min_filter.congr -> IsMinFilter.congr is a dubious translation:
 lean 3 declaration is

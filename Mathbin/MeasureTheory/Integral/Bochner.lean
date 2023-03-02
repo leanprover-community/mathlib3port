@@ -1335,7 +1335,7 @@ theorem integral_eq_zero_iff_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f)
   simp_rw [integral_eq_lintegral_of_nonneg_ae hf hfi.1, ENNReal.toReal_eq_zero_iff,
     lintegral_eq_zero_iff' (ennreal.measurable_of_real.comp_ae_measurable hfi.1.AeMeasurable), ←
     ENNReal.not_lt_top, ← has_finite_integral_iff_of_real hf, hfi.2, not_true, or_false_iff, ←
-    hf.le_iff_eq, Filter.EventuallyEq, Filter.EventuallyLe, (· ∘ ·), Pi.zero_apply,
+    hf.le_iff_eq, Filter.EventuallyEq, Filter.EventuallyLE, (· ∘ ·), Pi.zero_apply,
     ENNReal.ofReal_eq_zero]
 #align measure_theory.integral_eq_zero_iff_of_nonneg_ae MeasureTheory.integral_eq_zero_iff_of_nonneg_ae
 

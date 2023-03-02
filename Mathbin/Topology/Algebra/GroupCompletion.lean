@@ -70,7 +70,7 @@ open UniformSpace
 section Zero
 
 instance [UniformSpace α] [MonoidWithZero M] [Zero α] [MulActionWithZero M α]
-    [HasUniformContinuousConstSmul M α] : MulActionWithZero M (Completion α) :=
+    [UniformContinuousConstSMul M α] : MulActionWithZero M (Completion α) :=
   { Completion.mulAction M α with
     smul := (· • ·)
     smul_zero := fun r => by rw [← coe_zero, ← coe_smul, MulActionWithZero.smul_zero r]
@@ -168,7 +168,7 @@ instance : AddGroup (Completion α) :=
 instance : UniformAddGroup (Completion α) :=
   ⟨uniformContinuous_map₂ Sub.sub⟩
 
-instance {M} [Monoid M] [DistribMulAction M α] [HasUniformContinuousConstSmul M α] :
+instance {M} [Monoid M] [DistribMulAction M α] [UniformContinuousConstSMul M α] :
     DistribMulAction M (Completion α) :=
   { Completion.mulAction M α with
     smul := (· • ·)
@@ -215,7 +215,7 @@ instance : AddCommGroup (Completion α) :=
         change ↑x + ↑y = ↑y + ↑x
         rw [← coe_add, ← coe_add, add_comm] }
 
-instance [Semiring R] [Module R α] [HasUniformContinuousConstSmul R α] : Module R (Completion α) :=
+instance [Semiring R] [Module R α] [UniformContinuousConstSMul R α] : Module R (Completion α) :=
   { Completion.distribMulAction,
     Completion.mulActionWithZero with
     smul := (· • ·)

@@ -1634,7 +1634,7 @@ theorem integral_mono_interval {c d} (hca : c ≤ a) (hab : a ≤ b) (hbd : b �
     (∫ x in a..b, f x ∂μ) ≤ ∫ x in c..d, f x ∂μ :=
   by
   rw [integral_of_le hab, integral_of_le (hca.trans (hab.trans hbd))]
-  exact set_integral_mono_set hfi.1 hf (Ioc_subset_Ioc hca hbd).EventuallyLe
+  exact set_integral_mono_set hfi.1 hf (Ioc_subset_Ioc hca hbd).EventuallyLE
 #align interval_integral.integral_mono_interval intervalIntegral.integral_mono_interval
 
 theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[μ.restrict (Ι c d)] f)
@@ -1643,7 +1643,7 @@ theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[
   calc
     |∫ x in a..b, f x ∂μ| = |∫ x in Ι a b, f x ∂μ| := abs_integral_eq_abs_integral_uIoc f
     _ = ∫ x in Ι a b, f x ∂μ := (abs_of_nonneg (MeasureTheory.integral_nonneg_of_ae hf'))
-    _ ≤ ∫ x in Ι c d, f x ∂μ := (set_integral_mono_set hfi.def hf h.EventuallyLe)
+    _ ≤ ∫ x in Ι c d, f x ∂μ := (set_integral_mono_set hfi.def hf h.EventuallyLE)
     _ ≤ |∫ x in Ι c d, f x ∂μ| := (le_abs_self _)
     _ = |∫ x in c..d, f x ∂μ| := (abs_integral_eq_abs_integral_uIoc f).symm
     

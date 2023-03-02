@@ -116,7 +116,7 @@ instance [CommSemiring S] [CommSemiring K] [SMul S K] [Algebra S R] [Algebra K R
 
 instance [CommSemiring S] [CommSemiring K] [Algebra S R] [Algebra K R] [SMulCommClass S K R] :
     SMulCommClass S K (AdjoinRoot f) :=
-  Submodule.Quotient.sMulCommClass _ _
+  Submodule.Quotient.smulCommClass _ _
 
 @[simp]
 theorem algebraMap_eq : algebraMap R (AdjoinRoot f) = of f :=

@@ -604,7 +604,7 @@ instance [Pow G M] : Pow (Germ l G) M :=
 lean 3 declaration is
   forall {α : Type.{u1}} {l : Filter.{u1} α} {M : Type.{u2}} {G : Type.{u3}} [_inst_1 : SMul.{u2, u3} M G] (n : M) (f : α -> G), Eq.{succ (max u1 u3)} (Filter.Germ.{u1, u3} α l G) ((fun (a : Type.{max u1 u3}) (b : Type.{max u1 u3}) [self : HasLiftT.{succ (max u1 u3), succ (max u1 u3)} a b] => self.0) (α -> G) (Filter.Germ.{u1, u3} α l G) (HasLiftT.mk.{succ (max u1 u3), succ (max u1 u3)} (α -> G) (Filter.Germ.{u1, u3} α l G) (CoeTCₓ.coe.{succ (max u1 u3), succ (max u1 u3)} (α -> G) (Filter.Germ.{u1, u3} α l G) (Filter.Germ.hasCoeT.{u1, u3} α G l))) (SMul.smul.{u2, max u1 u3} M (α -> G) (Function.hasSMul.{u1, u2, u3} α M G _inst_1) n f)) (SMul.smul.{u2, max u1 u3} M (Filter.Germ.{u1, u3} α l G) (Filter.Germ.hasSmul.{u1, u2, u3} α l M G _inst_1) n ((fun (a : Sort.{max (succ u1) (succ u3)}) (b : Type.{max u1 u3}) [self : HasLiftT.{max (succ u1) (succ u3), succ (max u1 u3)} a b] => self.0) (α -> G) (Filter.Germ.{u1, u3} α l G) (HasLiftT.mk.{max (succ u1) (succ u3), succ (max u1 u3)} (α -> G) (Filter.Germ.{u1, u3} α l G) (CoeTCₓ.coe.{max (succ u1) (succ u3), succ (max u1 u3)} (α -> G) (Filter.Germ.{u1, u3} α l G) (Filter.Germ.hasCoeT.{u1, u3} α G l))) f))
 but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {M : Type.{u3}} {G : Type.{u2}} [_inst_1 : SMul.{u3, u2} M G] (n : M) (f : α -> G), Eq.{max (succ u1) (succ u2)} (Filter.Germ.{u1, u2} α l G) (Filter.Germ.ofFun.{u1, u2} α G l (HSMul.hSMul.{u3, max u1 u2, max u1 u2} M (α -> G) (α -> G) (instHSMul.{u3, max u1 u2} M (α -> G) (Pi.instSMul.{u1, u2, u3} α M (fun (a._@.Mathlib.Order.Filter.Germ._hyg.3203 : α) => G) (fun (i : α) => _inst_1))) n f)) (HSMul.hSMul.{u3, max u1 u2, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.{u1, u2} α l G) (instHSMul.{u3, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.sMul.{u1, u3, u2} α l M G _inst_1)) n (Filter.Germ.ofFun.{u1, u2} α G l f))
+  forall {α : Type.{u1}} {l : Filter.{u1} α} {M : Type.{u3}} {G : Type.{u2}} [_inst_1 : SMul.{u3, u2} M G] (n : M) (f : α -> G), Eq.{max (succ u1) (succ u2)} (Filter.Germ.{u1, u2} α l G) (Filter.Germ.ofFun.{u1, u2} α G l (HSMul.hSMul.{u3, max u1 u2, max u1 u2} M (α -> G) (α -> G) (instHSMul.{u3, max u1 u2} M (α -> G) (Pi.instSMul.{u1, u2, u3} α M (fun (a._@.Mathlib.Order.Filter.Germ._hyg.3203 : α) => G) (fun (i : α) => _inst_1))) n f)) (HSMul.hSMul.{u3, max u1 u2, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.{u1, u2} α l G) (instHSMul.{u3, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.smul.{u1, u3, u2} α l M G _inst_1)) n (Filter.Germ.ofFun.{u1, u2} α G l f))
 Case conversion may be inaccurate. Consider using '#align filter.germ.coe_smul Filter.Germ.coe_smulₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_smul [SMul M G] (n : M) (f : α → G) : ↑(n • f) = (n • f : Germ l G) :=
@@ -616,7 +616,7 @@ theorem coe_smul [SMul M G] (n : M) (f : α → G) : ↑(n • f) = (n • f : G
 lean 3 declaration is
   forall {α : Type.{u1}} {l : Filter.{u1} α} {M : Type.{u2}} {G : Type.{u3}} [_inst_1 : SMul.{u2, u3} M G] (n : M) (a : G), Eq.{succ (max u1 u3)} (Filter.Germ.{u1, u3} α l G) ((fun (a : Type.{u3}) (b : Type.{max u1 u3}) [self : HasLiftT.{succ u3, succ (max u1 u3)} a b] => self.0) G (Filter.Germ.{u1, u3} α l G) (Filter.Germ.hasLiftT.{u1, u3} α G l) (SMul.smul.{u2, u3} M G _inst_1 n a)) (SMul.smul.{u2, max u1 u3} M (Filter.Germ.{u1, u3} α l G) (Filter.Germ.hasSmul.{u1, u2, u3} α l M G _inst_1) n ((fun (a : Type.{u3}) (b : Type.{max u1 u3}) [self : HasLiftT.{succ u3, succ (max u1 u3)} a b] => self.0) G (Filter.Germ.{u1, u3} α l G) (Filter.Germ.hasLiftT.{u1, u3} α G l) a))
 but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {M : Type.{u3}} {G : Type.{u2}} [_inst_1 : SMul.{u3, u2} M G] (n : M) (a : G), Eq.{max (succ u1) (succ u2)} (Filter.Germ.{u1, u2} α l G) (Filter.Germ.const.{u1, u2} α G l (HSMul.hSMul.{u3, u2, u2} M G G (instHSMul.{u3, u2} M G _inst_1) n a)) (HSMul.hSMul.{u3, max u1 u2, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.{u1, u2} α l G) (instHSMul.{u3, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.sMul.{u1, u3, u2} α l M G _inst_1)) n (Filter.Germ.const.{u1, u2} α G l a))
+  forall {α : Type.{u1}} {l : Filter.{u1} α} {M : Type.{u3}} {G : Type.{u2}} [_inst_1 : SMul.{u3, u2} M G] (n : M) (a : G), Eq.{max (succ u1) (succ u2)} (Filter.Germ.{u1, u2} α l G) (Filter.Germ.const.{u1, u2} α G l (HSMul.hSMul.{u3, u2, u2} M G G (instHSMul.{u3, u2} M G _inst_1) n a)) (HSMul.hSMul.{u3, max u1 u2, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.{u1, u2} α l G) (instHSMul.{u3, max u1 u2} M (Filter.Germ.{u1, u2} α l G) (Filter.Germ.smul.{u1, u3, u2} α l M G _inst_1)) n (Filter.Germ.const.{u1, u2} α G l a))
 Case conversion may be inaccurate. Consider using '#align filter.germ.const_smul Filter.Germ.const_smulₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem const_smul [SMul M G] (n : M) (a : G) : (↑(n • a) : Germ l G) = n • ↑a :=
@@ -934,14 +934,14 @@ theorem const_le_iff [LE β] [NeBot l] {x y : β} : (↑x : Germ l β) ≤ ↑y 
 instance [Preorder β] : Preorder (Germ l β)
     where
   le := (· ≤ ·)
-  le_refl f := inductionOn f <| EventuallyLe.refl l
-  le_trans f₁ f₂ f₃ := inductionOn₃ f₁ f₂ f₃ fun f₁ f₂ f₃ => EventuallyLe.trans
+  le_refl f := inductionOn f <| EventuallyLE.refl l
+  le_trans f₁ f₂ f₃ := inductionOn₃ f₁ f₂ f₃ fun f₁ f₂ f₃ => EventuallyLE.trans
 
 instance [PartialOrder β] : PartialOrder (Germ l β) :=
   { Germ.preorder with
     le := (· ≤ ·)
     le_antisymm := fun f g =>
-      inductionOn₂ f g fun f g h₁ h₂ => (EventuallyLe.antisymm h₁ h₂).germ_eq }
+      inductionOn₂ f g fun f g h₁ h₂ => (EventuallyLE.antisymm h₁ h₂).germ_eq }
 
 instance [Bot β] : Bot (Germ l β) :=
   ⟨↑(⊥ : β)⟩

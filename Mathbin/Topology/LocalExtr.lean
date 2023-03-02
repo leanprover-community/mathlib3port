@@ -882,11 +882,11 @@ section Eventually
 
 variable [Preorder β] {s : Set α}
 
-#print Filter.EventuallyLe.isLocalMaxOn /-
-theorem Filter.EventuallyLe.isLocalMaxOn {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f)
+#print Filter.EventuallyLE.isLocalMaxOn /-
+theorem Filter.EventuallyLE.isLocalMaxOn {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f)
     (hfga : f a = g a) (h : IsLocalMaxOn f s a) : IsLocalMaxOn g s a :=
   hle.IsMaxFilter hfga h
-#align filter.eventually_le.is_local_max_on Filter.EventuallyLe.isLocalMaxOn
+#align filter.eventually_le.is_local_max_on Filter.EventuallyLE.isLocalMaxOn
 -/
 
 #print IsLocalMaxOn.congr /-
@@ -903,11 +903,11 @@ theorem Filter.EventuallyEq.isLocalMaxOn_iff {f g : α → β} {a : α} (heq : f
 #align filter.eventually_eq.is_local_max_on_iff Filter.EventuallyEq.isLocalMaxOn_iff
 -/
 
-#print Filter.EventuallyLe.isLocalMinOn /-
-theorem Filter.EventuallyLe.isLocalMinOn {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝[s] a] g)
+#print Filter.EventuallyLE.isLocalMinOn /-
+theorem Filter.EventuallyLE.isLocalMinOn {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝[s] a] g)
     (hfga : f a = g a) (h : IsLocalMinOn f s a) : IsLocalMinOn g s a :=
   hle.IsMinFilter hfga h
-#align filter.eventually_le.is_local_min_on Filter.EventuallyLe.isLocalMinOn
+#align filter.eventually_le.is_local_min_on Filter.EventuallyLE.isLocalMinOn
 -/
 
 #print IsLocalMinOn.congr /-
@@ -938,11 +938,11 @@ theorem Filter.EventuallyEq.isLocalExtrOn_iff {f g : α → β} {a : α} (heq : 
 #align filter.eventually_eq.is_local_extr_on_iff Filter.EventuallyEq.isLocalExtrOn_iff
 -/
 
-#print Filter.EventuallyLe.isLocalMax /-
-theorem Filter.EventuallyLe.isLocalMax {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝 a] f) (hfga : f a = g a)
+#print Filter.EventuallyLE.isLocalMax /-
+theorem Filter.EventuallyLE.isLocalMax {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝 a] f) (hfga : f a = g a)
     (h : IsLocalMax f a) : IsLocalMax g a :=
   hle.IsMaxFilter hfga h
-#align filter.eventually_le.is_local_max Filter.EventuallyLe.isLocalMax
+#align filter.eventually_le.is_local_max Filter.EventuallyLE.isLocalMax
 -/
 
 #print IsLocalMax.congr /-
@@ -959,11 +959,11 @@ theorem Filter.EventuallyEq.isLocalMax_iff {f g : α → β} {a : α} (heq : f =
 #align filter.eventually_eq.is_local_max_iff Filter.EventuallyEq.isLocalMax_iff
 -/
 
-#print Filter.EventuallyLe.isLocalMin /-
-theorem Filter.EventuallyLe.isLocalMin {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝 a] g) (hfga : f a = g a)
+#print Filter.EventuallyLE.isLocalMin /-
+theorem Filter.EventuallyLE.isLocalMin {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝 a] g) (hfga : f a = g a)
     (h : IsLocalMin f a) : IsLocalMin g a :=
   hle.IsMinFilter hfga h
-#align filter.eventually_le.is_local_min Filter.EventuallyLe.isLocalMin
+#align filter.eventually_le.is_local_min Filter.EventuallyLE.isLocalMin
 -/
 
 #print IsLocalMin.congr /-
