@@ -998,5 +998,5 @@ instance toNormedCommRing [NormedCommRing R] [SubringClass S R] (s : S) : Normed
 end SubringClass
 
 -- Guard again import creep.
-assert_not_exists restrict_scalars
+assert_not_exists RestrictScalars
 

@@ -385,7 +385,7 @@ then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
 -/
 def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)] :
     colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit :=
-  asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimitCoyonedaIso (op d)
+  asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ Coyoneda.colimitCoyonedaIso (op d)
 #align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
 
 theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}

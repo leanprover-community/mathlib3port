@@ -115,39 +115,59 @@ instance : AddCommMonoid (SetSemiring α)
   add_zero := union_empty
   add_comm := union_comm
 
+/- warning: set_semiring.zero_def -> SetSemiring.zero_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (SetSemiring.{u1} α) (OfNat.ofNat.{u1} (SetSemiring.{u1} α) 0 (OfNat.mk.{u1} (SetSemiring.{u1} α) 0 (Zero.zero.{u1} (SetSemiring.{u1} α) (AddZeroClass.toHasZero.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.addCommMonoid.{u1} α))))))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) => (Set.{u1} α) -> (SetSemiring.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (SetSemiring.{u1} α) (OfNat.ofNat.{u1} (SetSemiring.{u1} α) 0 (Zero.toOfNat0.{u1} (SetSemiring.{u1} α) (AddMonoid.toZero.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.instAddCommMonoidSetSemiring.{u1} α))))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.{u1} α) (fun (_x : Set.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Set.{u1} α) => SetSemiring.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align set_semiring.zero_def SetSemiring.zero_defₓ'. -/
 theorem zero_def : (0 : SetSemiring α) = Set.up ∅ :=
   rfl
 #align set_semiring.zero_def SetSemiring.zero_def
 
+#print SetSemiring.down_zero /-
 @[simp]
 theorem down_zero : (0 : SetSemiring α).down = ∅ :=
   rfl
 #align set_semiring.down_zero SetSemiring.down_zero
+-/
 
+#print Set.up_empty /-
 @[simp]
 theorem Set.up_empty : (∅ : Set α).up = 0 :=
   rfl
 #align set.up_empty Set.up_empty
+-/
 
+/- warning: set_semiring.add_def -> SetSemiring.add_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : SetSemiring.{u1} α) (t : SetSemiring.{u1} α), Eq.{succ u1} (SetSemiring.{u1} α) (HAdd.hAdd.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHAdd.{u1} (SetSemiring.{u1} α) (AddZeroClass.toHasAdd.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.addCommMonoid.{u1} α))))) s t) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) => (Set.{u1} α) -> (SetSemiring.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) => (SetSemiring.{u1} α) -> (Set.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) s) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) => (SetSemiring.{u1} α) -> (Set.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) t)))
+but is expected to have type
+  forall {α : Type.{u1}} (s : SetSemiring.{u1} α) (t : SetSemiring.{u1} α), Eq.{succ u1} (SetSemiring.{u1} α) (HAdd.hAdd.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHAdd.{u1} (SetSemiring.{u1} α) (AddZeroClass.toAdd.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.instAddCommMonoidSetSemiring.{u1} α))))) s t) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.{u1} α) (fun (_x : Set.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Set.{u1} α) => SetSemiring.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.{u1} α) (fun (_x : SetSemiring.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) s) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.{u1} α) (fun (_x : SetSemiring.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) t)))
+Case conversion may be inaccurate. Consider using '#align set_semiring.add_def SetSemiring.add_defₓ'. -/
 theorem add_def (s t : SetSemiring α) : s + t = (s.down ∪ t.down).up :=
   rfl
 #align set_semiring.add_def SetSemiring.add_def
 
+#print SetSemiring.down_add /-
 @[simp]
 theorem down_add (s t : SetSemiring α) : (s + t).down = s.down ∪ t.down :=
   rfl
 #align set_semiring.down_add SetSemiring.down_add
+-/
 
+#print Set.up_union /-
 @[simp]
 theorem Set.up_union (s t : Set α) : (s ∪ t).up = s.up + t.up :=
   rfl
 #align set.up_union Set.up_union
+-/
 
 /- warning: set_semiring.covariant_class_add -> SetSemiring.covariantClass_add is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}}, CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (HAdd.hAdd.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHAdd.{u1} (SetSemiring.{u1} α) (AddZeroClass.toHasAdd.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.addCommMonoid.{u1} α)))))) (LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (SetSemiring.partialOrder.{u1} α))))
 but is expected to have type
-  forall {α : Type.{u1}}, CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.341 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.343 : SetSemiring.{u1} α) => HAdd.hAdd.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHAdd.{u1} (SetSemiring.{u1} α) (AddZeroClass.toAdd.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.instAddCommMonoidSetSemiring.{u1} α))))) x._@.Mathlib.Data.Set.Semiring._hyg.341 x._@.Mathlib.Data.Set.Semiring._hyg.343) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.356 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.358 : SetSemiring.{u1} α) => LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (instPartialOrderSetSemiring.{u1} α))) x._@.Mathlib.Data.Set.Semiring._hyg.356 x._@.Mathlib.Data.Set.Semiring._hyg.358)
+  forall {α : Type.{u1}}, CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.470 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.472 : SetSemiring.{u1} α) => HAdd.hAdd.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHAdd.{u1} (SetSemiring.{u1} α) (AddZeroClass.toAdd.{u1} (SetSemiring.{u1} α) (AddMonoid.toAddZeroClass.{u1} (SetSemiring.{u1} α) (AddCommMonoid.toAddMonoid.{u1} (SetSemiring.{u1} α) (SetSemiring.instAddCommMonoidSetSemiring.{u1} α))))) x._@.Mathlib.Data.Set.Semiring._hyg.470 x._@.Mathlib.Data.Set.Semiring._hyg.472) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.485 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.487 : SetSemiring.{u1} α) => LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (instPartialOrderSetSemiring.{u1} α))) x._@.Mathlib.Data.Set.Semiring._hyg.485 x._@.Mathlib.Data.Set.Semiring._hyg.487)
 Case conversion may be inaccurate. Consider using '#align set_semiring.covariant_class_add SetSemiring.covariantClass_addₓ'. -/
 /- Since addition on `set_semiring` is commutative (it is set union), there is no need
 to also have the instance `covariant_class (set_semiring α) (set_semiring α) (swap (+)) (≤)`. -/
@@ -168,19 +188,29 @@ instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
     left_distrib := fun _ _ _ => mul_union
     right_distrib := fun _ _ _ => union_mul }
 
+/- warning: set_semiring.mul_def -> SetSemiring.mul_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (s : SetSemiring.{u1} α) (t : SetSemiring.{u1} α), Eq.{succ u1} (SetSemiring.{u1} α) (HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (Distrib.toHasMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toDistrib.{u1} (SetSemiring.{u1} α) (SetSemiring.nonUnitalNonAssocSemiring.{u1} α _inst_1)))) s t) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) => (Set.{u1} α) -> (SetSemiring.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) => (SetSemiring.{u1} α) -> (Set.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) s) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) => (SetSemiring.{u1} α) -> (Set.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) t)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (s : SetSemiring.{u1} α) (t : SetSemiring.{u1} α), Eq.{succ u1} (SetSemiring.{u1} α) (HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toMul.{u1} (SetSemiring.{u1} α) (SetSemiring.instNonUnitalNonAssocSemiringSetSemiring.{u1} α _inst_1))) s t) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.{u1} α) (fun (_x : Set.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Set.{u1} α) => SetSemiring.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) s) ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) t) ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) s) (instHMul.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) s) (Set.mul.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.{u1} α) (fun (_x : SetSemiring.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) s) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.{u1} α) (fun (_x : SetSemiring.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : SetSemiring.{u1} α) => Set.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (SetSemiring.{u1} α) (Set.{u1} α)) (SetSemiring.down.{u1} α) t)))
+Case conversion may be inaccurate. Consider using '#align set_semiring.mul_def SetSemiring.mul_defₓ'. -/
 theorem mul_def (s t : SetSemiring α) : s * t = (s.down * t.down).up :=
   rfl
 #align set_semiring.mul_def SetSemiring.mul_def
 
+#print SetSemiring.down_mul /-
 @[simp]
 theorem down_mul (s t : SetSemiring α) : (s + t).down = s.down ∪ t.down :=
   rfl
 #align set_semiring.down_mul SetSemiring.down_mul
+-/
 
+#print Set.up_mul /-
 @[simp]
 theorem Set.up_mul (s t : Set α) : (s * t).up = s.up * t.up :=
   rfl
 #align set.up_mul Set.up_mul
+-/
 
 instance : NoZeroDivisors (SetSemiring α) :=
   ⟨fun a b ab =>
@@ -192,7 +222,7 @@ instance : NoZeroDivisors (SetSemiring α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (Distrib.toHasMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toDistrib.{u1} (SetSemiring.{u1} α) (SetSemiring.nonUnitalNonAssocSemiring.{u1} α _inst_1))))) (LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (SetSemiring.partialOrder.{u1} α))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.533 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.535 : SetSemiring.{u1} α) => HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toMul.{u1} (SetSemiring.{u1} α) (SetSemiring.instNonUnitalNonAssocSemiringSetSemiring.{u1} α _inst_1))) x._@.Mathlib.Data.Set.Semiring._hyg.533 x._@.Mathlib.Data.Set.Semiring._hyg.535) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.548 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.550 : SetSemiring.{u1} α) => LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (instPartialOrderSetSemiring.{u1} α))) x._@.Mathlib.Data.Set.Semiring._hyg.548 x._@.Mathlib.Data.Set.Semiring._hyg.550)
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.746 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.748 : SetSemiring.{u1} α) => HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toMul.{u1} (SetSemiring.{u1} α) (SetSemiring.instNonUnitalNonAssocSemiringSetSemiring.{u1} α _inst_1))) x._@.Mathlib.Data.Set.Semiring._hyg.746 x._@.Mathlib.Data.Set.Semiring._hyg.748) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.761 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.763 : SetSemiring.{u1} α) => LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (instPartialOrderSetSemiring.{u1} α))) x._@.Mathlib.Data.Set.Semiring._hyg.761 x._@.Mathlib.Data.Set.Semiring._hyg.763)
 Case conversion may be inaccurate. Consider using '#align set_semiring.covariant_class_mul_left SetSemiring.covariantClass_mul_leftₓ'. -/
 instance covariantClass_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_left⟩
@@ -202,7 +232,7 @@ instance covariantClass_mul_left : CovariantClass (SetSemiring α) (SetSemiring 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (ᾰ : SetSemiring.{u1} α) (ᾰ : SetSemiring.{u1} α) => SetSemiring.{u1} α) (HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (Distrib.toHasMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toDistrib.{u1} (SetSemiring.{u1} α) (SetSemiring.nonUnitalNonAssocSemiring.{u1} α _inst_1)))))) (LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (SetSemiring.partialOrder.{u1} α))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (ᾰ : SetSemiring.{u1} α) (ᾰ : SetSemiring.{u1} α) => SetSemiring.{u1} α) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.593 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.595 : SetSemiring.{u1} α) => HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toMul.{u1} (SetSemiring.{u1} α) (SetSemiring.instNonUnitalNonAssocSemiringSetSemiring.{u1} α _inst_1))) x._@.Mathlib.Data.Set.Semiring._hyg.593 x._@.Mathlib.Data.Set.Semiring._hyg.595)) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.608 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.610 : SetSemiring.{u1} α) => LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (instPartialOrderSetSemiring.{u1} α))) x._@.Mathlib.Data.Set.Semiring._hyg.608 x._@.Mathlib.Data.Set.Semiring._hyg.610)
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α], CovariantClass.{u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (Function.swap.{succ u1, succ u1, succ u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (fun (ᾰ : SetSemiring.{u1} α) (ᾰ : SetSemiring.{u1} α) => SetSemiring.{u1} α) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.806 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.808 : SetSemiring.{u1} α) => HMul.hMul.{u1, u1, u1} (SetSemiring.{u1} α) (SetSemiring.{u1} α) (SetSemiring.{u1} α) (instHMul.{u1} (SetSemiring.{u1} α) (NonUnitalNonAssocSemiring.toMul.{u1} (SetSemiring.{u1} α) (SetSemiring.instNonUnitalNonAssocSemiringSetSemiring.{u1} α _inst_1))) x._@.Mathlib.Data.Set.Semiring._hyg.806 x._@.Mathlib.Data.Set.Semiring._hyg.808)) (fun (x._@.Mathlib.Data.Set.Semiring._hyg.821 : SetSemiring.{u1} α) (x._@.Mathlib.Data.Set.Semiring._hyg.823 : SetSemiring.{u1} α) => LE.le.{u1} (SetSemiring.{u1} α) (Preorder.toLE.{u1} (SetSemiring.{u1} α) (PartialOrder.toPreorder.{u1} (SetSemiring.{u1} α) (instPartialOrderSetSemiring.{u1} α))) x._@.Mathlib.Data.Set.Semiring._hyg.821 x._@.Mathlib.Data.Set.Semiring._hyg.823)
 Case conversion may be inaccurate. Consider using '#align set_semiring.covariant_class_mul_right SetSemiring.covariantClass_mul_rightₓ'. -/
 instance covariantClass_mul_right :
     CovariantClass (SetSemiring α) (SetSemiring α) (swap (· * ·)) (· ≤ ·) :=
@@ -217,19 +247,29 @@ variable [One α]
 
 instance : One (SetSemiring α) where one := Set.up 1
 
+/- warning: set_semiring.one_def -> SetSemiring.one_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α], Eq.{succ u1} (SetSemiring.{u1} α) (OfNat.ofNat.{u1} (SetSemiring.{u1} α) 1 (OfNat.mk.{u1} (SetSemiring.{u1} α) 1 (One.one.{u1} (SetSemiring.{u1} α) (SetSemiring.hasOne.{u1} α _inst_1)))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) => (Set.{u1} α) -> (SetSemiring.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (OfNat.mk.{u1} (Set.{u1} α) 1 (One.one.{u1} (Set.{u1} α) (Set.one.{u1} α _inst_1)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α], Eq.{succ u1} (SetSemiring.{u1} α) (OfNat.ofNat.{u1} (SetSemiring.{u1} α) 1 (One.toOfNat1.{u1} (SetSemiring.{u1} α) (SetSemiring.instOneSetSemiring.{u1} α _inst_1))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.{u1} α) (fun (_x : Set.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Set.{u1} α) => SetSemiring.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Set.{u1} α) (SetSemiring.{u1} α)) (Set.up.{u1} α) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (One.toOfNat1.{u1} (Set.{u1} α) (Set.one.{u1} α _inst_1))))
+Case conversion may be inaccurate. Consider using '#align set_semiring.one_def SetSemiring.one_defₓ'. -/
 theorem one_def : (1 : SetSemiring α) = Set.up 1 :=
   rfl
 #align set_semiring.one_def SetSemiring.one_def
 
+#print SetSemiring.down_one /-
 @[simp]
 theorem down_one : (1 : SetSemiring α).down = 1 :=
   rfl
 #align set_semiring.down_one SetSemiring.down_one
+-/
 
+#print Set.up_one /-
 @[simp]
 theorem Set.up_one : (1 : Set α).up = 1 :=
   rfl
 #align set.up_one Set.up_one
+-/
 
 end One
 
