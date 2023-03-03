@@ -47,7 +47,7 @@ namespace Emetric
 
 section InfEdist
 
-variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] {x y : α} {s t : Set α} {Φ : α → β}
+variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] {x y : α} {s t : Set α} {Φ : α → β}
 
 /-! ### Distance of a point to a set as a function into `ℝ≥0∞`. -/
 
@@ -146,7 +146,7 @@ theorem infEdist_closure : infEdist x (closure s) = infEdist x s :=
     ENNReal.lt_add_right h.ne ε0.ne'
   rcases inf_edist_lt_iff.mp this with ⟨y, ycs, hy⟩
   -- y : α,  ycs : y ∈ closure s,  hy : edist x y < inf_edist x (closure s) + ↑ε / 2
-  rcases Emetric.mem_closure_iff.1 ycs (ε / 2) ε0 with ⟨z, zs, dyz⟩
+  rcases EMetric.mem_closure_iff.1 ycs (ε / 2) ε0 with ⟨z, zs, dyz⟩
   -- z : α,  zs : z ∈ s,  dyz : edist y z < ↑ε / 2
   calc
     inf_edist x s ≤ edist x z := inf_edist_le_edist_of_mem zs
@@ -161,7 +161,7 @@ theorem mem_closure_iff_infEdist_zero : x ∈ closure s ↔ infEdist x s = 0 :=
   ⟨fun h => by
     rw [← inf_edist_closure]
     exact inf_edist_zero_of_mem h, fun h =>
-    Emetric.mem_closure_iff.2 fun ε εpos => infEdist_lt_iff.mp <| by rwa [h]⟩
+    EMetric.mem_closure_iff.2 fun ε εpos => infEdist_lt_iff.mp <| by rwa [h]⟩
 #align emetric.mem_closure_iff_inf_edist_zero Emetric.mem_closure_iff_infEdist_zero
 
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum edistance to this set vanishes -/
@@ -265,17 +265,17 @@ end InfEdist
 --section
 /-- The Hausdorff edistance between two sets is the smallest `r` such that each set
 is contained in the `r`-neighborhood of the other one -/
-irreducible_def hausdorffEdist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
+irreducible_def hausdorffEdist {α : Type u} [PseudoEMetricSpace α] (s t : Set α) : ℝ≥0∞ :=
   (⨆ x ∈ s, infEdist x t) ⊔ ⨆ y ∈ t, infEdist y s
 #align emetric.Hausdorff_edist Emetric.hausdorffEdist
 
-theorem hausdorffEdist_def {α : Type u} [PseudoEmetricSpace α] (s t : Set α) :
+theorem hausdorffEdist_def {α : Type u} [PseudoEMetricSpace α] (s t : Set α) :
     hausdorffEdist s t = (⨆ x ∈ s, infEdist x t) ⊔ ⨆ y ∈ t, infEdist y s := by rw [Hausdorff_edist]
 #align emetric.Hausdorff_edist_def Emetric.hausdorffEdist_def
 
 section HausdorffEdist
 
-variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] {x y : α} {s t u : Set α} {Φ : α → β}
+variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] {x y : α} {s t u : Set α} {Φ : α → β}
 
 /-- The Hausdorff edistance of a set to itself vanishes -/
 @[simp]
@@ -604,7 +604,7 @@ theorem disjoint_closedBall_of_lt_infDist {r : ℝ} (h : r < infDist x s) :
 theorem dist_le_infDist_add_diam (hs : Bounded s) (hy : y ∈ s) : dist x y ≤ infDist x s + diam s :=
   by
   have A : inf_edist x s ≠ ∞ := inf_edist_ne_top ⟨y, hy⟩
-  have B : Emetric.diam s ≠ ∞ := hs.ediam_ne_top
+  have B : EMetric.diam s ≠ ∞ := hs.ediam_ne_top
   rw [inf_dist, diam, ← ENNReal.toReal_add A B, dist_edist]
   apply (ENNReal.toReal_le_toReal _ _).2
   · exact edist_le_inf_edist_add_ediam hy
@@ -985,7 +985,7 @@ end
 --section
 section Thickening
 
-variable [PseudoEmetricSpace α] {δ : ℝ} {s : Set α} {x : α}
+variable [PseudoEMetricSpace α] {δ : ℝ} {s : Set α} {x : α}
 
 open Emetric
 
@@ -1114,7 +1114,7 @@ end Thickening
 --section
 section Cthickening
 
-variable [PseudoEmetricSpace α] {δ ε : ℝ} {s t : Set α} {x : α}
+variable [PseudoEMetricSpace α] {δ ε : ℝ} {s t : Set α} {x : α}
 
 open Emetric
 
@@ -1300,7 +1300,7 @@ theorem thickening_unionᵢ (δ : ℝ) (f : ι → Set α) :
   simp_rw [thickening, inf_edist_Union, infᵢ_lt_iff, set_of_exists]
 #align metric.thickening_Union Metric.thickening_unionᵢ
 
-theorem ediam_cthickening_le (ε : ℝ≥0) : Emetric.diam (cthickening ε s) ≤ Emetric.diam s + 2 * ε :=
+theorem ediam_cthickening_le (ε : ℝ≥0) : EMetric.diam (cthickening ε s) ≤ EMetric.diam s + 2 * ε :=
   by
   refine' diam_le fun x hx y hy => ENNReal.le_of_forall_pos_le_add fun δ hδ _ => _
   rw [mem_cthickening_iff, ENNReal.ofReal_coe_nnreal] at hx hy
@@ -1322,8 +1322,8 @@ theorem ediam_cthickening_le (ε : ℝ≥0) : Emetric.diam (cthickening ε s) �
   abel
 #align metric.ediam_cthickening_le Metric.ediam_cthickening_le
 
-theorem ediam_thickening_le (ε : ℝ≥0) : Emetric.diam (thickening ε s) ≤ Emetric.diam s + 2 * ε :=
-  (Emetric.diam_mono <| thickening_subset_cthickening _ _).trans <| ediam_cthickening_le _
+theorem ediam_thickening_le (ε : ℝ≥0) : EMetric.diam (thickening ε s) ≤ EMetric.diam s + 2 * ε :=
+  (EMetric.diam_mono <| thickening_subset_cthickening _ _).trans <| ediam_cthickening_le _
 #align metric.ediam_thickening_le Metric.ediam_thickening_le
 
 theorem diam_cthickening_le {α : Type _} [PseudoMetricSpace α] (s : Set α) (hε : 0 ≤ ε) :

@@ -54,7 +54,7 @@ namespace SimpleFunc
 /-! ### Pointwise approximation by simple functions -/
 
 
-variable [MeasurableSpace α] [PseudoEmetricSpace α] [OpensMeasurableSpace α]
+variable [MeasurableSpace α] [PseudoEMetricSpace α] [OpensMeasurableSpace α]
 
 /-- `nearest_pt_ind e N x` is the index `k` such that `e k` is the nearest point to `x` among the
 points `e 0`, ..., `e N`. If more than one point are at the same distance from `x`, then
@@ -122,7 +122,7 @@ theorem tendsto_nearestPt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e
     Tendsto (fun N => nearestPt e N x) atTop (𝓝 x) :=
   by
   refine' (at_top_basis.tendsto_iff nhds_basis_eball).2 fun ε hε => _
-  rcases Emetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
+  rcases EMetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
   rw [edist_comm] at hN
   exact ⟨N, trivial, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
 #align measure_theory.simple_func.tendsto_nearest_pt MeasureTheory.SimpleFunc.tendsto_nearestPt

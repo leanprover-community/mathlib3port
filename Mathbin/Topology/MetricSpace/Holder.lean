@@ -46,7 +46,7 @@ open NNReal ENNReal Topology
 
 section Emetric
 
-variable [PseudoEmetricSpace X] [PseudoEmetricSpace Y] [PseudoEmetricSpace Z]
+variable [PseudoEMetricSpace X] [PseudoEMetricSpace Y] [PseudoEMetricSpace Z]
 
 /-- A function `f : X → Y` between two `pseudo_emetric_space`s is Hölder continuous with constant
 `C : ℝ≥0` and exponent `r : ℝ≥0`, if `edist (f x) (f y) ≤ C * edist x y ^ r` for all `x y : X`. -/
@@ -141,7 +141,7 @@ theorem comp_holderWith {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : Holder
 protected theorem uniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) :
     UniformContinuousOn f s :=
   by
-  refine' Emetric.uniformContinuousOn_iff.2 fun ε εpos => _
+  refine' EMetric.uniformContinuousOn_iff.2 fun ε εpos => _
   have : tendsto (fun d : ℝ≥0∞ => (C : ℝ≥0∞) * d ^ (r : ℝ)) (𝓝 0) (𝓝 0) :=
     ENNReal.tendsto_const_mul_rpow_nhds_zero_of_pos ENNReal.coe_ne_top h0
   rcases ennreal.nhds_zero_basis.mem_iff.1 (this (gt_mem_nhds εpos)) with ⟨δ, δ0, H⟩
@@ -156,35 +156,35 @@ protected theorem mono (hf : HolderOnWith C r f s) (ht : t ⊆ s) : HolderOnWith
   fun x hx y hy => hf.edist_le (ht hx) (ht hy)
 #align holder_on_with.mono HolderOnWith.mono
 
-theorem ediam_image_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞} (hd : Emetric.diam s ≤ d) :
-    Emetric.diam (f '' s) ≤ C * d ^ (r : ℝ) :=
-  Emetric.diam_image_le_iff.2 fun x hx y hy =>
-    hf.edist_le_of_le hx hy <| (Emetric.edist_le_diam_of_mem hx hy).trans hd
+theorem ediam_image_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞} (hd : EMetric.diam s ≤ d) :
+    EMetric.diam (f '' s) ≤ C * d ^ (r : ℝ) :=
+  EMetric.diam_image_le_iff.2 fun x hx y hy =>
+    hf.edist_le_of_le hx hy <| (EMetric.edist_le_diam_of_mem hx hy).trans hd
 #align holder_on_with.ediam_image_le_of_le HolderOnWith.ediam_image_le_of_le
 
 theorem ediam_image_le (hf : HolderOnWith C r f s) :
-    Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=
+    EMetric.diam (f '' s) ≤ C * EMetric.diam s ^ (r : ℝ) :=
   hf.ediam_image_le_of_le le_rfl
 #align holder_on_with.ediam_image_le HolderOnWith.ediam_image_le
 
 theorem ediam_image_le_of_subset (hf : HolderOnWith C r f s) (ht : t ⊆ s) :
-    Emetric.diam (f '' t) ≤ C * Emetric.diam t ^ (r : ℝ) :=
+    EMetric.diam (f '' t) ≤ C * EMetric.diam t ^ (r : ℝ) :=
   (hf.mono ht).ediam_image_le
 #align holder_on_with.ediam_image_le_of_subset HolderOnWith.ediam_image_le_of_subset
 
 theorem ediam_image_le_of_subset_of_le (hf : HolderOnWith C r f s) (ht : t ⊆ s) {d : ℝ≥0∞}
-    (hd : Emetric.diam t ≤ d) : Emetric.diam (f '' t) ≤ C * d ^ (r : ℝ) :=
+    (hd : EMetric.diam t ≤ d) : EMetric.diam (f '' t) ≤ C * d ^ (r : ℝ) :=
   (hf.mono ht).ediam_image_le_of_le hd
 #align holder_on_with.ediam_image_le_of_subset_of_le HolderOnWith.ediam_image_le_of_subset_of_le
 
 theorem ediam_image_inter_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞}
-    (hd : Emetric.diam t ≤ d) : Emetric.diam (f '' (t ∩ s)) ≤ C * d ^ (r : ℝ) :=
+    (hd : EMetric.diam t ≤ d) : EMetric.diam (f '' (t ∩ s)) ≤ C * d ^ (r : ℝ) :=
   hf.ediam_image_le_of_subset_of_le (inter_subset_right _ _) <|
-    (Emetric.diam_mono <| inter_subset_left _ _).trans hd
+    (EMetric.diam_mono <| inter_subset_left _ _).trans hd
 #align holder_on_with.ediam_image_inter_le_of_le HolderOnWith.ediam_image_inter_le_of_le
 
 theorem ediam_image_inter_le (hf : HolderOnWith C r f s) (t : Set X) :
-    Emetric.diam (f '' (t ∩ s)) ≤ C * Emetric.diam t ^ (r : ℝ) :=
+    EMetric.diam (f '' (t ∩ s)) ≤ C * EMetric.diam t ^ (r : ℝ) :=
   hf.ediam_image_inter_le_of_le le_rfl
 #align holder_on_with.ediam_image_inter_le HolderOnWith.ediam_image_inter_le
 
@@ -224,9 +224,9 @@ protected theorem continuous (hf : HolderWith C r f) (h0 : 0 < r) : Continuous f
 #align holder_with.continuous HolderWith.continuous
 
 theorem ediam_image_le (hf : HolderWith C r f) (s : Set X) :
-    Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=
-  Emetric.diam_image_le_iff.2 fun x hx y hy =>
-    hf.edist_le_of_le <| Emetric.edist_le_diam_of_mem hx hy
+    EMetric.diam (f '' s) ≤ C * EMetric.diam s ^ (r : ℝ) :=
+  EMetric.diam_image_le_iff.2 fun x hx y hy =>
+    hf.edist_le_of_le <| EMetric.edist_le_diam_of_mem hx hy
 #align holder_with.ediam_image_le HolderWith.ediam_image_le
 
 end HolderWith

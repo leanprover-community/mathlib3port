@@ -38,7 +38,7 @@ namespace Emetric
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
-instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
+instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
   classical
     /- We start with trivial observations about `1 / 2 ^ k`. Here and below we use `1 / 2 ^ k` in
       the comments and `2⁻¹ ^ k` in the code. -/
@@ -190,7 +190,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       exact not_lt.1 fun hlt => (Hgt I.1 hlt I.2).le_bot hI.some_spec
 
 -- see Note [lower instance priority]
-instance (priority := 100) normal_of_emetric [EmetricSpace α] : NormalSpace α :=
+instance (priority := 100) normal_of_emetric [EMetricSpace α] : NormalSpace α :=
   normal_of_paracompact_t2
 #align emetric.normal_of_emetric Emetric.normal_of_emetric
 

@@ -478,7 +478,7 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
 
 /-- In a metric space (or even a pseudo emetric space), an open set can be approximated from inside
 by closed sets. -/
-theorem ofPseudoEmetricSpace {X : Type _} [PseudoEmetricSpace X] [MeasurableSpace X]
+theorem ofPseudoEmetricSpace {X : Type _} [PseudoEMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) : InnerRegular μ IsClosed IsOpen :=
   by
   intro U hU r hr
@@ -684,7 +684,7 @@ theorem restrictOfMeasurableSet [BorelSpace α] [WeaklyRegular μ] (A : Set α) 
 
 -- see Note [lower instance priority]
 /-- Any finite measure on a metric space (or even a pseudo emetric space) is weakly regular. -/
-instance (priority := 100) ofPseudoEmetricSpaceOfIsFiniteMeasure {X : Type _} [PseudoEmetricSpace X]
+instance (priority := 100) ofPseudoEmetricSpaceOfIsFiniteMeasure {X : Type _} [PseudoEMetricSpace X]
     [MeasurableSpace X] [BorelSpace X] (μ : Measure X) [IsFiniteMeasure μ] : WeaklyRegular μ :=
   (InnerRegular.ofPseudoEmetricSpace μ).weaklyRegularOfFinite μ
 #align measure_theory.measure.weakly_regular.of_pseudo_emetric_space_of_is_finite_measure MeasureTheory.Measure.WeaklyRegular.ofPseudoEmetricSpaceOfIsFiniteMeasure
@@ -693,7 +693,7 @@ instance (priority := 100) ofPseudoEmetricSpaceOfIsFiniteMeasure {X : Type _} [P
 /-- Any locally finite measure on a second countable metric space (or even a pseudo emetric space)
 is weakly regular. -/
 instance (priority := 100) ofPseudoEmetricSecondCountableOfLocallyFinite {X : Type _}
-    [PseudoEmetricSpace X] [TopologicalSpace.SecondCountableTopology X] [MeasurableSpace X]
+    [PseudoEMetricSpace X] [TopologicalSpace.SecondCountableTopology X] [MeasurableSpace X]
     [BorelSpace X] (μ : Measure X) [IsLocallyFiniteMeasure μ] : WeaklyRegular μ :=
   haveI : outer_regular μ :=
     by
@@ -705,12 +705,12 @@ instance (priority := 100) ofPseudoEmetricSecondCountableOfLocallyFinite {X : Ty
 
 end WeaklyRegular
 
-attribute [local instance] Emetric.second_countable_of_sigma_compact
+attribute [local instance] EMetric.secondCountable_of_sigmaCompact
 
 -- see Note [lower instance priority]
 /-- Any locally finite measure on a `σ`-compact (e)metric space is regular. -/
 instance (priority := 100) Regular.ofSigmaCompactSpaceOfIsLocallyFiniteMeasure {X : Type _}
-    [EmetricSpace X] [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measure X)
+    [EMetricSpace X] [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measure X)
     [IsLocallyFiniteMeasure μ] : Regular μ
     where
   lt_top_of_isCompact K hK := hK.measure_lt_top

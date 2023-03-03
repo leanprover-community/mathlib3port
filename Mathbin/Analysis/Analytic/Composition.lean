@@ -795,10 +795,10 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     `min (r, rf, δ)` be this new radius.-/
   have : ContinuousAt f x := Hf.analytic_at.continuous_at
   obtain ⟨δ, δpos, hδ⟩ :
-    ∃ (δ : ℝ≥0∞)(H : 0 < δ), ∀ {z : E}, z ∈ Emetric.ball x δ → f z ∈ Emetric.ball (f x) rg :=
+    ∃ (δ : ℝ≥0∞)(H : 0 < δ), ∀ {z : E}, z ∈ EMetric.ball x δ → f z ∈ EMetric.ball (f x) rg :=
     by
-    have : Emetric.ball (f x) rg ∈ 𝓝 (f x) := Emetric.ball_mem_nhds _ Hg.r_pos
-    rcases Emetric.mem_nhds_iff.1 (Hf.analytic_at.continuous_at this) with ⟨δ, δpos, Hδ⟩
+    have : EMetric.ball (f x) rg ∈ 𝓝 (f x) := EMetric.ball_mem_nhds _ Hg.r_pos
+    rcases EMetric.mem_nhds_iff.1 (Hf.analytic_at.continuous_at this) with ⟨δ, δpos, Hδ⟩
     exact ⟨δ, δpos, fun z hz => Hδ hz⟩
   let rf' := min rf δ
   have min_pos : 0 < min rf' r := by
@@ -812,13 +812,13 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
   /- Let `y` satisfy `‖y‖ < min (r, rf', δ)`. We want to show that `g (f (x + y))` is the sum of
     `q.comp p` applied to `y`. -/
   -- First, check that `y` is small enough so that estimates for `f` and `g` apply.
-  have y_mem : y ∈ Emetric.ball (0 : E) rf :=
-    (Emetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_left _ _))) hy
-  have fy_mem : f (x + y) ∈ Emetric.ball (f x) rg :=
+  have y_mem : y ∈ EMetric.ball (0 : E) rf :=
+    (EMetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_left _ _))) hy
+  have fy_mem : f (x + y) ∈ EMetric.ball (f x) rg :=
     by
     apply hδ
-    have : y ∈ Emetric.ball (0 : E) δ :=
-      (Emetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_right _ _))) hy
+    have : y ∈ EMetric.ball (0 : E) δ :=
+      (EMetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_right _ _))) hy
     simpa [edist_eq_coe_nnnorm_sub, edist_eq_coe_nnnorm]
   /- Now the proof starts. To show that the sum of `q.comp p` at `y` is `g (f (x + y))`, we will
     write `q.comp p` applied to `y` as a big sum over all compositions. Since the sum is
@@ -855,8 +855,8 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       by
       refine' ContinuousAt.comp _ (continuous_const.add continuous_id).ContinuousAt
       simp only [add_sub_cancel'_right, id.def]
-      exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds Emetric.isOpen_ball fy_mem)
-    have B₂ : f (x + y) - f x ∈ Emetric.ball (0 : F) rg := by
+      exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds EMetric.isOpen_ball fy_mem)
+    have B₂ : f (x + y) - f x ∈ EMetric.ball (0 : F) rg := by
       simpa [edist_eq_coe_nnnorm, edist_eq_coe_nnnorm_sub] using fy_mem
     rw [← emetric.is_open_ball.nhds_within_eq B₂] at A
     convert Hg.tendsto_locally_uniformly_on.tendsto_comp B₁.continuous_within_at B₂ A
@@ -891,7 +891,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
           rw [Finset.prod_const, Finset.card_fin]
           apply pow_le_pow_of_le_left (norm_nonneg _)
-          rw [Emetric.mem_ball, edist_eq_coe_nnnorm] at hy
+          rw [EMetric.mem_ball, edist_eq_coe_nnnorm] at hy
           have := le_trans (le_of_lt hy) (min_le_right _ _)
           rwa [ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this
         

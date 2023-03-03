@@ -964,8 +964,8 @@ theorem edist_eq_coe_nnnorm' (x : E) : edist x 1 = (‖x‖₊ : ℝ≥0∞) := 
 #align edist_eq_coe_nnnorm edist_eq_coe_nnnorm
 
 @[to_additive]
-theorem mem_emetric_ball_one_iff {r : ℝ≥0∞} : a ∈ Emetric.ball (1 : E) r ↔ ↑‖a‖₊ < r := by
-  rw [Emetric.mem_ball, edist_eq_coe_nnnorm']
+theorem mem_emetric_ball_one_iff {r : ℝ≥0∞} : a ∈ EMetric.ball (1 : E) r ↔ ↑‖a‖₊ < r := by
+  rw [EMetric.mem_ball, edist_eq_coe_nnnorm']
 #align mem_emetric_ball_one_iff mem_emetric_ball_one_iff
 #align mem_emetric_ball_zero_iff mem_emetric_ball_zero_iff
 
@@ -1839,7 +1839,7 @@ end
 
 namespace LipschitzWith
 
-variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
+variable [PseudoEMetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
 
 @[to_additive]
 theorem inv (hf : LipschitzWith K f) : LipschitzWith K fun x => (f x)⁻¹ := fun x y =>
@@ -1870,13 +1870,13 @@ end LipschitzWith
 
 namespace AntilipschitzWith
 
-variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
+variable [PseudoEMetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
 
 @[to_additive]
 theorem mul_lipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g) (hK : Kg < Kf⁻¹) :
     AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x * g x :=
   by
-  letI : PseudoMetricSpace α := PseudoEmetricSpace.toPseudoMetricSpace hf.edist_ne_top
+  letI : PseudoMetricSpace α := PseudoEMetricSpace.toPseudoMetricSpace hf.edist_ne_top
   refine' AntilipschitzWith.of_le_mul_dist fun x y => _
   rw [NNReal.coe_inv, ← div_eq_inv_mul]
   rw [le_div_iff (NNReal.coe_pos.2 <| tsub_pos_iff_lt.2 hK)]

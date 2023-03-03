@@ -315,7 +315,7 @@ decaying terms.
 
 section EdistLeGeometric
 
-variable [PseudoEmetricSpace α] (r C : ℝ≥0∞) (hr : r < 1) (hC : C ≠ ⊤) {f : ℕ → α}
+variable [PseudoEMetricSpace α] (r C : ℝ≥0∞) (hr : r < 1) (hC : C ≠ ⊤) {f : ℕ → α}
   (hu : ∀ n, edist (f n) (f (n + 1)) ≤ C * r ^ n)
 
 include hr hC hu
@@ -352,7 +352,7 @@ end EdistLeGeometric
 
 section EdistLeGeometricTwo
 
-variable [PseudoEmetricSpace α] (C : ℝ≥0∞) (hC : C ≠ ⊤) {f : ℕ → α}
+variable [PseudoEMetricSpace α] (C : ℝ≥0∞) (hC : C ≠ ⊤) {f : ℕ → α}
   (hu : ∀ n, edist (f n) (f (n + 1)) ≤ C / 2 ^ n) {a : α} (ha : Tendsto f atTop (𝓝 a))
 
 include hC hu

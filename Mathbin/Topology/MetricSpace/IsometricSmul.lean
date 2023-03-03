@@ -41,14 +41,14 @@ variable (M : Type u) (G : Type v) (X : Type w)
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isometry_vadd] [] -/
 /-- An additive action is isometric if each map `x ↦ c +ᵥ x` is an isometry. -/
-class HasIsometricVadd [PseudoEmetricSpace X] [VAdd M X] : Prop where
+class HasIsometricVadd [PseudoEMetricSpace X] [VAdd M X] : Prop where
   isometry_vadd : ∀ c : M, Isometry ((· +ᵥ ·) c : X → X)
 #align has_isometric_vadd HasIsometricVadd
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isometry_smul] [] -/
 /-- A multiplicative action is isometric if each map `x ↦ c • x` is an isometry. -/
 @[to_additive]
-class HasIsometricSmul [PseudoEmetricSpace X] [SMul M X] : Prop where
+class HasIsometricSmul [PseudoEMetricSpace X] [SMul M X] : Prop where
   isometry_smul : ∀ c : M, Isometry ((· • ·) c : X → X)
 #align has_isometric_smul HasIsometricSmul
 #align has_isometric_vadd HasIsometricVadd
@@ -58,14 +58,14 @@ export HasIsometricVadd (isometry_vadd)
 export HasIsometricSmul (isometry_smul)
 
 @[to_additive]
-instance (priority := 100) HasIsometricSmul.to_continuousConstSMul [PseudoEmetricSpace X] [SMul M X]
+instance (priority := 100) HasIsometricSmul.to_continuousConstSMul [PseudoEMetricSpace X] [SMul M X]
     [HasIsometricSmul M X] : ContinuousConstSMul M X :=
   ⟨fun c => (isometry_smul X c).Continuous⟩
 #align has_isometric_smul.to_has_continuous_const_smul HasIsometricSmul.to_continuousConstSMul
 #align has_isometric_vadd.to_has_continuous_const_vadd HasIsometricVadd.to_has_continuous_const_vadd
 
 @[to_additive]
-instance (priority := 100) HasIsometricSmul.opposite_of_comm [PseudoEmetricSpace X] [SMul M X]
+instance (priority := 100) HasIsometricSmul.opposite_of_comm [PseudoEMetricSpace X] [SMul M X]
     [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] [HasIsometricSmul M X] : HasIsometricSmul Mᵐᵒᵖ X :=
   ⟨fun c x y => by simpa only [← op_smul_eq_smul] using isometry_smul X c.unop x y⟩
 #align has_isometric_smul.opposite_of_comm HasIsometricSmul.opposite_of_comm
@@ -75,7 +75,7 @@ variable {M G X}
 
 section Emetric
 
-variable [PseudoEmetricSpace X] [Group G] [MulAction G X] [HasIsometricSmul G X]
+variable [PseudoEMetricSpace X] [Group G] [MulAction G X] [HasIsometricSmul G X]
 
 @[simp, to_additive]
 theorem edist_smul_left [SMul M X] [HasIsometricSmul M X] (c : M) (x y : X) :
@@ -85,42 +85,42 @@ theorem edist_smul_left [SMul M X] [HasIsometricSmul M X] (c : M) (x y : X) :
 #align edist_vadd_left edist_vadd_left
 
 @[to_additive]
-theorem isometry_mul_left [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul M M] (a : M) :
+theorem isometry_mul_left [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul M M] (a : M) :
     Isometry ((· * ·) a) :=
   isometry_smul M a
 #align isometry_mul_left isometry_mul_left
 #align isometry_add_left isometry_add_left
 
 @[simp, to_additive]
-theorem edist_mul_left [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul M M] (a b c : M) :
+theorem edist_mul_left [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul M M] (a b c : M) :
     edist (a * b) (a * c) = edist b c :=
   isometry_mul_left a b c
 #align edist_mul_left edist_mul_left
 #align edist_add_left edist_add_left
 
 @[to_additive]
-theorem isometry_mul_right [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M] (a : M) :
+theorem isometry_mul_right [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M] (a : M) :
     Isometry fun x => x * a :=
   isometry_smul M (MulOpposite.op a)
 #align isometry_mul_right isometry_mul_right
 #align isometry_add_right isometry_add_right
 
 @[simp, to_additive]
-theorem edist_mul_right [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M] (a b c : M) :
+theorem edist_mul_right [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M] (a b c : M) :
     edist (a * c) (b * c) = edist a b :=
   isometry_mul_right c a b
 #align edist_mul_right edist_mul_right
 #align edist_add_right edist_add_right
 
 @[simp, to_additive]
-theorem edist_div_right [DivInvMonoid M] [PseudoEmetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M]
+theorem edist_div_right [DivInvMonoid M] [PseudoEMetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M]
     (a b c : M) : edist (a / c) (b / c) = edist a b := by
   simp only [div_eq_mul_inv, edist_mul_right]
 #align edist_div_right edist_div_right
 #align edist_sub_right edist_sub_right
 
 @[simp, to_additive]
-theorem edist_inv_inv [PseudoEmetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G]
+theorem edist_inv_inv [PseudoEMetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G]
     (a b : G) : edist a⁻¹ b⁻¹ = edist a b := by
   rw [← edist_mul_left a, ← edist_mul_right _ _ b, mul_right_inv, one_mul, inv_mul_cancel_right,
     edist_comm]
@@ -128,20 +128,20 @@ theorem edist_inv_inv [PseudoEmetricSpace G] [HasIsometricSmul G G] [HasIsometri
 #align edist_neg_neg edist_neg_neg
 
 @[to_additive]
-theorem isometry_inv [PseudoEmetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G] :
+theorem isometry_inv [PseudoEMetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G] :
     Isometry (Inv.inv : G → G) :=
   edist_inv_inv
 #align isometry_inv isometry_inv
 #align isometry_neg isometry_neg
 
 @[to_additive]
-theorem edist_inv [PseudoEmetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G]
+theorem edist_inv [PseudoEMetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G]
     (x y : G) : edist x⁻¹ y = edist x y⁻¹ := by rw [← edist_inv_inv, inv_inv]
 #align edist_inv edist_inv
 #align edist_neg edist_neg
 
 @[simp, to_additive]
-theorem edist_div_left [PseudoEmetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G]
+theorem edist_div_left [PseudoEMetricSpace G] [HasIsometricSmul G G] [HasIsometricSmul Gᵐᵒᵖ G]
     (a b c : G) : edist (a / b) (a / c) = edist b c := by
   rw [div_eq_mul_inv, div_eq_mul_inv, edist_mul_left, edist_inv_inv]
 #align edist_div_left edist_div_left
@@ -166,7 +166,7 @@ theorem constSmul_symm (c : G) : (constSmul c : X ≃ᵢ X).symm = constSmul c�
 #align isometry_equiv.const_smul_symm IsometryEquiv.constSmul_symm
 #align isometry_equiv.const_vadd_symm IsometryEquiv.const_vadd_symm
 
-variable [PseudoEmetricSpace G]
+variable [PseudoEMetricSpace G]
 
 /-- Multiplication `y ↦ x * y` as an `isometry_equiv`. -/
 @[to_additive "Addition `y ↦ x + y` as an `isometry_equiv`.", simps apply toEquiv]
@@ -269,7 +269,7 @@ theorem preimage_smul_closedBall (c : G) (x : X) (r : ℝ≥0∞) :
 #align emetric.preimage_smul_closed_ball Emetric.preimage_smul_closedBall
 #align emetric.preimage_vadd_closed_ball Emetric.preimage_vadd_closedBall
 
-variable [PseudoEmetricSpace G]
+variable [PseudoEMetricSpace G]
 
 @[simp, to_additive]
 theorem preimage_mul_left_ball [HasIsometricSmul G G] (a b : G) (r : ℝ≥0∞) :
@@ -468,7 +468,7 @@ end Metric
 
 section Instances
 
-variable {Y : Type _} [PseudoEmetricSpace X] [PseudoEmetricSpace Y] [SMul M X]
+variable {Y : Type _} [PseudoEMetricSpace X] [PseudoEMetricSpace Y] [SMul M X]
   [HasIsometricSmul M X]
 
 @[to_additive]
@@ -476,15 +476,15 @@ instance [SMul M Y] [HasIsometricSmul M Y] : HasIsometricSmul M (X × Y) :=
   ⟨fun c => (isometry_smul X c).Prod_map (isometry_smul Y c)⟩
 
 @[to_additive]
-instance Prod.has_isometric_smul' {N} [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul M M] [Mul N]
-    [PseudoEmetricSpace N] [HasIsometricSmul N N] : HasIsometricSmul (M × N) (M × N) :=
+instance Prod.has_isometric_smul' {N} [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul M M] [Mul N]
+    [PseudoEMetricSpace N] [HasIsometricSmul N N] : HasIsometricSmul (M × N) (M × N) :=
   ⟨fun c => (isometry_smul M c.1).Prod_map (isometry_smul N c.2)⟩
 #align prod.has_isometric_smul' Prod.has_isometric_smul'
 #align prod.has_isometric_vadd' Prod.has_isometric_vadd'
 
 @[to_additive]
-instance Prod.has_isometric_smul'' {N} [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M]
-    [Mul N] [PseudoEmetricSpace N] [HasIsometricSmul Nᵐᵒᵖ N] :
+instance Prod.has_isometric_smul'' {N} [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M]
+    [Mul N] [PseudoEMetricSpace N] [HasIsometricSmul Nᵐᵒᵖ N] :
     HasIsometricSmul (M × N)ᵐᵒᵖ (M × N) :=
   ⟨fun c => (isometry_mul_right c.unop.1).Prod_map (isometry_mul_right c.unop.2)⟩
 #align prod.has_isometric_smul'' Prod.has_isometric_smul''
@@ -513,13 +513,13 @@ instance ULift.has_isometric_smul' : HasIsometricSmul M (ULift X) :=
 #align ulift.has_isometric_vadd' ULift.has_isometric_vadd'
 
 @[to_additive]
-instance {ι} {X : ι → Type _} [Fintype ι] [∀ i, SMul M (X i)] [∀ i, PseudoEmetricSpace (X i)]
+instance {ι} {X : ι → Type _} [Fintype ι] [∀ i, SMul M (X i)] [∀ i, PseudoEMetricSpace (X i)]
     [∀ i, HasIsometricSmul M (X i)] : HasIsometricSmul M (∀ i, X i) :=
   ⟨fun c => isometry_dcomp (fun i => (· • ·) c) fun i => isometry_smul (X i) c⟩
 
 @[to_additive]
 instance Pi.has_isometric_smul' {ι} {M X : ι → Type _} [Fintype ι] [∀ i, SMul (M i) (X i)]
-    [∀ i, PseudoEmetricSpace (X i)] [∀ i, HasIsometricSmul (M i) (X i)] :
+    [∀ i, PseudoEMetricSpace (X i)] [∀ i, HasIsometricSmul (M i) (X i)] :
     HasIsometricSmul (∀ i, M i) (∀ i, X i) :=
   ⟨fun c => isometry_dcomp (fun i => (· • ·) (c i)) fun i => isometry_smul _ _⟩
 #align pi.has_isometric_smul' Pi.has_isometric_smul'
@@ -527,7 +527,7 @@ instance Pi.has_isometric_smul' {ι} {M X : ι → Type _} [Fintype ι] [∀ i, 
 
 @[to_additive]
 instance Pi.has_isometric_smul'' {ι} {M : ι → Type _} [Fintype ι] [∀ i, Mul (M i)]
-    [∀ i, PseudoEmetricSpace (M i)] [∀ i, HasIsometricSmul (M i)ᵐᵒᵖ (M i)] :
+    [∀ i, PseudoEMetricSpace (M i)] [∀ i, HasIsometricSmul (M i)ᵐᵒᵖ (M i)] :
     HasIsometricSmul (∀ i, M i)ᵐᵒᵖ (∀ i, M i) :=
   ⟨fun c => isometry_dcomp (fun i (x : M i) => x * c.unop i) fun i => isometry_mul_right _⟩
 #align pi.has_isometric_smul'' Pi.has_isometric_smul''
@@ -537,27 +537,27 @@ instance Additive.hasIsometricVadd : HasIsometricVadd (Additive M) X :=
   ⟨fun c => isometry_smul X c.toMul⟩
 #align additive.has_isometric_vadd Additive.hasIsometricVadd
 
-instance Additive.has_isometric_vadd' [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul M M] :
+instance Additive.has_isometric_vadd' [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul M M] :
     HasIsometricVadd (Additive M) (Additive M) :=
   ⟨fun c x y => edist_smul_left c.toMul x.toMul y.toMul⟩
 #align additive.has_isometric_vadd' Additive.has_isometric_vadd'
 
-instance Additive.has_isometric_vadd'' [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M] :
+instance Additive.has_isometric_vadd'' [Mul M] [PseudoEMetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M] :
     HasIsometricVadd (Additive M)ᵃᵒᵖ (Additive M) :=
   ⟨fun c x y => edist_smul_left (MulOpposite.op c.unop.toMul) x.toMul y.toMul⟩
 #align additive.has_isometric_vadd'' Additive.has_isometric_vadd''
 
-instance Multiplicative.hasIsometricSmul {M X} [VAdd M X] [PseudoEmetricSpace X]
+instance Multiplicative.hasIsometricSmul {M X} [VAdd M X] [PseudoEMetricSpace X]
     [HasIsometricVadd M X] : HasIsometricSmul (Multiplicative M) X :=
   ⟨fun c => isometry_vadd X c.toAdd⟩
 #align multiplicative.has_isometric_smul Multiplicative.hasIsometricSmul
 
-instance Multiplicative.has_isometric_smul' [Add M] [PseudoEmetricSpace M] [HasIsometricVadd M M] :
+instance Multiplicative.has_isometric_smul' [Add M] [PseudoEMetricSpace M] [HasIsometricVadd M M] :
     HasIsometricSmul (Multiplicative M) (Multiplicative M) :=
   ⟨fun c x y => edist_vadd_left c.toAdd x.toAdd y.toAdd⟩
 #align multiplicative.has_isometric_smul' Multiplicative.has_isometric_smul'
 
-instance Multiplicative.has_isometric_vadd'' [Add M] [PseudoEmetricSpace M]
+instance Multiplicative.has_isometric_vadd'' [Add M] [PseudoEMetricSpace M]
     [HasIsometricVadd Mᵃᵒᵖ M] : HasIsometricSmul (Multiplicative M)ᵐᵒᵖ (Multiplicative M) :=
   ⟨fun c x y => edist_vadd_left (AddOpposite.op c.unop.toAdd) x.toAdd y.toAdd⟩
 #align multiplicative.has_isometric_vadd'' Multiplicative.has_isometric_vadd''

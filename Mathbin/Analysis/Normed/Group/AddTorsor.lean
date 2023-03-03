@@ -205,7 +205,7 @@ def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGrou
 
 include V
 
-theorem LipschitzWith.vadd [PseudoEmetricSpace α] {f : α → V} {g : α → P} {Kf Kg : ℝ≥0}
+theorem LipschitzWith.vadd [PseudoEMetricSpace α] {f : α → V} {g : α → P} {Kf Kg : ℝ≥0}
     (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f +ᵥ g) :=
   fun x y =>
   calc
@@ -216,7 +216,7 @@ theorem LipschitzWith.vadd [PseudoEmetricSpace α] {f : α → V} {g : α → P}
     
 #align lipschitz_with.vadd LipschitzWith.vadd
 
-theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ≥0}
+theorem LipschitzWith.vsub [PseudoEMetricSpace α] {f g : α → P} {Kf Kg : ℝ≥0}
     (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f -ᵥ g) :=
   fun x y =>
   calc

@@ -123,7 +123,7 @@ open Emetric Set Function Filter Encodable FiniteDimensional TopologicalSpace
 
 noncomputable section
 
-variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
+variable {ι X Y : Type _} [EMetricSpace X] [EMetricSpace Y]
 
 namespace MeasureTheory
 
@@ -559,7 +559,7 @@ theorem mkMetric_le_liminf_tsum {β : Type _} {ι : β → Type _} [∀ n, Count
   set u : ℕ → Set X := fun j => ⋃ b ∈ decode₂ (ι n) j, t n b
   refine' infᵢ₂_le_of_le u (by rwa [Union_decode₂]) _
   refine' infᵢ_le_of_le (fun j => _) _
-  · rw [Emetric.diam_unionᵢ_mem_option]
+  · rw [EMetric.diam_unionᵢ_mem_option]
     exact supᵢ₂_le fun _ _ => (htn _).trans hrn.le
   ·
     calc
@@ -677,7 +677,7 @@ theorem noAtomsHausdorff {d : ℝ} (hd : 0 < d) : HasNoAtoms (hausdorffMeasure d
   rw [← nonpos_iff_eq_zero, hausdorff_measure_apply]
   refine' supᵢ₂_le fun ε ε0 => infᵢ₂_le_of_le (fun n => {x}) _ <| infᵢ_le_of_le (fun n => _) _
   · exact subset_Union (fun n => {x} : ℕ → Set X) 0
-  · simp only [Emetric.diam_singleton, zero_le]
+  · simp only [EMetric.diam_singleton, zero_le]
   · simp [hd]
 #align measure_theory.measure.no_atoms_hausdorff MeasureTheory.Measure.noAtomsHausdorff
 

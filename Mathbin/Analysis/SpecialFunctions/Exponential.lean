@@ -88,7 +88,7 @@ variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedCommRing �
 characteristic zero has Fréchet-derivative `exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x` in the
 disk of convergence. -/
 theorem hasFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
-    (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+    (hx : x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     HasFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
   by
   have hpos : 0 < (expSeries 𝕂 𝔸).radius := (zero_le _).trans_lt hx
@@ -100,8 +100,8 @@ theorem hasFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     refine' (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)
     rw [← hasFderivAt_iff_isOCat_nhds_zero]
     exact hasFderivAt_exp_zero_of_radius_pos hpos
-  have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
-    Emetric.ball_mem_nhds _ hpos
+  have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
+    EMetric.ball_mem_nhds _ hpos
   filter_upwards [this]with _ hh
   rw [exp_add_of_mem_ball hx hh, exp_zero, zero_add, ContinuousLinearMap.id_apply, smul_eq_mul]
   ring
@@ -111,7 +111,7 @@ theorem hasFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
 characteristic zero has strict Fréchet-derivative `exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x` in
 the disk of convergence. -/
 theorem hasStrictFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
-    (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+    (hx : x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     HasStrictFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
   let ⟨p, hp⟩ := analyticAt_exp_of_mem_ball x hx
   hp.HasFderivAt.unique (hasFderivAt_exp_of_mem_ball hx) ▸ hp.HasStrictFderivAt
@@ -126,14 +126,14 @@ variable {𝕂 : Type _} [NontriviallyNormedField 𝕂] [CompleteSpace 𝕂]
 /-- The exponential map in a complete normed field `𝕂` of characteristic zero has strict derivative
 `exp 𝕂 x` at any point `x` in the disk of convergence. -/
 theorem hasStrictDerivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝕂}
-    (hx : x ∈ Emetric.ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : HasStrictDerivAt (exp 𝕂) (exp 𝕂 x) x :=
+    (hx : x ∈ EMetric.ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : HasStrictDerivAt (exp 𝕂) (exp 𝕂 x) x :=
   by simpa using (hasStrictFderivAt_exp_of_mem_ball hx).HasStrictDerivAt
 #align has_strict_deriv_at_exp_of_mem_ball hasStrictDerivAt_exp_of_mem_ball
 
 /-- The exponential map in a complete normed field `𝕂` of characteristic zero has derivative
 `exp 𝕂 x` at any point `x` in the disk of convergence. -/
 theorem hasDerivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝕂}
-    (hx : x ∈ Emetric.ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : HasDerivAt (exp 𝕂) (exp 𝕂 x) x :=
+    (hx : x ∈ EMetric.ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : HasDerivAt (exp 𝕂) (exp 𝕂 x) x :=
   (hasStrictDerivAt_exp_of_mem_ball hx).HasDerivAt
 #align has_deriv_at_exp_of_mem_ball hasDerivAt_exp_of_mem_ball
 

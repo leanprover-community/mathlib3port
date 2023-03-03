@@ -195,11 +195,11 @@ protected theorem continuous : Continuous f :=
   f.Isometry.Continuous
 #align affine_isometry.continuous AffineIsometry.continuous
 
-theorem ediam_image (s : Set P) : Emetric.diam (f '' s) = Emetric.diam s :=
+theorem ediam_image (s : Set P) : EMetric.diam (f '' s) = EMetric.diam s :=
   f.Isometry.ediam_image s
 #align affine_isometry.ediam_image AffineIsometry.ediam_image
 
-theorem ediam_range : Emetric.diam (range f) = Emetric.diam (univ : Set P) :=
+theorem ediam_range : EMetric.diam (range f) = EMetric.diam (univ : Set P) :=
   f.Isometry.ediam_range
 #align affine_isometry.ediam_range AffineIsometry.ediam_range
 
@@ -713,7 +713,7 @@ protected theorem antilipschitz : AntilipschitzWith 1 e :=
 #align affine_isometry_equiv.antilipschitz AffineIsometryEquiv.antilipschitz
 
 @[simp]
-theorem ediam_image (s : Set P) : Emetric.diam (e '' s) = Emetric.diam s :=
+theorem ediam_image (s : Set P) : EMetric.diam (e '' s) = EMetric.diam s :=
   e.Isometry.ediam_image s
 #align affine_isometry_equiv.ediam_image AffineIsometryEquiv.ediam_image
 

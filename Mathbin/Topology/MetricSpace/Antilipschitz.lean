@@ -34,16 +34,16 @@ open Set Filter Bornology
 
 /-- We say that `f : α → β` is `antilipschitz_with K` if for any two points `x`, `y` we have
 `edist x y ≤ K * edist (f x) (f y)`. -/
-def AntilipschitzWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0) (f : α → β) :=
+def AntilipschitzWith [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) (f : α → β) :=
   ∀ x y, edist x y ≤ K * edist (f x) (f y)
 #align antilipschitz_with AntilipschitzWith
 
-theorem AntilipschitzWith.edist_lt_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
+theorem AntilipschitzWith.edist_lt_top [PseudoEMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {f : α → β} (h : AntilipschitzWith K f) (x y : α) : edist x y < ⊤ :=
   (h x y).trans_lt <| ENNReal.mul_lt_top ENNReal.coe_ne_top (edist_ne_top _ _)
 #align antilipschitz_with.edist_lt_top AntilipschitzWith.edist_lt_top
 
-theorem AntilipschitzWith.edist_ne_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
+theorem AntilipschitzWith.edist_ne_top [PseudoEMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {f : α → β} (h : AntilipschitzWith K f) (x y : α) : edist x y ≠ ⊤ :=
   (h.edist_lt_top x y).Ne
 #align antilipschitz_with.edist_ne_top AntilipschitzWith.edist_ne_top
@@ -93,7 +93,7 @@ end Metric
 
 namespace AntilipschitzWith
 
-variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
+variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ]
 
 variable {K : ℝ≥0} {f : α → β}
 
@@ -107,7 +107,7 @@ protected def k (hf : AntilipschitzWith K f) : ℝ≥0 :=
   K
 #align antilipschitz_with.K AntilipschitzWith.k
 
-protected theorem injective {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β]
+protected theorem injective {α : Type _} {β : Type _} [EMetricSpace α] [PseudoEMetricSpace β]
     {K : ℝ≥0} {f : α → β} (hf : AntilipschitzWith K f) : Function.Injective f := fun x y h => by
   simpa only [h, edist_self, mul_zero, edist_le_zero] using hf x y
 #align antilipschitz_with.injective AntilipschitzWith.injective
@@ -182,7 +182,7 @@ protected theorem uniformInducing (hf : AntilipschitzWith K f) (hfc : UniformCon
   ⟨le_antisymm hf.comap_uniformity_le hfc.le_comap⟩
 #align antilipschitz_with.uniform_inducing AntilipschitzWith.uniformInducing
 
-protected theorem uniformEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β]
+protected theorem uniformEmbedding {α : Type _} {β : Type _} [EMetricSpace α] [PseudoEMetricSpace β]
     {K : ℝ≥0} {f : α → β} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     UniformEmbedding f :=
   ⟨hf.UniformInducing hfc, hf.Injective⟩
@@ -193,13 +193,13 @@ theorem isComplete_range [CompleteSpace α] (hf : AntilipschitzWith K f)
   (hf.UniformInducing hfc).isComplete_range
 #align antilipschitz_with.is_complete_range AntilipschitzWith.isComplete_range
 
-theorem isClosed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
+theorem isClosed_range {α β : Type _} [PseudoEMetricSpace α] [EMetricSpace β] [CompleteSpace α]
     {f : α → β} {K : ℝ≥0} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     IsClosed (range f) :=
   (hf.isComplete_range hfc).IsClosed
 #align antilipschitz_with.is_closed_range AntilipschitzWith.isClosed_range
 
-theorem closedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
+theorem closedEmbedding {α : Type _} {β : Type _} [EMetricSpace α] [EMetricSpace β] {K : ℝ≥0}
     {f : α → β} [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     ClosedEmbedding f :=
   { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.isClosed_range hfc }
@@ -214,7 +214,7 @@ theorem of_subsingleton [Subsingleton α] {K : ℝ≥0} : AntilipschitzWith K f 
 #align antilipschitz_with.of_subsingleton AntilipschitzWith.of_subsingleton
 
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
-protected theorem subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β}
+protected theorem subsingleton {α β} [EMetricSpace α] [PseudoEMetricSpace β] {f : α → β}
     (h : AntilipschitzWith 0 f) : Subsingleton α :=
   ⟨fun x y => edist_le_zero.1 <| (h x y).trans_eq <| zero_mul _⟩
 #align antilipschitz_with.subsingleton AntilipschitzWith.subsingleton
@@ -257,7 +257,7 @@ protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : 
 
 end AntilipschitzWith
 
-theorem LipschitzWith.to_rightInverse [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
+theorem LipschitzWith.to_rightInverse [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0}
     {f : α → β} (hf : LipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     AntilipschitzWith K g := fun x y => by simpa only [hg _] using hf (g x) (g y)
 #align lipschitz_with.to_right_inverse LipschitzWith.to_rightInverse

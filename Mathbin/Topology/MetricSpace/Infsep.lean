@@ -42,13 +42,13 @@ open ENNReal
 open Function
 
 /-- The "extended infimum separation" of a set with an edist function. -/
-noncomputable def einfsep [HasEdist α] (s : Set α) : ℝ≥0∞ :=
+noncomputable def einfsep [EDist α] (s : Set α) : ℝ≥0∞ :=
   ⨅ (x ∈ s) (y ∈ s) (hxy : x ≠ y), edist x y
 #align set.einfsep Set.einfsep
 
-section HasEdist
+section EDist
 
-variable [HasEdist α] {x y : α} {s t : Set α}
+variable [EDist α] {x y : α} {s t : Set α}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep_iff {d} :
@@ -227,11 +227,11 @@ theorem Finite.einfsep_exists_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial)
   hs.einfsep_exists_of_finite
 #align set.finite.einfsep_exists_of_nontrivial Set.Finite.einfsep_exists_of_nontrivial
 
-end HasEdist
+end EDist
 
-section PseudoEmetricSpace
+section PseudoEMetricSpace
 
-variable [PseudoEmetricSpace α] {x y z : α} {s t : Set α}
+variable [PseudoEMetricSpace α] {x y z : α} {s t : Set α}
 
 theorem einfsep_pair (hxy : x ≠ y) : ({x, y} : Set α).einfsep = edist x y :=
   by
@@ -258,7 +258,7 @@ theorem einfsep_triple (hxy : x ≠ y) (hyz : y ≠ z) (hxz : x ≠ z) :
     cinfᵢ_pos hxy, cinfᵢ_pos hyz, cinfᵢ_pos hxz]
 #align set.einfsep_triple Set.einfsep_triple
 
-theorem le_einfsep_pi_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEmetricSpace (π b)]
+theorem le_einfsep_pi_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEMetricSpace (π b)]
     {s : ∀ b : β, Set (π b)} {c : ℝ≥0∞} (h : ∀ b, c ≤ einfsep (s b)) :
     c ≤ einfsep (Set.pi univ s) :=
   by
@@ -268,7 +268,7 @@ theorem le_einfsep_pi_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEmet
   exact le_trans (le_einfsep_iff.1 (h i) _ (hx _) _ (hy _) hi) (edist_le_pi_edist _ _ i)
 #align set.le_einfsep_pi_of_le Set.le_einfsep_pi_of_le
 
-end PseudoEmetricSpace
+end PseudoEMetricSpace
 
 section PseudoMetricSpace
 
@@ -314,9 +314,9 @@ theorem le_einfsep_of_forall_dist_le {d}
 
 end PseudoMetricSpace
 
-section EmetricSpace
+section EMetricSpace
 
-variable [EmetricSpace α] {x y z : α} {s t : Set α} {C : ℝ≥0∞} {sC : Set ℝ≥0∞}
+variable [EMetricSpace α] {x y z : α} {s t : Set α} {C : ℝ≥0∞} {sC : Set ℝ≥0∞}
 
 theorem einfsep_pos_of_finite [Finite s] : 0 < s.einfsep :=
   by
@@ -348,7 +348,7 @@ theorem Finite.relatively_discrete (hs : s.Finite) :
   relatively_discrete_of_finite
 #align set.finite.relatively_discrete Set.Finite.relatively_discrete
 
-end EmetricSpace
+end EMetricSpace
 
 end Einfsep
 
@@ -359,13 +359,13 @@ open ENNReal
 open Set Function
 
 /-- The "infimum separation" of a set with an edist function. -/
-noncomputable def infsep [HasEdist α] (s : Set α) : ℝ :=
+noncomputable def infsep [EDist α] (s : Set α) : ℝ :=
   ENNReal.toReal s.einfsep
 #align set.infsep Set.infsep
 
-section HasEdist
+section EDist
 
-variable [HasEdist α] {x y : α} {s : Set α}
+variable [EDist α] {x y : α} {s : Set α}
 
 theorem infsep_zero : s.infsep = 0 ↔ s.einfsep = 0 ∨ s.einfsep = ∞ := by
   rw [infsep, ENNReal.toReal_eq_zero_iff]
@@ -406,11 +406,11 @@ theorem infsep_pair_le_toReal_inf (hxy : x ≠ y) :
   simp_rw [infsep, einfsep_pair_eq_inf hxy]
 #align set.infsep_pair_le_to_real_inf Set.infsep_pair_le_toReal_inf
 
-end HasEdist
+end EDist
 
-section PseudoEmetricSpace
+section PseudoEMetricSpace
 
-variable [PseudoEmetricSpace α] {x y : α} {s : Set α}
+variable [PseudoEMetricSpace α] {x y : α} {s : Set α}
 
 theorem infsep_pair_eq_toReal : ({x, y} : Set α).infsep = (edist x y).toReal :=
   by
@@ -420,7 +420,7 @@ theorem infsep_pair_eq_toReal : ({x, y} : Set α).infsep = (edist x y).toReal :=
   · rw [infsep, einfsep_pair hxy]
 #align set.infsep_pair_eq_to_real Set.infsep_pair_eq_toReal
 
-end PseudoEmetricSpace
+end PseudoEMetricSpace
 
 section PseudoMetricSpace
 

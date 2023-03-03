@@ -26,10 +26,10 @@ variable {α : Type _}
 
 /-- If the extended distance between consecutive points of a sequence is estimated
 by a summable series of `nnreal`s, then the original sequence is a Cauchy sequence. -/
-theorem cauchySeq_of_edist_le_of_summable [PseudoEmetricSpace α] {f : ℕ → α} (d : ℕ → ℝ≥0)
+theorem cauchySeq_of_edist_le_of_summable [PseudoEMetricSpace α] {f : ℕ → α} (d : ℕ → ℝ≥0)
     (hf : ∀ n, edist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f :=
   by
-  refine' Emetric.cauchySeq_iff_nNReal.2 fun ε εpos => _
+  refine' EMetric.cauchySeq_iff_NNReal.2 fun ε εpos => _
   -- Actually we need partial sums of `d` to be a Cauchy sequence
   replace hd : CauchySeq fun n : ℕ => ∑ x in range n, d x :=
     let ⟨_, H⟩ := hd

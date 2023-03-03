@@ -56,8 +56,8 @@ open BigOperators NNReal ENNReal Topology UniformConvergence
 
 open Set MeasureTheory Filter
 
-variable {α β : Type _} [LinearOrder α] [LinearOrder β] {E F : Type _} [PseudoEmetricSpace E]
-  [PseudoEmetricSpace F] {V : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V]
+variable {α β : Type _} [LinearOrder α] [LinearOrder β] {E F : Type _} [PseudoEMetricSpace E]
+  [PseudoEMetricSpace F] {V : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V]
   [FiniteDimensional ℝ V]
 
 /-- The (extended real valued) variation of a function `f` on a set `s` inside a linear order is

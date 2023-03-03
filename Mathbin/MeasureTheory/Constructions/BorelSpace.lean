@@ -313,7 +313,7 @@ theorem IsGδ.measurableSet (h : IsGδ s) : MeasurableSet s :=
   exact MeasurableSet.interₛ hSc fun t ht => (hSo t ht).MeasurableSet
 #align is_Gδ.measurable_set IsGδ.measurableSet
 
-theorem measurableSet_of_continuousAt {β} [EmetricSpace β] (f : α → β) :
+theorem measurableSet_of_continuousAt {β} [EMetricSpace β] (f : α → β) :
     MeasurableSet { x | ContinuousAt f x } :=
   (isGδ_setOf_continuousAt f).MeasurableSet
 #align measurable_set_of_continuous_at measurableSet_of_continuousAt
@@ -1675,17 +1675,17 @@ theorem tendsto_measure_cthickening_of_isCompact [MetricSpace α] [MeasurableSpa
     hs.IsClosed
 #align tendsto_measure_cthickening_of_is_compact tendsto_measure_cthickening_of_isCompact
 
-section PseudoEmetricSpace
+section PseudoEMetricSpace
 
-variable [PseudoEmetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
+variable [PseudoEMetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
 
 variable [MeasurableSpace β] {x : α} {ε : ℝ≥0∞}
 
 open Emetric
 
 @[measurability]
-theorem measurableSet_eball : MeasurableSet (Emetric.ball x ε) :=
-  Emetric.isOpen_ball.MeasurableSet
+theorem measurableSet_eball : MeasurableSet (EMetric.ball x ε) :=
+  EMetric.isOpen_ball.MeasurableSet
 #align measurable_set_eball measurableSet_eball
 
 @[measurability]
@@ -1728,7 +1728,7 @@ theorem AeMeasurable.edist {f g : β → α} {μ : Measure β} (hf : AeMeasurabl
   (@continuous_edist α _).aeMeasurable2 hf hg
 #align ae_measurable.edist AeMeasurable.edist
 
-end PseudoEmetricSpace
+end PseudoEMetricSpace
 
 namespace Real
 

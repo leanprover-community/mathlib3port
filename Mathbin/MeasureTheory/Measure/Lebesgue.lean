@@ -117,7 +117,7 @@ theorem volume_closedBall (a r : ℝ) : volume (Metric.closedBall a r) = ofReal 
 #align real.volume_closed_ball Real.volume_closedBall
 
 @[simp]
-theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.ball a r) = 2 * r :=
+theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.ball a r) = 2 * r :=
   by
   rcases eq_or_ne r ∞ with (rfl | hr)
   · rw [Metric.emetric_ball_top, volume_univ, two_mul, _root_.top_add]
@@ -127,10 +127,10 @@ theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.ball a 
 #align real.volume_emetric_ball Real.volume_emetric_ball
 
 @[simp]
-theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.closedBall a r) = 2 * r :=
+theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.closedBall a r) = 2 * r :=
   by
   rcases eq_or_ne r ∞ with (rfl | hr)
-  · rw [Emetric.closedBall_top, volume_univ, two_mul, _root_.top_add]
+  · rw [EMetric.closedBall_top, volume_univ, two_mul, _root_.top_add]
   · lift r to ℝ≥0 using hr
     rw [Metric.emetric_closedBall_nNReal, volume_closed_ball, two_mul, ← NNReal.coe_add,
       ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
@@ -196,7 +196,7 @@ instance isFiniteMeasureRestrictIoo (x y : ℝ) : IsFiniteMeasure (volume.restri
   ⟨by simp⟩
 #align real.is_finite_measure_restrict_Ioo Real.isFiniteMeasureRestrictIoo
 
-theorem volume_le_diam (s : Set ℝ) : volume s ≤ Emetric.diam s :=
+theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
   by
   by_cases hs : Metric.Bounded s
   · rw [Real.ediam_eq hs, ← volume_Icc]
@@ -280,23 +280,23 @@ theorem volume_pi_closedBall (a : ι → ℝ) {r : ℝ} (hr : 0 ≤ r) :
 #align real.volume_pi_closed_ball Real.volume_pi_closedBall
 
 theorem volume_pi_le_prod_diam (s : Set (ι → ℝ)) :
-    volume s ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) :=
+    volume s ≤ ∏ i : ι, EMetric.diam (Function.eval i '' s) :=
   calc
     volume s ≤ volume (pi univ fun i => closure (Function.eval i '' s)) :=
       volume.mono <|
         Subset.trans (subset_pi_eval_image univ s) <| pi_mono fun i hi => subset_closure
     _ = ∏ i, volume (closure <| Function.eval i '' s) := (volume_pi_pi _)
-    _ ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) :=
+    _ ≤ ∏ i : ι, EMetric.diam (Function.eval i '' s) :=
       Finset.prod_le_prod' fun i hi => (volume_le_diam _).trans_eq (Emetric.diam_closure _)
     
 #align real.volume_pi_le_prod_diam Real.volume_pi_le_prod_diam
 
-theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ Emetric.diam s ^ Fintype.card ι :=
+theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ EMetric.diam s ^ Fintype.card ι :=
   calc
-    volume s ≤ ∏ i : ι, Emetric.diam (Function.eval i '' s) := volume_pi_le_prod_diam s
-    _ ≤ ∏ i : ι, (1 : ℝ≥0) * Emetric.diam s :=
+    volume s ≤ ∏ i : ι, EMetric.diam (Function.eval i '' s) := volume_pi_le_prod_diam s
+    _ ≤ ∏ i : ι, (1 : ℝ≥0) * EMetric.diam s :=
       (Finset.prod_le_prod' fun i hi => (LipschitzWith.eval i).ediam_image_le s)
-    _ = Emetric.diam s ^ Fintype.card ι := by
+    _ = EMetric.diam s ^ Fintype.card ι := by
       simp only [ENNReal.coe_one, one_mul, Finset.prod_const, Fintype.card]
     
 #align real.volume_pi_le_diam_pow Real.volume_pi_le_diam_pow

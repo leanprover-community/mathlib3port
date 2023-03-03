@@ -203,7 +203,7 @@ attribute [instance] PseudoMetricSpace.toUniformSpace
 attribute [instance] PseudoMetricSpace.toBornology
 
 -- see Note [lower instance priority]
-instance (priority := 200) PseudoMetricSpace.toHasEdist : HasEdist α :=
+instance (priority := 200) PseudoMetricSpace.toHasEdist : EDist α :=
   ⟨PseudoMetricSpace.edist⟩
 #align pseudo_metric_space.to_has_edist PseudoMetricSpace.toHasEdist
 
@@ -1274,7 +1274,7 @@ theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | ed
 
 -- see Note [lower instance priority]
 /-- A pseudometric space induces a pseudoemetric space -/
-instance (priority := 100) PseudoMetricSpace.toPseudoEmetricSpace : PseudoEmetricSpace α :=
+instance (priority := 100) PseudoMetricSpace.toPseudoEmetricSpace : PseudoEMetricSpace α :=
   { ‹PseudoMetricSpace α› with
     edist := edist
     edist_self := by simp [edist_dist]
@@ -1289,22 +1289,22 @@ instance (priority := 100) PseudoMetricSpace.toPseudoEmetricSpace : PseudoEmetri
 #align pseudo_metric_space.to_pseudo_emetric_space PseudoMetricSpace.toPseudoEmetricSpace
 
 /-- In a pseudometric space, an open ball of infinite radius is the whole space -/
-theorem Metric.eball_top_eq_univ (x : α) : Emetric.ball x ∞ = Set.univ :=
+theorem Metric.eball_top_eq_univ (x : α) : EMetric.ball x ∞ = Set.univ :=
   Set.eq_univ_iff_forall.mpr fun y => edist_lt_top y x
 #align metric.eball_top_eq_univ Metric.eball_top_eq_univ
 
 /-- Balls defined using the distance or the edistance coincide -/
 @[simp]
-theorem Metric.emetric_ball {x : α} {ε : ℝ} : Emetric.ball x (ENNReal.ofReal ε) = ball x ε :=
+theorem Metric.emetric_ball {x : α} {ε : ℝ} : EMetric.ball x (ENNReal.ofReal ε) = ball x ε :=
   by
   ext y
-  simp only [Emetric.mem_ball, mem_ball, edist_dist]
+  simp only [EMetric.mem_ball, mem_ball, edist_dist]
   exact ENNReal.ofReal_lt_ofReal_iff_of_nonneg dist_nonneg
 #align metric.emetric_ball Metric.emetric_ball
 
 /-- Balls defined using the distance or the edistance coincide -/
 @[simp]
-theorem Metric.emetric_ball_nNReal {x : α} {ε : ℝ≥0} : Emetric.ball x ε = ball x ε :=
+theorem Metric.emetric_ball_nNReal {x : α} {ε : ℝ≥0} : EMetric.ball x ε = ball x ε :=
   by
   convert Metric.emetric_ball
   simp
@@ -1312,26 +1312,26 @@ theorem Metric.emetric_ball_nNReal {x : α} {ε : ℝ≥0} : Emetric.ball x ε =
 
 /-- Closed balls defined using the distance or the edistance coincide -/
 theorem Metric.emetric_closedBall {x : α} {ε : ℝ} (h : 0 ≤ ε) :
-    Emetric.closedBall x (ENNReal.ofReal ε) = closedBall x ε := by
+    EMetric.closedBall x (ENNReal.ofReal ε) = closedBall x ε := by
   ext y <;> simp [edist_dist] <;> rw [ENNReal.ofReal_le_ofReal_iff h]
 #align metric.emetric_closed_ball Metric.emetric_closedBall
 
 /-- Closed balls defined using the distance or the edistance coincide -/
 @[simp]
 theorem Metric.emetric_closedBall_nNReal {x : α} {ε : ℝ≥0} :
-    Emetric.closedBall x ε = closedBall x ε :=
+    EMetric.closedBall x ε = closedBall x ε :=
   by
   convert Metric.emetric_closedBall ε.2
   simp
 #align metric.emetric_closed_ball_nnreal Metric.emetric_closedBall_nNReal
 
 @[simp]
-theorem Metric.emetric_ball_top (x : α) : Emetric.ball x ⊤ = univ :=
+theorem Metric.emetric_ball_top (x : α) : EMetric.ball x ⊤ = univ :=
   eq_univ_of_forall fun y => edist_lt_top _ _
 #align metric.emetric_ball_top Metric.emetric_ball_top
 
 theorem Metric.inseparable_iff {x y : α} : Inseparable x y ↔ dist x y = 0 := by
-  rw [Emetric.inseparable_iff, edist_nndist, dist_nndist, ENNReal.coe_eq_zero, NNReal.coe_eq_zero]
+  rw [EMetric.inseparable_iff, edist_nndist, dist_nndist, ENNReal.coe_eq_zero, NNReal.coe_eq_zero]
 #align metric.inseparable_iff Metric.inseparable_iff
 
 /-- Build a new pseudometric space from an old one where the bundled uniform structure is provably
@@ -1339,7 +1339,7 @@ theorem Metric.inseparable_iff {x y : α} : Inseparable x y ↔ dist x y = 0 := 
 See Note [forgetful inheritance].
 -/
 def PseudoMetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoMetricSpace α)
-    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : PseudoMetricSpace α
+    (H : 𝓤[U] = 𝓤[PseudoEMetricSpace.toUniformSpace]) : PseudoMetricSpace α
     where
   dist := @dist _ m.toHasDist
   dist_self := dist_self
@@ -1352,7 +1352,7 @@ def PseudoMetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoMe
 #align pseudo_metric_space.replace_uniformity PseudoMetricSpace.replaceUniformity
 
 theorem PseudoMetricSpace.replaceUniformity_eq {α} [U : UniformSpace α] (m : PseudoMetricSpace α)
-    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : m.replaceUniformity H = m :=
+    (H : 𝓤[U] = 𝓤[PseudoEMetricSpace.toUniformSpace]) : m.replaceUniformity H = m :=
   by
   ext
   rfl
@@ -1380,13 +1380,13 @@ is everywhere finite, by pushing the edistance to reals. We set it up so that th
 uniformity are defeq in the pseudometric space and the pseudoemetric space. In this definition, the
 distance is given separately, to be able to prescribe some expression which is not defeq to the
 push-forward of the edistance to reals. -/
-def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetricSpace α]
+def PseudoEMetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEMetricSpace α]
     (dist : α → α → ℝ) (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤)
     (h : ∀ x y, dist x y = ENNReal.toReal (edist x y)) : PseudoMetricSpace α :=
   let m : PseudoMetricSpace α :=
     { dist
       dist_self := fun x => by simp [h]
-      dist_comm := fun x y => by simp [h, PseudoEmetricSpace.edist_comm]
+      dist_comm := fun x y => by simp [h, PseudoEMetricSpace.edist_comm]
       dist_triangle := fun x y z => by
         simp only [h]
         rw [← ENNReal.toReal_add (edist_ne_top _ _) (edist_ne_top _ _),
@@ -1399,16 +1399,16 @@ def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetri
     by
     rw [uniformity_pseudoedist, Metric.uniformity_edist]
     rfl
-#align pseudo_emetric_space.to_pseudo_metric_space_of_dist PseudoEmetricSpace.toPseudoMetricSpaceOfDist
+#align pseudo_emetric_space.to_pseudo_metric_space_of_dist PseudoEMetricSpace.toPseudoMetricSpaceOfDist
 
 /-- One gets a pseudometric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the pseudometric space and the emetric space. -/
-def PseudoEmetricSpace.toPseudoMetricSpace {α : Type u} [e : PseudoEmetricSpace α]
+def PseudoEMetricSpace.toPseudoMetricSpace {α : Type u} [e : PseudoEMetricSpace α]
     (h : ∀ x y : α, edist x y ≠ ⊤) : PseudoMetricSpace α :=
-  PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun x y => ENNReal.toReal (edist x y)) h fun x y =>
+  PseudoEMetricSpace.toPseudoMetricSpaceOfDist (fun x y => ENNReal.toReal (edist x y)) h fun x y =>
     rfl
-#align pseudo_emetric_space.to_pseudo_metric_space PseudoEmetricSpace.toPseudoMetricSpace
+#align pseudo_emetric_space.to_pseudo_metric_space PseudoEMetricSpace.toPseudoMetricSpace
 
 /-- Build a new pseudometric space from an old one where the bundled bornology structure is provably
 (but typically non-definitionaly) equal to some given bornology structure.
@@ -1449,7 +1449,7 @@ theorem Metric.complete_of_convergent_controlled_sequences (B : ℕ → Real) (h
 
 theorem Metric.complete_of_cauchySeq_tendsto :
     (∀ u : ℕ → α, CauchySeq u → ∃ a, Tendsto u atTop (𝓝 a)) → CompleteSpace α :=
-  Emetric.complete_of_cauchySeq_tendsto
+  EMetric.complete_of_cauchySeq_tendsto
 #align metric.complete_of_cauchy_seq_tendsto Metric.complete_of_cauchySeq_tendsto
 
 section Real
@@ -1887,7 +1887,7 @@ section Prod
 variable [PseudoMetricSpace β]
 
 instance Prod.pseudoMetricSpaceMax : PseudoMetricSpace (α × β) :=
-  (PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun x y : α × β => dist x.1 y.1 ⊔ dist x.2 y.2)
+  (PseudoEMetricSpace.toPseudoMetricSpaceOfDist (fun x y : α × β => dist x.1 y.1 ⊔ dist x.2 y.2)
         (fun x y => (max_lt (edist_lt_top _ _) (edist_lt_top _ _)).Ne) fun x y => by
         simp only [sup_eq_max, dist_edist, ←
           ENNReal.toReal_max (edist_ne_top _ _) (edist_ne_top _ _), Prod.edist_eq]).replaceBornology
@@ -2161,7 +2161,7 @@ instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) :=
     the uniformity is the same as the product uniformity, but we register nevertheless a nice formula
     for the distance -/
   refine'
-    (PseudoEmetricSpace.toPseudoMetricSpaceOfDist
+    (PseudoEMetricSpace.toPseudoMetricSpaceOfDist
           (fun f g : ∀ b, π b => ((sup univ fun b => nndist (f b) (g b) : ℝ≥0) : ℝ)) (fun f g => _)
           fun f g => _).replaceBornology
       fun s => _
@@ -2353,7 +2353,7 @@ instance (priority := 100) second_countable_of_proper [ProperSpace α] : SecondC
   by
   -- We already have `sigma_compact_space_of_locally_compact_second_countable`, so we don't
   -- add an instance for `sigma_compact_space`.
-  suffices SigmaCompactSpace α by exact Emetric.second_countable_of_sigma_compact α
+  suffices SigmaCompactSpace α by exact EMetric.secondCountable_of_sigmaCompact α
   rcases em (Nonempty α) with (⟨⟨x⟩⟩ | hn)
   · exact ⟨⟨fun n => closed_ball x n, fun n => is_compact_closed_ball _ _, Union_closed_ball_nat _⟩⟩
   · exact ⟨⟨fun n => ∅, fun n => isCompact_empty, Union_eq_univ_iff.2 fun x => (hn ⟨x⟩).elim⟩⟩
@@ -2486,7 +2486,7 @@ theorem second_countable_of_almost_dense_set
     (H : ∀ ε > (0 : ℝ), ∃ s : Set α, s.Countable ∧ ∀ x, ∃ y ∈ s, dist x y ≤ ε) :
     SecondCountableTopology α :=
   by
-  refine' Emetric.second_countable_of_almost_dense_set fun ε ε0 => _
+  refine' EMetric.secondCountable_of_almost_dense_set fun ε ε0 => _
   rcases ENNReal.lt_iff_exists_nnreal_btwn.1 ε0 with ⟨ε', ε'0, ε'ε⟩
   choose s hsc y hys hyx using H ε' (by exact_mod_cast ε'0)
   refine' ⟨s, hsc, Union₂_eq_univ_iff.2 fun x => ⟨y x, hys _, le_trans _ ε'ε.le⟩⟩
@@ -2836,7 +2836,7 @@ variable {s : Set α} {x y z : α}
 /-- The diameter of a set in a metric space. To get controllable behavior even when the diameter
 should be infinite, we express it in terms of the emetric.diameter -/
 noncomputable def diam (s : Set α) : ℝ :=
-  ENNReal.toReal (Emetric.diam s)
+  ENNReal.toReal (EMetric.diam s)
 #align metric.diam Metric.diam
 
 /-- The diameter of a set is always nonnegative -/
@@ -2845,7 +2845,7 @@ theorem diam_nonneg : 0 ≤ diam s :=
 #align metric.diam_nonneg Metric.diam_nonneg
 
 theorem diam_subsingleton (hs : s.Subsingleton) : diam s = 0 := by
-  simp only [diam, Emetric.diam_subsingleton hs, ENNReal.zero_toReal]
+  simp only [diam, EMetric.diam_subsingleton hs, ENNReal.zero_toReal]
 #align metric.diam_subsingleton Metric.diam_subsingleton
 
 /-- The empty set has zero diameter -/
@@ -2862,22 +2862,22 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
 
 -- Does not work as a simp-lemma, since {x, y} reduces to (insert y {x})
 theorem diam_pair : diam ({x, y} : Set α) = dist x y := by
-  simp only [diam, Emetric.diam_pair, dist_edist]
+  simp only [diam, EMetric.diam_pair, dist_edist]
 #align metric.diam_pair Metric.diam_pair
 
 -- Does not work as a simp-lemma, since {x, y, z} reduces to (insert z (insert y {x}))
 theorem diam_triple :
     Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (dist x z)) (dist y z) :=
   by
-  simp only [Metric.diam, Emetric.diam_triple, dist_edist]
+  simp only [Metric.diam, EMetric.diam_triple, dist_edist]
   rw [ENNReal.toReal_max, ENNReal.toReal_max] <;> apply_rules [ne_of_lt, edist_lt_top, max_lt]
 #align metric.diam_triple Metric.diam_triple
 
 /-- If the distance between any two points in a set is bounded by some constant `C`,
 then `ennreal.of_real C`  bounds the emetric diameter of this set. -/
 theorem ediam_le_of_forall_dist_le {C : ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, dist x y ≤ C) :
-    Emetric.diam s ≤ ENNReal.ofReal C :=
-  Emetric.diam_le fun x hx y hy => (edist_dist x y).symm ▸ ENNReal.ofReal_le_ofReal (h x hx y hy)
+    EMetric.diam s ≤ ENNReal.ofReal C :=
+  EMetric.diam_le fun x hx y hy => (edist_dist x y).symm ▸ ENNReal.ofReal_le_ofReal (h x hx y hy)
 #align metric.ediam_le_of_forall_dist_le Metric.ediam_le_of_forall_dist_le
 
 /-- If the distance between any two points in a set is bounded by some non-negative constant,
@@ -2898,33 +2898,33 @@ theorem diam_le_of_forall_dist_le_of_nonempty (hs : s.Nonempty) {C : ℝ}
 #align metric.diam_le_of_forall_dist_le_of_nonempty Metric.diam_le_of_forall_dist_le_of_nonempty
 
 /-- The distance between two points in a set is controlled by the diameter of the set. -/
-theorem dist_le_diam_of_mem' (h : Emetric.diam s ≠ ⊤) (hx : x ∈ s) (hy : y ∈ s) :
+theorem dist_le_diam_of_mem' (h : EMetric.diam s ≠ ⊤) (hx : x ∈ s) (hy : y ∈ s) :
     dist x y ≤ diam s := by
   rw [diam, dist_edist]
   rw [ENNReal.toReal_le_toReal (edist_ne_top _ _) h]
-  exact Emetric.edist_le_diam_of_mem hx hy
+  exact EMetric.edist_le_diam_of_mem hx hy
 #align metric.dist_le_diam_of_mem' Metric.dist_le_diam_of_mem'
 
 /-- Characterize the boundedness of a set in terms of the finiteness of its emetric.diameter. -/
-theorem bounded_iff_ediam_ne_top : Bounded s ↔ Emetric.diam s ≠ ⊤ :=
+theorem bounded_iff_ediam_ne_top : Bounded s ↔ EMetric.diam s ≠ ⊤ :=
   Iff.intro
     (fun ⟨C, hC⟩ => ne_top_of_le_ne_top ENNReal.ofReal_ne_top <| ediam_le_of_forall_dist_le hC)
     fun h => ⟨diam s, fun x hx y hy => dist_le_diam_of_mem' h hx hy⟩
 #align metric.bounded_iff_ediam_ne_top Metric.bounded_iff_ediam_ne_top
 
-theorem Bounded.ediam_ne_top (h : Bounded s) : Emetric.diam s ≠ ⊤ :=
+theorem Bounded.ediam_ne_top (h : Bounded s) : EMetric.diam s ≠ ⊤ :=
   bounded_iff_ediam_ne_top.1 h
 #align metric.bounded.ediam_ne_top Metric.Bounded.ediam_ne_top
 
 theorem ediam_univ_eq_top_iff_noncompact [ProperSpace α] :
-    Emetric.diam (univ : Set α) = ∞ ↔ NoncompactSpace α := by
+    EMetric.diam (univ : Set α) = ∞ ↔ NoncompactSpace α := by
   rw [← not_compactSpace_iff, compact_space_iff_bounded_univ, bounded_iff_ediam_ne_top,
     Classical.not_not]
 #align metric.ediam_univ_eq_top_iff_noncompact Metric.ediam_univ_eq_top_iff_noncompact
 
 @[simp]
 theorem ediam_univ_of_noncompact [ProperSpace α] [NoncompactSpace α] :
-    Emetric.diam (univ : Set α) = ∞ :=
+    EMetric.diam (univ : Set α) = ∞ :=
   ediam_univ_eq_top_iff_noncompact.mpr ‹_›
 #align metric.ediam_univ_of_noncompact Metric.ediam_univ_of_noncompact
 
@@ -2938,7 +2938,7 @@ theorem dist_le_diam_of_mem (h : Bounded s) (hx : x ∈ s) (hy : y ∈ s) : dist
   dist_le_diam_of_mem' h.ediam_ne_top hx hy
 #align metric.dist_le_diam_of_mem Metric.dist_le_diam_of_mem
 
-theorem ediam_of_unbounded (h : ¬Bounded s) : Emetric.diam s = ∞ := by
+theorem ediam_of_unbounded (h : ¬Bounded s) : EMetric.diam s = ∞ := by
   rwa [bounded_iff_ediam_ne_top, Classical.not_not] at h
 #align metric.ediam_of_unbounded Metric.ediam_of_unbounded
 
@@ -2953,7 +2953,7 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
   by
   unfold diam
   rw [ENNReal.toReal_le_toReal (bounded.mono h ht).ediam_ne_top ht.ediam_ne_top]
-  exact Emetric.diam_mono h
+  exact EMetric.diam_mono h
 #align metric.diam_mono Metric.diam_mono
 
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
@@ -2971,7 +2971,7 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
           repeat' apply ENNReal.add_ne_top.2 <;> constructor <;>
         try assumption <;>
       try apply edist_ne_top
-    exact Emetric.diam_union xs yt
+    exact EMetric.diam_union xs yt
   · rw [diam_eq_zero_of_unbounded H]
     apply_rules [add_nonneg, diam_nonneg, dist_nonneg]
 #align metric.diam_union Metric.diam_union
@@ -3227,8 +3227,8 @@ def MetricSpace.ofT0PseudoMetricSpace (α : Type _) [PseudoMetricSpace α] [T0Sp
 
 -- see Note [lower instance priority]
 /-- A metric space induces an emetric space -/
-instance (priority := 100) MetricSpace.toEmetricSpace : EmetricSpace γ :=
-  EmetricSpace.ofT0PseudoEmetricSpace γ
+instance (priority := 100) MetricSpace.toEmetricSpace : EMetricSpace γ :=
+  EMetricSpace.ofT0PseudoEMetricSpace γ
 #align metric_space.to_emetric_space MetricSpace.toEmetricSpace
 
 theorem isClosed_of_pairwise_le_dist {s : Set γ} {ε : ℝ} (hε : 0 < ε)
@@ -3257,13 +3257,13 @@ end Metric
 See Note [forgetful inheritance].
 -/
 def MetricSpace.replaceUniformity {γ} [U : UniformSpace γ] (m : MetricSpace γ)
-    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : MetricSpace γ :=
+    (H : 𝓤[U] = 𝓤[PseudoEMetricSpace.toUniformSpace]) : MetricSpace γ :=
   { PseudoMetricSpace.replaceUniformity m.toPseudoMetricSpace H with
     eq_of_dist_eq_zero := @eq_of_dist_eq_zero _ _ }
 #align metric_space.replace_uniformity MetricSpace.replaceUniformity
 
 theorem MetricSpace.replaceUniformity_eq {γ} [U : UniformSpace γ] (m : MetricSpace γ)
-    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : m.replaceUniformity H = m :=
+    (H : 𝓤[U] = 𝓤[PseudoEMetricSpace.toUniformSpace]) : m.replaceUniformity H = m :=
   by
   ext
   rfl
@@ -3291,20 +3291,20 @@ is everywhere finite, by pushing the edistance to reals. We set it up so that th
 uniformity are defeq in the metric space and the emetric space. In this definition, the distance
 is given separately, to be able to prescribe some expression which is not defeq to the push-forward
 of the edistance to reals. -/
-def EmetricSpace.toMetricSpaceOfDist {α : Type u} [e : EmetricSpace α] (dist : α → α → ℝ)
+def EMetricSpace.toMetricSpaceOfDist {α : Type u} [e : EMetricSpace α] (dist : α → α → ℝ)
     (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤) (h : ∀ x y, dist x y = ENNReal.toReal (edist x y)) :
     MetricSpace α :=
   @MetricSpace.ofT0PseudoMetricSpace α
-    (PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h) _
-#align emetric_space.to_metric_space_of_dist EmetricSpace.toMetricSpaceOfDist
+    (PseudoEMetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h) _
+#align emetric_space.to_metric_space_of_dist EMetricSpace.toMetricSpaceOfDist
 
 /-- One gets a metric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the metric space and the emetric space. -/
-def EmetricSpace.toMetricSpace {α : Type u} [EmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) :
+def EMetricSpace.toMetricSpace {α : Type u} [EMetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) :
     MetricSpace α :=
-  EmetricSpace.toMetricSpaceOfDist (fun x y => ENNReal.toReal (edist x y)) h fun x y => rfl
-#align emetric_space.to_metric_space EmetricSpace.toMetricSpace
+  EMetricSpace.toMetricSpaceOfDist (fun x y => ENNReal.toReal (edist x y)) h fun x y => rfl
+#align emetric_space.to_metric_space EMetricSpace.toMetricSpace
 
 /-- Build a new metric space from an old one where the bundled bornology structure is provably
 (but typically non-definitionaly) equal to some given bornology structure.
@@ -3483,7 +3483,7 @@ theorem UniformSpace.SeparationQuotient.dist_mk {α : Type u} [PseudoMetricSpace
 #align uniform_space.separation_quotient.dist_mk UniformSpace.SeparationQuotient.dist_mk
 
 instance {α : Type u} [PseudoMetricSpace α] : MetricSpace (UniformSpace.SeparationQuotient α) :=
-  EmetricSpace.toMetricSpaceOfDist dist (fun x y => Quotient.inductionOn₂' x y edist_ne_top)
+  EMetricSpace.toMetricSpaceOfDist dist (fun x y => Quotient.inductionOn₂' x y edist_ne_top)
     fun x y => Quotient.inductionOn₂' x y dist_edist
 
 end EqRel

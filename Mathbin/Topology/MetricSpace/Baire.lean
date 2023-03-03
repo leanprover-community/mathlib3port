@@ -52,7 +52,7 @@ class BaireSpace (α : Type _) [TopologicalSpace α] : Prop where
 /-- Baire theorems asserts that various topological spaces have the Baire property.
 Two versions of these theorems are given.
 The first states that complete pseudo_emetric spaces are Baire. -/
-instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetricSpace α]
+instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetricSpace α]
     [CompleteSpace α] : BaireSpace α :=
   by
   refine' ⟨fun f ho hd => _⟩
@@ -69,7 +69,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
     by
     intro n x δ δpos
     have : x ∈ closure (f n) := hd n x
-    rcases Emetric.mem_closure_iff.1 this (δ / 2) (ENNReal.half_pos δpos) with ⟨y, ys, xy⟩
+    rcases EMetric.mem_closure_iff.1 this (δ / 2) (ENNReal.half_pos δpos) with ⟨y, ys, xy⟩
     rw [edist_comm] at xy
     obtain ⟨r, rpos, hr⟩ : ∃ r > 0, closed_ball y r ⊆ f n :=
       nhds_basis_closed_eball.mem_iff.1 (isOpen_iff_mem_nhds.1 (ho n) y ys)

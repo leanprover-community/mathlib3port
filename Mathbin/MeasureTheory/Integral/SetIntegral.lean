@@ -1333,7 +1333,7 @@ end
 
 section thickenedIndicator
 
-variable [PseudoEmetricSpace α]
+variable [PseudoEMetricSpace α]
 
 theorem measure_le_lintegral_thickenedIndicatorAux (μ : Measure α) {E : Set α}
     (E_mble : MeasurableSet E) (δ : ℝ) : μ E ≤ ∫⁻ a, (thickenedIndicatorAux δ E a : ℝ≥0∞) ∂μ :=

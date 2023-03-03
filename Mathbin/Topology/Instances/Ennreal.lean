@@ -1578,7 +1578,7 @@ theorem tsum_lt_tsum_of_nonneg {i : ℕ} {f g : ℕ → ℝ} (h0 : ∀ b : ℕ, 
 
 section
 
-variable [EmetricSpace β]
+variable [EMetricSpace β]
 
 open ENNReal Filter Emetric
 
@@ -1595,27 +1595,27 @@ theorem edist_ne_top_of_mem_ball {a : β} {r : ℝ≥0∞} (x y : ball a r) : ed
 /-- Each ball in an extended metric space gives us a metric space, as the edist
 is everywhere finite. -/
 def metricSpaceEmetricBall (a : β) (r : ℝ≥0∞) : MetricSpace (ball a r) :=
-  EmetricSpace.toMetricSpace edist_ne_top_of_mem_ball
+  EMetricSpace.toMetricSpace edist_ne_top_of_mem_ball
 #align metric_space_emetric_ball metricSpaceEmetricBall
 
 attribute [local instance] metricSpaceEmetricBall
 
 theorem nhds_eq_nhds_emetric_ball (a x : β) (r : ℝ≥0∞) (h : x ∈ ball a r) :
     𝓝 x = map (coe : ball a r → β) (𝓝 ⟨x, h⟩) :=
-  (map_nhds_subtype_coe_eq_nhds _ <| IsOpen.mem_nhds Emetric.isOpen_ball h).symm
+  (map_nhds_subtype_coe_eq_nhds _ <| IsOpen.mem_nhds EMetric.isOpen_ball h).symm
 #align nhds_eq_nhds_emetric_ball nhds_eq_nhds_emetric_ball
 
 end
 
 section
 
-variable [PseudoEmetricSpace α]
+variable [PseudoEMetricSpace α]
 
 open Emetric
 
 theorem tendsto_iff_edist_tendsto_0 {l : Filter β} {f : β → α} {y : α} :
     Tendsto f l (𝓝 y) ↔ Tendsto (fun x => edist (f x) y) l (𝓝 0) := by
-  simp only [emetric.nhds_basis_eball.tendsto_right_iff, Emetric.mem_ball,
+  simp only [emetric.nhds_basis_eball.tendsto_right_iff, EMetric.mem_ball,
     @tendsto_order ℝ≥0∞ β _ _, forall_prop_of_false ENNReal.not_lt_zero, forall_const, true_and_iff]
 #align tendsto_iff_edist_tendsto_0 tendsto_iff_edist_tendsto_0
 
@@ -1627,7 +1627,7 @@ theorem Emetric.cauchySeq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s 
         (∀ n m N : β, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N) ∧ Tendsto b atTop (𝓝 0) :=
   ⟨by
     intro hs
-    rw [Emetric.cauchySeq_iff] at hs
+    rw [EMetric.cauchySeq_iff] at hs
     /- `s` is Cauchy sequence. The sequence `b` will be constructed by taking
       the supremum of the distances between `s n` and `s m` for `n m ≥ N`-/
     let b N := Sup ((fun p : β × β => edist (s p.1) (s p.2)) '' { p | p.1 ≥ N ∧ p.2 ≥ N })
@@ -1659,7 +1659,7 @@ theorem Emetric.cauchySeq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s 
     rintro ⟨b, ⟨b_bound, b_lim⟩⟩
     /-b : ℕ → ℝ, b_bound : ∀ (n m N : ℕ), N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N,
         b_lim : tendsto b at_top (𝓝 0)-/
-    refine' Emetric.cauchySeq_iff.2 fun ε εpos => _
+    refine' EMetric.cauchySeq_iff.2 fun ε εpos => _
     have : ∀ᶠ n in at_top, b n < ε := (tendsto_order.1 b_lim).2 _ εpos
     rcases Filter.mem_atTop_sets.1 this with ⟨N, hN⟩
     exact
@@ -1680,13 +1680,13 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
     by_cases hx : f x = ∞
     · have : f =ᶠ[𝓝 x] fun _ => ∞ :=
         by
-        filter_upwards [Emetric.ball_mem_nhds x ENNReal.coe_lt_top]
+        filter_upwards [EMetric.ball_mem_nhds x ENNReal.coe_lt_top]
         refine' fun y (hy : edist y x < ⊤) => _
         rw [edist_comm] at hy
         simpa [hx, ENNReal.mul_ne_top hC hy.ne] using h x y
       exact this.continuous_at
     · refine' (ENNReal.tendsto_nhds hx).2 fun ε (ε0 : 0 < ε) => _
-      filter_upwards [Emetric.closedBall_mem_nhds x (ENNReal.div_pos_iff.2 ⟨ε0.ne', hC⟩)]
+      filter_upwards [EMetric.closedBall_mem_nhds x (ENNReal.div_pos_iff.2 ⟨ε0.ne', hC⟩)]
       have hεC : C * (ε / C) = ε := ENNReal.mul_div_cancel' C0 hC
       refine' fun y (hy : edist y x ≤ ε / C) => ⟨tsub_le_iff_right.2 _, _⟩
       · rw [edist_comm] at hy
@@ -1753,7 +1753,7 @@ theorem Metric.diam_closure {α : Type _} [PseudoMetricSpace α] (s : Set α) :
     Metric.diam (closure s) = diam s := by simp only [Metric.diam, Emetric.diam_closure]
 #align metric.diam_closure Metric.diam_closure
 
-theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0)
+theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0)
     (s : Set α) : IsClosed { f : α → β | LipschitzOnWith K f s } :=
   by
   simp only [LipschitzOnWith, set_of_forall]
@@ -1761,7 +1761,7 @@ theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEmetricSpace α] [PseudoEm
   exacts[Continuous.edist (continuous_apply x) (continuous_apply y), continuous_const]
 #align is_closed_set_of_lipschitz_on_with isClosed_setOf_lipschitzOnWith
 
-theorem isClosed_setOf_lipschitzWith {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0) :
+theorem isClosed_setOf_lipschitzWith {α β} [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) :
     IsClosed { f : α → β | LipschitzWith K f } := by
   simp only [← lipschitz_on_univ, isClosed_setOf_lipschitzOnWith]
 #align is_closed_set_of_lipschitz_with isClosed_setOf_lipschitzWith
@@ -1770,7 +1770,7 @@ namespace Real
 
 /-- For a bounded set `s : set ℝ`, its `emetric.diam` is equal to `Sup s - Inf s` reinterpreted as
 `ℝ≥0∞`. -/
-theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = ENNReal.ofReal (supₛ s - infₛ s) :=
+theorem ediam_eq {s : Set ℝ} (h : Bounded s) : EMetric.diam s = ENNReal.ofReal (supₛ s - infₛ s) :=
   by
   rcases eq_empty_or_nonempty s with (rfl | hne); · simp
   refine' le_antisymm (Metric.ediam_le_of_forall_dist_le fun x hx y hy => _) _
@@ -1795,7 +1795,7 @@ theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = supₛ s - inf�
 #align real.diam_eq Real.diam_eq
 
 @[simp]
-theorem ediam_Ioo (a b : ℝ) : Emetric.diam (Ioo a b) = ENNReal.ofReal (b - a) :=
+theorem ediam_Ioo (a b : ℝ) : EMetric.diam (Ioo a b) = ENNReal.ofReal (b - a) :=
   by
   rcases le_or_lt b a with (h | h)
   · simp [h]
@@ -1803,7 +1803,7 @@ theorem ediam_Ioo (a b : ℝ) : Emetric.diam (Ioo a b) = ENNReal.ofReal (b - a) 
 #align real.ediam_Ioo Real.ediam_Ioo
 
 @[simp]
-theorem ediam_Icc (a b : ℝ) : Emetric.diam (Icc a b) = ENNReal.ofReal (b - a) :=
+theorem ediam_Icc (a b : ℝ) : EMetric.diam (Icc a b) = ENNReal.ofReal (b - a) :=
   by
   rcases le_or_lt a b with (h | h)
   · rw [Real.ediam_eq (bounded_Icc _ _), csupₛ_Icc h, cinfₛ_Icc h]
@@ -1811,13 +1811,13 @@ theorem ediam_Icc (a b : ℝ) : Emetric.diam (Icc a b) = ENNReal.ofReal (b - a) 
 #align real.ediam_Icc Real.ediam_Icc
 
 @[simp]
-theorem ediam_Ico (a b : ℝ) : Emetric.diam (Ico a b) = ENNReal.ofReal (b - a) :=
+theorem ediam_Ico (a b : ℝ) : EMetric.diam (Ico a b) = ENNReal.ofReal (b - a) :=
   le_antisymm (ediam_Icc a b ▸ diam_mono Ico_subset_Icc_self)
     (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ico_self)
 #align real.ediam_Ico Real.ediam_Ico
 
 @[simp]
-theorem ediam_Ioc (a b : ℝ) : Emetric.diam (Ioc a b) = ENNReal.ofReal (b - a) :=
+theorem ediam_Ioc (a b : ℝ) : EMetric.diam (Ioc a b) = ENNReal.ofReal (b - a) :=
   le_antisymm (ediam_Icc a b ▸ diam_mono Ioc_subset_Icc_self)
     (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ioc_self)
 #align real.ediam_Ioc Real.ediam_Ioc

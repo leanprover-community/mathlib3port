@@ -53,7 +53,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {ι : Type x}
 
 /-- A function `f` is Lipschitz continuous with constant `K ≥ 0` if for all `x, y`
 we have `dist (f x) (f y) ≤ K * dist x y` -/
-def LipschitzWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0) (f : α → β) :=
+def LipschitzWith [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) (f : α → β) :=
   ∀ x y, edist (f x) (f y) ≤ K * edist x y
 #align lipschitz_with LipschitzWith
 
@@ -70,17 +70,17 @@ alias lipschitzWith_iff_dist_le_mul ↔ LipschitzWith.dist_le_mul LipschitzWith.
 
 /-- A function `f` is Lipschitz continuous with constant `K ≥ 0` on `s` if for all `x, y` in `s`
 we have `dist (f x) (f y) ≤ K * dist x y` -/
-def LipschitzOnWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0) (f : α → β)
+def LipschitzOnWith [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) (f : α → β)
     (s : Set α) :=
   ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), edist (f x) (f y) ≤ K * edist x y
 #align lipschitz_on_with LipschitzOnWith
 
 @[simp]
-theorem lipschitzOnWith_empty [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ≥0) (f : α → β) :
+theorem lipschitzOnWith_empty [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) (f : α → β) :
     LipschitzOnWith K f ∅ := fun x x_in y y_in => False.elim x_in
 #align lipschitz_on_with_empty lipschitzOnWith_empty
 
-theorem LipschitzOnWith.mono [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {s t : Set α}
+theorem LipschitzOnWith.mono [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0} {s t : Set α}
     {f : α → β} (hf : LipschitzOnWith K f t) (h : s ⊆ t) : LipschitzOnWith K f s :=
   fun x x_in y y_in => hf (h x_in) (h y_in)
 #align lipschitz_on_with.mono LipschitzOnWith.mono
@@ -98,11 +98,11 @@ alias lipschitzOnWith_iff_dist_le_mul ↔ LipschitzOnWith.dist_le_mul LipschitzO
 #align lipschitz_on_with.of_dist_le_mul LipschitzOnWith.of_dist_le_mul
 
 @[simp]
-theorem lipschitz_on_univ [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} :
+theorem lipschitz_on_univ [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0} {f : α → β} :
     LipschitzOnWith K f univ ↔ LipschitzWith K f := by simp [LipschitzOnWith, LipschitzWith]
 #align lipschitz_on_univ lipschitz_on_univ
 
-theorem lipschitzOnWith_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
+theorem lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0}
     {f : α → β} {s : Set α} : LipschitzOnWith K f s ↔ LipschitzWith K (s.restrict f) := by
   simp only [LipschitzOnWith, LipschitzWith, SetCoe.forall', restrict, Subtype.edist_eq]
 #align lipschitz_on_with_iff_restrict lipschitzOnWith_iff_restrict
@@ -110,7 +110,7 @@ theorem lipschitzOnWith_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace
 alias lipschitzOnWith_iff_restrict ↔ LipschitzOnWith.to_restrict _
 #align lipschitz_on_with.to_restrict LipschitzOnWith.to_restrict
 
-theorem MapsTo.lipschitzOnWith_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
+theorem MapsTo.lipschitzOnWith_iff_restrict [PseudoEMetricSpace α] [PseudoEMetricSpace β] {K : ℝ≥0}
     {f : α → β} {s : Set α} {t : Set β} (h : MapsTo f s t) :
     LipschitzOnWith K f s ↔ LipschitzWith K (h.restrict f s t) :=
   lipschitzOnWith_iff_restrict
@@ -125,7 +125,7 @@ section Emetric
 
 open Emetric
 
-variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
+variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ]
 
 variable {K : ℝ≥0} {f : α → β} {x y : α} {r : ℝ≥0∞}
 
@@ -176,11 +176,11 @@ protected theorem weaken (hf : LipschitzWith K f) {K' : ℝ≥0} (h : K ≤ K') 
 #align lipschitz_with.weaken LipschitzWith.weaken
 
 theorem ediam_image_le (hf : LipschitzWith K f) (s : Set α) :
-    Emetric.diam (f '' s) ≤ K * Emetric.diam s :=
+    EMetric.diam (f '' s) ≤ K * EMetric.diam s :=
   by
-  apply Emetric.diam_le
+  apply EMetric.diam_le
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-  exact hf.edist_le_mul_of_le (Emetric.edist_le_diam_of_mem hx hy)
+  exact hf.edist_le_mul_of_le (EMetric.edist_le_diam_of_mem hx hy)
 #align lipschitz_with.ediam_image_le LipschitzWith.ediam_image_le
 
 theorem edist_lt_of_edist_lt_div (hf : LipschitzWith K f) {x y : α} {d : ℝ≥0∞}
@@ -194,7 +194,7 @@ theorem edist_lt_of_edist_lt_div (hf : LipschitzWith K f) {x y : α} {d : ℝ≥
 /-- A Lipschitz function is uniformly continuous -/
 protected theorem uniformContinuous (hf : LipschitzWith K f) : UniformContinuous f :=
   by
-  refine' Emetric.uniformContinuous_iff.2 fun ε εpos => _
+  refine' EMetric.uniformContinuous_iff.2 fun ε εpos => _
   use ε / K, ENNReal.div_pos_iff.2 ⟨ne_of_gt εpos, ENNReal.coe_ne_top⟩
   exact fun x y => hf.edist_lt_of_edist_lt_div
 #align lipschitz_with.uniform_continuous LipschitzWith.uniformContinuous
@@ -225,7 +225,7 @@ theorem subtype_mk (hf : LipschitzWith K f) {p : β → Prop} (hp : ∀ x, p (f 
   hf
 #align lipschitz_with.subtype_mk LipschitzWith.subtype_mk
 
-protected theorem eval {α : ι → Type u} [∀ i, PseudoEmetricSpace (α i)] [Fintype ι] (i : ι) :
+protected theorem eval {α : ι → Type u} [∀ i, PseudoEMetricSpace (α i)] [Fintype ι] (i : ι) :
     LipschitzWith 1 (Function.eval i : (∀ i, α i) → α i) :=
   LipschitzWith.of_edist_le fun f g => by convert edist_le_pi_edist f g i
 #align lipschitz_with.eval LipschitzWith.eval
@@ -454,7 +454,7 @@ end Metric
 
 section Emetric
 
-variable {α} [PseudoEmetricSpace α] {f g : α → ℝ} {Kf Kg : ℝ≥0}
+variable {α} [PseudoEMetricSpace α] {f g : α → ℝ} {Kf Kg : ℝ≥0}
 
 protected theorem max (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
     LipschitzWith (max Kf Kg) fun x => max (f x) (g x) := by
@@ -524,7 +524,7 @@ namespace LipschitzOnWith
 
 section Emetric
 
-variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
+variable [PseudoEMetricSpace α] [PseudoEMetricSpace β] [PseudoEMetricSpace γ]
 
 variable {K : ℝ≥0} {s : Set α} {f : α → β}
 
@@ -609,19 +609,19 @@ with the same Lipschitz constant `K`. Then it is continuous on `s × t`.
 
 The actual statement uses (Lipschitz) continuity of `λ y, f (a, y)` and `λ x, f (x, b)` instead
 of continuity of `f` on subsets of the product space. -/
-theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEmetricSpace α] [TopologicalSpace β]
-    [PseudoEmetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K : ℝ≥0)
+theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEMetricSpace α] [TopologicalSpace β]
+    [PseudoEMetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K : ℝ≥0)
     (ha : ∀ a ∈ s, ContinuousOn (fun y => f (a, y)) t)
     (hb : ∀ b ∈ t, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s ×ˢ t) :=
   by
   rintro ⟨x, y⟩ ⟨hx : x ∈ s, hy : y ∈ t⟩
-  refine' Emetric.tendsto_nhds.2 fun ε (ε0 : 0 < ε) => _
+  refine' EMetric.tendsto_nhds.2 fun ε (ε0 : 0 < ε) => _
   replace ε0 : 0 < ε / 2 := ENNReal.half_pos (ne_of_gt ε0)
   have εK : 0 < ε / 2 / K := ENNReal.div_pos_iff.2 ⟨ε0.ne', ENNReal.coe_ne_top⟩
-  have A : s ∩ Emetric.ball x (ε / 2 / K) ∈ 𝓝[s] x :=
-    inter_mem_nhdsWithin _ (Emetric.ball_mem_nhds _ εK)
+  have A : s ∩ EMetric.ball x (ε / 2 / K) ∈ 𝓝[s] x :=
+    inter_mem_nhdsWithin _ (EMetric.ball_mem_nhds _ εK)
   have B : { b : β | b ∈ t ∧ edist (f (x, b)) (f (x, y)) < ε / 2 } ∈ 𝓝[t] y :=
-    inter_mem self_mem_nhdsWithin (ha x hx y hy (Emetric.ball_mem_nhds _ ε0))
+    inter_mem self_mem_nhdsWithin (ha x hx y hy (EMetric.ball_mem_nhds _ ε0))
   filter_upwards [nhdsWithin_prod A B]
   rintro ⟨a, b⟩
     ⟨⟨has : a ∈ s, hax : edist a x < ε / 2 / K⟩, hbt : b ∈ t, hby :
@@ -640,8 +640,8 @@ theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEmetricSpace α] [
 
 The actual statement uses (Lipschitz) continuity of `λ y, f (a, y)` and `λ x, f (x, b)` instead
 of continuity of `f` on subsets of the product space. -/
-theorem continuous_prod_of_continuous_lipschitz [PseudoEmetricSpace α] [TopologicalSpace β]
-    [PseudoEmetricSpace γ] (f : α × β → γ) (K : ℝ≥0) (ha : ∀ a, Continuous fun y => f (a, y))
+theorem continuous_prod_of_continuous_lipschitz [PseudoEMetricSpace α] [TopologicalSpace β]
+    [PseudoEMetricSpace γ] (f : α × β → γ) (K : ℝ≥0) (ha : ∀ a, Continuous fun y => f (a, y))
     (hb : ∀ b, LipschitzWith K fun x => f (x, b)) : Continuous f :=
   by
   simp only [continuous_iff_continuousOn_univ, ← univ_prod_univ, ← lipschitz_on_univ] at *

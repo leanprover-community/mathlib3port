@@ -1783,7 +1783,7 @@ instance : HasNorm (lp E p μ) where norm f := ENNReal.toReal (snorm f p μ)
 
 instance : HasDist (lp E p μ) where dist f g := ‖f - g‖
 
-instance : HasEdist (lp E p μ) where edist f g := snorm (f - g) p μ
+instance : EDist (lp E p μ) where edist f g := snorm (f - g) p μ
 
 theorem norm_def (f : lp E p μ) : ‖f‖ = ENNReal.toReal (snorm f p μ) :=
   rfl
@@ -1929,7 +1929,7 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p μ) :=
         ENNReal.ofReal_toReal (snorm_ne_top (f - g))] }
 
 -- check no diamond is created
-example [Fact (1 ≤ p)] : PseudoEmetricSpace.toHasEdist = (lp.hasEdist : HasEdist (lp E p μ)) :=
+example [Fact (1 ≤ p)] : PseudoEMetricSpace.toHasEdist = (lp.hasEdist : EDist (lp E p μ)) :=
   rfl
 
 section NormedSpace

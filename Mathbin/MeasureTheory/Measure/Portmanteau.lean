@@ -341,7 +341,7 @@ theorem measure_of_cont_bdd_of_tendsto_indicator [TopologicalSpace Ω] [OpensMea
 measure of the closed set if the thickening radii tend to zero.
 -/
 theorem tendsto_lintegral_thickenedIndicator_of_isClosed {Ω : Type _} [MeasurableSpace Ω]
-    [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ] {F : Set Ω}
+    [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ] {F : Set Ω}
     (F_closed : IsClosed F) {δs : ℕ → ℝ} (δs_pos : ∀ n, 0 < δs n)
     (δs_lim : Tendsto δs atTop (𝓝 0)) :
     Tendsto (fun n => lintegral μ fun ω => (thickenedIndicator (δs_pos n) F ω : ℝ≥0∞)) atTop
@@ -359,7 +359,7 @@ Weak convergence of finite measures implies that the limsup of the measures of a
 at most the measure of the closed set under the limit measure.
 -/
 theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : Filter ι}
-    [MeasurableSpace Ω] [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] {μ : FiniteMeasure Ω}
+    [MeasurableSpace Ω] [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω] {μ : FiniteMeasure Ω}
     {μs : ι → FiniteMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ)) {F : Set Ω} (F_closed : IsClosed F) :
     (L.limsup fun i => (μs i : Measure Ω) F) ≤ (μ : Measure Ω) F :=
   by
@@ -404,7 +404,7 @@ Weak convergence of probability measures implies that the limsup of the measures
 set is at most the measure of the closed set under the limit probability measure.
 -/
 theorem ProbabilityMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : Filter ι}
-    [MeasurableSpace Ω] [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
+    [MeasurableSpace Ω] [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
     {μs : ι → ProbabilityMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ)) {F : Set Ω}
     (F_closed : IsClosed F) : (L.limsup fun i => (μs i : Measure Ω) F) ≤ (μ : Measure Ω) F := by
   apply
@@ -417,7 +417,7 @@ Weak convergence of probability measures implies that the liminf of the measures
 is at least the measure of the open set under the limit probability measure.
 -/
 theorem ProbabilityMeasure.le_liminf_measure_open_of_tendsto {Ω ι : Type _} {L : Filter ι}
-    [MeasurableSpace Ω] [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
+    [MeasurableSpace Ω] [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
     {μs : ι → ProbabilityMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ)) {G : Set Ω} (G_open : IsOpen G) :
     (μ : Measure Ω) G ≤ L.liminf fun i => (μs i : Measure Ω) G :=
   haveI h_closeds :
@@ -428,7 +428,7 @@ theorem ProbabilityMeasure.le_liminf_measure_open_of_tendsto {Ω ι : Type _} {L
 #align measure_theory.probability_measure.le_liminf_measure_open_of_tendsto MeasureTheory.ProbabilityMeasure.le_liminf_measure_open_of_tendsto
 
 theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto' {Ω ι : Type _}
-    {L : Filter ι} [MeasurableSpace Ω] [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω]
+    {L : Filter ι} [MeasurableSpace Ω] [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω]
     {μ : ProbabilityMeasure Ω} {μs : ι → ProbabilityMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ))
     {E : Set Ω} (E_nullbdry : (μ : Measure Ω) (frontier E) = 0) :
     Tendsto (fun i => (μs i : Measure Ω) E) L (𝓝 ((μ : Measure Ω) E)) :=
@@ -446,7 +446,7 @@ A version with coercions to ordinary `ℝ≥0∞`-valued measures is
 `measure_theory.probability_measure.tendsto_measure_of_null_frontier_of_tendsto'`.
 -/
 theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto {Ω ι : Type _} {L : Filter ι}
-    [MeasurableSpace Ω] [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
+    [MeasurableSpace Ω] [PseudoEMetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
     {μs : ι → ProbabilityMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ)) {E : Set Ω}
     (E_nullbdry : μ (frontier E) = 0) : Tendsto (fun i => μs i E) L (𝓝 (μ E)) :=
   by
@@ -467,7 +467,7 @@ TODO: The proof of the implication is not yet here. Add it.
 -/
 
 
-variable {Ω : Type _} [PseudoEmetricSpace Ω] [MeasurableSpace Ω] [OpensMeasurableSpace Ω]
+variable {Ω : Type _} [PseudoEMetricSpace Ω] [MeasurableSpace Ω] [OpensMeasurableSpace Ω]
 
 theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : Set Ω) {a b : ℝ}
     (hab : a < b) : ∃ r ∈ Ioo a b, μ (frontier (Metric.thickening r s)) = 0 :=

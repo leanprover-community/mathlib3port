@@ -110,12 +110,12 @@ protected theorem antilipschitz [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (
 #align semilinear_isometry_class.antilipschitz SemilinearIsometryClass.antilipschitz
 
 theorem ediam_image [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (s : Set E) :
-    Emetric.diam (f '' s) = Emetric.diam s :=
+    EMetric.diam (f '' s) = EMetric.diam s :=
   (SemilinearIsometryClass.isometry f).ediam_image s
 #align semilinear_isometry_class.ediam_image SemilinearIsometryClass.ediam_image
 
 theorem ediam_range [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) :
-    Emetric.diam (range f) = Emetric.diam (univ : Set E) :=
+    EMetric.diam (range f) = EMetric.diam (univ : Set E) :=
   (SemilinearIsometryClass.isometry f).ediam_range
 #align semilinear_isometry_class.ediam_range SemilinearIsometryClass.ediam_range
 
@@ -322,11 +322,11 @@ theorem preimage_closedBall (x : E) (r : ℝ) :
   f.Isometry.preimage_closedBall x r
 #align linear_isometry.preimage_closed_ball LinearIsometry.preimage_closedBall
 
-theorem ediam_image (s : Set E) : Emetric.diam (f '' s) = Emetric.diam s :=
+theorem ediam_image (s : Set E) : EMetric.diam (f '' s) = EMetric.diam s :=
   f.Isometry.ediam_image s
 #align linear_isometry.ediam_image LinearIsometry.ediam_image
 
-theorem ediam_range : Emetric.diam (range f) = Emetric.diam (univ : Set E) :=
+theorem ediam_range : EMetric.diam (range f) = EMetric.diam (univ : Set E) :=
   f.Isometry.ediam_range
 #align linear_isometry.ediam_range LinearIsometry.ediam_range
 
@@ -1053,7 +1053,7 @@ theorem image_eq_preimage (s : Set E) : e '' s = e.symm ⁻¹' s :=
 #align linear_isometry_equiv.image_eq_preimage LinearIsometryEquiv.image_eq_preimage
 
 @[simp]
-theorem ediam_image (s : Set E) : Emetric.diam (e '' s) = Emetric.diam s :=
+theorem ediam_image (s : Set E) : EMetric.diam (e '' s) = EMetric.diam s :=
   e.Isometry.ediam_image s
 #align linear_isometry_equiv.ediam_image LinearIsometryEquiv.ediam_image
 

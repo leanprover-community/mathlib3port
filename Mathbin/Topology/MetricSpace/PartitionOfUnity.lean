@@ -38,7 +38,7 @@ variable {ι X : Type _}
 
 namespace Emetric
 
-variable [EmetricSpace X] {K : ι → Set X} {U : ι → Set X}
+variable [EMetricSpace X] {K : ι → Set X} {U : ι → Set X}
 
 /-- Let `K : ι → set X` be a locally finitie family of closed sets in an emetric space. Let
 `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then for any point

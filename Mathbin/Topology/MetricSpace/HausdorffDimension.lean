@@ -90,7 +90,7 @@ open MeasureTheory ENNReal NNReal Topology
 
 open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional Filter
 
-variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
+variable {ι X Y : Type _} [EMetricSpace X] [EMetricSpace Y]
 
 /-- Hausdorff dimension of a set in an (e)metric space. -/
 noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ :=

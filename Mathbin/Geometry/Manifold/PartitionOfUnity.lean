@@ -578,12 +578,12 @@ theorem exists_smooth_forall_mem_convex_of_local_const (ht : ∀ x, Convex ℝ (
 finite family of closed sets, let `U : ι → set M` be a family of open sets such that `K i ⊆ U i` for
 all `i`. Then there exists a positive smooth function `δ : M → ℝ≥0` such that for any `i` and
 `x ∈ K i`, we have `emetric.closed_ball x (δ x) ⊆ U i`. -/
-theorem Emetric.exists_smooth_forall_closedBall_subset {M} [EmetricSpace M] [ChartedSpace H M]
+theorem Emetric.exists_smooth_forall_closedBall_subset {M} [EMetricSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] [SigmaCompactSpace M] {K : ι → Set M} {U : ι → Set M}
     (hK : ∀ i, IsClosed (K i)) (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i)
     (hfin : LocallyFinite K) :
     ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯,
-      (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Emetric.closedBall x (ENNReal.ofReal (δ x)) ⊆ U i :=
+      (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, EMetric.closedBall x (ENNReal.ofReal (δ x)) ⊆ U i :=
   by
   simpa only [mem_inter_iff, forall_and, mem_preimage, mem_Inter, @forall_swap ι M] using
     exists_smooth_forall_mem_convex_of_local_const I Emetric.exists_forall_closedBall_subset_aux₂

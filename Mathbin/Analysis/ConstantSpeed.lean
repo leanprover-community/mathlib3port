@@ -50,7 +50,7 @@ open BigOperators NNReal ENNReal
 
 open Set MeasureTheory Classical
 
-variable {α : Type _} [LinearOrder α] {E : Type _} [PseudoEmetricSpace E]
+variable {α : Type _} [LinearOrder α] {E : Type _} [PseudoEMetricSpace E]
 
 variable (f : ℝ → E) (s : Set ℝ) (l : ℝ≥0)
 

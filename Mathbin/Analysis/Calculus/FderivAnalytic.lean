@@ -68,7 +68,7 @@ theorem HasFpowerSeriesAt.fderiv_eq (h : HasFpowerSeriesAt f p x) :
 #align has_fpower_series_at.fderiv_eq HasFpowerSeriesAt.fderiv_eq
 
 theorem HasFpowerSeriesOnBall.differentiableOn [CompleteSpace F]
-    (h : HasFpowerSeriesOnBall f p x r) : DifferentiableOn 𝕜 f (Emetric.ball x r) := fun y hy =>
+    (h : HasFpowerSeriesOnBall f p x r) : DifferentiableOn 𝕜 f (EMetric.ball x r) := fun y hy =>
   (h.analyticAt_of_mem hy).DifferentiableWithinAt
 #align has_fpower_series_on_ball.differentiable_on HasFpowerSeriesOnBall.differentiableOn
 
@@ -107,7 +107,7 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
     intro z hz
     dsimp
     rw [← h.fderiv_eq, add_sub_cancel'_right]
-    simpa only [edist_eq_coe_nnnorm_sub, Emetric.mem_ball] using hz
+    simpa only [edist_eq_coe_nnnorm_sub, EMetric.mem_ball] using hz
   suffices B :
     HasFpowerSeriesOnBall (fun z => p.change_origin (z - x) 1) (p.change_origin_series 1) x r
   exact

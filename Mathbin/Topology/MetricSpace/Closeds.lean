@@ -40,11 +40,11 @@ namespace Emetric
 
 section
 
-variable {α : Type u} [EmetricSpace α] {s : Set α}
+variable {α : Type u} [EMetricSpace α] {s : Set α}
 
 /-- In emetric spaces, the Hausdorff edistance defines an emetric space structure
 on the type of closed subsets -/
-instance Closeds.emetricSpace : EmetricSpace (Closeds α)
+instance Closeds.emetricSpace : EMetricSpace (Closeds α)
     where
   edist s t := hausdorffEdist (s : Set α) t
   edist_self s := hausdorffEdist_self
@@ -211,10 +211,10 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
         start from a set `s` which is ε-dense in α. Then the subsets of `s`
         are finitely many, and ε-dense for the Hausdorff distance. -/
     refine'
-      isCompact_of_totallyBounded_isClosed (Emetric.totallyBounded_iff.2 fun ε εpos => _)
+      isCompact_of_totallyBounded_isClosed (EMetric.totallyBounded_iff.2 fun ε εpos => _)
         isClosed_univ
     rcases exists_between εpos with ⟨δ, δpos, δlt⟩
-    rcases Emetric.totallyBounded_iff.1
+    rcases EMetric.totallyBounded_iff.1
         (isCompact_iff_totallyBounded_isComplete.1 (@isCompact_univ α _ _)).1 δ δpos with
       ⟨s, fs, hs⟩
     -- s : set α,  fs : s.finite,  hs : univ ⊆ ⋃ (y : α) (H : y ∈ s), eball y δ
@@ -254,7 +254,7 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
 
 /-- In an emetric space, the type of non-empty compact subsets is an emetric space,
 where the edistance is the Hausdorff edistance -/
-instance NonemptyCompacts.emetricSpace : EmetricSpace (NonemptyCompacts α)
+instance NonemptyCompacts.emetricSpace : EMetricSpace (NonemptyCompacts α)
     where
   edist s t := hausdorffEdist (s : Set α) t
   edist_self s := hausdorffEdist_self
@@ -431,7 +431,7 @@ variable {α : Type u} [MetricSpace α]
 /-- `nonempty_compacts α` inherits a metric space structure, as the Hausdorff
 edistance between two such sets is finite. -/
 instance NonemptyCompacts.metricSpace : MetricSpace (NonemptyCompacts α) :=
-  EmetricSpace.toMetricSpace fun x y =>
+  EMetricSpace.toMetricSpace fun x y =>
     hausdorffEdist_ne_top_of_nonempty_of_bounded x.Nonempty y.Nonempty x.IsCompact.Bounded
       y.IsCompact.Bounded
 #align metric.nonempty_compacts.metric_space Metric.NonemptyCompacts.metricSpace

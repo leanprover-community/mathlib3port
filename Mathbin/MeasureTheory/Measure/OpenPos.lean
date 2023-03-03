@@ -198,7 +198,7 @@ end Metric
 
 namespace Emetric
 
-variable {X : Type _} [PseudoEmetricSpace X] {m : MeasurableSpace X} (μ : Measure X)
+variable {X : Type _} [PseudoEMetricSpace X] {m : MeasurableSpace X} (μ : Measure X)
   [IsOpenPosMeasure μ]
 
 theorem measure_ball_pos (x : X) {r : ℝ≥0∞} (hr : r ≠ 0) : 0 < μ (ball x r) :=

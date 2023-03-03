@@ -28,13 +28,13 @@ noncomputable section
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (r «expr ≠ » 0) -/
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
-def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
+def IsMetricSeparated {X : Type _} [EMetricSpace X] (s t : Set X) :=
   ∃ (r : _)(_ : r ≠ 0), ∀ x ∈ s, ∀ y ∈ t, r ≤ edist x y
 #align is_metric_separated IsMetricSeparated
 
 namespace IsMetricSeparated
 
-variable {X : Type _} [EmetricSpace X] {s t : Set X} {x y : X}
+variable {X : Type _} [EMetricSpace X] {s t : Set X} {x y : X}
 
 @[symm]
 theorem symm (h : IsMetricSeparated s t) : IsMetricSeparated t s :=

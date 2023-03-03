@@ -121,7 +121,7 @@ lemmas for each of three cases `p = 0`, `p = ∞` and `0 < p.to_real`.
 
 section Edist
 
-variable [∀ i, HasEdist (β i)]
+variable [∀ i, EDist (β i)]
 
 /-- Endowing the space `pi_Lp p β` with the `L^p` edistance. We register this instance
 separate from `pi_Lp.pseudo_emetric` since the latter requires the type class hypothesis
@@ -130,7 +130,7 @@ separate from `pi_Lp.pseudo_emetric` since the latter requires the type class hy
 Registering this separately allows for a future emetric-like structure on `pi_Lp p β` for `p < 1`
 satisfying a relaxed triangle inequality. The terminology for this varies throughout the
 literature, but it is sometimes called a *quasi-metric* or *semi-metric*. -/
-instance : HasEdist (PiLp p β)
+instance : EDist (PiLp p β)
     where edist f g :=
     if hp : p = 0 then { i | f i ≠ g i }.toFinite.toFinset.card
     else
@@ -158,7 +158,7 @@ end Edist
 
 section EdistProp
 
-variable {β} [∀ i, PseudoEmetricSpace (β i)]
+variable {β} [∀ i, PseudoEMetricSpace (β i)]
 
 /-- This holds independent of `p` and does not require `[fact (1 ≤ p)]`. We keep it separate
 from `pi_Lp.pseudo_emetric_space` so it can be used also for `p < 1`. -/
@@ -274,7 +274,7 @@ explaining why having definitionally the right uniformity is often important.
 -/
 
 
-variable [Fact (1 ≤ p)] [∀ i, PseudoMetricSpace (α i)] [∀ i, PseudoEmetricSpace (β i)]
+variable [Fact (1 ≤ p)] [∀ i, PseudoMetricSpace (α i)] [∀ i, PseudoEMetricSpace (β i)]
 
 variable [Fintype ι]
 
@@ -284,7 +284,7 @@ with the product one. Therefore, we do not register it as an instance. Using thi
 pseudoemetric space instance, we will show that the uniform structure is equal (but not defeq) to
 the product one, and then register an instance in which we replace the uniform structure by the
 product one using this pseudoemetric space and `pseudo_emetric_space.replace_uniformity`. -/
-def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β)
+def pseudoEmetricAux : PseudoEMetricSpace (PiLp p β)
     where
   edist_self := PiLp.edist_self p
   edist_comm := PiLp.edist_comm p
@@ -335,7 +335,7 @@ structure and the bornology by the product ones using this pseudometric space,
 See note [reducible non-instances] -/
 @[reducible]
 def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
-  PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist
+  PseudoEMetricSpace.toPseudoMetricSpaceOfDist dist
     (fun f g => by
       rcases p.dichotomy with (rfl | h)
       · exact supr_edist_ne_top_aux f g
@@ -481,13 +481,13 @@ variable [Fact (1 ≤ p)]
 
 /-- pseudoemetric space instance on the product of finitely many pseudoemetric spaces, using the
 `L^p` pseudoedistance, and having as uniformity the product uniformity. -/
-instance [∀ i, PseudoEmetricSpace (β i)] : PseudoEmetricSpace (PiLp p β) :=
+instance [∀ i, PseudoEMetricSpace (β i)] : PseudoEMetricSpace (PiLp p β) :=
   (pseudoEmetricAux p β).replaceUniformity (aux_uniformity_eq p β).symm
 
 /-- emetric space instance on the product of finitely many emetric spaces, using the `L^p`
 edistance, and having as uniformity the product uniformity. -/
-instance [∀ i, EmetricSpace (α i)] : EmetricSpace (PiLp p α) :=
-  @EmetricSpace.ofT0PseudoEmetricSpace (PiLp p α) _ Pi.t0Space
+instance [∀ i, EMetricSpace (α i)] : EMetricSpace (PiLp p α) :=
+  @EMetricSpace.ofT0PseudoEMetricSpace (PiLp p α) _ Pi.t0Space
 
 /-- pseudometric space instance on the product of finitely many psuedometric spaces, using the
 `L^p` distance, and having as uniformity the product uniformity. -/
@@ -515,16 +515,16 @@ theorem nndist_eq_supᵢ {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] 
     exact dist_eq_csupr _ _
 #align pi_Lp.nndist_eq_supr PiLp.nndist_eq_supᵢ
 
-theorem lipschitzWith_equiv [∀ i, PseudoEmetricSpace (β i)] : LipschitzWith 1 (PiLp.equiv p β) :=
+theorem lipschitzWith_equiv [∀ i, PseudoEMetricSpace (β i)] : LipschitzWith 1 (PiLp.equiv p β) :=
   lipschitzWith_equiv_aux p β
 #align pi_Lp.lipschitz_with_equiv PiLp.lipschitzWith_equiv
 
-theorem antilipschitzWith_equiv [∀ i, PseudoEmetricSpace (β i)] :
+theorem antilipschitzWith_equiv [∀ i, PseudoEMetricSpace (β i)] :
     AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (PiLp.equiv p β) :=
   antilipschitzWith_equiv_aux p β
 #align pi_Lp.antilipschitz_with_equiv PiLp.antilipschitzWith_equiv
 
-theorem infty_equiv_isometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) :=
+theorem infty_equiv_isometry [∀ i, PseudoEMetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) :=
   fun x y =>
   le_antisymm (by simpa only [ENNReal.coe_one, one_mul] using lipschitz_with_equiv ∞ β x y)
     (by

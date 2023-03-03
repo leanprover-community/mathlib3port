@@ -682,7 +682,7 @@ theorem rowLens_length_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hpo
 lean 3 declaration is
   forall {w : List.{0} Nat} {hw : List.Sorted.{0} Nat (GE.ge.{0} Nat Nat.hasLe) w} (i : Nat) (hi : LT.lt.{0} Nat Nat.hasLt i (List.length.{0} Nat w)), Eq.{1} Nat (YoungDiagram.rowLen (YoungDiagram.ofRowLens w hw) i) (List.nthLe.{0} Nat w i hi)
 but is expected to have type
-  forall {w : List.{0} Nat} {hw : List.Sorted.{0} Nat (fun (x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2895 : Nat) (x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2897 : Nat) => GE.ge.{0} Nat instLENat x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2895 x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2897) w} (i : Fin (List.length.{0} Nat w)), Eq.{1} Nat (YoungDiagram.rowLen (YoungDiagram.ofRowLens w hw) (Fin.val (List.length.{0} Nat w) i)) (List.get.{0} Nat w i)
+  forall {w : List.{0} Nat} {hw : List.Sorted.{0} Nat (fun (x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2897 : Nat) (x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2899 : Nat) => GE.ge.{0} Nat instLENat x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2897 x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2899) w} (i : Fin (List.length.{0} Nat w)), Eq.{1} Nat (YoungDiagram.rowLen (YoungDiagram.ofRowLens w hw) (Fin.val (List.length.{0} Nat w) i)) (List.get.{0} Nat w i)
 Case conversion may be inaccurate. Consider using '#align young_diagram.row_len_of_row_lens YoungDiagram.rowLen_ofRowLensₓ'. -/
 /-- The length of the `i`th row in `of_row_lens w hw` is the `i`th entry of `w` -/
 theorem rowLen_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (i : ℕ) (hi : i < w.length) :

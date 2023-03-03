@@ -47,7 +47,7 @@ open NNReal ENNReal Set Metric Emetric Filter
 
 section thickenedIndicator
 
-variable {α : Type _} [PseudoEmetricSpace α]
+variable {α : Type _} [PseudoEMetricSpace α]
 
 /-- The `δ`-thickened indicator of a set `E` is the function that equals `1` on `E`
 and `0` outside a `δ`-thickening of `E` and interpolates (continuously) between
