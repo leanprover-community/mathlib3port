@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 
 ! This file was ported from Lean 3 source module topology.algebra.localization
-! leanprover-community/mathlib commit f0401b9110462e5e9a3566c03fe36fd1155095ad
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Localization.Basic
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
 
 /-!
 

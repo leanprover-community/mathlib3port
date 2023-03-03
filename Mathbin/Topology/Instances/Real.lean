@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.UniformMulAction
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
 import Mathbin.Topology.Algebra.Star
 import Mathbin.Topology.Algebra.Order.Field
 import Mathbin.RingTheory.Subring.Basic

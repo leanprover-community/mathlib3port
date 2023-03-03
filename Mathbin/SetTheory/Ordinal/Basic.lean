@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.basic
-! leanprover-community/mathlib commit ac34df03f74e6f797efd6991df2e3b7f7d8d33e0
+! leanprover-community/mathlib commit 8da9e30545433fdd8fe55a0d3da208e5d9263f03
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -605,7 +605,7 @@ theorem typein_apply {α β} {r : α → α → Prop} {s : β → β → Prop} [
           (RelEmbedding.codRestrict _ ((Subrel.relEmbedding _ _).trans f) fun ⟨x, h⟩ => by
             rw [RelEmbedding.trans_apply] <;> exact f.to_rel_embedding.map_rel_iff.2 h)
           fun ⟨y, h⟩ => by
-          rcases f.init' h with ⟨a, rfl⟩ <;>
+          rcases f.init h with ⟨a, rfl⟩ <;>
             exact
               ⟨⟨a, f.to_rel_embedding.map_rel_iff.1 h⟩,
                 Subtype.eq <| RelEmbedding.trans_apply _ _ _⟩⟩

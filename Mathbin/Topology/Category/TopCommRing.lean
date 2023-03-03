@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.TopCommRing
-! leanprover-community/mathlib commit 79ffb5563b56fefdea3d60b5736dad168a9494ab
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Topology.Category.Top.Basic
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
 
 /-!
 # Category of topological commutative rings

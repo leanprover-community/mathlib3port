@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.div
-! leanprover-community/mathlib commit e064a7bf82ad94c3c17b5128bbd860d1ec34874e
+! leanprover-community/mathlib commit 742aa2cb249f23408bba420f8b6fe7a2b8093407
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,10 +38,24 @@ section CommSemiring
 
 variable [CommSemiring R]
 
-theorem x_dvd_iff {α : Type u} [CommSemiring α] {f : α[X]} : x ∣ f ↔ f.coeff 0 = 0 :=
+theorem x_dvd_iff {f : R[X]} : x ∣ f ↔ f.coeff 0 = 0 :=
   ⟨fun ⟨g, hfg⟩ => by rw [hfg, mul_comm, coeff_mul_X_zero], fun hf =>
     ⟨f.divX, by rw [mul_comm, ← add_zero (f.div_X * X), ← C_0, ← hf, div_X_mul_X_add]⟩⟩
 #align polynomial.X_dvd_iff Polynomial.x_dvd_iff
+
+theorem x_pow_dvd_iff {f : R[X]} {n : ℕ} : x ^ n ∣ f ↔ ∀ d < n, f.coeff d = 0 :=
+  ⟨fun ⟨g, hgf⟩ d hd => by
+    simp only [hgf, coeff_X_pow_mul', ite_eq_right_iff, not_le_of_lt hd, IsEmpty.forall_iff],
+    fun hd => by
+    induction' n with n hn
+    · simp only [pow_zero, one_dvd]
+    · obtain ⟨g, hgf⟩ := hn fun d : ℕ => fun H : d < n => hd _ (Nat.lt_succ_of_lt H)
+      have := coeff_X_pow_mul g n 0
+      rw [zero_add, ← hgf, hd n (Nat.lt_succ_self n)] at this
+      obtain ⟨k, hgk⟩ := polynomial.X_dvd_iff.mpr this.symm
+      use k
+      rwa [pow_succ, mul_comm X _, mul_assoc, ← hgk]⟩
+#align polynomial.X_pow_dvd_iff Polynomial.x_pow_dvd_iff
 
 end CommSemiring
 

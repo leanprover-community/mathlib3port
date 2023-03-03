@@ -3,13 +3,12 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
-! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! This file was ported from Lean 3 source module topology.algebra.ring.basic
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Ring.Prod
-import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.Topology.Algebra.Group.Basic
 
@@ -30,9 +29,6 @@ of topological (semi)rings.
   (semi)rings.
 - `pi.topological_semiring`/`pi.topological_ring`: The arbitrary product of topological
   (semi)rings.
-- `ideal.closure`: The closure of an ideal is an ideal.
-- `topological_ring_quotient`: The quotient of a topological semiring by an ideal is a
-  topological ring.
 
 -/
 
@@ -316,72 +312,6 @@ def Subring.commRingTopologicalClosure [T2Space α] (s : Subring α) (hs : ∀ x
 #align subring.comm_ring_topological_closure Subring.commRingTopologicalClosure
 
 end TopologicalSemiring
-
-section TopologicalRing
-
-variable {α : Type _} [TopologicalSpace α] [Ring α] [TopologicalRing α]
-
-/-- The closure of an ideal in a topological ring as an ideal. -/
-def Ideal.closure (S : Ideal α) : Ideal α :=
-  {
-    AddSubmonoid.topologicalClosure
-      S.toAddSubmonoid with
-    carrier := closure S
-    smul_mem' := fun c x hx => map_mem_closure (mulLeft_continuous _) hx fun a => S.mul_mem_left c }
-#align ideal.closure Ideal.closure
-
-@[simp]
-theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = closure S :=
-  rfl
-#align ideal.coe_closure Ideal.coe_closure
-
-@[simp]
-theorem Ideal.closure_eq_of_isClosed (S : Ideal α) [hS : IsClosed (S : Set α)] : S.closure = S :=
-  Ideal.ext <| Set.ext_iff.mp hS.closure_eq
-#align ideal.closure_eq_of_is_closed Ideal.closure_eq_of_isClosed
-
-end TopologicalRing
-
-section TopologicalRing
-
-variable {α : Type _} [TopologicalSpace α] [CommRing α] (N : Ideal α)
-
-open Ideal.Quotient
-
-instance topologicalRingQuotientTopology : TopologicalSpace (α ⧸ N) :=
-  show TopologicalSpace (Quotient _) by infer_instance
-#align topological_ring_quotient_topology topologicalRingQuotientTopology
-
--- note for the reader: in the following, `mk` is `ideal.quotient.mk`, the canonical map `R → R/I`.
-variable [TopologicalRing α]
-
-theorem QuotientRing.isOpenMap_coe : IsOpenMap (mk N) :=
-  by
-  intro s s_op
-  change IsOpen (mk N ⁻¹' (mk N '' s))
-  rw [quotient_ring_saturate]
-  exact isOpen_unionᵢ fun ⟨n, _⟩ => isOpenMap_add_left n s s_op
-#align quotient_ring.is_open_map_coe QuotientRing.isOpenMap_coe
-
-theorem QuotientRing.quotientMap_coe_coe : QuotientMap fun p : α × α => (mk N p.1, mk N p.2) :=
-  IsOpenMap.to_quotientMap ((QuotientRing.isOpenMap_coe N).Prod (QuotientRing.isOpenMap_coe N))
-    ((continuous_quot_mk.comp continuous_fst).prod_mk (continuous_quot_mk.comp continuous_snd))
-    (by rintro ⟨⟨x⟩, ⟨y⟩⟩ <;> exact ⟨(x, y), rfl⟩)
-#align quotient_ring.quotient_map_coe_coe QuotientRing.quotientMap_coe_coe
-
-instance topologicalRing_quotient : TopologicalRing (α ⧸ N) :=
-  TopologicalSemiring.to_topologicalRing
-    { continuous_add :=
-        have cont : Continuous (mk N ∘ fun p : α × α => p.fst + p.snd) :=
-          continuous_quot_mk.comp continuous_add
-        (QuotientMap.continuous_iff (QuotientRing.quotientMap_coe_coe N)).mpr cont
-      continuous_mul :=
-        have cont : Continuous (mk N ∘ fun p : α × α => p.fst * p.snd) :=
-          continuous_quot_mk.comp continuous_mul
-        (QuotientMap.continuous_iff (QuotientRing.quotientMap_coe_coe N)).mpr cont }
-#align topological_ring_quotient topologicalRing_quotient
-
-end TopologicalRing
 
 /-!
 ### Lattice of ring topologies

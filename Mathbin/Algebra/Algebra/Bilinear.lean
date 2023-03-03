@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.bilinear
-! leanprover-community/mathlib commit 657df4339ae6ceada048c8a2980fb10e393143ec
+! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.LinearAlgebra.TensorProduct
 
 /-!
 # Facts about algebras involving bilinear maps and tensor products
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We move a few basic statements about algebras out of `algebra.algebra.basic`,
 in order to avoid importing `linear_algebra.bilinear_map` and

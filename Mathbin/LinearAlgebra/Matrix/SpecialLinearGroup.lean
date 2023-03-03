@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.special_linear_group
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit f06058e64b7e8397234455038f3f8aec83aaba5a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,6 +296,39 @@ theorem SL2_inv_expl (A : SL(2, R)) :
   rfl
 #align matrix.special_linear_group.SL2_inv_expl Matrix.SpecialLinearGroup.SL2_inv_expl
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+theorem fin_two_induction (P : SL(2, R) → Prop)
+    (h :
+      ∀ (a b c d : R) (hdet : a * d - b * c = 1),
+        P
+          ⟨«expr!![ »
+              "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation",
+            by rwa [det_fin_two_of]⟩)
+    (g : SL(2, R)) : P g := by
+  obtain ⟨m, hm⟩ := g
+  convert h (m 0 0) (m 0 1) (m 1 0) (m 1 1) (by rwa [det_fin_two] at hm)
+  ext (i j); fin_cases i <;> fin_cases j <;> rfl
+#align matrix.special_linear_group.fin_two_induction Matrix.SpecialLinearGroup.fin_two_induction
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+theorem fin_two_exists_eq_mk_of_apply_zero_one_eq_zero {R : Type _} [Field R] (g : SL(2, R))
+    (hg : (g : Matrix (Fin 2) (Fin 2) R) 1 0 = 0) :
+    ∃ (a b : R)(h : a ≠ 0),
+      g =
+        (⟨«expr!![ »
+              "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation",
+            by simp [h]⟩ :
+          SL(2, R)) :=
+  by
+  induction' g using Matrix.SpecialLinearGroup.fin_two_induction with a b c d h_det
+  replace hg : c = 0 := by simpa using hg
+  have had : a * d = 1 := by rwa [hg, mul_zero, sub_zero] at h_det
+  refine' ⟨a, b, left_ne_zero_of_mul_eq_one had, _⟩
+  simp_rw [eq_inv_of_mul_eq_one_right had, hg]
+#align matrix.special_linear_group.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero Matrix.SpecialLinearGroup.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero
+
 end SpecialCases
 
 -- this section should be last to ensure we do not use it in lemmas
@@ -314,4 +347,101 @@ end CoeFnInstance
 end SpecialLinearGroup
 
 end Matrix
+
+namespace ModularGroup
+
+open MatrixGroups
+
+open Matrix Matrix.SpecialLinearGroup
+
+-- mathport name: «expr↑ₘ »
+local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) ℤ) _
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/-- The matrix `S = [[0, -1], [1, 0]]` as an element of `SL(2, ℤ)`.
+
+This element acts naturally on the Euclidean plane as a rotation about the origin by `π / 2`.
+
+This element also acts naturally on the hyperbolic plane as rotation about `i` by `π`. It
+represents the Mobiüs transformation `z ↦ -1/z` and is an involutive elliptic isometry. -/
+def s : SL(2, ℤ) :=
+  ⟨«expr!![ »
+      "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation",
+    by norm_num [Matrix.det_fin_two_of] ⟩
+#align modular_group.S ModularGroup.s
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/-- The matrix `T = [[1, 1], [0, 1]]` as an element of `SL(2, ℤ)` -/
+def t : SL(2, ℤ) :=
+  ⟨«expr!![ »
+      "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation",
+    by norm_num [Matrix.det_fin_two_of] ⟩
+#align modular_group.T ModularGroup.t
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+theorem coe_s :
+    ↑ₘs =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+  rfl
+#align modular_group.coe_S ModularGroup.coe_s
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+theorem coe_t :
+    ↑ₘt =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+  rfl
+#align modular_group.coe_T ModularGroup.coe_t
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+theorem coe_t_inv :
+    ↑ₘt⁻¹ =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+  by simp [coe_inv, coe_T, adjugate_fin_two]
+#align modular_group.coe_T_inv ModularGroup.coe_t_inv
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+theorem coe_t_zpow (n : ℤ) :
+    ↑ₘ(t ^ n) =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+  by
+  induction' n using Int.induction_on with n h n h
+  · rw [zpow_zero, coe_one, Matrix.one_fin_two]
+  · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
+    rw [mul_one, mul_one, add_comm]
+  · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
+    trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
+      ring
+#align modular_group.coe_T_zpow ModularGroup.coe_t_zpow
+
+@[simp]
+theorem t_pow_mul_apply_one (n : ℤ) (g : SL(2, ℤ)) : ↑ₘ(t ^ n * g) 1 = ↑ₘg 1 := by
+  simp [coe_T_zpow, Matrix.mul, Matrix.dotProduct, Fin.sum_univ_succ]
+#align modular_group.T_pow_mul_apply_one ModularGroup.t_pow_mul_apply_one
+
+@[simp]
+theorem t_mul_apply_one (g : SL(2, ℤ)) : ↑ₘ(t * g) 1 = ↑ₘg 1 := by
+  simpa using T_pow_mul_apply_one 1 g
+#align modular_group.T_mul_apply_one ModularGroup.t_mul_apply_one
+
+@[simp]
+theorem t_inv_mul_apply_one (g : SL(2, ℤ)) : ↑ₘ(t⁻¹ * g) 1 = ↑ₘg 1 := by
+  simpa using T_pow_mul_apply_one (-1) g
+#align modular_group.T_inv_mul_apply_one ModularGroup.t_inv_mul_apply_one
+
+end ModularGroup
 

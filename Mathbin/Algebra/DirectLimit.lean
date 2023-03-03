@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes
 
 ! This file was ported from Lean 3 source module algebra.direct_limit
-! leanprover-community/mathlib commit 4cfc30e317caad46858393f1a7a33f609296cc30
+! leanprover-community/mathlib commit e7f0ddbf65bd7181a85edb74b64bdc35ba4bdc74
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Order
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.RingTheory.FreeCommRing
-import Mathbin.RingTheory.Ideal.Operations
+import Mathbin.RingTheory.Ideal.QuotientOperations
 
 /-!
 # Direct limit of modules, abelian groups, rings, and fields.

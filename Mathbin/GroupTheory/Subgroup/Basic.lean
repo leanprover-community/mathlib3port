@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit c10e724be91096453ee3db13862b9fb9a992fef2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,6 +135,19 @@ class AddSubgroupClass (S G : Type _) [SubNegMonoid G] [SetLike S G] extends Add
 
 attribute [to_additive] InvMemClass SubgroupClass
 
+/- warning: inv_mem_iff -> inv_mem_iff is a dubious translation:
+lean 3 declaration is
+  forall {S : Type.{u1}} {G : Type.{u2}} [_inst_4 : InvolutiveInv.{u2} G] [_inst_5 : SetLike.{u1, u2} S G] [_inst_6 : InvMemClass.{u1, u2} S G (InvolutiveInv.toHasInv.{u2} G _inst_4) _inst_5] {H : S} {x : G}, Iff (Membership.Mem.{u2, u1} G S (SetLike.hasMem.{u1, u2} S G _inst_5) (Inv.inv.{u2} G (InvolutiveInv.toHasInv.{u2} G _inst_4) x) H) (Membership.Mem.{u2, u1} G S (SetLike.hasMem.{u1, u2} S G _inst_5) x H)
+but is expected to have type
+  forall {S : Type.{u2}} {G : Type.{u1}} [_inst_4 : InvolutiveInv.{u1} G] {_inst_5 : SetLike.{u2, u1} S G} [_inst_6 : InvMemClass.{u2, u1} S G (InvolutiveInv.toInv.{u1} G _inst_4) _inst_5] {H : S} {x : G}, Iff (Membership.mem.{u1, u2} G S (SetLike.instMembership.{u2, u1} S G _inst_5) (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_4) x) H) (Membership.mem.{u1, u2} G S (SetLike.instMembership.{u2, u1} S G _inst_5) x H)
+Case conversion may be inaccurate. Consider using '#align inv_mem_iff inv_mem_iffₓ'. -/
+@[simp, to_additive]
+theorem inv_mem_iff {S G} [InvolutiveInv G] [SetLike S G] [InvMemClass S G] {H : S} {x : G} :
+    x⁻¹ ∈ H ↔ x ∈ H :=
+  ⟨fun h => inv_inv x ▸ inv_mem h, inv_mem⟩
+#align inv_mem_iff inv_mem_iff
+#align neg_mem_iff neg_mem_iff
+
 variable {M S : Type _} [DivInvMonoid M] [SetLike S M] [hSM : SubgroupClass S M] {H K : S}
 
 include hSM
@@ -174,18 +187,6 @@ omit hSM
 variable [SetLike S G] [hSG : SubgroupClass S G]
 
 include hSG
-
-/- warning: inv_mem_iff -> inv_mem_iff is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Type.{u2}} {H : S} [_inst_6 : SetLike.{u2, u1} S G] [hSG : SubgroupClass.{u2, u1} S G (Group.toDivInvMonoid.{u1} G _inst_1) _inst_6] {x : G}, Iff (Membership.Mem.{u1, u2} G S (SetLike.hasMem.{u2, u1} S G _inst_6) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x) H) (Membership.Mem.{u1, u2} G S (SetLike.hasMem.{u2, u1} S G _inst_6) x H)
-but is expected to have type
-  forall {G : Type.{u2}} {_inst_1 : Type.{u1}} [S : InvolutiveInv.{u1} _inst_1] {H : SetLike.{u2, u1} G _inst_1} [_inst_6 : InvMemClass.{u2, u1} G _inst_1 (InvolutiveInv.toInv.{u1} _inst_1 S) H] {hSG : G} {x : _inst_1}, Iff (Membership.mem.{u1, u2} _inst_1 G (SetLike.instMembership.{u2, u1} G _inst_1 H) (Inv.inv.{u1} _inst_1 (InvolutiveInv.toInv.{u1} _inst_1 S) x) hSG) (Membership.mem.{u1, u2} _inst_1 G (SetLike.instMembership.{u2, u1} G _inst_1 H) x hSG)
-Case conversion may be inaccurate. Consider using '#align inv_mem_iff inv_mem_iffₓ'. -/
-@[simp, to_additive]
-theorem inv_mem_iff {x : G} : x⁻¹ ∈ H ↔ x ∈ H :=
-  ⟨fun h => inv_inv x ▸ inv_mem h, inv_mem⟩
-#align inv_mem_iff inv_mem_iff
-#align neg_mem_iff neg_mem_iff
 
 /- warning: div_mem_comm_iff -> div_mem_comm_iff is a dubious translation:
 lean 3 declaration is

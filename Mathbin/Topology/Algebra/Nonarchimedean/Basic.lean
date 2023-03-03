@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.basic
-! leanprover-community/mathlib commit 1ec4876214bf9f1ddfbf97ae4b0d777ebd5d6938
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.Topology.Algebra.OpenSubgroup
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
 
 /-!
 # Nonarchimedean Topology

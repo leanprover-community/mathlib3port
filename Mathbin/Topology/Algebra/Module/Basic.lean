@@ -5,11 +5,11 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.ContinuousFunction.Basic

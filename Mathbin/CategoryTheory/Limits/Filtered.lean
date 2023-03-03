@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.filtered
-! leanprover-community/mathlib commit e4ee4e30418efcb8cf304ba76ad653aeec04ba6e
+! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.HasLimits
 
 /-!
 # Possession of filtered colimits
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

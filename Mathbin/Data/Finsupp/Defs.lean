@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
+! leanprover-community/mathlib commit 842328d9df7e96fd90fc424e115679c15fb23a71
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -454,17 +454,11 @@ theorem single_apply_left {f : α → β} (hf : Function.Injective f) (x z : α)
     single (f x) y (f z) = single x y z := by classical simp only [single_apply, hf.eq_iff]
 #align finsupp.single_apply_left Finsupp.single_apply_left
 
-/- warning: finsupp.single_eq_indicator -> Finsupp.single_eq_indicator is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : Zero.{u2} M] {a : α} {b : M}, Eq.{max (succ u1) (succ u2)} (α -> M) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Finsupp.{u1, u2} α M _inst_1) (fun (_x : Finsupp.{u1, u2} α M _inst_1) => α -> M) (Finsupp.hasCoeToFun.{u1, u2} α M _inst_1) (Finsupp.single.{u1, u2} α M _inst_1 a b)) (Set.indicator.{u1, u2} α M _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) (fun (_x : α) => b))
-but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {a : α} {b : M}, Eq.{max (succ u2) (succ u1)} (forall (ᾰ : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (Finsupp.single.{u2, u1} α M _inst_1 a b)) (Set.indicator.{u2, u1} α M _inst_1 (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a) (fun (_x : α) => b))
-Case conversion may be inaccurate. Consider using '#align finsupp.single_eq_indicator Finsupp.single_eq_indicatorₓ'. -/
-theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
+theorem single_eq_set_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
   classical
     ext
     simp [single_apply, Set.indicator, @eq_comm _ a]
-#align finsupp.single_eq_indicator Finsupp.single_eq_indicator
+#align finsupp.single_eq_set_indicator Finsupp.single_eq_set_indicator
 
 #print Finsupp.single_eq_same /-
 @[simp]
@@ -490,7 +484,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] [_inst_2 : DecidableEq.{succ u2} α] (a : α) (b : M), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (Finsupp.single.{u2, u1} α M _inst_1 a b)) (Function.update.{succ u2, succ u1} α (fun (a : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (fun (a : α) (b : α) => _inst_2 a b) (OfNat.ofNat.{max u2 u1} (forall (a : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{max u2 u1} (forall (a : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (Pi.instZero.{u2, u1} α (fun (a : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (fun (i : α) => _inst_1)))) a b)
 Case conversion may be inaccurate. Consider using '#align finsupp.single_eq_update Finsupp.single_eq_updateₓ'. -/
 theorem single_eq_update [DecidableEq α] (a : α) (b : M) : ⇑(single a b) = Function.update 0 a b :=
-  by rw [single_eq_indicator, ← Set.piecewise_eq_indicator, Set.piecewise_singleton]
+  by rw [single_eq_set_indicator, ← Set.piecewise_eq_indicator, Set.piecewise_singleton]
 #align finsupp.single_eq_update Finsupp.single_eq_update
 
 /- warning: finsupp.single_eq_pi_single -> Finsupp.single_eq_pi_single is a dubious translation:
@@ -573,7 +567,7 @@ theorem single_injective (a : α) : Function.Injective (single a : M → α →�
 
 #print Finsupp.single_apply_eq_zero /-
 theorem single_apply_eq_zero {a x : α} {b : M} : single a b x = 0 ↔ x = a → b = 0 := by
-  simp [single_eq_indicator]
+  simp [single_eq_set_indicator]
 #align finsupp.single_apply_eq_zero Finsupp.single_apply_eq_zero
 -/
 
@@ -674,7 +668,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {a : α} {b : M}, Iff (Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M _inst_1) (Finsupp.single.{u2, u1} α M _inst_1 a b) (OfNat.ofNat.{max u2 u1} (Finsupp.{u2, u1} α M _inst_1) 0 (Zero.toOfNat0.{max u2 u1} (Finsupp.{u2, u1} α M _inst_1) (Finsupp.zero.{u2, u1} α M _inst_1)))) (Eq.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1)))
 Case conversion may be inaccurate. Consider using '#align finsupp.single_eq_zero Finsupp.single_eq_zeroₓ'. -/
 @[simp]
-theorem single_eq_zero : single a b = 0 ↔ b = 0 := by simp [ext_iff, single_eq_indicator]
+theorem single_eq_zero : single a b = 0 ↔ b = 0 := by simp [ext_iff, single_eq_set_indicator]
 #align finsupp.single_eq_zero Finsupp.single_eq_zero
 
 #print Finsupp.single_swap /-

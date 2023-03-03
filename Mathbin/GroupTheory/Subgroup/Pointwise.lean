@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.pointwise
-! leanprover-community/mathlib commit f16e7a22e11fc09c71f25446ac1db23a24e8a0bd
+! leanprover-community/mathlib commit c10e724be91096453ee3db13862b9fb9a992fef2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,21 +37,21 @@ open Set
 
 open Pointwise
 
-variable {α G A S : Type _} [Group G] [AddGroup A] {s : Set G}
+variable {α G A S : Type _}
 
 /- warning: inv_coe_set -> inv_coe_set is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} {S : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_3 : SetLike.{u2, u1} S G] [_inst_4 : SubgroupClass.{u2, u1} S G (Group.toDivInvMonoid.{u1} G _inst_1) _inst_3] {H : S}, Eq.{succ u1} (Set.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) ((fun (a : Type.{u2}) (b : Type.{u1}) [self : HasLiftT.{succ u2, succ u1} a b] => self.0) S (Set.{u1} G) (HasLiftT.mk.{succ u2, succ u1} S (Set.{u1} G) (CoeTCₓ.coe.{succ u2, succ u1} S (Set.{u1} G) (SetLike.Set.hasCoeT.{u2, u1} S G _inst_3))) H)) ((fun (a : Type.{u2}) (b : Type.{u1}) [self : HasLiftT.{succ u2, succ u1} a b] => self.0) S (Set.{u1} G) (HasLiftT.mk.{succ u2, succ u1} S (Set.{u1} G) (CoeTCₓ.coe.{succ u2, succ u1} S (Set.{u1} G) (SetLike.Set.hasCoeT.{u2, u1} S G _inst_3))) H)
+  forall {G : Type.{u1}} {S : Type.{u2}} [_inst_1 : InvolutiveInv.{u1} G] [_inst_2 : SetLike.{u2, u1} S G] [_inst_3 : InvMemClass.{u2, u1} S G (InvolutiveInv.toHasInv.{u1} G _inst_1) _inst_2] {H : S}, Eq.{succ u1} (Set.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1)) ((fun (a : Type.{u2}) (b : Type.{u1}) [self : HasLiftT.{succ u2, succ u1} a b] => self.0) S (Set.{u1} G) (HasLiftT.mk.{succ u2, succ u1} S (Set.{u1} G) (CoeTCₓ.coe.{succ u2, succ u1} S (Set.{u1} G) (SetLike.Set.hasCoeT.{u2, u1} S G _inst_2))) H)) ((fun (a : Type.{u2}) (b : Type.{u1}) [self : HasLiftT.{succ u2, succ u1} a b] => self.0) S (Set.{u1} G) (HasLiftT.mk.{succ u2, succ u1} S (Set.{u1} G) (CoeTCₓ.coe.{succ u2, succ u1} S (Set.{u1} G) (SetLike.Set.hasCoeT.{u2, u1} S G _inst_2))) H)
 but is expected to have type
-  forall {G : Type.{u2}} {S : Type.{u1}} [_inst_1 : InvolutiveInv.{u2} G] [_inst_3 : SetLike.{u1, u2} S G] [_inst_4 : InvMemClass.{u1, u2} S G (InvolutiveInv.toInv.{u2} G _inst_1) _inst_3] {H : S}, Eq.{succ u2} (Set.{u2} G) (Inv.inv.{u2} (Set.{u2} G) (Set.inv.{u2} G (InvolutiveInv.toInv.{u2} G _inst_1)) (SetLike.coe.{u1, u2} S G _inst_3 H)) (SetLike.coe.{u1, u2} S G _inst_3 H)
+  forall {G : Type.{u2}} {S : Type.{u1}} [_inst_1 : InvolutiveInv.{u2} G] [_inst_2 : SetLike.{u1, u2} S G] [_inst_3 : InvMemClass.{u1, u2} S G (InvolutiveInv.toInv.{u2} G _inst_1) _inst_2] {H : S}, Eq.{succ u2} (Set.{u2} G) (Inv.inv.{u2} (Set.{u2} G) (Set.inv.{u2} G (InvolutiveInv.toInv.{u2} G _inst_1)) (SetLike.coe.{u1, u2} S G _inst_2 H)) (SetLike.coe.{u1, u2} S G _inst_2 H)
 Case conversion may be inaccurate. Consider using '#align inv_coe_set inv_coe_setₓ'. -/
 @[simp, to_additive]
-theorem inv_coe_set [SetLike S G] [SubgroupClass S G] {H : S} : (H : Set G)⁻¹ = H :=
-  by
-  ext
-  simp
+theorem inv_coe_set [InvolutiveInv G] [SetLike S G] [InvMemClass S G] {H : S} : (H : Set G)⁻¹ = H :=
+  Set.ext fun _ => inv_mem_iff
 #align inv_coe_set inv_coe_set
 #align neg_coe_set neg_coe_set
+
+variable [Group G] [AddGroup A] {s : Set G}
 
 namespace Subgroup
 

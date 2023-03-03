@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum.ring
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Topology.Algebra.InfiniteSum.Basic
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
 
 /-!
 # Infinite sum in a ring
@@ -42,11 +43,11 @@ theorem HasSum.mul_right (a₂) (hf : HasSum f a₁) : HasSum (fun i => f i * a�
 #align has_sum.mul_right HasSum.mul_right
 
 theorem Summable.mul_left (a) (hf : Summable f) : Summable fun i => a * f i :=
-  (hf.HasSum.mul_left _).Summable
+  (hf.HasSum.mulLeft _).Summable
 #align summable.mul_left Summable.mul_left
 
 theorem Summable.mul_right (a) (hf : Summable f) : Summable fun i => f i * a :=
-  (hf.HasSum.mul_right _).Summable
+  (hf.HasSum.mulRight _).Summable
 #align summable.mul_right Summable.mul_right
 
 section tsum
@@ -54,11 +55,11 @@ section tsum
 variable [T2Space α]
 
 theorem Summable.tsum_mul_left (a) (hf : Summable f) : (∑' i, a * f i) = a * ∑' i, f i :=
-  (hf.HasSum.mul_left _).tsum_eq
+  (hf.HasSum.mulLeft _).tsum_eq
 #align summable.tsum_mul_left Summable.tsum_mul_left
 
 theorem Summable.tsum_mul_right (a) (hf : Summable f) : (∑' i, f i * a) = (∑' i, f i) * a :=
-  (hf.HasSum.mul_right _).tsum_eq
+  (hf.HasSum.mulRight _).tsum_eq
 #align summable.tsum_mul_right Summable.tsum_mul_right
 
 theorem Commute.tsum_right (a) (h : ∀ i, Commute a (f i)) : Commute a (∑' i, f i) :=
@@ -101,11 +102,11 @@ theorem hasSum_div_const_iff (h : a₂ ≠ 0) : HasSum (fun i => f i / a₂) (a�
 #align has_sum_div_const_iff hasSum_div_const_iff
 
 theorem summable_mul_left_iff (h : a ≠ 0) : (Summable fun i => a * f i) ↔ Summable f :=
-  ⟨fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a⁻¹, fun H => H.mul_left _⟩
+  ⟨fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a⁻¹, fun H => H.mulLeft _⟩
 #align summable_mul_left_iff summable_mul_left_iff
 
 theorem summable_mul_right_iff (h : a ≠ 0) : (Summable fun i => f i * a) ↔ Summable f :=
-  ⟨fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a⁻¹, fun H => H.mul_right _⟩
+  ⟨fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a⁻¹, fun H => H.mulRight _⟩
 #align summable_mul_right_iff summable_mul_right_iff
 
 theorem summable_div_const_iff (h : a ≠ 0) : (Summable fun i => f i / a) ↔ Summable f := by
@@ -159,8 +160,8 @@ variable [TopologicalSpace α] [T3Space α] [NonUnitalNonAssocSemiring α] [Topo
 
 theorem HasSum.mul_eq (hf : HasSum f s) (hg : HasSum g t)
     (hfg : HasSum (fun x : ι × κ => f x.1 * g x.2) u) : s * t = u :=
-  have key₁ : HasSum (fun i => f i * t) (s * t) := hf.mul_right t
-  have this : ∀ i : ι, HasSum (fun c : κ => f i * g c) (f i * t) := fun i => hg.mul_left (f i)
+  have key₁ : HasSum (fun i => f i * t) (s * t) := hf.mulRight t
+  have this : ∀ i : ι, HasSum (fun c : κ => f i * g c) (f i * t) := fun i => hg.mulLeft (f i)
   have key₂ : HasSum (fun i => f i * t) u := HasSum.prod_fiberwise hfg this
   key₁.unique key₂
 #align has_sum.mul_eq HasSum.mul_eq

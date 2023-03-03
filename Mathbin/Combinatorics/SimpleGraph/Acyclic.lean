@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.acyclic
-! leanprover-community/mathlib commit b07688016d62f81d14508ff339ea3415558d6353
+! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Combinatorics.SimpleGraph.Connectivity
 /-!
 
 # Acyclic graphs and trees
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module introduces *acyclic graphs* (a.k.a. *forests*) and *trees*.
 

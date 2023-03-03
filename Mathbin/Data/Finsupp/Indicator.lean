@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finsupp.indicator
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
+! leanprover-community/mathlib commit 842328d9df7e96fd90fc424e115679c15fb23a71
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,6 +113,18 @@ theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s :=
   by_contra
   exact hi (indicator_of_not_mem h _)
 #align finsupp.support_indicator_subset Finsupp.support_indicator_subset
+
+/- warning: finsupp.single_eq_indicator -> Finsupp.single_eq_indicator is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Zero.{u2} α] (i : ι) (b : α), Eq.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι α _inst_1) (Finsupp.single.{u1, u2} ι α _inst_1 i b) (Finsupp.indicator.{u1, u2} ι α _inst_1 (Singleton.singleton.{u1, u1} ι (Finset.{u1} ι) (Finset.hasSingleton.{u1} ι) i) (fun (_x : ι) (_x : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) _x (Singleton.singleton.{u1, u1} ι (Finset.{u1} ι) (Finset.hasSingleton.{u1} ι) i)) => b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Zero.{u1} α] {i : ι} {b : α}, Eq.{max (succ u2) (succ u1)} (forall (a : ι), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} ι α _inst_1) ι (fun (a : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) a) (Finsupp.funLike.{u2, u1} ι α _inst_1) (Finsupp.single.{u2, u1} ι α _inst_1 i b)) (Set.indicator.{u2, u1} ι α _inst_1 (Singleton.singleton.{u2, u2} ι (Set.{u2} ι) (Set.instSingletonSet.{u2} ι) i) (fun (_x : ι) => b))
+Case conversion may be inaccurate. Consider using '#align finsupp.single_eq_indicator Finsupp.single_eq_indicatorₓ'. -/
+theorem single_eq_indicator (i : ι) (b : α) : single i b = indicator {i} fun _ _ => b := by
+  classical
+    ext
+    simp [single_apply, indicator_apply, @eq_comm _ a]
+#align finsupp.single_eq_indicator Finsupp.single_eq_indicator
 
 end Finsupp
 

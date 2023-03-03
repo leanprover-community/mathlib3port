@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_ring
-! leanprover-community/mathlib commit ed5ef408e2955174e1e7185eb2326d03758c6d22
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Topology.Algebra.GroupCompletion
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Ideal
 
 /-!
 # Completion of topological rings:

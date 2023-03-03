@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit b8e1f0f706714622ed3081a0ce1ea6cdc5e17371
+! leanprover-community/mathlib commit f62c15c01a5409b31b97a82d79a12980be4eff35
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Dimension
+import Mathbin.LinearAlgebra.FreeModule.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.RingTheory.Finiteness
 
@@ -373,8 +374,8 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Finite ι] {b : ι
 variable {M}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
-/-- A finite type torsion free module over a PID is free. -/
-noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
+/-- A finite type torsion free module over a PID admits a basis. -/
+noncomputable def Module.basisOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
     (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
   classical
     -- We define `N` as the submodule spanned by a maximal linear independent subfamily of `s`
@@ -427,13 +428,28 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
     obtain ⟨n, b : Basis (Fin n) R φ.range⟩ := Submodule.basisOfPidOfLe this sI_basis
     -- hence `M` is free.
     exact ⟨n, b.map ψ.symm⟩
-#align module.free_of_finite_type_torsion_free Module.freeOfFiniteTypeTorsionFree
+#align module.basis_of_finite_type_torsion_free Module.basisOfFiniteTypeTorsionFree
 
-/-- A finite type torsion free module over a PID is free. -/
-noncomputable def Module.freeOfFiniteTypeTorsionFree' [Module.Finite R M] [NoZeroSMulDivisors R M] :
-    Σn : ℕ, Basis (Fin n) R M :=
-  Module.freeOfFiniteTypeTorsionFree Module.Finite.exists_fin.choose_spec.choose_spec
-#align module.free_of_finite_type_torsion_free' Module.freeOfFiniteTypeTorsionFree'
+theorem Module.free_of_finite_type_torsion_free [Finite ι] {s : ι → M} (hs : span R (range s) = ⊤)
+    [NoZeroSMulDivisors R M] : Module.Free R M :=
+  by
+  cases nonempty_fintype ι
+  obtain ⟨n, b⟩ : Σn, Basis (Fin n) R M := Module.basisOfFiniteTypeTorsionFree hs
+  exact Module.Free.of_basis b
+#align module.free_of_finite_type_torsion_free Module.free_of_finite_type_torsion_free
+
+/-- A finite type torsion free module over a PID admits a basis. -/
+noncomputable def Module.basisOfFiniteTypeTorsionFree' [Module.Finite R M]
+    [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M :=
+  Module.basisOfFiniteTypeTorsionFree Module.Finite.exists_fin.choose_spec.choose_spec
+#align module.basis_of_finite_type_torsion_free' Module.basisOfFiniteTypeTorsionFree'
+
+theorem Module.free_of_finite_type_torsion_free' [Module.Finite R M] [NoZeroSMulDivisors R M] :
+    Module.Free R M :=
+  by
+  obtain ⟨n, b⟩ : Σn, Basis (Fin n) R M := Module.basisOfFiniteTypeTorsionFree'
+  exact Module.Free.of_basis b
+#align module.free_of_finite_type_torsion_free' Module.free_of_finite_type_torsion_free'
 
 section SmithNormal
 

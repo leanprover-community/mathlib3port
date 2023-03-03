@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.big_operators.finsupp
-! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
+! leanprover-community/mathlib commit 842328d9df7e96fd90fc424e115679c15fb23a71
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Finsupp.Defs
+import Mathbin.Data.Finsupp.Indicator
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.BigOperators.Order
@@ -942,6 +942,26 @@ theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoid M] [CommMonoid N] {f1 f2 :
     apply prod_dvd_prod_of_dvd
     exact h2
 #align finsupp.prod_dvd_prod_of_subset_of_dvd Finsupp.prod_dvd_prod_of_subset_of_dvd
+
+theorem indicator_eq_sum_single [AddCommMonoid M] (s : Finset α) (f : ∀ a ∈ s, M) :
+    indicator s f = ∑ x in s.attach, single x (f x x.2) :=
+  by
+  rw [← sum_single (indicator s f), Sum, sum_subset (support_indicator_subset _ _), ← sum_attach]
+  · refine' Finset.sum_congr rfl fun x hx => _
+    rw [indicator_of_mem]
+  intro i _ hi
+  rw [not_mem_support_iff.mp hi, single_zero]
+#align finsupp.indicator_eq_sum_single Finsupp.indicator_eq_sum_single
+
+@[simp, to_additive]
+theorem prod_indicator_index [Zero M] [CommMonoid N] {s : Finset α} (f : ∀ a ∈ s, M) {h : α → M → N}
+    (h_zero : ∀ a ∈ s, h a 0 = 1) : (indicator s f).Prod h = ∏ x in s.attach, h x (f x x.2) :=
+  by
+  rw [prod_of_support_subset _ (support_indicator_subset _ _) h h_zero, ← prod_attach]
+  refine' Finset.prod_congr rfl fun x hx => _
+  rw [indicator_of_mem]
+#align finsupp.prod_indicator_index Finsupp.prod_indicator_index
+#align finsupp.sum_indicator_index Finsupp.sum_indicator_index
 
 end Finsupp
 

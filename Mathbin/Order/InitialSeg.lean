@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit 7c3269ca3fa4c0c19e4d127cd7151edbdbf99ed4
+! leanprover-community/mathlib commit 8da9e30545433fdd8fe55a0d3da208e5d9263f03
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ open Function
 embedding whose range is an initial segment. That is, whenever `b < f a` in `β` then `b` is in the
 range of `f`. -/
 structure InitialSeg {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends r ↪r s where
-  dropLast : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
+  init' : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
 #align initial_seg InitialSeg
 -/
 
@@ -108,15 +108,15 @@ theorem coe_coe_fn (f : r ≼i s) : ((f : r ↪r s) : α → β) = f :=
   rfl
 #align initial_seg.coe_coe_fn InitialSeg.coe_coe_fn
 
-/- warning: initial_seg.init' -> InitialSeg.init' is a dubious translation:
+/- warning: initial_seg.init -> InitialSeg.init is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u1, u2} α β r s) {a : α} {b : β}, (s b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (InitialSeg.{u1, u2} α β r s) α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (InitialSeg.{u1, u2} α β r s) α β (InitialSeg.embeddingLike.{u1, u2} α β r s))) f a)) -> (Exists.{succ u1} α (fun (a' : α) => Eq.{succ u2} β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (InitialSeg.{u1, u2} α β r s) α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (InitialSeg.{u1, u2} α β r s) α β (InitialSeg.embeddingLike.{u1, u2} α β r s))) f a') b))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u1, u2} α β r s) (a : α) (b : β), (s b (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (InitialSeg.toRelEmbedding.{u1, u2} α β r s f)) a)) -> (Exists.{succ u1} α (fun (a' : α) => Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a') (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (InitialSeg.toRelEmbedding.{u1, u2} α β r s f)) a') b))
-Case conversion may be inaccurate. Consider using '#align initial_seg.init' InitialSeg.init'ₓ'. -/
-theorem init' (f : r ≼i s) {a : α} {b : β} : s b (f a) → ∃ a', f a' = b :=
-  f.dropLast _ _
-#align initial_seg.init' InitialSeg.init'
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u2, u1} α β r s) {a : α} {b : β}, (s b (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a)) -> (Exists.{succ u2} α (fun (a' : α) => Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a') (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a') b))
+Case conversion may be inaccurate. Consider using '#align initial_seg.init InitialSeg.initₓ'. -/
+theorem init (f : r ≼i s) {a : α} {b : β} : s b (f a) → ∃ a', f a' = b :=
+  f.init' _ _
+#align initial_seg.init InitialSeg.init
 
 /- warning: initial_seg.map_rel_iff -> InitialSeg.map_rel_iff is a dubious translation:
 lean 3 declaration is
@@ -136,7 +136,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align initial_seg.init_iff InitialSeg.init_iffₓ'. -/
 theorem init_iff (f : r ≼i s) {a : α} {b : β} : s b (f a) ↔ ∃ a', f a' = b ∧ r a' a :=
   ⟨fun h =>
-    let ⟨a', e⟩ := f.init' h
+    let ⟨a', e⟩ := f.dropLast h
     ⟨a', e, f.map_rel_iff.1 (e.symm ▸ h)⟩,
     fun ⟨a', e, h⟩ => e ▸ f.map_rel_iff.2 h⟩
 #align initial_seg.init_iff InitialSeg.init_iff
@@ -279,7 +279,7 @@ theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) :
               rw [← e] <;>
                 exact
                   (trichotomous _ _).resolve_right
-                    (not_or_of_not (hn a) fun hl => not_exists.2 hn (f.init' hl))⟩⟩
+                    (not_or_of_not (hn a) fun hl => not_exists.2 hn (f.init hl))⟩⟩
 #align initial_seg.eq_or_principal InitialSeg.eq_or_principal
 
 /- warning: initial_seg.cod_restrict -> InitialSeg.codRestrict is a dubious translation:
@@ -291,7 +291,7 @@ Case conversion may be inaccurate. Consider using '#align initial_seg.cod_restri
 /-- Restrict the codomain of an initial segment -/
 def codRestrict (p : Set β) (f : r ≼i s) (H : ∀ a, f a ∈ p) : r ≼i Subrel s p :=
   ⟨RelEmbedding.codRestrict p f H, fun a ⟨b, m⟩ (h : s b (f a)) =>
-    let ⟨a', e⟩ := f.init' h
+    let ⟨a', e⟩ := f.dropLast h
     ⟨a', by clear _let_match <;> subst e <;> rfl⟩⟩
 #align initial_seg.cod_restrict InitialSeg.codRestrict
 

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson, Devon Tuma, Eric Rodriguez, Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.order.field
-! leanprover-community/mathlib commit 84dc0bd6619acaea625086d6f53cb35cdd554219
+! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Positivity
+import Mathbin.Tactic.Linarith.Default
 import Mathbin.Topology.Algebra.Order.Group
 import Mathbin.Topology.Algebra.Field
 

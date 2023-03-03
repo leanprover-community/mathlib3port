@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
+! leanprover-community/mathlib commit 8da9e30545433fdd8fe55a0d3da208e5d9263f03
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem alephIdx_le {a b} : alephIdx a ≤ alephIdx b ↔ a ≤ b := by
 
 #print Cardinal.alephIdx.init /-
 theorem alephIdx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
-  alephIdx.initialSeg.dropLast _ _
+  alephIdx.initialSeg.dropLast
 #align cardinal.aleph_idx.init Cardinal.alephIdx.init
 -/
 

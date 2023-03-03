@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 468b141b14016d54b479eb7a0fff1e360b7e3cf6
+! leanprover-community/mathlib commit c310cfdc40da4d99a10a58c33a95360ef9e6e0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -254,9 +254,7 @@ theorem finrank_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
 
 instance (priority := 900) StarModule.complexToReal {E : Type _} [AddCommGroup E] [Star E]
     [Module ℂ E] [StarModule ℂ E] : StarModule ℝ E :=
-  ⟨fun r a => by
-    rw [star_trivial r, restrictScalars_smul_def, restrictScalars_smul_def, star_smul,
-      Complex.coe_algebraMap, Complex.star_def, Complex.conj_of_real]⟩
+  ⟨fun r a => by rw [← smul_one_smul ℂ r a, star_smul, star_smul, star_one, smul_one_smul]⟩
 #align star_module.complex_to_real StarModule.complexToReal
 
 namespace Complex

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.metric
-! leanprover-community/mathlib commit 832a8ba8f10f11fea99367c469ff802e69a5b8ec
+! leanprover-community/mathlib commit f06058e64b7e8397234455038f3f8aec83aaba5a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ ball/sphere with another center and radius.
 
 noncomputable section
 
-open UpperHalfPlane ComplexConjugate NNReal Topology
+open UpperHalfPlane ComplexConjugate NNReal Topology MatrixGroups
 
 open Set Metric Filter Real
 
@@ -396,6 +396,30 @@ theorem isometry_pos_mul (a : { x : ℝ // 0 < x }) : Isometry ((· • ·) a : 
     Real.norm_eq_abs, mul_left_comm]
   exact mul_div_mul_left _ _ (mt _root_.abs_eq_zero.1 a.2.ne')
 #align upper_half_plane.isometry_pos_mul UpperHalfPlane.isometry_pos_mul
+
+/-- `SL(2, ℝ)` acts on the upper half plane as an isometry.-/
+instance : HasIsometricSmul SL(2, ℝ) ℍ :=
+  ⟨fun g =>
+    by
+    have h₀ : Isometry (fun z => ModularGroup.s • z : ℍ → ℍ) :=
+      Isometry.of_dist_eq fun y₁ y₂ =>
+        by
+        have h₁ : 0 ≤ im y₁ * im y₂ := mul_nonneg y₁.property.le y₂.property.le
+        have h₂ : Complex.abs (y₁ * y₂) ≠ 0 := by simp [y₁.ne_zero, y₂.ne_zero]
+        simp only [dist_eq, modular_S_smul, inv_neg, neg_div, div_mul_div_comm, coe_mk, mk_im,
+          div_one, Complex.inv_im, Complex.neg_im, coe_im, neg_neg, Complex.normSq_neg,
+          mul_eq_mul_left_iff, Real.arsinh_inj, bit0_eq_zero, one_ne_zero, or_false_iff,
+          dist_neg_neg, mul_neg, neg_mul, dist_inv_inv₀ y₁.ne_zero y₂.ne_zero, ← map_mul, ←
+          Complex.normSq_mul, Real.sqrt_div h₁, ← Complex.abs_apply, mul_div (2 : ℝ),
+          div_div_div_comm, div_self h₂, Complex.norm_eq_abs]
+    by_cases hc : g 1 0 = 0
+    · obtain ⟨u, v, h⟩ := exists_SL2_smul_eq_of_apply_zero_one_eq_zero g hc
+      rw [h]
+      exact (isometry_real_vadd v).comp (isometry_pos_mul u)
+    · obtain ⟨u, v, w, h⟩ := exists_SL2_smul_eq_of_apply_zero_one_ne_zero g hc
+      rw [h]
+      exact
+        (isometry_real_vadd w).comp (h₀.comp <| (isometry_real_vadd v).comp <| isometry_pos_mul u)⟩
 
 end UpperHalfPlane
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit ed90a7d327c3a5caf65a6faf7e8a0d63c4605df7
+! leanprover-community/mathlib commit f5edf4694f7c478cbca7a2451bddbd221fc7f869
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,8 +129,7 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
       exact hz
   rcases this with ⟨c, hc1, hci⟩
   refine' ⟨c * r, _, _, hs.2⟩
-  · rw [← Ideal.Quotient.eq, RingHom.map_one] at hr1 hc1⊢
-    rw [RingHom.map_mul, hc1, hr1, mul_one]
+  · simpa only [mul_sub, mul_one, sub_add_sub_cancel] using I.add_mem (I.mul_mem_left c hr1) hc1
   · intro n hn
     specialize hrn hn
     rw [mem_comap, mem_sup] at hrn

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit ec80bb1545ee17237ac0961a91bb2072780643c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1662,9 +1662,24 @@ theorem coe_add : ((f + g : Ratfunc F) : LaurentSeries F) = f + g :=
 #align ratfunc.coe_add Ratfunc.coe_add
 
 @[simp, norm_cast]
+theorem coe_sub : ((f - g : Ratfunc F) : LaurentSeries F) = f - g :=
+  (coeAlgHom F).map_sub _ _
+#align ratfunc.coe_sub Ratfunc.coe_sub
+
+@[simp, norm_cast]
+theorem coe_neg : ((-f : Ratfunc F) : LaurentSeries F) = -f :=
+  (coeAlgHom F).map_neg _
+#align ratfunc.coe_neg Ratfunc.coe_neg
+
+@[simp, norm_cast]
 theorem coe_mul : ((f * g : Ratfunc F) : LaurentSeries F) = f * g :=
   (coeAlgHom F).map_mul _ _
 #align ratfunc.coe_mul Ratfunc.coe_mul
+
+@[simp, norm_cast]
+theorem coe_pow (n : ℕ) : ((f ^ n : Ratfunc F) : LaurentSeries F) = f ^ n :=
+  (coeAlgHom F).map_pow _ _
+#align ratfunc.coe_pow Ratfunc.coe_pow
 
 @[simp, norm_cast]
 theorem coe_div :

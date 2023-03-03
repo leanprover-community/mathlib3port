@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.direct_sum.finsupp
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 9b9d125b7be0930f564a68f1d73ace10cf46064d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ open TensorProduct Classical
 def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
     [AddCommGroup N] [Module R N] : (ι →₀ M) ⊗[R] (κ →₀ N) ≃ₗ[R] ι × κ →₀ M ⊗[R] N :=
   TensorProduct.congr (finsuppLequivDirectSum R M ι) (finsuppLequivDirectSum R N κ) ≪≫ₗ
-    ((TensorProduct.directSum R ι κ (fun _ => M) fun _ => N) ≪≫ₗ
+    ((TensorProduct.directSum R (fun _ : ι => M) fun _ : κ => N) ≪≫ₗ
       (finsuppLequivDirectSum R (M ⊗[R] N) (ι × κ)).symm)
 #align finsupp_tensor_finsupp finsuppTensorFinsupp
 

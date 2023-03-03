@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.basic
-! leanprover-community/mathlib commit ae690b0c236e488a0043f6faa8ce3546e7f2f9c5
+! leanprover-community/mathlib commit f06058e64b7e8397234455038f3f8aec83aaba5a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
+import Mathbin.Tactic.LinearCombination
 
 /-!
 # The upper half plane and its automorphisms
@@ -35,12 +36,17 @@ open Classical BigOperators MatrixGroups
 
 attribute [local instance] Fintype.card_fin_even
 
-/- Disable this instances as it is not the simp-normal form, and having them disabled ensures
+/- Disable these instances as they are not the simp-normal form, and having them disabled ensures
 we state lemmas in this file without spurious `coe_fn` terms. -/
 attribute [-instance] Matrix.SpecialLinearGroup.hasCoeToFun
 
+attribute [-instance] Matrix.GeneralLinearGroup.hasCoeToFun
+
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
+
+-- mathport name: «expr↑ₘ[ ]»
+local notation:1024 "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
 -- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
@@ -137,6 +143,10 @@ theorem normSq_pos (z : ℍ) : 0 < Complex.normSq (z : ℂ) :=
 theorem normSq_ne_zero (z : ℍ) : Complex.normSq (z : ℂ) ≠ 0 :=
   (normSq_pos z).ne'
 #align upper_half_plane.norm_sq_ne_zero UpperHalfPlane.normSq_ne_zero
+
+theorem im_inv_neg_coe_pos (z : ℍ) : 0 < (-z : ℂ)⁻¹.im := by
+  simpa using div_pos z.property (norm_sq_pos z)
+#align upper_half_plane.im_inv_neg_coe_pos UpperHalfPlane.im_inv_neg_coe_pos
 
 /-- Numerator of the formula for a fractional linear transformation -/
 @[simp]
@@ -308,6 +318,15 @@ instance subgroup_to_SL_tower : IsScalarTower Γ SL(2, ℤ) ℍ
 
 end ModularScalarTowers
 
+theorem specialLinearGroup_apply {R : Type _} [CommRing R] [Algebra R ℝ] (g : SL(2, R)) (z : ℍ) :
+    g • z =
+      mk
+        ((((↑(↑ₘ[R] g 0 0) : ℝ) : ℂ) * z + ((↑(↑ₘ[R] g 0 1) : ℝ) : ℂ)) /
+          (((↑(↑ₘ[R] g 1 0) : ℝ) : ℂ) * z + ((↑(↑ₘ[R] g 1 1) : ℝ) : ℂ)))
+        (g • z).property :=
+  rfl
+#align upper_half_plane.special_linear_group_apply UpperHalfPlane.specialLinearGroup_apply
+
 @[simp]
 theorem coe_smul (g : GL(2, ℝ)⁺) (z : ℍ) : ↑(g • z) = num g z / denom g z :=
   rfl
@@ -440,6 +459,60 @@ theorem vadd_im : (x +ᵥ z).im = z.im :=
 #align upper_half_plane.vadd_im UpperHalfPlane.vadd_im
 
 end RealAddAction
+
+@[simp]
+theorem modular_s_smul (z : ℍ) : ModularGroup.s • z = mk (-z : ℂ)⁻¹ z.im_inv_neg_coe_pos :=
+  by
+  rw [special_linear_group_apply]
+  simp [ModularGroup.s, neg_div, inv_neg]
+#align upper_half_plane.modular_S_smul UpperHalfPlane.modular_s_smul
+
+theorem exists_SL2_smul_eq_of_apply_zero_one_eq_zero (g : SL(2, ℝ)) (hc : ↑ₘ[ℝ] g 1 0 = 0) :
+    ∃ (u : { x : ℝ // 0 < x })(v : ℝ), ((· • ·) g : ℍ → ℍ) = (fun z => v +ᵥ z) ∘ fun z => u • z :=
+  by
+  obtain ⟨a, b, ha, rfl⟩ := g.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero hc
+  refine' ⟨⟨_, mul_self_pos.mpr ha⟩, b * a, _⟩
+  ext1 ⟨z, hz⟩
+  ext1
+  suffices ↑a * z * a + b * a = b * a + a * a * z
+    by
+    rw [special_linear_group_apply]
+    simpa [add_mul]
+  ring
+#align upper_half_plane.exists_SL2_smul_eq_of_apply_zero_one_eq_zero UpperHalfPlane.exists_SL2_smul_eq_of_apply_zero_one_eq_zero
+
+theorem exists_SL2_smul_eq_of_apply_zero_one_ne_zero (g : SL(2, ℝ)) (hc : ↑ₘ[ℝ] g 1 0 ≠ 0) :
+    ∃ (u : { x : ℝ // 0 < x })(v w : ℝ),
+      ((· • ·) g : ℍ → ℍ) =
+        ((· +ᵥ ·) w : ℍ → ℍ) ∘
+          ((· • ·) ModularGroup.s : ℍ → ℍ) ∘ ((· +ᵥ ·) v : ℍ → ℍ) ∘ ((· • ·) u : ℍ → ℍ) :=
+  by
+  have h_denom := denom_ne_zero g
+  induction' g using Matrix.SpecialLinearGroup.fin_two_induction with a b c d h
+  replace hc : c ≠ 0
+  · simpa using hc
+  refine' ⟨⟨_, mul_self_pos.mpr hc⟩, c * d, a / c, _⟩
+  ext1 ⟨z, hz⟩
+  ext1
+  suffices (↑a * z + b) / (↑c * z + d) = a / c - (c * d + ↑c * ↑c * z)⁻¹
+    by
+    rw [special_linear_group_apply]
+    simpa [-neg_add_rev, inv_neg, ← sub_eq_add_neg]
+  replace hc : (c : ℂ) ≠ 0
+  · norm_cast
+    assumption
+  replace h_denom : ↑c * z + d ≠ 0
+  · simpa using h_denom ⟨z, hz⟩
+  have h_aux : (c : ℂ) * d + ↑c * ↑c * z ≠ 0 :=
+    by
+    rw [mul_assoc, ← mul_add, add_comm]
+    exact mul_ne_zero hc h_denom
+  replace h : (a * d - b * c : ℂ) = (1 : ℂ)
+  · norm_cast
+    assumption
+  field_simp
+  linear_combination (-(z * ↑c ^ 2) - ↑c * ↑d) * h
+#align upper_half_plane.exists_SL2_smul_eq_of_apply_zero_one_ne_zero UpperHalfPlane.exists_SL2_smul_eq_of_apply_zero_one_ne_zero
 
 end UpperHalfPlane
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.hahn_series
-! leanprover-community/mathlib commit b1d911acd60ab198808e853292106ee352b648ea
+! leanprover-community/mathlib commit a484a7d0eade4e1268f4fb402859b6686037f965
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -489,6 +489,14 @@ theorem sub_coeff' {x y : HahnSeries Γ R} : (x - y).coeff = x.coeff - y.coeff :
 theorem sub_coeff {x y : HahnSeries Γ R} {a : Γ} : (x - y).coeff a = x.coeff a - y.coeff a := by
   simp
 #align hahn_series.sub_coeff HahnSeries.sub_coeff
+
+@[simp]
+theorem order_neg [Zero Γ] {f : HahnSeries Γ R} : (-f).order = f.order :=
+  by
+  by_cases hf : f = 0
+  · simp only [hf, neg_zero]
+  simp only [order, support_neg, neg_eq_zero]
+#align hahn_series.order_neg HahnSeries.order_neg
 
 end AddGroup
 

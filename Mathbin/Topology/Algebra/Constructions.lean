@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.algebra.constructions
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
+! leanprover-community/mathlib commit c10e724be91096453ee3db13862b9fb9a992fef2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,6 +142,45 @@ theorem embedding_embedProduct : Embedding (embedProduct M) :=
   ⟨inducing_embedProduct, embedProduct_injective M⟩
 #align units.embedding_embed_product Units.embedding_embedProduct
 #align add_units.embedding_embed_product AddUnits.embedding_embedProduct
+
+/- warning: units.topology_eq_inf -> Units.topology_eq_inf is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : Monoid.{u1} M], Eq.{succ u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (Units.topologicalSpace.{u1} M _inst_1 _inst_2) (Inf.inf.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (TopologicalSpace.completeLattice.{u1} (Units.{u1} M _inst_2)))))) (TopologicalSpace.induced.{u1, u1} (Units.{u1} M _inst_2) M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_2) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_2) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_2) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_2) M (Units.hasCoe.{u1} M _inst_2))))) _inst_1) (TopologicalSpace.induced.{u1, u1} (Units.{u1} M _inst_2) M (fun (u : Units.{u1} M _inst_2) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_2) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_2) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_2) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_2) M (Units.hasCoe.{u1} M _inst_2)))) (Inv.inv.{u1} (Units.{u1} M _inst_2) (Units.hasInv.{u1} M _inst_2) u)) _inst_1))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : Monoid.{u1} M], Eq.{succ u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (Units.instTopologicalSpaceUnits.{u1} M _inst_1 _inst_2) (Inf.inf.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (Lattice.toInf.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} (Units.{u1} M _inst_2)) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} (Units.{u1} M _inst_2))))) (TopologicalSpace.induced.{u1, u1} (Units.{u1} M _inst_2) M (Units.val.{u1} M _inst_2) _inst_1) (TopologicalSpace.induced.{u1, u1} (Units.{u1} M _inst_2) M (fun (u : Units.{u1} M _inst_2) => Units.val.{u1} M _inst_2 (Inv.inv.{u1} (Units.{u1} M _inst_2) (Units.instInvUnits.{u1} M _inst_2) u)) _inst_1))
+Case conversion may be inaccurate. Consider using '#align units.topology_eq_inf Units.topology_eq_infₓ'. -/
+@[to_additive]
+theorem topology_eq_inf :
+    Units.topologicalSpace =
+      TopologicalSpace.induced (coe : Mˣ → M) ‹_› ⊓
+        TopologicalSpace.induced (fun u => ↑u⁻¹ : Mˣ → M) ‹_› :=
+  by
+  simp only [inducing_embed_product.1, Prod.topologicalSpace, induced_inf,
+      MulOpposite.topologicalSpace, induced_compose] <;>
+    rfl
+#align units.topology_eq_inf Units.topology_eq_inf
+#align add_units.topology_eq_inf AddUnits.topology_eq_inf
+
+/- warning: units.embedding_coe_mk -> Units.embedding_val_mk is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_4 : DivisionMonoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M], (ContinuousOn.{u1, u1} M M _inst_5 _inst_5 (Inv.inv.{u1} M (DivInvMonoid.toHasInv.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) (setOf.{u1} M (fun (x : M) => IsUnit.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4)) x))) -> (Embedding.{u1, u1} (Units.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) M (Units.topologicalSpace.{u1} M _inst_5 (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) _inst_5 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) M (coeBase.{succ u1, succ u1} (Units.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) M (Units.hasCoe.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))))))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_4 : DivisionMonoid.{u1} M] [_inst_5 : TopologicalSpace.{u1} M], (ContinuousOn.{u1, u1} M M _inst_5 _inst_5 (Inv.inv.{u1} M (InvOneClass.toInv.{u1} M (DivInvOneMonoid.toInvOneClass.{u1} M (DivisionMonoid.toDivInvOneMonoid.{u1} M _inst_4)))) (setOf.{u1} M (fun (x : M) => IsUnit.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4)) x))) -> (Embedding.{u1, u1} (Units.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) M (Units.instTopologicalSpaceUnits.{u1} M _inst_5 (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))) _inst_5 (Units.val.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_4))))
+Case conversion may be inaccurate. Consider using '#align units.embedding_coe_mk Units.embedding_val_mkₓ'. -/
+/-- An auxiliary lemma that can be used to prove that coercion `Mˣ → M` is a topological embedding.
+Use `units.coe_embedding₀`, `units.coe_embedding`, or `to_units_homeomorph` instead. -/
+@[to_additive
+      "An auxiliary lemma that can be used to prove that coercion `add_units M → M` is a\ntopological embedding. Use `add_units.coe_embedding` or `to_add_units_homeomorph` instead."]
+theorem embedding_val_mk {M : Type _} [DivisionMonoid M] [TopologicalSpace M]
+    (h : ContinuousOn Inv.inv { x : M | IsUnit x }) : Embedding (coe : Mˣ → M) :=
+  by
+  refine' ⟨⟨_⟩, ext⟩
+  rw [topology_eq_inf, inf_eq_left, ← continuous_iff_le_induced, continuous_iff_continuousAt]
+  intro u s hs
+  simp only [coe_inv, nhds_induced, Filter.mem_map] at hs⊢
+  exact ⟨_, mem_inf_principal.1 (h u u.is_unit hs), fun u' hu' => hu' u'.IsUnit⟩
+#align units.embedding_coe_mk Units.embedding_val_mk
+#align add_units.embedding_coe_mk AddUnits.embedding_val_mk
 
 /- warning: units.continuous_embed_product -> Units.continuous_embedProduct is a dubious translation:
 lean 3 declaration is

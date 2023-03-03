@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.algebra.operations
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
+! leanprover-community/mathlib commit 27b54c47c3137250a521aa64e9f1db90be5f6a26
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -555,13 +555,14 @@ theorem map_unop_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
 
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
+@[simps]
 def span.ringHom : SetSemiring A →+* Submodule R A
     where
-  toFun := Submodule.span R
+  toFun s := Submodule.span R s.down
   map_zero' := span_empty
   map_one' := one_eq_span.symm
   map_add' := span_union
-  map_mul' s t := by erw [span_mul_span, ← image_mul_prod]
+  map_mul' s t := by rw [SetSemiring.down_mul, span_mul_span, ← image_mul_prod]
 #align submodule.span.ring_hom Submodule.span.ringHom
 
 section
@@ -627,25 +628,22 @@ variable (R A)
 /-- R-submodules of the R-algebra A are a module over `set A`. -/
 instance moduleSet : Module (SetSemiring A) (Submodule R A)
     where
-  smul s P := span R s * P
+  smul s P := span R s.down * P
   smul_add _ _ _ := mul_add _ _ _
-  add_smul s t P := show span R (s ⊔ t) * P = _ by erw [span_union, right_distrib]
-  mul_smul s t P := show _ = _ * (_ * _) by rw [← mul_assoc, span_mul_span, ← image_mul_prod]
-  one_smul P :=
-    show span R {(1 : A)} * P = _ by
-      conv_lhs => erw [← span_eq P]
-      erw [span_mul_span, one_mul, span_eq]
-  zero_smul P := show span R ∅ * P = ⊥ by erw [span_empty, bot_mul]
+  add_smul s t P := by simp_rw [SMul.smul, SetSemiring.down_add, span_union, sup_mul, add_eq_sup]
+  mul_smul s t P := by simp_rw [SMul.smul, SetSemiring.down_mul, ← mul_assoc, span_mul_span]
+  one_smul P := by simp_rw [SMul.smul, SetSemiring.down_one, ← one_eq_span_one_set, one_mul]
+  zero_smul P := by simp_rw [SMul.smul, SetSemiring.down_zero, span_empty, bot_mul, bot_eq_zero]
   smul_zero _ := mul_bot _
 #align submodule.module_set Submodule.moduleSet
 
 variable {R A}
 
-theorem smul_def {s : SetSemiring A} {P : Submodule R A} : s • P = span R s * P :=
+theorem smul_def (s : SetSemiring A) (P : Submodule R A) : s • P = span R s.down * P :=
   rfl
 #align submodule.smul_def Submodule.smul_def
 
-theorem smul_le_smul {s t : SetSemiring A} {M N : Submodule R A} (h₁ : s.down ≤ t.down)
+theorem smul_le_smul {s t : SetSemiring A} {M N : Submodule R A} (h₁ : s.down ⊆ t.down)
     (h₂ : M ≤ N) : s • M ≤ t • N :=
   mul_le_mul (span_mono h₁) h₂
 #align submodule.smul_le_smul Submodule.smul_le_smul

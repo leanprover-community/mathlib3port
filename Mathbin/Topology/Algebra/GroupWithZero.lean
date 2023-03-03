@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
+! leanprover-community/mathlib commit c10e724be91096453ee3db13862b9fb9a992fef2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,6 +218,19 @@ theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x ∈ s, f x ≠ 0
 #align continuous_on.inv₀ ContinuousOn.inv₀
 
 end Inv₀
+
+/- warning: units.embedding_coe₀ -> Units.embedding_val₀ is a dubious translation:
+lean 3 declaration is
+  forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] [_inst_2 : TopologicalSpace.{u1} G₀] [_inst_3 : HasContinuousInv₀.{u1} G₀ (MulZeroClass.toHasZero.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) (DivInvMonoid.toHasInv.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ _inst_1)) _inst_2], Embedding.{u1, u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) G₀ (Units.topologicalSpace.{u1} G₀ _inst_2 (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) G₀ (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) G₀ (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) G₀ (coeBase.{succ u1, succ u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) G₀ (Units.hasCoe.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))))))
+but is expected to have type
+  forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] [_inst_2 : TopologicalSpace.{u1} G₀] [_inst_3 : HasContinuousInv₀.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)) (GroupWithZero.toInv.{u1} G₀ _inst_1) _inst_2], Embedding.{u1, u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) G₀ (Units.instTopologicalSpaceUnits.{u1} G₀ _inst_2 (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))) _inst_2 (Units.val.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))
+Case conversion may be inaccurate. Consider using '#align units.embedding_coe₀ Units.embedding_val₀ₓ'. -/
+/-- If `G₀` is a group with zero with topology such that `x ↦ x⁻¹` is continuous at all nonzero
+points. Then the coercion `Mˣ → M` is a topological embedding. -/
+theorem Units.embedding_val₀ [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] :
+    Embedding (coe : G₀ˣ → G₀) :=
+  Units.embedding_val_mk <| continuousOn_inv₀.mono fun x => IsUnit.ne_zero
+#align units.embedding_coe₀ Units.embedding_val₀
 
 /-!
 ### Continuity of division

@@ -2486,6 +2486,7 @@ import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.Ideal.Prod
 import Mathbin.RingTheory.Ideal.Quotient
+import Mathbin.RingTheory.Ideal.QuotientOperations
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.IntegralDomain
@@ -2845,7 +2846,8 @@ import Mathbin.Topology.Algebra.Order.ProjIcc
 import Mathbin.Topology.Algebra.Order.T5
 import Mathbin.Topology.Algebra.Order.UpperLower
 import Mathbin.Topology.Algebra.Polynomial
-import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Ring.Basic
+import Mathbin.Topology.Algebra.Ring.Ideal
 import Mathbin.Topology.Algebra.Semigroup
 import Mathbin.Topology.Algebra.Star
 import Mathbin.Topology.Algebra.StarSubalgebra

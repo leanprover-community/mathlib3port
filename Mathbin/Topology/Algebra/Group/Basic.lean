@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit c10e724be91096453ee3db13862b9fb9a992fef2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2509,6 +2509,23 @@ instance QuotientGroup.secondCountableTopology [SecondCountableTopology G] :
 -/
 
 end Quotient
+
+/- warning: to_units_homeomorph -> toUnits_homeomorph is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_2 (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))], Homeomorph.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _inst_2 (Units.topologicalSpace.{u1} G _inst_2 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_2 (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))], Homeomorph.{u1, u1} G (Units.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) _inst_2 (Units.instTopologicalSpaceUnits.{u1} G _inst_2 (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))
+Case conversion may be inaccurate. Consider using '#align to_units_homeomorph toUnits_homeomorphₓ'. -/
+/-- If `G` is a group with topological `⁻¹`, then it is homeomorphic to its units. -/
+@[to_additive
+      " If `G` is an additive group with topological negation, then it is homeomorphic to\nits additive units."]
+def toUnits_homeomorph [Group G] [TopologicalSpace G] [ContinuousInv G] : G ≃ₜ Gˣ
+    where
+  toEquiv := toUnits.toEquiv
+  continuous_toFun := Units.continuous_iff.2 ⟨continuous_id, continuous_inv⟩
+  continuous_invFun := Units.continuous_val
+#align to_units_homeomorph toUnits_homeomorph
+#align to_add_units_homeomorph toAddUnits_homeomorph
 
 namespace Units
 
