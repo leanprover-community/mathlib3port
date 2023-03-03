@@ -520,7 +520,7 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
         hasFpowerSeriesOnCauchyIntegral
           ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.coe_nonneg) hR
       refine' this.continuous_on.continuous_at (emetric.is_open_ball.mem_nhds _)
-      rwa [Metric.emetric_ball_nNReal]
+      rwa [Metric.emetric_ball_nnreal]
     have B : ContinuousAt f w := hc.continuous_at (closed_ball_mem_nhds_of_mem hw)
     refine' tendsto_nhds_unique_of_frequently_eq A B ((mem_closure_iff_frequently.1 this).mono _)
     intro z hz

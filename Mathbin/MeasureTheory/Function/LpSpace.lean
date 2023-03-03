@@ -1781,7 +1781,7 @@ theorem mem_lp_const (α) {m : MeasurableSpace α} (μ : Measure α) (c : E) [Is
 
 instance : HasNorm (lp E p μ) where norm f := ENNReal.toReal (snorm f p μ)
 
-instance : HasDist (lp E p μ) where dist f g := ‖f - g‖
+instance : Dist (lp E p μ) where dist f g := ‖f - g‖
 
 instance : EDist (lp E p μ) where edist f g := snorm (f - g) p μ
 

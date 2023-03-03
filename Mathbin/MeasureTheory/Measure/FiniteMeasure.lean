@@ -411,7 +411,7 @@ theorem testAgainstNn_lipschitz_estimate (μ : FiniteMeasure Ω) (f g : Ω →�
   by
   simp only [← μ.test_against_nn_const (nndist f g), ← test_against_nn_add, ← ENNReal.coe_le_coe,
     BoundedContinuousFunction.coe_add, const_apply, ENNReal.coe_add, Pi.add_apply,
-    coe_nNReal_eNNReal_nndist, test_against_nn_coe_eq]
+    coe_nnreal_ennreal_nndist, test_against_nn_coe_eq]
   apply lintegral_mono
   have le_dist : ∀ ω, dist (f ω) (g ω) ≤ nndist f g := BoundedContinuousFunction.dist_coe_le_dist
   intro ω
@@ -424,7 +424,7 @@ theorem testAgainstNn_lipschitz_estimate (μ : FiniteMeasure Ω) (f g : Ω →�
     by
     rw [← ENNReal.coe_add]
     exact ENNReal.coe_mono le'
-  rwa [coe_nNReal_eNNReal_nndist] at le
+  rwa [coe_nnreal_ennreal_nndist] at le
 #align measure_theory.finite_measure.test_against_nn_lipschitz_estimate MeasureTheory.FiniteMeasure.testAgainstNn_lipschitz_estimate
 
 theorem testAgainstNn_lipschitz (μ : FiniteMeasure Ω) :

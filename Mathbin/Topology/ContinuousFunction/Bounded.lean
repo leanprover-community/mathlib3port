@@ -159,7 +159,7 @@ def mkOfDiscrete [DiscreteTopology α] (f : α → β) (C : ℝ) (h : ∀ x y : 
 #align bounded_continuous_function.mk_of_discrete BoundedContinuousFunction.mkOfDiscrete
 
 /-- The uniform distance between two bounded continuous functions -/
-instance : HasDist (α →ᵇ β) :=
+instance : Dist (α →ᵇ β) :=
   ⟨fun f g => infₛ { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
 
 theorem dist_eq : dist f g = infₛ { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=

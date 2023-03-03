@@ -36,7 +36,7 @@ namespace UniformSpace.Completion
 
 /-- The distance on the completion is obtained by extending the distance on the original space,
 by uniform continuity. -/
-instance : HasDist (Completion α) :=
+instance : Dist (Completion α) :=
   ⟨Completion.extension₂ dist⟩
 
 /-- The new distance is uniformly continuous. -/

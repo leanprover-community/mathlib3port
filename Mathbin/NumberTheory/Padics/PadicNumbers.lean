@@ -781,7 +781,7 @@ section NormedSpace
 
 variable (p : ℕ) [Fact p.Prime]
 
-instance : HasDist ℚ_[p] :=
+instance : Dist ℚ_[p] :=
   ⟨fun x y => padicNormE (x - y)⟩
 
 instance : MetricSpace ℚ_[p] where

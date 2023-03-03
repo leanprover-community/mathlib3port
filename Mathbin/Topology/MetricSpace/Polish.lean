@@ -281,7 +281,7 @@ def CompleteCopy {α : Type _} (s : Set α) : Type _ :=
 It is given by `dist' x y = dist x y + |1 / dist x sᶜ - 1 / dist y sᶜ|`, where the second term
 blows up close to the boundary to ensure that Cauchy sequences for `dist'` remain well
 inside `s`. -/
-def hasDistCompleteCopy (s : Set α) : HasDist (CompleteCopy s) :=
+def hasDistCompleteCopy (s : Set α) : Dist (CompleteCopy s) :=
   ⟨fun x y => dist x.1 y.1 + abs (1 / infDist x.1 (sᶜ) - 1 / infDist y.1 (sᶜ))⟩
 #align polish_space.has_dist_complete_copy PolishSpace.hasDistCompleteCopy
 

@@ -184,7 +184,7 @@ end EdistProp
 
 section Dist
 
-variable [∀ i, HasDist (α i)]
+variable [∀ i, Dist (α i)]
 
 /-- Endowing the space `pi_Lp p β` with the `L^p` distance. We register this instance
 separate from `pi_Lp.pseudo_metric` since the latter requires the type class hypothesis
@@ -193,7 +193,7 @@ separate from `pi_Lp.pseudo_metric` since the latter requires the type class hyp
 Registering this separately allows for a future metric-like structure on `pi_Lp p β` for `p < 1`
 satisfying a relaxed triangle inequality. The terminology for this varies throughout the
 literature, but it is sometimes called a *quasi-metric* or *semi-metric*. -/
-instance : HasDist (PiLp p α)
+instance : Dist (PiLp p α)
     where dist f g :=
     if hp : p = 0 then { i | f i ≠ g i }.toFinite.toFinset.card
     else

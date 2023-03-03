@@ -423,7 +423,7 @@ section
 
 variable [Fintype ι] [∀ i, DecidableEq (β i)]
 
-instance : HasDist (Hamming β) :=
+instance : Dist (Hamming β) :=
   ⟨fun x y => hammingDist (ofHamming x) (ofHamming y)⟩
 
 @[simp, push_cast]

@@ -53,8 +53,8 @@ variable {α ι E : Type _} {m : MeasurableSpace α} {μ : Measure α}
 /-- A sequence of functions `f` is said to converge in measure to some function `g` if for all
 `ε > 0`, the measure of the set `{x | ε ≤ dist (f i x) (g x)}` tends to 0 as `i` converges along
 some given filter `l`. -/
-def TendstoInMeasure [HasDist E] {m : MeasurableSpace α} (μ : Measure α) (f : ι → α → E)
-    (l : Filter ι) (g : α → E) : Prop :=
+def TendstoInMeasure [Dist E] {m : MeasurableSpace α} (μ : Measure α) (f : ι → α → E) (l : Filter ι)
+    (g : α → E) : Prop :=
   ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ dist (f i x) (g x) }) l (𝓝 0)
 #align measure_theory.tendsto_in_measure MeasureTheory.TendstoInMeasure
 
@@ -67,7 +67,7 @@ theorem tendstoInMeasure_iff_norm [SeminormedAddCommGroup E] {l : Filter ι} {f 
 
 namespace TendstoInMeasure
 
-variable [HasDist E] {l : Filter ι} {f f' : ι → α → E} {g g' : α → E}
+variable [Dist E] {l : Filter ι} {f f' : ι → α → E} {g g' : α → E}
 
 protected theorem congr' (h_left : ∀ᶠ i in l, f i =ᵐ[μ] f' i) (h_right : g =ᵐ[μ] g')
     (h_tendsto : TendstoInMeasure μ f l g) : TendstoInMeasure μ f' l g' :=

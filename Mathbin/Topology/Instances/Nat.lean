@@ -23,7 +23,7 @@ open Metric Set Filter
 
 namespace Nat
 
-noncomputable instance : HasDist ℕ :=
+noncomputable instance : Dist ℕ :=
   ⟨fun x y => dist (x : ℝ) y⟩
 
 theorem dist_eq (x y : ℕ) : dist x y = |x - y| :=

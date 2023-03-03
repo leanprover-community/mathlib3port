@@ -282,7 +282,7 @@ induced metric space structure on the source space. -/
 theorem UniformEmbedding.to_isometry {α β} [UniformSpace α] [MetricSpace β] {f : α → β}
     (h : UniformEmbedding f) :
     @Isometry α β
-      (@PseudoMetricSpace.toPseudoEmetricSpace α
+      (@PseudoMetricSpace.toPseudoEMetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
   by
@@ -296,7 +296,7 @@ induced metric space structure on the source space. -/
 theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f : α → β}
     (h : Embedding f) :
     @Isometry α β
-      (@PseudoMetricSpace.toPseudoEmetricSpace α
+      (@PseudoMetricSpace.toPseudoEMetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
   by

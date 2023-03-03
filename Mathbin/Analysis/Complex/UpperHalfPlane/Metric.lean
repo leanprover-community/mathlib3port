@@ -38,7 +38,7 @@ variable {z w : ℍ} {r R : ℝ}
 
 namespace UpperHalfPlane
 
-instance : HasDist ℍ :=
+instance : Dist ℍ :=
   ⟨fun z w => 2 * arsinh (dist (z : ℂ) w / (2 * sqrt (z.im * w.im)))⟩
 
 theorem dist_eq (z w : ℍ) : dist z w = 2 * arsinh (dist (z : ℂ) w / (2 * sqrt (z.im * w.im))) :=

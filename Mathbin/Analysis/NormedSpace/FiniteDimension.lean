@@ -391,7 +391,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
   suffices :
     ∀ ε > (0 : ℝ), ∃ n : (E →L[𝕜] F) → Fin d → ℕ, ∀ f g : E →L[𝕜] F, n f = n g → dist f g ≤ ε
   exact
-    Metric.second_countable_of_countable_discretization fun ε ε_pos =>
+    Metric.secondCountable_of_countable_discretization fun ε ε_pos =>
       ⟨Fin d → ℕ, by infer_instance, this ε ε_pos⟩
   intro ε ε_pos
   obtain ⟨u : ℕ → F, hu : DenseRange u⟩ := exists_dense_seq F

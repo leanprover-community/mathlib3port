@@ -426,8 +426,8 @@ protected def dist : (Σi, E i) → (Σi, E i) → ℝ
   | ⟨i, x⟩, ⟨j, y⟩ =>
     if h : i = j then
       haveI : E j = E i := by rw [h]
-      HasDist.dist x (cast this y)
-    else HasDist.dist x (Nonempty.some ⟨x⟩) + 1 + HasDist.dist (Nonempty.some ⟨y⟩) y
+      Dist.dist x (cast this y)
+    else Dist.dist x (Nonempty.some ⟨x⟩) + 1 + Dist.dist (Nonempty.some ⟨y⟩) y
 #align metric.sigma.dist Metric.Sigma.dist
 
 /-- A `has_dist` instance on the disjoint union `Σ i, E i`.
@@ -435,7 +435,7 @@ We embed isometrically each factor, set the basepoints at distance 1, arbitraril
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-def hasDist : HasDist (Σi, E i) :=
+def hasDist : Dist (Σi, E i) :=
   ⟨Sigma.dist⟩
 #align metric.sigma.has_dist Metric.Sigma.hasDist
 
@@ -443,13 +443,13 @@ attribute [local instance] sigma.has_dist
 
 @[simp]
 theorem dist_same (i : ι) (x : E i) (y : E i) : dist (⟨i, x⟩ : Σj, E j) ⟨i, y⟩ = dist x y := by
-  simp [HasDist.dist, sigma.dist]
+  simp [Dist.dist, sigma.dist]
 #align metric.sigma.dist_same Metric.Sigma.dist_same
 
 @[simp]
 theorem dist_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
     dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y :=
-  by simp [HasDist.dist, sigma.dist, h]
+  by simp [Dist.dist, sigma.dist, h]
 #align metric.sigma.dist_ne Metric.Sigma.dist_ne
 
 theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :

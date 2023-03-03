@@ -25,7 +25,7 @@ open Metric Set Filter
 
 namespace Int
 
-instance : HasDist ℤ :=
+instance : Dist ℤ :=
   ⟨fun x y => dist (x : ℝ) y⟩
 
 theorem dist_eq (x y : ℤ) : dist x y = |x - y| :=

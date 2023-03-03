@@ -221,7 +221,7 @@ local instances in this section.
 
 /-- The distance function on a product space `Π n, E n`, given by `dist x y = (1/2)^n` where `n` is
 the first index at which `x` and `y` differ. -/
-protected def hasDist : HasDist (∀ n, E n) :=
+protected def hasDist : Dist (∀ n, E n) :=
   ⟨fun x y => if h : x ≠ y then (1 / 2 : ℝ) ^ firstDiff x y else 0⟩
 #align pi_nat.has_dist PiNat.hasDist
 
@@ -832,7 +832,7 @@ open Encodable
 /-- Given a countable family of metric spaces, one may put a distance on their product `Π i, E i`.
 It is highly non-canonical, though, and therefore not registered as a global instance.
 The distance we use here is `dist x y = ∑' i, min (1/2)^(encode i) (dist (x i) (y i))`. -/
-protected def hasDist : HasDist (∀ i, F i) :=
+protected def hasDist : Dist (∀ i, F i) :=
   ⟨fun x y => ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i))⟩
 #align pi_countable.has_dist PiCountable.hasDist
 

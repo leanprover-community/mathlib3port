@@ -67,7 +67,7 @@ instance : ProperSpace ℝ
     apply is_compact_Icc
 
 instance : SecondCountableTopology ℝ :=
-  second_countable_of_proper
+  secondCountable_of_proper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem Real.isTopologicalBasis_Ioo_rat :
