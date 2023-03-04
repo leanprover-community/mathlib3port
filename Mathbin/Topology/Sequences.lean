@@ -76,61 +76,82 @@ section TopologicalSpace
 
 variable [TopologicalSpace X] [TopologicalSpace Y]
 
+#print seqClosure /-
 /-- The sequential closure of a set `s : set X` in a topological space `X` is the set of all `a : X`
 which arise as limit of sequences in `s`. Note that the sequential closure of a set is not
 guaranteed to be sequentially closed. -/
 def seqClosure (s : Set X) : Set X :=
   { a | ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) }
 #align seq_closure seqClosure
+-/
 
+#print subset_seqClosure /-
 theorem subset_seqClosure {s : Set X} : s ⊆ seqClosure s := fun p hp =>
   ⟨const ℕ p, fun _ => hp, tendsto_const_nhds⟩
 #align subset_seq_closure subset_seqClosure
+-/
 
+#print seqClosure_subset_closure /-
 /-- The sequential closure of a set is contained in the closure of that set.
 The converse is not true. -/
 theorem seqClosure_subset_closure {s : Set X} : seqClosure s ⊆ closure s := fun p ⟨x, xM, xp⟩ =>
   mem_closure_of_tendsto xp (univ_mem' xM)
 #align seq_closure_subset_closure seqClosure_subset_closure
+-/
 
+#print IsSeqClosed /-
 /-- A set `s` is sequentially closed if for any converging sequence `x n` of elements of `s`, the
 limit belongs to `s` as well. Note that the sequential closure of a set is not guaranteed to be
 sequentially closed. -/
 def IsSeqClosed (s : Set X) : Prop :=
   ∀ ⦃x : ℕ → X⦄ ⦃p : X⦄, (∀ n, x n ∈ s) → Tendsto x atTop (𝓝 p) → p ∈ s
 #align is_seq_closed IsSeqClosed
+-/
 
+#print IsSeqClosed.seqClosure_eq /-
 /-- The sequential closure of a sequentially closed set is the set itself. -/
 theorem IsSeqClosed.seqClosure_eq {s : Set X} (hs : IsSeqClosed s) : seqClosure s = s :=
   Subset.antisymm (fun p ⟨x, hx, hp⟩ => hs hx hp) subset_seqClosure
 #align is_seq_closed.seq_closure_eq IsSeqClosed.seqClosure_eq
+-/
 
+#print isSeqClosed_of_seqClosure_eq /-
 /-- If a set is equal to its sequential closure, then it is sequentially closed. -/
 theorem isSeqClosed_of_seqClosure_eq {s : Set X} (hs : seqClosure s = s) : IsSeqClosed s :=
   fun x p hxs hxp => hs ▸ ⟨x, hxs, hxp⟩
 #align is_seq_closed_of_seq_closure_eq isSeqClosed_of_seqClosure_eq
+-/
 
+#print isSeqClosed_iff /-
 /-- A set is sequentially closed iff it is equal to its sequential closure. -/
 theorem isSeqClosed_iff {s : Set X} : IsSeqClosed s ↔ seqClosure s = s :=
   ⟨IsSeqClosed.seqClosure_eq, isSeqClosed_of_seqClosure_eq⟩
 #align is_seq_closed_iff isSeqClosed_iff
+-/
 
+#print IsClosed.isSeqClosed /-
 /-- A set is sequentially closed if it is closed. -/
 protected theorem IsClosed.isSeqClosed {s : Set X} (hc : IsClosed s) : IsSeqClosed s :=
   fun u x hu hx => hc.mem_of_tendsto hx (eventually_of_forall hu)
 #align is_closed.is_seq_closed IsClosed.isSeqClosed
+-/
 
+#print FrechetUrysohnSpace /-
 /-- A topological space is called a *Fréchet-Urysohn space*, if the sequential closure of any set
 is equal to its closure. Since one of the inclusions is trivial, we require only the non-trivial one
 in the definition. -/
 class FrechetUrysohnSpace (X : Type _) [TopologicalSpace X] : Prop where
   closure_subset_seqClosure : ∀ s : Set X, closure s ⊆ seqClosure s
 #align frechet_urysohn_space FrechetUrysohnSpace
+-/
 
+#print seqClosure_eq_closure /-
 theorem seqClosure_eq_closure [FrechetUrysohnSpace X] (s : Set X) : seqClosure s = closure s :=
   seqClosure_subset_closure.antisymm <| FrechetUrysohnSpace.closure_subset_seqClosure s
 #align seq_closure_eq_closure seqClosure_eq_closure
+-/
 
+#print mem_closure_iff_seq_limit /-
 /-- In a Fréchet-Urysohn space, a point belongs to the closure of a set iff it is a limit
 of a sequence taking values in this set. -/
 theorem mem_closure_iff_seq_limit [FrechetUrysohnSpace X] {s : Set X} {a : X} :
@@ -139,7 +160,14 @@ theorem mem_closure_iff_seq_limit [FrechetUrysohnSpace X] {s : Set X} {a : X} :
   rw [← seqClosure_eq_closure]
   rfl
 #align mem_closure_iff_seq_limit mem_closure_iff_seq_limit
+-/
 
+/- warning: tendsto_nhds_iff_seq_tendsto -> tendsto_nhds_iff_seq_tendsto is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : FrechetUrysohnSpace.{u1} X _inst_1] {f : X -> Y} {a : X} {b : Y}, Iff (Filter.Tendsto.{u1, u2} X Y f (nhds.{u1} X _inst_1 a) (nhds.{u2} Y _inst_2 b)) (forall (u : Nat -> X), (Filter.Tendsto.{0, u1} Nat X u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X _inst_1 a)) -> (Filter.Tendsto.{0, u2} Nat Y (Function.comp.{1, succ u1, succ u2} Nat X Y f u) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u2} Y _inst_2 b)))
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] [_inst_3 : FrechetUrysohnSpace.{u2} X _inst_1] {f : X -> Y} {a : X} {b : Y}, Iff (Filter.Tendsto.{u2, u1} X Y f (nhds.{u2} X _inst_1 a) (nhds.{u1} Y _inst_2 b)) (forall (u : Nat -> X), (Filter.Tendsto.{0, u2} Nat X u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u2} X _inst_1 a)) -> (Filter.Tendsto.{0, u1} Nat Y (Function.comp.{1, succ u2, succ u1} Nat X Y f u) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} Y _inst_2 b)))
+Case conversion may be inaccurate. Consider using '#align tendsto_nhds_iff_seq_tendsto tendsto_nhds_iff_seq_tendstoₓ'. -/
 /-- If the domain of a function `f : α → β` is a Fréchet-Urysohn space, then convergence
 is equivalent to sequential convergence. See also `filter.tendsto_iff_seq_tendsto` for a version
 that works for any pair of filters assuming that the filter in the domain is countably generated.
@@ -159,6 +187,7 @@ theorem tendsto_nhds_iff_seq_tendsto [FrechetUrysohnSpace X] {f : X → Y} {a : 
   exact hsc.mem_of_tendsto (h u hu) (eventually_of_forall hus)
 #align tendsto_nhds_iff_seq_tendsto tendsto_nhds_iff_seq_tendsto
 
+#print FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto /-
 /-- An alternative construction for `frechet_urysohn_space`: if sequential convergence implies
 convergence, then the space is a Fréchet-Urysohn space. -/
 theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
@@ -177,61 +206,94 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
   rcases extraction_of_frequently_at_top hus with ⟨φ, φ_mono, hφ⟩
   exact ⟨u ∘ φ, hφ, hux.comp φ_mono.tendsto_at_top⟩
 #align frechet_urysohn_space.of_seq_tendsto_imp_tendsto FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
+-/
 
+#print TopologicalSpace.FirstCountableTopology.frechetUrysohnSpace /-
 -- see Note [lower instance priority]
 /-- Every first-countable space is a Fréchet-Urysohn space. -/
 instance (priority := 100) TopologicalSpace.FirstCountableTopology.frechetUrysohnSpace
     [FirstCountableTopology X] : FrechetUrysohnSpace X :=
   FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto fun f a => tendsto_iff_seq_tendsto.2
 #align topological_space.first_countable_topology.frechet_urysohn_space TopologicalSpace.FirstCountableTopology.frechetUrysohnSpace
+-/
 
+#print SequentialSpace /-
 /-- A topological space is said to be a *sequential space* if any sequentially closed set in this
 space is closed. This condition is weaker than being a Fréchet-Urysohn space. -/
 class SequentialSpace (X : Type _) [TopologicalSpace X] : Prop where
   isClosed_of_seq : ∀ s : Set X, IsSeqClosed s → IsClosed s
 #align sequential_space SequentialSpace
+-/
 
+#print FrechetUrysohnSpace.to_sequentialSpace /-
 -- see Note [lower instance priority]
 /-- Every Fréchet-Urysohn space is a sequential space. -/
 instance (priority := 100) FrechetUrysohnSpace.to_sequentialSpace [FrechetUrysohnSpace X] :
     SequentialSpace X :=
   ⟨fun s hs => by rw [← closure_eq_iff_isClosed, ← seqClosure_eq_closure, hs.seq_closure_eq]⟩
 #align frechet_urysohn_space.to_sequential_space FrechetUrysohnSpace.to_sequentialSpace
+-/
 
+#print IsSeqClosed.isClosed /-
 /-- In a sequential space, a sequentially closed set is closed. -/
 protected theorem IsSeqClosed.isClosed [SequentialSpace X] {s : Set X} (hs : IsSeqClosed s) :
     IsClosed s :=
   SequentialSpace.isClosed_of_seq s hs
 #align is_seq_closed.is_closed IsSeqClosed.isClosed
+-/
 
+#print isSeqClosed_iff_isClosed /-
 /-- In a sequential space, a set is closed iff it's sequentially closed. -/
 theorem isSeqClosed_iff_isClosed [SequentialSpace X] {M : Set X} : IsSeqClosed M ↔ IsClosed M :=
   ⟨IsSeqClosed.isClosed, IsClosed.isSeqClosed⟩
 #align is_seq_closed_iff_is_closed isSeqClosed_iff_isClosed
+-/
 
+#print SeqContinuous /-
 /-- A function between topological spaces is sequentially continuous if it commutes with limit of
  convergent sequences. -/
 def SeqContinuous (f : X → Y) : Prop :=
   ∀ ⦃x : ℕ → X⦄ ⦃p : X⦄, Tendsto x atTop (𝓝 p) → Tendsto (f ∘ x) atTop (𝓝 (f p))
 #align seq_continuous SeqContinuous
+-/
 
+#print IsSeqClosed.preimage /-
 /-- The preimage of a sequentially closed set under a sequentially continuous map is sequentially
 closed. -/
 theorem IsSeqClosed.preimage {f : X → Y} {s : Set Y} (hs : IsSeqClosed s) (hf : SeqContinuous f) :
     IsSeqClosed (f ⁻¹' s) := fun x p hx hp => hs hx (hf hp)
 #align is_seq_closed.preimage IsSeqClosed.preimage
+-/
 
+/- warning: continuous.seq_continuous -> Continuous.seqContinuous is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {f : X -> Y}, (Continuous.{u1, u2} X Y _inst_1 _inst_2 f) -> (SeqContinuous.{u1, u2} X Y _inst_1 _inst_2 f)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : X -> Y}, (Continuous.{u2, u1} X Y _inst_1 _inst_2 f) -> (SeqContinuous.{u2, u1} X Y _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align continuous.seq_continuous Continuous.seqContinuousₓ'. -/
 -- A continuous function is sequentially continuous.
 protected theorem Continuous.seqContinuous {f : X → Y} (hf : Continuous f) : SeqContinuous f :=
   fun x p hx => (hf.Tendsto p).comp hx
 #align continuous.seq_continuous Continuous.seqContinuous
 
+/- warning: seq_continuous.continuous -> SeqContinuous.continuous is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : SequentialSpace.{u1} X _inst_1] {f : X -> Y}, (SeqContinuous.{u1, u2} X Y _inst_1 _inst_2 f) -> (Continuous.{u1, u2} X Y _inst_1 _inst_2 f)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] [_inst_3 : SequentialSpace.{u2} X _inst_1] {f : X -> Y}, (SeqContinuous.{u2, u1} X Y _inst_1 _inst_2 f) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align seq_continuous.continuous SeqContinuous.continuousₓ'. -/
 /-- A sequentially continuous function defined on a sequential space is continuous. -/
 protected theorem SeqContinuous.continuous [SequentialSpace X] {f : X → Y} (hf : SeqContinuous f) :
     Continuous f :=
   continuous_iff_isClosed.mpr fun s hs => (hs.IsSeqClosed.Preimage hf).IsClosed
 #align seq_continuous.continuous SeqContinuous.continuous
 
+/- warning: continuous_iff_seq_continuous -> continuous_iff_seqContinuous is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : SequentialSpace.{u1} X _inst_1] {f : X -> Y}, Iff (Continuous.{u1, u2} X Y _inst_1 _inst_2 f) (SeqContinuous.{u1, u2} X Y _inst_1 _inst_2 f)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] [_inst_3 : SequentialSpace.{u2} X _inst_1] {f : X -> Y}, Iff (Continuous.{u2, u1} X Y _inst_1 _inst_2 f) (SeqContinuous.{u2, u1} X Y _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align continuous_iff_seq_continuous continuous_iff_seqContinuousₓ'. -/
 /-- If the domain of a function is a sequential space, then continuity of this function is
 equivalent to its sequential continuity. -/
 theorem continuous_iff_seqContinuous [SequentialSpace X] {f : X → Y} :
@@ -239,6 +301,12 @@ theorem continuous_iff_seqContinuous [SequentialSpace X] {f : X → Y} :
   ⟨Continuous.seqContinuous, SeqContinuous.continuous⟩
 #align continuous_iff_seq_continuous continuous_iff_seqContinuous
 
+/- warning: quotient_map.sequential_space -> QuotientMap.sequentialSpace is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : SequentialSpace.{u1} X _inst_1] {f : X -> Y}, (QuotientMap.{u1, u2} X Y _inst_1 _inst_2 f) -> (SequentialSpace.{u2} Y _inst_2)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] [_inst_3 : SequentialSpace.{u2} X _inst_1] {f : X -> Y}, (QuotientMap.{u2, u1} X Y _inst_1 _inst_2 f) -> (SequentialSpace.{u1} Y _inst_2)
+Case conversion may be inaccurate. Consider using '#align quotient_map.sequential_space QuotientMap.sequentialSpaceₓ'. -/
 theorem QuotientMap.sequentialSpace [SequentialSpace X] {f : X → Y} (hf : QuotientMap f) :
     SequentialSpace Y :=
   ⟨fun s hs => hf.isClosed_preimage.mp <| (hs.Preimage <| hf.Continuous.SeqContinuous).IsClosed⟩
@@ -256,21 +324,31 @@ open TopologicalSpace TopologicalSpace.FirstCountableTopology
 
 variable [TopologicalSpace X]
 
+#print IsSeqCompact /-
 /-- A set `s` is sequentially compact if every sequence taking values in `s` has a
 converging subsequence. -/
 def IsSeqCompact (s : Set X) :=
   ∀ ⦃x : ℕ → X⦄, (∀ n, x n ∈ s) → ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a)
 #align is_seq_compact IsSeqCompact
+-/
 
+#print SeqCompactSpace /-
 /-- A space `X` is sequentially compact if every sequence in `X` has a
 converging subsequence. -/
 @[mk_iff]
 class SeqCompactSpace (X : Type _) [TopologicalSpace X] : Prop where
   seq_compact_univ : IsSeqCompact (univ : Set X)
 #align seq_compact_space SeqCompactSpace
+-/
 
 export SeqCompactSpace (seq_compact_univ)
 
+/- warning: is_seq_compact.subseq_of_frequently_in -> IsSeqCompact.subseq_of_frequently_in is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {s : Set.{u1} X}, (IsSeqCompact.{u1} X _inst_1 s) -> (forall {x : Nat -> X}, (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (x n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) -> (Exists.{succ u1} X (fun (a : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) => Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X _inst_1 a)))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {s : Set.{u1} X}, (IsSeqCompact.{u1} X _inst_1 s) -> (forall {x : Nat -> X}, (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (x n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) -> (Exists.{succ u1} X (fun (a : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a s) (Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X _inst_1 a)))))))
+Case conversion may be inaccurate. Consider using '#align is_seq_compact.subseq_of_frequently_in IsSeqCompact.subseq_of_frequently_inₓ'. -/
 theorem IsSeqCompact.subseq_of_frequently_in {s : Set X} (hs : IsSeqCompact s) {x : ℕ → X}
     (hx : ∃ᶠ n in atTop, x n ∈ s) :
     ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
@@ -279,11 +357,13 @@ theorem IsSeqCompact.subseq_of_frequently_in {s : Set X} (hs : IsSeqCompact s) {
   ⟨a, a_in, ψ ∘ φ, hψ.comp hφ, h⟩
 #align is_seq_compact.subseq_of_frequently_in IsSeqCompact.subseq_of_frequently_in
 
+#print SeqCompactSpace.tendsto_subseq /-
 theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace X] (x : ℕ → X) :
     ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   let ⟨a, _, φ, mono, h⟩ := seq_compact_univ fun n => mem_univ (x n)
   ⟨a, φ, mono, h⟩
 #align seq_compact_space.tendsto_subseq SeqCompactSpace.tendsto_subseq
+-/
 
 section FirstCountableTopology
 
@@ -291,33 +371,51 @@ variable [FirstCountableTopology X]
 
 open TopologicalSpace.FirstCountableTopology
 
+#print IsCompact.isSeqCompact /-
 protected theorem IsCompact.isSeqCompact {s : Set X} (hs : IsCompact s) : IsSeqCompact s :=
   fun x x_in =>
   let ⟨a, a_in, ha⟩ := hs (tendsto_principal.mpr (eventually_of_forall x_in))
   ⟨a, a_in, tendsto_subseq ha⟩
 #align is_compact.is_seq_compact IsCompact.isSeqCompact
+-/
 
+/- warning: is_compact.tendsto_subseq' -> IsCompact.tendsto_subseq' is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.FirstCountableTopology.{u1} X _inst_1] {s : Set.{u1} X} {x : Nat -> X}, (IsCompact.{u1} X _inst_1 s) -> (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (x n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) -> (Exists.{succ u1} X (fun (a : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) => Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X _inst_1 a))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.FirstCountableTopology.{u1} X _inst_1] {s : Set.{u1} X} {x : Nat -> X}, (IsCompact.{u1} X _inst_1 s) -> (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (x n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) -> (Exists.{succ u1} X (fun (a : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a s) (Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X _inst_1 a))))))
+Case conversion may be inaccurate. Consider using '#align is_compact.tendsto_subseq' IsCompact.tendsto_subseq'ₓ'. -/
 theorem IsCompact.tendsto_subseq' {s : Set X} {x : ℕ → X} (hs : IsCompact s)
     (hx : ∃ᶠ n in atTop, x n ∈ s) :
     ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   hs.IsSeqCompact.subseq_of_frequently_in hx
 #align is_compact.tendsto_subseq' IsCompact.tendsto_subseq'
 
+/- warning: is_compact.tendsto_subseq -> IsCompact.tendsto_subseq is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.FirstCountableTopology.{u1} X _inst_1] {s : Set.{u1} X} {x : Nat -> X}, (IsCompact.{u1} X _inst_1 s) -> (forall (n : Nat), Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (x n) s) -> (Exists.{succ u1} X (fun (a : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) => Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X _inst_1 a))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.FirstCountableTopology.{u1} X _inst_1] {s : Set.{u1} X} {x : Nat -> X}, (IsCompact.{u1} X _inst_1 s) -> (forall (n : Nat), Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (x n) s) -> (Exists.{succ u1} X (fun (a : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a s) (Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X _inst_1 a))))))
+Case conversion may be inaccurate. Consider using '#align is_compact.tendsto_subseq IsCompact.tendsto_subseqₓ'. -/
 theorem IsCompact.tendsto_subseq {s : Set X} {x : ℕ → X} (hs : IsCompact s) (hx : ∀ n, x n ∈ s) :
     ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   hs.IsSeqCompact hx
 #align is_compact.tendsto_subseq IsCompact.tendsto_subseq
 
+#print FirstCountableTopology.seq_compact_of_compact /-
 -- see Note [lower instance priority]
 instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [CompactSpace X] :
     SeqCompactSpace X :=
   ⟨isCompact_univ.IsSeqCompact⟩
 #align first_countable_topology.seq_compact_of_compact FirstCountableTopology.seq_compact_of_compact
+-/
 
+#print CompactSpace.tendsto_subseq /-
 theorem CompactSpace.tendsto_subseq [CompactSpace X] (x : ℕ → X) :
     ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   SeqCompactSpace.tendsto_subseq x
 #align compact_space.tendsto_subseq CompactSpace.tendsto_subseq
+-/
 
 end FirstCountableTopology
 
@@ -331,17 +429,30 @@ open UniformSpace Prod
 
 variable [UniformSpace X] {s : Set X}
 
+/- warning: is_seq_compact.exists_tendsto_of_frequently_mem -> IsSeqCompact.exists_tendsto_of_frequently_mem is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : UniformSpace.{u1} X] {s : Set.{u1} X}, (IsSeqCompact.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) s) -> (forall {u : Nat -> X}, (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (u n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) -> (CauchySeq.{u1, 0} X Nat _inst_1 (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u) -> (Exists.{succ u1} X (fun (x : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) => Filter.Tendsto.{0, u1} Nat X u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) x)))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : UniformSpace.{u1} X] {s : Set.{u1} X}, (IsSeqCompact.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) s) -> (forall {u : Nat -> X}, (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (u n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) -> (CauchySeq.{u1, 0} X Nat _inst_1 (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) u) -> (Exists.{succ u1} X (fun (x : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) (Filter.Tendsto.{0, u1} Nat X u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) x)))))
+Case conversion may be inaccurate. Consider using '#align is_seq_compact.exists_tendsto_of_frequently_mem IsSeqCompact.exists_tendsto_of_frequently_memₓ'. -/
 theorem IsSeqCompact.exists_tendsto_of_frequently_mem (hs : IsSeqCompact s) {u : ℕ → X}
     (hu : ∃ᶠ n in atTop, u n ∈ s) (huc : CauchySeq u) : ∃ x ∈ s, Tendsto u atTop (𝓝 x) :=
   let ⟨x, hxs, φ, φ_mono, hx⟩ := hs.subseq_of_frequently_in hu
   ⟨x, hxs, tendsto_nhds_of_cauchySeq_of_subseq huc φ_mono.tendsto_atTop hx⟩
 #align is_seq_compact.exists_tendsto_of_frequently_mem IsSeqCompact.exists_tendsto_of_frequently_mem
 
+/- warning: is_seq_compact.exists_tendsto -> IsSeqCompact.exists_tendsto is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : UniformSpace.{u1} X] {s : Set.{u1} X}, (IsSeqCompact.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) s) -> (forall {u : Nat -> X}, (forall (n : Nat), Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (u n) s) -> (CauchySeq.{u1, 0} X Nat _inst_1 (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u) -> (Exists.{succ u1} X (fun (x : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) => Filter.Tendsto.{0, u1} Nat X u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) x)))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : UniformSpace.{u1} X] {s : Set.{u1} X}, (IsSeqCompact.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) s) -> (forall {u : Nat -> X}, (forall (n : Nat), Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (u n) s) -> (CauchySeq.{u1, 0} X Nat _inst_1 (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) u) -> (Exists.{succ u1} X (fun (x : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) (Filter.Tendsto.{0, u1} Nat X u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X _inst_1) x)))))
+Case conversion may be inaccurate. Consider using '#align is_seq_compact.exists_tendsto IsSeqCompact.exists_tendstoₓ'. -/
 theorem IsSeqCompact.exists_tendsto (hs : IsSeqCompact s) {u : ℕ → X} (hu : ∀ n, u n ∈ s)
     (huc : CauchySeq u) : ∃ x ∈ s, Tendsto u atTop (𝓝 x) :=
   hs.exists_tendsto_of_frequently_mem (frequently_of_forall hu) huc
 #align is_seq_compact.exists_tendsto IsSeqCompact.exists_tendsto
 
+#print IsSeqCompact.totallyBounded /-
 /-- A sequentially compact set in a uniform space is totally bounded. -/
 protected theorem IsSeqCompact.totallyBounded (h : IsSeqCompact s) : TotallyBounded s :=
   by
@@ -357,12 +468,14 @@ protected theorem IsSeqCompact.totallyBounded (h : IsSeqCompact s) : TotallyBoun
   exact huφ.cauchy_seq.mem_entourage V_in
   exact hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N) (hN (N + 1) N N.le_succ le_rfl)
 #align is_seq_compact.totally_bounded IsSeqCompact.totallyBounded
+-/
 
 variable [IsCountablyGenerated (𝓤 X)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print IsSeqCompact.isComplete /-
 /-- A sequentially compact set in a uniform set with countably generated uniformity filter
 is complete. -/
 protected theorem IsSeqCompact.isComplete (hs : IsSeqCompact s) : IsComplete s :=
@@ -400,21 +513,28 @@ protected theorem IsSeqCompact.isComplete (hs : IsSeqCompact s) : IsComplete s :
   refine' mem_of_superset (htl n) fun y hy => hWV N ⟨u n, _, htW N ⟨_, _⟩⟩
   exacts[hn, ht_anti hNn (hu n), ht_anti hNn hy]
 #align is_seq_compact.is_complete IsSeqCompact.isComplete
+-/
 
+#print IsSeqCompact.isCompact /-
 /-- If `𝓤 β` is countably generated, then any sequentially compact set is compact. -/
 protected theorem IsSeqCompact.isCompact (hs : IsSeqCompact s) : IsCompact s :=
   isCompact_iff_totallyBounded_isComplete.2 ⟨hs.TotallyBounded, hs.IsComplete⟩
 #align is_seq_compact.is_compact IsSeqCompact.isCompact
+-/
 
+#print UniformSpace.isCompact_iff_isSeqCompact /-
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
 (e.g., in a metric space), a set is compact if and only if it is sequentially compact. -/
 protected theorem UniformSpace.isCompact_iff_isSeqCompact : IsCompact s ↔ IsSeqCompact s :=
   ⟨fun H => H.IsSeqCompact, fun H => H.IsCompact⟩
 #align uniform_space.is_compact_iff_is_seq_compact UniformSpace.isCompact_iff_isSeqCompact
+-/
 
+#print UniformSpace.compactSpace_iff_seqCompactSpace /-
 theorem UniformSpace.compactSpace_iff_seqCompactSpace : CompactSpace X ↔ SeqCompactSpace X := by
   simp only [← isCompact_univ_iff, seqCompactSpace_iff, UniformSpace.isCompact_iff_isSeqCompact]
 #align uniform_space.compact_space_iff_seq_compact_space UniformSpace.compactSpace_iff_seqCompactSpace
+-/
 
 end UniformSpaceSeqCompact
 
@@ -424,6 +544,12 @@ variable [PseudoMetricSpace X]
 
 open Metric
 
+/- warning: seq_compact.lebesgue_number_lemma_of_metric -> SeqCompact.lebesgue_number_lemma_of_metric is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} X] {ι : Sort.{u2}} {c : ι -> (Set.{u1} X)} {s : Set.{u1} X}, (IsSeqCompact.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s) -> (forall (i : ι), IsOpen.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) (c i)) -> (HasSubset.Subset.{u1} (Set.{u1} X) (Set.hasSubset.{u1} X) s (Set.unionᵢ.{u1, u2} X ι (fun (i : ι) => c i))) -> (Exists.{1} Real (fun (δ : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt δ (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (a : X), (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a s) -> (Exists.{u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} X) (Set.hasSubset.{u1} X) (Metric.ball.{u1} X _inst_1 a δ) (c i))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} X] {ι : Sort.{u2}} {c : ι -> (Set.{u1} X)} {s : Set.{u1} X}, (IsSeqCompact.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s) -> (forall (i : ι), IsOpen.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) (c i)) -> (HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) s (Set.unionᵢ.{u1, u2} X ι (fun (i : ι) => c i))) -> (Exists.{1} Real (fun (δ : Real) => And (GT.gt.{0} Real Real.instLTReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (a : X), (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a s) -> (Exists.{u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} X) (Set.instHasSubsetSet.{u1} X) (Metric.ball.{u1} X _inst_1 a δ) (c i))))))
+Case conversion may be inaccurate. Consider using '#align seq_compact.lebesgue_number_lemma_of_metric SeqCompact.lebesgue_number_lemma_of_metricₓ'. -/
 theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Sort _} {c : ι → Set X} {s : Set X}
     (hs : IsSeqCompact s) (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) :
     ∃ δ > 0, ∀ a ∈ s, ∃ i, ball a δ ⊆ c i :=
@@ -432,6 +558,12 @@ theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Sort _} {c : ι → Set
 
 variable [ProperSpace X] {s : Set X}
 
+/- warning: tendsto_subseq_of_frequently_bounded -> tendsto_subseq_of_frequently_bounded is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} X] [_inst_2 : ProperSpace.{u1} X _inst_1] {s : Set.{u1} X}, (Metric.Bounded.{u1} X _inst_1 s) -> (forall {x : Nat -> X}, (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (x n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) -> (Exists.{succ u1} X (fun (a : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a (closure.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s)) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a (closure.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s)) => Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) a)))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} X] [_inst_2 : ProperSpace.{u1} X _inst_1] {s : Set.{u1} X}, (Metric.Bounded.{u1} X _inst_1 s) -> (forall {x : Nat -> X}, (Filter.Frequently.{0} Nat (fun (n : Nat) => Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (x n) s) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) -> (Exists.{succ u1} X (fun (a : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a (closure.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s)) (Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) a)))))))
+Case conversion may be inaccurate. Consider using '#align tendsto_subseq_of_frequently_bounded tendsto_subseq_of_frequently_boundedₓ'. -/
 /-- A version of **Bolzano-Weistrass**: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
@@ -443,6 +575,12 @@ theorem tendsto_subseq_of_frequently_bounded (hs : Bounded s) {x : ℕ → X}
   hcs.subseq_of_frequently_in hu'
 #align tendsto_subseq_of_frequently_bounded tendsto_subseq_of_frequently_bounded
 
+/- warning: tendsto_subseq_of_bounded -> tendsto_subseq_of_bounded is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} X] [_inst_2 : ProperSpace.{u1} X _inst_1] {s : Set.{u1} X}, (Metric.Bounded.{u1} X _inst_1 s) -> (forall {x : Nat -> X}, (forall (n : Nat), Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) (x n) s) -> (Exists.{succ u1} X (fun (a : X) => Exists.{0} (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a (closure.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s)) (fun (H : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) a (closure.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s)) => Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) a)))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} X] [_inst_2 : ProperSpace.{u1} X _inst_1] {s : Set.{u1} X}, (Metric.Bounded.{u1} X _inst_1 s) -> (forall {x : Nat -> X}, (forall (n : Nat), Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) (x n) s) -> (Exists.{succ u1} X (fun (a : X) => And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) a (closure.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) s)) (Exists.{1} (Nat -> Nat) (fun (φ : Nat -> Nat) => And (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) φ) (Filter.Tendsto.{0, u1} Nat X (Function.comp.{1, 1, succ u1} Nat Nat X x φ) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X _inst_1)) a)))))))
+Case conversion may be inaccurate. Consider using '#align tendsto_subseq_of_bounded tendsto_subseq_of_boundedₓ'. -/
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
 theorem tendsto_subseq_of_bounded (hs : Bounded s) {x : ℕ → X} (hx : ∀ n, x n ∈ s) :
