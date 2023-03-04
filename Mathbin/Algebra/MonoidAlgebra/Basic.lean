@@ -76,7 +76,7 @@ def MonoidAlgebra : Type max u₁ u₂ :=
 #align monoid_algebra MonoidAlgebra
 
 instance : CoeFun (MonoidAlgebra k G) fun _ => G → k :=
-  Finsupp.hasCoeToFun
+  Finsupp.coeFun
 
 end
 
@@ -315,7 +315,7 @@ instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAc
 
 instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
     [SMulCommClass R S k] : SMulCommClass R S (MonoidAlgebra k G) :=
-  Finsupp.sMulCommClass G k
+  Finsupp.smulCommClass G k
 
 instance [Monoid R] [Semiring k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k]
     [IsCentralScalar R k] : IsCentralScalar R (MonoidAlgebra k G) :=
@@ -1024,7 +1024,7 @@ def AddMonoidAlgebra :=
 #align add_monoid_algebra AddMonoidAlgebra
 
 instance : CoeFun (AddMonoidAlgebra k G) fun _ => G → k :=
-  Finsupp.hasCoeToFun
+  Finsupp.coeFun
 
 end
 
@@ -1268,7 +1268,7 @@ instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAc
 
 instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
     [SMulCommClass R S k] : SMulCommClass R S (AddMonoidAlgebra k G) :=
-  Finsupp.sMulCommClass G k
+  Finsupp.smulCommClass G k
 
 instance [Monoid R] [Semiring k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k]
     [IsCentralScalar R k] : IsCentralScalar R (AddMonoidAlgebra k G) :=

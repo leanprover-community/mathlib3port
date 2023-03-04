@@ -77,8 +77,8 @@ instance bicategory : Bicategory.{max v u, max v u} Cat.{v, u}
   associator A B C D := Functor.associator
   leftUnitor A B := Functor.leftUnitor
   rightUnitor A B := Functor.rightUnitor
-  pentagon' A B C D E := Functor.pentagon
-  triangle' A B C := Functor.triangle
+  pentagon A B C D E := Functor.pentagon
+  triangle A B C := Functor.triangle
 #align category_theory.Cat.bicategory CategoryTheory.Cat.bicategory
 -/
 

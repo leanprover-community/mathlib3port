@@ -1102,18 +1102,18 @@ noncomputable def monBicategory : Bicategory (Mon_ C)
   associator _ _ _ _ L M N := associatorBimod L M N
   leftUnitor _ _ M := leftUnitorBimod M
   rightUnitor _ _ M := rightUnitorBimod M
-  whiskerLeft_id' _ _ _ _ _ := tensor_id
-  whiskerLeft_comp' _ _ _ M _ _ _ f g := whisker_left_comp_bimod M f g
-  id_whisker_left' _ _ _ _ f := id_whisker_left_bimod f
-  comp_whisker_left' _ _ _ _ M N _ _ f := comp_whisker_left_bimod M N f
-  id_whisker_right' _ _ _ _ _ := tensor_id
-  comp_whisker_right' _ _ _ _ _ _ f g Q := comp_whisker_right_bimod f g Q
-  whiskerRight_id' _ _ _ _ f := whisker_right_id_bimod f
-  whiskerRight_comp' _ _ _ _ _ _ f N P := whisker_right_comp_bimod f N P
-  whisker_assoc' _ _ _ _ M _ _ f P := whisker_assoc_bimod M f P
-  whisker_exchange' _ _ _ _ _ _ _ f g := whisker_exchange_bimod f g
-  pentagon' _ _ _ _ _ M N P Q := pentagon_bimod M N P Q
-  triangle' _ _ _ M N := triangle_bimod M N
+  whiskerLeft_id _ _ _ _ _ := tensor_id
+  whiskerLeft_comp _ _ _ M _ _ _ f g := whisker_left_comp_bimod M f g
+  id_whiskerLeft _ _ _ _ f := id_whisker_left_bimod f
+  comp_whiskerLeft _ _ _ _ M N _ _ f := comp_whisker_left_bimod M N f
+  id_whiskerRight _ _ _ _ _ := tensor_id
+  comp_whiskerRight _ _ _ _ _ _ f g Q := comp_whisker_right_bimod f g Q
+  whiskerRight_id _ _ _ _ f := whisker_right_id_bimod f
+  whiskerRight_comp _ _ _ _ _ _ f N P := whisker_right_comp_bimod f N P
+  whisker_assoc _ _ _ _ M _ _ f P := whisker_assoc_bimod M f P
+  whisker_exchange _ _ _ _ _ _ _ f g := whisker_exchange_bimod f g
+  pentagon _ _ _ _ _ M N P Q := pentagon_bimod M N P Q
+  triangle _ _ _ M N := triangle_bimod M N
 #align Bimod.Mon_bicategory Bimod.monBicategory
 
 end Bimod

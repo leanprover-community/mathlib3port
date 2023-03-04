@@ -130,56 +130,55 @@ class Bicategory (B : Type u) extends CategoryStruct.{v} B where
   -- right unitor:
   rightUnitor {a b : B} (f : a ⟶ b) : f ≫ 𝟙 b ≅ f
   -- axioms for left whiskering:
-  whiskerLeft_id' : ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), «expr ◁ » f (𝟙 g) = 𝟙 (f ≫ g) := by obviously
-  whiskerLeft_comp' :
+  whiskerLeft_id : ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), «expr ◁ » f (𝟙 g) = 𝟙 (f ≫ g) := by obviously
+  whiskerLeft_comp :
     ∀ {a b c} (f : a ⟶ b) {g h i : b ⟶ c} (η : g ⟶ h) (θ : h ⟶ i),
       «expr ◁ » f (η ≫ θ) = «expr ◁ » f η ≫ «expr ◁ » f θ := by
     obviously
-  id_whisker_left' :
+  id_whiskerLeft :
     ∀ {a b} {f g : a ⟶ b} (η : f ⟶ g),
       «expr ◁ » (𝟙 a) η = ((«exprλ_») f).Hom ≫ η ≫ ((«exprλ_») g).inv := by
     obviously
-  comp_whisker_left' :
+  comp_whiskerLeft :
     ∀ {a b c d} (f : a ⟶ b) (g : b ⟶ c) {h h' : c ⟶ d} (η : h ⟶ h'),
       «expr ◁ » (f ≫ g) η =
         ((exprα_) f g h).Hom ≫ «expr ◁ » f («expr ◁ » g η) ≫ ((exprα_) f g h').inv := by
     obviously
   -- axioms for right whiskering:
-  id_whisker_right' : ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), «expr ▷ » (𝟙 f) g = 𝟙 (f ≫ g) := by
-    obviously
-  comp_whisker_right' :
+  id_whiskerRight : ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), «expr ▷ » (𝟙 f) g = 𝟙 (f ≫ g) := by obviously
+  comp_whiskerRight :
     ∀ {a b c} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) (i : b ⟶ c),
       «expr ▷ » (η ≫ θ) i = «expr ▷ » η i ≫ «expr ▷ » θ i := by
     obviously
-  whiskerRight_id' :
+  whiskerRight_id :
     ∀ {a b} {f g : a ⟶ b} (η : f ⟶ g),
       «expr ▷ » η (𝟙 b) = ((exprρ_) f).Hom ≫ η ≫ ((exprρ_) g).inv := by
     obviously
-  whiskerRight_comp' :
+  whiskerRight_comp :
     ∀ {a b c d} {f f' : a ⟶ b} (η : f ⟶ f') (g : b ⟶ c) (h : c ⟶ d),
       «expr ▷ » η (g ≫ h) =
         ((exprα_) f g h).inv ≫ «expr ▷ » («expr ▷ » η g) h ≫ ((exprα_) f' g h).Hom := by
     obviously
   -- associativity of whiskerings:
-  whisker_assoc' :
+  whisker_assoc :
     ∀ {a b c d} (f : a ⟶ b) {g g' : b ⟶ c} (η : g ⟶ g') (h : c ⟶ d),
       «expr ▷ » («expr ◁ » f η) h =
         ((exprα_) f g h).Hom ≫ «expr ◁ » f («expr ▷ » η h) ≫ ((exprα_) f g' h).inv := by
     obviously
   -- exchange law of left and right whiskerings:
-  whisker_exchange' :
+  whisker_exchange :
     ∀ {a b c} {f g : a ⟶ b} {h i : b ⟶ c} (η : f ⟶ g) (θ : h ⟶ i),
       «expr ◁ » f θ ≫ «expr ▷ » η i = «expr ▷ » η h ≫ «expr ◁ » g θ := by
     obviously
   -- pentagon identity:
-  pentagon' :
+  pentagon :
     ∀ {a b c d e} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e),
       «expr ▷ » ((exprα_) f g h).Hom i ≫
           ((exprα_) f (g ≫ h) i).Hom ≫ «expr ◁ » f ((exprα_) g h i).Hom =
         ((exprα_) (f ≫ g) h i).Hom ≫ ((exprα_) f g (h ≫ i)).Hom := by
     obviously
   -- triangle identity:
-  triangle' :
+  triangle :
     ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c),
       ((exprα_) f (𝟙 b) g).Hom ≫ «expr ◁ » f ((«exprλ_») g).Hom = «expr ▷ » ((exprρ_) f).Hom g := by
     obviously

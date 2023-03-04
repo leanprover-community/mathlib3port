@@ -49,12 +49,7 @@ def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ
 #align finsupp.antidiagonal Finsupp.antidiagonal
 -/
 
-/- warning: finsupp.mem_antidiagonal -> Finsupp.mem_antidiagonal is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {f : Finsupp.{u1, 0} α Nat Nat.hasZero} {p : Prod.{u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero)}, Iff (Membership.Mem.{u1, u1} (Prod.{u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero)) (Finset.{u1} (Prod.{u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero))) (Finset.hasMem.{u1} (Prod.{u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero))) p (Finsupp.antidiagonal.{u1} α f)) (Eq.{succ u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (HAdd.hAdd.{u1, u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero) (instHAdd.{u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.hasAdd.{u1, 0} α Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Prod.fst.{u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero) p) (Prod.snd.{u1, u1} (Finsupp.{u1, 0} α Nat Nat.hasZero) (Finsupp.{u1, 0} α Nat Nat.hasZero) p)) f)
-but is expected to have type
-  forall {α : Type.{u1}} {f : Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)} {p : Prod.{u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero))}, Iff (Membership.mem.{u1, u1} (Prod.{u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero))) (Finset.{u1} (Prod.{u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))) (Finset.instMembershipFinset.{u1} (Prod.{u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))) p (Finsupp.antidiagonal.{u1} α f)) (Eq.{succ u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (HAdd.hAdd.{u1, u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (instHAdd.{u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.add.{u1, 0} α Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (Prod.fst.{u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) p) (Prod.snd.{u1, u1} (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.{u1, 0} α Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) p)) f)
-Case conversion may be inaccurate. Consider using '#align finsupp.mem_antidiagonal Finsupp.mem_antidiagonalₓ'. -/
+#print Finsupp.mem_antidiagonal /-
 @[simp]
 theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ ℕ)} :
     p ∈ antidiagonal f ↔ p.1 + p.2 = f :=
@@ -62,6 +57,7 @@ theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ 
   rcases p with ⟨p₁, p₂⟩
   simp [antidiagonal, antidiagonal', ← and_assoc, ← finsupp.to_multiset.apply_eq_iff_eq]
 #align finsupp.mem_antidiagonal Finsupp.mem_antidiagonal
+-/
 
 #print Finsupp.swap_mem_antidiagonal /-
 theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α →₀ ℕ)} :

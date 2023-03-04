@@ -189,10 +189,12 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
       refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩
       exact not_lt.1 fun hlt => (Hgt I.1 hlt I.2).le_bot hI.some_spec
 
+#print EMetric.normal_of_emetric /-
 -- see Note [lower instance priority]
 instance (priority := 100) normal_of_emetric [EMetricSpace α] : NormalSpace α :=
   normal_of_paracompact_t2
-#align emetric.normal_of_emetric Emetric.normal_of_emetric
+#align emetric.normal_of_emetric EMetric.normal_of_emetric
+-/
 
 end Emetric
 

@@ -68,7 +68,7 @@ noncomputable instance : Module S (PolynomialModule R M) :=
   Finsupp.module ℕ M
 
 instance : CoeFun (PolynomialModule R M) fun _ => ℕ → M :=
-  Finsupp.hasCoeToFun
+  Finsupp.coeFun
 
 /-- The monomial `m * x ^ i`. This is defeq to `finsupp.single_add_hom`, and is redefined here
 so that it has the desired type signature.  -/

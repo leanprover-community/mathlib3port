@@ -73,7 +73,7 @@ theorem QuotientRing.quotientMap_coe_coe : QuotientMap fun p : R × R => (mk N p
 #align quotient_ring.quotient_map_coe_coe QuotientRing.quotientMap_coe_coe
 
 instance topologicalRing_quotient : TopologicalRing (R ⧸ N) :=
-  TopologicalSemiring.to_topologicalRing
+  TopologicalSemiring.toTopologicalRing
     { continuous_add :=
         have cont : Continuous (mk N ∘ fun p : R × R => p.fst + p.snd) :=
           continuous_quot_mk.comp continuous_add

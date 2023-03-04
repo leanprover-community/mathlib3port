@@ -28,25 +28,33 @@ namespace CategoryTheory.Limits
 
 variable {J : Type v} [Category.{v'} J] {F : J ⥤ Discrete PUnit}
 
+#print CategoryTheory.Limits.pUnitCone /-
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
-def punitCone : Cone F :=
+def pUnitCone : Cone F :=
   ⟨⟨⟨⟩⟩, (Functor.pUnitExt _ _).Hom⟩
-#align category_theory.limits.punit_cone CategoryTheory.Limits.punitCone
+#align category_theory.limits.punit_cone CategoryTheory.Limits.pUnitCone
+-/
 
+#print CategoryTheory.Limits.pUnitCocone /-
 /-- A trivial cocone for a functor into `punit`. `punit_cocone_is_limit` shows it is a colimit. -/
-def punitCocone : Cocone F :=
+def pUnitCocone : Cocone F :=
   ⟨⟨⟨⟩⟩, (Functor.pUnitExt _ _).Hom⟩
-#align category_theory.limits.punit_cocone CategoryTheory.Limits.punitCocone
+#align category_theory.limits.punit_cocone CategoryTheory.Limits.pUnitCocone
+-/
 
+#print CategoryTheory.Limits.pUnitConeIsLimit /-
 /-- Any cone over a functor into `punit` is a limit cone.
 -/
-def punitConeIsLimit {c : Cone F} : IsLimit c := by tidy
-#align category_theory.limits.punit_cone_is_limit CategoryTheory.Limits.punitConeIsLimit
+def pUnitConeIsLimit {c : Cone F} : IsLimit c := by tidy
+#align category_theory.limits.punit_cone_is_limit CategoryTheory.Limits.pUnitConeIsLimit
+-/
 
+#print CategoryTheory.Limits.pUnitCoconeIsColimit /-
 /-- Any cocone over a functor into `punit` is a colimit cocone.
 -/
-def punitCoconeIsColimit {c : Cocone F} : IsColimit c := by tidy
-#align category_theory.limits.punit_cocone_is_colimit CategoryTheory.Limits.punitCoconeIsColimit
+def pUnitCoconeIsColimit {c : Cocone F} : IsColimit c := by tidy
+#align category_theory.limits.punit_cocone_is_colimit CategoryTheory.Limits.pUnitCoconeIsColimit
+-/
 
 instance : HasLimitsOfSize.{v', v} (Discrete PUnit) := by tidy
 
