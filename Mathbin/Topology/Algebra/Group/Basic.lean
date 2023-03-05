@@ -1697,7 +1697,7 @@ def Homeomorph.divLeft (x : G) : G ≃ₜ G :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9502 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9504 : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9502 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9504) a)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsOpenMap.{u1, u1} G G _inst_2 _inst_2 ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9523 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9525 : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9523 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9525) a)
 Case conversion may be inaccurate. Consider using '#align is_open_map_div_left isOpenMap_div_leftₓ'. -/
 @[to_additive]
 theorem isOpenMap_div_left (a : G) : IsOpenMap ((· / ·) a) :=
@@ -1709,7 +1709,7 @@ theorem isOpenMap_div_left (a : G) : IsOpenMap ((· / ·) a) :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9544 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9546 : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9544 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9546) a)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : TopologicalSpace.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_2 _inst_1] (a : G), IsClosedMap.{u1, u1} G G _inst_2 _inst_2 ((fun (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9565 : G) (x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9567 : G) => HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9565 x._@.Mathlib.Topology.Algebra.Group.Basic._hyg.9567) a)
 Case conversion may be inaccurate. Consider using '#align is_closed_map_div_left isClosedMap_div_leftₓ'. -/
 @[to_additive]
 theorem isClosedMap_div_left (a : G) : IsClosedMap ((· / ·) a) :=
