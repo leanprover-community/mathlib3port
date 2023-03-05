@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.nonempty
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,16 +262,12 @@ theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsing
 #align subsingleton_of_not_nonempty subsingleton_of_not_nonempty
 -/
 
-/- warning: function.surjective.nonempty -> Function.Surjective.nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [h : Nonempty.{succ u2} β] {f : α -> β}, (Function.Surjective.{succ u1, succ u2} α β f) -> (Nonempty.{succ u1} α)
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u2}} [h : Nonempty.{u2} β] {f : α -> β}, (Function.Surjective.{u1, u2} α β f) -> (Nonempty.{u1} α)
-Case conversion may be inaccurate. Consider using '#align function.surjective.nonempty Function.Surjective.nonemptyₓ'. -/
-theorem Function.Surjective.nonempty [h : Nonempty β] {f : α → β} (hf : Function.Surjective f) :
-    Nonempty α :=
+#print Function.Surjective.nonempty /-
+theorem Function.Surjective.nonempty {α β : Sort _} [h : Nonempty β] {f : α → β}
+    (hf : Function.Surjective f) : Nonempty α :=
   let ⟨y⟩ := h
   let ⟨x, hx⟩ := hf y
   ⟨x⟩
 #align function.surjective.nonempty Function.Surjective.nonempty
+-/
 

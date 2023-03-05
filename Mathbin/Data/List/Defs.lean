@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.defs
-! leanprover-community/mathlib commit 1447cae870f372074e480de1acbeb51de0077698
+! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -395,39 +395,45 @@ def andM : List (m Bool) → m Bool :=
 
 end
 
+/- warning: list.foldl_with_index_aux -> List.foldlWithIndexAux is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> Nat -> α -> (List.{u2} β) -> α
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Type.{u1}}, (Nat -> α -> β -> α) -> Nat -> α -> (List.{u1} β) -> α
+Case conversion may be inaccurate. Consider using '#align list.foldl_with_index_aux List.foldlWithIndexAuxₓ'. -/
 /-- Auxiliary definition for `foldl_with_index`. -/
-def foldlWithIndexAux (f : ℕ → α → β → α) : ℕ → α → List β → α
+def foldlWithIndexAux {α : Sort _} {β : Type _} (f : ℕ → α → β → α) : ℕ → α → List β → α
   | _, a, [] => a
   | i, a, b :: l => foldl_with_index_aux (i + 1) (f i a b) l
 #align list.foldl_with_index_aux List.foldlWithIndexAux
 
 /- warning: list.foldl_with_index -> List.foldlIdx is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> α -> (List.{u2} β) -> α
+  forall {α : Sort.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> α -> (List.{u2} β) -> α
 but is expected to have type
   forall {α : Sort.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> α) -> α -> (List.{u2} β) -> (optParam.{1} Nat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> α
 Case conversion may be inaccurate. Consider using '#align list.foldl_with_index List.foldlIdxₓ'. -/
 /-- Fold a list from left to right as with `foldl`, but the combining function
 also receives each element's index. -/
-def foldlIdx (f : ℕ → α → β → α) (a : α) (l : List β) : α :=
+def foldlIdx {α : Sort _} {β : Type _} (f : ℕ → α → β → α) (a : α) (l : List β) : α :=
   foldlWithIndexAux f 0 a l
 #align list.foldl_with_index List.foldlIdx
 
 /-- Auxiliary definition for `foldr_with_index`. -/
-def foldrWithIndexAux (f : ℕ → α → β → β) : ℕ → β → List α → β
+def foldrWithIndexAux {α : Type _} {β : Sort _} (f : ℕ → α → β → β) : ℕ → β → List α → β
   | _, b, [] => b
   | i, b, a :: l => f i a (foldr_with_index_aux (i + 1) b l)
 #align list.foldr_with_index_aux List.foldrWithIndexAux
 
 /- warning: list.foldr_with_index -> List.foldrIdx is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β -> β) -> β -> (List.{u1} α) -> β
+  forall {α : Type.{u1}} {β : Sort.{u2}}, (Nat -> α -> β -> β) -> β -> (List.{u1} α) -> β
 but is expected to have type
   forall {α : Type.{u1}} {β : Sort.{u2}}, (Nat -> α -> β -> β) -> β -> (List.{u1} α) -> (optParam.{1} Nat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> β
 Case conversion may be inaccurate. Consider using '#align list.foldr_with_index List.foldrIdxₓ'. -/
 /-- Fold a list from right to left as with `foldr`, but the combining function
 also receives each element's index. -/
-def foldrIdx (f : ℕ → α → β → β) (b : β) (l : List α) : β :=
+def foldrIdx {α : Type _} {β : Sort _} (f : ℕ → α → β → β) (b : β) (l : List α) : β :=
   foldrWithIndexAux f 0 b l
 #align list.foldr_with_index List.foldrIdx
 

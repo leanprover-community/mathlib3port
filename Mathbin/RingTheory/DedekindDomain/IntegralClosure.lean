@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.integral_closure
-! leanprover-community/mathlib commit 6155d4351090a6fad236e3d2e4e0e4e7342668e8
+! leanprover-community/mathlib commit 641b6a82006416ec431b2987b354af9311fed4f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.RingTheory.DedekindDomain.Basic
+import Mathbin.RingTheory.Localization.Module
 import Mathbin.RingTheory.Trace
 
 /-!
@@ -56,13 +58,43 @@ open Algebra
 
 open BigOperators
 
-variable {A K} [Algebra A K] [IsFractionRing A K]
+variable (A K) [Algebra A K] [IsFractionRing A K]
 
-variable {L : Type _} [Field L] (C : Type _) [CommRing C]
+variable (L : Type _) [Field L] (C : Type _) [CommRing C]
 
-variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K L]
+variable [Algebra K L] [Algebra A L] [IsScalarTower A K L]
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
+
+/- If `L` is a separable extension of `K = Frac(A)` and `L` has no zero smul divisors by `A`,
+then `L` is the localization of the integral closure `C` of `A` in `L` at `A⁰`. -/
+theorem IsIntegralClosure.isLocalization [IsSeparable K L] [NoZeroSMulDivisors A L] :
+    IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
+  by
+  haveI : IsDomain C :=
+    (IsIntegralClosure.equiv A C L (integralClosure A L)).toRingEquiv.IsDomain (integralClosure A L)
+  haveI : NoZeroSMulDivisors A C := IsIntegralClosure.noZeroSMulDivisors A L
+  refine' ⟨_, fun z => _, fun x y => ⟨fun h => ⟨1, _⟩, _⟩⟩
+  · rintro ⟨_, x, hx, rfl⟩
+    rw [isUnit_iff_ne_zero, map_ne_zero_iff _ (IsIntegralClosure.algebraMap_injective C A L),
+      Subtype.coe_mk, map_ne_zero_iff _ (NoZeroSMulDivisors.algebraMap_injective A C)]
+    exact mem_non_zero_divisors_iff_ne_zero.mp hx
+  · obtain ⟨m, hm⟩ :=
+      IsIntegral.exists_multiple_integral_of_isLocalization A⁰ z (IsSeparable.isIntegral K z)
+    obtain ⟨x, hx⟩ : ∃ x, algebraMap C L x = m • z := is_integral_closure.is_integral_iff.mp hm
+    refine' ⟨⟨x, algebraMap A C m, m, SetLike.coe_mem m, rfl⟩, _⟩
+    rw [Subtype.coe_mk, ← IsScalarTower.algebraMap_apply, hx, mul_comm, Submonoid.smul_def,
+      smul_def]
+  · simp only [IsIntegralClosure.algebraMap_injective C A L h]
+  · rintro ⟨⟨_, m, hm, rfl⟩, h⟩
+    refine' congr_arg (algebraMap C L) ((mul_right_inj' _).mp h)
+    rw [Subtype.coe_mk, map_ne_zero_iff _ (NoZeroSMulDivisors.algebraMap_injective A C)]
+    exact mem_non_zero_divisors_iff_ne_zero.mp hm
+#align is_integral_closure.is_localization IsIntegralClosure.isLocalization
+
+variable [FiniteDimensional K L]
+
+variable {A K L}
 
 theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι]
     [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
@@ -199,6 +231,31 @@ theorem IsIntegralClosure.isNoetherianRing [IsIntegrallyClosed A] [IsNoetherianR
     IsNoetherianRing C :=
   isNoetherianRing_iff.mpr <| isNoetherian_of_tower A (IsIntegralClosure.isNoetherian A K L C)
 #align is_integral_closure.is_noetherian_ring IsIntegralClosure.isNoetherianRing
+
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a principal ring
+and `L` has no zero smul divisors by `A`, the integral closure `C` of `A` in `L` is
+a free `A`-module. -/
+theorem IsIntegralClosure.module_free [NoZeroSMulDivisors A L] [IsPrincipalIdealRing A] :
+    Module.Free A C :=
+  by
+  haveI : NoZeroSMulDivisors A C := IsIntegralClosure.noZeroSMulDivisors A L
+  haveI : IsNoetherian A C := IsIntegralClosure.isNoetherian A K L _
+  exact Module.free_of_finite_type_torsion_free'
+#align is_integral_closure.module_free IsIntegralClosure.module_free
+
+/- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a principal ring
+and `L` has no zero smul divisors by `A`, the `A`-rank of the integral closure `C` of `A` in `L`
+is equal to the `K`-rank of `L`. -/
+theorem IsIntegralClosure.rank [IsPrincipalIdealRing A] [NoZeroSMulDivisors A L] :
+    FiniteDimensional.finrank A C = FiniteDimensional.finrank K L :=
+  by
+  haveI : Module.Free A C := IsIntegralClosure.module_free A K L C
+  haveI : IsNoetherian A C := IsIntegralClosure.isNoetherian A K L C
+  haveI : IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
+    IsIntegralClosure.isLocalization A K L C
+  let b := Basis.localizationLocalization K A⁰ L (Module.Free.chooseBasis A C)
+  rw [Module.Free.finrank_eq_card_chooseBasisIndex, FiniteDimensional.finrank_eq_card_basis b]
+#align is_integral_closure.rank IsIntegralClosure.rank
 
 variable {A K}
 

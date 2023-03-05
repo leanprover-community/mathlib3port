@@ -162,7 +162,7 @@ theorem foldrIdx_eq_foldrIdxSpec (f : ℕ → α → β → β) (start b as) :
 
 /- warning: list.foldr_with_index_eq_foldr_enum -> List.foldrIdx_eq_foldr_enum is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Nat -> α -> β -> β) (b : β) (as : List.{u1} α), Eq.{succ u2} β (List.foldrIdx.{u1, u2} α β f b as) (List.foldr.{u1, u2} (Prod.{0, u1} Nat α) β (Function.uncurry.{0, u1, u2} Nat α (β -> β) f) b (List.enum.{u1} α as))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : Nat -> α -> β -> β) (b : β) (as : List.{u1} α), Eq.{succ u2} β (List.foldrIdx.{u1, succ u2} α β f b as) (List.foldr.{u1, u2} (Prod.{0, u1} Nat α) β (Function.uncurry.{0, u1, u2} Nat α (β -> β) f) b (List.enum.{u1} α as))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : Nat -> α -> β -> β) (b : β) (as : List.{u1} α), Eq.{succ u2} β (List.foldrIdx.{u1, succ u2} α β f b as (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (List.foldr.{u1, u2} (Prod.{0, u1} Nat α) β (Function.uncurry.{0, u1, u2} Nat α (β -> β) f) b (List.enum.{u1} α as))
 Case conversion may be inaccurate. Consider using '#align list.foldr_with_index_eq_foldr_enum List.foldrIdx_eq_foldr_enumₓ'. -/
@@ -211,7 +211,7 @@ theorem foldlIdx_eq_foldlIdxSpec (f : ℕ → α → β → α) (start a bs) :
 
 /- warning: list.foldl_with_index_eq_foldl_enum -> List.foldlIdx_eq_foldl_enum is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Nat -> α -> β -> α) (a : α) (bs : List.{u2} β), Eq.{succ u1} α (List.foldlIdx.{u1, u2} α β f a bs) (List.foldl.{u1, u2} α (Prod.{0, u2} Nat β) (fun (a : α) (p : Prod.{0, u2} Nat β) => f (Prod.fst.{0, u2} Nat β p) a (Prod.snd.{0, u2} Nat β p)) a (List.enum.{u2} β bs))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : Nat -> α -> β -> α) (a : α) (bs : List.{u2} β), Eq.{succ u1} α (List.foldlIdx.{succ u1, u2} α β f a bs) (List.foldl.{u1, u2} α (Prod.{0, u2} Nat β) (fun (a : α) (p : Prod.{0, u2} Nat β) => f (Prod.fst.{0, u2} Nat β p) a (Prod.snd.{0, u2} Nat β p)) a (List.enum.{u2} β bs))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : Nat -> α -> β -> α) (a : α) (bs : List.{u2} β), Eq.{succ u1} α (List.foldlIdx.{succ u1, u2} α β f a bs (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (List.foldl.{u1, u2} α (Prod.{0, u2} Nat β) (fun (a : α) (p : Prod.{0, u2} Nat β) => f (Prod.fst.{0, u2} Nat β p) a (Prod.snd.{0, u2} Nat β p)) a (List.enum.{u2} β bs))
 Case conversion may be inaccurate. Consider using '#align list.foldl_with_index_eq_foldl_enum List.foldlIdx_eq_foldl_enumₓ'. -/

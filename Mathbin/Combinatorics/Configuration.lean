@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module combinatorics.configuration
-! leanprover-community/mathlib commit 26c71658340519485e2356d20cdca619e1cd4e19
+! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -513,7 +513,7 @@ theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + or
     have h2 : ∀ l : { l : L // p ∈ l }, Fintype.card { q // q ∈ l.1 ∧ q ≠ p } = order P L :=
       by
       intro l
-      rw [← Fintype.card_congr (Equiv.subtypeSubtypeEquivSubtypeInter _ _),
+      rw [← Fintype.card_congr (Equiv.subtypeSubtypeEquivSubtypeInter (· ∈ l.val) (· ≠ p)),
         Fintype.card_subtype_compl fun x : Subtype (· ∈ l.val) => x.val = p, ←
         Nat.card_eq_fintype_card]
       refine' tsub_eq_of_eq_add ((point_count_eq P l.1).trans _)

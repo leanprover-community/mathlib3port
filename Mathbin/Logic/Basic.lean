@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit 13cd3e89b30352d5b1b7349f5537ea18ba878e40
+! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -287,27 +287,19 @@ theorem ne_comm {α} {a b : α} : a ≠ b ↔ b ≠ a :=
 #align ne_comm ne_comm
 -/
 
-/- warning: eq_iff_eq_cancel_left -> eq_iff_eq_cancel_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {b : α} {c : α}, Iff (forall {a : α}, Iff (Eq.{succ u1} α a b) (Eq.{succ u1} α a c)) (Eq.{succ u1} α b c)
-but is expected to have type
-  forall {α : Sort.{u1}} {b : α} {c : α}, Iff (forall {a : α}, Iff (Eq.{u1} α a b) (Eq.{u1} α a c)) (Eq.{u1} α b c)
-Case conversion may be inaccurate. Consider using '#align eq_iff_eq_cancel_left eq_iff_eq_cancel_leftₓ'. -/
+#print eq_iff_eq_cancel_left /-
 @[simp]
-theorem eq_iff_eq_cancel_left {b c : α} : (∀ {a}, a = b ↔ a = c) ↔ b = c :=
+theorem eq_iff_eq_cancel_left {α : Sort _} {b c : α} : (∀ {a}, a = b ↔ a = c) ↔ b = c :=
   ⟨fun h => by rw [← h], fun h a => by rw [h]⟩
 #align eq_iff_eq_cancel_left eq_iff_eq_cancel_left
+-/
 
-/- warning: eq_iff_eq_cancel_right -> eq_iff_eq_cancel_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {a : α} {b : α}, Iff (forall {c : α}, Iff (Eq.{succ u1} α a c) (Eq.{succ u1} α b c)) (Eq.{succ u1} α a b)
-but is expected to have type
-  forall {α : Sort.{u1}} {a : α} {b : α}, Iff (forall {c : α}, Iff (Eq.{u1} α a c) (Eq.{u1} α b c)) (Eq.{u1} α a b)
-Case conversion may be inaccurate. Consider using '#align eq_iff_eq_cancel_right eq_iff_eq_cancel_rightₓ'. -/
+#print eq_iff_eq_cancel_right /-
 @[simp]
-theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b :=
+theorem eq_iff_eq_cancel_right {α : Sort _} {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b :=
   ⟨fun h => by rw [h], fun h a => by rw [h]⟩
 #align eq_iff_eq_cancel_right eq_iff_eq_cancel_right
+-/
 
 #print Fact /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/

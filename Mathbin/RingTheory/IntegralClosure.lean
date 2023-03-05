@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit 825edd3cd735e87495b0c2a2114fc3929eefce41
+! leanprover-community/mathlib commit 641b6a82006416ec431b2987b354af9311fed4f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -859,6 +859,15 @@ protected theorem isIntegral [Algebra R A] [IsScalarTower R A B] (x : A) : IsInt
 theorem isIntegral_algebra [Algebra R A] [IsScalarTower R A B] : Algebra.IsIntegral R A := fun x =>
   IsIntegralClosure.isIntegral R B x
 #align is_integral_closure.is_integral_algebra IsIntegralClosure.isIntegral_algebra
+
+theorem noZeroSMulDivisors [Algebra R A] [IsScalarTower R A B] [NoZeroSMulDivisors R B] :
+    NoZeroSMulDivisors R A :=
+  by
+  refine'
+    Function.Injective.noZeroSMulDivisors _ (IsIntegralClosure.algebraMap_injective A R B)
+      (map_zero _) fun _ _ => _
+  simp only [Algebra.algebraMap_eq_smul_one, IsScalarTower.smul_assoc]
+#align is_integral_closure.no_zero_smul_divisors IsIntegralClosure.noZeroSMulDivisors
 
 variable {R} (A) {B}
 

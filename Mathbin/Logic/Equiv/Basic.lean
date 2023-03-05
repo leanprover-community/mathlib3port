@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.basic
-! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
+! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1697,27 +1697,18 @@ def subtypeEquivOfSubtype' {p : α → Prop} (e : α ≃ β) :
 #align equiv.subtype_equiv_of_subtype' Equiv.subtypeEquivOfSubtype'
 -/
 
-/- warning: equiv.subtype_equiv_prop -> Equiv.subtypeEquivProp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {q : α -> Prop}, (Eq.{succ u1} (α -> Prop) p q) -> (Equiv.{succ u1, succ u1} (Subtype.{succ u1} α p) (Subtype.{succ u1} α q))
-but is expected to have type
-  forall {α : Sort.{u1}} {p : α -> Prop} {q : α -> Prop}, (Eq.{max 1 u1} (α -> Prop) p q) -> (Equiv.{max 1 u1, max 1 u1} (Subtype.{u1} α p) (Subtype.{u1} α q))
-Case conversion may be inaccurate. Consider using '#align equiv.subtype_equiv_prop Equiv.subtypeEquivPropₓ'. -/
+#print Equiv.subtypeEquivProp /-
 /-- If two predicates are equal, then the corresponding subtypes are equivalent. -/
-def subtypeEquivProp {α : Type _} {p q : α → Prop} (h : p = q) : Subtype p ≃ Subtype q :=
+def subtypeEquivProp {α : Sort _} {p q : α → Prop} (h : p = q) : Subtype p ≃ Subtype q :=
   subtypeEquiv (Equiv.refl α) fun a => h ▸ Iff.rfl
 #align equiv.subtype_equiv_prop Equiv.subtypeEquivProp
+-/
 
-/- warning: equiv.subtype_subtype_equiv_subtype_exists -> Equiv.subtypeSubtypeEquivSubtypeExists is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) (q : (Subtype.{succ u1} α p) -> Prop), Equiv.{succ u1, succ u1} (Subtype.{succ u1} (Subtype.{succ u1} α p) q) (Subtype.{succ u1} α (fun (a : α) => Exists.{0} (p a) (fun (h : p a) => q (Subtype.mk.{succ u1} α p a h))))
-but is expected to have type
-  forall {α : Sort.{u1}} (p : α -> Prop) (q : (Subtype.{u1} α p) -> Prop), Equiv.{max 1 u1, max 1 u1} (Subtype.{max 1 u1} (Subtype.{u1} α p) q) (Subtype.{u1} α (fun (a : α) => Exists.{0} (p a) (fun (h : p a) => q (Subtype.mk.{u1} α p a h))))
-Case conversion may be inaccurate. Consider using '#align equiv.subtype_subtype_equiv_subtype_exists Equiv.subtypeSubtypeEquivSubtypeExistsₓ'. -/
+#print Equiv.subtypeSubtypeEquivSubtypeExists /-
 /-- A subtype of a subtype is equivalent to the subtype of elements satisfying both predicates. This
 version allows the “inner” predicate to depend on `h : p a`. -/
 @[simps]
-def subtypeSubtypeEquivSubtypeExists {α : Type u} (p : α → Prop) (q : Subtype p → Prop) :
+def subtypeSubtypeEquivSubtypeExists {α : Sort u} (p : α → Prop) (q : Subtype p → Prop) :
     Subtype q ≃ { a : α // ∃ h : p a, q ⟨a, h⟩ } :=
   ⟨fun a =>
     ⟨a, a.1.2, by
@@ -1725,19 +1716,16 @@ def subtypeSubtypeEquivSubtypeExists {α : Type u} (p : α → Prop) (q : Subtyp
       exact haq⟩,
     fun a => ⟨⟨a, a.2.fst⟩, a.2.snd⟩, fun ⟨⟨a, ha⟩, h⟩ => rfl, fun ⟨a, h₁, h₂⟩ => rfl⟩
 #align equiv.subtype_subtype_equiv_subtype_exists Equiv.subtypeSubtypeEquivSubtypeExists
+-/
 
-/- warning: equiv.subtype_subtype_equiv_subtype_inter -> Equiv.subtypeSubtypeEquivSubtypeInter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop), Equiv.{succ u1, succ u1} (Subtype.{succ u1} (Subtype.{succ u1} α p) (fun (x : Subtype.{succ u1} α p) => q (Subtype.val.{succ u1} α p x))) (Subtype.{succ u1} α (fun (x : α) => And (p x) (q x)))
-but is expected to have type
-  forall {α : Sort.{u1}} (p : α -> Prop) (q : α -> Prop), Equiv.{max 1 u1, max 1 u1} (Subtype.{max 1 u1} (Subtype.{u1} α p) (fun (x : Subtype.{u1} α p) => q (Subtype.val.{u1} α p x))) (Subtype.{u1} α (fun (x : α) => And (p x) (q x)))
-Case conversion may be inaccurate. Consider using '#align equiv.subtype_subtype_equiv_subtype_inter Equiv.subtypeSubtypeEquivSubtypeInterₓ'. -/
+#print Equiv.subtypeSubtypeEquivSubtypeInter /-
 /-- A subtype of a subtype is equivalent to the subtype of elements satisfying both predicates. -/
 @[simps]
-def subtypeSubtypeEquivSubtypeInter {α : Type u} (p q : α → Prop) :
+def subtypeSubtypeEquivSubtypeInter {α : Sort u} (p q : α → Prop) :
     { x : Subtype p // q x.1 } ≃ Subtype fun x => p x ∧ q x :=
   (subtypeSubtypeEquivSubtypeExists p _).trans <| subtypeEquivRight fun x => exists_prop
 #align equiv.subtype_subtype_equiv_subtype_inter Equiv.subtypeSubtypeEquivSubtypeInter
+-/
 
 /- warning: equiv.subtype_subtype_equiv_subtype -> Equiv.subtypeSubtypeEquivSubtype is a dubious translation:
 lean 3 declaration is
@@ -2504,11 +2492,11 @@ theorem PLift.eq_up_iff_down_eq {x : PLift α} {y : α} : x = PLift.up y ↔ x.d
 
 /- warning: function.injective.map_swap -> Function.Injective.map_swap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall (x : α) (y : α) (z : α), Eq.{succ u2} β (f (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) z)) (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.swap.{succ u2} β (fun (a : β) (b : β) => _inst_2 a b) (f x) (f y)) (f z)))
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : DecidableEq.{u1} α] [_inst_2 : DecidableEq.{u2} β] {f : α -> β}, (Function.Injective.{u1, u2} α β f) -> (forall (x : α) (y : α) (z : α), Eq.{u2} β (f (coeFn.{max 1 u1, u1} (Equiv.Perm.{u1} α) (fun (_x : Equiv.{u1, u1} α α) => α -> α) (Equiv.hasCoeToFun.{u1, u1} α α) (Equiv.swap.{u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) z)) (coeFn.{max 1 u2, u2} (Equiv.Perm.{u2} β) (fun (_x : Equiv.{u2, u2} β β) => β -> β) (Equiv.hasCoeToFun.{u2, u2} β β) (Equiv.swap.{u2} β (fun (a : β) (b : β) => _inst_2 a b) (f x) (f y)) (f z)))
 but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : DecidableEq.{u2} α] [_inst_2 : DecidableEq.{u1} β] {f : α -> β}, (Function.Injective.{u2, u1} α β f) -> (forall (x : α) (y : α) (z : α), Eq.{u1} β (f (FunLike.coe.{max 1 u2, u2, u2} (Equiv.Perm.{u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) _x) (Equiv.instFunLikeEquiv.{u2, u2} α α) (Equiv.swap.{u2} α (fun (a : α) (b : α) => _inst_1 a b) x y) z)) (FunLike.coe.{max 1 u1, u1, u1} (Equiv.Perm.{u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : β) => β) _x) (Equiv.instFunLikeEquiv.{u1, u1} β β) (Equiv.swap.{u1} β (fun (a : β) (b : β) => _inst_2 a b) (f x) (f y)) (f z)))
 Case conversion may be inaccurate. Consider using '#align function.injective.map_swap Function.Injective.map_swapₓ'. -/
-theorem Function.Injective.map_swap {α β : Type _} [DecidableEq α] [DecidableEq β] {f : α → β}
+theorem Function.Injective.map_swap {α β : Sort _} [DecidableEq α] [DecidableEq β] {f : α → β}
     (hf : Function.Injective f) (x y z : α) : f (Equiv.swap x y z) = Equiv.swap (f x) (f y) (f z) :=
   by
   conv_rhs => rw [Equiv.swap_apply_def]

@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.number_field.basic
-! leanprover-community/mathlib commit 297610838471f6ea3368bf26d2642e63a159fbcf
+! leanprover-community/mathlib commit 641b6a82006416ec431b2987b354af9311fed4f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.Algebra.CharP.Algebra
+import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 
 /-!
 # Number fields
@@ -42,9 +42,9 @@ class NumberField (K : Type _) [Field K] : Prop where
   [to_finiteDimensional : FiniteDimensional ℚ K]
 #align number_field NumberField
 
-open Function
+open Function Module
 
-open Classical BigOperators
+open Classical BigOperators nonZeroDivisors
 
 /-- `ℤ` with its usual ring structure is not a field. -/
 theorem Int.not_isField : ¬IsField ℤ := fun h =>
@@ -134,14 +134,16 @@ protected noncomputable def equiv (R : Type _) [CommRing R] [Algebra R K]
 
 variable (K)
 
-instance [NumberField K] : CharZero (𝓞 K) :=
+include nf
+
+instance : CharZero (𝓞 K) :=
   CharZero.of_module _ K
 
-instance [NumberField K] : IsNoetherian ℤ (𝓞 K) :=
+instance : IsNoetherian ℤ (𝓞 K) :=
   IsIntegralClosure.isNoetherian _ ℚ K _
 
 /-- The ring of integers of a number field is not a field. -/
-theorem not_isField [NumberField K] : ¬IsField (𝓞 K) :=
+theorem not_isField : ¬IsField (𝓞 K) :=
   by
   have h_inj : Function.Injective ⇑(algebraMap ℤ (𝓞 K)) :=
     RingHom.injective_int (algebraMap ℤ (𝓞 K))
@@ -150,10 +152,38 @@ theorem not_isField [NumberField K] : ¬IsField (𝓞 K) :=
     Int.not_isField (((IsIntegralClosure.isIntegral_algebra ℤ K).isField_iff_isField h_inj).mpr hf)
 #align number_field.ring_of_integers.not_is_field NumberField.ringOfIntegers.not_isField
 
-instance [NumberField K] : IsDedekindDomain (𝓞 K) :=
+instance : IsDedekindDomain (𝓞 K) :=
   IsIntegralClosure.isDedekindDomain ℤ ℚ K _
 
+instance : Free ℤ (𝓞 K) :=
+  IsIntegralClosure.module_free ℤ ℚ K (𝓞 K)
+
+instance : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K) ℤ⁰) K :=
+  IsIntegralClosure.isLocalization ℤ ℚ K (𝓞 K)
+
+/-- A ℤ-basis of the ring of integers of `K`. -/
+noncomputable def basis : Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℤ (𝓞 K) :=
+  Free.chooseBasis ℤ (𝓞 K)
+#align number_field.ring_of_integers.basis NumberField.ringOfIntegers.basis
+
 end RingOfIntegers
+
+include nf
+
+/-- A basis of `K` over `ℚ` that is also a basis of `𝓞 K` over `ℤ`. -/
+noncomputable def integralBasis : Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℚ K :=
+  Basis.localizationLocalization ℚ (nonZeroDivisors ℤ) K (ringOfIntegers.basis K)
+#align number_field.integral_basis NumberField.integralBasis
+
+@[simp]
+theorem integralBasis_apply (i : Free.ChooseBasisIndex ℤ (𝓞 K)) :
+    integralBasis K i = algebraMap (𝓞 K) K (ringOfIntegers.basis K i) :=
+  Basis.localizationLocalization_apply ℚ (nonZeroDivisors ℤ) K (ringOfIntegers.basis K) i
+#align number_field.integral_basis_apply NumberField.integralBasis_apply
+
+theorem ringOfIntegers.rank : FiniteDimensional.finrank ℤ (𝓞 K) = FiniteDimensional.finrank ℚ K :=
+  IsIntegralClosure.rank ℤ ℚ K (𝓞 K)
+#align number_field.ring_of_integers.rank NumberField.ringOfIntegers.rank
 
 end NumberField
 
