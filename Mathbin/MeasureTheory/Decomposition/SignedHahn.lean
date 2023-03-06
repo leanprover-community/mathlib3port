@@ -350,7 +350,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
   have h₃ : tendsto (fun n => (bdd n : ℝ) + 1) at_top at_top :=
     by
     simp only [one_div] at h₃'
-    exact Summable.tendsto_top_of_pos h₃' fun n => Nat.cast_add_one_pos (bdd n)
+    exact Summable.tendsto_atTop_of_pos h₃' fun n => Nat.cast_add_one_pos (bdd n)
   have h₄ : tendsto (fun n => (bdd n : ℝ)) at_top at_top :=
     by
     convert at_top.tendsto_at_top_add_const_right (-1) h₃

@@ -109,10 +109,10 @@ theorem memℓp_gen {f : ∀ i, E i} (hf : Summable fun i => ‖f i‖ ^ p.toRea
   rcases p.trichotomy with (rfl | rfl | hp)
   · apply memℓp_zero
     have H : Summable fun i : α => (1 : ℝ) := by simpa using hf
-    exact (finite_of_summable_const (by norm_num) H).Subset (Set.subset_univ _)
+    exact (Set.Finite.of_summable_const (by norm_num) H).Subset (Set.subset_univ _)
   · apply memℓp_infty
     have H : Summable fun i : α => (1 : ℝ) := by simpa using hf
-    simpa using ((finite_of_summable_const (by norm_num) H).image fun i => ‖f i‖).BddAbove
+    simpa using ((Set.Finite.of_summable_const (by norm_num) H).image fun i => ‖f i‖).BddAbove
   exact (memℓp_gen_iff hp).2 hf
 #align mem_ℓp_gen memℓp_gen
 
