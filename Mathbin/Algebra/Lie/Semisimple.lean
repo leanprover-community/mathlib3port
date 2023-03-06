@@ -76,7 +76,7 @@ theorem isSemisimple_iff_no_abelian_ideals :
   · haveI : IsLieAbelian I := h₂
     apply h₁
     exact LieAlgebra.ofAbelianIsSolvable R I
-  · haveI : is_solvable R I := h₂
+  · haveI : IsSolvable R I := h₂
     rw [← abelian_of_solvable_ideal_eq_bot_iff]
     apply h₁
     exact abelian_derived_abelian_of_ideal I

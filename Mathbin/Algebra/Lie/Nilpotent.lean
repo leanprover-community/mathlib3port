@@ -189,7 +189,7 @@ theorem derivedSeries_le_lowerCentralSeries (k : ℕ) :
   induction' k with k h
   · rw [derived_series_def, derived_series_of_ideal_zero, lower_central_series_zero]
     exact le_rfl
-  · have h' : derived_series R L k ≤ ⊤ := by simp only [le_top]
+  · have h' : derivedSeries R L k ≤ ⊤ := by simp only [le_top]
     rw [derived_series_def, derived_series_of_ideal_succ, lower_central_series_succ]
     exact LieSubmodule.mono_lie _ _ _ _ h' h
 #align lie_module.derived_series_le_lower_central_series LieModule.derivedSeries_le_lowerCentralSeries

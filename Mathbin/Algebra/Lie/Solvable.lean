@@ -298,7 +298,7 @@ instance radicalIsSolvable [IsNoetherian R L] : IsSolvable R (radical R L) :=
   by
   have hwf := LieSubmodule.wellFounded_of_noetherian R L L
   rw [← CompleteLattice.isSupClosedCompact_iff_wellFounded] at hwf
-  refine' hwf { I : LieIdeal R L | is_solvable R I } ⟨⊥, _⟩ fun I hI J hJ => _
+  refine' hwf { I : LieIdeal R L | IsSolvable R I } ⟨⊥, _⟩ fun I hI J hJ => _
   · exact LieAlgebra.isSolvableBot R L
   · apply LieAlgebra.isSolvableAdd R L
     exacts[hI, hJ]
@@ -350,7 +350,7 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
 theorem derivedLength_eq_derivedLengthOfIdeal (I : LieIdeal R L) :
     derivedLength R I = derivedLengthOfIdeal R L I :=
   by
-  let s₁ := { k | derived_series R I k = ⊥ }
+  let s₁ := { k | derivedSeries R I k = ⊥ }
   let s₂ := { k | derived_series_of_ideal R L k I = ⊥ }
   change Inf s₁ = Inf s₂
   congr ; ext k; exact I.derived_series_eq_bot_iff k
