@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit fbde2f60a46865c85f49b4193175c6e339ff9020
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1599,6 +1599,42 @@ theorem integral_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : 
     (hf : Integrable f (Measure.sum μ)) : (∫ a, f a ∂Measure.sum μ) = ∑' i, ∫ a, f a ∂μ i :=
   (hasSum_integral_measure hf).tsum_eq.symm
 #align measure_theory.integral_sum_measure MeasureTheory.integral_sum_measure
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
+theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AeStronglyMeasurable (f i) μ)
+    (hf' : (∑' i, ∫⁻ a : α, ‖f i a‖₊ ∂μ) ≠ ∞) :
+    (∫ a : α, ∑' i, f i a ∂μ) = ∑' i, ∫ a : α, f i a ∂μ :=
+  by
+  have hf'' : ∀ i, AeMeasurable (fun x => (‖f i x‖₊ : ℝ≥0∞)) μ := fun i => (hf i).ennnorm
+  have hhh : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ) :=
+    by
+    rw [← lintegral_tsum hf''] at hf'
+    refine' (ae_lt_top' (AeMeasurable.ennrealTsum hf'') hf').mono _
+    intro x hx
+    rw [← ENNReal.tsum_coe_ne_top_iff_summable_coe]
+    exact hx.ne
+  convert
+    (MeasureTheory.hasSum_integral_of_dominated_convergence (fun i a => ‖f i a‖₊) hf _ hhh ⟨_, _⟩
+          _).tsum_eq.symm
+  · intro n
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
+    rfl
+  · simp_rw [← coe_nnnorm, ← NNReal.coe_tsum]
+    rw [aeStronglyMeasurable_iff_aeMeasurable]
+    apply AeMeasurable.coeNnrealReal
+    apply AeMeasurable.nnrealTsum
+    exact fun i => (hf i).nnnorm.AeMeasurable
+  · dsimp [has_finite_integral]
+    have : (∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ) < ⊤ := by rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
+    convert this using 1
+    apply lintegral_congr_ae
+    simp_rw [← coe_nnnorm, ← NNReal.coe_tsum, NNReal.nnnorm_eq]
+    filter_upwards [hhh]with a ha
+    exact ENNReal.coe_tsum (nnreal.summable_coe.mp ha)
+  · filter_upwards [hhh]with x hx
+    exact (summable_of_summable_norm hx).HasSum
+#align measure_theory.integral_tsum MeasureTheory.integral_tsum
 
 @[simp]
 theorem integral_smul_measure (f : α → E) (c : ℝ≥0∞) : (∫ x, f x ∂c • μ) = c.toReal • ∫ x, f x ∂μ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.homeomorph
-! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
+! leanprover-community/mathlib commit 3b267e70a936eebb21ab546f49a8df34dd300b25
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,6 +143,11 @@ Case conversion may be inaccurate. Consider using '#align homeomorph.ext Homeomo
 theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
   toEquiv_injective <| Equiv.ext H
 #align homeomorph.ext Homeomorph.ext
+
+@[simp]
+theorem symm_symm (h : α ≃ₜ β) : h.symm.symm = h :=
+  ext fun _ => rfl
+#align homeomorph.symm_symm Homeomorph.symm_symm
 
 #print Homeomorph.refl /-
 /-- Identity map as a homeomorphism. -/

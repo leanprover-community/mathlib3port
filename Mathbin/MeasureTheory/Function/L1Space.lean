@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 346bace1280dc6ff95e90ee8d681b75c340b2492
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -752,6 +752,40 @@ theorem Integrable.bddMul {F : Type _} [NormedDivisionRing F] {f g : α → F} (
     rw [lintegral_const_mul' _ _ ENNReal.coe_ne_top]
     exact ENNReal.mul_lt_top ENNReal.coe_ne_top (ne_of_lt hint.2)
 #align measure_theory.integrable.bdd_mul MeasureTheory.Integrable.bddMul
+
+/-- Hölder's inequality for integrable functions: the scalar multiplication of an integrable
+vector-valued function by a scalar function with finite essential supremum is integrable. -/
+theorem Integrable.essSupSmul {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β] {f : α → β}
+    (hf : Integrable f μ) {g : α → 𝕜} (g_ae_strongly_measurable : AeStronglyMeasurable g μ)
+    (ess_sup_g : essSup (fun x => (‖g x‖₊ : ℝ≥0∞)) μ ≠ ∞) : Integrable (fun x : α => g x • f x) μ :=
+  by
+  rw [← mem_ℒp_one_iff_integrable] at *
+  refine' ⟨g_ae_strongly_measurable.smul hf.1, _⟩
+  have h : (1 : ℝ≥0∞) / 1 = 1 / ∞ + 1 / 1 := by norm_num
+  have hg' : snorm g ∞ μ ≠ ∞ := by rwa [snorm_exponent_top]
+  calc
+    snorm (fun x : α => g x • f x) 1 μ ≤ _ :=
+      MeasureTheory.snorm_smul_le_mul_snorm hf.1 g_ae_strongly_measurable h
+    _ < ∞ := ENNReal.mul_lt_top hg' hf.2.Ne
+    
+#align measure_theory.integrable.ess_sup_smul MeasureTheory.Integrable.essSupSmul
+
+/-- Hölder's inequality for integrable functions: the scalar multiplication of an integrable
+scalar-valued function by a vector-value function with finite essential supremum is integrable. -/
+theorem Integrable.smulEssSup {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β] {f : α → 𝕜}
+    (hf : Integrable f μ) {g : α → β} (g_ae_strongly_measurable : AeStronglyMeasurable g μ)
+    (ess_sup_g : essSup (fun x => (‖g x‖₊ : ℝ≥0∞)) μ ≠ ∞) : Integrable (fun x : α => f x • g x) μ :=
+  by
+  rw [← mem_ℒp_one_iff_integrable] at *
+  refine' ⟨hf.1.smul g_ae_strongly_measurable, _⟩
+  have h : (1 : ℝ≥0∞) / 1 = 1 / 1 + 1 / ∞ := by norm_num
+  have hg' : snorm g ∞ μ ≠ ∞ := by rwa [snorm_exponent_top]
+  calc
+    snorm (fun x : α => f x • g x) 1 μ ≤ _ :=
+      MeasureTheory.snorm_smul_le_mul_snorm g_ae_strongly_measurable hf.1 h
+    _ < ∞ := ENNReal.mul_lt_top hf.2.Ne hg'
+    
+#align measure_theory.integrable.smul_ess_sup MeasureTheory.Integrable.smulEssSup
 
 theorem integrable_norm_iff {f : α → β} (hf : AeStronglyMeasurable f μ) :
     Integrable (fun a => ‖f a‖) μ ↔ Integrable f μ := by

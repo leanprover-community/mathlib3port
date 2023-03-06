@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
+! leanprover-community/mathlib commit fbde2f60a46865c85f49b4193175c6e339ff9020
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2019,6 +2019,15 @@ theorem AeMeasurable.ennrealTsum {ι} [Countable ι] {f : ι → α → ℝ≥0�
   apply aeMeasurableSupr
   exact fun s => Finset.ae_measurable_sum s fun i _ => h i
 #align ae_measurable.ennreal_tsum AeMeasurable.ennrealTsum
+
+@[measurability]
+theorem AeMeasurable.nnrealTsum {α : Type _} [MeasurableSpace α] {ι : Type _} [Countable ι]
+    {f : ι → α → NNReal} {μ : MeasureTheory.Measure α} (h : ∀ i : ι, AeMeasurable (f i) μ) :
+    AeMeasurable (fun x : α => ∑' i : ι, f i x) μ :=
+  by
+  simp_rw [NNReal.tsum_eq_toNNReal_tsum]
+  exact (AeMeasurable.ennrealTsum fun i => (h i).coe_nNReal_eNNReal).eNNReal_toNNReal
+#align ae_measurable.nnreal_tsum AeMeasurable.nnrealTsum
 
 @[measurability]
 theorem measurable_coe_real_eReal : Measurable (coe : ℝ → EReal) :=
