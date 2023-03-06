@@ -144,6 +144,12 @@ theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
   toEquiv_injective <| Equiv.ext H
 #align homeomorph.ext Homeomorph.ext
 
+/- warning: homeomorph.symm_symm -> Homeomorph.symm_symm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (h : Homeomorph.{u1, u2} α β _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) (Homeomorph.symm.{u2, u1} β α _inst_2 _inst_1 (Homeomorph.symm.{u1, u2} α β _inst_1 _inst_2 h)) h
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) (Homeomorph.symm.{u1, u2} β α _inst_2 _inst_1 (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 h)) h
+Case conversion may be inaccurate. Consider using '#align homeomorph.symm_symm Homeomorph.symm_symmₓ'. -/
 @[simp]
 theorem symm_symm (h : α ≃ₜ β) : h.symm.symm = h :=
   ext fun _ => rfl
