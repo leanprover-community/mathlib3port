@@ -485,7 +485,7 @@ noncomputable def imageFactorization {F F' : Sheaf J (Type max v u)} (f : F ⟶ 
         · apply presieve.is_sheaf_iso J (as_iso <| to_image_presheaf I.m.1)
           rw [← is_sheaf_iff_is_sheaf_of_type]
           exact I.I.2
-      lift_fac' := fun I => by
+      lift_fac := fun I => by
         ext1
         dsimp [image_mono_factorization]
         generalize_proofs h

@@ -113,7 +113,7 @@ the image. -/
 noncomputable def isImage : IsImage (monoFactorisation f)
     where
   lift := image.lift
-  lift_fac' := image.lift_fac
+  lift_fac := image.lift_fac
 #align Module.is_image ModuleCat.isImage
 
 /-- The categorical image of a morphism in `Module R`

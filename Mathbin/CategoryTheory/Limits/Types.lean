@@ -530,7 +530,7 @@ def monoFactorisation : MonoFactorisation f
 noncomputable def isImage : IsImage (monoFactorisation f)
     where
   lift := Image.lift
-  lift_fac' := Image.lift_fac
+  lift_fac := Image.lift_fac
 #align category_theory.limits.types.is_image CategoryTheory.Limits.Types.isImage
 
 instance : HasImage f :=

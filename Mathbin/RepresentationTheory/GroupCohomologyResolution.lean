@@ -533,17 +533,17 @@ theorem εToSingle₀_comp_eq :
   exact (forget₂_to_Module_homotopy_equiv_f_0_eq k G).symm
 #align group_cohomology.resolution.ε_to_single₀_comp_eq GroupCohomology.resolution.εToSingle₀_comp_eq
 
-theorem quasiIsoOfForget₂εToSingle₀ :
+theorem quasiIso_of_forget₂_εToSingle₀ :
     QuasiIso (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) :=
   by
-  have h : QuasiIso (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.toQuasiIso _
+  have h : QuasiIso (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.to_quasiIso _
   rw [← ε_to_single₀_comp_eq k G] at h
   haveI := h
-  exact quasiIsoOfCompRight _ ((ChainComplex.single₀MapHomologicalComplex _).hom.app _)
-#align group_cohomology.resolution.quasi_iso_of_forget₂_ε_to_single₀ GroupCohomology.resolution.quasiIsoOfForget₂εToSingle₀
+  exact quasiIso_of_comp_right _ ((ChainComplex.single₀MapHomologicalComplex _).hom.app _)
+#align group_cohomology.resolution.quasi_iso_of_forget₂_ε_to_single₀ GroupCohomology.resolution.quasiIso_of_forget₂_εToSingle₀
 
 instance : QuasiIso (εToSingle₀ k G) :=
-  (forget₂ _ (ModuleCat.{u} k)).quasiIsoOfMapQuasiIso _ (quasiIsoOfForget₂εToSingle₀ k G)
+  (forget₂ _ (ModuleCat.{u} k)).quasiIso_of_map_quasiIso _ (quasiIso_of_forget₂_εToSingle₀ k G)
 
 end Exactness
 

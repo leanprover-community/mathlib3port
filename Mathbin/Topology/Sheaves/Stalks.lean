@@ -493,7 +493,7 @@ instance stalkFunctor_preserves_mono (x : X) :
     ConcreteCategory.mono_of_injective _ <|
       (app_injective_iff_stalkFunctor_map_injective f.1).mpr
         (fun c =>
-          (@ConcreteCategory.mono_iff_injective_of_preserves_pullback _ _ (f.1.app (op c)) _).mp
+          (@ConcreteCategory.mono_iff_injective_of_preservesPullback _ _ (f.1.app (op c)) _).mp
             ((NatTrans.mono_iff_mono_app _ f.1).mp
                 (@CategoryTheory.presheaf_mono_of_mono _ _ _ _ _ _ _ _ _ _ _ m) <|
               op c))
@@ -509,9 +509,9 @@ theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, Mono <| (stal
     Mono f :=
   (Sheaf.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
     (NatTrans.mono_iff_mono_app _ _).mpr fun U =>
-      (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mpr <|
+      (ConcreteCategory.mono_iff_injective_of_preservesPullback _).mpr <|
         app_injective_of_stalkFunctor_map_injective f.1 U.unop fun ⟨x, hx⟩ =>
-          (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mp <| inferInstance
+          (ConcreteCategory.mono_iff_injective_of_preservesPullback _).mp <| inferInstance
 #align Top.presheaf.mono_of_stalk_mono TopCat.Presheaf.mono_of_stalk_mono
 
 theorem mono_iff_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) :

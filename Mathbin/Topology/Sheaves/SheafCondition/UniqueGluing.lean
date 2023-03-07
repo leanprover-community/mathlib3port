@@ -241,9 +241,9 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable [HasLimits C] [ReflectsIsomorphisms (ConcreteCategory.forget C)]
+variable [HasLimits C] [ReflectsIsomorphisms (ConcreteCategory.Forget C)]
 
-variable [PreservesLimits (ConcreteCategory.forget C)]
+variable [PreservesLimits (ConcreteCategory.Forget C)]
 
 variable {X : TopCat.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
 

@@ -44,26 +44,28 @@ class QuasiIso (f : C ⟶ D) : Prop where
 
 attribute [instance] QuasiIso.isIso
 
-instance (priority := 100) quasiIsoOfIso (f : C ⟶ D) [IsIso f] : QuasiIso f
+instance (priority := 100) quasiIso_of_iso (f : C ⟶ D) [IsIso f] : QuasiIso f
     where IsIso i :=
     by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance
-#align quasi_iso_of_iso quasiIsoOfIso
+#align quasi_iso_of_iso quasiIso_of_iso
 
-instance quasiIsoComp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] : QuasiIso (f ≫ g)
+instance quasiIso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] : QuasiIso (f ≫ g)
     where IsIso i := by
     rw [functor.map_comp]
     infer_instance
-#align quasi_iso_comp quasiIsoComp
+#align quasi_iso_comp quasiIso_comp
 
-theorem quasiIsoOfCompLeft (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] : QuasiIso g :=
+theorem quasiIso_of_comp_left (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] :
+    QuasiIso g :=
   { IsIso := fun i => IsIso.of_isIso_fac_left ((homologyFunctor V c i).map_comp f g).symm }
-#align quasi_iso_of_comp_left quasiIsoOfCompLeft
+#align quasi_iso_of_comp_left quasiIso_of_comp_left
 
-theorem quasiIsoOfCompRight (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] : QuasiIso f :=
+theorem quasiIso_of_comp_right (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] :
+    QuasiIso f :=
   { IsIso := fun i => IsIso.of_isIso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
-#align quasi_iso_of_comp_right quasiIsoOfCompRight
+#align quasi_iso_of_comp_right quasiIso_of_comp_right
 
 namespace HomotopyEquiv
 
@@ -73,21 +75,21 @@ variable {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W
   [HasZeroObject W] [HasImageMaps W]
 
 /-- An homotopy equivalence is a quasi-isomorphism. -/
-theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
+theorem to_quasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
   ⟨fun i => by
     refine' ⟨⟨(homologyFunctor W c i).map e.inv, _⟩⟩
     simp only [← functor.map_comp, ← (homologyFunctor W c i).map_id]
     constructor <;> apply homology_map_eq_of_homotopy
     exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
-#align homotopy_equiv.to_quasi_iso HomotopyEquiv.toQuasiIso
+#align homotopy_equiv.to_quasi_iso HomotopyEquiv.to_quasiIso
 
-theorem toQuasiIso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
-    (@asIso _ _ _ _ _ (e.toQuasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv :=
+theorem to_quasiIso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
+    (@asIso _ _ _ _ _ (e.to_quasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv :=
   by
   symm
   simp only [← iso.hom_comp_eq_id, as_iso_hom, ← functor.map_comp, ← (homologyFunctor W c i).map_id,
     homology_map_eq_of_homotopy e.homotopy_hom_inv_id _]
-#align homotopy_equiv.to_quasi_iso_inv HomotopyEquiv.toQuasiIso_inv
+#align homotopy_equiv.to_quasi_iso_inv HomotopyEquiv.to_quasiIso_inv
 
 end
 
@@ -221,7 +223,7 @@ end HomologicalComplex.Hom
 variable {A : Type _} [Category A] [Abelian A] {B : Type _} [Category B] [Abelian B] (F : A ⥤ B)
   [Functor.Additive F] [PreservesFiniteLimits F] [PreservesFiniteColimits F] [Faithful F]
 
-theorem CategoryTheory.Functor.quasiIsoOfMapQuasiIso {C D : HomologicalComplex A c} (f : C ⟶ D)
+theorem CategoryTheory.Functor.quasiIso_of_map_quasiIso {C D : HomologicalComplex A c} (f : C ⟶ D)
     (hf : QuasiIso ((F.mapHomologicalComplex _).map f)) : QuasiIso f :=
   ⟨fun i =>
     haveI : is_iso (F.map ((homologyFunctor A c i).map f)) :=
@@ -229,5 +231,5 @@ theorem CategoryTheory.Functor.quasiIsoOfMapQuasiIso {C D : HomologicalComplex A
       rw [← functor.comp_map, ← nat_iso.naturality_2 (F.homology_functor_iso i) f, functor.comp_map]
       infer_instance
     is_iso_of_reflects_iso _ F⟩
-#align category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasiIsoOfMapQuasiIso
+#align category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasiIso_of_map_quasiIso
 
