@@ -55,13 +55,13 @@ end Prio
 variable [NormedField α] [SeminormedAddCommGroup β]
 
 -- see Note [lower instance priority]
-instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] : HasBoundedSmul α β
+instance (priority := 100) NormedSpace.boundedSmul [NormedSpace α β] : BoundedSmul α β
     where
   dist_smul_pair' x y₁ y₂ := by
     simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
   dist_pair_smul' x₁ x₂ y := by
     simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
-#align normed_space.has_bounded_smul NormedSpace.hasBoundedSmul
+#align normed_space.has_bounded_smul NormedSpace.boundedSmul
 
 -- Shortcut instance, as otherwise this will be found by `normed_space.to_module` and be
 -- noncomputable.

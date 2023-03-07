@@ -86,7 +86,7 @@ namespace Urysohns
 open neighborhood `U`. -/
 @[protect_proj]
 structure CU (X : Type _) [TopologicalSpace X] where
-  (c U : Set X)
+  (C U : Set X)
   closed_c : IsClosed C
   open_u : IsOpen U
   Subset : C ⊆ U
@@ -101,9 +101,9 @@ namespace CU
 
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. -/
-@[simps c]
+@[simps C]
 def left (c : CU X) : CU X where
-  c := c.c
+  C := c.C
   U := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
   closed_c := c.closed_c
   open_u := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.1
@@ -115,14 +115,14 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u
 @[simps U]
 def right (c : CU X) : CU X
     where
-  c := closure (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
+  C := closure (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
   U := c.U
   closed_c := isClosed_closure
   open_u := c.open_u
   Subset := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.2.2
 #align urysohns.CU.right Urysohns.CU.right
 
-theorem left_u_subset_right_c (c : CU X) : c.left.U ⊆ c.right.c :=
+theorem left_u_subset_right_c (c : CU X) : c.left.U ⊆ c.right.C :=
   subset_closure
 #align urysohns.CU.left_U_subset_right_C Urysohns.CU.left_u_subset_right_c
 
@@ -130,7 +130,7 @@ theorem left_u_subset (c : CU X) : c.left.U ⊆ c.U :=
   Subset.trans c.left_u_subset_right_c c.right.Subset
 #align urysohns.CU.left_U_subset Urysohns.CU.left_u_subset
 
-theorem subset_right_c (c : CU X) : c.c ⊆ c.right.c :=
+theorem subset_right_c (c : CU X) : c.C ⊆ c.right.C :=
   Subset.trans c.left.Subset c.left_u_subset_right_c
 #align urysohns.CU.subset_right_C Urysohns.CU.subset_right_c
 
@@ -141,7 +141,7 @@ noncomputable def approx : ℕ → CU X → X → ℝ
   | n + 1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 #align urysohns.CU.approx Urysohns.CU.approx
 
-theorem approx_of_mem_c (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 :=
+theorem approx_of_mem_c (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx n x = 0 :=
   by
   induction' n with n ihn generalizing c
   · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
@@ -179,7 +179,7 @@ theorem bddAbove_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.ap
   ⟨1, fun y ⟨n, hn⟩ => hn ▸ c.approx_le_one n x⟩
 #align urysohns.CU.bdd_above_range_approx Urysohns.CU.bddAbove_range_approx
 
-theorem approx_le_approx_of_u_sub_c {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
+theorem approx_le_approx_of_u_sub_c {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x :=
   by
   by_cases hx : x ∈ c₁.U
@@ -237,7 +237,7 @@ theorem tendsto_approx_atTop (c : CU X) (x : X) :
   tendsto_atTop_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_atTop
 
-theorem lim_of_mem_c (c : CU X) (x : X) (h : x ∈ c.c) : c.lim x = 0 := by
+theorem lim_of_mem_c (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 := by
   simp only [CU.lim, approx_of_mem_C, h, csupᵢ_const]
 #align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_c
 

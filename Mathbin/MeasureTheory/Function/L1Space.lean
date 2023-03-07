@@ -848,7 +848,7 @@ theorem Integrable.realToNnreal {f : α → ℝ} (hf : Integrable f μ) :
     Integrable (fun x => ((f x).toNNReal : ℝ)) μ :=
   by
   refine'
-    ⟨hf.ae_strongly_measurable.ae_measurable.real_toNNReal.coeNnrealReal.AeStronglyMeasurable, _⟩
+    ⟨hf.ae_strongly_measurable.ae_measurable.real_toNNReal.coeNNRealReal.AeStronglyMeasurable, _⟩
   rw [has_finite_integral_iff_norm]
   refine' lt_of_le_of_lt _ ((has_finite_integral_iff_norm _).1 hf.has_finite_integral)
   apply lintegral_mono

@@ -313,7 +313,7 @@ instance Real.hasMeasurablePow : HasMeasurablePow ℝ ℝ :=
 #align real.has_measurable_pow Real.hasMeasurablePow
 
 instance NNReal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=
-  ⟨(measurable_fst.coeNnrealReal.pow measurable_snd).subtype_mk⟩
+  ⟨(measurable_fst.coeNNRealReal.pow measurable_snd).subtype_mk⟩
 #align nnreal.has_measurable_pow NNReal.hasMeasurablePow
 
 instance ENNReal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ :=

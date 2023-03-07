@@ -1906,9 +1906,9 @@ end AntilipschitzWith
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) SeminormedCommGroup.to_hasLipschitzMul : HasLipschitzMul E :=
+instance (priority := 100) SeminormedCommGroup.to_lipschitzMul : LipschitzMul E :=
   ⟨⟨1 + 1, LipschitzWith.prod_fst.mul' LipschitzWith.prod_snd⟩⟩
-#align seminormed_comm_group.to_has_lipschitz_mul SeminormedCommGroup.to_hasLipschitzMul
+#align seminormed_comm_group.to_has_lipschitz_mul SeminormedCommGroup.to_lipschitzMul
 #align seminormed_add_comm_group.to_has_lipschitz_add SeminormedAddCommGroup.to_has_lipschitz_add
 
 -- See note [lower instance priority]

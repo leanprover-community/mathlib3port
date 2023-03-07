@@ -394,7 +394,7 @@ theorem testAgainstNn_add (μ : FiniteMeasure Ω) (f₁ f₂ : Ω →ᵇ ℝ≥0
 #align measure_theory.finite_measure.test_against_nn_add MeasureTheory.FiniteMeasure.testAgainstNn_add
 
 theorem testAgainstNn_smul [IsScalarTower R ℝ≥0 ℝ≥0] [PseudoMetricSpace R] [Zero R]
-    [HasBoundedSmul R ℝ≥0] (μ : FiniteMeasure Ω) (c : R) (f : Ω →ᵇ ℝ≥0) :
+    [BoundedSmul R ℝ≥0] (μ : FiniteMeasure Ω) (c : R) (f : Ω →ᵇ ℝ≥0) :
     μ.testAgainstNn (c • f) = c • μ.testAgainstNn f :=
   by
   simp only [← ENNReal.coe_eq_coe, BoundedContinuousFunction.coe_smul, test_against_nn_coe_eq,

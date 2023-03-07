@@ -690,7 +690,7 @@ theorem one_compContinuous [TopologicalSpace γ] (f : C(γ, α)) :
 
 end One
 
-section HasLipschitzAdd
+section LipschitzAdd
 
 /- In this section, if `β` is an `add_monoid` whose addition operation is Lipschitz, then we show
 that the space of bounded continuous functions from `α` to `β` inherits a topological `add_monoid`
@@ -704,7 +704,7 @@ trivial inconvenience, but in any case there are no obvious applications of the 
 version. -/
 variable [TopologicalSpace α] [PseudoMetricSpace β] [AddMonoid β]
 
-variable [HasLipschitzAdd β]
+variable [LipschitzAdd β]
 
 variable (f g : α →ᵇ β) {x : α} {C : ℝ}
 
@@ -712,12 +712,12 @@ variable (f g : α →ᵇ β) {x : α} {C : ℝ}
 instance : Add (α →ᵇ β)
     where add f g :=
     BoundedContinuousFunction.mkOfBound (f.toContinuousMap + g.toContinuousMap)
-      (↑(HasLipschitzAdd.c β) * max (Classical.choose f.Bounded) (Classical.choose g.Bounded))
+      (↑(LipschitzAdd.C β) * max (Classical.choose f.Bounded) (Classical.choose g.Bounded))
       (by
         intro x y
         refine' le_trans (lipschitz_with_lipschitz_const_add ⟨f x, g x⟩ ⟨f y, g y⟩) _
         rw [Prod.dist_eq]
-        refine' mul_le_mul_of_nonneg_left _ (HasLipschitzAdd.c β).coe_nonneg
+        refine' mul_le_mul_of_nonneg_left _ (LipschitzAdd.C β).coe_nonneg
         apply max_le_max
         exact Classical.choose_spec f.bounded x y
         exact Classical.choose_spec g.bounded x y)
@@ -767,10 +767,10 @@ theorem nsmul_apply (r : ℕ) (f : α →ᵇ β) (v : α) : (r • f) v = r • 
 instance : AddMonoid (α →ᵇ β) :=
   FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
 
-instance : HasLipschitzAdd (α →ᵇ β)
+instance : LipschitzAdd (α →ᵇ β)
     where lipschitz_add :=
-    ⟨HasLipschitzAdd.c β, by
-      have C_nonneg := (HasLipschitzAdd.c β).coe_nonneg
+    ⟨LipschitzAdd.C β, by
+      have C_nonneg := (LipschitzAdd.C β).coe_nonneg
       rw [lipschitzWith_iff_dist_le_mul]
       rintro ⟨f₁, g₁⟩ ⟨f₂, g₂⟩
       rw [dist_le (mul_nonneg C_nonneg dist_nonneg)]
@@ -805,11 +805,11 @@ def toContinuousMapAddHom : (α →ᵇ β) →+ C(α, β)
     simp
 #align bounded_continuous_function.to_continuous_map_add_hom BoundedContinuousFunction.toContinuousMapAddHom
 
-end HasLipschitzAdd
+end LipschitzAdd
 
 section CommHasLipschitzAdd
 
-variable [TopologicalSpace α] [PseudoMetricSpace β] [AddCommMonoid β] [HasLipschitzAdd β]
+variable [TopologicalSpace α] [PseudoMetricSpace β] [AddCommMonoid β] [LipschitzAdd β]
 
 @[to_additive]
 instance : AddCommMonoid (α →ᵇ β) :=
@@ -1115,7 +1115,7 @@ theorem norm_compContinuous_le [TopologicalSpace γ] (f : α →ᵇ β) (g : C(�
 
 end NormedAddCommGroup
 
-section HasBoundedSmul
+section BoundedSmul
 
 /-!
 ### `has_bounded_smul` (in particular, topological module) structure
@@ -1131,7 +1131,7 @@ variable {𝕜 : Type _} [PseudoMetricSpace 𝕜] [TopologicalSpace α] [PseudoM
 
 section SMul
 
-variable [Zero 𝕜] [Zero β] [SMul 𝕜 β] [HasBoundedSmul 𝕜 β]
+variable [Zero 𝕜] [Zero β] [SMul 𝕜 β] [BoundedSmul 𝕜 β]
 
 instance : SMul 𝕜 (α →ᵇ β)
     where smul c f :=
@@ -1156,7 +1156,7 @@ theorem smul_apply (c : 𝕜) (f : α →ᵇ β) (x : α) : (c • f) x = c • 
 instance [SMul 𝕜ᵐᵒᵖ β] [IsCentralScalar 𝕜 β] : IsCentralScalar 𝕜 (α →ᵇ β)
     where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
-instance : HasBoundedSmul 𝕜 (α →ᵇ β)
+instance : BoundedSmul 𝕜 (α →ᵇ β)
     where
   dist_smul_pair' c f₁ f₂ :=
     by
@@ -1176,7 +1176,7 @@ end SMul
 
 section MulAction
 
-variable [MonoidWithZero 𝕜] [Zero β] [MulAction 𝕜 β] [HasBoundedSmul 𝕜 β]
+variable [MonoidWithZero 𝕜] [Zero β] [MulAction 𝕜 β] [BoundedSmul 𝕜 β]
 
 instance : MulAction 𝕜 (α →ᵇ β) :=
   FunLike.coe_injective.MulAction _ coe_smul
@@ -1185,9 +1185,9 @@ end MulAction
 
 section DistribMulAction
 
-variable [MonoidWithZero 𝕜] [AddMonoid β] [DistribMulAction 𝕜 β] [HasBoundedSmul 𝕜 β]
+variable [MonoidWithZero 𝕜] [AddMonoid β] [DistribMulAction 𝕜 β] [BoundedSmul 𝕜 β]
 
-variable [HasLipschitzAdd β]
+variable [LipschitzAdd β]
 
 instance : DistribMulAction 𝕜 (α →ᵇ β) :=
   Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
@@ -1196,11 +1196,11 @@ end DistribMulAction
 
 section Module
 
-variable [Semiring 𝕜] [AddCommMonoid β] [Module 𝕜 β] [HasBoundedSmul 𝕜 β]
+variable [Semiring 𝕜] [AddCommMonoid β] [Module 𝕜 β] [BoundedSmul 𝕜 β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
-variable [HasLipschitzAdd β]
+variable [LipschitzAdd β]
 
 instance : Module 𝕜 (α →ᵇ β) :=
   Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
@@ -1232,7 +1232,7 @@ def toContinuousMapLinearMap : (α →ᵇ β) →ₗ[𝕜] C(α, β)
 
 end Module
 
-end HasBoundedSmul
+end BoundedSmul
 
 section NormedSpace
 

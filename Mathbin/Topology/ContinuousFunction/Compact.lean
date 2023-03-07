@@ -80,7 +80,7 @@ theorem uniformEmbedding_equivBoundedOfCompact : UniformEmbedding (equivBoundedO
 additively equivalent to `C(α, 𝕜)`.
 -/
 @[simps (config := { fullyApplied := false }) apply symm_apply]
-def addEquivBoundedOfCompact [AddMonoid β] [HasLipschitzAdd β] : C(α, β) ≃+ (α →ᵇ β) :=
+def addEquivBoundedOfCompact [AddMonoid β] [LipschitzAdd β] : C(α, β) ≃+ (α →ᵇ β) :=
   ({ toContinuousMapAddHom α β, (equivBoundedOfCompact α β).symm with } : (α →ᵇ β) ≃+ C(α, β)).symm
 #align continuous_map.add_equiv_bounded_of_compact ContinuousMap.addEquivBoundedOfCompact
 

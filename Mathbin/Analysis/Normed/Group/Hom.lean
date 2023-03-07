@@ -494,8 +494,8 @@ theorem sub_apply (f g : NormedAddGroupHom V₁ V₂) (v : V₁) :
 section SMul
 
 variable {R R' : Type _} [MonoidWithZero R] [DistribMulAction R V₂] [PseudoMetricSpace R]
-  [HasBoundedSmul R V₂] [MonoidWithZero R'] [DistribMulAction R' V₂] [PseudoMetricSpace R']
-  [HasBoundedSmul R' V₂]
+  [BoundedSmul R V₂] [MonoidWithZero R'] [DistribMulAction R' V₂] [PseudoMetricSpace R']
+  [BoundedSmul R' V₂]
 
 instance : SMul R (NormedAddGroupHom V₁ V₂)
     where smul r f :=
@@ -629,10 +629,10 @@ theorem sum_apply {ι : Type _} (s : Finset ι) (f : ι → NormedAddGroupHom V�
 
 
 instance {R : Type _} [MonoidWithZero R] [DistribMulAction R V₂] [PseudoMetricSpace R]
-    [HasBoundedSmul R V₂] : DistribMulAction R (NormedAddGroupHom V₁ V₂) :=
+    [BoundedSmul R V₂] : DistribMulAction R (NormedAddGroupHom V₁ V₂) :=
   Function.Injective.distribMulAction coeFnAddHom coe_injective coe_smul
 
-instance {R : Type _} [Semiring R] [Module R V₂] [PseudoMetricSpace R] [HasBoundedSmul R V₂] :
+instance {R : Type _} [Semiring R] [Module R V₂] [PseudoMetricSpace R] [BoundedSmul R V₂] :
     Module R (NormedAddGroupHom V₁ V₂) :=
   Function.Injective.module _ coeFnAddHom coe_injective coe_smul
 

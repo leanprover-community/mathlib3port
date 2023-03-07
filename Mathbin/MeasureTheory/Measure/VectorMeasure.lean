@@ -1447,7 +1447,7 @@ def toMeasureOfZeroLe (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet
       rw [NNReal.coe_tsum_of_nonneg h, ENNReal.coe_tsum]
       · refine' tsum_congr fun n => _
         simp_rw [s.restrict_apply hi₁ (hf₁ n), Set.inter_comm]
-      · exact (NNReal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).Summable)
+      · exact (NNReal.summable_mk h).2 (s.m_Union h₁ h₂).Summable)
 #align measure_theory.signed_measure.to_measure_of_zero_le MeasureTheory.SignedMeasure.toMeasureOfZeroLe
 
 variable (s : SignedMeasure α) {i j : Set α}
