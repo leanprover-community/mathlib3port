@@ -38,6 +38,7 @@ open Category
 
 variable {C : Type u} [Category.{v} C]
 
+#print CategoryTheory.Limits.CoproductDisjoint /-
 /-- Given any pullback diagram of the form
 
 Z  ⟶  X₁
@@ -55,7 +56,9 @@ class CoproductDisjoint (X₁ X₂ : C) where
   mono_inl : ∀ (X) (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : IsColimit (BinaryCofan.mk X₁ X₂)), Mono X₁
   mono_inr : ∀ (X) (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : IsColimit (BinaryCofan.mk X₁ X₂)), Mono X₂
 #align category_theory.limits.coproduct_disjoint CategoryTheory.Limits.CoproductDisjoint
+-/
 
+#print CategoryTheory.Limits.isInitialOfIsPullbackOfIsCoproduct /-
 /-- If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
 
 Z  ⟶  X₁
@@ -69,7 +72,9 @@ def isInitialOfIsPullbackOfIsCoproduct {Z X₁ X₂ X : C} [CoproductDisjoint X�
     {comm : f ≫ pX₁ = g ≫ pX₂} (cZ : IsLimit (PullbackCone.mk _ _ comm)) : IsInitial Z :=
   CoproductDisjoint.isInitialOfIsPullbackOfIsCoproduct cX cZ
 #align category_theory.limits.is_initial_of_is_pullback_of_is_coproduct CategoryTheory.Limits.isInitialOfIsPullbackOfIsCoproduct
+-/
 
+#print CategoryTheory.Limits.isInitialOfIsPullbackOfCoproduct /-
 /-- If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
 
 Z  ⟶  X₁
@@ -84,7 +89,9 @@ noncomputable def isInitialOfIsPullbackOfCoproduct {Z X₁ X₂ : C} [HasBinaryC
     (cZ : IsLimit (PullbackCone.mk _ _ comm)) : IsInitial Z :=
   CoproductDisjoint.isInitialOfIsPullbackOfIsCoproduct (coprodIsCoprod _ _) cZ
 #align category_theory.limits.is_initial_of_is_pullback_of_coproduct CategoryTheory.Limits.isInitialOfIsPullbackOfCoproduct
+-/
 
+#print CategoryTheory.Limits.isInitialOfPullbackOfIsCoproduct /-
 /-- If the coproduct of `X₁` and `X₂` is disjoint, then provided `X₁ ⟶ X ← X₂` is a coproduct the
 pullback is an initial object:
 
@@ -97,7 +104,9 @@ noncomputable def isInitialOfPullbackOfIsCoproduct {X X₁ X₂ : C} [CoproductD
     IsInitial (pullback pX₁ pX₂) :=
   CoproductDisjoint.isInitialOfIsPullbackOfIsCoproduct cX (pullbackIsPullback _ _)
 #align category_theory.limits.is_initial_of_pullback_of_is_coproduct CategoryTheory.Limits.isInitialOfPullbackOfIsCoproduct
+-/
 
+#print CategoryTheory.Limits.isInitialOfPullbackOfCoproduct /-
 /-- If the coproduct of `X₁` and `X₂` is disjoint, the pullback of `X₁ ⟶ X₁ ⨿ X₂` and `X₂ ⟶ X₁ ⨿ X₂`
 is initial.
 -/
@@ -106,6 +115,7 @@ noncomputable def isInitialOfPullbackOfCoproduct {X₁ X₂ : C} [HasBinaryCopro
     IsInitial (pullback (coprod.inl : X₁ ⟶ _ ⨿ X₂) coprod.inr) :=
   isInitialOfIsPullbackOfCoproduct (pullbackIsPullback _ _)
 #align category_theory.limits.is_initial_of_pullback_of_coproduct CategoryTheory.Limits.isInitialOfPullbackOfCoproduct
+-/
 
 instance {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂] :
     Mono (coprod.inl : X₁ ⟶ X₁ ⨿ X₂) :=
@@ -115,13 +125,16 @@ instance {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ 
     Mono (coprod.inr : X₂ ⟶ X₁ ⨿ X₂) :=
   CoproductDisjoint.mono_inr _ _ _ (coprodIsCoprod _ _)
 
+#print CategoryTheory.Limits.CoproductsDisjoint /-
 /-- `C` has disjoint coproducts if every coproduct is disjoint. -/
 class CoproductsDisjoint (C : Type u) [Category.{v} C] where
   CoproductDisjoint : ∀ X Y : C, CoproductDisjoint X Y
 #align category_theory.limits.coproducts_disjoint CategoryTheory.Limits.CoproductsDisjoint
+-/
 
 attribute [instance] coproducts_disjoint.coproduct_disjoint
 
+#print CategoryTheory.Limits.initialMonoClass_of_disjoint_coproducts /-
 /-- If `C` has disjoint coproducts, any morphism out of initial is mono. Note it isn't true in
 general that `C` has strict initial objects, for instance consider the category of types and
 partial functions. -/
@@ -135,6 +148,7 @@ theorem initialMonoClass_of_disjoint_coproducts [CoproductsDisjoint C] : Initial
           uniq := fun (s : BinaryCofan _ _) m w =>
             (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
 #align category_theory.limits.initial_mono_class_of_disjoint_coproducts CategoryTheory.Limits.initialMonoClass_of_disjoint_coproducts
+-/
 
 end Limits
 
