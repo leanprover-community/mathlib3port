@@ -80,17 +80,17 @@ structure CoverLifting (G : C ⥤ D) : Prop where
 #align category_theory.cover_lifting CategoryTheory.CoverLifting
 
 /-- The identity functor on a site is cover-lifting. -/
-theorem id_coverLifting : CoverLifting J J (𝟭 _) :=
+theorem idCoverLifting : CoverLifting J J (𝟭 _) :=
   ⟨fun _ _ h => by simpa using h⟩
-#align category_theory.id_cover_lifting CategoryTheory.id_coverLifting
+#align category_theory.id_cover_lifting CategoryTheory.idCoverLifting
 
 variable {J K}
 
 /-- The composition of two cover-lifting functors are cover-lifting -/
-theorem comp_coverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E}
+theorem compCoverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E}
     (hv : CoverLifting K L G) : CoverLifting J L (F ⋙ G) :=
   ⟨fun _ S h => hu.cover_lift (hv.cover_lift h)⟩
-#align category_theory.comp_cover_lifting CategoryTheory.comp_coverLifting
+#align category_theory.comp_cover_lifting CategoryTheory.compCoverLifting
 
 end CoverLifting
 

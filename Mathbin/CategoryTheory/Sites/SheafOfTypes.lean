@@ -665,7 +665,7 @@ theorem isSheafFor_singleton_iso (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P (Presie
     simp
   · intro t ht
     simpa using ht _ (presieve.singleton_self _)
-#align category_theory.presieve.is_sheaf_for_singleton_iso CategoryTheory.Presieve.isSheafFor_singleton_iso
+#align category_theory.presieve.is_sheaf_for_singleton_iso CategoryTheory.Presieve.isSheafFor_singletonₓ_iso
 
 /-- Every presheaf is a sheaf for the maximal sieve.
 

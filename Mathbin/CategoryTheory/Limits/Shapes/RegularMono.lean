@@ -42,6 +42,7 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 variable {X Y : C}
 
+#print CategoryTheory.RegularMono /-
 /-- A regular monomorphism is a morphism which is the equalizer of some parallel pair. -/
 class RegularMono (f : X ⟶ Y) where
   z : C
@@ -49,14 +50,18 @@ class RegularMono (f : X ⟶ Y) where
   w : f ≫ left = f ≫ right
   IsLimit : IsLimit (Fork.ofι f w)
 #align category_theory.regular_mono CategoryTheory.RegularMono
+-/
 
 attribute [reassoc.1] regular_mono.w
 
+#print CategoryTheory.RegularMono.mono /-
 /-- Every regular monomorphism is a monomorphism. -/
 instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono f :=
   mono_of_isLimit_fork RegularMono.isLimit
 #align category_theory.regular_mono.mono CategoryTheory.RegularMono.mono
+-/
 
+#print CategoryTheory.equalizerRegular /-
 instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] :
     RegularMono (equalizer.ι g h) where
   z := Y
@@ -69,7 +74,9 @@ instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] :
       ext1
       simp [← w]
 #align category_theory.equalizer_regular CategoryTheory.equalizerRegular
+-/
 
+#print CategoryTheory.RegularMono.ofIsSplitMono /-
 /-- Every split monomorphism is a regular monomorphism. -/
 instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] : RegularMono f
     where
@@ -79,7 +86,9 @@ instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono 
   w := by tidy
   IsLimit := isSplitMonoEqualizes f
 #align category_theory.regular_mono.of_is_split_mono CategoryTheory.RegularMono.ofIsSplitMono
+-/
 
+#print CategoryTheory.RegularMono.lift' /-
 /-- If `f` is a regular mono, then any map `k : W ⟶ Y` equalizing `regular_mono.left` and
     `regular_mono.right` induces a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
 def RegularMono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
@@ -87,7 +96,9 @@ def RegularMono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
     { l : W ⟶ X // l ≫ f = k } :=
   Fork.IsLimit.lift' RegularMono.isLimit _ h
 #align category_theory.regular_mono.lift' CategoryTheory.RegularMono.lift'
+-/
 
+#print CategoryTheory.regularOfIsPullbackSndOfRegular /-
 /-- The second leg of a pullback cone is a regular monomorphism if the right component is too.
 
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
@@ -115,7 +126,9 @@ def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
     · erw [← cancel_mono h, category.assoc, category.assoc, comm, reassoc_of z]
     · exact z
 #align category_theory.regular_of_is_pullback_snd_of_regular CategoryTheory.regularOfIsPullbackSndOfRegular
+-/
 
+#print CategoryTheory.regularOfIsPullbackFstOfRegular /-
 /-- The first leg of a pullback cone is a regular monomorphism if the left component is too.
 
 See also `pullback.fst_of_mono` for the basic monomorphism version, and
@@ -126,7 +139,9 @@ def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
     RegularMono f :=
   regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
 #align category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
+-/
 
+#print CategoryTheory.strongMono_of_regularMono /-
 instance (priority := 100) strongMono_of_regularMono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
   StrongMono.mk'
     (by
@@ -139,29 +154,37 @@ instance (priority := 100) strongMono_of_regularMono (f : X ⟶ Y) [RegularMono 
       refine' comm_sq.has_lift.mk' ⟨t, (cancel_mono f).1 _, ht⟩
       simp only [arrow.mk_hom, arrow.hom_mk'_left, category.assoc, ht, sq.w])
 #align category_theory.strong_mono_of_regular_mono CategoryTheory.strongMono_of_regularMono
+-/
 
+#print CategoryTheory.isIso_of_regularMono_of_epi /-
 /-- A regular monomorphism is an isomorphism if it is an epimorphism. -/
 theorem isIso_of_regularMono_of_epi (f : X ⟶ Y) [RegularMono f] [e : Epi f] : IsIso f :=
   isIso_of_epi_of_strongMono _
 #align category_theory.is_iso_of_regular_mono_of_epi CategoryTheory.isIso_of_regularMono_of_epi
+-/
 
 section
 
 variable (C)
 
+#print CategoryTheory.RegularMonoCategory /-
 /-- A regular mono category is a category in which every monomorphism is regular. -/
 class RegularMonoCategory where
   regularMonoOfMono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], RegularMono f
 #align category_theory.regular_mono_category CategoryTheory.RegularMonoCategory
+-/
 
 end
 
+#print CategoryTheory.regularMonoOfMono /-
 /-- In a category in which every monomorphism is regular, we can express every monomorphism as
     an equalizer. This is not an instance because it would create an instance loop. -/
 def regularMonoOfMono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMono f :=
   RegularMonoCategory.regularMonoOfMono _
 #align category_theory.regular_mono_of_mono CategoryTheory.regularMonoOfMono
+-/
 
+#print CategoryTheory.regularMonoCategoryOfSplitMonoCategory /-
 instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCategory C] :
     RegularMonoCategory C
     where regularMonoOfMono _ _ f _ :=
@@ -169,7 +192,9 @@ instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCate
     haveI := is_split_mono_of_mono f
     infer_instance
 #align category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
+-/
 
+#print CategoryTheory.strongMonoCategory_of_regularMonoCategory /-
 instance (priority := 100) strongMonoCategory_of_regularMonoCategory [RegularMonoCategory C] :
     StrongMonoCategory C
     where strongMono_of_mono _ _ f _ :=
@@ -177,7 +202,9 @@ instance (priority := 100) strongMonoCategory_of_regularMonoCategory [RegularMon
     haveI := regular_mono_of_mono f
     infer_instance
 #align category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strongMonoCategory_of_regularMonoCategory
+-/
 
+#print CategoryTheory.RegularEpi /-
 /-- A regular epimorphism is a morphism which is the coequalizer of some parallel pair. -/
 class RegularEpi (f : X ⟶ Y) where
   w : C
@@ -185,14 +212,18 @@ class RegularEpi (f : X ⟶ Y) where
   w : left ≫ f = right ≫ f
   IsColimit : IsColimit (Cofork.ofπ f w)
 #align category_theory.regular_epi CategoryTheory.RegularEpi
+-/
 
 attribute [reassoc.1] regular_epi.w
 
+#print CategoryTheory.RegularEpi.epi /-
 /-- Every regular epimorphism is an epimorphism. -/
 instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :=
   epi_of_isColimit_cofork RegularEpi.isColimit
 #align category_theory.regular_epi.epi CategoryTheory.RegularEpi.epi
+-/
 
+#print CategoryTheory.coequalizerRegular /-
 instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] :
     RegularEpi (coequalizer.π g h) where
   w := X
@@ -205,7 +236,9 @@ instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] :
       ext1
       simp [← w]
 #align category_theory.coequalizer_regular CategoryTheory.coequalizerRegular
+-/
 
+#print CategoryTheory.RegularEpi.ofSplitEpi /-
 /-- Every split epimorphism is a regular epimorphism. -/
 instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : RegularEpi f
     where
@@ -215,7 +248,14 @@ instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : 
   w := by tidy
   IsColimit := isSplitEpiCoequalizes f
 #align category_theory.regular_epi.of_split_epi CategoryTheory.RegularEpi.ofSplitEpi
+-/
 
+/- warning: category_theory.regular_epi.desc' -> CategoryTheory.RegularEpi.desc' is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} {W : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_2 : CategoryTheory.RegularEpi.{u1, u2} C _inst_1 X Y f] (k : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W), (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.RegularEpi.w.{u1, u2} C _inst_1 X Y f _inst_2) W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.RegularEpi.w.{u1, u2} C _inst_1 X Y f _inst_2) X W (CategoryTheory.RegularEpi.left.{u1, u2} C _inst_1 X Y f _inst_2) k) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.RegularEpi.w.{u1, u2} C _inst_1 X Y f _inst_2) X W (CategoryTheory.RegularEpi.right.{u1, u2} C _inst_1 X Y f _inst_2) k)) -> (Subtype.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) (fun (l : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) => Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) X Y W f l) k))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} {W : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_2 : CategoryTheory.RegularEpi.{u1, u2} C _inst_1 X Y f] (k : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W), (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.RegularEpi.W.{u1, u2} C _inst_1 X Y f _inst_2) W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.RegularEpi.W.{u1, u2} C _inst_1 X Y f _inst_2) X W (CategoryTheory.RegularEpi.left.{u1, u2} C _inst_1 X Y f _inst_2) k) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.RegularEpi.W.{u1, u2} C _inst_1 X Y f _inst_2) X W (CategoryTheory.RegularEpi.right.{u1, u2} C _inst_1 X Y f _inst_2) k)) -> (Subtype.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) (fun (l : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) => Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) X Y W f l) k))
+Case conversion may be inaccurate. Consider using '#align category_theory.regular_epi.desc' CategoryTheory.RegularEpi.desc'ₓ'. -/
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
     `regular_epi.right` induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
@@ -224,6 +264,7 @@ def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
   Cofork.IsColimit.desc' RegularEpi.isColimit _ h
 #align category_theory.regular_epi.desc' CategoryTheory.RegularEpi.desc'
 
+#print CategoryTheory.regularOfIsPushoutSndOfRegular /-
 /-- The second leg of a pushout cocone is a regular epimorphism if the right component is too.
 
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
@@ -252,7 +293,9 @@ def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     · erw [← cancel_epi g, ← reassoc_of comm, ← reassoc_of comm, z]
       rfl
 #align category_theory.regular_of_is_pushout_snd_of_regular CategoryTheory.regularOfIsPushoutSndOfRegular
+-/
 
+#print CategoryTheory.regularOfIsPushoutFstOfRegular /-
 /-- The first leg of a pushout cocone is a regular epimorphism if the left component is too.
 
 See also `pushout.fst_of_epi` for the basic epimorphism version, and
@@ -263,7 +306,9 @@ def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     RegularEpi k :=
   regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
 #align category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
+-/
 
+#print CategoryTheory.strongEpi_of_regularEpi /-
 instance (priority := 100) strongEpi_of_regularEpi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
   StrongEpi.mk'
     (by
@@ -279,29 +324,37 @@ instance (priority := 100) strongEpi_of_regularEpi (f : X ⟶ Y) [RegularEpi f] 
             (cancel_epi f).1
               (by simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
 #align category_theory.strong_epi_of_regular_epi CategoryTheory.strongEpi_of_regularEpi
+-/
 
+#print CategoryTheory.isIso_of_regularEpi_of_mono /-
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
 theorem isIso_of_regularEpi_of_mono (f : X ⟶ Y) [RegularEpi f] [m : Mono f] : IsIso f :=
   isIso_of_mono_of_strongEpi _
 #align category_theory.is_iso_of_regular_epi_of_mono CategoryTheory.isIso_of_regularEpi_of_mono
+-/
 
 section
 
 variable (C)
 
+#print CategoryTheory.RegularEpiCategory /-
 /-- A regular epi category is a category in which every epimorphism is regular. -/
 class RegularEpiCategory where
   regularEpiOfEpi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], RegularEpi f
 #align category_theory.regular_epi_category CategoryTheory.RegularEpiCategory
+-/
 
 end
 
+#print CategoryTheory.regularEpiOfEpi /-
 /-- In a category in which every epimorphism is regular, we can express every epimorphism as
     a coequalizer. This is not an instance because it would create an instance loop. -/
 def regularEpiOfEpi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f :=
   RegularEpiCategory.regularEpiOfEpi _
 #align category_theory.regular_epi_of_epi CategoryTheory.regularEpiOfEpi
+-/
 
+#print CategoryTheory.regularEpiCategoryOfSplitEpiCategory /-
 instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategory C] :
     RegularEpiCategory C
     where regularEpiOfEpi _ _ f _ :=
@@ -309,7 +362,9 @@ instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategor
     haveI := is_split_epi_of_epi f
     infer_instance
 #align category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
+-/
 
+#print CategoryTheory.strongEpiCategory_of_regularEpiCategory /-
 instance (priority := 100) strongEpiCategory_of_regularEpiCategory [RegularEpiCategory C] :
     StrongEpiCategory C
     where strongEpi_of_epi _ _ f _ :=
@@ -317,6 +372,7 @@ instance (priority := 100) strongEpiCategory_of_regularEpiCategory [RegularEpiCa
     haveI := regular_epi_of_epi f
     infer_instance
 #align category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strongEpiCategory_of_regularEpiCategory
+-/
 
 end CategoryTheory
 

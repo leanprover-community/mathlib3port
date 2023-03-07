@@ -82,9 +82,9 @@ structure CoverPreserving (G : C ⥤ D) : Prop where
 #align category_theory.cover_preserving CategoryTheory.CoverPreserving
 
 /-- The identity functor on a site is cover-preserving. -/
-theorem id_coverPreserving : CoverPreserving J J (𝟭 _) :=
+theorem idCoverPreserving : CoverPreserving J J (𝟭 _) :=
   ⟨fun U S hS => by simpa using hS⟩
-#align category_theory.id_cover_preserving CategoryTheory.id_coverPreserving
+#align category_theory.id_cover_preserving CategoryTheory.idCoverPreserving
 
 variable (J) (K)
 
