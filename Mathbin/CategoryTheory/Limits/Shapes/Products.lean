@@ -53,16 +53,21 @@ variable {C : Type u} [Category.{v} C]
 -- or `(co)span`, since we already have `discrete.functor`.
 attribute [local tidy] tactic.discrete_cases
 
+#print CategoryTheory.Limits.Fan /-
 /-- A fan over `f : β → C` consists of a collection of maps from an object `P` to every `f b`. -/
 abbrev Fan (f : β → C) :=
   Cone (Discrete.functor f)
 #align category_theory.limits.fan CategoryTheory.Limits.Fan
+-/
 
+#print CategoryTheory.Limits.Cofan /-
 /-- A cofan over `f : β → C` consists of a collection of maps from every `f b` to an object `P`. -/
 abbrev Cofan (f : β → C) :=
   Cocone (Discrete.functor f)
 #align category_theory.limits.cofan CategoryTheory.Limits.Cofan
+-/
 
+#print CategoryTheory.Limits.Fan.mk /-
 /-- A fan over `f : β → C` consists of a collection of maps from an object `P` to every `f b`. -/
 @[simps]
 def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) : Fan f
@@ -70,7 +75,9 @@ def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) : Fan f
   pt := P
   π := { app := fun X => p X.as }
 #align category_theory.limits.fan.mk CategoryTheory.Limits.Fan.mk
+-/
 
+#print CategoryTheory.Limits.Cofan.mk /-
 /-- A cofan over `f : β → C` consists of a collection of maps from every `f b` to an object `P`. -/
 @[simps]
 def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) : Cofan f
@@ -78,28 +85,38 @@ def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) : Cofan f
   pt := P
   ι := { app := fun X => p X.as }
 #align category_theory.limits.cofan.mk CategoryTheory.Limits.Cofan.mk
+-/
 
+#print CategoryTheory.Limits.Fan.proj /-
 -- FIXME dualize as needed below (and rename?)
 /-- Get the `j`th map in the fan -/
 def Fan.proj {f : β → C} (p : Fan f) (j : β) : p.pt ⟶ f j :=
   p.π.app (Discrete.mk j)
 #align category_theory.limits.fan.proj CategoryTheory.Limits.Fan.proj
+-/
 
+#print CategoryTheory.Limits.fan_mk_proj /-
 @[simp]
 theorem fan_mk_proj {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) (j : β) : (Fan.mk P p).proj j = p j :=
   rfl
 #align category_theory.limits.fan_mk_proj CategoryTheory.Limits.fan_mk_proj
+-/
 
+#print CategoryTheory.Limits.HasProduct /-
 /-- An abbreviation for `has_limit (discrete.functor f)`. -/
 abbrev HasProduct (f : β → C) :=
   HasLimit (Discrete.functor f)
 #align category_theory.limits.has_product CategoryTheory.Limits.HasProduct
+-/
 
+#print CategoryTheory.Limits.HasCoproduct /-
 /-- An abbreviation for `has_colimit (discrete.functor f)`. -/
 abbrev HasCoproduct (f : β → C) :=
   HasColimit (Discrete.functor f)
 #align category_theory.limits.has_coproduct CategoryTheory.Limits.HasCoproduct
+-/
 
+#print CategoryTheory.Limits.mkFanLimit /-
 /-- Make a fan `f` into a limit fan by providing `lift`, `fac`, and `uniq` --
   just a convenience lemma to avoid having to go through `discrete` -/
 @[simps]
@@ -111,36 +128,45 @@ def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.pt ⟶ t.pt)
     fac := fun s j => by convert fac s j.as <;> simp
     uniq := fun s m w => uniq s m fun j => w (Discrete.mk j) }
 #align category_theory.limits.mk_fan_limit CategoryTheory.Limits.mkFanLimit
+-/
 
 section
 
 variable (C)
 
+#print CategoryTheory.Limits.HasProductsOfShape /-
 /-- An abbreviation for `has_limits_of_shape (discrete f)`. -/
 abbrev HasProductsOfShape (β : Type v) :=
   HasLimitsOfShape.{v} (Discrete β)
 #align category_theory.limits.has_products_of_shape CategoryTheory.Limits.HasProductsOfShape
+-/
 
+#print CategoryTheory.Limits.HasCoproductsOfShape /-
 /-- An abbreviation for `has_colimits_of_shape (discrete f)`. -/
 abbrev HasCoproductsOfShape (β : Type v) :=
   HasColimitsOfShape.{v} (Discrete β)
 #align category_theory.limits.has_coproducts_of_shape CategoryTheory.Limits.HasCoproductsOfShape
+-/
 
 end
 
+#print CategoryTheory.Limits.piObj /-
 /-- `pi_obj f` computes the product of a family of elements `f`.
 (It is defined as an abbreviation for `limit (discrete.functor f)`,
 so for most facts about `pi_obj f`, you will just use general facts about limits.) -/
 abbrev piObj (f : β → C) [HasProduct f] :=
   limit (Discrete.functor f)
 #align category_theory.limits.pi_obj CategoryTheory.Limits.piObj
+-/
 
+#print CategoryTheory.Limits.sigmaObj /-
 /-- `sigma_obj f` computes the coproduct of a family of elements `f`.
 (It is defined as an abbreviation for `colimit (discrete.functor f)`,
 so for most facts about `sigma_obj f`, you will just use general facts about colimits.) -/
 abbrev sigmaObj (f : β → C) [HasCoproduct f] :=
   colimit (Discrete.functor f)
 #align category_theory.limits.sigma_obj CategoryTheory.Limits.sigmaObj
+-/
 
 -- mathport name: «expr∏ »
 notation "∏ " f:20 => piObj f
@@ -148,44 +174,59 @@ notation "∏ " f:20 => piObj f
 -- mathport name: «expr∐ »
 notation "∐ " f:20 => sigmaObj f
 
+#print CategoryTheory.Limits.Pi.π /-
 /-- The `b`-th projection from the pi object over `f` has the form `∏ f ⟶ f b`. -/
 abbrev Pi.π (f : β → C) [HasProduct f] (b : β) : ∏ f ⟶ f b :=
   limit.π (Discrete.functor f) (Discrete.mk b)
 #align category_theory.limits.pi.π CategoryTheory.Limits.Pi.π
+-/
 
+#print CategoryTheory.Limits.Sigma.ι /-
 /-- The `b`-th inclusion into the sigma object over `f` has the form `f b ⟶ ∐ f`. -/
 abbrev Sigma.ι (f : β → C) [HasCoproduct f] (b : β) : f b ⟶ ∐ f :=
   colimit.ι (Discrete.functor f) (Discrete.mk b)
 #align category_theory.limits.sigma.ι CategoryTheory.Limits.Sigma.ι
+-/
 
+#print CategoryTheory.Limits.productIsProduct /-
 /-- The fan constructed of the projections from the product is limiting. -/
 def productIsProduct (f : β → C) [HasProduct f] : IsLimit (Fan.mk _ (Pi.π f)) :=
   IsLimit.ofIsoLimit (limit.isLimit (Discrete.functor f)) (Cones.ext (Iso.refl _) (by tidy))
 #align category_theory.limits.product_is_product CategoryTheory.Limits.productIsProduct
+-/
 
+#print CategoryTheory.Limits.coproductIsCoproduct /-
 /-- The cofan constructed of the inclusions from the coproduct is colimiting. -/
 def coproductIsCoproduct (f : β → C) [HasCoproduct f] : IsColimit (Cofan.mk _ (Sigma.ι f)) :=
   IsColimit.ofIsoColimit (colimit.isColimit (Discrete.functor f))
     (Cocones.ext (Iso.refl _) (by tidy))
 #align category_theory.limits.coproduct_is_coproduct CategoryTheory.Limits.coproductIsCoproduct
+-/
 
+#print CategoryTheory.Limits.Pi.lift /-
 /-- A collection of morphisms `P ⟶ f b` induces a morphism `P ⟶ ∏ f`. -/
 abbrev Pi.lift {f : β → C} [HasProduct f] {P : C} (p : ∀ b, P ⟶ f b) : P ⟶ ∏ f :=
   limit.lift _ (Fan.mk P p)
 #align category_theory.limits.pi.lift CategoryTheory.Limits.Pi.lift
+-/
 
+#print CategoryTheory.Limits.Sigma.desc /-
 /-- A collection of morphisms `f b ⟶ P` induces a morphism `∐ f ⟶ P`. -/
 abbrev Sigma.desc {f : β → C} [HasCoproduct f] {P : C} (p : ∀ b, f b ⟶ P) : ∐ f ⟶ P :=
   colimit.desc _ (Cofan.mk P p)
 #align category_theory.limits.sigma.desc CategoryTheory.Limits.Sigma.desc
+-/
 
+#print CategoryTheory.Limits.Pi.map /-
 /-- Construct a morphism between categorical products (indexed by the same type)
 from a family of morphisms between the factors.
 -/
 abbrev Pi.map {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b) : ∏ f ⟶ ∏ g :=
   limMap (Discrete.natTrans fun X => p X.as)
 #align category_theory.limits.pi.map CategoryTheory.Limits.Pi.map
+-/
 
+#print CategoryTheory.Limits.Pi.map_mono /-
 instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Mono (p i)] : Mono <| Pi.map p :=
   @Limits.limMap_mono _ _ _ _ _
@@ -193,21 +234,27 @@ instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, 
       dsimp
       infer_instance)
 #align category_theory.limits.pi.map_mono CategoryTheory.Limits.Pi.map_mono
+-/
 
+#print CategoryTheory.Limits.Pi.mapIso /-
 /-- Construct an isomorphism between categorical products (indexed by the same type)
 from a family of isomorphisms between the factors.
 -/
 abbrev Pi.mapIso {f g : β → C} [HasProductsOfShape β C] (p : ∀ b, f b ≅ g b) : ∏ f ≅ ∏ g :=
   lim.mapIso (Discrete.natIso fun X => p X.as)
 #align category_theory.limits.pi.map_iso CategoryTheory.Limits.Pi.mapIso
+-/
 
+#print CategoryTheory.Limits.Sigma.map /-
 /-- Construct a morphism between categorical coproducts (indexed by the same type)
 from a family of morphisms between the factors.
 -/
 abbrev Sigma.map {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b) : ∐ f ⟶ ∐ g :=
   colimMap (Discrete.natTrans fun X => p X.as)
 #align category_theory.limits.sigma.map CategoryTheory.Limits.Sigma.map
+-/
 
+#print CategoryTheory.Limits.Sigma.map_epi /-
 instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Epi (p i)] : Epi <| Sigma.map p :=
   @Limits.colimMap_epi _ _ _ _ _
@@ -215,13 +262,16 @@ instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : �
       dsimp
       infer_instance)
 #align category_theory.limits.sigma.map_epi CategoryTheory.Limits.Sigma.map_epi
+-/
 
+#print CategoryTheory.Limits.Sigma.mapIso /-
 /-- Construct an isomorphism between categorical coproducts (indexed by the same type)
 from a family of isomorphisms between the factors.
 -/
 abbrev Sigma.mapIso {f g : β → C} [HasCoproductsOfShape β C] (p : ∀ b, f b ≅ g b) : ∐ f ≅ ∐ g :=
   colim.mapIso (Discrete.natIso fun X => p X.as)
 #align category_theory.limits.sigma.map_iso CategoryTheory.Limits.Sigma.mapIso
+-/
 
 section Comparison
 
@@ -229,6 +279,12 @@ variable {D : Type u₂} [Category.{v₂} D] (G : C ⥤ D)
 
 variable (f : β → C)
 
+/- warning: category_theory.limits.pi_comparison -> CategoryTheory.Limits.piComparison is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))], Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4)
+but is expected to have type
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))], Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4)
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.pi_comparison CategoryTheory.Limits.piComparisonₓ'. -/
 /-- The comparison morphism for the product of `f`. This is an iso iff `G` preserves the product
 of `f`, see `preserves_product.of_iso_comparison`. -/
 def piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] :
@@ -236,12 +292,24 @@ def piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] :
   Pi.lift fun b => G.map (Pi.π f b)
 #align category_theory.limits.pi_comparison CategoryTheory.Limits.piComparison
 
+/- warning: category_theory.limits.pi_comparison_comp_π -> CategoryTheory.Limits.piComparison_comp_π is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))] (b : β), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) (CategoryTheory.Limits.piComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4) (CategoryTheory.Limits.Pi.π.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4 b)) (CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3) (f b) (CategoryTheory.Limits.Pi.π.{u1, u2, u4} β C _inst_1 f _inst_3 b))
+but is expected to have type
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))] (b : β), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) (CategoryTheory.Limits.piComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4) (CategoryTheory.Limits.Pi.π.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4 b)) (Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 f _inst_3) (f b) (CategoryTheory.Limits.Pi.π.{u1, u2, u4} β C _inst_1 f _inst_3 b))
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.pi_comparison_comp_π CategoryTheory.Limits.piComparison_comp_πₓ'. -/
 @[simp, reassoc.1]
 theorem piComparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (b : β) :
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 #align category_theory.limits.pi_comparison_comp_π CategoryTheory.Limits.piComparison_comp_π
 
+/- warning: category_theory.limits.map_lift_pi_comparison -> CategoryTheory.Limits.map_lift_piComparison is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))] (P : C) (g : forall (j : β), Quiver.Hom.{succ u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) P (f j)), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4)) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 (fun (j : β) => f j) _inst_3)) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4) (CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 (fun (j : β) => f j) _inst_3) (CategoryTheory.Limits.Pi.lift.{u1, u2, u4} β C _inst_1 (fun (j : β) => f j) _inst_3 P g)) (CategoryTheory.Limits.piComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4)) (CategoryTheory.Limits.Pi.lift.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4 (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P) (fun (j : β) => CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P (f j) (g j)))
+but is expected to have type
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))] (P : C) (g : forall (j : β), Quiver.Hom.{succ u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) P (f j)), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4)) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 (fun (j : β) => f j) _inst_3)) (CategoryTheory.Limits.piObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4) (Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P (CategoryTheory.Limits.piObj.{u1, u2, u4} β C _inst_1 (fun (j : β) => f j) _inst_3) (CategoryTheory.Limits.Pi.lift.{u1, u2, u4} β C _inst_1 (fun (j : β) => f j) _inst_3 P g)) (CategoryTheory.Limits.piComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4)) (CategoryTheory.Limits.Pi.lift.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4 (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P) (fun (j : β) => Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P (f j) (g j)))
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.map_lift_pi_comparison CategoryTheory.Limits.map_lift_piComparisonₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc.1]
 theorem map_lift_piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C)
@@ -253,6 +321,12 @@ theorem map_lift_piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (
   simp [← G.map_comp]
 #align category_theory.limits.map_lift_pi_comparison CategoryTheory.Limits.map_lift_piComparison
 
+/- warning: category_theory.limits.sigma_comparison -> CategoryTheory.Limits.sigmaComparison is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))], Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3))
+but is expected to have type
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))], Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3))
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.sigma_comparison CategoryTheory.Limits.sigmaComparisonₓ'. -/
 /-- The comparison morphism for the coproduct of `f`. This is an iso iff `G` preserves the coproduct
 of `f`, see `preserves_coproduct.of_iso_comparison`. -/
 def sigmaComparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] :
@@ -260,12 +334,24 @@ def sigmaComparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] :
   Sigma.desc fun b => G.map (Sigma.ι f b)
 #align category_theory.limits.sigma_comparison CategoryTheory.Limits.sigmaComparison
 
+/- warning: category_theory.limits.ι_comp_sigma_comparison -> CategoryTheory.Limits.ι_comp_sigmaComparison is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))] (b : β), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3))) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Limits.Sigma.ι.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4 b) (CategoryTheory.Limits.sigmaComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4)) (CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3) (CategoryTheory.Limits.Sigma.ι.{u1, u2, u4} β C _inst_1 f _inst_3 b))
+but is expected to have type
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))] (b : β), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3))) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Limits.Sigma.ι.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4 b) (CategoryTheory.Limits.sigmaComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4)) (Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3) (CategoryTheory.Limits.Sigma.ι.{u1, u2, u4} β C _inst_1 f _inst_3 b))
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.ι_comp_sigma_comparison CategoryTheory.Limits.ι_comp_sigmaComparisonₓ'. -/
 @[simp, reassoc.1]
 theorem ι_comp_sigmaComparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (b : β) :
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 #align category_theory.limits.ι_comp_sigma_comparison CategoryTheory.Limits.ι_comp_sigmaComparison
 
+/- warning: category_theory.limits.sigma_comparison_map_desc -> CategoryTheory.Limits.sigmaComparison_map_desc is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b))] (P : C) (g : forall (j : β), Quiver.Hom.{succ u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) (f j) P), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P)) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P) (CategoryTheory.Limits.sigmaComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4) (CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3) P (CategoryTheory.Limits.Sigma.desc.{u1, u2, u4} β C _inst_1 f _inst_3 P g))) (CategoryTheory.Limits.Sigma.desc.{u1, u3, u5} β D _inst_2 (fun (b : β) => CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f b)) _inst_4 (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G P) (fun (j : β) => CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G (f j) P (g j)))
+but is expected to have type
+  forall {β : Type.{u1}} {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) (f : β -> C) [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u4} β C _inst_1 f] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b))] (P : C) (g : forall (j : β), Quiver.Hom.{succ u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) (f j) P), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P)) (CategoryTheory.CategoryStruct.comp.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (CategoryTheory.Limits.sigmaObj.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P) (CategoryTheory.Limits.sigmaComparison.{u1, u2, u3, u4, u5} β C _inst_1 D _inst_2 G f _inst_3 _inst_4) (Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.Limits.sigmaObj.{u1, u2, u4} β C _inst_1 f _inst_3) P (CategoryTheory.Limits.Sigma.desc.{u1, u2, u4} β C _inst_1 f _inst_3 P g))) (CategoryTheory.Limits.Sigma.desc.{u1, u3, u5} β D _inst_2 (fun (b : β) => Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f b)) _inst_4 (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) P) (fun (j : β) => Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (f j) P (g j)))
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.sigma_comparison_map_desc CategoryTheory.Limits.sigmaComparison_map_descₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc.1]
 theorem sigmaComparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C)
@@ -282,27 +368,36 @@ end Comparison
 
 variable (C)
 
+#print CategoryTheory.Limits.HasProducts /-
 /-- An abbreviation for `Π J, has_limits_of_shape (discrete J) C` -/
 abbrev HasProducts :=
   ∀ J : Type w, HasLimitsOfShape (Discrete J) C
 #align category_theory.limits.has_products CategoryTheory.Limits.HasProducts
+-/
 
+#print CategoryTheory.Limits.HasCoproducts /-
 /-- An abbreviation for `Π J, has_colimits_of_shape (discrete J) C` -/
 abbrev HasCoproducts :=
   ∀ J : Type w, HasColimitsOfShape (Discrete J) C
 #align category_theory.limits.has_coproducts CategoryTheory.Limits.HasCoproducts
+-/
 
 variable {C}
 
+#print CategoryTheory.Limits.has_smallest_products_of_hasProducts /-
 theorem has_smallest_products_of_hasProducts [HasProducts.{w} C] : HasProducts.{0} C := fun J =>
   hasLimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 #align category_theory.limits.has_smallest_products_of_has_products CategoryTheory.Limits.has_smallest_products_of_hasProducts
+-/
 
+#print CategoryTheory.Limits.has_smallest_coproducts_of_hasCoproducts /-
 theorem has_smallest_coproducts_of_hasCoproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C :=
   fun J =>
   hasColimitsOfShape_of_equivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
 #align category_theory.limits.has_smallest_coproducts_of_has_coproducts CategoryTheory.Limits.has_smallest_coproducts_of_hasCoproducts
+-/
 
+#print CategoryTheory.Limits.hasProducts_of_limit_fans /-
 theorem hasProducts_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
     (lf_is_limit : ∀ {J : Type w} (f : J → C), IsLimit (lf f)) : HasProducts.{w} C :=
   fun J : Type w =>
@@ -312,6 +407,7 @@ theorem hasProducts_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
         ⟨(Cones.postcompose Discrete.natIsoFunctor.inv).obj (lf fun j => F.obj ⟨j⟩),
           (IsLimit.postcomposeInvEquiv _ _).symm (lf_is_limit _)⟩ }
 #align category_theory.limits.has_products_of_limit_fans CategoryTheory.Limits.hasProducts_of_limit_fans
+-/
 
 /-!
 (Co)products over a type with a unique term.
@@ -322,6 +418,7 @@ section Unique
 
 variable {C} [Unique β] (f : β → C)
 
+#print CategoryTheory.Limits.limitConeOfUnique /-
 /-- The limit cone for the product over an index type with exactly one term. -/
 @[simps]
 def limitConeOfUnique : LimitCone (Discrete.functor f)
@@ -347,18 +444,24 @@ def limitConeOfUnique : LimitCone (Discrete.functor f)
         dsimp at w
         simpa using w }
 #align category_theory.limits.limit_cone_of_unique CategoryTheory.Limits.limitConeOfUnique
+-/
 
+#print CategoryTheory.Limits.hasProduct_unique /-
 instance (priority := 100) hasProduct_unique : HasProduct f :=
   HasLimit.mk (limitConeOfUnique f)
 #align category_theory.limits.has_product_unique CategoryTheory.Limits.hasProduct_unique
+-/
 
+#print CategoryTheory.Limits.productUniqueIso /-
 /-- A product over a index type with exactly one term is just the object over that term. -/
 @[simps]
 def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 #align category_theory.limits.product_unique_iso CategoryTheory.Limits.productUniqueIso
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.Limits.colimitCoconeOfUnique /-
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
@@ -386,16 +489,21 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
         dsimp at w
         simpa using w }
 #align category_theory.limits.colimit_cocone_of_unique CategoryTheory.Limits.colimitCoconeOfUnique
+-/
 
+#print CategoryTheory.Limits.hasCoproduct_unique /-
 instance (priority := 100) hasCoproduct_unique : HasCoproduct f :=
   HasColimit.mk (colimitCoconeOfUnique f)
 #align category_theory.limits.has_coproduct_unique CategoryTheory.Limits.hasCoproduct_unique
+-/
 
+#print CategoryTheory.Limits.coproductUniqueIso /-
 /-- A coproduct over a index type with exactly one term is just the object over that term. -/
 @[simps]
 def coproductUniqueIso : ∐ f ≅ f default :=
   IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (colimitCoconeOfUnique f).IsColimit
 #align category_theory.limits.coproduct_unique_iso CategoryTheory.Limits.coproductUniqueIso
+-/
 
 end Unique
 
@@ -407,11 +515,14 @@ section
 
 variable [HasProduct f] [HasProduct (f ∘ ε)]
 
+#print CategoryTheory.Limits.Pi.reindex /-
 /-- Reindex a categorical product via an equivalence of the index types. -/
 def Pi.reindex : piObj (f ∘ ε) ≅ piObj f :=
   HasLimit.isoOfEquivalence (Discrete.equivalence ε) (Discrete.natIso fun i => Iso.refl _)
 #align category_theory.limits.pi.reindex CategoryTheory.Limits.Pi.reindex
+-/
 
+#print CategoryTheory.Limits.Pi.reindex_hom_π /-
 @[simp, reassoc.1]
 theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b :=
   by
@@ -423,11 +534,14 @@ theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = 
   simpa [eq_to_hom_map] using
     limit.w (discrete.functor (f ∘ ε)) (discrete.eq_to_hom' (ε.symm_apply_apply b))
 #align category_theory.limits.pi.reindex_hom_π CategoryTheory.Limits.Pi.reindex_hom_π
+-/
 
+#print CategoryTheory.Limits.Pi.reindex_inv_π /-
 @[simp, reassoc.1]
 theorem Pi.reindex_inv_π (b : β) : (Pi.reindex ε f).inv ≫ Pi.π (f ∘ ε) b = Pi.π f (ε b) := by
   simp [iso.inv_comp_eq]
 #align category_theory.limits.pi.reindex_inv_π CategoryTheory.Limits.Pi.reindex_inv_π
+-/
 
 end
 
@@ -435,11 +549,14 @@ section
 
 variable [HasCoproduct f] [HasCoproduct (f ∘ ε)]
 
+#print CategoryTheory.Limits.Sigma.reindex /-
 /-- Reindex a categorical coproduct via an equivalence of the index types. -/
 def Sigma.reindex : sigmaObj (f ∘ ε) ≅ sigmaObj f :=
   HasColimit.isoOfEquivalence (Discrete.equivalence ε) (Discrete.natIso fun i => Iso.refl _)
 #align category_theory.limits.sigma.reindex CategoryTheory.Limits.Sigma.reindex
+-/
 
+#print CategoryTheory.Limits.Sigma.ι_reindex_hom /-
 @[simp, reassoc.1]
 theorem Sigma.ι_reindex_hom (b : β) :
     Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) :=
@@ -452,11 +569,14 @@ theorem Sigma.ι_reindex_hom (b : β) :
   simp [eq_to_hom_map, ←
     colimit.w (discrete.functor f) (discrete.eq_to_hom' (ε.apply_symm_apply (ε b)))]
 #align category_theory.limits.sigma.ι_reindex_hom CategoryTheory.Limits.Sigma.ι_reindex_hom
+-/
 
+#print CategoryTheory.Limits.Sigma.ι_reindex_inv /-
 @[simp, reassoc.1]
 theorem Sigma.ι_reindex_inv (b : β) :
     Sigma.ι f (ε b) ≫ (Sigma.reindex ε f).inv = Sigma.ι (f ∘ ε) b := by simp [iso.comp_inv_eq]
 #align category_theory.limits.sigma.ι_reindex_inv CategoryTheory.Limits.Sigma.ι_reindex_inv
+-/
 
 end
 
