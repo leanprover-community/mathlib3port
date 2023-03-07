@@ -103,10 +103,12 @@ theorem eq_one_or_neg_one_of_mul_eq_one' {z w : ℤ} (h : z * w = 1) :
 #align int.eq_one_or_neg_one_of_mul_eq_one' Int.eq_one_or_neg_one_of_mul_eq_one'
 -/
 
+#print Int.eq_of_mul_eq_one /-
 theorem eq_of_mul_eq_one {z w : ℤ} (h : z * w = 1) : z = w :=
   (eq_one_or_neg_one_of_mul_eq_one' h).elim (fun h => h.1.trans h.2.symm) fun h =>
     h.1.trans h.2.symm
 #align int.eq_of_mul_eq_one Int.eq_of_mul_eq_one
+-/
 
 #print Int.mul_eq_one_iff_eq_one_or_neg_one /-
 theorem mul_eq_one_iff_eq_one_or_neg_one {z w : ℤ} : z * w = 1 ↔ z = 1 ∧ w = 1 ∨ z = -1 ∧ w = -1 :=

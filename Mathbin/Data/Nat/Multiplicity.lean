@@ -258,7 +258,8 @@ theorem multiplicity_choose_prime_pow_add_multiplicity {p n k : ℕ} (hp : p.Pri
 theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : k ≠ 0) :
     multiplicity p (choose (p ^ n) k) =
       ↑(n - (multiplicity p k).get (finite_nat_iff.2 ⟨hp.ne_one, hk0.bot_lt⟩)) :=
-  PartENat.eq_coe_sub_of_add_eq_coe <| multiplicity_choose_prime_pow_add_multiplicity hp hkn hk0
+  PartENat.eq_natCast_sub_of_add_eq_natCast <|
+    multiplicity_choose_prime_pow_add_multiplicity hp hkn hk0
 #align nat.prime.multiplicity_choose_prime_pow Nat.Prime.multiplicity_choose_prime_pow
 
 end Prime
