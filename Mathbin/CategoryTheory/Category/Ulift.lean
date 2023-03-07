@@ -188,7 +188,7 @@ def ULiftHom.down : ULiftHom C ⥤ C where
 lean 3 declaration is
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max u3 u1, u2, u2} C _inst_1 (CategoryTheory.ULiftHom.{u3, u2} C) (CategoryTheory.ULiftHom.category.{u1, u3, u2} C _inst_1)
 but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max u1 u3, u2, u2} C (CategoryTheory.ULiftHom.{u3, u2} C) _inst_1 (CategoryTheory.instCategoryULiftHom.{u1, u3, u2} C _inst_1)
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max u1 u3, u2, u2} C (CategoryTheory.ULiftHom.{u3, u2} C) _inst_1 (CategoryTheory.ULiftHom.category.{u1, u3, u2} C _inst_1)
 Case conversion may be inaccurate. Consider using '#align category_theory.ulift_hom.equiv CategoryTheory.ULiftHom.equivₓ'. -/
 /-- The equivalence between `C` and `ulift_hom C`. -/
 def ULiftHom.equiv : C ≌ ULiftHom C
@@ -270,7 +270,7 @@ instance [Inhabited C] : Inhabited (AsSmall C) :=
 lean 3 declaration is
   forall (C : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u3, u4} C], CategoryTheory.Equivalence.{u3, max u1 u3, u4, max u4 u2} C _inst_2 (CategoryTheory.ULiftHom.{u1, max u4 u2} (ULift.{u2, u4} C)) (CategoryTheory.ULiftHom.category.{u3, u1, max u4 u2} (ULift.{u2, u4} C) (CategoryTheory.uliftCategory.{u3, u4, u2} C _inst_2))
 but is expected to have type
-  forall (C : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u3, u4} C], CategoryTheory.Equivalence.{u3, max u3 u1, u4, max u2 u4} C (CategoryTheory.ULiftHom.{u1, max u2 u4} (ULift.{u2, u4} C)) _inst_2 (CategoryTheory.instCategoryULiftHom.{u3, u1, max u4 u2} (ULift.{u2, u4} C) (CategoryTheory.uliftCategory.{u3, u4, u2} C _inst_2))
+  forall (C : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u3, u4} C], CategoryTheory.Equivalence.{u3, max u3 u1, u4, max u2 u4} C (CategoryTheory.ULiftHom.{u1, max u2 u4} (ULift.{u2, u4} C)) _inst_2 (CategoryTheory.ULiftHom.category.{u3, u1, max u4 u2} (ULift.{u2, u4} C) (CategoryTheory.uliftCategory.{u3, u4, u2} C _inst_2))
 Case conversion may be inaccurate. Consider using '#align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.ULiftHomULiftCategory.equivₓ'. -/
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def ULiftHomULiftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] :
