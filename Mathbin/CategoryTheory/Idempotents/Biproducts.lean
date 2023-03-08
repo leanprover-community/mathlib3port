@@ -134,18 +134,18 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
       snd := P.complement.decompIdP
       inl := P.decompIdI
       inr := P.complement.decompIdI
-      inl_fst' := P.decomp_id.symm
-      inl_snd' :=
+      inl_fst := P.decomp_id.symm
+      inl_snd :=
         by
         simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [comp_id, sub_self]
-      inr_fst' :=
+      inr_fst :=
         by
         simp only [decomp_id_i_f, complement_p, decomp_id_p_f, sub_comp, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [id_comp, sub_self]
-      inr_snd' := P.complement.decomp_id.symm }
+      inr_snd := P.complement.decomp_id.symm }
     (by
       simp only [hom_ext, ← decomp_p, quiver.hom.add_comm_group_add_f, to_karoubi_map_f, id_eq,
         coe_p, complement_p, add_sub_cancel'_right])

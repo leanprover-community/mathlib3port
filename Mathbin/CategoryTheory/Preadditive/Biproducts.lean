@@ -213,7 +213,7 @@ variable {f : J → C} [HasBiproduct f]
 -/
 @[simp]
 theorem biproduct.total : (∑ j : J, biproduct.π f j ≫ biproduct.ι f j) = 𝟙 (⨁ f) :=
-  IsBilimit.total (Biproduct.isBilimit _)
+  IsBilimit.total (biproduct.isBilimit _)
 #align category_theory.limits.biproduct.total CategoryTheory.Limits.biproduct.total
 
 theorem biproduct.lift_eq {T : C} {g : ∀ j, T ⟶ f j} :
@@ -500,9 +500,9 @@ def binaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSplitMono f] 
     let i' : IsColimit c' := isCokernelEpiComp i (retraction f) (by simp)
     let i'' := isColimitCoforkOfCokernelCofork i'
     (splitEpiOfIdempotentOfIsColimitCofork C (by simp) i'').section_
-  inl_fst' := by simp
-  inl_snd' := by simp
-  inr_fst' := by
+  inl_fst := by simp
+  inl_snd := by simp
+  inr_fst := by
     dsimp only
     rw [split_epi_of_idempotent_of_is_colimit_cofork_section_,
       is_colimit_cofork_of_cokernel_cofork_desc, is_cokernel_epi_comp_desc]
@@ -513,7 +513,7 @@ def binaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSplitMono f] 
       cofork.is_colimit.π_desc_assoc, cokernel_cofork.π_of_π, is_split_mono.id_assoc]
     apply sub_eq_zero_of_eq
     apply category.id_comp
-  inr_snd' := by apply split_epi.id
+  inr_snd := by apply split_epi.id
 #align category_theory.limits.binary_bicone_of_is_split_mono_of_cokernel CategoryTheory.Limits.binaryBiconeOfIsSplitMonoOfCokernel
 
 /-- The bicone constructed in `binary_bicone_of_split_mono_of_cokernel` is a bilimit.
@@ -612,9 +612,9 @@ def binaryBiconeOfIsSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [IsSplitEpi f] {c :
     snd := f
     inl := c.ι
     inr := section_ f
-    inl_fst' := by apply split_mono.id
-    inl_snd' := by simp
-    inr_fst' := by
+    inl_fst := by apply split_mono.id
+    inl_snd := by simp
+    inr_fst := by
       dsimp only
       rw [split_mono_of_idempotent_of_is_limit_fork_retraction, is_limit_fork_of_kernel_fork_lift,
         is_kernel_comp_mono_lift]
@@ -623,7 +623,7 @@ def binaryBiconeOfIsSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [IsSplitEpi f] {c :
       apply zero_of_comp_mono c.ι
       simp only [comp_sub, category.comp_id, category.assoc, sub_self, fork.is_limit.lift_ι,
         fork.ι_of_ι, is_split_epi.id_assoc]
-    inr_snd' := by simp }
+    inr_snd := by simp }
 #align category_theory.limits.binary_bicone_of_is_split_epi_of_kernel CategoryTheory.Limits.binaryBiconeOfIsSplitEpiOfKernel
 
 /-- The bicone constructed in `binary_bicone_of_is_split_epi_of_kernel` is a bilimit.

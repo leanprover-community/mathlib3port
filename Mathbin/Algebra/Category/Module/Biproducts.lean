@@ -149,7 +149,7 @@ on the dependent function type
 @[simps hom_apply]
 noncomputable def biproductIsoPi [Fintype J] (f : J → ModuleCat.{v} R) :
     (⨁ f : ModuleCat.{v} R) ≅ ModuleCat.of R (∀ j, f j) :=
-  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).IsLimit
+  IsLimit.conePointUniqueUpToIso (biproduct.isLimit f) (productLimitCone f).IsLimit
 #align Module.biproduct_iso_pi ModuleCat.biproductIsoPi
 
 @[simp, elementwise]

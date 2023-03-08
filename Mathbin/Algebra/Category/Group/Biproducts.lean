@@ -144,7 +144,7 @@ on the dependent function type
 @[simps hom_apply]
 noncomputable def biproductIsoPi (f : J → AddCommGroupCat.{u}) :
     (⨁ f : AddCommGroupCat) ≅ AddCommGroupCat.of (∀ j, f j) :=
-  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).IsLimit
+  IsLimit.conePointUniqueUpToIso (biproduct.isLimit f) (productLimitCone f).IsLimit
 #align AddCommGroup.biproduct_iso_pi AddCommGroupCat.biproductIsoPi
 
 @[simp, elementwise]
