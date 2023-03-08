@@ -1188,7 +1188,7 @@ protected theorem mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.6882 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.6884 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.6882 x._@.Mathlib.Algebra.Group.Units._hyg.6884) a))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.6867 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.6869 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.6867 x._@.Mathlib.Algebra.Group.Units._hyg.6869) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_right_injective IsUnit.mul_right_injectiveₓ'. -/
 @[to_additive]
 protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ =>
