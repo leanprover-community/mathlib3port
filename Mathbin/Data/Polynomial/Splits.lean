@@ -78,7 +78,7 @@ theorem splits_of_map_eq_c {f : K[X]} {a : L} (h : f.map i = C a) : Splits i f :
 
 @[simp]
 theorem splits_c (a : K) : Splits i (C a) :=
-  splits_of_map_eq_c i (map_c i)
+  splits_of_map_eq_c i (map_C i)
 #align polynomial.splits_C Polynomial.splits_c
 
 theorem splits_of_map_degree_eq_one {f : K[X]} (hf : degree (f.map i) = 1) : Splits i f :=

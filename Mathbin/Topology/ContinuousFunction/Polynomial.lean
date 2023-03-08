@@ -167,7 +167,7 @@ theorem polynomialFunctions_separatesPoints (X : Set R) : (polynomialFunctions X
   by
   -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.X, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
-  dsimp; simp only [Polynomial.eval_x]
+  dsimp; simp only [Polynomial.eval_X]
   exact fun h' => h (Subtype.ext h')
 #align polynomial_functions_separates_points polynomialFunctions_separatesPoints
 
@@ -190,8 +190,8 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
     · ext x
-      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_toRingHom, Polynomial.eval_x,
-        Polynomial.eval_neg, Polynomial.eval_c, Polynomial.eval_smul, smul_eq_mul,
+      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_toRingHom, Polynomial.eval_X,
+        Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul, smul_eq_mul,
         Polynomial.eval_mul, Polynomial.eval_add, Polynomial.coe_aeval_eq_eval,
         Polynomial.eval_comp, Polynomial.toContinuousMapOnAlgHom_apply,
         Polynomial.toContinuousMapOn_apply, Polynomial.toContinuousMap_apply]

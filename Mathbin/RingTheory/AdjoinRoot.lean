@@ -667,7 +667,7 @@ def equiv (f : F[X]) (hf : f ≠ 0) :
   (powerBasis hf).liftEquiv'.trans
     ((Equiv.refl _).subtypeEquiv fun x =>
       by
-      rw [power_basis_gen, minpoly_root hf, Polynomial.map_mul, roots_mul, Polynomial.map_c,
+      rw [power_basis_gen, minpoly_root hf, Polynomial.map_mul, roots_mul, Polynomial.map_C,
         roots_C, add_zero, Equiv.refl_apply]
       rw [← Polynomial.map_mul]; exact map_monic_ne_zero (monic_mul_leading_coeff_inv hf))
 #align adjoin_root.equiv AdjoinRoot.equiv

@@ -465,7 +465,7 @@ theorem splits_x_pow_sub_one [H : IsCyclotomicExtension S K L] (hS : n ∈ S) :
     Splits (algebraMap K L) (X ^ (n : ℕ) - 1) :=
   by
   rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow,
-    Polynomial.map_x]
+    Polynomial.map_X]
   obtain ⟨z, hz⟩ := ((isCyclotomicExtension_iff _ _ _).1 H).1 hS
   exact X_pow_sub_one_splits hz
 #align is_cyclotomic_extension.splits_X_pow_sub_one IsCyclotomicExtension.splits_x_pow_sub_one
@@ -493,7 +493,7 @@ theorem splitting_field_x_pow_sub_one : IsSplittingField K L (X ^ (n : ℕ) - 1)
       congr
       refine' Set.ext fun x => _
       simp only [Polynomial.map_pow, mem_singleton_iff, Multiset.mem_toFinset, exists_eq_left,
-        mem_set_of_eq, Polynomial.map_x, Polynomial.map_one, Finset.mem_coe, Polynomial.map_sub]
+        mem_set_of_eq, Polynomial.map_X, Polynomial.map_one, Finset.mem_coe, Polynomial.map_sub]
       rwa [← RingHom.map_one C, mem_roots (@X_pow_sub_C_ne_zero L _ _ _ n.pos _), is_root.def,
         eval_sub, eval_pow, eval_C, eval_X, sub_eq_zero] }
 #align is_cyclotomic_extension.splitting_field_X_pow_sub_one IsCyclotomicExtension.splitting_field_x_pow_sub_one

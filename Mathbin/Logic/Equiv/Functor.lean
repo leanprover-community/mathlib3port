@@ -68,7 +68,7 @@ end Functor
 
 namespace Bifunctor
 
-variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [IsLawfulBifunctor F]
+variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [LawfulBifunctor F]
 
 /-- Apply a bifunctor to a pair of `equiv`s. -/
 def mapEquiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β'

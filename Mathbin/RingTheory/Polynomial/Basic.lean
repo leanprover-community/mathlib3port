@@ -766,7 +766,7 @@ theorem polynomialQuotientEquivQuotientPolynomial_symm_mk (I : Ideal R) (f : R[X
     I.polynomialQuotientEquivQuotientPolynomial.symm (Quotient.mk _ f) = f.map (Quotient.mk I) := by
   rw [polynomial_quotient_equiv_quotient_polynomial, RingEquiv.symm_mk, [anonymous],
     Ideal.Quotient.lift_mk, coe_eval₂_ring_hom, eval₂_eq_eval_map, ← Polynomial.map_map, ←
-    eval₂_eq_eval_map, Polynomial.eval₂_c_x]
+    eval₂_eq_eval_map, Polynomial.eval₂_C_X]
 #align ideal.polynomial_quotient_equiv_quotient_polynomial_symm_mk Ideal.polynomialQuotientEquivQuotientPolynomial_symm_mk
 
 @[simp]
@@ -842,7 +842,7 @@ variable (σ) {r : R}
 namespace Polynomial
 
 theorem prime_c_iff : Prime (C r) ↔ Prime r :=
-  ⟨comap_prime C (evalRingHom (0 : R)) fun r => eval_c, fun hr =>
+  ⟨comap_prime C (evalRingHom (0 : R)) fun r => eval_C, fun hr =>
     by
     have := hr.1
     rw [← Ideal.span_singleton_prime] at hr⊢

@@ -523,7 +523,7 @@ noncomputable def quotientSpanXSubCAlgEquiv (x : R) :
   (AlgEquiv.restrictScalars R <|
           Ideal.quotientEquivAlgOfEq R
             (ker_eval_ring_hom x : RingHom.ker (aeval x).toRingHom = _)).symm.trans <|
-    Ideal.quotientKerAlgEquivOfRightInverse fun _ => eval_c
+    Ideal.quotientKerAlgEquivOfRightInverse fun _ => eval_C
 #align polynomial.quotient_span_X_sub_C_alg_equiv Polynomial.quotientSpanXSubCAlgEquiv
 
 @[simp]

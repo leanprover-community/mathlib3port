@@ -330,7 +330,7 @@ theorem derivative_map [Semiring S] (p : R[X]) (f : R →+* S) :
   rw [derivative_apply, derivative_apply]
   rw [sum_over_range' _ _ (n + 1) ((le_max_left _ _).trans_lt (lt_add_one _))]
   rw [sum_over_range' _ _ (n + 1) ((le_max_right _ _).trans_lt (lt_add_one _))]
-  simp only [Polynomial.map_sum, Polynomial.map_mul, Polynomial.map_c, map_mul, coeff_map,
+  simp only [Polynomial.map_sum, Polynomial.map_mul, Polynomial.map_C, map_mul, coeff_map,
     map_natCast, Polynomial.map_nat_cast, Polynomial.map_pow, map_X]
   all_goals intro n; rw [zero_mul, C_0, zero_mul]
 #align polynomial.derivative_map Polynomial.derivative_map

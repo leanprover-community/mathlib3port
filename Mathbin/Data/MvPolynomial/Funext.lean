@@ -67,7 +67,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
       exact Fin.cases (eval x q) x i
     apply induction_on p
     · intro r
-      simp only [eval_C, Polynomial.eval_c, RingHom.coe_comp, eval₂_hom_C]
+      simp only [eval_C, Polynomial.eval_C, RingHom.coe_comp, eval₂_hom_C]
     · intros
       simp only [*, RingHom.map_add, Polynomial.eval_add]
     · intro φ i hφ
@@ -75,9 +75,9 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
       congr 1
       by_cases hi : i = 0
       · subst hi
-        simp only [Polynomial.eval_x, Fin.cases_zero]
+        simp only [Polynomial.eval_X, Fin.cases_zero]
       · rw [← Fin.succ_pred i hi]
-        simp only [eval_X, Polynomial.eval_c, Fin.cases_succ]
+        simp only [eval_X, Polynomial.eval_C, Fin.cases_succ]
     · infer_instance
 #align mv_polynomial.funext_fin mv_polynomial.funext_fin
 

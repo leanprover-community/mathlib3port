@@ -169,7 +169,7 @@ the unique `R`-algebra homomorphism from `R[X]` to `A` sending `X` to `x`.
 This is a stronger variant of the linear map `polynomial.leval`. -/
 def aeval : R[X] →ₐ[R] A :=
   { eval₂RingHom' (algebraMap R A) x fun a => Algebra.commutes _ _ with
-    commutes' := fun r => eval₂_c _ _ }
+    commutes' := fun r => eval₂_C _ _ }
 #align polynomial.aeval Polynomial.aeval
 
 variable {R A}
@@ -199,12 +199,12 @@ theorem aeval_zero : aeval x (0 : R[X]) = 0 :=
 
 @[simp]
 theorem aeval_x : aeval x (X : R[X]) = x :=
-  eval₂_x _ x
+  eval₂_X _ x
 #align polynomial.aeval_X Polynomial.aeval_x
 
 @[simp]
 theorem aeval_c (r : R) : aeval x (C r) = algebraMap R A r :=
-  eval₂_c _ x
+  eval₂_C _ x
 #align polynomial.aeval_C Polynomial.aeval_c
 
 @[simp]
@@ -214,7 +214,7 @@ theorem aeval_monomial {n : ℕ} {r : R} : aeval x (monomial n r) = algebraMap _
 
 @[simp]
 theorem aeval_x_pow {n : ℕ} : aeval x ((X : R[X]) ^ n) = x ^ n :=
-  eval₂_x_pow _ _
+  eval₂_X_pow _ _
 #align polynomial.aeval_X_pow Polynomial.aeval_x_pow
 
 @[simp]
@@ -389,12 +389,12 @@ variable (g : R →ₐ[S] A') (y : A')
 
 @[simp]
 theorem aevalTower_x : aevalTower g y X = y :=
-  eval₂_x _ _
+  eval₂_X _ _
 #align polynomial.aeval_tower_X Polynomial.aevalTower_x
 
 @[simp]
 theorem aevalTower_c (x : R) : aevalTower g y (C x) = g x :=
-  eval₂_c _ _
+  eval₂_C _ _
 #align polynomial.aeval_tower_C Polynomial.aevalTower_c
 
 @[simp]
@@ -404,7 +404,7 @@ theorem aevalTower_comp_c : (aevalTower g y : R[X] →+* A').comp C = g :=
 
 @[simp]
 theorem aevalTower_algebraMap (x : R) : aevalTower g y (algebraMap R R[X] x) = g x :=
-  eval₂_c _ _
+  eval₂_C _ _
 #align polynomial.aeval_tower_algebra_map Polynomial.aevalTower_algebraMap
 
 @[simp]

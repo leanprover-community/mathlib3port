@@ -85,7 +85,7 @@ theorem x_pow_sub_x_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n
       (X_pow_sub_X_sub_one_irreducible hn1)
   ·
     rwa [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_one,
-      Polynomial.map_x] at h
+      Polynomial.map_X] at h
   · exact hp.symm ▸ (trinomial_monic zero_lt_one hn).IsPrimitive
 #align polynomial.X_pow_sub_X_sub_one_irreducible_rat Polynomial.x_pow_sub_x_sub_one_irreducible_rat
 

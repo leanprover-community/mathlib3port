@@ -38,7 +38,7 @@ variable (R : Type u) [CommSemiring R] {S : Type v} [CommSemiring S] (p q : ℕ)
 
 /-- Expand the polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`. -/
 noncomputable def expand : R[X] →ₐ[R] R[X] :=
-  { (eval₂RingHom C (X ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_c _ _ }
+  { (eval₂RingHom C (X ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_C _ _ }
 #align polynomial.expand Polynomial.expand
 
 theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ C (X ^ p) :=
@@ -55,12 +55,12 @@ theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => C a * (X ^ p)
 
 @[simp]
 theorem expand_c (r : R) : expand R p (C r) = C r :=
-  eval₂_c _ _
+  eval₂_C _ _
 #align polynomial.expand_C Polynomial.expand_c
 
 @[simp]
 theorem expand_x : expand R p X = X ^ p :=
-  eval₂_x _ _
+  eval₂_X _ _
 #align polynomial.expand_X Polynomial.expand_x
 
 @[simp]

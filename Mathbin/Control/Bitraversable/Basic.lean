@@ -63,7 +63,7 @@ open Functor
 
 /-- Bifunctor. This typeclass asserts that a lawless bitraversable bifunctor is lawful. -/
 class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t] extends
-  IsLawfulBifunctor t where
+  LawfulBifunctor t where
   id_bitraverse : ∀ {α β} (x : t α β), bitraverse id.mk id.mk x = id.mk x
   comp_bitraverse :
     ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G]

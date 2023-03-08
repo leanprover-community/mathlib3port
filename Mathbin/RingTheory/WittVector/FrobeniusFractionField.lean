@@ -140,7 +140,7 @@ theorem succNthVal_spec' (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k)
   by
   rw [← sub_eq_zero]
   have := succ_nth_val_spec p n a₁ a₂ bs ha₁ ha₂
-  simp only [Polynomial.map_add, Polynomial.eval_x, Polynomial.map_pow, Polynomial.eval_c,
+  simp only [Polynomial.map_add, Polynomial.eval_X, Polynomial.map_pow, Polynomial.eval_C,
     Polynomial.eval_pow, succ_nth_defining_poly, Polynomial.eval_mul, Polynomial.eval_add,
     Polynomial.eval_sub, Polynomial.map_mul, Polynomial.map_sub, Polynomial.IsRoot.def] at this
   convert this using 1

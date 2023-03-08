@@ -397,14 +397,14 @@ theorem prod_cyclotomic_eq_x_pow_sub_one {n : ℕ} (hpos : 0 < n) (R : Type _) [
       Polynomial.map_one, Polynomial.map_sub]
     exact prod_cyclotomic'_eq_X_pow_sub_one hpos (Complex.isPrimitiveRoot_exp n hpos.ne')
   simpa only [Polynomial.map_prod, map_cyclotomic_int, Polynomial.map_sub, Polynomial.map_one,
-    Polynomial.map_pow, Polynomial.map_x] using congr_arg (map (Int.castRingHom R)) integer
+    Polynomial.map_pow, Polynomial.map_X] using congr_arg (map (Int.castRingHom R)) integer
 #align polynomial.prod_cyclotomic_eq_X_pow_sub_one Polynomial.prod_cyclotomic_eq_x_pow_sub_one
 
 theorem cyclotomic.dvd_x_pow_sub_one (n : ℕ) (R : Type _) [Ring R] : cyclotomic n R ∣ X ^ n - 1 :=
   by
   suffices cyclotomic n ℤ ∣ X ^ n - 1 by
     simpa only [map_cyclotomic_int, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow,
-      Polynomial.map_x] using map_dvd (Int.castRingHom R) this
+      Polynomial.map_X] using map_dvd (Int.castRingHom R) this
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
   rw [← prod_cyclotomic_eq_X_pow_sub_one hn]
@@ -416,7 +416,7 @@ theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) (R) [CommRing R] :
   by
   suffices (∏ i in n.divisors.eraseₓ 1, cyclotomic i ℤ) = ∑ i in Finset.range n, X ^ i by
     simpa only [Polynomial.map_prod, map_cyclotomic_int, Polynomial.map_sum, Polynomial.map_pow,
-      Polynomial.map_x] using congr_arg (map (Int.castRingHom R)) this
+      Polynomial.map_X] using congr_arg (map (Int.castRingHom R)) this
   rw [← mul_left_inj' (cyclotomic_ne_zero 1 ℤ), prod_erase_mul _ _ (Nat.one_mem_divisors.2 h.ne'),
     cyclotomic_one, geom_sum_mul, prod_cyclotomic_eq_X_pow_sub_one h]
 #align polynomial.prod_cyclotomic_eq_geom_sum Polynomial.prod_cyclotomic_eq_geom_sum
@@ -426,7 +426,7 @@ theorem cyclotomic_prime (R : Type _) [Ring R] (p : ℕ) [hp : Fact p.Prime] :
     cyclotomic p R = ∑ i in Finset.range p, X ^ i :=
   by
   suffices cyclotomic p ℤ = ∑ i in range p, X ^ i by
-    simpa only [map_cyclotomic_int, Polynomial.map_sum, Polynomial.map_pow, Polynomial.map_x] using
+    simpa only [map_cyclotomic_int, Polynomial.map_sum, Polynomial.map_pow, Polynomial.map_X] using
       congr_arg (map (Int.castRingHom R)) this
   rw [← prod_cyclotomic_eq_geom_sum hp.out.pos, hp.out.divisors,
     erase_insert (mem_singleton.not.2 hp.out.ne_one.symm), prod_singleton]
@@ -449,7 +449,7 @@ theorem cyclotomic_dvd_geom_sum_of_dvd (R) [Ring R] {d n : ℕ} (hdn : d ∣ n) 
     cyclotomic d R ∣ ∑ i in Finset.range n, X ^ i :=
   by
   suffices cyclotomic d ℤ ∣ ∑ i in Finset.range n, X ^ i by
-    simpa only [map_cyclotomic_int, Polynomial.map_sum, Polynomial.map_pow, Polynomial.map_x] using
+    simpa only [map_cyclotomic_int, Polynomial.map_sum, Polynomial.map_pow, Polynomial.map_X] using
       map_dvd (Int.castRingHom R) this
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp

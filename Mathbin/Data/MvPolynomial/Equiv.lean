@@ -79,15 +79,15 @@ def punitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X]
     apply is_id
     · ext a
       dsimp
-      rw [eval₂_C, Polynomial.eval₂_c]
+      rw [eval₂_C, Polynomial.eval₂_C]
     · rintro ⟨⟩
       dsimp
-      rw [eval₂_X, Polynomial.eval₂_x]
+      rw [eval₂_X, Polynomial.eval₂_X]
   right_inv p :=
-    Polynomial.induction_on p (fun a => by rw [Polynomial.eval₂_c, MvPolynomial.eval₂_c])
+    Polynomial.induction_on p (fun a => by rw [Polynomial.eval₂_C, MvPolynomial.eval₂_c])
       (fun p q hp hq => by rw [Polynomial.eval₂_add, MvPolynomial.eval₂_add, hp, hq]) fun p n hp =>
       by
-      rw [Polynomial.eval₂_mul, Polynomial.eval₂_pow, Polynomial.eval₂_x, Polynomial.eval₂_c,
+      rw [Polynomial.eval₂_mul, Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_C,
         eval₂_mul, eval₂_C, eval₂_pow, eval₂_X]
   map_mul' _ _ := eval₂_mul _ _
   map_add' _ _ := eval₂_add _ _
@@ -410,7 +410,7 @@ theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (
   let φ : (MvPolynomial (Fin n) R)[X] →ₐ[R] R[X] :=
     { Polynomial.mapRingHom (eval s) with
       commutes' := fun r => by
-        convert Polynomial.map_c _
+        convert Polynomial.map_C _
         exact (eval_C _).symm }
   show
     aeval (Fin.cons y s : Fin (n + 1) → R) f =
@@ -419,10 +419,10 @@ theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (
   apply MvPolynomial.algHom_ext
   rw [Fin.forall_fin_succ]
   simp only [aeval_X, Fin.cons_zero, AlgEquiv.toAlgHom_eq_coe, AlgHom.coe_comp,
-    Polynomial.coe_aeval_eq_eval, Polynomial.map_c, AlgHom.coe_mks, RingHom.toFun_eq_coe,
+    Polynomial.coe_aeval_eq_eval, Polynomial.map_C, AlgHom.coe_mks, RingHom.toFun_eq_coe,
     Polynomial.coe_mapRingHom, AlgEquiv.coe_algHom, comp_app, fin_succ_equiv_apply, eval₂_hom_X',
-    Fin.cases_zero, Polynomial.map_x, Polynomial.eval_x, eq_self_iff_true, Fin.cons_succ,
-    Fin.cases_succ, eval_X, Polynomial.eval_c, imp_true_iff, and_self_iff]
+    Fin.cases_zero, Polynomial.map_X, Polynomial.eval_X, eq_self_iff_true, Fin.cons_succ,
+    Fin.cases_succ, eval_X, Polynomial.eval_C, imp_true_iff, and_self_iff]
 #align mv_polynomial.eval_eq_eval_mv_eval' MvPolynomial.eval_eq_eval_mv_eval'
 
 theorem coeff_eval_eq_eval_coeff (s' : Fin n → R) (f : Polynomial (MvPolynomial (Fin n) R))
