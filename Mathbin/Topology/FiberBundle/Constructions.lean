@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sébastien Gouëzel, Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.constructions
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,11 +15,11 @@ import Mathbin.Topology.FiberBundle.Basic
 
 This file contains several standard constructions on fiber bundles:
 
-* `bundle.trivial.fiber_bundle 𝕜 B F`: the trivial fiber bundle with model fibre `F` over the base
+* `bundle.trivial.fiber_bundle 𝕜 B F`: the trivial fiber bundle with model fiber `F` over the base
   `B`
 
 * `fiber_bundle.prod`: for fiber bundles `E₁` and `E₂` over a common base, a fiber bundle structure
-  on their fibrewise product `E₁ ×ᵇ E₂` (the notation stands for `λ x, E₁ x × E₂ x`).
+  on their fiberwise product `E₁ ×ᵇ E₂` (the notation stands for `λ x, E₁ x × E₂ x`).
 
 * `fiber_bundle.pullback`: for a fiber bundle `E` over `B`, a fiber bundle structure on its
   pullback `f *ᵖ E` by a map `f : B' → B` (the notation is a type synonym for `E ∘ f`).
@@ -132,7 +132,7 @@ variable (E₁ : B → Type _) (E₂ : B → Type _)
 
 variable [TopologicalSpace (TotalSpace E₁)] [TopologicalSpace (TotalSpace E₂)]
 
-/-- Equip the total space of the fibrewise product of two fiber bundles `E₁`, `E₂` with
+/-- Equip the total space of the fiberwise product of two fiber bundles `E₁`, `E₂` with
 the induced topology from the diagonal embedding into `total_space E₁ × total_space E₂`. -/
 instance FiberBundle.Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ ×ᵇ E₂)) :=
   TopologicalSpace.induced
@@ -140,7 +140,7 @@ instance FiberBundle.Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ 
     (by infer_instance : TopologicalSpace (TotalSpace E₁ × TotalSpace E₂))
 #align fiber_bundle.prod.topological_space FiberBundle.Prod.topologicalSpace
 
-/-- The diagonal map from the total space of the fibrewise product of two fiber bundles
+/-- The diagonal map from the total space of the fiberwise product of two fiber bundles
 `E₁`, `E₂` into `total_space E₁ × total_space E₂` is `inducing`. -/
 theorem FiberBundle.Prod.inducing_diag :
     Inducing
@@ -163,7 +163,7 @@ variable {F₁ E₁ F₂ E₂} (e₁ : Trivialization F₁ (π E₁)) (e₂ : Tr
 
 /-- Given trivializations `e₁`, `e₂` for fiber bundles `E₁`, `E₂` over a base `B`, the forward
 function for the construction `trivialization.prod`, the induced
-trivialization for the fibrewise product of `E₁` and `E₂`. -/
+trivialization for the fiberwise product of `E₁` and `E₂`. -/
 def Prod.toFun' : TotalSpace (E₁ ×ᵇ E₂) → B × F₁ × F₂ := fun p =>
   ⟨p.1, (e₁ ⟨p.1, p.2.1⟩).2, (e₂ ⟨p.1, p.2.2⟩).2⟩
 #align trivialization.prod.to_fun' Trivialization.Prod.toFun'
@@ -198,7 +198,7 @@ variable (e₁ e₂) [∀ x, Zero (E₁ x)] [∀ x, Zero (E₂ x)]
 
 /-- Given trivializations `e₁`, `e₂` for fiber bundles `E₁`, `E₂` over a base `B`, the inverse
 function for the construction `trivialization.prod`, the induced
-trivialization for the fibrewise product of `E₁` and `E₂`. -/
+trivialization for the fiberwise product of `E₁` and `E₂`. -/
 noncomputable def Prod.invFun' (p : B × F₁ × F₂) : TotalSpace (E₁ ×ᵇ E₂) :=
   ⟨p.1, e₁.symm p.1 p.2.1, e₂.symm p.1 p.2.2⟩
 #align trivialization.prod.inv_fun' Trivialization.Prod.invFun'
@@ -239,7 +239,7 @@ variable (e₁ e₂ e₁ e₂)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given trivializations `e₁`, `e₂` for bundle types `E₁`, `E₂` over a base `B`, the induced
-trivialization for the fibrewise product of `E₁` and `E₂`, whose base set is
+trivialization for the fiberwise product of `E₁` and `E₂`, whose base set is
 `e₁.base_set ∩ e₂.base_set`. -/
 noncomputable def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂))
     where
@@ -310,7 +310,7 @@ instance {e₁ : Trivialization F₁ (π E₁)} {e₂ : Trivialization F₂ (π 
 
 end Prod
 
-/-! ### Pullbacks of fibre bundles -/
+/-! ### Pullbacks of fiber bundles -/
 
 
 section

@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.Normed.Group.AddTorsor
-import Mathbin.LinearAlgebra.AffineSpace.Midpoint
+import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
 import Mathbin.Topology.Instances.RealVectorSpace
 

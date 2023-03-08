@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sébastien Gouëzel, Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.constructions
-! leanprover-community/mathlib commit 87f3aec412c51c63e9623034de001d783f00cc65
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,7 +17,7 @@ import Mathbin.Topology.VectorBundle.Basic
 This file contains several standard constructions on vector bundles:
 
 * `bundle.trivial.vector_bundle 𝕜 B F`: the trivial vector bundle with scalar field `𝕜` and model
-  fibre `F` over the base `B`
+  fiber `F` over the base `B`
 
 * `vector_bundle.prod`: for vector bundles `E₁` and `E₂` with scalar field `𝕜` over a common base,
   a vector bundle structure on their direct sum `E₁ ×ᵇ E₂` (the notation stands for
@@ -90,13 +90,28 @@ variable (𝕜 : Type _) {B : Type _} [NontriviallyNormedField 𝕜] [Topologica
 namespace Trivialization
 
 variable {F₁ E₁ F₂ E₂} [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)]
-  [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)] (e₁ : Trivialization F₁ (π E₁))
-  (e₂ : Trivialization F₂ (π E₂))
+  [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)] (e₁ e₁' : Trivialization F₁ (π E₁))
+  (e₂ e₂' : Trivialization F₂ (π E₂))
 
 instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e₂).isLinear 𝕜
     where linear := fun x ⟨h₁, h₂⟩ =>
     (((e₁.linear 𝕜 h₁).mk' _).Prod_map ((e₂.linear 𝕜 h₂).mk' _)).isLinear
 #align trivialization.prod.is_linear Trivialization.prod.isLinear
+
+@[simp]
+theorem coordChangeL_prod [e₁.isLinear 𝕜] [e₁'.isLinear 𝕜] [e₂.isLinear 𝕜] [e₂'.isLinear 𝕜] ⦃b⦄
+    (hb : b ∈ (e₁.Prod e₂).baseSet ∩ (e₁'.Prod e₂').baseSet) :
+    ((e₁.Prod e₂).coordChangeL 𝕜 (e₁'.Prod e₂') b : F₁ × F₂ →L[𝕜] F₁ × F₂) =
+      (e₁.coordChangeL 𝕜 e₁' b : F₁ →L[𝕜] F₁).Prod_map (e₂.coordChangeL 𝕜 e₂' b) :=
+  by
+  rw [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_prod_map']
+  rintro ⟨v₁, v₂⟩
+  show
+    (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =
+      (e₁.coord_changeL 𝕜 e₁' b v₁, e₂.coord_changeL 𝕜 e₂' b v₂)
+  rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod e₂).coordChangeL_apply']
+  exacts[rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
+#align trivialization.coord_changeL_prod Trivialization.coordChangeL_prod
 
 variable {e₁ e₂} [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)]
   [FiberBundle F₁ E₁] [FiberBundle F₂ E₂]

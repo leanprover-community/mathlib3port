@@ -1792,7 +1792,9 @@ import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Geometry.Manifold.PartitionOfUnity
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Geometry.Manifold.TangentBundle
-import Mathbin.Geometry.Manifold.VectorBundle
+import Mathbin.Geometry.Manifold.VectorBundle.Basic
+import Mathbin.Geometry.Manifold.VectorBundle.FiberwiseLinear
+import Mathbin.Geometry.Manifold.VectorBundle.Pullback
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.Archimedean
@@ -1894,6 +1896,7 @@ import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathbin.LinearAlgebra.AffineSpace.Independent
 import Mathbin.LinearAlgebra.AffineSpace.Matrix
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
+import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 import Mathbin.LinearAlgebra.AffineSpace.Ordered
 import Mathbin.LinearAlgebra.AffineSpace.Pointwise
 import Mathbin.LinearAlgebra.AffineSpace.Restrict

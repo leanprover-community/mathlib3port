@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.hom
-! leanprover-community/mathlib commit 87f3aec412c51c63e9623034de001d783f00cc65
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ type synonym for `λ x, E₁ x →SL[σ] E₂ x`. If the `E₁` and `E₂` are v
 
 The topology is constructed from the trivializations for `E₁` and `E₂` and the norm-topology on the
 model fiber `F₁ →SL[𝕜] F₂` using the `vector_prebundle` construction.  This is a bit awkward because
-it introduces a spurious (?) dependence on the normed space structure of the model fibre, rather
+it introduces a spurious (?) dependence on the normed space structure of the model fiber, rather
 than just its topological vector space structure; this might be fixable now that we have
 `continuous_linear_map.strong_topology`.
 

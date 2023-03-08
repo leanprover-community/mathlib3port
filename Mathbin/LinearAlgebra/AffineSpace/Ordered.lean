@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.ordered
-! leanprover-community/mathlib commit 402f8982dddc1864bd703da2d6e2ee304a866973
+! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.Module
-import Mathbin.LinearAlgebra.AffineSpace.Midpoint
+import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 import Mathbin.LinearAlgebra.AffineSpace.Slope
 import Mathbin.Tactic.FieldSimp
 

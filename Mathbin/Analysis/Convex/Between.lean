@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.between
-! leanprover-community/mathlib commit ba2245edf0c8bb155f1569fd9b9492a9b384cde6
+! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Analysis.Convex.Segment
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
+import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 import Mathbin.Tactic.FieldSimp
 
 /-!

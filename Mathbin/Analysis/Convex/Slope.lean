@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Malo Jaffré
 
 ! This file was ported from Lean 3 source module analysis.convex.slope
-! leanprover-community/mathlib commit 0ee3e6f52678a420c58b1072870fed5e0240c083
+! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Function
 import Mathbin.Tactic.FieldSimp
+import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Slopes of convex functions

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 38f16f960f5006c6c0c2bac7b0aba5273188f4e5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.Analysis.LocallyConvex.WithSeminorms
 import Mathbin.Topology.Algebra.UniformFilterBasis
 import Mathbin.Topology.ContinuousFunction.Bounded
 import Mathbin.Tactic.Positivity
+import Mathbin.Analysis.SpecialFunctions.Pow
 
 /-!
 # Schwartz space
@@ -123,6 +124,47 @@ theorem differentiable (f : 𝓢(E, F)) : Differentiable ℝ f :=
 theorem ext {f g : 𝓢(E, F)} (h : ∀ x, (f : E → F) x = g x) : f = g :=
   FunLike.ext f g h
 #align schwartz_map.ext SchwartzMap.ext
+
+section IsO
+
+variable (f : 𝓢(E, F))
+
+/-- Auxiliary lemma, used in proving the more general result `is_O_cocompact_zpow`. -/
+theorem isO_cocompact_zpow_neg_nat (k : ℕ) :
+    Asymptotics.IsO (Filter.cocompact E) f fun x => ‖x‖ ^ (-k : ℤ) :=
+  by
+  obtain ⟨d, hd, hd'⟩ := f.decay k 0
+  simp_rw [norm_iteratedFderiv_zero] at hd'
+  simp_rw [Asymptotics.IsO, Asymptotics.IsOWith]
+  refine' ⟨d, Filter.Eventually.filter_mono Filter.cocompact_le_cofinite _⟩
+  refine' (Filter.eventually_cofinite_ne 0).mp (Filter.eventually_of_forall fun x hx => _)
+  rwa [Real.norm_of_nonneg (zpow_nonneg (norm_nonneg _) _), zpow_neg, ← div_eq_mul_inv, le_div_iff']
+  exacts[hd' x, zpow_pos_of_pos (norm_pos_iff.mpr hx) _]
+#align schwartz_map.is_O_cocompact_zpow_neg_nat SchwartzMap.isO_cocompact_zpow_neg_nat
+
+theorem isO_cocompact_rpow [ProperSpace E] (s : ℝ) :
+    Asymptotics.IsO (Filter.cocompact E) f fun x => ‖x‖ ^ s :=
+  by
+  let k := ⌈-s⌉₊
+  have hk : -(k : ℝ) ≤ s := neg_le.mp (Nat.le_ceil (-s))
+  refine' (is_O_cocompact_zpow_neg_nat f k).trans _
+  refine'
+    (_ : Asymptotics.IsO Filter.atTop (fun x : ℝ => x ^ (-k : ℤ)) fun x : ℝ => x ^ s).comp_tendsto
+      tendsto_norm_cocompact_atTop
+  simp_rw [Asymptotics.IsO, Asymptotics.IsOWith]
+  refine' ⟨1, Filter.eventually_of_mem (Filter.eventually_ge_atTop 1) fun x hx => _⟩
+  rw [one_mul, Real.norm_of_nonneg (Real.rpow_nonneg_of_nonneg (zero_le_one.trans hx) _),
+    Real.norm_of_nonneg (zpow_nonneg (zero_le_one.trans hx) _), ← Real.rpow_int_cast, Int.cast_neg,
+    Int.cast_ofNat]
+  exact Real.rpow_le_rpow_of_exponent_le hx hk
+#align schwartz_map.is_O_cocompact_rpow SchwartzMap.isO_cocompact_rpow
+
+theorem isO_cocompact_zpow [ProperSpace E] (k : ℤ) :
+    Asymptotics.IsO (Filter.cocompact E) f fun x => ‖x‖ ^ k := by
+  simpa only [Real.rpow_int_cast] using is_O_cocompact_rpow f k
+#align schwartz_map.is_O_cocompact_zpow SchwartzMap.isO_cocompact_zpow
+
+end IsO
 
 section Aux
 
@@ -578,7 +620,7 @@ section BoundedContinuousFunction
 
 open BoundedContinuousFunction
 
-/-- Schwartz functions as bounded continuous functions-/
+/-- Schwartz functions as bounded continuous functions -/
 def toBoundedContinuousFunction (f : 𝓢(E, F)) : E →ᵇ F :=
   BoundedContinuousFunction.ofNormedAddCommGroup f (SchwartzMap.continuous f)
     (SchwartzMap.seminorm ℝ 0 0 f) (norm_le_seminorm ℝ f)
@@ -589,6 +631,11 @@ theorem toBoundedContinuousFunction_apply (f : 𝓢(E, F)) (x : E) :
     f.toBoundedContinuousFunction x = f x :=
   rfl
 #align schwartz_map.to_bounded_continuous_function_apply SchwartzMap.toBoundedContinuousFunction_apply
+
+/-- Schwartz functions as continuous functions -/
+def toContinuousMap (f : 𝓢(E, F)) : C(E, F) :=
+  f.toBoundedContinuousFunction.toContinuousMap
+#align schwartz_map.to_continuous_map SchwartzMap.toContinuousMap
 
 variable (𝕜 E F)
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.is_homeomorphic_trivial_bundle
-! leanprover-community/mathlib commit ad0089aca372256fe53dde13ca0dfea569bf5ac7
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,7 @@ map `p : Z → B` between topological spaces is a "trivial fiber bundle" in the 
 exists a homeomorphism `h : Z ≃ₜ B × F` such that `proj x = (h x).1`.  This is an abstraction which
 is occasionally convenient in showing that a map is open, a quotient map, etc.
 
-This material was formerly linked to the main definition of fibre bundles, but after a series of
+This material was formerly linked to the main definition of fiber bundles, but after a series of
 refactors, there is no longer a direct connection.
 -/
 

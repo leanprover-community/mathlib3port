@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.p_series
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 38f16f960f5006c6c0c2bac7b0aba5273188f4e5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -241,6 +241,17 @@ theorem Real.summable_one_div_int_pow {p : ℕ} : (Summable fun n : ℤ => 1 / (
   conv_lhs => rw [mul_div, mul_one]
   rfl
 #align real.summable_one_div_int_pow Real.summable_one_div_int_pow
+
+theorem Real.summable_abs_int_rpow {b : ℝ} (hb : 1 < b) : Summable fun n : ℤ => |(n : ℝ)| ^ (-b) :=
+  by
+  refine'
+    summable_int_of_summable_nat (_ : Summable fun n : ℕ => |(n : ℝ)| ^ _)
+      (_ : Summable fun n : ℕ => |((-n : ℤ) : ℝ)| ^ _)
+  on_goal 2 => simp_rw [Int.cast_neg, Int.cast_ofNat, abs_neg]
+  all_goals
+    simp_rw [fun n : ℕ => abs_of_nonneg (n.cast_nonneg : 0 ≤ (n : ℝ))]
+    rwa [Real.summable_nat_rpow, neg_lt_neg_iff]
+#align real.summable_abs_int_rpow Real.summable_abs_int_rpow
 
 /-- Harmonic series is not unconditionally summable. -/
 theorem Real.not_summable_nat_cast_inv : ¬Summable (fun n => n⁻¹ : ℕ → ℝ) :=

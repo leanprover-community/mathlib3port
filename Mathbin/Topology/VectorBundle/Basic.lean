@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Patrick Massot, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.basic
-! leanprover-community/mathlib commit f11f1e72b81ab0a9772a645e8a3dc0ee76e043f2
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ To have a vector bundle structure on `bundle.total_space E`, one should addition
 following properties:
 
 * The bundle trivializations in the trivialization atlas should be continuous linear equivs in the
-fibres;
+fibers;
 * For any two trivializations `e`, `e'` in the atlas the transition function considered as a map
 from `B` into `F →L[R] F` is continuous on `e.base_set ∩ e'.base_set` with respect to the operator
 norm topology on `F →L[R] F`.
@@ -55,8 +55,8 @@ section TopologicalVectorSpace
 
 variable {B F E} [Semiring R] [TopologicalSpace F] [TopologicalSpace B]
 
-/-- A mixin class for `pretrivialization`, stating that a pretrivialization is fibrewise linear with
-respect to given module structures on its fibres and the model fibre. -/
+/-- A mixin class for `pretrivialization`, stating that a pretrivialization is fiberwise linear with
+respect to given module structures on its fibers and the model fiber. -/
 protected class Pretrivialization.IsLinear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)]
   [∀ x, Module R (E x)] (e : Pretrivialization F (π E)) : Prop where
   linear : ∀ b ∈ e.baseSet, IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2
@@ -158,8 +158,8 @@ end Pretrivialization
 
 variable (R) [TopologicalSpace (TotalSpace E)]
 
-/-- A mixin class for `trivialization`, stating that a trivialization is fibrewise linear with
-respect to given module structures on its fibres and the model fibre. -/
+/-- A mixin class for `trivialization`, stating that a trivialization is fiberwise linear with
+respect to given module structures on its fibers and the model fiber. -/
 protected class Trivialization.IsLinear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)]
   [∀ x, Module R (E x)] (e : Trivialization F (π E)) : Prop where
   linear : ∀ b ∈ e.baseSet, IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2
@@ -302,6 +302,21 @@ theorem coe_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isL
   congr_arg LinearEquiv.toFun (dif_pos hb)
 #align trivialization.coe_coord_changeL Trivialization.coe_coordChangeL
 
+theorem coe_coord_changeL' (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
+    (hb : b ∈ e.baseSet ∩ e'.baseSet) :
+    (coordChangeL R e e' b).toLinearEquiv =
+      (e.linearEquivAt R b hb.1).symm.trans (e'.linearEquivAt R b hb.2) :=
+  LinearEquiv.coe_injective (coe_coordChangeL _ _ _)
+#align trivialization.coe_coord_changeL' Trivialization.coe_coord_changeL'
+
+theorem symm_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
+    (hb : b ∈ e'.baseSet ∩ e.baseSet) : (e.coordChangeL R e' b).symm = e'.coordChangeL R e b :=
+  by
+  apply ContinuousLinearEquiv.toLinearEquiv_injective
+  rw [coe_coord_changeL' e' e hb, (coord_changeL R e e' b).symm_toLinearEquiv,
+    coe_coord_changeL' e e' hb.symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
+#align trivialization.symm_coord_changeL Trivialization.symm_coordChangeL
+
 theorem coordChangeL_apply (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R] {b : B}
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (y : F) :
     coordChangeL R e e' b y = (e' (totalSpaceMk b (e.symm b y))).2 :=
@@ -318,6 +333,12 @@ theorem mk_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLi
     exact hb.2
   · exact e.coord_changeL_apply e' hb y
 #align trivialization.mk_coord_changeL Trivialization.mk_coordChangeL
+
+theorem apply_symm_apply_eq_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R]
+    [e'.isLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
+    e' (e.toLocalHomeomorph.symm (b, v)) = (b, e.coordChangeL R e' b v) := by
+  rw [e.mk_coord_changeL e' hb, e.mk_symm hb.1]
+#align trivialization.apply_symm_apply_eq_coord_changeL Trivialization.apply_symm_apply_eq_coordChangeL
 
 /-- A version of `coord_change_apply` that fully unfolds `coord_change`. The right-hand side is
 ugly, but has good definitional properties for specifically defined trivializations. -/

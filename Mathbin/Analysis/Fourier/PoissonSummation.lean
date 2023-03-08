@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.poisson_summation
-! leanprover-community/mathlib commit 3353f3371120058977ce1e20bf7fc8986c0fb042
+! leanprover-community/mathlib commit 38f16f960f5006c6c0c2bac7b0aba5273188f4e5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Fourier.AddCircle
 import Mathbin.Analysis.Fourier.FourierTransform
+import Mathbin.Analysis.PSeries
+import Mathbin.Analysis.SchwartzSpace
 
 /-!
 # Poisson's summation formula
@@ -19,10 +21,19 @@ Fourier transform of `f`, under the following hypotheses:
 * `f` is a continuous function `ℝ → ℂ`.
 * The sum `∑ (n : ℤ), 𝓕 f n` is convergent.
 * For all compacts `K ⊂ ℝ`, the sum `∑ (n : ℤ), sup { ‖f(x + n)‖ | x ∈ K }` is convergent.
+See `real.tsum_eq_tsum_fourier_integral` for this formulation.
+
+These hypotheses are potentially a little awkward to apply, so we also provide the less general but
+easier-to-use result `real.tsum_eq_tsum_fourier_integral_of_rpow_decay`, in which we assume `f` and
+`𝓕 f` both decay as `|x| ^ (-b)` for some `b > 1`, and the even more specific result
+`schwartz_map.tsum_eq_tsum_fourier_integral`, where we assume that both `f` and `𝓕 f` are Schwartz
+functions.
 
 ## TODO
 
-* Show that the conditions on `f` are automatically satisfied for Schwartz functions.
+At the moment `schwartz_map.tsum_eq_tsum_fourier_integral` requires separate proofs that both `f`
+and `𝓕 f` are Schwartz functions. In fact, `𝓕 f` is automatically Schwartz if `f` is; and once
+we have this lemma in the library, we should adjust the hypotheses here accordingly.
 -/
 
 
@@ -30,11 +41,13 @@ noncomputable section
 
 open Function hiding comp_apply
 
-open Complex Real
+open Complex hiding abs_of_nonneg
+
+open Real
 
 open Set hiding restrict_apply
 
-open TopologicalSpace Filter MeasureTheory
+open TopologicalSpace Filter MeasureTheory Asymptotics
 
 open Real BigOperators Filter FourierTransform
 
@@ -109,7 +122,7 @@ theorem Real.fourierCoeff_tsum_comp_add {f : C(ℝ, ℂ)}
     
 #align real.fourier_coeff_tsum_comp_add Real.fourierCoeff_tsum_comp_add
 
-/-- **Poisson's summation formula**. -/
+/-- **Poisson's summation formula**, most general form. -/
 theorem Real.tsum_eq_tsum_fourierIntegral {f : C(ℝ, ℂ)}
     (h_norm :
       ∀ K : Compacts ℝ, Summable fun n : ℤ => ‖(f.comp <| ContinuousMap.addRight n).restrict K‖)
@@ -128,4 +141,154 @@ theorem Real.tsum_eq_tsum_fourierIntegral {f : C(ℝ, ℂ)}
     rw [← Real.fourierCoeff_tsum_comp_add h_norm n, fourier_eval_zero, smul_eq_mul, mul_one]
     rfl
 #align real.tsum_eq_tsum_fourier_integral Real.tsum_eq_tsum_fourierIntegral
+
+section RpowDecay
+
+variable {E : Type _} [NormedAddCommGroup E]
+
+/-- If `f` is `O(x ^ (-b))` at infinity, then so is the function
+`λ x, ‖f.restrict (Icc (x + R) (x + S))‖` for any fixed `R` and `S`. -/
+theorem isO_norm_Icc_restrict_atTop {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
+    (hf : IsO atTop f fun x : ℝ => |x| ^ (-b)) (R S : ℝ) :
+    IsO atTop (fun x : ℝ => ‖f.restrict (Icc (x + R) (x + S))‖) fun x : ℝ => |x| ^ (-b) :=
+  by
+  -- First establish an explicit estimate on decay of inverse powers.
+  -- This is logically independent of the rest of the proof, but of no mathematical interest in
+  -- itself, so it is proved using `async` rather than being formulated as a separate lemma.
+  have claim :
+    ∀ x : ℝ, max 0 (-2 * R) < x → ∀ y : ℝ, x + R ≤ y → y ^ (-b) ≤ (1 / 2) ^ (-b) * x ^ (-b) :=
+    by
+    intro x hx y hy
+    rw [max_lt_iff] at hx
+    have hxR : 0 < x + R := by
+      rcases le_or_lt 0 R with (h | h)
+      · exact add_pos_of_pos_of_nonneg hx.1 h
+      · rw [← sub_lt_iff_lt_add, zero_sub]
+        refine' lt_trans _ hx.2
+        rwa [neg_mul, neg_lt_neg_iff, two_mul, add_lt_iff_neg_left]
+    have hy' : 0 < y := hxR.trans_le hy
+    have : y ^ (-b) ≤ (x + R) ^ (-b) :=
+      by
+      rw [rpow_neg hy'.le, rpow_neg hxR.le,
+        inv_le_inv (rpow_pos_of_pos hy' _) (rpow_pos_of_pos hxR _)]
+      exact rpow_le_rpow hxR.le hy hb.le
+    refine' this.trans _
+    rw [← mul_rpow one_half_pos.le hx.1.le, rpow_neg (mul_pos one_half_pos hx.1).le,
+      rpow_neg hxR.le]
+    refine' inv_le_inv_of_le (rpow_pos_of_pos (mul_pos one_half_pos hx.1) _) _
+    exact rpow_le_rpow (mul_pos one_half_pos hx.1).le (by linarith) hb.le
+  -- Now the main proof.
+  obtain ⟨c, hc, hc'⟩ := hf.exists_pos
+  simp only [is_O, is_O_with, eventually_at_top] at hc'⊢
+  obtain ⟨d, hd⟩ := hc'
+  refine' ⟨c * (1 / 2) ^ (-b), ⟨max (1 + max 0 (-2 * R)) (d - R), fun x hx => _⟩⟩
+  rw [ge_iff_le, max_le_iff] at hx
+  have hx' : max 0 (-2 * R) < x := by linarith
+  rw [max_lt_iff] at hx'
+  rw [norm_norm,
+    ContinuousMap.norm_le _
+      (mul_nonneg (mul_nonneg hc.le <| rpow_nonneg_of_nonneg one_half_pos.le _) (norm_nonneg _))]
+  refine' fun y => (hd y.1 (by linarith [hx.1, y.2.1])).trans _
+  have A : ∀ x : ℝ, 0 ≤ |x| ^ (-b) := fun x => by positivity
+  rwa [mul_assoc, mul_le_mul_left hc, norm_of_nonneg (A _), norm_of_nonneg (A _)]
+  convert claim x (by linarith only [hx.1]) y.1 y.2.1
+  · apply abs_of_nonneg
+    linarith [y.2.1]
+  · exact abs_of_pos hx'.1
+#align is_O_norm_Icc_restrict_at_top isO_norm_Icc_restrict_atTop
+
+theorem isO_norm_Icc_restrict_atBot {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
+    (hf : IsO atBot f fun x : ℝ => |x| ^ (-b)) (R S : ℝ) :
+    IsO atBot (fun x : ℝ => ‖f.restrict (Icc (x + R) (x + S))‖) fun x : ℝ => |x| ^ (-b) :=
+  by
+  have h1 : is_O at_top (f.comp (ContinuousMap.mk _ continuous_neg)) fun x : ℝ => |x| ^ (-b) :=
+    by
+    convert hf.comp_tendsto tendsto_neg_at_top_at_bot
+    ext1 x
+    simp only [Function.comp_apply, abs_neg]
+  have h2 := (isO_norm_Icc_restrict_atTop hb h1 (-S) (-R)).comp_tendsto tendsto_neg_at_bot_at_top
+  have : (fun x : ℝ => |x| ^ (-b)) ∘ Neg.neg = fun x : ℝ => |x| ^ (-b) :=
+    by
+    ext1 x
+    simp only [Function.comp_apply, abs_neg]
+  rw [this] at h2
+  refine' (is_O_of_le _ fun x => _).trans h2
+  -- equality holds, but less work to prove `≤` alone
+  rw [norm_norm, Function.comp_apply, norm_norm, ContinuousMap.norm_le _ (norm_nonneg _)]
+  rintro ⟨x, hx⟩
+  rw [ContinuousMap.restrict_apply_mk]
+  refine' (le_of_eq _).trans (ContinuousMap.norm_coe_le_norm _ ⟨-x, _⟩)
+  · exact ⟨by linarith [hx.2], by linarith [hx.1]⟩
+  · rw [ContinuousMap.restrict_apply_mk, ContinuousMap.comp_apply, ContinuousMap.coe_mk, neg_neg]
+#align is_O_norm_Icc_restrict_at_bot isO_norm_Icc_restrict_atBot
+
+theorem isO_norm_restrict_cocompact (f : C(ℝ, E)) {b : ℝ} (hb : 0 < b)
+    (hf : IsO (cocompact ℝ) f fun x : ℝ => |x| ^ (-b)) (K : Compacts ℝ) :
+    IsO (cocompact ℝ) (fun x => ‖(f.comp (ContinuousMap.addRight x)).restrict K‖) fun x =>
+      |x| ^ (-b) :=
+  by
+  obtain ⟨r, hr⟩ := K.is_compact.bounded.subset_ball 0
+  rw [closed_ball_eq_Icc, zero_add, zero_sub] at hr
+  have :
+    ∀ x : ℝ,
+      ‖(f.comp (ContinuousMap.addRight x)).restrict K‖ ≤ ‖f.restrict (Icc (x - r) (x + r))‖ :=
+    by
+    intro x
+    rw [ContinuousMap.norm_le _ (norm_nonneg _)]
+    rintro ⟨y, hy⟩
+    refine' (le_of_eq _).trans (ContinuousMap.norm_coe_le_norm _ ⟨y + x, _⟩)
+    exact ⟨by linarith [(hr hy).1], by linarith [(hr hy).2]⟩
+    simp_rw [ContinuousMap.restrict_apply, ContinuousMap.comp_apply, ContinuousMap.coe_add_right,
+      Subtype.coe_mk]
+  simp_rw [cocompact_eq, is_O_sup] at hf⊢
+  constructor
+  · refine' (is_O_of_le at_bot _).trans (isO_norm_Icc_restrict_atBot hb hf.1 (-r) r)
+    simp_rw [norm_norm]
+    exact this
+  · refine' (is_O_of_le at_top _).trans (isO_norm_Icc_restrict_atTop hb hf.2 (-r) r)
+    simp_rw [norm_norm]
+    exact this
+#align is_O_norm_restrict_cocompact isO_norm_restrict_cocompact
+
+/-- **Poisson's summation formula**, assuming that `f` decays as
+`|x| ^ (-b)` for some `1 < b` and its Fourier transform is summable. -/
+theorem Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay_of_summable {f : ℝ → ℂ} (hc : Continuous f)
+    {b : ℝ} (hb : 1 < b) (hf : IsO (cocompact ℝ) f fun x : ℝ => |x| ^ (-b))
+    (hFf : Summable fun n : ℤ => 𝓕 f n) : (∑' n : ℤ, f n) = ∑' n : ℤ, 𝓕 f n :=
+  Real.tsum_eq_tsum_fourierIntegral
+    (fun K =>
+      summable_of_isO (Real.summable_abs_int_rpow hb)
+        ((isO_norm_restrict_cocompact (ContinuousMap.mk _ hc) (zero_lt_one.trans hb) hf
+              K).comp_tendsto
+          Int.tendsto_coe_cofinite))
+    hFf
+#align real.tsum_eq_tsum_fourier_integral_of_rpow_decay_of_summable Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay_of_summable
+
+/-- **Poisson's summation formula**, assuming that both `f` and its Fourier transform decay as
+`|x| ^ (-b)` for some `1 < b`. (This is the one-dimensional case of Corollary VII.2.6 of Stein and
+Weiss, *Introduction to Fourier analysis on Euclidean spaces*.) -/
+theorem Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay {f : ℝ → ℂ} (hc : Continuous f) {b : ℝ}
+    (hb : 1 < b) (hf : IsO (cocompact ℝ) f fun x : ℝ => |x| ^ (-b))
+    (hFf : IsO (cocompact ℝ) (𝓕 f) fun x : ℝ => |x| ^ (-b)) : (∑' n : ℤ, f n) = ∑' n : ℤ, 𝓕 f n :=
+  Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay_of_summable hc hb hf
+    (summable_of_isO (Real.summable_abs_int_rpow hb) (hFf.comp_tendsto Int.tendsto_coe_cofinite))
+#align real.tsum_eq_tsum_fourier_integral_of_rpow_decay Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay
+
+end RpowDecay
+
+section Schwartz
+
+/-- **Poisson's summation formula** for Schwartz functions. -/
+theorem SchwartzMap.tsum_eq_tsum_fourierIntegral (f g : SchwartzMap ℝ ℂ) (hfg : 𝓕 f = g) :
+    (∑' n : ℤ, f n) = ∑' n : ℤ, g n :=
+  by
+  -- We know that Schwartz functions are `O(‖x ^ (-b)‖)` for *every* `b`; for this argument we take
+  -- `b = 2` and work with that.
+  simp_rw [← hfg]
+  exact
+    Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay f.continuous one_lt_two
+      (f.is_O_cocompact_rpow (-2)) (by simpa only [hfg] using g.is_O_cocompact_rpow (-2))
+#align schwartz_map.tsum_eq_tsum_fourier_integral SchwartzMap.tsum_eq_tsum_fourierIntegral
+
+end Schwartz
 

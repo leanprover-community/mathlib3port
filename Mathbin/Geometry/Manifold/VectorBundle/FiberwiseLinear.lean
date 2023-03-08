@@ -3,19 +3,17 @@ Copyright (c) 2022 Floris van Doorn, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
-! This file was ported from Lean 3 source module geometry.manifold.vector_bundle
-! leanprover-community/mathlib commit 87ecf9614fedda186a792c38ee571904f548df29
+! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.fiberwise_linear
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.ContMdiff
 
-/-! # Smooth vector bundles
+/-! # The groupoid of smooth, fiberwise-linear maps
 
-This file will eventually contain the definition of a smooth vector bundle. For now, it contains
-preliminaries regarding an associated `structure_groupoid`, the groupoid of
-`smooth_fiberwise_linear` functions. When a (topological) vector bundle is smooth, then the
-composition of charts associated to the vector bundle belong to this groupoid.
+This file contains preliminaries for the definition of a smooth vector bundle: an associated
+`structure_groupoid`, the groupoid of `smooth_fiberwise_linear` functions.
 -/
 
 
@@ -124,7 +122,6 @@ variable {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB] {HB : Type 
 /-- Let `e` be a local homeomorphism of `B × F`.  Suppose that at every point `p` in the source of
 `e`, there is some neighbourhood `s` of `p` on which `e` is equal to a bi-smooth fiberwise linear
 local homeomorphism.
-
 Then the source of `e` is of the form `U ×ˢ univ`, for some set `U` in `B`, and, at any point `x` in
 `U`, admits a neighbourhood `u` of `x` such that `e` is equal on `u ×ˢ univ` to some bi-smooth
 fiberwise linear local homeomorphism. -/
@@ -334,4 +331,16 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     rintro e e' ⟨φ, U, hU, hφ, h2φ, heφ⟩ hee'
     exact ⟨φ, U, hU, hφ, h2φ, Setoid.trans hee' heφ⟩
 #align smooth_fiberwise_linear smoothFiberwiseLinear
+
+@[simp]
+theorem mem_smoothFiberwiseLinear_iff (e : LocalHomeomorph (B × F) (B × F)) :
+    e ∈ smoothFiberwiseLinear B F IB ↔
+      ∃ (φ : B → F ≃L[𝕜] F)(U : Set B)(hU : IsOpen U)(hφ :
+        SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => φ x : B → F →L[𝕜] F) U)(h2φ :
+        SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x).symm : B → F →L[𝕜] F) U),
+        e.EqOnSource (FiberwiseLinear.localHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn) :=
+  show e ∈ Set.unionᵢ _ ↔ _ by
+    simp only [mem_Union]
+    rfl
+#align mem_smooth_fiberwise_linear_iff mem_smoothFiberwiseLinear_iff
 

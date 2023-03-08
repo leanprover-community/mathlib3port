@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit 2b69cd5eca1cc3c5f4a754abe7dab71111959a9d
+! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,6 +96,12 @@ theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f =
 @[ext]
 theorem ext (h : ∀ x, f x = g x) : f = g := by cases f <;> cases g <;> congr <;> exact funext h
 #align cont_mdiff_map.ext ContMdiffMap.ext
+
+instance : ContinuousMapClass C^n⟮I, M; I', M'⟯ M M'
+    where
+  coe f := ⇑f
+  coe_injective' := coe_inj
+  map_continuous f := f.ContMdiff.Continuous
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=

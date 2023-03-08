@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.affine_isometry
-! leanprover-community/mathlib commit 4b99fe0a1096dc52abe68e65107220e604ea49b2
+! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Analysis.NormedSpace.LinearIsometry
 import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.LinearAlgebra.AffineSpace.Restrict
+import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 
 /-!
 # Affine isometries
