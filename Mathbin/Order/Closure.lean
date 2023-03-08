@@ -75,12 +75,10 @@ namespace ClosureOperator
 instance [Preorder α] : CoeFun (ClosureOperator α) fun _ => α → α :=
   ⟨fun c => c.toFun⟩
 
-#print ClosureOperator.Simps.apply /-
 /-- See Note [custom simps projection] -/
 def Simps.apply [Preorder α] (f : ClosureOperator α) : α → α :=
   f
 #align closure_operator.simps.apply ClosureOperator.Simps.apply
--/
 
 initialize_simps_projections ClosureOperator (to_order_hom_to_fun → apply, -toOrderHom)
 
@@ -436,12 +434,10 @@ variable [Preorder α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 instance : CoeFun (LowerAdjoint u) fun _ => α → β where coe := toFun
 
-#print LowerAdjoint.Simps.apply /-
 /-- See Note [custom simps projection] -/
 def Simps.apply : α → β :=
   l
 #align lower_adjoint.simps.apply LowerAdjoint.Simps.apply
--/
 
 /- warning: lower_adjoint.gc -> LowerAdjoint.gc is a dubious translation:
 lean 3 declaration is

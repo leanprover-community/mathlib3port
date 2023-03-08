@@ -83,13 +83,11 @@ protected def symm (h : α ≃ₜ β) : β ≃ₜ α
 #align homeomorph.symm Homeomorph.symm
 -/
 
-#print Homeomorph.Simps.apply /-
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
 def Simps.apply (h : α ≃ₜ β) : α → β :=
   h
 #align homeomorph.simps.apply Homeomorph.Simps.apply
--/
 
 #print Homeomorph.Simps.symm_apply /-
 /-- See Note [custom simps projection] -/
