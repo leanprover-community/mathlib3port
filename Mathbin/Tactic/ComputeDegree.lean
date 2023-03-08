@@ -61,8 +61,8 @@ open Expr Polynomial
     | q( Zero.zero ) => pure q( 0 )
       | q( One.one ) => pure q( 0 )
       | q( - $ ( f ) ) => guess_degree f
-      | app q( ⇑ c ) x => pure q( 0 )
-      | q( x ) => pure q( 1 )
+      | app q( ⇑ C ) x => pure q( 0 )
+      | q( X ) => pure q( 1 )
       | q( bit0 $ ( a ) ) => guess_degree a
       | q( bit1 $ ( a ) ) => guess_degree a
       |
@@ -144,16 +144,16 @@ open Expr Polynomial
                             ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
                           )
               | q( - $ ( f ) ) => refine ` `( ( natDegree_neg _ ) . le . trans _ )
-              | q( x ^ $ ( n ) ) => refine ` `( ( natDegree_x_pow_le $ ( n ) ) . trans _ )
+              | q( X ^ $ ( n ) ) => refine ` `( ( natDegree_x_pow_le $ ( n ) ) . trans _ )
               |
                 app q( ⇑ ( @ monomial $ ( R ) $ ( inst ) $ ( n ) ) ) x
                 =>
                 refine ` `( ( natDegree_monomial_le $ ( x ) ) . trans _ )
               |
-                app q( ⇑ c ) x
+                app q( ⇑ C ) x
                 =>
                 refine ` `( ( natDegree_c $ ( x ) ) . le . trans ( Nat.zero_le $ ( tr ) ) )
-              | q( x ) => refine ` `( natDegree_x_le . trans _ )
+              | q( X ) => refine ` `( natDegree_x_le . trans _ )
               | q( Zero.zero ) => refine ` `( natDegree_zero . le . trans ( Nat.zero_le _ ) )
               | q( One.one ) => refine ` `( natDegree_one . le . trans ( Nat.zero_le _ ) )
               | q( bit0 $ ( a ) ) => refine ` `( ( natDegree_bit0 $ ( a ) ) . trans _ )

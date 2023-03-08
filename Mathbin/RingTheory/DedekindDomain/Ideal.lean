@@ -557,7 +557,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
   refine'
     ⟨AlgHom.range (Polynomial.aeval x : A[X] →ₐ[A] K),
       is_noetherian_submodule.mp (IsNoetherian I⁻¹) _ fun y hy => _,
-      ⟨Polynomial.x, Polynomial.aeval_x x⟩⟩
+      ⟨Polynomial.X, Polynomial.aeval_x x⟩⟩
   obtain ⟨p, rfl⟩ := (AlgHom.mem_range _).mp hy
   rw [Polynomial.aeval_eq_sum_range]
   refine' Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ _

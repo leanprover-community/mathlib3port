@@ -166,7 +166,7 @@ theorem polynomialFunctions_separatesPoints (X : Set R) : (polynomialFunctions X
   fun x y h =>
   by
   -- We use `polynomial.X`, then clean up.
-  refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
+  refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.X, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
   dsimp; simp only [Polynomial.eval_x]
   exact fun h' => h (Subtype.ext h')
 #align polynomial_functions_separates_points polynomialFunctions_separatesPoints
@@ -186,7 +186,7 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
   · rintro ⟨p, ⟨-, w⟩⟩
     rw [FunLike.ext_iff] at w
     dsimp at w
-    let q := p.comp ((b - a)⁻¹ • Polynomial.x + Polynomial.c (-a * (b - a)⁻¹))
+    let q := p.comp ((b - a)⁻¹ • Polynomial.X + Polynomial.C (-a * (b - a)⁻¹))
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
     · ext x
@@ -214,7 +214,7 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
         · rw [← div_eq_mul_inv, div_le_one (sub_pos.mpr h)]
           exact w₃
   · rintro ⟨p, ⟨-, rfl⟩⟩
-    let q := p.comp ((b - a) • Polynomial.x + Polynomial.c a)
+    let q := p.comp ((b - a) • Polynomial.X + Polynomial.C a)
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
     · ext x

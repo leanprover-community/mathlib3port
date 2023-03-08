@@ -199,7 +199,7 @@ theorem degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < degree (minpoly A 
 /-- If `B/A` is an injective ring extension, and `a` is an element of `A`,
 then the minimal polynomial of `algebra_map A B a` is `X - C a`. -/
 theorem eq_x_sub_c_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMap A B)) :
-    minpoly A (algebraMap A B a) = x - c a :=
+    minpoly A (algebraMap A B a) = X - C a :=
   by
   nontriviality A
   refine' (unique' A _ (monic_X_sub_C a) _ _).symm

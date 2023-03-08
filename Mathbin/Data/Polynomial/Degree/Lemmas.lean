@@ -48,11 +48,11 @@ theorem natDegree_comp_le : natDegree (p.comp q) ≤ natDegree p * natDegree q :
         _ ≤ _ :=
           Finset.sup_le fun n hn =>
             calc
-              degree (c (coeff p n) * q ^ n) ≤ degree (c (coeff p n)) + degree (q ^ n) :=
+              degree (C (coeff p n) * q ^ n) ≤ degree (C (coeff p n)) + degree (q ^ n) :=
                 degree_mul_le _ _
-              _ ≤ natDegree (c (coeff p n)) + n • degree q :=
+              _ ≤ natDegree (C (coeff p n)) + n • degree q :=
                 (add_le_add degree_le_natDegree (degree_pow_le _ _))
-              _ ≤ natDegree (c (coeff p n)) + n • natDegree q :=
+              _ ≤ natDegree (C (coeff p n)) + n • natDegree q :=
                 (add_le_add_left (nsmul_le_nsmul_of_le_right (@degree_le_natDegree _ _ q) n) _)
               _ = (n * natDegree q : ℕ) := by
                 rw [nat_degree_C, WithBot.coe_zero, zero_add, ← WithBot.coe_nsmul, nsmul_eq_mul] <;>
@@ -93,17 +93,17 @@ theorem natDegree_add_le_iff_right {n : ℕ} (p q : R[X]) (pn : p.natDegree ≤ 
   exact nat_degree_add_le_iff_left _ _ pn
 #align polynomial.nat_degree_add_le_iff_right Polynomial.natDegree_add_le_iff_right
 
-theorem natDegree_c_mul_le (a : R) (f : R[X]) : (c a * f).natDegree ≤ f.natDegree :=
+theorem natDegree_c_mul_le (a : R) (f : R[X]) : (C a * f).natDegree ≤ f.natDegree :=
   calc
-    (c a * f).natDegree ≤ (c a).natDegree + f.natDegree := natDegree_mul_le
+    (C a * f).natDegree ≤ (C a).natDegree + f.natDegree := natDegree_mul_le
     _ = 0 + f.natDegree := by rw [nat_degree_C a]
     _ = f.natDegree := zero_add _
     
 #align polynomial.nat_degree_C_mul_le Polynomial.natDegree_c_mul_le
 
-theorem natDegree_mul_c_le (f : R[X]) (a : R) : (f * c a).natDegree ≤ f.natDegree :=
+theorem natDegree_mul_c_le (f : R[X]) (a : R) : (f * C a).natDegree ≤ f.natDegree :=
   calc
-    (f * c a).natDegree ≤ f.natDegree + (c a).natDegree := natDegree_mul_le
+    (f * C a).natDegree ≤ f.natDegree + (C a).natDegree := natDegree_mul_le
     _ = f.natDegree + 0 := by rw [nat_degree_C a]
     _ = f.natDegree := add_zero _
     
@@ -115,22 +115,22 @@ theorem eq_natDegree_of_le_mem_support (pn : p.natDegree ≤ n) (ns : n ∈ p.su
 #align polynomial.eq_nat_degree_of_le_mem_support Polynomial.eq_natDegree_of_le_mem_support
 
 theorem natDegree_c_mul_eq_of_mul_eq_one {ai : R} (au : ai * a = 1) :
-    (c a * p).natDegree = p.natDegree :=
+    (C a * p).natDegree = p.natDegree :=
   le_antisymm (natDegree_c_mul_le a p)
     (calc
       p.natDegree = (1 * p).natDegree := by nth_rw 1 [← one_mul p]
-      _ = (c ai * (c a * p)).natDegree := by rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
-      _ ≤ (c a * p).natDegree := natDegree_c_mul_le ai (c a * p)
+      _ = (C ai * (C a * p)).natDegree := by rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
+      _ ≤ (C a * p).natDegree := natDegree_c_mul_le ai (C a * p)
       )
 #align polynomial.nat_degree_C_mul_eq_of_mul_eq_one Polynomial.natDegree_c_mul_eq_of_mul_eq_one
 
 theorem natDegree_mul_c_eq_of_mul_eq_one {ai : R} (au : a * ai = 1) :
-    (p * c a).natDegree = p.natDegree :=
+    (p * C a).natDegree = p.natDegree :=
   le_antisymm (natDegree_mul_c_le p a)
     (calc
       p.natDegree = (p * 1).natDegree := by nth_rw 1 [← mul_one p]
-      _ = (p * c a * c ai).natDegree := by rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
-      _ ≤ (p * c a).natDegree := natDegree_mul_c_le (p * c a) ai
+      _ = (p * C a * C ai).natDegree := by rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
+      _ ≤ (p * C a).natDegree := natDegree_mul_c_le (p * C a) ai
       )
 #align polynomial.nat_degree_mul_C_eq_of_mul_eq_one Polynomial.natDegree_mul_c_eq_of_mul_eq_one
 
@@ -138,7 +138,7 @@ theorem natDegree_mul_c_eq_of_mul_eq_one {ai : R} (au : a * ai = 1) :
 force the polynomial `p` to be non-zero, via `p.leading_coeff ≠ 0`.
 -/
 theorem natDegree_mul_c_eq_of_mul_ne_zero (h : p.leadingCoeff * a ≠ 0) :
-    (p * c a).natDegree = p.natDegree :=
+    (p * C a).natDegree = p.natDegree :=
   by
   refine' eq_nat_degree_of_le_mem_support (nat_degree_mul_C_le p a) _
   refine' mem_support_iff.mpr _
@@ -149,7 +149,7 @@ theorem natDegree_mul_c_eq_of_mul_ne_zero (h : p.leadingCoeff * a ≠ 0) :
 force the polynomial `p` to be non-zero, via `p.leading_coeff ≠ 0`.
 -/
 theorem natDegree_c_mul_eq_of_mul_ne_zero (h : a * p.leadingCoeff ≠ 0) :
-    (c a * p).natDegree = p.natDegree :=
+    (C a * p).natDegree = p.natDegree :=
   by
   refine' eq_nat_degree_of_le_mem_support (nat_degree_C_mul_le a p) _
   refine' mem_support_iff.mpr _
@@ -329,19 +329,19 @@ section NoZeroDivisors
 
 variable [Semiring R] [NoZeroDivisors R] {p q : R[X]}
 
-theorem degree_mul_c (a0 : a ≠ 0) : (p * c a).degree = p.degree := by
+theorem degree_mul_c (a0 : a ≠ 0) : (p * C a).degree = p.degree := by
   rw [degree_mul, degree_C a0, add_zero]
 #align polynomial.degree_mul_C Polynomial.degree_mul_c
 
-theorem degree_c_mul (a0 : a ≠ 0) : (c a * p).degree = p.degree := by
+theorem degree_c_mul (a0 : a ≠ 0) : (C a * p).degree = p.degree := by
   rw [degree_mul, degree_C a0, zero_add]
 #align polynomial.degree_C_mul Polynomial.degree_c_mul
 
-theorem natDegree_mul_c (a0 : a ≠ 0) : (p * c a).natDegree = p.natDegree := by
+theorem natDegree_mul_c (a0 : a ≠ 0) : (p * C a).natDegree = p.natDegree := by
   simp only [nat_degree, degree_mul_C a0]
 #align polynomial.nat_degree_mul_C Polynomial.natDegree_mul_c
 
-theorem natDegree_c_mul (a0 : a ≠ 0) : (c a * p).natDegree = p.natDegree := by
+theorem natDegree_c_mul (a0 : a ≠ 0) : (C a * p).natDegree = p.natDegree := by
   simp only [nat_degree, degree_C_mul a0]
 #align polynomial.nat_degree_C_mul Polynomial.natDegree_c_mul
 

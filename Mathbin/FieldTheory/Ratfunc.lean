@@ -427,13 +427,13 @@ theorem toFractionRing_smul [SMul R (FractionRing K[X])] (c : R) (p : Ratfunc K)
   rw [← of_fraction_ring_smul]
 #align ratfunc.to_fraction_ring_smul Ratfunc.toFractionRing_smul
 
-theorem smul_eq_c_smul (x : Ratfunc K) (r : K) : r • x = Polynomial.c r • x :=
+theorem smul_eq_c_smul (x : Ratfunc K) (r : K) : r • x = Polynomial.C r • x :=
   by
   cases x
   induction x
   ·
     rw [← of_fraction_ring_smul, ← of_fraction_ring_smul, Localization.smul_mk,
-      Localization.smul_mk, smul_eq_mul, Polynomial.smul_eq_c_mul]
+      Localization.smul_mk, smul_eq_mul, Polynomial.smul_eq_C_mul]
   · simp only
 #align ratfunc.smul_eq_C_smul Ratfunc.smul_eq_c_smul
 
@@ -1059,8 +1059,8 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
       if q = 0 then ⟨0, 1⟩
       else
         let r := gcd p q
-        ⟨Polynomial.c (q / r).leadingCoeff⁻¹ * (p / r),
-          Polynomial.c (q / r).leadingCoeff⁻¹ * (q / r)⟩)
+        ⟨Polynomial.C (q / r).leadingCoeff⁻¹ * (p / r),
+          Polynomial.C (q / r).leadingCoeff⁻¹ * (q / r)⟩)
     (by
       intro p q a hq ha
       rw [if_neg hq, if_neg (mul_ne_zero ha hq)]
@@ -1070,18 +1070,18 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
       simp only [Prod.ext_iff, gcd_mul_left, normalize_apply, Polynomial.coe_normUnit, mul_assoc,
         CommGroupWithZero.coe_normUnit _ ha']
       have hdeg : (gcd p q).degree ≤ q.degree := degree_gcd_le_right _ hq
-      have hdeg' : (Polynomial.c a.leading_coeff⁻¹ * gcd p q).degree ≤ q.degree :=
+      have hdeg' : (Polynomial.C a.leading_coeff⁻¹ * gcd p q).degree ≤ q.degree :=
         by
         rw [Polynomial.degree_mul, Polynomial.degree_c hainv, zero_add]
         exact hdeg
-      have hdivp : Polynomial.c a.leading_coeff⁻¹ * gcd p q ∣ p :=
+      have hdivp : Polynomial.C a.leading_coeff⁻¹ * gcd p q ∣ p :=
         (C_mul_dvd hainv).mpr (gcd_dvd_left p q)
-      have hdivq : Polynomial.c a.leading_coeff⁻¹ * gcd p q ∣ q :=
+      have hdivq : Polynomial.C a.leading_coeff⁻¹ * gcd p q ∣ q :=
         (C_mul_dvd hainv).mpr (gcd_dvd_right p q)
       rw [EuclideanDomain.mul_div_mul_cancel ha hdivp, EuclideanDomain.mul_div_mul_cancel ha hdivq,
         leading_coeff_div hdeg, leading_coeff_div hdeg', Polynomial.leadingCoeff_mul,
-        Polynomial.leadingCoeff_c, div_C_mul, div_C_mul, ← mul_assoc, ← Polynomial.c_mul, ←
-        mul_assoc, ← Polynomial.c_mul]
+        Polynomial.leadingCoeff_c, div_C_mul, div_C_mul, ← mul_assoc, ← Polynomial.C_mul, ←
+        mul_assoc, ← Polynomial.C_mul]
       constructor <;> congr <;>
         rw [inv_div, mul_comm, mul_div_assoc, ← mul_assoc, inv_inv, _root_.mul_inv_cancel ha',
           one_mul, inv_div])
@@ -1090,8 +1090,8 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
 @[simp]
 theorem numDenom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     numDenom (algebraMap _ _ p / algebraMap _ _ q) =
-      (Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q),
-        Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (q / gcd p q)) :=
+      (Polynomial.C (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q),
+        Polynomial.C (q / gcd p q).leadingCoeff⁻¹ * (q / gcd p q)) :=
   by
   rw [num_denom, lift_on'_div, if_neg hq]
   intro p
@@ -1107,7 +1107,7 @@ def num (x : Ratfunc K) : K[X] :=
 
 private theorem num_div' (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     num (algebraMap _ _ p / algebraMap _ _ q) =
-      Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) :=
+      Polynomial.C (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) :=
   by rw [Num, num_denom_div _ hq]
 #align ratfunc.num_div' ratfunc.num_div'
 
@@ -1118,7 +1118,7 @@ theorem num_zero : num (0 : Ratfunc K) = 0 := by convert num_div' (0 : K[X]) one
 @[simp]
 theorem num_div (p q : K[X]) :
     num (algebraMap _ _ p / algebraMap _ _ q) =
-      Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) :=
+      Polynomial.C (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) :=
   by
   by_cases hq : q = 0
   · simp [hq]
@@ -1144,7 +1144,7 @@ theorem num_div_dvd (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 /-- A version of `num_div_dvd` with the LHS in simp normal form -/
 @[simp]
 theorem num_div_dvd' (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
-    c (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) ∣ p := by simpa using num_div_dvd p hq
+    C (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) ∣ p := by simpa using num_div_dvd p hq
 #align ratfunc.num_div_dvd' Ratfunc.num_div_dvd'
 
 /-- `ratfunc.denom` is the denominator of a rational function,
@@ -1156,7 +1156,7 @@ def denom (x : Ratfunc K) : K[X] :=
 @[simp]
 theorem denom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     denom (algebraMap _ _ p / algebraMap _ _ q) =
-      Polynomial.c (q / gcd p q).leadingCoeff⁻¹ * (q / gcd p q) :=
+      Polynomial.C (q / gcd p q).leadingCoeff⁻¹ * (q / gcd p q) :=
   by rw [denom, num_denom_div _ hq]
 #align ratfunc.denom_div Ratfunc.denom_div
 
@@ -1364,12 +1364,12 @@ theorem algebraMap_eq_c : algebraMap K (Ratfunc K) = c :=
 #align ratfunc.algebra_map_eq_C Ratfunc.algebraMap_eq_c
 
 @[simp]
-theorem algebraMap_c (a : K) : algebraMap K[X] (Ratfunc K) (Polynomial.c a) = c a :=
+theorem algebraMap_c (a : K) : algebraMap K[X] (Ratfunc K) (Polynomial.C a) = c a :=
   rfl
 #align ratfunc.algebra_map_C Ratfunc.algebraMap_c
 
 @[simp]
-theorem algebraMap_comp_c : (algebraMap K[X] (Ratfunc K)).comp Polynomial.c = c :=
+theorem algebraMap_comp_c : (algebraMap K[X] (Ratfunc K)).comp Polynomial.C = c :=
   rfl
 #align ratfunc.algebra_map_comp_C Ratfunc.algebraMap_comp_c
 
@@ -1379,11 +1379,11 @@ theorem smul_eq_c_mul (r : K) (x : Ratfunc K) : r • x = c r * x := by
 
 /-- `ratfunc.X` is the polynomial variable (aka indeterminate). -/
 def x : Ratfunc K :=
-  algebraMap K[X] (Ratfunc K) Polynomial.x
+  algebraMap K[X] (Ratfunc K) Polynomial.X
 #align ratfunc.X Ratfunc.x
 
 @[simp]
-theorem algebraMap_x : algebraMap K[X] (Ratfunc K) Polynomial.x = x :=
+theorem algebraMap_x : algebraMap K[X] (Ratfunc K) Polynomial.X = x :=
   rfl
 #align ratfunc.algebra_map_X Ratfunc.algebraMap_x
 
@@ -1394,7 +1394,7 @@ variable [hfield : Field K]
 include hfield
 
 @[simp]
-theorem num_c (c : K) : num (c c) = Polynomial.c c :=
+theorem num_c (c : K) : num (c c) = Polynomial.C c :=
   num_algebraMap _
 #align ratfunc.num_C Ratfunc.num_c
 
@@ -1404,7 +1404,7 @@ theorem denom_c (c : K) : denom (c c) = 1 :=
 #align ratfunc.denom_C Ratfunc.denom_c
 
 @[simp]
-theorem num_x : num (x : Ratfunc K) = Polynomial.x :=
+theorem num_x : num (x : Ratfunc K) = Polynomial.X :=
   num_algebraMap _
 #align ratfunc.num_X Ratfunc.num_x
 
@@ -1414,7 +1414,7 @@ theorem denom_x : denom (x : Ratfunc K) = 1 :=
 #align ratfunc.denom_X Ratfunc.denom_x
 
 theorem x_ne_zero : (Ratfunc.x : Ratfunc K) ≠ 0 :=
-  Ratfunc.algebraMap_ne_zero Polynomial.x_ne_zero
+  Ratfunc.algebraMap_ne_zero Polynomial.X_ne_zero
 #align ratfunc.X_ne_zero Ratfunc.x_ne_zero
 
 variable {L : Type _} [Field L]

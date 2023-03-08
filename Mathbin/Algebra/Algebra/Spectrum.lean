@@ -341,7 +341,7 @@ theorem sub_singleton_eq (a : A) (r : R) : σ a - {r} = σ (a - ↑ₐ r) := by
 open Polynomial
 
 theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp : p ≠ 0)
-    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => x - c x) p.roots).Prod)) :
+    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => X - C x) p.roots).Prod)) :
     ∃ k : R, k ∈ σ a ∧ eval k p = 0 :=
   by
   rw [← Multiset.prod_toList, AlgHom.map_list_prod] at h

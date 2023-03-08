@@ -41,7 +41,7 @@ variable [Semiring R]
 /-- `derivative p` is the formal derivative of the polynomial `p` -/
 def derivative : R[X] →ₗ[R] R[X]
     where
-  toFun p := p.Sum fun n a => c (a * n) * x ^ (n - 1)
+  toFun p := p.Sum fun n a => C (a * n) * X ^ (n - 1)
   map_add' p q := by
     rw [sum_add_index] <;>
       simp only [add_mul, forall_const, RingHom.map_add, eq_self_iff_true, zero_mul,
@@ -52,7 +52,7 @@ def derivative : R[X] →ₗ[R] R[X]
         RingHom.map_zero, Sum]
 #align polynomial.derivative Polynomial.derivative
 
-theorem derivative_apply (p : R[X]) : derivative p = p.Sum fun n a => c (a * n) * x ^ (n - 1) :=
+theorem derivative_apply (p : R[X]) : derivative p = p.Sum fun n a => C (a * n) * X ^ (n - 1) :=
   rfl
 #align polynomial.derivative_apply Polynomial.derivative_apply
 
@@ -96,31 +96,31 @@ theorem derivative_monomial (a : R) (n : ℕ) :
   simp
 #align polynomial.derivative_monomial Polynomial.derivative_monomial
 
-theorem derivative_c_mul_x (a : R) : derivative (c a * x) = c a := by
+theorem derivative_c_mul_x (a : R) : derivative (C a * X) = C a := by
   simpa only [C_mul_X_eq_monomial, derivative_monomial, Nat.cast_one, mul_one]
 #align polynomial.derivative_C_mul_X Polynomial.derivative_c_mul_x
 
 theorem derivative_c_mul_x_pow (a : R) (n : ℕ) :
-    derivative (c a * x ^ n) = c (a * n) * x ^ (n - 1) := by
+    derivative (C a * X ^ n) = C (a * n) * X ^ (n - 1) := by
   rw [C_mul_X_pow_eq_monomial, C_mul_X_pow_eq_monomial, derivative_monomial]
 #align polynomial.derivative_C_mul_X_pow Polynomial.derivative_c_mul_x_pow
 
-theorem derivative_c_mul_x_sq (a : R) : derivative (c a * x ^ 2) = c (a * 2) * x := by
+theorem derivative_c_mul_x_sq (a : R) : derivative (C a * X ^ 2) = C (a * 2) * X := by
   rw [derivative_C_mul_X_pow, Nat.cast_two, pow_one]
 #align polynomial.derivative_C_mul_X_sq Polynomial.derivative_c_mul_x_sq
 
 @[simp]
-theorem derivative_x_pow (n : ℕ) : derivative (x ^ n : R[X]) = c ↑n * x ^ (n - 1) := by
+theorem derivative_x_pow (n : ℕ) : derivative (X ^ n : R[X]) = C ↑n * X ^ (n - 1) := by
   convert derivative_C_mul_X_pow (1 : R) n <;> simp
 #align polynomial.derivative_X_pow Polynomial.derivative_x_pow
 
 @[simp]
-theorem derivative_x_sq : derivative (x ^ 2 : R[X]) = c 2 * x := by
+theorem derivative_x_sq : derivative (X ^ 2 : R[X]) = C 2 * X := by
   rw [derivative_X_pow, Nat.cast_two, pow_one]
 #align polynomial.derivative_X_sq Polynomial.derivative_x_sq
 
 @[simp]
-theorem derivative_c {a : R} : derivative (c a) = 0 := by simp [derivative_apply]
+theorem derivative_c {a : R} : derivative (C a) = 0 := by simp [derivative_apply]
 #align polynomial.derivative_C Polynomial.derivative_c
 
 theorem derivative_of_natDegree_zero {p : R[X]} (hp : p.natDegree = 0) : p.derivative = 0 := by
@@ -128,7 +128,7 @@ theorem derivative_of_natDegree_zero {p : R[X]} (hp : p.natDegree = 0) : p.deriv
 #align polynomial.derivative_of_nat_degree_zero Polynomial.derivative_of_natDegree_zero
 
 @[simp]
-theorem derivative_x : derivative (x : R[X]) = 1 :=
+theorem derivative_x : derivative (X : R[X]) = 1 :=
   (derivative_monomial _ _).trans <| by simp
 #align polynomial.derivative_X Polynomial.derivative_x
 
@@ -151,7 +151,7 @@ theorem derivative_add {f g : R[X]} : derivative (f + g) = derivative f + deriva
 #align polynomial.derivative_add Polynomial.derivative_add
 
 @[simp]
-theorem derivative_x_add_c (c : R) : (x + c c).derivative = 1 := by
+theorem derivative_x_add_c (c : R) : (X + C c).derivative = 1 := by
   rw [derivative_add, derivative_X, derivative_C, add_zero]
 #align polynomial.derivative_X_add_C Polynomial.derivative_x_add_c
 
@@ -184,7 +184,7 @@ theorem iterate_derivative_smul {S : Type _} [Monoid S] [DistribMulAction S R] [
 
 @[simp]
 theorem iterate_derivative_c_mul (a : R) (p : R[X]) (k : ℕ) :
-    (derivative^[k]) (c a * p) = c a * (derivative^[k]) p := by
+    (derivative^[k]) (C a * p) = C a * (derivative^[k]) p := by
   simp_rw [← smul_eq_C_mul, iterate_derivative_smul]
 #align polynomial.iterate_derivative_C_mul Polynomial.iterate_derivative_c_mul
 
@@ -242,7 +242,7 @@ theorem iterate_derivative_eq_zero {p : R[X]} {x : ℕ} (hx : p.natDegree < x) :
 #align polynomial.iterate_derivative_eq_zero Polynomial.iterate_derivative_eq_zero
 
 @[simp]
-theorem iterate_derivative_c {k} (h : 0 < k) : (derivative^[k]) (c a : R[X]) = 0 :=
+theorem iterate_derivative_c {k} (h : 0 < k) : (derivative^[k]) (C a : R[X]) = 0 :=
   iterate_derivative_eq_zero <| (natDegree_c _).trans_lt h
 #align polynomial.iterate_derivative_C Polynomial.iterate_derivative_c
 
@@ -252,7 +252,7 @@ theorem iterate_derivative_one {k} (h : 0 < k) : (derivative^[k]) (1 : R[X]) = 0
 #align polynomial.iterate_derivative_one Polynomial.iterate_derivative_one
 
 @[simp]
-theorem iterate_derivative_x {k} (h : 1 < k) : (derivative^[k]) (x : R[X]) = 0 :=
+theorem iterate_derivative_x {k} (h : 1 < k) : (derivative^[k]) (X : R[X]) = 0 :=
   iterate_derivative_eq_zero <| natDegree_x_le.trans_lt h
 #align polynomial.iterate_derivative_X Polynomial.iterate_derivative_x
 
@@ -275,7 +275,7 @@ theorem natDegree_eq_zero_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : 
 #align polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.natDegree_eq_zero_of_derivative_eq_zero
 
 theorem eq_c_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
-    f = c (f.coeff 0) :=
+    f = C (f.coeff 0) :=
   eq_c_of_natDegree_eq_zero <| natDegree_eq_zero_of_derivative_eq_zero h
 #align polynomial.eq_C_of_derivative_eq_zero Polynomial.eq_c_of_derivative_eq_zero
 
@@ -283,7 +283,7 @@ theorem eq_c_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]} (h : f.
 theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f * derivative g :=
   calc
     derivative (f * g) =
-        f.Sum fun n a => g.Sum fun m b => (n + m) • (c (a * b) * x ^ (n + m - 1)) :=
+        f.Sum fun n a => g.Sum fun m b => (n + m) • (C (a * b) * X ^ (n + m - 1)) :=
       by
       rw [mul_eq_sum_sum]
       trans; exact derivative_sum
@@ -298,7 +298,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
     _ =
         f.Sum fun n a =>
           g.Sum fun m b =>
-            n • (c a * x ^ (n - 1)) * (c b * x ^ m) + c a * x ^ n * m • (c b * x ^ (m - 1)) :=
+            n • (C a * X ^ (n - 1)) * (C b * X ^ m) + C a * X ^ n * m • (C b * X ^ (m - 1)) :=
       (sum_congr rfl fun n hn =>
         sum_congr rfl fun m hm => by
           cases n <;> cases m <;>
@@ -480,19 +480,19 @@ section CommSemiring
 variable [CommSemiring R]
 
 theorem derivative_pow_succ (p : R[X]) (n : ℕ) :
-    (p ^ (n + 1)).derivative = c ↑(n + 1) * p ^ n * p.derivative :=
+    (p ^ (n + 1)).derivative = C ↑(n + 1) * p ^ n * p.derivative :=
   Nat.recOn n (by rw [pow_one, Nat.cast_one, C_1, one_mul, pow_zero, one_mul]) fun n ih => by
     rw [pow_succ', derivative_mul, ih, Nat.add_one, mul_right_comm, Nat.cast_add n.succ, C_add,
       add_mul, add_mul, pow_succ', ← mul_assoc, Nat.cast_one, C_1, one_mul]
 #align polynomial.derivative_pow_succ Polynomial.derivative_pow_succ
 
 theorem derivative_pow (p : R[X]) (n : ℕ) :
-    (p ^ n).derivative = c ↑n * p ^ (n - 1) * p.derivative :=
+    (p ^ n).derivative = C ↑n * p ^ (n - 1) * p.derivative :=
   Nat.casesOn n (by rw [pow_zero, derivative_one, Nat.cast_zero, C_0, zero_mul, zero_mul]) fun n =>
     by rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
 #align polynomial.derivative_pow Polynomial.derivative_pow
 
-theorem derivative_sq (p : R[X]) : (p ^ 2).derivative = c 2 * p * p.derivative := by
+theorem derivative_sq (p : R[X]) : (p ^ 2).derivative = C 2 * p * p.derivative := by
   rw [derivative_pow_succ, Nat.cast_two, pow_one]
 #align polynomial.derivative_sq Polynomial.derivative_sq
 
@@ -506,7 +506,7 @@ theorem dvd_iterate_derivative_pow (f : R[X]) (n : ℕ) {m : ℕ} (c : R) (hm : 
 #align polynomial.dvd_iterate_derivative_pow Polynomial.dvd_iterate_derivative_pow
 
 theorem iterate_derivative_x_pow_eq_nat_cast_mul (n k : ℕ) :
-    (derivative^[k]) (x ^ n : R[X]) = ↑(Nat.descFactorial n k) * x ^ (n - k) :=
+    (derivative^[k]) (X ^ n : R[X]) = ↑(Nat.descFactorial n k) * X ^ (n - k) :=
   by
   induction' k with k ih
   · rw [Function.iterate_zero_apply, tsub_zero, Nat.descFactorial_zero, Nat.cast_one, one_mul]
@@ -517,26 +517,26 @@ theorem iterate_derivative_x_pow_eq_nat_cast_mul (n k : ℕ) :
 #align polynomial.iterate_derivative_X_pow_eq_nat_cast_mul Polynomial.iterate_derivative_x_pow_eq_nat_cast_mul
 
 theorem iterate_derivative_x_pow_eq_c_mul (n k : ℕ) :
-    (derivative^[k]) (x ^ n : R[X]) = c ↑(Nat.descFactorial n k) * x ^ (n - k) := by
+    (derivative^[k]) (X ^ n : R[X]) = C ↑(Nat.descFactorial n k) * X ^ (n - k) := by
   rw [iterate_derivative_X_pow_eq_nat_cast_mul n k, C_eq_nat_cast]
 #align polynomial.iterate_derivative_X_pow_eq_C_mul Polynomial.iterate_derivative_x_pow_eq_c_mul
 
 theorem iterate_derivative_x_pow_eq_smul (n : ℕ) (k : ℕ) :
-    (derivative^[k]) (x ^ n : R[X]) = (Nat.descFactorial n k : R) • x ^ (n - k) := by
+    (derivative^[k]) (X ^ n : R[X]) = (Nat.descFactorial n k : R) • X ^ (n - k) := by
   rw [iterate_derivative_X_pow_eq_C_mul n k, smul_eq_C_mul]
 #align polynomial.iterate_derivative_X_pow_eq_smul Polynomial.iterate_derivative_x_pow_eq_smul
 
 theorem derivative_x_add_c_pow (c : R) (m : ℕ) :
-    ((x + c c) ^ m).derivative = c ↑m * (x + c c) ^ (m - 1) := by
+    ((X + C c) ^ m).derivative = C ↑m * (X + C c) ^ (m - 1) := by
   rw [derivative_pow, derivative_X_add_C, mul_one]
 #align polynomial.derivative_X_add_C_pow Polynomial.derivative_x_add_c_pow
 
-theorem derivative_x_add_c_sq (c : R) : ((x + c c) ^ 2).derivative = c 2 * (x + c c) := by
+theorem derivative_x_add_c_sq (c : R) : ((X + C c) ^ 2).derivative = C 2 * (X + C c) := by
   rw [derivative_sq, derivative_X_add_C, mul_one]
 #align polynomial.derivative_X_add_C_sq Polynomial.derivative_x_add_c_sq
 
 theorem iterate_derivative_x_add_pow (n k : ℕ) (c : R) :
-    (derivative^[k]) ((x + c c) ^ n) = ↑(∏ i in Finset.range k, n - i) * (x + c c) ^ (n - k) :=
+    (derivative^[k]) ((X + C c) ^ n) = ↑(∏ i in Finset.range k, n - i) * (X + C c) ^ (n - k) :=
   by
   induction' k with k IH
   ·
@@ -563,7 +563,7 @@ theorem derivative_comp (p q : R[X]) : (p.comp q).derivative = q.derivative * p.
 
 /-- Chain rule for formal derivative of polynomials. -/
 theorem derivative_eval₂_c (p q : R[X]) :
-    (p.eval₂ c q).derivative = p.derivative.eval₂ c q * q.derivative :=
+    (p.eval₂ C q).derivative = p.derivative.eval₂ C q * q.derivative :=
   Polynomial.induction_on p (fun r => by rw [eval₂_C, derivative_C, eval₂_zero, zero_mul])
     (fun p₁ p₂ ih₁ ih₂ => by
       rw [eval₂_add, derivative_add, ih₁, ih₂, derivative_add, eval₂_add, add_mul])
@@ -612,7 +612,7 @@ theorem derivative_sub {f g : R[X]} : derivative (f - g) = derivative f - deriva
 #align polynomial.derivative_sub Polynomial.derivative_sub
 
 @[simp]
-theorem derivative_x_sub_c (c : R) : (x - c c).derivative = 1 := by
+theorem derivative_x_sub_c (c : R) : (X - C c).derivative = 1 := by
   rw [derivative_sub, derivative_X, derivative_C, sub_zero]
 #align polynomial.derivative_X_sub_C Polynomial.derivative_x_sub_c
 
@@ -646,12 +646,12 @@ section CommRing
 variable [CommRing R]
 
 theorem derivative_comp_one_sub_x (p : R[X]) :
-    (p.comp (1 - x)).derivative = -p.derivative.comp (1 - x) := by simp [derivative_comp]
+    (p.comp (1 - X)).derivative = -p.derivative.comp (1 - X) := by simp [derivative_comp]
 #align polynomial.derivative_comp_one_sub_X Polynomial.derivative_comp_one_sub_x
 
 @[simp]
 theorem iterate_derivative_comp_one_sub_x (p : R[X]) (k : ℕ) :
-    (derivative^[k]) (p.comp (1 - x)) = (-1) ^ k * ((derivative^[k]) p).comp (1 - x) :=
+    (derivative^[k]) (p.comp (1 - X)) = (-1) ^ k * ((derivative^[k]) p).comp (1 - X) :=
   by
   induction' k with k ih generalizing p
   · simp
@@ -659,7 +659,7 @@ theorem iterate_derivative_comp_one_sub_x (p : R[X]) (k : ℕ) :
 #align polynomial.iterate_derivative_comp_one_sub_X Polynomial.iterate_derivative_comp_one_sub_x
 
 theorem eval_multiset_prod_x_sub_c_derivative {S : Multiset R} {r : R} (hr : r ∈ S) :
-    eval r (Multiset.map (fun a => x - c a) S).Prod.derivative =
+    eval r (Multiset.map (fun a => X - C a) S).Prod.derivative =
       (Multiset.map (fun a => r - a) (S.eraseₓ r)).Prod :=
   by
   nth_rw 1 [← Multiset.cons_erase hr]
@@ -667,16 +667,16 @@ theorem eval_multiset_prod_x_sub_c_derivative {S : Multiset R} {r : R} (hr : r �
 #align polynomial.eval_multiset_prod_X_sub_C_derivative Polynomial.eval_multiset_prod_x_sub_c_derivative
 
 theorem derivative_x_sub_c_pow (c : R) (m : ℕ) :
-    ((x - c c) ^ m).derivative = c ↑m * (x - c c) ^ (m - 1) := by
+    ((X - C c) ^ m).derivative = C ↑m * (X - C c) ^ (m - 1) := by
   rw [derivative_pow, derivative_X_sub_C, mul_one]
 #align polynomial.derivative_X_sub_C_pow Polynomial.derivative_x_sub_c_pow
 
-theorem derivative_x_sub_c_sq (c : R) : ((x - c c) ^ 2).derivative = c 2 * (x - c c) := by
+theorem derivative_x_sub_c_sq (c : R) : ((X - C c) ^ 2).derivative = C 2 * (X - C c) := by
   rw [derivative_sq, derivative_X_sub_C, mul_one]
 #align polynomial.derivative_X_sub_C_sq Polynomial.derivative_x_sub_c_sq
 
 theorem iterate_derivative_x_sub_pow (n k : ℕ) (c : R) :
-    (derivative^[k]) ((x - c c) ^ n) = ↑(∏ i in Finset.range k, n - i) * (x - c c) ^ (n - k) := by
+    (derivative^[k]) ((X - C c) ^ n) = ↑(∏ i in Finset.range k, n - i) * (X - C c) ^ (n - k) := by
   simp_rw [sub_eq_add_neg, ← C_neg, iterate_derivative_X_add_pow]
 #align polynomial.iterate_derivative_X_sub_pow Polynomial.iterate_derivative_x_sub_pow
 

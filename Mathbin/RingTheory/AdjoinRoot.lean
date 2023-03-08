@@ -104,7 +104,7 @@ theorem induction_on {C : AdjoinRoot f → Prop} (x : AdjoinRoot f) (ih : ∀ p 
 
 /-- Embedding of the original ring `R` into `adjoin_root f`. -/
 def of : R →+* AdjoinRoot f :=
-  (mk f).comp c
+  (mk f).comp C
 #align adjoin_root.of AdjoinRoot.of
 
 instance [CommSemiring S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
@@ -142,7 +142,7 @@ theorem finitePresentation : Algebra.FinitePresentation R (AdjoinRoot f) :=
 
 /-- The adjoined root. -/
 def root : AdjoinRoot f :=
-  mk f x
+  mk f X
 #align adjoin_root.root AdjoinRoot.root
 
 variable {f}
@@ -175,12 +175,12 @@ theorem mk_self : mk f f = 0 :=
 #align adjoin_root.mk_self AdjoinRoot.mk_self
 
 @[simp]
-theorem mk_c (x : R) : mk f (c x) = x :=
+theorem mk_c (x : R) : mk f (C x) = x :=
   rfl
 #align adjoin_root.mk_C AdjoinRoot.mk_c
 
 @[simp]
-theorem mk_x : mk f x = root f :=
+theorem mk_x : mk f X = root f :=
   rfl
 #align adjoin_root.mk_X AdjoinRoot.mk_x
 
@@ -324,13 +324,13 @@ theorem liftHom_of {x : R} : liftHom f a hfx (of f x) = algebraMap _ _ x :=
 section AdjoinInv
 
 @[simp]
-theorem root_is_inv (r : R) : of _ r * root (c r * x - 1) = 1 := by
+theorem root_is_inv (r : R) : of _ r * root (C r * X - 1) = 1 := by
   convert sub_eq_zero.1 ((eval₂_sub _).symm.trans <| eval₂_root <| C r * X - 1) <;>
     simp only [eval₂_mul, eval₂_C, eval₂_X, eval₂_one]
 #align adjoin_root.root_is_inv AdjoinRoot.root_is_inv
 
 theorem algHom_subsingleton {S : Type _} [CommRing S] [Algebra R S] {r : R} :
-    Subsingleton (AdjoinRoot (c r * x - 1) →ₐ[R] S) :=
+    Subsingleton (AdjoinRoot (C r * X - 1) →ₐ[R] S) :=
   ⟨fun f g =>
     algHom_ext
       (@inv_unique _ _ (algebraMap R S r) _ _
@@ -383,7 +383,7 @@ theorem coe_injective' [Fact (Irreducible f)] : Function.Injective (coe : K → 
 variable (f)
 
 theorem mul_div_root_cancel [Fact (Irreducible f)] :
-    (x - c (root f)) * (f.map (of f) / (x - c (root f))) = f.map (of f) :=
+    (X - C (root f)) * (f.map (of f) / (X - C (root f))) = f.map (of f) :=
   mul_div_eq_iff_isRoot.2 <| isRoot_root _
 #align adjoin_root.mul_div_root_cancel AdjoinRoot.mul_div_root_cancel
 
@@ -504,7 +504,7 @@ theorem isIntegral_root (hf : f ≠ 0) : IsIntegral K (root f) :=
   isAlgebraic_iff_isIntegral.mp (isAlgebraic_root hf)
 #align adjoin_root.is_integral_root AdjoinRoot.isIntegral_root
 
-theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff⁻¹ :=
+theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * C f.leadingCoeff⁻¹ :=
   by
   have f'_monic : monic _ := monic_mul_leading_coeff_inv hf
   refine' (minpoly.unique K _ f'_monic _ _).symm
@@ -559,7 +559,7 @@ def powerBasis (hf : f ≠ 0) : PowerBasis K (AdjoinRoot f)
 #align adjoin_root.power_basis AdjoinRoot.powerBasis
 
 theorem minpoly_powerBasis_gen (hf : f ≠ 0) :
-    minpoly K (powerBasis hf).gen = f * c f.leadingCoeff⁻¹ := by
+    minpoly K (powerBasis hf).gen = f * C f.leadingCoeff⁻¹ := by
   rw [power_basis_gen, minpoly_root hf]
 #align adjoin_root.minpoly_power_basis_gen AdjoinRoot.minpoly_powerBasis_gen
 
@@ -597,7 +597,7 @@ theorem Minpoly.toAdjoin_apply' (a : AdjoinRoot (minpoly R x)) :
 #align adjoin_root.minpoly.to_adjoin_apply' AdjoinRoot.Minpoly.toAdjoin_apply'
 
 theorem Minpoly.toAdjoin.apply_x :
-    Minpoly.toAdjoin R x (mk (minpoly R x) x) = ⟨x, self_mem_adjoin_singleton R x⟩ := by simp
+    Minpoly.toAdjoin R x (mk (minpoly R x) X) = ⟨x, self_mem_adjoin_singleton R x⟩ := by simp
 #align adjoin_root.minpoly.to_adjoin.apply_X AdjoinRoot.Minpoly.toAdjoin.apply_x
 
 variable (R x)
@@ -688,7 +688,7 @@ variable [CommRing R] (I : Ideal R) (f : R[X])
 See `adjoin_root.quot_map_of_equiv` for the isomorphism with `(R/I)[X] / (f mod I)`. -/
 def quotMapOfEquivQuotMapCMapSpanMk :
     AdjoinRoot f ⧸ I.map (of f) ≃+*
-      AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span {f}).Quotient.mk :=
+      AdjoinRoot f ⧸ (I.map (C : R →+* R[X])).map (span {f}).Quotient.mk :=
   Ideal.quotEquivOfEq (by rw [of, AdjoinRoot.mk, Ideal.map_map])
 #align adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk AdjoinRoot.quotMapOfEquivQuotMapCMapSpanMk
 
@@ -702,7 +702,7 @@ theorem quotMapOfEquivQuotMapCMapSpanMk_mk (x : AdjoinRoot f) :
 --this lemma should have the simp tag but this causes a lint issue
 theorem quotMapOfEquivQuotMapCMapSpanMk_symm_mk (x : AdjoinRoot f) :
     (quotMapOfEquivQuotMapCMapSpanMk I f).symm
-        (Ideal.Quotient.mk ((I.map (c : R →+* R[X])).map (span {f}).Quotient.mk) x) =
+        (Ideal.Quotient.mk ((I.map (C : R →+* R[X])).map (span {f}).Quotient.mk) x) =
       Ideal.Quotient.mk (I.map (of f)) x :=
   by rw [quot_map_of_equiv_quot_map_C_map_span_mk, Ideal.quotEquivOfEq_symm, quot_equiv_of_eq_mk]
 #align adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk AdjoinRoot.quotMapOfEquivQuotMapCMapSpanMk_symm_mk
@@ -710,22 +710,22 @@ theorem quotMapOfEquivQuotMapCMapSpanMk_symm_mk (x : AdjoinRoot f) :
 /-- The natural isomorphism `R[α]/((I[x] ⊔ (f)) / (f)) ≅ (R[x]/I[x])/((f) ⊔ I[x] / I[x])`
   for `α` a root of `f : R[X]` and `I : ideal R`-/
 def quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk :
-    AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span ({f} : Set R[X])).Quotient.mk ≃+*
-      (R[X] ⧸ I.map (c : R →+* R[X])) ⧸
-        (span ({f} : Set R[X])).map (I.map (c : R →+* R[X])).Quotient.mk :=
-  quotQuotEquivComm (Ideal.span ({f} : Set R[X])) (I.map (c : R →+* R[X]))
+    AdjoinRoot f ⧸ (I.map (C : R →+* R[X])).map (span ({f} : Set R[X])).Quotient.mk ≃+*
+      (R[X] ⧸ I.map (C : R →+* R[X])) ⧸
+        (span ({f} : Set R[X])).map (I.map (C : R →+* R[X])).Quotient.mk :=
+  quotQuotEquivComm (Ideal.span ({f} : Set R[X])) (I.map (C : R →+* R[X]))
 #align adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk AdjoinRoot.quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk
 
 @[simp]
 theorem quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk_mk (p : R[X]) :
     quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f (Ideal.Quotient.mk _ (mk f p)) =
-      quotQuotMk (I.map c) (span {f}) p :=
+      quotQuotMk (I.map C) (span {f}) p :=
   rfl
 #align adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk AdjoinRoot.quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk_mk
 
 @[simp]
 theorem quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk_symm_quotQuotMk (p : R[X]) :
-    (quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f).symm (quotQuotMk (I.map c) (span {f}) p) =
+    (quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f).symm (quotQuotMk (I.map C) (span {f}) p) =
       Ideal.Quotient.mk _ (mk f p) :=
   rfl
 #align adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk AdjoinRoot.quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk_symm_quotQuotMk
@@ -734,9 +734,9 @@ theorem quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk_symm_quotQuotMk (p : R[X]) :
   `f : R[X]` and `I : ideal R`-/
 def Polynomial.quotQuotEquivComm :
     (R ⧸ I)[X] ⧸ span ({f.map I.Quotient.mk} : Set (Polynomial (R ⧸ I))) ≃+*
-      (R[X] ⧸ map c I) ⧸ span ({(Ideal.Quotient.mk (I C)) f} : Set (R[X] ⧸ map c I)) :=
+      (R[X] ⧸ map C I) ⧸ span ({(Ideal.Quotient.mk (I C)) f} : Set (R[X] ⧸ map C I)) :=
   quotientEquiv (span ({f.map I.Quotient.mk} : Set (Polynomial (R ⧸ I))))
-    (span {Ideal.Quotient.mk (I.map Polynomial.c) f}) (polynomialQuotientEquivQuotientPolynomial I)
+    (span {Ideal.Quotient.mk (I.map Polynomial.C) f}) (polynomialQuotientEquivQuotientPolynomial I)
     (by
       rw [map_span, Set.image_singleton, RingEquiv.coe_toRingHom,
         polynomial_quotient_equiv_quotient_polynomial_map_mk I f])
@@ -768,8 +768,8 @@ def quotAdjoinRootEquivQuotPolynomialQuot :
     ((quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f).trans
       ((Ideal.quotEquivOfEq
             (show
-              (span ({f} : Set R[X])).map (I.map (c : R →+* R[X])).Quotient.mk =
-                span ({(Ideal.Quotient.mk (I Polynomial.c)) f} : Set (R[X] ⧸ map c I))
+              (span ({f} : Set R[X])).map (I.map (C : R →+* R[X])).Quotient.mk =
+                span ({(Ideal.Quotient.mk (I Polynomial.C)) f} : Set (R[X] ⧸ map C I))
               by rw [map_span, Set.image_singleton])).trans
         (Polynomial.quotQuotEquivComm I f).symm))
 #align adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot AdjoinRoot.quotAdjoinRootEquivQuotPolynomialQuot

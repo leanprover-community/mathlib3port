@@ -181,7 +181,7 @@ noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (ZMod 
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`.
 Asserts that the Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ`
 if `cyclotomic n K` is irreducible in the base field. -/
-noncomputable def galXPowEquivUnitsZmod : (x ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
+noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_X_pow_equiv_units_zmod galXPowEquivUnitsZmod

@@ -291,7 +291,7 @@ theorem IsIntegral.exists_multiple_integral_of_isLocalization [Algebra Rₘ S] [
   by
   cases' subsingleton_or_nontrivial Rₘ with _ nontriv <;> skip
   · haveI := (algebraMap Rₘ S).codomain_trivial
-    exact ⟨1, Polynomial.x, Polynomial.monic_x, Subsingleton.elim _ _⟩
+    exact ⟨1, Polynomial.X, Polynomial.monic_x, Subsingleton.elim _ _⟩
   obtain ⟨p, hp₁, hp₂⟩ := hx
   obtain ⟨p', hp'₁, -, hp'₂⟩ :=
     lifts_and_nat_degree_eq_and_monic (IsLocalization.scaleRoots_commonDenom_mem_lifts M p _) _

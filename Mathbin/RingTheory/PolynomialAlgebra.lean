@@ -59,7 +59,7 @@ as a bilinear function of two arguments.
 -/
 @[simps apply_apply]
 def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
-  LinearMap.toSpanSingleton A _ (aeval (Polynomial.x : A[X])).toLinearMap
+  LinearMap.toSpanSingleton A _ (aeval (Polynomial.X : A[X])).toLinearMap
 #align poly_equiv_tensor.to_fun_bilinear PolyEquivTensor.toFunBilinear
 
 theorem toFunBilinear_apply_eq_sum (a : A) (p : R[X]) :
@@ -144,7 +144,7 @@ The bare function `A[X] → A ⊗[R] R[X]`.
 (We don't need to show that it's an algebra map, thankfully --- just that it's an inverse.)
 -/
 def invFun (p : A[X]) : A ⊗[R] R[X] :=
-  p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (x : R[X]))
+  p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (X : R[X]))
 #align poly_equiv_tensor.inv_fun PolyEquivTensor.invFun
 
 @[simp]
@@ -153,7 +153,7 @@ theorem invFun_add {p q} : invFun R A (p + q) = invFun R A p + invFun R A q := b
 #align poly_equiv_tensor.inv_fun_add PolyEquivTensor.invFun_add
 
 theorem invFun_monomial (n : ℕ) (a : A) :
-    invFun R A (monomial n a) = includeLeft a * (1 : A) ⊗ₜ[R] (x : R[X]) ^ n :=
+    invFun R A (monomial n a) = includeLeft a * (1 : A) ⊗ₜ[R] (X : R[X]) ^ n :=
   eval₂_monomial _ _
 #align poly_equiv_tensor.inv_fun_monomial PolyEquivTensor.invFun_monomial
 
@@ -210,7 +210,7 @@ def polyEquivTensor : A[X] ≃ₐ[R] A ⊗[R] R[X] :=
 @[simp]
 theorem polyEquivTensor_apply (p : A[X]) :
     polyEquivTensor R A p =
-      p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (x : R[X])) :=
+      p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (X : R[X])) :=
   rfl
 #align poly_equiv_tensor_apply polyEquivTensor_apply
 

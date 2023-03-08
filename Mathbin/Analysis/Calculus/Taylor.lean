@@ -66,7 +66,7 @@ $$∑_{k=0}^n \frac{(x - x₀)^k}{k!} f^{(k)}(x₀),$$
 where $f^{(k)}(x₀)$ denotes the iterated derivative in the set `s`. -/
 noncomputable def taylorWithin (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) : PolynomialModule ℝ E :=
   (Finset.range (n + 1)).Sum fun k =>
-    PolynomialModule.comp (Polynomial.x - Polynomial.c x₀)
+    PolynomialModule.comp (Polynomial.X - Polynomial.C x₀)
       (PolynomialModule.single ℝ k (taylorCoeffWithin f k s x₀))
 #align taylor_within taylorWithin
 
@@ -78,7 +78,7 @@ noncomputable def taylorWithinEval (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀
 theorem taylorWithin_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) :
     taylorWithin f (n + 1) s x₀ =
       taylorWithin f n s x₀ +
-        PolynomialModule.comp (Polynomial.x - Polynomial.c x₀)
+        PolynomialModule.comp (Polynomial.X - Polynomial.C x₀)
           (PolynomialModule.single ℝ (n + 1) (taylorCoeffWithin f (n + 1) s x₀)) :=
   by
   dsimp only [taylorWithin]

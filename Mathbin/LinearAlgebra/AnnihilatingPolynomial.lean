@@ -83,7 +83,7 @@ Since `𝕜[X]` is a principal ideal domain there is a polynomial `g` such that
  We prefer the monic generator of the ideal. -/
 noncomputable def annIdealGenerator (a : A) : 𝕜[X] :=
   let g := IsPrincipal.generator <| annIdeal 𝕜 a
-  g * c g.leadingCoeff⁻¹
+  g * C g.leadingCoeff⁻¹
 #align polynomial.ann_ideal_generator Polynomial.annIdealGenerator
 
 section
@@ -93,7 +93,7 @@ variable {𝕜}
 @[simp]
 theorem annIdealGenerator_eq_zero_iff {a : A} : annIdealGenerator 𝕜 a = 0 ↔ annIdeal 𝕜 a = ⊥ := by
   simp only [ann_ideal_generator, mul_eq_zero, is_principal.eq_bot_iff_generator_eq_zero,
-    Polynomial.c_eq_zero, inv_eq_zero, Polynomial.leadingCoeff_eq_zero, or_self_iff]
+    Polynomial.C_eq_zero, inv_eq_zero, Polynomial.leadingCoeff_eq_zero, or_self_iff]
 #align polynomial.ann_ideal_generator_eq_zero_iff Polynomial.annIdealGenerator_eq_zero_iff
 
 end

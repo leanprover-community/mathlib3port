@@ -101,7 +101,7 @@ theorem exists_eq_mul_self [IsAlgClosed k] (x : k) : ∃ z, x = z * z :=
   exact ⟨z, sq z⟩
 #align is_alg_closed.exists_eq_mul_self IsAlgClosed.exists_eq_mul_self
 
-theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} : p.roots = 0 ↔ p = Polynomial.c (p.coeff 0) :=
+theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} : p.roots = 0 ↔ p = Polynomial.C (p.coeff 0) :=
   by
   refine' ⟨fun h => _, fun hp => by rw [hp, roots_C]⟩
   cases' le_or_lt (degree p) 0 with hd hd
@@ -139,11 +139,11 @@ theorem of_exists_root (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p
     IsAlgClosed k :=
   ⟨fun p =>
     Or.inr fun q hq hqp =>
-      have : Irreducible (q * c (leadingCoeff q)⁻¹) :=
+      have : Irreducible (q * C (leadingCoeff q)⁻¹) :=
         by
         rw [← coe_norm_unit_of_ne_zero hq.ne_zero]
         exact (associated_normalize _).Irreducible hq
-      let ⟨x, hx⟩ := H (q * c (leadingCoeff q)⁻¹) (monic_mul_leadingCoeff_inv hq.NeZero) this
+      let ⟨x, hx⟩ := H (q * C (leadingCoeff q)⁻¹) (monic_mul_leadingCoeff_inv hq.NeZero) this
       degree_mul_leadingCoeff_inv q hq.NeZero ▸ degree_eq_one_of_irreducible_of_root this hx⟩
 #align is_alg_closed.of_exists_root IsAlgClosed.of_exists_root
 

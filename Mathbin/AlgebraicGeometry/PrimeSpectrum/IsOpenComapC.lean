@@ -49,14 +49,14 @@ theorem isOpen_imageOfDf : IsOpen (imageOfDf f) :=
 This lemma is a reformulation of `exists_C_coeff_not_mem`. -/
 theorem comap_c_mem_imageOfDf {I : PrimeSpectrum R[X]}
     (H : I ∈ (zeroLocus {f} : Set (PrimeSpectrum R[X]))ᶜ) :
-    PrimeSpectrum.comap (Polynomial.c : R →+* R[X]) I ∈ imageOfDf f :=
-  exists_c_coeff_not_mem (mem_compl_zeroLocus_iff_not_mem.mp H)
+    PrimeSpectrum.comap (Polynomial.C : R →+* R[X]) I ∈ imageOfDf f :=
+  exists_C_coeff_not_mem (mem_compl_zeroLocus_iff_not_mem.mp H)
 #align algebraic_geometry.polynomial.comap_C_mem_image_of_Df AlgebraicGeometry.Polynomial.comap_c_mem_imageOfDf
 
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
 theorem imageOfDf_eq_comap_c_compl_zeroLocus :
-    imageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' zeroLocus {f}ᶜ :=
+    imageOfDf f = PrimeSpectrum.comap (C : R →+* R[X]) '' zeroLocus {f}ᶜ :=
   by
   ext x
   refine' ⟨fun hx => ⟨⟨map C x.as_ideal, is_prime_map_C_of_is_prime x.is_prime⟩, ⟨_, _⟩⟩, _⟩
@@ -76,7 +76,7 @@ Stacks Project "Lemma 00FB", first part.
 
 https://stacks.math.columbia.edu/tag/00FB
 -/
-theorem isOpenMap_comap_c : IsOpenMap (PrimeSpectrum.comap (c : R →+* R[X])) :=
+theorem isOpenMap_comap_c : IsOpenMap (PrimeSpectrum.comap (C : R →+* R[X])) :=
   by
   rintro U ⟨s, z⟩
   rw [← compl_compl U, ← z, ← Union_of_singleton_coe s, zero_locus_Union, compl_Inter, image_Union]

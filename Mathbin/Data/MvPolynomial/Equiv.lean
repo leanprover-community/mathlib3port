@@ -69,12 +69,12 @@ polynomials over the ground ring.
 @[simps]
 def punitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X]
     where
-  toFun := eval₂ Polynomial.c fun u : PUnit => Polynomial.x
+  toFun := eval₂ Polynomial.C fun u : PUnit => Polynomial.X
   invFun := Polynomial.eval₂ MvPolynomial.c (x PUnit.unit)
   left_inv :=
     by
     let f : R[X] →+* MvPolynomial PUnit R := Polynomial.eval₂RingHom MvPolynomial.c (X PUnit.unit)
-    let g : MvPolynomial PUnit R →+* R[X] := eval₂_hom Polynomial.c fun u : PUnit => Polynomial.x
+    let g : MvPolynomial PUnit R →+* R[X] := eval₂_hom Polynomial.C fun u : PUnit => Polynomial.X
     show ∀ p, f.comp g p = p
     apply is_id
     · ext a
@@ -296,7 +296,7 @@ polynomials with coefficients in `mv_polynomial S₁ R`.
 -/
 @[simps]
 def optionEquivLeft : MvPolynomial (Option S₁) R ≃ₐ[R] Polynomial (MvPolynomial S₁ R) :=
-  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.x fun s => Polynomial.c (x s))
+  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.X fun s => Polynomial.C (x s))
     (Polynomial.aevalTower (MvPolynomial.rename some) (x none))
     (by ext : 2 <;> simp [← Polynomial.c_eq_algebraMap]) (by ext i : 2 <;> cases i <;> simp)
 #align mv_polynomial.option_equiv_left MvPolynomial.optionEquivLeft
@@ -307,7 +307,7 @@ end
 multivariable polynomials with coefficients in polynomials.
 -/
 def optionEquivRight : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ R[X] :=
-  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim (c Polynomial.x) x)
+  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim (c Polynomial.X) x)
     (MvPolynomial.aevalTower (Polynomial.aeval (x none)) fun i => x (Option.some i))
     (by
       ext : 2 <;>
@@ -331,8 +331,8 @@ def finSuccEquiv : MvPolynomial (Fin (n + 1)) R ≃ₐ[R] Polynomial (MvPolynomi
 
 theorem finSuccEquiv_eq :
     (finSuccEquiv R n : MvPolynomial (Fin (n + 1)) R →+* Polynomial (MvPolynomial (Fin n) R)) =
-      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Fin n) R)) fun i : Fin (n + 1) =>
-        Fin.cases Polynomial.x (fun k => Polynomial.c (x k)) i :=
+      eval₂Hom (Polynomial.C.comp (c : R →+* MvPolynomial (Fin n) R)) fun i : Fin (n + 1) =>
+        Fin.cases Polynomial.X (fun k => Polynomial.C (x k)) i :=
   by
   ext : 2
   · simp only [finSuccEquiv, option_equiv_left_apply, aeval_C, AlgEquiv.coe_trans, RingHom.coe_coe,
@@ -345,8 +345,8 @@ theorem finSuccEquiv_eq :
 @[simp]
 theorem finSuccEquiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
     finSuccEquiv R n p =
-      eval₂Hom (Polynomial.c.comp (c : R →+* MvPolynomial (Fin n) R))
-        (fun i : Fin (n + 1) => Fin.cases Polynomial.x (fun k => Polynomial.c (x k)) i) p :=
+      eval₂Hom (Polynomial.C.comp (c : R →+* MvPolynomial (Fin n) R))
+        (fun i : Fin (n + 1) => Fin.cases Polynomial.X (fun k => Polynomial.C (x k)) i) p :=
   by
   rw [← fin_succ_equiv_eq]
   rfl
@@ -354,7 +354,7 @@ theorem finSuccEquiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
 
 theorem finSuccEquiv_comp_c_eq_c {R : Type u} [CommSemiring R] (n : ℕ) :
     (↑(MvPolynomial.finSuccEquiv R n).symm : Polynomial (MvPolynomial (Fin n) R) →+* _).comp
-        (Polynomial.c.comp MvPolynomial.c) =
+        (Polynomial.C.comp MvPolynomial.c) =
       (MvPolynomial.c : R →+* MvPolynomial (Fin n.succ) R) :=
   by
   refine' RingHom.ext fun x => _
@@ -367,10 +367,10 @@ theorem finSuccEquiv_comp_c_eq_c {R : Type u} [CommSemiring R] (n : ℕ) :
 
 variable {n} {R}
 
-theorem finSuccEquiv_x_zero : finSuccEquiv R n (x 0) = Polynomial.x := by simp
+theorem finSuccEquiv_x_zero : finSuccEquiv R n (x 0) = Polynomial.X := by simp
 #align mv_polynomial.fin_succ_equiv_X_zero MvPolynomial.finSuccEquiv_x_zero
 
-theorem finSuccEquiv_x_succ {j : Fin n} : finSuccEquiv R n (x j.succ) = Polynomial.c (x j) := by
+theorem finSuccEquiv_x_succ {j : Fin n} : finSuccEquiv R n (x j.succ) = Polynomial.C (x j) := by
   simp
 #align mv_polynomial.fin_succ_equiv_X_succ MvPolynomial.finSuccEquiv_x_succ
 
@@ -383,9 +383,9 @@ theorem finSuccEquiv_coeff_coeff (m : Fin n →₀ ℕ) (f : MvPolynomial (Fin (
   swap
   · simp only [(finSuccEquiv R n).map_add, Polynomial.coeff_add, coeff_add, hp, hq]
   simp only [fin_succ_equiv_apply, coe_eval₂_hom, eval₂_monomial, RingHom.coe_comp, prod_pow,
-    Polynomial.coeff_c_mul, coeff_C_mul, coeff_monomial, Fin.prod_univ_succ, Fin.cases_zero,
+    Polynomial.coeff_C_mul, coeff_C_mul, coeff_monomial, Fin.prod_univ_succ, Fin.cases_zero,
     Fin.cases_succ, ← RingHom.map_prod, ← RingHom.map_pow]
-  rw [← mul_boole, mul_comm (Polynomial.x ^ j 0), Polynomial.coeff_c_mul_x_pow]; congr 1
+  rw [← mul_boole, mul_comm (Polynomial.X ^ j 0), Polynomial.coeff_C_mul_X_pow]; congr 1
   obtain rfl | hjmi := eq_or_ne j (m.cons i)
   ·
     simpa only [cons_zero, cons_succ, if_pos rfl, monomial_eq, C_1, one_mul, prod_pow] using

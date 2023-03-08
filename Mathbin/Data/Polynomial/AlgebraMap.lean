@@ -55,31 +55,31 @@ instance algebraOfAlgebra : Algebra R A[X]
       dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
       convert Algebra.commutes' r p.to_finsupp
-  toRingHom := c.comp (algebraMap R A)
+  toRingHom := C.comp (algebraMap R A)
 #align polynomial.algebra_of_algebra Polynomial.algebraOfAlgebra
 
-theorem algebraMap_apply (r : R) : algebraMap R A[X] r = c (algebraMap R A r) :=
+theorem algebraMap_apply (r : R) : algebraMap R A[X] r = C (algebraMap R A r) :=
   rfl
 #align polynomial.algebra_map_apply Polynomial.algebraMap_apply
 
 @[simp]
 theorem toFinsupp_algebraMap (r : R) : (algebraMap R A[X] r).toFinsupp = algebraMap R _ r :=
-  show toFinsupp (c (algebraMap _ _ r)) = _
+  show toFinsupp (C (algebraMap _ _ r)) = _
     by
     rw [to_finsupp_C]
     rfl
 #align polynomial.to_finsupp_algebra_map Polynomial.toFinsupp_algebraMap
 
-theorem of_finsupp_algebraMap (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R A[X] r :=
+theorem ofFinsupp_algebraMap (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R A[X] r :=
   toFinsupp_injective (toFinsupp_algebraMap _).symm
-#align polynomial.of_finsupp_algebra_map Polynomial.of_finsupp_algebraMap
+#align polynomial.of_finsupp_algebra_map Polynomial.ofFinsupp_algebraMap
 
 /-- When we have `[comm_semiring R]`, the function `C` is the same as `algebra_map R R[X]`.
 
 (But note that `C` is defined when `R` is not necessarily commutative, in which case
 `algebra_map` is not available.)
 -/
-theorem c_eq_algebraMap (r : R) : c r = algebraMap R R[X] r :=
+theorem c_eq_algebraMap (r : R) : C r = algebraMap R R[X] r :=
   rfl
 #align polynomial.C_eq_algebra_map Polynomial.c_eq_algebraMap
 
@@ -90,7 +90,7 @@ variable {R}
 @[ext]
 theorem algHom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
     (h₁ : f.comp (IsScalarTower.toAlgHom R A' A'[X]) = g.comp (IsScalarTower.toAlgHom R A' A'[X]))
-    (h₂ : f x = g x) : f = g :=
+    (h₂ : f X = g X) : f = g :=
   AlgHom.coe_ringHom_injective (Polynomial.ringHom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
 #align polynomial.alg_hom_ext' Polynomial.algHom_ext'
 
@@ -130,9 +130,9 @@ theorem algHom_eval₂_algebraMap {R A B : Type _} [CommSemiring R] [Semiring A]
 
 @[simp]
 theorem eval₂_algebraMap_x {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (p : R[X])
-    (f : R[X] →ₐ[R] A) : eval₂ (algebraMap R A) (f x) p = f p :=
+    (f : R[X] →ₐ[R] A) : eval₂ (algebraMap R A) (f X) p = f p :=
   by
-  conv_rhs => rw [← Polynomial.sum_c_mul_x_pow_eq p]
+  conv_rhs => rw [← Polynomial.sum_C_mul_X_pow_eq p]
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_intCast, map_intCast]
   simp [Polynomial.c_eq_algebraMap]
@@ -147,7 +147,7 @@ theorem ringHom_eval₂_cast_int_ringHom {R S : Type _} [Ring R] [Ring S] (p : �
 
 @[simp]
 theorem eval₂_int_castRingHom_x {R : Type _} [Ring R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
-    eval₂ (Int.castRingHom R) (f x) p = f p :=
+    eval₂ (Int.castRingHom R) (f X) p = f p :=
   eval₂_algebraMap_x p f.toIntAlgHom
 #align polynomial.eval₂_int_cast_ring_hom_X Polynomial.eval₂_int_castRingHom_x
 
@@ -175,7 +175,7 @@ def aeval : R[X] →ₐ[R] A :=
 variable {R A}
 
 @[simp]
-theorem adjoin_x : Algebra.adjoin R ({x} : Set R[X]) = ⊤ :=
+theorem adjoin_x : Algebra.adjoin R ({X} : Set R[X]) = ⊤ :=
   by
   refine' top_unique fun p hp => _
   set S := Algebra.adjoin R ({X} : Set R[X])
@@ -184,7 +184,7 @@ theorem adjoin_x : Algebra.adjoin R ({x} : Set R[X]) = ⊤ :=
 #align polynomial.adjoin_X Polynomial.adjoin_x
 
 @[ext]
-theorem algHom_ext {f g : R[X] →ₐ[R] A} (h : f x = g x) : f = g :=
+theorem algHom_ext {f g : R[X] →ₐ[R] A} (h : f X = g X) : f = g :=
   AlgHom.ext_of_adjoin_eq_top adjoin_x fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 #align polynomial.alg_hom_ext Polynomial.algHom_ext
 
@@ -198,12 +198,12 @@ theorem aeval_zero : aeval x (0 : R[X]) = 0 :=
 #align polynomial.aeval_zero Polynomial.aeval_zero
 
 @[simp]
-theorem aeval_x : aeval x (x : R[X]) = x :=
+theorem aeval_x : aeval x (X : R[X]) = x :=
   eval₂_x _ x
 #align polynomial.aeval_X Polynomial.aeval_x
 
 @[simp]
-theorem aeval_c (r : R) : aeval x (c r) = algebraMap R A r :=
+theorem aeval_c (r : R) : aeval x (C r) = algebraMap R A r :=
   eval₂_c _ x
 #align polynomial.aeval_C Polynomial.aeval_c
 
@@ -213,7 +213,7 @@ theorem aeval_monomial {n : ℕ} {r : R} : aeval x (monomial n r) = algebraMap _
 #align polynomial.aeval_monomial Polynomial.aeval_monomial
 
 @[simp]
-theorem aeval_x_pow {n : ℕ} : aeval x ((x : R[X]) ^ n) = x ^ n :=
+theorem aeval_x_pow {n : ℕ} : aeval x ((X : R[X]) ^ n) = x ^ n :=
   eval₂_x_pow _ _
 #align polynomial.aeval_X_pow Polynomial.aeval_x_pow
 
@@ -256,15 +256,15 @@ theorem aeval_algHom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x
 #align polynomial.aeval_alg_hom Polynomial.aeval_algHom
 
 @[simp]
-theorem aeval_x_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
-  algHom_ext <| aeval_x x
+theorem aeval_x_left : aeval (X : R[X]) = AlgHom.id R R[X] :=
+  algHom_ext <| aeval_x X
 #align polynomial.aeval_X_left Polynomial.aeval_x_left
 
-theorem aeval_x_left_apply (p : R[X]) : aeval x p = p :=
+theorem aeval_x_left_apply (p : R[X]) : aeval X p = p :=
   AlgHom.congr_fun (@aeval_x_left R _) p
 #align polynomial.aeval_X_left_apply Polynomial.aeval_x_left_apply
 
-theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ x) p := by
+theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ X) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
 #align polynomial.eval_unique Polynomial.eval_unique
 
@@ -388,17 +388,17 @@ def aevalTower (f : R →ₐ[S] A') (x : A') : R[X] →ₐ[S] A' :=
 variable (g : R →ₐ[S] A') (y : A')
 
 @[simp]
-theorem aevalTower_x : aevalTower g y x = y :=
+theorem aevalTower_x : aevalTower g y X = y :=
   eval₂_x _ _
 #align polynomial.aeval_tower_X Polynomial.aevalTower_x
 
 @[simp]
-theorem aevalTower_c (x : R) : aevalTower g y (c x) = g x :=
+theorem aevalTower_c (x : R) : aevalTower g y (C x) = g x :=
   eval₂_c _ _
 #align polynomial.aeval_tower_C Polynomial.aevalTower_c
 
 @[simp]
-theorem aevalTower_comp_c : (aevalTower g y : R[X] →+* A').comp c = g :=
+theorem aevalTower_comp_c : (aevalTower g y : R[X] →+* A').comp C = g :=
   RingHom.ext <| aevalTower_c _ _
 #align polynomial.aeval_tower_comp_C Polynomial.aevalTower_comp_c
 
@@ -479,7 +479,7 @@ when evaluated at `r`.
 
 This is the key step in our proof of the Cayley-Hamilton theorem.
 -/
-theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (x - c r)).eval r = 0 :=
+theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (X - C r)).eval r = 0 :=
   by
   simp only [eval, eval₂, RingHom.id_apply]
   have bound :=
@@ -500,7 +500,7 @@ theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (x - c r)).eval r = 0 :=
   simp [sum_range_sub', coeff_monomial]
 #align polynomial.eval_mul_X_sub_C Polynomial.eval_mul_x_sub_c
 
-theorem not_isUnit_x_sub_c [Nontrivial R] (r : R) : ¬IsUnit (x - c r) :=
+theorem not_isUnit_x_sub_c [Nontrivial R] (r : R) : ¬IsUnit (X - C r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ => zero_ne_one' R <| by erw [← eval_mul_X_sub_C, hgf, eval_one]
 #align polynomial.not_is_unit_X_sub_C Polynomial.not_isUnit_x_sub_c
 

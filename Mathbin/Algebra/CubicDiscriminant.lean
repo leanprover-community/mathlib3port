@@ -64,11 +64,11 @@ variable {P Q : Cubic R} {a b c d a' b' c' d' : R} [Semiring R]
 
 /-- Convert a cubic polynomial to a polynomial. -/
 def toPoly (P : Cubic R) : R[X] :=
-  c P.a * x ^ 3 + c P.b * x ^ 2 + c P.c * x + c P.d
+  C P.a * X ^ 3 + C P.b * X ^ 2 + C P.c * X + C P.d
 #align cubic.to_poly Cubic.toPoly
 
 theorem c_mul_prod_x_sub_c_eq [CommRing S] {w x y z : S} :
-    c w * (x - c x) * (x - c y) * (x - c z) =
+    C w * (X - C x) * (X - C y) * (X - C z) =
       toPoly ⟨w, w * -(x + y + z), w * (x * y + x * z + y * z), w * -(x * y * z)⟩ :=
   by
   simp only [to_poly, C_neg, C_add, C_mul]
@@ -76,7 +76,7 @@ theorem c_mul_prod_x_sub_c_eq [CommRing S] {w x y z : S} :
 #align cubic.C_mul_prod_X_sub_C_eq Cubic.c_mul_prod_x_sub_c_eq
 
 theorem prod_x_sub_c_eq [CommRing S] {x y z : S} :
-    (x - c x) * (x - c y) * (x - c z) =
+    (X - C x) * (X - C y) * (X - C z) =
       toPoly ⟨1, -(x + y + z), x * y + x * z + y * z, -(x * y * z)⟩ :=
   by rw [← one_mul <| X - C x, ← C_1, C_mul_prod_X_sub_C_eq, one_mul, one_mul, one_mul]
 #align cubic.prod_X_sub_C_eq Cubic.prod_x_sub_c_eq
@@ -140,27 +140,27 @@ theorem toPoly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
   ⟨fun h => ext P Q (a_of_eq h) (b_of_eq h) (c_of_eq h) (d_of_eq h), congr_arg toPoly⟩
 #align cubic.to_poly_injective Cubic.toPoly_injective
 
-theorem of_a_eq_zero (ha : P.a = 0) : P.toPoly = c P.b * x ^ 2 + c P.c * x + c P.d := by
+theorem of_a_eq_zero (ha : P.a = 0) : P.toPoly = C P.b * X ^ 2 + C P.c * X + C P.d := by
   rw [to_poly, ha, C_0, zero_mul, zero_add]
 #align cubic.of_a_eq_zero Cubic.of_a_eq_zero
 
-theorem of_a_eq_zero' : toPoly ⟨0, b, c, d⟩ = c b * x ^ 2 + c c * x + c d :=
+theorem of_a_eq_zero' : toPoly ⟨0, b, c, d⟩ = C b * X ^ 2 + C c * X + C d :=
   of_a_eq_zero rfl
 #align cubic.of_a_eq_zero' Cubic.of_a_eq_zero'
 
-theorem of_b_eq_zero (ha : P.a = 0) (hb : P.b = 0) : P.toPoly = c P.c * x + c P.d := by
+theorem of_b_eq_zero (ha : P.a = 0) (hb : P.b = 0) : P.toPoly = C P.c * X + C P.d := by
   rw [of_a_eq_zero ha, hb, C_0, zero_mul, zero_add]
 #align cubic.of_b_eq_zero Cubic.of_b_eq_zero
 
-theorem of_b_eq_zero' : toPoly ⟨0, 0, c, d⟩ = c c * x + c d :=
+theorem of_b_eq_zero' : toPoly ⟨0, 0, c, d⟩ = C c * X + C d :=
   of_b_eq_zero rfl rfl
 #align cubic.of_b_eq_zero' Cubic.of_b_eq_zero'
 
-theorem of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) : P.toPoly = c P.d := by
+theorem of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) : P.toPoly = C P.d := by
   rw [of_b_eq_zero ha hb, hc, C_0, zero_mul, zero_add]
 #align cubic.of_c_eq_zero Cubic.of_c_eq_zero
 
-theorem of_c_eq_zero' : toPoly ⟨0, 0, 0, d⟩ = c d :=
+theorem of_c_eq_zero' : toPoly ⟨0, 0, 0, d⟩ = C d :=
   of_c_eq_zero rfl rfl rfl
 #align cubic.of_c_eq_zero' Cubic.of_c_eq_zero'
 
@@ -538,7 +538,7 @@ theorem splits_iff_roots_eq_three (ha : P.a ≠ 0) :
 #align cubic.splits_iff_roots_eq_three Cubic.splits_iff_roots_eq_three
 
 theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
-    (map φ P).toPoly = c (φ P.a) * (x - c x) * (x - c y) * (x - c z) :=
+    (map φ P).toPoly = C (φ P.a) * (X - C x) * (X - C y) * (X - C z) :=
   by
   rw [map_to_poly,
     eq_prod_roots_of_splits <|

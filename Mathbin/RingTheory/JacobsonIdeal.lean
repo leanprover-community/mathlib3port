@@ -337,7 +337,7 @@ open Polynomial
 variable [CommRing R]
 
 theorem jacobson_bot_polynomial_le_infₛ_map_maximal :
-    jacobson (⊥ : Ideal R[X]) ≤ infₛ (map (c : R →+* R[X]) '' { J : Ideal R | J.IsMaximal }) :=
+    jacobson (⊥ : Ideal R[X]) ≤ infₛ (map (C : R →+* R[X]) '' { J : Ideal R | J.IsMaximal }) :=
   by
   refine' le_infₛ fun J => exists_imp.2 fun j hj => _
   haveI : j.is_maximal := hj.1

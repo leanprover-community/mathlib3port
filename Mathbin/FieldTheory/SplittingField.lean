@@ -54,7 +54,7 @@ section SplittingField
 
 /-- Non-computably choose an irreducible factor from a polynomial. -/
 def factor (f : K[X]) : K[X] :=
-  if H : ∃ g, Irreducible g ∧ g ∣ f then Classical.choose H else x
+  if H : ∃ g, Irreducible g ∧ g ∣ f then Classical.choose H else X
 #align polynomial.factor Polynomial.factor
 
 theorem irreducible_factor (f : K[X]) : Irreducible (factor f) := by rw [factor]; split_ifs with H;
@@ -87,11 +87,11 @@ theorem factor_dvd_of_natDegree_ne_zero {f : K[X]} (hf : f.natDegree ≠ 0) : fa
 
 /-- Divide a polynomial f by X - C r where r is a root of f in a bigger field extension. -/
 def removeFactor (f : K[X]) : Polynomial (AdjoinRoot <| factor f) :=
-  map (AdjoinRoot.of f.factor) f /ₘ (x - c (AdjoinRoot.root f.factor))
+  map (AdjoinRoot.of f.factor) f /ₘ (X - C (AdjoinRoot.root f.factor))
 #align polynomial.remove_factor Polynomial.removeFactor
 
 theorem x_sub_c_mul_removeFactor (f : K[X]) (hf : f.natDegree ≠ 0) :
-    (x - c (AdjoinRoot.root f.factor)) * f.removeFactor = map (AdjoinRoot.of f.factor) f :=
+    (X - C (AdjoinRoot.root f.factor)) * f.removeFactor = map (AdjoinRoot.of f.factor) f :=
   let ⟨g, hg⟩ := factor_dvd_of_natDegree_ne_zero hf
   mul_divByMonic_eq_iff_isRoot.2 <| by
     rw [is_root.def, eval_map, hg, eval₂_mul, ← hg, AdjoinRoot.eval₂_root, zero_mul]

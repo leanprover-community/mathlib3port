@@ -229,7 +229,7 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   have :
     ∀ x,
       is_supported x s →
-        ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n :=
+        ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.X) x = n :=
     by
     intro x hx
     refine' Subring.InClosure.recOn hx _ _ _ _
@@ -253,9 +253,9 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   exfalso
   apply Ne.symm Int.zero_ne_one
   rcases this with ⟨w, H⟩
-  rw [← Polynomial.c_eq_int_cast] at H
-  have : polynomial.X.coeff 1 = (Polynomial.c ↑w).coeff 1 := by rw [H]
-  rwa [Polynomial.coeff_c, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_x, if_pos rfl] at this
+  rw [← Polynomial.C_eq_int_cast] at H
+  have : polynomial.X.coeff 1 = (Polynomial.C ↑w).coeff 1 := by rw [H]
+  rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
 #align free_comm_ring.is_supported_of FreeCommRing.isSupported_of
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]

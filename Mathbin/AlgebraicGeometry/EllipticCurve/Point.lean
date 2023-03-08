@@ -112,7 +112,7 @@ variable {R : Type u} [CommRing R] (W : WeierstrassCurve R) (A : Type v) [CommRi
 
 /-- The polynomial $-Y - a_1X - a_3$ associated to negation. -/
 noncomputable def negPolynomial : R[X][Y] :=
-  -Y - c (c W.a₁ * x + c W.a₃)
+  -Y - C (C W.a₁ * X + C W.a₃)
 #align weierstrass_curve.neg_polynomial WeierstrassCurve.negPolynomial
 
 /-- The $Y$-coordinate of the negation of an affine point in `W`.
@@ -148,7 +148,7 @@ theorem baseChange_negY_of_baseChange (x₁ y₁ : A) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1038319287.eval_simp -/
 @[simp]
-theorem eval_negPolynomial : (W.negPolynomial.eval <| c y₁).eval x₁ = W.negY x₁ y₁ :=
+theorem eval_negPolynomial : (W.negPolynomial.eval <| C y₁).eval x₁ = W.negY x₁ y₁ :=
   by
   rw [neg_Y, sub_sub, neg_polynomial]
   run_tac
@@ -160,7 +160,7 @@ with a slope of $L$ that passes through an affine point $(x_1, y_1)$.
 
 This does not depend on `W`, and has argument order: $x_1$, $y_1$, $L$. -/
 noncomputable def linePolynomial : R[X] :=
-  c L * (x - c x₁) + c y₁
+  C L * (X - C x₁) + C y₁
 #align weierstrass_curve.line_polynomial WeierstrassCurve.linePolynomial
 
 /-- The polynomial obtained by substituting the line $Y = L(X - x_1) + y_1$, with a slope of $L$
@@ -451,7 +451,7 @@ theorem slope_of_X_ne (hx : x₁ ≠ x₂) : W.slope x₁ x₂ y₁ y₂ = (y₁
 
 theorem slope_of_Y_ne_eq_eval (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂) :
     W.slope x₁ x₂ y₁ y₂ =
-      -(W.polynomialX.eval <| c y₁).eval x₁ / (W.polynomialY.eval <| c y₁).eval x₁ :=
+      -(W.polynomialX.eval <| C y₁).eval x₁ / (W.polynomialY.eval <| C y₁).eval x₁ :=
   by
   rw [slope_of_Y_ne hx hy, eval_polynomial_X, neg_sub]
   congr 1
@@ -509,7 +509,7 @@ theorem Y_eq_of_Y_ne (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂) : y₁ 
 
 theorem addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     W.addPolynomial x₁ y₁ (W.slope x₁ x₂ y₁ y₂) =
-      -((x - c x₁) * (x - c x₂) * (x - c (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) :=
+      -((X - C x₁) * (X - C x₂) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) :=
   by
   rw [add_polynomial_eq, neg_inj, Cubic.prod_x_sub_c_eq, Cubic.toPoly_injective]
   by_cases hx : x₁ = x₂
@@ -540,8 +540,8 @@ theorem addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.150691367.derivative_simp -/
 theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     derivative (W.addPolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) =
-      -((x - c x₁) * (x - c x₂) + (x - c x₁) * (x - c (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)) +
-          (x - c x₂) * (x - c (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) :=
+      -((X - C x₁) * (X - C x₂) + (X - C x₁) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)) +
+          (X - C x₂) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) :=
   by
   rw [add_polynomial_slope h₁' h₂' hxy]
   run_tac

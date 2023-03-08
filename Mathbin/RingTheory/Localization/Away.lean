@@ -205,7 +205,7 @@ attribute [local instance] IsLocalization.algHom_subsingleton AdjoinRoot.algHom_
 
 /-- The `R`-`alg_equiv` between the localization of `R` away from `r` and
     `R` with an inverse of `r` adjoined. -/
-noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (c r * x - 1) :=
+noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (C r * X - 1) :=
   AlgEquiv.ofAlgHom
     { awayLift _ r _ with
       commutes' :=
@@ -216,7 +216,7 @@ noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] Adjoin
     (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align localization.away_equiv_adjoin Localization.awayEquivAdjoin
 
-theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * x - 1) :=
+theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| C r * X - 1) :=
   IsLocalization.isLocalization_of_algEquiv _ (Localization.awayEquivAdjoin r)
 #align is_localization.adjoin_inv IsLocalization.adjoin_inv
 

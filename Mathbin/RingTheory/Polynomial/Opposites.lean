@@ -49,17 +49,17 @@ theorem opRingEquiv_op_monomial (n : ℕ) (r : R) :
 #align polynomial.op_ring_equiv_op_monomial Polynomial.opRingEquiv_op_monomial
 
 @[simp]
-theorem opRingEquiv_op_c (a : R) : opRingEquiv R (op (c a)) = c (op a) :=
+theorem opRingEquiv_op_c (a : R) : opRingEquiv R (op (C a)) = C (op a) :=
   opRingEquiv_op_monomial 0 a
 #align polynomial.op_ring_equiv_op_C Polynomial.opRingEquiv_op_c
 
 @[simp]
-theorem opRingEquiv_op_x : opRingEquiv R (op (x : R[X])) = x :=
+theorem opRingEquiv_op_x : opRingEquiv R (op (X : R[X])) = X :=
   opRingEquiv_op_monomial 1 1
 #align polynomial.op_ring_equiv_op_X Polynomial.opRingEquiv_op_x
 
 theorem opRingEquiv_op_c_mul_x_pow (r : R) (n : ℕ) :
-    opRingEquiv R (op (c r * x ^ n : R[X])) = c (op r) * x ^ n := by
+    opRingEquiv R (op (C r * X ^ n : R[X])) = C (op r) * X ^ n := by
   simp only [X_pow_mul, op_mul, op_pow, map_mul, map_pow, op_ring_equiv_op_X, op_ring_equiv_op_C]
 #align polynomial.op_ring_equiv_op_C_mul_X_pow Polynomial.opRingEquiv_op_c_mul_x_pow
 
@@ -74,17 +74,17 @@ theorem opRingEquiv_symm_monomial (n : ℕ) (r : Rᵐᵒᵖ) :
 #align polynomial.op_ring_equiv_symm_monomial Polynomial.opRingEquiv_symm_monomial
 
 @[simp]
-theorem opRingEquiv_symm_c (a : Rᵐᵒᵖ) : (opRingEquiv R).symm (c a) = op (c (unop a)) :=
+theorem opRingEquiv_symm_c (a : Rᵐᵒᵖ) : (opRingEquiv R).symm (C a) = op (C (unop a)) :=
   opRingEquiv_symm_monomial 0 a
 #align polynomial.op_ring_equiv_symm_C Polynomial.opRingEquiv_symm_c
 
 @[simp]
-theorem opRingEquiv_symm_x : (opRingEquiv R).symm (x : Rᵐᵒᵖ[X]) = op x :=
+theorem opRingEquiv_symm_x : (opRingEquiv R).symm (X : Rᵐᵒᵖ[X]) = op X :=
   opRingEquiv_symm_monomial 1 1
 #align polynomial.op_ring_equiv_symm_X Polynomial.opRingEquiv_symm_x
 
 theorem opRingEquiv_symm_c_mul_x_pow (r : Rᵐᵒᵖ) (n : ℕ) :
-    (opRingEquiv R).symm (c r * x ^ n : Rᵐᵒᵖ[X]) = op (c (unop r) * x ^ n) := by
+    (opRingEquiv R).symm (C r * X ^ n : Rᵐᵒᵖ[X]) = op (C (unop r) * X ^ n) := by
   rw [C_mul_X_pow_eq_monomial, op_ring_equiv_symm_monomial, ← C_mul_X_pow_eq_monomial]
 #align polynomial.op_ring_equiv_symm_C_mul_X_pow Polynomial.opRingEquiv_symm_c_mul_x_pow
 

@@ -143,7 +143,7 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
       intro h
       rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq
       cases hq
-    _ = (aeval f (c q.leadingCoeff * x + c (q.coeff 0))).ker :=
+    _ = (aeval f (C q.leadingCoeff * X + C (q.coeff 0))).ker :=
       by
       rw [C_mul', aeval_def]
       simp [algebraMap, Algebra.toRingHom]

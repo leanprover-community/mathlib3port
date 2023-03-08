@@ -79,8 +79,8 @@ is injective.
 -/
 theorem injective_quotient_le_comap_map (P : Ideal R[X]) :
     Function.Injective
-      ((map (mapRingHom (Quotient.mk (P.comap (c : R →+* R[X])))) P).quotientMap
-        (mapRingHom (Quotient.mk (P.comap (c : R →+* R[X])))) le_comap_map) :=
+      ((map (mapRingHom (Quotient.mk (P.comap (C : R →+* R[X])))) P).quotientMap
+        (mapRingHom (Quotient.mk (P.comap (C : R →+* R[X])))) le_comap_map) :=
   by
   refine' quotient_map_injective' (le_of_eq _)
   rw [comap_map_of_surjective (map_ring_hom (Quotient.mk' (P.comap (C : R →+* R[X]))))
@@ -101,11 +101,11 @@ commutes.  It is used, for instance, in the proof of `quotient_mk_comp_C_is_inte
 in the file `ring_theory/jacobson`.
 -/
 theorem quotient_mk_maps_eq (P : Ideal R[X]) :
-    ((Quotient.mk (map (mapRingHom (Quotient.mk (P.comap (c : R →+* R[X])))) P)).comp c).comp
-        (Quotient.mk (P.comap (c : R →+* R[X]))) =
-      ((map (mapRingHom (Quotient.mk (P.comap (c : R →+* R[X])))) P).quotientMap
-            (mapRingHom (Quotient.mk (P.comap (c : R →+* R[X])))) le_comap_map).comp
-        ((Quotient.mk P).comp c) :=
+    ((Quotient.mk (map (mapRingHom (Quotient.mk (P.comap (C : R →+* R[X])))) P)).comp C).comp
+        (Quotient.mk (P.comap (C : R →+* R[X]))) =
+      ((map (mapRingHom (Quotient.mk (P.comap (C : R →+* R[X])))) P).quotientMap
+            (mapRingHom (Quotient.mk (P.comap (C : R →+* R[X])))) le_comap_map).comp
+        ((Quotient.mk P).comp C) :=
   by
   refine' RingHom.ext fun x => _
   repeat' rw [RingHom.coe_comp, Function.comp_apply]
@@ -116,8 +116,8 @@ theorem quotient_mk_maps_eq (P : Ideal R[X]) :
 that is non-zero in the quotient `R / (P ∩ R) [x]`.  The assumptions are equivalent to
 `P ≠ 0` and `P ∩ R = (0)`.
 -/
-theorem exists_nonzero_mem_of_ne_bot {P : Ideal R[X]} (Pb : P ≠ ⊥) (hP : ∀ x : R, c x ∈ P → x = 0) :
-    ∃ p : R[X], p ∈ P ∧ Polynomial.map (Quotient.mk (P.comap (c : R →+* R[X]))) p ≠ 0 :=
+theorem exists_nonzero_mem_of_ne_bot {P : Ideal R[X]} (Pb : P ≠ ⊥) (hP : ∀ x : R, C x ∈ P → x = 0) :
+    ∃ p : R[X], p ∈ P ∧ Polynomial.map (Quotient.mk (P.comap (C : R →+* R[X]))) p ≠ 0 :=
   by
   obtain ⟨m, hm⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_iff_ne_bot.mpr Pb)
   refine' ⟨m, Submodule.coe_mem m, fun pp0 => hm (submodule.coe_eq_zero.mp _)⟩

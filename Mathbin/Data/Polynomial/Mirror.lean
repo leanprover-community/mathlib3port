@@ -40,7 +40,7 @@ variable {R : Type _} [Semiring R] (p q : R[X])
 
 /-- mirror of a polynomial: reverses the coefficients while preserving `polynomial.nat_degree` -/
 noncomputable def mirror :=
-  p.reverse * x ^ p.natTrailingDegree
+  p.reverse * X ^ p.natTrailingDegree
 #align polynomial.mirror Polynomial.mirror
 
 @[simp]
@@ -57,11 +57,11 @@ theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a
         mul_one]
 #align polynomial.mirror_monomial Polynomial.mirror_monomial
 
-theorem mirror_c (a : R) : (c a).mirror = c a :=
+theorem mirror_c (a : R) : (C a).mirror = C a :=
   mirror_monomial 0 a
 #align polynomial.mirror_C Polynomial.mirror_c
 
-theorem mirror_x : x.mirror = (x : R[X]) :=
+theorem mirror_x : X.mirror = (X : R[X]) :=
   mirror_monomial 1 (1 : R)
 #align polynomial.mirror_X Polynomial.mirror_x
 

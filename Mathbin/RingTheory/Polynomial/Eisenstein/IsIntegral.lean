@@ -45,7 +45,7 @@ local notation "𝓟" => Submodule.span ℤ {p}
 open Polynomial
 
 theorem cyclotomic_comp_x_add_one_isEisensteinAt [hp : Fact p.Prime] :
-    ((cyclotomic p ℤ).comp (x + 1)).IsEisensteinAt 𝓟 :=
+    ((cyclotomic p ℤ).comp (X + 1)).IsEisensteinAt 𝓟 :=
   by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
@@ -81,7 +81,7 @@ theorem cyclotomic_comp_x_add_one_isEisensteinAt [hp : Fact p.Prime] :
 #align cyclotomic_comp_X_add_one_is_eisenstein_at cyclotomic_comp_x_add_one_isEisensteinAt
 
 theorem cyclotomic_prime_pow_comp_x_add_one_isEisensteinAt [hp : Fact p.Prime] (n : ℕ) :
-    ((cyclotomic (p ^ (n + 1)) ℤ).comp (x + 1)).IsEisensteinAt 𝓟 :=
+    ((cyclotomic (p ^ (n + 1)) ℤ).comp (X + 1)).IsEisensteinAt 𝓟 :=
   by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _

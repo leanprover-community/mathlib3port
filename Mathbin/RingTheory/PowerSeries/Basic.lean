@@ -1313,7 +1313,7 @@ def x : PowerSeries R :=
 #align power_series.X PowerSeries.x
 
 theorem commute_x (φ : PowerSeries R) : Commute φ x :=
-  φ.commute_x _
+  φ.commute_X _
 #align power_series.commute_X PowerSeries.commute_x
 
 @[simp]
@@ -1749,9 +1749,9 @@ theorem trunc_one (n) : trunc (n + 1) (1 : PowerSeries R) = 1 :=
 #align power_series.trunc_one PowerSeries.trunc_one
 
 @[simp]
-theorem trunc_c (n) (a : R) : trunc (n + 1) (c R a) = Polynomial.c a :=
+theorem trunc_c (n) (a : R) : trunc (n + 1) (c R a) = Polynomial.C a :=
   Polynomial.ext fun m => by
-    rw [coeff_trunc, coeff_C, Polynomial.coeff_c]
+    rw [coeff_trunc, coeff_C, Polynomial.coeff_C]
     split_ifs with H <;> first |rfl|try simp_all
 #align power_series.trunc_C PowerSeries.trunc_c
 
@@ -2496,7 +2496,7 @@ theorem coe_mul : ((φ * ψ : R[X]) : PowerSeries R) = φ * ψ :=
 #align polynomial.coe_mul Polynomial.coe_mul
 
 @[simp, norm_cast]
-theorem coe_c (a : R) : ((c a : R[X]) : PowerSeries R) = PowerSeries.c R a :=
+theorem coe_c (a : R) : ((C a : R[X]) : PowerSeries R) = PowerSeries.c R a :=
   by
   have := coe_monomial 0 a
   rwa [PowerSeries.monomial_zero_eq_c_apply] at this
@@ -2513,7 +2513,7 @@ theorem coe_bit1 : ((bit1 φ : R[X]) : PowerSeries R) = bit1 (φ : PowerSeries R
 #align polynomial.coe_bit1 Polynomial.coe_bit1
 
 @[simp, norm_cast]
-theorem coe_x : ((x : R[X]) : PowerSeries R) = PowerSeries.x :=
+theorem coe_x : ((X : R[X]) : PowerSeries R) = PowerSeries.x :=
   coe_monomial _ _
 #align polynomial.coe_X Polynomial.coe_x
 

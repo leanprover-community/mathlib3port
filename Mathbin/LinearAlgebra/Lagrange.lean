@@ -134,7 +134,7 @@ variable {x y : F}
 when evaluated at `x` it gives `1` and `y` it gives `0` (where when `x = y` it is identically `0`).
 Such polynomials are the building blocks for the Lagrange interpolants. -/
 def basisDivisor (x y : F) : F[X] :=
-  c (x - y)⁻¹ * (x - c y)
+  C (x - y)⁻¹ * (X - C y)
 #align lagrange.basis_divisor Lagrange.basisDivisor
 
 theorem basisDivisor_self : basisDivisor x x = 0 := by
@@ -310,7 +310,7 @@ polynomial of degree `< s.card` that takes value `r i` on `v i` for all `i` in `
 @[simps]
 def interpolate (s : Finset ι) (v : ι → F) : (ι → F) →ₗ[F] F[X]
     where
-  toFun r := ∑ i in s, c (r i) * Lagrange.basis s v i
+  toFun r := ∑ i in s, C (r i) * Lagrange.basis s v i
   map_add' f g := by simp_rw [← Finset.sum_add_distrib, ← add_mul, ← C_add, Pi.add_apply]
   map_smul' c f := by
     simp_rw [Finset.smul_sum, C_mul', smul_smul, Pi.smul_apply, RingHom.id_apply, smul_eq_mul]
@@ -321,7 +321,7 @@ theorem interpolate_empty : interpolate ∅ v r = 0 := by rw [interpolate_apply,
 #align lagrange.interpolate_empty Lagrange.interpolate_empty
 
 @[simp]
-theorem interpolate_singleton : interpolate {i} v r = c (r i) := by
+theorem interpolate_singleton : interpolate {i} v r = C (r i) := by
   rw [interpolate_apply, sum_singleton, basis_singleton, mul_one]
 #align lagrange.interpolate_singleton Lagrange.interpolate_singleton
 
@@ -501,10 +501,10 @@ with appropriate multiplicity.
 We can use `nodal` to define the barycentric forms of the evaluated interpolant.
 -/
 def nodal (s : Finset ι) (v : ι → F) : F[X] :=
-  ∏ i in s, x - c (v i)
+  ∏ i in s, X - C (v i)
 #align lagrange.nodal Lagrange.nodal
 
-theorem nodal_eq (s : Finset ι) (v : ι → F) : nodal s v = ∏ i in s, x - c (v i) :=
+theorem nodal_eq (s : Finset ι) (v : ι → F) : nodal s v = ∏ i in s, X - C (v i) :=
   rfl
 #align lagrange.nodal_eq Lagrange.nodal_eq
 
@@ -534,22 +534,22 @@ theorem eval_nodal_not_at_node (hx : ∀ i ∈ s, x ≠ v i) : eval x (nodal s v
 #align lagrange.eval_nodal_not_at_node Lagrange.eval_nodal_not_at_node
 
 theorem nodal_eq_mul_nodal_erase [DecidableEq ι] (hi : i ∈ s) :
-    nodal s v = (x - c (v i)) * nodal (s.eraseₓ i) v := by simp_rw [nodal, mul_prod_erase _ _ hi]
+    nodal s v = (X - C (v i)) * nodal (s.eraseₓ i) v := by simp_rw [nodal, mul_prod_erase _ _ hi]
 #align lagrange.nodal_eq_mul_nodal_erase Lagrange.nodal_eq_mul_nodal_erase
 
-theorem x_sub_c_dvd_nodal (v : ι → F) (hi : i ∈ s) : x - c (v i) ∣ nodal s v :=
+theorem x_sub_c_dvd_nodal (v : ι → F) (hi : i ∈ s) : X - C (v i) ∣ nodal s v :=
   ⟨_, by classical exact nodal_eq_mul_nodal_erase hi⟩
 #align lagrange.X_sub_C_dvd_nodal Lagrange.x_sub_c_dvd_nodal
 
 variable [DecidableEq ι]
 
-theorem nodal_erase_eq_nodal_div (hi : i ∈ s) : nodal (s.eraseₓ i) v = nodal s v / (x - c (v i)) :=
+theorem nodal_erase_eq_nodal_div (hi : i ∈ s) : nodal (s.eraseₓ i) v = nodal s v / (X - C (v i)) :=
   by
   rw [nodal_eq_mul_nodal_erase hi, EuclideanDomain.mul_div_cancel_left]
   exact X_sub_C_ne_zero _
 #align lagrange.nodal_erase_eq_nodal_div Lagrange.nodal_erase_eq_nodal_div
 
-theorem nodal_insert_eq_nodal (hi : i ∉ s) : nodal (insert i s) v = (x - c (v i)) * nodal s v := by
+theorem nodal_insert_eq_nodal (hi : i ∉ s) : nodal (insert i s) v = (X - C (v i)) * nodal s v := by
   simp_rw [nodal, prod_insert hi]
 #align lagrange.nodal_insert_eq_nodal Lagrange.nodal_insert_eq_nodal
 
@@ -597,7 +597,7 @@ theorem nodalWeight_ne_zero (hvs : Set.InjOn v s) (hi : i ∈ s) : nodalWeight s
 #align lagrange.nodal_weight_ne_zero Lagrange.nodalWeight_ne_zero
 
 theorem basis_eq_prod_sub_inv_mul_nodal_div (hi : i ∈ s) :
-    Lagrange.basis s v i = c (nodalWeight s v i) * (nodal s v / (x - c (v i))) := by
+    Lagrange.basis s v i = C (nodalWeight s v i) * (nodal s v / (X - C (v i))) := by
   simp_rw [Lagrange.basis, basis_divisor, nodal_weight, prod_mul_distrib, map_prod, ←
     nodal_erase_eq_nodal_div hi, nodal]
 #align lagrange.basis_eq_prod_sub_inv_mul_nodal_div Lagrange.basis_eq_prod_sub_inv_mul_nodal_div
@@ -610,7 +610,7 @@ theorem eval_basis_not_at_node (hi : i ∈ s) (hxi : x ≠ v i) :
 #align lagrange.eval_basis_not_at_node Lagrange.eval_basis_not_at_node
 
 theorem interpolate_eq_nodalWeight_mul_nodal_div_x_sub_c :
-    interpolate s v r = ∑ i in s, c (nodalWeight s v i) * (nodal s v / (x - c (v i))) * c (r i) :=
+    interpolate s v r = ∑ i in s, C (nodalWeight s v i) * (nodal s v / (X - C (v i))) * C (r i) :=
   sum_congr rfl fun j hj => by rw [mul_comm, basis_eq_prod_sub_inv_mul_nodal_div hj]
 #align lagrange.interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C Lagrange.interpolate_eq_nodalWeight_mul_nodal_div_x_sub_c
 

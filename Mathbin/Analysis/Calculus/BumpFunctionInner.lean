@@ -65,7 +65,7 @@ derivatives for `x > 0`. The `n`-th derivative is of the form `P_aux n (x) exp(-
 where `P_aux n` is computed inductively. -/
 noncomputable def pAux : ℕ → ℝ[X]
   | 0 => 1
-  | n + 1 => x ^ 2 * (P_aux n).derivative + (1 - c ↑(2 * n) * x) * P_aux n
+  | n + 1 => X ^ 2 * (P_aux n).derivative + (1 - C ↑(2 * n) * X) * P_aux n
 #align exp_neg_inv_glue.P_aux expNegInvGlue.pAux
 
 /-- Formula for the `n`-th derivative of `exp_neg_inv_glue`, as an auxiliary function `f_aux`. -/

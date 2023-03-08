@@ -79,7 +79,7 @@ theorem self : FiniteType R R :=
 #align algebra.finite_type.self Algebra.FiniteType.self
 
 protected theorem polynomial : FiniteType R R[X] :=
-  ⟨⟨{Polynomial.x}, by
+  ⟨⟨{Polynomial.X}, by
       rw [Finset.coe_singleton]
       exact Polynomial.adjoin_x⟩⟩
 #align algebra.finite_type.polynomial Algebra.FiniteType.polynomial

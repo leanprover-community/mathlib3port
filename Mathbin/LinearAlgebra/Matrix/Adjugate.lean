@@ -461,7 +461,7 @@ theorem adjugate_mul_distrib_aux (A B : Matrix n n α) (hA : IsLeftRegular A.det
 -/
 theorem adjugate_mul_distrib (A B : Matrix n n α) : adjugate (A ⬝ B) = adjugate B ⬝ adjugate A :=
   by
-  let g : Matrix n n α → Matrix n n α[X] := fun M => M.map Polynomial.c + (Polynomial.x : α[X]) • 1
+  let g : Matrix n n α → Matrix n n α[X] := fun M => M.map Polynomial.C + (Polynomial.X : α[X]) • 1
   let f' : Matrix n n α[X] →+* Matrix n n α := (Polynomial.evalRingHom 0).mapMatrix
   have f'_inv : ∀ M, f' (g M) = M := by
     intro

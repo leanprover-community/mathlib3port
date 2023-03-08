@@ -102,19 +102,19 @@ instance uniqueGalOne : Unique (1 : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_one _)
 #align polynomial.gal.unique_gal_one Polynomial.Gal.uniqueGalOne
 
-instance uniqueGalC (x : F) : Unique (c x).Gal :=
+instance uniqueGalC (x : F) : Unique (C x).Gal :=
   uniqueGalOfSplits _ (splits_c _ _)
 #align polynomial.gal.unique_gal_C Polynomial.Gal.uniqueGalC
 
-instance uniqueGalX : Unique (x : F[X]).Gal :=
+instance uniqueGalX : Unique (X : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_x _)
 #align polynomial.gal.unique_gal_X Polynomial.Gal.uniqueGalX
 
-instance uniqueGalXSubC (x : F) : Unique (x - c x).Gal :=
+instance uniqueGalXSubC (x : F) : Unique (X - C x).Gal :=
   uniqueGalOfSplits _ (splits_x_sub_c _)
 #align polynomial.gal.unique_gal_X_sub_C Polynomial.Gal.uniqueGalXSubC
 
-instance uniqueGalXPow (n : ℕ) : Unique (x ^ n : F[X]).Gal :=
+instance uniqueGalXPow (n : ℕ) : Unique (X ^ n : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_x_pow _ _)
 #align polynomial.gal.unique_gal_X_pow Polynomial.Gal.uniqueGalXPow
 

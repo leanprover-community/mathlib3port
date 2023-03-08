@@ -63,8 +63,8 @@ theorem splits_zero : Splits i (0 : K[X]) :=
   Or.inl (Polynomial.map_zero i)
 #align polynomial.splits_zero Polynomial.splits_zero
 
-theorem splits_of_map_eq_c {f : K[X]} {a : L} (h : f.map i = c a) : Splits i f :=
-  if ha : a = 0 then Or.inl (h.trans (ha.symm ▸ c_0))
+theorem splits_of_map_eq_c {f : K[X]} {a : L} (h : f.map i = C a) : Splits i f :=
+  if ha : a = 0 then Or.inl (h.trans (ha.symm ▸ C_0))
   else
     Or.inr fun g hg ⟨p, hp⟩ =>
       absurd hg.1 <|
@@ -77,7 +77,7 @@ theorem splits_of_map_eq_c {f : K[X]} {a : L} (h : f.map i = c a) : Splits i f :
 #align polynomial.splits_of_map_eq_C Polynomial.splits_of_map_eq_c
 
 @[simp]
-theorem splits_c (a : K) : Splits i (c a) :=
+theorem splits_c (a : K) : Splits i (C a) :=
   splits_of_map_eq_c i (map_c i)
 #align polynomial.splits_C Polynomial.splits_c
 
@@ -140,11 +140,11 @@ theorem splits_of_isUnit [IsDomain K] {u : K[X]} (hu : IsUnit u) : u.Splits i :=
   (isUnit_iff.mp hu).choose_spec.2 ▸ splits_c _ _
 #align polynomial.splits_of_is_unit Polynomial.splits_of_isUnit
 
-theorem splits_x_sub_c {x : K} : (x - c x).Splits i :=
+theorem splits_x_sub_c {x : K} : (X - C x).Splits i :=
   splits_of_degree_le_one _ <| degree_x_sub_c_le _
 #align polynomial.splits_X_sub_C Polynomial.splits_x_sub_c
 
-theorem splits_x : x.Splits i :=
+theorem splits_x : X.Splits i :=
   splits_of_degree_le_one _ degree_x_le
 #align polynomial.splits_X Polynomial.splits_x
 
@@ -162,7 +162,7 @@ theorem splits_pow {f : K[X]} (hf : f.Splits i) (n : ℕ) : (f ^ n).Splits i :=
   exact splits_prod i fun j hj => hf
 #align polynomial.splits_pow Polynomial.splits_pow
 
-theorem splits_x_pow (n : ℕ) : (x ^ n).Splits i :=
+theorem splits_x_pow (n : ℕ) : (X ^ n).Splits i :=
   splits_pow i (splits_x i) n
 #align polynomial.splits_X_pow Polynomial.splits_x_pow
 
@@ -350,7 +350,7 @@ theorem adjoin_rootSet_eq_range [Algebra F K] [Algebra F L] {p : F[X]}
 #align polynomial.adjoin_root_set_eq_range Polynomial.adjoin_rootSet_eq_range
 
 theorem eq_prod_roots_of_splits {p : K[X]} {i : K →+* L} (hsplit : Splits i p) :
-    p.map i = c (i p.leadingCoeff) * ((p.map i).roots.map fun a => x - c a).Prod :=
+    p.map i = C (i p.leadingCoeff) * ((p.map i).roots.map fun a => X - C a).Prod :=
   by
   rw [← leading_coeff_map]; symm
   apply C_leading_coeff_mul_prod_multiset_X_sub_C
@@ -358,19 +358,19 @@ theorem eq_prod_roots_of_splits {p : K[X]} {i : K →+* L} (hsplit : Splits i p)
 #align polynomial.eq_prod_roots_of_splits Polynomial.eq_prod_roots_of_splits
 
 theorem eq_prod_roots_of_splits_id {p : K[X]} (hsplit : Splits (RingHom.id K) p) :
-    p = c p.leadingCoeff * (p.roots.map fun a => x - c a).Prod := by
+    p = C p.leadingCoeff * (p.roots.map fun a => X - C a).Prod := by
   simpa using eq_prod_roots_of_splits hsplit
 #align polynomial.eq_prod_roots_of_splits_id Polynomial.eq_prod_roots_of_splits_id
 
 theorem eq_prod_roots_of_monic_of_splits_id {p : K[X]} (m : Monic p)
-    (hsplit : Splits (RingHom.id K) p) : p = (p.roots.map fun a => x - c a).Prod :=
+    (hsplit : Splits (RingHom.id K) p) : p = (p.roots.map fun a => X - C a).Prod :=
   by
   convert eq_prod_roots_of_splits_id hsplit
   simp [m]
 #align polynomial.eq_prod_roots_of_monic_of_splits_id Polynomial.eq_prod_roots_of_monic_of_splits_id
 
 theorem eq_x_sub_c_of_splits_of_single_root {x : K} {h : K[X]} (h_splits : Splits i h)
-    (h_roots : (h.map i).roots = {i x}) : h = c h.leadingCoeff * (x - c x) :=
+    (h_roots : (h.map i).roots = {i x}) : h = C h.leadingCoeff * (X - C x) :=
   by
   apply Polynomial.map_injective _ i.injective
   rw [eq_prod_roots_of_splits h_splits, h_roots]
@@ -397,7 +397,7 @@ local infixl:50 " ~ᵤ " => Associated
 open UniqueFactorizationMonoid Associates
 
 theorem splits_of_exists_multiset {f : K[X]} {s : Multiset L}
-    (hs : f.map i = c (i f.leadingCoeff) * (s.map fun a : L => x - c a).Prod) : Splits i f :=
+    (hs : f.map i = C (i f.leadingCoeff) * (s.map fun a : L => X - C a).Prod) : Splits i f :=
   if hf0 : f = 0 then hf0.symm ▸ splits_zero i
   else
     Or.inr fun p hp hdp => by
@@ -427,7 +427,7 @@ end UFD
 
 theorem splits_iff_exists_multiset {f : K[X]} :
     Splits i f ↔
-      ∃ s : Multiset L, f.map i = c (i f.leadingCoeff) * (s.map fun a : L => x - c a).Prod :=
+      ∃ s : Multiset L, f.map i = C (i f.leadingCoeff) * (s.map fun a : L => X - C a).Prod :=
   ⟨fun hf => ⟨(f.map i).roots, eq_prod_roots_of_splits hf⟩, fun ⟨s, hs⟩ =>
     splits_of_exists_multiset i hs⟩
 #align polynomial.splits_iff_exists_multiset Polynomial.splits_iff_exists_multiset

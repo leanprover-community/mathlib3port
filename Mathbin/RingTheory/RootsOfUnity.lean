@@ -1038,7 +1038,7 @@ variable [IsDomain K] [CharZero K]
 omit hpos
 
 /-- The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
-theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ x ^ n - 1 :=
+theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=
   by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · simp

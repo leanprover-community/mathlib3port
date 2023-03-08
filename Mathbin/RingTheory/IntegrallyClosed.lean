@@ -199,7 +199,7 @@ variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
     `g * (C g.leading_coeff⁻¹)` has coefficients in `R` -/
 theorem eq_map_mul_c_of_dvd [IsIntegrallyClosed R] {f : R[X]} (hf : f.Monic) {g : K[X]}
     (hg : g ∣ f.map (algebraMap R K)) :
-    ∃ g' : R[X], g'.map (algebraMap R K) * (c <| leadingCoeff g) = g :=
+    ∃ g' : R[X], g'.map (algebraMap R K) * (C <| leadingCoeff g) = g :=
   by
   have g_ne_0 : g ≠ 0 := ne_zero_of_dvd_ne_zero (monic.ne_zero <| hf.map (algebraMap R K)) hg
   suffices lem : ∃ g' : R[X], g'.map (algebraMap R K) = g * C g.leading_coeff⁻¹

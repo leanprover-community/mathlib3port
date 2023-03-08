@@ -319,7 +319,7 @@ variable {A}
 theorem minpoly_sub_one_eq_cyclotomic_comp [Algebra K A] [IsDomain A] {ζ : A}
     [IsCyclotomicExtension {n} K A] (hζ : IsPrimitiveRoot ζ n)
     (h : Irreducible (Polynomial.cyclotomic n K)) :
-    minpoly K (ζ - 1) = (cyclotomic n K).comp (x + 1) :=
+    minpoly K (ζ - 1) = (cyclotomic n K).comp (X + 1) :=
   by
   haveI := IsCyclotomicExtension.ne_zero' n K A
   rw [show ζ - 1 = ζ + algebraMap K A (-1) by simp [sub_eq_add_neg],

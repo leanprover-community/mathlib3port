@@ -70,9 +70,9 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
     Fintype.card R ≤ natDegree p * (univ.image fun x => eval x p).card :=
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
-      _ = (p - c a).roots.toFinset.card :=
+      _ = (p - C a).roots.toFinset.card :=
         congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_C hp])
-      _ ≤ (p - c a).roots.card := (Multiset.toFinset_card_le _)
+      _ ≤ (p - C a).roots.card := (Multiset.toFinset_card_le _)
       _ ≤ _ := card_roots_sub_C' hp
       
 #align finite_field.card_image_polynomial_eval FiniteField.card_image_polynomial_eval
@@ -269,7 +269,7 @@ section
 
 variable (K' : Type _) [Field K'] {p n : ℕ}
 
-theorem x_pow_card_sub_x_natDegree_eq (hp : 1 < p) : (x ^ p - x : K'[X]).natDegree = p :=
+theorem x_pow_card_sub_x_natDegree_eq (hp : 1 < p) : (X ^ p - X : K'[X]).natDegree = p :=
   by
   have h1 : (X : K'[X]).degree < (X ^ p : K'[X]).degree :=
     by
@@ -279,11 +279,11 @@ theorem x_pow_card_sub_x_natDegree_eq (hp : 1 < p) : (x ^ p - x : K'[X]).natDegr
 #align finite_field.X_pow_card_sub_X_nat_degree_eq FiniteField.x_pow_card_sub_x_natDegree_eq
 
 theorem x_pow_card_pow_sub_x_natDegree_eq (hn : n ≠ 0) (hp : 1 < p) :
-    (x ^ p ^ n - x : K'[X]).natDegree = p ^ n :=
+    (X ^ p ^ n - X : K'[X]).natDegree = p ^ n :=
   x_pow_card_sub_x_natDegree_eq K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
 #align finite_field.X_pow_card_pow_sub_X_nat_degree_eq FiniteField.x_pow_card_pow_sub_x_natDegree_eq
 
-theorem x_pow_card_sub_x_ne_zero (hp : 1 < p) : (x ^ p - x : K'[X]) ≠ 0 :=
+theorem x_pow_card_sub_x_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
   ne_zero_of_natDegree_gt <|
     calc
       1 < _ := hp
@@ -291,7 +291,7 @@ theorem x_pow_card_sub_x_ne_zero (hp : 1 < p) : (x ^ p - x : K'[X]) ≠ 0 :=
       
 #align finite_field.X_pow_card_sub_X_ne_zero FiniteField.x_pow_card_sub_x_ne_zero
 
-theorem x_pow_card_pow_sub_x_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (x ^ p ^ n - x : K'[X]) ≠ 0 :=
+theorem x_pow_card_pow_sub_x_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]) ≠ 0 :=
   x_pow_card_sub_x_ne_zero K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
 #align finite_field.X_pow_card_pow_sub_X_ne_zero FiniteField.x_pow_card_pow_sub_x_ne_zero
 
@@ -299,7 +299,7 @@ end
 
 variable (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K]
 
-theorem roots_x_pow_card_sub_x : roots (x ^ q - x : K[X]) = Finset.univ.val := by
+theorem roots_x_pow_card_sub_x : roots (X ^ q - X : K[X]) = Finset.univ.val := by
   classical
     have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
     have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ :=
@@ -317,7 +317,7 @@ theorem roots_x_pow_card_sub_x : roots (x ^ q - x : K[X]) = Finset.univ.val := b
         zero_sub]
 #align finite_field.roots_X_pow_card_sub_X FiniteField.roots_x_pow_card_sub_x
 
-instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (x ^ q - x)
+instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X)
     where
   Splits :=
     by

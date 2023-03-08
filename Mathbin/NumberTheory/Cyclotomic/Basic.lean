@@ -462,7 +462,7 @@ variable {n S}
 
 /-- A cyclotomic extension splits `X ^ n - 1` if `n ∈ S`.-/
 theorem splits_x_pow_sub_one [H : IsCyclotomicExtension S K L] (hS : n ∈ S) :
-    Splits (algebraMap K L) (x ^ (n : ℕ) - 1) :=
+    Splits (algebraMap K L) (X ^ (n : ℕ) - 1) :=
   by
   rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow,
     Polynomial.map_x]
@@ -486,7 +486,7 @@ section Singleton
 variable [IsCyclotomicExtension {n} K L]
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `X ^ n - 1`. -/
-theorem splitting_field_x_pow_sub_one : IsSplittingField K L (x ^ (n : ℕ) - 1) :=
+theorem splitting_field_x_pow_sub_one : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
   { Splits := splits_x_pow_sub_one K L (mem_singleton n)
     adjoin_roots := by
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]

@@ -41,8 +41,8 @@ variable [Ring R] (p q : R[X])
 /-- `cancel_leads p q` is formed by multiplying `p` and `q` by monomials so that they
   have the same leading term, and then subtracting. -/
 def cancelLeads : R[X] :=
-  c p.leadingCoeff * x ^ (p.natDegree - q.natDegree) * q -
-    c q.leadingCoeff * x ^ (q.natDegree - p.natDegree) * p
+  C p.leadingCoeff * X ^ (p.natDegree - q.natDegree) * q -
+    C q.leadingCoeff * X ^ (q.natDegree - p.natDegree) * p
 #align polynomial.cancel_leads Polynomial.cancelLeads
 
 variable {p q}

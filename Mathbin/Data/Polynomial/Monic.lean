@@ -52,7 +52,7 @@ theorem monic_zero_iff_subsingleton' :
 #align polynomial.monic_zero_iff_subsingleton' Polynomial.monic_zero_iff_subsingleton'
 
 theorem Monic.as_sum (hp : p.Monic) :
-    p = x ^ p.natDegree + ∑ i in range p.natDegree, c (p.coeff i) * x ^ i :=
+    p = X ^ p.natDegree + ∑ i in range p.natDegree, C (p.coeff i) * X ^ i :=
   by
   conv_lhs => rw [p.as_sum_range_C_mul_X_pow, sum_range_succ_comm]
   suffices C (p.coeff p.nat_degree) = 1 by rw [this, one_mul]
@@ -80,13 +80,13 @@ theorem Monic.map [Semiring S] (f : R →+* S) (hp : Monic p) : Monic (p.map f) 
 #align polynomial.monic.map Polynomial.Monic.map
 
 theorem monic_c_mul_of_mul_leadingCoeff_eq_one {b : R} (hp : b * p.leadingCoeff = 1) :
-    Monic (c b * p) := by
+    Monic (C b * p) := by
   nontriviality
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 #align polynomial.monic_C_mul_of_mul_leading_coeff_eq_one Polynomial.monic_c_mul_of_mul_leadingCoeff_eq_one
 
 theorem monic_mul_c_of_leadingCoeff_mul_eq_one {b : R} (hp : p.leadingCoeff * b = 1) :
-    Monic (p * c b) := by
+    Monic (p * C b) := by
   nontriviality
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 #align polynomial.monic_mul_C_of_leading_coeff_mul_eq_one Polynomial.monic_mul_c_of_leadingCoeff_mul_eq_one
@@ -98,15 +98,15 @@ theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) 
     rwa [monic, leading_coeff, nat_degree, (lt_or_eq_of_le H1).resolve_left H]
 #align polynomial.monic_of_degree_le Polynomial.monic_of_degree_le
 
-theorem monic_x_pow_add {n : ℕ} (H : degree p ≤ n) : Monic (x ^ (n + 1) + p) :=
+theorem monic_x_pow_add {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) + p) :=
   have H1 : degree p < n + 1 := lt_of_le_of_lt H (WithBot.coe_lt_coe.2 (Nat.lt_succ_self n))
   monic_of_degree_le (n + 1)
     (le_trans (degree_add_le _ _) (max_le (degree_x_pow_le _) (le_of_lt H1)))
     (by rw [coeff_add, coeff_X_pow, if_pos rfl, coeff_eq_zero_of_degree_lt H1, add_zero])
 #align polynomial.monic_X_pow_add Polynomial.monic_x_pow_add
 
-theorem monic_x_add_c (x : R) : Monic (x + c x) :=
-  pow_one (x : R[X]) ▸ monic_x_pow_add degree_c_le
+theorem monic_x_add_c (x : R) : Monic (X + C x) :=
+  pow_one (X : R[X]) ▸ monic_x_pow_add degree_c_le
 #align polynomial.monic_X_add_C Polynomial.monic_x_add_c
 
 theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=
@@ -249,7 +249,7 @@ theorem natDegree_pow (hp : p.Monic) (n : ℕ) : (p ^ n).natDegree = n * p.natDe
 end Monic
 
 @[simp]
-theorem natDegree_pow_x_add_c [Nontrivial R] (n : ℕ) (r : R) : ((x + c r) ^ n).natDegree = n := by
+theorem natDegree_pow_x_add_c [Nontrivial R] (n : ℕ) (r : R) : ((X + C r) ^ n).natDegree = n := by
   rw [(monic_X_add_C r).natDegree_pow, nat_degree_X_add_C, mul_one]
 #align polynomial.nat_degree_pow_X_add_C Polynomial.natDegree_pow_x_add_c
 
@@ -389,16 +389,16 @@ section Ring
 
 variable [Ring R] {p : R[X]}
 
-theorem monic_x_sub_c (x : R) : Monic (x - c x) := by
+theorem monic_x_sub_c (x : R) : Monic (X - C x) := by
   simpa only [sub_eq_add_neg, C_neg] using monic_X_add_C (-x)
 #align polynomial.monic_X_sub_C Polynomial.monic_x_sub_c
 
-theorem monic_x_pow_sub {n : ℕ} (H : degree p ≤ n) : Monic (x ^ (n + 1) - p) := by
+theorem monic_x_pow_sub {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) - p) := by
   simpa [sub_eq_add_neg] using monic_X_pow_add (show degree (-p) ≤ n by rwa [← degree_neg p] at H)
 #align polynomial.monic_X_pow_sub Polynomial.monic_x_pow_sub
 
 /-- `X ^ n - a` is monic. -/
-theorem monic_x_pow_sub_c {R : Type u} [Ring R] (a : R) {n : ℕ} (h : n ≠ 0) : (x ^ n - c a).Monic :=
+theorem monic_x_pow_sub_c {R : Type u} [Ring R] (a : R) {n : ℕ} (h : n ≠ 0) : (X ^ n - C a).Monic :=
   by
   obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero h
   convert monic_X_pow_sub _
@@ -406,7 +406,7 @@ theorem monic_x_pow_sub_c {R : Type u} [Ring R] (a : R) {n : ℕ} (h : n ≠ 0) 
 #align polynomial.monic_X_pow_sub_C Polynomial.monic_x_pow_sub_c
 
 theorem not_isUnit_x_pow_sub_one (R : Type _) [CommRing R] [Nontrivial R] (n : ℕ) :
-    ¬IsUnit (x ^ n - 1 : R[X]) := by
+    ¬IsUnit (X ^ n - 1 : R[X]) := by
   intro h
   rcases eq_or_ne n 0 with (rfl | hn)
   · simpa using h

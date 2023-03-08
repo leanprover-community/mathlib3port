@@ -433,7 +433,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
   Polynomial.induction_on q
     (fun z =>
       let ⟨i, x, h⟩ := exists_of z
-      ⟨i, c x, by rw [map_C, h]⟩)
+      ⟨i, C x, by rw [map_C, h]⟩)
     (fun q₁ q₂ ⟨i₁, p₁, ih₁⟩ ⟨i₂, p₂, ih₂⟩ =>
       let ⟨i, h1, h2⟩ := exists_ge_ge i₁ i₂
       ⟨i, p₁.map (f' i₁ i h1) + p₂.map (f' i₂ i h2),
@@ -442,7 +442,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
         congr 2 <;> ext x <;> simp_rw [RingHom.comp_apply, of_f]⟩)
     fun n z ih =>
     let ⟨i, x, h⟩ := exists_of z
-    ⟨i, c x * x ^ (n + 1), by rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
+    ⟨i, C x * X ^ (n + 1), by rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
 #align ring.direct_limit.polynomial.exists_of Ring.DirectLimit.Polynomial.exists_of
 
 end

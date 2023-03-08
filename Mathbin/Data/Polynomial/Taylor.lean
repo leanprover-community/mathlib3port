@@ -37,21 +37,21 @@ variable {R : Type _} [Semiring R] (r : R) (f : R[X])
 /-- The Taylor expansion of a polynomial `f` at `r`. -/
 def taylor (r : R) : R[X] →ₗ[R] R[X]
     where
-  toFun f := f.comp (x + c r)
+  toFun f := f.comp (X + C r)
   map_add' f g := add_comp
   map_smul' c f := by simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
 #align polynomial.taylor Polynomial.taylor
 
-theorem taylor_apply : taylor r f = f.comp (x + c r) :=
+theorem taylor_apply : taylor r f = f.comp (X + C r) :=
   rfl
 #align polynomial.taylor_apply Polynomial.taylor_apply
 
 @[simp]
-theorem taylor_x : taylor r x = x + c r := by simp only [taylor_apply, X_comp]
+theorem taylor_x : taylor r X = X + C r := by simp only [taylor_apply, X_comp]
 #align polynomial.taylor_X Polynomial.taylor_x
 
 @[simp]
-theorem taylor_c (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, C_comp]
+theorem taylor_c (x : R) : taylor r (C x) = C x := by simp only [taylor_apply, C_comp]
 #align polynomial.taylor_C Polynomial.taylor_c
 
 @[simp]
@@ -66,11 +66,11 @@ theorem taylor_zero (f : R[X]) : taylor 0 f = f := by rw [taylor_zero', LinearMa
 #align polynomial.taylor_zero Polynomial.taylor_zero
 
 @[simp]
-theorem taylor_one : taylor r (1 : R[X]) = c 1 := by rw [← C_1, taylor_C]
+theorem taylor_one : taylor r (1 : R[X]) = C 1 := by rw [← C_1, taylor_C]
 #align polynomial.taylor_one Polynomial.taylor_one
 
 @[simp]
-theorem taylor_monomial (i : ℕ) (k : R) : taylor r (monomial i k) = c k * (x + c r) ^ i := by
+theorem taylor_monomial (i : ℕ) (k : R) : taylor r (monomial i k) = C k * (X + C r) ^ i := by
   simp [taylor_apply]
 #align polynomial.taylor_monomial Polynomial.taylor_monomial
 
@@ -151,7 +151,7 @@ theorem eq_zero_of_hasseDeriv_eq_zero {R} [CommRing R] (f : R[X]) (r : R)
 
 /-- Taylor's formula. -/
 theorem sum_taylor_eq {R} [CommRing R] (f : R[X]) (r : R) :
-    ((taylor r f).Sum fun i a => c a * (x - c r) ^ i) = f := by
+    ((taylor r f).Sum fun i a => C a * (X - C r) ^ i) = f := by
   rw [← comp_eq_sum_left, sub_eq_add_neg, ← C_neg, ← taylor_apply, taylor_taylor, neg_add_self,
     taylor_zero]
 #align polynomial.sum_taylor_eq Polynomial.sum_taylor_eq

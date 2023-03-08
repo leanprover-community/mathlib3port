@@ -238,12 +238,12 @@ theorem natDegree_lt_natDegree {p q : R[X]} (hp : p ≠ 0) (hpq : p.degree < q.d
 #align polynomial.nat_degree_lt_nat_degree Polynomial.natDegree_lt_natDegree
 
 @[simp]
-theorem degree_c (ha : a ≠ 0) : degree (c a) = (0 : WithBot ℕ) := by
+theorem degree_c (ha : a ≠ 0) : degree (C a) = (0 : WithBot ℕ) := by
   rw [degree, ← monomial_zero_left, support_monomial 0 ha, max_eq_sup_coe, sup_singleton,
     WithBot.coe_zero]
 #align polynomial.degree_C Polynomial.degree_c
 
-theorem degree_c_le : degree (c a) ≤ 0 :=
+theorem degree_c_le : degree (C a) ≤ 0 :=
   by
   by_cases h : a = 0
   · rw [h, C_0]
@@ -252,7 +252,7 @@ theorem degree_c_le : degree (c a) ≤ 0 :=
     exact le_rfl
 #align polynomial.degree_C_le Polynomial.degree_c_le
 
-theorem degree_c_lt : degree (c a) < 1 :=
+theorem degree_c_lt : degree (C a) < 1 :=
   degree_c_le.trans_lt <| WithBot.coe_lt_coe.mpr zero_lt_one
 #align polynomial.degree_C_lt Polynomial.degree_c_lt
 
@@ -260,7 +260,7 @@ theorem degree_one_le : degree (1 : R[X]) ≤ (0 : WithBot ℕ) := by rw [← C_
 #align polynomial.degree_one_le Polynomial.degree_one_le
 
 @[simp]
-theorem natDegree_c (a : R) : natDegree (c a) = 0 :=
+theorem natDegree_c (a : R) : natDegree (C a) = 0 :=
   by
   by_cases ha : a = 0
   · have : C a = 0 := by rw [ha, C_0]
@@ -286,11 +286,11 @@ theorem degree_monomial (n : ℕ) (ha : a ≠ 0) : degree (monomial n a) = n := 
 #align polynomial.degree_monomial Polynomial.degree_monomial
 
 @[simp]
-theorem degree_c_mul_x_pow (n : ℕ) (ha : a ≠ 0) : degree (c a * x ^ n) = n := by
+theorem degree_c_mul_x_pow (n : ℕ) (ha : a ≠ 0) : degree (C a * X ^ n) = n := by
   rw [C_mul_X_pow_eq_monomial, degree_monomial n ha]
 #align polynomial.degree_C_mul_X_pow Polynomial.degree_c_mul_x_pow
 
-theorem degree_c_mul_x (ha : a ≠ 0) : degree (c a * x) = 1 := by
+theorem degree_c_mul_x (ha : a ≠ 0) : degree (C a * X) = 1 := by
   simpa only [pow_one] using degree_C_mul_X_pow 1 ha
 #align polynomial.degree_C_mul_X Polynomial.degree_c_mul_x
 
@@ -299,23 +299,23 @@ theorem degree_monomial_le (n : ℕ) (a : R) : degree (monomial n a) ≤ n :=
   else le_of_eq (degree_monomial n h)
 #align polynomial.degree_monomial_le Polynomial.degree_monomial_le
 
-theorem degree_c_mul_x_pow_le (n : ℕ) (a : R) : degree (c a * x ^ n) ≤ n :=
+theorem degree_c_mul_x_pow_le (n : ℕ) (a : R) : degree (C a * X ^ n) ≤ n :=
   by
   rw [C_mul_X_pow_eq_monomial]
   apply degree_monomial_le
 #align polynomial.degree_C_mul_X_pow_le Polynomial.degree_c_mul_x_pow_le
 
-theorem degree_c_mul_x_le (a : R) : degree (c a * x) ≤ 1 := by
+theorem degree_c_mul_x_le (a : R) : degree (C a * X) ≤ 1 := by
   simpa only [pow_one] using degree_C_mul_X_pow_le 1 a
 #align polynomial.degree_C_mul_X_le Polynomial.degree_c_mul_x_le
 
 @[simp]
-theorem natDegree_c_mul_x_pow (n : ℕ) (a : R) (ha : a ≠ 0) : natDegree (c a * x ^ n) = n :=
+theorem natDegree_c_mul_x_pow (n : ℕ) (a : R) (ha : a ≠ 0) : natDegree (C a * X ^ n) = n :=
   natDegree_eq_of_degree_eq_some (degree_c_mul_x_pow n ha)
 #align polynomial.nat_degree_C_mul_X_pow Polynomial.natDegree_c_mul_x_pow
 
 @[simp]
-theorem natDegree_c_mul_x (a : R) (ha : a ≠ 0) : natDegree (c a * x) = 1 := by
+theorem natDegree_c_mul_x (a : R) (ha : a ≠ 0) : natDegree (C a * X) = 1 := by
   simpa only [pow_one] using nat_degree_C_mul_X_pow 1 a ha
 #align polynomial.nat_degree_C_mul_X Polynomial.natDegree_c_mul_x
 
@@ -386,7 +386,7 @@ theorem as_sum_support (p : R[X]) : p = ∑ i in p.support, monomial i (p.coeff 
   (sum_monomial_eq p).symm
 #align polynomial.as_sum_support Polynomial.as_sum_support
 
-theorem as_sum_support_c_mul_x_pow (p : R[X]) : p = ∑ i in p.support, c (p.coeff i) * x ^ i :=
+theorem as_sum_support_c_mul_x_pow (p : R[X]) : p = ∑ i in p.support, C (p.coeff i) * X ^ i :=
   trans p.as_sum_support <| by simp only [C_mul_X_pow_eq_monomial]
 #align polynomial.as_sum_support_C_mul_X_pow Polynomial.as_sum_support_c_mul_x_pow
 
@@ -431,7 +431,7 @@ theorem as_sum_range (p : R[X]) : p = ∑ i in range (p.natDegree + 1), monomial
 #align polynomial.as_sum_range Polynomial.as_sum_range
 
 theorem as_sum_range_c_mul_x_pow (p : R[X]) :
-    p = ∑ i in range (p.natDegree + 1), c (coeff p i) * x ^ i :=
+    p = ∑ i in range (p.natDegree + 1), C (coeff p i) * X ^ i :=
   p.as_sum_range.trans <| by simp only [C_mul_X_pow_eq_monomial]
 #align polynomial.as_sum_range_C_mul_X_pow Polynomial.as_sum_range_c_mul_x_pow
 
@@ -439,7 +439,7 @@ theorem coeff_ne_zero_of_eq_degree (hn : degree p = n) : coeff p n ≠ 0 := fun 
   mem_support_iff.mp (mem_of_max hn) h
 #align polynomial.coeff_ne_zero_of_eq_degree Polynomial.coeff_ne_zero_of_eq_degree
 
-theorem eq_x_add_c_of_degree_le_one (h : degree p ≤ 1) : p = c (p.coeff 1) * x + c (p.coeff 0) :=
+theorem eq_x_add_c_of_degree_le_one (h : degree p ≤ 1) : p = C (p.coeff 1) * X + C (p.coeff 0) :=
   ext fun n =>
     Nat.casesOn n (by simp) fun n =>
       Nat.casesOn n (by simp [coeff_C]) fun m =>
@@ -449,41 +449,41 @@ theorem eq_x_add_c_of_degree_le_one (h : degree p ≤ 1) : p = c (p.coeff 1) * x
           @eq_comm ℕ 0]
 #align polynomial.eq_X_add_C_of_degree_le_one Polynomial.eq_x_add_c_of_degree_le_one
 
-theorem eq_x_add_c_of_degree_eq_one (h : degree p = 1) : p = c p.leadingCoeff * x + c (p.coeff 0) :=
+theorem eq_x_add_c_of_degree_eq_one (h : degree p = 1) : p = C p.leadingCoeff * X + C (p.coeff 0) :=
   (eq_x_add_c_of_degree_le_one (show degree p ≤ 1 from h ▸ le_rfl)).trans
     (by simp only [leading_coeff, nat_degree_eq_of_degree_eq_some h])
 #align polynomial.eq_X_add_C_of_degree_eq_one Polynomial.eq_x_add_c_of_degree_eq_one
 
 theorem eq_x_add_c_of_natDegree_le_one (h : natDegree p ≤ 1) :
-    p = c (p.coeff 1) * x + c (p.coeff 0) :=
+    p = C (p.coeff 1) * X + C (p.coeff 0) :=
   eq_x_add_c_of_degree_le_one <| degree_le_of_natDegree_le h
 #align polynomial.eq_X_add_C_of_nat_degree_le_one Polynomial.eq_x_add_c_of_natDegree_le_one
 
-theorem Monic.eq_x_add_c (hm : p.Monic) (hnd : p.natDegree = 1) : p = x + c (p.coeff 0) := by
+theorem Monic.eq_x_add_c (hm : p.Monic) (hnd : p.natDegree = 1) : p = X + C (p.coeff 0) := by
   rw [← one_mul X, ← C_1, ← hm.coeff_nat_degree, hnd, ← eq_X_add_C_of_nat_degree_le_one hnd.le]
 #align polynomial.monic.eq_X_add_C Polynomial.Monic.eq_x_add_c
 
-theorem exists_eq_x_add_c_of_natDegree_le_one (h : natDegree p ≤ 1) : ∃ a b, p = c a * x + c b :=
+theorem exists_eq_x_add_c_of_natDegree_le_one (h : natDegree p ≤ 1) : ∃ a b, p = C a * X + C b :=
   ⟨p.coeff 1, p.coeff 0, eq_x_add_c_of_natDegree_le_one h⟩
 #align polynomial.exists_eq_X_add_C_of_nat_degree_le_one Polynomial.exists_eq_x_add_c_of_natDegree_le_one
 
-theorem degree_x_pow_le (n : ℕ) : degree (x ^ n : R[X]) ≤ n := by
+theorem degree_x_pow_le (n : ℕ) : degree (X ^ n : R[X]) ≤ n := by
   simpa only [C_1, one_mul] using degree_C_mul_X_pow_le n (1 : R)
 #align polynomial.degree_X_pow_le Polynomial.degree_x_pow_le
 
-theorem degree_x_le : degree (x : R[X]) ≤ 1 :=
+theorem degree_x_le : degree (X : R[X]) ≤ 1 :=
   degree_monomial_le _ _
 #align polynomial.degree_X_le Polynomial.degree_x_le
 
-theorem natDegree_x_le : (x : R[X]).natDegree ≤ 1 :=
+theorem natDegree_x_le : (X : R[X]).natDegree ≤ 1 :=
   natDegree_le_of_degree_le degree_x_le
 #align polynomial.nat_degree_X_le Polynomial.natDegree_x_le
 
-theorem mem_support_c_mul_x_pow {n a : ℕ} {c : R} (h : a ∈ (c c * x ^ n).support) : a = n :=
-  mem_singleton.1 <| support_c_mul_x_pow' n c h
+theorem mem_support_c_mul_x_pow {n a : ℕ} {c : R} (h : a ∈ (C c * X ^ n).support) : a = n :=
+  mem_singleton.1 <| support_C_mul_X_pow' n c h
 #align polynomial.mem_support_C_mul_X_pow Polynomial.mem_support_c_mul_x_pow
 
-theorem card_support_c_mul_x_pow_le_one {c : R} {n : ℕ} : (c c * x ^ n).support.card ≤ 1 :=
+theorem card_support_c_mul_x_pow_le_one {c : R} {n : ℕ} : (C c * X ^ n).support.card ≤ 1 :=
   by
   rw [← card_singleton n]
   apply card_le_of_subset (support_C_mul_X_pow' n c)
@@ -515,12 +515,12 @@ theorem degree_one : degree (1 : R[X]) = (0 : WithBot ℕ) :=
 #align polynomial.degree_one Polynomial.degree_one
 
 @[simp]
-theorem degree_x : degree (x : R[X]) = 1 :=
+theorem degree_x : degree (X : R[X]) = 1 :=
   degree_monomial _ one_ne_zero
 #align polynomial.degree_X Polynomial.degree_x
 
 @[simp]
-theorem natDegree_x : (x : R[X]).natDegree = 1 :=
+theorem natDegree_x : (X : R[X]).natDegree = 1 :=
   natDegree_eq_of_degree_eq_some degree_x
 #align polynomial.nat_degree_X Polynomial.natDegree_x
 
@@ -531,7 +531,7 @@ section Ring
 variable [Ring R]
 
 theorem coeff_mul_x_sub_c {p : R[X]} {r : R} {a : ℕ} :
-    coeff (p * (x - c r)) (a + 1) = coeff p a - coeff p (a + 1) * r := by simp [mul_sub]
+    coeff (p * (X - C r)) (a + 1) = coeff p a - coeff p (a + 1) * r := by simp [mul_sub]
 #align polynomial.coeff_mul_X_sub_C Polynomial.coeff_mul_x_sub_c
 
 @[simp]
@@ -564,7 +564,7 @@ def nextCoeff (p : R[X]) : R :=
 #align polynomial.next_coeff Polynomial.nextCoeff
 
 @[simp]
-theorem nextCoeff_c_eq_zero (c : R) : nextCoeff (c c) = 0 :=
+theorem nextCoeff_c_eq_zero (c : R) : nextCoeff (C c) = 0 :=
   by
   rw [next_coeff]
   simp
@@ -618,18 +618,18 @@ theorem natDegree_lt_natDegree_iff (hp : p ≠ 0) : natDegree p < natDegree q �
     exact_mod_cast h⟩
 #align polynomial.nat_degree_lt_nat_degree_iff Polynomial.natDegree_lt_natDegree_iff
 
-theorem eq_c_of_degree_le_zero (h : degree p ≤ 0) : p = c (coeff p 0) :=
+theorem eq_c_of_degree_le_zero (h : degree p ≤ 0) : p = C (coeff p 0) :=
   by
   ext (_ | n); · simp
   rw [coeff_C, if_neg (Nat.succ_ne_zero _), coeff_eq_zero_of_degree_lt]
   exact h.trans_lt (WithBot.some_lt_some.2 n.succ_pos)
 #align polynomial.eq_C_of_degree_le_zero Polynomial.eq_c_of_degree_le_zero
 
-theorem eq_c_of_degree_eq_zero (h : degree p = 0) : p = c (coeff p 0) :=
+theorem eq_c_of_degree_eq_zero (h : degree p = 0) : p = C (coeff p 0) :=
   eq_c_of_degree_le_zero (h ▸ le_rfl)
 #align polynomial.eq_C_of_degree_eq_zero Polynomial.eq_c_of_degree_eq_zero
 
-theorem degree_le_zero_iff : degree p ≤ 0 ↔ p = c (coeff p 0) :=
+theorem degree_le_zero_iff : degree p ≤ 0 ↔ p = C (coeff p 0) :=
   ⟨eq_c_of_degree_le_zero, fun h => h.symm ▸ degree_c_le⟩
 #align polynomial.degree_le_zero_iff Polynomial.degree_le_zero_iff
 
@@ -687,7 +687,7 @@ theorem natDegree_eq_support_max' (h : p ≠ 0) :
     max'_le _ _ _ le_natDegree_of_mem_supp
 #align polynomial.nat_degree_eq_support_max' Polynomial.natDegree_eq_support_max'
 
-theorem natDegree_c_mul_x_pow_le (a : R) (n : ℕ) : natDegree (c a * x ^ n) ≤ n :=
+theorem natDegree_c_mul_x_pow_le (a : R) (n : ℕ) : natDegree (C a * X ^ n) ≤ n :=
   natDegree_le_iff_degree_le.2 <| degree_c_mul_x_pow_le _ _
 #align polynomial.nat_degree_C_mul_X_pow_le Polynomial.natDegree_c_mul_x_pow_le
 
@@ -713,8 +713,8 @@ theorem natDegree_add_eq_right_of_natDegree_lt (h : natDegree p < natDegree q) :
   natDegree_eq_of_degree_eq (degree_add_eq_right_of_degree_lt (degree_lt_degree h))
 #align polynomial.nat_degree_add_eq_right_of_nat_degree_lt Polynomial.natDegree_add_eq_right_of_natDegree_lt
 
-theorem degree_add_c (hp : 0 < degree p) : degree (p + c a) = degree p :=
-  add_comm (c a) p ▸ degree_add_eq_right_of_degree_lt <| lt_of_le_of_lt degree_c_le hp
+theorem degree_add_c (hp : 0 < degree p) : degree (p + C a) = degree p :=
+  add_comm (C a) p ▸ degree_add_eq_right_of_degree_lt <| lt_of_le_of_lt degree_c_le hp
 #align polynomial.degree_add_C Polynomial.degree_add_c
 
 theorem degree_add_eq_of_leadingCoeff_add_ne_zero (h : leadingCoeff p + leadingCoeff q ≠ 0) :
@@ -772,14 +772,14 @@ theorem degree_sum_le (s : Finset ι) (f : ι → R[X]) :
 theorem degree_mul_le (p q : R[X]) : degree (p * q) ≤ degree p + degree q :=
   calc
     degree (p * q) ≤
-        p.support.sup fun i => degree (sum q fun j a => c (coeff p i * a) * x ^ (i + j)) :=
+        p.support.sup fun i => degree (sum q fun j a => C (coeff p i * a) * X ^ (i + j)) :=
       by
       simp only [← C_mul_X_pow_eq_monomial.symm]
       convert degree_sum_le _ _
       exact mul_eq_sum_sum
     _ ≤
         p.support.sup fun i =>
-          q.support.sup fun j => degree (c (coeff p i * coeff q j) * x ^ (i + j)) :=
+          q.support.sup fun j => degree (C (coeff p i * coeff q j) * X ^ (i + j)) :=
       (Finset.sup_mono_fun fun i hi => degree_sum_le _ _)
     _ ≤ degree p + degree q :=
       by
@@ -810,36 +810,36 @@ theorem leadingCoeff_monomial (a : R) (n : ℕ) : leadingCoeff (monomial n a) = 
     simp
 #align polynomial.leading_coeff_monomial Polynomial.leadingCoeff_monomial
 
-theorem leadingCoeff_c_mul_x_pow (a : R) (n : ℕ) : leadingCoeff (c a * x ^ n) = a := by
+theorem leadingCoeff_c_mul_x_pow (a : R) (n : ℕ) : leadingCoeff (C a * X ^ n) = a := by
   rw [C_mul_X_pow_eq_monomial, leading_coeff_monomial]
 #align polynomial.leading_coeff_C_mul_X_pow Polynomial.leadingCoeff_c_mul_x_pow
 
-theorem leadingCoeff_c_mul_x (a : R) : leadingCoeff (c a * x) = a := by
+theorem leadingCoeff_c_mul_x (a : R) : leadingCoeff (C a * X) = a := by
   simpa only [pow_one] using leading_coeff_C_mul_X_pow a 1
 #align polynomial.leading_coeff_C_mul_X Polynomial.leadingCoeff_c_mul_x
 
 @[simp]
-theorem leadingCoeff_c (a : R) : leadingCoeff (c a) = a :=
+theorem leadingCoeff_c (a : R) : leadingCoeff (C a) = a :=
   leadingCoeff_monomial a 0
 #align polynomial.leading_coeff_C Polynomial.leadingCoeff_c
 
 @[simp]
-theorem leadingCoeff_x_pow (n : ℕ) : leadingCoeff ((x : R[X]) ^ n) = 1 := by
+theorem leadingCoeff_x_pow (n : ℕ) : leadingCoeff ((X : R[X]) ^ n) = 1 := by
   simpa only [C_1, one_mul] using leading_coeff_C_mul_X_pow (1 : R) n
 #align polynomial.leading_coeff_X_pow Polynomial.leadingCoeff_x_pow
 
 @[simp]
-theorem leadingCoeff_x : leadingCoeff (x : R[X]) = 1 := by
+theorem leadingCoeff_x : leadingCoeff (X : R[X]) = 1 := by
   simpa only [pow_one] using @leading_coeff_X_pow R _ 1
 #align polynomial.leading_coeff_X Polynomial.leadingCoeff_x
 
 @[simp]
-theorem monic_x_pow (n : ℕ) : Monic (x ^ n : R[X]) :=
+theorem monic_x_pow (n : ℕ) : Monic (X ^ n : R[X]) :=
   leadingCoeff_x_pow n
 #align polynomial.monic_X_pow Polynomial.monic_x_pow
 
 @[simp]
-theorem monic_x : Monic (x : R[X]) :=
+theorem monic_x : Monic (X : R[X]) :=
   leadingCoeff_x
 #align polynomial.monic_X Polynomial.monic_x
 
@@ -980,7 +980,7 @@ theorem monomial_natDegree_leadingCoeff_eq_self (h : p.support.card ≤ 1) :
   by_cases ha : a = 0 <;> simp [ha]
 #align polynomial.monomial_nat_degree_leading_coeff_eq_self Polynomial.monomial_natDegree_leadingCoeff_eq_self
 
-theorem c_mul_x_pow_eq_self (h : p.support.card ≤ 1) : c p.leadingCoeff * x ^ p.natDegree = p := by
+theorem c_mul_x_pow_eq_self (h : p.support.card ≤ 1) : C p.leadingCoeff * X ^ p.natDegree = p := by
   rw [C_mul_X_pow_eq_monomial, monomial_nat_degree_leading_coeff_eq_self h]
 #align polynomial.C_mul_X_pow_eq_self Polynomial.c_mul_x_pow_eq_self
 
@@ -1035,12 +1035,12 @@ theorem leadingCoeff_mul_monic {p q : R[X]} (hq : Monic q) :
 #align polynomial.leading_coeff_mul_monic Polynomial.leadingCoeff_mul_monic
 
 @[simp]
-theorem leadingCoeff_mul_x_pow {p : R[X]} {n : ℕ} : leadingCoeff (p * x ^ n) = leadingCoeff p :=
+theorem leadingCoeff_mul_x_pow {p : R[X]} {n : ℕ} : leadingCoeff (p * X ^ n) = leadingCoeff p :=
   leadingCoeff_mul_monic (monic_x_pow n)
 #align polynomial.leading_coeff_mul_X_pow Polynomial.leadingCoeff_mul_x_pow
 
 @[simp]
-theorem leadingCoeff_mul_x {p : R[X]} : leadingCoeff (p * x) = leadingCoeff p :=
+theorem leadingCoeff_mul_x {p : R[X]} : leadingCoeff (p * X) = leadingCoeff p :=
   leadingCoeff_mul_monic monic_x
 #align polynomial.leading_coeff_mul_X Polynomial.leadingCoeff_mul_x
 
@@ -1120,7 +1120,7 @@ theorem natDegree_smul_le (a : R) (p : R[X]) : natDegree (a • p) ≤ natDegree
   natDegree_le_natDegree (degree_smul_le a p)
 #align polynomial.nat_degree_smul_le Polynomial.natDegree_smul_le
 
-theorem degree_lt_degree_mul_x (hp : p ≠ 0) : p.degree < (p * x).degree :=
+theorem degree_lt_degree_mul_x (hp : p ≠ 0) : p.degree < (p * X).degree :=
   haveI := nontrivial.of_polynomial_ne hp
   by
   have : leading_coeff p * leading_coeff X ≠ 0 := by simpa
@@ -1133,11 +1133,11 @@ theorem natDegree_pos_iff_degree_pos : 0 < natDegree p ↔ 0 < degree p :=
   lt_iff_lt_of_le_iff_le natDegree_le_iff_degree_le
 #align polynomial.nat_degree_pos_iff_degree_pos Polynomial.natDegree_pos_iff_degree_pos
 
-theorem eq_c_of_natDegree_le_zero (h : natDegree p ≤ 0) : p = c (coeff p 0) :=
+theorem eq_c_of_natDegree_le_zero (h : natDegree p ≤ 0) : p = C (coeff p 0) :=
   eq_c_of_degree_le_zero <| degree_le_of_natDegree_le h
 #align polynomial.eq_C_of_nat_degree_le_zero Polynomial.eq_c_of_natDegree_le_zero
 
-theorem eq_c_of_natDegree_eq_zero (h : natDegree p = 0) : p = c (coeff p 0) :=
+theorem eq_c_of_natDegree_eq_zero (h : natDegree p = 0) : p = C (coeff p 0) :=
   eq_c_of_natDegree_le_zero h.le
 #align polynomial.eq_C_of_nat_degree_eq_zero Polynomial.eq_c_of_natDegree_eq_zero
 
@@ -1150,99 +1150,99 @@ theorem le_natDegree_of_coe_le_degree (hdeg : ↑n ≤ p.degree) : n ≤ p.natDe
 #align polynomial.le_nat_degree_of_coe_le_degree Polynomial.le_natDegree_of_coe_le_degree
 
 theorem degree_sum_fin_lt {n : ℕ} (f : Fin n → R) :
-    degree (∑ i : Fin n, c (f i) * x ^ (i : ℕ)) < n :=
+    degree (∑ i : Fin n, C (f i) * X ^ (i : ℕ)) < n :=
   (degree_sum_le _ _).trans_lt <|
     (Finset.sup_lt_iff <| WithBot.bot_lt_coe n).2 fun k hk =>
       (degree_c_mul_x_pow_le _ _).trans_lt <| WithBot.coe_lt_coe.2 k.is_lt
 #align polynomial.degree_sum_fin_lt Polynomial.degree_sum_fin_lt
 
-theorem degree_linear_le : degree (c a * x + c b) ≤ 1 :=
+theorem degree_linear_le : degree (C a * X + C b) ≤ 1 :=
   degree_add_le_of_degree_le (degree_c_mul_x_le _) <| le_trans degree_c_le Nat.WithBot.coe_nonneg
 #align polynomial.degree_linear_le Polynomial.degree_linear_le
 
-theorem degree_linear_lt : degree (c a * x + c b) < 2 :=
+theorem degree_linear_lt : degree (C a * X + C b) < 2 :=
   degree_linear_le.trans_lt <| WithBot.coe_lt_coe.mpr one_lt_two
 #align polynomial.degree_linear_lt Polynomial.degree_linear_lt
 
-theorem degree_c_lt_degree_c_mul_x (ha : a ≠ 0) : degree (c b) < degree (c a * x) := by
+theorem degree_c_lt_degree_c_mul_x (ha : a ≠ 0) : degree (C b) < degree (C a * X) := by
   simpa only [degree_C_mul_X ha] using degree_C_lt
 #align polynomial.degree_C_lt_degree_C_mul_X Polynomial.degree_c_lt_degree_c_mul_x
 
 @[simp]
-theorem degree_linear (ha : a ≠ 0) : degree (c a * x + c b) = 1 := by
+theorem degree_linear (ha : a ≠ 0) : degree (C a * X + C b) = 1 := by
   rw [degree_add_eq_left_of_degree_lt <| degree_C_lt_degree_C_mul_X ha, degree_C_mul_X ha]
 #align polynomial.degree_linear Polynomial.degree_linear
 
-theorem natDegree_linear_le : natDegree (c a * x + c b) ≤ 1 :=
+theorem natDegree_linear_le : natDegree (C a * X + C b) ≤ 1 :=
   natDegree_le_of_degree_le degree_linear_le
 #align polynomial.nat_degree_linear_le Polynomial.natDegree_linear_le
 
 @[simp]
-theorem natDegree_linear (ha : a ≠ 0) : natDegree (c a * x + c b) = 1 :=
+theorem natDegree_linear (ha : a ≠ 0) : natDegree (C a * X + C b) = 1 :=
   natDegree_eq_of_degree_eq_some <| degree_linear ha
 #align polynomial.nat_degree_linear Polynomial.natDegree_linear
 
 @[simp]
-theorem leadingCoeff_linear (ha : a ≠ 0) : leadingCoeff (c a * x + c b) = a := by
+theorem leadingCoeff_linear (ha : a ≠ 0) : leadingCoeff (C a * X + C b) = a := by
   rw [add_comm, leading_coeff_add_of_degree_lt (degree_C_lt_degree_C_mul_X ha),
     leading_coeff_C_mul_X]
 #align polynomial.leading_coeff_linear Polynomial.leadingCoeff_linear
 
-theorem degree_quadratic_le : degree (c a * x ^ 2 + c b * x + c c) ≤ 2 := by
+theorem degree_quadratic_le : degree (C a * X ^ 2 + C b * X + C c) ≤ 2 := by
   simpa only [add_assoc] using
     degree_add_le_of_degree_le (degree_C_mul_X_pow_le 2 a)
       (le_trans degree_linear_le <| with_bot.coe_le_coe.mpr one_le_two)
 #align polynomial.degree_quadratic_le Polynomial.degree_quadratic_le
 
-theorem degree_quadratic_lt : degree (c a * x ^ 2 + c b * x + c c) < 3 :=
+theorem degree_quadratic_lt : degree (C a * X ^ 2 + C b * X + C c) < 3 :=
   degree_quadratic_le.trans_lt <| WithBot.coe_lt_coe.mpr <| lt_add_one 2
 #align polynomial.degree_quadratic_lt Polynomial.degree_quadratic_lt
 
 theorem degree_linear_lt_degree_c_mul_x_sq (ha : a ≠ 0) :
-    degree (c b * x + c c) < degree (c a * x ^ 2) := by
+    degree (C b * X + C c) < degree (C a * X ^ 2) := by
   simpa only [degree_C_mul_X_pow 2 ha] using degree_linear_lt
 #align polynomial.degree_linear_lt_degree_C_mul_X_sq Polynomial.degree_linear_lt_degree_c_mul_x_sq
 
 @[simp]
-theorem degree_quadratic (ha : a ≠ 0) : degree (c a * x ^ 2 + c b * x + c c) = 2 :=
+theorem degree_quadratic (ha : a ≠ 0) : degree (C a * X ^ 2 + C b * X + C c) = 2 :=
   by
   rw [add_assoc, degree_add_eq_left_of_degree_lt <| degree_linear_lt_degree_C_mul_X_sq ha,
     degree_C_mul_X_pow 2 ha]
   rfl
 #align polynomial.degree_quadratic Polynomial.degree_quadratic
 
-theorem natDegree_quadratic_le : natDegree (c a * x ^ 2 + c b * x + c c) ≤ 2 :=
+theorem natDegree_quadratic_le : natDegree (C a * X ^ 2 + C b * X + C c) ≤ 2 :=
   natDegree_le_of_degree_le degree_quadratic_le
 #align polynomial.nat_degree_quadratic_le Polynomial.natDegree_quadratic_le
 
 @[simp]
-theorem natDegree_quadratic (ha : a ≠ 0) : natDegree (c a * x ^ 2 + c b * x + c c) = 2 :=
+theorem natDegree_quadratic (ha : a ≠ 0) : natDegree (C a * X ^ 2 + C b * X + C c) = 2 :=
   natDegree_eq_of_degree_eq_some <| degree_quadratic ha
 #align polynomial.nat_degree_quadratic Polynomial.natDegree_quadratic
 
 @[simp]
-theorem leadingCoeff_quadratic (ha : a ≠ 0) : leadingCoeff (c a * x ^ 2 + c b * x + c c) = a := by
+theorem leadingCoeff_quadratic (ha : a ≠ 0) : leadingCoeff (C a * X ^ 2 + C b * X + C c) = a := by
   rw [add_assoc, add_comm, leading_coeff_add_of_degree_lt <| degree_linear_lt_degree_C_mul_X_sq ha,
     leading_coeff_C_mul_X_pow]
 #align polynomial.leading_coeff_quadratic Polynomial.leadingCoeff_quadratic
 
-theorem degree_cubic_le : degree (c a * x ^ 3 + c b * x ^ 2 + c c * x + c d) ≤ 3 := by
+theorem degree_cubic_le : degree (C a * X ^ 3 + C b * X ^ 2 + C c * X + C d) ≤ 3 := by
   simpa only [add_assoc] using
     degree_add_le_of_degree_le (degree_C_mul_X_pow_le 3 a)
       (le_trans degree_quadratic_le <| with_bot.coe_le_coe.mpr <| Nat.le_succ 2)
 #align polynomial.degree_cubic_le Polynomial.degree_cubic_le
 
-theorem degree_cubic_lt : degree (c a * x ^ 3 + c b * x ^ 2 + c c * x + c d) < 4 :=
+theorem degree_cubic_lt : degree (C a * X ^ 3 + C b * X ^ 2 + C c * X + C d) < 4 :=
   degree_cubic_le.trans_lt <| WithBot.coe_lt_coe.mpr <| lt_add_one 3
 #align polynomial.degree_cubic_lt Polynomial.degree_cubic_lt
 
 theorem degree_quadratic_lt_degree_c_mul_x_cb (ha : a ≠ 0) :
-    degree (c b * x ^ 2 + c c * x + c d) < degree (c a * x ^ 3) := by
+    degree (C b * X ^ 2 + C c * X + C d) < degree (C a * X ^ 3) := by
   simpa only [degree_C_mul_X_pow 3 ha] using degree_quadratic_lt
 #align polynomial.degree_quadratic_lt_degree_C_mul_X_cb Polynomial.degree_quadratic_lt_degree_c_mul_x_cb
 
 @[simp]
-theorem degree_cubic (ha : a ≠ 0) : degree (c a * x ^ 3 + c b * x ^ 2 + c c * x + c d) = 3 :=
+theorem degree_cubic (ha : a ≠ 0) : degree (C a * X ^ 3 + C b * X ^ 2 + C c * X + C d) = 3 :=
   by
   rw [add_assoc, add_assoc, ← add_assoc (C b * X ^ 2),
     degree_add_eq_left_of_degree_lt <| degree_quadratic_lt_degree_C_mul_X_cb ha,
@@ -1250,18 +1250,18 @@ theorem degree_cubic (ha : a ≠ 0) : degree (c a * x ^ 3 + c b * x ^ 2 + c c * 
   rfl
 #align polynomial.degree_cubic Polynomial.degree_cubic
 
-theorem natDegree_cubic_le : natDegree (c a * x ^ 3 + c b * x ^ 2 + c c * x + c d) ≤ 3 :=
+theorem natDegree_cubic_le : natDegree (C a * X ^ 3 + C b * X ^ 2 + C c * X + C d) ≤ 3 :=
   natDegree_le_of_degree_le degree_cubic_le
 #align polynomial.nat_degree_cubic_le Polynomial.natDegree_cubic_le
 
 @[simp]
-theorem natDegree_cubic (ha : a ≠ 0) : natDegree (c a * x ^ 3 + c b * x ^ 2 + c c * x + c d) = 3 :=
+theorem natDegree_cubic (ha : a ≠ 0) : natDegree (C a * X ^ 3 + C b * X ^ 2 + C c * X + C d) = 3 :=
   natDegree_eq_of_degree_eq_some <| degree_cubic ha
 #align polynomial.nat_degree_cubic Polynomial.natDegree_cubic
 
 @[simp]
 theorem leadingCoeff_cubic (ha : a ≠ 0) :
-    leadingCoeff (c a * x ^ 3 + c b * x ^ 2 + c c * x + c d) = a := by
+    leadingCoeff (C a * X ^ 3 + C b * X ^ 2 + C c * X + C d) = a := by
   rw [add_assoc, add_assoc, ← add_assoc (C b * X ^ 2), add_comm,
     leading_coeff_add_of_degree_lt <| degree_quadratic_lt_degree_C_mul_X_cb ha,
     leading_coeff_C_mul_X_pow]
@@ -1274,23 +1274,23 @@ section NontrivialSemiring
 variable [Semiring R] [Nontrivial R] {p q : R[X]}
 
 @[simp]
-theorem degree_x_pow (n : ℕ) : degree ((x : R[X]) ^ n) = n := by
+theorem degree_x_pow (n : ℕ) : degree ((X : R[X]) ^ n) = n := by
   rw [X_pow_eq_monomial, degree_monomial _ (one_ne_zero' R)]
 #align polynomial.degree_X_pow Polynomial.degree_x_pow
 
 @[simp]
-theorem natDegree_x_pow (n : ℕ) : natDegree ((x : R[X]) ^ n) = n :=
+theorem natDegree_x_pow (n : ℕ) : natDegree ((X : R[X]) ^ n) = n :=
   natDegree_eq_of_degree_eq_some (degree_x_pow n)
 #align polynomial.nat_degree_X_pow Polynomial.natDegree_x_pow
 
 --  This lemma explicitly does not require the `nontrivial R` assumption.
-theorem natDegree_x_pow_le {R : Type _} [Semiring R] (n : ℕ) : (x ^ n : R[X]).natDegree ≤ n :=
+theorem natDegree_x_pow_le {R : Type _} [Semiring R] (n : ℕ) : (X ^ n : R[X]).natDegree ≤ n :=
   by
   nontriviality R
   rwa [Polynomial.natDegree_x_pow]
 #align polynomial.nat_degree_X_pow_le Polynomial.natDegree_x_pow_le
 
-theorem not_isUnit_x : ¬IsUnit (x : R[X]) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
+theorem not_isUnit_x : ¬IsUnit (X : R[X]) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
   zero_ne_one' R <| by
     change g * monomial 1 1 = 1 at hgf
     rw [← coeff_one_zero, ← hgf]
@@ -1298,11 +1298,11 @@ theorem not_isUnit_x : ¬IsUnit (x : R[X]) := fun ⟨⟨_, g, hfg, hgf⟩, rfl�
 #align polynomial.not_is_unit_X Polynomial.not_isUnit_x
 
 @[simp]
-theorem degree_mul_x : degree (p * x) = degree p + 1 := by simp [monic_X.degree_mul]
+theorem degree_mul_x : degree (p * X) = degree p + 1 := by simp [monic_X.degree_mul]
 #align polynomial.degree_mul_X Polynomial.degree_mul_x
 
 @[simp]
-theorem degree_mul_x_pow : degree (p * x ^ n) = degree p + n := by simp [(monic_X_pow n).degree_mul]
+theorem degree_mul_x_pow : degree (p * X ^ n) = degree p + n := by simp [(monic_X_pow n).degree_mul]
 #align polynomial.degree_mul_X_pow Polynomial.degree_mul_x_pow
 
 end NontrivialSemiring
@@ -1338,11 +1338,11 @@ theorem degree_sub_lt (hd : degree p = degree q) (hp0 : p ≠ 0)
     
 #align polynomial.degree_sub_lt Polynomial.degree_sub_lt
 
-theorem degree_x_sub_c_le (r : R) : (x - c r).degree ≤ 1 :=
+theorem degree_x_sub_c_le (r : R) : (X - C r).degree ≤ 1 :=
   (degree_sub_le _ _).trans (max_le degree_x_le (degree_c_le.trans zero_le_one))
 #align polynomial.degree_X_sub_C_le Polynomial.degree_x_sub_c_le
 
-theorem natDegree_x_sub_c_le (r : R) : (x - c r).natDegree ≤ 1 :=
+theorem natDegree_x_sub_c_le (r : R) : (X - C r).natDegree ≤ 1 :=
   natDegree_le_iff_degree_le.2 <| degree_x_sub_c_le r
 #align polynomial.nat_degree_X_sub_C_le Polynomial.natDegree_x_sub_c_le
 
@@ -1379,64 +1379,64 @@ section Semiring
 variable [Semiring R]
 
 @[simp]
-theorem degree_x_add_c (a : R) : degree (x + c a) = 1 :=
+theorem degree_x_add_c (a : R) : degree (X + C a) = 1 :=
   by
-  have : degree (c a) < degree (x : R[X]) :=
+  have : degree (C a) < degree (X : R[X]) :=
     calc
-      degree (c a) ≤ 0 := degree_c_le
+      degree (C a) ≤ 0 := degree_c_le
       _ < 1 := (WithBot.some_lt_some.mpr zero_lt_one)
-      _ = degree x := degree_x.symm
+      _ = degree X := degree_x.symm
       
   rw [degree_add_eq_left_of_degree_lt this, degree_X]
 #align polynomial.degree_X_add_C Polynomial.degree_x_add_c
 
 @[simp]
-theorem natDegree_x_add_c (x : R) : (x + c x).natDegree = 1 :=
+theorem natDegree_x_add_c (x : R) : (X + C x).natDegree = 1 :=
   natDegree_eq_of_degree_eq_some <| degree_x_add_c x
 #align polynomial.nat_degree_X_add_C Polynomial.natDegree_x_add_c
 
 @[simp]
-theorem nextCoeff_x_add_c [Semiring S] (c : S) : nextCoeff (x + c c) = c :=
+theorem nextCoeff_x_add_c [Semiring S] (c : S) : nextCoeff (X + C c) = c :=
   by
   nontriviality S
   simp [next_coeff_of_pos_nat_degree]
 #align polynomial.next_coeff_X_add_C Polynomial.nextCoeff_x_add_c
 
-theorem degree_x_pow_add_c {n : ℕ} (hn : 0 < n) (a : R) : degree ((x : R[X]) ^ n + c a) = n :=
+theorem degree_x_pow_add_c {n : ℕ} (hn : 0 < n) (a : R) : degree ((X : R[X]) ^ n + C a) = n :=
   by
-  have : degree (c a) < degree ((x : R[X]) ^ n) :=
+  have : degree (C a) < degree ((X : R[X]) ^ n) :=
     degree_c_le.trans_lt <| by rwa [degree_X_pow, WithBot.coe_pos]
   rw [degree_add_eq_left_of_degree_lt this, degree_X_pow]
 #align polynomial.degree_X_pow_add_C Polynomial.degree_x_pow_add_c
 
-theorem x_pow_add_c_ne_zero {n : ℕ} (hn : 0 < n) (a : R) : (x : R[X]) ^ n + c a ≠ 0 :=
+theorem x_pow_add_c_ne_zero {n : ℕ} (hn : 0 < n) (a : R) : (X : R[X]) ^ n + C a ≠ 0 :=
   mt degree_eq_bot.2
-    (show degree ((x : R[X]) ^ n + c a) ≠ ⊥ by rw [degree_X_pow_add_C hn a] <;> exact by decide)
+    (show degree ((X : R[X]) ^ n + C a) ≠ ⊥ by rw [degree_X_pow_add_C hn a] <;> exact by decide)
 #align polynomial.X_pow_add_C_ne_zero Polynomial.x_pow_add_c_ne_zero
 
-theorem x_add_c_ne_zero (r : R) : x + c r ≠ 0 :=
-  pow_one (x : R[X]) ▸ x_pow_add_c_ne_zero zero_lt_one r
+theorem x_add_c_ne_zero (r : R) : X + C r ≠ 0 :=
+  pow_one (X : R[X]) ▸ x_pow_add_c_ne_zero zero_lt_one r
 #align polynomial.X_add_C_ne_zero Polynomial.x_add_c_ne_zero
 
 theorem zero_nmem_multiset_map_x_add_c {α : Type _} (m : Multiset α) (f : α → R) :
-    (0 : R[X]) ∉ m.map fun a => x + c (f a) := fun mem =>
+    (0 : R[X]) ∉ m.map fun a => X + C (f a) := fun mem =>
   let ⟨a, _, ha⟩ := Multiset.mem_map.mp mem
   x_add_c_ne_zero _ ha
 #align polynomial.zero_nmem_multiset_map_X_add_C Polynomial.zero_nmem_multiset_map_x_add_c
 
-theorem natDegree_x_pow_add_c {n : ℕ} {r : R} : (x ^ n + c r).natDegree = n :=
+theorem natDegree_x_pow_add_c {n : ℕ} {r : R} : (X ^ n + C r).natDegree = n :=
   by
   by_cases hn : n = 0
   · rw [hn, pow_zero, ← C_1, ← RingHom.map_add, nat_degree_C]
   · exact nat_degree_eq_of_degree_eq_some (degree_X_pow_add_C (pos_iff_ne_zero.mpr hn) r)
 #align polynomial.nat_degree_X_pow_add_C Polynomial.natDegree_x_pow_add_c
 
-theorem x_pow_add_c_ne_one {n : ℕ} (hn : 0 < n) (a : R) : (x : R[X]) ^ n + c a ≠ 1 := fun h =>
+theorem x_pow_add_c_ne_one {n : ℕ} (hn : 0 < n) (a : R) : (X : R[X]) ^ n + C a ≠ 1 := fun h =>
   hn.ne' <| by simpa only [nat_degree_X_pow_add_C, nat_degree_one] using congr_arg nat_degree h
 #align polynomial.X_pow_add_C_ne_one Polynomial.x_pow_add_c_ne_one
 
-theorem x_add_c_ne_one (r : R) : x + c r ≠ 1 :=
-  pow_one (x : R[X]) ▸ x_pow_add_c_ne_one zero_lt_one r
+theorem x_add_c_ne_one (r : R) : X + C r ≠ 1 :=
+  pow_one (X : R[X]) ▸ x_pow_add_c_ne_one zero_lt_one r
 #align polynomial.X_add_C_ne_one Polynomial.x_add_c_ne_one
 
 end Semiring
@@ -1448,7 +1448,7 @@ section Semiring
 variable [Semiring R]
 
 @[simp]
-theorem leadingCoeff_x_pow_add_c {n : ℕ} (hn : 0 < n) {r : R} : (x ^ n + c r).leadingCoeff = 1 :=
+theorem leadingCoeff_x_pow_add_c {n : ℕ} (hn : 0 < n) {r : R} : (X ^ n + C r).leadingCoeff = 1 :=
   by
   nontriviality R
   rw [leading_coeff, nat_degree_X_pow_add_C, coeff_add, coeff_X_pow_self, coeff_C,
@@ -1456,17 +1456,17 @@ theorem leadingCoeff_x_pow_add_c {n : ℕ} (hn : 0 < n) {r : R} : (x ^ n + c r).
 #align polynomial.leading_coeff_X_pow_add_C Polynomial.leadingCoeff_x_pow_add_c
 
 @[simp]
-theorem leadingCoeff_x_add_c [Semiring S] (r : S) : (x + c r).leadingCoeff = 1 := by
+theorem leadingCoeff_x_add_c [Semiring S] (r : S) : (X + C r).leadingCoeff = 1 := by
   rw [← pow_one (X : S[X]), leading_coeff_X_pow_add_C zero_lt_one]
 #align polynomial.leading_coeff_X_add_C Polynomial.leadingCoeff_x_add_c
 
 @[simp]
-theorem leadingCoeff_x_pow_add_one {n : ℕ} (hn : 0 < n) : (x ^ n + 1 : R[X]).leadingCoeff = 1 :=
+theorem leadingCoeff_x_pow_add_one {n : ℕ} (hn : 0 < n) : (X ^ n + 1 : R[X]).leadingCoeff = 1 :=
   leadingCoeff_x_pow_add_c hn
 #align polynomial.leading_coeff_X_pow_add_one Polynomial.leadingCoeff_x_pow_add_one
 
 @[simp]
-theorem leadingCoeff_pow_x_add_c (r : R) (i : ℕ) : leadingCoeff ((x + c r) ^ i) = 1 :=
+theorem leadingCoeff_pow_x_add_c (r : R) (i : ℕ) : leadingCoeff ((X + C r) ^ i) = 1 :=
   by
   nontriviality
   rw [leading_coeff_pow'] <;> simp
@@ -1479,58 +1479,58 @@ section Ring
 variable [Ring R]
 
 @[simp]
-theorem leadingCoeff_x_pow_sub_c {n : ℕ} (hn : 0 < n) {r : R} : (x ^ n - c r).leadingCoeff = 1 := by
+theorem leadingCoeff_x_pow_sub_c {n : ℕ} (hn : 0 < n) {r : R} : (X ^ n - C r).leadingCoeff = 1 := by
   rw [sub_eq_add_neg, ← map_neg C r, leading_coeff_X_pow_add_C hn] <;> infer_instance
 #align polynomial.leading_coeff_X_pow_sub_C Polynomial.leadingCoeff_x_pow_sub_c
 
 @[simp]
-theorem leadingCoeff_x_pow_sub_one {n : ℕ} (hn : 0 < n) : (x ^ n - 1 : R[X]).leadingCoeff = 1 :=
+theorem leadingCoeff_x_pow_sub_one {n : ℕ} (hn : 0 < n) : (X ^ n - 1 : R[X]).leadingCoeff = 1 :=
   leadingCoeff_x_pow_sub_c hn
 #align polynomial.leading_coeff_X_pow_sub_one Polynomial.leadingCoeff_x_pow_sub_one
 
 variable [Nontrivial R]
 
 @[simp]
-theorem degree_x_sub_c (a : R) : degree (x - c a) = 1 := by
+theorem degree_x_sub_c (a : R) : degree (X - C a) = 1 := by
   rw [sub_eq_add_neg, ← map_neg C a, degree_X_add_C]
 #align polynomial.degree_X_sub_C Polynomial.degree_x_sub_c
 
 @[simp]
-theorem natDegree_x_sub_c (x : R) : (x - c x).natDegree = 1 :=
+theorem natDegree_x_sub_c (x : R) : (X - C x).natDegree = 1 :=
   natDegree_eq_of_degree_eq_some <| degree_x_sub_c x
 #align polynomial.nat_degree_X_sub_C Polynomial.natDegree_x_sub_c
 
 @[simp]
-theorem nextCoeff_x_sub_c [Ring S] (c : S) : nextCoeff (x - c c) = -c := by
+theorem nextCoeff_x_sub_c [Ring S] (c : S) : nextCoeff (X - C c) = -c := by
   rw [sub_eq_add_neg, ← map_neg C c, next_coeff_X_add_C]
 #align polynomial.next_coeff_X_sub_C Polynomial.nextCoeff_x_sub_c
 
-theorem degree_x_pow_sub_c {n : ℕ} (hn : 0 < n) (a : R) : degree ((x : R[X]) ^ n - c a) = n := by
+theorem degree_x_pow_sub_c {n : ℕ} (hn : 0 < n) (a : R) : degree ((X : R[X]) ^ n - C a) = n := by
   rw [sub_eq_add_neg, ← map_neg C a, degree_X_pow_add_C hn] <;> infer_instance
 #align polynomial.degree_X_pow_sub_C Polynomial.degree_x_pow_sub_c
 
-theorem x_pow_sub_c_ne_zero {n : ℕ} (hn : 0 < n) (a : R) : (x : R[X]) ^ n - c a ≠ 0 :=
+theorem x_pow_sub_c_ne_zero {n : ℕ} (hn : 0 < n) (a : R) : (X : R[X]) ^ n - C a ≠ 0 :=
   by
   rw [sub_eq_add_neg, ← map_neg C a]
   exact X_pow_add_C_ne_zero hn _
 #align polynomial.X_pow_sub_C_ne_zero Polynomial.x_pow_sub_c_ne_zero
 
-theorem x_sub_c_ne_zero (r : R) : x - c r ≠ 0 :=
-  pow_one (x : R[X]) ▸ x_pow_sub_c_ne_zero zero_lt_one r
+theorem x_sub_c_ne_zero (r : R) : X - C r ≠ 0 :=
+  pow_one (X : R[X]) ▸ x_pow_sub_c_ne_zero zero_lt_one r
 #align polynomial.X_sub_C_ne_zero Polynomial.x_sub_c_ne_zero
 
 theorem zero_nmem_multiset_map_x_sub_c {α : Type _} (m : Multiset α) (f : α → R) :
-    (0 : R[X]) ∉ m.map fun a => x - c (f a) := fun mem =>
+    (0 : R[X]) ∉ m.map fun a => X - C (f a) := fun mem =>
   let ⟨a, _, ha⟩ := Multiset.mem_map.mp mem
   x_sub_c_ne_zero _ ha
 #align polynomial.zero_nmem_multiset_map_X_sub_C Polynomial.zero_nmem_multiset_map_x_sub_c
 
-theorem natDegree_x_pow_sub_c {n : ℕ} {r : R} : (x ^ n - c r).natDegree = n := by
+theorem natDegree_x_pow_sub_c {n : ℕ} {r : R} : (X ^ n - C r).natDegree = n := by
   rw [sub_eq_add_neg, ← map_neg C r, nat_degree_X_pow_add_C]
 #align polynomial.nat_degree_X_pow_sub_C Polynomial.natDegree_x_pow_sub_c
 
 @[simp]
-theorem leadingCoeff_x_sub_c [Ring S] (r : S) : (x - c r).leadingCoeff = 1 := by
+theorem leadingCoeff_x_sub_c [Ring S] (r : S) : (X - C r).leadingCoeff = 1 := by
   rw [sub_eq_add_neg, ← map_neg C r, leading_coeff_X_add_C]
 #align polynomial.leading_coeff_X_sub_C Polynomial.leadingCoeff_x_sub_c
 

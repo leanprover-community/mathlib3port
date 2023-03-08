@@ -75,7 +75,7 @@ theorem degreeLe_mono {m n : WithBot ℕ} (H : m ≤ n) : degreeLe R m ≤ degre
 #align polynomial.degree_le_mono Polynomial.degreeLe_mono
 
 theorem degreeLe_eq_span_x_pow {n : ℕ} :
-    degreeLe R n = Submodule.span R ↑((Finset.range (n + 1)).image fun n => (x : R[X]) ^ n) :=
+    degreeLe R n = Submodule.span R ↑((Finset.range (n + 1)).image fun n => (X : R[X]) ^ n) :=
   by
   apply le_antisymm
   · intro p hp
@@ -110,7 +110,7 @@ theorem degreeLt_mono {m n : ℕ} (H : m ≤ n) : degreeLt R m ≤ degreeLt R n 
 #align polynomial.degree_lt_mono Polynomial.degreeLt_mono
 
 theorem degreeLt_eq_span_x_pow {n : ℕ} :
-    degreeLt R n = Submodule.span R ↑((Finset.range n).image fun n => x ^ n : Finset R[X]) :=
+    degreeLt R n = Submodule.span R ↑((Finset.range n).image fun n => X ^ n : Finset R[X]) :=
   by
   apply le_antisymm
   · intro p hp
@@ -207,8 +207,8 @@ theorem coeff_mem_frange (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n 
 #align polynomial.coeff_mem_frange Polynomial.coeff_mem_frange
 
 theorem geom_sum_x_comp_x_add_one_eq_sum (n : ℕ) :
-    (∑ i in range n, (x : R[X]) ^ i).comp (x + 1) =
-      (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * x ^ i :=
+    (∑ i in range n, (X : R[X]) ^ i).comp (X + 1) =
+      (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i :=
   by
   ext i
   trans (n.choose (i + 1) : R); swap
@@ -247,7 +247,7 @@ theorem Monic.geom_sum' {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.degree) {n : ℕ
   hP.geom_sum (natDegree_pos_iff_degree_pos.2 hdeg) hn
 #align polynomial.monic.geom_sum' Polynomial.Monic.geom_sum'
 
-theorem monic_geom_sum_x {n : ℕ} (hn : n ≠ 0) : (∑ i in range n, (x : R[X]) ^ i).Monic :=
+theorem monic_geom_sum_x {n : ℕ} (hn : n ≠ 0) : (∑ i in range n, (X : R[X]) ^ i).Monic :=
   by
   nontriviality R
   apply monic_X.geom_sum _ hn
@@ -540,14 +540,14 @@ variable [CommSemiring R] [Semiring S]
 
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself -/
 theorem polynomial_mem_ideal_of_coeff_mem_ideal (I : Ideal R[X]) (p : R[X])
-    (hp : ∀ n : ℕ, p.coeff n ∈ I.comap (c : R →+* R[X])) : p ∈ I :=
-  sum_c_mul_x_pow_eq p ▸ Submodule.sum_mem I fun n hn => I.mul_mem_right _ (hp n)
+    (hp : ∀ n : ℕ, p.coeff n ∈ I.comap (C : R →+* R[X])) : p ∈ I :=
+  sum_C_mul_X_pow_eq p ▸ Submodule.sum_mem I fun n hn => I.mul_mem_right _ (hp n)
 #align ideal.polynomial_mem_ideal_of_coeff_mem_ideal Ideal.polynomial_mem_ideal_of_coeff_mem_ideal
 
 /-- The push-forward of an ideal `I` of `R` to `R[X]` via inclusion
  is exactly the set of polynomials whose coefficients are in `I` -/
 theorem mem_map_c_iff {I : Ideal R} {f : R[X]} :
-    f ∈ (Ideal.map (c : R →+* R[X]) I : Ideal R[X]) ↔ ∀ n : ℕ, f.coeff n ∈ I :=
+    f ∈ (Ideal.map (C : R →+* R[X]) I : Ideal R[X]) ↔ ∀ n : ℕ, f.coeff n ∈ I :=
   by
   constructor
   · intro hf
@@ -572,7 +572,7 @@ theorem mem_map_c_iff {I : Ideal R} {f : R[X]} :
 #align ideal.mem_map_C_iff Ideal.mem_map_c_iff
 
 theorem Polynomial.ker_mapRingHom (f : R →+* S) :
-    (Polynomial.mapRingHom f).ker = f.ker.map (c : R →+* R[X]) :=
+    (Polynomial.mapRingHom f).ker = f.ker.map (C : R →+* R[X]) :=
   by
   ext
   rw [mem_map_C_iff, RingHom.mem_ker, Polynomial.ext_iff]
@@ -606,12 +606,12 @@ theorem mem_leadingCoeffNth (n : ℕ) (x) :
     · rw [Polynomial.leadingCoeff, ← coeff_mul_X_pow p (n - nat_degree p), this]
 #align ideal.mem_leading_coeff_nth Ideal.mem_leadingCoeffNth
 
-theorem mem_leadingCoeffNth_zero (x) : x ∈ I.leadingCoeffNth 0 ↔ c x ∈ I :=
+theorem mem_leadingCoeffNth_zero (x) : x ∈ I.leadingCoeffNth 0 ↔ C x ∈ I :=
   (mem_leadingCoeffNth _ _ _).trans
     ⟨fun ⟨p, hpI, hpdeg, hpx⟩ => by
       rwa [← hpx, Polynomial.leadingCoeff,
         Nat.eq_zero_of_le_zero (nat_degree_le_of_degree_le hpdeg), ← eq_C_of_degree_le_zero hpdeg],
-      fun hx => ⟨c x, hx, degree_c_le, leadingCoeff_c x⟩⟩
+      fun hx => ⟨C x, hx, degree_c_le, leadingCoeff_c x⟩⟩
 #align ideal.mem_leading_coeff_nth_zero Ideal.mem_leadingCoeffNth_zero
 
 theorem leadingCoeffNth_mono {m n : ℕ} (H : m ≤ n) : I.leadingCoeffNth m ≤ I.leadingCoeffNth n :=
@@ -685,7 +685,7 @@ theorem polynomial_not_isField : ¬IsField R[X] :=
 
 /-- The only constant in a maximal ideal over a field is `0`. -/
 theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal R[X]) [hI : I.IsMaximal]
-    (x : R) (hx : c x ∈ I) : x = 0 :=
+    (x : R) (hx : C x ∈ I) : x = 0 :=
   by
   refine' by_contradiction fun hx0 => hI.ne_top ((eq_top_iff_one I).2 _)
   obtain ⟨y, hy⟩ := hR.mul_inv_cancel hx0
@@ -700,7 +700,7 @@ section CommRing
 variable [CommRing R]
 
 theorem quotient_map_c_eq_zero {I : Ideal R} :
-    ∀ a ∈ I, ((Quotient.mk (map (c : R →+* R[X]) I : Ideal R[X])).comp c) a = 0 :=
+    ∀ a ∈ I, ((Quotient.mk (map (C : R →+* R[X]) I : Ideal R[X])).comp C) a = 0 :=
   by
   intro a ha
   rw [RingHom.comp_apply, quotient.eq_zero_iff_mem]
@@ -708,7 +708,7 @@ theorem quotient_map_c_eq_zero {I : Ideal R} :
 #align ideal.quotient_map_C_eq_zero Ideal.quotient_map_c_eq_zero
 
 theorem eval₂_c_mk_eq_zero {I : Ideal R} :
-    ∀ f ∈ (map (c : R →+* R[X]) I : Ideal R[X]), eval₂RingHom (c.comp (Quotient.mk I)) x f = 0 :=
+    ∀ f ∈ (map (C : R →+* R[X]) I : Ideal R[X]), eval₂RingHom (C.comp (Quotient.mk I)) X f = 0 :=
   by
   intro a ha
   rw [← sum_monomial_eq a]
@@ -728,14 +728,14 @@ theorem eval₂_c_mk_eq_zero {I : Ideal R} :
 isomorphic to the quotient of `R[X]` by the ideal `map C I`,
 where `map C I` contains exactly the polynomials whose coefficients all lie in `I` -/
 def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
-    (R ⧸ I)[X] ≃+* R[X] ⧸ (map c I : Ideal R[X])
+    (R ⧸ I)[X] ≃+* R[X] ⧸ (map C I : Ideal R[X])
     where
   toFun :=
     eval₂RingHom
-      (Quotient.lift I ((Quotient.mk (map c I : Ideal R[X])).comp c) quotient_map_c_eq_zero)
-      (Quotient.mk (map c I : Ideal R[X]) x)
+      (Quotient.lift I ((Quotient.mk (map C I : Ideal R[X])).comp C) quotient_map_c_eq_zero)
+      (Quotient.mk (map C I : Ideal R[X]) X)
   invFun :=
-    Quotient.lift (map c I : Ideal R[X]) (eval₂RingHom (c.comp (Quotient.mk I)) x)
+    Quotient.lift (map C I : Ideal R[X]) (eval₂RingHom (C.comp (Quotient.mk I)) X)
       eval₂_c_mk_eq_zero
   map_mul' f g := by simp only [coe_eval₂_ring_hom, eval₂_mul]
   map_add' f g := by simp only [eval₂_add, coe_eval₂_ring_hom]
@@ -779,14 +779,14 @@ theorem polynomialQuotientEquivQuotientPolynomial_map_mk (I : Ideal R) (f : R[X]
 
 /-- If `P` is a prime ideal of `R`, then `R[x]/(P)` is an integral domain. -/
 theorem isDomain_map_c_quotient {P : Ideal R} (H : IsPrime P) :
-    IsDomain (R[X] ⧸ (map (c : R →+* R[X]) P : Ideal R[X])) :=
+    IsDomain (R[X] ⧸ (map (C : R →+* R[X]) P : Ideal R[X])) :=
   RingEquiv.isDomain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
 #align ideal.is_domain_map_C_quotient Ideal.isDomain_map_c_quotient
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
 theorem isPrime_map_c_of_isPrime {P : Ideal R} (H : IsPrime P) :
-    IsPrime (map (c : R →+* R[X]) P : Ideal R[X]) :=
-  (Quotient.isDomain_iff_prime (map c P : Ideal R[X])).mp (isDomain_map_c_quotient H)
+    IsPrime (map (C : R →+* R[X]) P : Ideal R[X]) :=
+  (Quotient.isDomain_iff_prime (map C P : Ideal R[X])).mp (isDomain_map_c_quotient H)
 #align ideal.is_prime_map_C_of_is_prime Ideal.isPrime_map_c_of_isPrime
 
 /-- Given any ring `R` and an ideal `I` of `R[X]`, we get a map `R → R[x] → R[x]/I`.
@@ -794,8 +794,8 @@ theorem isPrime_map_c_of_isPrime {P : Ideal R} (H : IsPrime P) :
   In particular we can map `I` across this map, to get `I'` and a new map `R' → R'[x] → R'[x]/I`.
   This theorem shows `I'` will not contain any non-zero constant polynomials
   -/
-theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk I).comp c).range)
-    (hx : c x ∈ I.map (Polynomial.mapRingHom ((Quotient.mk I).comp c).range_restrict)) : x = 0 :=
+theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk I).comp C).range)
+    (hx : C x ∈ I.map (Polynomial.mapRingHom ((Quotient.mk I).comp C).range_restrict)) : x = 0 :=
   by
   let i := ((Quotient.mk' I).comp C).range_restrict
   have hi' : (Polynomial.mapRingHom i).ker ≤ I :=
@@ -841,8 +841,8 @@ variable (σ) {r : R}
 
 namespace Polynomial
 
-theorem prime_c_iff : Prime (c r) ↔ Prime r :=
-  ⟨comap_prime c (evalRingHom (0 : R)) fun r => eval_c, fun hr =>
+theorem prime_c_iff : Prime (C r) ↔ Prime r :=
+  ⟨comap_prime C (evalRingHom (0 : R)) fun r => eval_c, fun hr =>
     by
     have := hr.1
     rw [← Ideal.span_singleton_prime] at hr⊢
@@ -1019,7 +1019,7 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
               rw [← Polynomial.leadingCoeff_eq_zero] at H
               rw [hlqp, Polynomial.leadingCoeff_eq_zero] at H
               exact hp0 H
-            have h1 : p.degree = (q * Polynomial.x ^ (k - q.nat_degree)).degree :=
+            have h1 : p.degree = (q * Polynomial.X ^ (k - q.nat_degree)).degree :=
               by
               rw [Polynomial.degree_mul', Polynomial.degree_x_pow]
               rw [Polynomial.degree_eq_natDegree hp0, Polynomial.degree_eq_natDegree hq0]
@@ -1027,13 +1027,13 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
               · refine' le_trans (Polynomial.natDegree_le_of_degree_le hdq) (le_of_lt h)
               rw [Polynomial.leadingCoeff_x_pow, mul_one]
               exact mt Polynomial.leadingCoeff_eq_zero.1 hq0
-            have h2 : p.leading_coeff = (q * Polynomial.x ^ (k - q.nat_degree)).leadingCoeff := by
+            have h2 : p.leading_coeff = (q * Polynomial.X ^ (k - q.nat_degree)).leadingCoeff := by
               rw [← hlqp, Polynomial.leadingCoeff_mul_x_pow]
             have := Polynomial.degree_sub_lt h1 hp0 h2
             rw [Polynomial.degree_eq_natDegree hp0] at this
-            rw [← sub_add_cancel p (q * Polynomial.x ^ (k - q.nat_degree))]
+            rw [← sub_add_cancel p (q * Polynomial.X ^ (k - q.nat_degree))]
             refine' (Ideal.span ↑s).add_mem _ ((Ideal.span ↑s).mul_mem_right _ _)
-            · by_cases hpq : p - q * Polynomial.x ^ (k - q.nat_degree) = 0
+            · by_cases hpq : p - q * Polynomial.X ^ (k - q.nat_degree) = 0
               · rw [hpq]
                 exact Ideal.zero_mem _
               refine' ih _ _ (I.sub_mem hp (I.mul_mem_right _ hq)) rfl

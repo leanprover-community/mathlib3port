@@ -126,7 +126,7 @@ theorem hasseDeriv_monomial (n : ℕ) (r : R) :
       rw [Nat.choose_eq_zero_of_lt hkn, Nat.cast_zero, zero_mul, if_t_t]
 #align polynomial.hasse_deriv_monomial Polynomial.hasseDeriv_monomial
 
-theorem hasseDeriv_c (r : R) (hk : 0 < k) : hasseDeriv k (c r) = 0 := by
+theorem hasseDeriv_c (r : R) (hk : 0 < k) : hasseDeriv k (C r) = 0 := by
   rw [← monomial_zero_left, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
     zero_mul, monomial_zero_right]
 #align polynomial.hasse_deriv_C Polynomial.hasseDeriv_c
@@ -135,7 +135,7 @@ theorem hasseDeriv_apply_one (hk : 0 < k) : hasseDeriv k (1 : R[X]) = 0 := by
   rw [← C_1, hasse_deriv_C k _ hk]
 #align polynomial.hasse_deriv_apply_one Polynomial.hasseDeriv_apply_one
 
-theorem hasseDeriv_x (hk : 1 < k) : hasseDeriv k (x : R[X]) = 0 := by
+theorem hasseDeriv_x (hk : 1 < k) : hasseDeriv k (X : R[X]) = 0 := by
   rw [← monomial_one_one_eq_X, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
     zero_mul, monomial_zero_right]
 #align polynomial.hasse_deriv_X Polynomial.hasseDeriv_x

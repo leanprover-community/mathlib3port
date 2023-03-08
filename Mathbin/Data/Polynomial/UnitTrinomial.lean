@@ -39,10 +39,10 @@ variable {R : Type _} [Semiring R] (k m n : ℕ) (u v w : R)
 
 /-- Shorthand for a trinomial -/
 noncomputable def trinomial :=
-  c u * x ^ k + c v * x ^ m + c w * x ^ n
+  C u * X ^ k + C v * X ^ m + C w * X ^ n
 #align polynomial.trinomial Polynomial.trinomial
 
-theorem trinomial_def : trinomial k m n u v w = c u * x ^ k + c v * x ^ m + c w * x ^ n :=
+theorem trinomial_def : trinomial k m n u v w = C u * X ^ k + C v * X ^ m + C w * X ^ n :=
   rfl
 #align polynomial.trinomial_def Polynomial.trinomial_def
 
@@ -231,7 +231,7 @@ namespace IsUnitTrinomial
 
 theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Units ℤ)
     (hp : p = trinomial k m n u v w) :
-    c ↑v * (c ↑u * x ^ (m + n) + c ↑w * x ^ (n - m + k + n)) =
+    C ↑v * (C ↑u * X ^ (m + n) + C ↑w * X ^ (n - m + k + n)) =
       ⟨Finsupp.filter (Set.Ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
   by
   have key : n - m + k < n := by rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]

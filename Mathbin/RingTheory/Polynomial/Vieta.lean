@@ -42,8 +42,8 @@ variable {R : Type _} [CommSemiring R]
 `λ` runs through a multiset `s` is equal to a linear combination of the symmetric functions
 `esymm s` of the `λ`'s .-/
 theorem prod_x_add_c_eq_sum_esymm (s : Multiset R) :
-    (s.map fun r => x + c r).Prod =
-      ∑ j in Finset.range (s.card + 1), c (s.esymm j) * x ^ (s.card - j) :=
+    (s.map fun r => X + C r).Prod =
+      ∑ j in Finset.range (s.card + 1), C (s.esymm j) * X ^ (s.card - j) :=
   by
   classical
     rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp,
@@ -58,7 +58,7 @@ theorem prod_x_add_c_eq_sum_esymm (s : Multiset R) :
 /-- Vieta's formula for the coefficients of the product of linear terms `X + λ` where `λ` runs
 through a multiset `s` : the `k`th coefficient is the symmetric function `esymm (card s - k) s`. -/
 theorem prod_x_add_c_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
-    (s.map fun r => x + c r).Prod.coeff k = s.esymm (s.card - k) :=
+    (s.map fun r => X + C r).Prod.coeff k = s.esymm (s.card - k) :=
   by
   convert polynomial.ext_iff.mp (prod_X_add_C_eq_sum_esymm s) k
   simp_rw [finset_sum_coeff, coeff_C_mul_X_pow]
@@ -74,12 +74,12 @@ theorem prod_x_add_c_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
 #align multiset.prod_X_add_C_coeff Multiset.prod_x_add_c_coeff
 
 theorem prod_x_add_c_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
-    (s.map fun i => x + c (r i)).Prod.coeff k = (s.map r).esymm (s.card - k) := by
+    (s.map fun i => X + C (r i)).Prod.coeff k = (s.map r).esymm (s.card - k) := by
   rw [← map_map (fun r => X + C r) r, prod_X_add_C_coeff] <;> rwa [s.card_map r]
 #align multiset.prod_X_add_C_coeff' Multiset.prod_x_add_c_coeff'
 
 theorem Finset.prod_x_add_c_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
-    (∏ i in s, x + c (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i :=
+    (∏ i in s, X + C (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i :=
   by
   rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]
   rfl
@@ -103,8 +103,8 @@ theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ 
 #align multiset.esymm_neg Multiset.esymm_neg
 
 theorem prod_x_sub_c_eq_sum_esymm (s : Multiset R) :
-    (s.map fun t => x - c t).Prod =
-      ∑ j in Finset.range (s.card + 1), (-1) ^ j * (c (s.esymm j) * x ^ (s.card - j)) :=
+    (s.map fun t => X - C t).Prod =
+      ∑ j in Finset.range (s.card + 1), (-1) ^ j * (C (s.esymm j) * X ^ (s.card - j)) :=
   by
   conv_lhs =>
     congr
@@ -118,7 +118,7 @@ theorem prod_x_sub_c_eq_sum_esymm (s : Multiset R) :
 #align multiset.prod_X_sub_C_eq_sum_esymm Multiset.prod_x_sub_c_eq_sum_esymm
 
 theorem prod_x_sub_c_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
-    (s.map fun t => x - c t).Prod.coeff k = (-1) ^ (s.card - k) * s.esymm (s.card - k) :=
+    (s.map fun t => X - C t).Prod.coeff k = (-1) ^ (s.card - k) * s.esymm (s.card - k) :=
   by
   conv_lhs =>
     congr
@@ -165,8 +165,8 @@ variable (R σ : Type _) [CommSemiring R] [Fintype σ]
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
 theorem MvPolynomial.prod_c_add_x_eq_sum_esymm :
-    (∏ i : σ, x + c (MvPolynomial.x i)) =
-      ∑ j in range (card σ + 1), c (MvPolynomial.esymm σ R j) * x ^ (card σ - j) :=
+    (∏ i : σ, X + C (MvPolynomial.x i)) =
+      ∑ j in range (card σ + 1), C (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
   by
   let s := finset.univ.val.map fun i : σ => MvPolynomial.x i
   rw [(_ : card σ = s.card)]
@@ -178,7 +178,7 @@ theorem MvPolynomial.prod_c_add_x_eq_sum_esymm :
 #align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_c_add_x_eq_sum_esymm
 
 theorem MvPolynomial.prod_x_add_c_coeff (k : ℕ) (h : k ≤ card σ) :
-    (∏ i : σ, x + c (MvPolynomial.x i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
+    (∏ i : σ, X + C (MvPolynomial.x i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
   by
   let s := finset.univ.val.map fun i => (MvPolynomial.x i : MvPolynomial σ R)
   rw [(_ : card σ = s.card)] at h⊢

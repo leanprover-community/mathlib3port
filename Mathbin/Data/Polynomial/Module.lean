@@ -194,8 +194,8 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
       · simp_all only [add_smul, map_add, [anonymous]]
       · ext i
         dsimp
-        rw [monomial_smul_apply, ← Polynomial.c_mul_x_pow_eq_monomial, mul_assoc,
-          Polynomial.coeff_c_mul, Polynomial.coeff_x_pow_mul', mul_ite, mul_zero]
+        rw [monomial_smul_apply, ← Polynomial.C_mul_X_pow_eq_monomial, mul_assoc,
+          Polynomial.coeff_C_mul, Polynomial.coeff_X_pow_mul', mul_ite, mul_zero]
         simp }
 #align polynomial_module.equiv_polynomial_self PolynomialModule.equivPolynomialSelf
 

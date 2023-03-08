@@ -38,7 +38,7 @@ open Polynomial Matrix Equiv.Perm
 namespace Polynomial
 
 theorem natDegree_det_x_add_c_le (A B : Matrix n n α) :
-    natDegree (det ((x : α[X]) • A.map c + B.map c)) ≤ Fintype.card n :=
+    natDegree (det ((X : α[X]) • A.map C + B.map C)) ≤ Fintype.card n :=
   by
   rw [det_apply]
   refine' (nat_degree_sum_le _ _).trans _
@@ -72,7 +72,7 @@ theorem natDegree_det_x_add_c_le (A B : Matrix n n α) :
 #align polynomial.nat_degree_det_X_add_C_le Polynomial.natDegree_det_x_add_c_le
 
 theorem coeff_det_x_add_c_zero (A B : Matrix n n α) :
-    coeff (det ((x : α[X]) • A.map c + B.map c)) 0 = det B :=
+    coeff (det ((X : α[X]) • A.map C + B.map C)) 0 = det B :=
   by
   rw [det_apply, finset_sum_coeff, det_apply]
   refine' Finset.sum_congr rfl _
@@ -84,7 +84,7 @@ theorem coeff_det_x_add_c_zero (A B : Matrix n n α) :
 #align polynomial.coeff_det_X_add_C_zero Polynomial.coeff_det_x_add_c_zero
 
 theorem coeff_det_x_add_c_card (A B : Matrix n n α) :
-    coeff (det ((x : α[X]) • A.map c + B.map c)) (Fintype.card n) = det A :=
+    coeff (det ((X : α[X]) • A.map C + B.map C)) (Fintype.card n) = det A :=
   by
   rw [det_apply, det_apply, finset_sum_coeff]
   refine' Finset.sum_congr rfl _
@@ -103,7 +103,7 @@ theorem coeff_det_x_add_c_card (A B : Matrix n n α) :
 #align polynomial.coeff_det_X_add_C_card Polynomial.coeff_det_x_add_c_card
 
 theorem leadingCoeff_det_x_one_add_c (A : Matrix n n α) :
-    leadingCoeff (det ((x : α[X]) • (1 : Matrix n n α[X]) + A.map c)) = 1 :=
+    leadingCoeff (det ((X : α[X]) • (1 : Matrix n n α[X]) + A.map C)) = 1 :=
   by
   cases subsingleton_or_nontrivial α
   · simp

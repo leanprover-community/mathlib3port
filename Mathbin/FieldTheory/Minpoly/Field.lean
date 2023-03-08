@@ -42,7 +42,7 @@ the assumptions on `A` in exchange for stronger assumptions on `B`. -/
 theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x p = 0) :
     degree (minpoly A x) ≤ degree p :=
   calc
-    degree (minpoly A x) ≤ degree (p * c (leadingCoeff p)⁻¹) :=
+    degree (minpoly A x) ≤ degree (p * C (leadingCoeff p)⁻¹) :=
       min A x (monic_mul_leadingCoeff_inv pnz) (by simp [hp])
     _ = degree p := degree_mul_leadingCoeff_inv p pnz
     
@@ -127,7 +127,7 @@ theorem eq_of_irreducible_of_monic [Nontrivial B] {p : A[X]} (hp1 : Irreducible 
 #align minpoly.eq_of_irreducible_of_monic minpoly.eq_of_irreducible_of_monic
 
 theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p)
-    (hp2 : Polynomial.aeval x p = 0) : p * c p.leadingCoeff⁻¹ = minpoly A x :=
+    (hp2 : Polynomial.aeval x p = 0) : p * C p.leadingCoeff⁻¹ = minpoly A x :=
   by
   have : p.leading_coeff ≠ 0 := leading_coeff_ne_zero.mpr hp1.ne_zero
   apply eq_of_irreducible_of_monic
@@ -158,7 +158,7 @@ theorem eq_of_algebraMap_eq {K S T : Type _} [Field K] [CommRing S] [CommRing T]
 #align minpoly.eq_of_algebra_map_eq minpoly.eq_of_algebraMap_eq
 
 theorem add_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)
-    (a : A) : minpoly A (x + algebraMap A B a) = (minpoly A x).comp (x - c a) :=
+    (a : A) : minpoly A (x + algebraMap A B a) = (minpoly A x).comp (X - C a) :=
   by
   refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_x_sub_c _) _ fun q qmo hq => _).symm
   · simp [aeval_comp]
@@ -173,7 +173,7 @@ theorem add_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsI
 #align minpoly.add_algebra_map minpoly.add_algebraMap
 
 theorem sub_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)
-    (a : A) : minpoly A (x - algebraMap A B a) = (minpoly A x).comp (x + c a) := by
+    (a : A) : minpoly A (x - algebraMap A B a) = (minpoly A x).comp (X + C a) := by
   simpa [sub_eq_add_neg] using add_algebra_map hx (-a)
 #align minpoly.sub_algebra_map minpoly.sub_algebraMap
 
@@ -225,11 +225,11 @@ variable (B) [Nontrivial B]
 
 /-- If `B/K` is a nontrivial algebra over a field, and `x` is an element of `K`,
 then the minimal polynomial of `algebra_map K B x` is `X - C x`. -/
-theorem eq_x_sub_c (a : A) : minpoly A (algebraMap A B a) = x - c a :=
+theorem eq_x_sub_c (a : A) : minpoly A (algebraMap A B a) = X - C a :=
   eq_x_sub_c_of_algebraMap_inj a (algebraMap A B).Injective
 #align minpoly.eq_X_sub_C minpoly.eq_x_sub_c
 
-theorem eq_x_sub_C' (a : A) : minpoly A a = x - c a :=
+theorem eq_x_sub_C' (a : A) : minpoly A a = X - C a :=
   eq_x_sub_c A a
 #align minpoly.eq_X_sub_C' minpoly.eq_x_sub_C'
 
@@ -237,13 +237,13 @@ variable (A)
 
 /-- The minimal polynomial of `0` is `X`. -/
 @[simp]
-theorem zero : minpoly A (0 : B) = x := by
+theorem zero : minpoly A (0 : B) = X := by
   simpa only [add_zero, C_0, sub_eq_add_neg, neg_zero, RingHom.map_zero] using eq_X_sub_C B (0 : A)
 #align minpoly.zero minpoly.zero
 
 /-- The minimal polynomial of `1` is `X - 1`. -/
 @[simp]
-theorem one : minpoly A (1 : B) = x - 1 := by
+theorem one : minpoly A (1 : B) = X - 1 := by
   simpa only [RingHom.map_one, C_1, sub_eq_add_neg] using eq_X_sub_C B (1 : A)
 #align minpoly.one minpoly.one
 
@@ -270,7 +270,7 @@ of an element `x ∈ L`, then `y` maps to `x` under the field embedding. -/
 theorem root {x : B} (hx : IsIntegral A x) {y : A} (h : IsRoot (minpoly A x) y) :
     algebraMap A B y = x :=
   by
-  have key : minpoly A x = x - c y :=
+  have key : minpoly A x = X - C y :=
     eq_of_monic_of_associated (monic hx) (monic_x_sub_c y)
       (associated_of_dvd_dvd
         ((irreducible_x_sub_c y).dvd_symm (irreducible hx) (dvd_iff_isRoot.2 h))

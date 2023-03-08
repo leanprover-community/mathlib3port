@@ -105,7 +105,7 @@ theorem IsIntegral.isAlgebraic [Nontrivial R] {x : A} : IsIntegral R x → IsAlg
 variable {R}
 
 theorem isAlgebraic_zero [Nontrivial R] : IsAlgebraic R (0 : A) :=
-  ⟨_, x_ne_zero, aeval_x 0⟩
+  ⟨_, X_ne_zero, aeval_x 0⟩
 #align is_algebraic_zero isAlgebraic_zero
 
 /-- An element of `R` is algebraic, when viewed as an element of the `R`-algebra `A`. -/

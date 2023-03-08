@@ -2231,7 +2231,7 @@ variable (n : ℕ)
 theorem hasStrictDerivAt_pow (n : ℕ) (x : 𝕜) :
     HasStrictDerivAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) x :=
   by
-  convert (Polynomial.c (1 : 𝕜) * Polynomial.x ^ n).HasStrictDerivAt x
+  convert (Polynomial.C (1 : 𝕜) * Polynomial.X ^ n).HasStrictDerivAt x
   · simp
   · rw [Polynomial.derivative_c_mul_x_pow]
     simp

@@ -157,7 +157,7 @@ variable [Algebra A S]
 
 /-- `pb.minpoly_gen` is the minimal polynomial for `pb.gen`. -/
 noncomputable def minpolyGen (pb : PowerBasis A S) : A[X] :=
-  x ^ pb.dim - ∑ i : Fin pb.dim, c (pb.Basis.repr (pb.gen ^ pb.dim) i) * x ^ (i : ℕ)
+  X ^ pb.dim - ∑ i : Fin pb.dim, C (pb.Basis.repr (pb.gen ^ pb.dim) i) * X ^ (i : ℕ)
 #align power_basis.minpoly_gen PowerBasis.minpolyGen
 
 theorem aeval_minpolyGen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) = 0 :=

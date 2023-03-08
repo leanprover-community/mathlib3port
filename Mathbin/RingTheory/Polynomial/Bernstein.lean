@@ -41,7 +41,7 @@ noncomputable section
 
 open Nat (choose)
 
-open Polynomial (x)
+open Polynomial (X)
 
 open BigOperators Polynomial
 
@@ -52,10 +52,10 @@ variable (R : Type _) [CommRing R]
 Although the coefficients are integers, it is convenient to work over an arbitrary commutative ring.
 -/
 def bernsteinPolynomial (n ν : ℕ) : R[X] :=
-  choose n ν * x ^ ν * (1 - x) ^ (n - ν)
+  choose n ν * X ^ ν * (1 - X) ^ (n - ν)
 #align bernstein_polynomial bernsteinPolynomial
 
-example : bernsteinPolynomial ℤ 3 2 = 3 * x ^ 2 - 3 * x ^ 3 :=
+example : bernsteinPolynomial ℤ 3 2 = 3 * X ^ 2 - 3 * X ^ 3 :=
   by
   norm_num [bernsteinPolynomial, choose]
   ring
@@ -78,12 +78,12 @@ theorem map (f : R →+* S) (n ν : ℕ) :
 end
 
 theorem flip (n ν : ℕ) (h : ν ≤ n) :
-    (bernsteinPolynomial R n ν).comp (1 - x) = bernsteinPolynomial R n (n - ν) := by
+    (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
   simp [bernsteinPolynomial, h, tsub_tsub_assoc, mul_right_comm]
 #align bernstein_polynomial.flip bernsteinPolynomial.flip
 
 theorem flip' (n ν : ℕ) (h : ν ≤ n) :
-    bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - x) := by
+    bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
   simp [← flip _ _ _ h, Polynomial.comp_assoc]
 #align bernstein_polynomial.flip' bernsteinPolynomial.flip'
 
@@ -123,7 +123,7 @@ theorem derivative_succ_aux (n ν : ℕ) :
       Polynomial.derivative_mul, Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add,
       algebraMap.coe_one, Polynomial.derivative_x, mul_one, zero_add, Polynomial.derivative_sub,
       Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ← Nat.cast_succ,
-      Polynomial.c_eq_nat_cast]
+      Polynomial.C_eq_nat_cast]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
   refine' congr (congr_arg Sub.sub _) _
@@ -315,7 +315,7 @@ theorem linearIndependent (n : ℕ) :
 
 theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
-    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (x + (1 - x)) ^ n :=
+    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n :=
       by
       rw [add_pow]
       simp only [bernsteinPolynomial, mul_comm, mul_assoc, mul_left_comm]
@@ -349,8 +349,8 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     have w :
       ∀ k : ℕ,
         k • bernsteinPolynomial R n k =
-          ↑k * Polynomial.x ^ (k - 1) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) *
-            Polynomial.x :=
+          ↑k * Polynomial.X ^ (k - 1) * (1 - Polynomial.X) ^ (n - k) * ↑(n.choose k) *
+            Polynomial.X :=
       by
       rintro (_ | k)
       · simp
@@ -396,8 +396,8 @@ theorem sum_mul_smul (n : ℕ) :
       ∀ k : ℕ,
         (k * (k - 1)) • bernsteinPolynomial R n k =
           ↑(n.choose k) *
-              ((1 - Polynomial.x) ^ (n - k) * (↑k * (↑(k - 1) * Polynomial.x ^ (k - 1 - 1)))) *
-            Polynomial.x ^ 2 :=
+              ((1 - Polynomial.X) ^ (n - k) * (↑k * (↑(k - 1) * Polynomial.X ^ (k - 1 - 1)))) *
+            Polynomial.X ^ 2 :=
       by
       rintro (_ | _ | k)
       · simp
@@ -426,12 +426,12 @@ theorem sum_mul_smul (n : ℕ) :
 which we'll want later.
 -/
 theorem variance (n : ℕ) :
-    (∑ ν in Finset.range (n + 1), (n • Polynomial.x - ν) ^ 2 * bernsteinPolynomial R n ν) =
-      n • Polynomial.x * (1 - Polynomial.x) :=
+    (∑ ν in Finset.range (n + 1), (n • Polynomial.X - ν) ^ 2 * bernsteinPolynomial R n ν) =
+      n • Polynomial.X * (1 - Polynomial.X) :=
   by
   have p :
     ((((Finset.range (n + 1)).Sum fun ν => (ν * (ν - 1)) • bernsteinPolynomial R n ν) +
-          (1 - (2 * n) • Polynomial.x) *
+          (1 - (2 * n) • Polynomial.X) *
             (Finset.range (n + 1)).Sum fun ν => ν • bernsteinPolynomial R n ν) +
         n ^ 2 • X ^ 2 * (Finset.range (n + 1)).Sum fun ν => bernsteinPolynomial R n ν) =
       _ :=

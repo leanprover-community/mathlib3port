@@ -38,28 +38,28 @@ variable (R : Type u) [CommSemiring R] {S : Type v} [CommSemiring S] (p q : ℕ)
 
 /-- Expand the polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`. -/
 noncomputable def expand : R[X] →ₐ[R] R[X] :=
-  { (eval₂RingHom c (x ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_c _ _ }
+  { (eval₂RingHom C (X ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_c _ _ }
 #align polynomial.expand Polynomial.expand
 
-theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ c (x ^ p) :=
+theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ C (X ^ p) :=
   rfl
 #align polynomial.coe_expand Polynomial.coe_expand
 
 variable {R}
 
-theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => c a * (x ^ p) ^ e :=
+theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => C a * (X ^ p) ^ e :=
   by
   dsimp [expand, eval₂]
   rfl
 #align polynomial.expand_eq_sum Polynomial.expand_eq_sum
 
 @[simp]
-theorem expand_c (r : R) : expand R p (c r) = c r :=
+theorem expand_c (r : R) : expand R p (C r) = C r :=
   eval₂_c _ _
 #align polynomial.expand_C Polynomial.expand_c
 
 @[simp]
-theorem expand_x : expand R p x = x ^ p :=
+theorem expand_x : expand R p X = X ^ p :=
   eval₂_x _ _
 #align polynomial.expand_X Polynomial.expand_x
 
@@ -79,7 +79,7 @@ theorem expand_mul (f : R[X]) : expand R (p * q) f = expand R p (expand R q f) :
 #align polynomial.expand_mul Polynomial.expand_mul
 
 @[simp]
-theorem expand_zero (f : R[X]) : expand R 0 f = c (eval 1 f) := by simp [expand]
+theorem expand_zero (f : R[X]) : expand R 0 f = C (eval 1 f) := by simp [expand]
 #align polynomial.expand_zero Polynomial.expand_zero
 
 @[simp]
@@ -95,7 +95,7 @@ theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
 #align polynomial.expand_pow Polynomial.expand_pow
 
 theorem derivative_expand (f : R[X]) :
-    (expand R p f).derivative = expand R p f.derivative * (p * x ^ (p - 1)) := by
+    (expand R p f).derivative = expand R p f.derivative * (p * X ^ (p - 1)) := by
   rw [coe_expand, derivative_eval₂_C, derivative_pow, C_eq_nat_cast, derivative_X, mul_one]
 #align polynomial.derivative_expand Polynomial.derivative_expand
 
@@ -148,7 +148,7 @@ theorem expand_ne_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f ≠ 0 �
   (expand_eq_zero hp).Not
 #align polynomial.expand_ne_zero Polynomial.expand_ne_zero
 
-theorem expand_eq_c {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = c r ↔ f = c r := by
+theorem expand_eq_c {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = C r ↔ f = C r := by
   rw [← expand_C, expand_inj hp, expand_C]
 #align polynomial.expand_eq_C Polynomial.expand_eq_c
 

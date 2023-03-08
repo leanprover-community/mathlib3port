@@ -49,29 +49,29 @@ open Finset
 The determinant of this matrix is the characteristic polynomial.
 -/
 def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
-  Matrix.scalar n (x : R[X]) - (c : R →+* R[X]).mapMatrix M
+  Matrix.scalar n (X : R[X]) - (C : R →+* R[X]).mapMatrix M
 #align charmatrix charmatrix
 
 theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
-    charmatrix M i j = x * (1 : Matrix n n R[X]) i j - c (M i j) :=
+    charmatrix M i j = X * (1 : Matrix n n R[X]) i j - C (M i j) :=
   rfl
 #align charmatrix_apply charmatrix_apply
 
 @[simp]
 theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) :
-    charmatrix M i i = (x : R[X]) - c (M i i) := by
+    charmatrix M i i = (X : R[X]) - C (M i i) := by
   simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.mapMatrix_apply,
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_eq charmatrix_apply_eq
 
 @[simp]
 theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
-    charmatrix M i j = -c (M i j) := by
+    charmatrix M i j = -C (M i j) := by
   simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.mapMatrix_apply,
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
 
-theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = x - c M :=
+theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - C M :=
   by
   ext (k i j)
   simp only [matPolyEquiv_coeff_apply, coeff_sub, Pi.sub_apply]
