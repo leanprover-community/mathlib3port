@@ -544,7 +544,7 @@ section Coeff
 
 /-- The coefficient of the monomial `m` in the multi-variable polynomial `p`. -/
 def coeff (m : σ →₀ ℕ) (p : MvPolynomial σ R) : R :=
-  @coeFn _ _ (MonoidAlgebra.hasCoeToFun _ _) p m
+  @coeFn _ _ (MonoidAlgebra.coeFun _ _) p m
 #align mv_polynomial.coeff MvPolynomial.coeff
 
 @[simp]

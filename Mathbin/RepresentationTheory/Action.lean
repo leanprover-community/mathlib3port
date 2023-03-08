@@ -321,10 +321,10 @@ instance : HasZeroMorphisms (Action V G)
     ⟨⟨0, by
         intro g
         simp⟩⟩
-  comp_zero' P Q f R := by
+  comp_zero P Q f R := by
     ext1
     simp
-  zero_comp' P Q R f := by
+  zero_comp P Q R f := by
     ext1
     simp
 

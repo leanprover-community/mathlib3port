@@ -139,13 +139,13 @@ variable (hx : x.Compatible)
 /-- The family of morphisms `X ⟶ 𝒢(G(Y')) ⟶ ℱ(Y')` defined on `{ Y' ⊆ Y : G(Y') ⊆ U ∈ S}`. -/
 def pulledbackFamily (Y : StructuredArrow (op U) G.op) :=
   ((x.pullback Y.Hom.unop).functorPullback G).compPresheafMap
-    (show _ ⟶ _ from whiskerRight ((ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
+    (show _ ⟶ _ from whiskerRight ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
 #align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily
 
 @[simp]
 theorem pulledbackFamily_apply (Y : StructuredArrow (op U) G.op) {W} {f : W ⟶ _} (Hf) :
     pulledbackFamily ℱ S x Y f Hf =
-      x (G.map f ≫ Y.Hom.unop) Hf ≫ ((ran.adjunction A G.op).counit.app ℱ.val).app (op W) :=
+      x (G.map f ≫ Y.Hom.unop) Hf ≫ ((Ran.adjunction A G.op).counit.app ℱ.val).app (op W) :=
   rfl
 #align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family_apply CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily_apply
 
@@ -314,8 +314,8 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
     Sites.pullback A Hc Hp ⊣ Sites.copullback A Hl
     where
   homEquiv X Y :=
-    { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩
-      invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩
+    { toFun := fun f => ⟨(Ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩
+      invFun := fun f => ⟨((Ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩
       left_inv := fun f => by
         ext1
         dsimp
@@ -325,13 +325,13 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
         dsimp
         rw [Equiv.apply_symm_apply] }
   Unit :=
-    { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩
+    { app := fun X => ⟨(Ran.adjunction A G.op).Unit.app X.val⟩
       naturality' := fun _ _ f =>
-        Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
+        Sheaf.Hom.ext _ _ <| (Ran.adjunction A G.op).Unit.naturality f.val }
   counit :=
-    { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩
+    { app := fun X => ⟨(Ran.adjunction A G.op).counit.app X.val⟩
       naturality' := fun _ _ f =>
-        Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
+        Sheaf.Hom.ext _ _ <| (Ran.adjunction A G.op).counit.naturality f.val }
   homEquiv_unit X Y f := by
     ext1
     apply (Ran.adjunction A G.op).homEquiv_unit

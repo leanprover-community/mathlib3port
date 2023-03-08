@@ -465,7 +465,7 @@ theorem pullbackObj_eq_pullbackObj {C} [Category C] [HasColimits C] {X Y : TopCa
 /-- The pullback and pushforward along a continuous map are adjoint to each other. -/
 @[simps unit_app_app counit_app_app]
 def pushforwardPullbackAdjunction {X Y : TopCat.{v}} (f : X ⟶ Y) : pullback C f ⊣ pushforward C f :=
-  lan.adjunction _ _
+  Lan.adjunction _ _
 #align Top.presheaf.pushforward_pullback_adjunction TopCat.Presheaf.pushforwardPullbackAdjunction
 
 /-- Pulling back along a homeomorphism is the same as pushing forward along its inverse. -/

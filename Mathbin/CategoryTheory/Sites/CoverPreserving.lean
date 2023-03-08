@@ -290,7 +290,7 @@ instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.push
 /-- The pushforward functor is left adjoint to the pullback functor. -/
 def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
     (hG₂ : CoverPreserving J K G) : Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
-  ((lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful
+  ((Lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful
     (sheafToPresheaf J A) (𝟭 _)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)

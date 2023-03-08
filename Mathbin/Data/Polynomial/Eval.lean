@@ -170,7 +170,7 @@ theorem eval₂_finset_sum (s : Finset ι) (g : ι → R[X]) (x : S) :
 #align polynomial.eval₂_finset_sum Polynomial.eval₂_finset_sum
 
 theorem eval₂_of_finsupp {f : R →+* S} {x : S} {p : AddMonoidAlgebra R ℕ} :
-    eval₂ f x (⟨p⟩ : R[X]) = liftNc (↑f) (powersHom S x) p :=
+    eval₂ f x (⟨p⟩ : R[X]) = liftNC (↑f) (powersHom S x) p :=
   by
   simp only [eval₂_eq_sum, Sum, to_finsupp_sum, support, coeff]
   rfl

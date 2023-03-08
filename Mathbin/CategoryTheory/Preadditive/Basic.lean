@@ -210,8 +210,8 @@ instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
 instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C
     where
   Zero := inferInstance
-  comp_zero' P Q f R := show leftComp R f 0 = 0 from map_zero _
-  zero_comp' P Q R f := show rightComp P f 0 = 0 from map_zero _
+  comp_zero P Q f R := show leftComp R f 0 = 0 from map_zero _
+  zero_comp P Q R f := show rightComp P f 0 = 0 from map_zero _
 #align category_theory.preadditive.preadditive_has_zero_morphisms CategoryTheory.Preadditive.preadditiveHasZeroMorphisms
 
 instance moduleEndRight {X Y : C} : Module (End Y) (X ⟶ Y)

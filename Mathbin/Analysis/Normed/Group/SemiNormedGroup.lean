@@ -213,10 +213,10 @@ instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] :
 instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁
     where
   Zero X Y := { zero := ⟨0, NormedAddGroupHom.NormNoninc.zero⟩ }
-  comp_zero' X Y f Z := by
+  comp_zero X Y f Z := by
     ext
     rfl
-  zero_comp' X Y Z f := by
+  zero_comp X Y Z f := by
     ext
     simp [coeFn_coe_base']
 
