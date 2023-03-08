@@ -45,6 +45,7 @@ section
 
 variable [HasZeroMorphisms C]
 
+#print CategoryTheory.NormalMono /-
 /-- A normal monomorphism is a morphism which is the kernel of some morphism. -/
 class NormalMono (f : X ⟶ Y) where
   z : C
@@ -52,6 +53,7 @@ class NormalMono (f : X ⟶ Y) where
   w : f ≫ g = 0
   IsLimit : IsLimit (KernelFork.ofι f w)
 #align category_theory.normal_mono CategoryTheory.NormalMono
+-/
 
 section
 
@@ -59,6 +61,12 @@ attribute [local instance] fully_faithful_reflects_limits
 
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
+/- warning: category_theory.equivalence_reflects_normal_mono -> CategoryTheory.equivalenceReflectsNormalMono is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} D _inst_3] (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.IsEquivalence.{u1, u1, u2, u3} C _inst_1 D _inst_3 F] {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y}, (CategoryTheory.NormalMono.{u1, u3} D _inst_3 (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y) _inst_4 (CategoryTheory.Functor.map.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X Y f)) -> (CategoryTheory.NormalMono.{u1, u2} C _inst_1 X Y _inst_2 f)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} D _inst_3] (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.IsEquivalence.{u1, u1, u2, u3} C _inst_1 D _inst_3 F] {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y}, (CategoryTheory.NormalMono.{u1, u3} D _inst_3 (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) Y) _inst_4 (Prefunctor.map.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X Y f)) -> (CategoryTheory.NormalMono.{u1, u2} C _inst_1 X Y _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align category_theory.equivalence_reflects_normal_mono CategoryTheory.equivalenceReflectsNormalMonoₓ'. -/
 /-- If `F` is an equivalence and `F.map f` is a normal mono, then `f` is a normal mono. -/
 def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
     [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f
@@ -78,6 +86,7 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
 
 end
 
+#print CategoryTheory.NormalMono.regularMono /-
 /-- Every normal monomorphism is a regular monomorphism. -/
 instance (priority := 100) NormalMono.regularMono (f : X ⟶ Y) [I : NormalMono f] : RegularMono f :=
   { I with
@@ -85,14 +94,18 @@ instance (priority := 100) NormalMono.regularMono (f : X ⟶ Y) [I : NormalMono 
     right := 0
     w := by simpa using I.w }
 #align category_theory.normal_mono.regular_mono CategoryTheory.NormalMono.regularMono
+-/
 
+#print CategoryTheory.NormalMono.lift' /-
 /-- If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
     a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
 def NormalMono.lift' {W : C} (f : X ⟶ Y) [NormalMono f] (k : W ⟶ Y) (h : k ≫ NormalMono.g = 0) :
     { l : W ⟶ X // l ≫ f = k } :=
   KernelFork.IsLimit.lift' NormalMono.isLimit _ h
 #align category_theory.normal_mono.lift' CategoryTheory.NormalMono.lift'
+-/
 
+#print CategoryTheory.normalOfIsPullbackSndOfNormal /-
 /-- The second leg of a pullback cone is a normal monomorphism if the right component is too.
 
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
@@ -111,7 +124,9 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     dsimp only [kernel_fork.of_ι, fork.of_ι]
     congr ; exact q; exact q; exact q; apply proof_irrel_heq
 #align category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
+-/
 
+#print CategoryTheory.normalOfIsPullbackFstOfNormal /-
 /-- The first leg of a pullback cone is a normal monomorphism if the left component is too.
 
 See also `pullback.fst_of_mono` for the basic monomorphism version, and
@@ -122,24 +137,30 @@ def normalOfIsPullbackFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     NormalMono f :=
   normalOfIsPullbackSndOfNormal comm.symm (PullbackCone.flipIsLimit t)
 #align category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
+-/
 
 section
 
 variable (C)
 
+#print CategoryTheory.NormalMonoCategory /-
 /-- A normal mono category is a category in which every monomorphism is normal. -/
 class NormalMonoCategory where
   normalMonoOfMono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], NormalMono f
 #align category_theory.normal_mono_category CategoryTheory.NormalMonoCategory
+-/
 
 end
 
+#print CategoryTheory.normalMonoOfMono /-
 /-- In a category in which every monomorphism is normal, we can express every monomorphism as
     a kernel. This is not an instance because it would create an instance loop. -/
 def normalMonoOfMono [NormalMonoCategory C] (f : X ⟶ Y) [Mono f] : NormalMono f :=
   NormalMonoCategory.normalMonoOfMono _
 #align category_theory.normal_mono_of_mono CategoryTheory.normalMonoOfMono
+-/
 
+#print CategoryTheory.regularMonoCategoryOfNormalMonoCategory /-
 instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCategory C] :
     RegularMonoCategory C
     where regularMonoOfMono _ _ f _ :=
@@ -147,6 +168,7 @@ instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCa
     haveI := normal_mono_of_mono f
     infer_instance
 #align category_theory.regular_mono_category_of_normal_mono_category CategoryTheory.regularMonoCategoryOfNormalMonoCategory
+-/
 
 end
 
@@ -154,6 +176,7 @@ section
 
 variable [HasZeroMorphisms C]
 
+#print CategoryTheory.NormalEpi /-
 /-- A normal epimorphism is a morphism which is the cokernel of some morphism. -/
 class NormalEpi (f : X ⟶ Y) where
   w : C
@@ -161,6 +184,7 @@ class NormalEpi (f : X ⟶ Y) where
   w : g ≫ f = 0
   IsColimit : IsColimit (CokernelCofork.ofπ f w)
 #align category_theory.normal_epi CategoryTheory.NormalEpi
+-/
 
 section
 
@@ -168,6 +192,12 @@ attribute [local instance] fully_faithful_reflects_colimits
 
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
+/- warning: category_theory.equivalence_reflects_normal_epi -> CategoryTheory.equivalenceReflectsNormalEpi is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} D _inst_3] (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.IsEquivalence.{u1, u1, u2, u3} C _inst_1 D _inst_3 F] {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y}, (CategoryTheory.NormalEpi.{u1, u3} D _inst_3 (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u1, u2, u3} C _inst_1 D _inst_3 F Y) _inst_4 (CategoryTheory.Functor.map.{u1, u1, u2, u3} C _inst_1 D _inst_3 F X Y f)) -> (CategoryTheory.NormalEpi.{u1, u2} C _inst_1 X Y _inst_2 f)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u1, u3} D] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u3} D _inst_3] (F : CategoryTheory.Functor.{u1, u1, u2, u3} C _inst_1 D _inst_3) [_inst_5 : CategoryTheory.IsEquivalence.{u1, u1, u2, u3} C _inst_1 D _inst_3 F] {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y}, (CategoryTheory.NormalEpi.{u1, u3} D _inst_3 (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) Y) _inst_4 (Prefunctor.map.{succ u1, succ u1, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} D (CategoryTheory.Category.toCategoryStruct.{u1, u3} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u3} C _inst_1 D _inst_3 F) X Y f)) -> (CategoryTheory.NormalEpi.{u1, u2} C _inst_1 X Y _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align category_theory.equivalence_reflects_normal_epi CategoryTheory.equivalenceReflectsNormalEpiₓ'. -/
 /-- If `F` is an equivalence and `F.map f` is a normal epi, then `f` is a normal epi. -/
 def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
     [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f
@@ -187,6 +217,7 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
 
 end
 
+#print CategoryTheory.NormalEpi.regularEpi /-
 /-- Every normal epimorphism is a regular epimorphism. -/
 instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] : RegularEpi f :=
   { I with
@@ -194,7 +225,14 @@ instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] 
     right := 0
     w := by simpa using I.w }
 #align category_theory.normal_epi.regular_epi CategoryTheory.NormalEpi.regularEpi
+-/
 
+/- warning: category_theory.normal_epi.desc' -> CategoryTheory.NormalEpi.desc' is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {W : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_3 : CategoryTheory.NormalEpi.{u1, u2} C _inst_1 X Y _inst_2 f] (k : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W), (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.w.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.NormalEpi.w.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) X W (CategoryTheory.NormalEpi.g.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) k) (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.w.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) 0 (OfNat.mk.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.w.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) 0 (Zero.zero.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.w.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) (CategoryTheory.Limits.HasZeroMorphisms.hasZero.{u1, u2} C _inst_1 _inst_2 (CategoryTheory.NormalEpi.w.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W))))) -> (Subtype.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) (fun (l : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) => Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) X Y W f l) k))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {W : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_3 : CategoryTheory.NormalEpi.{u1, u2} C _inst_1 X Y _inst_2 f] (k : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W), (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.W.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.NormalEpi.W.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) X W (CategoryTheory.NormalEpi.g.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) k) (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.W.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) 0 (Zero.toOfNat0.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.NormalEpi.W.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u1, u2} C _inst_1 _inst_2 (CategoryTheory.NormalEpi.W.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3) W)))) -> (Subtype.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) (fun (l : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y W) => Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X W) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) X Y W f l) k))
+Case conversion may be inaccurate. Consider using '#align category_theory.normal_epi.desc' CategoryTheory.NormalEpi.desc'ₓ'. -/
 /-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
     induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : NormalEpi.g ≫ k = 0) :
@@ -202,6 +240,7 @@ def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : Norma
   CokernelCofork.IsColimit.desc' NormalEpi.isColimit _ h
 #align category_theory.normal_epi.desc' CategoryTheory.NormalEpi.desc'
 
+#print CategoryTheory.normalOfIsPushoutSndOfNormal /-
 /-- The second leg of a pushout cocone is a normal epimorphism if the right component is too.
 
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
@@ -220,7 +259,9 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     dsimp only [cokernel_cofork.of_π, cofork.of_π]
     congr ; exact q; exact q; exact q; apply proof_irrel_heq
 #align category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
+-/
 
+#print CategoryTheory.normalOfIsPushoutFstOfNormal /-
 /-- The first leg of a pushout cocone is a normal epimorphism if the left component is too.
 
 See also `pushout.fst_of_epi` for the basic epimorphism version, and
@@ -231,6 +272,7 @@ def normalOfIsPushoutFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     NormalEpi k :=
   normalOfIsPushoutSndOfNormal comm.symm (PushoutCocone.flipIsColimit t)
 #align category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
+-/
 
 end
 
@@ -238,6 +280,7 @@ open Opposite
 
 variable [HasZeroMorphisms C]
 
+#print CategoryTheory.normalEpiOfNormalMonoUnop /-
 /-- A normal mono becomes a normal epi in the opposite category. -/
 def normalEpiOfNormalMonoUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalMono f.unop) : NormalEpi f
     where
@@ -257,7 +300,9 @@ def normalEpiOfNormalMonoUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalMono f.un
         apply m.is_limit.uniq (kernel_fork.of_ι (m'.unop ≫ f.unop) _) m'.unop
         rintro (⟨⟩ | ⟨⟩) <;> simp)
 #align category_theory.normal_epi_of_normal_mono_unop CategoryTheory.normalEpiOfNormalMonoUnop
+-/
 
+#print CategoryTheory.normalMonoOfNormalEpiUnop /-
 /-- A normal epi becomes a normal mono in the opposite category. -/
 def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.unop) : NormalMono f
     where
@@ -277,24 +322,30 @@ def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.uno
         apply m.is_colimit.uniq (cokernel_cofork.of_π (f.unop ≫ m'.unop) _) m'.unop
         rintro (⟨⟩ | ⟨⟩) <;> simp)
 #align category_theory.normal_mono_of_normal_epi_unop CategoryTheory.normalMonoOfNormalEpiUnop
+-/
 
 section
 
 variable (C)
 
+#print CategoryTheory.NormalEpiCategory /-
 /-- A normal epi category is a category in which every epimorphism is normal. -/
 class NormalEpiCategory where
   normalEpiOfEpi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], NormalEpi f
 #align category_theory.normal_epi_category CategoryTheory.NormalEpiCategory
+-/
 
 end
 
+#print CategoryTheory.normalEpiOfEpi /-
 /-- In a category in which every epimorphism is normal, we can express every epimorphism as
     a kernel. This is not an instance because it would create an instance loop. -/
 def normalEpiOfEpi [NormalEpiCategory C] (f : X ⟶ Y) [Epi f] : NormalEpi f :=
   NormalEpiCategory.normalEpiOfEpi _
 #align category_theory.normal_epi_of_epi CategoryTheory.normalEpiOfEpi
+-/
 
+#print CategoryTheory.regularEpiCategoryOfNormalEpiCategory /-
 instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCategory C] :
     RegularEpiCategory C
     where regularEpiOfEpi _ _ f _ :=
@@ -302,6 +353,7 @@ instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCateg
     haveI := normal_epi_of_epi f
     infer_instance
 #align category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
+-/
 
 end CategoryTheory
 

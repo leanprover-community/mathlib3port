@@ -58,6 +58,7 @@ real numbers, completion, uniform spaces
 
 open Set Function Filter CauSeq UniformSpace
 
+#print Rat.uniformSpace_eq /-
 /-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
 theorem Rat.uniformSpace_eq :
@@ -68,7 +69,9 @@ theorem Rat.uniformSpace_eq :
   simp only [Rat.dist_eq, AbsoluteValue.abs_apply, ← Rat.cast_sub, ← Rat.cast_abs, Rat.cast_lt,
     abs_sub_comm]
 #align rat.uniform_space_eq Rat.uniformSpace_eq
+-/
 
+#print rationalCauSeqPkg /-
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
 def rationalCauSeqPkg : @AbstractCompletion ℚ <| (@AbsoluteValue.abs ℚ _).UniformSpace
     where
@@ -82,9 +85,11 @@ def rationalCauSeqPkg : @AbstractCompletion ℚ <| (@AbsoluteValue.abs ℚ _).Un
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
   dense := Rat.denseEmbedding_coe_real.dense
 #align rational_cau_seq_pkg rationalCauSeqPkg
+-/
 
 namespace CompareReals
 
+#print CompareReals.Q /-
 /-- Type wrapper around ℚ to make sure the absolute value uniform space instance is picked up
 instead of the metric space one. We proved in rat.uniform_space_eq that they are equal,
 but they are not definitionaly equal, so it would confuse the type class system (and probably
@@ -92,33 +97,58 @@ also human readers). -/
 def Q :=
   ℚ deriving CommRing, Inhabited
 #align compare_reals.Q CompareReals.Q
+-/
 
 instance : UniformSpace Q :=
   (@AbsoluteValue.abs ℚ _).UniformSpace
 
+#print CompareReals.Bourbakiℝ /-
 /-- Real numbers constructed as in Bourbaki. -/
 def Bourbakiℝ : Type :=
   Completion Q deriving Inhabited
 #align compare_reals.Bourbakiℝ CompareReals.Bourbakiℝ
+-/
 
+#print CompareReals.Bourbaki.uniformSpace /-
 instance Bourbaki.uniformSpace : UniformSpace Bourbakiℝ :=
   Completion.uniformSpace Q
 #align compare_reals.bourbaki.uniform_space CompareReals.Bourbaki.uniformSpace
+-/
 
+/- warning: compare_reals.Bourbaki_pkg -> CompareReals.bourbakiPkg is a dubious translation:
+lean 3 declaration is
+  AbstractCompletion.{0} CompareReals.Q CompareReals.Q.uniformSpace
+but is expected to have type
+  AbstractCompletion.{0} CompareReals.Q CompareReals.uniformSpace
+Case conversion may be inaccurate. Consider using '#align compare_reals.Bourbaki_pkg CompareReals.bourbakiPkgₓ'. -/
 /-- Bourbaki reals packaged as a completion of Q using the general theory. -/
 def bourbakiPkg : AbstractCompletion Q :=
   Completion.cPkg
 #align compare_reals.Bourbaki_pkg CompareReals.bourbakiPkg
 
+#print CompareReals.compareEquiv /-
 /-- The uniform bijection between Bourbaki and Cauchy reals. -/
 noncomputable def compareEquiv : Bourbakiℝ ≃ᵤ ℝ :=
   bourbakiPkg.compareEquiv rationalCauSeqPkg
 #align compare_reals.compare_equiv CompareReals.compareEquiv
+-/
 
+/- warning: compare_reals.compare_uc -> CompareReals.compare_uc is a dubious translation:
+lean 3 declaration is
+  UniformContinuous.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (coeFn.{1, 1} (UniformEquiv.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (_x : UniformEquiv.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) => CompareReals.Bourbakiℝ -> Real) (UniformEquiv.hasCoeToFun.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) CompareReals.compareEquiv)
+but is expected to have type
+  UniformContinuous.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (FunLike.coe.{1, 1, 1} (UniformEquiv.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) CompareReals.Bourbakiℝ (fun (_x : CompareReals.Bourbakiℝ) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : CompareReals.Bourbakiℝ) => Real) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (UniformEquiv.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) CompareReals.Bourbakiℝ Real (EquivLike.toEmbeddingLike.{1, 1, 1} (UniformEquiv.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) CompareReals.Bourbakiℝ Real (UniformEquiv.instEquivLikeUniformEquiv.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)))) CompareReals.compareEquiv)
+Case conversion may be inaccurate. Consider using '#align compare_reals.compare_uc CompareReals.compare_ucₓ'. -/
 theorem compare_uc : UniformContinuous compareEquiv :=
   bourbakiPkg.uniformContinuous_compareEquiv _
 #align compare_reals.compare_uc CompareReals.compare_uc
 
+/- warning: compare_reals.compare_uc_symm -> CompareReals.compare_uc_symm is a dubious translation:
+lean 3 declaration is
+  UniformContinuous.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace (coeFn.{1, 1} (UniformEquiv.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace) (fun (_x : UniformEquiv.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace) => Real -> CompareReals.Bourbakiℝ) (UniformEquiv.hasCoeToFun.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace) (UniformEquiv.symm.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.compareEquiv))
+but is expected to have type
+  UniformContinuous.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace (FunLike.coe.{1, 1, 1} (UniformEquiv.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace) Real (fun (_x : Real) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Real) => CompareReals.Bourbakiℝ) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (UniformEquiv.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace) Real CompareReals.Bourbakiℝ (EquivLike.toEmbeddingLike.{1, 1, 1} (UniformEquiv.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace) Real CompareReals.Bourbakiℝ (UniformEquiv.instEquivLikeUniformEquiv.{0, 0} Real CompareReals.Bourbakiℝ (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.Bourbaki.uniformSpace))) (UniformEquiv.symm.{0, 0} CompareReals.Bourbakiℝ Real CompareReals.Bourbaki.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) CompareReals.compareEquiv))
+Case conversion may be inaccurate. Consider using '#align compare_reals.compare_uc_symm CompareReals.compare_uc_symmₓ'. -/
 theorem compare_uc_symm : UniformContinuous compareEquiv.symm :=
   bourbakiPkg.uniformContinuous_compareEquiv_symm _
 #align compare_reals.compare_uc_symm CompareReals.compare_uc_symm
