@@ -255,7 +255,7 @@ theorem card_le_one_iff_eq_bot [Fintype H] : Fintype.card H ≤ 1 ↔ H = ⊥ :=
       simpa [Subtype.ext_iff] using Fintype.card_le_one_iff.1 h ⟨x, hx⟩ 1,
     fun h => by simp [h]⟩
 #align subgroup.card_le_one_iff_eq_bot Subgroup.card_le_one_iff_eq_bot
-#align add_subgroup.card_nonpos_iff_eq_bot AddSubgroup.card_nonpos_iff_eq_bot
+#align add_subgroup.card_nonpos_iff_eq_bot AddSubgroup.card_le_one_iff_eq_bot
 
 /- warning: subgroup.one_lt_card_iff_ne_bot -> Subgroup.one_lt_card_iff_ne_bot is a dubious translation:
 lean 3 declaration is
@@ -267,7 +267,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.one_lt_card_i
 theorem one_lt_card_iff_ne_bot [Fintype H] : 1 < Fintype.card H ↔ H ≠ ⊥ :=
   lt_iff_not_le.trans H.card_le_one_iff_eq_bot.Not
 #align subgroup.one_lt_card_iff_ne_bot Subgroup.one_lt_card_iff_ne_bot
-#align add_subgroup.pos_card_iff_ne_bot AddSubgroup.pos_card_iff_ne_bot
+#align add_subgroup.pos_card_iff_ne_bot AddSubgroup.one_lt_card_iff_ne_bot
 
 end Subgroup
 
