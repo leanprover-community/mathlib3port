@@ -611,7 +611,7 @@ theorem mem_leadingCoeffNth_zero (x) : x ∈ I.leadingCoeffNth 0 ↔ C x ∈ I :
     ⟨fun ⟨p, hpI, hpdeg, hpx⟩ => by
       rwa [← hpx, Polynomial.leadingCoeff,
         Nat.eq_zero_of_le_zero (nat_degree_le_of_degree_le hpdeg), ← eq_C_of_degree_le_zero hpdeg],
-      fun hx => ⟨C x, hx, degree_c_le, leadingCoeff_c x⟩⟩
+      fun hx => ⟨C x, hx, degree_C_le, leadingCoeff_C x⟩⟩
 #align ideal.mem_leading_coeff_nth_zero Ideal.mem_leadingCoeffNth_zero
 
 theorem leadingCoeffNth_mono {m n : ℕ} (H : m ≤ n) : I.leadingCoeffNth m ≤ I.leadingCoeffNth n :=
@@ -944,7 +944,7 @@ instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R
       · simp only [hdeg, add_zero]
         refine' Prod.Lex.right _ ⟨_, ⟨c.leading_coeff, fun unit_c => not_unit_c _, rfl⟩⟩
         · rwa [Ne, Polynomial.leadingCoeff_eq_zero]
-        rw [Polynomial.isUnit_iff, Polynomial.eq_c_of_degree_eq_zero hdeg]
+        rw [Polynomial.isUnit_iff, Polynomial.eq_C_of_degree_eq_zero hdeg]
         use c.leading_coeff, unit_c
         rw [Polynomial.leadingCoeff, Polynomial.natDegree_eq_of_degree_eq_some hdeg]
       · apply Prod.Lex.left
@@ -1021,14 +1021,14 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
               exact hp0 H
             have h1 : p.degree = (q * Polynomial.X ^ (k - q.nat_degree)).degree :=
               by
-              rw [Polynomial.degree_mul', Polynomial.degree_x_pow]
+              rw [Polynomial.degree_mul', Polynomial.degree_X_pow]
               rw [Polynomial.degree_eq_natDegree hp0, Polynomial.degree_eq_natDegree hq0]
               rw [← WithBot.coe_add, add_tsub_cancel_of_le, hn]
               · refine' le_trans (Polynomial.natDegree_le_of_degree_le hdq) (le_of_lt h)
-              rw [Polynomial.leadingCoeff_x_pow, mul_one]
+              rw [Polynomial.leadingCoeff_X_pow, mul_one]
               exact mt Polynomial.leadingCoeff_eq_zero.1 hq0
             have h2 : p.leading_coeff = (q * Polynomial.X ^ (k - q.nat_degree)).leadingCoeff := by
-              rw [← hlqp, Polynomial.leadingCoeff_mul_x_pow]
+              rw [← hlqp, Polynomial.leadingCoeff_mul_X_pow]
             have := Polynomial.degree_sub_lt h1 hp0 h2
             rw [Polynomial.degree_eq_natDegree hp0] at this
             rw [← sub_add_cancel p (q * Polynomial.X ^ (k - q.nat_degree))]

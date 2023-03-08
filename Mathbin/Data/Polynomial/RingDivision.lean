@@ -236,7 +236,7 @@ theorem degree_coe_units [Nontrivial R] (u : R[X]ˣ) : degree (u : R[X]) = 0 :=
 theorem isUnit_iff : IsUnit p ↔ ∃ r : R, IsUnit r ∧ C r = p :=
   ⟨fun hp =>
     ⟨p.coeff 0,
-      let h := eq_c_of_natDegree_eq_zero (natDegree_eq_zero_of_isUnit hp)
+      let h := eq_C_of_natDegree_eq_zero (natDegree_eq_zero_of_isUnit hp)
       ⟨isUnit_C.1 (h ▸ hp), h.symm⟩⟩,
     fun ⟨r, hr, hrp⟩ => hrp ▸ isUnit_C.2 hr⟩
 #align polynomial.is_unit_iff Polynomial.isUnit_iff
@@ -246,7 +246,7 @@ variable [CharZero R]
 @[simp]
 theorem degree_bit0_eq (p : R[X]) : degree (bit0 p) = degree p := by
   rw [bit0_eq_two_mul, degree_mul, (by simp : (2 : R[X]) = C 2),
-    @Polynomial.degree_c R _ _ two_ne_zero, zero_add]
+    @Polynomial.degree_C R _ _ two_ne_zero, zero_add]
 #align polynomial.degree_bit0_eq Polynomial.degree_bit0_eq
 
 @[simp]
@@ -405,7 +405,7 @@ section Roots
 open Multiset
 
 theorem prime_x_sub_c (r : R) : Prime (X - C r) :=
-  ⟨x_sub_c_ne_zero r, not_isUnit_x_sub_c r, fun _ _ =>
+  ⟨X_sub_C_ne_zero r, not_isUnit_x_sub_c r, fun _ _ =>
     by
     simp_rw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
     exact id⟩
@@ -550,7 +550,7 @@ theorem card_roots_sub_c {p : R[X]} {a : R} (hp0 : 0 < degree p) :
     ((p - C a).roots.card : WithBot ℕ) ≤ degree p :=
   calc
     ((p - C a).roots.card : WithBot ℕ) ≤ degree (p - C a) :=
-      card_roots <| mt sub_eq_zero.1 fun h => not_le_of_gt hp0 <| h.symm ▸ degree_c_le
+      card_roots <| mt sub_eq_zero.1 fun h => not_le_of_gt hp0 <| h.symm ▸ degree_C_le
     _ = degree p := by rw [sub_eq_add_neg, ← C_neg] <;> exact degree_add_C hp0
     
 #align polynomial.card_roots_sub_C Polynomial.card_roots_sub_c
@@ -633,7 +633,7 @@ theorem mem_roots_sub_C' {p : R[X]} {a x : R} : x ∈ (p - C a).roots ↔ p ≠ 
 
 theorem mem_roots_sub_c {p : R[X]} {a x : R} (hp0 : 0 < degree p) :
     x ∈ (p - C a).roots ↔ p.eval x = a :=
-  mem_roots_sub_C'.trans <| and_iff_right fun hp => hp0.not_le <| hp.symm ▸ degree_c_le
+  mem_roots_sub_C'.trans <| and_iff_right fun hp => hp0.not_le <| hp.symm ▸ degree_C_le
 #align polynomial.mem_roots_sub_C Polynomial.mem_roots_sub_c
 
 @[simp]
@@ -719,7 +719,7 @@ theorem roots_monomial (ha : a ≠ 0) (n : ℕ) : (monomial n a).roots = n • {
 #align polynomial.roots_monomial Polynomial.roots_monomial
 
 theorem roots_prod_x_sub_c (s : Finset R) : (s.Prod fun a => X - C a).roots = s.val :=
-  (roots_prod (fun a => X - C a) s (prod_ne_zero_iff.mpr fun a _ => x_sub_c_ne_zero a)).trans
+  (roots_prod (fun a => X - C a) s (prod_ne_zero_iff.mpr fun a _ => X_sub_C_ne_zero a)).trans
     (by simp_rw [roots_X_sub_C, Multiset.bind_singleton, Multiset.map_id'])
 #align polynomial.roots_prod_X_sub_C Polynomial.roots_prod_x_sub_c
 
@@ -749,8 +749,8 @@ theorem card_roots_x_pow_sub_c {n : ℕ} (hn : 0 < n) (a : R) :
   WithBot.coe_le_coe.1 <|
     calc
       ((roots ((X : R[X]) ^ n - C a)).card : WithBot ℕ) ≤ degree ((X : R[X]) ^ n - C a) :=
-        card_roots (x_pow_sub_c_ne_zero hn a)
-      _ = n := degree_x_pow_sub_c hn a
+        card_roots (X_pow_sub_C_ne_zero hn a)
+      _ = n := degree_X_pow_sub_C hn a
       
 #align polynomial.card_roots_X_pow_sub_C Polynomial.card_roots_x_pow_sub_c
 
@@ -825,7 +825,7 @@ theorem Monic.comp_x_sub_c (hp : p.Monic) (r : R) : (p.comp (X - C r)).Monic := 
 #align polynomial.monic.comp_X_sub_C Polynomial.Monic.comp_x_sub_c
 
 theorem units_coeff_zero_smul (c : R[X]ˣ) (p : R[X]) : (c : R[X]).coeff 0 • p = c * p := by
-  rw [← Polynomial.C_mul', ← Polynomial.eq_c_of_degree_eq_zero (degree_coe_units c)]
+  rw [← Polynomial.C_mul', ← Polynomial.eq_C_of_degree_eq_zero (degree_coe_units c)]
 #align polynomial.units_coeff_zero_smul Polynomial.units_coeff_zero_smul
 
 @[simp]
@@ -984,7 +984,7 @@ theorem degree_eq_one_of_irreducible_of_root (hi : Irreducible p) {x : R} (hx : 
   have : IsUnit (X - C x) ∨ IsUnit g := hi.isUnit_or_isUnit hg
   this.elim
     (fun h => by
-      have h₁ : degree (X - C x) = 1 := degree_x_sub_c x
+      have h₁ : degree (X - C x) = 1 := degree_X_sub_C x
       have h₂ : degree (X - C x) = 0 := degree_eq_zero_of_isUnit h
       rw [h₁] at h₂ <;> exact absurd h₂ (by decide))
     fun hgu => by rw [hg, degree_mul, degree_X_sub_C, degree_eq_zero_of_is_unit hgu, add_zero]

@@ -507,7 +507,7 @@ theorem not_irreducible_c (x : R) : ¬Irreducible (C x) :=
 
 theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=
   lt_of_not_ge fun hp0 =>
-    have := eq_c_of_degree_le_zero hp0
+    have := eq_C_of_degree_le_zero hp0
     not_irreducible_c (p.coeff 0) <| this ▸ hp
 #align polynomial.degree_pos_of_irreducible Polynomial.degree_pos_of_irreducible
 
@@ -520,7 +520,7 @@ theorem isCoprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] (
   refine'
     Or.resolve_left
       (EuclideanDomain.dvd_or_coprime (X - C a) (f /ₘ (X - C a))
-        (irreducible_of_degree_eq_one (Polynomial.degree_x_sub_c a)))
+        (irreducible_of_degree_eq_one (Polynomial.degree_X_sub_C a)))
       _
   contrapose! hf' with h
   have key : (X - C a) * (f /ₘ (X - C a)) = f - f %ₘ (X - C a) :=

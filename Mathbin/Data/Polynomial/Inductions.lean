@@ -145,7 +145,7 @@ theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree 
     (fun p a _ _ ih h0 =>
       have : 0 < degree p :=
         lt_of_not_ge fun h =>
-          not_lt_of_ge degree_c_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
+          not_lt_of_ge degree_C_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
       hadd this (ih this))
     (fun p _ ih h0' =>
       if h0 : 0 < degree p then hX h0 (ih h0)

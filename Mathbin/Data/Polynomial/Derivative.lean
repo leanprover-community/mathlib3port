@@ -243,7 +243,7 @@ theorem iterate_derivative_eq_zero {p : R[X]} {x : ℕ} (hx : p.natDegree < x) :
 
 @[simp]
 theorem iterate_derivative_c {k} (h : 0 < k) : (derivative^[k]) (C a : R[X]) = 0 :=
-  iterate_derivative_eq_zero <| (natDegree_c _).trans_lt h
+  iterate_derivative_eq_zero <| (natDegree_C _).trans_lt h
 #align polynomial.iterate_derivative_C Polynomial.iterate_derivative_c
 
 @[simp]
@@ -253,7 +253,7 @@ theorem iterate_derivative_one {k} (h : 0 < k) : (derivative^[k]) (1 : R[X]) = 0
 
 @[simp]
 theorem iterate_derivative_x {k} (h : 1 < k) : (derivative^[k]) (X : R[X]) = 0 :=
-  iterate_derivative_eq_zero <| natDegree_x_le.trans_lt h
+  iterate_derivative_eq_zero <| natDegree_X_le.trans_lt h
 #align polynomial.iterate_derivative_X Polynomial.iterate_derivative_x
 
 theorem natDegree_eq_zero_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]}
@@ -276,7 +276,7 @@ theorem natDegree_eq_zero_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : 
 
 theorem eq_c_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
     f = C (f.coeff 0) :=
-  eq_c_of_natDegree_eq_zero <| natDegree_eq_zero_of_derivative_eq_zero h
+  eq_C_of_natDegree_eq_zero <| natDegree_eq_zero_of_derivative_eq_zero h
 #align polynomial.eq_C_of_derivative_eq_zero Polynomial.eq_c_of_derivative_eq_zero
 
 @[simp]

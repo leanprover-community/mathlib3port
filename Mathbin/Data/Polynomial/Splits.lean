@@ -141,11 +141,11 @@ theorem splits_of_isUnit [IsDomain K] {u : K[X]} (hu : IsUnit u) : u.Splits i :=
 #align polynomial.splits_of_is_unit Polynomial.splits_of_isUnit
 
 theorem splits_x_sub_c {x : K} : (X - C x).Splits i :=
-  splits_of_degree_le_one _ <| degree_x_sub_c_le _
+  splits_of_degree_le_one _ <| degree_X_sub_C_le _
 #align polynomial.splits_X_sub_C Polynomial.splits_x_sub_c
 
 theorem splits_x : X.Splits i :=
-  splits_of_degree_le_one _ degree_x_le
+  splits_of_degree_le_one _ degree_X_le
 #align polynomial.splits_X Polynomial.splits_x
 
 theorem splits_prod {ι : Type u} {s : ι → K[X]} {t : Finset ι} :

@@ -690,7 +690,7 @@ noncomputable def xClass : W.CoordinateRing :=
 #align weierstrass_curve.coordinate_ring.X_class WeierstrassCurve.CoordinateRing.xClass
 
 theorem xClass_ne_zero [Nontrivial R] : xClass W x ≠ 0 :=
-  AdjoinRoot.mk_ne_zero_of_natDegree_lt W.monic_polynomial (C_ne_zero.mpr <| x_sub_c_ne_zero x) <|
+  AdjoinRoot.mk_ne_zero_of_natDegree_lt W.monic_polynomial (C_ne_zero.mpr <| X_sub_C_ne_zero x) <|
     by
     rw [nat_degree_polynomial, nat_degree_C]
     norm_num1
@@ -703,7 +703,7 @@ noncomputable def yClass : W.CoordinateRing :=
 #align weierstrass_curve.coordinate_ring.Y_class WeierstrassCurve.CoordinateRing.yClass
 
 theorem yClass_ne_zero [Nontrivial R] : yClass W y ≠ 0 :=
-  AdjoinRoot.mk_ne_zero_of_natDegree_lt W.monic_polynomial (x_sub_c_ne_zero y) <|
+  AdjoinRoot.mk_ne_zero_of_natDegree_lt W.monic_polynomial (X_sub_C_ne_zero y) <|
     by
     rw [nat_degree_polynomial, nat_degree_X_sub_C]
     norm_num1

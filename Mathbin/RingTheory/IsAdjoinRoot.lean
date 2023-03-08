@@ -254,7 +254,7 @@ theorem lift_algebraMap (h : IsAdjoinRoot S f) (a : R) : h.lift i x hx (algebraM
 theorem apply_eq_lift (h : IsAdjoinRoot S f) (g : S →+* T) (hmap : ∀ a, g (algebraMap R S a) = i a)
     (hroot : g h.root = x) (a : S) : g a = h.lift i x hx a :=
   by
-  rw [← h.map_repr a, Polynomial.as_sum_range_c_mul_x_pow (h.repr a)]
+  rw [← h.map_repr a, Polynomial.as_sum_range_C_mul_X_pow (h.repr a)]
   simp only [map_sum, map_mul, map_pow, h.map_X, hroot, ← h.algebra_map_apply, hmap, lift_root,
     lift_algebra_map]
 #align is_adjoin_root.apply_eq_lift IsAdjoinRoot.apply_eq_lift

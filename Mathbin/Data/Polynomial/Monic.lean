@@ -101,12 +101,12 @@ theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) 
 theorem monic_x_pow_add {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) + p) :=
   have H1 : degree p < n + 1 := lt_of_le_of_lt H (WithBot.coe_lt_coe.2 (Nat.lt_succ_self n))
   monic_of_degree_le (n + 1)
-    (le_trans (degree_add_le _ _) (max_le (degree_x_pow_le _) (le_of_lt H1)))
+    (le_trans (degree_add_le _ _) (max_le (degree_X_pow_le _) (le_of_lt H1)))
     (by rw [coeff_add, coeff_X_pow, if_pos rfl, coeff_eq_zero_of_degree_lt H1, add_zero])
 #align polynomial.monic_X_pow_add Polynomial.monic_x_pow_add
 
 theorem monic_x_add_c (x : R) : Monic (X + C x) :=
-  pow_one (X : R[X]) ▸ monic_x_pow_add degree_c_le
+  pow_one (X : R[X]) ▸ monic_x_pow_add degree_C_le
 #align polynomial.monic_X_add_C Polynomial.monic_x_add_c
 
 theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=

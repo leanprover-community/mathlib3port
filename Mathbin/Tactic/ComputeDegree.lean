@@ -144,7 +144,7 @@ open Expr Polynomial
                             ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
                           )
               | q( - $ ( f ) ) => refine ` `( ( natDegree_neg _ ) . le . trans _ )
-              | q( X ^ $ ( n ) ) => refine ` `( ( natDegree_x_pow_le $ ( n ) ) . trans _ )
+              | q( X ^ $ ( n ) ) => refine ` `( ( natDegree_X_pow_le $ ( n ) ) . trans _ )
               |
                 app q( ⇑ ( @ monomial $ ( R ) $ ( inst ) $ ( n ) ) ) x
                 =>
@@ -152,8 +152,8 @@ open Expr Polynomial
               |
                 app q( ⇑ C ) x
                 =>
-                refine ` `( ( natDegree_c $ ( x ) ) . le . trans ( Nat.zero_le $ ( tr ) ) )
-              | q( X ) => refine ` `( natDegree_x_le . trans _ )
+                refine ` `( ( natDegree_C $ ( x ) ) . le . trans ( Nat.zero_le $ ( tr ) ) )
+              | q( X ) => refine ` `( natDegree_X_le . trans _ )
               | q( Zero.zero ) => refine ` `( natDegree_zero . le . trans ( Nat.zero_le _ ) )
               | q( One.one ) => refine ` `( natDegree_one . le . trans ( Nat.zero_le _ ) )
               | q( bit0 $ ( a ) ) => refine ` `( ( natDegree_bit0 $ ( a ) ) . trans _ )

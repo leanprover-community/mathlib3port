@@ -1072,7 +1072,7 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
       have hdeg : (gcd p q).degree ≤ q.degree := degree_gcd_le_right _ hq
       have hdeg' : (Polynomial.C a.leading_coeff⁻¹ * gcd p q).degree ≤ q.degree :=
         by
-        rw [Polynomial.degree_mul, Polynomial.degree_c hainv, zero_add]
+        rw [Polynomial.degree_mul, Polynomial.degree_C hainv, zero_add]
         exact hdeg
       have hdivp : Polynomial.C a.leading_coeff⁻¹ * gcd p q ∣ p :=
         (C_mul_dvd hainv).mpr (gcd_dvd_left p q)
@@ -1080,7 +1080,7 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
         (C_mul_dvd hainv).mpr (gcd_dvd_right p q)
       rw [EuclideanDomain.mul_div_mul_cancel ha hdivp, EuclideanDomain.mul_div_mul_cancel ha hdivq,
         leading_coeff_div hdeg, leading_coeff_div hdeg', Polynomial.leadingCoeff_mul,
-        Polynomial.leadingCoeff_c, div_C_mul, div_C_mul, ← mul_assoc, ← Polynomial.C_mul, ←
+        Polynomial.leadingCoeff_C, div_C_mul, div_C_mul, ← mul_assoc, ← Polynomial.C_mul, ←
         mul_assoc, ← Polynomial.C_mul]
       constructor <;> congr <;>
         rw [inv_div, mul_comm, mul_div_assoc, ← mul_assoc, inv_inv, _root_.mul_inv_cancel ha',
@@ -1541,7 +1541,7 @@ theorem intDegree_c (k : K) : intDegree (Ratfunc.c k) = 0 := by
 
 @[simp]
 theorem intDegree_x : intDegree (x : Ratfunc K) = 1 := by
-  rw [int_degree, Ratfunc.num_x, Polynomial.natDegree_x, Ratfunc.denom_x, Polynomial.natDegree_one,
+  rw [int_degree, Ratfunc.num_x, Polynomial.natDegree_X, Ratfunc.denom_x, Polynomial.natDegree_one,
     Int.ofNat_one, Int.ofNat_zero, sub_zero]
 #align ratfunc.int_degree_X Ratfunc.intDegree_x
 
