@@ -88,7 +88,7 @@ noncomputable instance Prop.linearOrder : LinearOrder Prop := by
 lean 3 declaration is
   Eq.{1} (Prop -> Prop -> Prop) (Sup.sup.{0} Prop (SemilatticeSup.toHasSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (LinearOrder.toLattice.{0} Prop Prop.linearOrder)))) Or
 but is expected to have type
-  Eq.{1} (Prop -> Prop -> Prop) (fun (x._@.Mathlib.Order.PropInstances._hyg.307 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.309 : Prop) => Sup.sup.{0} Prop (SemilatticeSup.toSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (DistribLattice.toLattice.{0} Prop Prop.distribLattice))) x._@.Mathlib.Order.PropInstances._hyg.307 x._@.Mathlib.Order.PropInstances._hyg.309) (fun (x._@.Mathlib.Order.PropInstances._hyg.322 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.324 : Prop) => Or x._@.Mathlib.Order.PropInstances._hyg.322 x._@.Mathlib.Order.PropInstances._hyg.324)
+  Eq.{1} (Prop -> Prop -> Prop) (fun (x._@.Mathlib.Order.PropInstances._hyg.236 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.238 : Prop) => Sup.sup.{0} Prop (SemilatticeSup.toSup.{0} Prop (Lattice.toSemilatticeSup.{0} Prop (DistribLattice.toLattice.{0} Prop Prop.distribLattice))) x._@.Mathlib.Order.PropInstances._hyg.236 x._@.Mathlib.Order.PropInstances._hyg.238) (fun (x._@.Mathlib.Order.PropInstances._hyg.251 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.253 : Prop) => Or x._@.Mathlib.Order.PropInstances._hyg.251 x._@.Mathlib.Order.PropInstances._hyg.253)
 Case conversion may be inaccurate. Consider using '#align sup_Prop_eq sup_Prop_eqₓ'. -/
 @[simp]
 theorem sup_Prop_eq : (· ⊔ ·) = (· ∨ ·) :=
@@ -99,7 +99,7 @@ theorem sup_Prop_eq : (· ⊔ ·) = (· ∨ ·) :=
 lean 3 declaration is
   Eq.{1} (Prop -> Prop -> Prop) (Inf.inf.{0} Prop (SemilatticeInf.toHasInf.{0} Prop (Lattice.toSemilatticeInf.{0} Prop (LinearOrder.toLattice.{0} Prop Prop.linearOrder)))) And
 but is expected to have type
-  Eq.{1} (Prop -> Prop -> Prop) (fun (x._@.Mathlib.Order.PropInstances._hyg.343 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.345 : Prop) => Inf.inf.{0} Prop (Lattice.toInf.{0} Prop (DistribLattice.toLattice.{0} Prop Prop.distribLattice)) x._@.Mathlib.Order.PropInstances._hyg.343 x._@.Mathlib.Order.PropInstances._hyg.345) (fun (x._@.Mathlib.Order.PropInstances._hyg.358 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.360 : Prop) => And x._@.Mathlib.Order.PropInstances._hyg.358 x._@.Mathlib.Order.PropInstances._hyg.360)
+  Eq.{1} (Prop -> Prop -> Prop) (fun (x._@.Mathlib.Order.PropInstances._hyg.272 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.274 : Prop) => Inf.inf.{0} Prop (Lattice.toInf.{0} Prop (DistribLattice.toLattice.{0} Prop Prop.distribLattice)) x._@.Mathlib.Order.PropInstances._hyg.272 x._@.Mathlib.Order.PropInstances._hyg.274) (fun (x._@.Mathlib.Order.PropInstances._hyg.287 : Prop) (x._@.Mathlib.Order.PropInstances._hyg.289 : Prop) => And x._@.Mathlib.Order.PropInstances._hyg.287 x._@.Mathlib.Order.PropInstances._hyg.289)
 Case conversion may be inaccurate. Consider using '#align inf_Prop_eq inf_Prop_eqₓ'. -/
 @[simp]
 theorem inf_Prop_eq : (· ⊓ ·) = (· ∧ ·) :=

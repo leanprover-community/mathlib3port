@@ -3607,7 +3607,7 @@ theorem nthLe_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
 lean 3 declaration is
   forall {α : Type.{u1}} (L : List.{u1} α) {i : Nat} {j : Nat} (h : LT.lt.{0} Nat Nat.hasLt j (List.length.{u1} α (List.drop.{u1} α i L))), Eq.{succ u1} α (List.nthLe.{u1} α (List.drop.{u1} α i L) j h) (List.nthLe.{u1} α L (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) i j) (Iff.mp (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (LinearOrder.toLattice.{0} Nat Nat.linearOrder))))) j (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (List.length.{u1} α L) i)) (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (LinearOrder.toLattice.{0} Nat Nat.linearOrder))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddSemigroup.toHasAdd.{0} Nat (AddCommSemigroup.toAddSemigroup.{0} Nat Nat.addCommSemigroup))) i j) (List.length.{u1} α L)) (lt_tsub_iff_left.{0} Nat j (List.length.{u1} α L) i Nat.linearOrder Nat.addCommSemigroup Nat.hasSub Nat.hasOrderedSub) (Eq.subst.{1} Nat (fun (_x : Nat) => LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (LinearOrder.toLattice.{0} Nat Nat.linearOrder))))) j _x) (List.length.{u1} α (List.drop.{u1} α i L)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (List.length.{u1} α L) i) (List.length_drop.{u1} α i L) h)))
 but is expected to have type
-  forall {α : Type.{u1}} (L : List.{u1} α) {i : Nat} {j : Nat} (h : LT.lt.{0} Nat instLTNat j (List.length.{u1} α (List.drop.{u1} α i L))), Eq.{succ u1} α (List.nthLe.{u1} α (List.drop.{u1} α i L) j h) (List.nthLe.{u1} α L (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i j) (Iff.mp (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i)) (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddSemigroup.toAdd.{0} Nat (AddCommSemigroup.toAddSemigroup.{0} Nat Nat.addCommSemigroup))) i j) (List.length.{u1} α L)) (lt_tsub_iff_left.{0} Nat j (List.length.{u1} α L) i Nat.linearOrder Nat.addCommSemigroup instSubNat Nat.instOrderedSubNatInstLENatInstAddNatInstSubNat) (Eq.rec.{0, 1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) (fun (x._@.Mathlib.Data.List.Basic._hyg.25569 : Nat) (h._@.Mathlib.Data.List.Basic._hyg.25570 : Eq.{1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) x._@.Mathlib.Data.List.Basic._hyg.25569) => LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j x._@.Mathlib.Data.List.Basic._hyg.25569) h (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i) (List.length_drop.{u1} α i L))))
+  forall {α : Type.{u1}} (L : List.{u1} α) {i : Nat} {j : Nat} (h : LT.lt.{0} Nat instLTNat j (List.length.{u1} α (List.drop.{u1} α i L))), Eq.{succ u1} α (List.nthLe.{u1} α (List.drop.{u1} α i L) j h) (List.nthLe.{u1} α L (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i j) (Iff.mp (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i)) (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddSemigroup.toAdd.{0} Nat (AddCommSemigroup.toAddSemigroup.{0} Nat Nat.addCommSemigroup))) i j) (List.length.{u1} α L)) (lt_tsub_iff_left.{0} Nat j (List.length.{u1} α L) i Nat.linearOrder Nat.addCommSemigroup instSubNat Nat.instOrderedSubNatInstLENatInstAddNatInstSubNat) (Eq.rec.{0, 1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) (fun (x._@.Mathlib.Data.List.Basic._hyg.25563 : Nat) (h._@.Mathlib.Data.List.Basic._hyg.25564 : Eq.{1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) x._@.Mathlib.Data.List.Basic._hyg.25563) => LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j x._@.Mathlib.Data.List.Basic._hyg.25563) h (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i) (List.length_drop.{u1} α i L))))
 Case conversion may be inaccurate. Consider using '#align list.nth_le_drop' List.nthLe_drop'ₓ'. -/
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the small list to the big list. -/
@@ -5144,7 +5144,7 @@ theorem filterMap_eq_map (f : α → β) : filterMap (some ∘ f) = map f :=
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α p (fun (a : α) => _inst_1 a))) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.42145 : α) => Eq.{1} Bool (p x._@.Mathlib.Data.List.Basic._hyg.42145) Bool.true) (fun (a : α) => instDecidableEqBool (p a) Bool.true))) (List.filter.{u1} α p)
+  forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.42127 : α) => Eq.{1} Bool (p x._@.Mathlib.Data.List.Basic._hyg.42127) Bool.true) (fun (a : α) => instDecidableEqBool (p a) Bool.true))) (List.filter.{u1} α p)
 Case conversion may be inaccurate. Consider using '#align list.filter_map_eq_filter List.filterMap_eq_filterₓ'. -/
 theorem filterMap_eq_filter (p : α → Prop) [DecidablePred p] :
     filterMap (Option.guard p) = filter p := by
@@ -5651,7 +5651,7 @@ theorem filter_filter (q) [DecidablePred q] :
 lean 3 declaration is
   forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => True)} (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (_x : α) => True) h l) l
 but is expected to have type
-  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46252 : α) => Bool.true) h) h
+  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46232 : α) => Bool.true) h) h
 Case conversion may be inaccurate. Consider using '#align list.filter_true List.filter_trueₓ'. -/
 @[simp]
 theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) :
@@ -5662,7 +5662,7 @@ theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) :
 lean 3 declaration is
   forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => False)} (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (_x : α) => False) h l) (List.nil.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46302 : α) => Bool.false) h) (List.nil.{u1} α)
+  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46282 : α) => Bool.false) h) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.filter_false List.filter_falseₓ'. -/
 @[simp]
 theorem filter_false {h : DecidablePred fun a : α => False} (l : List α) :
@@ -6432,16 +6432,21 @@ theorem map_fst_add_enum_eq_enumFrom (l : List α) (n : ℕ) :
 #align list.map_fst_add_enum_eq_enum_from List.map_fst_add_enum_eq_enumFrom
 -/
 
+#print List.enumFrom_cons' /-
 theorem enumFrom_cons' (n : ℕ) (x : α) (xs : List α) :
     enumFrom n (x :: xs) = (n, x) :: (enumFrom n xs).map (Prod.map Nat.succ id) := by
   rw [enum_from_cons, add_comm, ← map_fst_add_enum_from_eq_enum_from]
 #align list.enum_from_cons' List.enumFrom_cons'
+-/
 
+#print List.enum_cons' /-
 theorem enum_cons' (x : α) (xs : List α) :
     enum (x :: xs) = (0, x) :: (enum xs).map (Prod.map Nat.succ id) :=
   enumFrom_cons' _ _ _
 #align list.enum_cons' List.enum_cons'
+-/
 
+#print List.enumFrom_map /-
 theorem enumFrom_map (n : ℕ) (l : List α) (f : α → β) :
     enumFrom n (l.map f) = (enumFrom n l).map (Prod.map id f) :=
   by
@@ -6450,10 +6455,13 @@ theorem enumFrom_map (n : ℕ) (l : List α) (f : α → β) :
   · rw [map_cons, enum_from_cons', enum_from_cons', map_cons, map_map, IH, map_map]
     rfl
 #align list.enum_from_map List.enumFrom_map
+-/
 
+#print List.enum_map /-
 theorem enum_map (l : List α) (f : α → β) : (l.map f).enum = l.enum.map (Prod.map id f) :=
   enumFrom_map _ _ _
 #align list.enum_map List.enum_map
+-/
 
 #print List.nthLe_enumFrom /-
 theorem nthLe_enumFrom (l : List α) (n i : ℕ) (hi' : i < (l.enumFrom n).length)

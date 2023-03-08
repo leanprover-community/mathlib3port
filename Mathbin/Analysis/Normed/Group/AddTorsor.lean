@@ -47,9 +47,9 @@ instance (priority := 100) NormedAddTorsor.toAddTorsor' {V P : Type _} [NormedAd
 variable {α V P W Q : Type _} [SeminormedAddCommGroup V] [PseudoMetricSpace P] [NormedAddTorsor V P]
   [NormedAddCommGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
-instance (priority := 100) NormedAddTorsor.to_hasIsometricVadd : HasIsometricVadd V P :=
+instance (priority := 100) NormedAddTorsor.to_isometricVAdd : IsometricVAdd V P :=
   ⟨fun c => Isometry.of_dist_eq fun x y => by simp [NormedAddTorsor.dist_eq_norm']⟩
-#align normed_add_torsor.to_has_isometric_vadd NormedAddTorsor.to_hasIsometricVadd
+#align normed_add_torsor.to_has_isometric_vadd NormedAddTorsor.to_isometricVAdd
 
 /-- A `seminormed_add_comm_group` is a `normed_add_torsor` over itself. -/
 instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor : NormedAddTorsor V V

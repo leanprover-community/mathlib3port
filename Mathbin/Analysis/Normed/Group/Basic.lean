@@ -363,9 +363,9 @@ alias dist_eq_norm_sub' ← dist_eq_norm'
 #align dist_eq_norm' dist_eq_norm'
 
 @[to_additive]
-instance NormedGroup.to_hasIsometricSmul_right : HasIsometricSmul Eᵐᵒᵖ E :=
+instance NormedGroup.to_isometricSMul_right : IsometricSMul Eᵐᵒᵖ E :=
   ⟨fun a => Isometry.of_dist_eq fun b c => by simp [dist_eq_norm_div]⟩
-#align normed_group.to_has_isometric_smul_right NormedGroup.to_hasIsometricSmul_right
+#align normed_group.to_has_isometric_smul_right NormedGroup.to_isometricSMul_right
 #align normed_add_group.to_has_isometric_vadd_right NormedAddGroup.to_has_isometric_vadd_right
 
 @[simp, to_additive]
@@ -1365,9 +1365,9 @@ section SeminormedCommGroup
 variable [SeminormedCommGroup E] [SeminormedCommGroup F] {a a₁ a₂ b b₁ b₂ : E} {r r₁ r₂ : ℝ}
 
 @[to_additive]
-instance NormedGroup.to_hasIsometricSmul_left : HasIsometricSmul E E :=
+instance NormedGroup.to_isometricSMul_left : IsometricSMul E E :=
   ⟨fun a => Isometry.of_dist_eq fun b c => by simp [dist_eq_norm_div]⟩
-#align normed_group.to_has_isometric_smul_left NormedGroup.to_hasIsometricSmul_left
+#align normed_group.to_has_isometric_smul_left NormedGroup.to_isometricSMul_left
 #align normed_add_group.to_has_isometric_vadd_left NormedAddGroup.to_has_isometric_vadd_left
 
 @[to_additive]

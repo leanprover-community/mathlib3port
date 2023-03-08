@@ -2276,6 +2276,7 @@ theorem continuous_update [DecidableEq ι] (i : ι) :
   continuous_fst.update i continuous_snd
 #align continuous_update continuous_update
 
+#print continuous_mulSingle /-
 /-- `pi.mul_single i x` is continuous in `x`. -/
 @[continuity, to_additive "`pi.single i x` is continuous in `x`."]
 theorem continuous_mulSingle [∀ i, One (π i)] [DecidableEq ι] (i : ι) :
@@ -2283,6 +2284,7 @@ theorem continuous_mulSingle [∀ i, One (π i)] [DecidableEq ι] (i : ι) :
   continuous_const.update _ continuous_id
 #align continuous_mul_single continuous_mulSingle
 #align continuous_single continuous_single
+-/
 
 /- warning: filter.tendsto.fin_insert_nth -> Filter.Tendsto.fin_insertNth is a dubious translation:
 lean 3 declaration is

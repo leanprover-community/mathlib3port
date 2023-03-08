@@ -398,7 +398,7 @@ theorem isometry_pos_mul (a : { x : ℝ // 0 < x }) : Isometry ((· • ·) a : 
 #align upper_half_plane.isometry_pos_mul UpperHalfPlane.isometry_pos_mul
 
 /-- `SL(2, ℝ)` acts on the upper half plane as an isometry.-/
-instance : HasIsometricSmul SL(2, ℝ) ℍ :=
+instance : IsometricSMul SL(2, ℝ) ℍ :=
   ⟨fun g =>
     by
     have h₀ : Isometry (fun z => ModularGroup.s • z : ℍ → ℍ) :=
