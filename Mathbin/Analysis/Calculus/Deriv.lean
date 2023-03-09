@@ -2233,7 +2233,7 @@ theorem hasStrictDerivAt_pow (n : ℕ) (x : 𝕜) :
   by
   convert (Polynomial.C (1 : 𝕜) * Polynomial.X ^ n).HasStrictDerivAt x
   · simp
-  · rw [Polynomial.derivative_c_mul_x_pow]
+  · rw [Polynomial.derivative_C_mul_X_pow]
     simp
 #align has_strict_deriv_at_pow hasStrictDerivAt_pow
 

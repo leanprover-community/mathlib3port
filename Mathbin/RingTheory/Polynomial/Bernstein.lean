@@ -121,7 +121,7 @@ theorem derivative_succ_aux (n ν : ℕ) :
     by
     simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub,
       Polynomial.derivative_mul, Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add,
-      algebraMap.coe_one, Polynomial.derivative_x, mul_one, zero_add, Polynomial.derivative_sub,
+      algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add, Polynomial.derivative_sub,
       Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ← Nat.cast_succ,
       Polynomial.C_eq_nat_cast]
   conv_rhs => rw [mul_sub]
