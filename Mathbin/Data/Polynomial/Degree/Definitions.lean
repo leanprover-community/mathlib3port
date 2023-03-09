@@ -1744,15 +1744,15 @@ theorem natDegree_smul_le (a : R) (p : R[X]) : natDegree (a • p) ≤ natDegree
 #align polynomial.nat_degree_smul_le Polynomial.natDegree_smul_le
 -/
 
-#print Polynomial.degree_lt_degree_mul_x /-
-theorem degree_lt_degree_mul_x (hp : p ≠ 0) : p.degree < (p * X).degree :=
+#print Polynomial.degree_lt_degree_mul_X /-
+theorem degree_lt_degree_mul_X (hp : p ≠ 0) : p.degree < (p * X).degree :=
   haveI := nontrivial.of_polynomial_ne hp
   by
   have : leading_coeff p * leading_coeff X ≠ 0 := by simpa
   erw [degree_mul' this, degree_eq_nat_degree hp, degree_X, ← WithBot.coe_one, ← WithBot.coe_add,
       WithBot.coe_lt_coe] <;>
     exact Nat.lt_succ_self _
-#align polynomial.degree_lt_degree_mul_X Polynomial.degree_lt_degree_mul_x
+#align polynomial.degree_lt_degree_mul_X Polynomial.degree_lt_degree_mul_X
 -/
 
 #print Polynomial.natDegree_pos_iff_degree_pos /-

@@ -44,6 +44,7 @@ open LinearMap
 
 namespace CategoryTheory
 
+#print CategoryTheory.Linear /-
 /-- A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is
     `R`-linear in both variables. -/
 class Linear (R : Type w) [Semiring R] (C : Type u) [Category.{v} C] [Preadditive C] where
@@ -53,6 +54,7 @@ class Linear (R : Type w) [Semiring R] (C : Type u) [Category.{v} C] [Preadditiv
   comp_smul' : ∀ (X Y Z : C) (f : X ⟶ Y) (r : R) (g : Y ⟶ Z), f ≫ (r • g) = r • f ≫ g := by
     obviously
 #align category_theory.linear CategoryTheory.Linear
+-/
 
 attribute [instance] linear.hom_module
 
@@ -73,12 +75,20 @@ namespace CategoryTheory.Linear
 
 variable {C : Type u} [Category.{v} C] [Preadditive C]
 
+#print CategoryTheory.Linear.preadditiveNatLinear /-
 instance preadditiveNatLinear : Linear ℕ C
     where
   smul_comp' X Y Z r f g := (Preadditive.rightComp X g).map_nsmul f r
   comp_smul' X Y Z f r g := (Preadditive.leftComp Z f).map_nsmul g r
 #align category_theory.linear.preadditive_nat_linear CategoryTheory.Linear.preadditiveNatLinear
+-/
 
+/- warning: category_theory.linear.preadditive_int_linear -> CategoryTheory.Linear.preadditiveIntLinear is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1], CategoryTheory.Linear.{0, u1, u2} Int Int.semiring C _inst_1 _inst_2
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Preadditive.{u1, u2} C _inst_1], CategoryTheory.Linear.{0, u1, u2} Int Int.instSemiringInt C _inst_1 _inst_2
+Case conversion may be inaccurate. Consider using '#align category_theory.linear.preadditive_int_linear CategoryTheory.Linear.preadditiveIntLinearₓ'. -/
 instance preadditiveIntLinear : Linear ℤ C
     where
   smul_comp' X Y Z r f g := (Preadditive.rightComp X g).map_zsmul f r
@@ -109,15 +119,23 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
+#print CategoryTheory.Linear.inducedCategory /-
 instance inducedCategory : Linear.{w, v} R (InducedCategory C F)
     where
   homModule X Y := @Linear.homModule R _ C _ _ _ (F X) (F Y)
   smul_comp' P Q R f f' g := smul_comp' _ _ _ _ _ _
   comp_smul' P Q R f g g' := comp_smul' _ _ _ _ _ _
 #align category_theory.linear.induced_category CategoryTheory.Linear.inducedCategory
+-/
 
 end InducedCategory
 
+/- warning: category_theory.linear.full_subcategory -> CategoryTheory.Linear.fullSubcategory is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u3} C _inst_1] {R : Type.{u1}} [_inst_3 : Semiring.{u1} R] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R _inst_3 C _inst_1 _inst_2] (Z : C -> Prop), CategoryTheory.Linear.{u1, u2, u3} R _inst_3 (CategoryTheory.FullSubcategoryₓ.{u2, u3} C _inst_1 Z) (CategoryTheory.FullSubcategory.category.{u2, u3} C _inst_1 Z) (CategoryTheory.Preadditive.fullSubcategory.{u2, u3} C _inst_1 _inst_2 Z)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u3} C _inst_1] {R : Type.{u1}} [_inst_3 : Semiring.{u1} R] [_inst_4 : CategoryTheory.Linear.{u1, u2, u3} R _inst_3 C _inst_1 _inst_2] (Z : C -> Prop), CategoryTheory.Linear.{u1, u2, u3} R _inst_3 (CategoryTheory.FullSubcategory.{u3} C Z) (CategoryTheory.FullSubcategory.category.{u2, u3} C _inst_1 Z) (CategoryTheory.Preadditive.fullSubcategory.{u2, u3} C _inst_1 _inst_2 Z)
+Case conversion may be inaccurate. Consider using '#align category_theory.linear.full_subcategory CategoryTheory.Linear.fullSubcategoryₓ'. -/
 instance fullSubcategory (Z : C → Prop) : Linear.{w, v} R (FullSubcategory Z)
     where
   homModule X Y := @Linear.homModule R _ C _ _ _ X.obj Y.obj
@@ -127,6 +145,7 @@ instance fullSubcategory (Z : C → Prop) : Linear.{w, v} R (FullSubcategory Z)
 
 variable (R)
 
+#print CategoryTheory.Linear.leftComp /-
 /-- Composition by a fixed left argument as an `R`-linear map. -/
 @[simps]
 def leftComp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z
@@ -135,7 +154,9 @@ def leftComp {X Y : C} (Z : C) (f : X ⟶ Y) : (Y ⟶ Z) →ₗ[R] X ⟶ Z
   map_add' := by simp
   map_smul' := by simp
 #align category_theory.linear.left_comp CategoryTheory.Linear.leftComp
+-/
 
+#print CategoryTheory.Linear.rightComp /-
 /-- Composition by a fixed right argument as an `R`-linear map. -/
 @[simps]
 def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z
@@ -144,6 +165,7 @@ def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z
   map_add' := by simp
   map_smul' := by simp
 #align category_theory.linear.right_comp CategoryTheory.Linear.rightComp
+-/
 
 instance {X Y : C} (f : X ⟶ Y) [Epi f] (r : R) [Invertible r] : Epi (r • f) :=
   ⟨fun R g g' H =>
@@ -163,6 +185,7 @@ section
 
 variable {S : Type w} [CommSemiring S] [Linear S C]
 
+#print CategoryTheory.Linear.comp /-
 /-- Composition as a bilinear map. -/
 @[simps]
 def comp (X Y Z : C) : (X ⟶ Y) →ₗ[S] (Y ⟶ Z) →ₗ[S] X ⟶ Z
@@ -177,6 +200,7 @@ def comp (X Y Z : C) : (X ⟶ Y) →ₗ[S] (Y ⟶ Z) →ₗ[S] X ⟶ Z
     ext
     simp
 #align category_theory.linear.comp CategoryTheory.Linear.comp
+-/
 
 end
 
