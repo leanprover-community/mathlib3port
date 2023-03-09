@@ -501,29 +501,29 @@ unsafe def replace_with (e : expr) (s : expr) (s' : expr) : expr :=
 unsafe def mreplace_aux {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) :
     expr → ℕ → m expr
   | app f x, n =>
-    Option.getDM (R (app f x) n) do
+    Option.getDM' (R (app f x) n) do
       let Rf ← mreplace_aux f n
       let Rx ← mreplace_aux x n
       return <| app Rf Rx
   | lam nm bi ty bd, n =>
-    Option.getDM (R (lam nm bi ty bd) n) do
+    Option.getDM' (R (lam nm bi ty bd) n) do
       let Rty ← mreplace_aux ty n
       let Rbd ← mreplace_aux bd (n + 1)
       return <| lam nm bi Rty Rbd
   | pi nm bi ty bd, n =>
-    Option.getDM (R (pi nm bi ty bd) n) do
+    Option.getDM' (R (pi nm bi ty bd) n) do
       let Rty ← mreplace_aux ty n
       let Rbd ← mreplace_aux bd (n + 1)
       return <| pi nm bi Rty Rbd
   | elet nm ty a b, n =>
-    Option.getDM (R (elet nm ty a b) n) do
+    Option.getDM' (R (elet nm ty a b) n) do
       let Rty ← mreplace_aux ty n
       let Ra ← mreplace_aux a n
       let Rb ← mreplace_aux b n
       return <| elet nm Rty Ra Rb
   | macro c es, n =>
-    Option.getDM (R (macro c es) n) <| macro c <$> es.mapM fun e => mreplace_aux e n
-  | e, n => Option.getDM (R e n) (return e)
+    Option.getDM' (R (macro c es) n) <| macro c <$> es.mapM fun e => mreplace_aux e n
+  | e, n => Option.getDM' (R e n) (return e)
 #align expr.mreplace_aux expr.mreplace_aux
 
 /-- Monadic analogue of `expr.replace`.

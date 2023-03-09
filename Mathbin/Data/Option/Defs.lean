@@ -287,16 +287,16 @@ def elimM {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α 
   x >>= Option.elim' y z
 #align option.melim Option.elimM
 
-/- warning: option.mget_or_else -> Option.getDM is a dubious translation:
+/- warning: option.mget_or_else -> Option.getDM' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m], (m (Option.{u1} α)) -> (m α) -> (m α)
 but is expected to have type
   forall {α : Type.{u1} -> Type.{u2}} {m : Type.{u1}} [_inst_1 : Monad.{u1, u2} α], (α (Option.{u1} m)) -> (α m) -> (α m)
-Case conversion may be inaccurate. Consider using '#align option.mget_or_else Option.getDMₓ'. -/
+Case conversion may be inaccurate. Consider using '#align option.mget_or_else Option.getDM'ₓ'. -/
 /-- A monadic analogue of `option.get_or_else`. -/
-def getDM {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
+def getDM' {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
   elimM y pure x
-#align option.mget_or_else Option.getDM
+#align option.mget_or_else Option.getDM'
 
 end Option
 
