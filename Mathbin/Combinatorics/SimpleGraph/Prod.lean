@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: George Peter Banyard, Yaël Dillies, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.prod
-! leanprover-community/mathlib commit 2985fa3c31a27274aed06c433510bc14b73d6488
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Combinatorics.SimpleGraph.Connectivity
 
 /-!
 # Graph products
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the box product of graphs and other product constructions. The box product of `G`
 and `H` is the graph on the product of the vertices such that `x` and `y` are related iff they agree

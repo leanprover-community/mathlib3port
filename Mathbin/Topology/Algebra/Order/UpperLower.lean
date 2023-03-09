@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.algebra.order.upper_lower
-! leanprover-community/mathlib commit 4330aae21f538b862f8aead371cfb6ee556398f1
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Algebra.Group.Basic
 
 /-!
 # Topological facts about upper/lower/order-connected sets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The topological closure and interior of an upper/lower/order-connected set is an
 upper/lower/order-connected set (with the notable exception of the closure of an order-connected

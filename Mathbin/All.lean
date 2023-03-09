@@ -1040,7 +1040,8 @@ import Mathbin.CategoryTheory.Preadditive.Projective
 import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 import Mathbin.CategoryTheory.Preadditive.Schur
 import Mathbin.CategoryTheory.Preadditive.SingleObj
-import Mathbin.CategoryTheory.Preadditive.Yoneda
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Basic
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Limits
 import Mathbin.CategoryTheory.Products.Associator
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Products.Bifunctor
@@ -1064,6 +1065,7 @@ import Mathbin.CategoryTheory.Sites.LeftExact
 import Mathbin.CategoryTheory.Sites.Limits
 import Mathbin.CategoryTheory.Sites.Plus
 import Mathbin.CategoryTheory.Sites.Pretopology
+import Mathbin.CategoryTheory.Sites.Pushforward
 import Mathbin.CategoryTheory.Sites.Sheaf
 import Mathbin.CategoryTheory.Sites.SheafOfTypes
 import Mathbin.CategoryTheory.Sites.Sheafification

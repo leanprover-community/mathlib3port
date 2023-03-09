@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
+! leanprover-community/mathlib commit 671d5d9a0cca76de2933cff8ee3c29b7533f9caf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,6 +71,12 @@ theorem star_comm_self' [Mul R] [Star R] (x : R) [IsStarNormal x] : star x * x =
 
 namespace IsSelfAdjoint
 
+-- named to match `commute.all`
+/-- All elements are self-adjoint when `star` is trivial. -/
+theorem all [Star R] [TrivialStar R] (r : R) : IsSelfAdjoint r :=
+  star_trivial _
+#align is_self_adjoint.all IsSelfAdjoint.all
+
 #print IsSelfAdjoint.star_eq /-
 theorem star_eq [Star R] {x : R} (hx : IsSelfAdjoint x) : star x = x :=
   hx
@@ -124,15 +130,15 @@ theorem starHom_apply {F R S : Type _} [Star R] [Star S] [StarHomClass F R S] {x
   show star (f x) = f x from map_star f x ▸ congr_arg f hx
 #align is_self_adjoint.star_hom_apply IsSelfAdjoint.starHom_apply
 
-section AddGroup
+section AddMonoid
 
-variable [AddGroup R] [StarAddMonoid R]
+variable [AddMonoid R] [StarAddMonoid R]
 
 variable (R)
 
 /- warning: is_self_adjoint_zero -> isSelfAdjoint_zero is a dubious translation:
 lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))], IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (AddZeroClass.toHasZero.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)))))))
+  forall (R : Type.{u1}) [_inst_1 : AddMonoid.{u1} R] [_inst_2 : StarAddMonoid.{u1} R _inst_1], IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (AddZeroClass.toHasZero.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1)))))
 but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))], IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint_zero isSelfAdjoint_zeroₓ'. -/
@@ -144,13 +150,29 @@ variable {R}
 
 /- warning: is_self_adjoint.add -> IsSelfAdjoint.add is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))] {x : R} {y : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) y) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))))) x y))
+  forall {R : Type.{u1}} [_inst_1 : AddMonoid.{u1} R] [_inst_2 : StarAddMonoid.{u1} R _inst_1] {x : R} {y : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1))) x y))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))] {x : R} {y : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) y) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))))) x y))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.add IsSelfAdjoint.addₓ'. -/
 theorem add {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x + y) := by
   simp only [isSelfAdjoint_iff, star_add, hx.star_eq, hy.star_eq]
 #align is_self_adjoint.add IsSelfAdjoint.add
+
+/- warning: is_self_adjoint.bit0 -> IsSelfAdjoint.bit0 is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : AddMonoid.{u1} R] [_inst_2 : StarAddMonoid.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (bit0.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1)) x))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (bit0.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)))) x))
+Case conversion may be inaccurate. Consider using '#align is_self_adjoint.bit0 IsSelfAdjoint.bit0ₓ'. -/
+theorem bit0 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit0 x) := by
+  simp only [isSelfAdjoint_iff, star_bit0, hx.star_eq]
+#align is_self_adjoint.bit0 IsSelfAdjoint.bit0
+
+end AddMonoid
+
+section AddGroup
+
+variable [AddGroup R] [StarAddMonoid R]
 
 /- warning: is_self_adjoint.neg -> IsSelfAdjoint.neg is a dubious translation:
 lean 3 declaration is
@@ -172,25 +194,15 @@ theorem sub {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjo
   simp only [isSelfAdjoint_iff, star_sub, hx.star_eq, hy.star_eq]
 #align is_self_adjoint.sub IsSelfAdjoint.sub
 
-/- warning: is_self_adjoint.bit0 -> IsSelfAdjoint.bit0 is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (bit0.{u1} R (AddZeroClass.toHasAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)))) x))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) (bit0.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)))) x))
-Case conversion may be inaccurate. Consider using '#align is_self_adjoint.bit0 IsSelfAdjoint.bit0ₓ'. -/
-theorem bit0 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit0 x) := by
-  simp only [isSelfAdjoint_iff, star_bit0, hx.star_eq]
-#align is_self_adjoint.bit0 IsSelfAdjoint.bit0
-
 end AddGroup
 
-section NonUnitalSemiring
+section Semigroup
 
-variable [NonUnitalSemiring R] [StarRing R]
+variable [Semigroup R] [StarSemigroup R]
 
 /- warning: is_self_adjoint.conjugate -> IsSelfAdjoint.conjugate is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x) -> (forall (z : R), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) z x) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) z)))
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) -> (forall (z : R), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) z x) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) z)))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x) -> (forall (z : R), IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) z x) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) z)))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.conjugate IsSelfAdjoint.conjugateₓ'. -/
@@ -200,7 +212,7 @@ theorem conjugate {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (z * x 
 
 /- warning: is_self_adjoint.conjugate' -> IsSelfAdjoint.conjugate' is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x) -> (forall (z : R), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) z) x) z))
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) -> (forall (z : R), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) z) x) z))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x) -> (forall (z : R), IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) z) x) z))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.conjugate' IsSelfAdjoint.conjugate'ₓ'. -/
@@ -210,7 +222,7 @@ theorem conjugate' {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (star 
 
 /- warning: is_self_adjoint.is_star_normal -> IsSelfAdjoint.isStarNormal is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x) -> (IsStarNormal.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x)
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) -> (IsStarNormal.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x) -> (IsStarNormal.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 _inst_2))) x)
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.is_star_normal IsSelfAdjoint.isStarNormalₓ'. -/
@@ -218,35 +230,29 @@ theorem isStarNormal {x : R} (hx : IsSelfAdjoint x) : IsStarNormal x :=
   ⟨by simp only [hx.star_eq]⟩
 #align is_self_adjoint.is_star_normal IsSelfAdjoint.isStarNormal
 
-end NonUnitalSemiring
+end Semigroup
 
-section Ring
+section Monoid
 
-variable [Ring R] [StarRing R]
+variable [Monoid R] [StarSemigroup R]
 
 variable (R)
 
-#print isSelfAdjoint_one /-
+/- warning: is_self_adjoint_one -> isSelfAdjoint_one is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Monoid.{u1} R] [_inst_2 : StarSemigroup.{u1} R (Monoid.toSemigroup.{u1} R _inst_1)], IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (MulOneClass.toHasOne.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))], IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))
+Case conversion may be inaccurate. Consider using '#align is_self_adjoint_one isSelfAdjoint_oneₓ'. -/
 theorem isSelfAdjoint_one : IsSelfAdjoint (1 : R) :=
   star_one R
 #align is_self_adjoint_one isSelfAdjoint_one
--/
 
 variable {R}
 
-/- warning: is_self_adjoint.bit1 -> IsSelfAdjoint.bit1 is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (bit1.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R _inst_1)) x))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (bit1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) x))
-Case conversion may be inaccurate. Consider using '#align is_self_adjoint.bit1 IsSelfAdjoint.bit1ₓ'. -/
-theorem bit1 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit1 x) := by
-  simp only [isSelfAdjoint_iff, star_bit1, hx.star_eq]
-#align is_self_adjoint.bit1 IsSelfAdjoint.bit1
-
 /- warning: is_self_adjoint.pow -> IsSelfAdjoint.pow is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (forall (n : Nat), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R _inst_1))) x n))
+  forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] [_inst_2 : StarSemigroup.{u1} R (Monoid.toSemigroup.{u1} R _inst_1)] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) x) -> (forall (n : Nat), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R _inst_1)) x n))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (forall (n : Nat), IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))))) x n))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.pow IsSelfAdjoint.powₓ'. -/
@@ -254,15 +260,36 @@ theorem pow {x : R} (hx : IsSelfAdjoint x) (n : ℕ) : IsSelfAdjoint (x ^ n) := 
   simp only [isSelfAdjoint_iff, star_pow, hx.star_eq]
 #align is_self_adjoint.pow IsSelfAdjoint.pow
 
-end Ring
+end Monoid
 
-section NonUnitalCommRing
+section Semiring
 
-variable [NonUnitalCommRing R] [StarRing R]
+variable [Semiring R] [StarRing R]
+
+/- warning: is_self_adjoint.bit1 -> IsSelfAdjoint.bit1 is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : StarRing.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1)] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1) _inst_2))) (bit1.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Distrib.toHasAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) x))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (bit1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) x))
+Case conversion may be inaccurate. Consider using '#align is_self_adjoint.bit1 IsSelfAdjoint.bit1ₓ'. -/
+theorem bit1 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit1 x) := by
+  simp only [isSelfAdjoint_iff, star_bit1, hx.star_eq]
+#align is_self_adjoint.bit1 IsSelfAdjoint.bit1
+
+@[simp]
+theorem isSelfAdjoint_nat_cast (n : ℕ) : IsSelfAdjoint (n : R) :=
+  star_natCast _
+#align is_self_adjoint_nat_cast isSelfAdjoint_nat_cast
+
+end Semiring
+
+section CommSemigroup
+
+variable [CommSemigroup R] [StarSemigroup R]
 
 /- warning: is_self_adjoint.mul -> IsSelfAdjoint.mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : NonUnitalCommRing.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1))] {x : R} {y : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) y) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalNonAssocRing.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)))))) x y))
+  forall {R : Type.{u1}} [_inst_1 : CommSemigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1)] {x : R} {y : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1) _inst_2)) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1) _inst_2)) y) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1) _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1))) x y))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalCommRing.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1))] {x : R} {y : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonUnitalRing.toNonUnitalNonAssocRing.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonUnitalRing.toNonUnitalNonAssocRing.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) y) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R (NonUnitalRing.toNonUnitalNonAssocRing.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)) _inst_2))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonUnitalRing.toNonUnitalNonAssocRing.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R _inst_1)))) x y))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.mul IsSelfAdjoint.mulₓ'. -/
@@ -270,21 +297,52 @@ theorem mul {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjo
   simp only [isSelfAdjoint_iff, star_mul', hx.star_eq, hy.star_eq]
 #align is_self_adjoint.mul IsSelfAdjoint.mul
 
-end NonUnitalCommRing
+end CommSemigroup
 
-section Field
+section Ring
 
-variable [Field R] [StarRing R]
+variable [Ring R] [StarRing R]
+
+@[simp]
+theorem isSelfAdjoint_int_cast (z : ℤ) : IsSelfAdjoint (z : R) :=
+  star_intCast _
+#align is_self_adjoint_int_cast isSelfAdjoint_int_cast
+
+end Ring
+
+section DivisionRing
+
+variable [DivisionRing R] [StarRing R]
 
 /- warning: is_self_adjoint.inv -> IsSelfAdjoint.inv is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) (Inv.inv.{u1} R (DivInvMonoid.toHasInv.{u1} R (DivisionRing.toDivInvMonoid.{u1} R (Field.toDivisionRing.{u1} R _inst_1))) x))
+  forall {R : Type.{u1}} [_inst_1 : DivisionRing.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))) _inst_2))) (Inv.inv.{u1} R (DivInvMonoid.toHasInv.{u1} R (DivisionRing.toDivInvMonoid.{u1} R _inst_1)) x))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) x) -> (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) (Inv.inv.{u1} R (Field.toInv.{u1} R _inst_1) x))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.inv IsSelfAdjoint.invₓ'. -/
 theorem inv {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint x⁻¹ := by
   simp only [isSelfAdjoint_iff, star_inv', hx.star_eq]
 #align is_self_adjoint.inv IsSelfAdjoint.inv
+
+/- warning: is_self_adjoint.zpow -> IsSelfAdjoint.zpow is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : DivisionRing.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))) _inst_2))) x) -> (forall (n : Int), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (Ring.toNonUnitalRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))) _inst_2))) (HPow.hPow.{u1, 0, u1} R Int R (instHPow.{u1, 0} R Int (DivInvMonoid.Pow.{u1} R (DivisionRing.toDivInvMonoid.{u1} R _inst_1))) x n))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))] {x : R}, (IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) x) -> (forall (n : Int), IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) (HPow.hPow.{u1, 0, u1} R Int R (instHPow.{u1, 0} R Int (DivInvMonoid.Pow.{u1} R (DivisionRing.toDivInvMonoid.{u1} R (Field.toDivisionRing.{u1} R _inst_1)))) x n))
+Case conversion may be inaccurate. Consider using '#align is_self_adjoint.zpow IsSelfAdjoint.zpowₓ'. -/
+theorem zpow {x : R} (hx : IsSelfAdjoint x) (n : ℤ) : IsSelfAdjoint (x ^ n) := by
+  simp only [isSelfAdjoint_iff, star_zpow₀, hx.star_eq]
+#align is_self_adjoint.zpow IsSelfAdjoint.zpow
+
+theorem isSelfAdjoint_rat_cast (x : ℚ) : IsSelfAdjoint (x : R) :=
+  star_ratCast _
+#align is_self_adjoint_rat_cast isSelfAdjoint_rat_cast
+
+end DivisionRing
+
+section Field
+
+variable [Field R] [StarRing R]
 
 /- warning: is_self_adjoint.div -> IsSelfAdjoint.div is a dubious translation:
 lean 3 declaration is
@@ -296,26 +354,20 @@ theorem div {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjo
   simp only [isSelfAdjoint_iff, star_div', hx.star_eq, hy.star_eq]
 #align is_self_adjoint.div IsSelfAdjoint.div
 
-#print IsSelfAdjoint.zpow /-
-theorem zpow {x : R} (hx : IsSelfAdjoint x) (n : ℤ) : IsSelfAdjoint (x ^ n) := by
-  simp only [isSelfAdjoint_iff, star_zpow₀, hx.star_eq]
-#align is_self_adjoint.zpow IsSelfAdjoint.zpow
--/
-
 end Field
 
 section SMul
 
-variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
+variable [Star R] [AddMonoid A] [StarAddMonoid A] [SMul R A] [StarModule R A]
 
 /- warning: is_self_adjoint.smul -> IsSelfAdjoint.smul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : Star.{u1} R] [_inst_2 : TrivialStar.{u1} R _inst_1] [_inst_3 : AddGroup.{u2} A] [_inst_4 : StarAddMonoid.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_3))] [_inst_5 : SMul.{u1, u2} R A] [_inst_6 : StarModule.{u1, u2} R A _inst_1 (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_3)) _inst_4)) _inst_5] (r : R) {x : A}, (IsSelfAdjoint.{u2} A (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_3)) _inst_4)) x) -> (IsSelfAdjoint.{u2} A (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A (SubNegMonoid.toAddMonoid.{u2} A (AddGroup.toSubNegMonoid.{u2} A _inst_3)) _inst_4)) (SMul.smul.{u1, u2} R A _inst_5 r x))
+  forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : Star.{u1} R] [_inst_2 : AddMonoid.{u2} A] [_inst_3 : StarAddMonoid.{u2} A _inst_2] [_inst_4 : SMul.{u1, u2} R A] [_inst_5 : StarModule.{u1, u2} R A _inst_1 (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A _inst_2 _inst_3)) _inst_4] {r : R}, (IsSelfAdjoint.{u1} R _inst_1 r) -> (forall {x : A}, (IsSelfAdjoint.{u2} A (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A _inst_2 _inst_3)) x) -> (IsSelfAdjoint.{u2} A (InvolutiveStar.toHasStar.{u2} A (StarAddMonoid.toHasInvolutiveStar.{u2} A _inst_2 _inst_3)) (SMul.smul.{u1, u2} R A _inst_4 r x)))
 but is expected to have type
-  forall {R : Type.{u2}} {A : Type.{u1}} [_inst_1 : Star.{u2} R] [_inst_2 : TrivialStar.{u2} R _inst_1] [_inst_3 : AddGroup.{u1} A] [_inst_4 : StarAddMonoid.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3))] [_inst_5 : SMul.{u2, u1} R A] [_inst_6 : StarModule.{u2, u1} R A _inst_1 (InvolutiveStar.toStar.{u1} A (StarAddMonoid.toInvolutiveStar.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3)) _inst_4)) _inst_5] (r : R) {x : A}, (IsSelfAdjoint.{u1} A (InvolutiveStar.toStar.{u1} A (StarAddMonoid.toInvolutiveStar.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3)) _inst_4)) x) -> (IsSelfAdjoint.{u1} A (InvolutiveStar.toStar.{u1} A (StarAddMonoid.toInvolutiveStar.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3)) _inst_4)) (HSMul.hSMul.{u2, u1, u1} R A A (instHSMul.{u2, u1} R A _inst_5) r x))
+  forall {R : Type.{u2}} {A : Type.{u1}} [_inst_1 : Star.{u2} R] [_inst_2 : TrivialStar.{u2} R _inst_1] [_inst_3 : AddGroup.{u1} A] [_inst_4 : StarAddMonoid.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3))] [_inst_5 : SMul.{u2, u1} R A] [r : StarModule.{u2, u1} R A _inst_1 (InvolutiveStar.toStar.{u1} A (StarAddMonoid.toInvolutiveStar.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3)) _inst_4)) _inst_5] (hr : R) {x : A}, (IsSelfAdjoint.{u1} A (InvolutiveStar.toStar.{u1} A (StarAddMonoid.toInvolutiveStar.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3)) _inst_4)) x) -> (IsSelfAdjoint.{u1} A (InvolutiveStar.toStar.{u1} A (StarAddMonoid.toInvolutiveStar.{u1} A (SubNegMonoid.toAddMonoid.{u1} A (AddGroup.toSubNegMonoid.{u1} A _inst_3)) _inst_4)) (HSMul.hSMul.{u2, u1, u1} R A A (instHSMul.{u2, u1} R A _inst_5) hr x))
 Case conversion may be inaccurate. Consider using '#align is_self_adjoint.smul IsSelfAdjoint.smulₓ'. -/
-theorem smul [SMul R A] [StarModule R A] (r : R) {x : A} (hx : IsSelfAdjoint x) :
-    IsSelfAdjoint (r • x) := by simp only [isSelfAdjoint_iff, star_smul, star_trivial, hx.star_eq]
+theorem smul {r : R} (hr : IsSelfAdjoint r) {x : A} (hx : IsSelfAdjoint x) :
+    IsSelfAdjoint (r • x) := by simp only [isSelfAdjoint_iff, star_smul, hr.star_eq, hx.star_eq]
 #align is_self_adjoint.smul IsSelfAdjoint.smul
 
 end SMul
@@ -405,16 +457,10 @@ instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
   ⟨⟨0, 1, Subtype.ne_of_val_ne zero_ne_one⟩⟩
 
 instance : NatCast (selfAdjoint R) :=
-  ⟨fun n =>
-    ⟨n,
-      Nat.recOn n (by simp [zero_mem]) fun k hk =>
-        (@Nat.cast_succ R _ k).symm ▸ add_mem hk (isSelfAdjoint_one R)⟩⟩
+  ⟨fun n => ⟨n, isSelfAdjoint_nat_cast _⟩⟩
 
 instance : IntCast (selfAdjoint R) :=
-  ⟨fun n =>
-    ⟨n, by
-      cases n <;> simp [show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]
-      refine' add_mem (isSelfAdjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
+  ⟨fun n => ⟨n, isSelfAdjoint_int_cast _⟩⟩
 
 instance : Pow (selfAdjoint R) ℕ :=
   ⟨fun x n => ⟨(x : R) ^ n, x.Prop.pow n⟩⟩
@@ -507,19 +553,8 @@ theorem val_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
   rfl
 #align self_adjoint.coe_zpow selfAdjoint.val_zpow
 
-/- warning: self_adjoint.rat_cast_mem -> selfAdjoint.ratCast_mem is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))] (x : Rat), IsSelfAdjoint.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarAddMonoid.toHasInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat R (HasLiftT.mk.{1, succ u1} Rat R (CoeTCₓ.coe.{1, succ u1} Rat R (Rat.castCoe.{u1} R (DivisionRing.toHasRatCast.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) x)
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))] (x : Rat), IsSelfAdjoint.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))) (RatCast.ratCast.{u1} R (Field.toRatCast.{u1} R _inst_1) x)
-Case conversion may be inaccurate. Consider using '#align self_adjoint.rat_cast_mem selfAdjoint.ratCast_memₓ'. -/
-theorem ratCast_mem : ∀ x : ℚ, IsSelfAdjoint (x : R)
-  | ⟨a, b, h1, h2⟩ => by
-    rw [IsSelfAdjoint, Rat.cast_mk', star_mul', star_inv', star_natCast, star_intCast]
-#align self_adjoint.rat_cast_mem selfAdjoint.ratCast_mem
-
 instance : RatCast (selfAdjoint R) :=
-  ⟨fun n => ⟨n, ratCast_mem n⟩⟩
+  ⟨fun n => ⟨n, isSelfAdjoint_rat_cast n⟩⟩
 
 /- warning: self_adjoint.coe_rat_cast -> selfAdjoint.val_ratCast is a dubious translation:
 lean 3 declaration is
@@ -539,7 +574,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))], SMul.{0, u1} Rat (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1)))))) x (selfAdjoint.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align self_adjoint.has_qsmul selfAdjoint.instQSMulₓ'. -/
 instance instQSMul : SMul ℚ (selfAdjoint R) :=
-  ⟨fun a x => ⟨a • x, by rw [Rat.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
+  ⟨fun a x =>
+    ⟨a • x, by rw [Rat.smul_def] <;> exact IsSelfAdjoint.mul (isSelfAdjoint_rat_cast a) x.prop⟩⟩
 #align self_adjoint.has_qsmul selfAdjoint.instQSMul
 
 /- warning: self_adjoint.coe_rat_smul -> selfAdjoint.val_rat_smul is a dubious translation:
@@ -566,7 +602,7 @@ section SMul
 variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
 
 instance [SMul R A] [StarModule R A] : SMul R (selfAdjoint A) :=
-  ⟨fun r x => ⟨r • x, x.Prop.smul r⟩⟩
+  ⟨fun r x => ⟨r • x, (IsSelfAdjoint.all _).smul x.Prop⟩⟩
 
 /- warning: self_adjoint.coe_smul -> selfAdjoint.val_smul is a dubious translation:
 lean 3 declaration is

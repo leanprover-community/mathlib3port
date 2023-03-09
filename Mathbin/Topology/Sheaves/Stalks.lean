@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit e2e38c005fc6f715502490da6cb0ec84df9ed228
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Tactic.Elementwise
 import Mathbin.Algebra.Category.Ring.Colimits
+import Mathbin.CategoryTheory.Sites.Pushforward
 
 /-!
 # Stalks

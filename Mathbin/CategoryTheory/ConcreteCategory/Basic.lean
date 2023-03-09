@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.basic
-! leanprover-community/mathlib commit 05b820ec79b3c98a7dbf1cb32e181584166da2ca
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 
 /-!
 # Concrete categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A concrete category is a category `C` with a fixed faithful functor
 `forget : C ⥤ Type*`.  We define concrete categories using `class

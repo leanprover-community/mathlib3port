@@ -4,14 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.cover_preserving
-! leanprover-community/mathlib commit 85d6221d32c37e68f05b2e42cde6cee658dae5e9
+! leanprover-community/mathlib commit e2e38c005fc6f715502490da6cb0ec84df9ed228
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Sites.Limits
 import Mathbin.CategoryTheory.Functor.Flat
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
-import Mathbin.CategoryTheory.Sites.LeftExact
 
 /-!
 # Cover-preserving functors between sites.
@@ -29,10 +28,6 @@ if it pushes compatible families of elements to compatible families.
 * `category_theory.pullback_sheaf`: the pullback of a sheaf along a cover-preserving and
 compatible-preserving functor.
 * `category_theory.sites.pullback`: the induced functor `Sheaf K A ⥤ Sheaf J A` for a
-cover-preserving and compatible-preserving functor `G : (C, J) ⥤ (D, K)`.
-* `category_theory.sites.pushforward`: the induced functor `Sheaf J A ⥤ Sheaf K A` for a
-cover-preserving and compatible-preserving functor `G : (C, J) ⥤ (D, K)`.
-* `category_theory.sites.pushforward`: the induced functor `Sheaf J A ⥤ Sheaf K A` for a
 cover-preserving and compatible-preserving functor `G : (C, J) ⥤ (D, K)`.
 
 ## Main results
@@ -247,56 +242,6 @@ def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : Cov
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_comp
 #align category_theory.sites.pullback CategoryTheory.Sites.pullback
-
-end CategoryTheory
-
-namespace CategoryTheory
-
-variable {C : Type v₁} [SmallCategory C] {D : Type v₁} [SmallCategory D]
-
-variable (A : Type u₂) [Category.{v₁} A]
-
-variable (J : GrothendieckTopology C) (K : GrothendieckTopology D)
-
-instance [HasLimits A] : CreatesLimits (sheafToPresheaf J A) :=
-  CategoryTheory.Sheaf.CategoryTheory.SheafToPresheaf.CategoryTheory.createsLimits.{u₂, v₁, v₁}
-
--- The assumptions so that we have sheafification
-variable [ConcreteCategory.{v₁} A] [PreservesLimits (forget A)] [HasColimits A] [HasLimits A]
-
-variable [PreservesFilteredColimits (forget A)] [ReflectsIsomorphisms (forget A)]
-
-attribute [local instance] reflects_limits_of_reflects_isomorphisms
-
-instance {X : C} : IsCofiltered (J.cover X) :=
-  inferInstance
-
-/-- The pushforward functor `Sheaf J A ⥤ Sheaf K A` associated to a functor `G : C ⥤ D` in the
-same direction as `G`. -/
-@[simps]
-def Sites.pushforward (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
-  sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
-#align category_theory.sites.pushforward CategoryTheory.Sites.pushforward
-
-instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) :=
-  by
-  apply (config := { instances := false }) comp_preserves_finite_limits
-  · infer_instance
-  apply (config := { instances := false }) comp_preserves_finite_limits
-  · apply CategoryTheory.lanPreservesFiniteLimitsOfFlat
-  · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₂, v₁, v₁}
-    infer_instance
-
-/-- The pushforward functor is left adjoint to the pullback functor. -/
-def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
-    (hG₂ : CoverPreserving J K G) : Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
-  ((Lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful
-    (sheafToPresheaf J A) (𝟭 _)
-    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
-      (Category.comp_id _).trans (Category.id_comp _).symm)
-    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
-      (Category.comp_id _).trans (Category.id_comp _).symm)
-#align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
 
 end CategoryTheory
 

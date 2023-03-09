@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.star_alg_hom
-! leanprover-community/mathlib commit 35882ddc66524b6980532a123a4ad4166db34c81
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Algebra.Prod
 
 /-!
 # Morphisms of star algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines morphisms between `R`-algebras (unital or non-unital) `A` and `B` where both
 `A` and `B` are equipped with a `star` operation. These morphisms, namely `star_alg_hom` and

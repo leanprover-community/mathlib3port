@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.equivalence
-! leanprover-community/mathlib commit ea74dc9f981009c33b9971f3389509a88c95cf07
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 
 /-!
 # Transporting existence of specific limits across equivalences
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For now, we only treat the case of initial and terminal objects, but other special shapes can be
 added in the future.

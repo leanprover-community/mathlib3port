@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.module
-! leanprover-community/mathlib commit 09d7fe375d1f63d17cf6b2aa4b413ab3e6ec49df
+! leanprover-community/mathlib commit 671d5d9a0cca76de2933cff8ee3c29b7533f9caf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.Prod
 
 /-!
 # The star operation, bundled as a star-linear equiv
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `star_linear_equiv`, which is the star operation bundled as a star-linear map.
 It is defined on a star algebra `A` over the base ring `R`.
@@ -125,7 +128,7 @@ variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R
 #print selfAdjoint.submodule /-
 /-- The self-adjoint elements of a star module, as a submodule. -/
 def selfAdjoint.submodule : Submodule R A :=
-  { selfAdjoint A with smul_mem' := IsSelfAdjoint.smul }
+  { selfAdjoint A with smul_mem' := fun r x => (IsSelfAdjoint.all _).smul }
 #align self_adjoint.submodule selfAdjoint.submodule
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Vincent Beffara
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.metric
-! leanprover-community/mathlib commit 352ecfe114946c903338006dd3287cb5a9955ff2
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Nat.Lattice
 
 /-!
 # Graph metric
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module defines the `simple_graph.dist` function, which takes
 pairs of vertices to the length of the shortest walk between them.

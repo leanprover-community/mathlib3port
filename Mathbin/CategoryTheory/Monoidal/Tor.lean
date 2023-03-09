@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.tor
-! leanprover-community/mathlib commit 8001ea54ece3bd5c0d0932f1e4f6d0f142ea20d9
+! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,4 +78,6 @@ def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).
 #align category_theory.Tor'_succ_of_projective CategoryTheory.tor'SuccOfProjective
 
 end CategoryTheory
+
+assert_not_exists Module.abelian
 

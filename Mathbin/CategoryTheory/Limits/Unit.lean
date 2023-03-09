@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.unit
-! leanprover-community/mathlib commit c85d2ff93210de84373ab4c9c6dba2b78494961e
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.HasLimits
 
 /-!
 # `discrete punit` has limits and colimits
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Mostly for the sake of constructing trivial examples, we show all (co)cones into `discrete punit`
 are (co)limit (co)cones. We also show that such (co)cones exist, and that `discrete punit` has all

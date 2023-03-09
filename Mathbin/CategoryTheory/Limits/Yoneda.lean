@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.yoneda
-! leanprover-community/mathlib commit e83fa8324dbec147a1d1f6d11751361235ce3806
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Tactic.AssertExists
 
 /-!
 # Limit properties relating to the (co)yoneda embedding.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We calculate the colimit of `Y ↦ (X ⟶ Y)`, which is just `punit`.
 (This is used in characterising cofinal functors.)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.functor_category
-! leanprover-community/mathlib commit 03f58c5218f58a1a2cae40651057bef6ff6e4c88
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Limits.Preserves.Limits
 
 /-!
 # (Co)limits in functor categories.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that if `D` has limits, then the functor category `C ⥤ D` also has limits
 (`category_theory.limits.functor_category_has_limits`),

@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.generator
-! leanprover-community/mathlib commit 6db15773a59381c4102a41d7dbad8ec1b1609482
+! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Generator
-import Mathbin.CategoryTheory.Preadditive.Yoneda
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Basic
 
 /-!
 # Separators in preadditive categories

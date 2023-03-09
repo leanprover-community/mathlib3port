@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.path_category
-! leanprover-community/mathlib commit c6dd521ebdce53bb372c527569dd7c25de53a08b
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Combinatorics.Quiver.Path
 
 /-!
 # The category paths on a quiver.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 When `C` is a quiver, `paths C` is the category of paths.
 
 ## When the quiver is itself a category

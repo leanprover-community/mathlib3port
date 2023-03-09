@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Johan Commelin
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.limits
-! leanprover-community/mathlib commit 9e7c80f638149bfb3504ba8ff48dfdbfc949fb1a
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.Creates
 
 /-!
 # Adjunctions and limits
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A left adjoint preserves colimits (`category_theory.adjunction.left_adjoint_preserves_colimits`),
 and a right adjoint preserves limits (`category_theory.adjunction.right_adjoint_preserves_limits`).

@@ -4,14 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 90ac7a91781abbb5f0206888d68bd095f88c4229
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Instances.Nnreal
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
-import Mathbin.Analysis.Normed.Group.Basic
 import Mathbin.Topology.Algebra.InfiniteSum.Real
+import Mathbin.Topology.Algebra.Order.LiminfLimsup
+import Mathbin.Topology.MetricSpace.Lipschitz
 
 /-!
 # Extended non-negative reals
@@ -786,7 +787,7 @@ section Liminf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x : ι → ℝ}
-    (hx : liminf (fun n => (‖x n‖₊ : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, x n < R :=
+    (hx : liminf (fun n => ((x n).nnabs : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, x n < R :=
   by
   by_contra h
   simp_rw [not_exists, not_frequently, not_lt] at h
@@ -799,12 +800,12 @@ theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x :
               is_bounded_default)
           _)
   simp only [eventually_map, ENNReal.coe_le_coe]
-  filter_upwards [h r]with i hi using hi.trans ((coe_nnnorm (x i)).symm ▸ le_abs_self (x i))
+  filter_upwards [h r]with i hi using hi.trans (le_abs_self (x i))
 #align ennreal.exists_frequently_lt_of_liminf_ne_top ENNReal.exists_frequently_lt_of_liminf_ne_top
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x : ι → ℝ}
-    (hx : liminf (fun n => (‖x n‖₊ : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, R < x n :=
+    (hx : liminf (fun n => ((x n).nnabs : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, R < x n :=
   by
   by_contra h
   simp_rw [not_exists, not_frequently, not_lt] at h
@@ -821,7 +822,7 @@ theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x 
 #align ennreal.exists_frequently_lt_of_liminf_ne_top' ENNReal.exists_frequently_lt_of_liminf_ne_top'
 
 theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x : ι → ℝ}
-    (hf : liminf (fun i => (‖x i‖₊ : ℝ≥0∞)) l ≠ ∞)
+    (hf : liminf (fun i => ((x i).nnabs : ℝ≥0∞)) l ≠ ∞)
     (hbdd : ¬IsBoundedUnder (· ≤ ·) l fun i => |x i|) :
     ∃ a b : ℚ, a < b ∧ (∃ᶠ i in l, x i < a) ∧ ∃ᶠ i in l, ↑b < x i :=
   by

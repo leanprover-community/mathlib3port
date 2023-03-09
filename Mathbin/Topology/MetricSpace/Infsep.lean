@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module topology.metric_space.infsep
-! leanprover-community/mathlib commit 5316314b553dcf8c6716541851517c1a9715e22b
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.MetricSpace.Basic
 
 /-!
 # Infimum separation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the extended infimum separation of a set. This is approximately dual to the
 diameter of a set, but where the extended diameter of a set is the supremum of the extended distance

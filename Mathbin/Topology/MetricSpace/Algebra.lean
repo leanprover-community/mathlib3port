@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.metric_space.algebra
-! leanprover-community/mathlib commit 14d34b71b6d896b6e5f1ba2ec9124b9cd1f90fca
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.MetricSpace.Lipschitz
 
 /-!
 # Compatibility of algebraic operations with metric space structures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define mixin typeclasses `has_lipschitz_mul`, `has_lipschitz_add`,
 `has_bounded_smul` expressing compatibility of multiplication, addition and scalar-multiplication

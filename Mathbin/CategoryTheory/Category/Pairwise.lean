@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.category.pairwise
-! leanprover-community/mathlib commit d82b87871d9a274884dff5263fa4f5d93bcce1d6
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.IsLimit
 
 /-!
 # The category of "pairwise intersections".
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given `ι : Type v`, we build the diagram category `pairwise ι`
 with objects `single i` and `pair i j`, for `i j : ι`,

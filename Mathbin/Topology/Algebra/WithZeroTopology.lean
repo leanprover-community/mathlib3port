@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.with_zero_topology
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 3e0c4d76b6ebe9dfafb67d16f7286d2731ed6064
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,11 +30,9 @@ absolute value (resp. `p`-adic absolute value) on `ℚ` is extended to `ℝ` (re
 
 ## Implementation notes
 
-This topology is not defined as an instance since it may not be the desired topology on
-a linearly ordered commutative group with zero. You can locally activate this topology using
-`local attribute [instance] linear_ordered_comm_group_with_zero.topological_space`
-All other instances will (`ordered_topology`, `t3_space`, `has_continuous_mul`) then follow.
-
+This topology is not defined as a global instance since it may not be the desired topology on a
+linearly ordered commutative group with zero. You can locally activate this topology using
+`open_locale with_zero_topology`.
 -/
 
 
@@ -42,7 +40,7 @@ open Topology Filter
 
 open TopologicalSpace Filter Set Function
 
-namespace LinearOrderedCommGroupWithZero
+namespace WithZeroTopology
 
 variable {α Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] {γ γ₁ γ₂ : Γ₀} {l : Filter α}
   {f : α → Γ₀}
@@ -52,14 +50,14 @@ variable {α Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] {γ γ₁ γ
 A subset U is open if 0 ∉ U or if there is an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
 protected def topologicalSpace : TopologicalSpace Γ₀ :=
   TopologicalSpace.mkOfNhds <| update pure 0 <| ⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ)
-#align linear_ordered_comm_group_with_zero.topological_space LinearOrderedCommGroupWithZero.topologicalSpace
+#align with_zero_topology.topological_space WithZeroTopology.topologicalSpace
 
-attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
+attribute [scoped instance] WithZeroTopology.topologicalSpace
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ)) :=
   funext <| nhds_mkOfNhds_single <| le_infᵢ₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
-#align linear_ordered_comm_group_with_zero.nhds_eq_update LinearOrderedCommGroupWithZero.nhds_eq_update
+#align with_zero_topology.nhds_eq_update WithZeroTopology.nhds_eq_update
 
 /-!
 ### Neighbourhoods of zero
@@ -68,7 +66,7 @@ theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (�
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ) := by rw [nhds_eq_update, update_same]
-#align linear_ordered_comm_group_with_zero.nhds_zero LinearOrderedCommGroupWithZero.nhds_zero
+#align with_zero_topology.nhds_zero WithZeroTopology.nhds_zero
 
 /-- In a linearly ordered group with zero element adjoined, `U` is a neighbourhood of `0` if and
 only if there exists a nonzero element `γ₀` such that `Iio γ₀ ⊆ U`. -/
@@ -77,22 +75,22 @@ theorem hasBasis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ �
   rw [nhds_zero]
   refine' has_basis_binfi_principal _ ⟨1, one_ne_zero⟩
   exact directedOn_iff_directed.2 (directed_of_inf fun a b hab => Iio_subset_Iio hab)
-#align linear_ordered_comm_group_with_zero.has_basis_nhds_zero LinearOrderedCommGroupWithZero.hasBasis_nhds_zero
+#align with_zero_topology.has_basis_nhds_zero WithZeroTopology.hasBasis_nhds_zero
 
 theorem Iio_mem_nhds_zero (hγ : γ ≠ 0) : Iio γ ∈ 𝓝 (0 : Γ₀) :=
   hasBasis_nhds_zero.mem_of_mem hγ
-#align linear_ordered_comm_group_with_zero.Iio_mem_nhds_zero LinearOrderedCommGroupWithZero.Iio_mem_nhds_zero
+#align with_zero_topology.Iio_mem_nhds_zero WithZeroTopology.Iio_mem_nhds_zero
 
 /-- If `γ` is an invertible element of a linearly ordered group with zero element adjoined, then
 `Iio (γ : Γ₀)` is a neighbourhood of `0`. -/
 theorem nhds_zero_of_units (γ : Γ₀ˣ) : Iio ↑γ ∈ 𝓝 (0 : Γ₀) :=
   Iio_mem_nhds_zero γ.NeZero
-#align linear_ordered_comm_group_with_zero.nhds_zero_of_units LinearOrderedCommGroupWithZero.nhds_zero_of_units
+#align with_zero_topology.nhds_zero_of_units WithZeroTopology.nhds_zero_of_units
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
 theorem tendsto_zero : Tendsto f l (𝓝 (0 : Γ₀)) ↔ ∀ (γ₀) (_ : γ₀ ≠ 0), ∀ᶠ x in l, f x < γ₀ := by
   simp [nhds_zero]
-#align linear_ordered_comm_group_with_zero.tendsto_zero LinearOrderedCommGroupWithZero.tendsto_zero
+#align with_zero_topology.tendsto_zero WithZeroTopology.tendsto_zero
 
 /-!
 ### Neighbourhoods of non-zero elements
@@ -104,46 +102,46 @@ element. -/
 @[simp]
 theorem nhds_of_ne_zero {γ : Γ₀} (h₀ : γ ≠ 0) : 𝓝 γ = pure γ := by
   rw [nhds_eq_update, update_noteq h₀]
-#align linear_ordered_comm_group_with_zero.nhds_of_ne_zero LinearOrderedCommGroupWithZero.nhds_of_ne_zero
+#align with_zero_topology.nhds_of_ne_zero WithZeroTopology.nhds_of_ne_zero
 
 /-- The neighbourhood filter of an invertible element consists of all sets containing that
 element. -/
 theorem nhds_coe_units (γ : Γ₀ˣ) : 𝓝 (γ : Γ₀) = pure (γ : Γ₀) :=
   nhds_of_ne_zero γ.NeZero
-#align linear_ordered_comm_group_with_zero.nhds_coe_units LinearOrderedCommGroupWithZero.nhds_coe_units
+#align with_zero_topology.nhds_coe_units WithZeroTopology.nhds_coe_units
 
 /-- If `γ` is an invertible element of a linearly ordered group with zero element adjoined, then
 `{γ}` is a neighbourhood of `γ`. -/
 theorem singleton_mem_nhds_of_units (γ : Γ₀ˣ) : ({γ} : Set Γ₀) ∈ 𝓝 (γ : Γ₀) := by simp
-#align linear_ordered_comm_group_with_zero.singleton_mem_nhds_of_units LinearOrderedCommGroupWithZero.singleton_mem_nhds_of_units
+#align with_zero_topology.singleton_mem_nhds_of_units WithZeroTopology.singleton_mem_nhds_of_units
 
 /-- If `γ` is a nonzero element of a linearly ordered group with zero element adjoined, then `{γ}`
 is a neighbourhood of `γ`. -/
 theorem singleton_mem_nhds_of_ne_zero (h : γ ≠ 0) : ({γ} : Set Γ₀) ∈ 𝓝 (γ : Γ₀) := by simp [h]
-#align linear_ordered_comm_group_with_zero.singleton_mem_nhds_of_ne_zero LinearOrderedCommGroupWithZero.singleton_mem_nhds_of_ne_zero
+#align with_zero_topology.singleton_mem_nhds_of_ne_zero WithZeroTopology.singleton_mem_nhds_of_ne_zero
 
 theorem hasBasis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) :
     HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
   by
   rw [nhds_of_ne_zero h]
   exact has_basis_pure _
-#align linear_ordered_comm_group_with_zero.has_basis_nhds_of_ne_zero LinearOrderedCommGroupWithZero.hasBasis_nhds_of_ne_zero
+#align with_zero_topology.has_basis_nhds_of_ne_zero WithZeroTopology.hasBasis_nhds_of_ne_zero
 
 theorem hasBasis_nhds_units (γ : Γ₀ˣ) : HasBasis (𝓝 (γ : Γ₀)) (fun i : Unit => True) fun i => {γ} :=
   hasBasis_nhds_of_ne_zero γ.NeZero
-#align linear_ordered_comm_group_with_zero.has_basis_nhds_units LinearOrderedCommGroupWithZero.hasBasis_nhds_units
+#align with_zero_topology.has_basis_nhds_units WithZeroTopology.hasBasis_nhds_units
 
 theorem tendsto_of_ne_zero {γ : Γ₀} (h : γ ≠ 0) : Tendsto f l (𝓝 γ) ↔ ∀ᶠ x in l, f x = γ := by
   rw [nhds_of_ne_zero h, tendsto_pure]
-#align linear_ordered_comm_group_with_zero.tendsto_of_ne_zero LinearOrderedCommGroupWithZero.tendsto_of_ne_zero
+#align with_zero_topology.tendsto_of_ne_zero WithZeroTopology.tendsto_of_ne_zero
 
 theorem tendsto_units {γ₀ : Γ₀ˣ} : Tendsto f l (𝓝 (γ₀ : Γ₀)) ↔ ∀ᶠ x in l, f x = γ₀ :=
   tendsto_of_ne_zero γ₀.NeZero
-#align linear_ordered_comm_group_with_zero.tendsto_units LinearOrderedCommGroupWithZero.tendsto_units
+#align with_zero_topology.tendsto_units WithZeroTopology.tendsto_units
 
 theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
   rcases eq_or_ne γ₁ 0 with (rfl | h₀) <;> simp [*, h.ne', Iio_mem_nhds_zero]
-#align linear_ordered_comm_group_with_zero.Iio_mem_nhds LinearOrderedCommGroupWithZero.Iio_mem_nhds
+#align with_zero_topology.Iio_mem_nhds WithZeroTopology.Iio_mem_nhds
 
 /-!
 ### Open/closed sets
@@ -156,18 +154,18 @@ theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ 
   rw [isOpen_iff_mem_nhds, ← and_forall_ne (0 : Γ₀)]
   simp (config := { contextual := true }) [nhds_of_ne_zero, imp_iff_not_or,
     has_basis_nhds_zero.mem_iff]
-#align linear_ordered_comm_group_with_zero.is_open_iff LinearOrderedCommGroupWithZero.isOpen_iff
+#align with_zero_topology.is_open_iff WithZeroTopology.isOpen_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem isClosed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ Ici γ :=
   by
   simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, Classical.not_not, ← compl_Ici,
     compl_subset_compl]
-#align linear_ordered_comm_group_with_zero.is_closed_iff LinearOrderedCommGroupWithZero.isClosed_iff
+#align with_zero_topology.is_closed_iff WithZeroTopology.isClosed_iff
 
 theorem isOpen_Iio {a : Γ₀} : IsOpen (Iio a) :=
   isOpen_iff.mpr <| imp_iff_not_or.mp fun ha => ⟨a, ne_of_gt ha, Subset.rfl⟩
-#align linear_ordered_comm_group_with_zero.is_open_Iio LinearOrderedCommGroupWithZero.isOpen_Iio
+#align with_zero_topology.is_open_Iio WithZeroTopology.isOpen_Iio
 
 /-!
 ### Instances
@@ -176,33 +174,39 @@ theorem isOpen_Iio {a : Γ₀} : IsOpen (Iio a) :=
 
 /-- The topology on a linearly ordered group with zero element adjoined is compatible with the order
 structure: the set `{p : Γ₀ × Γ₀ | p.1 ≤ p.2}` is closed. -/
-instance (priority := 100) orderClosedTopology : OrderClosedTopology Γ₀
-    where isClosed_le' :=
-    by
-    simp only [← isOpen_compl_iff, compl_set_of, not_le, isOpen_iff_mem_nhds]
-    rintro ⟨a, b⟩ (hab : b < a)
-    rw [nhds_prod_eq, nhds_of_ne_zero (zero_le'.trans_lt hab).ne', pure_prod]
-    exact Iio_mem_nhds hab
-#align linear_ordered_comm_group_with_zero.order_closed_topology LinearOrderedCommGroupWithZero.orderClosedTopology
+protected theorem orderClosedTopology : OrderClosedTopology Γ₀ :=
+  {
+    isClosed_le' :=
+      by
+      simp only [← isOpen_compl_iff, compl_set_of, not_le, isOpen_iff_mem_nhds]
+      rintro ⟨a, b⟩ (hab : b < a)
+      rw [nhds_prod_eq, nhds_of_ne_zero (zero_le'.trans_lt hab).ne', pure_prod]
+      exact Iio_mem_nhds hab }
+#align with_zero_topology.order_closed_topology WithZeroTopology.orderClosedTopology
+
+attribute [scoped instance] WithZeroTopology.orderClosedTopology
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
-instance (priority := 100) t3Space : T3Space Γ₀
-    where to_regularSpace :=
-    RegularSpace.ofLift'_closure fun γ =>
-      by
-      rcases ne_or_eq γ 0 with (h₀ | rfl)
-      ·
-        rw [nhds_of_ne_zero h₀, lift'_pure (monotone_closure Γ₀), closure_singleton,
-          principal_singleton]
-      ·
-        exact
-          has_basis_nhds_zero.lift'_closure_eq_self fun x hx =>
-            is_closed_iff.2 <| Or.inl <| zero_lt_iff.2 hx
-#align linear_ordered_comm_group_with_zero.t3_space LinearOrderedCommGroupWithZero.t3Space
+theorem t3Space : T3Space Γ₀ :=
+  {
+    to_regularSpace :=
+      RegularSpace.ofLift'_closure fun γ =>
+        by
+        rcases ne_or_eq γ 0 with (h₀ | rfl)
+        ·
+          rw [nhds_of_ne_zero h₀, lift'_pure (monotone_closure Γ₀), closure_singleton,
+            principal_singleton]
+        ·
+          exact
+            has_basis_nhds_zero.lift'_closure_eq_self fun x hx =>
+              is_closed_iff.2 <| Or.inl <| zero_lt_iff.2 hx }
+#align with_zero_topology.t3_space WithZeroTopology.t3Space
+
+attribute [scoped instance] WithZeroTopology.t3Space
 
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
-instance (priority := 100) : ContinuousMul Γ₀ :=
+protected theorem continuousMul : ContinuousMul Γ₀ :=
   ⟨by
     rw [continuous_iff_continuousAt]
     rintro ⟨x, y⟩
@@ -226,11 +230,17 @@ instance (priority := 100) : ContinuousMul Γ₀ :=
     · have hy : y ≠ 0 := ((zero_lt_iff.mpr hx).trans_le hle).ne'
       rw [ContinuousAt, nhds_prod_eq, nhds_of_ne_zero hx, nhds_of_ne_zero hy, prod_pure_pure]
       exact pure_le_nhds (x * y)⟩
+#align with_zero_topology.has_continuous_mul WithZeroTopology.continuousMul
 
-instance (priority := 100) : HasContinuousInv₀ Γ₀ :=
+attribute [scoped instance] WithZeroTopology.continuousMul
+
+protected theorem hasContinuousInv₀ : HasContinuousInv₀ Γ₀ :=
   ⟨fun γ h => by
     rw [ContinuousAt, nhds_of_ne_zero h]
     exact pure_le_nhds γ⁻¹⟩
+#align with_zero_topology.has_continuous_inv₀ WithZeroTopology.hasContinuousInv₀
 
-end LinearOrderedCommGroupWithZero
+attribute [scoped instance] WithZeroTopology.hasContinuousInv₀
+
+end WithZeroTopology
 

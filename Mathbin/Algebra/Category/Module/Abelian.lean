@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Module.abelian
-! leanprover-community/mathlib commit ac3ae212f394f508df43e37aa093722fa9b65d31
+! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,13 +83,14 @@ def normalEpi (hf : Epi f) : NormalEpi f
 #align Module.normal_epi ModuleCat.normalEpi
 
 /-- The category of R-modules is abelian. -/
-instance : Abelian (ModuleCat R)
+instance abelian : Abelian (ModuleCat R)
     where
   HasFiniteProducts := ⟨fun n => Limits.hasLimitsOfShapeOfHasLimits⟩
   HasKernels := Limits.hasKernels_of_hasEqualizers (ModuleCat R)
   HasCokernels := hasCokernels_moduleCat
   normalMonoOfMono X Y := normalMono
   normalEpiOfEpi X Y := normalEpi
+#align Module.abelian ModuleCat.abelian
 
 section ReflectsLimits
 

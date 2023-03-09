@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 3c72a10e5b1c2b9fa755d858f2e04d964a4c5375
+! leanprover-community/mathlib commit 21e3562c5e12d846c7def5eff8cdbc520d7d4936
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2291,8 +2291,11 @@ instance [InvolutiveStar α] : InvolutiveStar (Matrix n n α)
 instance [AddMonoid α] [StarAddMonoid α] : StarAddMonoid (Matrix n n α)
     where star_add := conjTranspose_add
 
+instance [Star α] [Star β] [SMul α β] [StarModule α β] : StarModule α (Matrix n n β)
+    where star_smul := conjTranspose_smul
+
 /-- When `α` is a `*`-(semi)ring, `matrix.has_star` is also a `*`-(semi)ring. -/
-instance [Fintype n] [Semiring α] [StarRing α] : StarRing (Matrix n n α)
+instance [Fintype n] [NonUnitalSemiring α] [StarRing α] : StarRing (Matrix n n α)
     where
   star_add := conjTranspose_add
   star_mul := conjTranspose_mul

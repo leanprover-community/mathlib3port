@@ -4,14 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.projective
-! leanprover-community/mathlib commit 956af7c76589f444f2e1313911bad16366ea476d
+! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Homology.Exact
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Preadditive.Yoneda
+import Mathbin.CategoryTheory.Adjunction.Limits
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Basic
 import Mathbin.Algebra.Category.Group.EpiMono
 import Mathbin.Algebra.Category.Module.EpiMono
 

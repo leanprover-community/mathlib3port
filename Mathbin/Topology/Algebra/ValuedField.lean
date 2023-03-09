@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valued_field
-! leanprover-community/mathlib commit a8e7ac804fc39df0340c64906075787e0c90fa60
+! leanprover-community/mathlib commit 3e0c4d76b6ebe9dfafb67d16f7286d2731ed6064
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpac
 
 section
 
-attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
+open WithZeroTopology
 
 open Valued
 
@@ -125,12 +125,12 @@ theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ�
   rw [continuous_iff_continuousAt]
   intro x
   rcases eq_or_ne x 0 with (rfl | h)
-  · rw [ContinuousAt, map_zero, LinearOrderedCommGroupWithZero.tendsto_zero]
+  · rw [ContinuousAt, map_zero, WithZeroTopology.tendsto_zero]
     intro γ hγ
     rw [Filter.Eventually, Valued.mem_nhds_zero]
     use Units.mk0 γ hγ, subset.rfl
   · have v_ne : (v x : Γ₀) ≠ 0 := (Valuation.ne_zero_iff _).mpr h
-    rw [ContinuousAt, LinearOrderedCommGroupWithZero.tendsto_of_ne_zero v_ne]
+    rw [ContinuousAt, WithZeroTopology.tendsto_of_ne_zero v_ne]
     apply Valued.loc_const v_ne
 #align valued.continuous_valuation Valued.continuous_valuation
 
@@ -203,7 +203,7 @@ instance (priority := 100) completable : CompletableTopField K :=
           exact mul_le_mul_left' this γ }
 #align valued.completable Valued.completable
 
-attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
+open WithZeroTopology
 
 /-- The extension of the valuation of a valued field to the completion of the field. -/
 noncomputable def extension : hat K → Γ₀ :=
@@ -278,7 +278,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     rcases this with ⟨z₀, y₀, y₀_in, hz₀, z₀_ne⟩
     have vz₀_ne : (v z₀ : Γ₀) ≠ 0 := by rwa [Valuation.ne_zero_iff]
     refine' ⟨v z₀, _⟩
-    rw [LinearOrderedCommGroupWithZero.tendsto_of_ne_zero vz₀_ne, eventually_comap]
+    rw [WithZeroTopology.tendsto_of_ne_zero vz₀_ne, eventually_comap]
     filter_upwards [nhds_right]with x x_in a ha
     rcases x_in with ⟨y, y_in, rfl⟩
     have : (v (a * z₀⁻¹) : Γ₀) = 1 := by
@@ -354,7 +354,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
   intro h
   have hγ₀ : extension ⁻¹' {γ₀} ∈ 𝓝 x :=
     continuous_extension.continuous_at.preimage_mem_nhds
-      (LinearOrderedCommGroupWithZero.singleton_mem_nhds_of_ne_zero h)
+      (WithZeroTopology.singleton_mem_nhds_of_ne_zero h)
   rw [mem_closure_iff_nhds']
   refine' ⟨fun hx => _, fun hx s hs => _⟩
   · obtain ⟨⟨-, y, hy₁ : v y < (γ : Γ₀), rfl⟩, hy₂⟩ := hx _ hγ₀

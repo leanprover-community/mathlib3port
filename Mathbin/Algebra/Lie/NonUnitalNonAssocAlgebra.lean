@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.non_unital_non_assoc_algebra
-! leanprover-community/mathlib commit 841ac1a3d9162bf51c6327812ecb6e5e71883ac4
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Lie.Basic
 
 /-!
 # Lie algebras as non-unital, non-associative algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The definition of Lie algebras uses the `has_bracket` typeclass for multiplication whereas we have a
 separate `has_mul` typeclass used for general algebras.

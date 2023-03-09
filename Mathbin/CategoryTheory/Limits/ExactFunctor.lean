@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.exact_functor
-! leanprover-community/mathlib commit 9fc53308a90fac244ac715308e1f9c969e6843a4
+! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Limits.Preserves.Finite
 
 /-!
 # Bundled exact functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We say that a functor `F` is left exact if it preserves finite limits, it is right exact if it
 preserves finite colimits, and it is exact if it is both left exact and right exact.
