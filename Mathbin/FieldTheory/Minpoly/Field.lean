@@ -271,7 +271,7 @@ theorem root {x : B} (hx : IsIntegral A x) {y : A} (h : IsRoot (minpoly A x) y) 
     algebraMap A B y = x :=
   by
   have key : minpoly A x = X - C y :=
-    eq_of_monic_of_associated (monic hx) (monic_x_sub_c y)
+    eq_of_monic_of_associated (monic hx) (monic_X_sub_C y)
       (associated_of_dvd_dvd
         ((irreducible_x_sub_c y).dvd_symm (irreducible hx) (dvd_iff_isRoot.2 h))
         (dvd_iff_isRoot.2 h))

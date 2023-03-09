@@ -79,7 +79,7 @@ protected def Algebra.IsIntegral : Prop :=
 variable {R A}
 
 theorem RingHom.is_integral_map {x : R} : f.IsIntegralElem (f x) :=
-  ⟨X - C x, monic_x_sub_c _, by simp⟩
+  ⟨X - C x, monic_X_sub_C _, by simp⟩
 #align ring_hom.is_integral_map RingHom.is_integral_map
 
 theorem isIntegral_algebraMap {x : R} : IsIntegral R (algebraMap R A x) :=

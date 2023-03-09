@@ -1052,7 +1052,7 @@ theorem pairwise_coprime_x_sub_c {K} [Field K] {I : Type v} {s : I → K} (H : F
 #align polynomial.pairwise_coprime_X_sub_C Polynomial.pairwise_coprime_x_sub_c
 
 theorem monic_prod_multiset_x_sub_c : Monic (p.roots.map fun a => X - C a).Prod :=
-  monic_multiset_prod_of_monic _ _ fun a _ => monic_x_sub_c a
+  monic_multiset_prod_of_monic _ _ fun a _ => monic_X_sub_C a
 #align polynomial.monic_prod_multiset_X_sub_C Polynomial.monic_prod_multiset_x_sub_c
 
 theorem prod_multiset_root_eq_finset_root :

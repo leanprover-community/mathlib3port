@@ -564,7 +564,7 @@ def rootMultiplicity (a : R) (p : R[X]) : ℕ :=
   if h0 : p = 0 then 0
   else
     let I : DecidablePred fun n : ℕ => ¬(X - C a) ^ (n + 1) ∣ p := fun n =>
-      @Not.decidable _ (decidableDvdMonic p ((monic_x_sub_c a).pow (n + 1)))
+      @Not.decidable _ (decidableDvdMonic p ((monic_X_sub_C a).pow (n + 1)))
     Nat.find (multiplicity_X_sub_C_finite a h0)
 #align polynomial.root_multiplicity Polynomial.rootMultiplicity
 
@@ -614,7 +614,7 @@ theorem pow_rootMultiplicity_dvd (p : R[X]) (a : R) : (X - C a) ^ rootMultiplici
 theorem divByMonic_mul_pow_rootMultiplicity_eq (p : R[X]) (a : R) :
     p /ₘ (X - C a) ^ rootMultiplicity a p * (X - C a) ^ rootMultiplicity a p = p :=
   by
-  have : Monic ((X - C a) ^ rootMultiplicity a p) := (monic_x_sub_c _).pow _
+  have : Monic ((X - C a) ^ rootMultiplicity a p) := (monic_X_sub_C _).pow _
   conv_rhs =>
       rw [← mod_by_monic_add_div p this,
         (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>

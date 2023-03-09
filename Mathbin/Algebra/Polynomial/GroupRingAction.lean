@@ -102,7 +102,7 @@ noncomputable def prodXSubSmul (x : R) : R[X] :=
 #align prod_X_sub_smul prodXSubSmul
 
 theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
-  Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_x_sub_c _
+  Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_X_sub_C _
 #align prod_X_sub_smul.monic prodXSubSmul.monic
 
 theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=

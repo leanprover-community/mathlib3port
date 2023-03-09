@@ -105,7 +105,7 @@ theorem cyclotomic'_two (R : Type _) [CommRing R] [IsDomain R] (p : ℕ) [CharP 
 /-- `cyclotomic' n R` is monic. -/
 theorem cyclotomic'.monic (n : ℕ) (R : Type _) [CommRing R] [IsDomain R] :
     (cyclotomic' n R).Monic :=
-  monic_prod_of_monic _ _ fun z hz => monic_x_sub_c _
+  monic_prod_of_monic _ _ fun z hz => monic_X_sub_C _
 #align polynomial.cyclotomic'.monic Polynomial.cyclotomic'.monic
 
 /-- `cyclotomic' n R` is different from `0`. -/
