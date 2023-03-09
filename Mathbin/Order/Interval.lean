@@ -227,7 +227,7 @@ instance : PartialOrder (NonemptyInterval α) :=
 
 /-- Consider a nonempty interval `[a, b]` as the set `[a, b]`. -/
 def coeHom : NonemptyInterval α ↪o Set α :=
-  OrderEmbedding.ofMapLeIff (fun s => Icc s.fst s.snd) fun s t => Icc_subset_Icc_iff s.fst_le_snd
+  OrderEmbedding.ofMapLEIff (fun s => Icc s.fst s.snd) fun s t => Icc_subset_Icc_iff s.fst_le_snd
 #align nonempty_interval.coe_hom NonemptyInterval.coeHom
 
 instance : SetLike (NonemptyInterval α) α
@@ -433,7 +433,7 @@ instance : PartialOrder (Interval α) :=
 
 /-- Consider a interval `[a, b]` as the set `[a, b]`. -/
 def coeHom : Interval α ↪o Set α :=
-  OrderEmbedding.ofMapLeIff
+  OrderEmbedding.ofMapLEIff
     (fun s =>
       match s with
       | ⊥ => ∅

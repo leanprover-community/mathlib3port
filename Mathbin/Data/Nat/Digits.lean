@@ -663,8 +663,8 @@ theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : 
     exact dvd_mul_sub_mul h ih
 #align nat.dvd_of_digits_sub_of_digits Nat.dvd_ofDigits_sub_ofDigits
 
-#print Nat.ofDigits_modeq' /-
-theorem ofDigits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List ℕ) :
+#print Nat.ofDigits_modEq' /-
+theorem ofDigits_modEq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List ℕ) :
     ofDigits b L ≡ ofDigits b' L [MOD k] :=
   by
   induction' L with d L ih
@@ -673,12 +673,12 @@ theorem ofDigits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List 
     dsimp [Nat.ModEq] at *
     conv_lhs => rw [Nat.add_mod, Nat.mul_mod, h, ih]
     conv_rhs => rw [Nat.add_mod, Nat.mul_mod]
-#align nat.of_digits_modeq' Nat.ofDigits_modeq'
+#align nat.of_digits_modeq' Nat.ofDigits_modEq'
 -/
 
 #print Nat.ofDigits_modEq /-
 theorem ofDigits_modEq (b k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [MOD k] :=
-  ofDigits_modeq' b (b % k) k (b.mod_modEq k).symm L
+  ofDigits_modEq' b (b % k) k (b.mod_modEq k).symm L
 #align nat.of_digits_modeq Nat.ofDigits_modEq
 -/
 

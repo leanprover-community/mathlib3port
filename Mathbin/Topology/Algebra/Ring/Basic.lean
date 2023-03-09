@@ -267,13 +267,13 @@ section
 
 variable {R : Type _} [NonUnitalNonAssocRing R] [TopologicalSpace R]
 
-/- warning: topological_ring.of_add_group_of_nhds_zero -> TopologicalRing.of_add_group_of_nhds_zero is a dubious translation:
+/- warning: topological_ring.of_add_group_of_nhds_zero -> TopologicalRing.of_addGroup_of_nhds_zero is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalAddGroup.{u1} R _inst_2 (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R _inst_1))], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} R R) R (Function.uncurry.{u1, u1, u1} R R R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))) (Filter.prod.{u1, u1} R R (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))))) -> (forall (x₀ : R), Filter.Tendsto.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) x₀ x) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))))) -> (forall (x₀ : R), Filter.Tendsto.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) x x₀) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))))) -> (TopologicalRing.{u1} R _inst_2 _inst_1)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [_inst_3 : TopologicalAddGroup.{u1} R _inst_2 (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R _inst_1))], (Filter.Tendsto.{u1, u1} (Prod.{u1, u1} R R) R (Function.uncurry.{u1, u1, u1} R R R (fun (x._@.Mathlib.Topology.Algebra.Ring.Basic._hyg.806 : R) (x._@.Mathlib.Topology.Algebra.Ring.Basic._hyg.808 : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) x._@.Mathlib.Topology.Algebra.Ring.Basic._hyg.806 x._@.Mathlib.Topology.Algebra.Ring.Basic._hyg.808)) (Filter.prod.{u1, u1} R R (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) -> (forall (x₀ : R), Filter.Tendsto.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) x₀ x) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) -> (forall (x₀ : R), Filter.Tendsto.{u1, u1} R R (fun (x : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) x x₀) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))))) (nhds.{u1} R _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))))) -> (TopologicalRing.{u1} R _inst_2 _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_add_group_of_nhds_zeroₓ'. -/
-theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
+Case conversion may be inaccurate. Consider using '#align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_addGroup_of_nhds_zeroₓ'. -/
+theorem TopologicalRing.of_addGroup_of_nhds_zero [TopologicalAddGroup R]
     (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R :=
@@ -302,7 +302,7 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
     · simp only [add_comm]
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
-#align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_add_group_of_nhds_zero
+#align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_addGroup_of_nhds_zero
 
 /- warning: topological_ring.of_nhds_zero -> TopologicalRing.of_nhds_zero is a dubious translation:
 lean 3 declaration is
@@ -318,7 +318,7 @@ theorem TopologicalRing.of_nhds_zero
     (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
     (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
   haveI := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
-  TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
+  TopologicalRing.of_addGroup_of_nhds_zero hmul hmul_left hmul_right
 #align topological_ring.of_nhds_zero TopologicalRing.of_nhds_zero
 
 end
@@ -554,7 +554,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbeddingₓ'. -/
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
 def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) :=
-  OrderEmbedding.ofMapLeIff toAddGroupTopology fun _ _ => Iff.rfl
+  OrderEmbedding.ofMapLEIff toAddGroupTopology fun _ _ => Iff.rfl
 #align ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbedding
 
 end RingTopology

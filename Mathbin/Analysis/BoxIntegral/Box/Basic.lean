@@ -202,7 +202,7 @@ instance : PartialOrder (Box ι) :=
 
 /-- Closed box corresponding to `I : box_integral.box ι`. -/
 protected def icc : Box ι ↪o Set (ι → ℝ) :=
-  OrderEmbedding.ofMapLeIff (fun I : Box ι => Icc I.lower I.upper) fun I J => (le_tFAE I J).out 2 0
+  OrderEmbedding.ofMapLEIff (fun I : Box ι => Icc I.lower I.upper) fun I J => (le_tFAE I J).out 2 0
 #align box_integral.box.Icc BoxIntegral.Box.icc
 
 theorem icc_def : I.Icc = Icc I.lower I.upper :=

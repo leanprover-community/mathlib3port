@@ -1019,32 +1019,32 @@ protected def withTopMap (f : α ↪o β) : WithTop α ↪o WithTop β :=
 #align order_embedding.with_top_map OrderEmbedding.withTopMap
 -/
 
-#print OrderEmbedding.ofMapLeIff /-
+#print OrderEmbedding.ofMapLEIff /-
 /-- To define an order embedding from a partial order to a preorder it suffices to give a function
 together with a proof that it satisfies `f a ≤ f b ↔ a ≤ b`.
 -/
-def ofMapLeIff {α β} [PartialOrder α] [Preorder β] (f : α → β) (hf : ∀ a b, f a ≤ f b ↔ a ≤ b) :
+def ofMapLEIff {α β} [PartialOrder α] [Preorder β] (f : α → β) (hf : ∀ a b, f a ≤ f b ↔ a ≤ b) :
     α ↪o β :=
   RelEmbedding.ofMapRelIff f hf
-#align order_embedding.of_map_le_iff OrderEmbedding.ofMapLeIff
+#align order_embedding.of_map_le_iff OrderEmbedding.ofMapLEIff
 -/
 
-/- warning: order_embedding.coe_of_map_le_iff -> OrderEmbedding.coe_ofMapLeIff is a dubious translation:
+/- warning: order_embedding.coe_of_map_le_iff -> OrderEmbedding.coe_ofMapLEIff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : PartialOrder.{u1} α] [_inst_4 : Preorder.{u2} β] {f : α -> β} (h : forall (a : α) (b : α), Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4) (f a) (f b)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) a b)), Eq.{max (succ u1) (succ u2)} (α -> β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (Preorder.toLE.{u2} β _inst_4)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4))) (OrderEmbedding.ofMapLeIff.{u1, u2} α β _inst_3 _inst_4 f h)) f
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : PartialOrder.{u1} α] [_inst_4 : Preorder.{u2} β] {f : α -> β} (h : forall (a : α) (b : α), Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4) (f a) (f b)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) a b)), Eq.{max (succ u1) (succ u2)} (α -> β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (Preorder.toLE.{u2} β _inst_4)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4))) (OrderEmbedding.ofMapLEIff.{u1, u2} α β _inst_3 _inst_4 f h)) f
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : PartialOrder.{u2} α] [_inst_4 : Preorder.{u1} β] {f : α -> β} (h : forall (a : α) (b : α), Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_4) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_3)) a b)), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : α), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_3)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_4) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (OrderEmbedding.ofMapLeIff.{u2, u1} α β _inst_3 _inst_4 f h))) f
-Case conversion may be inaccurate. Consider using '#align order_embedding.coe_of_map_le_iff OrderEmbedding.coe_ofMapLeIffₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : PartialOrder.{u2} α] [_inst_4 : Preorder.{u1} β] {f : α -> β} (h : forall (a : α) (b : α), Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_4) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_3)) a b)), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : α), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_3)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_4) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (OrderEmbedding.ofMapLEIff.{u2, u1} α β _inst_3 _inst_4 f h))) f
+Case conversion may be inaccurate. Consider using '#align order_embedding.coe_of_map_le_iff OrderEmbedding.coe_ofMapLEIffₓ'. -/
 @[simp]
-theorem coe_ofMapLeIff {α β} [PartialOrder α] [Preorder β] {f : α → β} (h) :
-    ⇑(ofMapLeIff f h) = f :=
+theorem coe_ofMapLEIff {α β} [PartialOrder α] [Preorder β] {f : α → β} (h) :
+    ⇑(ofMapLEIff f h) = f :=
   rfl
-#align order_embedding.coe_of_map_le_iff OrderEmbedding.coe_ofMapLeIff
+#align order_embedding.coe_of_map_le_iff OrderEmbedding.coe_ofMapLEIff
 
 #print OrderEmbedding.ofStrictMono /-
 /-- A strictly monotone map from a linear order is an order embedding. -/
 def ofStrictMono {α β} [LinearOrder α] [Preorder β] (f : α → β) (h : StrictMono f) : α ↪o β :=
-  ofMapLeIff f fun _ _ => h.le_iff_le
+  ofMapLEIff f fun _ _ => h.le_iff_le
 #align order_embedding.of_strict_mono OrderEmbedding.ofStrictMono
 -/
 

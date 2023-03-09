@@ -562,7 +562,7 @@ The way `edge_set` is defined is such that `mem_edge_set` is proved by `refl`.
 (That is, `⟦(v, w)⟧ ∈ G.edge_set` is definitionally equal to `G.adj v w`.)
 -/
 def edgeSetEmbedding : SimpleGraph V ↪o Set (Sym2 V) :=
-  OrderEmbedding.ofMapLeIff (fun G => Sym2.fromRel G.symm) fun G G' =>
+  OrderEmbedding.ofMapLEIff (fun G => Sym2.fromRel G.symm) fun G G' =>
     ⟨fun h a b => @h ⟦(a, b)⟧, fun h e => Sym2.ind (@h) e⟩
 #align simple_graph.edge_set SimpleGraph.edgeSetEmbedding
 -/
@@ -610,16 +610,16 @@ theorem edgeSet_subset_edgeSet : G₁.edgeSetEmbedding ⊆ G₂.edgeSetEmbedding
   (edgeSetEmbedding : SimpleGraph V ↪o Set (Sym2 V)).le_iff_le
 #align simple_graph.edge_set_subset_edge_set SimpleGraph.edgeSet_subset_edgeSet
 
-/- warning: simple_graph.edge_set_ssubset_edge_set -> SimpleGraph.edgeSet_sSubset_edgeSet is a dubious translation:
+/- warning: simple_graph.edge_set_ssubset_edge_set -> SimpleGraph.edgeSet_ssubset_edgeSet is a dubious translation:
 lean 3 declaration is
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasSsubset.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))) G₁ G₂)
 but is expected to have type
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instHasSSubsetSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G₁) (SimpleGraph.edgeSet.{u1} V G₂)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))))))) G₁ G₂)
-Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_ssubset_edge_set SimpleGraph.edgeSet_sSubset_edgeSetₓ'. -/
+Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_ssubset_edge_set SimpleGraph.edgeSet_ssubset_edgeSetₓ'. -/
 @[simp]
-theorem edgeSet_sSubset_edgeSet : G₁.edgeSetEmbedding ⊂ G₂.edgeSetEmbedding ↔ G₁ < G₂ :=
+theorem edgeSet_ssubset_edgeSet : G₁.edgeSetEmbedding ⊂ G₂.edgeSetEmbedding ↔ G₁ < G₂ :=
   (edgeSetEmbedding : SimpleGraph V ↪o Set (Sym2 V)).lt_iff_lt
-#align simple_graph.edge_set_ssubset_edge_set SimpleGraph.edgeSet_sSubset_edgeSet
+#align simple_graph.edge_set_ssubset_edge_set SimpleGraph.edgeSet_ssubset_edgeSet
 
 /- warning: simple_graph.edge_set_injective -> SimpleGraph.edgeSet_injective is a dubious translation:
 lean 3 declaration is
@@ -1338,16 +1338,16 @@ theorem edgeFinset_subset_edgeFinset : G₁.edgeFinset ⊆ G₂.edgeFinset ↔ G
   simp [edge_finset]
 #align simple_graph.edge_finset_subset_edge_finset SimpleGraph.edgeFinset_subset_edgeFinset
 
-/- warning: simple_graph.edge_finset_ssubset_edge_finset -> SimpleGraph.edgeFinset_sSubset_edgeFinset is a dubious translation:
+/- warning: simple_graph.edge_finset_ssubset_edge_finset -> SimpleGraph.edgeFinset_ssubset_edgeFinset is a dubious translation:
 lean 3 declaration is
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₁))] [_inst_3 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Sym2.{u1} V)) Type.{u1} (Set.hasCoeToSort.{u1} (Sym2.{u1} V)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.hasLe.{u1} V) (Set.hasLe.{u1} (Sym2.{u1} V))) (fun (_x : RelEmbedding.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) => (SimpleGraph.{u1} V) -> (Set.{u1} (Sym2.{u1} V))) (RelEmbedding.hasCoeToFun.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (Sym2.{u1} V)) (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasLe.{u1} V)) (LE.le.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.hasLe.{u1} (Sym2.{u1} V)))) (SimpleGraph.edgeSetEmbedding.{u1} V) G₂))], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.hasSsubset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (CompleteSemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toCompleteSemilatticeInf.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))) G₁ G₂)
 but is expected to have type
   forall {V : Type.{u1}} {G₁ : SimpleGraph.{u1} V} {G₂ : SimpleGraph.{u1} V} [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₁))] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₂))], Iff (HasSSubset.SSubset.{u1} (Finset.{u1} (Sym2.{u1} V)) (Finset.instHasSSubsetFinset.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeFinset.{u1} V G₁ _inst_2) (SimpleGraph.edgeFinset.{u1} V G₂ _inst_3)) (LT.lt.{u1} (SimpleGraph.{u1} V) (Preorder.toLT.{u1} (SimpleGraph.{u1} V) (PartialOrder.toPreorder.{u1} (SimpleGraph.{u1} V) (SemilatticeInf.toPartialOrder.{u1} (SimpleGraph.{u1} V) (Lattice.toSemilatticeInf.{u1} (SimpleGraph.{u1} V) (GeneralizedCoheytingAlgebra.toLattice.{u1} (SimpleGraph.{u1} V) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBiheytingAlgebra.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))))))))) G₁ G₂)
-Case conversion may be inaccurate. Consider using '#align simple_graph.edge_finset_ssubset_edge_finset SimpleGraph.edgeFinset_sSubset_edgeFinsetₓ'. -/
+Case conversion may be inaccurate. Consider using '#align simple_graph.edge_finset_ssubset_edge_finset SimpleGraph.edgeFinset_ssubset_edgeFinsetₓ'. -/
 @[simp]
-theorem edgeFinset_sSubset_edgeFinset : G₁.edgeFinset ⊂ G₂.edgeFinset ↔ G₁ < G₂ := by
+theorem edgeFinset_ssubset_edgeFinset : G₁.edgeFinset ⊂ G₂.edgeFinset ↔ G₁ < G₂ := by
   simp [edge_finset]
-#align simple_graph.edge_finset_ssubset_edge_finset SimpleGraph.edgeFinset_sSubset_edgeFinset
+#align simple_graph.edge_finset_ssubset_edge_finset SimpleGraph.edgeFinset_ssubset_edgeFinset
 
 /- warning: simple_graph.edge_finset_mono -> SimpleGraph.edgeFinset_mono is a dubious translation:
 lean 3 declaration is

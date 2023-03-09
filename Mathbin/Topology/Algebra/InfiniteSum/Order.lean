@@ -348,10 +348,10 @@ section CanonicallyOrderedAddMonoid
 variable [CanonicallyOrderedAddMonoid α] [TopologicalSpace α] [OrderClosedTopology α] {f : ι → α}
   {a : α}
 
-#print le_has_sum' /-
-theorem le_has_sum' (hf : HasSum f a) (i : ι) : f i ≤ a :=
+#print le_hasSum' /-
+theorem le_hasSum' (hf : HasSum f a) (i : ι) : f i ≤ a :=
   le_hasSum hf i fun _ _ => zero_le _
-#align le_has_sum' le_has_sum'
+#align le_has_sum' le_hasSum'
 -/
 
 #print le_tsum' /-
@@ -370,7 +370,7 @@ theorem hasSum_zero_iff : HasSum f 0 ↔ ∀ x, f x = 0 :=
   by
   refine' ⟨_, fun h => _⟩
   · contrapose!
-    exact fun ⟨x, hx⟩ h => hx (nonpos_iff_eq_zero.1 <| le_has_sum' h x)
+    exact fun ⟨x, hx⟩ h => hx (nonpos_iff_eq_zero.1 <| le_hasSum' h x)
   · convert hasSum_zero
     exact funext h
 #align has_sum_zero_iff hasSum_zero_iff
@@ -395,10 +395,10 @@ theorem tsum_ne_zero_iff (hf : Summable f) : (∑' i, f i) ≠ 0 ↔ ∃ x, f x 
   rw [Ne.def, tsum_eq_zero_iff hf, not_forall]
 #align tsum_ne_zero_iff tsum_ne_zero_iff
 
-#print isLUB_has_sum' /-
-theorem isLUB_has_sum' (hf : HasSum f a) : IsLUB (Set.range fun s => ∑ i in s, f i) a :=
+#print isLUB_hasSum' /-
+theorem isLUB_hasSum' (hf : HasSum f a) : IsLUB (Set.range fun s => ∑ i in s, f i) a :=
   isLUB_of_tendsto_atTop (Finset.sum_mono_set f) hf
-#align is_lub_has_sum' isLUB_has_sum'
+#align is_lub_has_sum' isLUB_hasSum'
 -/
 
 end CanonicallyOrderedAddMonoid

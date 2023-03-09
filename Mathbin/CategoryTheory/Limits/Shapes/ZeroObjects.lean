@@ -230,15 +230,15 @@ section
 
 variable [HasZeroObject C]
 
-#print CategoryTheory.Limits.HasZeroObject.hasZero /-
+#print CategoryTheory.Limits.HasZeroObject.zero' /-
 /-- Construct a `has_zero C` for a category with a zero object.
 This can not be a global instance as it will trigger for every `has_zero C` typeclass search.
 -/
-protected def HasZeroObject.hasZero : Zero C where zero := HasZeroObject.zero.some
-#align category_theory.limits.has_zero_object.has_zero CategoryTheory.Limits.HasZeroObject.hasZero
+protected def HasZeroObject.zero' : Zero C where zero := HasZeroObject.zero.some
+#align category_theory.limits.has_zero_object.has_zero CategoryTheory.Limits.HasZeroObject.zero'
 -/
 
-scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
+scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.zero'
 
 #print CategoryTheory.Limits.isZero_zero /-
 theorem isZero_zero : IsZero (0 : C) :=
@@ -395,10 +395,10 @@ def zeroIsoTerminal [HasTerminal C] : 0 ≅ ⊤_ C :=
 #align category_theory.limits.has_zero_object.zero_iso_terminal CategoryTheory.Limits.HasZeroObject.zeroIsoTerminal
 -/
 
-#print CategoryTheory.Limits.HasZeroObject.has_strict_initial /-
-instance (priority := 100) has_strict_initial : InitialMonoClass C :=
+#print CategoryTheory.Limits.HasZeroObject.initialMonoClass /-
+instance (priority := 100) initialMonoClass : InitialMonoClass C :=
   InitialMonoClass.of_isInitial zeroIsInitial fun X => CategoryTheory.mono _
-#align category_theory.limits.has_zero_object.has_strict_initial CategoryTheory.Limits.HasZeroObject.has_strict_initial
+#align category_theory.limits.has_zero_object.has_strict_initial CategoryTheory.Limits.HasZeroObject.initialMonoClass
 -/
 
 end HasZeroObject

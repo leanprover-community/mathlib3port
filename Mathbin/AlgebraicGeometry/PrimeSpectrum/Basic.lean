@@ -520,7 +520,7 @@ theorem vanishingIdeal_strict_anti_mono_iff {s t : Set (PrimeSpectrum R)} (hs : 
 /-- The antitone order embedding of closed subsets of `Spec R` into ideals of `R`. -/
 def closedsEmbedding (R : Type _) [CommRing R] :
     (TopologicalSpace.Closeds <| PrimeSpectrum R)ᵒᵈ ↪o Ideal R :=
-  OrderEmbedding.ofMapLeIff (fun s => vanishingIdeal s.ofDual) fun s t =>
+  OrderEmbedding.ofMapLEIff (fun s => vanishingIdeal s.ofDual) fun s t =>
     (vanishingIdeal_anti_mono_iff s.2).symm
 #align prime_spectrum.closeds_embedding PrimeSpectrum.closedsEmbedding
 
@@ -968,7 +968,7 @@ theorem le_iff_specializes (x y : PrimeSpectrum R) : x ≤ y ↔ x ⤳ y :=
 /-- `nhds` as an order embedding. -/
 @[simps (config := { fullyApplied := true })]
 def nhdsOrderEmbedding : PrimeSpectrum R ↪o Filter (PrimeSpectrum R) :=
-  OrderEmbedding.ofMapLeIff nhds fun a b => (le_iff_specializes a b).symm
+  OrderEmbedding.ofMapLEIff nhds fun a b => (le_iff_specializes a b).symm
 #align prime_spectrum.nhds_order_embedding PrimeSpectrum.nhdsOrderEmbedding
 
 instance : T0Space (PrimeSpectrum R) :=

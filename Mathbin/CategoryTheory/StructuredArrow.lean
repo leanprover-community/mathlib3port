@@ -288,11 +288,11 @@ theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
   simp
 #align category_theory.structured_arrow.map_comp CategoryTheory.StructuredArrow.map_comp
 
-#print CategoryTheory.StructuredArrow.proj_reflects_iso /-
-instance proj_reflects_iso : ReflectsIsomorphisms (proj S T)
+#print CategoryTheory.StructuredArrow.proj_reflectsIsomorphisms /-
+instance proj_reflectsIsomorphisms : ReflectsIsomorphisms (proj S T)
     where reflects Y Z f t :=
     ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
-#align category_theory.structured_arrow.proj_reflects_iso CategoryTheory.StructuredArrow.proj_reflects_iso
+#align category_theory.structured_arrow.proj_reflects_iso CategoryTheory.StructuredArrow.proj_reflectsIsomorphisms
 -/
 
 open CategoryTheory.Limits
@@ -596,11 +596,11 @@ theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
   simp
 #align category_theory.costructured_arrow.map_comp CategoryTheory.CostructuredArrow.map_comp
 
-#print CategoryTheory.CostructuredArrow.proj_reflects_iso /-
-instance proj_reflects_iso : ReflectsIsomorphisms (proj S T)
+#print CategoryTheory.CostructuredArrow.proj_reflectsIsomorphisms /-
+instance proj_reflectsIsomorphisms : ReflectsIsomorphisms (proj S T)
     where reflects Y Z f t :=
     ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
-#align category_theory.costructured_arrow.proj_reflects_iso CategoryTheory.CostructuredArrow.proj_reflects_iso
+#align category_theory.costructured_arrow.proj_reflects_iso CategoryTheory.CostructuredArrow.proj_reflectsIsomorphisms
 -/
 
 open CategoryTheory.Limits

@@ -225,11 +225,11 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
       (Polynomial.pairwise_coprime_x_sub_c <| MulAction.injective_ofQuotientStabilizer G x) fun y =>
       QuotientGroup.induction_on y fun g => _
   rw [Polynomial.dvd_iff_isRoot, Polynomial.IsRoot.def, MulAction.ofQuotientStabilizer_mk,
-    Polynomial.eval_smul', ← Subfield.toSubring.subtype_eq_subtype, ←
+    Polynomial.eval_smul', ← Subfield.toSubring_subtype_eq_subtype, ←
     IsInvariantSubring.coe_subtype_hom' G (FixedPoints.subfield G F).toSubring, ←
     MulSemiringActionHom.coe_polynomial, ← MulSemiringActionHom.map_smul, smul_polynomial,
     MulSemiringActionHom.coe_polynomial, IsInvariantSubring.coe_subtype_hom', Polynomial.eval_map,
-    Subfield.toSubring.subtype_eq_subtype, hf, smul_zero]
+    Subfield.toSubring_subtype_eq_subtype, hf, smul_zero]
 #align fixed_points.minpoly.of_eval₂ FixedPoints.minpoly.of_eval₂
 
 -- Why is this so slow?
@@ -299,7 +299,7 @@ instance normal : Normal (FixedPoints.subfield G F) F :=
     (Polynomial.splits_id_iff_splits _).1 <|
       by
       cases nonempty_fintype G
-      rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
+      rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring_subtype_eq_subtype,
         Polynomial.map_toSubring _ (Subfield G F).toSubring, prodXSubSmul]
       exact Polynomial.splits_prod _ fun _ _ => Polynomial.splits_x_sub_c _⟩
 #align fixed_points.normal FixedPoints.normal

@@ -170,7 +170,7 @@ theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
   rw [eq_comm, List.get?_eq_some'] at this
   obtain ⟨w, h⟩ := this
   let f' : ℕ ↪o ℕ :=
-    OrderEmbedding.ofMapLeIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
+    OrderEmbedding.ofMapLEIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
       simp [tsub_le_tsub_iff_right, Nat.succ_le_iff, Nat.lt_succ_iff]
   have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).get? (f' ix) :=
     by
@@ -204,7 +204,7 @@ theorem sublist_iff_exists_orderEmbedding_get?_eq {l l' : List α} :
       simpa using hf
     · obtain ⟨f, hf⟩ := IH
       refine'
-        ⟨OrderEmbedding.ofMapLeIff (fun ix : ℕ => if ix = 0 then 0 else (f ix.pred).succ) _, _⟩
+        ⟨OrderEmbedding.ofMapLEIff (fun ix : ℕ => if ix = 0 then 0 else (f ix.pred).succ) _, _⟩
       · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iff]
       · rintro ⟨_ | i⟩
         · simp
@@ -238,7 +238,7 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
       rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf
       obtain ⟨h, -⟩ := hf
       exact h
-    refine' ⟨OrderEmbedding.ofMapLeIff (fun ix => ⟨f ix, h ix.is_lt⟩) _, _⟩
+    refine' ⟨OrderEmbedding.ofMapLEIff (fun ix => ⟨f ix, h ix.is_lt⟩) _, _⟩
     · simp
     · intro i
       apply Option.some_injective
