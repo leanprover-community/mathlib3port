@@ -27,7 +27,7 @@ section NormedField
 
 /-- If `f : 𝕜 → E` is bounded in a punctured neighborhood of `a`, then `f(x) = o((x - a)⁻¹)` as
 `x → a`, `x ≠ a`. -/
-theorem Filter.IsBoundedUnder.isOCat_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [HasNorm E] {a : 𝕜}
+theorem Filter.IsBoundedUnder.isOCat_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [Norm E] {a : 𝕜}
     {f : 𝕜 → E} (h : IsBoundedUnder (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) :
     f =o[𝓝[≠] a] fun x => (x - a)⁻¹ :=
   by

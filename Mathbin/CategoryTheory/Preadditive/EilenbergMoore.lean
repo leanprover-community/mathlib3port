@@ -100,11 +100,11 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T)
         intros
         ext
         apply add_comm }
-  add_comp' := by
+  add_comp := by
     intros
     ext
     apply add_comp
-  comp_add' := by
+  comp_add := by
     intros
     ext
     apply comp_add
@@ -184,11 +184,11 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U)
         intros
         ext
         apply add_comm }
-  add_comp' := by
+  add_comp := by
     intros
     ext
     apply add_comp
-  comp_add' := by
+  comp_add := by
     intros
     ext
     apply comp_add

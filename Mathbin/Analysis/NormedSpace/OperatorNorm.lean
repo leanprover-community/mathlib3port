@@ -141,7 +141,7 @@ def opNorm (f : E →SL[σ₁₂] F) :=
   infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
 #align continuous_linear_map.op_norm ContinuousLinearMap.opNorm
 
-instance hasOpNorm : HasNorm (E →SL[σ₁₂] F) :=
+instance hasOpNorm : Norm (E →SL[σ₁₂] F) :=
   ⟨opNorm⟩
 #align continuous_linear_map.has_op_norm ContinuousLinearMap.hasOpNorm
 

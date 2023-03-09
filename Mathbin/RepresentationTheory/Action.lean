@@ -371,11 +371,11 @@ instance : Preadditive (Action V G)
         intros
         ext
         exact add_comm _ _ }
-  add_comp' := by
+  add_comp := by
     intros
     ext
     exact preadditive.add_comp _ _ _ _ _ _
-  comp_add' := by
+  comp_add := by
     intros
     ext
     exact preadditive.comp_add _ _ _ _ _ _

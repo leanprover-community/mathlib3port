@@ -259,7 +259,7 @@ instance completeSpace : CompleteSpace ℤ_[p] :=
   this.completeSpace_coe
 #align padic_int.complete_space PadicInt.completeSpace
 
-instance : HasNorm ℤ_[p] :=
+instance : Norm ℤ_[p] :=
   ⟨fun z => ‖(z : ℚ_[p])‖⟩
 
 variable {p}

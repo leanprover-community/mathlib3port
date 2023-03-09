@@ -349,7 +349,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
 
 /-- Norm constructed from a `inner_product_space.core` structure, defined to be the square root
 of the scalar product. -/
-def toHasNorm : HasNorm F where norm x := sqrt (re ⟪x, x⟫)
+def toHasNorm : Norm F where norm x := sqrt (re ⟪x, x⟫)
 #align inner_product_space.of_core.to_has_norm InnerProductSpace.OfCore.toHasNorm
 
 attribute [local instance] to_has_norm

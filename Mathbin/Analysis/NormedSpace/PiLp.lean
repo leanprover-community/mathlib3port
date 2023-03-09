@@ -221,7 +221,7 @@ end Dist
 
 section Norm
 
-variable [∀ i, HasNorm (β i)] [∀ i, Zero (β i)]
+variable [∀ i, Norm (β i)] [∀ i, Zero (β i)]
 
 /-- Endowing the space `pi_Lp p β` with the `L^p` norm. We register this instance
 separate from `pi_Lp.seminormed_add_comm_group` since the latter requires the type class hypothesis
@@ -229,7 +229,7 @@ separate from `pi_Lp.seminormed_add_comm_group` since the latter requires the ty
 
 Registering this separately allows for a future norm-like structure on `pi_Lp p β` for `p < 1`
 satisfying a relaxed triangle inequality. These are called *quasi-norms*. -/
-instance hasNorm : HasNorm (PiLp p β)
+instance hasNorm : Norm (PiLp p β)
     where norm f :=
     if hp : p = 0 then { i | f i ≠ 0 }.toFinite.toFinset.card
     else if p = ∞ then ⨆ i, ‖f i‖ else (∑ i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal)

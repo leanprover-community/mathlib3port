@@ -478,7 +478,7 @@ instance : MetricSpace (Hamming β) :=
       push_cast
       exact_mod_cast @eq_of_hammingDist_eq_zero _ _ _ _ }
 
-instance [∀ i, Zero (β i)] : HasNorm (Hamming β) :=
+instance [∀ i, Zero (β i)] : Norm (Hamming β) :=
   ⟨fun x => hammingNorm (ofHamming x)⟩
 
 @[simp, push_cast]

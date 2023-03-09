@@ -94,11 +94,11 @@ theorem completion.map_zero (V W : SemiNormedGroup) : completion.map (0 : V ⟶ 
 instance : Preadditive SemiNormedGroup.{u}
     where
   homGroup P Q := inferInstance
-  add_comp' := by
+  add_comp := by
     intros
     ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
-  comp_add' := by
+  comp_add := by
     intros
     ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]

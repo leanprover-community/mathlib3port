@@ -104,7 +104,7 @@ open Topology NNReal
 variable {M N : Type _} [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
 
 /-- The definition of the norm on the quotient by an additive subgroup. -/
-noncomputable instance normOnQuotient (S : AddSubgroup M) : HasNorm (M ⧸ S)
+noncomputable instance normOnQuotient (S : AddSubgroup M) : Norm (M ⧸ S)
     where norm x := infₛ (norm '' { m | mk' S m = x })
 #align norm_on_quotient normOnQuotient
 

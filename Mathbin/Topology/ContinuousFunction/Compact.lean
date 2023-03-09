@@ -167,7 +167,7 @@ theorem continuous_coe : @Continuous C(α, β) (α → β) _ _ coeFn :=
 
 -- TODO at some point we will need lemmas characterising this norm!
 -- At the moment the only way to reason about it is to transfer `f : C(α,E)` back to `α →ᵇ E`.
-instance : HasNorm C(α, E) where norm x := dist x 0
+instance : Norm C(α, E) where norm x := dist x 0
 
 @[simp]
 theorem BoundedContinuousFunction.norm_mkOfCompact (f : C(α, E)) : ‖mkOfCompact f‖ = ‖f‖ :=

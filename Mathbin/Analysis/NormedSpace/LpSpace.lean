@@ -392,7 +392,7 @@ theorem coeFn_sub (f g : lp E p) : ⇑(f - g) = f - g :=
   rfl
 #align lp.coe_fn_sub lp.coeFn_sub
 
-instance : HasNorm (lp E p)
+instance : Norm (lp E p)
     where norm f :=
     if hp : p = 0 then by subst hp <;> exact (lp.memℓp f).finite_dsupport.toFinset.card
     else if p = ∞ then ⨆ i, ‖f i‖ else (∑' i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal)

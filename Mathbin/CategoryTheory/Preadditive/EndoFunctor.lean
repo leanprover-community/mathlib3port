@@ -99,11 +99,11 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F)
         intros
         ext
         apply add_comm }
-  add_comp' := by
+  add_comp := by
     intros
     ext
     apply add_comp
-  comp_add' := by
+  comp_add := by
     intros
     ext
     apply comp_add
@@ -180,11 +180,11 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
         intros
         ext
         apply add_comm }
-  add_comp' := by
+  add_comp := by
     intros
     ext
     apply add_comp
-  comp_add' := by
+  comp_add := by
     intros
     ext
     apply comp_add

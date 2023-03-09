@@ -242,10 +242,10 @@ attribute [local reducible] CategoryTheory.categoryFree
 instance : Preadditive (Free R C)
     where
   homGroup X Y := Finsupp.addCommGroup
-  add_comp' X Y Z f f' g := by
+  add_comp X Y Z f f' g := by
     dsimp
     rw [Finsupp.sum_add_index'] <;> · simp [add_mul]
-  comp_add' X Y Z f g g' := by
+  comp_add X Y Z f g g' := by
     dsimp
     rw [← Finsupp.sum_add]
     congr ; ext (r h)

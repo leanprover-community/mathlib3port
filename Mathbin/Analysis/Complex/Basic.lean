@@ -46,7 +46,7 @@ namespace Complex
 
 open ComplexConjugate Topology
 
-instance : HasNorm ℂ :=
+instance : Norm ℂ :=
   ⟨abs⟩
 
 @[simp]

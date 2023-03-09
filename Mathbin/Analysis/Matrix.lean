@@ -564,7 +564,7 @@ matrix. -/
 def frobeniusNormedRing [DecidableEq m] : NormedRing (Matrix m m α) :=
   {
     Matrix.frobeniusSeminormedAddCommGroup with
-    norm := HasNorm.norm
+    norm := Norm.norm
     norm_mul := frobenius_norm_mul }
 #align matrix.frobenius_normed_ring Matrix.frobeniusNormedRing
 

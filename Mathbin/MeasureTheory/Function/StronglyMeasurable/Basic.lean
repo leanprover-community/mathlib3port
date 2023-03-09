@@ -208,7 +208,7 @@ protected theorem tendsto_approx {m : MeasurableSpace α} (hf : StronglyMeasurab
 /-- Similar to `strongly_measurable.approx`, but enforces that the norm of every function in the
 sequence is less than `c` everywhere. If `‖f x‖ ≤ c` this sequence of simple functions verifies
 `tendsto (λ n, hf.approx_bounded n x) at_top (𝓝 (f x))`. -/
-noncomputable def approxBounded {m : MeasurableSpace α} [HasNorm β] [SMul ℝ β]
+noncomputable def approxBounded {m : MeasurableSpace α} [Norm β] [SMul ℝ β]
     (hf : StronglyMeasurable f) (c : ℝ) : ℕ → SimpleFunc α β := fun n =>
   (hf.approx n).map fun x => min 1 (c / ‖x‖) • x
 #align measure_theory.strongly_measurable.approx_bounded MeasureTheory.StronglyMeasurable.approxBounded

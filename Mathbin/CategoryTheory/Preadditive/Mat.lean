@@ -153,10 +153,10 @@ instance : Preadditive (Mat_ C)
   homGroup M N := by
     change AddCommGroup (DMatrix M.ι N.ι _)
     infer_instance
-  add_comp' M N K f f' g := by
+  add_comp M N K f f' g := by
     ext
     simp [Finset.sum_add_distrib]
-  comp_add' M N K f g g' := by
+  comp_add M N K f g g' := by
     ext
     simp [Finset.sum_add_distrib]
 
@@ -616,11 +616,11 @@ def equivalenceSingleObj : Mat R ≌ Mat_ (SingleObj Rᵐᵒᵖ) :=
 
 instance : Preadditive (Mat R)
     where
-  add_comp' := by
+  add_comp := by
     intros
     ext
     simp [add_mul, Finset.sum_add_distrib]
-  comp_add' := by
+  comp_add := by
     intros
     ext
     simp [mul_add, Finset.sum_add_distrib]

@@ -77,7 +77,7 @@ def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [Continuous
 
 /-- If `l` is a filter on `α`, then a function `f: α → β` is `bounded_at_filter l`
 if `f =O[l] 1`. -/
-def BoundedAtFilter [HasNorm β] (l : Filter α) (f : α → β) : Prop :=
+def BoundedAtFilter [Norm β] (l : Filter α) (f : α → β) : Prop :=
   Asymptotics.IsO l f (1 : α → ℝ)
 #align filter.bounded_at_filter Filter.BoundedAtFilter
 

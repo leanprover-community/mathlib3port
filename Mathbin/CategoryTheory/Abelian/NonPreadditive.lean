@@ -493,8 +493,8 @@ def preadditive : Preadditive C
       neg := fun f => -f
       add_left_neg := neg_add_self
       add_comm := add_comm }
-  add_comp' := add_comp
-  comp_add' := comp_add
+  add_comp := add_comp
+  comp_add := comp_add
 #align category_theory.non_preadditive_abelian.preadditive CategoryTheory.NonPreadditiveAbelian.preadditive
 
 end

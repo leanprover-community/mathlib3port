@@ -320,13 +320,13 @@ def opNorm :=
   infₛ { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ }
 #align continuous_multilinear_map.op_norm ContinuousMultilinearMap.opNorm
 
-instance hasOpNorm : HasNorm (ContinuousMultilinearMap 𝕜 E G) :=
+instance hasOpNorm : Norm (ContinuousMultilinearMap 𝕜 E G) :=
   ⟨opNorm⟩
 #align continuous_multilinear_map.has_op_norm ContinuousMultilinearMap.hasOpNorm
 
 /-- An alias of `continuous_multilinear_map.has_op_norm` with non-dependent types to help typeclass
 search. -/
-instance hasOpNorm' : HasNorm (ContinuousMultilinearMap 𝕜 (fun i : ι => G) G') :=
+instance hasOpNorm' : Norm (ContinuousMultilinearMap 𝕜 (fun i : ι => G) G') :=
   ContinuousMultilinearMap.hasOpNorm
 #align continuous_multilinear_map.has_op_norm' ContinuousMultilinearMap.hasOpNorm'
 

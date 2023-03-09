@@ -28,7 +28,7 @@ open Topology BigOperators NNReal ENNReal uniformity Pointwise
 
 /-- A non-unital seminormed ring is a not-necessarily-unital ring
 endowed with a seminorm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
-class NonUnitalSemiNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α,
+class NonUnitalSemiNormedRing (α : Type _) extends Norm α, NonUnitalRing α,
   PseudoMetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
@@ -36,7 +36,7 @@ class NonUnitalSemiNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α
 
 /-- A seminormed ring is a ring endowed with a seminorm which satisfies the inequality
 `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
-class SemiNormedRing (α : Type _) extends HasNorm α, Ring α, PseudoMetricSpace α where
+class SemiNormedRing (α : Type _) extends Norm α, Ring α, PseudoMetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 #align semi_normed_ring SemiNormedRing
@@ -50,7 +50,7 @@ instance (priority := 100) SemiNormedRing.toNonUnitalSemiNormedRing [β : SemiNo
 
 /-- A non-unital normed ring is a not-necessarily-unital ring
 endowed with a norm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
-class NonUnitalNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α, MetricSpace α where
+class NonUnitalNormedRing (α : Type _) extends Norm α, NonUnitalRing α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 #align non_unital_normed_ring NonUnitalNormedRing
@@ -63,14 +63,14 @@ instance (priority := 100) NonUnitalNormedRing.toNonUnitalSemiNormedRing
 #align non_unital_normed_ring.to_non_unital_semi_normed_ring NonUnitalNormedRing.toNonUnitalSemiNormedRing
 
 /-- A normed ring is a ring endowed with a norm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
-class NormedRing (α : Type _) extends HasNorm α, Ring α, MetricSpace α where
+class NormedRing (α : Type _) extends Norm α, Ring α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 #align normed_ring NormedRing
 
 /-- A normed division ring is a division ring endowed with a seminorm which satisfies the equality
 `‖x y‖ = ‖x‖ ‖y‖`. -/
-class NormedDivisionRing (α : Type _) extends HasNorm α, DivisionRing α, MetricSpace α where
+class NormedDivisionRing (α : Type _) extends Norm α, DivisionRing α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul' : ∀ a b, norm (a * b) = norm a * norm b
 #align normed_division_ring NormedDivisionRing
@@ -119,7 +119,7 @@ instance : NormedCommRing PUnit :=
 
 /-- A mixin class with the axiom `‖1‖ = 1`. Many `normed_ring`s and all `normed_field`s satisfy this
 axiom. -/
-class NormOneClass (α : Type _) [HasNorm α] [One α] : Prop where
+class NormOneClass (α : Type _) [Norm α] [One α] : Prop where
   norm_one : ‖(1 : α)‖ = 1
 #align norm_one_class NormOneClass
 
@@ -642,7 +642,7 @@ theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖
 end NormedDivisionRing
 
 /-- A normed field is a field with a norm satisfying ‖x y‖ = ‖x‖ ‖y‖. -/
-class NormedField (α : Type _) extends HasNorm α, Field α, MetricSpace α where
+class NormedField (α : Type _) extends Norm α, Field α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul' : ∀ a b, norm (a * b) = norm a * norm b
 #align normed_field NormedField
@@ -868,8 +868,7 @@ variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 
 /-- This class states that a ring homomorphism is isometric. This is a sufficient assumption
 for a continuous semilinear map to be bounded and this is the main use for this typeclass. -/
-class RingHomIsometric [Semiring R₁] [Semiring R₂] [HasNorm R₁] [HasNorm R₂] (σ : R₁ →+* R₂) :
-  Prop where
+class RingHomIsometric [Semiring R₁] [Semiring R₂] [Norm R₁] [Norm R₂] (σ : R₁ →+* R₂) : Prop where
   is_iso : ∀ {x : R₁}, ‖σ x‖ = ‖x‖
 #align ring_hom_isometric RingHomIsometric
 

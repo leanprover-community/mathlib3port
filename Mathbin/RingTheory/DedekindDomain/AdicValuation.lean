@@ -368,8 +368,7 @@ def AdicCompletion :=
 #align is_dedekind_domain.height_one_spectrum.adic_completion IsDedekindDomain.HeightOneSpectrum.AdicCompletion
 
 instance : Field (v.adicCompletion K) :=
-  @UniformSpace.Completion.field K _ v.adicValued.toUniformSpace _ _
-    v.adicValued.to_uniform_add_group
+  @UniformSpace.Completion.field K _ v.adicValued.toUniformSpace _ _ v.adicValued.to_uniformAddGroup
 
 instance : Inhabited (v.adicCompletion K) :=
   ⟨0⟩

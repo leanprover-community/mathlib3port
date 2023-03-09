@@ -797,14 +797,14 @@ instance : MetricSpace ℚ_[p] where
     apply padic_norm_e.eq_zero.1
     exact_mod_cast h
 
-instance : HasNorm ℚ_[p] :=
+instance : Norm ℚ_[p] :=
   ⟨fun x => padicNormE x⟩
 
 instance : NormedField ℚ_[p] :=
   { Padic.field,
     Padic.metricSpace p with
     dist_eq := fun _ _ => rfl
-    norm_mul' := by simp [HasNorm.norm, map_mul]
+    norm_mul' := by simp [Norm.norm, map_mul]
     norm := norm }
 
 instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
@@ -812,13 +812,13 @@ instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
   abv_nonneg := norm_nonneg
   abv_eq_zero _ := norm_eq_zero
   abv_add := norm_add_le
-  abv_mul := by simp [HasNorm.norm, map_mul]
+  abv_mul := by simp [Norm.norm, map_mul]
 #align padic.is_absolute_value Padic.isAbsoluteValue
 
 theorem rat_dense (q : ℚ_[p]) {ε : ℝ} (hε : 0 < ε) : ∃ r : ℚ, ‖q - r‖ < ε :=
   let ⟨ε', hε'l, hε'r⟩ := exists_rat_btwn hε
   let ⟨r, hr⟩ := rat_dense' q (by simpa using hε'l)
-  ⟨r, lt_trans (by simpa [HasNorm.norm] using hr) hε'r⟩
+  ⟨r, lt_trans (by simpa [Norm.norm] using hr) hε'r⟩
 #align padic.rat_dense Padic.rat_dense
 
 end NormedSpace
@@ -834,7 +834,7 @@ variable {p : ℕ} [hp : Fact p.Prime]
 include hp
 
 @[simp]
-protected theorem mul (q r : ℚ_[p]) : ‖q * r‖ = ‖q‖ * ‖r‖ := by simp [HasNorm.norm, map_mul]
+protected theorem mul (q r : ℚ_[p]) : ‖q * r‖ = ‖q‖ * ‖r‖ := by simp [Norm.norm, map_mul]
 #align padic_norm_e.mul padicNormE.mul
 
 protected theorem is_norm (q : ℚ_[p]) : ↑(padicNormE q) = ‖q‖ :=
@@ -843,24 +843,24 @@ protected theorem is_norm (q : ℚ_[p]) : ↑(padicNormE q) = ‖q‖ :=
 
 theorem nonarchimedean (q r : ℚ_[p]) : ‖q + r‖ ≤ max ‖q‖ ‖r‖ :=
   by
-  unfold HasNorm.norm
+  unfold Norm.norm
   exact_mod_cast nonarchimedean' _ _
 #align padic_norm_e.nonarchimedean padicNormE.nonarchimedean
 
 theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ‖q‖ ≠ ‖r‖) : ‖q + r‖ = max ‖q‖ ‖r‖ :=
   by
-  unfold HasNorm.norm
+  unfold Norm.norm
   apply_mod_cast add_eq_max_of_ne'
   intro h'
   apply h
-  unfold HasNorm.norm
+  unfold Norm.norm
   exact_mod_cast h'
 #align padic_norm_e.add_eq_max_of_ne padicNormE.add_eq_max_of_ne
 
 @[simp]
 theorem eq_padicNorm (q : ℚ) : ‖(q : ℚ_[p])‖ = padicNorm p q :=
   by
-  unfold HasNorm.norm
+  unfold Norm.norm
   rw [← padicNormE.eq_padic_norm']
 #align padic_norm_e.eq_padic_norm padicNormE.eq_padicNorm
 

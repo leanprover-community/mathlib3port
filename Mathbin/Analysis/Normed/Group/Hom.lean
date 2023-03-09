@@ -209,7 +209,7 @@ def opNorm (f : NormedAddGroupHom V₁ V₂) :=
   infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
 #align normed_add_group_hom.op_norm NormedAddGroupHom.opNorm
 
-instance hasOpNorm : HasNorm (NormedAddGroupHom V₁ V₂) :=
+instance hasOpNorm : Norm (NormedAddGroupHom V₁ V₂) :=
   ⟨opNorm⟩
 #align normed_add_group_hom.has_op_norm NormedAddGroupHom.hasOpNorm
 

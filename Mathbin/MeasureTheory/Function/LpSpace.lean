@@ -1779,7 +1779,7 @@ theorem mem_lp_const (α) {m : MeasurableSpace α} (μ : Measure α) (c : E) [Is
   (memℒpConst c).snorm_mk_lt_top
 #align measure_theory.Lp.mem_Lp_const MeasureTheory.lp.mem_lp_const
 
-instance : HasNorm (lp E p μ) where norm f := ENNReal.toReal (snorm f p μ)
+instance : Norm (lp E p μ) where norm f := ENNReal.toReal (snorm f p μ)
 
 instance : Dist (lp E p μ) where dist f g := ‖f - g‖
 

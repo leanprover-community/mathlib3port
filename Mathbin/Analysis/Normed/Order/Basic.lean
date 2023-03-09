@@ -28,8 +28,7 @@ variable {α : Type _}
 /-- A `normed_ordered_add_group` is an additive group that is both a `normed_add_comm_group` and an
 `ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both classes
 carrying their own group structure. -/
-class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, HasNorm α,
-  MetricSpace α where
+class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, Norm α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_ordered_add_group NormedOrderedAddGroup
 
@@ -37,7 +36,7 @@ class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, HasNor
 `ordered_comm_group`. This class is necessary to avoid diamonds caused by both classes
 carrying their own group structure. -/
 @[to_additive]
-class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, HasNorm α, MetricSpace α where
+class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, Norm α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_ordered_group NormedOrderedGroup
 #align normed_ordered_add_group NormedOrderedAddGroup
@@ -45,7 +44,7 @@ class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, HasNorm α, 
 /-- A `normed_linear_ordered_add_group` is an additive group that is both a `normed_add_comm_group`
 and a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both
 classes carrying their own group structure. -/
-class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGroup α, HasNorm α,
+class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGroup α, Norm α,
   MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_linear_ordered_add_group NormedLinearOrderedAddGroup
@@ -54,7 +53,7 @@ class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGrou
 `linear_ordered_comm_group`. This class is necessary to avoid diamonds caused by both classes
 carrying their own group structure. -/
 @[to_additive]
-class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, HasNorm α,
+class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, Norm α,
   MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_linear_ordered_group NormedLinearOrderedGroup
@@ -62,7 +61,7 @@ class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, 
 
 /-- A `normed_linear_ordered_field` is a field that is both a `normed_field` and a
     `linear_ordered_field`. This class is necessary to avoid diamonds. -/
-class NormedLinearOrderedField (α : Type _) extends LinearOrderedField α, HasNorm α,
+class NormedLinearOrderedField (α : Type _) extends LinearOrderedField α, Norm α,
   MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
   norm_mul' : ∀ x y : α, ‖x * y‖ = ‖x‖ * ‖y‖

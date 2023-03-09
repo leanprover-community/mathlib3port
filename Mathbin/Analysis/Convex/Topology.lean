@@ -26,7 +26,7 @@ We prove the following facts:
 -/
 
 
-assert_not_exists has_norm
+assert_not_exists Norm
 
 variable {ι : Type _} {E : Type _}
 

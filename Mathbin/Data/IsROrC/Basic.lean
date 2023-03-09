@@ -1222,7 +1222,7 @@ theorem continuous_of_real : Continuous (coe : ℝ → K) :=
 
 @[continuity]
 theorem continuous_abs : Continuous (@IsROrC.abs K _) := by
-  simp only [show @IsROrC.abs K _ = HasNorm.norm by
+  simp only [show @IsROrC.abs K _ = Norm.norm by
       ext
       exact (norm_eq_abs _).symm,
     continuous_norm]

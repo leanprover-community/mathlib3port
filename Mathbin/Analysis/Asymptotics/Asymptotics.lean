@@ -60,7 +60,7 @@ variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' 
   {F' : Type _} {G' : Type _} {E'' : Type _} {F'' : Type _} {G'' : Type _} {R : Type _}
   {R' : Type _} {𝕜 : Type _} {𝕜' : Type _}
 
-variable [HasNorm E] [HasNorm F] [HasNorm G]
+variable [Norm E] [Norm F] [Norm G]
 
 variable [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F'] [SeminormedAddCommGroup G']
   [NormedAddCommGroup E''] [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SemiNormedRing R]
@@ -2151,7 +2151,7 @@ namespace LocalHomeomorph
 
 variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable {E : Type _} [HasNorm E] {F : Type _} [HasNorm F]
+variable {E : Type _} [Norm E] {F : Type _} [Norm F]
 
 /-- Transfer `is_O_with` over a `local_homeomorph`. -/
 theorem isOWith_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F}
@@ -2188,7 +2188,7 @@ namespace Homeomorph
 
 variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable {E : Type _} [HasNorm E] {F : Type _} [HasNorm F]
+variable {E : Type _} [Norm E] {F : Type _} [Norm F]
 
 open Asymptotics
 

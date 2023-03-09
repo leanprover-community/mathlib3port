@@ -27,9 +27,9 @@ variable (C : Type _) [Category C] [Preadditive C]
 instance : Preadditive Cᵒᵖ
     where
   homGroup X Y := Equiv.addCommGroup (opEquiv X Y)
-  add_comp' X Y Z f f' g :=
+  add_comp X Y Z f f' g :=
     congr_arg Quiver.Hom.op (Preadditive.comp_add _ _ _ g.unop f.unop f'.unop)
-  comp_add' X Y Z f g g' :=
+  comp_add X Y Z f g g' :=
     congr_arg Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)
 
 instance moduleEndLeft {X : Cᵒᵖ} {Y : C} : Module (End X) (unop X ⟶ Y)

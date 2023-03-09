@@ -838,7 +838,7 @@ variable [TopologicalSpace α] [SeminormedAddCommGroup β]
 
 variable (f g : α →ᵇ β) {x : α} {C : ℝ}
 
-instance : HasNorm (α →ᵇ β) :=
+instance : Norm (α →ᵇ β) :=
   ⟨fun u => dist u 0⟩
 
 theorem norm_def : ‖f‖ = dist f 0 :=
@@ -1684,7 +1684,7 @@ def nnnorm (f : α →ᵇ ℝ) : α →ᵇ ℝ≥0 :=
 #align bounded_continuous_function.nnnorm BoundedContinuousFunction.nnnorm
 
 @[simp]
-theorem nnnorm_coe_fun_eq (f : α →ᵇ ℝ) : ⇑f.nnnorm = HasNnnorm.nnnorm ∘ ⇑f :=
+theorem nnnorm_coe_fun_eq (f : α →ᵇ ℝ) : ⇑f.nnnorm = NNNorm.nnnorm ∘ ⇑f :=
   rfl
 #align bounded_continuous_function.nnnorm_coe_fun_eq BoundedContinuousFunction.nnnorm_coe_fun_eq
 

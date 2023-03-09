@@ -951,7 +951,7 @@ number of "pretrivializations" identifying parts of `E` with product spaces `U �
 establishes that for the topology constructed on the sigma-type using
 `vector_prebundle.total_space_topology`, these "pretrivializations" are actually
 "trivializations" (i.e., homeomorphisms with respect to the constructed topology). -/
-theorem toVectorBundle :
+theorem to_vectorBundle :
     @VectorBundle R _ F E _ _ _ _ _ _ a.totalSpaceTopology a.fiberTopology a.toFiberBundle :=
   { trivialization_linear' := by
       rintro _ ⟨e, he, rfl⟩
@@ -965,7 +965,7 @@ theorem toVectorBundle :
       rw [a.coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe,
         Trivialization.coordChangeL_apply]
       exacts[rfl, hb] }
-#align vector_prebundle.to_vector_bundle VectorPrebundle.toVectorBundle
+#align vector_prebundle.to_vector_bundle VectorPrebundle.to_vectorBundle
 
 end VectorPrebundle
 

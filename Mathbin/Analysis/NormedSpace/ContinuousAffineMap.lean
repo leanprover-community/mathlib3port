@@ -184,7 +184,7 @@ variable (f : V →A[𝕜] W)
 
 /-- Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
 we do _not_ necessarily have `‖f.comp g‖ ≤ ‖f‖ * ‖g‖`. See `norm_comp_le` for what we can say. -/
-noncomputable instance hasNorm : HasNorm (V →A[𝕜] W) :=
+noncomputable instance hasNorm : Norm (V →A[𝕜] W) :=
   ⟨fun f => max ‖f 0‖ ‖f.contLinear‖⟩
 #align continuous_affine_map.has_norm ContinuousAffineMap.hasNorm
 

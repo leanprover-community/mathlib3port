@@ -459,10 +459,10 @@ instance : AddCommGroup (P ⟶ Q) :=
 instance : Preadditive (Sheaf J A)
     where
   homGroup P Q := inferInstance
-  add_comp' P Q R f f' g := by
+  add_comp P Q R f f' g := by
     ext
     simp
-  comp_add' P Q R f g g' := by
+  comp_add P Q R f g g' := by
     ext
     simp
 
