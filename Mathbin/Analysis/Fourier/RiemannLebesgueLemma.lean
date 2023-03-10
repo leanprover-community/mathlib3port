@@ -44,7 +44,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {f : ℝ → E}
 
 /-- The integrand in the Riemann-Lebesgue lemma is integrable. -/
 theorem fourierIntegrandIntegrable (hf : Integrable f) (t : ℝ) :
-    Integrable fun x : ℝ => exp (↑(t * x) * i) • f x :=
+    Integrable fun x : ℝ => exp (↑(t * x) * I) • f x :=
   by
   rw [← integrable_norm_iff]
   simp_rw [norm_smul, norm_exp_of_real_mul_I, one_mul]
@@ -55,7 +55,7 @@ variable [CompleteSpace E]
 
 /-- Shifting `f` by `π / t` negates the integral in the Riemann-Lebesgue lemma. -/
 theorem fourier_integral_half_period_translate {t : ℝ} (ht : t ≠ 0) :
-    (∫ x : ℝ, exp (↑(t * x) * i) • f (x + π / t)) = -∫ x : ℝ, exp (↑(t * x) * i) • f x :=
+    (∫ x : ℝ, exp (↑(t * x) * I) • f (x + π / t)) = -∫ x : ℝ, exp (↑(t * x) * I) • f x :=
   by
   have :
     (fun x : ℝ => exp (↑(t * x) * I) • f (x + π / t)) = fun x : ℝ =>
@@ -77,8 +77,8 @@ theorem fourier_integral_half_period_translate {t : ℝ} (ht : t ≠ 0) :
 /-- Rewrite the Riemann-Lebesgue integral in a form that allows us to use uniform continuity. -/
 theorem fourier_integral_eq_half_sub_half_period_translate {t : ℝ} (ht : t ≠ 0)
     (hf : Integrable f) :
-    (∫ x : ℝ, exp (↑(t * x) * i) • f x) =
-      (1 / (2 : ℂ)) • ∫ x : ℝ, exp (↑(t * x) * i) • (f x - f (x + π / t)) :=
+    (∫ x : ℝ, exp (↑(t * x) * I) • f x) =
+      (1 / (2 : ℂ)) • ∫ x : ℝ, exp (↑(t * x) * I) • (f x - f (x + π / t)) :=
   by
   simp_rw [smul_sub]
   rw [integral_sub, fourier_integral_half_period_translate ht, sub_eq_add_neg, neg_neg, ←
@@ -91,7 +91,7 @@ theorem fourier_integral_eq_half_sub_half_period_translate {t : ℝ} (ht : t ≠
 `∫ x, exp (t * x * I) • f x` tends to 0 as `t` gets large.  -/
 theorem tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1 : Continuous f)
     (hf2 : HasCompactSupport f) :
-    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * i) • f x) atTop (𝓝 0) :=
+    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * I) • f x) atTop (𝓝 0) :=
   by
   simp_rw [NormedAddCommGroup.tendsto_nhds_zero, eventually_at_top, ge_iff_le]
   intro ε hε
@@ -106,7 +106,7 @@ theorem tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1 : Cont
   rw [fourier_integral_eq_half_sub_half_period_translate
       (lt_of_lt_of_le (lt_max_of_lt_left Real.pi_pos) ht).ne'
       (hf1.integrable_of_has_compact_support hf2)]
-  rw [norm_smul, norm_eq_abs, ← Complex.of_real_one, ← of_real_bit0, ← of_real_div,
+  rw [norm_smul, norm_eq_abs, ← Complex.ofReal_one, ← of_real_bit0, ← of_real_div,
     Complex.abs_of_nonneg one_half_pos.le]
   have : ε = 1 / 2 * (2 * ε) := by
     field_simp
@@ -165,7 +165,7 @@ theorem tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1 : Cont
 
 theorem tendsto_integral_mul_exp_atBot_of_continuous_compact_support (hf1 : Continuous f)
     (hf2 : HasCompactSupport f) :
-    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * i) • f x) atBot (𝓝 0) :=
+    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * I) • f x) atBot (𝓝 0) :=
   by
   have hg2 : HasCompactSupport (f ∘ Neg.neg) := by
     simpa only [neg_one_smul] using hf2.comp_smul (neg_ne_zero.mpr <| one_ne_zero' ℝ)
@@ -180,7 +180,7 @@ theorem tendsto_integral_mul_exp_atBot_of_continuous_compact_support (hf1 : Cont
 
 theorem zero_at_infty_integral_mul_exp_of_continuous_compact_support (hf1 : Continuous f)
     (hf2 : HasCompactSupport f) :
-    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * i) • f x) (cocompact ℝ) (𝓝 0) :=
+    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * I) • f x) (cocompact ℝ) (𝓝 0) :=
   by
   rw [Real.cocompact_eq, tendsto_sup]
   exact

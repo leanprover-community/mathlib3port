@@ -94,19 +94,19 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complexToReal_fderiv' {f : ℂ → E} {x : ℂ} {f' : E}
     (h : HasStrictDerivAt f f' x) :
-    HasStrictFderivAt f (reClm.smul_right f' + i • imClm.smul_right f') x := by
+    HasStrictFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
   simpa only [Complex.restrictScalars_one_smul_right'] using
     h.has_strict_fderiv_at.restrict_scalars ℝ
 #align has_strict_deriv_at.complex_to_real_fderiv' HasStrictDerivAt.complexToReal_fderiv'
 
 theorem HasDerivAt.complexToReal_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasDerivAt f f' x) :
-    HasFderivAt f (reClm.smul_right f' + i • imClm.smul_right f') x := by
+    HasFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
   simpa only [Complex.restrictScalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
 #align has_deriv_at.complex_to_real_fderiv' HasDerivAt.complexToReal_fderiv'
 
 theorem HasDerivWithinAt.complexToReal_fderiv' {f : ℂ → E} {s : Set ℂ} {x : ℂ} {f' : E}
     (h : HasDerivWithinAt f f' s x) :
-    HasFderivWithinAt f (reClm.smul_right f' + i • imClm.smul_right f') s x := by
+    HasFderivWithinAt f (reClm.smul_right f' + I • imClm.smul_right f') s x := by
   simpa only [Complex.restrictScalars_one_smul_right'] using
     h.has_fderiv_within_at.restrict_scalars ℝ
 #align has_deriv_within_at.complex_to_real_fderiv' HasDerivWithinAt.complexToReal_fderiv'

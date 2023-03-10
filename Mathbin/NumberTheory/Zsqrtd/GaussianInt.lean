@@ -68,7 +68,7 @@ attribute [-instance] Complex.field
 -- Avoid making things noncomputable unnecessarily.
 /-- The embedding of the Gaussian integers into the complex numbers, as a ring homomorphism. -/
 def toComplex : ℤ[i] →+* ℂ :=
-  Zsqrtd.lift ⟨i, by simp⟩
+  Zsqrtd.lift ⟨I, by simp⟩
 #align gaussian_int.to_complex GaussianInt.toComplex
 
 end
@@ -76,11 +76,11 @@ end
 instance : Coe ℤ[i] ℂ :=
   ⟨toComplex⟩
 
-theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re + x.im * i :=
+theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re + x.im * I :=
   rfl
 #align gaussian_int.to_complex_def GaussianInt.to_complex_def
 
-theorem to_complex_def' (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ) = x + y * i := by simp [to_complex_def]
+theorem to_complex_def' (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ) = x + y * I := by simp [to_complex_def]
 #align gaussian_int.to_complex_def' GaussianInt.to_complex_def'
 
 theorem to_complex_def₂ (x : ℤ[i]) : (x : ℂ) = ⟨x.re, x.im⟩ := by
@@ -212,10 +212,10 @@ theorem normSq_le_normSq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|)
 theorem normSq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq < 1 :=
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
-        ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * i :
+        ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I :
             ℂ).normSq :=
       congr_arg _ <| by apply Complex.ext <;> simp
-    _ ≤ (1 / 2 + 1 / 2 * i).normSq :=
+    _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       (have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
       normSq_le_normSq_of_re_le_of_im_le
         (by

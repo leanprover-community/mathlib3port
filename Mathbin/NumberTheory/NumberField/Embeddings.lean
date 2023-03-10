@@ -269,7 +269,7 @@ theorem coe_mk (φ : K →+* ℂ) : ⇑(mk φ) = place φ :=
   rfl
 #align number_field.infinite_place.coe_mk NumberField.InfinitePlace.coe_mk
 
-theorem apply (φ : K →+* ℂ) (x : K) : (mk φ) x = Complex.abs (φ x) :=
+theorem apply (φ : K →+* ℂ) (x : K) : (mk φ) x = Complex.AbsTheory.Complex.abs (φ x) :=
   rfl
 #align number_field.infinite_place.apply NumberField.InfinitePlace.apply
 
@@ -284,7 +284,8 @@ theorem mk_embedding (w : InfinitePlace K) : mk (embedding w) = w :=
 #align number_field.infinite_place.mk_embedding NumberField.InfinitePlace.mk_embedding
 
 @[simp]
-theorem abs_embedding (w : InfinitePlace K) (x : K) : Complex.abs (embedding w x) = w x :=
+theorem abs_embedding (w : InfinitePlace K) (x : K) :
+    Complex.AbsTheory.Complex.abs (embedding w x) = w x :=
   congr_fun (congr_arg coeFn w.2.choose_spec) x
 #align number_field.infinite_place.abs_embedding NumberField.InfinitePlace.abs_embedding
 
@@ -439,13 +440,13 @@ theorem mkComplex_coe (φ : { φ : K →+* ℂ // ¬ComplexEmbedding.IsReal φ }
 
 @[simp]
 theorem mkReal.apply (φ : { φ : K →+* ℂ // ComplexEmbedding.IsReal φ }) (x : K) :
-    mkReal K φ x = Complex.abs (φ x) :=
+    mkReal K φ x = Complex.AbsTheory.Complex.abs (φ x) :=
   apply φ x
 #align number_field.infinite_place.mk_real.apply NumberField.InfinitePlace.mkReal.apply
 
 @[simp]
 theorem mkComplex.apply (φ : { φ : K →+* ℂ // ¬ComplexEmbedding.IsReal φ }) (x : K) :
-    mkComplex K φ x = Complex.abs (φ x) :=
+    mkComplex K φ x = Complex.AbsTheory.Complex.abs (φ x) :=
   apply φ x
 #align number_field.infinite_place.mk_complex.apply NumberField.InfinitePlace.mkComplex.apply
 
@@ -484,10 +485,13 @@ theorem prod_eq_abs_norm (x : K) :
     (Finset.univ.Prod fun w : InfinitePlace K => ite w.IsReal (w x) (w x ^ 2)) =
       abs (Algebra.norm ℚ x) :=
   by
-  convert (congr_arg Complex.abs (@Algebra.norm_eq_prod_embeddings ℚ _ _ _ _ ℂ _ _ _ _ _ x)).symm
+  convert
+    (congr_arg Complex.AbsTheory.Complex.abs
+        (@Algebra.norm_eq_prod_embeddings ℚ _ _ _ _ ℂ _ _ _ _ _ x)).symm
   · rw [map_prod, ←
-      Equiv.prod_comp' RingHom.equivRatAlgHom (fun f => Complex.abs (f x))
-        (fun φ => Complex.abs (φ x)) fun _ => by simpa only [RingHom.equivRatAlgHom_apply] ]
+      Equiv.prod_comp' RingHom.equivRatAlgHom (fun f => Complex.AbsTheory.Complex.abs (f x))
+        (fun φ => Complex.AbsTheory.Complex.abs (φ x)) fun _ => by
+        simpa only [RingHom.equivRatAlgHom_apply] ]
     dsimp only
     conv =>
       rhs
@@ -495,17 +499,22 @@ theorem prod_eq_abs_norm (x : K) :
       skip
       ext
       rw [(by simp only [if_t_t] :
-          Complex.abs (f x) =
-            ite (complex_embedding.is_real f) (Complex.abs (f x)) (Complex.abs (f x)))]
+          Complex.AbsTheory.Complex.abs (f x) =
+            ite (complex_embedding.is_real f) (Complex.AbsTheory.Complex.abs (f x))
+              (Complex.AbsTheory.Complex.abs (f x)))]
     rw [Finset.prod_ite, Finset.prod_ite]
     refine' congr (congr_arg Mul.mul _) _
     · rw [← Finset.prod_subtype_eq_prod_filter, ← Finset.prod_subtype_eq_prod_filter]
-      convert (Equiv.prod_comp' (mk_real K) (fun φ => Complex.abs (φ x)) (fun w => w x) _).symm
+      convert
+        (Equiv.prod_comp' (mk_real K) (fun φ => Complex.AbsTheory.Complex.abs (φ x)) (fun w => w x)
+            _).symm
       any_goals ext; simp only [Finset.mem_subtype, Finset.mem_univ]
       exact fun φ => mk_real.apply K φ x
     · rw [Finset.filter_congr fun (w : infinite_place K) _ => @not_is_real_iff_is_complex K _ w, ←
         Finset.prod_subtype_eq_prod_filter, ← Finset.prod_subtype_eq_prod_filter]
-      convert Finset.prod_fiberwise Finset.univ (fun φ => mk_complex K φ) fun φ => Complex.abs (φ x)
+      convert
+        Finset.prod_fiberwise Finset.univ (fun φ => mk_complex K φ) fun φ =>
+          Complex.AbsTheory.Complex.abs (φ x)
       any_goals ext; simp only [Finset.mem_subtype, Finset.mem_univ, not_is_real_iff_is_complex]
       · ext w
         rw [@Finset.prod_congr _ _ _ _ _ (fun φ => w x) _ (Eq.refl _) fun φ hφ =>
@@ -513,7 +522,7 @@ theorem prod_eq_abs_norm (x : K) :
               (congr_fun (congr_arg coeFn (Finset.mem_filter.1 hφ).2) x),
           Finset.prod_const, mk_complex.filter_card K w]
         rfl
-  · rw [eq_ratCast, ← Complex.abs_of_real, Complex.of_real_rat_cast]
+  · rw [eq_ratCast, ← Complex.abs_ofReal, Complex.ofReal_rat_cast]
 #align number_field.infinite_place.prod_eq_abs_norm NumberField.InfinitePlace.prod_eq_abs_norm
 
 open Fintype

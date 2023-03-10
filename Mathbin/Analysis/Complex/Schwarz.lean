@@ -184,7 +184,8 @@ variable {f : ℂ → ℂ} {c z : ℂ} {R R₁ R₂ : ℝ}
 `R₁` to an open disk with center `f c` and radius `R₂`, then the absolute value of the derivative of
 `f` at `c` is at most the ratio `R₂ / R₁`. -/
 theorem abs_deriv_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R₁))
-    (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (h₀ : 0 < R₁) : abs (deriv f c) ≤ R₂ / R₁ :=
+    (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (h₀ : 0 < R₁) :
+    Complex.AbsTheory.Complex.abs (deriv f c) ≤ R₂ / R₁ :=
   norm_deriv_le_div_of_mapsTo_ball hd h_maps h₀
 #align complex.abs_deriv_le_div_of_maps_to_ball Complex.abs_deriv_le_div_of_mapsTo_ball
 
@@ -192,7 +193,8 @@ theorem abs_deriv_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R�
 center of this disk to itself, then the absolute value of the derivative of `f` at the center of
 this disk is at most `1`. -/
 theorem abs_deriv_le_one_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R))
-    (h_maps : MapsTo f (ball c R) (ball c R)) (hc : f c = c) (h₀ : 0 < R) : abs (deriv f c) ≤ 1 :=
+    (h_maps : MapsTo f (ball c R) (ball c R)) (hc : f c = c) (h₀ : 0 < R) :
+    Complex.AbsTheory.Complex.abs (deriv f c) ≤ 1 :=
   (norm_deriv_le_div_of_mapsTo_ball hd (by rwa [hc]) h₀).trans_eq (div_self h₀.ne')
 #align complex.abs_deriv_le_one_of_maps_to_ball Complex.abs_deriv_le_one_of_mapsTo_ball
 
@@ -210,7 +212,9 @@ theorem dist_le_dist_of_mapsTo_ball_self (hd : DifferentiableOn ℂ f (ball c R)
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk with center `0` to itself, the for any
 point `z` of this disk we have `abs (f z) ≤ abs z`. -/
 theorem abs_le_abs_of_mapsTo_ball_self (hd : DifferentiableOn ℂ f (ball 0 R))
-    (h_maps : MapsTo f (ball 0 R) (ball 0 R)) (h₀ : f 0 = 0) (hz : abs z < R) : abs (f z) ≤ abs z :=
+    (h_maps : MapsTo f (ball 0 R) (ball 0 R)) (h₀ : f 0 = 0)
+    (hz : Complex.AbsTheory.Complex.abs z < R) :
+    Complex.AbsTheory.Complex.abs (f z) ≤ Complex.AbsTheory.Complex.abs z :=
   by
   replace hz : z ∈ ball (0 : ℂ) R; exact mem_ball_zero_iff.2 hz
   simpa only [dist_zero_right] using dist_le_dist_of_maps_to_ball_self hd h_maps h₀ hz

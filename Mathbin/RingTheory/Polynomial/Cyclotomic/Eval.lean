@@ -203,7 +203,7 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
     convert norm_sub_norm_le (↑q) ζ'
     · rw [Complex.norm_real, Real.norm_of_nonneg hq.le]
     · rw [hζ'.norm'_eq_one hn.ne']
-  let ζ := Complex.exp (2 * ↑Real.pi * Complex.i / ↑n)
+  let ζ := Complex.exp (2 * ↑Real.pi * Complex.I / ↑n)
   have hζ : IsPrimitiveRoot ζ n := Complex.isPrimitiveRoot_exp n hn.ne'
   have hex : ∃ ζ' ∈ primitiveRoots n ℂ, q - 1 < ‖↑q - ζ'‖ :=
     by
@@ -221,7 +221,7 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
   have : ¬eval (↑q) (cyclotomic n ℂ) = 0 :=
     by
     erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ)]
-    simpa only [Complex.coe_algebraMap, Complex.of_real_eq_zero] using (cyclotomic_pos' n hq').ne'
+    simpa only [Complex.coe_algebraMap, Complex.ofReal_eq_zero] using (cyclotomic_pos' n hq').ne'
   suffices
     Units.mk0 (Real.toNNReal (q - 1)) (by simp [hq']) ^ totient n <
       Units.mk0 ‖(cyclotomic n ℂ).eval q‖₊ (by simp [this])
@@ -231,7 +231,7 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
       NNReal.coe_pow, Real.coe_toNNReal', max_eq_left, sub_nonneg] at this
     convert this
     erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ), eq_comm]
-    simp only [cyclotomic_nonneg n hq'.le, Complex.coe_algebraMap, Complex.abs_of_real, abs_eq_self]
+    simp only [cyclotomic_nonneg n hq'.le, Complex.coe_algebraMap, Complex.abs_ofReal, abs_eq_self]
   simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub,
     nnnorm_prod, Units.mk0_prod]
   convert Finset.prod_lt_prod' _ _
@@ -267,7 +267,7 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     convert norm_sub_le (↑q) ζ'
     · rw [Complex.norm_real, Real.norm_of_nonneg (zero_le_one.trans_lt hq').le]
     · rw [hζ'.norm'_eq_one hn.ne']
-  let ζ := Complex.exp (2 * ↑Real.pi * Complex.i / ↑n)
+  let ζ := Complex.exp (2 * ↑Real.pi * Complex.I / ↑n)
   have hζ : IsPrimitiveRoot ζ n := Complex.isPrimitiveRoot_exp n hn.ne'
   have hex : ∃ ζ' ∈ primitiveRoots n ℂ, ‖↑q - ζ'‖ < q + 1 :=
     by
@@ -294,7 +294,7 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
   have : ¬eval (↑q) (cyclotomic n ℂ) = 0 :=
     by
     erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ)]
-    simp only [Complex.coe_algebraMap, Complex.of_real_eq_zero]
+    simp only [Complex.coe_algebraMap, Complex.ofReal_eq_zero]
     exact (cyclotomic_pos' n hq').Ne.symm
   suffices
     Units.mk0 ‖(cyclotomic n ℂ).eval q‖₊ (by simp [this]) <
@@ -318,11 +318,11 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
       Units.val_le_val, ← NNReal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.val_mk0,
       Real.coe_toNNReal, coe_nnnorm, Complex.norm_eq_abs, max_le_iff]
     intro x hx
-    have : Complex.abs _ ≤ _ := hfor x hx
+    have : Complex.AbsTheory.Complex.abs _ ≤ _ := hfor x hx
     simp [this]
   · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ←
       NNReal.coe_lt_coe, ← Units.val_lt_val, Units.val_mk0 _, coe_nnnorm]
-    obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
+    obtain ⟨ζ, hζ, hhζ : Complex.AbsTheory.Complex.abs _ < _⟩ := hex
     exact ⟨ζ, hζ, by simp [hhζ]⟩
 #align polynomial.cyclotomic_eval_lt_add_one_pow_totient Polynomial.cyclotomic_eval_lt_add_one_pow_totient
 

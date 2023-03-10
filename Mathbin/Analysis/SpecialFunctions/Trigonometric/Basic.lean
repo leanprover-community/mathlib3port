@@ -1403,48 +1403,48 @@ theorem tan_int_mul_pi_sub (x : ℂ) (n : ℤ) : tan (n * π - x) = -tan x :=
   tan_neg x ▸ tan_periodic.int_mul_sub_eq n
 #align complex.tan_int_mul_pi_sub Complex.tan_int_mul_pi_sub
 
-theorem exp_antiperiodic : Function.Antiperiodic exp (π * i) := by simp [exp_add, exp_mul_I]
+theorem exp_antiperiodic : Function.Antiperiodic exp (π * I) := by simp [exp_add, exp_mul_I]
 #align complex.exp_antiperiodic Complex.exp_antiperiodic
 
-theorem exp_periodic : Function.Periodic exp (2 * π * i) :=
-  (mul_assoc (2 : ℂ) π i).symm ▸ exp_antiperiodic.Periodic
+theorem exp_periodic : Function.Periodic exp (2 * π * I) :=
+  (mul_assoc (2 : ℂ) π I).symm ▸ exp_antiperiodic.Periodic
 #align complex.exp_periodic Complex.exp_periodic
 
-theorem exp_mul_i_antiperiodic : Function.Antiperiodic (fun x => exp (x * i)) π := by
+theorem exp_mul_i_antiperiodic : Function.Antiperiodic (fun x => exp (x * I)) π := by
   simpa only [mul_inv_cancel_right₀ I_ne_zero] using exp_antiperiodic.mul_const I_ne_zero
 #align complex.exp_mul_I_antiperiodic Complex.exp_mul_i_antiperiodic
 
-theorem exp_mul_i_periodic : Function.Periodic (fun x => exp (x * i)) (2 * π) :=
+theorem exp_mul_i_periodic : Function.Periodic (fun x => exp (x * I)) (2 * π) :=
   exp_mul_i_antiperiodic.Periodic
 #align complex.exp_mul_I_periodic Complex.exp_mul_i_periodic
 
 @[simp]
-theorem exp_pi_mul_i : exp (π * i) = -1 :=
+theorem exp_pi_mul_i : exp (π * I) = -1 :=
   exp_zero ▸ exp_antiperiodic.Eq
 #align complex.exp_pi_mul_I Complex.exp_pi_mul_i
 
 @[simp]
-theorem exp_two_pi_mul_i : exp (2 * π * i) = 1 :=
+theorem exp_two_pi_mul_i : exp (2 * π * I) = 1 :=
   exp_periodic.Eq.trans exp_zero
 #align complex.exp_two_pi_mul_I Complex.exp_two_pi_mul_i
 
 @[simp]
-theorem exp_nat_mul_two_pi_mul_i (n : ℕ) : exp (n * (2 * π * i)) = 1 :=
+theorem exp_nat_mul_two_pi_mul_i (n : ℕ) : exp (n * (2 * π * I)) = 1 :=
   (exp_periodic.nat_mul_eq n).trans exp_zero
 #align complex.exp_nat_mul_two_pi_mul_I Complex.exp_nat_mul_two_pi_mul_i
 
 @[simp]
-theorem exp_int_mul_two_pi_mul_i (n : ℤ) : exp (n * (2 * π * i)) = 1 :=
+theorem exp_int_mul_two_pi_mul_i (n : ℤ) : exp (n * (2 * π * I)) = 1 :=
   (exp_periodic.int_mul_eq n).trans exp_zero
 #align complex.exp_int_mul_two_pi_mul_I Complex.exp_int_mul_two_pi_mul_i
 
 @[simp]
-theorem exp_add_pi_mul_i (z : ℂ) : exp (z + π * i) = -exp z :=
+theorem exp_add_pi_mul_i (z : ℂ) : exp (z + π * I) = -exp z :=
   exp_antiperiodic z
 #align complex.exp_add_pi_mul_I Complex.exp_add_pi_mul_i
 
 @[simp]
-theorem exp_sub_pi_mul_i (z : ℂ) : exp (z - π * i) = -exp z :=
+theorem exp_sub_pi_mul_i (z : ℂ) : exp (z - π * I) = -exp z :=
   exp_antiperiodic.sub_eq z
 #align complex.exp_sub_pi_mul_I Complex.exp_sub_pi_mul_i
 
@@ -1454,7 +1454,8 @@ $$\left|exp^{a\left(e^{z}+e^{-z}\right)}\right| \le e^{a\cos b \exp^{|re z|}}.$$
 -/
 theorem abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le {a b : ℝ} (ha : a ≤ 0) {z : ℂ} (hz : |z.im| ≤ b)
     (hb : b ≤ π / 2) :
-    abs (exp (a * (exp z + exp (-z)))) ≤ Real.exp (a * Real.cos b * Real.exp (|z.re|)) :=
+    Complex.AbsTheory.Complex.abs (exp (a * (exp z + exp (-z)))) ≤
+      Real.exp (a * Real.cos b * Real.exp (|z.re|)) :=
   by
   simp only [abs_exp, Real.exp_le_exp, of_real_mul_re, add_re, exp_re, neg_im, Real.cos_neg, ←
     add_mul, mul_assoc, mul_comm (Real.cos b), neg_re, ← Real.cos_abs z.im]

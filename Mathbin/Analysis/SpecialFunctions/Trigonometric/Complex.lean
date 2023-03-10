@@ -149,19 +149,19 @@ theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) :=
 
 theorem tan_add_mul_i {x y : ℂ}
     (h :
-      ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y * i ≠ (2 * l + 1) * π / 2) ∨
-        (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y * i = (2 * l + 1) * π / 2) :
-    tan (x + y * i) = (tan x + tanh y * i) / (1 - tan x * tanh y * i) := by
+      ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y * I ≠ (2 * l + 1) * π / 2) ∨
+        (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y * I = (2 * l + 1) * π / 2) :
+    tan (x + y * I) = (tan x + tanh y * I) / (1 - tan x * tanh y * I) := by
   rw [tan_add h, tan_mul_I, mul_assoc]
 #align complex.tan_add_mul_I Complex.tan_add_mul_i
 
 theorem tan_eq {z : ℂ}
     (h :
       ((∀ k : ℤ, (z.re : ℂ) ≠ (2 * k + 1) * π / 2) ∧
-          ∀ l : ℤ, (z.im : ℂ) * i ≠ (2 * l + 1) * π / 2) ∨
+          ∀ l : ℤ, (z.im : ℂ) * I ≠ (2 * l + 1) * π / 2) ∨
         (∃ k : ℤ, (z.re : ℂ) = (2 * k + 1) * π / 2) ∧
-          ∃ l : ℤ, (z.im : ℂ) * i = (2 * l + 1) * π / 2) :
-    tan z = (tan z.re + tanh z.im * i) / (1 - tan z.re * tanh z.im * i) := by
+          ∃ l : ℤ, (z.im : ℂ) * I = (2 * l + 1) * π / 2) :
+    tan z = (tan z.re + tanh z.im * I) / (1 - tan z.re * tanh z.im * I) := by
   convert tan_add_mul_I h <;> exact (re_add_im z).symm
 #align complex.tan_eq Complex.tan_eq
 
@@ -177,7 +177,7 @@ theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
 #align complex.continuous_tan Complex.continuous_tan
 
 theorem cos_eq_iff_quadratic {z w : ℂ} :
-    cos z = w ↔ exp (z * i) ^ 2 - 2 * w * exp (z * i) + 1 = 0 :=
+    cos z = w ↔ exp (z * I) ^ 2 - 2 * w * exp (z * I) + 1 = 0 :=
   by
   rw [← sub_eq_zero]
   field_simp [cos, exp_neg, exp_ne_zero]

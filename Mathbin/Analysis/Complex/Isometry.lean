@@ -38,7 +38,7 @@ open Complex
 open ComplexConjugate
 
 -- mathport name: complex.abs
-local notation "|" x "|" => Complex.abs x
+local notation "|" x "|" => Complex.AbsTheory.Complex.abs x
 
 /-- An element of the unit circle defines a `linear_isometry_equiv` from `ℂ` to itself, by
 rotation. -/
@@ -82,7 +82,7 @@ theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
 unit circle. -/
 @[simps]
 def rotationOf (e : ℂ ≃ₗᵢ[ℝ] ℂ) : circle :=
-  ⟨e 1 / Complex.abs (e 1), by simp⟩
+  ⟨e 1 / Complex.AbsTheory.Complex.abs (e 1), by simp⟩
 #align rotation_of rotationOf
 
 @[simp]
@@ -137,7 +137,7 @@ theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
   by
   have h0 : f I = I ∨ f I = -I :=
     by
-    have : |f I| = 1 := by simpa using f.norm_map Complex.i
+    have : |f I| = 1 := by simpa using f.norm_map Complex.I
     simp only [ext_iff, ← and_or_left, neg_re, I_re, neg_im, neg_zero]
     constructor
     · rw [← I_re]

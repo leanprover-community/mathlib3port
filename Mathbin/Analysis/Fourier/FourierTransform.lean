@@ -235,7 +235,7 @@ def fourierChar : Multiplicative ℝ →* 𝕊
   map_mul' x y := by rw [toAdd_mul, mul_add, expMapCircle_add]
 #align real.fourier_char Real.fourierChar
 
-theorem fourierChar_apply (x : ℝ) : Real.fourierChar[x] = Complex.exp (↑(2 * π * x) * Complex.i) :=
+theorem fourierChar_apply (x : ℝ) : Real.fourierChar[x] = Complex.exp (↑(2 * π * x) * Complex.I) :=
   by rfl
 #align real.fourier_char_apply Real.fourierChar_apply
 
@@ -250,7 +250,7 @@ theorem vector_fourierIntegral_eq_integral_exp_smul {V : Type _} [AddCommGroup V
     [MeasurableSpace V] {W : Type _} [AddCommGroup W] [Module ℝ W] (L : V →ₗ[ℝ] W →ₗ[ℝ] ℝ)
     (μ : Measure V) (f : V → E) (w : W) :
     VectorFourier.fourierIntegral fourierChar μ L f w =
-      ∫ v : V, Complex.exp (↑(-2 * π * L v w) * Complex.i) • f v ∂μ :=
+      ∫ v : V, Complex.exp (↑(-2 * π * L v w) * Complex.I) • f v ∂μ :=
   by simp_rw [VectorFourier.fourierIntegral, Real.fourierChar_apply, mul_neg, neg_mul]
 #align real.vector_fourier_integral_eq_integral_exp_smul Real.vector_fourierIntegral_eq_integral_exp_smul
 
@@ -270,7 +270,7 @@ scoped[FourierTransform] notation "𝓕" => Real.fourierIntegral
 
 theorem fourierIntegral_eq_integral_exp_smul {E : Type _} [NormedAddCommGroup E] [CompleteSpace E]
     [NormedSpace ℂ E] (f : ℝ → E) (w : ℝ) :
-    𝓕 f w = ∫ v : ℝ, Complex.exp (↑(-2 * π * v * w) * Complex.i) • f v := by
+    𝓕 f w = ∫ v : ℝ, Complex.exp (↑(-2 * π * v * w) * Complex.I) • f v := by
   simp_rw [fourier_integral_def, Real.fourierChar_apply, mul_neg, neg_mul, mul_assoc]
 #align real.fourier_integral_eq_integral_exp_smul Real.fourierIntegral_eq_integral_exp_smul
 

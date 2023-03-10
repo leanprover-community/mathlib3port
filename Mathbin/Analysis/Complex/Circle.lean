@@ -49,20 +49,21 @@ def circle : Submonoid ℂ :=
 #align circle circle
 
 @[simp]
-theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
+theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ Complex.AbsTheory.Complex.abs z = 1 :=
   mem_sphere_zero_iff_norm
 #align mem_circle_iff_abs mem_circle_iff_abs
 
-theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
+theorem circle_def : ↑circle = { z : ℂ | Complex.AbsTheory.Complex.abs z = 1 } :=
   Set.ext fun z => mem_circle_iff_abs
 #align circle_def circle_def
 
 @[simp]
-theorem abs_coe_circle (z : circle) : abs z = 1 :=
+theorem abs_coe_circle (z : circle) : Complex.AbsTheory.Complex.abs z = 1 :=
   mem_circle_iff_abs.mp z.2
 #align abs_coe_circle abs_coe_circle
 
-theorem mem_circle_iff_normSq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by simp [Complex.abs]
+theorem mem_circle_iff_normSq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by
+  simp [Complex.AbsTheory.Complex.abs]
 #align mem_circle_iff_norm_sq mem_circle_iff_normSq
 
 @[simp]
@@ -117,11 +118,11 @@ def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
 def expMapCircle : C(ℝ, circle)
-    where toFun t := ⟨exp (t * i), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
+    where toFun t := ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 #align exp_map_circle expMapCircle
 
 @[simp]
-theorem expMapCircle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
+theorem expMapCircle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.I) :=
   rfl
 #align exp_map_circle_apply expMapCircle_apply
 

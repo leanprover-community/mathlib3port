@@ -574,7 +574,7 @@ theorem loc_unif_bound_dGammaIntegrand {t : ℂ} {s1 s2 x : ℝ} (ht1 : s1 ≤ t
   · -- case 1 ≤ x
     refine' le_add_of_nonneg_of_le (abs_nonneg _) _
     rw [dGammaIntegrand, dGammaIntegrandReal, Complex.norm_eq_abs, map_mul, abs_mul, ←
-      Complex.of_real_mul, Complex.abs_of_real]
+      Complex.ofReal_mul, Complex.abs_ofReal]
     refine' mul_le_mul_of_nonneg_left _ (abs_nonneg _)
     rw [Complex.abs_cpow_eq_rpow_re_of_pos hx]
     refine' le_trans _ (le_abs_self _)
@@ -583,7 +583,7 @@ theorem loc_unif_bound_dGammaIntegrand {t : ℂ} {s1 s2 x : ℝ} (ht1 : s1 ≤ t
     linarith
   · refine' le_add_of_le_of_nonneg _ (abs_nonneg _)
     rw [dGammaIntegrand, dGammaIntegrandReal, Complex.norm_eq_abs, map_mul, abs_mul, ←
-      Complex.of_real_mul, Complex.abs_of_real]
+      Complex.ofReal_mul, Complex.abs_ofReal]
     refine' mul_le_mul_of_nonneg_left _ (abs_nonneg _)
     rw [Complex.abs_cpow_eq_rpow_re_of_pos hx]
     refine' le_trans _ (le_abs_self _)
@@ -730,13 +730,13 @@ def gamma (s : ℝ) : ℝ :=
 
 theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp (-x) * x ^ (s - 1) :=
   by
-  rw [Gamma, Complex.gamma_eq_integral (by rwa [Complex.of_real_re] : 0 < Complex.re s)]
+  rw [Gamma, Complex.gamma_eq_integral (by rwa [Complex.ofReal_re] : 0 < Complex.re s)]
   dsimp only [Complex.gammaIntegral]
-  simp_rw [← Complex.of_real_one, ← Complex.of_real_sub]
+  simp_rw [← Complex.ofReal_one, ← Complex.ofReal_sub]
   suffices
     (∫ x : ℝ in Ioi 0, ↑(exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ)) =
       ∫ x : ℝ in Ioi 0, ((exp (-x) * x ^ (s - 1) : ℝ) : ℂ)
-    by rw [this, _root_.integral_of_real, Complex.of_real_re]
+    by rw [this, _root_.integral_of_real, Complex.ofReal_re]
   refine' set_integral_congr measurableSet_Ioi fun x hx => _
   push_cast
   rw [Complex.of_real_cpow (le_of_lt hx)]
@@ -746,34 +746,34 @@ theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp
 theorem gamma_add_one {s : ℝ} (hs : s ≠ 0) : gamma (s + 1) = s * gamma s :=
   by
   simp_rw [Gamma]
-  rw [Complex.of_real_add, Complex.of_real_one, Complex.gamma_add_one, Complex.of_real_mul_re]
-  rwa [Complex.of_real_ne_zero]
+  rw [Complex.ofReal_add, Complex.ofReal_one, Complex.gamma_add_one, Complex.ofReal_mul_re]
+  rwa [Complex.ofReal_ne_zero]
 #align real.Gamma_add_one Real.gamma_add_one
 
 theorem gamma_one : gamma 1 = 1 := by
-  rw [Gamma, Complex.of_real_one, Complex.gamma_one, Complex.one_re]
+  rw [Gamma, Complex.ofReal_one, Complex.gamma_one, Complex.one_re]
 #align real.Gamma_one Real.gamma_one
 
 theorem Complex.gamma_of_real (s : ℝ) : Complex.gamma (s : ℂ) = gamma s := by
-  rw [Gamma, eq_comm, ← Complex.eq_conj_iff_re, ← Complex.gamma_conj, Complex.conj_of_real]
+  rw [Gamma, eq_comm, ← Complex.eq_conj_iff_re, ← Complex.gamma_conj, Complex.conj_ofReal]
 #align complex.Gamma_of_real Complex.gamma_of_real
 
 theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! := by
-  rw [Gamma, Complex.of_real_add, Complex.of_real_nat_cast, Complex.of_real_one,
-    Complex.gamma_nat_eq_factorial, ← Complex.of_real_nat_cast, Complex.of_real_re]
+  rw [Gamma, Complex.ofReal_add, Complex.ofReal_nat_cast, Complex.ofReal_one,
+    Complex.gamma_nat_eq_factorial, ← Complex.ofReal_nat_cast, Complex.ofReal_re]
 #align real.Gamma_nat_eq_factorial Real.gamma_nat_eq_factorial
 
 /-- At `0` the Gamma function is undefined; by convention we assign it the value `0`. -/
 theorem gamma_zero : gamma 0 = 0 := by
-  simpa only [← Complex.of_real_zero, Complex.gamma_of_real, Complex.of_real_inj] using
+  simpa only [← Complex.ofReal_zero, Complex.gamma_of_real, Complex.ofReal_inj] using
     Complex.gamma_zero
 #align real.Gamma_zero Real.gamma_zero
 
 /-- At `-n` for `n ∈ ℕ`, the Gamma function is undefined; by convention we assign it the value `0`.
 -/
 theorem gamma_neg_nat_eq_zero (n : ℕ) : gamma (-n) = 0 := by
-  simpa only [← Complex.of_real_nat_cast, ← Complex.of_real_neg, Complex.gamma_of_real,
-    Complex.of_real_eq_zero] using Complex.gamma_neg_nat_eq_zero n
+  simpa only [← Complex.ofReal_nat_cast, ← Complex.ofReal_neg, Complex.gamma_of_real,
+    Complex.ofReal_eq_zero] using Complex.gamma_neg_nat_eq_zero n
 #align real.Gamma_neg_nat_eq_zero Real.gamma_neg_nat_eq_zero
 
 theorem gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < gamma s :=
@@ -837,7 +837,7 @@ theorem gamma_eq_zero_iff (s : ℝ) : gamma s = 0 ↔ ∃ m : ℕ, s = -m :=
 theorem differentiableAt_gamma {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : DifferentiableAt ℝ gamma s :=
   by
   refine' (Complex.differentiableAt_gamma _ _).HasDerivAt.real_of_complex.DifferentiableAt
-  simp_rw [← Complex.of_real_nat_cast, ← Complex.of_real_neg, Ne.def, Complex.of_real_inj]
+  simp_rw [← Complex.ofReal_nat_cast, ← Complex.ofReal_neg, Ne.def, Complex.ofReal_inj]
   exact hs
 #align real.differentiable_at_Gamma Real.differentiableAt_gamma
 
@@ -1786,14 +1786,14 @@ theorem gammaSeq_tendsto_gamma (s : ℝ) : Tendsto (gammaSeq s) atTop (𝓝 <| g
   ext1 n
   dsimp only [Gamma_seq, Function.comp_apply, Complex.gammaSeq]
   push_cast
-  rw [Complex.of_real_cpow n.cast_nonneg, Complex.of_real_nat_cast]
+  rw [Complex.of_real_cpow n.cast_nonneg, Complex.ofReal_nat_cast]
 #align real.Gamma_seq_tendsto_Gamma Real.gammaSeq_tendsto_gamma
 
 /-- Euler's reflection formula for the real Gamma function. -/
 theorem gamma_mul_gamma_one_sub (s : ℝ) : gamma s * gamma (1 - s) = π / sin (π * s) :=
   by
-  simp_rw [← Complex.of_real_inj, Complex.of_real_div, Complex.of_real_sin, Complex.of_real_mul, ←
-    Complex.gamma_of_real, Complex.of_real_sub, Complex.of_real_one]
+  simp_rw [← Complex.ofReal_inj, Complex.ofReal_div, Complex.of_real_sin, Complex.ofReal_mul, ←
+    Complex.gamma_of_real, Complex.ofReal_sub, Complex.ofReal_one]
   exact Complex.gamma_mul_gamma_one_sub s
 #align real.Gamma_mul_Gamma_one_sub Real.gamma_mul_gamma_one_sub
 

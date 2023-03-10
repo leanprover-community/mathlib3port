@@ -84,8 +84,8 @@ theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
   convert integral_mul_deriv_eq_deriv_mul der1 (fun x hx => antideriv_cos_comp_const_mul hz x) _ _
   · ext1 x
     rw [mul_comm]
-  · rw [Complex.of_real_zero, mul_zero, Complex.sin_zero, zero_div, mul_zero, sub_zero,
-      cos_pi_div_two, Complex.of_real_zero, zero_pow (by positivity : 0 < n), zero_mul, zero_sub, ←
+  · rw [Complex.ofReal_zero, mul_zero, Complex.sin_zero, zero_div, mul_zero, sub_zero,
+      cos_pi_div_two, Complex.ofReal_zero, zero_pow (by positivity : 0 < n), zero_mul, zero_sub, ←
       integral_neg, ← integral_const_mul]
     refine' integral_congr fun x hx => _
     field_simp
@@ -128,7 +128,7 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     ring_nf
   · -- now a tedious rearrangement of terms
     -- gather into a single integral, and deal with continuity subgoals:
-    rw [sin_zero, cos_pi_div_two, Complex.of_real_zero, zero_pow, zero_mul, mul_zero, zero_mul,
+    rw [sin_zero, cos_pi_div_two, Complex.ofReal_zero, zero_pow, zero_mul, mul_zero, zero_mul,
       zero_mul, sub_zero, zero_sub, ← integral_neg, ← integral_const_mul, ← integral_const_mul, ←
       integral_sub]
     rotate_left
@@ -240,7 +240,7 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
   · simp
   induction' n with n hn
   · simp_rw [mul_zero, pow_zero, mul_one, Finset.prod_range_zero, mul_one, integral_one, sub_zero]
-    rw [integral_cos_mul_complex (mul_ne_zero two_ne_zero hz), Complex.of_real_zero, mul_zero,
+    rw [integral_cos_mul_complex (mul_ne_zero two_ne_zero hz), Complex.ofReal_zero, mul_zero,
       Complex.sin_zero, zero_div, sub_zero,
       (by
         push_cast
@@ -282,7 +282,7 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
           ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * ↑x) * ↑(cos x) ^ (2 * n.succ)) =
         (2 * n + 1) / (2 * n + 2) * B
       by
-      rw [this, Complex.of_real_mul, Complex.of_real_div]
+      rw [this, Complex.ofReal_mul, Complex.ofReal_div]
       have : (C : ℂ) ≠ 0 := complex.of_real_ne_zero.mpr (integral_cos_pow_pos _).ne'
       have : 2 * (n : ℂ) + 1 ≠ 0 :=
         by
@@ -315,8 +315,8 @@ theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f 
       (fun n : ℕ => (∫ x : ℝ in 0 ..π / 2, ↑(cos x) ^ n * f x) / ↑(∫ x : ℝ in 0 ..π / 2, cos x ^ n))
       atTop (𝓝 <| f 0) :=
   by
-  simp_rw [div_eq_inv_mul _ (coe _), ← Complex.of_real_inv, integral_of_le pi_div_two_pos.le, ←
-    MeasureTheory.integral_Icc_eq_integral_Ioc, ← Complex.of_real_pow, ← Complex.real_smul]
+  simp_rw [div_eq_inv_mul _ (coe _), ← Complex.ofReal_inv, integral_of_le pi_div_two_pos.le, ←
+    MeasureTheory.integral_Icc_eq_integral_Ioc, ← Complex.ofReal_pow, ← Complex.real_smul]
   have c_lt : ∀ y : ℝ, y ∈ Icc 0 (π / 2) → y ≠ 0 → cos y < cos 0 := fun y hy hy' =>
     cos_lt_cos_of_nonneg_of_le_pi_div_two (le_refl 0) hy.2 (lt_of_le_of_ne hy.1 hy'.symm)
   have c_nonneg : ∀ x : ℝ, x ∈ Icc 0 (π / 2) → 0 ≤ cos x := fun x hx =>
@@ -362,7 +362,7 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
   · ext1 n
     congr 2 with x : 1
     rw [mul_comm]
-  · rw [Complex.of_real_zero, mul_zero, Complex.cos_zero]
+  · rw [Complex.ofReal_zero, mul_zero, Complex.cos_zero]
 #align complex.tendsto_euler_sin_prod Complex.tendsto_euler_sin_prod
 
 /-- Euler's infinite product formula for the real sine function. -/
@@ -372,15 +372,15 @@ theorem Real.tendsto_euler_sin_prod (x : ℝ) :
   by
   convert (complex.continuous_re.tendsto _).comp (Complex.tendsto_euler_sin_prod x)
   · ext1 n
-    rw [Function.comp_apply, ← Complex.of_real_mul, Complex.of_real_mul_re]
+    rw [Function.comp_apply, ← Complex.ofReal_mul, Complex.ofReal_mul_re]
     suffices
       (∏ j : ℕ in Finset.range n, 1 - (x : ℂ) ^ 2 / (↑j + 1) ^ 2) =
         ↑(∏ j : ℕ in Finset.range n, 1 - x ^ 2 / (↑j + 1) ^ 2)
-      by rw [this, Complex.of_real_re]
-    rw [Complex.of_real_prod]
+      by rw [this, Complex.ofReal_re]
+    rw [Complex.ofReal_prod]
     refine' Finset.prod_congr (by rfl) fun n hn => _
     norm_cast
-  · rw [← Complex.of_real_mul, ← Complex.of_real_sin, Complex.of_real_re]
+  · rw [← Complex.ofReal_mul, ← Complex.of_real_sin, Complex.ofReal_re]
 #align real.tendsto_euler_sin_prod Real.tendsto_euler_sin_prod
 
 end EulerSine

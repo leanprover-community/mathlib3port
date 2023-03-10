@@ -164,11 +164,11 @@ theorem fourier_apply {n : ℤ} {x : AddCircle T} : fourier n x = toCircle (n �
 
 @[simp]
 theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
-    fourier n (x : AddCircle T) = Complex.exp (2 * π * Complex.i * n * x / T) :=
+    fourier n (x : AddCircle T) = Complex.exp (2 * π * Complex.I * n * x / T) :=
   by
   rw [fourier_apply, ← QuotientAddGroup.mk_zsmul, to_circle, Function.Periodic.lift_coe,
-    expMapCircle_apply, Complex.of_real_mul, Complex.of_real_div, Complex.of_real_mul, zsmul_eq_mul,
-    Complex.of_real_mul, Complex.of_real_int_cast, Complex.of_real_bit0, Complex.of_real_one]
+    expMapCircle_apply, Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_mul, zsmul_eq_mul,
+    Complex.ofReal_mul, Complex.ofReal_int_cast, Complex.ofReal_bit0, Complex.ofReal_one]
   congr 1; ring
 #align fourier_coe_apply fourier_coe_apply
 
@@ -181,7 +181,7 @@ theorem fourier_zero {x : AddCircle T} : fourier 0 x = 1 :=
 
 @[simp]
 theorem fourier_eval_zero (n : ℤ) : fourier n (0 : AddCircle T) = 1 := by
-  rw [← QuotientAddGroup.mk_zero, fourier_coe_apply, Complex.of_real_zero, mul_zero, zero_div,
+  rw [← QuotientAddGroup.mk_zero, fourier_coe_apply, Complex.ofReal_zero, mul_zero, zero_div,
     Complex.exp_zero]
 #align fourier_eval_zero fourier_eval_zero
 
@@ -324,7 +324,7 @@ theorem orthonormalFourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
       ext1
       exact fourier_zero
     rw [this, integral_const, measure_univ, ENNReal.one_toReal, Complex.real_smul,
-      Complex.of_real_one, mul_one]
+      Complex.ofReal_one, mul_one]
   have hij : -i + j ≠ 0 := by
     rw [add_comm]
     exact sub_ne_zero.mpr (Ne.symm h)
@@ -536,7 +536,7 @@ variable (T)
 
 theorem hasDerivAt_fourier (n : ℤ) (x : ℝ) :
     HasDerivAt (fun y : ℝ => fourier n (y : AddCircle T))
-      (2 * π * i * n / T * fourier n (x : AddCircle T)) x :=
+      (2 * π * I * n / T * fourier n (x : AddCircle T)) x :=
   by
   simp_rw [fourier_coe_apply]
   refine' (_ : HasDerivAt (fun y => exp (2 * π * I * n * y / T)) _ _).comp_of_real
@@ -548,14 +548,14 @@ theorem hasDerivAt_fourier (n : ℤ) (x : ℝ) :
 
 theorem hasDerivAt_fourier_neg (n : ℤ) (x : ℝ) :
     HasDerivAt (fun y : ℝ => fourier (-n) (y : AddCircle T))
-      (-2 * π * i * n / T * fourier (-n) (x : AddCircle T)) x :=
+      (-2 * π * I * n / T * fourier (-n) (x : AddCircle T)) x :=
   by simpa using hasDerivAt_fourier T (-n) x
 #align has_deriv_at_fourier_neg hasDerivAt_fourier_neg
 
 variable {T}
 
 theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0) (x : ℝ) :
-    HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * i * n) * fourier (-n) (y : AddCircle T))
+    HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * I * n) * fourier (-n) (y : AddCircle T))
       (fourier (-n) (x : AddCircle T)) x :=
   by
   convert (hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
@@ -572,7 +572,7 @@ theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0
 theorem fourierCoeffOn_of_hasDerivAt {a b : ℝ} (hab : a < b) {f f' : ℝ → ℂ} {n : ℤ} (hn : n ≠ 0)
     (hf : ∀ x, x ∈ [a, b] → HasDerivAt f (f' x) x) (hf' : IntervalIntegrable f' volume a b) :
     fourierCoeffOn hab f n =
-      1 / (-2 * π * i * n) *
+      1 / (-2 * π * I * n) *
         (fourier (-n) (a : AddCircle (b - a)) * (f b - f a) - (b - a) * fourierCoeffOn hab f' n) :=
   by
   rw [← of_real_sub]

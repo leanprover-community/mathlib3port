@@ -40,7 +40,7 @@ theorem hasDerivAt_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^
 open Topology
 
 theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) :
-    Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop :=
+    Tendsto (fun x => Complex.AbsTheory.Complex.abs (tan x)) (𝓝[≠] x) atTop :=
   by
   simp only [tan_eq_sin_div_cos, ← norm_eq_abs, norm_div]
   have A : sin x ≠ 0 := fun h => by simpa [*, sq] using sin_sq_add_cos_sq x
@@ -52,7 +52,7 @@ theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) :
 #align complex.tendsto_abs_tan_of_cos_eq_zero Complex.tendsto_abs_tan_of_cos_eq_zero
 
 theorem tendsto_abs_tan_atTop (k : ℤ) :
-    Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
+    Tendsto (fun x => Complex.AbsTheory.Complex.abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
   tendsto_abs_tan_of_cos_eq_zero <| cos_eq_zero_iff.2 ⟨k, rfl⟩
 #align complex.tendsto_abs_tan_at_top Complex.tendsto_abs_tan_atTop
 

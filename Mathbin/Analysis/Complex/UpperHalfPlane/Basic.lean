@@ -66,7 +66,7 @@ scoped[UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 namespace UpperHalfPlane
 
 instance : Inhabited ℍ :=
-  ⟨⟨Complex.i, by simp⟩⟩
+  ⟨⟨Complex.I, by simp⟩⟩
 
 instance canLift : CanLift ℂ ℍ coe fun z => 0 < z.im :=
   Subtype.canLift fun z => 0 < z.im
@@ -118,7 +118,7 @@ theorem mk_coe (z : ℍ) (h : 0 < (z : ℂ).im := z.2) : mk z h = z :=
   Subtype.eta z h
 #align upper_half_plane.mk_coe UpperHalfPlane.mk_coe
 
-theorem re_add_im (z : ℍ) : (z.re + z.im * Complex.i : ℂ) = z :=
+theorem re_add_im (z : ℍ) : (z.re + z.im * Complex.I : ℂ) = z :=
   Complex.re_add_im z
 #align upper_half_plane.re_add_im UpperHalfPlane.re_add_im
 
@@ -168,8 +168,8 @@ theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : �
     -- we will need this twice
     apply_fun Complex.im  at h
     simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, zero_mul, or_false_iff,
-      Complex.of_real_im, Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
-  simp only [this, zero_mul, Complex.of_real_zero, zero_add, Complex.of_real_eq_zero] at h
+      Complex.ofReal_im, Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
+  simp only [this, zero_mul, Complex.ofReal_zero, zero_add, Complex.ofReal_eq_zero] at h
   ext i
   fin_cases i <;> assumption
 #align upper_half_plane.linear_ne_zero UpperHalfPlane.linear_ne_zero
@@ -182,8 +182,8 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 :=
   simp only [general_linear_group.coe_det_apply] at DET
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by simpa using congr_arg Complex.im H
   cases H1
-  · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_add,
-      Complex.of_real_eq_zero] at H
+  · simp only [H1, Complex.ofReal_zero, denom, coe_fn_eq_coe, zero_mul, zero_add,
+      Complex.ofReal_eq_zero] at H
     rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Fin 2) (Fin 2) ℝ)] at DET
     simp only [coe_coe, H, H1, mul_zero, sub_zero, lt_self_iff_false] at DET
     exact DET
@@ -233,7 +233,7 @@ theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) :
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
     general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
-    Fin.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
+    Fin.succ_zero_eq_one, Complex.ofReal_add, Complex.ofReal_mul]
   ring
 #align upper_half_plane.denom_cocycle UpperHalfPlane.denom_cocycle
 
@@ -245,7 +245,7 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
     general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
-    Fin.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
+    Fin.succ_zero_eq_one, Complex.ofReal_add, Complex.ofReal_mul]
   ring
 #align upper_half_plane.mul_smul' UpperHalfPlane.mul_smul'
 
@@ -352,7 +352,7 @@ theorem neg_smul (g : GL(2, ℝ)⁺) (z : ℍ) : -g • z = g • z :=
   ext1
   change _ / _ = _ / _
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Num, denom, coe_coe, Complex.of_real_neg, neg_mul, GL_pos.coe_neg_GL, Units.val_neg,
+  simp only [Num, denom, coe_coe, Complex.ofReal_neg, neg_mul, GL_pos.coe_neg_GL, Units.val_neg,
     Pi.neg_apply]
   ring_nf
 #align upper_half_plane.neg_smul UpperHalfPlane.neg_smul

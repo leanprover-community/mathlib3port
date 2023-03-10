@@ -101,7 +101,7 @@ theorem tendsto_abs_re (hl : IsExpCmpFilter l) : Tendsto (fun z : ℂ => |z.re|)
   tendsto_abs_atTop_atTop.comp hl.tendsto_re
 #align complex.is_exp_cmp_filter.tendsto_abs_re Complex.IsExpCmpFilter.tendsto_abs_re
 
-theorem tendsto_abs (hl : IsExpCmpFilter l) : Tendsto abs l atTop :=
+theorem tendsto_abs (hl : IsExpCmpFilter l) : Tendsto Complex.AbsTheory.Complex.abs l atTop :=
   tendsto_atTop_mono abs_re_le_abs hl.tendsto_abs_re
 #align complex.is_exp_cmp_filter.tendsto_abs Complex.IsExpCmpFilter.tendsto_abs
 
@@ -130,9 +130,10 @@ theorem abs_im_pow_eventuallyLE_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
 /-- If `l : filter ℂ` is an "exponential comparison filter", then $\log |z| =o(ℜ z)$ along `l`.
 This is the main lemma in the proof of `complex.is_exp_cmp_filter.is_o_cpow_exp` below.
 -/
-theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o[l] re :=
+theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) :
+    (fun z => Real.log (Complex.AbsTheory.Complex.abs z)) =o[l] re :=
   calc
-    (fun z => Real.log (abs z)) =O[l] fun z =>
+    (fun z => Real.log (Complex.AbsTheory.Complex.abs z)) =O[l] fun z =>
         Real.log (Real.sqrt 2) + Real.log (max z.re (|z.im|)) :=
       IsO.of_bound 1 <|
         (hl.tendsto_re.eventually_ge_atTop 1).mono fun z hz =>
@@ -171,9 +172,9 @@ positive real `b`, we have `(λ z, z ^ a) =o[l] (λ z, exp (b * z))`. -/
 theorem isOCat_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b) :
     (fun z => z ^ a) =o[l] fun z => exp (b * z) :=
   calc
-    (fun z => z ^ a) =Θ[l] fun z => abs z ^ re a :=
+    (fun z => z ^ a) =Θ[l] fun z => Complex.AbsTheory.Complex.abs z ^ re a :=
       isTheta_cpow_const_rpow fun _ _ => hl.eventually_ne
-    _ =ᶠ[l] fun z => Real.exp (re a * Real.log (abs z)) :=
+    _ =ᶠ[l] fun z => Real.exp (re a * Real.log (Complex.AbsTheory.Complex.abs z)) :=
       (hl.eventually_ne.mono fun z hz => by simp only [Real.rpow_def_of_pos, abs.pos hz, mul_comm])
     _ =o[l] fun z => exp (b * z) :=
       IsOCat.of_norm_right <|

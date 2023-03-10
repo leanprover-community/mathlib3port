@@ -78,10 +78,10 @@ you will not typically need to use this bundled object, and will instead use
 @[nolint has_nonempty_instance]
 structure ProjectiveResolution (Z : C) where
   complex : ChainComplex C ℕ
-  π : HomologicalComplex.Hom complex ((ChainComplex.single₀ C).obj Z)
-  Projective : ∀ n, Projective (complex.pt n) := by infer_instance
-  exact₀ : Exact (complex.d 1 0) (π.f 0)
-  exact : ∀ n, Exact (complex.d (n + 2) (n + 1)) (complex.d (n + 1) n)
+  π : HomologicalComplex.Hom Complex ((ChainComplex.single₀ C).obj Z)
+  Projective : ∀ n, Projective (Complex.pt n) := by infer_instance
+  exact₀ : Exact (Complex.d 1 0) (π.f 0)
+  exact : ∀ n, Exact (Complex.d (n + 2) (n + 1)) (Complex.d (n + 1) n)
   Epi : Epi (π.f 0) := by infer_instance
 #align category_theory.ProjectiveResolution CategoryTheory.ProjectiveResolution
 

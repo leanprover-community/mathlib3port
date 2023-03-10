@@ -841,7 +841,7 @@ end Basic
 
 theorem integral_of_real {a b : ℝ} {μ : Measure ℝ} {f : ℝ → ℝ} :
     (∫ x in a..b, (f x : ℂ) ∂μ) = ↑(∫ x in a..b, f x ∂μ) := by
-  simp only [intervalIntegral, integral_of_real, Complex.of_real_sub]
+  simp only [intervalIntegral, integral_of_real, Complex.ofReal_sub]
 #align interval_integral.integral_of_real intervalIntegral.integral_of_real
 
 section ContinuousLinearMap

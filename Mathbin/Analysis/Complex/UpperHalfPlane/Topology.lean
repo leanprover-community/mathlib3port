@@ -64,7 +64,7 @@ instance : NormalSpace ℍ :=
   normalSpaceOfT3SecondCountable ℍ
 
 instance : ContractibleSpace ℍ :=
-  (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq i_im.symm⟩
+  (convex_halfspace_im_gt 0).ContractibleSpace ⟨I, one_pos.trans_eq i_im.symm⟩
 
 instance : LocPathConnectedSpace ℍ :=
   loc_path_connected_of_isOpen <| isOpen_lt continuous_const Complex.continuous_im

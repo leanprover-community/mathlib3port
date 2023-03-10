@@ -55,7 +55,7 @@ theorem reClm_nnnorm : ‖reClm‖₊ = 1 :=
 theorem imClm_norm : ‖imClm‖ = 1 :=
   le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
     calc
-      1 = ‖imClm i‖ := by simp
+      1 = ‖imClm I‖ := by simp
       _ ≤ ‖imClm‖ := unit_le_op_norm _ _ (by simp)
       
 #align complex.im_clm_norm Complex.imClm_norm

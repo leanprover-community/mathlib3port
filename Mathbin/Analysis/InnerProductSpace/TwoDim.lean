@@ -497,10 +497,10 @@ real part is the inner product and its imaginary part is `orientation.area_form`
 On `ℂ` with the standard orientation, `kahler w z = conj w * z`; see `complex.kahler`. -/
 def kahler : E →ₗ[ℝ] E →ₗ[ℝ] ℂ :=
   LinearMap.llcomp ℝ E ℝ ℂ Complex.ofRealClm ∘ₗ @innerₛₗ ℝ E _ _ +
-    LinearMap.llcomp ℝ E ℝ ℂ ((LinearMap.lsmul ℝ ℂ).flip Complex.i) ∘ₗ ω
+    LinearMap.llcomp ℝ E ℝ ℂ ((LinearMap.lsmul ℝ ℂ).flip Complex.I) ∘ₗ ω
 #align orientation.kahler Orientation.kahler
 
-theorem kahler_apply_apply (x y : E) : o.kahler x y = ⟪x, y⟫ + ω x y • Complex.i :=
+theorem kahler_apply_apply (x y : E) : o.kahler x y = ⟪x, y⟫ + ω x y • Complex.I :=
   rfl
 #align orientation.kahler_apply_apply Orientation.kahler_apply_apply
 
@@ -517,18 +517,18 @@ theorem kahler_apply_self (x : E) : o.kahler x x = ‖x‖ ^ 2 := by
 #align orientation.kahler_apply_self Orientation.kahler_apply_self
 
 @[simp]
-theorem kahler_rightAngleRotation_left (x y : E) : o.kahler (J x) y = -Complex.i * o.kahler x y :=
+theorem kahler_rightAngleRotation_left (x y : E) : o.kahler (J x) y = -Complex.I * o.kahler x y :=
   by
   simp only [o.area_form_right_angle_rotation_left, o.inner_right_angle_rotation_left,
-    o.kahler_apply_apply, Complex.of_real_neg, Complex.real_smul]
+    o.kahler_apply_apply, Complex.ofReal_neg, Complex.real_smul]
   linear_combination ω x y * Complex.i_sq
 #align orientation.kahler_right_angle_rotation_left Orientation.kahler_rightAngleRotation_left
 
 @[simp]
-theorem kahler_rightAngleRotation_right (x y : E) : o.kahler x (J y) = Complex.i * o.kahler x y :=
+theorem kahler_rightAngleRotation_right (x y : E) : o.kahler x (J y) = Complex.I * o.kahler x y :=
   by
   simp only [o.area_form_right_angle_rotation_right, o.inner_right_angle_rotation_right,
-    o.kahler_apply_apply, Complex.of_real_neg, Complex.real_smul]
+    o.kahler_apply_apply, Complex.ofReal_neg, Complex.real_smul]
   linear_combination -ω x y * Complex.i_sq
 #align orientation.kahler_right_angle_rotation_right Orientation.kahler_rightAngleRotation_right
 
@@ -549,11 +549,11 @@ theorem kahler_mul (a x y : E) : o.kahler x a * o.kahler a y = ‖a‖ ^ 2 * o.k
   trans (↑(‖a‖ ^ 2) : ℂ) * o.kahler x y
   · ext
     · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.i_im, Complex.i_re,
-        Complex.mul_im, Complex.mul_re, Complex.of_real_im, Complex.of_real_re, Complex.real_smul]
+        Complex.mul_im, Complex.mul_re, Complex.ofReal_im, Complex.ofReal_re, Complex.real_smul]
       rw [real_inner_comm a x, o.area_form_swap x a]
       linear_combination o.inner_mul_inner_add_area_form_mul_area_form a x y
     · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.i_im, Complex.i_re,
-        Complex.mul_im, Complex.mul_re, Complex.of_real_im, Complex.of_real_re, Complex.real_smul]
+        Complex.mul_im, Complex.mul_re, Complex.ofReal_im, Complex.ofReal_re, Complex.real_smul]
       rw [real_inner_comm a x, o.area_form_swap x a]
       linear_combination o.inner_mul_area_form_sub a x y
   · norm_cast
@@ -563,7 +563,7 @@ theorem normSq_kahler (x y : E) : Complex.normSq (o.kahler x y) = ‖x‖ ^ 2 * 
   simpa [kahler_apply_apply, Complex.normSq, sq] using o.inner_sq_add_area_form_sq x y
 #align orientation.norm_sq_kahler Orientation.normSq_kahler
 
-theorem abs_kahler (x y : E) : Complex.abs (o.kahler x y) = ‖x‖ * ‖y‖ :=
+theorem abs_kahler (x y : E) : Complex.AbsTheory.Complex.abs (o.kahler x y) = ‖x‖ * ‖y‖ :=
   by
   rw [← sq_eq_sq, Complex.sq_abs]
   · linear_combination o.norm_sq_kahler x y
@@ -635,7 +635,7 @@ protected theorem areaForm (w z : ℂ) : Complex.orientation.areaForm w z = (con
 #align complex.area_form Complex.areaForm
 
 @[simp]
-protected theorem rightAngleRotation (z : ℂ) : Complex.orientation.rightAngleRotation z = i * z :=
+protected theorem rightAngleRotation (z : ℂ) : Complex.orientation.rightAngleRotation z = I * z :=
   by
   apply ext_inner_right ℝ
   intro w
@@ -678,7 +678,7 @@ theorem areaForm_map_complex (f : E ≃ₗᵢ[ℝ] ℂ)
 evaluated in terms of a complex-number representation of the space. -/
 theorem rightAngleRotation_map_complex (f : E ≃ₗᵢ[ℝ] ℂ)
     (hf : Orientation.map (Fin 2) f.toLinearEquiv o = Complex.orientation) (x : E) :
-    f (J x) = i * f x :=
+    f (J x) = I * f x :=
   by
   rw [← Complex.rightAngleRotation, ← hf, o.right_angle_rotation_map]
   simp

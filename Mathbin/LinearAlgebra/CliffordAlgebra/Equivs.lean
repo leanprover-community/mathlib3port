@@ -149,7 +149,7 @@ theorem q_apply (r : ℝ) : q r = -(r * r) :=
 `clifford_algebra_complex.Q` above can be converted to `ℂ`. -/
 def toComplex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
   CliffordAlgebra.lift q
-    ⟨LinearMap.toSpanSingleton _ _ Complex.i, fun r =>
+    ⟨LinearMap.toSpanSingleton _ _ Complex.I, fun r =>
       by
       dsimp [LinearMap.toSpanSingleton, LinearMap.id]
       rw [mul_mul_mul_comm]
@@ -157,7 +157,7 @@ def toComplex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
 #align clifford_algebra_complex.to_complex CliffordAlgebraComplex.toComplex
 
 @[simp]
-theorem toComplex_ι (r : ℝ) : toComplex (ι q r) = r • Complex.i :=
+theorem toComplex_ι (r : ℝ) : toComplex (ι q r) = r • Complex.I :=
   CliffordAlgebra.lift_ι_apply _ _ r
 #align clifford_algebra_complex.to_complex_ι CliffordAlgebraComplex.toComplex_ι
 
@@ -166,7 +166,7 @@ theorem toComplex_ι (r : ℝ) : toComplex (ι q r) = r • Complex.i :=
 theorem toComplex_involute (c : CliffordAlgebra q) : toComplex c.involute = conj (toComplex c) :=
   by
   have : to_complex (involute (ι Q 1)) = conj (to_complex (ι Q 1)) := by
-    simp only [involute_ι, to_complex_ι, AlgHom.map_neg, one_smul, Complex.conj_i]
+    simp only [involute_ι, to_complex_ι, AlgHom.map_neg, one_smul, Complex.conj_I]
   suffices to_complex.comp involute = complex.conj_ae.to_alg_hom.comp to_complex by
     exact AlgHom.congr_fun this c
   ext : 2
@@ -182,7 +182,7 @@ def ofComplex : ℂ →ₐ[ℝ] CliffordAlgebra q :=
 #align clifford_algebra_complex.of_complex CliffordAlgebraComplex.ofComplex
 
 @[simp]
-theorem ofComplex_i : ofComplex Complex.i = ι q 1 :=
+theorem ofComplex_i : ofComplex Complex.I = ι q 1 :=
   Complex.liftAux_apply_i _ _
 #align clifford_algebra_complex.of_complex_I CliffordAlgebraComplex.ofComplex_i
 

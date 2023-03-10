@@ -150,7 +150,7 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under {f
 theorem two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
     (hU : IsOpen U) {c w₀ : ℂ} {R : ℝ} {f : ℂ → E} (hc : closedBall c R ⊆ U)
     (hf : DifferentiableOn ℂ f U) (hw₀ : w₀ ∈ ball c R) :
-    ((2 * π * i : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z) = deriv f w₀ :=
+    ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z) = deriv f w₀ :=
   by
   -- We apply the removable singularity theorem and the Cauchy formula to `dslope f w₀`
   have hR : 0 < R := not_le.mp (ball_eq_empty.not.mp (nonempty_of_mem hw₀).ne_empty)

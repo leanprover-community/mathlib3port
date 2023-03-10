@@ -67,17 +67,17 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
       congr 1
       ring
     · convert Complex.arg_mul_cos_add_sin_mul_i hr ⟨hθ.1, hθ.2.le⟩
-      simp only [Complex.equivRealProd_symm_apply, Complex.of_real_mul, Complex.of_real_cos,
+      simp only [Complex.equivRealProd_symm_apply, Complex.ofReal_mul, Complex.of_real_cos,
         Complex.of_real_sin]
       ring
   left_inv' := by
     rintro ⟨x, y⟩ hxy
-    have A : sqrt (x ^ 2 + y ^ 2) = Complex.abs (x + y * Complex.i) := by
+    have A : sqrt (x ^ 2 + y ^ 2) = Complex.AbsTheory.Complex.abs (x + y * Complex.I) := by
       simp only [Complex.abs_def, Complex.normSq, pow_two, MonoidWithZeroHom.coe_mk, Complex.add_re,
-        Complex.of_real_re, Complex.mul_re, Complex.i_re, mul_zero, Complex.of_real_im,
-        Complex.i_im, sub_self, add_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add]
-    have Z := Complex.abs_mul_cos_add_sin_mul_i (x + y * Complex.i)
-    simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_add, ← Complex.of_real_mul, ←
+        Complex.ofReal_re, Complex.mul_re, Complex.i_re, mul_zero, Complex.ofReal_im, Complex.i_im,
+        sub_self, add_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add]
+    have Z := Complex.abs_mul_cos_add_sin_mul_i (x + y * Complex.I)
+    simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_add, ← Complex.ofReal_mul, ←
       mul_assoc] at Z
     simpa [A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
   open_target := isOpen_Ioi.Prod isOpen_Ioo

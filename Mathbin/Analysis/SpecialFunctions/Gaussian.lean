@@ -429,13 +429,13 @@ variable {b : ℂ}
 /-- The integral of the Gaussian function over the vertical edges of a rectangle
 with vertices at `(±T, 0)` and `(±T, c)`.  -/
 def verticalIntegral (b : ℂ) (c T : ℝ) : ℂ :=
-  ∫ y : ℝ in 0 ..c, i * (cexp (-b * (T + y * i) ^ 2) - cexp (-b * (T - y * i) ^ 2))
+  ∫ y : ℝ in 0 ..c, I * (cexp (-b * (T + y * I) ^ 2) - cexp (-b * (T - y * I) ^ 2))
 #align gaussian_fourier.vertical_integral GaussianFourier.verticalIntegral
 
 /-- Explicit formula for the norm of the Gaussian function along the vertical
 edges. -/
 theorem norm_cexp_neg_mul_sq_add_mul_i (b : ℂ) (c T : ℝ) :
-    ‖cexp (-b * (T + c * i) ^ 2)‖ = exp (-(b.re * T ^ 2 - 2 * b.im * c * T - b.re * c ^ 2)) :=
+    ‖cexp (-b * (T + c * I) ^ 2)‖ = exp (-(b.re * T ^ 2 - 2 * b.im * c * T - b.re * c ^ 2)) :=
   by
   rw [Complex.norm_eq_abs, Complex.abs_exp, neg_mul, neg_re, ← re_add_im b]
   simp only [sq, re_add_im, mul_re, mul_im, add_re, add_im, of_real_re, of_real_im, I_re, I_im]
@@ -443,7 +443,7 @@ theorem norm_cexp_neg_mul_sq_add_mul_i (b : ℂ) (c T : ℝ) :
 #align gaussian_fourier.norm_cexp_neg_mul_sq_add_mul_I GaussianFourier.norm_cexp_neg_mul_sq_add_mul_i
 
 theorem norm_cexp_neg_mul_sq_add_mul_I' (hb : b.re ≠ 0) (c T : ℝ) :
-    ‖cexp (-b * (T + c * i) ^ 2)‖ =
+    ‖cexp (-b * (T + c * I) ^ 2)‖ =
       exp (-(b.re * (T - b.im * c / b.re) ^ 2 - c ^ 2 * (b.im ^ 2 / b.re + b.re))) :=
   by
   have :
@@ -522,7 +522,7 @@ theorem tendsto_verticalIntegral (hb : 0 < b.re) (c : ℝ) :
 #align gaussian_fourier.tendsto_vertical_integral GaussianFourier.tendsto_verticalIntegral
 
 theorem integrableCexpNegMulSqAddRealMulI (hb : 0 < b.re) (c : ℝ) :
-    Integrable fun x : ℝ => cexp (-b * (x + c * i) ^ 2) :=
+    Integrable fun x : ℝ => cexp (-b * (x + c * I) ^ 2) :=
   by
   refine'
     ⟨(complex.continuous_exp.comp
@@ -539,7 +539,7 @@ theorem integrableCexpNegMulSqAddRealMulI (hb : 0 < b.re) (c : ℝ) :
 #align gaussian_fourier.integrable_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integrableCexpNegMulSqAddRealMulI
 
 theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
-    (∫ x : ℝ, cexp (-b * (x + c * i) ^ 2)) = (π / b) ^ (1 / 2 : ℂ) :=
+    (∫ x : ℝ, cexp (-b * (x + c * I) ^ 2)) = (π / b) ^ (1 / 2 : ℂ) :=
   by
   refine'
     tendsto_nhds_unique
@@ -595,7 +595,7 @@ theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
 #align integral_cexp_neg_mul_sq_add_const integral_cexp_neg_mul_sq_add_const
 
 theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
-    (∫ x : ℝ, cexp (i * t * x) * cexp (-b * x ^ 2)) =
+    (∫ x : ℝ, cexp (I * t * x) * cexp (-b * x ^ 2)) =
       cexp (-t ^ 2 / (4 * b)) * (π / b) ^ (1 / 2 : ℂ) :=
   by
   have : b ≠ 0 := by
@@ -613,7 +613,7 @@ theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
 #align fourier_transform_gaussian fourier_transform_gaussian
 
 theorem fourier_transform_gaussian_pi (hb : 0 < b.re) (t : ℂ) :
-    (∫ x : ℝ, cexp (2 * π * i * t * x) * cexp (-π * b * x ^ 2)) =
+    (∫ x : ℝ, cexp (2 * π * I * t * x) * cexp (-π * b * x ^ 2)) =
       1 / b ^ (1 / 2 : ℂ) * cexp (-π * (1 / b) * t ^ 2) :=
   by
   have h1 : 0 < re (π * b) := by

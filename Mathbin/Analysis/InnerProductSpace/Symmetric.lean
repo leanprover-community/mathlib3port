@@ -159,8 +159,8 @@ theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
     nth_rw 2 [inner_map_polarization]
     simp only [starRingEnd_apply, star_div', star_sub, star_add, star_mul]
     simp only [← starRingEnd_apply]
-    rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]
-    simp only [Complex.conj_i]
+    rw [h (x + y), h (x - y), h (x + Complex.I • y), h (x - Complex.I • y)]
+    simp only [Complex.conj_I]
     rw [inner_map_polarization']
     norm_num
     ring

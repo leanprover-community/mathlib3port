@@ -128,7 +128,7 @@ theorem measurable_arg : Measurable arg :=
 @[measurability]
 theorem measurable_log : Measurable log :=
   (measurable_of_real.comp <| Real.measurable_log.comp measurable_norm).add <|
-    (measurable_of_real.comp measurable_arg).mul_const i
+    (measurable_of_real.comp measurable_arg).mul_const I
 #align complex.measurable_log Complex.measurable_log
 
 end Complex

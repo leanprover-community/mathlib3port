@@ -48,11 +48,11 @@ theorem coe_injective : Injective (coe : 𝔻 → ℂ) :=
   Subtype.coe_injective
 #align complex.unit_disc.coe_injective Complex.UnitDisc.coe_injective
 
-theorem abs_lt_one (z : 𝔻) : abs (z : ℂ) < 1 :=
+theorem abs_lt_one (z : 𝔻) : Complex.AbsTheory.Complex.abs (z : ℂ) < 1 :=
   mem_ball_zero_iff.1 z.2
 #align complex.unit_disc.abs_lt_one Complex.UnitDisc.abs_lt_one
 
-theorem abs_ne_one (z : 𝔻) : abs (z : ℂ) ≠ 1 :=
+theorem abs_ne_one (z : 𝔻) : Complex.AbsTheory.Complex.abs (z : ℂ) ≠ 1 :=
   z.abs_lt_one.Ne
 #align complex.unit_disc.abs_ne_one Complex.UnitDisc.abs_ne_one
 
@@ -61,11 +61,13 @@ theorem normSq_lt_one (z : 𝔻) : normSq z < 1 :=
 #align complex.unit_disc.norm_sq_lt_one Complex.UnitDisc.normSq_lt_one
 
 theorem coe_ne_one (z : 𝔻) : (z : ℂ) ≠ 1 :=
-  ne_of_apply_ne abs <| (map_one abs).symm ▸ z.abs_ne_one
+  ne_of_apply_ne Complex.AbsTheory.Complex.abs <|
+    (map_one Complex.AbsTheory.Complex.abs).symm ▸ z.abs_ne_one
 #align complex.unit_disc.coe_ne_one Complex.UnitDisc.coe_ne_one
 
 theorem coe_ne_neg_one (z : 𝔻) : (z : ℂ) ≠ -1 :=
-  ne_of_apply_ne abs <| by
+  ne_of_apply_ne Complex.AbsTheory.Complex.abs <|
+    by
     rw [abs.map_neg, map_one]
     exact z.abs_ne_one
 #align complex.unit_disc.coe_ne_neg_one Complex.UnitDisc.coe_ne_neg_one
@@ -81,22 +83,24 @@ theorem coe_mul (z w : 𝔻) : ↑(z * w) = (z * w : ℂ) :=
 
 /-- A constructor that assumes `abs z < 1` instead of `dist z 0 < 1` and returns an element 
 of `𝔻` instead of `↥metric.ball (0 : ℂ) 1`. -/
-def mk (z : ℂ) (hz : abs z < 1) : 𝔻 :=
+def mk (z : ℂ) (hz : Complex.AbsTheory.Complex.abs z < 1) : 𝔻 :=
   ⟨z, mem_ball_zero_iff.2 hz⟩
 #align complex.unit_disc.mk Complex.UnitDisc.mk
 
 @[simp]
-theorem coe_mk (z : ℂ) (hz : abs z < 1) : (mk z hz : ℂ) = z :=
+theorem coe_mk (z : ℂ) (hz : Complex.AbsTheory.Complex.abs z < 1) : (mk z hz : ℂ) = z :=
   rfl
 #align complex.unit_disc.coe_mk Complex.UnitDisc.coe_mk
 
 @[simp]
-theorem mk_coe (z : 𝔻) (hz : abs (z : ℂ) < 1 := z.abs_lt_one) : mk z hz = z :=
+theorem mk_coe (z : 𝔻) (hz : Complex.AbsTheory.Complex.abs (z : ℂ) < 1 := z.abs_lt_one) :
+    mk z hz = z :=
   Subtype.eta _ _
 #align complex.unit_disc.mk_coe Complex.UnitDisc.mk_coe
 
 @[simp]
-theorem mk_neg (z : ℂ) (hz : abs (-z) < 1) : mk (-z) hz = -mk z (abs.map_neg z ▸ hz) :=
+theorem mk_neg (z : ℂ) (hz : Complex.AbsTheory.Complex.abs (-z) < 1) :
+    mk (-z) hz = -mk z (Complex.AbsTheory.Complex.abs.map_neg z ▸ hz) :=
   rfl
 #align complex.unit_disc.mk_neg Complex.UnitDisc.mk_neg
 

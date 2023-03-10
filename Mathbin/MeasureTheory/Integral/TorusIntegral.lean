@@ -100,7 +100,7 @@ local notation "ℂⁿ⁺¹" => Fin (n + 1) → ℂ
 /-- The n dimensional exponential map $θ_i ↦ c + R e^{θ_i*I}, θ ∈ ℝⁿ$ representing
 a torus in `ℂⁿ` with center `c ∈ ℂⁿ` and generalized radius `R ∈ ℝⁿ`, so we can adjust
 it to every n axis. -/
-def torusMap (c : ℂⁿ) (R : ℝⁿ) : ℝⁿ → ℂⁿ := fun θ i => c i + R i * exp (θ i * i)
+def torusMap (c : ℂⁿ) (R : ℝⁿ) : ℝⁿ → ℂⁿ := fun θ i => c i + R i * exp (θ i * I)
 #align torus_map torusMap
 
 theorem torusMap_sub_center (c : ℂⁿ) (R : ℝⁿ) (θ : ℝⁿ) : torusMap c R θ - c = torusMap 0 R θ :=
@@ -165,7 +165,7 @@ theorem torusIntegrable_zero_radius {f : ℂⁿ → E} {c : ℂⁿ} : TorusInteg
 
 /-- The function given in the definition of `torus_integral` is integrable. -/
 theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
-    IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * i) * i : ℂ) • f (torusMap c R θ))
+    IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
       (Icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
   by
   refine' (hf.norm.const_mul (∏ i, |R i|)).mono' _ _
@@ -185,7 +185,7 @@ variable [NormedSpace ℂ E] [CompleteSpace E] {f g : ℂⁿ → E} {c : ℂⁿ}
 /-- The definition of the integral over a generalized torus with center `c ∈ ℂⁿ` and radius `R ∈ ℝⁿ`
 as the `•`-product of the derivative of `torus_map` and `f (torus_map c R θ)`-/
 def torusIntegral (f : ℂⁿ → E) (c : ℂⁿ) (R : ℝⁿ) :=
-  ∫ θ : ℝⁿ in Icc (0 : ℝⁿ) fun _ => 2 * π, (∏ i, R i * exp (θ i * i) * i : ℂ) • f (torusMap c R θ)
+  ∫ θ : ℝⁿ in Icc (0 : ℝⁿ) fun _ => 2 * π, (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)
 #align torus_integral torusIntegral
 
 -- mathport name: «expr∯ inT( , ), »
@@ -230,7 +230,7 @@ theorem norm_torusIntegral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (tor
     ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (Icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
       norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSet_Icc fun θ hθ =>
         calc
-          ‖(∏ i : Fin n, R i * exp (θ i * i) * i : ℂ) • f (torusMap c R θ)‖ =
+          ‖(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)‖ =
               (∏ i : Fin n, |R i|) * ‖f (torusMap c R θ)‖ :=
             by simp [norm_smul]
           _ ≤ (∏ i : Fin n, |R i|) * C :=

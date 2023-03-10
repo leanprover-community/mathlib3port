@@ -40,12 +40,12 @@ namespace Complex
 If `f` is differentiable and `w` is in the interior of the ball, then the integral from `0` to
 `2 * π` of this gives the value `f(w)`. -/
 def circleTransform (f : ℂ → E) (θ : ℝ) : E :=
-  (2 * ↑π * i)⁻¹ • deriv (circleMap z R) θ • (circleMap z R θ - w)⁻¹ • f (circleMap z R θ)
+  (2 * ↑π * I)⁻¹ • deriv (circleMap z R) θ • (circleMap z R θ - w)⁻¹ • f (circleMap z R θ)
 #align complex.circle_transform Complex.circleTransform
 
 /-- The derivative of `circle_transform` w.r.t `w`.-/
 def circleTransformDeriv (f : ℂ → E) (θ : ℝ) : E :=
-  (2 * ↑π * i)⁻¹ • deriv (circleMap z R) θ • ((circleMap z R θ - w) ^ 2)⁻¹ • f (circleMap z R θ)
+  (2 * ↑π * I)⁻¹ • deriv (circleMap z R) θ • ((circleMap z R θ - w) ^ 2)⁻¹ • f (circleMap z R θ)
 #align complex.circle_transform_deriv Complex.circleTransformDeriv
 
 theorem circleTransformDeriv_periodic (f : ℂ → E) :
@@ -72,7 +72,7 @@ theorem circleTransformDeriv_eq (f : ℂ → E) :
 
 theorem integral_circleTransform [CompleteSpace E] (f : ℂ → E) :
     (∫ θ : ℝ in 0 ..2 * π, circleTransform R z w f θ) =
-      (2 * ↑π * i)⁻¹ • ∮ z in C(z, R), (z - w)⁻¹ • f z :=
+      (2 * ↑π * I)⁻¹ • ∮ z in C(z, R), (z - w)⁻¹ • f z :=
   by
   simp_rw [circle_transform, circleIntegral, deriv_circleMap, circleMap]
   simp
@@ -123,7 +123,8 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R) (z : ℂ) :
-    ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (closedBall z r ×ˢ univ) :=
+    ContinuousOn (Complex.AbsTheory.Complex.abs ∘ fun t => circleTransformBoundingFunction R z t)
+      (closedBall z r ×ˢ univ) :=
   by
   have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) :=
     by
@@ -145,7 +146,8 @@ theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R
 theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
     ∃ x : closedBall z r ×ˢ [0, 2 * π],
       ∀ y : closedBall z r ×ˢ [0, 2 * π],
-        abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) :=
+        Complex.AbsTheory.Complex.abs (circleTransformBoundingFunction R z y) ≤
+          Complex.AbsTheory.Complex.abs (circleTransformBoundingFunction R z x) :=
   by
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
   have comp : IsCompact (closed_ball z r ×ˢ [0, 2 * π]) := by
