@@ -172,7 +172,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_icc
   have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_icc
   have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
-    tendsto_atTop_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
+    tendsto_atTop_csupᵢ (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
   have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) :=
     by
     suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this

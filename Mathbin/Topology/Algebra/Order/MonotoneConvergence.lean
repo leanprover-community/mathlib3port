@@ -147,28 +147,28 @@ section Csupr
 
 variable [ConditionallyCompleteLattice α] [SupConvergenceClass α] {f : ι → α} {a : α}
 
-/- warning: tendsto_at_top_csupr -> tendsto_atTop_csupr is a dubious translation:
+/- warning: tendsto_at_top_csupr -> tendsto_atTop_csupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : SupConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Monotone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atTop.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toHasSup.{u1} α _inst_3) ι (fun (i : ι) => f i))))
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : SupConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Monotone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atTop.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_3) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align tendsto_at_top_csupr tendsto_atTop_csuprₓ'. -/
-theorem tendsto_atTop_csupr (h_mono : Monotone f) (hbdd : BddAbove <| range f) :
+Case conversion may be inaccurate. Consider using '#align tendsto_at_top_csupr tendsto_atTop_csupᵢₓ'. -/
+theorem tendsto_atTop_csupᵢ (h_mono : Monotone f) (hbdd : BddAbove <| range f) :
     Tendsto f atTop (𝓝 (⨆ i, f i)) :=
   by
   cases isEmpty_or_nonempty ι
   exacts[tendsto_of_is_empty, tendsto_atTop_isLUB h_mono (isLUB_csupᵢ hbdd)]
-#align tendsto_at_top_csupr tendsto_atTop_csupr
+#align tendsto_at_top_csupr tendsto_atTop_csupᵢ
 
-/- warning: tendsto_at_bot_csupr -> tendsto_atBot_csupr is a dubious translation:
+/- warning: tendsto_at_bot_csupr -> tendsto_atBot_csupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : SupConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Antitone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atBot.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toHasSup.{u1} α _inst_3) ι (fun (i : ι) => f i))))
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : SupConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Antitone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atBot.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_3) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align tendsto_at_bot_csupr tendsto_atBot_csuprₓ'. -/
-theorem tendsto_atBot_csupr (h_anti : Antitone f) (hbdd : BddAbove <| range f) :
-    Tendsto f atBot (𝓝 (⨆ i, f i)) := by convert tendsto_atTop_csupr h_anti.dual hbdd.dual
-#align tendsto_at_bot_csupr tendsto_atBot_csupr
+Case conversion may be inaccurate. Consider using '#align tendsto_at_bot_csupr tendsto_atBot_csupᵢₓ'. -/
+theorem tendsto_atBot_csupᵢ (h_anti : Antitone f) (hbdd : BddAbove <| range f) :
+    Tendsto f atBot (𝓝 (⨆ i, f i)) := by convert tendsto_atTop_csupᵢ h_anti.dual hbdd.dual
+#align tendsto_at_bot_csupr tendsto_atBot_csupᵢ
 
 end Csupr
 
@@ -176,25 +176,25 @@ section Cinfi
 
 variable [ConditionallyCompleteLattice α] [InfConvergenceClass α] {f : ι → α} {a : α}
 
-/- warning: tendsto_at_bot_cinfi -> tendsto_atBot_cinfi is a dubious translation:
+/- warning: tendsto_at_bot_cinfi -> tendsto_atBot_cinfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : InfConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Monotone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atBot.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toHasInf.{u1} α _inst_3) ι (fun (i : ι) => f i))))
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : InfConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Monotone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atBot.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_3) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align tendsto_at_bot_cinfi tendsto_atBot_cinfiₓ'. -/
-theorem tendsto_atBot_cinfi (h_mono : Monotone f) (hbdd : BddBelow <| range f) :
-    Tendsto f atBot (𝓝 (⨅ i, f i)) := by convert tendsto_atTop_csupr h_mono.dual hbdd.dual
-#align tendsto_at_bot_cinfi tendsto_atBot_cinfi
+Case conversion may be inaccurate. Consider using '#align tendsto_at_bot_cinfi tendsto_atBot_cinfᵢₓ'. -/
+theorem tendsto_atBot_cinfᵢ (h_mono : Monotone f) (hbdd : BddBelow <| range f) :
+    Tendsto f atBot (𝓝 (⨅ i, f i)) := by convert tendsto_atTop_csupᵢ h_mono.dual hbdd.dual
+#align tendsto_at_bot_cinfi tendsto_atBot_cinfᵢ
 
-/- warning: tendsto_at_top_cinfi -> tendsto_atTop_cinfi is a dubious translation:
+/- warning: tendsto_at_top_cinfi -> tendsto_atTop_cinfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : InfConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Antitone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atTop.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toHasInf.{u1} α _inst_3) ι (fun (i : ι) => f i))))
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : ConditionallyCompleteLattice.{u1} α] [_inst_4 : InfConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) _inst_2] {f : ι -> α}, (Antitone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) f) -> (BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_3)))) (Set.range.{u1, succ u2} α ι f)) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atTop.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_3) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align tendsto_at_top_cinfi tendsto_atTop_cinfiₓ'. -/
-theorem tendsto_atTop_cinfi (h_anti : Antitone f) (hbdd : BddBelow <| range f) :
-    Tendsto f atTop (𝓝 (⨅ i, f i)) := by convert tendsto_atBot_csupr h_anti.dual hbdd.dual
-#align tendsto_at_top_cinfi tendsto_atTop_cinfi
+Case conversion may be inaccurate. Consider using '#align tendsto_at_top_cinfi tendsto_atTop_cinfᵢₓ'. -/
+theorem tendsto_atTop_cinfᵢ (h_anti : Antitone f) (hbdd : BddBelow <| range f) :
+    Tendsto f atTop (𝓝 (⨅ i, f i)) := by convert tendsto_atBot_csupᵢ h_anti.dual hbdd.dual
+#align tendsto_at_top_cinfi tendsto_atTop_cinfᵢ
 
 end Cinfi
 
@@ -209,7 +209,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : CompleteLattice.{u1} α] [_inst_4 : SupConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) _inst_2] {f : ι -> α}, (Monotone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) f) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atTop.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_3)) ι (fun (i : ι) => f i))))
 Case conversion may be inaccurate. Consider using '#align tendsto_at_top_supr tendsto_atTop_supᵢₓ'. -/
 theorem tendsto_atTop_supᵢ (h_mono : Monotone f) : Tendsto f atTop (𝓝 (⨆ i, f i)) :=
-  tendsto_atTop_csupr h_mono (OrderTop.bddAbove _)
+  tendsto_atTop_csupᵢ h_mono (OrderTop.bddAbove _)
 #align tendsto_at_top_supr tendsto_atTop_supᵢ
 
 /- warning: tendsto_at_bot_supr -> tendsto_atBot_supᵢ is a dubious translation:
@@ -219,7 +219,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : CompleteLattice.{u1} α] [_inst_4 : SupConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) _inst_2] {f : ι -> α}, (Antitone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) f) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atBot.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_3)) ι (fun (i : ι) => f i))))
 Case conversion may be inaccurate. Consider using '#align tendsto_at_bot_supr tendsto_atBot_supᵢₓ'. -/
 theorem tendsto_atBot_supᵢ (h_anti : Antitone f) : Tendsto f atBot (𝓝 (⨆ i, f i)) :=
-  tendsto_atBot_csupr h_anti (OrderTop.bddAbove _)
+  tendsto_atBot_csupᵢ h_anti (OrderTop.bddAbove _)
 #align tendsto_at_bot_supr tendsto_atBot_supᵢ
 
 end supᵢ
@@ -235,7 +235,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : CompleteLattice.{u1} α] [_inst_4 : InfConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) _inst_2] {f : ι -> α}, (Monotone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) f) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atBot.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_3)) ι (fun (i : ι) => f i))))
 Case conversion may be inaccurate. Consider using '#align tendsto_at_bot_infi tendsto_atBot_infᵢₓ'. -/
 theorem tendsto_atBot_infᵢ (h_mono : Monotone f) : Tendsto f atBot (𝓝 (⨅ i, f i)) :=
-  tendsto_atBot_cinfi h_mono (OrderBot.bddBelow _)
+  tendsto_atBot_cinfᵢ h_mono (OrderBot.bddBelow _)
 #align tendsto_at_bot_infi tendsto_atBot_infᵢ
 
 /- warning: tendsto_at_top_infi -> tendsto_atTop_infᵢ is a dubious translation:
@@ -245,7 +245,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Preorder.{u2} ι] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : CompleteLattice.{u1} α] [_inst_4 : InfConvergenceClass.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) _inst_2] {f : ι -> α}, (Antitone.{u2, u1} ι α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_3))) f) -> (Filter.Tendsto.{u2, u1} ι α f (Filter.atTop.{u2} ι _inst_1) (nhds.{u1} α _inst_2 (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_3)) ι (fun (i : ι) => f i))))
 Case conversion may be inaccurate. Consider using '#align tendsto_at_top_infi tendsto_atTop_infᵢₓ'. -/
 theorem tendsto_atTop_infᵢ (h_anti : Antitone f) : Tendsto f atTop (𝓝 (⨅ i, f i)) :=
-  tendsto_atTop_cinfi h_anti (OrderBot.bddBelow _)
+  tendsto_atTop_cinfᵢ h_anti (OrderBot.bddBelow _)
 #align tendsto_at_top_infi tendsto_atTop_infᵢ
 
 end infᵢ
@@ -304,7 +304,7 @@ Case conversion may be inaccurate. Consider using '#align tendsto_of_monotone te
 theorem tendsto_of_monotone {ι α : Type _} [Preorder ι] [TopologicalSpace α]
     [ConditionallyCompleteLinearOrder α] [OrderTopology α] {f : ι → α} (h_mono : Monotone f) :
     Tendsto f atTop atTop ∨ ∃ l, Tendsto f atTop (𝓝 l) :=
-  if H : BddAbove (range f) then Or.inr ⟨_, tendsto_atTop_csupr h_mono H⟩
+  if H : BddAbove (range f) then Or.inr ⟨_, tendsto_atTop_csupᵢ h_mono H⟩
   else Or.inl <| tendsto_atTop_atTop_of_monotone' h_mono H
 #align tendsto_of_monotone tendsto_of_monotone
 

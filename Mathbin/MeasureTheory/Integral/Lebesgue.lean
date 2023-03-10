@@ -1504,7 +1504,7 @@ theorem exists_simpleFunc_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞}
   by
   rw [lintegral_eq_nnreal] at h
   have := ENNReal.lt_add_right h hε
-  erw [ENNReal.bsupr_add] at this <;> [skip, exact ⟨0, fun x => zero_le _⟩]
+  erw [ENNReal.bsupᵢ_add] at this <;> [skip, exact ⟨0, fun x => zero_le _⟩]
   simp_rw [lt_supᵢ_iff, supᵢ_lt_iff, supᵢ_le_iff] at this
   rcases this with ⟨φ, hle : ∀ x, ↑(φ x) ≤ f x, b, hbφ, hb⟩
   refine' ⟨φ, hle, fun ψ hψ => _⟩
@@ -1805,7 +1805,7 @@ of their sum. The other inequality needs one of these functions to be (a.e.-)mea
 theorem le_lintegral_add (f g : α → ℝ≥0∞) : ((∫⁻ a, f a ∂μ) + ∫⁻ a, g a ∂μ) ≤ ∫⁻ a, f a + g a ∂μ :=
   by
   dsimp only [lintegral]
-  refine' ENNReal.bsupr_add_bsupr_le' ⟨0, zero_le f⟩ ⟨0, zero_le g⟩ fun f' hf' g' hg' => _
+  refine' ENNReal.bsupᵢ_add_bsupᵢ_le' ⟨0, zero_le f⟩ ⟨0, zero_le g⟩ fun f' hf' g' hg' => _
   exact le_supᵢ₂_of_le (f' + g') (add_le_add hf' hg') (add_lintegral _ _).ge
 #align measure_theory.le_lintegral_add MeasureTheory.le_lintegral_add
 

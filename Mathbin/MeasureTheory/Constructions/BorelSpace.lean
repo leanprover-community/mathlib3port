@@ -1875,7 +1875,7 @@ theorem aeMeasurable_coe_nNReal_real_iff {f : α → ℝ≥0} {μ : Measure α} 
 
 /-- The set of finite `ℝ≥0∞` numbers is `measurable_equiv` to `ℝ≥0`. -/
 def MeasurableEquiv.ennrealEquivNnreal : { r : ℝ≥0∞ | r ≠ ∞ } ≃ᵐ ℝ≥0 :=
-  ENNReal.neTopHomeomorphNnreal.toMeasurableEquiv
+  ENNReal.neTopHomeomorphNNReal.toMeasurableEquiv
 #align measurable_equiv.ennreal_equiv_nnreal MeasurableEquiv.ennrealEquivNnreal
 
 namespace ENNReal

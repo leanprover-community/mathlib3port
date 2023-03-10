@@ -234,7 +234,7 @@ protected noncomputable def lim (c : CU X) (x : X) : ℝ :=
 
 theorem tendsto_approx_atTop (c : CU X) (x : X) :
     Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
-  tendsto_atTop_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
+  tendsto_atTop_csupᵢ (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_atTop
 
 theorem lim_of_mem_c (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 := by
