@@ -34,6 +34,12 @@ variable (E : Type _)
 instance [UniformSpace E] [Norm E] : Norm (Completion E)
     where norm := Completion.extension Norm.norm
 
+/- warning: uniform_space.completion.norm_coe -> UniformSpace.Completion.norm_coe is a dubious translation:
+lean 3 declaration is
+  forall {E : Type.{u1}} [_inst_1 : SeminormedAddCommGroup.{u1} E] (x : E), Eq.{1} Real (Norm.norm.{u1} (UniformSpace.Completion.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1))) (UniformSpace.Completion.hasNorm.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1)) (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) E (UniformSpace.Completion.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1))) (HasLiftT.mk.{succ u1, succ u1} E (UniformSpace.Completion.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1))) (CoeTCₓ.coe.{succ u1, succ u1} E (UniformSpace.Completion.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1))) (UniformSpace.Completion.hasCoeT.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1))))) x)) (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) x)
+but is expected to have type
+  forall {E : Type.{u1}} [_inst_1 : SeminormedAddCommGroup.{u1} E] (x : E), Eq.{1} Real (Norm.norm.{u1} (UniformSpace.Completion.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1))) (UniformSpace.Completion.instNormCompletion.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1)) (SeminormedAddCommGroup.toNorm.{u1} E _inst_1)) (UniformSpace.Completion.coe'.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_1)) x)) (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) x)
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.norm_coe UniformSpace.Completion.norm_coeₓ'. -/
 @[simp]
 theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)‖ = ‖x‖ :=
   Completion.extension_coe uniformContinuous_norm x

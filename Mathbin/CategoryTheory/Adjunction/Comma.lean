@@ -40,6 +40,12 @@ section OfInitials
 
 variable [∀ A, HasInitial (StructuredArrow A G)]
 
+/- warning: category_theory.left_adjoint_of_structured_arrow_initials_aux -> CategoryTheory.leftAdjointOfStructuredArrowInitialsAux is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) [_inst_3 : forall (A : C), CategoryTheory.Limits.HasInitial.{max u1 u2, max u4 u1} (CategoryTheory.StructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.StructuredArrow.category.{u1, u3, u4, u2} D _inst_2 C _inst_1 A G)] (A : C) (B : D), Equiv.{succ u2, succ u1} (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Comma.right.{u1, u2, u1, u1, u4, u3} (CategoryTheory.Discrete.{u1} PUnit.{succ u1}) (CategoryTheory.discreteCategory.{u1} PUnit.{succ u1}) D _inst_2 C _inst_1 (CategoryTheory.Functor.fromPUnit.{u1, u3} C _inst_1 A) G (CategoryTheory.Limits.initial.{max u1 u2, max u4 u1} (CategoryTheory.StructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.StructuredArrow.category.{u1, u3, u4, u2} D _inst_2 C _inst_1 A G) (_inst_3 A))) B) (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) A (CategoryTheory.Functor.obj.{u2, u1, u4, u3} D _inst_2 C _inst_1 G B))
+but is expected to have type
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) [_inst_3 : forall (A : C), CategoryTheory.Limits.HasInitial.{max u1 u2, max u4 u1} (CategoryTheory.StructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.instCategoryStructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G)] (A : C) (B : D), Equiv.{succ u2, succ u1} (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Comma.right.{u1, u2, u1, u1, u4, u3} (CategoryTheory.Discrete.{u1} PUnit.{succ u1}) (CategoryTheory.discreteCategory.{u1} PUnit.{succ u1}) D _inst_2 C _inst_1 (CategoryTheory.Functor.fromPUnit.{u1, u3} C _inst_1 A) G (CategoryTheory.Limits.initial.{max u1 u2, max u4 u1} (CategoryTheory.StructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.instCategoryStructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (_inst_3 A))) B) (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) A (Prefunctor.obj.{succ u2, succ u1, u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u4, u3} D _inst_2 C _inst_1 G) B))
+Case conversion may be inaccurate. Consider using '#align category_theory.left_adjoint_of_structured_arrow_initials_aux CategoryTheory.leftAdjointOfStructuredArrowInitialsAuxₓ'. -/
 /-- Implementation: If each structured arrow category on `G` has an initial object, an equivalence
 which is helpful for constructing a left adjoint to `G`.
 -/
@@ -64,6 +70,7 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) :
     apply (comma_morphism.w (initial.to B')).symm.trans (category.id_comp _)
 #align category_theory.left_adjoint_of_structured_arrow_initials_aux CategoryTheory.leftAdjointOfStructuredArrowInitialsAux
 
+#print CategoryTheory.leftAdjointOfStructuredArrowInitials /-
 /--
 If each structured arrow category on `G` has an initial object, construct a left adjoint to `G`. It
 is shown that it is a left adjoint in `adjunction_of_structured_arrow_initials`.
@@ -71,7 +78,9 @@ is shown that it is a left adjoint in `adjunction_of_structured_arrow_initials`.
 def leftAdjointOfStructuredArrowInitials : C ⥤ D :=
   Adjunction.leftAdjointOfEquiv (leftAdjointOfStructuredArrowInitialsAux G) fun _ _ => by simp
 #align category_theory.left_adjoint_of_structured_arrow_initials CategoryTheory.leftAdjointOfStructuredArrowInitials
+-/
 
+#print CategoryTheory.adjunctionOfStructuredArrowInitials /-
 /--
 If each structured arrow category on `G` has an initial object, we have a constructed left adjoint
 to `G`.
@@ -79,13 +88,16 @@ to `G`.
 def adjunctionOfStructuredArrowInitials : leftAdjointOfStructuredArrowInitials G ⊣ G :=
   Adjunction.adjunctionOfEquivLeft _ _
 #align category_theory.adjunction_of_structured_arrow_initials CategoryTheory.adjunctionOfStructuredArrowInitials
+-/
 
+#print CategoryTheory.isRightAdjointOfStructuredArrowInitials /-
 /-- If each structured arrow category on `G` has an initial object, `G` is a right adjoint. -/
 def isRightAdjointOfStructuredArrowInitials : IsRightAdjoint G
     where
   left := _
   adj := adjunctionOfStructuredArrowInitials G
 #align category_theory.is_right_adjoint_of_structured_arrow_initials CategoryTheory.isRightAdjointOfStructuredArrowInitials
+-/
 
 end OfInitials
 
@@ -93,6 +105,12 @@ section OfTerminals
 
 variable [∀ A, HasTerminal (CostructuredArrow G A)]
 
+/- warning: category_theory.right_adjoint_of_costructured_arrow_terminals_aux -> CategoryTheory.rightAdjointOfCostructuredArrowTerminalsAux is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) [_inst_3 : forall (A : C), CategoryTheory.Limits.HasTerminal.{max u2 u1, max u4 u1} (CategoryTheory.CostructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A) (CategoryTheory.CostructuredArrow.category.{u1, u3, u4, u2} D _inst_2 C _inst_1 G A)] (B : D) (A : C), Equiv.{succ u1, succ u2} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.obj.{u2, u1, u4, u3} D _inst_2 C _inst_1 G B) A) (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) B (CategoryTheory.Comma.left.{u2, u1, u1, u4, u1, u3} D _inst_2 (CategoryTheory.Discrete.{u1} PUnit.{succ u1}) (CategoryTheory.discreteCategory.{u1} PUnit.{succ u1}) C _inst_1 G (CategoryTheory.Functor.fromPUnit.{u1, u3} C _inst_1 A) (CategoryTheory.Limits.terminal.{max u2 u1, max u4 u1} (CategoryTheory.CostructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A) (CategoryTheory.CostructuredArrow.category.{u1, u3, u4, u2} D _inst_2 C _inst_1 G A) (_inst_3 A))))
+but is expected to have type
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) [_inst_3 : forall (A : C), CategoryTheory.Limits.HasTerminal.{max u1 u2, max u4 u1} (CategoryTheory.CostructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A) (CategoryTheory.instCategoryCostructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A)] (B : D) (A : C), Equiv.{succ u1, succ u2} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (Prefunctor.obj.{succ u2, succ u1, u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u4, u3} D _inst_2 C _inst_1 G) B) A) (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) B (CategoryTheory.Comma.left.{u2, u1, u1, u4, u1, u3} D _inst_2 (CategoryTheory.Discrete.{u1} PUnit.{succ u1}) (CategoryTheory.discreteCategory.{u1} PUnit.{succ u1}) C _inst_1 G (CategoryTheory.Functor.fromPUnit.{u1, u3} C _inst_1 A) (CategoryTheory.Limits.terminal.{max u1 u2, max u4 u1} (CategoryTheory.CostructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A) (CategoryTheory.instCategoryCostructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A) (_inst_3 A))))
+Case conversion may be inaccurate. Consider using '#align category_theory.right_adjoint_of_costructured_arrow_terminals_aux CategoryTheory.rightAdjointOfCostructuredArrowTerminalsAuxₓ'. -/
 /-- Implementation: If each costructured arrow category on `G` has a terminal object, an equivalence
 which is helpful for constructing a right adjoint to `G`.
 -/
@@ -116,6 +134,7 @@ def rightAdjointOfCostructuredArrowTerminalsAux (B : D) (A : C) :
     rfl
 #align category_theory.right_adjoint_of_costructured_arrow_terminals_aux CategoryTheory.rightAdjointOfCostructuredArrowTerminalsAux
 
+#print CategoryTheory.rightAdjointOfCostructuredArrowTerminals /-
 /--
 If each costructured arrow category on `G` has a terminal object, construct a right adjoint to `G`.
 It is shown that it is a right adjoint in `adjunction_of_structured_arrow_initials`.
@@ -126,20 +145,25 @@ def rightAdjointOfCostructuredArrowTerminals : C ⥤ D :=
     rw [← Equiv.eq_symm_apply]
     simp
 #align category_theory.right_adjoint_of_costructured_arrow_terminals CategoryTheory.rightAdjointOfCostructuredArrowTerminals
+-/
 
+#print CategoryTheory.adjunctionOfCostructuredArrowTerminals /-
 /-- If each costructured arrow category on `G` has a terminal object, we have a constructed right
 adjoint to `G`.
 -/
 def adjunctionOfCostructuredArrowTerminals : G ⊣ rightAdjointOfCostructuredArrowTerminals G :=
   Adjunction.adjunctionOfEquivRight _ _
 #align category_theory.adjunction_of_costructured_arrow_terminals CategoryTheory.adjunctionOfCostructuredArrowTerminals
+-/
 
+#print CategoryTheory.isLeftAdjointOfCostructuredArrowTerminals /-
 /-- If each costructured arrow category on `G` has an terminal object, `G` is a left adjoint. -/
 def isLeftAdjointOfCostructuredArrowTerminals : IsLeftAdjoint G
     where
   right := rightAdjointOfCostructuredArrowTerminals G
   adj := Adjunction.adjunctionOfEquivRight _ _
 #align category_theory.is_left_adjoint_of_costructured_arrow_terminals CategoryTheory.isLeftAdjointOfCostructuredArrowTerminals
+-/
 
 end OfTerminals
 
@@ -149,6 +173,12 @@ variable {F : C ⥤ D}
 
 attribute [local tidy] tactic.discrete_cases
 
+/- warning: category_theory.mk_initial_of_left_adjoint -> CategoryTheory.mkInitialOfLeftAdjoint is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (h : CategoryTheory.Adjunction.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G) (A : C), CategoryTheory.Limits.IsInitial.{max u1 u2, max u4 u1} (CategoryTheory.StructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.StructuredArrow.category.{u1, u3, u4, u2} D _inst_2 C _inst_1 A G) (CategoryTheory.StructuredArrow.mk.{u2, u1, u4, u3} D _inst_2 C _inst_1 A (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F A) G (CategoryTheory.NatTrans.app.{u1, u1, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u3} C _inst_1) (CategoryTheory.Functor.comp.{u1, u2, u1, u3, u4, u3} C _inst_1 D _inst_2 C _inst_1 F G) (CategoryTheory.Adjunction.unit.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G h) A))
+but is expected to have type
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (h : CategoryTheory.Adjunction.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G) (A : C), CategoryTheory.Limits.IsInitial.{max u1 u2, max u4 u1} (CategoryTheory.StructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.instCategoryStructuredArrow.{u2, u1, u4, u3} D _inst_2 C _inst_1 A G) (CategoryTheory.StructuredArrow.mk.{u2, u1, u4, u3} D _inst_2 C _inst_1 A (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) A) G (CategoryTheory.NatTrans.app.{u1, u1, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u3} C _inst_1) (CategoryTheory.Functor.comp.{u1, u2, u1, u3, u4, u3} C _inst_1 D _inst_2 C _inst_1 F G) (CategoryTheory.Adjunction.unit.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G h) A))
+Case conversion may be inaccurate. Consider using '#align category_theory.mk_initial_of_left_adjoint CategoryTheory.mkInitialOfLeftAdjointₓ'. -/
 /-- Given a left adjoint to `G`, we can construct an initial object in each structured arrow
 category on `G`. -/
 def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
@@ -162,6 +192,12 @@ def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
     apply structured_arrow.w m
 #align category_theory.mk_initial_of_left_adjoint CategoryTheory.mkInitialOfLeftAdjoint
 
+/- warning: category_theory.mk_terminal_of_right_adjoint -> CategoryTheory.mkTerminalOfRightAdjoint is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (h : CategoryTheory.Adjunction.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G) (A : D), CategoryTheory.Limits.IsTerminal.{max u1 u2, max u3 u2} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 F A) (CategoryTheory.CostructuredArrow.category.{u2, u4, u3, u1} C _inst_1 D _inst_2 F A) (CategoryTheory.CostructuredArrow.mk.{u1, u2, u3, u4} C _inst_1 D _inst_2 A (CategoryTheory.Functor.obj.{u2, u1, u4, u3} D _inst_2 C _inst_1 G A) F (CategoryTheory.NatTrans.app.{u2, u2, u4, u4} D _inst_2 D _inst_2 (CategoryTheory.Functor.comp.{u2, u1, u2, u4, u3, u4} D _inst_2 C _inst_1 D _inst_2 G F) (CategoryTheory.Functor.id.{u2, u4} D _inst_2) (CategoryTheory.Adjunction.counit.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G h) A))
+but is expected to have type
+  forall {C : Type.{u3}} {D : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.Category.{u2, u4} D] (G : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1) {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (h : CategoryTheory.Adjunction.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G) (A : D), CategoryTheory.Limits.IsTerminal.{max u1 u2, max u3 u2} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 F A) (CategoryTheory.instCategoryCostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 F A) (CategoryTheory.CostructuredArrow.mk.{u1, u2, u3, u4} C _inst_1 D _inst_2 A (Prefunctor.obj.{succ u2, succ u1, u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u4, u3} D _inst_2 C _inst_1 G) A) F (CategoryTheory.NatTrans.app.{u2, u2, u4, u4} D _inst_2 D _inst_2 (CategoryTheory.Functor.comp.{u2, u1, u2, u4, u3, u4} D _inst_2 C _inst_1 D _inst_2 G F) (CategoryTheory.Functor.id.{u2, u4} D _inst_2) (CategoryTheory.Adjunction.counit.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G h) A))
+Case conversion may be inaccurate. Consider using '#align category_theory.mk_terminal_of_right_adjoint CategoryTheory.mkTerminalOfRightAdjointₓ'. -/
 /-- Given a right adjoint to `F`, we can construct a terminal object in each costructured arrow
 category on `F`. -/
 def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
@@ -177,17 +213,21 @@ def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
 
 end
 
+#print CategoryTheory.nonempty_isRightAdjoint_iff_hasInitial_structuredArrow /-
 theorem nonempty_isRightAdjoint_iff_hasInitial_structuredArrow {G : D ⥤ C} :
     Nonempty (IsRightAdjoint G) ↔ ∀ A, HasInitial (StructuredArrow A G) :=
   ⟨fun ⟨h⟩ A => (mk_initial_of_left_adjoint _ h.adj A).HasInitial, fun h =>
     ⟨is_right_adjoint_of_structured_arrow_initials _⟩⟩
 #align category_theory.nonempty_is_right_adjoint_iff_has_initial_structured_arrow CategoryTheory.nonempty_isRightAdjoint_iff_hasInitial_structuredArrow
+-/
 
+#print CategoryTheory.nonempty_isLeftAdjoint_iff_hasTerminal_costructuredArrow /-
 theorem nonempty_isLeftAdjoint_iff_hasTerminal_costructuredArrow {F : C ⥤ D} :
     Nonempty (IsLeftAdjoint F) ↔ ∀ A, HasTerminal (CostructuredArrow F A) :=
   ⟨fun ⟨h⟩ A => (mk_terminal_of_right_adjoint _ h.adj A).HasTerminal, fun h =>
     ⟨is_left_adjoint_of_costructured_arrow_terminals _⟩⟩
 #align category_theory.nonempty_is_left_adjoint_iff_has_terminal_costructured_arrow CategoryTheory.nonempty_isLeftAdjoint_iff_hasTerminal_costructuredArrow
+-/
 
 end CategoryTheory
 

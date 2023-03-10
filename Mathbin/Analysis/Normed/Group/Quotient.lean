@@ -393,7 +393,7 @@ theorem ker_normedMk (S : AddSubgroup M) : S.normedMk.ker = S :=
 
 /-- The operator norm of the projection is at most `1`. -/
 theorem norm_normedMk_le (S : AddSubgroup M) : ‖S.normedMk‖ ≤ 1 :=
-  NormedAddGroupHom.op_norm_le_bound _ zero_le_one fun m => by simp [quotient_norm_mk_le']
+  NormedAddGroupHom.opNorm_le_bound _ zero_le_one fun m => by simp [quotient_norm_mk_le']
 #align add_subgroup.norm_normed_mk_le AddSubgroup.norm_normedMk_le
 
 /-- The operator norm of the projection is `1` if the subspace is not dense. -/

@@ -146,7 +146,7 @@ theorem hasFderivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' :
       _ ≤ b a + ‖F' a‖ := _
       
     exact mul_le_mul_of_nonneg_left ha_bound (nneg _)
-    apply mul_le_mul_of_nonneg_left ((F' a).le_op_norm _) (nneg _)
+    apply mul_le_mul_of_nonneg_left ((F' a).le_opNorm _) (nneg _)
     by_cases h : ‖x - x₀‖ = 0
     · simpa [h] using add_nonneg (b_nonneg a) (norm_nonneg (F' a))
     · field_simp [h]

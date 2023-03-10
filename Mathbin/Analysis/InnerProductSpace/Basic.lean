@@ -2005,7 +2005,7 @@ theorem innerSL_apply_norm {x : E} : ‖(innerSL x : E →L[𝕜] 𝕜)‖ = ‖
   by
   refine'
     le_antisymm
-      ((innerSL x : E →L[𝕜] 𝕜).op_norm_le_bound (norm_nonneg _) fun y => norm_inner_le_norm _ _) _
+      ((innerSL x : E →L[𝕜] 𝕜).opNorm_le_bound (norm_nonneg _) fun y => norm_inner_le_norm _ _) _
   cases' eq_or_lt_of_le (norm_nonneg x) with h h
   · have : x = 0 := norm_eq_zero.mp (Eq.symm h)
     simp [this]
@@ -2017,7 +2017,7 @@ theorem innerSL_apply_norm {x : E} : ‖(innerSL x : E →L[𝕜] 𝕜)‖ = ‖
       _ = ‖innerSL x x‖ := by
         rw [← IsROrC.norm_eq_abs]
         rfl
-      _ ≤ ‖innerSL x‖ * ‖x‖ := (innerSL x : E →L[𝕜] 𝕜).le_op_norm _
+      _ ≤ ‖innerSL x‖ * ‖x‖ := (innerSL x : E →L[𝕜] 𝕜).le_opNorm _
       
 #align innerSL_apply_norm innerSL_apply_norm
 

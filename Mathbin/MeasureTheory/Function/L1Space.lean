@@ -1469,13 +1469,13 @@ variable {E : Type _} [NormedAddCommGroup E] {𝕜 : Type _} [NontriviallyNormed
 theorem MeasureTheory.Integrable.applyContinuousLinearMap {φ : α → H →L[𝕜] E}
     (φ_int : Integrable φ μ) (v : H) : Integrable (fun a => φ a v) μ :=
   (φ_int.norm.mul_const ‖v‖).mono' (φ_int.AeStronglyMeasurable.apply_continuousLinearMap v)
-    (eventually_of_forall fun a => (φ a).le_op_norm v)
+    (eventually_of_forall fun a => (φ a).le_opNorm v)
 #align measure_theory.integrable.apply_continuous_linear_map MeasureTheory.Integrable.applyContinuousLinearMap
 
 theorem ContinuousLinearMap.integrableComp {φ : α → H} (L : H →L[𝕜] E) (φ_int : Integrable φ μ) :
     Integrable (fun a : α => L (φ a)) μ :=
   ((Integrable.norm φ_int).const_mul ‖L‖).mono'
     (L.Continuous.compAeStronglyMeasurable φ_int.AeStronglyMeasurable)
-    (eventually_of_forall fun a => L.le_op_norm (φ a))
+    (eventually_of_forall fun a => L.le_opNorm (φ a))
 #align continuous_linear_map.integrable_comp ContinuousLinearMap.integrableComp
 

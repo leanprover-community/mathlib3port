@@ -250,7 +250,7 @@ variable (𝕜)
 theorem closedBall_inv_subset_polar_closedBall {r : ℝ} :
     closedBall (0 : Dual 𝕜 E) r⁻¹ ⊆ polar 𝕜 (closedBall (0 : E) r) := fun x' hx' x hx =>
   calc
-    ‖x' x‖ ≤ ‖x'‖ * ‖x‖ := x'.le_op_norm x
+    ‖x' x‖ ≤ ‖x'‖ * ‖x‖ := x'.le_opNorm x
     _ ≤ r⁻¹ * r :=
       (mul_le_mul (mem_closedBall_zero_iff.1 hx') (mem_closedBall_zero_iff.1 hx) (norm_nonneg _)
         (dist_nonneg.trans hx'))
