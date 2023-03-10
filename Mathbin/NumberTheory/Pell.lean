@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 35c1956cb727c474aa8863c13ca3abca4c2f885e
+! leanprover-community/mathlib commit 5b05c634aa9ed56cce0f5dedd4ccf4ca0c1dcd95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,11 +47,13 @@ namespace Pell
 
 section Existence
 
+variable {d : ℤ}
+
 open Set Real
 
 /-- If `d` is a positive integer that is not a square, then there is a nontrivial solution
 to the Pell equation `x^2 - d*y^2 = 1`. -/
-theorem exists_of_not_isSquare {d : ℤ} (h₀ : 0 < d) (hd : ¬IsSquare d) :
+theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     ∃ x y : ℤ, x ^ 2 - d * y ^ 2 = 1 ∧ y ≠ 0 :=
   by
   let ξ : ℝ := sqrt d
@@ -129,7 +131,7 @@ theorem exists_of_not_isSquare {d : ℤ} (h₀ : 0 < d) (hd : ¬IsSquare d) :
 
 /-- If `d` is a positive integer, then there is a nontrivial solution
 to the Pell equation `x^2 - d*y^2 = 1` if and only if `d` is not a square. -/
-theorem exists_iff_not_isSquare {d : ℤ} (h₀ : 0 < d) :
+theorem exists_iff_not_isSquare (h₀ : 0 < d) :
     (∃ x y : ℤ, x ^ 2 - d * y ^ 2 = 1 ∧ y ≠ 0) ↔ ¬IsSquare d :=
   by
   refine' ⟨_, exists_of_not_is_square h₀⟩
@@ -137,6 +139,17 @@ theorem exists_iff_not_isSquare {d : ℤ} (h₀ : 0 < d) :
   rw [← sq, ← mul_pow, sq_sub_sq] at hxy
   simpa [mul_self_pos.mp h₀, sub_eq_add_neg, eq_neg_self_iff] using Int.eq_of_mul_eq_one hxy
 #align pell.exists_iff_not_is_square Pell.exists_iff_not_isSquare
+
+/-- If `d` is a positive integer that is not a square, then there exists a solution
+to the Pell equation `x^2 - d*y^2 = 1` with `x > 1` and `y > 0`. -/
+theorem exists_pos_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
+    ∃ x y : ℤ, x ^ 2 - d * y ^ 2 = 1 ∧ 1 < x ∧ 0 < y :=
+  by
+  obtain ⟨x, y, h, hy⟩ := exists_of_not_is_square h₀ hd
+  refine' ⟨|x|, |y|, by rwa [sq_abs, sq_abs], _, abs_pos.mpr hy⟩
+  rw [← one_lt_sq_iff_one_lt_abs, eq_add_of_sub_eq h, lt_add_iff_pos_right]
+  exact mul_pos h₀ (sq_pos_of_ne_zero y hy)
+#align pell.exists_pos_of_not_is_square Pell.exists_pos_of_not_isSquare
 
 end Existence
 

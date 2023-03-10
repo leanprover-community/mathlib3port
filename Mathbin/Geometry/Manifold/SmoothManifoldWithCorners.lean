@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.smooth_manifold_with_corners
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ddec54a71a0dd025c05445d467f1a2b7d586a3ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -853,6 +853,10 @@ theorem mapsTo_extend (hs : s ⊆ f.source) :
   exact image_subset _ (inter_subset_right _ _)
 #align local_homeomorph.maps_to_extend LocalHomeomorph.mapsTo_extend
 
+theorem extend_left_inv {x : M} (hxf : x ∈ f.source) : (f.extend I).symm (f.extend I x) = x :=
+  (f.extend I).left_inv <| by rwa [f.extend_source]
+#align local_homeomorph.extend_left_inv LocalHomeomorph.extend_left_inv
+
 theorem extend_source_mem_nhds {x : M} (h : x ∈ f.source) : (f.extend I).source ∈ 𝓝 x :=
   (isOpen_extend_source f I).mem_nhds <| by rwa [f.extend_source I]
 #align local_homeomorph.extend_source_mem_nhds LocalHomeomorph.extend_source_mem_nhds
@@ -1021,6 +1025,24 @@ theorem extend_image_source_inter :
     symm_target]
 #align local_homeomorph.extend_image_source_inter LocalHomeomorph.extend_image_source_inter
 
+theorem extend_coord_change_source_mem_nhdsWithin {x : E}
+    (hx : x ∈ ((f.extend I).symm ≫ f'.extend I).source) :
+    ((f.extend I).symm ≫ f'.extend I).source ∈ 𝓝[range I] x :=
+  by
+  rw [f.extend_coord_change_source] at hx⊢
+  obtain ⟨x, hx, rfl⟩ := hx
+  refine' I.image_mem_nhds_within _
+  refine' (LocalHomeomorph.open_source _).mem_nhds hx
+#align local_homeomorph.extend_coord_change_source_mem_nhds_within LocalHomeomorph.extend_coord_change_source_mem_nhdsWithin
+
+theorem extend_coord_change_source_mem_nhds_within' {x : M} (hxf : x ∈ f.source)
+    (hxf' : x ∈ f'.source) : ((f.extend I).symm ≫ f'.extend I).source ∈ 𝓝[range I] f.extend I x :=
+  by
+  apply extend_coord_change_source_mem_nhds_within
+  rw [← extend_image_source_inter]
+  exact mem_image_of_mem _ ⟨hxf, hxf'⟩
+#align local_homeomorph.extend_coord_change_source_mem_nhds_within' LocalHomeomorph.extend_coord_change_source_mem_nhds_within'
+
 variable {f f'}
 
 open SmoothManifoldWithCorners
@@ -1042,6 +1064,15 @@ theorem contDiffWithinAt_extend_coord_change [ChartedSpace H M] (hf : f ∈ maxi
   obtain ⟨z, hz, rfl⟩ := hx
   exact I.image_mem_nhds_within ((LocalHomeomorph.open_source _).mem_nhds hz)
 #align local_homeomorph.cont_diff_within_at_extend_coord_change LocalHomeomorph.contDiffWithinAt_extend_coord_change
+
+theorem contDiffWithinAt_extend_coord_change' [ChartedSpace H M] (hf : f ∈ maximalAtlas I M)
+    (hf' : f' ∈ maximalAtlas I M) {x : M} (hxf : x ∈ f.source) (hxf' : x ∈ f'.source) :
+    ContDiffWithinAt 𝕜 ⊤ (f.extend I ∘ (f'.extend I).symm) (range I) (f'.extend I x) :=
+  by
+  refine' cont_diff_within_at_extend_coord_change I hf hf' _
+  rw [← extend_image_source_inter]
+  exact mem_image_of_mem _ ⟨hxf', hxf⟩
+#align local_homeomorph.cont_diff_within_at_extend_coord_change' LocalHomeomorph.contDiffWithinAt_extend_coord_change'
 
 end LocalHomeomorph
 

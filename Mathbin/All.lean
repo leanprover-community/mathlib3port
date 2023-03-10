@@ -1797,6 +1797,7 @@ import Mathbin.Geometry.Manifold.TangentBundle
 import Mathbin.Geometry.Manifold.VectorBundle.Basic
 import Mathbin.Geometry.Manifold.VectorBundle.FiberwiseLinear
 import Mathbin.Geometry.Manifold.VectorBundle.Pullback
+import Mathbin.Geometry.Manifold.VectorBundle.Tangent
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.Archimedean

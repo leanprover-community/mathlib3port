@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ddec54a71a0dd025c05445d467f1a2b7d586a3ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1330,6 +1330,18 @@ theorem fderivWithin.comp {g : F → G} {t : Set F} (hg : DifferentiableWithinAt
     fderivWithin 𝕜 (g ∘ f) s x = (fderivWithin 𝕜 g t (f x)).comp (fderivWithin 𝕜 f s x) :=
   (hg.HasFderivWithinAt.comp x hf.HasFderivWithinAt h).fderivWithin hxs
 #align fderiv_within.comp fderivWithin.comp
+
+/-- A version of `fderiv_within.comp` that is useful to rewrite the composition of two derivatives
+  into a single derivative. This version always applies, but creates a new side-goal `f x = y`. -/
+theorem fderivWithin_fderivWithin {g : F → G} {f : E → F} {x : E} {y : F} {s : Set E} {t : Set F}
+    (hg : DifferentiableWithinAt 𝕜 g t y) (hf : DifferentiableWithinAt 𝕜 f s x) (h : MapsTo f s t)
+    (hxs : UniqueDiffWithinAt 𝕜 s x) (hy : f x = y) (v : E) :
+    fderivWithin 𝕜 g t y (fderivWithin 𝕜 f s x v) = fderivWithin 𝕜 (g ∘ f) s x v :=
+  by
+  subst y
+  rw [fderivWithin.comp x hg hf h hxs]
+  rfl
+#align fderiv_within_fderiv_within fderivWithin_fderivWithin
 
 /-- Ternary version of `fderiv_within.comp`, with equality assumptions of basepoints added, in
   order to apply more easily as a rewrite from right-to-left. -/

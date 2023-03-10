@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.basic
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit ddec54a71a0dd025c05445d467f1a2b7d586a3ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,11 +72,11 @@ variable {𝕜 B B' F M : Type _} {E : B → Type _}
 section
 
 variable [TopologicalSpace F] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
-  {HB : Type _} [TopologicalSpace HB] [TopologicalSpace B] [ChartedSpace HB B]
+  {HB : Type _} [TopologicalSpace HB] [TopologicalSpace B] [ChartedSpace HB B] [FiberBundle F E]
 
 /-- A fiber bundle `E` over a base `B` with model fiber `F` is naturally a charted space modelled on
 `B × F`. -/
-instance FiberBundle.chartedSpace [FiberBundle F E] : ChartedSpace (B × F) (TotalSpace E)
+instance FiberBundle.chartedSpace : ChartedSpace (B × F) (TotalSpace E)
     where
   atlas := (fun e : Trivialization F (π E) => e.toLocalHomeomorph) '' trivializationAtlas F E
   chartAt x := (trivializationAt F E x.proj).toLocalHomeomorph
@@ -85,14 +85,27 @@ instance FiberBundle.chartedSpace [FiberBundle F E] : ChartedSpace (B × F) (Tot
   chart_mem_atlas x := mem_image_of_mem _ (trivialization_mem_atlas F E _)
 #align fiber_bundle.charted_space FiberBundle.chartedSpace
 
+section
+
 attribute [local reducible] ModelProd
 
 /-- Let `B` be a charted space modelled on `HB`.  Then a fiber bundle `E` over a base `B` with model
 fiber `F` is naturally a charted space modelled on `HB.prod F`. -/
-instance FiberBundle.chartedSpace' [FiberBundle F E] :
-    ChartedSpace (ModelProd HB F) (TotalSpace E) :=
+instance FiberBundle.chartedSpace' : ChartedSpace (ModelProd HB F) (TotalSpace E) :=
   ChartedSpace.comp _ (ModelProd B F) _
 #align fiber_bundle.charted_space' FiberBundle.chartedSpace'
+
+end
+
+theorem FiberBundle.chartedSpace_chartAt (x : TotalSpace E) :
+    chartAt (ModelProd HB F) x =
+      (trivializationAt F E x.proj).toLocalHomeomorph ≫ₕ
+        (chartAt HB x.proj).Prod (LocalHomeomorph.refl F) :=
+  by
+  dsimp only [FiberBundle.chartedSpace', ChartedSpace.comp, FiberBundle.chartedSpace,
+    prodChartedSpace, chartedSpaceSelf]
+  rw [Trivialization.coe_coe, Trivialization.coe_fst' _ (mem_base_set_trivialization_at F E x.proj)]
+#align fiber_bundle.charted_space_chart_at FiberBundle.chartedSpace_chartAt
 
 end
 
