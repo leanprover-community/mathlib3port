@@ -458,7 +458,7 @@ protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) :
 
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
-protected def hasRatCast [RatCast β] : RatCast α where ratCast n := e.symm n
+protected def hasRatCast [HasRatCast β] : HasRatCast α where ratCast n := e.symm n
 #align equiv.has_rat_cast Equiv.hasRatCast
 
 /-- Transfer `division_ring` across an `equiv` -/
@@ -472,7 +472,7 @@ protected def divisionRing [DivisionRing β] : DivisionRing α :=
   let mul := e.Mul
   let npow := e.Pow ℕ
   let zpow := e.Pow ℤ
-  let rat_cast := e.RatCast
+  let rat_cast := e.HasRatCast
   let qsmul := e.SMul ℚ
   skip <;> apply e.injective.division_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.division_ring Equiv.divisionRing
@@ -489,7 +489,7 @@ protected def field [Field β] : Field α :=
   let mul := e.Mul
   let npow := e.Pow ℕ
   let zpow := e.Pow ℤ
-  let rat_cast := e.RatCast
+  let rat_cast := e.HasRatCast
   let qsmul := e.SMul ℚ
   skip <;> apply e.injective.field _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.field Equiv.field

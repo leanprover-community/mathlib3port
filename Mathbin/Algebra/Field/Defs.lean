@@ -72,14 +72,12 @@ def Rat.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
   | ⟨a, b, _, _⟩ => ↑a * (↑b)⁻¹
 #align rat.cast_rec Rat.castRec
 
-#print RatCast /-
 /-- Type class for the canonical homomorphism `ℚ → K`.
 -/
 @[protect_proj]
-class RatCast (K : Type u) where
+class HasRatCast (K : Type u) where
   ratCast : ℚ → K
-#align has_rat_cast RatCast
--/
+#align has_rat_cast HasRatCast
 
 #print qsmulRec /-
 /-- The default definition of the scalar multiplication `(a : ℚ) • (x : K)` for a division ring `K`
@@ -110,7 +108,7 @@ definitions for some special cases of `K` (in particular `K = ℚ` itself).
 See also Note [forgetful inheritance].
 -/
 @[protect_proj]
-class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, RatCast K where
+class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, HasRatCast K where
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
   inv_zero : (0 : K)⁻¹ = 0
   ratCast := Rat.castRec
@@ -164,26 +162,20 @@ variable [DivisionRing K] {a b : K}
 
 namespace Rat
 
-/- warning: rat.cast_coe -> Rat.castCoe is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [_inst_2 : RatCast.{u1} K], CoeTCₓ.{1, succ u1} Rat K
-but is expected to have type
-  forall {K : Type.{u1}} [_inst_2 : RatCast.{u1} K], CoeTC.{1, succ u1} Rat K
-Case conversion may be inaccurate. Consider using '#align rat.cast_coe Rat.castCoeₓ'. -/
 -- see Note [coercion into rings]
 /-- Construct the canonical injection from `ℚ` into an arbitrary
   division ring. If the field has positive characteristic `p`,
   we define `1 / p = 1 / 0 = 0` for consistency with our
   division by zero convention. -/
-instance (priority := 900) castCoe {K : Type _} [RatCast K] : CoeTC ℚ K :=
-  ⟨RatCast.ratCast⟩
+instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTC ℚ K :=
+  ⟨HasRatCast.ratCast⟩
 #align rat.cast_coe Rat.castCoe
 
 /- warning: rat.cast_mk' -> Rat.cast_mk' is a dubious translation:
 lean 3 declaration is
   forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Int) (b : Nat) (h1 : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) b) (h2 : Nat.coprime (Int.natAbs a) b), Eq.{succ u1} K ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) (Rat.mk' a b h1 h2)) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int K (HasLiftT.mk.{1, succ u1} Int K (CoeTCₓ.coe.{1, succ u1} Int K (Int.castCoe.{u1} K (AddGroupWithOne.toHasIntCast.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) a) (Inv.inv.{u1} K (DivInvMonoid.toHasInv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat K (HasLiftT.mk.{1, succ u1} Nat K (CoeTCₓ.coe.{1, succ u1} Nat K (Nat.castCoe.{u1} K (AddMonoidWithOne.toNatCast.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))))) b)))
 but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Int) (b : Nat) (h1 : Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (h2 : Nat.coprime (Int.natAbs a) b), Eq.{succ u1} K (RatCast.ratCast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) (Rat.mk' a b h1 h2)) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) a) (Inv.inv.{u1} K (DivisionRing.toInv.{u1} K _inst_1) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) b)))
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Int) (b : Nat) (h1 : Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (h2 : Nat.coprime (Int.natAbs a) b), Eq.{succ u1} K (Rat.cast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) (Rat.mk' a b h1 h2)) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) a) (Inv.inv.{u1} K (DivisionRing.toInv.{u1} K _inst_1) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) b)))
 Case conversion may be inaccurate. Consider using '#align rat.cast_mk' Rat.cast_mk'ₓ'. -/
 theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=
   DivisionRing.ratCast_mk _ _ _ _
@@ -193,7 +185,7 @@ theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=
 lean 3 declaration is
   forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (r : Rat), Eq.{succ u1} K ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) r) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivInvMonoid.toHasDiv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int K (HasLiftT.mk.{1, succ u1} Int K (CoeTCₓ.coe.{1, succ u1} Int K (Int.castCoe.{u1} K (AddGroupWithOne.toHasIntCast.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (Rat.num r)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat K (HasLiftT.mk.{1, succ u1} Nat K (CoeTCₓ.coe.{1, succ u1} Nat K (Nat.castCoe.{u1} K (AddMonoidWithOne.toNatCast.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))))) (Rat.den r)))
 but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (r : Rat), Eq.{succ u1} K (RatCast.ratCast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) r) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivisionRing.toDiv.{u1} K _inst_1)) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (Rat.num r)) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) (Rat.den r)))
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (r : Rat), Eq.{succ u1} K (Rat.cast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) r) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivisionRing.toDiv.{u1} K _inst_1)) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (Rat.num r)) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) (Rat.den r)))
 Case conversion may be inaccurate. Consider using '#align rat.cast_def Rat.cast_defₓ'. -/
 theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.den
   | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
@@ -209,7 +201,7 @@ instance (priority := 100) smulDivisionRing : SMul ℚ K :=
 lean 3 declaration is
   forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (SMul.smul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) a) x)
 but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (HSMul.hSMul.{0, u1, u1} Rat K K (instHSMul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1)) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (RatCast.ratCast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) a) x)
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (HSMul.hSMul.{0, u1, u1} Rat K K (instHSMul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1)) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) a) x)
 Case conversion may be inaccurate. Consider using '#align rat.smul_def Rat.smul_defₓ'. -/
 theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
   DivisionRing.qsmul_eq_mul' a x

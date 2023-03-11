@@ -5144,7 +5144,7 @@ theorem filterMap_eq_map (f : α → β) : filterMap (some ∘ f) = map f :=
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α p (fun (a : α) => _inst_1 a))) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.42127 : α) => Eq.{1} Bool (p x._@.Mathlib.Data.List.Basic._hyg.42127) Bool.true) (fun (a : α) => instDecidableEqBool (p a) Bool.true))) (List.filter.{u1} α p)
+  forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.42129 : α) => Eq.{1} Bool (p x._@.Mathlib.Data.List.Basic._hyg.42129) Bool.true) (fun (a : α) => instDecidableEqBool (p a) Bool.true))) (List.filter.{u1} α p)
 Case conversion may be inaccurate. Consider using '#align list.filter_map_eq_filter List.filterMap_eq_filterₓ'. -/
 theorem filterMap_eq_filter (p : α → Prop) [DecidablePred p] :
     filterMap (Option.guard p) = filter p := by
@@ -5651,7 +5651,7 @@ theorem filter_filter (q) [DecidablePred q] :
 lean 3 declaration is
   forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => True)} (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (_x : α) => True) h l) l
 but is expected to have type
-  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46232 : α) => Bool.true) h) h
+  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46234 : α) => Bool.true) h) h
 Case conversion may be inaccurate. Consider using '#align list.filter_true List.filter_trueₓ'. -/
 @[simp]
 theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) :
@@ -5662,7 +5662,7 @@ theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) :
 lean 3 declaration is
   forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => False)} (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (_x : α) => False) h l) (List.nil.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46282 : α) => Bool.false) h) (List.nil.{u1} α)
+  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.46284 : α) => Bool.false) h) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.filter_false List.filter_falseₓ'. -/
 @[simp]
 theorem filter_false {h : DecidablePred fun a : α => False} (l : List α) :

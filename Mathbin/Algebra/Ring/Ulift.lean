@@ -225,17 +225,17 @@ instance commRing [CommRing α] : CommRing (ULift α) := by
 #align ulift.comm_ring ULift.commRing
 -/
 
-instance [RatCast α] : RatCast (ULift α) :=
+instance [HasRatCast α] : HasRatCast (ULift α) :=
   ⟨fun a => ULift.up (coe a)⟩
 
 /- warning: ulift.rat_cast_down -> ULift.rat_cast_down is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : RatCast.{u1} α] (n : Rat), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Rat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (Rat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.hasRatCast.{u1, u2} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat α (HasLiftT.mk.{1, succ u1} Rat α (CoeTCₓ.coe.{1, succ u1} Rat α (Rat.castCoe.{u1} α _inst_1))) n)
+  forall {α : Type.{u1}} [_inst_1 : HasRatCast.{u1} α] (n : Rat), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Rat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Rat (ULift.{u2, u1} α) (Rat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.hasRatCast.{u1, u2} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat α (HasLiftT.mk.{1, succ u1} Rat α (CoeTCₓ.coe.{1, succ u1} Rat α (Rat.castCoe.{u1} α _inst_1))) n)
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : RatCast.{u2} α] (n : Rat), Eq.{succ u2} α (ULift.down.{u1, u2} α (RatCast.ratCast.{max u2 u1} (ULift.{u1, u2} α) (ULift.instRatCastULift.{u2, u1} α _inst_1) n)) (RatCast.ratCast.{u2} α _inst_1 n)
+  forall {α : Type.{u2}} [_inst_1 : RatCast.{u2} α] (n : Rat), Eq.{succ u2} α (ULift.down.{u1, u2} α (Rat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.instRatCastULift.{u2, u1} α _inst_1) n)) (Rat.cast.{u2} α _inst_1 n)
 Case conversion may be inaccurate. Consider using '#align ulift.rat_cast_down ULift.rat_cast_downₓ'. -/
 @[simp]
-theorem rat_cast_down [RatCast α] (n : ℚ) : ULift.down (n : ULift α) = n :=
+theorem rat_cast_down [HasRatCast α] (n : ℚ) : ULift.down (n : ULift α) = n :=
   rfl
 #align ulift.rat_cast_down ULift.rat_cast_down
 

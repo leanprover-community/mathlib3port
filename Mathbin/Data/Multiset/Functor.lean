@@ -92,7 +92,7 @@ theorem pure_def {α} : (pure : α → Multiset α) = singleton :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u1}}, Eq.{succ u1} ((Multiset.{u1} α) -> (α -> (Multiset.{u1} β)) -> (Multiset.{u1} β)) (Bind.bind.{u1, u1} Multiset.{u1} (Monad.toHasBind.{u1, u1} Multiset.{u1} Multiset.monad.{u1}) α β) (Multiset.bind.{u1, u1} α β)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}}, Eq.{succ u1} ((Multiset.{u1} α) -> (α -> (Multiset.{u1} β)) -> (Multiset.{u1} β)) (fun (x._@.Mathlib.Data.Multiset.Functor._hyg.718 : Multiset.{u1} α) (x._@.Mathlib.Data.Multiset.Functor._hyg.720 : α -> (Multiset.{u1} β)) => Bind.bind.{u1, u1} Multiset.{u1} (Monad.toBind.{u1, u1} Multiset.{u1} Multiset.instMonadMultiset.{u1}) α β x._@.Mathlib.Data.Multiset.Functor._hyg.718 x._@.Mathlib.Data.Multiset.Functor._hyg.720) (Multiset.bind.{u1, u1} α β)
+  forall {α : Type.{u1}} {β : Type.{u1}}, Eq.{succ u1} ((Multiset.{u1} α) -> (α -> (Multiset.{u1} β)) -> (Multiset.{u1} β)) (fun (x._@.Mathlib.Data.Multiset.Functor._hyg.720 : Multiset.{u1} α) (x._@.Mathlib.Data.Multiset.Functor._hyg.722 : α -> (Multiset.{u1} β)) => Bind.bind.{u1, u1} Multiset.{u1} (Monad.toBind.{u1, u1} Multiset.{u1} Multiset.instMonadMultiset.{u1}) α β x._@.Mathlib.Data.Multiset.Functor._hyg.720 x._@.Mathlib.Data.Multiset.Functor._hyg.722) (Multiset.bind.{u1, u1} α β)
 Case conversion may be inaccurate. Consider using '#align multiset.bind_def Multiset.bind_defₓ'. -/
 @[simp]
 theorem bind_def {α β} : (· >>= ·) = @bind α β :=

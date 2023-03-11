@@ -36,7 +36,7 @@ instance : MetricSpace ℚ :=
 lean 3 declaration is
   forall (x : Rat) (y : Rat), Eq.{1} Real (Dist.dist.{0} Rat (PseudoMetricSpace.toHasDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)) x y) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) y)))
 but is expected to have type
-  forall (x : Rat) (y : Rat), Eq.{1} Real (Dist.dist.{0} Rat (PseudoMetricSpace.toDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) x y) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (RatCast.ratCast.{0} Real Real.ratCast x) (RatCast.ratCast.{0} Real Real.ratCast y)))
+  forall (x : Rat) (y : Rat), Eq.{1} Real (Dist.dist.{0} Rat (PseudoMetricSpace.toDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) x y) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Rat.cast.{0} Real Real.ratCast x) (Rat.cast.{0} Real Real.ratCast y)))
 Case conversion may be inaccurate. Consider using '#align rat.dist_eq Rat.dist_eqₓ'. -/
 theorem dist_eq (x y : ℚ) : dist x y = |x - y| :=
   rfl
@@ -46,7 +46,7 @@ theorem dist_eq (x y : ℚ) : dist x y = |x - y| :=
 lean 3 declaration is
   forall (x : Rat) (y : Rat), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toHasDist.{0} Real Real.pseudoMetricSpace) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) y)) (Dist.dist.{0} Rat (PseudoMetricSpace.toHasDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)) x y)
 but is expected to have type
-  forall (x : Rat) (y : Rat), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) (RatCast.ratCast.{0} Real Real.ratCast x) (RatCast.ratCast.{0} Real Real.ratCast y)) (Dist.dist.{0} Rat (PseudoMetricSpace.toDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) x y)
+  forall (x : Rat) (y : Rat), Eq.{1} Real (Dist.dist.{0} Real (PseudoMetricSpace.toDist.{0} Real Real.pseudoMetricSpace) (Rat.cast.{0} Real Real.ratCast x) (Rat.cast.{0} Real Real.ratCast y)) (Dist.dist.{0} Rat (PseudoMetricSpace.toDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) x y)
 Case conversion may be inaccurate. Consider using '#align rat.dist_cast Rat.dist_castₓ'. -/
 @[norm_cast, simp]
 theorem dist_cast (x y : ℚ) : dist (x : ℝ) y = dist x y :=
@@ -57,7 +57,7 @@ theorem dist_cast (x y : ℚ) : dist (x : ℝ) y = dist x y :=
 lean 3 declaration is
   UniformContinuous.{0, 0} Rat Real (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))))
 but is expected to have type
-  UniformContinuous.{0, 0} Rat Real (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (RatCast.ratCast.{0} Real Real.ratCast)
+  UniformContinuous.{0, 0} Rat Real (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (Rat.cast.{0} Real Real.ratCast)
 Case conversion may be inaccurate. Consider using '#align rat.uniform_continuous_coe_real Rat.uniformContinuous_coe_realₓ'. -/
 theorem uniformContinuous_coe_real : UniformContinuous (coe : ℚ → ℝ) :=
   uniformContinuous_comap
@@ -67,7 +67,7 @@ theorem uniformContinuous_coe_real : UniformContinuous (coe : ℚ → ℝ) :=
 lean 3 declaration is
   UniformEmbedding.{0, 0} Rat Real (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))))
 but is expected to have type
-  UniformEmbedding.{0, 0} Rat Real (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (RatCast.ratCast.{0} Real Real.ratCast)
+  UniformEmbedding.{0, 0} Rat Real (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (Rat.cast.{0} Real Real.ratCast)
 Case conversion may be inaccurate. Consider using '#align rat.uniform_embedding_coe_real Rat.uniformEmbedding_coe_realₓ'. -/
 theorem uniformEmbedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
   uniformEmbedding_comap Rat.cast_injective
@@ -77,7 +77,7 @@ theorem uniformEmbedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
 lean 3 declaration is
   DenseEmbedding.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))))
 but is expected to have type
-  DenseEmbedding.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (RatCast.ratCast.{0} Real Real.ratCast)
+  DenseEmbedding.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Rat.cast.{0} Real Real.ratCast)
 Case conversion may be inaccurate. Consider using '#align rat.dense_embedding_coe_real Rat.denseEmbedding_coe_realₓ'. -/
 theorem denseEmbedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
   uniformEmbedding_coe_real.DenseEmbedding Rat.denseRange_cast
@@ -87,7 +87,7 @@ theorem denseEmbedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
 lean 3 declaration is
   Embedding.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))))
 but is expected to have type
-  Embedding.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (RatCast.ratCast.{0} Real Real.ratCast)
+  Embedding.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Rat.cast.{0} Real Real.ratCast)
 Case conversion may be inaccurate. Consider using '#align rat.embedding_coe_real Rat.embedding_coe_realₓ'. -/
 theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
   denseEmbedding_coe_real.toEmbedding
@@ -97,7 +97,7 @@ theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
 lean 3 declaration is
   Continuous.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))))
 but is expected to have type
-  Continuous.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (RatCast.ratCast.{0} Real Real.ratCast)
+  Continuous.{0, 0} Rat Real (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Rat.cast.{0} Real Real.ratCast)
 Case conversion may be inaccurate. Consider using '#align rat.continuous_coe_real Rat.continuous_coe_realₓ'. -/
 theorem continuous_coe_real : Continuous (coe : ℚ → ℝ) :=
   uniformContinuous_coe_real.Continuous

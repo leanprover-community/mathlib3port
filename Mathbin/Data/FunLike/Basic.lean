@@ -303,7 +303,7 @@ namespace FunLike
 lean 3 declaration is
   forall {F : Sort.{u1}} {α : Sort.{u2}} {β : Sort.{u3}} [i : FunLike.{u1, u2, u3} F α (fun (_x : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u1} F f g) -> (Eq.{u2} α x y) -> (Eq.{u3} β (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) i) f x) (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) i) g y))
 but is expected to have type
-  forall {F : Sort.{u3}} {α : Sort.{u2}} {β : Sort.{u1}} [i : FunLike.{u3, u2, u1} F α (fun (_x : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u3} F f g) -> (Eq.{u2} α x y) -> (Eq.{u1} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.596 : α) => β) x) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.596 : α) => β) _x) i f x) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.596 : α) => β) _x) i g y))
+  forall {F : Sort.{u3}} {α : Sort.{u2}} {β : Sort.{u1}} [i : FunLike.{u3, u2, u1} F α (fun (_x : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u3} F f g) -> (Eq.{u2} α x y) -> (Eq.{u1} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.614 : α) => β) x) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.614 : α) => β) _x) i f x) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.614 : α) => β) _x) i g y))
 Case conversion may be inaccurate. Consider using '#align fun_like.congr FunLike.congrₓ'. -/
 protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x = g y :=
   congr (congr_arg _ h₁) h₂
@@ -313,7 +313,7 @@ protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x
 lean 3 declaration is
   forall {F : Sort.{u1}} {α : Sort.{u2}} {β : Sort.{u3}} [i : FunLike.{u1, u2, u3} F α (fun (_x : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u2} α x y) -> (Eq.{u3} β (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) i) f x) (coeFn.{u1, imax u2 u3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u1, u2, u3} F α (fun (_x : α) => β) i) f y))
 but is expected to have type
-  forall {F : Sort.{u1}} {α : Sort.{u3}} {β : Sort.{u2}} [i : FunLike.{u1, u3, u2} F α (fun (_x : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u3} α x y) -> (Eq.{u2} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.637 : α) => β) x) (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.637 : α) => β) _x) i f x) (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.637 : α) => β) _x) i f y))
+  forall {F : Sort.{u1}} {α : Sort.{u3}} {β : Sort.{u2}} [i : FunLike.{u1, u3, u2} F α (fun (_x : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u3} α x y) -> (Eq.{u2} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.657 : α) => β) x) (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.657 : α) => β) _x) i f x) (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.657 : α) => β) _x) i f y))
 Case conversion may be inaccurate. Consider using '#align fun_like.congr_arg FunLike.congr_argₓ'. -/
 protected theorem congr_arg (f : F) {x y : α} (h₂ : x = y) : f x = f y :=
   congr_arg _ h₂
