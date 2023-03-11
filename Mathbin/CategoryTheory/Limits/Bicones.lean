@@ -40,6 +40,7 @@ section Bicone
 
 variable (J : Type u₁)
 
+#print CategoryTheory.Bicone /-
 /-- Given a category `J`, construct a walking `bicone J` by adjoining two elements. -/
 inductive Bicone
   | left : bicone
@@ -47,10 +48,12 @@ inductive Bicone
   | diagram (val : J) : bicone
   deriving DecidableEq
 #align category_theory.bicone CategoryTheory.Bicone
+-/
 
 instance : Inhabited (Bicone J) :=
   ⟨Bicone.left⟩
 
+#print CategoryTheory.finBicone /-
 instance finBicone [Fintype J] : Fintype (Bicone J)
     where
   elems := [Bicone.left, Bicone.right].toFinset ∪ Finset.image Bicone.diagram (Fintype.elems J)
@@ -58,9 +61,11 @@ instance finBicone [Fintype J] : Fintype (Bicone J)
     cases j <;> simp
     exact Fintype.complete j
 #align category_theory.fin_bicone CategoryTheory.finBicone
+-/
 
 variable [Category.{v₁} J]
 
+#print CategoryTheory.BiconeHom /-
 /-- The homs for a walking `bicone J`. -/
 inductive BiconeHom : Bicone J → Bicone J → Type max u₁ v₁
   | left_id : bicone_hom Bicone.left Bicone.left
@@ -69,14 +74,18 @@ inductive BiconeHom : Bicone J → Bicone J → Type max u₁ v₁
   | right (j : J) : bicone_hom Bicone.right (Bicone.diagram j)
   | diagram {j k : J} (f : j ⟶ k) : bicone_hom (Bicone.diagram j) (Bicone.diagram k)
 #align category_theory.bicone_hom CategoryTheory.BiconeHom
+-/
 
 instance : Inhabited (BiconeHom J Bicone.left Bicone.left) :=
   ⟨BiconeHom.left_id⟩
 
+#print CategoryTheory.BiconeHom.decidableEq /-
 instance BiconeHom.decidableEq {j k : Bicone J} : DecidableEq (BiconeHom J j k) := fun f g => by
   cases f <;> cases g <;> simp <;> infer_instance
 #align category_theory.bicone_hom.decidable_eq CategoryTheory.BiconeHom.decidableEq
+-/
 
+#print CategoryTheory.biconeCategoryStruct /-
 @[simps]
 instance biconeCategoryStruct : CategoryStruct (Bicone J)
     where
@@ -93,13 +102,16 @@ instance biconeCategoryStruct : CategoryStruct (Bicone J)
     cases g
     exact bicone_hom.diagram (f_f ≫ g_f)
 #align category_theory.bicone_category_struct CategoryTheory.biconeCategoryStruct
+-/
 
+#print CategoryTheory.biconeCategory /-
 instance biconeCategory : Category (Bicone J)
     where
   id_comp' X Y f := by cases f <;> simp
   comp_id' X Y f := by cases f <;> simp
   assoc' W X Y Z f g h := by cases f <;> cases g <;> cases h <;> simp
 #align category_theory.bicone_category CategoryTheory.biconeCategory
+-/
 
 end Bicone
 
@@ -107,6 +119,7 @@ section SmallCategory
 
 variable (J : Type v₁) [SmallCategory J]
 
+#print CategoryTheory.biconeMk /-
 /-- Given a diagram `F : J ⥤ C` and two `cone F`s, we can join them into a diagram `bicone J ⥤ C`.
 -/
 @[simps]
@@ -132,7 +145,9 @@ def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone
     cases g
     exact F.map_comp _ _
 #align category_theory.bicone_mk CategoryTheory.biconeMk
+-/
 
+#print CategoryTheory.finBiconeHom /-
 instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) :=
   by
   cases j <;> cases k
@@ -176,13 +191,18 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) :=
         use f_f
         simpa using Fintype.complete _ }
 #align category_theory.fin_bicone_hom CategoryTheory.finBiconeHom
+-/
 
+#print CategoryTheory.biconeSmallCategory /-
 instance biconeSmallCategory : SmallCategory (Bicone J) :=
   CategoryTheory.biconeCategory J
 #align category_theory.bicone_small_category CategoryTheory.biconeSmallCategory
+-/
 
+#print CategoryTheory.biconeFinCategory /-
 instance biconeFinCategory [FinCategory J] : FinCategory (Bicone J) where
 #align category_theory.bicone_fin_category CategoryTheory.biconeFinCategory
+-/
 
 end SmallCategory
 

@@ -350,7 +350,8 @@ theorem coe_equivIco_mk_apply (x : 𝕜) :
 instance : DivisibleBy (AddCircle p) ℤ
     where
   div x n := (↑((n : 𝕜)⁻¹ * (equivIco p 0 x : 𝕜)) : AddCircle p)
-  div_zero x := by simp only [algebraMap.coe_zero, QuotientAddGroup.mk_zero, inv_zero, zero_mul]
+  div_zero x := by
+    simp only [algebraMap.coe_zero, QuotientAddGroup.mk_zero, inv_zero, MulZeroClass.zero_mul]
   div_cancel n x hn := by
     replace hn : (n : 𝕜) ≠ 0;
     · norm_cast

@@ -39,14 +39,14 @@ theorem isUnit_iff_not_dvd_char_of_ringChar_ne_zero (R : Type _) [CommRing R] (p
     have h₄ := mt (CharP.int_cast_eq_zero_iff R (ringChar R) q).mp
     apply_fun (coe : ℕ → R)  at hq
     apply_fun (· * ·) a  at hq
-    rw [Nat.cast_mul, hch, mul_zero, ← mul_assoc, ha, one_mul] at hq
+    rw [Nat.cast_mul, hch, MulZeroClass.mul_zero, ← mul_assoc, ha, one_mul] at hq
     norm_cast  at h₄
     exact h₄ h₃ hq.symm
   · intro h
     rcases(hp.coprime_iff_not_dvd.mpr h).IsCoprime with ⟨a, b, hab⟩
     apply_fun (coe : ℤ → R)  at hab
     push_cast at hab
-    rw [hch, mul_zero, add_zero, mul_comm] at hab
+    rw [hch, MulZeroClass.mul_zero, add_zero, mul_comm] at hab
     exact isUnit_of_mul_eq_one (p : R) a hab
 #align is_unit_iff_not_dvd_char_of_ring_char_ne_zero isUnit_iff_not_dvd_char_of_ringChar_ne_zero
 
@@ -75,7 +75,7 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : �
   rw [hr, nsmul_eq_mul] at hr₁
   rcases IsUnit.exists_left_inv ((isUnit_iff_not_dvd_char R p).mpr h₀) with ⟨u, hu⟩
   apply_fun (· * ·) u  at hr₁
-  rw [mul_zero, ← mul_assoc, hu, one_mul] at hr₁
+  rw [MulZeroClass.mul_zero, ← mul_assoc, hu, one_mul] at hr₁
   exact
     mt add_monoid.order_of_eq_one_iff.mpr (ne_of_eq_of_ne hr (Nat.Prime.ne_one (Fact.out p.prime)))
       hr₁

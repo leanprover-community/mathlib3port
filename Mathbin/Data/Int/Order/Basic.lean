@@ -448,7 +448,7 @@ theorem emod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by
 #print Int.add_mul_emod_self /-
 @[simp]
 theorem add_mul_emod_self {a b c : ℤ} : (a + b * c) % c = a % c :=
-  if cz : c = 0 then by rw [cz, mul_zero, add_zero]
+  if cz : c = 0 then by rw [cz, MulZeroClass.mul_zero, add_zero]
   else by
     rw [mod_def, mod_def, Int.add_mul_ediv_right _ _ cz, mul_add, mul_comm,
       add_sub_add_right_eq_sub]
@@ -849,7 +849,7 @@ but is expected to have type
   forall {d : Int} {n : Int}, (Dvd.dvd.{0} Int Int.instDvdInt d n) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n d) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_div_eq_zero Int.eq_zero_of_ediv_eq_zeroₓ'. -/
 protected theorem eq_zero_of_ediv_eq_zero {d n : ℤ} (h : d ∣ n) (H : n / d = 0) : n = 0 := by
-  rw [← Int.mul_ediv_cancel' h, H, mul_zero]
+  rw [← Int.mul_ediv_cancel' h, H, MulZeroClass.mul_zero]
 #align int.eq_zero_of_div_eq_zero Int.eq_zero_of_ediv_eq_zero
 
 /- warning: int.div_left_inj -> Int.ediv_left_inj is a dubious translation:
@@ -1073,7 +1073,7 @@ but is expected to have type
   forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b))
 Case conversion may be inaccurate. Consider using '#align int.div_pos_of_pos_of_dvd Int.ediv_pos_of_pos_of_dvdₓ'. -/
 theorem ediv_pos_of_pos_of_dvd {a b : ℤ} (H1 : 0 < a) (H2 : 0 ≤ b) (H3 : b ∣ a) : 0 < a / b :=
-  Int.lt_ediv_of_mul_lt H2 H3 (by rwa [zero_mul])
+  Int.lt_ediv_of_mul_lt H2 H3 (by rwa [MulZeroClass.zero_mul])
 #align int.div_pos_of_pos_of_dvd Int.ediv_pos_of_pos_of_dvd
 
 /- warning: int.nat_abs_eq_of_dvd_dvd -> Int.natAbs_eq_of_dvd_dvd is a dubious translation:

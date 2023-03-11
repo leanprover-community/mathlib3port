@@ -80,7 +80,7 @@ theorem ne_zero_of_ne_zero_of_monic (hp : p ≠ 0) (hq : Monic q) : q ≠ 0 :=
   by
   rintro rfl
   rw [monic.def, leading_coeff_zero] at hq
-  rw [← mul_one p, ← C_1, ← hq, C_0, mul_zero] at hp
+  rw [← mul_one p, ← C_1, ← hq, C_0, MulZeroClass.mul_zero] at hp
   exact hp rfl
 #align polynomial.ne_zero_of_ne_zero_of_monic Polynomial.ne_zero_of_ne_zero_of_monic
 -/
@@ -778,12 +778,12 @@ theorem isUnit_leadingCoeff_mul_left_eq_zero_iff (h : IsUnit p.leadingCoeff) {q 
   constructor
   · intro hp
     replace hp := congr_arg (· * C ↑h.unit⁻¹) hp
-    simp only [zero_mul] at hp
+    simp only [MulZeroClass.zero_mul] at hp
     rwa [mul_assoc, monic.mul_left_eq_zero_iff] at hp
     refine' monic_mul_C_of_leading_coeff_mul_eq_one _
     simp [Units.mul_inv_eq_iff_eq_mul, IsUnit.unit_spec]
   · rintro rfl
-    rw [zero_mul]
+    rw [MulZeroClass.zero_mul]
 #align polynomial.is_unit_leading_coeff_mul_left_eq_zero_iff Polynomial.isUnit_leadingCoeff_mul_left_eq_zero_iff
 -/
 

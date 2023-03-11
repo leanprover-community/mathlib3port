@@ -78,7 +78,7 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
           Coeffs.valBetween v as 0 k
   | 0 => by
     exists (0 : Int)
-    simp only [add_zero, mul_zero, coeffs.val_between]
+    simp only [add_zero, MulZeroClass.mul_zero, coeffs.val_between]
   | k + 1 => by
     simp only [zero_add, coeffs.val_between, List.map]
     cases' @rhs_correct_aux k with d h1; rw [← h1]
@@ -288,7 +288,8 @@ theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : Term} {n 
   cases' t with b' as'
   simp only [term.val]
   have h3 : coeffs.val (v ⟨n ↦ sgm v b as n⟩) (as' {n ↦ 0}) = coeffs.val_except n v as' := by
-    rw [← coeffs.val_except_add_eq n, get_set, zero_mul, add_zero, coeffs.val_except_update_set]
+    rw [← coeffs.val_except_add_eq n, get_set, MulZeroClass.zero_mul, add_zero,
+      coeffs.val_except_update_set]
   rw [h3, ← coeffs.val_except_add_eq n]
   ring
 #align omega.subst_correct Omega.subst_correct
@@ -447,7 +448,7 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
     constructor <;> intro t h4 <;> rw [List.mem_map'] at h4 <;> rcases h4 with ⟨s, h4, h5⟩ <;>
           rw [← h5] <;>
         simp only [term.val_add, term.val_mul, cancel] <;>
-      rw [← h1, mul_zero, zero_add]
+      rw [← h1, MulZeroClass.mul_zero, zero_add]
     · apply h3 _ h4
     · apply h2 _ h4
 #align omega.sat_eq_elim Omega.sat_eqElim

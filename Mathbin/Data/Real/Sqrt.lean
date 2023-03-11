@@ -113,7 +113,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nnreal.sqrt_eq_zero NNReal.sqrt_eq_zeroₓ'. -/
 @[simp]
 theorem sqrt_eq_zero : sqrt x = 0 ↔ x = 0 :=
-  sqrt_eq_iff_sq_eq.trans <| by rw [eq_comm, sq, zero_mul]
+  sqrt_eq_iff_sq_eq.trans <| by rw [eq_comm, sq, MulZeroClass.zero_mul]
 #align nnreal.sqrt_eq_zero NNReal.sqrt_eq_zero
 
 /- warning: nnreal.sqrt_zero -> NNReal.sqrt_zero is a dubious translation:

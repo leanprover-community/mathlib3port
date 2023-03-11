@@ -105,7 +105,7 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
       derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast, ← PNat.pow_coe,
       hζ.minpoly_eq_cyclotomic_of_irreducible hirr] at H
     replace H := congr_arg (fun P => aeval ζ P) H
-    simp only [aeval_add, aeval_mul, minpoly.aeval, zero_mul, add_zero, aeval_nat_cast,
+    simp only [aeval_add, aeval_mul, minpoly.aeval, MulZeroClass.zero_mul, add_zero, aeval_nat_cast,
       _root_.map_sub, aeval_one, aeval_X_pow] at H
     replace H := congr_arg (Algebra.norm K) H
     have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = p ^ (p : ℕ) ^ k :=
@@ -149,7 +149,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       (-1) ^ ((p ^ k : ℕ).totient / 2) * p ^ ((p : ℕ) ^ (k - 1) * ((p - 1) * k - 1)) :=
   by
   cases k
-  · simp only [coe_basis, pow_zero, power_basis_gen, totient_one, mul_zero, mul_one,
+  · simp only [coe_basis, pow_zero, power_basis_gen, totient_one, MulZeroClass.mul_zero, mul_one,
       show 1 / 2 = 0 by rfl, discr, trace_matrix]
     have hζone : ζ = 1 := by simpa using hζ
     rw [hζ.power_basis_dim _, hζone, ← (algebraMap K L).map_one,
@@ -172,7 +172,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       rw [add_left_eq_self] at hk
       simp only [hp, hk, pow_one, PNat.coe_bit0, PNat.one_coe] at hζ
       simp only [hp, hk, show 1 / 2 = 0 by rfl, coe_basis, pow_one, power_basis_gen, PNat.coe_bit0,
-        PNat.one_coe, totient_two, pow_zero, mul_one, mul_zero]
+        PNat.one_coe, totient_two, pow_zero, mul_one, MulZeroClass.mul_zero]
       rw [power_basis_dim, hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
         minpoly.eq_x_sub_c_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
       simp only [discr, trace_matrix, Matrix.det_unique, Fin.default_eq_zero, Fin.val_zero,

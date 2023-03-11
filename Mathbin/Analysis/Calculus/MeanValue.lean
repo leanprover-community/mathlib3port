@@ -166,7 +166,7 @@ theorem image_le_of_liminf_slope_right_le_deriv_boundary {f : ℝ → ℝ} {a b 
     by
     intro x hx r hr
     apply image_le_of_liminf_slope_right_lt_deriv_boundary' hf bound
-    · rwa [sub_self, mul_zero, add_zero]
+    · rwa [sub_self, MulZeroClass.mul_zero, add_zero]
     · exact hB.add (continuous_on_const.mul (continuous_id.continuous_on.sub continuousOn_const))
     · intro x hx
       exact (hB' x hx).add (((hasDerivWithinAt_id x (Ici x)).sub_const a).const_mul r)
@@ -355,7 +355,7 @@ theorem norm_image_sub_le_of_norm_deriv_right_le_segment {f' : ℝ → E} {C : �
     simpa using (hasDerivAt_const x C).mul ((hasDerivAt_id x).sub (hasDerivAt_const x a))
   convert image_norm_le_of_norm_deriv_right_le_deriv_boundary hg hg' _ hB bound
   simp only [g, B]
-  rw [sub_self, norm_zero, sub_self, mul_zero]
+  rw [sub_self, norm_zero, sub_self, MulZeroClass.mul_zero]
 #align norm_image_sub_le_of_norm_deriv_right_le_segment norm_image_sub_le_of_norm_deriv_right_le_segment
 
 /-- A function on `[a, b]` with the norm of the derivative within `[a, b]`
@@ -403,7 +403,7 @@ theorem norm_image_sub_le_of_norm_deriv_le_segment_01 {C : ℝ}
 
 theorem constant_of_has_deriv_right_zero (hcont : ContinuousOn f (Icc a b))
     (hderiv : ∀ x ∈ Ico a b, HasDerivWithinAt f 0 (Ici x) x) : ∀ x ∈ Icc a b, f x = f a := by
-  simpa only [zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
+  simpa only [MulZeroClass.zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
     norm_image_sub_le_of_norm_deriv_right_le_segment hcont hderiv
       (fun y hy => by rw [norm_le_zero_iff]) x hx
 #align constant_of_has_deriv_right_zero constant_of_has_deriv_right_zero
@@ -413,7 +413,7 @@ theorem constant_of_derivWithin_zero (hdiff : DifferentiableOn ℝ f (Icc a b))
   by
   have H : ∀ x ∈ Ico a b, ‖derivWithin f (Icc a b) x‖ ≤ 0 := by
     simpa only [norm_le_zero_iff] using fun x hx => hderiv x hx
-  simpa only [zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
+  simpa only [MulZeroClass.zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
     norm_image_sub_le_of_norm_deriv_le_segment hdiff H x hx
 #align constant_of_deriv_within_zero constant_of_derivWithin_zero
 
@@ -626,7 +626,7 @@ theorem is_const_of_fderivWithin_eq_zero (hs : Convex ℝ s) (hf : Differentiabl
     (hf' : ∀ x ∈ s, fderivWithin 𝕜 f s x = 0) (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
   by
   have bound : ∀ x ∈ s, ‖fderivWithin 𝕜 f s x‖ ≤ 0 := fun x hx => by simp only [hf' x hx, norm_zero]
-  simpa only [(dist_eq_norm _ _).symm, zero_mul, dist_le_zero, eq_comm] using
+  simpa only [(dist_eq_norm _ _).symm, MulZeroClass.zero_mul, dist_le_zero, eq_comm] using
     hs.norm_image_sub_le_of_norm_fderiv_within_le hf bound hx hy
 #align convex.is_const_of_fderiv_within_eq_zero Convex.is_const_of_fderivWithin_eq_zero
 
@@ -871,7 +871,7 @@ theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D
   by
   intro x hx y hy hxy
   cases' eq_or_lt_of_le hxy with hxy' hxy'
-  · rw [hxy', sub_self, sub_self, mul_zero]
+  · rw [hxy', sub_self, sub_self, MulZeroClass.mul_zero]
   have hxyD : Icc x y ⊆ D := hD.ord_connected.out hx hy
   have hxyD' : Ioo x y ⊆ interior D :=
     subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
@@ -956,7 +956,8 @@ theorem Convex.strictMonoOn_of_deriv_pos {D : Set ℝ} (hD : Convex ℝ D) {f : 
     (hf : ContinuousOn f D) (hf' : ∀ x ∈ interior D, 0 < deriv f x) : StrictMonoOn f D :=
   by
   rintro x hx y hy
-  simpa only [zero_mul, sub_pos] using hD.mul_sub_lt_image_sub_of_lt_deriv hf _ hf' x hx y hy
+  simpa only [MulZeroClass.zero_mul, sub_pos] using
+    hD.mul_sub_lt_image_sub_of_lt_deriv hf _ hf' x hx y hy
   exact fun z hz => (differentiableAt_of_deriv_ne_zero (hf' z hz).ne').DifferentiableWithinAt
 #align convex.strict_mono_on_of_deriv_pos Convex.strictMonoOn_of_deriv_pos
 
@@ -978,7 +979,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f'` is no
 theorem Convex.monotoneOn_of_deriv_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D))
     (hf'_nonneg : ∀ x ∈ interior D, 0 ≤ deriv f x) : MonotoneOn f D := fun x hx y hy hxy => by
-  simpa only [zero_mul, sub_nonneg] using
+  simpa only [MulZeroClass.zero_mul, sub_nonneg] using
     hD.mul_sub_le_image_sub_of_le_deriv hf hf' hf'_nonneg x hx y hy hxy
 #align convex.monotone_on_of_deriv_nonneg Convex.monotoneOn_of_deriv_nonneg
 
@@ -997,7 +998,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f'` is ne
 theorem Convex.strictAntiOn_of_deriv_neg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : ∀ x ∈ interior D, deriv f x < 0) : StrictAntiOn f D :=
   fun x hx y => by
-  simpa only [zero_mul, sub_lt_zero] using
+  simpa only [MulZeroClass.zero_mul, sub_lt_zero] using
     hD.image_sub_lt_mul_sub_of_deriv_lt hf
       (fun z hz => (differentiableAt_of_deriv_ne_zero (hf' z hz).Ne).DifferentiableWithinAt) hf' x
       hx y
@@ -1021,7 +1022,7 @@ of the real line. If `f` is differentiable on the interior of `D` and `f'` is no
 theorem Convex.antitoneOn_of_deriv_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf' : DifferentiableOn ℝ f (interior D))
     (hf'_nonpos : ∀ x ∈ interior D, deriv f x ≤ 0) : AntitoneOn f D := fun x hx y hy hxy => by
-  simpa only [zero_mul, sub_nonpos] using
+  simpa only [MulZeroClass.zero_mul, sub_nonpos] using
     hD.image_sub_le_mul_sub_of_deriv_le hf hf' hf'_nonpos x hx y hy hxy
 #align convex.antitone_on_of_deriv_nonpos Convex.antitoneOn_of_deriv_nonpos
 

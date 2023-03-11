@@ -78,13 +78,13 @@ instance colimitSemiring : Semiring R :=
       apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
-      rw [CategoryTheory.Functor.map_id, id_apply, id_apply, mul_zero x]
+      rw [CategoryTheory.Functor.map_id, id_apply, id_apply, MulZeroClass.mul_zero x]
       rfl
     zero_mul := fun x => by
       apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
-      rw [CategoryTheory.Functor.map_id, id_apply, id_apply, zero_mul x]
+      rw [CategoryTheory.Functor.map_id, id_apply, id_apply, MulZeroClass.zero_mul x]
       rfl
     left_distrib := fun x y z => by
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z

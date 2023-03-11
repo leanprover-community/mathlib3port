@@ -522,8 +522,12 @@ def liftMonoid : (α →* R) ≃ (FreeAbelianGroup α →+* R)
       map_one' := (lift.of f _).trans f.map_one
       map_mul' := fun x y =>
         by
-        refine' FreeAbelianGroup.induction_on y (mul_zero _).symm (fun L2 => _) (fun L2 ih => _) _
-        · refine' FreeAbelianGroup.induction_on x (zero_mul _).symm (fun L1 => _) (fun L1 ih => _) _
+        refine'
+          FreeAbelianGroup.induction_on y (MulZeroClass.mul_zero _).symm (fun L2 => _)
+            (fun L2 ih => _) _
+        · refine'
+            FreeAbelianGroup.induction_on x (MulZeroClass.zero_mul _).symm (fun L1 => _)
+              (fun L1 ih => _) _
           · simp_rw [of_mul_of, lift.of]
             exact f.map_mul _ _
           · simp_rw [neg_mul, map_neg, neg_mul]
@@ -568,9 +572,9 @@ instance [CommMonoid α] : CommRing (FreeAbelianGroup α) :=
   { FreeAbelianGroup.ring α with
     mul_comm := fun x y =>
       by
-      refine' FreeAbelianGroup.induction_on x (zero_mul y) _ _ _
+      refine' FreeAbelianGroup.induction_on x (MulZeroClass.zero_mul y) _ _ _
       · intro s
-        refine' FreeAbelianGroup.induction_on y (zero_mul _).symm _ _ _
+        refine' FreeAbelianGroup.induction_on y (MulZeroClass.zero_mul _).symm _ _ _
         · intro t
           unfold Mul.mul Semigroup.mul Ring.mul
           iterate 4 rw [lift.of]

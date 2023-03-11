@@ -182,7 +182,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antilipschitz_with.injective AntilipschitzWith.injectiveₓ'. -/
 protected theorem injective {α : Type _} {β : Type _} [EMetricSpace α] [PseudoEMetricSpace β]
     {K : ℝ≥0} {f : α → β} (hf : AntilipschitzWith K f) : Function.Injective f := fun x y h => by
-  simpa only [h, edist_self, mul_zero, edist_le_zero] using hf x y
+  simpa only [h, edist_self, MulZeroClass.mul_zero, edist_le_zero] using hf x y
 #align antilipschitz_with.injective AntilipschitzWith.injective
 
 /- warning: antilipschitz_with.mul_le_edist -> AntilipschitzWith.mul_le_edist is a dubious translation:
@@ -395,7 +395,7 @@ Case conversion may be inaccurate. Consider using '#align antilipschitz_with.sub
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
 protected theorem subsingleton {α β} [EMetricSpace α] [PseudoEMetricSpace β] {f : α → β}
     (h : AntilipschitzWith 0 f) : Subsingleton α :=
-  ⟨fun x y => edist_le_zero.1 <| (h x y).trans_eq <| zero_mul _⟩
+  ⟨fun x y => edist_le_zero.1 <| (h x y).trans_eq <| MulZeroClass.zero_mul _⟩
 #align antilipschitz_with.subsingleton AntilipschitzWith.subsingleton
 
 end AntilipschitzWith

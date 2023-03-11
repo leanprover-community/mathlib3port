@@ -1456,7 +1456,7 @@ theorem coeff_mul_degree_add_degree (p q : R[X]) :
         ·
           rw [coeff_eq_zero_of_degree_lt
               (lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 H)),
-            zero_mul]
+            MulZeroClass.zero_mul]
         · rw [not_lt_iff_eq_or_lt] at H
           cases H
           · subst H
@@ -1468,7 +1468,7 @@ theorem coeff_mul_degree_add_degree (p q : R[X]) :
           · suffices nat_degree q < j by
               rw [coeff_eq_zero_of_degree_lt
                   (lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 this)),
-                mul_zero]
+                MulZeroClass.mul_zero]
             · by_contra H'
               rw [not_lt] at H'
               exact
@@ -1489,8 +1489,10 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.degree_mul' Polynomial.degree_mul'ₓ'. -/
 theorem degree_mul' (h : leadingCoeff p * leadingCoeff q ≠ 0) :
     degree (p * q) = degree p + degree q :=
-  have hp : p ≠ 0 := by refine' mt _ h <;> exact fun hp => by rw [hp, leading_coeff_zero, zero_mul]
-  have hq : q ≠ 0 := by refine' mt _ h <;> exact fun hq => by rw [hq, leading_coeff_zero, mul_zero]
+  have hp : p ≠ 0 := by
+    refine' mt _ h <;> exact fun hp => by rw [hp, leading_coeff_zero, MulZeroClass.zero_mul]
+  have hq : q ≠ 0 := by
+    refine' mt _ h <;> exact fun hq => by rw [hq, leading_coeff_zero, MulZeroClass.mul_zero]
   le_antisymm (degree_mul_le _ _)
     (by
       rw [degree_eq_nat_degree hp, degree_eq_nat_degree hq]
@@ -1513,8 +1515,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.nat_degree_mul' Polynomial.natDegree_mul'ₓ'. -/
 theorem natDegree_mul' (h : leadingCoeff p * leadingCoeff q ≠ 0) :
     natDegree (p * q) = natDegree p + natDegree q :=
-  have hp : p ≠ 0 := mt leadingCoeff_eq_zero.2 fun h₁ => h <| by rw [h₁, zero_mul]
-  have hq : q ≠ 0 := mt leadingCoeff_eq_zero.2 fun h₁ => h <| by rw [h₁, mul_zero]
+  have hp : p ≠ 0 := mt leadingCoeff_eq_zero.2 fun h₁ => h <| by rw [h₁, MulZeroClass.zero_mul]
+  have hq : q ≠ 0 := mt leadingCoeff_eq_zero.2 fun h₁ => h <| by rw [h₁, MulZeroClass.mul_zero]
   natDegree_eq_of_degree_eq_some <| by
     rw [degree_mul' h, WithBot.coe_add, degree_eq_nat_degree hp, degree_eq_nat_degree hq]
 #align polynomial.nat_degree_mul' Polynomial.natDegree_mul'
@@ -1565,7 +1567,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.leading_coe
 theorem leadingCoeff_pow' : leadingCoeff p ^ n ≠ 0 → leadingCoeff (p ^ n) = leadingCoeff p ^ n :=
   Nat.recOn n (by simp) fun n ih h =>
     by
-    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, mul_zero]
+    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, MulZeroClass.mul_zero]
     have h₂ : leadingCoeff p * leadingCoeff (p ^ n) ≠ 0 := by rwa [pow_succ, ← ih h₁] at h
     rw [pow_succ, pow_succ, leading_coeff_mul' h₂, ih h₁]
 #align polynomial.leading_coeff_pow' Polynomial.leadingCoeff_pow'
@@ -1580,7 +1582,7 @@ theorem degree_pow' : ∀ {n : ℕ}, leadingCoeff p ^ n ≠ 0 → degree (p ^ n)
   | 0 => fun h => by rw [pow_zero, ← C_1] at * <;> rw [degree_C h, zero_nsmul]
   | n + 1 => fun h =>
     by
-    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, mul_zero]
+    have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, MulZeroClass.mul_zero]
     have h₂ : leadingCoeff p * leadingCoeff (p ^ n) ≠ 0 := by
       rwa [pow_succ, ← leading_coeff_pow' h₁] at h
     rw [pow_succ, degree_mul' h₂, succ_nsmul, degree_pow' h₁]
@@ -1622,7 +1624,7 @@ theorem leadingCoeff_mul_monic {p q : R[X]} (hq : Monic q) :
     leadingCoeff (p * q) = leadingCoeff p :=
   Decidable.byCases
     (fun H : leadingCoeff p = 0 => by
-      rw [H, leading_coeff_eq_zero.1 H, zero_mul, leading_coeff_zero])
+      rw [H, leading_coeff_eq_zero.1 H, MulZeroClass.zero_mul, leading_coeff_zero])
     fun H : leadingCoeff p ≠ 0 => by
     rw [leading_coeff_mul', hq.leading_coeff, mul_one] <;> rwa [hq.leading_coeff, mul_one]
 #align polynomial.leading_coeff_mul_monic Polynomial.leadingCoeff_mul_monic
@@ -1672,9 +1674,9 @@ theorem coeff_pow_mul_natDegree (p : R[X]) (n : ℕ) :
   · simp
   · rw [pow_succ', pow_succ', Nat.succ_mul]
     by_cases hp1 : p.leading_coeff ^ i = 0
-    · rw [hp1, zero_mul]
+    · rw [hp1, MulZeroClass.zero_mul]
       by_cases hp2 : p ^ i = 0
-      · rw [hp2, zero_mul, coeff_zero]
+      · rw [hp2, MulZeroClass.zero_mul, coeff_zero]
       · apply coeff_eq_zero_of_nat_degree_lt
         have h1 : (p ^ i).natDegree < i * p.nat_degree :=
           by
@@ -2516,9 +2518,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.degree_mul Polynomial.degree_mulₓ'. -/
 @[simp]
 theorem degree_mul : degree (p * q) = degree p + degree q :=
-  if hp0 : p = 0 then by simp only [hp0, degree_zero, zero_mul, WithBot.bot_add]
+  if hp0 : p = 0 then by simp only [hp0, degree_zero, MulZeroClass.zero_mul, WithBot.bot_add]
   else
-    if hq0 : q = 0 then by simp only [hq0, degree_zero, mul_zero, WithBot.add_bot]
+    if hq0 : q = 0 then by simp only [hq0, degree_zero, MulZeroClass.mul_zero, WithBot.add_bot]
     else degree_mul' <| mul_ne_zero (mt leadingCoeff_eq_zero.1 hp0) (mt leadingCoeff_eq_zero.1 hq0)
 #align polynomial.degree_mul Polynomial.degree_mul
 
@@ -2558,9 +2560,9 @@ Case conversion may be inaccurate. Consider using '#align polynomial.leading_coe
 theorem leadingCoeff_mul (p q : R[X]) : leadingCoeff (p * q) = leadingCoeff p * leadingCoeff q :=
   by
   by_cases hp : p = 0
-  · simp only [hp, zero_mul, leading_coeff_zero]
+  · simp only [hp, MulZeroClass.zero_mul, leading_coeff_zero]
   · by_cases hq : q = 0
-    · simp only [hq, mul_zero, leading_coeff_zero]
+    · simp only [hq, MulZeroClass.mul_zero, leading_coeff_zero]
     · rw [leading_coeff_mul']
       exact mul_ne_zero (mt leading_coeff_eq_zero.1 hp) (mt leading_coeff_eq_zero.1 hq)
 #align polynomial.leading_coeff_mul Polynomial.leadingCoeff_mul

@@ -551,13 +551,13 @@ noncomputable def FiniteSpanningSetsIn.prod {ν : Measure β} {C : Set (Set α)}
 theorem quasiMeasurePreservingFst : QuasiMeasurePreserving Prod.fst (μ.Prod ν) μ :=
   by
   refine' ⟨measurable_fst, absolutely_continuous.mk fun s hs h2s => _⟩
-  rw [map_apply measurable_fst hs, ← prod_univ, prod_prod, h2s, zero_mul]
+  rw [map_apply measurable_fst hs, ← prod_univ, prod_prod, h2s, MulZeroClass.zero_mul]
 #align measure_theory.measure.quasi_measure_preserving_fst MeasureTheory.Measure.quasiMeasurePreservingFst
 
 theorem quasiMeasurePreservingSnd : QuasiMeasurePreserving Prod.snd (μ.Prod ν) ν :=
   by
   refine' ⟨measurable_snd, absolutely_continuous.mk fun s hs h2s => _⟩
-  rw [map_apply measurable_snd hs, ← univ_prod, prod_prod, h2s, mul_zero]
+  rw [map_apply measurable_snd hs, ← univ_prod, prod_prod, h2s, MulZeroClass.mul_zero]
 #align measure_theory.measure.quasi_measure_preserving_snd MeasureTheory.Measure.quasiMeasurePreservingSnd
 
 variable [SigmaFinite μ]

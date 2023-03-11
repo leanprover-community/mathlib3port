@@ -87,7 +87,7 @@ namespace AddMonoidHom
 def mulLeft {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R
     where
   toFun := (· * ·) r
-  map_zero' := mul_zero r
+  map_zero' := MulZeroClass.mul_zero r
   map_add' := mul_add r
 #align add_monoid_hom.mul_left AddMonoidHom.mulLeft
 -/
@@ -109,7 +109,7 @@ theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
 def mulRight {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R
     where
   toFun a := a * r
-  map_zero' := zero_mul r
+  map_zero' := MulZeroClass.zero_mul r
   map_add' _ _ := add_mul _ _ r
 #align add_monoid_hom.mul_right AddMonoidHom.mulRight
 -/
@@ -238,7 +238,7 @@ theorem IsLeftCancelMulZero.to_noZeroDivisors [Ring α] [IsLeftCancelMulZero α]
   · left
     exact hx
   · right
-    rw [← sub_zero (x * y), ← mul_zero x, ← mul_sub] at h
+    rw [← sub_zero (x * y), ← MulZeroClass.mul_zero x, ← mul_sub] at h
     convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
     rw [sub_zero]
 #align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_noZeroDivisors
@@ -256,7 +256,7 @@ theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero �
   · right
     exact hy
   · left
-    rw [← sub_zero (x * y), ← zero_mul y, ← sub_mul] at h
+    rw [← sub_zero (x * y), ← MulZeroClass.zero_mul y, ← sub_mul] at h
     convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h
     rw [sub_zero]
 #align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_noZeroDivisors

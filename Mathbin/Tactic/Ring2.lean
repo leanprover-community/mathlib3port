@@ -361,7 +361,7 @@ theorem cseval_mulConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Horn
   simp [mul_const]
   split_ifs with h h
   · cases (Num.toZNum_inj.1 h : k = 0)
-    exact ⟨⟨0, rfl⟩, (mul_zero _).symm⟩
+    exact ⟨⟨0, rfl⟩, (MulZeroClass.mul_zero _).symm⟩
   · cases (Num.toZNum_inj.1 h : k = 1)
     exact ⟨cs, (mul_one _).symm⟩
   induction' e with n a x n b A B <;> simp [*]

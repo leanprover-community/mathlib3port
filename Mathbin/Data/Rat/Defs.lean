@@ -754,8 +754,8 @@ instance : CommGroupWithZero ℚ :=
     exists_pair_ne := ⟨0, 1, Rat.zero_ne_one⟩
     inv_zero := rfl
     mul_inv_cancel := Rat.mul_inv_cancel
-    mul_zero := mul_zero
-    zero_mul := zero_mul }
+    mul_zero := MulZeroClass.mul_zero
+    zero_mul := MulZeroClass.zero_mul }
 
 instance : IsDomain ℚ :=
   NoZeroDivisors.to_isDomain _

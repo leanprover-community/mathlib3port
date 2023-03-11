@@ -155,9 +155,9 @@ theorem expand_eq_c {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = C
 theorem natDegree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.natDegree * p :=
   by
   cases' p.eq_zero_or_pos with hp hp
-  · rw [hp, coe_expand, pow_zero, mul_zero, ← C_1, eval₂_hom, nat_degree_C]
+  · rw [hp, coe_expand, pow_zero, MulZeroClass.mul_zero, ← C_1, eval₂_hom, nat_degree_C]
   by_cases hf : f = 0
-  · rw [hf, AlgHom.map_zero, nat_degree_zero, zero_mul]
+  · rw [hf, AlgHom.map_zero, nat_degree_zero, MulZeroClass.zero_mul]
   have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hf1]
   refine' le_antisymm ((degree_le_iff_coeff_zero _ _).2 fun n hn => _) _

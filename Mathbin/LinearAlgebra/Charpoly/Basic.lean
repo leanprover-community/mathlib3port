@@ -107,7 +107,7 @@ theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R
     by
     rw [hP, mul_comm]
     refine' degree_lt_degree_mul_X fun h => _
-    rw [h, mul_zero] at hP
+    rw [h, MulZeroClass.mul_zero] at hP
     exact minpoly.ne_zero (IsIntegral f) hP
   have hPmonic : P.monic :=
     by

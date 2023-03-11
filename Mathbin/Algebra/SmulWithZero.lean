@@ -67,8 +67,8 @@ Case conversion may be inaccurate. Consider using '#align mul_zero_class.to_smul
 instance MulZeroClass.toSMulWithZero [MulZeroClass R] : SMulWithZero R R
     where
   smul := (· * ·)
-  smul_zero := mul_zero
-  zero_smul := zero_mul
+  smul_zero := MulZeroClass.mul_zero
+  zero_smul := MulZeroClass.zero_mul
 #align mul_zero_class.to_smul_with_zero MulZeroClass.toSMulWithZero
 
 /- warning: mul_zero_class.to_opposite_smul_with_zero -> MulZeroClass.toOppositeSMulWithZero is a dubious translation:
@@ -81,8 +81,8 @@ Case conversion may be inaccurate. Consider using '#align mul_zero_class.to_oppo
 instance MulZeroClass.toOppositeSMulWithZero [MulZeroClass R] : SMulWithZero Rᵐᵒᵖ R
     where
   smul := (· • ·)
-  smul_zero r := zero_mul _
-  zero_smul := mul_zero
+  smul_zero r := MulZeroClass.zero_mul _
+  zero_smul := MulZeroClass.mul_zero
 #align mul_zero_class.to_opposite_smul_with_zero MulZeroClass.toOppositeSMulWithZero
 
 variable (R) {M} [Zero R] [Zero M] [SMulWithZero R M]

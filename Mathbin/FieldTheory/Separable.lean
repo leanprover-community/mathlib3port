@@ -56,7 +56,7 @@ theorem separable_def' (f : R[X]) : f.Separable ↔ ∃ a b : R[X], a * f + b * 
 theorem not_separable_zero [Nontrivial R] : ¬Separable (0 : R[X]) :=
   by
   rintro ⟨x, y, h⟩
-  simpa only [derivative_zero, mul_zero, add_zero, zero_ne_one] using h
+  simpa only [derivative_zero, MulZeroClass.mul_zero, add_zero, zero_ne_one] using h
 #align polynomial.not_separable_zero Polynomial.not_separable_zero
 
 theorem separable_one : (1 : R[X]).Separable :=
@@ -356,7 +356,7 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
     have hg1 : g.nat_degree * p = N.succ := by rwa [← nat_degree_expand, hgf]
     have hg2 : g.nat_degree ≠ 0 := by
       intro this
-      rw [this, zero_mul] at hg1
+      rw [this, MulZeroClass.zero_mul] at hg1
       cases hg1
     have hg3 : g.nat_degree < N.succ :=
       by
@@ -373,7 +373,8 @@ theorem isUnit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
   rw [or_iff_not_imp_right]
   rintro hn : n ≠ 0
   have hf2 : (expand F (p ^ n) f).derivative = 0 := by
-    rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow hn.bot_lt, zero_mul, mul_zero]
+    rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow hn.bot_lt,
+      MulZeroClass.zero_mul, MulZeroClass.mul_zero]
   rw [separable_def, hf2, isCoprime_zero_right, is_unit_iff] at hf
   rcases hf with ⟨r, hr, hrf⟩
   rw [eq_comm, expand_eq_C (pow_pos hp _)] at hrf
@@ -421,7 +422,7 @@ theorem x_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔
   rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
   -- Suppose `(n : F) = 0`, then the derivative is `0`, so `X ^ n - 1` is a unit, contradiction.
   rintro (h : IsCoprime _ _) hn'
-  rw [hn', C_0, zero_mul, isCoprime_zero_right] at h
+  rw [hn', C_0, MulZeroClass.zero_mul, isCoprime_zero_right] at h
   exact not_is_unit_X_pow_sub_one F n h
 #align polynomial.X_pow_sub_one_separable_iff Polynomial.x_pow_sub_one_separable_iff
 

@@ -578,8 +578,8 @@ theorem le_trailingDegree_mul : p.trailingDegree + q.trailingDegree ≤ (p * q).
 theorem le_natTrailingDegree_mul (h : p * q ≠ 0) :
     p.natTrailingDegree + q.natTrailingDegree ≤ (p * q).natTrailingDegree :=
   by
-  have hp : p ≠ 0 := fun hp => h (by rw [hp, zero_mul])
-  have hq : q ≠ 0 := fun hq => h (by rw [hq, mul_zero])
+  have hp : p ≠ 0 := fun hp => h (by rw [hp, MulZeroClass.zero_mul])
+  have hq : q ≠ 0 := fun hq => h (by rw [hq, MulZeroClass.mul_zero])
   rw [← WithTop.coe_le_coe, WithTop.coe_add, ← trailing_degree_eq_nat_trailing_degree hp, ←
     trailing_degree_eq_nat_trailing_degree hq, ← trailing_degree_eq_nat_trailing_degree h]
   exact le_trailing_degree_mul
@@ -602,9 +602,9 @@ theorem coeff_mul_natTrailingDegree_add_natTrailingDegree :
   rintro ⟨i, j⟩ h₁ h₂
   rw [nat.mem_antidiagonal] at h₁
   by_cases hi : i < p.nat_trailing_degree
-  · rw [coeff_eq_zero_of_lt_nat_trailing_degree hi, zero_mul]
+  · rw [coeff_eq_zero_of_lt_nat_trailing_degree hi, MulZeroClass.zero_mul]
   by_cases hj : j < q.nat_trailing_degree
-  · rw [coeff_eq_zero_of_lt_nat_trailing_degree hj, mul_zero]
+  · rw [coeff_eq_zero_of_lt_nat_trailing_degree hj, MulZeroClass.mul_zero]
   rw [not_lt] at hi hj
   refine' (h₂ (prod.ext_iff.mpr _).symm).elim
   exact (add_eq_add_iff_eq_and_eq hi hj).mp h₁.symm
@@ -619,8 +619,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.trailing_de
 theorem trailingDegree_mul' (h : p.trailingCoeff * q.trailingCoeff ≠ 0) :
     (p * q).trailingDegree = p.trailingDegree + q.trailingDegree :=
   by
-  have hp : p ≠ 0 := fun hp => h (by rw [hp, trailing_coeff_zero, zero_mul])
-  have hq : q ≠ 0 := fun hq => h (by rw [hq, trailing_coeff_zero, mul_zero])
+  have hp : p ≠ 0 := fun hp => h (by rw [hp, trailing_coeff_zero, MulZeroClass.zero_mul])
+  have hq : q ≠ 0 := fun hq => h (by rw [hq, trailing_coeff_zero, MulZeroClass.mul_zero])
   refine' le_antisymm _ le_trailing_degree_mul
   rw [trailing_degree_eq_nat_trailing_degree hp, trailing_degree_eq_nat_trailing_degree hq, ←
     ENat.coe_add]
@@ -637,8 +637,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.nat_trailin
 theorem natTrailingDegree_mul' (h : p.trailingCoeff * q.trailingCoeff ≠ 0) :
     (p * q).natTrailingDegree = p.natTrailingDegree + q.natTrailingDegree :=
   by
-  have hp : p ≠ 0 := fun hp => h (by rw [hp, trailing_coeff_zero, zero_mul])
-  have hq : q ≠ 0 := fun hq => h (by rw [hq, trailing_coeff_zero, mul_zero])
+  have hp : p ≠ 0 := fun hp => h (by rw [hp, trailing_coeff_zero, MulZeroClass.zero_mul])
+  have hq : q ≠ 0 := fun hq => h (by rw [hq, trailing_coeff_zero, MulZeroClass.mul_zero])
   apply nat_trailing_degree_eq_of_trailing_degree_eq_some
   rw [trailing_degree_mul' h, WithTop.coe_add, ← trailing_degree_eq_nat_trailing_degree hp, ←
     trailing_degree_eq_nat_trailing_degree hq]

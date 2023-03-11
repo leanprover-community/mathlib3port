@@ -50,7 +50,7 @@ Case conversion may be inaccurate. Consider using '#align pow_sub_of_lt pow_sub_
 theorem pow_sub_of_lt (a : G₀) {m n : ℕ} (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
   by
   obtain rfl | ha := eq_or_ne a 0
-  · rw [zero_pow (tsub_pos_of_lt h), zero_pow (n.zero_le.trans_lt h), zero_mul]
+  · rw [zero_pow (tsub_pos_of_lt h), zero_pow (n.zero_le.trans_lt h), MulZeroClass.zero_mul]
   · exact pow_sub₀ _ ha h.le
 #align pow_sub_of_lt pow_sub_of_lt
 
@@ -178,7 +178,7 @@ theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 
   · subst a
     simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff,
       or_false_iff] at h
-    rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
+    rw [zero_zpow _ h, zero_zpow _ hm, MulZeroClass.zero_mul]
   · exact zpow_add₀ ha m n
 #align zpow_add' zpow_add'
 

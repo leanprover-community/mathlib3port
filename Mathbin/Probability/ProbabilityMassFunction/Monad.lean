@@ -144,8 +144,10 @@ theorem pure_bind (a : α) (f : α → Pmf β) : (pure a).bind f = f a :=
 theorem bind_pure : p.bind pure = p :=
   Pmf.ext fun x =>
     (bind_apply _ _ _).trans
-      (trans (tsum_eq_single x fun y hy => by rw [pure_apply_of_ne _ _ hy.symm, mul_zero]) <| by
-        rw [pure_apply_self, mul_one])
+      (trans
+          (tsum_eq_single x fun y hy => by
+            rw [pure_apply_of_ne _ _ hy.symm, MulZeroClass.mul_zero]) <|
+        by rw [pure_apply_self, mul_one])
 #align pmf.bind_pure Pmf.bind_pure
 
 @[simp]
@@ -220,7 +222,7 @@ def bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf β) : Pmf β :=
         refine' ennreal.tsum_comm.trans (trans (tsum_congr fun a => _) p.tsum_coe)
         simp_rw [ENNReal.tsum_mul_left]
         split_ifs with h
-        · simp only [h, zero_mul]
+        · simp only [h, MulZeroClass.zero_mul]
         · rw [(f a h).tsum_coe, mul_one])⟩
 #align pmf.bind_on_support Pmf.bindOnSupport
 
@@ -260,9 +262,9 @@ theorem bindOnSupport_eq_bind (p : Pmf α) (f : α → Pmf β) :
   by
   ext (b x)
   have : ∀ a, ite (p a = 0) 0 (p a * f a b) = p a * f a b := fun a =>
-    ite_eq_right_iff.2 fun h => h.symm ▸ symm (zero_mul <| f a b)
-  simp only [bind_on_support_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, mul_ite, mul_zero,
-    this]
+    ite_eq_right_iff.2 fun h => h.symm ▸ symm (MulZeroClass.zero_mul <| f a b)
+  simp only [bind_on_support_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, mul_ite,
+    MulZeroClass.mul_zero, this]
 #align pmf.bind_on_support_eq_bind Pmf.bindOnSupport_eq_bind
 
 theorem bindOnSupport_eq_zero_iff (b : β) :
@@ -338,7 +340,7 @@ theorem toOuterMeasure_bindOnSupport_apply :
     _ = ∑' (a) (b), ite (b ∈ s) (p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
       ENNReal.tsum_comm
     _ = ∑' a, p a * ∑' b, ite (b ∈ s) (dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
-      (tsum_congr fun a => by simp only [← ENNReal.tsum_mul_left, mul_ite, mul_zero])
+      (tsum_congr fun a => by simp only [← ENNReal.tsum_mul_left, mul_ite, MulZeroClass.mul_zero])
     _ = ∑' a, p a * dite (p a = 0) (fun h => 0) fun h => ∑' b, ite (b ∈ s) (f a h b) 0 :=
       tsum_congr fun a => by split_ifs with ha <;> simp only [if_t_t, tsum_zero, eq_self_iff_true]
     

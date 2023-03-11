@@ -167,9 +167,10 @@ theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : �
     by
     -- we will need this twice
     apply_fun Complex.im  at h
-    simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, zero_mul, or_false_iff,
+    simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, MulZeroClass.zero_mul, or_false_iff,
       Complex.ofReal_im, Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
-  simp only [this, zero_mul, Complex.ofReal_zero, zero_add, Complex.ofReal_eq_zero] at h
+  simp only [this, MulZeroClass.zero_mul, Complex.ofReal_zero, zero_add, Complex.ofReal_eq_zero] at
+    h
   ext i
   fin_cases i <;> assumption
 #align upper_half_plane.linear_ne_zero UpperHalfPlane.linear_ne_zero
@@ -182,10 +183,10 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 :=
   simp only [general_linear_group.coe_det_apply] at DET
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by simpa using congr_arg Complex.im H
   cases H1
-  · simp only [H1, Complex.ofReal_zero, denom, coe_fn_eq_coe, zero_mul, zero_add,
+  · simp only [H1, Complex.ofReal_zero, denom, coe_fn_eq_coe, MulZeroClass.zero_mul, zero_add,
       Complex.ofReal_eq_zero] at H
     rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Fin 2) (Fin 2) ℝ)] at DET
-    simp only [coe_coe, H, H1, mul_zero, sub_zero, lt_self_iff_false] at DET
+    simp only [coe_coe, H, H1, MulZeroClass.mul_zero, sub_zero, lt_self_iff_false] at DET
     exact DET
   · change z.im > 0 at hz
     linarith

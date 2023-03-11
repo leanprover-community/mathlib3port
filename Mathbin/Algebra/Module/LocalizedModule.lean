@@ -287,11 +287,11 @@ instance {A : Type _} [Semiring A] [Algebra R A] {S : Submonoid R} :
     zero_mul := by
       intro x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
-      exact mk_eq.mpr ⟨1, by simp only [zero_mul, smul_zero]⟩
+      exact mk_eq.mpr ⟨1, by simp only [MulZeroClass.zero_mul, smul_zero]⟩
     mul_zero := by
       intro x
       obtain ⟨⟨a, s⟩, rfl : mk a s = x⟩ := Quotient.exists_rep x
-      exact mk_eq.mpr ⟨1, by simp only [mul_zero, smul_zero]⟩
+      exact mk_eq.mpr ⟨1, by simp only [MulZeroClass.mul_zero, smul_zero]⟩
     mul_assoc := by
       intro x₁ x₂ x₃
       obtain ⟨⟨a₁, s₁⟩, rfl : mk a₁ s₁ = x₁⟩ := Quotient.exists_rep x₁

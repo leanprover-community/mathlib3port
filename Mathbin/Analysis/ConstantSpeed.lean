@@ -73,7 +73,7 @@ theorem hasConstantSpeedOnWith_of_subsingleton (f : ℝ → E) {s : Set ℝ} (hs
   by
   rintro x hx y hy; cases hs hx hy
   rw [evariationOn.subsingleton f (fun y hy z hz => hs hy.1 hz.1 : (s ∩ Icc x x).Subsingleton)]
-  simp only [sub_self, mul_zero, ENNReal.ofReal_zero]
+  simp only [sub_self, MulZeroClass.mul_zero, ENNReal.ofReal_zero]
 #align has_constant_speed_on_with_of_subsingleton hasConstantSpeedOnWith_of_subsingleton
 
 theorem hasConstantSpeedOnWith_iff_ordered :
@@ -144,7 +144,7 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
     exacts[⟨⟨hs.1, hs.2 zs, le_rfl⟩, fun w ⟨ws, zw, wx⟩ => wx⟩,
       ⟨⟨ht.1, le_rfl, ht.2 yt⟩, fun w ⟨wt, xw, wy⟩ => xw⟩]
   · cases le_antisymm zy ((hs.2 ys).trans (ht.2 zt))
-    simp only [Icc_self, sub_self, mul_zero, ENNReal.ofReal_zero]
+    simp only [Icc_self, sub_self, MulZeroClass.mul_zero, ENNReal.ofReal_zero]
     exact evariationOn.subsingleton _ fun _ ⟨_, uz⟩ _ ⟨_, vz⟩ => uz.trans vz.symm
   · have : (s ∪ t) ∩ Icc z y = t ∩ Icc z y := by
       ext w
@@ -179,7 +179,7 @@ theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
   by
   dsimp [HasConstantSpeedOnWith]
-  simp only [zero_mul, ENNReal.ofReal_zero, ← evariationOn.eq_zero_iff]
+  simp only [MulZeroClass.zero_mul, ENNReal.ofReal_zero, ← evariationOn.eq_zero_iff]
   constructor
   · by_contra'
     obtain ⟨h, hfs⟩ := this

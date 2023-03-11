@@ -293,7 +293,8 @@ theorem choose_mul_succ_eq (n k : ℕ) : n.choose k * (n + 1) = (n + 1).choose k
   ·
     rw [choose_succ_succ, add_mul, succ_sub_succ, ← choose_succ_right_eq, ← succ_sub_succ, mul_tsub,
       add_tsub_cancel_of_le (Nat.mul_le_mul_left _ hk)]
-  rw [choose_eq_zero_of_lt hk, choose_eq_zero_of_lt (n.lt_succ_self.trans hk), zero_mul, zero_mul]
+  rw [choose_eq_zero_of_lt hk, choose_eq_zero_of_lt (n.lt_succ_self.trans hk),
+    MulZeroClass.zero_mul, MulZeroClass.zero_mul]
 #align nat.choose_mul_succ_eq Nat.choose_mul_succ_eq
 -/
 
@@ -329,7 +330,7 @@ theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) :
 theorem descFactorial_eq_factorial_mul_choose (n k : ℕ) : n.descFactorial k = k ! * n.choose k :=
   by
   obtain h | h := Nat.lt_or_ge n k
-  · rw [desc_factorial_eq_zero_iff_lt.2 h, choose_eq_zero_of_lt h, mul_zero]
+  · rw [desc_factorial_eq_zero_iff_lt.2 h, choose_eq_zero_of_lt h, MulZeroClass.mul_zero]
   rw [mul_comm]
   apply mul_right_cancel₀ (factorial_ne_zero (n - k))
   rw [choose_mul_factorial_mul_factorial h, ← factorial_mul_desc_factorial h, mul_comm]

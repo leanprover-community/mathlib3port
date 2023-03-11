@@ -143,8 +143,8 @@ inductive Rel : Pre R X → Pre R X → Prop-- force `of_scalar` to be a central
   right_distrib {a b c : Pre R X} :
     Rel ((a + b) * c) (a * c + b * c)-- other relations needed for semiring
 
-  | zero_mul {a : Pre R X} : Rel (0 * a) 0
-  | mul_zero {a : Pre R X} : Rel (a * 0) 0-- compatibility
+  | MulZeroClass.zero_mul {a : Pre R X} : Rel (0 * a) 0
+  | MulZeroClass.mul_zero {a : Pre R X} : Rel (a * 0) 0-- compatibility
 
   | add_compat_left {a b c : Pre R X} : Rel a b → Rel (a + c) (b + c)
   | add_compat_right {a b c : Pre R X} : Rel a b → Rel (c + a) (c + b)

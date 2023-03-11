@@ -540,7 +540,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.support_mul_subset_left Function.support_mul_subset_leftₓ'. -/
 @[simp]
 theorem support_mul_subset_left [MulZeroClass R] (f g : α → R) :
-    (support fun x => f x * g x) ⊆ support f := fun x hfg hf => hfg <| by simp only [hf, zero_mul]
+    (support fun x => f x * g x) ⊆ support f := fun x hfg hf =>
+  hfg <| by simp only [hf, MulZeroClass.zero_mul]
 #align function.support_mul_subset_left Function.support_mul_subset_left
 
 /- warning: function.support_mul_subset_right -> Function.support_mul_subset_right is a dubious translation:
@@ -551,7 +552,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.support_mul_subset_right Function.support_mul_subset_rightₓ'. -/
 @[simp]
 theorem support_mul_subset_right [MulZeroClass R] (f g : α → R) :
-    (support fun x => f x * g x) ⊆ support g := fun x hfg hg => hfg <| by simp only [hg, mul_zero]
+    (support fun x => f x * g x) ⊆ support g := fun x hfg hg =>
+  hfg <| by simp only [hg, MulZeroClass.mul_zero]
 #align function.support_mul_subset_right Function.support_mul_subset_right
 
 /- warning: function.support_smul_subset_right -> Function.support_smul_subset_right is a dubious translation:

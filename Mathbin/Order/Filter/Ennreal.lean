@@ -84,7 +84,7 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
     (f.limsup fun x : α => a * u x) = a * f.limsup u :=
   by
   by_cases ha_zero : a = 0
-  · simp_rw [ha_zero, zero_mul, ← ENNReal.bot_eq_zero]
+  · simp_rw [ha_zero, MulZeroClass.zero_mul, ← ENNReal.bot_eq_zero]
     exact limsup_const_bot
   let g := fun x : ℝ≥0∞ => a * x
   have hg_bij : Function.Bijective g :=

@@ -171,7 +171,7 @@ theorem indepBotRight (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : M
   intro s t hs ht
   rw [Set.mem_setOf_eq, MeasurableSpace.measurableSet_bot_iff] at ht
   cases ht
-  · rw [ht, Set.inter_empty, measure_empty, mul_zero]
+  · rw [ht, Set.inter_empty, measure_empty, MulZeroClass.mul_zero]
   · rw [ht, Set.inter_univ, measure_univ, mul_one]
 #align probability_theory.indep_bot_right ProbabilityTheory.indepBotRight
 

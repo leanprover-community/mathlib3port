@@ -508,9 +508,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sign_mul sign_mulₓ'. -/
 theorem sign_mul (x y : α) : SignType.sign (x * y) = SignType.sign x * SignType.sign y := by
   rcases lt_trichotomy x 0 with (hx | hx | hx) <;> rcases lt_trichotomy y 0 with (hy | hy | hy) <;>
-    simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_one, neg_one_mul,
-      neg_neg, one_mul, mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero,
-      mul_neg_of_pos_of_neg, mul_pos]
+    simp only [sign_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul, sign_pos, sign_neg, hx, hy,
+      mul_one, neg_one_mul, neg_neg, one_mul, mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos,
+      neg_zero, mul_neg_of_pos_of_neg, mul_pos]
 #align sign_mul sign_mul
 
 /- warning: sign_hom -> signHom is a dubious translation:

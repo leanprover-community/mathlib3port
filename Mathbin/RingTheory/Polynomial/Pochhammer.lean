@@ -272,8 +272,8 @@ theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n
   | 0 => by
     by_cases h : r = 0
-    · simp only [h, zero_mul, zero_add]
-    · simp only [pochhammer_eval_zero, zero_mul, if_neg h, mul_zero]
+    · simp only [h, MulZeroClass.zero_mul, zero_add]
+    · simp only [pochhammer_eval_zero, MulZeroClass.zero_mul, if_neg h, MulZeroClass.mul_zero]
   | k + 1 => by simp only [pochhammer_nat_eq_ascFactorial, Nat.succ_ascFactorial, add_right_comm]
 #align pochhammer_nat_eval_succ pochhammer_nat_eval_succ
 -/

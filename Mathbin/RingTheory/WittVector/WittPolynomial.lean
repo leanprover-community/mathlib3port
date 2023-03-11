@@ -163,7 +163,7 @@ theorem wittPolynomial_zMod_self (n : ℕ) :
   by
   simp only [wittPolynomial_eq_sum_c_mul_x_pow]
   rw [sum_range_succ, ← Nat.cast_pow, CharP.cast_eq_zero (ZMod (p ^ (n + 1))) (p ^ (n + 1)), C_0,
-    zero_mul, add_zero, AlgHom.map_sum, sum_congr rfl]
+    MulZeroClass.zero_mul, add_zero, AlgHom.map_sum, sum_congr rfl]
   intro k hk
   rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mul, ← pow_succ]
   congr
@@ -238,11 +238,11 @@ theorem constantCoeff_xInTermsOfW [hp : Fact p.Prime] [Invertible (p : R)] (n : 
   intro n IH
   rw [xInTermsOfW_eq, mul_comm, RingHom.map_mul, RingHom.map_sub, RingHom.map_sum, constant_coeff_C,
     sum_eq_zero]
-  · simp only [constant_coeff_X, sub_zero, mul_zero]
+  · simp only [constant_coeff_X, sub_zero, MulZeroClass.mul_zero]
   · intro m H
     rw [mem_range] at H
     simp only [RingHom.map_mul, RingHom.map_pow, constant_coeff_C, IH m H]
-    rw [zero_pow, mul_zero]
+    rw [zero_pow, MulZeroClass.mul_zero]
     apply pow_pos hp.1.Pos
 #align constant_coeff_X_in_terms_of_W constantCoeff_xInTermsOfW
 

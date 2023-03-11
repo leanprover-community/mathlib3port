@@ -178,7 +178,7 @@ theorem ToAdjoin.injective (hx : IsIntegral R x) : Function.Injective (Minpoly.t
   rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
     [anonymous], is_integrally_closed_dvd_iff hx] at hP₁
   obtain ⟨Q, hQ⟩ := hP₁
-  rw [← hP, hQ, RingHom.map_mul, mk_self, zero_mul]
+  rw [← hP, hQ, RingHom.map_mul, mk_self, MulZeroClass.zero_mul]
 #align minpoly.to_adjoin.injective minpoly.ToAdjoin.injective
 
 /-- The algebra isomorphism `adjoin_root (minpoly R x) ≃ₐ[R] adjoin R x` -/

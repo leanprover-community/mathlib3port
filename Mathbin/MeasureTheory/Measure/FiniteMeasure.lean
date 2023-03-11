@@ -355,7 +355,7 @@ theorem testAgainstNn_mono (μ : FiniteMeasure Ω) {f g : Ω →ᵇ ℝ≥0} (f_
 
 @[simp]
 theorem testAgainstNn_zero (μ : FiniteMeasure Ω) : μ.testAgainstNn 0 = 0 := by
-  simpa only [zero_mul] using μ.test_against_nn_const 0
+  simpa only [MulZeroClass.zero_mul] using μ.test_against_nn_const 0
 #align measure_theory.finite_measure.test_against_nn_zero MeasureTheory.FiniteMeasure.testAgainstNn_zero
 
 @[simp]
@@ -544,7 +544,7 @@ theorem tendsto_zero_testAgainstNn_of_tendsto_zero_mass {γ : Type _} {F : Filte
     refine' (Prod.tendsto_iff _ _).mpr ⟨tendsto_const_nhds, _⟩
     exact (nnreal.continuous_coe.tendsto 0).comp mass_lim
   have key := tendsto_mul.comp lim_pair
-  rwa [mul_zero] at key
+  rwa [MulZeroClass.mul_zero] at key
 #align measure_theory.finite_measure.tendsto_zero_test_against_nn_of_tendsto_zero_mass MeasureTheory.FiniteMeasure.tendsto_zero_testAgainstNn_of_tendsto_zero_mass
 
 /-- If the total masses of finite measures tend to zero, then the measures tend to zero. -/

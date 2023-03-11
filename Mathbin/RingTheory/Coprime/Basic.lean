@@ -64,7 +64,7 @@ theorem isCoprime_comm : IsCoprime x y ↔ IsCoprime y x :=
 theorem isCoprime_self : IsCoprime x x ↔ IsUnit x :=
   ⟨fun ⟨a, b, h⟩ => isUnit_of_mul_eq_one x (a + b) <| by rwa [mul_comm, add_mul], fun h =>
     let ⟨b, hb⟩ := isUnit_iff_exists_inv'.1 h
-    ⟨b, 0, by rwa [zero_mul, add_zero]⟩⟩
+    ⟨b, 0, by rwa [MulZeroClass.zero_mul, add_zero]⟩⟩
 #align is_coprime_self isCoprime_self
 -/
 
@@ -75,7 +75,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R}, Iff (IsCoprime.{u1} R _inst_1 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)))) x) (IsUnit.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) x)
 Case conversion may be inaccurate. Consider using '#align is_coprime_zero_left isCoprime_zero_leftₓ'. -/
 theorem isCoprime_zero_left : IsCoprime 0 x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, H⟩ => isUnit_of_mul_eq_one x b <| by rwa [mul_zero, zero_add, mul_comm] at H, fun H =>
+  ⟨fun ⟨a, b, H⟩ =>
+    isUnit_of_mul_eq_one x b <| by rwa [MulZeroClass.mul_zero, zero_add, mul_comm] at H, fun H =>
     let ⟨b, hb⟩ := isUnit_iff_exists_inv'.1 H
     ⟨1, b, by rwa [one_mul, zero_add]⟩⟩
 #align is_coprime_zero_left isCoprime_zero_left
@@ -115,13 +116,13 @@ theorem IsCoprime.ne_zero [Nontrivial R] {p : Fin 2 → R} (h : IsCoprime (p 0) 
 
 #print isCoprime_one_left /-
 theorem isCoprime_one_left : IsCoprime 1 x :=
-  ⟨1, 0, by rw [one_mul, zero_mul, add_zero]⟩
+  ⟨1, 0, by rw [one_mul, MulZeroClass.zero_mul, add_zero]⟩
 #align is_coprime_one_left isCoprime_one_left
 -/
 
 #print isCoprime_one_right /-
 theorem isCoprime_one_right : IsCoprime x 1 :=
-  ⟨0, 1, by rw [one_mul, zero_mul, zero_add]⟩
+  ⟨0, 1, by rw [one_mul, MulZeroClass.zero_mul, zero_add]⟩
 #align is_coprime_one_right isCoprime_one_right
 -/
 

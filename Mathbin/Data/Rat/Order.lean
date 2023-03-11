@@ -345,11 +345,11 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,
-      zero_mul] at hq
+      MulZeroClass.zero_mul] at hq
     rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
   · rw [abs_of_nonneg hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one,
-      zero_mul] at hq
+      MulZeroClass.zero_mul] at hq
     rw [Int.natAbs_of_nonneg hq, num_denom]
 #align rat.abs_def Rat.abs_def
 

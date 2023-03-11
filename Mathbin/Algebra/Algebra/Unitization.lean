@@ -379,7 +379,8 @@ theorem inl_one [One R] [Zero A] : (inl 1 : Unitization R A) = 1 :=
 theorem inl_mul [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r₁ r₂ : R) :
     (inl (r₁ * r₂) : Unitization R A) = inl r₁ * inl r₂ :=
   ext rfl <|
-    show (0 : A) = r₁ • (0 : A) + r₂ • 0 + 0 * 0 by simp only [smul_zero, add_zero, mul_zero]
+    show (0 : A) = r₁ • (0 : A) + r₂ • 0 + 0 * 0 by
+      simp only [smul_zero, add_zero, MulZeroClass.mul_zero]
 #align unitization.inl_mul Unitization.inl_mul
 
 theorem inl_mul_inl [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r₁ r₂ : R) :
@@ -396,7 +397,7 @@ variable (R)
 @[simp]
 theorem coe_mul [Semiring R] [AddCommMonoid A] [Mul A] [SMulWithZero R A] (a₁ a₂ : A) :
     (↑(a₁ * a₂) : Unitization R A) = a₁ * a₂ :=
-  ext (mul_zero _).symm <|
+  ext (MulZeroClass.mul_zero _).symm <|
     show a₁ * a₂ = (0 : R) • a₂ + (0 : R) • a₁ + a₁ * a₂ by simp only [zero_smul, zero_add]
 #align unitization.coe_mul Unitization.coe_mul
 
@@ -404,14 +405,16 @@ end
 
 theorem inl_mul_coe [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r : R)
     (a : A) : (inl r * a : Unitization R A) = ↑(r • a) :=
-  ext (mul_zero r) <|
-    show r • a + (0 : R) • 0 + 0 * a = r • a by rw [smul_zero, add_zero, zero_mul, add_zero]
+  ext (MulZeroClass.mul_zero r) <|
+    show r • a + (0 : R) • 0 + 0 * a = r • a by
+      rw [smul_zero, add_zero, MulZeroClass.zero_mul, add_zero]
 #align unitization.inl_mul_coe Unitization.inl_mul_coe
 
 theorem coe_mul_inl [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r : R)
     (a : A) : (a * inl r : Unitization R A) = ↑(r • a) :=
-  ext (zero_mul r) <|
-    show (0 : R) • 0 + r • a + a * 0 = r • a by rw [smul_zero, zero_add, mul_zero, add_zero]
+  ext (MulZeroClass.zero_mul r) <|
+    show (0 : R) • 0 + r • a + a * 0 = r • a by
+      rw [smul_zero, zero_add, MulZeroClass.mul_zero, add_zero]
 #align unitization.coe_mul_inl Unitization.coe_mul_inl
 
 instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] :
@@ -421,11 +424,11 @@ instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction 
     one_mul := fun x =>
       ext (one_mul x.1) <|
         show (1 : R) • x.2 + x.1 • 0 + 0 * x.2 = x.2 by
-          rw [one_smul, smul_zero, add_zero, zero_mul, add_zero]
+          rw [one_smul, smul_zero, add_zero, MulZeroClass.zero_mul, add_zero]
     mul_one := fun x =>
       ext (mul_one x.1) <|
         show (x.1 • 0 : A) + (1 : R) • x.2 + x.2 * 0 = x.2 by
-          rw [smul_zero, zero_add, one_smul, mul_zero, add_zero] }
+          rw [smul_zero, zero_add, one_smul, MulZeroClass.mul_zero, add_zero] }
 #align unitization.mul_one_class Unitization.mulOneClass
 
 instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
@@ -433,13 +436,13 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
   { Unitization.mulOneClass,
     Unitization.addCommMonoid with
     zero_mul := fun x =>
-      ext (zero_mul x.1) <|
+      ext (MulZeroClass.zero_mul x.1) <|
         show (0 : R) • x.2 + x.1 • 0 + 0 * x.2 = 0 by
-          rw [zero_smul, zero_add, smul_zero, zero_mul, add_zero]
+          rw [zero_smul, zero_add, smul_zero, MulZeroClass.zero_mul, add_zero]
     mul_zero := fun x =>
-      ext (mul_zero x.1) <|
+      ext (MulZeroClass.mul_zero x.1) <|
         show (x.1 • 0 : A) + (0 : R) • x.2 + x.2 * 0 = 0 by
-          rw [smul_zero, zero_add, zero_smul, mul_zero, add_zero]
+          rw [smul_zero, zero_add, zero_smul, MulZeroClass.mul_zero, add_zero]
     left_distrib := fun x₁ x₂ x₃ =>
       ext (mul_add x₁.1 x₂.1 x₃.1) <|
         show
@@ -661,9 +664,10 @@ def lift : (A →ₙₐ[R] C) ≃ (Unitization R A →ₐ[R] C)
       map_mul' := fun x y => by
         induction x using Unitization.ind
         induction y using Unitization.ind
-        simp only [mul_add, add_mul, coe_mul, fst_add, fst_mul, fst_inl, fst_coe, mul_zero,
-          add_zero, zero_mul, map_mul, snd_add, snd_mul, snd_inl, smul_zero, snd_coe, zero_add,
-          φ.map_add, φ.map_smul, φ.map_mul, zero_smul, zero_add]
+        simp only [mul_add, add_mul, coe_mul, fst_add, fst_mul, fst_inl, fst_coe,
+          MulZeroClass.mul_zero, add_zero, MulZeroClass.zero_mul, map_mul, snd_add, snd_mul,
+          snd_inl, smul_zero, snd_coe, zero_add, φ.map_add, φ.map_smul, φ.map_mul, zero_smul,
+          zero_add]
         rw [← Algebra.commutes _ (φ x_a)]
         simp only [Algebra.algebraMap_eq_smul_one, smul_one_mul, add_assoc]
       map_zero' := by simp only [fst_zero, map_zero, snd_zero, φ.map_zero, add_zero]

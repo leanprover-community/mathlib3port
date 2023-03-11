@@ -747,7 +747,7 @@ theorem isSt_mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) : Is
           is_st_iff_abs_sub_lt_delta.mp hys (d / t)
             (div_pos hd (coe_pos.1 (lt_of_le_of_lt (abs_nonneg x) ht)))
         rw [hs, coe_zero, sub_zero] at hys'
-        rw [hs, mul_zero, coe_zero, sub_zero, abs_mul, mul_comm, ←
+        rw [hs, MulZeroClass.mul_zero, coe_zero, sub_zero, abs_mul, mul_comm, ←
           div_mul_cancel (d : ℝ*) (ne_of_gt (lt_of_le_of_lt (abs_nonneg x) ht)), ← coe_div]
         exact mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)
       exact is_st_mul' hxr hys hs
@@ -838,7 +838,7 @@ theorem infinitesimal_neg_iff {x : ℝ*} : Infinitesimal x ↔ Infinitesimal (-x
 #align hyperreal.infinitesimal_neg_iff Hyperreal.infinitesimal_neg_iff
 
 theorem infinitesimal_mul {x y : ℝ*} (hx : Infinitesimal x) (hy : Infinitesimal y) :
-    Infinitesimal (x * y) := by simpa only [mul_zero] using is_st_mul hx hy
+    Infinitesimal (x * y) := by simpa only [MulZeroClass.mul_zero] using is_st_mul hx hy
 #align hyperreal.infinitesimal_mul Hyperreal.infinitesimal_mul
 
 theorem infinitesimal_of_tendsto_zero {f : ℕ → ℝ} :

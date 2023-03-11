@@ -3155,12 +3155,12 @@ protected theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : 
     simp [hb]
   by_cases h'a : a = 0
   ·
-    simp only [h'a, WithTop.top_mul, ENNReal.inv_zero, ENNReal.coe_ne_top, zero_mul, Ne.def,
-      not_false_iff, ENNReal.coe_zero, ENNReal.inv_eq_zero]
+    simp only [h'a, WithTop.top_mul, ENNReal.inv_zero, ENNReal.coe_ne_top, MulZeroClass.zero_mul,
+      Ne.def, not_false_iff, ENNReal.coe_zero, ENNReal.inv_eq_zero]
   by_cases h'b : b = 0
   ·
     simp only [h'b, ENNReal.inv_zero, ENNReal.coe_ne_top, WithTop.mul_top, Ne.def, not_false_iff,
-      mul_zero, ENNReal.coe_zero, ENNReal.inv_eq_zero]
+      MulZeroClass.mul_zero, ENNReal.coe_zero, ENNReal.inv_eq_zero]
   rw [← ENNReal.coe_mul, ← ENNReal.coe_inv, ← ENNReal.coe_inv h'a, ← ENNReal.coe_inv h'b, ←
     ENNReal.coe_mul, mul_inv_rev, mul_comm]
   simp [h'a, h'b]
@@ -3364,7 +3364,7 @@ but is expected to have type
   forall {a : ENNReal}, Eq.{1} ENNReal (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) a (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))
 Case conversion may be inaccurate. Consider using '#align ennreal.div_top ENNReal.div_topₓ'. -/
 @[simp]
-theorem div_top : a / ∞ = 0 := by rw [div_eq_mul_inv, inv_top, mul_zero]
+theorem div_top : a / ∞ = 0 := by rw [div_eq_mul_inv, inv_top, MulZeroClass.mul_zero]
 #align ennreal.div_top ENNReal.div_top
 
 /- warning: ennreal.top_div_coe -> ENNReal.top_div_coe is a dubious translation:
@@ -3417,7 +3417,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ennreal.zero_div ENNReal.zero_divₓ'. -/
 @[simp]
 protected theorem zero_div : 0 / a = 0 :=
-  zero_mul a⁻¹
+  MulZeroClass.zero_mul a⁻¹
 #align ennreal.zero_div ENNReal.zero_div
 
 /- warning: ennreal.div_eq_top -> ENNReal.div_eq_top is a dubious translation:
@@ -4824,7 +4824,7 @@ but is expected to have type
   forall (a : ENNReal), Eq.{1} Real (ENNReal.toReal (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) a (Top.top.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toTop.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
 Case conversion may be inaccurate. Consider using '#align ennreal.to_real_mul_top ENNReal.toReal_mul_topₓ'. -/
 theorem toReal_mul_top (a : ℝ≥0∞) : ENNReal.toReal (a * ∞) = 0 := by
-  rw [to_real_mul, top_to_real, mul_zero]
+  rw [to_real_mul, top_to_real, MulZeroClass.mul_zero]
 #align ennreal.to_real_mul_top ENNReal.toReal_mul_top
 
 /- warning: ennreal.to_real_top_mul -> ENNReal.toReal_top_mul is a dubious translation:
@@ -5184,7 +5184,7 @@ also `ennreal.infi_mul_of_ne` that assumes `x ≠ 0` but does not require `[none
 theorem infᵢ_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) :
     infᵢ f * x = ⨅ i, f i * x := by
   by_cases h0 : x = 0
-  · simp only [h0, mul_zero, infᵢ_const]
+  · simp only [h0, MulZeroClass.mul_zero, infᵢ_const]
   · exact infi_mul_of_ne h0 h
 #align ennreal.infi_mul ENNReal.infᵢ_mul
 

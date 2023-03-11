@@ -553,7 +553,7 @@ This is the `mul_hom` version of `pi.single`. -/
 def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : f i →ₙ* ∀ i, f i
     where
   toFun := single i
-  map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => zero_mul _) _
+  map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => MulZeroClass.zero_mul _) _
 #align mul_hom.single MulHom.single
 
 variable {f}

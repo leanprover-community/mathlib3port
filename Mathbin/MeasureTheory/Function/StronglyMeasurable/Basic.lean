@@ -264,7 +264,7 @@ theorem norm_approxBounded_le {β} {f : α → β} [SeminormedAddCommGroup β] [
   simp only [strongly_measurable.approx_bounded, simple_func.coe_map, Function.comp_apply]
   refine' (norm_smul _ _).le.trans _
   by_cases h0 : ‖hf.approx n x‖ = 0
-  · simp only [h0, div_zero, min_eq_right, zero_le_one, norm_zero, mul_zero]
+  · simp only [h0, div_zero, min_eq_right, zero_le_one, norm_zero, MulZeroClass.mul_zero]
     exact hc
   cases le_total ‖hf.approx n x‖ c
   · rw [min_eq_left _]

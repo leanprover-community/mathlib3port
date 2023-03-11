@@ -127,7 +127,7 @@ theorem neg_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (-f) ∣[k]A
 
 @[simp]
 theorem zero_slash (k : ℤ) (A : GL(2, ℝ)⁺) : (0 : ℍ → ℂ) ∣[k]A = 0 :=
-  funext fun _ => by simp only [slash, Pi.zero_apply, zero_mul]
+  funext fun _ => by simp only [slash, Pi.zero_apply, MulZeroClass.zero_mul]
 #align modular_form.zero_slash ModularForm.zero_slash
 
 instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ

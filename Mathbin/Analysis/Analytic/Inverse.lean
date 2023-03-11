@@ -605,7 +605,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
   apply le_radius_of_bound _ ((I + 1) * a) fun n => _
   by_cases hn : n = 0
   · have : ‖p.right_inv i n‖ = ‖p.right_inv i 0‖ := by congr <;> try rw [hn]
-    simp only [this, norm_zero, zero_mul, right_inv_coeff_zero]
+    simp only [this, norm_zero, MulZeroClass.zero_mul, right_inv_coeff_zero]
     apply_rules [mul_nonneg, add_nonneg, norm_nonneg, zero_le_one, apos.le]
   · have one_le_n : 1 ≤ n := bot_lt_iff_ne_bot.2 hn
     calc

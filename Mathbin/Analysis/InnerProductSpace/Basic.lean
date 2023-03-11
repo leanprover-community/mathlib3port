@@ -242,7 +242,8 @@ theorem inner_smul_right {x y : F} {r : 𝕜} : ⟪x, r • y⟫ = r * ⟪x, y�
 #align inner_product_space.of_core.inner_smul_right InnerProductSpace.OfCore.inner_smul_right
 
 theorem inner_zero_left {x : F} : ⟪0, x⟫ = 0 := by
-  rw [← zero_smul 𝕜 (0 : F), inner_smul_left] <;> simp only [zero_mul, RingHom.map_zero]
+  rw [← zero_smul 𝕜 (0 : F), inner_smul_left] <;>
+    simp only [MulZeroClass.zero_mul, RingHom.map_zero]
 #align inner_product_space.of_core.inner_zero_left InnerProductSpace.OfCore.inner_zero_left
 
 theorem inner_zero_right {x : F} : ⟪x, 0⟫ = 0 := by
@@ -305,7 +306,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
   by
   by_cases hy : y = 0
   · rw [hy]
-    simp only [IsROrC.abs_zero, inner_zero_left, mul_zero, AddMonoidHom.map_zero]
+    simp only [IsROrC.abs_zero, inner_zero_left, MulZeroClass.mul_zero, AddMonoidHom.map_zero]
   · change y ≠ 0 at hy
     have hy' : ⟪y, y⟫ ≠ 0 := fun h => by rw [inner_self_eq_zero] at h <;> exact hy h
     set T := ⟪y, x⟫ / ⟪y, y⟫ with hT
@@ -592,7 +593,7 @@ theorem Dfinsupp.inner_sum {ι : Type _} [dec : DecidableEq ι] {α : ι → Typ
 
 @[simp]
 theorem inner_zero_left {x : E} : ⟪0, x⟫ = 0 := by
-  rw [← zero_smul 𝕜 (0 : E), inner_smul_left, RingHom.map_zero, zero_mul]
+  rw [← zero_smul 𝕜 (0 : E), inner_smul_left, RingHom.map_zero, MulZeroClass.zero_mul]
 #align inner_zero_left inner_zero_left
 
 theorem inner_re_zero_left {x : E} : re ⟪0, x⟫ = 0 := by
@@ -769,7 +770,7 @@ theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
   by
   by_cases hy : y = 0
   · rw [hy]
-    simp only [IsROrC.abs_zero, inner_zero_left, mul_zero, AddMonoidHom.map_zero]
+    simp only [IsROrC.abs_zero, inner_zero_left, MulZeroClass.mul_zero, AddMonoidHom.map_zero]
   · have hy' : ⟪y, y⟫ ≠ 0 := inner_self_eq_zero.not.2 hy
     set T := ⟪y, x⟫ / ⟪y, y⟫ with hT
     have h₁ : re ⟪y, x⟫ = re ⟪x, y⟫ := inner_re_symm
@@ -838,7 +839,7 @@ theorem linearIndependent_of_ne_zero_of_inner_eq_zero {ι : Type _} {v : ι → 
     convert Finset.sum_eq_single i _ _
     · rw [inner_smul_right]
     · intro j hj hji
-      rw [inner_smul_right, ho i j hji.symm, mul_zero]
+      rw [inner_smul_right, ho i j hji.symm, MulZeroClass.mul_zero]
     · exact fun h => False.elim (h hi)
   simpa [hg, hz] using h'
 #align linear_independent_of_ne_zero_of_inner_eq_zero linearIndependent_of_ne_zero_of_inner_eq_zero
@@ -1793,7 +1794,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       have h2' := congr_arg (fun z : ℝ => (z : 𝕜)) h2
       simp_rw [inner_self_re_to_K, inner_add_add_self] at h2'
       exact h2'
-    conv at h2 in ⟪r • x, t⟫ => rw [inner_smul_left, ht0, mul_zero]
+    conv at h2 in ⟪r • x, t⟫ => rw [inner_smul_left, ht0, MulZeroClass.mul_zero]
     symm at h2
     have h₁ : ⟪t, r • x⟫ = 0 :=
       by
@@ -1959,9 +1960,9 @@ theorem inner_sum_smul_sum_smul_of_sum_eq_zero {ι₁ : Type _} {s₁ : Finset �
   simp_rw [sum_inner, inner_sum, real_inner_smul_left, real_inner_smul_right,
     real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two, ← div_sub_div_same,
     ← div_add_div_same, mul_sub_left_distrib, left_distrib, Finset.sum_sub_distrib,
-    Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul, h₁, h₂, zero_mul, mul_zero,
-    Finset.sum_const_zero, zero_add, zero_sub, Finset.mul_sum, neg_div, Finset.sum_div,
-    mul_div_assoc, mul_assoc]
+    Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul, h₁, h₂, MulZeroClass.zero_mul,
+    MulZeroClass.mul_zero, Finset.sum_const_zero, zero_add, zero_sub, Finset.mul_sum, neg_div,
+    Finset.sum_div, mul_div_assoc, mul_assoc]
 #align inner_sum_smul_sum_smul_of_sum_eq_zero inner_sum_smul_sum_smul_of_sum_eq_zero
 
 /-- The inner product as a sesquilinear map. -/
@@ -2574,7 +2575,7 @@ def Submodule.orthogonal : Submodule 𝕜 E
   carrier := { v | ∀ u ∈ K, ⟪u, v⟫ = 0 }
   zero_mem' _ _ := inner_zero_right
   add_mem' x y hx hy u hu := by rw [inner_add_right, hx u hu, hy u hu, add_zero]
-  smul_mem' c x hx u hu := by rw [inner_smul_right, hx u hu, mul_zero]
+  smul_mem' c x hx u hu := by rw [inner_smul_right, hx u hu, MulZeroClass.mul_zero]
 #align submodule.orthogonal Submodule.orthogonal
 
 -- mathport name: «expr ᗮ»

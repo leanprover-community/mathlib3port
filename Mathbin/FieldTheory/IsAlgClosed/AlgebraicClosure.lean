@@ -93,7 +93,7 @@ theorem spanEval_ne_top : spanEval k ≠ ⊤ :=
   rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
   · exact zero_ne_one hv
   intro j hj
-  rw [smul_eq_mul, AlgHom.map_mul, to_splitting_field_eval_X_self k hj, mul_zero]
+  rw [smul_eq_mul, AlgHom.map_mul, to_splitting_field_eval_X_self k hj, MulZeroClass.mul_zero]
 #align algebraic_closure.span_eval_ne_top AlgebraicClosure.spanEval_ne_top
 
 /-- A random maximal ideal that contains `span_eval k` -/

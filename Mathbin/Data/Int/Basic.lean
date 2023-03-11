@@ -658,7 +658,7 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
   fun m k b =>
   match b, k with
   | (n : ℕ), k => congr_arg ofNat (Nat.mul_div_mul _ _ m.succ_pos)
-  | -[n+1], 0 => by rw [Int.ofNat_zero, mul_zero, Int.div_zero, Int.div_zero]
+  | -[n+1], 0 => by rw [Int.ofNat_zero, MulZeroClass.mul_zero, Int.div_zero, Int.div_zero]
   | -[n+1], k + 1 =>
     congr_arg negSucc <|
       show (m.succ * n + m) / (m.succ * k.succ) = n / k.succ
@@ -762,7 +762,7 @@ theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
 #print Int.mul_sign /-
 theorem mul_sign : ∀ i : ℤ, i * sign i = natAbs i
   | (n + 1 : ℕ) => mul_one _
-  | 0 => mul_zero _
+  | 0 => MulZeroClass.mul_zero _
   | -[n+1] => mul_neg_one _
 #align int.mul_sign Int.mul_sign
 -/

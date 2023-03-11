@@ -36,7 +36,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemigroupWithZero.{u1} α] {a : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α _inst_1))) a) -> (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align eq_zero_of_zero_dvd eq_zero_of_zero_dvdₓ'. -/
 theorem eq_zero_of_zero_dvd (h : 0 ∣ a) : a = 0 :=
-  Dvd.elim h fun c H' => H'.trans (zero_mul c)
+  Dvd.elim h fun c H' => H'.trans (MulZeroClass.zero_mul c)
 #align eq_zero_of_zero_dvd eq_zero_of_zero_dvd
 
 /- warning: zero_dvd_iff -> zero_dvd_iff is a dubious translation:

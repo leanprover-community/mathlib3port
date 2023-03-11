@@ -466,7 +466,8 @@ theorem eval_polynomial (x y : R) :
 
 @[simp]
 theorem eval_polynomial_zero : (W.Polynomial.eval 0).eval 0 = -W.a₆ := by
-  simp only [← C_0, eval_polynomial, zero_add, zero_sub, mul_zero, zero_pow (Nat.zero_lt_succ _)]
+  simp only [← C_0, eval_polynomial, zero_add, zero_sub, MulZeroClass.mul_zero,
+    zero_pow (Nat.zero_lt_succ _)]
 #align weierstrass_curve.eval_polynomial_zero WeierstrassCurve.eval_polynomial_zero
 
 /-- The proposition that an affine point $(x, y)$ lies in `W`. In other words, $W(x, y) = 0$. -/
@@ -545,7 +546,8 @@ theorem eval_polynomialX (x y : R) :
 
 @[simp]
 theorem eval_polynomialX_zero : (W.polynomialX.eval 0).eval 0 = -W.a₄ := by
-  simp only [← C_0, eval_polynomial_X, zero_add, zero_sub, mul_zero, zero_pow zero_lt_two]
+  simp only [← C_0, eval_polynomial_X, zero_add, zero_sub, MulZeroClass.mul_zero,
+    zero_pow zero_lt_two]
 #align weierstrass_curve.eval_polynomial_X_zero WeierstrassCurve.eval_polynomialX_zero
 
 /-- The partial derivative $W_Y(X, Y)$ of $W(X, Y)$ with respect to $Y$.
@@ -567,7 +569,7 @@ theorem eval_polynomialY (x y : R) : (W.polynomialY.eval <| C y).eval x = 2 * y 
 
 @[simp]
 theorem eval_polynomialY_zero : (W.polynomialY.eval 0).eval 0 = W.a₃ := by
-  simp only [← C_0, eval_polynomial_Y, zero_add, mul_zero]
+  simp only [← C_0, eval_polynomial_Y, zero_add, MulZeroClass.mul_zero]
 #align weierstrass_curve.eval_polynomial_Y_zero WeierstrassCurve.eval_polynomialY_zero
 
 /-- The proposition that an affine point $(x, y)$ on `W` is nonsingular.
@@ -857,12 +859,12 @@ theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
   rw [norm_smul_basis]
   by_cases hp : p = 0
   ·
-    simpa only [hp, hdq, neg_zero, zero_sub, zero_mul, zero_pow zero_lt_two, degree_neg] using
-      (max_bot_left _).symm
+    simpa only [hp, hdq, neg_zero, zero_sub, MulZeroClass.zero_mul, zero_pow zero_lt_two,
+      degree_neg] using (max_bot_left _).symm
   by_cases hq : q = 0
   ·
-    simpa only [hq, hdp, sub_zero, zero_mul, mul_zero, zero_pow zero_lt_two] using
-      (max_bot_right _).symm
+    simpa only [hq, hdp, sub_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero,
+      zero_pow zero_lt_two] using (max_bot_right _).symm
   rw [← not_congr degree_eq_bot] at hp hq
   cases' p.degree with dp
   · exact (hp rfl).elim

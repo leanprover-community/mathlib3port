@@ -421,7 +421,7 @@ theorem descFactorial_succ (n k : ℕ) : n.descFactorial k.succ = (n - k) * n.de
 
 #print Nat.zero_descFactorial_succ /-
 theorem zero_descFactorial_succ (k : ℕ) : (0 : ℕ).descFactorial k.succ = 0 := by
-  rw [desc_factorial_succ, zero_tsub, zero_mul]
+  rw [desc_factorial_succ, zero_tsub, MulZeroClass.zero_mul]
 #align nat.zero_desc_factorial_succ Nat.zero_descFactorial_succ
 -/
 

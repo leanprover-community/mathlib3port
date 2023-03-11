@@ -148,11 +148,11 @@ instance : NonUnitalNonAssocSemiring (MonoidAlgebra k G) :=
     add := (· + ·)
     left_distrib := fun f g h => by
       haveI := Classical.decEq G <;>
-        simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
+        simp only [mul_def, sum_add_index, mul_add, MulZeroClass.mul_zero, single_zero, single_add,
           eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add]
     right_distrib := fun f g h => by
       haveI := Classical.decEq G <;>
-        simp only [mul_def, sum_add_index, add_mul, zero_mul, single_zero, single_add,
+        simp only [mul_def, sum_add_index, add_mul, MulZeroClass.zero_mul, single_zero, single_add,
           eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add]
     zero_mul := fun f => by simp only [mul_def, sum_zero_index]
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero] }
@@ -189,7 +189,8 @@ instance : NonUnitalSemiring (MonoidAlgebra k G) :=
     mul_assoc := fun f g h => by
       simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index,
         single_zero, single_add, eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul,
-        mul_add, add_assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add] }
+        mul_add, add_assoc, mul_assoc, MulZeroClass.zero_mul, MulZeroClass.mul_zero, sum_zero,
+        sum_add] }
 
 end Semigroup
 
@@ -239,11 +240,11 @@ instance : NonAssocSemiring (MonoidAlgebra k G) :=
     natCast_zero := by simp [Nat.cast]
     natCast_succ := fun _ => by simp [Nat.cast] <;> rfl
     one_mul := fun f => by
-      simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add,
-        one_mul, sum_single]
+      simp only [mul_def, one_def, sum_single_index, MulZeroClass.zero_mul, single_zero, sum_zero,
+        zero_add, one_mul, sum_single]
     mul_one := fun f => by
-      simp only [mul_def, one_def, sum_single_index, mul_zero, single_zero, sum_zero, add_zero,
-        mul_one, sum_single] }
+      simp only [mul_def, one_def, sum_single_index, MulZeroClass.mul_zero, single_zero, sum_zero,
+        add_zero, mul_one, sum_single] }
 
 /- warning: monoid_algebra.nat_cast_def -> MonoidAlgebra.nat_cast_def is a dubious translation:
 lean 3 declaration is
@@ -434,8 +435,8 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
             by
             simp only [mem_filter, mem_support_iff, not_and, Classical.not_not] at hp⊢
             by_cases h1 : f p.1 = 0
-            · rw [h1, zero_mul]
-            · rw [hp hps h1, mul_zero]
+            · rw [h1, MulZeroClass.zero_mul]
+            · rw [hp hps h1, MulZeroClass.mul_zero]
         
 #align monoid_algebra.mul_apply_antidiagonal MonoidAlgebra.mul_apply_antidiagonal
 
@@ -448,8 +449,8 @@ Case conversion may be inaccurate. Consider using '#align monoid_algebra.single_
 @[simp]
 theorem single_mul_single [Mul G] {a₁ a₂ : G} {b₁ b₂ : k} :
     (single a₁ b₁ : MonoidAlgebra k G) * single a₂ b₂ = single (a₁ * a₂) (b₁ * b₂) :=
-  (sum_single_index (by simp only [zero_mul, single_zero, sum_zero])).trans
-    (sum_single_index (by rw [mul_zero, single_zero]))
+  (sum_single_index (by simp only [MulZeroClass.zero_mul, single_zero, sum_zero])).trans
+    (sum_single_index (by rw [MulZeroClass.mul_zero, single_zero]))
 #align monoid_algebra.single_mul_single MonoidAlgebra.single_mul_single
 
 /- warning: monoid_algebra.single_pow -> MonoidAlgebra.single_pow is a dubious translation:
@@ -514,7 +515,8 @@ variable (k G)
 def ofMagma [Mul G] : G →ₙ* MonoidAlgebra k G
     where
   toFun a := single a 1
-  map_mul' a b := by simp only [mul_def, mul_one, sum_single_index, single_eq_zero, mul_zero]
+  map_mul' a b := by
+    simp only [mul_def, mul_one, sum_single_index, single_eq_zero, MulZeroClass.mul_zero]
 #align monoid_algebra.of_magma MonoidAlgebra.ofMagma
 -/
 
@@ -667,8 +669,8 @@ instance isScalarTower_self [IsScalarTower R k k] :
   ⟨fun t a b => by
     ext m
     classical simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc, sum_smul_index',
-        zero_mul, if_t_t, imp_true_iff, eq_self_iff_true, sum_zero, coe_smul, smul_eq_mul,
-        Pi.smul_apply, smul_zero]⟩
+        MulZeroClass.zero_mul, if_t_t, imp_true_iff, eq_self_iff_true, sum_zero, coe_smul,
+        smul_eq_mul, Pi.smul_apply, smul_zero]⟩
 #align monoid_algebra.is_scalar_tower_self MonoidAlgebra.isScalarTower_self
 
 /- warning: monoid_algebra.smul_comm_class_self -> MonoidAlgebra.sMulCommClass_self is a dubious translation:
@@ -687,7 +689,7 @@ instance sMulCommClass_self [SMulCommClass R k k] :
       ext m
       simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index',
         imp_true_iff, eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply,
-        mul_zero, smul_zero]⟩
+        MulZeroClass.mul_zero, smul_zero]⟩
 #align monoid_algebra.smul_comm_class_self MonoidAlgebra.sMulCommClass_self
 
 /- warning: monoid_algebra.smul_comm_class_symm_self -> MonoidAlgebra.sMulCommClass_symm_self is a dubious translation:
@@ -1443,12 +1445,13 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
     add := (· + ·)
     left_distrib := fun f g h => by
       haveI := Classical.decEq G <;>
-        simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
+        simp only [mul_def, sum_add_index, mul_add, MulZeroClass.mul_zero, single_zero, single_add,
           eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add]
     right_distrib := fun f g h => by
       haveI := Classical.decEq G <;>
-        simp only [mul_def, sum_add_index, add_mul, mul_zero, zero_mul, single_zero, single_add,
-          eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add]
+        simp only [mul_def, sum_add_index, add_mul, MulZeroClass.mul_zero, MulZeroClass.zero_mul,
+          single_zero, single_add, eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero,
+          sum_add]
     zero_mul := fun f => by simp only [mul_def, sum_zero_index]
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero]
     nsmul := fun n f => n • f
@@ -1524,7 +1527,8 @@ instance : NonUnitalSemiring (AddMonoidAlgebra k G) :=
     mul_assoc := fun f g h => by
       simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index,
         single_zero, single_add, eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul,
-        mul_add, add_assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add] }
+        mul_add, add_assoc, mul_assoc, MulZeroClass.zero_mul, MulZeroClass.mul_zero, sum_zero,
+        sum_add] }
 
 end Semigroup
 
@@ -1543,11 +1547,11 @@ instance : NonAssocSemiring (AddMonoidAlgebra k G) :=
     natCast_zero := by simp [Nat.cast]
     natCast_succ := fun _ => by simp [Nat.cast] <;> rfl
     one_mul := fun f => by
-      simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add,
-        one_mul, sum_single]
+      simp only [mul_def, one_def, sum_single_index, MulZeroClass.zero_mul, single_zero, sum_zero,
+        zero_add, one_mul, sum_single]
     mul_one := fun f => by
-      simp only [mul_def, one_def, sum_single_index, mul_zero, single_zero, sum_zero, add_zero,
-        mul_one, sum_single] }
+      simp only [mul_def, one_def, sum_single_index, MulZeroClass.mul_zero, single_zero, sum_zero,
+        add_zero, mul_one, sum_single] }
 
 /- warning: add_monoid_algebra.nat_cast_def -> AddMonoidAlgebra.nat_cast_def is a dubious translation:
 lean 3 declaration is
@@ -1790,7 +1794,8 @@ Case conversion may be inaccurate. Consider using '#align add_monoid_algebra.of_
 def ofMagma [Add G] : Multiplicative G →ₙ* AddMonoidAlgebra k G
     where
   toFun a := single a 1
-  map_mul' a b := by simpa only [mul_def, mul_one, sum_single_index, single_eq_zero, mul_zero]
+  map_mul' a b := by
+    simpa only [mul_def, mul_one, sum_single_index, single_eq_zero, MulZeroClass.mul_zero]
 #align add_monoid_algebra.of_magma AddMonoidAlgebra.ofMagma
 
 #print AddMonoidAlgebra.of /-

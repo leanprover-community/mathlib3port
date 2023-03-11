@@ -524,8 +524,8 @@ theorem bind₁_onePoly_wittPolynomial (n : ℕ) : bind₁ onePoly (wittPolynomi
     simp only [one_poly, one_pow, one_mul, AlgHom.map_pow, C_1, pow_zero, bind₁_X_right, if_true,
       eq_self_iff_true]
   · intro i hi hi0
-    simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), mul_zero, AlgHom.map_pow,
-      bind₁_X_right, AlgHom.map_mul]
+    simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), MulZeroClass.mul_zero,
+      AlgHom.map_pow, bind₁_X_right, AlgHom.map_mul]
   · rw [Finset.mem_range]
     decide
 #align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_onePoly_wittPolynomial
@@ -650,7 +650,7 @@ theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) :
 end IsPoly₂
 
 attribute [ghost_simps]
-  AlgHom.map_zero AlgHom.map_one AlgHom.map_add AlgHom.map_mul AlgHom.map_sub AlgHom.map_neg AlgHom.id_apply map_natCast RingHom.map_zero RingHom.map_one RingHom.map_mul RingHom.map_add RingHom.map_sub RingHom.map_neg RingHom.id_apply mul_add add_mul add_zero zero_add mul_one one_mul mul_zero zero_mul Nat.succ_ne_zero add_tsub_cancel_right Nat.succ_eq_add_one if_true eq_self_iff_true if_false forall_true_iff forall₂_true_iff forall₃_true_iff
+  AlgHom.map_zero AlgHom.map_one AlgHom.map_add AlgHom.map_mul AlgHom.map_sub AlgHom.map_neg AlgHom.id_apply map_natCast RingHom.map_zero RingHom.map_one RingHom.map_mul RingHom.map_add RingHom.map_sub RingHom.map_neg RingHom.id_apply mul_add add_mul add_zero zero_add mul_one one_mul MulZeroClass.mul_zero MulZeroClass.zero_mul Nat.succ_ne_zero add_tsub_cancel_right Nat.succ_eq_add_one if_true eq_self_iff_true if_false forall_true_iff forall₂_true_iff forall₃_true_iff
 
 end WittVector
 

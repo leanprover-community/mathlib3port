@@ -136,11 +136,11 @@ instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
     zero_mul := by
       intros
       ext
-      simp only [mul_apply, zero_apply, zero_mul]
+      simp only [mul_apply, zero_apply, MulZeroClass.zero_mul]
     mul_zero := by
       intros
       ext
-      simp only [mul_apply, zero_apply, mul_zero] }
+      simp only [mul_apply, zero_apply, MulZeroClass.mul_zero] }
 
 instance [MulZeroOneClass Y] : MulZeroOneClass (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.mulOneClass with }

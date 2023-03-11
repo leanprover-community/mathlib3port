@@ -586,8 +586,9 @@ def repeat {α : Type _} (m : ℕ) (a : Fin n → α) : Fin (m * n) → α
 
 #print Fin.repeat_zero /-
 @[simp]
-theorem repeat_zero {α : Type _} (a : Fin n → α) : repeat 0 a = Fin.elim0' ∘ cast (zero_mul _) :=
-  funext fun x => (cast (zero_mul _) x).elim0'
+theorem repeat_zero {α : Type _} (a : Fin n → α) :
+    repeat 0 a = Fin.elim0' ∘ cast (MulZeroClass.zero_mul _) :=
+  funext fun x => (cast (MulZeroClass.zero_mul _) x).elim0'
 #align fin.repeat_zero Fin.repeat_zero
 -/
 

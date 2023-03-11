@@ -332,7 +332,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ite_and_mul_zero ite_and_mul_zeroₓ'. -/
 theorem ite_and_mul_zero {α : Type _} [MulZeroClass α] (P Q : Prop) [Decidable P] [Decidable Q]
     (a b : α) : ite (P ∧ Q) (a * b) 0 = ite P a 0 * ite Q b 0 := by
-  simp only [← ite_and, ite_mul, mul_ite, mul_zero, zero_mul, and_comm']
+  simp only [← ite_and, ite_mul, mul_ite, MulZeroClass.mul_zero, MulZeroClass.zero_mul, and_comm']
 #align ite_and_mul_zero ite_and_mul_zero
 
 end Semiring
@@ -517,7 +517,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_zero_class.neg_zero_class MulZeroClass.negZeroClassₓ'. -/
 instance (priority := 100) MulZeroClass.negZeroClass : NegZeroClass α :=
   { MulZeroClass.toHasZero α, HasDistribNeg.toHasInvolutiveNeg α with
-    neg_zero := by rw [← zero_mul (0 : α), ← neg_mul, mul_zero, mul_zero] }
+    neg_zero := by
+      rw [← MulZeroClass.zero_mul (0 : α), ← neg_mul, MulZeroClass.mul_zero,
+        MulZeroClass.mul_zero] }
 #align mul_zero_class.neg_zero_class MulZeroClass.negZeroClass
 
 end MulZeroClass
@@ -576,8 +578,10 @@ instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg
     where
   neg := Neg.neg
   neg_neg := neg_neg
-  neg_mul a b := eq_neg_of_add_eq_zero_left <| by rw [← right_distrib, add_left_neg, zero_mul]
-  mul_neg a b := eq_neg_of_add_eq_zero_left <| by rw [← left_distrib, add_left_neg, mul_zero]
+  neg_mul a b :=
+    eq_neg_of_add_eq_zero_left <| by rw [← right_distrib, add_left_neg, MulZeroClass.zero_mul]
+  mul_neg a b :=
+    eq_neg_of_add_eq_zero_left <| by rw [← left_distrib, add_left_neg, MulZeroClass.mul_zero]
 #align non_unital_non_assoc_ring.to_has_distrib_neg NonUnitalNonAssocRing.toHasDistribNeg
 
 /- warning: mul_sub_left_distrib -> mul_sub_left_distrib is a dubious translation:
@@ -766,8 +770,8 @@ class CommRing (α : Type u) extends Ring α, CommMonoid α
 -- see Note [lower instance priority]
 instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemiring α :=
   { s with
-    mul_zero := mul_zero
-    zero_mul := zero_mul }
+    mul_zero := MulZeroClass.mul_zero
+    zero_mul := MulZeroClass.zero_mul }
 #align comm_ring.to_comm_semiring CommRing.toCommSemiring
 -/
 
@@ -775,8 +779,8 @@ instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemir
 -- see Note [lower instance priority]
 instance (priority := 100) CommRing.toNonUnitalCommRing [s : CommRing α] : NonUnitalCommRing α :=
   { s with
-    mul_zero := mul_zero
-    zero_mul := zero_mul }
+    mul_zero := MulZeroClass.mul_zero
+    zero_mul := MulZeroClass.zero_mul }
 #align comm_ring.to_non_unital_comm_ring CommRing.toNonUnitalCommRing
 -/
 

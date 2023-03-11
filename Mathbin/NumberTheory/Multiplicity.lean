@@ -62,7 +62,7 @@ theorem sq_dvd_add_pow_sub_sub (p x : R) (n : ℕ) :
     p ^ 2 ∣ (x + p) ^ n - x ^ (n - 1) * p * n - x ^ n :=
   by
   cases n
-  · simp only [pow_zero, Nat.cast_zero, mul_zero, sub_zero, sub_self, dvd_zero]
+  · simp only [pow_zero, Nat.cast_zero, MulZeroClass.mul_zero, sub_zero, sub_self, dvd_zero]
   · simp only [Nat.succ_sub_succ_eq_sub, tsub_zero, Nat.cast_succ, add_pow, Finset.sum_range_succ,
       Nat.choose_self, Nat.succ_sub _, tsub_self, pow_one, Nat.choose_succ_self_right, pow_zero,
       mul_one, Nat.cast_zero, zero_add, Nat.succ_eq_add_one]
@@ -131,7 +131,7 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
       simp only [Finset.mul_sum, ← mul_assoc, ← pow_add]
       rw [Finset.sum_congr rfl]
       rintro (⟨⟩ | ⟨x⟩) hx
-      · rw [Nat.cast_zero, mul_zero, mul_zero]
+      · rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.mul_zero]
       · have : x.succ - 1 + (p - 1 - x.succ) = p - 2 :=
           by
           rw [← Nat.add_sub_assoc (Nat.le_pred_of_lt (finset.mem_range.mp hx))]

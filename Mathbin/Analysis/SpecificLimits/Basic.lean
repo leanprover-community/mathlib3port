@@ -36,7 +36,7 @@ theorem tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻�
 #align tendsto_inverse_at_top_nhds_0_nat tendsto_inverse_atTop_nhds_0_nat
 
 theorem tendsto_const_div_atTop_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
-  simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_atTop_nhds_0_nat
+  simpa only [MulZeroClass.mul_zero] using tendsto_const_nhds.mul tendsto_inverse_atTop_nhds_0_nat
 #align tendsto_const_div_at_top_nhds_0_nat tendsto_const_div_atTop_nhds_0_nat
 
 theorem NNReal.tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
@@ -69,7 +69,7 @@ theorem tendsto_coe_nat_div_add_atTop {𝕜 : Type _} [DivisionRing 𝕜] [Topol
   · exact fun n : ℕ => 1 / (1 + x / n)
   · field_simp [nat.cast_ne_zero.mpr hn]
   · have : 𝓝 (1 : 𝕜) = 𝓝 (1 / (1 + x * ↑(0 : ℝ))) := by
-      rw [algebraMap.coe_zero, mul_zero, add_zero, div_one]
+      rw [algebraMap.coe_zero, MulZeroClass.mul_zero, add_zero, div_one]
     rw [this]
     refine' tendsto_const_nhds.div (tendsto_const_nhds.add _) (by simp)
     simp_rw [div_eq_mul_inv]

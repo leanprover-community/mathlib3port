@@ -294,7 +294,7 @@ theorem nonsingular_add_of_eval_derivative_ne_zero
     eval_simp
   run_tac
     derivative_simp
-  simp only [zero_add, add_zero, sub_zero, zero_mul, mul_one]
+  simp only [zero_add, add_zero, sub_zero, MulZeroClass.zero_mul, mul_one]
   run_tac
     eval_simp
   linear_combination (norm := (norm_num1; ring1)) hx.left + L * hx.right
@@ -561,7 +561,7 @@ theorem equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
   rw [equation_add_iff, add_polynomial_slope h₁' h₂' hxy]
   run_tac
     eval_simp
-  rw [neg_eq_zero, sub_self, mul_zero]
+  rw [neg_eq_zero, sub_self, MulZeroClass.mul_zero]
 #align weierstrass_curve.equation_add' WeierstrassCurve.equation_add'
 
 /-- The addition of two affine points in `W` on a sloped line lies in `W`. -/
@@ -581,7 +581,7 @@ theorem nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     W.Nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   by_cases hx₁ : W.add_X x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₁
-  · rwa [add_Y', hx₁, sub_self, mul_zero, zero_add]
+  · rwa [add_Y', hx₁, sub_self, MulZeroClass.mul_zero, zero_add]
   · by_cases hx₂ : W.add_X x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₂
     · by_cases hx : x₁ = x₂
       · subst hx
@@ -593,7 +593,7 @@ theorem nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
       rw [derivative_add_polynomial_slope h₁.left h₂.left hxy]
       run_tac
         eval_simp
-      simpa only [neg_ne_zero, sub_self, mul_zero, add_zero] using
+      simpa only [neg_ne_zero, sub_self, MulZeroClass.mul_zero, add_zero] using
         mul_ne_zero (sub_ne_zero_of_ne hx₁) (sub_ne_zero_of_ne hx₂)
 #align weierstrass_curve.nonsingular_add' WeierstrassCurve.nonsingular_add'
 

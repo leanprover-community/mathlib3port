@@ -280,12 +280,12 @@ instance : MulZeroOneClass EReal :=
       induction x using EReal.rec <;>
         · simp only [(· * ·)]
           simp only [EReal.mul, ← EReal.coe_zero, zero_lt_one, if_true, if_false, lt_irrefl (0 : ℝ),
-            eq_self_iff_true, zero_mul]
+            eq_self_iff_true, MulZeroClass.zero_mul]
     mul_zero := fun x => by
       induction x using EReal.rec <;>
         · simp only [(· * ·)]
           simp only [EReal.mul, ← EReal.coe_zero, zero_lt_one, if_true, if_false, lt_irrefl (0 : ℝ),
-            eq_self_iff_true, mul_zero] }
+            eq_self_iff_true, MulZeroClass.mul_zero] }
 
 /-! ### Real coercion -/
 
@@ -953,14 +953,14 @@ theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : EReal) =
   | ⊤, ⊤ => rfl
   | ⊤, (y : ℝ≥0) => by
     rw [ENNReal.top_mul']; split_ifs
-    · simp only [h, coe_ennreal_zero, mul_zero]
+    · simp only [h, coe_ennreal_zero, MulZeroClass.mul_zero]
     · have A : (0 : ℝ) < y := by
         simp only [ENNReal.coe_eq_zero] at h
         exact NNReal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
       simp only [coe_nnreal_eq_coe_real, coe_ennreal_top, (· * ·), EReal.mul, A, if_true]
   | (x : ℝ≥0), ⊤ => by
     rw [ENNReal.mul_top']; split_ifs
-    · simp only [h, coe_ennreal_zero, zero_mul]
+    · simp only [h, coe_ennreal_zero, MulZeroClass.zero_mul]
     · have A : (0 : ℝ) < x := by
         simp only [ENNReal.coe_eq_zero] at h
         exact NNReal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
@@ -1834,20 +1834,28 @@ theorem toReal_mul {x y : EReal} : toReal (x * y) = toReal x * toReal y :=
     apply @induction₂ fun x y => to_real (x * y) = to_real x * to_real y <;>
     propagate_tags try dsimp only
   case top_zero | bot_zero | zero_top | zero_bot =>
-    all_goals simp only [zero_mul, mul_zero, to_real_zero]
+    all_goals simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero, to_real_zero]
   case coe_coe x y => norm_cast
-  case top_top => rw [top_mul_top, to_real_top, mul_zero]
-  case top_bot => rw [top_mul_bot, to_real_top, to_real_bot, zero_mul]
-  case bot_top => rw [bot_mul_top, to_real_bot, zero_mul]
-  case bot_bot => rw [bot_mul_bot, to_real_top, to_real_bot, zero_mul]
-  case pos_bot x hx => rw [to_real_bot, to_real_coe, coe_mul_bot_of_pos hx, to_real_bot, mul_zero]
-  case neg_bot x hx => rw [to_real_bot, to_real_coe, coe_mul_bot_of_neg hx, to_real_top, mul_zero]
-  case pos_top x hx => rw [to_real_top, to_real_coe, coe_mul_top_of_pos hx, to_real_top, mul_zero]
-  case neg_top x hx => rw [to_real_top, to_real_coe, coe_mul_top_of_neg hx, to_real_bot, mul_zero]
-  case top_pos y hy => rw [to_real_top, to_real_coe, top_mul_coe_of_pos hy, to_real_top, zero_mul]
-  case top_neg y hy => rw [to_real_top, to_real_coe, top_mul_coe_of_neg hy, to_real_bot, zero_mul]
-  case bot_pos y hy => rw [to_real_bot, to_real_coe, bot_mul_coe_of_pos hy, to_real_bot, zero_mul]
-  case bot_neg y hy => rw [to_real_bot, to_real_coe, bot_mul_coe_of_neg hy, to_real_top, zero_mul]
+  case top_top => rw [top_mul_top, to_real_top, MulZeroClass.mul_zero]
+  case top_bot => rw [top_mul_bot, to_real_top, to_real_bot, MulZeroClass.zero_mul]
+  case bot_top => rw [bot_mul_top, to_real_bot, MulZeroClass.zero_mul]
+  case bot_bot => rw [bot_mul_bot, to_real_top, to_real_bot, MulZeroClass.zero_mul]
+  case pos_bot x hx =>
+    rw [to_real_bot, to_real_coe, coe_mul_bot_of_pos hx, to_real_bot, MulZeroClass.mul_zero]
+  case neg_bot x hx =>
+    rw [to_real_bot, to_real_coe, coe_mul_bot_of_neg hx, to_real_top, MulZeroClass.mul_zero]
+  case pos_top x hx =>
+    rw [to_real_top, to_real_coe, coe_mul_top_of_pos hx, to_real_top, MulZeroClass.mul_zero]
+  case neg_top x hx =>
+    rw [to_real_top, to_real_coe, coe_mul_top_of_neg hx, to_real_bot, MulZeroClass.mul_zero]
+  case top_pos y hy =>
+    rw [to_real_top, to_real_coe, top_mul_coe_of_pos hy, to_real_top, MulZeroClass.zero_mul]
+  case top_neg y hy =>
+    rw [to_real_top, to_real_coe, top_mul_coe_of_neg hy, to_real_bot, MulZeroClass.zero_mul]
+  case bot_pos y hy =>
+    rw [to_real_bot, to_real_coe, bot_mul_coe_of_pos hy, to_real_bot, MulZeroClass.zero_mul]
+  case bot_neg y hy =>
+    rw [to_real_bot, to_real_coe, bot_mul_coe_of_neg hy, to_real_top, MulZeroClass.zero_mul]
 #align ereal.to_real_mul EReal.toReal_mul
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:145:2: warning: unsupported: with_cases -/
@@ -1859,7 +1867,7 @@ protected theorem neg_mul (x y : EReal) : -x * y = -(x * y) :=
     propagate_tags try dsimp only
   case top_top | bot_top | top_bot | bot_bot => all_goals rfl
   case top_zero | bot_zero | zero_top | zero_bot =>
-    all_goals simp only [zero_mul, mul_zero, neg_zero]
+    all_goals simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero, neg_zero]
   case coe_coe x y => norm_cast; exact neg_mul _ _
   case pos_bot x hx =>
     rw [coe_mul_bot_of_pos hx, neg_bot, ← coe_neg, coe_mul_bot_of_neg (neg_neg_of_pos hx)]
@@ -1989,7 +1997,7 @@ theorem abs_mul (x y : EReal) : (x * y).abs = x.abs * y.abs :=
     propagate_tags try dsimp only
   case top_top | bot_top | top_bot | bot_bot => all_goals rfl
   case top_zero | bot_zero | zero_top | zero_bot =>
-    all_goals simp only [zero_mul, mul_zero, abs_zero]
+    all_goals simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero, abs_zero]
   case coe_coe x y => simp only [← coe_mul, EReal.abs, abs_mul, ENNReal.ofReal_mul (abs_nonneg _)]
   case pos_bot x hx =>
     simp only [coe_mul_bot_of_pos hx, hx.ne', abs_bot, WithTop.mul_top, Ne.def, abs_eq_zero_iff,
@@ -2060,7 +2068,7 @@ theorem sign_mul (x y : EReal) : SignType.sign (x * y) = SignType.sign x * SignT
     propagate_tags try dsimp only
   case top_top | bot_top | top_bot | bot_bot => all_goals rfl
   case top_zero | bot_zero | zero_top | zero_bot =>
-    all_goals simp only [zero_mul, mul_zero, sign_zero]
+    all_goals simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero, sign_zero]
   case coe_coe x y => simp only [← coe_mul, sign_coe, sign_mul]
   case pos_bot x hx => simp_rw [coe_mul_bot_of_pos hx, sign_coe, sign_pos hx, one_mul]
   case neg_bot x hx =>
@@ -2156,7 +2164,8 @@ instance : PosMulMono EReal :=
       all_goals
         rw [← x.sign_mul_abs, ← a.sign_mul_abs, ← b.sign_mul_abs, sign_pos x0]
         simp only [h]; dsimp
-        simp only [neg_mul, mul_neg, EReal.neg_le_neg_iff, one_mul, le_refl, zero_mul, mul_zero]
+        simp only [neg_mul, mul_neg, EReal.neg_le_neg_iff, one_mul, le_refl, MulZeroClass.zero_mul,
+          MulZeroClass.mul_zero]
       all_goals norm_cast; exact mul_le_mul_left' h.2.2 _⟩
 
 instance : MulPosMono EReal :=

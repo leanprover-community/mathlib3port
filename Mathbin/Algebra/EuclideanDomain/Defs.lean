@@ -194,7 +194,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (a : R), Eq.{succ u1} R (HMod.hMod.{u1, u1, u1} R R R (instHMod.{u1} R (EuclideanDomain.instMod.{u1} R _inst_1)) a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) a
 Case conversion may be inaccurate. Consider using '#align euclidean_domain.mod_zero EuclideanDomain.mod_zeroₓ'. -/
 @[simp]
-theorem mod_zero (a : R) : a % 0 = a := by simpa only [zero_mul, zero_add] using div_add_mod a 0
+theorem mod_zero (a : R) : a % 0 = a := by
+  simpa only [MulZeroClass.zero_mul, zero_add] using div_add_mod a 0
 #align euclidean_domain.mod_zero EuclideanDomain.mod_zero
 
 /- warning: euclidean_domain.lt_one -> EuclideanDomain.lt_one is a dubious translation:
@@ -220,7 +221,7 @@ theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
       (mt
         (by
           rintro rfl
-          exact mul_zero _)
+          exact MulZeroClass.mul_zero _)
         ha)
 #align euclidean_domain.val_dvd_le EuclideanDomain.val_dvd_le
 

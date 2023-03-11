@@ -590,7 +590,9 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
   rcases le_or_lt (μ s) 0 with (hμs | hμs)
   · have : μ s = 0 := le_bot_iff.1 hμs
     refine' ⟨∅, by simp only [Finset.coe_empty, empty_subset], _, _⟩
-    · simp only [this, diff_empty, Union_false, Union_empty, nonpos_iff_eq_zero, mul_zero]
+    ·
+      simp only [this, diff_empty, Union_false, Union_empty, nonpos_iff_eq_zero,
+        MulZeroClass.mul_zero]
     · simp only [Finset.coe_empty, pairwise_disjoint_empty]
   cases isEmpty_or_nonempty α
   · simp only [eq_empty_of_is_empty s, measure_empty] at hμs
@@ -876,7 +878,7 @@ theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measu
         exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) zero_lt_one
       · simp only [true_or_iff, add_eq_zero_iff, Ne.def, not_false_iff, one_ne_zero, and_false_iff]
       · simp only [ENNReal.nat_ne_top, Ne.def, not_false_iff, or_true_iff]
-    rw [zero_mul] at C
+    rw [MulZeroClass.zero_mul] at C
     apply le_bot_iff.1
     exact le_of_tendsto_of_tendsto' tendsto_const_nhds C fun n => (A n).trans (B n)
   · refine' (pairwise_disjoint_Union _).2 fun n => (Pu n).1

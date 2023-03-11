@@ -189,16 +189,16 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
     have eq₁ : tendsto (fun n : ℕ => 8 * δ * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
       by
       convert (@tendsto_const_nhds _ _ _ (8 * δ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
-      simp only [mul_zero]
+      simp only [MulZeroClass.mul_zero]
     have : tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
       by
       convert (@tendsto_const_nhds _ _ _ (4 : ℝ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
-      simp only [mul_zero]
+      simp only [MulZeroClass.mul_zero]
     have eq₂ :
       tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1)) * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
       by
       convert this.mul tendsto_one_div_add_atTop_nhds_0_nat
-      simp only [mul_zero]
+      simp only [MulZeroClass.mul_zero]
     convert eq₁.add eq₂
     simp only [add_zero]
   -- Step 3: By completeness of `K`, let `w : ℕ → K` converge to some `v : K`.
@@ -511,7 +511,8 @@ def orthogonalProjection : E →L[𝕜] K :=
         have ho : ∀ w ∈ K, ⟪c • x - c • orthogonalProjectionFn K x, w⟫ = 0 :=
           by
           intro w hw
-          rw [← smul_sub, inner_smul_left, orthogonalProjectionFn_inner_eq_zero _ w hw, mul_zero]
+          rw [← smul_sub, inner_smul_left, orthogonalProjectionFn_inner_eq_zero _ w hw,
+            MulZeroClass.mul_zero]
         ext
         simp [eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero hm ho] }
     1 fun x => by

@@ -372,8 +372,8 @@ theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ 
   by
   constructor
   · rintro ⟨x, rfl⟩
-    simp only [add_zero, coe_int_re, zero_mul, mul_im, dvd_mul_right, and_self_iff, mul_re,
-      mul_zero, coe_int_im]
+    simp only [add_zero, coe_int_re, MulZeroClass.zero_mul, mul_im, dvd_mul_right, and_self_iff,
+      mul_re, MulZeroClass.mul_zero, coe_int_im]
   · rintro ⟨⟨r, hr⟩, ⟨i, hi⟩⟩
     use ⟨r, i⟩
     rw [smul_val, ext]
@@ -1017,7 +1017,7 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
     suffices a.re * a.re = 0 by
       rw [eq_zero_of_mul_self_eq_zero this] at ha⊢
       simpa only [true_and_iff, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul,
-        mul_zero, mul_eq_zero, h.ne, false_or_iff, or_self_iff] using ha
+        MulZeroClass.mul_zero, mul_eq_zero, h.ne, false_or_iff, or_self_iff] using ha
     apply _root_.le_antisymm _ (mul_self_nonneg _)
     rw [ha, mul_assoc]
     exact mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)
@@ -1072,10 +1072,10 @@ theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d })
     have h_inj : Function.Injective (coe : ℤ → R) := Int.cast_injective
     suffices lift r a.norm = 0
       by
-      simp only [coe_int_re, add_zero, lift_apply_apply, coe_int_im, Int.cast_zero, zero_mul] at
-        this
+      simp only [coe_int_re, add_zero, lift_apply_apply, coe_int_im, Int.cast_zero,
+        MulZeroClass.zero_mul] at this
       rwa [← Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this
-    rw [norm_eq_mul_conj, RingHom.map_mul, ha, zero_mul]
+    rw [norm_eq_mul_conj, RingHom.map_mul, ha, MulZeroClass.zero_mul]
 #align zsqrtd.lift_injective Zsqrtd.lift_injective
 
 end Zsqrtd

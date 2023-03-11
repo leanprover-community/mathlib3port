@@ -98,7 +98,7 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
   · have := pow_ne_zero 2 hx
     field_simp only
     cases n
-    · simp only [mul_zero, Nat.cast_zero, mul_one]
+    · simp only [MulZeroClass.mul_zero, Nat.cast_zero, mul_one]
       ring
     · rw [(id rfl : 2 * n.succ - 1 = 2 * n + 1)]
       ring

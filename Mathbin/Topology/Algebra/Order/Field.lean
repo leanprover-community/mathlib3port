@@ -147,10 +147,10 @@ instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :
     rw [continuous_iff_continuousAt]
     rintro ⟨x₀, y₀⟩
     by_cases hx₀ : x₀ = 0
-    · rw [hx₀, ContinuousAt, zero_mul, nhds_prod_eq]
+    · rw [hx₀, ContinuousAt, MulZeroClass.zero_mul, nhds_prod_eq]
       exact mul_tendsto_nhds_zero_right y₀
     by_cases hy₀ : y₀ = 0
-    · rw [hy₀, ContinuousAt, mul_zero, nhds_prod_eq]
+    · rw [hy₀, ContinuousAt, MulZeroClass.mul_zero, nhds_prod_eq]
       exact mul_tendsto_nhds_zero_left x₀
     have hxy : x₀ * y₀ ≠ 0 := mul_ne_zero hx₀ hy₀
     have key :
@@ -343,7 +343,7 @@ theorem Filter.Tendsto.div_atTop [ContinuousMul α] {f g : β → α} {l : Filte
     (h : Tendsto f l (𝓝 a)) (hg : Tendsto g l atTop) : Tendsto (fun x => f x / g x) l (𝓝 0) :=
   by
   simp only [div_eq_mul_inv]
-  exact mul_zero a ▸ h.mul (tendsto_inv_at_top_zero.comp hg)
+  exact MulZeroClass.mul_zero a ▸ h.mul (tendsto_inv_at_top_zero.comp hg)
 #align filter.tendsto.div_at_top Filter.Tendsto.div_atTop
 
 /- warning: filter.tendsto.inv_tendsto_at_top -> Filter.Tendsto.inv_tendsto_atTop is a dubious translation:
@@ -400,7 +400,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align tendsto_const_mul_zpow_at_top_zero tendsto_const_mul_zpow_atTop_zeroₓ'. -/
 theorem tendsto_const_mul_zpow_atTop_zero {n : ℤ} {c : α} (hn : n < 0) :
     Tendsto (fun x => c * x ^ n) atTop (𝓝 0) :=
-  mul_zero c ▸ Filter.Tendsto.const_mul c (tendsto_zpow_atTop_zero hn)
+  MulZeroClass.mul_zero c ▸ Filter.Tendsto.const_mul c (tendsto_zpow_atTop_zero hn)
 #align tendsto_const_mul_zpow_at_top_zero tendsto_const_mul_zpow_atTop_zero
 
 /- warning: tendsto_const_mul_pow_nhds_iff' -> tendsto_const_mul_pow_nhds_iff' is a dubious translation:
@@ -517,7 +517,7 @@ theorem nhdsWithin_pos_comap_mul_left {x : α} (hx : 0 < x) :
     exact this (inv_pos.mpr hx)
   intro x hx
   convert nhdsWithin_le_comap (continuous_mul_left x).ContinuousWithinAt
-  · exact (mul_zero _).symm
+  · exact (MulZeroClass.mul_zero _).symm
   · rw [image_const_mul_Ioi_zero hx]
 #align nhds_within_pos_comap_mul_left nhdsWithin_pos_comap_mul_left
 

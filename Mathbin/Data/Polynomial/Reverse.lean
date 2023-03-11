@@ -248,7 +248,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     -- second induction (right): induction step
     · intro N O f g Cf Cg Nf Og
       by_cases g0 : g = 0
-      · rw [g0, reflect_zero, mul_zero, mul_zero, reflect_zero]
+      · rw [g0, reflect_zero, MulZeroClass.mul_zero, MulZeroClass.mul_zero, reflect_zero]
       rw [← erase_lead_add_C_mul_X_pow g, mul_add, reflect_add, reflect_add, mul_add, hcg, hcg] <;>
         try assumption
       · exact le_add_left card_support_C_mul_X_pow_le_one
@@ -258,7 +258,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
   --first induction (left): induction step
   · intro N O f g Cf Cg Nf Og
     by_cases f0 : f = 0
-    · rw [f0, reflect_zero, zero_mul, zero_mul, reflect_zero]
+    · rw [f0, reflect_zero, MulZeroClass.zero_mul, MulZeroClass.zero_mul, reflect_zero]
     rw [← erase_lead_add_C_mul_X_pow f, add_mul, reflect_add, reflect_add, add_mul, hcf, hcf] <;>
       try assumption
     · exact le_add_left card_support_C_mul_X_pow_le_one
@@ -313,10 +313,10 @@ theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : 
   conv_rhs => rw [← eval₂_reflect_mul_pow i x N f hf]
   constructor
   · intro h
-    rw [h, zero_mul]
+    rw [h, MulZeroClass.zero_mul]
   · intro h
     rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_invOf_self x, mul_pow, ← mul_assoc, h,
-      zero_mul]
+      MulZeroClass.zero_mul]
 #align polynomial.eval₂_reflect_eq_zero_iff Polynomial.eval₂_reflect_eq_zero_iff
 
 end Eval₂
@@ -439,9 +439,9 @@ theorem reverse_mul_of_domain {R : Type _} [Ring R] [NoZeroDivisors R] (f g : R[
     reverse (f * g) = reverse f * reverse g :=
   by
   by_cases f0 : f = 0
-  · simp only [f0, zero_mul, reverse_zero]
+  · simp only [f0, MulZeroClass.zero_mul, reverse_zero]
   by_cases g0 : g = 0
-  · rw [g0, mul_zero, reverse_zero, mul_zero]
+  · rw [g0, MulZeroClass.mul_zero, reverse_zero, MulZeroClass.mul_zero]
   simp [reverse_mul, *]
 #align polynomial.reverse_mul_of_domain Polynomial.reverse_mul_of_domain
 

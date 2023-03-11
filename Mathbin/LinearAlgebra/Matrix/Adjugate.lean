@@ -402,13 +402,13 @@ theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
   ext (i j)
   rw [adjugate_apply, det_fin_two]
   fin_cases i <;> fin_cases j <;>
-    simp only [one_mul, Fin.one_eq_zero_iff, Pi.single_eq_same, mul_zero, sub_zero,
+    simp only [one_mul, Fin.one_eq_zero_iff, Pi.single_eq_same, MulZeroClass.mul_zero, sub_zero,
       Pi.single_eq_of_ne, Ne.def, not_false_iff, update_row_self, update_row_ne, cons_val_zero,
       of_apply, Nat.succ_succ_ne_one, Pi.single_eq_of_ne, update_row_self, Pi.single_eq_of_ne,
       Ne.def, Fin.zero_eq_one_iff, Nat.succ_succ_ne_one, not_false_iff, update_row_ne,
-      Fin.one_eq_zero_iff, zero_mul, Pi.single_eq_same, one_mul, zero_sub, of_apply, cons_val',
-      cons_val_fin_one, cons_val_one, head_fin_const, neg_inj, eq_self_iff_true, cons_val_zero,
-      head_cons, mul_one]
+      Fin.one_eq_zero_iff, MulZeroClass.zero_mul, Pi.single_eq_same, one_mul, zero_sub, of_apply,
+      cons_val', cons_val_fin_one, cons_val_one, head_fin_const, neg_inj, eq_self_iff_true,
+      cons_val_zero, head_cons, mul_one]
 #align matrix.adjugate_fin_two Matrix.adjugate_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/

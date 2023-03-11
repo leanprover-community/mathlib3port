@@ -390,7 +390,7 @@ unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × exp
     if c₁ = 0 then do
       let c ← get_cache
       let α0 ← ic_lift fun ic => ic.mk_app `` Zero.zero []
-      let p ← ic_lift fun ic => ic.mk_app `` zero_mul [e₂]
+      let p ← ic_lift fun ic => ic.mk_app `` MulZeroClass.zero_mul [e₂]
       return (const α0 0, p)
     else
       if c₁ = 1 then do

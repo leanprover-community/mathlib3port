@@ -908,8 +908,8 @@ theorem upcrossingsBefore_eq_sum (hab : a < b) :
     simp only [Set.mem_setOf_eq, not_lt]
     exact (upper_crossing_time_eq_of_upcrossings_before_lt hab hk.1).symm.le
   rw [Finset.sum_congr rfl h₁, Finset.sum_congr rfl h₂, Finset.sum_const, Finset.sum_const,
-    smul_eq_mul, mul_one, smul_eq_mul, mul_zero, Nat.card_Ico, Nat.add_succ_sub_one, add_zero,
-    add_zero]
+    smul_eq_mul, mul_one, smul_eq_mul, MulZeroClass.mul_zero, Nat.card_Ico, Nat.add_succ_sub_one,
+    add_zero, add_zero]
 #align measure_theory.upcrossings_before_eq_sum MeasureTheory.upcrossingsBefore_eq_sum
 
 theorem Adapted.measurable_upcrossingsBefore (hf : Adapted ℱ f) (hab : a < b) :
@@ -1006,7 +1006,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
       rw [Nat.cast_le]
       exact upcrossings_before_mono hab hNM ω
   · rw [not_lt, ← sub_nonpos] at hab
-    rw [ENNReal.ofReal_of_nonpos hab, zero_mul]
+    rw [ENNReal.ofReal_of_nonpos hab, MulZeroClass.zero_mul]
     exact zero_le _
 #align measure_theory.submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part MeasureTheory.Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part
 

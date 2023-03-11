@@ -1563,12 +1563,12 @@ theorem mem_closure_iff {s : Set R} {x} :
         (fun q hq =>
           AddSubgroup.closure_induction hx
             (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).mul_mem hp hq))
-            (by rw [zero_mul q]; apply AddSubgroup.zero_mem _)
+            (by rw [MulZeroClass.zero_mul q]; apply AddSubgroup.zero_mem _)
             (fun p₁ p₂ ihp₁ ihp₂ => by rw [add_mul p₁ p₂ q]; apply AddSubgroup.add_mem _ ihp₁ ihp₂)
             fun x hx => by
             have f : -x * q = -(x * q) := by simp
             rw [f]; apply AddSubgroup.neg_mem _ hx)
-        (by rw [mul_zero x]; apply AddSubgroup.zero_mem _)
+        (by rw [MulZeroClass.mul_zero x]; apply AddSubgroup.zero_mem _)
         (fun q₁ q₂ ihq₁ ihq₂ => by rw [mul_add x q₁ q₂]; apply AddSubgroup.add_mem _ ihq₁ ihq₂)
         fun z hz => by
         have f : x * -z = -(x * z) := by simp
@@ -1595,9 +1595,10 @@ def closureCommRingOfComm {s : Set R} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b =
       ext
       simp only [Subring.coe_mul]
       refine'
-        closure_induction₂ x.prop y.prop hcomm (fun x => by simp only [mul_zero, zero_mul])
-          (fun x => by simp only [mul_zero, zero_mul]) (fun x => by simp only [mul_one, one_mul])
-          (fun x => by simp only [mul_one, one_mul])
+        closure_induction₂ x.prop y.prop hcomm
+          (fun x => by simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul])
+          (fun x => by simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul])
+          (fun x => by simp only [mul_one, one_mul]) (fun x => by simp only [mul_one, one_mul])
           (fun x y hxy => by simp only [mul_neg, neg_mul, hxy])
           (fun x y hxy => by simp only [mul_neg, neg_mul, hxy])
           (fun x₁ x₂ y h₁ h₂ => by simp only [add_mul, mul_add, h₁, h₂])

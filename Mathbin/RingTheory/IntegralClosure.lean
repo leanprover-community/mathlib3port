@@ -225,7 +225,7 @@ theorem fg_adjoin_singleton_of_integral (x : A) (hx : IsIntegral R x) :
   rcases(aeval x).mem_range.mp hr with ⟨p, rfl⟩
   rw [← mod_by_monic_add_div p hfm]
   rw [← aeval_def] at hfx
-  rw [AlgHom.map_add, AlgHom.map_mul, hfx, zero_mul, add_zero]
+  rw [AlgHom.map_add, AlgHom.map_mul, hfx, MulZeroClass.zero_mul, add_zero]
   have : degree (p %ₘ f) ≤ degree f := degree_mod_by_monic_le p hfm
   generalize p %ₘ f = q at this⊢
   rw [← sum_C_mul_X_pow_eq q, aeval_def, eval₂_sum, sum_def]
@@ -699,7 +699,7 @@ theorem IsIntegral.tmul (x : A) {y : B} (h : IsIntegral R y) : IsIntegral A (x �
   ·
     simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, mul_one, one_mul,
       Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.tmul_mul_tmul]
-  convert (mul_zero _).symm
+  convert (MulZeroClass.mul_zero _).symm
   rw [Polynomial.eval₂_map, Algebra.TensorProduct.includeLeft_comp_algebraMap, ←
     Polynomial.eval₂_map]
   convert Polynomial.eval₂_at_apply algebra.tensor_product.include_right.to_ring_hom y
@@ -721,7 +721,7 @@ theorem normalizeScaleRoots_coeff_mul_leadingCoeff_pow (i : ℕ) (hp : 1 ≤ nat
       p.coeff i * p.leadingCoeff ^ (p.natDegree - 1) :=
   by
   simp only [normalizeScaleRoots, finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', one_mul,
-    zero_mul, mem_support_iff, ite_mul, Ne.def, ite_not]
+    MulZeroClass.zero_mul, mem_support_iff, ite_mul, Ne.def, ite_not]
   split_ifs with h₁ h₂
   · simp [h₁]
   · rw [h₂, leading_coeff, ← pow_succ, tsub_add_cancel_of_le hp]
@@ -796,11 +796,11 @@ theorem RingHom.isIntegralElem_leadingCoeff_mul (h : p.eval₂ f x = 0) :
       rw [h'', nat_degree_zero] at h'
       exact Nat.not_succ_le_zero 0 h'
     use normalizeScaleRoots_monic p this
-    rw [normalizeScaleRoots_eval₂_leadingCoeff_mul p h' f x, h, mul_zero]
+    rw [normalizeScaleRoots_eval₂_leadingCoeff_mul p h' f x, h, MulZeroClass.mul_zero]
   · by_cases hp : p.map f = 0
     · apply_fun fun q => coeff q p.nat_degree  at hp
       rw [coeff_map, coeff_zero, coeff_nat_degree] at hp
-      rw [hp, zero_mul]
+      rw [hp, MulZeroClass.zero_mul]
       exact f.is_integral_zero
     · rw [Nat.one_le_iff_ne_zero, Classical.not_not] at h'
       rw [eq_C_of_nat_degree_eq_zero h', eval₂_C] at h

@@ -108,8 +108,8 @@ instance : SemigroupWithZero 𝔻 :=
   {
     UnitDisc.commSemigroup with
     zero := mk 0 <| (map_zero _).trans_lt one_pos
-    zero_mul := fun z => coe_injective <| zero_mul _
-    mul_zero := fun z => coe_injective <| mul_zero _ }
+    zero_mul := fun z => coe_injective <| MulZeroClass.zero_mul _
+    mul_zero := fun z => coe_injective <| MulZeroClass.mul_zero _ }
 
 @[simp]
 theorem coe_zero : ((0 : 𝔻) : ℂ) = 0 :=

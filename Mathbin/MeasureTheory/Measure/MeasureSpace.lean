@@ -2151,7 +2151,7 @@ theorem tsum_indicator_apply_singleton [Countable α] [MeasurableSingletonClass 
     (∑' x : α, s.indicator (fun x => μ {x}) x) = Measure.sum (fun a => μ {a} • Measure.dirac a) s :=
       by
       simp only [measure.sum_apply _ hs, measure.smul_apply, smul_eq_mul, measure.dirac_apply,
-        Set.indicator_apply, mul_ite, Pi.one_apply, mul_one, mul_zero]
+        Set.indicator_apply, mul_ite, Pi.one_apply, mul_one, MulZeroClass.mul_zero]
     _ = μ s := by rw [μ.sum_smul_dirac]
     
 #align measure_theory.measure.tsum_indicator_apply_singleton MeasureTheory.Measure.tsum_indicator_apply_singleton

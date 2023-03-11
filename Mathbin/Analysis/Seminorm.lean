@@ -75,7 +75,7 @@ def Seminorm.of [SemiNormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E] (f : E �
     (add_le : ∀ x y : E, f (x + y) ≤ f x + f y) (smul : ∀ (a : 𝕜) (x : E), f (a • x) = ‖a‖ * f x) :
     Seminorm 𝕜 E where
   toFun := f
-  map_zero' := by rw [← zero_smul 𝕜 (0 : E), smul, norm_zero, zero_mul]
+  map_zero' := by rw [← zero_smul 𝕜 (0 : E), smul, norm_zero, MulZeroClass.zero_mul]
   add_le' := add_le
   smul' := smul
   neg' x := by rw [← neg_one_smul 𝕜, smul, norm_neg, ← smul, one_smul]
@@ -135,7 +135,7 @@ theorem ext {p q : Seminorm 𝕜 E} (h : ∀ x, (p : E → ℝ) x = q x) : p = q
 #align seminorm.ext Seminorm.ext
 
 instance : Zero (Seminorm 𝕜 E) :=
-  ⟨{ AddGroupSeminorm.hasZero.zero with smul' := fun _ _ => (mul_zero _).symm }⟩
+  ⟨{ AddGroupSeminorm.hasZero.zero with smul' := fun _ _ => (MulZeroClass.mul_zero _).symm }⟩
 
 @[simp]
 theorem coe_zero : ⇑(0 : Seminorm 𝕜 E) = 0 :=
@@ -458,7 +458,7 @@ noncomputable instance : Inf (Seminorm 𝕜 E)
       smul' := by
         intro a x
         obtain rfl | ha := eq_or_ne a 0
-        · rw [norm_zero, zero_mul, zero_smul]
+        · rw [norm_zero, MulZeroClass.zero_mul, zero_smul]
           refine'
             cinfᵢ_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => by positivity) fun x hx =>
               ⟨0, by rwa [map_zero, sub_zero, map_zero, add_zero]⟩
@@ -931,7 +931,7 @@ theorem ball_norm_mul_subset {p : Seminorm 𝕜 E} {k : 𝕜} {r : ℝ} :
     p.ball 0 (‖k‖ * r) ⊆ k • p.ball 0 r :=
   by
   rcases eq_or_ne k 0 with (rfl | hk)
-  · rw [norm_zero, zero_mul, ball_eq_emptyset _ le_rfl]
+  · rw [norm_zero, MulZeroClass.zero_mul, ball_eq_emptyset _ le_rfl]
     exact empty_subset _
   · intro x
     rw [Set.mem_smul_set, Seminorm.mem_ball_zero]

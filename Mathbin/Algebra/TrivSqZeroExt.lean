@@ -484,19 +484,21 @@ variable (R)
 @[simp]
 theorem inr_mul_inr [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] (m₁ m₂ : M) :
     (inr m₁ * inr m₂ : tsze R M) = 0 :=
-  ext (mul_zero _) <| show (0 : R) • m₂ + (0 : Rᵐᵒᵖ) • m₁ = 0 by rw [zero_smul, zero_add, zero_smul]
+  ext (MulZeroClass.mul_zero _) <|
+    show (0 : R) • m₂ + (0 : Rᵐᵒᵖ) • m₁ = 0 by rw [zero_smul, zero_add, zero_smul]
 #align triv_sq_zero_ext.inr_mul_inr TrivSqZeroExt.inr_mul_inr
 
 end
 
 theorem inl_mul_inr [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] (r : R) (m : M) :
     (inl r * inr m : tsze R M) = inr (r • m) :=
-  ext (mul_zero r) <| show r • m + (0 : Rᵐᵒᵖ) • 0 = r • m by rw [smul_zero, add_zero]
+  ext (MulZeroClass.mul_zero r) <| show r • m + (0 : Rᵐᵒᵖ) • 0 = r • m by rw [smul_zero, add_zero]
 #align triv_sq_zero_ext.inl_mul_inr TrivSqZeroExt.inl_mul_inr
 
 theorem inr_mul_inl [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] (r : R) (m : M) :
     (inr m * inl r : tsze R M) = inr (op r • m) :=
-  ext (zero_mul r) <| show (0 : R) • 0 + op r • m = op r • m by rw [smul_zero, zero_add]
+  ext (MulZeroClass.zero_mul r) <|
+    show (0 : R) • 0 + op r • m = op r • m by rw [smul_zero, zero_add]
 #align triv_sq_zero_ext.inr_mul_inl TrivSqZeroExt.inr_mul_inl
 
 instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐᵒᵖ M] :
@@ -559,10 +561,10 @@ instance [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] :
   { TrivSqZeroExt.addMonoidWithOne, TrivSqZeroExt.mulOneClass,
     TrivSqZeroExt.addCommMonoid with
     zero_mul := fun x =>
-      ext (zero_mul x.1) <|
+      ext (MulZeroClass.zero_mul x.1) <|
         show (0 : R) • x.2 + op x.1 • 0 = 0 by rw [zero_smul, zero_add, smul_zero]
     mul_zero := fun x =>
-      ext (mul_zero x.1) <|
+      ext (MulZeroClass.mul_zero x.1) <|
         show (x.1 • 0 : M) + (0 : Rᵐᵒᵖ) • x.2 = 0 by rw [smul_zero, zero_add, zero_smul]
     left_distrib := fun x₁ x₂ x₃ =>
       ext (mul_add x₁.1 x₂.1 x₃.1) <|

@@ -233,7 +233,7 @@ theorem edgeDensity_add_edgeDensity_compl (hs : s.Nonempty) (ht : t.Nonempty) :
 #print Rel.edgeDensity_empty_left /-
 @[simp]
 theorem edgeDensity_empty_left (t : Finset β) : edgeDensity r ∅ t = 0 := by
-  rw [edge_density, Finset.card_empty, Nat.cast_zero, zero_mul, div_zero]
+  rw [edge_density, Finset.card_empty, Nat.cast_zero, MulZeroClass.zero_mul, div_zero]
 #align rel.edge_density_empty_left Rel.edgeDensity_empty_left
 -/
 
@@ -245,7 +245,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rel.edge_density_empty_right Rel.edgeDensity_empty_rightₓ'. -/
 @[simp]
 theorem edgeDensity_empty_right (s : Finset α) : edgeDensity r s ∅ = 0 := by
-  rw [edge_density, Finset.card_empty, Nat.cast_zero, mul_zero, div_zero]
+  rw [edge_density, Finset.card_empty, Nat.cast_zero, MulZeroClass.mul_zero, div_zero]
 #align rel.edge_density_empty_right Rel.edgeDensity_empty_right
 
 /- warning: rel.card_interedges_finpartition_left -> Rel.card_interedges_finpartition_left is a dubious translation:

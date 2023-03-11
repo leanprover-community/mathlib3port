@@ -108,10 +108,10 @@ theorem quadraticCharFun_mul (a b : F) :
     quadraticCharFun F (a * b) = quadraticCharFun F a * quadraticCharFun F b :=
   by
   by_cases ha : a = 0
-  · rw [ha, zero_mul, quadraticCharFun_zero, zero_mul]
+  · rw [ha, MulZeroClass.zero_mul, quadraticCharFun_zero, MulZeroClass.zero_mul]
   -- now `a ≠ 0`
   by_cases hb : b = 0
-  · rw [hb, mul_zero, quadraticCharFun_zero, mul_zero]
+  · rw [hb, MulZeroClass.mul_zero, quadraticCharFun_zero, MulZeroClass.mul_zero]
   -- now `a ≠ 0` and `b ≠ 0`
   have hab := mul_ne_zero ha hb
   by_cases hF : ringChar F = 2
@@ -469,7 +469,7 @@ theorem FiniteField.isSquare_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [Fa
         congr
         skip
         rw [hc, Nat.cast_pow, map_pow, hchar, map_ring_char]
-      simp only [zero_pow n.pos, mul_zero, zero_eq_neg, one_ne_zero, not_false_iff]
+      simp only [zero_pow n.pos, MulZeroClass.mul_zero, zero_eq_neg, one_ne_zero, not_false_iff]
     · rw [← Iff.not_left (@quadraticChar_neg_one_iff_not_isSquare F _ _ _ _),
         quadraticChar_odd_prime hF hp]
       exact hFp

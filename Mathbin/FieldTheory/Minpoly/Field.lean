@@ -138,7 +138,7 @@ theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p)
             rwa [← C_mul, mul_inv_cancel, C_1]⟩,
           rfl⟩
         hp1
-  · rw [aeval_mul, hp2, zero_mul]
+  · rw [aeval_mul, hp2, MulZeroClass.zero_mul]
   · rwa [Polynomial.Monic, leading_coeff_mul, leading_coeff_C, mul_inv_cancel]
 #align minpoly.eq_of_irreducible minpoly.eq_of_irreducible
 

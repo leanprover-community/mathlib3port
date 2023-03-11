@@ -627,7 +627,8 @@ instance : SMul R (AddGroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x
       map_zero' := by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_zero, mul_zero]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_zero,
+          MulZeroClass.mul_zero]
       add_le' := fun _ _ =>
         by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul]
@@ -884,7 +885,7 @@ instance : SMul R (GroupSeminorm E) :=
     { toFun := fun x => r • p x
       map_one' := by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_one_eq_zero p,
-          mul_zero]
+          MulZeroClass.mul_zero]
       mul_le' := fun _ _ =>
         by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul]
@@ -964,7 +965,7 @@ instance : SMul R (NonarchAddGroupSeminorm E) :=
     { toFun := fun x => r • p x
       map_zero' := by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_zero p,
-          mul_zero]
+          MulZeroClass.mul_zero]
       add_le_max' := fun x y =>
         by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, ←

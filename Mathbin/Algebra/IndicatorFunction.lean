@@ -1083,7 +1083,7 @@ theorem indicator_mul (s : Set α) (f g : α → M) :
   simp only [indicator]
   split_ifs
   · rfl
-  rw [mul_zero]
+  rw [MulZeroClass.mul_zero]
 #align set.indicator_mul Set.indicator_mul
 
 /- warning: set.indicator_mul_left -> Set.indicator_mul_left is a dubious translation:
@@ -1098,7 +1098,7 @@ theorem indicator_mul_left (s : Set α) (f g : α → M) :
   simp only [indicator]
   split_ifs
   · rfl
-  rw [zero_mul]
+  rw [MulZeroClass.zero_mul]
 #align set.indicator_mul_left Set.indicator_mul_left
 
 /- warning: set.indicator_mul_right -> Set.indicator_mul_right is a dubious translation:
@@ -1113,7 +1113,7 @@ theorem indicator_mul_right (s : Set α) (f g : α → M) :
   simp only [indicator]
   split_ifs
   · rfl
-  rw [mul_zero]
+  rw [MulZeroClass.mul_zero]
 #align set.indicator_mul_right Set.indicator_mul_right
 
 /- warning: set.inter_indicator_mul -> Set.inter_indicator_mul is a dubious translation:

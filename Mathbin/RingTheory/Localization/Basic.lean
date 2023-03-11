@@ -291,8 +291,8 @@ theorem map_eq_zero_iff (r : R) : algebraMap R S r = 0 ↔ ∃ m : M, ↑m * r =
   · obtain ⟨m, hm⟩ := (IsLocalization.eq_iff_exists M S).mp ((algebraMap R S).map_zero.trans h.symm)
     exact ⟨m, by simpa using hm.symm⟩
   · rintro ⟨m, hm⟩
-    rw [← (IsLocalization.map_units S m).mul_right_inj, mul_zero, ← RingHom.map_mul, hm,
-      RingHom.map_zero]
+    rw [← (IsLocalization.map_units S m).mul_right_inj, MulZeroClass.mul_zero, ← RingHom.map_mul,
+      hm, RingHom.map_zero]
 #align is_localization.map_eq_zero_iff IsLocalization.map_eq_zero_iff
 
 variable {M}
@@ -515,7 +515,7 @@ but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {M : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))} {S : Type.{u1}} [_inst_2 : CommSemiring.{u1} S] [_inst_3 : Algebra.{u2, u1} R S _inst_1 (CommSemiring.toSemiring.{u1} S _inst_2)] [_inst_5 : IsLocalization.{u2, u1} R _inst_1 M S _inst_2 _inst_3] (x : R) (s : Subtype.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))))) x M)), Iff (Eq.{succ u1} S (IsLocalization.mk'.{u2, u1} R _inst_1 M S _inst_2 _inst_3 _inst_5 x s) (OfNat.ofNat.{u1} S 0 (Zero.toOfNat0.{u1} S (CommMonoidWithZero.toZero.{u1} S (CommSemiring.toCommMonoidWithZero.{u1} S _inst_2))))) (Exists.{succ u2} (Subtype.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))))) x M)) (fun (m : Subtype.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))))) x M)) => Eq.{succ u2} R (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) (Subtype.val.{succ u2} R (fun (x : R) => Membership.mem.{u2, u2} R (Set.{u2} R) (Set.instMembershipSet.{u2} R) x (SetLike.coe.{u2, u2} (Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) R (Submonoid.instSetLikeSubmonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))) M)) m) x) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align is_localization.mk'_eq_zero_iff IsLocalization.mk'_eq_zero_iffₓ'. -/
 theorem mk'_eq_zero_iff (x : R) (s : M) : mk' S x s = 0 ↔ ∃ m : M, ↑m * x = 0 := by
-  rw [← (map_units S s).mul_left_inj, mk'_spec, zero_mul, map_eq_zero_iff M]
+  rw [← (map_units S s).mul_left_inj, mk'_spec, MulZeroClass.zero_mul, map_eq_zero_iff M]
 #align is_localization.mk'_eq_zero_iff IsLocalization.mk'_eq_zero_iff
 
 /- warning: is_localization.mk'_zero -> IsLocalization.mk'_zero is a dubious translation:
@@ -526,7 +526,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_localization.mk'_zero IsLocalization.mk'_zeroₓ'. -/
 @[simp]
 theorem mk'_zero (s : M) : IsLocalization.mk' S 0 s = 0 := by
-  rw [eq_comm, IsLocalization.eq_mk'_iff_mul_eq, zero_mul, map_zero]
+  rw [eq_comm, IsLocalization.eq_mk'_iff_mul_eq, MulZeroClass.zero_mul, map_zero]
 #align is_localization.mk'_zero IsLocalization.mk'_zero
 
 /- warning: is_localization.ne_zero_of_mk'_ne_zero -> IsLocalization.ne_zero_of_mk'_ne_zero is a dubious translation:
@@ -1337,7 +1337,7 @@ theorem nonZeroDivisors_le_comap [IsLocalization M S] :
   rw [← @mk'_one R _ M, ← mk'_mul, ← (algebraMap R S).map_zero, ← @mk'_one R _ M,
     IsLocalization.eq] at e
   obtain ⟨c, e⟩ := e
-  rw [mul_zero, mul_zero, Submonoid.coe_one, one_mul, ← mul_assoc] at e
+  rw [MulZeroClass.mul_zero, MulZeroClass.mul_zero, Submonoid.coe_one, one_mul, ← mul_assoc] at e
   rw [mk'_eq_zero_iff]
   exact ⟨c, ha _ e⟩
 #align is_localization.non_zero_divisors_le_comap IsLocalization.nonZeroDivisors_le_comap
@@ -1838,7 +1838,7 @@ theorem to_map_eq_zero_iff {x : R} (hM : M ≤ nonZeroDivisors R) : algebraMap R
   rw [← (algebraMap R S).map_zero]
   constructor <;> intro h
   · cases' (eq_iff_exists M S).mp h with c hc
-    rw [mul_zero, mul_comm] at hc
+    rw [MulZeroClass.mul_zero, mul_comm] at hc
     exact hM c.2 x hc
   · rw [h]
 #align is_localization.to_map_eq_zero_iff IsLocalization.to_map_eq_zero_iff
@@ -1946,7 +1946,7 @@ theorem noZeroDivisors_of_le_nonZeroDivisors [Algebra A S] {M : Submonoid A} [Is
       have :
         z * w * algebraMap A S y.2 * algebraMap A S x.2 = algebraMap A S x.1 * algebraMap A S y.1 :=
         by rw [mul_assoc z, hy, ← hx] <;> ring
-      rw [h, zero_mul, zero_mul, ← (algebraMap A S).map_mul] at this
+      rw [h, MulZeroClass.zero_mul, MulZeroClass.zero_mul, ← (algebraMap A S).map_mul] at this
       cases' eq_zero_or_eq_zero_of_mul_eq_zero ((to_map_eq_zero_iff S hM).mp this.symm) with H H
       · exact Or.inl (eq_zero_of_fst_eq_zero hx H)
       · exact Or.inr (eq_zero_of_fst_eq_zero hy H) }

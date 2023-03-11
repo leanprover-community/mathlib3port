@@ -950,7 +950,9 @@ Case conversion may be inaccurate. Consider using '#align add_submonoid.mul_indu
 @[elab_as_elim]
 protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
     (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
-  (@mul_le _ _ _ _ ⟨C, ha, by simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2 hm hr
+  (@mul_le _ _ _ _
+        ⟨C, ha, by simpa only [MulZeroClass.zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
+    hm hr
 #align add_submonoid.mul_induction_on AddSubmonoid.mul_induction_on
 
 open Pointwise
@@ -972,8 +974,8 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
       intros ; apply closure_induction hb
       on_goal 1 => intros ; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals intros ;
-      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm,
-          smul_mul_assoc] <;>
+      simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul, zero_mem, left_distrib,
+          right_distrib, mul_smul_comm, smul_mul_assoc] <;>
         solve_by_elim (config :=
           { max_depth := 4
             discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _]
@@ -1001,7 +1003,7 @@ Case conversion may be inaccurate. Consider using '#align add_submonoid.mul_bot 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
   eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
+    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, MulZeroClass.mul_zero]
 #align add_submonoid.mul_bot AddSubmonoid.mul_bot
 
 /- warning: add_submonoid.bot_mul -> AddSubmonoid.bot_mul is a dubious translation:
@@ -1013,7 +1015,7 @@ Case conversion may be inaccurate. Consider using '#align add_submonoid.bot_mul 
 @[simp]
 theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
   eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
+    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, MulZeroClass.zero_mul]
 #align add_submonoid.bot_mul AddSubmonoid.bot_mul
 
 /- warning: add_submonoid.mul_le_mul -> AddSubmonoid.mul_le_mul is a dubious translation:

@@ -313,7 +313,7 @@ def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C
   inv := CartesianClosed.curry ((mulZero t).Hom ≫ t.to _)
   hom_inv_id' :=
     by
-    rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
+    rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (MulZeroClass.mul_zero t).inv]
     · apply t.hom_ext
     · infer_instance
     · infer_instance
@@ -349,7 +349,7 @@ exponentiable object is an isomorphism.
 -/
 theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f :=
   by
-  haveI : mono (limits.prod.lift (𝟙 A) f ≫ (zero_mul t).Hom) := mono_comp _ _
+  haveI : mono (limits.prod.lift (𝟙 A) f ≫ (MulZeroClass.zero_mul t).Hom) := mono_comp _ _
   rw [zero_mul_hom, prod.lift_snd] at _inst
   haveI : is_split_epi f := is_split_epi.mk' ⟨t.to _, t.hom_ext _ _⟩
   apply is_iso_of_mono_of_is_split_epi

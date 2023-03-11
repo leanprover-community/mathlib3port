@@ -163,9 +163,9 @@ instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOne
   { MulEquivClass.monoidHomClass _ with
     map_zero := fun e =>
       calc
-        e 0 = e 0 * e (EquivLike.inv e 0) := by rw [← map_mul, zero_mul]
+        e 0 = e 0 * e (EquivLike.inv e 0) := by rw [← map_mul, MulZeroClass.zero_mul]
         _ = 0 := by
-          convert mul_zero _
+          convert MulZeroClass.mul_zero _
           exact EquivLike.right_inv e _
          }
 #align mul_equiv_class.to_monoid_with_zero_hom_class MulEquivClass.toMonoidWithZeroHomClass

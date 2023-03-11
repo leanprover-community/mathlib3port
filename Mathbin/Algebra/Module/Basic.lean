@@ -500,8 +500,8 @@ instance (priority := 910) Semiring.toModule [Semiring R] : Module R R
     where
   smul_add := mul_add
   add_smul := add_mul
-  zero_smul := zero_mul
-  smul_zero := mul_zero
+  zero_smul := MulZeroClass.zero_mul
+  smul_zero := MulZeroClass.mul_zero
 #align semiring.to_module Semiring.toModule
 -/
 

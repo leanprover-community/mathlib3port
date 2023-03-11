@@ -234,7 +234,8 @@ theorem map_add_self (x : M) : Q (x + x) = 4 * Q x :=
 #align quadratic_form.map_add_self QuadraticForm.map_add_self
 
 @[simp]
-theorem map_zero : Q 0 = 0 := by rw [← @zero_smul R _ _ _ _ (0 : M), map_smul, zero_mul, zero_mul]
+theorem map_zero : Q 0 = 0 := by
+  rw [← @zero_smul R _ _ _ _ (0 : M), map_smul, MulZeroClass.zero_mul, MulZeroClass.zero_mul]
 #align quadratic_form.map_zero QuadraticForm.map_zero
 
 instance zeroHomClass : ZeroHomClass (QuadraticForm R M) M R :=
@@ -402,7 +403,7 @@ end SMul
 
 instance : Zero (QuadraticForm R M) :=
   ⟨{  toFun := fun x => 0
-      toFun_smul := fun a x => by simp only [mul_zero]
+      toFun_smul := fun a x => by simp only [MulZeroClass.mul_zero]
       exists_companion' := ⟨0, fun x y => by simp only [add_zero, BilinForm.zero_apply]⟩ }⟩
 
 @[simp]
@@ -1147,7 +1148,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
         refine' ⟨-B x y / B x x, fun z hz => _⟩
         obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz
         rw [is_ortho, smul_left, add_right, smul_right, div_mul_cancel _ hx, add_neg_self,
-          mul_zero])
+          MulZeroClass.mul_zero])
   refine' ⟨b, _⟩
   · rw [Basis.coe_mkFinCons]
     intro j i
@@ -1218,8 +1219,8 @@ theorem basisRepr_eq_of_isOrthoCat {R₁ M} [CommRing R₁] [AddCommGroup M] [Mo
   · rw [smul_left, smul_right, smul_eq_mul]
     ring
   · intro i _ hij
-    rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ hij.symm, mul_zero,
-      mul_zero]
+    rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ hij.symm,
+      MulZeroClass.mul_zero, MulZeroClass.mul_zero]
 #align quadratic_form.basis_repr_eq_of_is_Ortho QuadraticForm.basisRepr_eq_of_isOrthoCat
 
 end QuadraticForm

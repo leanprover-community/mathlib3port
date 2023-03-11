@@ -2734,7 +2734,7 @@ instance : CommMonoidWithZero (Localization S) := by
       Localization.induction_on x <| by
         intros
         refine' mk_eq_mk_iff.mpr (r_of_eq _)
-        simp only [zero_mul, mul_zero]
+        simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero]
 
 variable {S}
 
@@ -2775,7 +2775,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.localization_map.sec_zero_fst Submonoid.LocalizationMap.sec_zero_fstₓ'. -/
 @[simp]
 theorem LocalizationMap.sec_zero_fst {f : LocalizationMap S N} : f.toMap (f.sec 0).fst = 0 := by
-  rw [localization_map.sec_spec', mul_zero]
+  rw [localization_map.sec_spec', MulZeroClass.mul_zero]
 #align submonoid.localization_map.sec_zero_fst Submonoid.LocalizationMap.sec_zero_fst
 
 namespace LocalizationWithZeroMap
@@ -2795,7 +2795,7 @@ noncomputable def lift (f : LocalizationWithZeroMap S N) (g : M →*₀ P)
   { @LocalizationMap.lift _ _ _ _ _ _ _ f.toLocalizationMap g.toMonoidHom hg with
     map_zero' :=
       by
-      rw [MonoidHom.toFun_eq_coe, localization_map.lift_spec, mul_zero, ← map_zero g, ←
+      rw [MonoidHom.toFun_eq_coe, localization_map.lift_spec, MulZeroClass.mul_zero, ← map_zero g, ←
         g.to_monoid_hom_coe]
       refine' f.to_localization_map.eq_of_eq hg _
       rw [localization_map.sec_zero_fst]

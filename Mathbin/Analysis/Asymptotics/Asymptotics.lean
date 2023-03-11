@@ -247,7 +247,7 @@ theorem isOCat_iff_nat_mul_le_aux (h₀ : (∀ x, 0 ≤ ‖f x‖) ∨ ∀ x, 0 
   constructor
   · rintro H (_ | n)
     · refine' (H.def one_pos).mono fun x h₀' => _
-      rw [Nat.cast_zero, zero_mul]
+      rw [Nat.cast_zero, MulZeroClass.zero_mul]
       refine' h₀.elim (fun hf => (hf x).trans _) fun hg => hg x
       rwa [one_mul] at h₀'
     · have : (0 : ℝ) < n.succ := Nat.cast_pos.2 n.succ_pos
@@ -1186,8 +1186,8 @@ variable {g g' l}
 
 @[simp]
 theorem isOWith_zero_right_iff : (IsOWith c l f'' fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 := by
-  simp only [is_O_with, exists_prop, true_and_iff, norm_zero, mul_zero, norm_le_zero_iff,
-    eventually_eq, Pi.zero_apply]
+  simp only [is_O_with, exists_prop, true_and_iff, norm_zero, MulZeroClass.mul_zero,
+    norm_le_zero_iff, eventually_eq, Pi.zero_apply]
 #align asymptotics.is_O_with_zero_right_iff Asymptotics.isOWith_zero_right_iff
 
 @[simp]
@@ -1253,7 +1253,8 @@ theorem isOCat_top : f'' =o[⊤] g'' ↔ ∀ x, f'' x = 0 :=
   simp only [is_o_iff, eventually_top]
   refine' fun h x => norm_le_zero_iff.1 _
   have : tendsto (fun c : ℝ => c * ‖g'' x‖) (𝓝[>] 0) (𝓝 0) :=
-    ((continuous_id.mul continuous_const).tendsto' _ _ (zero_mul _)).mono_left inf_le_left
+    ((continuous_id.mul continuous_const).tendsto' _ _ (MulZeroClass.zero_mul _)).mono_left
+      inf_le_left
   exact
     le_of_tendsto_of_tendsto tendsto_const_nhds this
       (eventually_nhdsWithin_iff.2 <| eventually_of_forall fun c hc => h hc x)
@@ -1639,7 +1640,7 @@ theorem IsOWith.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : IsOWith c l f 
   by
   refine' is_O_with.of_bound (h.bound.mp (h₀.mono fun x h₀ hle => _))
   cases' eq_or_ne (f x) 0 with hx hx
-  · simp only [hx, h₀ hx, inv_zero, norm_zero, mul_zero]
+  · simp only [hx, h₀ hx, inv_zero, norm_zero, MulZeroClass.mul_zero]
   · have hc : 0 < c := pos_of_mul_pos_left ((norm_pos_iff.2 hx).trans_le hle) (norm_nonneg _)
     replace hle := inv_le_inv_of_le (norm_pos_iff.2 hx) hle
     simpa only [norm_inv, mul_inv, ← div_eq_inv_mul, div_le_iff hc] using hle

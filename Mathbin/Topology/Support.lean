@@ -458,7 +458,7 @@ Case conversion may be inaccurate. Consider using '#align has_compact_support.mu
 theorem HasCompactSupport.mul_right (hf : HasCompactSupport f) : HasCompactSupport (f * f') :=
   by
   rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
-  refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, zero_mul]
+  refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, MulZeroClass.zero_mul]
 #align has_compact_support.mul_right HasCompactSupport.mul_right
 
 /- warning: has_compact_support.mul_left -> HasCompactSupport.mul_left is a dubious translation:
@@ -470,7 +470,7 @@ Case conversion may be inaccurate. Consider using '#align has_compact_support.mu
 theorem HasCompactSupport.mul_left (hf : HasCompactSupport f') : HasCompactSupport (f * f') :=
   by
   rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
-  refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, mul_zero]
+  refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, MulZeroClass.mul_zero]
 #align has_compact_support.mul_left HasCompactSupport.mul_left
 
 end MulZeroClass

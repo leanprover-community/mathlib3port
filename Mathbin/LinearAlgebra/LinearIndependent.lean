@@ -1523,7 +1523,7 @@ theorem linearIndependent_monoidHom (G : Type _) [Monoid G] (L : Type _) [CommRi
                             a x * (∑ i in insert a s, (g i • i : G → L)) y :=
                         by rw [Finset.sum_apply, Finset.sum_apply, Finset.mul_sum] <;> rfl
                       _ = 0 - a x * 0 := by rw [hg] <;> rfl
-                      _ = 0 := by rw [mul_zero, sub_zero]
+                      _ = 0 := by rw [MulZeroClass.mul_zero, sub_zero]
                       )
                   i his
           -- On the other hand, since `a` is not already in `s`, for any character `i ∈ s`

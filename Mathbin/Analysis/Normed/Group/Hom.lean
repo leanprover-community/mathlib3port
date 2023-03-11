@@ -392,7 +392,7 @@ theorem le_opNorm (x : V₁) : ‖f x‖ ≤ ‖f‖ * ‖x‖ :=
   obtain ⟨C, Cpos, hC⟩ := f.bound
   replace hC := hC x
   by_cases h : ‖x‖ = 0
-  · rwa [h, mul_zero] at hC⊢
+  · rwa [h, MulZeroClass.mul_zero] at hC⊢
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
@@ -624,7 +624,7 @@ theorem opNorm_zero : ‖(0 : NormedAddGroupHom V₁ V₂)‖ = 0 :=
       ⟨ge_of_eq rfl, fun _ =>
         le_of_eq
           (by
-            rw [zero_mul]
+            rw [MulZeroClass.zero_mul]
             exact norm_zero)⟩)
     (opNorm_nonneg _)
 #align normed_add_group_hom.op_norm_zero NormedAddGroupHom.opNorm_zero
@@ -644,7 +644,7 @@ theorem opNorm_zero_iff {V₁ V₂ : Type _} [NormedAddCommGroup V₁] [NormedAd
         norm_le_zero_iff.1
           (calc
             _ ≤ ‖f‖ * ‖x‖ := le_opNorm _ _
-            _ = _ := by rw [hn, zero_mul]
+            _ = _ := by rw [hn, MulZeroClass.zero_mul]
             ))
     fun hf => by rw [hf, op_norm_zero]
 #align normed_add_group_hom.op_norm_zero_iff NormedAddGroupHom.opNorm_zero_iff

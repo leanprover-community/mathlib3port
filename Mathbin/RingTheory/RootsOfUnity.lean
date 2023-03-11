@@ -524,7 +524,7 @@ theorem pow {n : ℕ} {a b : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ n) (hprod
   intro l hl
   have ha0 : a ≠ 0 := by
     rintro rfl
-    simpa only [Nat.not_lt_zero, zero_mul] using hn
+    simpa only [Nat.not_lt_zero, MulZeroClass.zero_mul] using hn
   rwa [← mul_dvd_mul_iff_left ha0]
   exact h.dvd_of_pow_eq_one _ hl
 #align is_primitive_root.pow IsPrimitiveRoot.pow
@@ -983,7 +983,7 @@ theorem nth_roots_one_eq_bunionᵢ_primitive_roots' {ζ : R} {n : ℕ+} (h : IsP
     rintro ⟨a, ⟨d, hd⟩, ha⟩
     have hazero : 0 < a := by
       contrapose! hd with ha0
-      simp_all only [nonpos_iff_eq_zero, zero_mul]
+      simp_all only [nonpos_iff_eq_zero, MulZeroClass.zero_mul]
       exact n.ne_zero
     rw [mem_primitiveRoots hazero] at ha
     rw [hd, pow_mul, ha.pow_eq_one, one_pow]

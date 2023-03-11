@@ -129,7 +129,7 @@ theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X])
   rw [pow_add, expand_mul, expand_inj (pow_pos (NeZero.pos q) m)] at h_expand
   subst h_expand
   rcases is_unit_or_eq_zero_of_separable_expand q s (NeZero.pos q) hg with (h | rfl)
-  · rw [nat_degree_expand, nat_degree_eq_zero_of_is_unit h, zero_mul]
+  · rw [nat_degree_expand, nat_degree_eq_zero_of_is_unit h, MulZeroClass.zero_mul]
   · rw [nat_degree_expand, pow_zero, mul_one]
 #align polynomial.contraction_degree_eq_or_insep Polynomial.contraction_degree_eq_or_insep
 

@@ -1264,7 +1264,7 @@ but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) b) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b))
 Case conversion may be inaccurate. Consider using '#align ordinal.mul_pos Ordinal.mul_posₓ'. -/
 theorem mul_pos {a b : Ordinal} (h₁ : 0 < a) (h₂ : 0 < b) : 0 < a * b := by
-  simpa only [mul_zero] using mul_lt_mul_of_pos_left h₂ h₁
+  simpa only [MulZeroClass.mul_zero] using mul_lt_mul_of_pos_left h₂ h₁
 #align ordinal.mul_pos Ordinal.mul_pos
 
 /- warning: ordinal.mul_ne_zero -> Ordinal.mul_ne_zero is a dubious translation:
@@ -1329,7 +1329,7 @@ but is expected to have type
   forall (n : Nat) (a : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HSMul.hSMul.{0, succ u1, succ u1} Nat Ordinal.{u1} Ordinal.{u1} (instHSMul.{0, succ u1} Nat Ordinal.{u1} (AddMonoid.SMul.{succ u1} Ordinal.{u1} (AddMonoidWithOne.toAddMonoid.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}))) n a) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a (Nat.cast.{succ u1} Ordinal.{u1} (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) n))
 Case conversion may be inaccurate. Consider using '#align ordinal.smul_eq_mul Ordinal.smul_eq_mulₓ'. -/
 theorem smul_eq_mul : ∀ (n : ℕ) (a : Ordinal), n • a = a * n
-  | 0, a => by rw [zero_smul, Nat.cast_zero, mul_zero]
+  | 0, a => by rw [zero_smul, Nat.cast_zero, MulZeroClass.mul_zero]
   | n + 1, a => by rw [succ_nsmul', Nat.cast_add, mul_add, Nat.cast_one, mul_one, smul_eq_mul]
 #align ordinal.smul_eq_mul Ordinal.smul_eq_mul
 
@@ -1434,7 +1434,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.le_div Ordinal
 theorem le_div {a b c : Ordinal} (c0 : c ≠ 0) : a ≤ b / c ↔ c * a ≤ b :=
   by
   apply limit_rec_on a
-  · simp only [mul_zero, Ordinal.zero_le]
+  · simp only [MulZeroClass.mul_zero, Ordinal.zero_le]
   · intros
     rw [succ_le_iff, lt_div c0]
   ·
@@ -1492,7 +1492,8 @@ but is expected to have type
   forall (a : Ordinal.{u1}) (b : Ordinal.{u1}), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b (HDiv.hDiv.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHDiv.{succ u1} Ordinal.{u1} Ordinal.div.{u1}) a b)) a
 Case conversion may be inaccurate. Consider using '#align ordinal.mul_div_le Ordinal.mul_div_leₓ'. -/
 theorem mul_div_le (a b : Ordinal) : b * (a / b) ≤ a :=
-  if b0 : b = 0 then by simp only [b0, zero_mul, Ordinal.zero_le] else (le_div b0).1 le_rfl
+  if b0 : b = 0 then by simp only [b0, MulZeroClass.zero_mul, Ordinal.zero_le]
+  else (le_div b0).1 le_rfl
 #align ordinal.mul_div_le Ordinal.mul_div_le
 
 /- warning: ordinal.mul_add_div -> Ordinal.mul_add_div is a dubious translation:
@@ -1563,7 +1564,7 @@ but is expected to have type
   forall (a : Ordinal.{u1}) (b : Ordinal.{u1}) (c : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a (HSub.hSub.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHSub.{succ u1} Ordinal.{u1} Ordinal.sub.{u1}) b c)) (HSub.hSub.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHSub.{succ u1} Ordinal.{u1} Ordinal.sub.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a c))
 Case conversion may be inaccurate. Consider using '#align ordinal.mul_sub Ordinal.mul_subₓ'. -/
 theorem mul_sub (a b c : Ordinal) : a * (b - c) = a * b - a * c :=
-  if a0 : a = 0 then by simp only [a0, zero_mul, sub_self]
+  if a0 : a = 0 then by simp only [a0, MulZeroClass.zero_mul, sub_self]
   else
     eq_of_forall_ge_iff fun d => by rw [sub_le, ← le_div a0, sub_le, ← le_div a0, mul_add_div _ a0]
 #align ordinal.mul_sub Ordinal.mul_sub
@@ -1610,8 +1611,8 @@ theorem div_mul_cancel : ∀ {a b : Ordinal}, a ≠ 0 → a ∣ b → a * (b / a
 theorem le_of_dvd : ∀ {a b : Ordinal}, b ≠ 0 → a ∣ b → a ≤ b
   | a, _, b0, ⟨b, rfl⟩ => by
     simpa only [mul_one] using
-      mul_le_mul_left' (one_le_iff_ne_zero.2 fun h : b = 0 => by simpa only [h, mul_zero] using b0)
-        a
+      mul_le_mul_left'
+        (one_le_iff_ne_zero.2 fun h : b = 0 => by simpa only [h, MulZeroClass.mul_zero] using b0) a
 #align ordinal.le_of_dvd Ordinal.le_of_dvd
 -/
 
@@ -1649,7 +1650,8 @@ but is expected to have type
   forall (a : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) a
 Case conversion may be inaccurate. Consider using '#align ordinal.mod_zero Ordinal.mod_zeroₓ'. -/
 @[simp]
-theorem mod_zero (a : Ordinal) : a % 0 = a := by simp only [mod_def, div_zero, zero_mul, sub_zero]
+theorem mod_zero (a : Ordinal) : a % 0 = a := by
+  simp only [mod_def, div_zero, MulZeroClass.zero_mul, sub_zero]
 #align ordinal.mod_zero Ordinal.mod_zero
 
 /- warning: ordinal.mod_eq_of_lt -> Ordinal.mod_eq_of_lt is a dubious translation:
@@ -1659,7 +1661,7 @@ but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a b) a)
 Case conversion may be inaccurate. Consider using '#align ordinal.mod_eq_of_lt Ordinal.mod_eq_of_ltₓ'. -/
 theorem mod_eq_of_lt {a b : Ordinal} (h : a < b) : a % b = a := by
-  simp only [mod_def, div_eq_zero_of_lt h, mul_zero, sub_zero]
+  simp only [mod_def, div_eq_zero_of_lt h, MulZeroClass.mul_zero, sub_zero]
 #align ordinal.mod_eq_of_lt Ordinal.mod_eq_of_lt
 
 /- warning: ordinal.zero_mod -> Ordinal.zero_mod is a dubious translation:
@@ -1669,7 +1671,8 @@ but is expected to have type
   forall (b : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) b) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))
 Case conversion may be inaccurate. Consider using '#align ordinal.zero_mod Ordinal.zero_modₓ'. -/
 @[simp]
-theorem zero_mod (b : Ordinal) : 0 % b = 0 := by simp only [mod_def, zero_div, mul_zero, sub_self]
+theorem zero_mod (b : Ordinal) : 0 % b = 0 := by
+  simp only [mod_def, zero_div, MulZeroClass.mul_zero, sub_self]
 #align ordinal.zero_mod Ordinal.zero_mod
 
 /- warning: ordinal.div_add_mod -> Ordinal.div_add_mod is a dubious translation:
@@ -3725,7 +3728,7 @@ theorem isLimit_iff_omega_dvd {a : Ordinal} : IsLimit a ↔ a ≠ 0 ∧ ω ∣ a
   · rcases h with ⟨a0, b, rfl⟩
     refine' mul_is_limit_left omega_is_limit (Ordinal.pos_iff_ne_zero.2 <| mt _ a0)
     intro e
-    simp only [e, mul_zero]
+    simp only [e, MulZeroClass.mul_zero]
 #align ordinal.is_limit_iff_omega_dvd Ordinal.isLimit_iff_omega_dvd
 -/
 
@@ -3817,8 +3820,8 @@ Case conversion may be inaccurate. Consider using '#align ordinal.sup_mul_nat Or
 theorem sup_mul_nat (o : Ordinal) : (sup fun n : ℕ => o * n) = o * ω :=
   by
   rcases eq_zero_or_pos o with (rfl | ho)
-  · rw [zero_mul]
-    exact sup_eq_zero_iff.2 fun n => zero_mul n
+  · rw [MulZeroClass.zero_mul]
+    exact sup_eq_zero_iff.2 fun n => MulZeroClass.zero_mul n
   · exact (mul_is_normal ho).apply_omega
 #align ordinal.sup_mul_nat Ordinal.sup_mul_nat
 

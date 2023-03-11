@@ -95,7 +95,7 @@ instance : Inhabited (PicardLindelof E) :=
         lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _
         cont := fun _ _ => by simpa only [Pi.zero_apply] using continuousOn_const
         norm_le := fun t ht x hx => norm_zero.le
-        C_mul_le_R := (zero_mul _).le }⟩⟩
+        C_mul_le_R := (MulZeroClass.zero_mul _).le }⟩⟩
 
 theorem tMin_le_tMax : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2

@@ -549,7 +549,7 @@ theorem exp_sum {α : Type _} (s : Finset α) (f : α → ℂ) :
 #align complex.exp_sum Complex.exp_sum
 
 theorem exp_nat_mul (x : ℂ) : ∀ n : ℕ, exp (n * x) = exp x ^ n
-  | 0 => by rw [Nat.cast_zero, zero_mul, exp_zero, pow_zero]
+  | 0 => by rw [Nat.cast_zero, MulZeroClass.zero_mul, exp_zero, pow_zero]
   | Nat.succ n => by rw [pow_succ', Nat.cast_add_one, add_mul, exp_add, ← exp_nat_mul, one_mul]
 #align complex.exp_nat_mul Complex.exp_nat_mul
 
@@ -1134,7 +1134,7 @@ theorem cos_add_sin_mul_i_pow (n : ℕ) (z : ℂ) :
   by
   rw [← exp_mul_I, ← exp_mul_I]
   induction' n with n ih
-  · rw [pow_zero, Nat.cast_zero, zero_mul, zero_mul, exp_zero]
+  · rw [pow_zero, Nat.cast_zero, MulZeroClass.zero_mul, MulZeroClass.zero_mul, exp_zero]
   · rw [pow_succ', ih, Nat.cast_succ, add_mul, add_mul, one_mul, exp_add]
 #align complex.cos_add_sin_mul_I_pow Complex.cos_add_sin_mul_i_pow
 
@@ -1167,7 +1167,7 @@ theorem exp_sum {α : Type _} (s : Finset α) (f : α → ℝ) :
 #align real.exp_sum Real.exp_sum
 
 theorem exp_nat_mul (x : ℝ) : ∀ n : ℕ, exp (n * x) = exp x ^ n
-  | 0 => by rw [Nat.cast_zero, zero_mul, exp_zero, pow_zero]
+  | 0 => by rw [Nat.cast_zero, MulZeroClass.zero_mul, exp_zero, pow_zero]
   | Nat.succ n => by rw [pow_succ', Nat.cast_add_one, add_mul, exp_add, ← exp_nat_mul, one_mul]
 #align real.exp_nat_mul Real.exp_nat_mul
 
@@ -2033,7 +2033,7 @@ theorem exp_bound_div_one_sub_of_interval_approx {x : ℝ} (h1 : 0 ≤ x) (h2 : 
   have i1 : x * 4 / 18 ≤ 1 / 2 := by linarith
   have i2 : 0 ≤ x * 4 / 18 := by linarith
   have i3 := mul_le_mul h1 h1 le_rfl h1
-  rw [zero_mul] at i3
+  rw [MulZeroClass.zero_mul] at i3
   have t := mul_le_mul le_rfl i1 i2 i3
   rw [← mul_assoc]
   rwa [mul_one_div, ← mul_div_assoc, ← mul_assoc] at t

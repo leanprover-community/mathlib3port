@@ -65,7 +65,7 @@ theorem isUnit_iff : IsUnit a ↔ a = 1 :=
   · exact ht.1
   all_goals rwa [one_le_iff_ne_zero]
   · rintro rfl
-    rw [mul_zero] at ht
+    rw [MulZeroClass.mul_zero] at ht
     exact zero_ne_one ht
 #align cardinal.is_unit_iff Cardinal.isUnit_iff
 
@@ -77,8 +77,8 @@ instance : Unique Cardinal.{u}ˣ where
 theorem le_of_dvd : ∀ {a b : Cardinal}, b ≠ 0 → a ∣ b → a ≤ b
   | a, _, b0, ⟨b, rfl⟩ => by
     simpa only [mul_one] using
-      mul_le_mul_left' (one_le_iff_ne_zero.2 fun h : b = 0 => by simpa only [h, mul_zero] using b0)
-        a
+      mul_le_mul_left'
+        (one_le_iff_ne_zero.2 fun h : b = 0 => by simpa only [h, MulZeroClass.mul_zero] using b0) a
 #align cardinal.le_of_dvd Cardinal.le_of_dvd
 -/
 
@@ -135,7 +135,8 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m :=
   have : ↑m < ℵ₀ := nat_lt_aleph_0 m
   rw [hk, mul_lt_aleph_0_iff] at this
   rcases this with (h | h | ⟨-, hk'⟩)
-  iterate 2 simp only [h, mul_zero, zero_mul, Nat.cast_eq_zero] at hk; simp [hk]
+  iterate 2 simp only [h, MulZeroClass.mul_zero, MulZeroClass.zero_mul, Nat.cast_eq_zero] at hk;
+    simp [hk]
   lift k to ℕ using hk'
   exact ⟨k, by exact_mod_cast hk⟩
 #align cardinal.nat_coe_dvd_iff Cardinal.nat_coe_dvd_iff

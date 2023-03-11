@@ -539,7 +539,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedRing.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedRing.toPartialOrder.{u1} α _inst_1))) a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedRing.toOrderedSemiring.{u1} α _inst_1))))))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedRing.toPartialOrder.{u1} α _inst_1))) b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedRing.toOrderedSemiring.{u1} α _inst_1))))))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedRing.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedRing.toOrderedSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (OrderedRing.toRing.{u1} α _inst_1))))) a b))
 Case conversion may be inaccurate. Consider using '#align mul_nonneg_of_nonpos_of_nonpos mul_nonneg_of_nonpos_of_nonposₓ'. -/
 theorem mul_nonneg_of_nonpos_of_nonpos (ha : a ≤ 0) (hb : b ≤ 0) : 0 ≤ a * b := by
-  simpa only [zero_mul] using mul_le_mul_of_nonpos_right ha hb
+  simpa only [MulZeroClass.zero_mul] using mul_le_mul_of_nonpos_right ha hb
 #align mul_nonneg_of_nonpos_of_nonpos mul_nonneg_of_nonpos_of_nonpos
 
 /- warning: mul_le_mul_of_nonneg_of_nonpos -> mul_le_mul_of_nonneg_of_nonpos is a dubious translation:
@@ -872,7 +872,7 @@ Case conversion may be inaccurate. Consider using '#align decidable.mul_lt_mul''
 protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a < c) (h2 : b < d)
     (h3 : 0 ≤ a) (h4 : 0 ≤ b) : a * b < c * d :=
   h4.lt_or_eq_dec.elim (fun b0 => mul_lt_mul h1 h2.le b0 <| h3.trans h1.le) fun b0 => by
-    rw [← b0, mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
+    rw [← b0, MulZeroClass.mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
 #align decidable.mul_lt_mul'' Decidable.mul_lt_mul''
 
 /- warning: mul_lt_mul'' -> mul_lt_mul'' is a dubious translation:
@@ -1089,9 +1089,9 @@ def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRin
     mul_nonneg := fun a b ha hb =>
       by
       obtain ha | ha := Decidable.eq_or_lt_of_le ha
-      · rw [← ha, zero_mul]
+      · rw [← ha, MulZeroClass.zero_mul]
       obtain hb | hb := Decidable.eq_or_lt_of_le hb
-      · rw [← hb, mul_zero]
+      · rw [← hb, MulZeroClass.mul_zero]
       · exact (StrictOrderedRing.mul_pos _ _ ha hb).le }
 #align strict_ordered_ring.to_ordered_ring' StrictOrderedRing.toOrderedRing'
 -/
@@ -1133,7 +1133,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedRing.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α _inst_1))) a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α _inst_1))))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α _inst_1))) b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α _inst_1))))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α _inst_1))))) a b))
 Case conversion may be inaccurate. Consider using '#align mul_pos_of_neg_of_neg mul_pos_of_neg_of_negₓ'. -/
 theorem mul_pos_of_neg_of_neg {a b : α} (ha : a < 0) (hb : b < 0) : 0 < a * b := by
-  simpa only [zero_mul] using mul_lt_mul_of_neg_right ha hb
+  simpa only [MulZeroClass.zero_mul] using mul_lt_mul_of_neg_right ha hb
 #align mul_pos_of_neg_of_neg mul_pos_of_neg_of_neg
 
 section Monotone
@@ -1997,7 +1997,7 @@ theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 :=
   by
   constructor
   · rintro h rfl
-    rw [mul_zero] at h
+    rw [MulZeroClass.mul_zero] at h
     exact h.false
   · intro h
     cases' h.lt_or_lt with h h

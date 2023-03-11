@@ -36,7 +36,7 @@ theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1
   by
   have h : (exp (θ * I) + exp (-θ * I)) / 2 = 0 ↔ exp (2 * θ * I) = -1 :=
     by
-    rw [@div_eq_iff _ _ (exp (θ * I) + exp (-θ * I)) 2 0 two_ne_zero, zero_mul,
+    rw [@div_eq_iff _ _ (exp (θ * I) + exp (-θ * I)) 2 0 two_ne_zero, MulZeroClass.zero_mul,
       add_eq_zero_iff_eq_neg, neg_eq_neg_one_mul, ← div_eq_iff (exp_ne_zero _), ← exp_sub]
     field_simp only
     congr 3
@@ -74,9 +74,10 @@ theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2
   by
   have h := (sin_two_mul θ).symm
   rw [mul_assoc] at h
-  rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← zero_mul (1 / 2 : ℂ), mul_one_div,
+  rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← MulZeroClass.zero_mul (1 / 2 : ℂ), mul_one_div,
     CancelFactors.cancel_factors_eq_div h two_ne_zero, mul_comm]
-  simpa only [zero_div, zero_mul, Ne.def, not_false_iff, field_simps] using sin_eq_zero_iff
+  simpa only [zero_div, MulZeroClass.zero_mul, Ne.def, not_false_iff, field_simps] using
+    sin_eq_zero_iff
 #align complex.tan_eq_zero_iff Complex.tan_eq_zero_iff
 
 theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
@@ -196,7 +197,7 @@ theorem cos_surjective : Function.Surjective cos :=
       ⟨w, hw⟩
     refine' ⟨w, _, hw⟩
     rintro rfl
-    simpa only [zero_add, one_ne_zero, mul_zero] using hw
+    simpa only [zero_add, one_ne_zero, MulZeroClass.mul_zero] using hw
   refine' ⟨log w / I, cos_eq_iff_quadratic.2 _⟩
   rw [div_mul_cancel _ I_ne_zero, exp_log w₀]
   convert hw

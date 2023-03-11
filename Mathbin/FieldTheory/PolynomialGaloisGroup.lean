@@ -334,12 +334,12 @@ theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
     intro p₁ p₂ hp₁ hp₂
     by_cases h₁ : p₁.comp q = 0
     · cases' comp_eq_zero_iff.mp h₁ with h h
-      · rw [h, zero_mul]
+      · rw [h, MulZeroClass.zero_mul]
         exact splits_zero _
       · exact False.ndrec _ (hq (by rw [h.2, nat_degree_C]))
     by_cases h₂ : p₂.comp q = 0
     · cases' comp_eq_zero_iff.mp h₂ with h h
-      · rw [h, mul_zero]
+      · rw [h, MulZeroClass.mul_zero]
         exact splits_zero _
       · exact False.ndrec _ (hq (by rw [h.2, nat_degree_C]))
     have key := mul_splits_in_splitting_field_of_mul h₁ h₂ hp₁ hp₂

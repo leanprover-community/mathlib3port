@@ -229,8 +229,8 @@ instance categoryFree : Category (Free R C)
     dsimp
     -- This imitates the proof of associativity for `monoid_algebra`.
     simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true,
-      forall_true_iff, forall₃_true_iff, add_mul, mul_add, category.assoc, mul_assoc, zero_mul,
-      mul_zero, sum_zero, sum_add]
+      forall_true_iff, forall₃_true_iff, add_mul, mul_add, category.assoc, mul_assoc,
+      MulZeroClass.zero_mul, MulZeroClass.mul_zero, sum_zero, sum_add]
 #align category_theory.category_Free CategoryTheory.categoryFree
 
 namespace Free

@@ -317,7 +317,7 @@ Case conversion may be inaccurate. Consider using '#align is_add_monoid_hom.is_a
 /-- Left multiplication in a ring is an additive monoid morphism. -/
 theorem isAddMonoidHom_mul_left {γ : Type _} [NonUnitalNonAssocSemiring γ] (x : γ) :
     IsAddMonoidHom fun y : γ => x * y :=
-  { map_zero := mul_zero x
+  { map_zero := MulZeroClass.mul_zero x
     map_add := fun y z => mul_add x y z }
 #align is_add_monoid_hom.is_add_monoid_hom_mul_left IsAddMonoidHom.isAddMonoidHom_mul_left
 
@@ -330,7 +330,7 @@ Case conversion may be inaccurate. Consider using '#align is_add_monoid_hom.is_a
 /-- Right multiplication in a ring is an additive monoid morphism. -/
 theorem isAddMonoidHom_mul_right {γ : Type _} [NonUnitalNonAssocSemiring γ] (x : γ) :
     IsAddMonoidHom fun y : γ => y * x :=
-  { map_zero := zero_mul x
+  { map_zero := MulZeroClass.zero_mul x
     map_add := fun y z => add_mul y z x }
 #align is_add_monoid_hom.is_add_monoid_hom_mul_right IsAddMonoidHom.isAddMonoidHom_mul_right
 

@@ -41,8 +41,8 @@ protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀
     where
   mul := (· * ·)
   zero := 0
-  zero_mul a := hf <| by simp only [mul, zero, zero_mul]
-  mul_zero a := hf <| by simp only [mul, zero, mul_zero]
+  zero_mul a := hf <| by simp only [mul, zero, MulZeroClass.zero_mul]
+  mul_zero a := hf <| by simp only [mul, zero, MulZeroClass.mul_zero]
 #align function.injective.mul_zero_class Function.Injective.mulZeroClass
 
 /- warning: function.surjective.mul_zero_class -> Function.Surjective.mulZeroClass is a dubious translation:
@@ -59,8 +59,8 @@ protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M�
     where
   mul := (· * ·)
   zero := 0
-  mul_zero := hf.forall.2 fun x => by simp only [← zero, ← mul, mul_zero]
-  zero_mul := hf.forall.2 fun x => by simp only [← zero, ← mul, zero_mul]
+  mul_zero := hf.forall.2 fun x => by simp only [← zero, ← mul, MulZeroClass.mul_zero]
+  zero_mul := hf.forall.2 fun x => by simp only [← zero, ← mul, MulZeroClass.zero_mul]
 #align function.surjective.mul_zero_class Function.Surjective.mulZeroClass
 
 end MulZeroClass

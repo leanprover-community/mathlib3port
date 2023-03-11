@@ -58,7 +58,8 @@ noncomputable def stirlingSeq (n : ℕ) : ℝ :=
 
 @[simp]
 theorem stirlingSeq_zero : stirlingSeq 0 = 0 := by
-  rw [stirling_seq, cast_zero, mul_zero, Real.sqrt_zero, zero_mul, div_zero]
+  rw [stirling_seq, cast_zero, MulZeroClass.mul_zero, Real.sqrt_zero, MulZeroClass.zero_mul,
+    div_zero]
 #align stirling.stirling_seq_zero Stirling.stirlingSeq_zero
 
 @[simp]

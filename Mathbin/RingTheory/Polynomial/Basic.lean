@@ -175,7 +175,7 @@ theorem eval_eq_sum_degreeLtEquiv {n : ℕ} {p : R[X]} (hp : p ∈ degreeLt R n)
     p.eval x = ∑ i, degreeLtEquiv _ _ ⟨p, hp⟩ i * x ^ (i : ℕ) :=
   by
   simp_rw [eval_eq_sum]
-  exact (sum_fin _ (by simp_rw [zero_mul, forall_const]) (mem_degree_lt.mp hp)).symm
+  exact (sum_fin _ (by simp_rw [MulZeroClass.zero_mul, forall_const]) (mem_degree_lt.mp hp)).symm
 #align polynomial.eval_eq_sum_degree_lt_equiv Polynomial.eval_eq_sum_degreeLtEquiv
 
 /-- The finset of nonzero coefficients of a polynomial. -/
@@ -676,7 +676,7 @@ theorem polynomial_not_isField : ¬IsField R[X] :=
   obtain ⟨p, hp⟩ := hR.mul_inv_cancel X_ne_zero
   have hp0 : p ≠ 0 := by
     rintro rfl
-    rw [mul_zero] at hp
+    rw [MulZeroClass.mul_zero] at hp
     exact zero_ne_one hp
   have := degree_lt_degree_mul_X hp0
   rw [← X_mul, congr_arg degree hp, degree_one, Nat.WithBot.lt_zero_iff, degree_eq_bot] at this
@@ -1002,7 +1002,7 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
               apply hp0
               ext i
               refine' (mul_one _).symm.trans _
-              rw [← h, mul_zero]
+              rw [← h, MulZeroClass.mul_zero]
               rfl
             haveI : Nontrivial R := ⟨⟨0, 1, this⟩⟩
             have : p.leading_coeff ∈ I.leading_coeff_nth N :=

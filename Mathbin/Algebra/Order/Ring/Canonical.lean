@@ -196,7 +196,9 @@ Case conversion may be inaccurate. Consider using '#align add_le_cancellable.mul
 protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b - a * c :=
   by
   cases' total_of (· ≤ ·) b c with hbc hcb
-  · rw [tsub_eq_zero_iff_le.2 hbc, mul_zero, tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
+  ·
+    rw [tsub_eq_zero_iff_le.2 hbc, MulZeroClass.mul_zero,
+      tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
   · apply h.eq_tsub_of_add_eq
     rw [← mul_add, tsub_add_cancel_of_le hcb]
 #align add_le_cancellable.mul_tsub AddLECancellable.mul_tsub

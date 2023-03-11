@@ -58,8 +58,8 @@ theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x
   by
   induction' n with n ih generalizing k
   ·
-    simp only [Nat.zero_eq, Nat.cast_zero, mul_zero, zero_coeff, witt_mul_n, AlgHom.map_zero,
-      Pi.zero_apply]
+    simp only [Nat.zero_eq, Nat.cast_zero, MulZeroClass.mul_zero, zero_coeff, witt_mul_n,
+      AlgHom.map_zero, Pi.zero_apply]
   · rw [witt_mul_n, Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, mul_add, mul_one, aeval_bind₁,
       add_coeff]
     apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
@@ -84,7 +84,7 @@ theorem bind₁_wittMulN_wittPolynomial (n k : ℕ) :
     bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k :=
   by
   induction' n with n ih
-  · simp only [witt_mul_n, Nat.cast_zero, zero_mul, bind₁_zero_witt_polynomial]
+  · simp only [witt_mul_n, Nat.cast_zero, MulZeroClass.zero_mul, bind₁_zero_witt_polynomial]
   · rw [witt_mul_n, ← bind₁_bind₁, witt_add, wittStructureInt_prop]
     simp only [AlgHom.map_add, Nat.cast_succ, bind₁_X_right]
     rw [add_mul, one_mul, bind₁_rename, bind₁_rename]

@@ -180,7 +180,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : �
   have hRp : 0 ≤ R₁ := fun i => le_max_left 0 (r₁ i)
   replace hMr : ∀ᶠ i in at_top, M * R₁ i ≤ R₂ i
   · refine' hMr.mono fun i hi => _
-    rw [mul_max_of_nonneg _ _ hM.le, mul_zero]
+    rw [mul_max_of_nonneg _ _ hM.le, MulZeroClass.mul_zero]
     exact max_le_max (le_refl 0) hi
   simp_rw [← cthickening_max_zero (r₁ _), ← cthickening_max_zero (r₂ _)]
   cases' le_or_lt 1 M with hM' hM'
@@ -219,7 +219,7 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     clear p hr r
     intro p r hr
     have hr' : tendsto (fun i => M * r i) at_top (𝓝[>] 0) := by
-      convert tendsto_nhds_within_Ioi.const_mul hM hr <;> simp only [mul_zero]
+      convert tendsto_nhds_within_Ioi.const_mul hM hr <;> simp only [MulZeroClass.mul_zero]
     refine' eventually_le_antisymm_iff.mpr ⟨_, _⟩
     ·
       exact

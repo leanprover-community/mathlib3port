@@ -57,13 +57,16 @@ open Opposite
 
 namespace CategoryTheory
 
+#print CategoryTheory.IsPreconnected /-
 /-- A possibly empty category for which every functor to a discrete category is constant.
 -/
 class IsPreconnected (J : Type u₁) [Category.{v₁} J] : Prop where
   iso_constant :
     ∀ {α : Type u₁} (F : J ⥤ Discrete α) (j : J), Nonempty (F ≅ (Functor.const J).obj (F.obj j))
 #align category_theory.is_preconnected CategoryTheory.IsPreconnected
+-/
 
+#print CategoryTheory.IsConnected /-
 /-- We define a connected category as a _nonempty_ category for which every
 functor to a discrete category is constant.
 
@@ -78,6 +81,7 @@ See <https://stacks.math.columbia.edu/tag/002S>
 class IsConnected (J : Type u₁) [Category.{v₁} J] extends IsPreconnected J : Prop where
   [is_nonempty : Nonempty J]
 #align category_theory.is_connected CategoryTheory.IsConnected
+-/
 
 attribute [instance] is_connected.is_nonempty
 
@@ -85,6 +89,12 @@ variable {J : Type u₁} [Category.{v₁} J]
 
 variable {K : Type u₂} [Category.{v₂} K]
 
+/- warning: category_theory.iso_constant -> CategoryTheory.isoConstant is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] {α : Type.{u2}} (F : CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (j : J), CategoryTheory.Iso.{u2, max u1 u2} (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.category.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) F (CategoryTheory.Functor.obj.{u2, u2, u2, max u1 u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.category.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.const.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.obj.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F j))
+but is expected to have type
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] {α : Type.{u2}} (F : CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (j : J), CategoryTheory.Iso.{u2, max u2 u1} (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.category.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) F (Prefunctor.obj.{succ u2, succ u2, u2, max u2 u1} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u2 u1} (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Category.toCategoryStruct.{u2, max u2 u1} (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.category.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u2, max u2 u1} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) (CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.category.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (CategoryTheory.Functor.const.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (Prefunctor.obj.{succ u1, succ u2, u2, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Discrete.{u2} α) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F) j))
+Case conversion may be inaccurate. Consider using '#align category_theory.iso_constant CategoryTheory.isoConstantₓ'. -/
 /-- If `J` is connected, any functor `F : J ⥤ discrete α` is isomorphic to
 the constant functor with value `F.obj j` (for any choice of `j`).
 -/
@@ -93,6 +103,12 @@ def isoConstant [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j :
   (IsPreconnected.iso_constant F j).some
 #align category_theory.iso_constant CategoryTheory.isoConstant
 
+/- warning: category_theory.any_functor_const_on_obj -> CategoryTheory.any_functor_const_on_obj is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] {α : Type.{u2}} (F : CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (j : J) (j' : J), Eq.{succ u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Functor.obj.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F j) (CategoryTheory.Functor.obj.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F j')
+but is expected to have type
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] {α : Type.{u2}} (F : CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (j : J) (j' : J), Eq.{succ u2} (CategoryTheory.Discrete.{u2} α) (Prefunctor.obj.{succ u1, succ u2, u2, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Discrete.{u2} α) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F) j) (Prefunctor.obj.{succ u1, succ u2, u2, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Discrete.{u2} α) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F) j')
+Case conversion may be inaccurate. Consider using '#align category_theory.any_functor_const_on_obj CategoryTheory.any_functor_const_on_objₓ'. -/
 /-- If J is connected, any functor to a discrete category is constant on objects.
 The converse is given in `is_connected.of_any_functor_const_on_obj`.
 -/
@@ -102,6 +118,12 @@ theorem any_functor_const_on_obj [IsPreconnected J] {α : Type u₁} (F : J ⥤ 
   exact ((iso_constant F j').Hom.app j).down.1
 #align category_theory.any_functor_const_on_obj CategoryTheory.any_functor_const_on_obj
 
+/- warning: category_theory.is_connected.of_any_functor_const_on_obj -> CategoryTheory.IsConnected.of_any_functor_const_on_obj is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : Nonempty.{succ u2} J], (forall {α : Type.{u2}} (F : CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (j : J) (j' : J), Eq.{succ u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Functor.obj.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F j) (CategoryTheory.Functor.obj.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F j')) -> (CategoryTheory.IsConnected.{u1, u2} J _inst_1)
+but is expected to have type
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : Nonempty.{succ u2} J], (forall {α : Type.{u2}} (F : CategoryTheory.Functor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α)) (j : J) (j' : J), Eq.{succ u2} (CategoryTheory.Discrete.{u2} α) (Prefunctor.obj.{succ u1, succ u2, u2, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Discrete.{u2} α) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F) j) (Prefunctor.obj.{succ u1, succ u2, u2, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Discrete.{u2} α) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α))) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u2} J _inst_1 (CategoryTheory.Discrete.{u2} α) (CategoryTheory.discreteCategory.{u2} α) F) j')) -> (CategoryTheory.IsConnected.{u1, u2} J _inst_1)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_connected.of_any_functor_const_on_obj CategoryTheory.IsConnected.of_any_functor_const_on_objₓ'. -/
 /-- If any functor to a discrete category is constant on objects, J is connected.
 The converse of `any_functor_const_on_obj`.
 -/
@@ -112,6 +134,7 @@ theorem IsConnected.of_any_functor_const_on_obj [Nonempty J]
       ⟨NatIso.ofComponents (fun j => eqToIso (h F j j')) fun _ _ _ => Subsingleton.elim _ _⟩ }
 #align category_theory.is_connected.of_any_functor_const_on_obj CategoryTheory.IsConnected.of_any_functor_const_on_obj
 
+#print CategoryTheory.constant_of_preserves_morphisms /-
 /-- If `J` is connected, then given any function `F` such that the presence of a
 morphism `j₁ ⟶ j₂` implies `F j₁ = F j₂`, we have that `F` is constant.
 This can be thought of as a local-to-global property.
@@ -130,7 +153,9 @@ theorem constant_of_preserves_morphisms [IsPreconnected J] {α : Type u₁} (F :
               exact h _ _ f) }
       j j'
 #align category_theory.constant_of_preserves_morphisms CategoryTheory.constant_of_preserves_morphisms
+-/
 
+#print CategoryTheory.IsConnected.of_constant_of_preserves_morphisms /-
 /-- `J` is connected if: given any function `F : J → α` which is constant for any
 `j₁, j₂` for which there is a morphism `j₁ ⟶ j₂`, then `F` is constant.
 This can be thought of as a local-to-global property.
@@ -147,7 +172,9 @@ theorem IsConnected.of_constant_of_preserves_morphisms [Nonempty J]
       ext
       exact discrete.eq_of_hom (F.map f)
 #align category_theory.is_connected.of_constant_of_preserves_morphisms CategoryTheory.IsConnected.of_constant_of_preserves_morphisms
+-/
 
+#print CategoryTheory.induct_on_objects /-
 /-- An inductive-like property for the objects of a connected category.
 If the set `p` is nonempty, and `p` is closed under morphisms of `J`,
 then `p` contains all of `J`.
@@ -163,7 +190,9 @@ theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ �
   dsimp
   exact congr_arg ULift.up (propext (h1 f))
 #align category_theory.induct_on_objects CategoryTheory.induct_on_objects
+-/
 
+#print CategoryTheory.IsConnected.of_induct /-
 /--
 If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
 
@@ -179,6 +208,7 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
     intro j j'
     rw [w j, w j']
 #align category_theory.is_connected.of_induct CategoryTheory.IsConnected.of_induct
+-/
 
 /-- Lifting the universe level of morphisms and objects preserves connectedness. -/
 instance [hc : IsConnected J] : IsConnected (ULiftHom.{v₂} (ULift.{u₂} J)) :=
@@ -195,6 +225,12 @@ instance [hc : IsConnected J] : IsConnected (ULiftHom.{v₂} (ULift.{u₂} J)) :
     induct_on_objects (fun j : J => p { down := j }) hj₀' fun _ _ f =>
       h ((ulift_hom_ulift_category.equiv J).Functor.map f)
 
+/- warning: category_theory.is_preconnected_induction -> CategoryTheory.isPreconnected_induction is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] [_inst_3 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] (Z : J -> Sort.{u3}), (forall {j₁ : J} {j₂ : J}, (Quiver.Hom.{succ u1, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) j₁ j₂) -> (Z j₁) -> (Z j₂)) -> (forall {j₁ : J} {j₂ : J}, (Quiver.Hom.{succ u1, u2} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) j₁ j₂) -> (Z j₂) -> (Z j₁)) -> (forall {j₀ : J}, (Z j₀) -> (forall (j : J), Nonempty.{u3} (Z j)))
+but is expected to have type
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} J] [_inst_3 : CategoryTheory.IsPreconnected.{u2, u3} J _inst_1] (Z : J -> Sort.{u1}), (forall {j₁ : J} {j₂ : J}, (Quiver.Hom.{succ u2, u3} J (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} J (CategoryTheory.Category.toCategoryStruct.{u2, u3} J _inst_1)) j₁ j₂) -> (Z j₁) -> (Z j₂)) -> (forall {j₁ : J} {j₂ : J}, (Quiver.Hom.{succ u2, u3} J (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} J (CategoryTheory.Category.toCategoryStruct.{u2, u3} J _inst_1)) j₁ j₂) -> (Z j₂) -> (Z j₁)) -> (forall {j₀ : J}, (Z j₀) -> (forall (j : J), Nonempty.{u1} (Z j)))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_preconnected_induction CategoryTheory.isPreconnected_inductionₓ'. -/
 /-- Another induction principle for `is_preconnected J`:
 given a type family `Z : J → Sort*` and
 a rule for transporting in *both* directions along a morphism in `J`,
@@ -214,6 +250,12 @@ theorem isPreconnected_induction [IsPreconnected J] (Z : J → Sort _)
     _)
 #align category_theory.is_preconnected_induction CategoryTheory.isPreconnected_induction
 
+/- warning: category_theory.is_preconnected_of_equivalent -> CategoryTheory.isPreconnected_of_equivalent is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u2, u3} K] [_inst_4 : CategoryTheory.IsPreconnected.{u1, u3} J _inst_1], (CategoryTheory.Equivalence.{u1, u2, u3, u3} J _inst_1 K _inst_3) -> (CategoryTheory.IsPreconnected.{u2, u3} K _inst_3)
+but is expected to have type
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u2, u3} K] [_inst_4 : CategoryTheory.IsPreconnected.{u1, u3} J _inst_1], (CategoryTheory.Equivalence.{u1, u2, u3, u3} J K _inst_1 _inst_3) -> (CategoryTheory.IsPreconnected.{u2, u3} K _inst_3)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_preconnected_of_equivalent CategoryTheory.isPreconnected_of_equivalentₓ'. -/
 /-- If `J` and `K` are equivalent, then if `J` is preconnected then `K` is as well. -/
 theorem isPreconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPreconnected J]
     (e : J ≌ K) : IsPreconnected K :=
@@ -229,6 +271,12 @@ theorem isPreconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPrec
           ⟩ }
 #align category_theory.is_preconnected_of_equivalent CategoryTheory.isPreconnected_of_equivalent
 
+/- warning: category_theory.is_connected_of_equivalent -> CategoryTheory.isConnected_of_equivalent is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u2, u3} K], (CategoryTheory.Equivalence.{u1, u2, u3, u3} J _inst_1 K _inst_3) -> (forall [_inst_4 : CategoryTheory.IsConnected.{u1, u3} J _inst_1], CategoryTheory.IsConnected.{u2, u3} K _inst_3)
+but is expected to have type
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u2, u3} K], (CategoryTheory.Equivalence.{u1, u2, u3, u3} J K _inst_1 _inst_3) -> (forall [_inst_4 : CategoryTheory.IsConnected.{u1, u3} J _inst_1], CategoryTheory.IsConnected.{u2, u3} K _inst_3)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_connected_of_equivalent CategoryTheory.isConnected_of_equivalentₓ'. -/
 /-- If `J` and `K` are equivalent, then if `J` is connected then `K` is as well. -/
 theorem isConnected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌ K) [IsConnected J] :
     IsConnected K :=
@@ -236,6 +284,7 @@ theorem isConnected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌
     to_isPreconnected := isPreconnected_of_equivalent e }
 #align category_theory.is_connected_of_equivalent CategoryTheory.isConnected_of_equivalent
 
+#print CategoryTheory.isPreconnected_op /-
 /-- If `J` is preconnected, then `Jᵒᵖ` is preconnected as well. -/
 instance isPreconnected_op [IsPreconnected J] : IsPreconnected Jᵒᵖ
     where iso_constant α F X :=
@@ -250,29 +299,41 @@ instance isPreconnected_op [IsPreconnected J] : IsPreconnected Jᵒᵖ
                     (unop Y)).Hom)))
         fun Y Z f => Subsingleton.elim _ _⟩
 #align category_theory.is_preconnected_op CategoryTheory.isPreconnected_op
+-/
 
+#print CategoryTheory.isConnected_op /-
 /-- If `J` is connected, then `Jᵒᵖ` is connected as well. -/
 instance isConnected_op [IsConnected J] : IsConnected Jᵒᵖ
     where is_nonempty := Nonempty.intro (op (Classical.arbitrary J))
 #align category_theory.is_connected_op CategoryTheory.isConnected_op
+-/
 
+#print CategoryTheory.isPreconnected_of_isPreconnected_op /-
 theorem isPreconnected_of_isPreconnected_op [IsPreconnected Jᵒᵖ] : IsPreconnected J :=
   isPreconnected_of_equivalent (opOpEquivalence J)
 #align category_theory.is_preconnected_of_is_preconnected_op CategoryTheory.isPreconnected_of_isPreconnected_op
+-/
 
+#print CategoryTheory.isConnected_of_isConnected_op /-
 theorem isConnected_of_isConnected_op [IsConnected Jᵒᵖ] : IsConnected J :=
   isConnected_of_equivalent (opOpEquivalence J)
 #align category_theory.is_connected_of_is_connected_op CategoryTheory.isConnected_of_isConnected_op
+-/
 
+#print CategoryTheory.Zag /-
 /-- j₁ and j₂ are related by `zag` if there is a morphism between them. -/
 @[reducible]
 def Zag (j₁ j₂ : J) : Prop :=
   Nonempty (j₁ ⟶ j₂) ∨ Nonempty (j₂ ⟶ j₁)
 #align category_theory.zag CategoryTheory.Zag
+-/
 
+#print CategoryTheory.zag_symmetric /-
 theorem zag_symmetric : Symmetric (@Zag J _) := fun j₂ j₁ h => h.symm
 #align category_theory.zag_symmetric CategoryTheory.zag_symmetric
+-/
 
+#print CategoryTheory.Zigzag /-
 /-- `j₁` and `j₂` are related by `zigzag` if there is a chain of
 morphisms from `j₁` to `j₂`, with backward morphisms allowed.
 -/
@@ -280,15 +341,21 @@ morphisms from `j₁` to `j₂`, with backward morphisms allowed.
 def Zigzag : J → J → Prop :=
   Relation.ReflTransGen Zag
 #align category_theory.zigzag CategoryTheory.Zigzag
+-/
 
+#print CategoryTheory.zigzag_symmetric /-
 theorem zigzag_symmetric : Symmetric (@Zigzag J _) :=
   Relation.ReflTransGen.symmetric zag_symmetric
 #align category_theory.zigzag_symmetric CategoryTheory.zigzag_symmetric
+-/
 
+#print CategoryTheory.zigzag_equivalence /-
 theorem zigzag_equivalence : Equivalence (@Zigzag J _) :=
   Equivalence.mk _ Relation.reflexive_reflTransGen zigzag_symmetric Relation.transitive_reflTransGen
 #align category_theory.zigzag_equivalence CategoryTheory.zigzag_equivalence
+-/
 
+#print CategoryTheory.Zigzag.setoid /-
 /-- The setoid given by the equivalence relation `zigzag`. A quotient for this
 setoid is a connected component of the category.
 -/
@@ -297,7 +364,14 @@ def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoid J
   R := Zigzag
   iseqv := zigzag_equivalence
 #align category_theory.zigzag.setoid CategoryTheory.Zigzag.setoid
+-/
 
+/- warning: category_theory.zigzag_obj_of_zigzag -> CategoryTheory.zigzag_obj_of_zigzag is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} K] (F : CategoryTheory.Functor.{u1, u2, u3, u4} J _inst_1 K _inst_2) {j₁ : J} {j₂ : J}, (CategoryTheory.Zigzag.{u1, u3} J _inst_1 j₁ j₂) -> (CategoryTheory.Zigzag.{u2, u4} K _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} J _inst_1 K _inst_2 F j₁) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} J _inst_1 K _inst_2 F j₂))
+but is expected to have type
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} K] (F : CategoryTheory.Functor.{u1, u2, u3, u4} J _inst_1 K _inst_2) {j₁ : J} {j₂ : J}, (CategoryTheory.Zigzag.{u1, u3} J _inst_1 j₁ j₂) -> (CategoryTheory.Zigzag.{u2, u4} K _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} J (CategoryTheory.Category.toCategoryStruct.{u1, u3} J _inst_1)) K (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} K (CategoryTheory.Category.toCategoryStruct.{u2, u4} K _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} J _inst_1 K _inst_2 F) j₁) (Prefunctor.obj.{succ u1, succ u2, u3, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} J (CategoryTheory.Category.toCategoryStruct.{u1, u3} J _inst_1)) K (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} K (CategoryTheory.Category.toCategoryStruct.{u2, u4} K _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} J _inst_1 K _inst_2 F) j₂))
+Case conversion may be inaccurate. Consider using '#align category_theory.zigzag_obj_of_zigzag CategoryTheory.zigzag_obj_of_zigzagₓ'. -/
 /-- If there is a zigzag from `j₁` to `j₂`, then there is a zigzag from `F j₁` to
 `F j₂` as long as `F` is a functor.
 -/
@@ -306,12 +380,19 @@ theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : Zigzag j₁ j₂
   h.lift _ fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
 #align category_theory.zigzag_obj_of_zigzag CategoryTheory.zigzag_obj_of_zigzag
 
+/- warning: category_theory.zag_of_zag_obj -> CategoryTheory.zag_of_zag_obj is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} K] (F : CategoryTheory.Functor.{u1, u2, u3, u4} J _inst_1 K _inst_2) [_inst_3 : CategoryTheory.Full.{u1, u2, u3, u4} J _inst_1 K _inst_2 F] {j₁ : J} {j₂ : J}, (CategoryTheory.Zag.{u2, u4} K _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} J _inst_1 K _inst_2 F j₁) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} J _inst_1 K _inst_2 F j₂)) -> (CategoryTheory.Zag.{u1, u3} J _inst_1 j₁ j₂)
+but is expected to have type
+  forall {J : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} J] {K : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} K] (F : CategoryTheory.Functor.{u1, u2, u3, u4} J _inst_1 K _inst_2) [_inst_3 : CategoryTheory.Full.{u1, u2, u3, u4} J _inst_1 K _inst_2 F] {j₁ : J} {j₂ : J}, (CategoryTheory.Zag.{u2, u4} K _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} J (CategoryTheory.Category.toCategoryStruct.{u1, u3} J _inst_1)) K (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} K (CategoryTheory.Category.toCategoryStruct.{u2, u4} K _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} J _inst_1 K _inst_2 F) j₁) (Prefunctor.obj.{succ u1, succ u2, u3, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} J (CategoryTheory.Category.toCategoryStruct.{u1, u3} J _inst_1)) K (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} K (CategoryTheory.Category.toCategoryStruct.{u2, u4} K _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} J _inst_1 K _inst_2 F) j₂)) -> (CategoryTheory.Zag.{u1, u3} J _inst_1 j₁ j₂)
+Case conversion may be inaccurate. Consider using '#align category_theory.zag_of_zag_obj CategoryTheory.zag_of_zag_objₓ'. -/
 -- TODO: figure out the right way to generalise this to `zigzag`.
 theorem zag_of_zag_obj (F : J ⥤ K) [Full F] {j₁ j₂ : J} (h : Zag (F.obj j₁) (F.obj j₂)) :
     Zag j₁ j₂ :=
   Or.imp (Nonempty.map F.Preimage) (Nonempty.map F.Preimage) h
 #align category_theory.zag_of_zag_obj CategoryTheory.zag_of_zag_obj
 
+#print CategoryTheory.equiv_relation /-
 /-- Any equivalence relation containing (⟶) holds for all pairs of a connected category. -/
 theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalence r)
     (h : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), r j₁ j₂) : ∀ j₁ j₂ : J, r j₁ j₂ :=
@@ -321,13 +402,17 @@ theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalence 
       fun _ _ f => ⟨fun t => hr.2.2 t (h f), fun t => hr.2.2 t (hr.2.1 (h f))⟩
   intros ; apply hr.2.2 (hr.2.1 (z _)) (z _)
 #align category_theory.equiv_relation CategoryTheory.equiv_relation
+-/
 
+#print CategoryTheory.isConnected_zigzag /-
 /-- In a connected category, any two objects are related by `zigzag`. -/
 theorem isConnected_zigzag [IsConnected J] (j₁ j₂ : J) : Zigzag j₁ j₂ :=
   equiv_relation _ zigzag_equivalence
     (fun _ _ f => Relation.ReflTransGen.single (Or.inl (Nonempty.intro f))) _ _
 #align category_theory.is_connected_zigzag CategoryTheory.isConnected_zigzag
+-/
 
+#print CategoryTheory.zigzag_isConnected /-
 /-- If any two objects in an nonempty category are related by `zigzag`, the category is connected.
 -/
 theorem zigzag_isConnected [Nonempty J] (h : ∀ j₁ j₂ : J, Zigzag j₁ j₂) : IsConnected J :=
@@ -345,12 +430,16 @@ theorem zigzag_isConnected [Nonempty J] (h : ∀ j₁ j₂ : J, Zigzag j₁ j₂
       apply (hjp zag).symm
   rwa [this j (Classical.arbitrary J) (h _ _)]
 #align category_theory.zigzag_is_connected CategoryTheory.zigzag_isConnected
+-/
 
+#print CategoryTheory.exists_zigzag' /-
 theorem exists_zigzag' [IsConnected J] (j₁ j₂ : J) :
     ∃ l, List.Chain Zag j₁ l ∧ List.getLast (j₁ :: l) (List.cons_ne_nil _ _) = j₂ :=
   List.exists_chain_of_relationReflTransGen (isConnected_zigzag _ _)
 #align category_theory.exists_zigzag' CategoryTheory.exists_zigzag'
+-/
 
+#print CategoryTheory.isConnected_of_zigzag /-
 /-- If any two objects in an nonempty category are linked by a sequence of (potentially reversed)
 morphisms, then J is connected.
 
@@ -365,7 +454,9 @@ theorem isConnected_of_zigzag [Nonempty J]
   rcases h j₁ j₂ with ⟨l, hl₁, hl₂⟩
   apply List.relationReflTransGen_of_exists_chain l hl₁ hl₂
 #align category_theory.is_connected_of_zigzag CategoryTheory.isConnected_of_zigzag
+-/
 
+#print CategoryTheory.discreteIsConnectedEquivPunit /-
 /-- If `discrete α` is connected, then `α` is (type-)equivalent to `punit`. -/
 def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] : α ≃ PUnit :=
   Discrete.equivOfEquivalence.{u₁, u₁}
@@ -374,9 +465,16 @@ def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] :
       unitIso := iso_constant _ (Classical.arbitrary _)
       counitIso := Functor.pUnitExt _ _ }
 #align category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPunit
+-/
 
 variable {C : Type u₂} [Category.{u₁} C]
 
+/- warning: category_theory.nat_trans_from_is_connected -> CategoryTheory.nat_trans_from_is_connected is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u2, u3} C] [_inst_4 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] {X : C} {Y : C} (α : Quiver.Hom.{succ u2, max u1 u2 u3} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2 u3} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2 u3} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) X) (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) Y)) (j : J) (j' : J), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.obj.{u1, u2, u2, u3} J _inst_1 C _inst_3 (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) X) j) (CategoryTheory.Functor.obj.{u1, u2, u2, u3} J _inst_1 C _inst_3 (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) Y) j)) (CategoryTheory.NatTrans.app.{u1, u2, u2, u3} J _inst_1 C _inst_3 (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) X) (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) Y) α j) (CategoryTheory.NatTrans.app.{u1, u2, u2, u3} J _inst_1 C _inst_3 (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) X) (CategoryTheory.Functor.obj.{u2, u2, u3, max u1 u2 u3} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3) Y) α j')
+but is expected to have type
+  forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u2, u3} C] [_inst_4 : CategoryTheory.IsPreconnected.{u1, u2} J _inst_1] {X : C} {Y : C} (α : Quiver.Hom.{succ u2, max (max u2 u1) u3} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max u2 u3) u1} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max u2 u3) u1} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) X) (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) Y)) (j : J) (j' : J), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (Prefunctor.obj.{succ u1, succ u2, u2, u3} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u3} J _inst_1 C _inst_3 (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) X)) j) (Prefunctor.obj.{succ u1, succ u2, u2, u3} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u2, u3} J _inst_1 C _inst_3 (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) Y)) j)) (CategoryTheory.NatTrans.app.{u1, u2, u2, u3} J _inst_1 C _inst_3 (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) X) (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) Y) α j) (CategoryTheory.NatTrans.app.{u1, u2, u2, u3} J _inst_1 C _inst_3 (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) X) (Prefunctor.obj.{succ u2, succ u2, u3, max (max u2 u1) u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_3)) (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.CategoryStruct.toQuiver.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Category.toCategoryStruct.{u2, max (max (max u2 u1) u3) u2} (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, max (max (max u2 u1) u3) u2} C _inst_3 (CategoryTheory.Functor.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.category.{u1, u2, u2, u3} J _inst_1 C _inst_3) (CategoryTheory.Functor.const.{u1, u2, u2, u3} J _inst_1 C _inst_3)) Y) α j')
+Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans_from_is_connected CategoryTheory.nat_trans_from_is_connectedₓ'. -/
 /-- For objects `X Y : C`, any natural transformation `α : const X ⟶ const Y` from a connected
 category must be constant.
 This is the key property of connected categories which we use to establish properties about limits.
@@ -398,6 +496,7 @@ instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C)
     ext j
     apply nat_trans_from_is_connected f (Classical.arbitrary J) j
 
+#print CategoryTheory.nonempty_hom_of_connected_groupoid /-
 instance nonempty_hom_of_connected_groupoid {G} [Groupoid G] [IsConnected G] :
     ∀ x y : G, Nonempty (x ⟶ y) :=
   by
@@ -405,6 +504,7 @@ instance nonempty_hom_of_connected_groupoid {G} [Groupoid G] [IsConnected G] :
   exact
     ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.map fun f => inv f, fun _ _ _ => Nonempty.map2 (· ≫ ·)⟩
 #align category_theory.nonempty_hom_of_connected_groupoid CategoryTheory.nonempty_hom_of_connected_groupoid
+-/
 
 end CategoryTheory
 

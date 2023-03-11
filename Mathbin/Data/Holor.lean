@@ -264,7 +264,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align holor.zero_mul Holor.zero_mulₓ'. -/
 @[simp]
 theorem zero_mul {α : Type} [Ring α] (x : Holor α ds₂) : (0 : Holor α ds₁) ⊗ x = 0 :=
-  funext fun t => zero_mul (x (HolorIndex.drop t))
+  funext fun t => MulZeroClass.zero_mul (x (HolorIndex.drop t))
 #align holor.zero_mul Holor.zero_mul
 
 /- warning: holor.mul_zero -> Holor.mul_zero is a dubious translation:
@@ -275,7 +275,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align holor.mul_zero Holor.mul_zeroₓ'. -/
 @[simp]
 theorem mul_zero {α : Type} [Ring α] (x : Holor α ds₁) : x ⊗ (0 : Holor α ds₂) = 0 :=
-  funext fun t => mul_zero (x (HolorIndex.take t))
+  funext fun t => MulZeroClass.mul_zero (x (HolorIndex.take t))
 #align holor.mul_zero Holor.mul_zero
 
 /- warning: holor.mul_scalar_mul -> Holor.mul_scalar_mul is a dubious translation:
@@ -469,7 +469,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align holor.cprank_max_mul Holor.cprankMax_mulₓ'. -/
 theorem cprankMax_mul [Ring α] :
     ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CPRankMax n y → CPRankMax n (x ⊗ y)
-  | 0, x, _, cprank_max.zero => by simp [mul_zero x, cprank_max.zero]
+  | 0, x, _, cprank_max.zero => by simp [MulZeroClass.mul_zero x, cprank_max.zero]
   | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ =>
     by
     rw [mul_left_distrib]

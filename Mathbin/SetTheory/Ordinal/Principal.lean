@@ -323,7 +323,7 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} :
     suffices e : (omega^log omega o) * ↑n + o = o
     · simpa only [e] using le_add_right ((omega^log omega o) * ↑n) o
     induction' n with n IH
-    · simp only [Nat.cast_zero, mul_zero, zero_add]
+    · simp only [Nat.cast_zero, MulZeroClass.mul_zero, zero_add]
     simp only [Nat.cast_succ, mul_add_one, add_assoc, this, IH]
 #align ordinal.principal_add_iff_zero_or_omega_opow Ordinal.principal_add_iff_zero_or_omega_opow
 
@@ -365,10 +365,10 @@ theorem mul_principal_add_is_principal_add (a : Ordinal.{u}) {b : Ordinal.{u}} (
     (hb : Principal (· + ·) b) : Principal (· + ·) (a * b) :=
   by
   rcases eq_zero_or_pos a with (rfl | ha)
-  · rw [zero_mul]
+  · rw [MulZeroClass.zero_mul]
     exact principal_zero
   · rcases eq_zero_or_pos b with (rfl | hb₁')
-    · rw [mul_zero]
+    · rw [MulZeroClass.mul_zero]
       exact principal_zero
     · rw [← succ_le_iff, succ_zero] at hb₁'
       intro c d hc hd
@@ -393,7 +393,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_
 theorem principal_mul_one : Principal (· * ·) 1 :=
   by
   rw [principal_one_iff]
-  exact zero_mul _
+  exact MulZeroClass.zero_mul _
 #align ordinal.principal_mul_one Ordinal.principal_mul_one
 
 /- warning: ordinal.principal_mul_two -> Ordinal.principal_mul_two is a dubious translation:
@@ -474,7 +474,7 @@ theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
       · rwa [← succ_le_iff, succ_zero] at ha₀
     · exact op_eq_self_of_principal hao (mul_is_normal ha₀) h (principal_mul_is_limit ho h)
   · rcases eq_or_ne a 0 with (rfl | ha)
-    · rwa [zero_mul]
+    · rwa [MulZeroClass.zero_mul]
     rw [← Ordinal.pos_iff_ne_zero] at ha
     rw [← h a ha hao]
     exact (mul_is_normal ha).StrictMono hbo

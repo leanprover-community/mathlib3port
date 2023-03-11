@@ -298,7 +298,7 @@ variable [SMul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
 instance : SMul R (OuterMeasure α) :=
   ⟨fun c m =>
     { measureOf := fun s => c • m s
-      Empty := by rw [← smul_one_mul c (_ : ℝ≥0∞), empty', mul_zero]
+      Empty := by rw [← smul_one_mul c (_ : ℝ≥0∞), empty', MulZeroClass.mul_zero]
       mono := fun s t h => by
         rw [← smul_one_mul c (m s), ← smul_one_mul c (m t)]
         exact ENNReal.mul_left_mono (m.mono h)

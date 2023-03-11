@@ -660,8 +660,8 @@ variable (ι)
 instance NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring {R : Type _} [AddMonoid ι]
     [NonUnitalNonAssocSemiring R] : DirectSum.GnonUnitalNonAssocSemiring fun i : ι => R :=
   { Mul.gMul ι with
-    mul_zero := fun i j => mul_zero
-    zero_mul := fun i j => zero_mul
+    mul_zero := fun i j => MulZeroClass.mul_zero
+    zero_mul := fun i j => MulZeroClass.zero_mul
     mul_add := fun i j => mul_add
     add_mul := fun i j => add_mul }
 #align non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring

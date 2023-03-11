@@ -103,8 +103,8 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
   by
   cases' eq_or_ne b 0 with hb hb
   · -- case `b = 0`
-    simp only [hb, inv_zero, mul_zero, MulChar.map_zero, zero_mul, Finset.sum_const_zero,
-      map_zero_one, mul_one]
+    simp only [hb, inv_zero, MulZeroClass.mul_zero, MulChar.map_zero, MulZeroClass.zero_mul,
+      Finset.sum_const_zero, map_zero_one, mul_one]
     exact hχ.sum_eq_zero.symm
   · -- case `b ≠ 0`
     refine' (Fintype.sum_bijective _ (Equiv.mulLeft_bijective₀ b hb) _ _ fun x => _).symm
@@ -122,7 +122,7 @@ theorem gaussSum_mul_gaussSum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial χ
   rw [Finset.sum_comm]
   classical
     -- to get `[decidable_eq R]` for `sum_mul_shift`
-    simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, mul_zero]
+    simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, MulZeroClass.mul_zero]
     rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
     simp only [Finset.mem_univ, map_one, one_mul, if_true]
 #align gauss_sum_mul_gauss_sum_eq_card gaussSum_mul_gaussSum_eq_card
@@ -309,7 +309,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
     · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
         Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_vecAppend,
         Matrix.cons_vecAlt0, Matrix.cons_vecAlt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
-        zero_mul]
+        MulZeroClass.zero_mul]
       rfl
     convert_to 8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) = _
     · ring

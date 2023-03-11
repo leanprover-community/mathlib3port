@@ -292,13 +292,13 @@ theorem IndepFunCat.integral_mul (hXY : IndepFunCat X Y μ) (hX : AeStronglyMeas
       filter_upwards [h'X]with ω hω
       simp [hω]
     simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const,
-      Algebra.id.smul_eq_mul, mul_zero, zero_mul]
+      Algebra.id.smul_eq_mul, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
   by_cases h'Y : Y =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
       filter_upwards [h'Y]with ω hω
       simp [hω]
     simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const,
-      Algebra.id.smul_eq_mul, mul_zero, zero_mul]
+      Algebra.id.smul_eq_mul, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
   by_cases h : integrable (X * Y) μ
   · have HX : integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
     have HY : integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X

@@ -168,7 +168,7 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
   let f := fun m i : ℕ => (x + y) ^ i * y ^ (m - 1 - i)
   change (∑ i in range n, (f n) i) * x + y ^ n = (x + y) ^ n
   induction' n with n ih
-  · rw [range_zero, sum_empty, zero_mul, zero_add, pow_zero, pow_zero]
+  · rw [range_zero, sum_empty, MulZeroClass.zero_mul, zero_add, pow_zero, pow_zero]
   · have f_last : f (n + 1) n = (x + y) ^ n := by
       dsimp [f]
       rw [← tsub_add_eq_tsub_tsub, Nat.add_comm, tsub_self, pow_zero, mul_one]
@@ -713,7 +713,7 @@ theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) :
   by
   refine' (Nat.le_div_iff_mul_le <| tsub_pos_of_lt hb).2 _
   cases n
-  · rw [sum_range_zero, zero_mul]
+  · rw [sum_range_zero, MulZeroClass.zero_mul]
     exact Nat.zero_le _
   rw [mul_comm]
   exact (Nat.pred_mul_geom_sum_le a b n).trans tsub_le_self

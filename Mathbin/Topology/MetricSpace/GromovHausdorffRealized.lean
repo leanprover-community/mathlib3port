@@ -192,14 +192,14 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
       f (inl x, inr y) ≤ maxVar X Y := candidates_le_maxVar fA
       _ = maxVar X Y * 1 := by simp
       _ ≤ maxVar X Y * dist (inl x) (inr y) :=
-        mul_le_mul_of_nonneg_left Sum.one_dist_le (le_trans zero_le_one (one_le_maxVar X Y))
+        mul_le_mul_of_nonneg_left Sum.one_le_dist_inl_inr (le_trans zero_le_one (one_le_maxVar X Y))
       
   | inr x, inl y =>
     calc
       f (inr x, inl y) ≤ maxVar X Y := candidates_le_maxVar fA
       _ = maxVar X Y * 1 := by simp
       _ ≤ maxVar X Y * dist (inl x) (inr y) :=
-        mul_le_mul_of_nonneg_left Sum.one_dist_le (le_trans zero_le_one (one_le_maxVar X Y))
+        mul_le_mul_of_nonneg_left Sum.one_le_dist_inl_inr (le_trans zero_le_one (one_le_maxVar X Y))
       
   | inr x, inr y =>
     calc

@@ -339,7 +339,7 @@ def normalize : ProbabilityMeasure Ω :=
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s :=
   by
   obtain rfl | h := eq_or_ne μ 0
-  · simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
+  · simp only [zero.mass, coe_fn_zero, Pi.zero_apply, MulZeroClass.zero_mul]
   have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
   simp only [normalize, dif_neg mass_nonzero, ENNReal.toNNReal_mul, Subtype.coe_mk,
     probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure, ENNReal.toNNReal_coe,

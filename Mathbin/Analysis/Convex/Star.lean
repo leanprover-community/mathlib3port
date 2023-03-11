@@ -421,9 +421,9 @@ theorem starConvex_iff_div :
   ⟨fun h y hy a b ha hb hab => by
     apply h hy
     · have ha' := mul_le_mul_of_nonneg_left ha (inv_pos.2 hab).le
-      rwa [mul_zero, ← div_eq_inv_mul] at ha'
+      rwa [MulZeroClass.mul_zero, ← div_eq_inv_mul] at ha'
     · have hb' := mul_le_mul_of_nonneg_left hb (inv_pos.2 hab).le
-      rwa [mul_zero, ← div_eq_inv_mul] at hb'
+      rwa [MulZeroClass.mul_zero, ← div_eq_inv_mul] at hb'
     · rw [← add_div]
       exact div_self hab.ne', fun h y hy a b ha hb hab =>
     by

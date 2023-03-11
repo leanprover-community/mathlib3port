@@ -475,9 +475,9 @@ theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
         Fin.succ_zero_eq_one', Fintype.univ_of_isEmpty, Finset.sum_empty, o.area_form_apply_self,
         map_smul, map_add, map_zero, inner_smul_left, inner_smul_right, inner_add_left,
         inner_add_right, inner_zero_right, LinearMap.add_apply, Matrix.cons_val_one,
-        Matrix.head_cons, Algebra.id.smul_eq_mul, o.area_form_right_angle_rotation_right, mul_zero,
-        add_zero, zero_add, neg_zero, o.inner_right_angle_rotation_right, o.area_form_apply_self,
-        real_inner_self_eq_norm_sq]
+        Matrix.head_cons, Algebra.id.smul_eq_mul, o.area_form_right_angle_rotation_right,
+        MulZeroClass.mul_zero, add_zero, zero_add, neg_zero, o.inner_right_angle_rotation_right,
+        o.area_form_apply_self, real_inner_self_eq_norm_sq]
       exact this
     rintro ⟨ha, hb⟩
     have hx' : 0 < ‖x‖ := by simpa using hx
@@ -487,7 +487,8 @@ theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
   · intro h
     obtain ⟨r, hr, rfl⟩ := h.exists_nonneg_left hx
     simp only [inner_smul_right, real_inner_self_eq_norm_sq, LinearMap.map_smulₛₗ,
-      area_form_apply_self, Algebra.id.smul_eq_mul, mul_zero, eq_self_iff_true, and_true_iff]
+      area_form_apply_self, Algebra.id.smul_eq_mul, MulZeroClass.mul_zero, eq_self_iff_true,
+      and_true_iff]
     positivity
 #align orientation.nonneg_inner_and_area_form_eq_zero_iff_same_ray Orientation.nonneg_inner_and_areaForm_eq_zero_iff_sameRay
 

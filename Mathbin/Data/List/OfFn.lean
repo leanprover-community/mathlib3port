@@ -243,7 +243,7 @@ theorem ofFn_mul {m n} (f : Fin (m * n) → α) :
                   ⟩) :=
   by
   induction' m with m IH
-  · simp_rw [of_fn_zero, zero_mul, of_fn_zero, join]
+  · simp_rw [of_fn_zero, MulZeroClass.zero_mul, of_fn_zero, join]
   · simp_rw [of_fn_succ', succ_mul, join_concat, of_fn_add, IH]
     rfl
 #align list.of_fn_mul List.ofFn_mul

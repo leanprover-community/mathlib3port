@@ -979,7 +979,7 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε
       refine' ((L (f t)).dist_le_op_norm _ _).trans _
       exact mul_le_mul_of_nonneg_left (hg h2t) (norm_nonneg _)
     · rw [nmem_support] at ht
-      simp_rw [ht, L.map_zero₂, L.map_zero, norm_zero, zero_mul, dist_self]
+      simp_rw [ht, L.map_zero₂, L.map_zero, norm_zero, MulZeroClass.zero_mul, dist_self]
   simp_rw [convolution_def]
   simp_rw [dist_eq_norm] at h2⊢
   rw [← integral_sub hfg.integrable]

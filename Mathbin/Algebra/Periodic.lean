@@ -840,7 +840,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.antiperiodic.nat_mul_eq_of_eq_zero Function.Antiperiodic.nat_mul_eq_of_eq_zeroₓ'. -/
 theorem Antiperiodic.nat_mul_eq_of_eq_zero [Ring α] [NegZeroClass β] (h : Antiperiodic f c)
     (hi : f 0 = 0) : ∀ n : ℕ, f (n * c) = 0
-  | 0 => by rwa [Nat.cast_zero, zero_mul]
+  | 0 => by rwa [Nat.cast_zero, MulZeroClass.zero_mul]
   | n + 1 => by simp [add_mul, antiperiodic.nat_mul_eq_of_eq_zero n, h _]
 #align function.antiperiodic.nat_mul_eq_of_eq_zero Function.Antiperiodic.nat_mul_eq_of_eq_zero
 

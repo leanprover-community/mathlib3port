@@ -422,16 +422,18 @@ theorem volumePreservingTransvectionStruct [DecidableEq ι] (t : TransvectionStr
     ext (f k)
     simp only [LinearEquiv.map_smul, dite_eq_ite, LinearMap.id_coe, p, ite_not,
       Algebra.id.smul_eq_mul, one_mul, dot_product, std_basis_matrix,
-      MeasurableEquiv.piEquivPiSubtypeProd_symm_apply, id.def, transvection, Pi.add_apply, zero_mul,
-      LinearMap.smul_apply, Function.comp_apply, MeasurableEquiv.piEquivPiSubtypeProd_apply,
-      Matrix.TransvectionStruct.toMatrix_mk, Matrix.mulVec, LinearEquiv.map_add, ite_mul, e,
-      Matrix.toLin'_apply, Pi.smul_apply, Subtype.coe_mk, g, LinearMap.add_apply, Finset.sum_congr,
-      Matrix.toLin'_one]
+      MeasurableEquiv.piEquivPiSubtypeProd_symm_apply, id.def, transvection, Pi.add_apply,
+      MulZeroClass.zero_mul, LinearMap.smul_apply, Function.comp_apply,
+      MeasurableEquiv.piEquivPiSubtypeProd_apply, Matrix.TransvectionStruct.toMatrix_mk,
+      Matrix.mulVec, LinearEquiv.map_add, ite_mul, e, Matrix.toLin'_apply, Pi.smul_apply,
+      Subtype.coe_mk, g, LinearMap.add_apply, Finset.sum_congr, Matrix.toLin'_one]
     by_cases h : t_i = k
     ·
       simp only [h, true_and_iff, Finset.mem_univ, if_true, eq_self_iff_true, Finset.sum_ite_eq,
         one_apply, boole_mul, add_comm]
-    · simp only [h, Ne.symm h, add_zero, if_false, Finset.sum_const_zero, false_and_iff, mul_zero]
+    ·
+      simp only [h, Ne.symm h, add_zero, if_false, Finset.sum_const_zero, false_and_iff,
+        MulZeroClass.mul_zero]
   rw [this]
   have A : measure_preserving e := by
     convert volume_preserving_pi_equiv_pi_subtype_prod (fun i : ι => ℝ) p

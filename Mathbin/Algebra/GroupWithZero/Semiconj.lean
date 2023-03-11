@@ -32,7 +32,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiconj_by.zero_right SemiconjBy.zero_rightₓ'. -/
 @[simp]
 theorem zero_right [MulZeroClass G₀] (a : G₀) : SemiconjBy a 0 0 := by
-  simp only [SemiconjBy, mul_zero, zero_mul]
+  simp only [SemiconjBy, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
 #align semiconj_by.zero_right SemiconjBy.zero_right
 
 /- warning: semiconj_by.zero_left -> SemiconjBy.zero_left is a dubious translation:
@@ -43,7 +43,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiconj_by.zero_left SemiconjBy.zero_leftₓ'. -/
 @[simp]
 theorem zero_left [MulZeroClass G₀] (x y : G₀) : SemiconjBy 0 x y := by
-  simp only [SemiconjBy, mul_zero, zero_mul]
+  simp only [SemiconjBy, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
 #align semiconj_by.zero_left SemiconjBy.zero_left
 
 variable [GroupWithZero G₀] {a x y x' y' : G₀}
@@ -82,7 +82,7 @@ theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ :=
   · simp only [ha, zero_left]
   by_cases hx : x = 0
   · subst x
-    simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
+    simp only [SemiconjBy, MulZeroClass.mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
     simp [h.resolve_right ha]
   · have := mul_ne_zero ha hx
     rw [h.eq, mul_ne_zero_iff] at this

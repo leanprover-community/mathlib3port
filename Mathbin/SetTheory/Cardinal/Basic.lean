@@ -2217,7 +2217,8 @@ theorem mul_lt_aleph0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0 
       refine' (mul_le_mul' le_rfl hb).trans_lt h
     · rw [← one_mul b]
       refine' (mul_le_mul' ha le_rfl).trans_lt h
-  rintro (rfl | rfl | ⟨ha, hb⟩) <;> simp only [*, mul_lt_aleph_0, aleph_0_pos, zero_mul, mul_zero]
+  rintro (rfl | rfl | ⟨ha, hb⟩) <;>
+    simp only [*, mul_lt_aleph_0, aleph_0_pos, MulZeroClass.zero_mul, MulZeroClass.mul_zero]
 #align cardinal.mul_lt_aleph_0_iff Cardinal.mul_lt_aleph0_iff
 
 /- warning: cardinal.aleph_0_le_mul_iff -> Cardinal.aleph0_le_mul_iff is a dubious translation:
@@ -2591,17 +2592,17 @@ Case conversion may be inaccurate. Consider using '#align cardinal.to_nat_mul Ca
 theorem toNat_mul (x y : Cardinal) : (x * y).toNat = x.toNat * y.toNat :=
   by
   rcases eq_or_ne x 0 with (rfl | hx1)
-  · rw [zero_mul, zero_to_nat, zero_mul]
+  · rw [MulZeroClass.zero_mul, zero_to_nat, MulZeroClass.zero_mul]
   rcases eq_or_ne y 0 with (rfl | hy1)
-  · rw [mul_zero, zero_to_nat, mul_zero]
+  · rw [MulZeroClass.mul_zero, zero_to_nat, MulZeroClass.mul_zero]
   cases' lt_or_le x ℵ₀ with hx2 hx2
   · cases' lt_or_le y ℵ₀ with hy2 hy2
     · lift x to ℕ using hx2
       lift y to ℕ using hy2
       rw [← Nat.cast_mul, to_nat_cast, to_nat_cast, to_nat_cast]
-    · rw [to_nat_apply_of_aleph_0_le hy2, mul_zero, to_nat_apply_of_aleph_0_le]
+    · rw [to_nat_apply_of_aleph_0_le hy2, MulZeroClass.mul_zero, to_nat_apply_of_aleph_0_le]
       exact aleph_0_le_mul_iff'.2 (Or.inl ⟨hx1, hy2⟩)
-  · rw [to_nat_apply_of_aleph_0_le hx2, zero_mul, to_nat_apply_of_aleph_0_le]
+  · rw [to_nat_apply_of_aleph_0_le hx2, MulZeroClass.zero_mul, to_nat_apply_of_aleph_0_le]
     exact aleph_0_le_mul_iff'.2 (Or.inr ⟨hx2, hy1⟩)
 #align cardinal.to_nat_mul Cardinal.toNat_mul
 

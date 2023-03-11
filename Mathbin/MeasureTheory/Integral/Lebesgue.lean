@@ -1074,7 +1074,7 @@ theorem restrict_lintegral (f : α →ₛ ℝ≥0∞) {s : Set α} (hs : Measura
     _ = ∑ r in f.range, r * μ (f ⁻¹' {r} ∩ s) :=
       Finset.sum_congr rfl <|
         forall_range_iff.2 fun b =>
-          if hb : f b = 0 then by simp only [hb, zero_mul]
+          if hb : f b = 0 then by simp only [hb, MulZeroClass.zero_mul]
           else by rw [restrict_preimage_singleton _ hs hb, inter_comm]
     
 #align measure_theory.simple_func.restrict_lintegral MeasureTheory.SimpleFunc.restrict_lintegral
@@ -1255,7 +1255,7 @@ protected theorem mul {β} [MonoidWithZero β] {f g : α →ₛ β} (hf : f.FinM
     (hg : g.FinMeasSupp μ) : (f * g).FinMeasSupp μ :=
   by
   rw [mul_eq_map₂]
-  exact hf.map₂ hg (zero_mul 0)
+  exact hf.map₂ hg (MulZeroClass.zero_mul 0)
 #align measure_theory.simple_func.fin_meas_supp.mul MeasureTheory.SimpleFunc.FinMeasSupp.mul
 
 theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf : ∀ᵐ a ∂μ, f a ≠ ∞) :
@@ -1266,7 +1266,7 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
     simp [Set.preimage, hf]
   · by_cases ha0 : a = 0
     · subst a
-      rwa [zero_mul]
+      rwa [MulZeroClass.zero_mul]
     · exact mul_ne_top ha (fin_meas_supp_iff.1 hm _ ha0).Ne
 #align measure_theory.simple_func.fin_meas_supp.lintegral_lt_top MeasureTheory.SimpleFunc.FinMeasSupp.lintegral_lt_top
 
@@ -1648,7 +1648,7 @@ theorem lintegral_supᵢ {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable
     have : s x ≠ 0 := by
       refine' mt _ this
       intro h
-      rw [h, mul_zero]
+      rw [h, MulZeroClass.mul_zero]
     have : (rs.map c) x < ⨆ n : ℕ, f n x :=
       by
       refine' lt_of_lt_of_le (ENNReal.coe_lt_coe.2 _) (hsf x)
@@ -3200,7 +3200,7 @@ theorem lintegral_withDensity_eq_lintegral_mul₀' {μ : Measure α} {f : α →
         filter_upwards [ae_restrict_mem M]
         intro x hx
         simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
-        simp only [hx, zero_mul, Pi.mul_apply]
+        simp only [hx, MulZeroClass.zero_mul, Pi.mul_apply]
     _ = ∫⁻ a : α, (f * g) a ∂μ := by
       apply lintegral_congr_ae
       filter_upwards [hf.ae_eq_mk]
@@ -3245,7 +3245,7 @@ theorem lintegral_withDensity_eq_lintegral_mul_non_measurable (μ : Measure α) 
   intro x h'x
   rcases eq_or_ne (f x) 0 with (hx | hx)
   · have := hi x
-    simp only [hx, zero_mul, Pi.mul_apply, nonpos_iff_eq_zero] at this
+    simp only [hx, MulZeroClass.zero_mul, Pi.mul_apply, nonpos_iff_eq_zero] at this
     simp [this]
   · apply le_of_eq _
     dsimp
@@ -3447,7 +3447,7 @@ theorem SimpleFunc.exists_lt_lintegral_simpleFunc_of_lt_lintegral {m : Measurabl
       coe_indicator, Function.const_apply] at hL
     have c_ne_zero : c ≠ 0 := by
       intro hc
-      simpa only [hc, ENNReal.coe_zero, zero_mul, not_lt_zero] using hL
+      simpa only [hc, ENNReal.coe_zero, MulZeroClass.zero_mul, not_lt_zero] using hL
     have : L / c < μ s := by
       rwa [ENNReal.div_lt_iff, mul_comm]
       · simp only [c_ne_zero, Ne.def, coe_eq_zero, not_false_iff, true_or_iff]

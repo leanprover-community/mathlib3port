@@ -168,7 +168,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     fun t ht => by rw [closedBall_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
   rw [set_lintegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int''), lintegral_const 0,
-    zero_mul]
+    MulZeroClass.zero_mul]
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm
 

@@ -215,7 +215,7 @@ theorem t_derivative_eq_u : ∀ n : ℕ, derivative (t R (n + 1)) = (n + 1) * u 
           2 * t R (n + 2) + 2 * X * derivative (t R (n + 1 + 1)) - derivative (t R (n + 1)) :=
         by
         simp only [T_add_two _ (n + 1), derivative_sub, derivative_mul, derivative_X,
-          derivative_bit0, derivative_one, bit0_zero, zero_mul, zero_add, mul_one]
+          derivative_bit0, derivative_one, bit0_zero, MulZeroClass.zero_mul, zero_add, mul_one]
       _ =
           2 * (u R (n + 1 + 1) - X * u R (n + 1)) + 2 * X * ((n + 1 + 1) * u R (n + 1)) -
             (n + 1) * u R n :=

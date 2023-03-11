@@ -100,7 +100,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
       by
       apply tendsto.mono_left _ nhdsWithin_le_nhds
       exact (tendsto_id.mul tendsto_const_nhds).add tendsto_id
-    rw [zero_mul, zero_add] at A
+    rw [MulZeroClass.zero_mul, zero_add] at A
     exact (((tendsto_order.1 A).2 ε εpos).And self_mem_nhdsWithin).exists
   suffices ∀ᶠ i in l, ‖∫ x in s, φ i x • g x ∂μ‖ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ
     by
@@ -296,7 +296,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
       · infer_instance
       apply tendsto_pow_atTop_nhds_0_of_lt_1 (div_nonneg t_pos t'_pos.le)
       exact (div_lt_one t'_pos).2 tt'
-    rw [mul_zero] at N
+    rw [MulZeroClass.mul_zero] at N
     refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
     filter_upwards [(tendsto_order.1 N).2 ε εpos]with n hn x hx
     simp only [Pi.zero_apply, dist_zero_left, Real.norm_of_nonneg (hnφ n x hx.1)]

@@ -114,7 +114,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit_zero_iff isUnit_zero_iffₓ'. -/
 @[simp]
 theorem isUnit_zero_iff : IsUnit (0 : M₀) ↔ (0 : M₀) = 1 :=
-  ⟨fun ⟨⟨_, a, (a0 : 0 * a = 1), _⟩, rfl⟩ => by rwa [zero_mul] at a0, fun h =>
+  ⟨fun ⟨⟨_, a, (a0 : 0 * a = 1), _⟩, rfl⟩ => by rwa [MulZeroClass.zero_mul] at a0, fun h =>
     @isUnit_of_subsingleton _ _ (subsingleton_of_zero_eq_one h) 0⟩
 #align is_unit_zero_iff isUnit_zero_iff
 

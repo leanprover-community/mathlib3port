@@ -37,8 +37,8 @@ instance [MulZeroClass α] : MulZeroClass αᵐᵒᵖ
     where
   zero := 0
   mul := (· * ·)
-  zero_mul x := unop_injective <| mul_zero <| unop x
-  mul_zero x := unop_injective <| zero_mul <| unop x
+  zero_mul x := unop_injective <| MulZeroClass.mul_zero <| unop x
+  mul_zero x := unop_injective <| MulZeroClass.zero_mul <| unop x
 
 instance [MulZeroOneClass α] : MulZeroOneClass αᵐᵒᵖ :=
   { MulOpposite.mulZeroClass α, MulOpposite.mulOneClass α with }
@@ -118,8 +118,8 @@ instance [MulZeroClass α] : MulZeroClass αᵃᵒᵖ
     where
   zero := 0
   mul := (· * ·)
-  zero_mul x := unop_injective <| zero_mul <| unop x
-  mul_zero x := unop_injective <| mul_zero <| unop x
+  zero_mul x := unop_injective <| MulZeroClass.zero_mul <| unop x
+  mul_zero x := unop_injective <| MulZeroClass.mul_zero <| unop x
 
 instance [MulZeroOneClass α] : MulZeroOneClass αᵃᵒᵖ :=
   { AddOpposite.mulZeroClass α, AddOpposite.mulOneClass α with }

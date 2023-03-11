@@ -1032,7 +1032,7 @@ theorem eq_of_dvd_of_div_eq_one {a b : ℕ} (w : a ∣ b) (h : b / a = 1) : a = 
 
 #print Nat.eq_zero_of_dvd_of_div_eq_zero /-
 theorem eq_zero_of_dvd_of_div_eq_zero {a b : ℕ} (w : a ∣ b) (h : b / a = 0) : b = 0 := by
-  rw [← Nat.div_mul_cancel w, h, zero_mul]
+  rw [← Nat.div_mul_cancel w, h, MulZeroClass.zero_mul]
 #align nat.eq_zero_of_dvd_of_div_eq_zero Nat.eq_zero_of_dvd_of_div_eq_zero
 -/
 
@@ -1052,7 +1052,7 @@ theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
 theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m :=
   by
   cases' Nat.eq_zero_or_pos n with n0 h
-  · rw [n0, zero_mul]
+  · rw [n0, MulZeroClass.zero_mul]
     exact m.zero_le
   · rw [mul_comm, ← Nat.le_div_iff_mul_le' h]
 #align nat.mul_div_le Nat.mul_div_le

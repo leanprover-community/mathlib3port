@@ -457,13 +457,13 @@ theorem preVal_mul {x y : ModP K v O hv p} (hxy0 : x * y ≠ 0) :
     mt
       (by
         rintro rfl
-        rw [zero_mul])
+        rw [MulZeroClass.zero_mul])
       hxy0
   have hy0 : y ≠ 0 :=
     mt
       (by
         rintro rfl
-        rw [mul_zero])
+        rw [MulZeroClass.mul_zero])
       hxy0
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -620,9 +620,9 @@ theorem valAux_mul (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f * g) = valAux K v O hv p f * valAux K v O hv p g :=
   by
   by_cases hf : f = 0
-  · rw [hf, zero_mul, val_aux_zero, zero_mul]
+  · rw [hf, MulZeroClass.zero_mul, val_aux_zero, MulZeroClass.zero_mul]
   by_cases hg : g = 0
-  · rw [hg, mul_zero, val_aux_zero, mul_zero]
+  · rw [hg, MulZeroClass.mul_zero, val_aux_zero, MulZeroClass.mul_zero]
   obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
   obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
   replace hm := coeff_ne_zero_of_le hm (le_max_left m n)

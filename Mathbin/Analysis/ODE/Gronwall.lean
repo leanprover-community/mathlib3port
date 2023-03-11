@@ -62,7 +62,7 @@ theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
   by
   by_cases hK : K = 0
   · subst K
-    simp only [gronwallBound_K0, zero_mul, zero_add]
+    simp only [gronwallBound_K0, MulZeroClass.zero_mul, zero_add]
     convert ((hasDerivAt_id x).const_mul ε).const_add δ
     rw [mul_one]
   · simp only [gronwallBound_of_K_ne_0 hK]
@@ -84,19 +84,21 @@ theorem hasDerivAt_gronwallBound_shift (δ K ε x a : ℝ) :
 theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
   by
   by_cases hK : K = 0
-  · simp only [gronwallBound, if_pos hK, mul_zero, add_zero]
-  · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one, add_zero]
+  · simp only [gronwallBound, if_pos hK, MulZeroClass.mul_zero, add_zero]
+  ·
+    simp only [gronwallBound, if_neg hK, MulZeroClass.mul_zero, exp_zero, sub_self, mul_one,
+      add_zero]
 #align gronwall_bound_x0 gronwallBound_x0
 
 theorem gronwallBound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) :=
   by
   by_cases hK : K = 0
-  · simp only [gronwallBound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
-  · simp only [gronwallBound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
+  · simp only [gronwallBound_K0, hK, MulZeroClass.zero_mul, exp_zero, add_zero, mul_one]
+  · simp only [gronwallBound_of_K_ne_0 hK, zero_div, MulZeroClass.zero_mul, add_zero]
 #align gronwall_bound_ε0 gronwallBound_ε0
 
 theorem gronwallBound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
-  simp only [gronwallBound_ε0, zero_mul]
+  simp only [gronwallBound_ε0, MulZeroClass.zero_mul]
 #align gronwall_bound_ε0_δ0 gronwallBound_ε0_δ0
 
 theorem gronwallBound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x :=
@@ -260,7 +262,7 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
   by
   intro t ht
   have := dist_le_of_trajectories_ODE_of_mem_set hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
-  rwa [zero_mul, dist_le_zero] at this
+  rwa [MulZeroClass.zero_mul, dist_le_zero] at this
 #align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_set
 
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) with

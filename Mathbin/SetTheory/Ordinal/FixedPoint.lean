@@ -771,7 +771,7 @@ theorem nfp_add_zero (a) : nfp ((· + ·) a) 0 = a * omega :=
   simp_rw [← sup_iterate_eq_nfp, ← sup_mul_nat]
   congr ; funext
   induction' n with n hn
-  · rw [Nat.cast_zero, mul_zero, iterate_zero_apply]
+  · rw [Nat.cast_zero, MulZeroClass.mul_zero, iterate_zero_apply]
   · nth_rw 2 [Nat.succ_eq_one_add]
     rw [Nat.cast_add, Nat.cast_one, mul_one_add, iterate_succ_apply', hn]
 #align ordinal.nfp_add_zero Ordinal.nfp_add_zero
@@ -875,7 +875,7 @@ theorem nfp_mul_zero (a : Ordinal) : nfp ((· * ·) a) 0 = 0 :=
   rw [← Ordinal.le_zero, nfp_le_iff]
   intro n
   induction' n with n hn; · rfl
-  rwa [iterate_succ_apply, mul_zero]
+  rwa [iterate_succ_apply, MulZeroClass.mul_zero]
 #align ordinal.nfp_mul_zero Ordinal.nfp_mul_zero
 
 /- warning: ordinal.nfp_zero_mul -> Ordinal.nfp_zero_mul is a dubious translation:
@@ -892,7 +892,7 @@ theorem nfp_zero_mul : nfp ((· * ·) 0) = id :=
   induction' n with n hn; · rfl
   rw [Function.iterate_succ']
   change 0 * _ ≤ a
-  rw [zero_mul]
+  rw [MulZeroClass.zero_mul]
   exact Ordinal.zero_le a
 #align ordinal.nfp_zero_mul Ordinal.nfp_zero_mul
 
@@ -956,7 +956,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.mul_eq_right_i
 theorem mul_eq_right_iff_opow_omega_dvd {a b : Ordinal} : a * b = b ↔ (a^omega) ∣ b :=
   by
   cases' eq_zero_or_pos a with ha ha
-  · rw [ha, zero_mul, zero_opow omega_ne_zero, zero_dvd_iff]
+  · rw [ha, MulZeroClass.zero_mul, zero_opow omega_ne_zero, zero_dvd_iff]
     exact eq_comm
   refine' ⟨fun hab => _, fun h => _⟩
   · rw [dvd_iff_mod_eq_zero]
@@ -1019,7 +1019,7 @@ theorem deriv_mul_eq_opow_omega_mul {a : Ordinal.{u}} (ha : 0 < a) (b) :
   rw [← funext_iff,
     is_normal.eq_iff_zero_and_succ (deriv_is_normal _) (mul_is_normal (opow_pos omega ha))]
   refine' ⟨_, fun c h => _⟩
-  · rw [deriv_zero, nfp_mul_zero, mul_zero]
+  · rw [deriv_zero, nfp_mul_zero, MulZeroClass.mul_zero]
   · rw [deriv_succ, h]
     exact nfp_mul_opow_omega_add c ha zero_lt_one (one_le_iff_pos.2 (opow_pos _ ha))
 #align ordinal.deriv_mul_eq_opow_omega_mul Ordinal.deriv_mul_eq_opow_omega_mul

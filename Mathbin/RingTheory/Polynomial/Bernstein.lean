@@ -120,10 +120,10 @@ theorem derivative_succ_aux (n ν : ℕ) :
           ↑(n.choose (ν + 1)) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
     by
     simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub,
-      Polynomial.derivative_mul, Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add,
-      algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add, Polynomial.derivative_sub,
-      Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ← Nat.cast_succ,
-      Polynomial.C_eq_nat_cast]
+      Polynomial.derivative_mul, Polynomial.derivative_nat_cast, MulZeroClass.zero_mul,
+      Nat.cast_add, algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add,
+      Polynomial.derivative_sub, Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ←
+      Nat.cast_succ, Polynomial.C_eq_nat_cast]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
   refine' congr (congr_arg Sub.sub _) _
@@ -362,7 +362,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     -- Step inside the sum:
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
-      Bool.cond_false, add_zero, mul_one, mul_zero, smul_zero, MvPolynomial.aeval_x,
+      Bool.cond_false, add_zero, mul_one, MulZeroClass.mul_zero, smul_zero, MvPolynomial.aeval_x,
       MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_coe_nat, map_natCast, map_pow,
       map_mul]
   · rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]
@@ -411,9 +411,10 @@ theorem sum_mul_smul (n : ℕ) :
     -- Step inside the sum:
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
-      Bool.cond_false, add_zero, zero_add, mul_zero, smul_zero, mul_one, MvPolynomial.aeval_x,
-      MvPolynomial.pderiv_x_self, MvPolynomial.pderiv_x_of_ne, Derivation.leibniz_pow,
-      Derivation.leibniz, Derivation.map_coe_nat, map_natCast, map_pow, map_mul, map_add]
+      Bool.cond_false, add_zero, zero_add, MulZeroClass.mul_zero, smul_zero, mul_one,
+      MvPolynomial.aeval_x, MvPolynomial.pderiv_x_self, MvPolynomial.pderiv_x_of_ne,
+      Derivation.leibniz_pow, Derivation.leibniz, Derivation.map_coe_nat, map_natCast, map_pow,
+      map_mul, map_add]
   -- On the right hand side, we'll just simplify.
   ·
     simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat,

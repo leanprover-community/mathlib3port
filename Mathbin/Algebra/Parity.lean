@@ -231,7 +231,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_square_zero isSquare_zeroₓ'. -/
 @[simp]
 theorem isSquare_zero [MulZeroClass α] : IsSquare (0 : α) :=
-  ⟨0, (mul_zero _).symm⟩
+  ⟨0, (MulZeroClass.mul_zero _).symm⟩
 #align is_square_zero isSquare_zero
 
 variable {α}
@@ -599,7 +599,7 @@ theorem Odd.add_odd : Odd m → Odd n → Even (m + n) :=
 #print odd_one /-
 @[simp]
 theorem odd_one : Odd (1 : α) :=
-  ⟨0, (zero_add _).symm.trans (congr_arg (· + (1 : α)) (mul_zero _).symm)⟩
+  ⟨0, (zero_add _).symm.trans (congr_arg (· + (1 : α)) (MulZeroClass.mul_zero _).symm)⟩
 #align odd_one odd_one
 -/
 

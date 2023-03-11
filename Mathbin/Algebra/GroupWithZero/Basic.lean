@@ -91,7 +91,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] {a : M₀} {b : M₀}, ((Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) -> (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_ne_zero_imp_eq_zero mul_eq_zero_of_ne_zero_imp_eq_zeroₓ'. -/
 theorem mul_eq_zero_of_ne_zero_imp_eq_zero {a b : M₀} (h : a ≠ 0 → b = 0) : a * b = 0 :=
-  if ha : a = 0 then by rw [ha, zero_mul] else by rw [h ha, mul_zero]
+  if ha : a = 0 then by rw [ha, MulZeroClass.zero_mul] else by rw [h ha, MulZeroClass.mul_zero]
 #align mul_eq_zero_of_ne_zero_imp_eq_zero mul_eq_zero_of_ne_zero_imp_eq_zero
 
 /- warning: zero_mul_eq_const -> zero_mul_eq_const is a dubious translation:
@@ -102,7 +102,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zero_mul_eq_const zero_mul_eq_constₓ'. -/
 /-- To match `one_mul_eq_id`. -/
 theorem zero_mul_eq_const : (· * ·) (0 : M₀) = Function.const _ 0 :=
-  funext zero_mul
+  funext MulZeroClass.zero_mul
 #align zero_mul_eq_const zero_mul_eq_const
 
 /- warning: mul_zero_eq_const -> mul_zero_eq_const is a dubious translation:
@@ -113,7 +113,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_zero_eq_const mul_zero_eq_constₓ'. -/
 /-- To match `mul_one_eq_id`. -/
 theorem mul_zero_eq_const : (· * (0 : M₀)) = Function.const _ 0 :=
-  funext mul_zero
+  funext MulZeroClass.mul_zero
 #align mul_zero_eq_const mul_zero_eq_const
 
 end MulZeroClass
@@ -162,7 +162,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eq_zero_of_zero_eq_one eq_zero_of_zero_eq_oneₓ'. -/
 /-- In a monoid with zero, if zero equals one, then zero is the only element. -/
 theorem eq_zero_of_zero_eq_one (h : (0 : M₀) = 1) (a : M₀) : a = 0 := by
-  rw [← mul_one a, ← h, mul_zero]
+  rw [← mul_one a, ← h, MulZeroClass.mul_zero]
 #align eq_zero_of_zero_eq_one eq_zero_of_zero_eq_one
 
 /- warning: unique_of_zero_eq_one -> uniqueOfZeroEqOne is a dubious translation:
@@ -269,7 +269,7 @@ instance (priority := 10) CancelMonoidWithZero.to_noZeroDivisors : NoZeroDivisor
       exact h
     right
     apply CancelMonoidWithZero.mul_left_cancel_of_ne_zero h
-    rw [ab0, mul_zero]⟩
+    rw [ab0, MulZeroClass.mul_zero]⟩
 #align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.to_noZeroDivisors
 
 /- warning: mul_left_inj' -> mul_left_inj' is a dubious translation:
@@ -507,7 +507,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] (a : G₀), Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_1)) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align zero_div zero_divₓ'. -/
 @[simp]
-theorem zero_div (a : G₀) : 0 / a = 0 := by rw [div_eq_mul_inv, zero_mul]
+theorem zero_div (a : G₀) : 0 / a = 0 := by rw [div_eq_mul_inv, MulZeroClass.zero_mul]
 #align zero_div zero_div
 
 /- warning: div_zero -> div_zero is a dubious translation:
@@ -517,7 +517,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] (a : G₀), Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_1)) a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align div_zero div_zeroₓ'. -/
 @[simp]
-theorem div_zero (a : G₀) : a / 0 = 0 := by rw [div_eq_mul_inv, inv_zero, mul_zero]
+theorem div_zero (a : G₀) : a / 0 = 0 := by rw [div_eq_mul_inv, inv_zero, MulZeroClass.mul_zero]
 #align div_zero div_zero
 
 /- warning: mul_self_mul_inv -> mul_self_mul_inv is a dubious translation:
@@ -532,7 +532,7 @@ Case conversion may be inaccurate. Consider using '#align mul_self_mul_inv mul_s
 theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a :=
   by
   by_cases h : a = 0
-  · rw [h, inv_zero, mul_zero]
+  · rw [h, inv_zero, MulZeroClass.mul_zero]
   · rw [mul_assoc, mul_inv_cancel h, mul_one]
 #align mul_self_mul_inv mul_self_mul_inv
 
@@ -548,7 +548,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_mul_self mul_i
 theorem mul_inv_mul_self (a : G₀) : a * a⁻¹ * a = a :=
   by
   by_cases h : a = 0
-  · rw [h, inv_zero, mul_zero]
+  · rw [h, inv_zero, MulZeroClass.mul_zero]
   · rw [mul_inv_cancel h, one_mul]
 #align mul_inv_mul_self mul_inv_mul_self
 
@@ -564,7 +564,7 @@ is zero). -/
 theorem inv_mul_mul_self (a : G₀) : a⁻¹ * a * a = a :=
   by
   by_cases h : a = 0
-  · rw [h, inv_zero, mul_zero]
+  · rw [h, inv_zero, MulZeroClass.mul_zero]
   · rw [inv_mul_cancel h, one_mul]
 #align inv_mul_mul_self inv_mul_mul_self
 

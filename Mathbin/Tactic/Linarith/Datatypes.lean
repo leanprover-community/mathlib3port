@@ -460,7 +460,7 @@ open Tactic
           if
             c = 0
             then
-            do let e' ← mk_app ` ` zero_mul [ e ] return ( ineq.eq , e' )
+            do let e' ← mk_app ` ` MulZeroClass.zero_mul [ e ] return ( ineq.eq , e' )
             else
             if
               c = 1

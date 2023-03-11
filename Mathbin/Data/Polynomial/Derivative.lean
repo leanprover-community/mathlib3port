@@ -45,12 +45,12 @@ def derivative : R[X] →ₗ[R] R[X]
   toFun p := p.Sum fun n a => C (a * n) * X ^ (n - 1)
   map_add' p q := by
     rw [sum_add_index] <;>
-      simp only [add_mul, forall_const, RingHom.map_add, eq_self_iff_true, zero_mul,
+      simp only [add_mul, forall_const, RingHom.map_add, eq_self_iff_true, MulZeroClass.zero_mul,
         RingHom.map_zero]
   map_smul' a p := by
     dsimp <;> rw [sum_smul_index] <;>
-      simp only [mul_sum, ← C_mul', mul_assoc, coeff_C_mul, RingHom.map_mul, forall_const, zero_mul,
-        RingHom.map_zero, Sum]
+      simp only [mul_sum, ← C_mul', mul_assoc, coeff_C_mul, RingHom.map_mul, forall_const,
+        MulZeroClass.zero_mul, RingHom.map_zero, Sum]
 #align polynomial.derivative Polynomial.derivative
 -/
 
@@ -79,9 +79,9 @@ theorem coeff_derivative (p : R[X]) (n : ℕ) : coeff (derivative p) n = coeff p
   · intro b
     cases b
     · intros
-      rw [Nat.cast_zero, mul_zero, zero_mul]
+      rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
     · intro _ H
-      rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), mul_zero]
+      rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), MulZeroClass.mul_zero]
   · rw [if_pos (add_tsub_cancel_right n 1).symm, mul_one, Nat.cast_add, Nat.cast_one,
       mem_support_iff]
     intro h
@@ -337,7 +337,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.of_mem_supp
 theorem of_mem_support_derivative {p : R[X]} {n : ℕ} (h : n ∈ p.derivative.support) :
     n + 1 ∈ p.support :=
   mem_support_iff.2 fun h1 : p.coeff (n + 1) = 0 =>
-    mem_support_iff.1 h <| show p.derivative.coeff n = 0 by rw [coeff_derivative, h1, zero_mul]
+    mem_support_iff.1 h <|
+      show p.derivative.coeff n = 0 by rw [coeff_derivative, h1, MulZeroClass.zero_mul]
 #align polynomial.of_mem_support_derivative Polynomial.of_mem_support_derivative
 
 /- warning: polynomial.degree_derivative_lt -> Polynomial.degree_derivative_lt is a dubious translation:
@@ -562,7 +563,7 @@ theorem derivative_map [Semiring S] (p : R[X]) (f : R →+* S) :
   rw [sum_over_range' _ _ (n + 1) ((le_max_right _ _).trans_lt (lt_add_one _))]
   simp only [Polynomial.map_sum, Polynomial.map_mul, Polynomial.map_C, map_mul, coeff_map,
     map_natCast, Polynomial.map_nat_cast, Polynomial.map_pow, map_X]
-  all_goals intro n; rw [zero_mul, C_0, zero_mul]
+  all_goals intro n; rw [MulZeroClass.zero_mul, C_0, MulZeroClass.zero_mul]
 #align polynomial.derivative_map Polynomial.derivative_map
 
 /- warning: polynomial.iterate_derivative_map -> Polynomial.iterate_derivative_map is a dubious translation:
@@ -778,8 +779,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.derivative_pow Polynomial.derivative_powₓ'. -/
 theorem derivative_pow (p : R[X]) (n : ℕ) :
     (p ^ n).derivative = C ↑n * p ^ (n - 1) * p.derivative :=
-  Nat.casesOn n (by rw [pow_zero, derivative_one, Nat.cast_zero, C_0, zero_mul, zero_mul]) fun n =>
-    by rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
+  Nat.casesOn n
+    (by
+      rw [pow_zero, derivative_one, Nat.cast_zero, C_0, MulZeroClass.zero_mul,
+        MulZeroClass.zero_mul])
+    fun n => by rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
 #align polynomial.derivative_pow Polynomial.derivative_pow
 
 /- warning: polynomial.derivative_sq -> Polynomial.derivative_sq is a dubious translation:
@@ -881,9 +885,9 @@ theorem iterate_derivative_X_add_pow (n k : ℕ) (c : R) :
     rw [Function.iterate_zero_apply, Finset.range_zero, Finset.prod_empty, Nat.cast_one, one_mul,
       tsub_zero]
   ·
-    simp only [Function.iterate_succ_apply', IH, derivative_mul, zero_mul, derivative_nat_cast,
-      zero_add, Finset.prod_range_succ, C_eq_nat_cast, Nat.sub_sub, ← mul_assoc,
-      derivative_X_add_C_pow, Nat.succ_eq_add_one, Nat.cast_mul]
+    simp only [Function.iterate_succ_apply', IH, derivative_mul, MulZeroClass.zero_mul,
+      derivative_nat_cast, zero_add, Finset.prod_range_succ, C_eq_nat_cast, Nat.sub_sub, ←
+      mul_assoc, derivative_X_add_C_pow, Nat.succ_eq_add_one, Nat.cast_mul]
 #align polynomial.iterate_derivative_X_add_pow Polynomial.iterate_derivative_X_add_pow
 
 /- warning: polynomial.derivative_comp -> Polynomial.derivative_comp is a dubious translation:
@@ -899,7 +903,7 @@ theorem derivative_comp (p q : R[X]) : (p.comp q).derivative = q.derivative * p.
     simp [h₁, h₂, mul_add]
   · intro n r
     simp only [derivative_pow, derivative_mul, monomial_comp, derivative_monomial, derivative_C,
-      zero_mul, C_eq_nat_cast, zero_add, RingHom.map_mul]
+      MulZeroClass.zero_mul, C_eq_nat_cast, zero_add, RingHom.map_mul]
     -- is there a tactic for this? (a multiplicative `abel`):
     rw [mul_comm (derivative q)]
     simp only [mul_assoc]
@@ -914,7 +918,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.derivative_
 /-- Chain rule for formal derivative of polynomials. -/
 theorem derivative_eval₂_C (p q : R[X]) :
     (p.eval₂ C q).derivative = p.derivative.eval₂ C q * q.derivative :=
-  Polynomial.induction_on p (fun r => by rw [eval₂_C, derivative_C, eval₂_zero, zero_mul])
+  Polynomial.induction_on p
+    (fun r => by rw [eval₂_C, derivative_C, eval₂_zero, MulZeroClass.zero_mul])
     (fun p₁ p₂ ih₁ ih₂ => by
       rw [eval₂_add, derivative_add, ih₁, ih₂, derivative_add, eval₂_add, add_mul])
     fun n r ih => by

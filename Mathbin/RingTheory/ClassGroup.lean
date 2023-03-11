@@ -314,7 +314,7 @@ theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     have hy' : y ∈ R⁰ := mem_non_zero_divisors_iff_ne_zero.mpr hy
     refine' ⟨IsLocalization.mk' _ x ⟨y, hy'⟩, _, _⟩
     · contrapose! hx
-      rwa [mk'_eq_iff_eq_mul, zero_mul, ← (algebraMap R (FractionRing R)).map_zero,
+      rwa [mk'_eq_iff_eq_mul, MulZeroClass.zero_mul, ← (algebraMap R (FractionRing R)).map_zero,
         (IsFractionRing.injective R (FractionRing R)).eq_iff] at hx
     · exact (FractionalIdeal.mk'_mul_coe_ideal_eq_coe_ideal _ hy').mpr h
 #align class_group.mk0_eq_mk0_iff ClassGroup.mk0_eq_mk0_iff
@@ -328,12 +328,12 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
   have fa_ne_zero : (algebraMap R (FractionRing R)) a ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors a_ne_zero'
   refine' ⟨⟨{ carrier := { x | (algebraMap R _ a)⁻¹ * algebraMap R _ x ∈ I.1 }.. }, _⟩, _⟩
-  · simp only [RingHom.map_add, Set.mem_setOf_eq, mul_zero, RingHom.map_mul, mul_add]
+  · simp only [RingHom.map_add, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul, mul_add]
     exact fun _ _ ha hb => Submodule.add_mem I ha hb
-  · simp only [RingHom.map_zero, Set.mem_setOf_eq, mul_zero, RingHom.map_mul]
+  · simp only [RingHom.map_zero, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul]
     exact Submodule.zero_mem I
   · intro c _ hb
-    simp only [smul_eq_mul, Set.mem_setOf_eq, mul_zero, RingHom.map_mul, mul_add,
+    simp only [smul_eq_mul, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul, mul_add,
       mul_left_comm ((algebraMap R (FractionRing R)) a)⁻¹]
     rw [← Algebra.smul_def c]
     exact Submodule.smul_mem I c hb

@@ -507,7 +507,7 @@ theorem not_prime_iff_minFac_lt {n : ℕ} (n2 : 2 ≤ n) : ¬Prime n ↔ minFac 
 #print Nat.minFac_le_div /-
 theorem minFac_le_div {n : ℕ} (pos : 0 < n) (np : ¬Prime n) : minFac n ≤ n / minFac n :=
   match minFac_dvd n with
-  | ⟨0, h0⟩ => absurd Pos <| by rw [h0, mul_zero] <;> exact by decide
+  | ⟨0, h0⟩ => absurd Pos <| by rw [h0, MulZeroClass.mul_zero] <;> exact by decide
   | ⟨1, h1⟩ => by
     rw [mul_one] at h1
     rw [prime_def_min_fac, not_and_or, ← h1, eq_self_iff_true, not_true, or_false_iff, not_le] at np

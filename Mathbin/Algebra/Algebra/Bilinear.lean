@@ -221,7 +221,7 @@ def LinearMap.NonUnitalAlgHom.lmul : A →ₙₐ[R] End R A :=
       exact mul_assoc a b c
     map_zero' := by
       ext a
-      exact zero_mul a }
+      exact MulZeroClass.zero_mul a }
 #align non_unital_alg_hom.lmul LinearMap.NonUnitalAlgHom.lmul
 
 variable {R A}
@@ -305,7 +305,7 @@ def LinearMap.Algebra.lmul : A →ₐ[R] End R A :=
       exact mul_assoc a b c
     map_zero' := by
       ext a
-      exact zero_mul a
+      exact MulZeroClass.zero_mul a
     commutes' := by
       intro r
       ext a

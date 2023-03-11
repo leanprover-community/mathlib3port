@@ -789,7 +789,7 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
       by
       have : tendsto (fun n : ℕ => (2 : ℝ) * (1 / 2) ^ n) at_top (𝓝 (2 * 0)) :=
         (tendsto_pow_atTop_nhds_0_of_lt_1 I0.le I1).const_mul _
-      rw [mul_zero] at this
+      rw [MulZeroClass.mul_zero] at this
       exact
         squeeze_zero (fun n => diam_nonneg) (fun n => diam_closed_ball (pow_nonneg I0.le _)) this
     refine'
@@ -937,7 +937,8 @@ protected def metricSpace : MetricSpace (∀ i, F i)
         rcases Nat.eq_zero_or_pos K.card with (hK | hK)
         ·
           exact
-            ⟨1, zero_lt_one, by simpa only [hK, Nat.cast_zero, zero_mul] using (half_pos εpos).le⟩
+            ⟨1, zero_lt_one, by
+              simpa only [hK, Nat.cast_zero, MulZeroClass.zero_mul] using (half_pos εpos).le⟩
         · have Kpos : 0 < (K.card : ℝ) := Nat.cast_pos.2 hK
           refine' ⟨ε / 2 / (K.card : ℝ), div_pos (half_pos εpos) Kpos, le_of_eq _⟩
           field_simp [Kpos.ne']

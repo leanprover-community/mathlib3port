@@ -130,7 +130,7 @@ theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, x ^ (n : ℂ) = x ^ n
   | n + 1 =>
     if hx : x = 0 then by
       simp only [hx, pow_succ, Complex.zero_cpow (Nat.cast_ne_zero.2 (Nat.succ_ne_zero _)),
-        zero_mul]
+        MulZeroClass.zero_mul]
     else by simp [cpow_add, hx, pow_add, cpow_nat_cast n]
 #align complex.cpow_nat_cast Complex.cpow_nat_cast
 
@@ -181,9 +181,9 @@ theorem mul_cpow_of_real_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : �
   rcases eq_or_ne r 0 with (rfl | hr)
   · simp only [cpow_zero, mul_one]
   rcases eq_or_lt_of_le ha with (rfl | ha')
-  · rw [of_real_zero, zero_mul, zero_cpow hr, zero_mul]
+  · rw [of_real_zero, MulZeroClass.zero_mul, zero_cpow hr, MulZeroClass.zero_mul]
   rcases eq_or_lt_of_le hb with (rfl | hb')
-  · rw [of_real_zero, mul_zero, zero_cpow hr, mul_zero]
+  · rw [of_real_zero, MulZeroClass.mul_zero, zero_cpow hr, MulZeroClass.mul_zero]
   have ha'' : (a : ℂ) ≠ 0 := of_real_ne_zero.mpr ha'.ne'
   have hb'' : (b : ℂ) ≠ 0 := of_real_ne_zero.mpr hb'.ne'
   rw [cpow_def_of_ne_zero (mul_ne_zero ha'' hb''), log_of_real_mul ha' hb'', of_real_log ha,
@@ -505,7 +505,7 @@ theorem of_real_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
   have hne : (x : ℂ) ≠ 0 := of_real_ne_zero.mpr hlt.ne
   rw [cpow_def_of_ne_zero hne, cpow_def_of_ne_zero (neg_ne_zero.2 hne), ← exp_add, ← add_mul, log,
     log, abs.map_neg, arg_of_real_of_neg hlt, ← of_real_neg,
-    arg_of_real_of_nonneg (neg_nonneg.2 hx), of_real_zero, zero_mul, add_zero]
+    arg_of_real_of_nonneg (neg_nonneg.2 hx), of_real_zero, MulZeroClass.zero_mul, add_zero]
 #align complex.of_real_cpow_of_nonpos Complex.of_real_cpow_of_nonpos
 
 theorem abs_cpow_of_ne_zero {z : ℂ} (hz : z ≠ 0) (w : ℂ) :
@@ -605,8 +605,8 @@ theorem abs_cpow_inv_nat (x : ℂ) (n : ℕ) :
 
 theorem abs_cpow_eq_rpow_re_of_pos {x : ℝ} (hx : 0 < x) (y : ℂ) :
     Complex.AbsTheory.Complex.abs (x ^ y) = x ^ y.re := by
-  rw [abs_cpow_of_ne_zero (of_real_ne_zero.mpr hx.ne'), arg_of_real_of_nonneg hx.le, zero_mul,
-    Real.exp_zero, div_one, abs_of_nonneg hx.le]
+  rw [abs_cpow_of_ne_zero (of_real_ne_zero.mpr hx.ne'), arg_of_real_of_nonneg hx.le,
+    MulZeroClass.zero_mul, Real.exp_zero, div_one, abs_of_nonneg hx.le]
 #align complex.abs_cpow_eq_rpow_re_of_pos Complex.abs_cpow_eq_rpow_re_of_pos
 
 theorem abs_cpow_eq_rpow_re_of_nonneg {x : ℝ} (hx : 0 ≤ x) {y : ℂ} (hy : re y ≠ 0) :
@@ -1230,7 +1230,7 @@ theorem sqrt_eq_rpow (x : ℝ) : sqrt x = x ^ (1 / (2 : ℝ)) :=
     norm_num
   · have : 1 / (2 : ℝ) * π = π / (2 : ℝ)
     ring
-    rw [sqrt_eq_zero_of_nonpos h.le, rpow_def_of_neg h, this, cos_pi_div_two, mul_zero]
+    rw [sqrt_eq_zero_of_nonpos h.le, rpow_def_of_neg h, this, cos_pi_div_two, MulZeroClass.mul_zero]
 #align real.sqrt_eq_rpow Real.sqrt_eq_rpow
 
 theorem rpow_div_two_eq_sqrt {x : ℝ} (r : ℝ) (hx : 0 ≤ x) : x ^ (r / 2) = sqrt x ^ r :=
@@ -1277,7 +1277,7 @@ theorem tendsto_rpow_div_mul_add (a b c : ℝ) (hb : 0 ≠ b) :
     tendsto.congr' _
       ((tendsto_exp_nhds_0_nhds_1.comp
             (by
-              simpa only [mul_zero, pow_one] using
+              simpa only [MulZeroClass.mul_zero, pow_one] using
                 (@tendsto_const_nhds _ _ _ a _).mul
                   (tendsto_div_pow_mul_exp_add_at_top b c 1 hb))).comp
         tendsto_log_at_top)
@@ -1977,7 +1977,7 @@ theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y :=
   by
   rw [zero_rpow_def]
   split_ifs
-  exacts[zero_mul _, one_mul _, top_mul_top]
+  exacts[MulZeroClass.zero_mul _, one_mul _, top_mul_top]
 #align ennreal.zero_rpow_mul_self ENNReal.zero_rpow_mul_self
 
 @[norm_cast]

@@ -151,7 +151,7 @@ theorem linearIndependent_of_isOrthoCat {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ
       by
       apply Finset.sum_eq_single_of_mem i hi
       intro j hj hij
-      rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
+      rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
     simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
     apply (map_eq_zero I₁).mp
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
@@ -802,7 +802,7 @@ theorem IsOrthoCat.not_isOrtho_basis_self_of_separatingLeft [Nontrivial R]
   apply Finset.sum_eq_zero
   rintro j -
   rw [map_smulₛₗ]
-  convert mul_zero _ using 2
+  convert MulZeroClass.mul_zero _ using 2
   obtain rfl | hij := eq_or_ne i j
   · exact ho
   · exact h hij
@@ -835,10 +835,10 @@ theorem IsOrthoCat.separatingLeftOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M
   rw [Finset.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (h i) hB
   · intro j hj hij
-    convert mul_zero _ using 2
+    convert MulZeroClass.mul_zero _ using 2
     exact hO hij
   · intro hi
-    convert zero_mul _ using 2
+    convert MulZeroClass.zero_mul _ using 2
     exact finsupp.not_mem_support_iff.mp hi
 #align linear_map.is_Ortho.separating_left_of_not_is_ortho_basis_self LinearMap.IsOrthoCat.separatingLeftOfNotIsOrthoBasisSelf
 

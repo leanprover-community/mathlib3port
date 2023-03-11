@@ -48,15 +48,27 @@ section MulZeroClass
 
 variable [MulZeroClass M₀] {a b : M₀}
 
+/- warning: zero_mul -> MulZeroClass.zero_mul is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))) a) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))) a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))
+Case conversion may be inaccurate. Consider using '#align zero_mul MulZeroClass.zero_mulₓ'. -/
 @[ematch, simp]
-theorem zero_mul (a : M₀) : 0 * a = 0 :=
+theorem MulZeroClass.zero_mul (a : M₀) : 0 * a = 0 :=
   MulZeroClass.zero_mul a
-#align zero_mul zero_mul
+#align zero_mul MulZeroClass.zero_mul
 
+/- warning: mul_zero -> MulZeroClass.mul_zero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))
+Case conversion may be inaccurate. Consider using '#align mul_zero MulZeroClass.mul_zeroₓ'. -/
 @[ematch, simp]
-theorem mul_zero (a : M₀) : a * 0 = 0 :=
+theorem MulZeroClass.mul_zero (a : M₀) : a * 0 = 0 :=
   MulZeroClass.mul_zero a
-#align mul_zero mul_zero
+#align mul_zero MulZeroClass.mul_zero
 
 end MulZeroClass
 
@@ -320,8 +332,8 @@ instance NeZero.one : NeZero (1 : M₀) :=
     apply hx
     calc
       x = 1 * x := by rw [one_mul]
-      _ = 0 := by rw [h, zero_mul]
-      _ = 1 * y := by rw [h, zero_mul]
+      _ = 0 := by rw [h, MulZeroClass.zero_mul]
+      _ = 1 * y := by rw [h, MulZeroClass.zero_mul]
       _ = y := by rw [one_mul]
       ⟩
 #align ne_zero.one NeZero.one
@@ -356,7 +368,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] {a : M₀}, (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) -> (forall (b : M₀), Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_left mul_eq_zero_of_leftₓ'. -/
 theorem mul_eq_zero_of_left {a : M₀} (h : a = 0) (b : M₀) : a * b = 0 :=
-  h.symm ▸ zero_mul b
+  h.symm ▸ MulZeroClass.zero_mul b
 #align mul_eq_zero_of_left mul_eq_zero_of_left
 
 /- warning: mul_eq_zero_of_right -> mul_eq_zero_of_right is a dubious translation:
@@ -366,7 +378,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] (a : M₀) {b : M₀}, (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a b) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_right mul_eq_zero_of_rightₓ'. -/
 theorem mul_eq_zero_of_right (a : M₀) {b : M₀} (h : b = 0) : a * b = 0 :=
-  h.symm ▸ mul_zero a
+  h.symm ▸ MulZeroClass.mul_zero a
 #align mul_eq_zero_of_right mul_eq_zero_of_right
 
 variable [NoZeroDivisors M₀] {a b : M₀}

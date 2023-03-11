@@ -144,9 +144,11 @@ theorem coeff_list_prod_of_natDegree_le (l : List S[X]) (n : ℕ) (hl : ∀ p �
     rcases hdn.eq_or_lt with (rfl | hdn')
     · cases' h.eq_or_lt with h' h'
       · rw [← h', coeff_mul_degree_add_degree, leading_coeff, leading_coeff]
-      · rw [coeff_eq_zero_of_nat_degree_lt, coeff_eq_zero_of_nat_degree_lt h', mul_zero]
+      · rw [coeff_eq_zero_of_nat_degree_lt, coeff_eq_zero_of_nat_degree_lt h',
+          MulZeroClass.mul_zero]
         exact nat_degree_mul_le.trans_lt (add_lt_add_left h' _)
-    · rw [coeff_eq_zero_of_nat_degree_lt hdn', coeff_eq_zero_of_nat_degree_lt, zero_mul]
+    · rw [coeff_eq_zero_of_nat_degree_lt hdn', coeff_eq_zero_of_nat_degree_lt,
+        MulZeroClass.zero_mul]
       exact nat_degree_mul_le.trans_lt (add_lt_add_of_lt_of_le hdn' h)
 #align polynomial.coeff_list_prod_of_nat_degree_le Polynomial.coeff_list_prod_of_natDegree_le
 

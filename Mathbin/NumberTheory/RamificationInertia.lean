@@ -366,8 +366,8 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
       
     ·
       simp only [Matrix.adjugate_mul, Pi.smul_apply, Matrix.one_apply, mul_ite, ite_smul,
-        smul_eq_mul, mul_one, mul_zero, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ,
-        if_true]
+        smul_eq_mul, mul_one, MulZeroClass.mul_zero, one_smul, zero_smul, Finset.sum_ite_eq,
+        Finset.mem_univ, if_true]
     · simp only [Matrix.mul_apply, Finset.smul_sum, Finset.sum_smul, smul_smul]
       rw [Finset.sum_comm]
     · rw [A_smul, smul_zero]
@@ -729,7 +729,8 @@ theorem finrank_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] (hP0
     refine' Cardinal.natCast_injective _
     rw [finrank_eq_dim, Nat.cast_mul, finrank_eq_dim, hdim, nsmul_eq_mul]
   have hPe := mt (finite_dimensional_iff_of_rank_eq_nsmul he hdim).mp hP
-  simp only [finrank_of_infinite_dimensional hP, finrank_of_infinite_dimensional hPe, mul_zero]
+  simp only [finrank_of_infinite_dimensional hP, finrank_of_infinite_dimensional hPe,
+    MulZeroClass.mul_zero]
 #align ideal.finrank_prime_pow_ramification_idx Ideal.finrank_prime_pow_ramificationIdx
 
 end FactLeComap

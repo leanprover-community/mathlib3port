@@ -293,7 +293,7 @@ theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) 
   have t := @integral_const_mul 0 X volume _ _ s fun x : ℝ => (-x).exp * x ^ (s - 1)
   dsimp at t
   rw [← t, of_real_zero, zero_cpow]
-  · rw [mul_zero, add_zero]
+  · rw [MulZeroClass.mul_zero, add_zero]
     congr
     ext1
     ring
@@ -1711,10 +1711,10 @@ theorem gamma_mul_gamma_one_sub (z : ℂ) : gamma z * gamma (1 - z) = π / sin (
       neg_eq_iff_neg_eq] at hk
     rw [← hk]
     cases k
-    · rw [Int.cast_ofNat, Complex.gamma_neg_nat_eq_zero, zero_mul]
+    · rw [Int.cast_ofNat, Complex.gamma_neg_nat_eq_zero, MulZeroClass.zero_mul]
     ·
       rw [Int.cast_negSucc, neg_neg, Nat.cast_add, Nat.cast_one, add_comm, sub_add_cancel',
-        Complex.gamma_neg_nat_eq_zero, mul_zero]
+        Complex.gamma_neg_nat_eq_zero, MulZeroClass.mul_zero]
   refine' tendsto_nhds_unique ((Gamma_seq_tendsto_Gamma z).mul (Gamma_seq_tendsto_Gamma <| 1 - z)) _
   have : ↑π / sin (↑π * z) = 1 * (π / sin (π * z)) := by rw [one_mul]
   rw [this]
@@ -1741,7 +1741,7 @@ theorem gamma_ne_zero {s : ℂ} (hs : ∀ m : ℕ, s ≠ -m) : gamma s ≠ 0 :=
   by_cases h_im : s.im = 0
   · have : s = ↑s.re := by
       conv_lhs => rw [← Complex.re_add_im s]
-      rw [h_im, of_real_zero, zero_mul, add_zero]
+      rw [h_im, of_real_zero, MulZeroClass.zero_mul, add_zero]
     rw [this, Gamma_of_real, of_real_ne_zero]
     refine' Real.gamma_ne_zero fun n => _
     specialize hs n

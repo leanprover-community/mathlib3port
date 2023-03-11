@@ -148,7 +148,7 @@ Case conversion may be inaccurate. Consider using '#align set.center_units_subse
 theorem center_units_subset [GroupWithZero M] : Set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M :=
   fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
-  · rw [zero_mul, mul_zero]
+  · rw [MulZeroClass.zero_mul, MulZeroClass.mul_zero]
   · exact units.ext_iff.mp (ha (Units.mk0 _ hb))
 #align set.center_units_subset Set.center_units_subset
 

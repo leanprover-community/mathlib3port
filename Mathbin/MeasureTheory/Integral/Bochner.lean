@@ -413,7 +413,7 @@ theorem integral_eq_lintegral' {f : α →ₛ E} {g : E → ℝ≥0∞} (hf : In
     rw [smul_eq_mul, to_real_mul, mul_comm]
   · intro a ha
     by_cases a0 : a = 0
-    · rw [a0, hg0, zero_mul]
+    · rw [a0, hg0, MulZeroClass.zero_mul]
       exact WithTop.zero_ne_top
     · apply mul_ne_top (ht a) (hf'.meas_preimage_singleton_ne_zero a0).Ne
   · simp [hg0]
@@ -1991,7 +1991,7 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
   by_cases hr : r = 0
   · suffices f =ᵐ[μ] 0
       by
-      rw [snorm_congr_ae this, snorm_zero, hr, ENNReal.coe_zero, mul_zero]
+      rw [snorm_congr_ae this, snorm_zero, hr, ENNReal.coe_zero, MulZeroClass.mul_zero]
       exact le_rfl
     rw [hr, Nonneg.coe_zero] at hf
     have hnegf : (∫ x, -f x ∂μ) = 0 :=

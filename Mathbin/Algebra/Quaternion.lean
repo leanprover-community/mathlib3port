@@ -1385,7 +1385,7 @@ theorem coe_conjAe : ⇑(conjAe : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ) = op ∘ con
 /-- Square of the norm. -/
 def normSq : ℍ[R] →*₀ R where
   toFun a := (a * a.conj).re
-  map_zero' := by rw [conj_zero, zero_mul, zero_re]
+  map_zero' := by rw [conj_zero, MulZeroClass.zero_mul, zero_re]
   map_one' := by rw [conj_one, one_mul, one_re]
   map_mul' x y :=
     coe_injective <| by

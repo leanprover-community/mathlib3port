@@ -486,7 +486,8 @@ theorem degree_c_mul_t (n : ℤ) (a : R) (a0 : a ≠ 0) : (c a * t n).degree = n
 
 theorem degree_c_mul_t_ite (n : ℤ) (a : R) : (c a * t n).degree = ite (a = 0) ⊥ n := by
   split_ifs with h h <;>
-    simp only [h, map_zero, zero_mul, degree_zero, degree_C_mul_T, Ne.def, not_false_iff]
+    simp only [h, map_zero, MulZeroClass.zero_mul, degree_zero, degree_C_mul_T, Ne.def,
+      not_false_iff]
 #align laurent_polynomial.degree_C_mul_T_ite LaurentPolynomial.degree_c_mul_t_ite
 
 @[simp]
@@ -513,7 +514,7 @@ section DegreeBounds
 theorem degree_c_mul_t_le (n : ℤ) (a : R) : (c a * t n).degree ≤ n :=
   by
   by_cases a0 : a = 0
-  · simp only [a0, map_zero, zero_mul, degree_zero, bot_le]
+  · simp only [a0, map_zero, MulZeroClass.zero_mul, degree_zero, bot_le]
   · exact (degree_C_mul_T n a a0).le
 #align laurent_polynomial.degree_C_mul_T_le LaurentPolynomial.degree_c_mul_t_le
 

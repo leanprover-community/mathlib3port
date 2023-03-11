@@ -176,13 +176,14 @@ theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
 theorem fourier_zero {x : AddCircle T} : fourier 0 x = 1 :=
   by
   induction x using QuotientAddGroup.induction_on'
-  simp only [fourier_coe_apply, algebraMap.coe_zero, mul_zero, zero_mul, zero_div, Complex.exp_zero]
+  simp only [fourier_coe_apply, algebraMap.coe_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul,
+    zero_div, Complex.exp_zero]
 #align fourier_zero fourier_zero
 
 @[simp]
 theorem fourier_eval_zero (n : ℤ) : fourier n (0 : AddCircle T) = 1 := by
-  rw [← QuotientAddGroup.mk_zero, fourier_coe_apply, Complex.ofReal_zero, mul_zero, zero_div,
-    Complex.exp_zero]
+  rw [← QuotientAddGroup.mk_zero, fourier_coe_apply, Complex.ofReal_zero, MulZeroClass.mul_zero,
+    zero_div, Complex.exp_zero]
 #align fourier_eval_zero fourier_eval_zero
 
 @[simp]

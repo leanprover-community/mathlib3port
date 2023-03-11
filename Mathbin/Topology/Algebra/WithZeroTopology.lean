@@ -214,13 +214,14 @@ protected theorem continuousMul : ContinuousMul Γ₀ :=
     · have := tendsto.comp (this y x (le_of_not_le hle)) (continuous_swap.tendsto (x, y))
       simpa only [mul_comm, Function.comp, Prod.swap]
     rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip]
-    · rw [ContinuousAt, zero_mul]
+    · rw [ContinuousAt, MulZeroClass.zero_mul]
       refine'
         ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iffₓ has_basis_nhds_zero).2
           fun γ hγ => ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, _⟩
       rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
       exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)
-    · rw [ContinuousAt, zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure, tendsto_map'_iff]
+    · rw [ContinuousAt, MulZeroClass.zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure,
+        tendsto_map'_iff]
       refine' (has_basis_nhds_zero.tendsto_iff has_basis_nhds_zero).2 fun γ hγ => _
       refine' ⟨γ / y, div_ne_zero hγ hy, fun x hx => _⟩
       calc

@@ -449,7 +449,7 @@ theorem norm_trivial_quotient_mk (S : AddSubgroup M)
     rw [S.ker_normed_mk]
     exact Set.mem_of_eq_of_mem h trivial
   rw [ker_normed_mk] at hker
-  simp only [(quotient_norm_eq_zero_iff S x).mpr hker, normed_mk.apply, zero_mul]
+  simp only [(quotient_norm_eq_zero_iff S x).mpr hker, normed_mk.apply, MulZeroClass.zero_mul]
 #align add_subgroup.norm_trivial_quotient_mk AddSubgroup.norm_trivial_quotient_mk
 
 end AddSubgroup
@@ -532,12 +532,12 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
   apply op_norm_le_bound _ c.coe_nonneg
   intro x
   by_cases hc : c = 0
-  · simp only [hc, NNReal.coe_zero, zero_mul] at fb⊢
+  · simp only [hc, NNReal.coe_zero, MulZeroClass.zero_mul] at fb⊢
     obtain ⟨x, rfl⟩ := surjective_quot_mk _ x
     show ‖f x‖ ≤ 0
     calc
       ‖f x‖ ≤ 0 * ‖x‖ := f.le_of_op_norm_le fb x
-      _ = 0 := zero_mul _
+      _ = 0 := MulZeroClass.zero_mul _
       
   · replace hc : 0 < c := pos_iff_ne_zero.mpr hc
     apply le_of_forall_pos_le_add

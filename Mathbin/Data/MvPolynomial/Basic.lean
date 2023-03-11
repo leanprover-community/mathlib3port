@@ -729,7 +729,7 @@ theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ
     coeff m (p * monomial s r) = if s ≤ m then coeff (m - s) p * r else 0 :=
   by
   obtain rfl | hr := eq_or_ne r 0
-  · simp only [monomial_zero, coeff_zero, mul_zero, if_t_t]
+  · simp only [monomial_zero, coeff_zero, MulZeroClass.mul_zero, if_t_t]
   haveI : Nontrivial R := nontrivial_of_ne _ _ hr
   split_ifs with h h
   · conv_rhs => rw [← coeff_mul_monomial _ s]
@@ -806,7 +806,7 @@ theorem c_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : c r ∣ φ ↔ �
       split_ifs with hi hi
       · rw [hc]
       · rw [not_mem_support_iff] at hi
-        rwa [mul_zero]
+        rwa [MulZeroClass.mul_zero]
 #align mv_polynomial.C_dvd_iff_dvd_coeff MvPolynomial.c_dvd_iff_dvd_coeff
 
 end Coeff
@@ -1504,7 +1504,7 @@ theorem eval₂Hom_eq_zero (f : R →+* S₂) (g : σ → S₂) (φ : MvPolynomi
   rw [φ.as_sum, RingHom.map_sum, Finset.sum_eq_zero]
   intro d hd
   obtain ⟨i, hi, hgi⟩ : ∃ i ∈ d.support, g i = 0 := h d (finsupp.mem_support_iff.mp hd)
-  rw [eval₂_hom_monomial, Finsupp.prod, Finset.prod_eq_zero hi, mul_zero]
+  rw [eval₂_hom_monomial, Finsupp.prod, Finset.prod_eq_zero hi, MulZeroClass.mul_zero]
   rw [hgi, zero_pow]
   rwa [pos_iff_ne_zero, ← Finsupp.mem_support_iff]
 #align mv_polynomial.eval₂_hom_eq_zero MvPolynomial.eval₂Hom_eq_zero

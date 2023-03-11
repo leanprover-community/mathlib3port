@@ -121,7 +121,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
   by_cases hfint : integrable f μ
   swap
   · simp only [condexp_undef hfint, Pi.zero_apply, abs_zero, integral_const, Algebra.id.smul_eq_mul,
-      mul_zero]
+      MulZeroClass.mul_zero]
     exact integral_nonneg fun x => abs_nonneg _
   rw [integral_eq_lintegral_of_nonneg_ae, integral_eq_lintegral_of_nonneg_ae]
   · rw [ENNReal.toReal_le_toReal] <;> simp_rw [← Real.norm_eq_abs, ofReal_norm_eq_coe_nnnorm]
@@ -147,7 +147,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
   by_cases hfint : integrable f μ
   swap
   · simp only [condexp_undef hfint, Pi.zero_apply, abs_zero, integral_const, Algebra.id.smul_eq_mul,
-      mul_zero]
+      MulZeroClass.mul_zero]
     exact integral_nonneg fun x => abs_nonneg _
   have : (∫ x in s, |(μ[f|m]) x| ∂μ) = ∫ x, |(μ[s.indicator f|m]) x| ∂μ :=
     by
@@ -280,7 +280,7 @@ theorem condexp_strongly_measurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleF
     ext1 x
     by_cases hx : x ∈ s
     · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul]
-    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
+    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, MulZeroClass.zero_mul]
   refine' @simple_func.induction _ _ m _ _ (fun c s hs => _) (fun g₁ g₂ h_disj h_eq₁ h_eq₂ => _) f
   · simp only [simple_func.const_zero, simple_func.coe_piecewise, simple_func.coe_const,
       simple_func.coe_zero, Set.piecewise_eq_indicator]
@@ -381,11 +381,11 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measura
   by_cases hm : m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
-    rw [mul_zero]
+    rw [MulZeroClass.mul_zero]
   by_cases hμm : sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
-    rw [mul_zero]
+    rw [MulZeroClass.mul_zero]
   haveI : sigma_finite (μ.trim hm) := hμm
   obtain ⟨sets, sets_prop, h_univ⟩ := hf.exists_spanning_measurable_set_norm_le hm μ
   simp_rw [forall_and] at sets_prop

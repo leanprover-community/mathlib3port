@@ -537,7 +537,7 @@ theorem mod_add_div (m k : ℕ+) : (mod m k + k * div m k : ℕ) = m :=
   have : ¬((m : ℕ) % (k : ℕ) = 0 ∧ (m : ℕ) / (k : ℕ) = 0) :=
     by
     rintro ⟨hr, hq⟩
-    rw [hr, hq, mul_zero, zero_add] at h₀
+    rw [hr, hq, MulZeroClass.mul_zero, zero_add] at h₀
     exact (m.ne_zero h₀.symm).elim
   have := mod_div_aux_spec k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ)) this
   exact this.trans h₀
@@ -574,7 +574,7 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
   · have hm : (m : ℕ) > 0 := m.pos
     rw [← Nat.mod_add_div (m : ℕ) (k : ℕ), h, zero_add] at hm⊢
     by_cases h' : (m : ℕ) / (k : ℕ) = 0
-    · rw [h', mul_zero] at hm
+    · rw [h', MulZeroClass.mul_zero] at hm
       exact (lt_irrefl _ hm).elim
     · let h' := Nat.mul_le_mul_left (k : ℕ) (Nat.succ_le_of_lt (Nat.pos_of_ne_zero h'))
       rw [mul_one] at h'

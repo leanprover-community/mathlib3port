@@ -111,7 +111,7 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
     let c := Basis.ofVectorSpace K A
     rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c),
       Fintype.card_prod]
-  · rw [finrank_of_infinite_dimensional hA, mul_zero, finrank_of_infinite_dimensional]
+  · rw [finrank_of_infinite_dimensional hA, MulZeroClass.mul_zero, finrank_of_infinite_dimensional]
     exact mt (@right F K A _ _ _ _ _ _ _) hA
 #align finite_dimensional.finrank_mul_finrank FiniteDimensional.finrank_mul_finrank
 

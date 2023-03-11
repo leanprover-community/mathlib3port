@@ -300,7 +300,8 @@ theorem isFractionRing_of_isLocalization (S T : Type _) [CommRing S] [CommRing T
     apply IsLocalization.injective S hM
     rw [map_zero]
     apply hx
-    rw [← (map_units S s).mul_left_inj, mul_assoc, e, ← map_mul, hz, map_zero, zero_mul]
+    rw [← (map_units S s).mul_left_inj, mul_assoc, e, ← map_mul, hz, map_zero,
+      MulZeroClass.zero_mul]
   · exact hM
 #align is_fraction_ring.is_fraction_ring_of_is_localization IsFractionRing.isFractionRing_of_isLocalization
 

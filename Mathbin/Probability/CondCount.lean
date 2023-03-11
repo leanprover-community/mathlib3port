@@ -153,7 +153,7 @@ theorem condCount_inter (hs : s.Finite) :
   by
   by_cases hst : s ∩ t = ∅
   ·
-    rw [hst, cond_count_empty_meas, measure.coe_zero, Pi.zero_apply, zero_mul,
+    rw [hst, cond_count_empty_meas, measure.coe_zero, Pi.zero_apply, MulZeroClass.zero_mul,
       cond_count_eq_zero_iff hs, ← Set.inter_assoc, hst, Set.empty_inter]
   rw [cond_count, cond_count, cond_apply _ hs.measurable_set, cond_apply _ hs.measurable_set,
     cond_apply _ (hs.inter_of_left _).MeasurableSet, mul_comm _ (measure.count (s ∩ t)), ←

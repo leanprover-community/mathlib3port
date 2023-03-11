@@ -786,7 +786,7 @@ theorem add_overlap_pf_zero {ps qs} (p : α) : ps + qs = 0 → p * ps + p * qs =
   calc
     p * ps + p * qs = p * (ps + qs) := symm (mul_add _ _ _)
     _ = p * 0 := by rw [pq_pf]
-    _ = 0 := mul_zero _
+    _ = 0 := MulZeroClass.mul_zero _
     
 #align tactic.ring_exp.add_overlap_pf_zero Tactic.RingExp.add_overlap_pf_zero
 
@@ -994,7 +994,8 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
           pure <| pqqs ppqqs_o pf
 #align tactic.ring_exp.mul_pp tactic.ring_exp.mul_pp
 
-theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by rw [ps_pf, zero_mul]
+theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by
+  rw [ps_pf, MulZeroClass.zero_mul]
 #align tactic.ring_exp.mul_p_pf_zero Tactic.RingExp.mul_p_pf_zero
 
 theorem mul_p_pf_sum {pps p ps qs ppsqs : α} :
@@ -1030,7 +1031,8 @@ unsafe def mul_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     pure <| ppsqs ppsqs_o pf
 #align tactic.ring_exp.mul_p tactic.ring_exp.mul_p
 
-theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by rw [qs_pf, mul_zero]
+theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by
+  rw [qs_pf, MulZeroClass.mul_zero]
 #align tactic.ring_exp.mul_pf_zero Tactic.RingExp.mul_pf_zero
 
 theorem mul_pf_sum {ps qqs q qs psqqs : α} :

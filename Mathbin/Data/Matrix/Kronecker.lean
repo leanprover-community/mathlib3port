@@ -245,12 +245,12 @@ hypotheses which can be filled by properties of `*`. -/
 
 @[simp]
 theorem zero_kronecker [MulZeroClass α] (B : Matrix n p α) : (0 : Matrix l m α) ⊗ₖ B = 0 :=
-  kroneckerMap_zero_left _ zero_mul B
+  kroneckerMap_zero_left _ MulZeroClass.zero_mul B
 #align matrix.zero_kronecker Matrix.zero_kronecker
 
 @[simp]
 theorem kronecker_zero [MulZeroClass α] (A : Matrix l m α) : A ⊗ₖ (0 : Matrix n p α) = 0 :=
-  kroneckerMap_zero_right _ mul_zero A
+  kroneckerMap_zero_right _ MulZeroClass.mul_zero A
 #align matrix.kronecker_zero Matrix.kronecker_zero
 
 theorem add_kronecker [Distrib α] (A₁ A₂ : Matrix l m α) (B : Matrix n p α) :
@@ -275,13 +275,13 @@ theorem kronecker_smul [Monoid R] [Monoid α] [MulAction R α] [SMulCommClass R 
 
 theorem diagonal_kronecker_diagonal [MulZeroClass α] [DecidableEq m] [DecidableEq n] (a : m → α)
     (b : n → α) : diagonal a ⊗ₖ diagonal b = diagonal fun mn => a mn.1 * b mn.2 :=
-  kroneckerMap_diagonal_diagonal _ zero_mul mul_zero _ _
+  kroneckerMap_diagonal_diagonal _ MulZeroClass.zero_mul MulZeroClass.mul_zero _ _
 #align matrix.diagonal_kronecker_diagonal Matrix.diagonal_kronecker_diagonal
 
 @[simp]
 theorem one_kronecker_one [MulZeroOneClass α] [DecidableEq m] [DecidableEq n] :
     (1 : Matrix m m α) ⊗ₖ (1 : Matrix n n α) = 1 :=
-  kroneckerMap_one_one _ zero_mul mul_zero (one_mul _)
+  kroneckerMap_one_one _ MulZeroClass.zero_mul MulZeroClass.mul_zero (one_mul _)
 #align matrix.one_kronecker_one Matrix.one_kronecker_one
 
 theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiring α] (A : Matrix l m α)

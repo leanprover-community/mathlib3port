@@ -579,7 +579,7 @@ instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [Norm
 #align normed_algebra_rat normedAlgebraRat
 
 instance PUnit.normedAlgebra : NormedAlgebra 𝕜 PUnit
-    where norm_smul_le q x := by simp only [PUnit.norm_eq_zero, mul_zero]
+    where norm_smul_le q x := by simp only [PUnit.norm_eq_zero, MulZeroClass.mul_zero]
 #align punit.normed_algebra PUnit.normedAlgebra
 
 instance : NormedAlgebra 𝕜 (ULift 𝕜') :=

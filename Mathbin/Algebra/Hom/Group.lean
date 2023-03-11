@@ -2663,5 +2663,5 @@ instance {M N} {hM : MulZeroOneClass M} [CommMonoidWithZero N] : Mul (M →*₀ 
   ⟨fun f g =>
     { (f * g : M →* N) with
       toFun := fun a => f a * g a
-      map_zero' := by rw [map_zero, zero_mul] }⟩
+      map_zero' := by rw [map_zero, MulZeroClass.zero_mul] }⟩
 

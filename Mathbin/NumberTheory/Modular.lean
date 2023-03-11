@@ -168,7 +168,7 @@ theorem tendsto_normSq_coprime_pair :
     · show (z : ℂ).im⁻¹ * ((z : ℂ) * conj (f c)).im = c 1
       rw [f_def, RingHom.map_add, RingHom.map_mul, mul_add, mul_left_comm, mul_conj, conj_of_real,
         conj_of_real, ← of_real_mul, add_im, of_real_im, zero_add, inv_mul_eq_iff_eq_mul₀ hz]
-      simp only [of_real_im, of_real_re, mul_im, zero_add, mul_zero]
+      simp only [of_real_im, of_real_re, mul_im, zero_add, MulZeroClass.mul_zero]
   have hf' : ClosedEmbedding f :=
     by
     -- for some reason we get a timeout if we try and apply this lemma in a more sensible way

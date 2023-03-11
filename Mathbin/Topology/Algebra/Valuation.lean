@@ -57,7 +57,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
       · use (1 : Γ₀ˣ)
         rintro y (y_in : (v y : Γ₀) < 1)
         change v (x * y) < _
-        rw [Valuation.map_mul, Hx, zero_mul]
+        rw [Valuation.map_mul, Hx, MulZeroClass.zero_mul]
         exact Units.zero_lt γ
       · simp only [image_subset_iff, set_of_subset_set_of, preimage_set_of_eq, Valuation.map_mul]
         use γx⁻¹ * γ
@@ -72,7 +72,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
       · use 1
         rintro y (y_in : (v y : Γ₀) < 1)
         change v (y * x) < _
-        rw [Valuation.map_mul, Hx, mul_zero]
+        rw [Valuation.map_mul, Hx, MulZeroClass.mul_zero]
         exact Units.zero_lt γ
       · use γx⁻¹ * γ
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))

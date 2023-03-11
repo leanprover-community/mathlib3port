@@ -839,7 +839,7 @@ theorem HasFpowerSeriesOnBall.tendstoUniformlyOn {r' : ℝ≥0} (hf : HasFpowerS
   refine' Metric.tendstoUniformlyOn_iff.2 fun ε εpos => _
   have L : tendsto (fun n => (C : ℝ) * a ^ n) at_top (𝓝 ((C : ℝ) * 0)) :=
     tendsto_const_nhds.mul (tendsto_pow_atTop_nhds_0_of_lt_1 ha.1.le ha.2)
-  rw [mul_zero] at L
+  rw [MulZeroClass.mul_zero] at L
   refine' (L.eventually (gt_mem_nhds εpos)).mono fun n hn y hy => _
   rw [dist_eq_norm]
   exact (hp y hy n).trans_lt hn
@@ -968,7 +968,8 @@ theorem Asymptotics.IsO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p : E[
       norm_eq_zero.mp
         (by
           simpa only [fin0_apply_norm, norm_eq_zero, norm_zero, zero_pow', Ne.def, Nat.one_ne_zero,
-            not_false_iff, mul_zero, norm_le_zero_iff] using ht 0 (δε (Metric.mem_ball_self δ_pos)))
+            not_false_iff, MulZeroClass.mul_zero, norm_le_zero_iff] using
+            ht 0 (δε (Metric.mem_ball_self δ_pos)))
   · refine' Or.elim (em (y = 0)) (fun hy => by simpa only [hy] using p.map_zero) fun hy => _
     replace hy := norm_pos_iff.mpr hy
     refine' norm_eq_zero.mp (le_antisymm (le_of_forall_pos_le_add fun ε ε_pos => _) (norm_nonneg _))

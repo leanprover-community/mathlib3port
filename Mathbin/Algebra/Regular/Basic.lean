@@ -260,7 +260,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_left_regular.subsingleton IsLeftRegular.subsingletonₓ'. -/
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
-  ⟨fun a b => h <| Eq.trans (zero_mul a) (zero_mul b).symm⟩
+  ⟨fun a b => h <| Eq.trans (MulZeroClass.zero_mul a) (MulZeroClass.zero_mul b).symm⟩
 #align is_left_regular.subsingleton IsLeftRegular.subsingleton
 
 /- warning: is_right_regular.subsingleton -> IsRightRegular.subsingleton is a dubious translation:
@@ -271,7 +271,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_right_regular.subsingleton IsRightRegular.subsingletonₓ'. -/
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
 theorem IsRightRegular.subsingleton (h : IsRightRegular (0 : R)) : Subsingleton R :=
-  ⟨fun a b => h <| Eq.trans (mul_zero a) (mul_zero b).symm⟩
+  ⟨fun a b => h <| Eq.trans (MulZeroClass.mul_zero a) (MulZeroClass.mul_zero b).symm⟩
 #align is_right_regular.subsingleton IsRightRegular.subsingleton
 
 /- warning: is_regular.subsingleton -> IsRegular.subsingleton is a dubious translation:
@@ -359,7 +359,7 @@ theorem IsLeftRegular.ne_zero [Nontrivial R] (la : IsLeftRegular a) : a ≠ 0 :=
   rintro rfl
   rcases exists_pair_ne R with ⟨x, y, xy⟩
   refine' xy (la _)
-  rw [zero_mul, zero_mul]
+  rw [MulZeroClass.zero_mul, MulZeroClass.zero_mul]
 #align is_left_regular.ne_zero IsLeftRegular.ne_zero
 
 /- warning: is_right_regular.ne_zero -> IsRightRegular.ne_zero is a dubious translation:
@@ -374,7 +374,7 @@ theorem IsRightRegular.ne_zero [Nontrivial R] (ra : IsRightRegular a) : a ≠ 0 
   rintro rfl
   rcases exists_pair_ne R with ⟨x, y, xy⟩
   refine' xy (ra (_ : x * 0 = y * 0))
-  rw [mul_zero, mul_zero]
+  rw [MulZeroClass.mul_zero, MulZeroClass.mul_zero]
 #align is_right_regular.ne_zero IsRightRegular.ne_zero
 
 /- warning: is_regular.ne_zero -> IsRegular.ne_zero is a dubious translation:

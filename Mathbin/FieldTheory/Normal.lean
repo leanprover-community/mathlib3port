@@ -197,7 +197,7 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
       (AdjoinRoot.lift (algebraMap F D) (AdjoinRoot.root q)
         (by
           rw [algebra_map_eq F E D, ← eval₂_map, hr, AdjoinRoot.algebraMap_eq, eval₂_mul,
-            AdjoinRoot.eval₂_root, zero_mul]))
+            AdjoinRoot.eval₂_root, MulZeroClass.zero_mul]))
   letI : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
   haveI : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   haveI : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm

@@ -1096,7 +1096,7 @@ theorem pow_multiset_sum_mem_span_pow (s : Multiset α) (n : ℕ) :
     simp_rw [← mul_assoc]
     rw [← pow_add, add_zero, add_tsub_cancel_of_le h]
   · use 0
-    simp_rw [zero_mul, zero_add]
+    simp_rw [MulZeroClass.zero_mul, zero_add]
     refine' ⟨_, _, rfl⟩
     replace h : c ≤ n := nat.lt_succ_iff.mp (not_le.mp h)
     have : (s.card + 1) * n + 1 - c = s.card * n + 1 + (n - c) := by

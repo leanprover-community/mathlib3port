@@ -72,7 +72,7 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
     tsub_zero]
   · rfl
   · intro i hi h0
-    convert mul_zero _
+    convert MulZeroClass.mul_zero _
     convert zero_pow _
     · cases i
       · contradiction

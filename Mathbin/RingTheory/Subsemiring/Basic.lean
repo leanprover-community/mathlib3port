@@ -582,8 +582,8 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_non_ass
 instance toNonAssocSemiring : NonAssocSemiring s :=
   { s.toSubmonoid.toMulOneClass,
     s.toAddSubmonoid.toAddCommMonoid with
-    mul_zero := fun x => Subtype.eq <| mul_zero x
-    zero_mul := fun x => Subtype.eq <| zero_mul x
+    mul_zero := fun x => Subtype.eq <| MulZeroClass.mul_zero x
+    zero_mul := fun x => Subtype.eq <| MulZeroClass.zero_mul x
     right_distrib := fun x y z => Subtype.eq <| right_distrib x y z
     left_distrib := fun x y z => Subtype.eq <| left_distrib x y z
     natCast := fun n => ⟨n, coe_nat_mem s n⟩
@@ -2409,9 +2409,10 @@ def closureCommSemiringOfComm {s : Set R'} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a 
       ext
       simp only [Subsemiring.coe_mul]
       refine'
-        closure_induction₂ x.prop y.prop hcomm (fun x => by simp only [zero_mul, mul_zero])
-          (fun x => by simp only [zero_mul, mul_zero]) (fun x => by simp only [one_mul, mul_one])
-          (fun x => by simp only [one_mul, mul_one])
+        closure_induction₂ x.prop y.prop hcomm
+          (fun x => by simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero])
+          (fun x => by simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero])
+          (fun x => by simp only [one_mul, mul_one]) (fun x => by simp only [one_mul, mul_one])
           (fun x y z h₁ h₂ => by simp only [add_mul, mul_add, h₁, h₂])
           (fun x y z h₁ h₂ => by simp only [add_mul, mul_add, h₁, h₂])
           (fun x y z h₁ h₂ => by rw [mul_assoc, h₂, ← mul_assoc, h₁, mul_assoc]) fun x y z h₁ h₂ =>

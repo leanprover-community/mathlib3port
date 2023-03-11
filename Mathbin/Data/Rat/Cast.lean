@@ -138,7 +138,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     have dd := denom_dvd a b
     cases' show (d : ℤ) ∣ b by rwa [e] at dd with k ke
     have : (b : α) = (d : α) * (k : α) := by rw [ke, Int.cast_mul, Int.cast_ofNat]
-    rw [d0, zero_mul] at this
+    rw [d0, MulZeroClass.zero_mul] at this
     contradiction
   rw [num_denom'] at e
   have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
@@ -285,7 +285,8 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.den : α) ≠ 0) (nn : (n.num :
   have : (n⁻¹.den : α) = 0 → (n.num : α) = 0 := fun h =>
     by
     let ⟨k, e⟩ := this
-    have := congr_arg (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_ofNat, h, zero_mul] at this
+    have := congr_arg (coe : ℤ → α) e <;>
+      rwa [Int.cast_mul, Int.cast_ofNat, h, MulZeroClass.zero_mul] at this
   rw [division_def, cast_mul_of_ne_zero md (mt this nn), cast_inv_of_ne_zero nn nd, division_def]
 #align rat.cast_div_of_ne_zero Rat.cast_div_of_ne_zero
 
@@ -906,7 +907,7 @@ variable {K : Type _} [DivisionRing K]
 instance (priority := 100) distribSMul : DistribSMul ℚ K
     where
   smul := (· • ·)
-  smul_zero a := by rw [smul_def, mul_zero]
+  smul_zero a := by rw [smul_def, MulZeroClass.mul_zero]
   smul_add a x y := by simp only [smul_def, mul_add, cast_add]
 #align rat.distrib_smul Rat.distribSMul
 -/

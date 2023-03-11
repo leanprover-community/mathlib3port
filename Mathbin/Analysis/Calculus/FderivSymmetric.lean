@@ -91,7 +91,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     have : Filter.Tendsto (fun h => h * (‖v‖ + ‖w‖)) (𝓝[>] (0 : ℝ)) (𝓝 (0 * (‖v‖ + ‖w‖))) :=
       (continuous_id.mul continuous_const).ContinuousWithinAt
     apply (tendsto_order.1 this).2 δ
-    simpa only [zero_mul] using δpos
+    simpa only [MulZeroClass.zero_mul] using δpos
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
     mem_nhdsWithin_Ioi_iff_exists_Ioo_subset.2
       ⟨(1 : ℝ), by simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
@@ -191,8 +191,8 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   convert I using 1
   · congr 1
     dsimp only [g]
-    simp only [Nat.one_ne_zero, add_zero, one_mul, zero_div, zero_mul, sub_zero, zero_smul, Ne.def,
-      not_false_iff, bit0_eq_zero, zero_pow']
+    simp only [Nat.one_ne_zero, add_zero, one_mul, zero_div, MulZeroClass.zero_mul, sub_zero,
+      zero_smul, Ne.def, not_false_iff, bit0_eq_zero, zero_pow']
     abel
   ·
     simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg,

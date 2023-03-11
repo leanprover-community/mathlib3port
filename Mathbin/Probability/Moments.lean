@@ -65,13 +65,14 @@ def centralMoment (X : Ω → ℝ) (p : ℕ) (μ : Measure Ω) : ℝ :=
 @[simp]
 theorem moment_zero (hp : p ≠ 0) : moment 0 p μ = 0 := by
   simp only [moment, hp, zero_pow', Ne.def, not_false_iff, Pi.zero_apply, integral_const,
-    Algebra.id.smul_eq_mul, mul_zero]
+    Algebra.id.smul_eq_mul, MulZeroClass.mul_zero]
 #align probability_theory.moment_zero ProbabilityTheory.moment_zero
 
 @[simp]
 theorem centralMoment_zero (hp : p ≠ 0) : centralMoment 0 p μ = 0 := by
-  simp only [central_moment, hp, Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul, mul_zero,
-    zero_sub, Pi.pow_apply, Pi.neg_apply, neg_zero, zero_pow', Ne.def, not_false_iff]
+  simp only [central_moment, hp, Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
+    MulZeroClass.mul_zero, zero_sub, Pi.pow_apply, Pi.neg_apply, neg_zero, zero_pow', Ne.def,
+    not_false_iff]
 #align probability_theory.central_moment_zero ProbabilityTheory.centralMoment_zero
 
 theorem centralMoment_one' [IsFiniteMeasure μ] (h_int : Integrable X μ) :
@@ -87,7 +88,7 @@ theorem centralMoment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 :
   by
   by_cases h_int : integrable X μ
   · rw [central_moment_one' h_int]
-    simp only [measure_univ, ENNReal.one_toReal, sub_self, zero_mul]
+    simp only [measure_univ, ENNReal.one_toReal, sub_self, MulZeroClass.zero_mul]
   · simp only [central_moment, Pi.sub_apply, pow_one]
     have : ¬integrable (fun x => X x - integral μ X) μ :=
       by
@@ -124,8 +125,8 @@ def cgf (X : Ω → ℝ) (μ : Measure Ω) (t : ℝ) : ℝ :=
 
 @[simp]
 theorem mgf_zero_fun : mgf 0 μ t = (μ Set.univ).toReal := by
-  simp only [mgf, Pi.zero_apply, mul_zero, exp_zero, integral_const, Algebra.id.smul_eq_mul,
-    mul_one]
+  simp only [mgf, Pi.zero_apply, MulZeroClass.mul_zero, exp_zero, integral_const,
+    Algebra.id.smul_eq_mul, mul_one]
 #align probability_theory.mgf_zero_fun ProbabilityTheory.mgf_zero_fun
 
 @[simp]
@@ -169,7 +170,7 @@ theorem cgf_const [IsProbabilityMeasure μ] (c : ℝ) : cgf (fun _ => c) μ t = 
 
 @[simp]
 theorem mgf_zero' : mgf X μ 0 = (μ Set.univ).toReal := by
-  simp only [mgf, zero_mul, exp_zero, integral_const, Algebra.id.smul_eq_mul, mul_one]
+  simp only [mgf, MulZeroClass.zero_mul, exp_zero, integral_const, Algebra.id.smul_eq_mul, mul_one]
 #align probability_theory.mgf_zero' ProbabilityTheory.mgf_zero'
 
 @[simp]
@@ -287,7 +288,7 @@ theorem aeStronglyMeasurableExpMulSum {X : ι → Ω → ℝ} {s : Finset ι}
     AeStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
   classical
     induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-    · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
+    · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, exp_zero]
       exact ae_strongly_measurable_const
     · have : ∀ i : ι, i ∈ s → ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
         h_int i (mem_insert_of_mem hi)
@@ -311,7 +312,7 @@ theorem IndepFun.integrableExpMulSum [IsProbabilityMeasure μ] {X : ι → Ω �
     Integrable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
   classical
     induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-    · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
+    · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, exp_zero]
       exact integrable_const _
     · have : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
         h_int i (mem_insert_of_mem hi)
@@ -353,7 +354,7 @@ theorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
   by
   cases' ht.eq_or_lt with ht_zero_eq ht_pos
   · rw [ht_zero_eq.symm]
-    simp only [neg_zero, zero_mul, exp_zero, mgf_zero', one_mul]
+    simp only [neg_zero, MulZeroClass.zero_mul, exp_zero, mgf_zero', one_mul]
     rw [ENNReal.toReal_le_toReal (measure_ne_top μ _) (measure_ne_top μ _)]
     exact measure_mono (Set.subset_univ _)
   calc

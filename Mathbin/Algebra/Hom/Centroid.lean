@@ -349,8 +349,8 @@ theorem cancel_left {g f₁ f₂ : CentroidHom α} (hg : Injective g) :
 
 instance : Zero (CentroidHom α) :=
   ⟨{ (0 : α →+ α) with
-      map_mul_left' := fun a b => (mul_zero _).symm
-      map_mul_right' := fun a b => (zero_mul _).symm }⟩
+      map_mul_left' := fun a b => (MulZeroClass.mul_zero _).symm
+      map_mul_right' := fun a b => (MulZeroClass.zero_mul _).symm }⟩
 
 instance : One (CentroidHom α) :=
   ⟨CentroidHom.id α⟩

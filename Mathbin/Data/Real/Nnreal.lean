@@ -985,7 +985,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nnreal.mul_finset_sup NNReal.mul_finset_supₓ'. -/
 theorem mul_finset_sup {α} (r : ℝ≥0) (s : Finset α) (f : α → ℝ≥0) :
     r * s.sup f = s.sup fun a => r * f a :=
-  Finset.comp_sup_eq_sup_comp _ (NNReal.mul_sup r) (mul_zero r)
+  Finset.comp_sup_eq_sup_comp _ (NNReal.mul_sup r) (MulZeroClass.mul_zero r)
 #align nnreal.mul_finset_sup NNReal.mul_finset_sup
 
 /- warning: nnreal.finset_sup_mul -> NNReal.finset_sup_mul is a dubious translation:
@@ -996,7 +996,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nnreal.finset_sup_mul NNReal.finset_sup_mulₓ'. -/
 theorem finset_sup_mul {α} (s : Finset α) (f : α → ℝ≥0) (r : ℝ≥0) :
     s.sup f * r = s.sup fun a => f a * r :=
-  Finset.comp_sup_eq_sup_comp (· * r) (fun x y => NNReal.sup_mul x y r) (zero_mul r)
+  Finset.comp_sup_eq_sup_comp (· * r) (fun x y => NNReal.sup_mul x y r) (MulZeroClass.zero_mul r)
 #align nnreal.finset_sup_mul NNReal.finset_sup_mul
 
 /- warning: nnreal.finset_sup_div -> NNReal.finset_sup_div is a dubious translation:
@@ -1343,7 +1343,7 @@ theorem Real.toNNReal_mul {p q : ℝ} (hp : 0 ≤ p) :
   · apply NNReal.eq
     simp [Real.toNNReal, hp, hq, max_eq_left, mul_nonneg]
   · have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq
-    rw [to_nnreal_eq_zero.2 hq, to_nnreal_eq_zero.2 hpq, mul_zero]
+    rw [to_nnreal_eq_zero.2 hq, to_nnreal_eq_zero.2 hpq, MulZeroClass.mul_zero]
 #align real.to_nnreal_mul Real.toNNReal_mul
 
 end Mul

@@ -80,7 +80,7 @@ theorem mod_eq_zero {a b : R} : a % b = 0 ↔ b ∣ a :=
     rw [e, ← add_left_cancel_iff, div_add_mod, add_zero]
     haveI := Classical.dec
     by_cases b0 : b = 0
-    · simp only [b0, zero_mul]
+    · simp only [b0, MulZeroClass.zero_mul]
     · rw [mul_div_cancel_left _ b0]⟩
 #align euclidean_domain.mod_eq_zero EuclideanDomain.mod_eq_zero
 
@@ -132,7 +132,7 @@ Case conversion may be inaccurate. Consider using '#align euclidean_domain.zero_
 @[simp]
 theorem zero_div {a : R} : 0 / a = 0 :=
   by_cases (fun a0 : a = 0 => a0.symm ▸ div_zero 0) fun a0 => by
-    simpa only [zero_mul] using mul_div_cancel 0 a0
+    simpa only [MulZeroClass.zero_mul] using mul_div_cancel 0 a0
 #align euclidean_domain.zero_div EuclideanDomain.zero_div
 
 /- warning: euclidean_domain.div_self -> EuclideanDomain.div_self is a dubious translation:
@@ -176,7 +176,7 @@ theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) 
   classical
     by_cases hz : z = 0
     · subst hz
-      rw [div_zero, div_zero, mul_zero]
+      rw [div_zero, div_zero, MulZeroClass.mul_zero]
     rcases h with ⟨p, rfl⟩
     rw [mul_div_cancel_left _ hz, mul_left_comm, mul_div_cancel_left _ hz]
 #align euclidean_domain.mul_div_assoc EuclideanDomain.mul_div_assoc
@@ -361,8 +361,8 @@ Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd_e
 theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b :=
   by
   have :=
-    @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_one, mul_zero, add_zero])
-      (by rw [P, mul_one, mul_zero, zero_add])
+    @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_one, MulZeroClass.mul_zero, add_zero])
+      (by rw [P, mul_one, MulZeroClass.mul_zero, zero_add])
   rwa [xgcd_aux_val, xgcd_val] at this
 #align euclidean_domain.gcd_eq_gcd_ab EuclideanDomain.gcd_eq_gcd_ab
 
@@ -448,7 +448,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (x : R), Eq.{succ u1} R (EuclideanDomain.lcm.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R (IsDomain.toCancelCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)) (EuclideanDomain.instIsDomainToSemiringToRingToCommRing.{u1} R _inst_1)))))) x) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R (IsDomain.toCancelCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)) (EuclideanDomain.instIsDomainToSemiringToRingToCommRing.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align euclidean_domain.lcm_zero_left EuclideanDomain.lcm_zero_leftₓ'. -/
 @[simp]
-theorem lcm_zero_left (x : R) : lcm 0 x = 0 := by rw [lcm, zero_mul, zero_div]
+theorem lcm_zero_left (x : R) : lcm 0 x = 0 := by rw [lcm, MulZeroClass.zero_mul, zero_div]
 #align euclidean_domain.lcm_zero_left EuclideanDomain.lcm_zero_left
 
 /- warning: euclidean_domain.lcm_zero_right -> EuclideanDomain.lcm_zero_right is a dubious translation:
@@ -458,7 +458,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (x : R), Eq.{succ u1} R (EuclideanDomain.lcm.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R (IsDomain.toCancelCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)) (EuclideanDomain.instIsDomainToSemiringToRingToCommRing.{u1} R _inst_1))))))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} R (IsDomain.toCancelCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)) (EuclideanDomain.instIsDomainToSemiringToRingToCommRing.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align euclidean_domain.lcm_zero_right EuclideanDomain.lcm_zero_rightₓ'. -/
 @[simp]
-theorem lcm_zero_right (x : R) : lcm x 0 = 0 := by rw [lcm, mul_zero, zero_div]
+theorem lcm_zero_right (x : R) : lcm x 0 = 0 := by rw [lcm, MulZeroClass.mul_zero, zero_div]
 #align euclidean_domain.lcm_zero_right EuclideanDomain.lcm_zero_right
 
 /- warning: euclidean_domain.lcm_eq_zero_iff -> EuclideanDomain.lcm_eq_zero_iff is a dubious translation:
@@ -482,7 +482,7 @@ theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 :=
       generalize gcd x y = g at hr hs hy hgxy⊢
       subst hs
       rw [mul_div_cancel_left _ hgxy] at hy
-      rw [hy, mul_zero]
+      rw [hy, MulZeroClass.mul_zero]
   rintro (hx | hy)
   · rw [hx, lcm_zero_left]
   · rw [hy, lcm_zero_right]
@@ -498,9 +498,9 @@ Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd_m
 theorem gcd_mul_lcm (x y : R) : gcd x y * lcm x y = x * y :=
   by
   rw [lcm]; by_cases h : gcd x y = 0
-  · rw [h, zero_mul]
+  · rw [h, MulZeroClass.zero_mul]
     rw [EuclideanDomain.gcd_eq_zero_iff] at h
-    rw [h.1, zero_mul]
+    rw [h.1, MulZeroClass.zero_mul]
   rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
   generalize gcd x y = g at h hr⊢; subst hr
   rw [mul_assoc, mul_div_cancel_left _ h]

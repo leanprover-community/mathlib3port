@@ -137,7 +137,7 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
     by
     intro a b c hab hbc
     rw [← nonpos_iff_eq_zero]
-    simpa only [*, max_eq_right, mul_zero] using hd a b c c
+    simpa only [*, max_eq_right, MulZeroClass.mul_zero] using hd a b c c
   haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
   induction' hn : length l using Nat.strong_induction_on with n ihn generalizing x y l
   simp only at ihn

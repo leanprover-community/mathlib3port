@@ -241,11 +241,11 @@ theorem coeff_mul_of_natDegree_le (pm : p.natDegree ≤ m) (qn : q.natDegree ≤
   by
   rcases eq_or_lt_of_le pm with (rfl | hm) <;> rcases eq_or_lt_of_le qn with (rfl | hn)
   · exact nat_degree_add_coeff_mul _ _
-  · rw [coeff_eq_zero_of_nat_degree_lt hn, mul_zero]
+  · rw [coeff_eq_zero_of_nat_degree_lt hn, MulZeroClass.mul_zero]
     exact nat_degree_lt_coeff_mul (add_lt_add_left hn _)
-  · rw [coeff_eq_zero_of_nat_degree_lt hm, zero_mul]
+  · rw [coeff_eq_zero_of_nat_degree_lt hm, MulZeroClass.zero_mul]
     exact nat_degree_lt_coeff_mul (add_lt_add_right hm _)
-  · rw [coeff_eq_zero_of_nat_degree_lt hn, mul_zero]
+  · rw [coeff_eq_zero_of_nat_degree_lt hn, MulZeroClass.mul_zero]
     exact nat_degree_lt_coeff_mul (add_lt_add hm hn)
 #align polynomial.coeff_mul_of_nat_degree_le Polynomial.coeff_mul_of_natDegree_le
 
@@ -486,9 +486,9 @@ theorem natDegree_comp : natDegree (p.comp q) = natDegree p * natDegree q :=
   by_cases q0 : q.nat_degree = 0
   ·
     rw [degree_le_zero_iff.mp (nat_degree_eq_zero_iff_degree_le_zero.mp q0), comp_C, nat_degree_C,
-      nat_degree_C, mul_zero]
+      nat_degree_C, MulZeroClass.mul_zero]
   · by_cases p0 : p = 0
-    · simp only [p0, zero_comp, nat_degree_zero, zero_mul]
+    · simp only [p0, zero_comp, nat_degree_zero, MulZeroClass.zero_mul]
     refine' le_antisymm nat_degree_comp_le (le_nat_degree_of_ne_zero _)
     simp only [coeff_comp_degree_mul_degree q0, p0, mul_eq_zero, leading_coeff_eq_zero, or_self_iff,
       ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zero q0), pow_ne_zero, Ne.def, not_false_iff]

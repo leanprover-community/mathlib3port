@@ -386,7 +386,7 @@ def toPouFun (i : ι) (x : X) : ℝ :=
 #align bump_covering.to_pou_fun BumpCovering.toPouFun
 
 theorem toPouFun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x = 0 := by
-  rw [to_pou_fun, h, zero_mul]
+  rw [to_pou_fun, h, MulZeroClass.zero_mul]
 #align bump_covering.to_pou_fun_zero_of_zero BumpCovering.toPouFun_zero_of_zero
 
 theorem support_toPouFun_subset (i : ι) : support (f.toPouFun i) ⊆ support (f i) := fun x =>

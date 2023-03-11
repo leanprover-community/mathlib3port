@@ -304,7 +304,8 @@ theorem tendstoInMeasureOfTendstoSnormOfStronglyMeasurable (hp_ne_zero : p ≠ 0
   replace hfg :=
     ENNReal.Tendsto.const_mul (tendsto.ennrpow_const p.to_real hfg)
       (Or.inr <| @ENNReal.ofReal_ne_top (1 / ε ^ p.to_real))
-  simp only [mul_zero, ENNReal.zero_rpow_of_pos (ENNReal.toReal_pos hp_ne_zero hp_ne_top)] at hfg
+  simp only [MulZeroClass.mul_zero,
+    ENNReal.zero_rpow_of_pos (ENNReal.toReal_pos hp_ne_zero hp_ne_top)] at hfg
   rw [ENNReal.tendsto_nhds_zero] at hfg⊢
   intro δ hδ
   refine' (hfg δ hδ).mono fun n hn => _

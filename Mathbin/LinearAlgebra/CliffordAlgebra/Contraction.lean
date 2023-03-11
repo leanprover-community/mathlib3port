@@ -165,7 +165,8 @@ variable (Q)
 @[simp]
 theorem contractLeft_ι (x : M) : d⌋ι Q x = algebraMap R _ (d x) :=
   (foldr'_ι _ _ _ _ _).trans <| by
-    simp_rw [contract_left_aux_apply_apply, mul_zero, sub_zero, Algebra.algebraMap_eq_smul_one]
+    simp_rw [contract_left_aux_apply_apply, MulZeroClass.mul_zero, sub_zero,
+      Algebra.algebraMap_eq_smul_one]
 #align clifford_algebra.contract_left_ι CliffordAlgebra.contractLeft_ι
 
 @[simp]
@@ -202,8 +203,8 @@ theorem contractLeft_contractLeft (x : CliffordAlgebra Q) : d⌋(d⌋x) = 0 :=
   · simp_rw [contract_left_algebra_map, map_zero]
   · rw [map_add, map_add, hx, hy, add_zero]
   ·
-    rw [contract_left_ι_mul, map_sub, contract_left_ι_mul, hx, LinearMap.map_smul, mul_zero,
-      sub_zero, sub_self]
+    rw [contract_left_ι_mul, map_sub, contract_left_ι_mul, hx, LinearMap.map_smul,
+      MulZeroClass.mul_zero, sub_zero, sub_self]
 #align clifford_algebra.contract_left_contract_left CliffordAlgebra.contractLeft_contractLeft
 
 /-- This is [grinberg_clifford_2016][] Theorem 13 -/

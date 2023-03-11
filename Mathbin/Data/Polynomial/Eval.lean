@@ -78,9 +78,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.eval₂_at_zero Polynomial.eval₂_at_zeroₓ'. -/
 @[simp]
 theorem eval₂_at_zero : p.eval₂ f 0 = f (coeff p 0) := by
-  simp (config := { contextual := true }) only [eval₂_eq_sum, zero_pow_eq, mul_ite, mul_zero,
-    mul_one, Sum, Classical.not_not, mem_support_iff, sum_ite_eq', ite_eq_left_iff,
-    RingHom.map_zero, imp_true_iff, eq_self_iff_true]
+  simp (config := { contextual := true }) only [eval₂_eq_sum, zero_pow_eq, mul_ite,
+    MulZeroClass.mul_zero, mul_one, Sum, Classical.not_not, mem_support_iff, sum_ite_eq',
+    ite_eq_left_iff, RingHom.map_zero, imp_true_iff, eq_self_iff_true]
 #align polynomial.eval₂_at_zero Polynomial.eval₂_at_zero
 
 /- warning: polynomial.eval₂_zero -> Polynomial.eval₂_zero is a dubious translation:
@@ -392,7 +392,7 @@ theorem eval₂_eq_sum_range' (f : R →+* S) {p : R[X]} {n : ℕ} (hn : p.natDe
   by
   rw [eval₂_eq_sum, p.sum_over_range' _ _ hn]
   intro i
-  rw [f.map_zero, zero_mul]
+  rw [f.map_zero, MulZeroClass.zero_mul]
 #align polynomial.eval₂_eq_sum_range' Polynomial.eval₂_eq_sum_range'
 
 end
@@ -715,7 +715,7 @@ theorem eval_monomial_one_add_sub [CommRing S] (d : ℕ) (y : S) :
     skip
     rw [one_pow, mul_one, mul_comm]
   rw [sum_range_succ, mul_add, Nat.choose_self, Nat.cast_one, one_mul, add_sub_cancel, mul_sum,
-    sum_range_succ', Nat.cast_zero, zero_mul, mul_zero, add_zero]
+    sum_range_succ', Nat.cast_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero, add_zero]
   apply sum_congr rfl fun y hy => _
   rw [← mul_assoc, ← mul_assoc, ← Nat.cast_mul, Nat.succ_mul_choose_eq, Nat.cast_mul,
     Nat.add_sub_cancel]
@@ -1376,7 +1376,7 @@ theorem map_monic_eq_zero_iff (hp : p.Monic) : p.map f = 0 ↔ ∀ x, f x = 0 :=
     calc
       f x = f x * f p.leadingCoeff := by simp only [mul_one, hp.leading_coeff, f.map_one]
       _ = f x * (p.map f).coeff p.natDegree := (congr_arg _ (coeff_map _ _).symm)
-      _ = 0 := by simp only [hfp, mul_zero, coeff_zero]
+      _ = 0 := by simp only [hfp, MulZeroClass.mul_zero, coeff_zero]
       ,
     fun h => ext fun n => by simp only [h, coeff_map, coeff_zero]⟩
 #align polynomial.map_monic_eq_zero_iff Polynomial.map_monic_eq_zero_iff
@@ -1732,13 +1732,13 @@ theorem coe_compRingHom_apply (p q : R[X]) : (compRingHom q : R[X] → R[X]) p =
 
 #print Polynomial.root_mul_left_of_isRoot /-
 theorem root_mul_left_of_isRoot (p : R[X]) {q : R[X]} : IsRoot q a → IsRoot (p * q) a := fun H => by
-  rw [is_root, eval_mul, is_root.def.1 H, mul_zero]
+  rw [is_root, eval_mul, is_root.def.1 H, MulZeroClass.mul_zero]
 #align polynomial.root_mul_left_of_is_root Polynomial.root_mul_left_of_isRoot
 -/
 
 #print Polynomial.root_mul_right_of_isRoot /-
 theorem root_mul_right_of_isRoot {p : R[X]} (q : R[X]) : IsRoot p a → IsRoot (p * q) a := fun H =>
-  by rw [is_root, eval_mul, is_root.def.1 H, zero_mul]
+  by rw [is_root, eval_mul, is_root.def.1 H, MulZeroClass.zero_mul]
 #align polynomial.root_mul_right_of_is_root Polynomial.root_mul_right_of_isRoot
 -/
 

@@ -196,7 +196,7 @@ theorem isUnitTrinomial_iff :
   rw [if_neg hkm.ne, if_neg (hkm.trans hmn).Ne] at hx
   rw [if_neg hkm.ne', if_neg hmn.ne] at hy
   rw [if_neg (hkm.trans hmn).ne', if_neg hmn.ne'] at hz
-  simp_rw [mul_zero, zero_add, add_zero] at hx hy hz
+  simp_rw [MulZeroClass.mul_zero, zero_add, add_zero] at hx hy hz
   exact ⟨k, m, n, hkm, hmn, hx.unit, hy.unit, hz.unit, rfl⟩
 #align polynomial.is_unit_trinomial_iff Polynomial.isUnitTrinomial_iff
 
@@ -373,9 +373,9 @@ theorem irreducible_of_coprime' (hp : IsUnitTrinomial p)
   rw [is_root, eval_map, ← aeval_def] at hz
   refine' h z ⟨_, _⟩
   · cases' hq with g' hg'
-    rw [hg', aeval_mul, hz, zero_mul]
+    rw [hg', aeval_mul, hz, MulZeroClass.zero_mul]
   · cases' hq' with g' hg'
-    rw [hg', aeval_mul, hz, zero_mul]
+    rw [hg', aeval_mul, hz, MulZeroClass.zero_mul]
 #align polynomial.is_unit_trinomial.irreducible_of_coprime' Polynomial.IsUnitTrinomial.irreducible_of_coprime'
 
 -- TODO: Develop more theory (e.g., it suffices to check that `aeval z p ≠ 0` for `z = 0`

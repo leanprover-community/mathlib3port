@@ -461,7 +461,7 @@ noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Typ
     rw [← (algebraMap R' S').map_one, this, g.map_one]
   · intro x y
     apply H.out.induction_on x
-    · rw [zero_mul, map_zero, zero_mul]
+    · rw [MulZeroClass.zero_mul, map_zero, MulZeroClass.zero_mul]
     rotate_left
     · intro s s' e
       dsimp only [LinearMap.restrictScalars_apply] at e⊢
@@ -473,7 +473,7 @@ noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Typ
     dsimp
     rw [this]
     apply H.out.induction_on y
-    · rw [mul_zero, map_zero, mul_zero]
+    · rw [MulZeroClass.mul_zero, map_zero, MulZeroClass.mul_zero]
     · intro y
       dsimp
       rw [← _root_.map_mul, this, this, _root_.map_mul]

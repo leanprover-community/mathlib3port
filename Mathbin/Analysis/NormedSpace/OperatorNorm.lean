@@ -89,7 +89,7 @@ theorem SemilinearMapClass.bound_of_continuous [SemilinearMapClass 𝓕 σ₁₂
   have : 0 < ‖c‖ / ε := div_pos (zero_lt_one.trans hc) ε_pos
   refine' ⟨‖c‖ / ε, this, fun x => _⟩
   by_cases hx : ‖x‖ = 0
-  · rw [hx, mul_zero]
+  · rw [hx, MulZeroClass.mul_zero]
     exact le_of_eq (norm_image_of_norm_zero f hf hx)
   refine' SemilinearMapClass.bound_of_shell_semi_normed f ε_pos hc (fun x hle hlt => _) hx
   refine' (hε _ hlt).le.trans _
@@ -172,7 +172,7 @@ theorem op_norm_le_bound' (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M)
     (hM : ∀ x, ‖x‖ ≠ 0 → ‖f x‖ ≤ M * ‖x‖) : ‖f‖ ≤ M :=
   op_norm_le_bound f hMp fun x =>
     (ne_or_eq ‖x‖ 0).elim (hM x) fun h => by
-      simp only [h, mul_zero, norm_image_of_norm_zero f f.2 h]
+      simp only [h, MulZeroClass.mul_zero, norm_image_of_norm_zero f f.2 h]
 #align continuous_linear_map.op_norm_le_bound' ContinuousLinearMap.op_norm_le_bound'
 
 theorem op_norm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0} (hf : LipschitzWith K f) : ‖f‖ ≤ K :=
@@ -206,7 +206,7 @@ theorem le_op_norm : ‖f x‖ ≤ ‖f‖ * ‖x‖ :=
   obtain ⟨C, Cpos, hC⟩ := f.bound
   replace hC := hC x
   by_cases h : ‖x‖ = 0
-  · rwa [h, mul_zero] at hC⊢
+  · rwa [h, MulZeroClass.mul_zero] at hC⊢
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
@@ -290,7 +290,7 @@ theorem op_norm_zero : ‖(0 : E →SL[σ₁₂] F)‖ = 0 :=
       ⟨le_rfl, fun _ =>
         le_of_eq
           (by
-            rw [zero_mul]
+            rw [MulZeroClass.zero_mul]
             exact norm_zero)⟩)
     (op_norm_nonneg _)
 #align continuous_linear_map.op_norm_zero ContinuousLinearMap.op_norm_zero
@@ -755,7 +755,8 @@ def mkContinuous₂ (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃] G) (C : ℝ
         rw [ContinuousLinearMap.smul_apply, mk_continuous_apply, mk_continuous_apply, map_smulₛₗ,
           smul_apply] }
     (max C 0) fun x =>
-    (mkContinuous_norm_le' _ _).trans_eq <| by rw [max_mul_of_nonneg _ _ (norm_nonneg x), zero_mul]
+    (mkContinuous_norm_le' _ _).trans_eq <| by
+      rw [max_mul_of_nonneg _ _ (norm_nonneg x), MulZeroClass.zero_mul]
 #align linear_map.mk_continuous₂ LinearMap.mkContinuous₂
 
 @[simp]
@@ -1425,7 +1426,7 @@ theorem op_norm_zero_iff [RingHomIsometric σ₁₂] : ‖f‖ = 0 ↔ f = 0 :=
         norm_le_zero_iff.1
           (calc
             _ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
-            _ = _ := by rw [hn, zero_mul]
+            _ = _ := by rw [hn, MulZeroClass.zero_mul]
             ))
     (by
       rintro rfl
@@ -1732,7 +1733,7 @@ theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
     have hψ : ψ = 0 := by
       rw [hf]
       apply extend_zero
-    rw [hψ, hf, norm_zero, norm_zero, mul_zero]
+    rw [hψ, hf, norm_zero, norm_zero, MulZeroClass.mul_zero]
 #align continuous_linear_map.op_norm_extend_le ContinuousLinearMap.op_norm_extend_le
 
 end

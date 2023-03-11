@@ -60,7 +60,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
   have h_last : ∀ n, t n n.succ = 0 := fun n =>
     by
     dsimp [t]
-    rw [choose_succ_self, Nat.cast_zero, mul_zero]
+    rw [choose_succ_self, Nat.cast_zero, MulZeroClass.mul_zero]
   have h_middle :
     ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ :=
     by
@@ -72,7 +72,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     · rw [pow_succ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
     · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).Eq]
       by_cases h_eq : i = n
-      · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
+      · rw [h_eq, choose_succ_self, Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.mul_zero]
       · rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
         rw [pow_succ y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
   induction' n with n ih
@@ -83,7 +83,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     rw [sum_congr rfl (h_middle n), sum_add_distrib, add_assoc]
     rw [pow_succ (x + y), ih, add_mul, mul_sum, mul_sum]
     congr 1
-    rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zero, pow_succ]
+    rw [sum_range_succ', sum_range_succ, h_first, h_last, MulZeroClass.mul_zero, add_zero, pow_succ]
 #align commute.add_pow Commute.add_pow
 
 /- warning: commute.add_pow' -> Commute.add_pow' is a dubious translation:

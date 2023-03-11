@@ -700,7 +700,7 @@ theorem WithBot.coe_nsmul [AddMonoid A] (a : A) (n : ℕ) : ((n • a : A) : Wit
 -/
 
 theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n := by
-  induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, mul_zero],
+  induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, MulZeroClass.mul_zero],
     rw [succ_nsmul', ih, Nat.cast_succ, mul_add, mul_one]]
 #align nsmul_eq_mul' nsmul_eq_mul'ₓ
 
@@ -720,7 +720,7 @@ instance NonUnitalNonAssocSemiring.nat_smulCommClass [NonUnitalNonAssocSemiring 
     SMulCommClass ℕ R R :=
   ⟨fun n x y =>
     match n with
-    | 0 => by simp_rw [zero_nsmul, smul_eq_mul, mul_zero]
+    | 0 => by simp_rw [zero_nsmul, smul_eq_mul, MulZeroClass.mul_zero]
     | n + 1 => by simp_rw [succ_nsmul, smul_eq_mul, mul_add, ← smul_eq_mul, _match n]⟩
 #align non_unital_non_assoc_semiring.nat_smul_comm_class NonUnitalNonAssocSemiring.nat_smulCommClass
 
@@ -735,7 +735,7 @@ instance NonUnitalNonAssocSemiring.nat_isScalarTower [NonUnitalNonAssocSemiring 
     IsScalarTower ℕ R R :=
   ⟨fun n x y =>
     match n with
-    | 0 => by simp_rw [zero_nsmul, smul_eq_mul, zero_mul]
+    | 0 => by simp_rw [zero_nsmul, smul_eq_mul, MulZeroClass.zero_mul]
     | n + 1 => by simp_rw [succ_nsmul, ← _match n, smul_eq_mul, add_mul]⟩
 #align non_unital_non_assoc_semiring.nat_is_scalar_tower NonUnitalNonAssocSemiring.nat_isScalarTower
 
@@ -1849,7 +1849,7 @@ open Multiplicative
 theorem Nat.toAdd_pow (a : Multiplicative ℕ) (b : ℕ) : toAdd (a ^ b) = toAdd a * b :=
   by
   induction' b with b ih
-  · erw [pow_zero, toAdd_one, mul_zero]
+  · erw [pow_zero, toAdd_one, MulZeroClass.mul_zero]
   · simp [*, pow_succ, add_comm, Nat.mul_succ]
 #align nat.to_add_pow Nat.toAdd_pow
 -/

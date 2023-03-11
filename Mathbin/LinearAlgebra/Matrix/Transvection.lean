@@ -109,11 +109,11 @@ theorem updateRow_eq_transvection [Finite n] (c : R) :
   ·
     simp only [update_row, transvection, ha, hb, std_basis_matrix.apply_of_ne, Function.update_same,
       Pi.add_apply, Ne.def, not_false_iff, Pi.smul_apply, and_false_iff, one_apply_ne,
-      Algebra.id.smul_eq_mul, mul_zero]
+      Algebra.id.smul_eq_mul, MulZeroClass.mul_zero]
   ·
     simp only [update_row, transvection, ha, Ne.symm ha, std_basis_matrix.apply_of_ne, add_zero,
       Algebra.id.smul_eq_mul, Function.update_noteq, Ne.def, not_false_iff, DMatrix.add_apply,
-      Pi.smul_apply, mul_zero, false_and_iff]
+      Pi.smul_apply, MulZeroClass.mul_zero, false_and_iff]
 #align matrix.update_row_eq_transvection Matrix.updateRow_eq_transvection
 
 variable [Fintype n]

@@ -170,7 +170,7 @@ theorem Gamma1_to_gamma0_mem (N : ℕ) (A : gamma0 N) :
     simp only [gamma0Map, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply, Gamma1_mem',
       MonoidHom.coe_mk, Subtype.val_eq_coe, Int.cast_sub, Int.cast_mul] at *
     rw [hA, ha] at adet
-    simp only [mul_one, mul_zero, sub_zero] at adet
+    simp only [mul_one, MulZeroClass.mul_zero, sub_zero] at adet
     simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
   · intro ha
     simp only [Gamma1_mem', gamma0Map, MonoidHom.coe_mk, coe_coe, coe_matrix_coe,

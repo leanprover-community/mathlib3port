@@ -74,7 +74,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subadditive.apply_mul_add_le Subadditive.apply_mul_add_leₓ'. -/
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
   by
-  induction' k with k IH; · simp only [Nat.cast_zero, zero_mul, zero_add]
+  induction' k with k IH; · simp only [Nat.cast_zero, MulZeroClass.zero_mul, zero_add]
   calc
     u ((k + 1) * n + r) = u (n + (k * n + r)) :=
       by

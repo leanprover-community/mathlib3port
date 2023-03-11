@@ -121,7 +121,7 @@ theorem sphere_subset_preimage_metric_sphere :
 def map (d : ℕ) : (Fin n → ℕ) →+ ℕ
     where
   toFun a := ∑ i, a i * d ^ (i : ℕ)
-  map_zero' := by simp_rw [Pi.zero_apply, zero_mul, sum_const_zero]
+  map_zero' := by simp_rw [Pi.zero_apply, MulZeroClass.zero_mul, sum_const_zero]
   map_add' a b := by simp_rw [Pi.add_apply, add_mul, sum_add_distrib]
 #align behrend.map Behrend.map
 

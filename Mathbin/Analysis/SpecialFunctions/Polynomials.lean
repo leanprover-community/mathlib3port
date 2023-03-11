@@ -118,7 +118,7 @@ theorem tendsto_nhds_iff {c : 𝕜} :
   refine' ⟨fun h => _, fun h => _⟩
   · have := P.is_equivalent_at_top_lead.tendsto_nhds h
     by_cases hP : P.leading_coeff = 0
-    · simp only [hP, zero_mul, tendsto_const_nhds_iff] at this
+    · simp only [hP, MulZeroClass.zero_mul, tendsto_const_nhds_iff] at this
       refine' ⟨trans hP this, by simp [leading_coeff_eq_zero.1 hP]⟩
     · rw [tendsto_const_mul_pow_nhds_iff hP, nat_degree_eq_zero_iff_degree_le_zero] at this
       exact this.symm
@@ -153,7 +153,7 @@ theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
   · simp [hP, tendsto_const_nhds]
   rw [← nat_degree_lt_nat_degree_iff hP] at hdeg
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_nhds _
-  rw [← mul_zero]
+  rw [← MulZeroClass.mul_zero]
   refine' (tendsto_zpow_atTop_zero _).const_mul _
   linarith
 #align polynomial.div_tendsto_zero_of_degree_lt Polynomial.div_tendsto_zero_of_degree_lt

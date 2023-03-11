@@ -37,7 +37,8 @@ theorem map_eq_c_mul_x_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
   Polynomial.ext fun n => by
     by_cases hf0 : f = 0; · simp [hf0]
     rcases lt_trichotomy (↑n) (degree f) with (h | h | h)
-    · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
+    · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg,
+        MulZeroClass.mul_zero]
       rintro rfl
       exact not_lt_of_ge degree_le_nat_degree h
     · have : nat_degree f = n := nat_degree_eq_of_degree_eq_some h.symm
@@ -63,7 +64,7 @@ theorem le_natDegree_of_map_eq_mul_x_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime
 theorem eval_zero_mem_ideal_of_eq_mul_x_pow {n : ℕ} {P : Ideal R} {q : R[X]}
     {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P := by
   rw [← coeff_zero_eq_eval_zero, ← eq_zero_iff_mem, ← coeff_map, coeff_zero_eq_eval_zero, hq,
-    eval_mul, eval_pow, eval_X, zero_pow hn0, mul_zero]
+    eval_mul, eval_pow, eval_X, zero_pow hn0, MulZeroClass.mul_zero]
 #align polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_x_pow
 
 theorem isUnit_of_natDegree_eq_zero_of_forall_dvd_isUnit {p q : R[X]}
@@ -107,8 +108,10 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
         Ideal.mul_mem_mul (eval_zero_mem_ideal_of_eq_mul_X_pow hp hm0)
           (eval_zero_mem_ideal_of_eq_mul_X_pow hq hn0)
     have hpql0 : (mk P) (p * q).leadingCoeff ≠ 0 := by rwa [Ne.def, eq_zero_iff_mem]
-    have hp0 : p ≠ 0 := fun h => by simp_all only [zero_mul, eq_self_iff_true, not_true, Ne.def]
-    have hq0 : q ≠ 0 := fun h => by simp_all only [eq_self_iff_true, not_true, Ne.def, mul_zero]
+    have hp0 : p ≠ 0 := fun h => by
+      simp_all only [MulZeroClass.zero_mul, eq_self_iff_true, not_true, Ne.def]
+    have hq0 : q ≠ 0 := fun h => by
+      simp_all only [eq_self_iff_true, not_true, Ne.def, MulZeroClass.mul_zero]
     have hbc0 : degree b = 0 ∧ degree c = 0 :=
       by
       apply_fun degree  at hbc

@@ -1320,7 +1320,7 @@ theorem snorm_smul_le_snorm_top_mul_snorm (p : ℝ≥0∞) {f : α → E} (hf : 
       ENNReal.coe_mul]
     exact ENNReal.essSup_mul_le _ _
   by_cases hp_zero : p = 0
-  · simp only [hp_zero, snorm_exponent_zero, mul_zero, le_zero_iff]
+  · simp only [hp_zero, snorm_exponent_zero, MulZeroClass.mul_zero, le_zero_iff]
   simp_rw [snorm_eq_lintegral_rpow_nnnorm hp_zero hp_top, snorm_exponent_top, snorm_ess_sup]
   calc
     (∫⁻ x, ↑‖(φ • f) x‖₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) =

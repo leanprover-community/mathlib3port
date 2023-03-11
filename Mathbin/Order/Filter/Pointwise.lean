@@ -1212,7 +1212,7 @@ Case conversion may be inaccurate. Consider using '#align filter.ne_bot.mul_zero
 theorem NeBot.mul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f * 0 :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
-    ⟨_, _, ha, h₂, mul_zero _⟩
+    ⟨_, _, ha, h₂, MulZeroClass.mul_zero _⟩
 #align filter.ne_bot.mul_zero_nonneg Filter.NeBot.mul_zero_nonneg
 
 /- warning: filter.ne_bot.zero_mul_nonneg -> Filter.NeBot.zero_mul_nonneg is a dubious translation:
@@ -1224,7 +1224,7 @@ Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_mul
 theorem NeBot.zero_mul_nonneg (hg : g.ne_bot) : 0 ≤ 0 * g :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
-    ⟨_, _, h₁, hb, zero_mul _⟩
+    ⟨_, _, h₁, hb, MulZeroClass.zero_mul _⟩
 #align filter.ne_bot.zero_mul_nonneg Filter.NeBot.zero_mul_nonneg
 
 end MulZeroClass

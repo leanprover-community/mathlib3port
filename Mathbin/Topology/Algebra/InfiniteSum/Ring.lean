@@ -224,7 +224,7 @@ theorem tsum_mul_left [T2Space α] : (∑' x, a * f x) = a * ∑' x, f x :=
     if ha : a = 0 then by simp [ha]
     else by
       rw [tsum_eq_zero_of_not_summable hf,
-        tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).mp hf), mul_zero]
+        tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).mp hf), MulZeroClass.mul_zero]
 #align tsum_mul_left tsum_mul_left
 
 /- warning: tsum_mul_right -> tsum_mul_right is a dubious translation:
@@ -239,7 +239,7 @@ theorem tsum_mul_right [T2Space α] : (∑' x, f x * a) = (∑' x, f x) * a :=
     if ha : a = 0 then by simp [ha]
     else by
       rw [tsum_eq_zero_of_not_summable hf,
-        tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).mp hf), zero_mul]
+        tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).mp hf), MulZeroClass.zero_mul]
 #align tsum_mul_right tsum_mul_right
 
 /- warning: tsum_div_const -> tsum_div_const is a dubious translation:

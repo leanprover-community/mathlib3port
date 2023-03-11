@@ -844,7 +844,7 @@ theorem toNNRat_mul (hp : 0 ≤ p) : toNNRat (p * q) = toNNRat p * toNNRat q :=
   cases' le_total 0 q with hq hq
   · ext <;> simp [to_nnrat, hp, hq, max_eq_left, mul_nonneg]
   · have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq
-    rw [to_nnrat_eq_zero.2 hq, to_nnrat_eq_zero.2 hpq, mul_zero]
+    rw [to_nnrat_eq_zero.2 hq, to_nnrat_eq_zero.2 hpq, MulZeroClass.mul_zero]
 #align rat.to_nnrat_mul Rat.toNNRat_mul
 
 /- warning: rat.to_nnrat_inv -> Rat.toNNRat_inv is a dubious translation:

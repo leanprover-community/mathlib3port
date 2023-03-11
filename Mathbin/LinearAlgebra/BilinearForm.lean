@@ -112,12 +112,13 @@ theorem smul_right (a : R) (x y : M) : B x (a • y) = a * B x y :=
 #align bilin_form.smul_right BilinForm.smul_right
 
 @[simp]
-theorem zero_left (x : M) : B 0 x = 0 := by rw [← @zero_smul R _ _ _ _ (0 : M), smul_left, zero_mul]
+theorem zero_left (x : M) : B 0 x = 0 := by
+  rw [← @zero_smul R _ _ _ _ (0 : M), smul_left, MulZeroClass.zero_mul]
 #align bilin_form.zero_left BilinForm.zero_left
 
 @[simp]
 theorem zero_right (x : M) : B x 0 = 0 := by
-  rw [← @zero_smul _ _ _ _ _ (0 : M), smul_right, zero_mul]
+  rw [← @zero_smul _ _ _ _ _ (0 : M), smul_right, MulZeroClass.zero_mul]
 #align bilin_form.zero_right BilinForm.zero_right
 
 @[simp]
@@ -169,9 +170,9 @@ instance : Zero (BilinForm R M)
     where zero :=
     { bilin := fun x y => 0
       bilin_add_left := fun x y z => (add_zero 0).symm
-      bilin_smul_left := fun a x y => (mul_zero a).symm
+      bilin_smul_left := fun a x y => (MulZeroClass.mul_zero a).symm
       bilin_add_right := fun x y z => (zero_add 0).symm
-      bilin_smul_right := fun a x y => (mul_zero a).symm }
+      bilin_smul_right := fun a x y => (MulZeroClass.mul_zero a).symm }
 
 @[simp]
 theorem coe_zero : ⇑(0 : BilinForm R M) = 0 :=
@@ -808,7 +809,7 @@ theorem isOrtho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G (a 
     cases H
     · trivial
     · exact H
-  · rw [smul_left, H, mul_zero]
+  · rw [smul_left, H, MulZeroClass.mul_zero]
 #align bilin_form.is_ortho_smul_left BilinForm.isOrtho_smul_left
 
 @[simp]
@@ -820,7 +821,7 @@ theorem isOrtho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x 
     cases H
     · trivial
     · exact H
-  · rw [smul_right, H, mul_zero]
+  · rw [smul_right, H, MulZeroClass.mul_zero]
 #align bilin_form.is_ortho_smul_right BilinForm.isOrtho_smul_right
 
 /-- A set of orthogonal vectors `v` with respect to some bilinear form `B` is linearly independent
@@ -835,7 +836,7 @@ theorem linearIndependent_of_isOrthoCat {n : Type w} {B : BilinForm K V} {v : n 
       by
       apply Finset.sum_eq_single_of_mem i hi
       intro j hj hij
-      rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
+      rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
     simp_rw [sum_left, smul_left, hsum] at this
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 #align bilin_form.linear_independent_of_is_Ortho BilinForm.linearIndependent_of_isOrthoCat
@@ -1210,7 +1211,8 @@ def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M
   zero_mem' x _ := isOrthoZeroRight x
   add_mem' x y hx hy n hn := by
     rw [is_ortho, add_right, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_add]
-  smul_mem' c x hx n hn := by rw [is_ortho, smul_right, show B n x = 0 from hx n hn, mul_zero]
+  smul_mem' c x hx n hn := by
+    rw [is_ortho, smul_right, show B n x = 0 from hx n hn, MulZeroClass.mul_zero]
 #align bilin_form.orthogonal BilinForm.orthogonal
 
 variable {N L : Submodule R M}
@@ -1380,7 +1382,7 @@ theorem IsOrthoCat.not_isOrtho_basis_self_of_nondegenerate {n : Type w} [Nontriv
   apply Finset.sum_eq_zero
   rintro j -
   rw [smul_right]
-  convert mul_zero _ using 2
+  convert MulZeroClass.mul_zero _ using 2
   obtain rfl | hij := eq_or_ne i j
   · exact ho
   · exact h hij
@@ -1402,10 +1404,10 @@ theorem IsOrthoCat.nondegenerate_iff_not_isOrtho_basis_self {n : Type w} [Nontri
   rw [Finset.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (ho i) hB
   · intro j hj hij
-    convert mul_zero _ using 2
+    convert MulZeroClass.mul_zero _ using 2
     exact hO hij
   · intro hi
-    convert zero_mul _ using 2
+    convert MulZeroClass.zero_mul _ using 2
     exact finsupp.not_mem_support_iff.mp hi
 #align bilin_form.is_Ortho.nondegenerate_iff_not_is_ortho_basis_self BilinForm.IsOrthoCat.nondegenerate_iff_not_isOrtho_basis_self
 

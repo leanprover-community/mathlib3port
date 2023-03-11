@@ -302,7 +302,7 @@ theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
   cases' le_or_lt b 1 with hb hb
   · rw [log_of_left_le_one hb, log_of_left_le_one hb]
   cases' lt_or_le n b with h h
-  · rw [div_eq_of_lt h, zero_mul, log_zero_right, log_of_lt h]
+  · rw [div_eq_of_lt h, MulZeroClass.zero_mul, log_zero_right, log_of_lt h]
   rw [log_mul_base hb (Nat.div_pos h (zero_le_one.trans_lt hb)).ne', log_div_base,
     tsub_add_cancel_of_le (succ_le_iff.2 <| log_pos hb h)]
 #align nat.log_div_mul_self Nat.log_div_mul_self

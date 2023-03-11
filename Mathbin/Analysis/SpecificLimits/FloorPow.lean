@@ -191,7 +191,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         by
         apply tendsto.mono_left _ nhdsWithin_le_nhds
         exact tendsto_const_nhds.add (tendsto_id.mul tendsto_const_nhds)
-      simp only [zero_mul, add_zero] at L
+      simp only [MulZeroClass.zero_mul, add_zero] at L
       exact (((tendsto_order.1 L).2 l hd).And self_mem_nhdsWithin).exists
     filter_upwards [B ε εpos, Ioi_mem_at_top 0]with n hn npos
     simp_rw [div_eq_inv_mul]
@@ -215,7 +215,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         exact
           tendsto_const_nhds.add
             (tendsto_id.mul ((tendsto_const_nhds.add tendsto_id).add tendsto_const_nhds))
-      simp only [zero_mul, add_zero] at L
+      simp only [MulZeroClass.zero_mul, add_zero] at L
       exact (((tendsto_order.1 L).2 d hd).And self_mem_nhdsWithin).exists
     filter_upwards [A ε εpos, Ioi_mem_at_top 0]with n hn npos
     simp_rw [div_eq_inv_mul]

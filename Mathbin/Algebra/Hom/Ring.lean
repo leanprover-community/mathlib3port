@@ -321,7 +321,7 @@ include rα rβ
 
 instance : Zero (α →ₙ+* β) :=
   ⟨{  toFun := 0
-      map_mul' := fun x y => (mul_zero (0 : β)).symm
+      map_mul' := fun x y => (MulZeroClass.mul_zero (0 : β)).symm
       map_zero' := rfl
       map_add' := fun x y => (add_zero (0 : β)).symm }⟩
 
@@ -1031,7 +1031,7 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.codomain_triv
 /-- `f : α →+* β` has a trivial codomain iff it has a trivial range. -/
 theorem codomain_trivial_iff_range_trivial : (0 : β) = 1 ↔ ∀ x, f x = 0 :=
   f.codomain_trivial_iff_map_one_eq_zero.trans
-    ⟨fun h x => by rw [← mul_one x, map_mul, h, mul_zero], fun h => h 1⟩
+    ⟨fun h x => by rw [← mul_one x, map_mul, h, MulZeroClass.mul_zero], fun h => h 1⟩
 #align ring_hom.codomain_trivial_iff_range_trivial RingHom.codomain_trivial_iff_range_trivial
 
 /- warning: ring_hom.codomain_trivial_iff_range_eq_singleton_zero -> RingHom.codomain_trivial_iff_range_eq_singleton_zero is a dubious translation:

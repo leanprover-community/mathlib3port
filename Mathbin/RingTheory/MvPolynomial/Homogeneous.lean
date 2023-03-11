@@ -102,7 +102,8 @@ theorem homogeneousSubmodule_mul [CommSemiring R] (m n : ℕ) :
   have aux : coeff d φ ≠ 0 ∧ coeff e ψ ≠ 0 :=
     by
     contrapose! H
-    by_cases h : coeff d φ = 0 <;> simp_all only [Ne.def, not_false_iff, zero_mul, mul_zero]
+    by_cases h : coeff d φ = 0 <;>
+      simp_all only [Ne.def, not_false_iff, MulZeroClass.zero_mul, MulZeroClass.mul_zero]
   specialize hφ aux.1
   specialize hψ aux.2
   rw [Finsupp.mem_antidiagonal] at hde

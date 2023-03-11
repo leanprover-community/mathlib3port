@@ -138,7 +138,7 @@ theorem commute [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : 
     rw [add_le_add_iff_left, two_smul, ← two_mul] at e1
     rw [le_antisymm_iff]
     refine' ⟨_, norm_nonneg _⟩
-    rwa [← mul_zero (2 : ℝ), mul_le_mul_left (show (0 : ℝ) < 2 by norm_num)] at e1
+    rwa [← MulZeroClass.mul_zero (2 : ℝ), mul_le_mul_left (show (0 : ℝ) < 2 by norm_num)] at e1
   have QP_eq_QPQ : Q * P = Q * P * Q :=
     by
     have e1 : P * (1 - Q) = P * (1 - Q) - (Q * P - Q * P * Q) :=
@@ -232,7 +232,7 @@ theorem le_def [FaithfulSMul M X] (P Q : { P : M // IsLprojection X P }) :
 
 instance : Zero { P : M // IsLprojection X P } :=
   ⟨⟨0,
-      ⟨by rw [IsIdempotentElem, zero_mul], fun x => by
+      ⟨by rw [IsIdempotentElem, MulZeroClass.zero_mul], fun x => by
         simp only [zero_smul, norm_zero, sub_zero, one_smul, zero_add]⟩⟩⟩
 
 @[simp]
@@ -253,7 +253,7 @@ instance [FaithfulSMul M X] : BoundedOrder { P : M // IsLprojection X P }
   top := 1
   le_top P := (mul_one (P : M)).symm
   bot := 0
-  bot_le P := (zero_mul (P : M)).symm
+  bot_le P := (MulZeroClass.zero_mul (P : M)).symm
 
 @[simp]
 theorem coe_bot [FaithfulSMul M X] :
@@ -280,9 +280,9 @@ theorem distrib_lattice_lemma [FaithfulSMul M X] {P Q R : { P : M // IsLprojecti
   rw [add_mul, mul_add, mul_add, mul_assoc (↑(Pᶜ)) (↑R) (↑Q * ↑R * ↑(Pᶜ)), ←
     mul_assoc (↑R) (↑Q * ↑R) ↑(Pᶜ), ← coe_inf Q, (Pᶜ.Prop.Commute R.prop).Eq,
     ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, (R.prop.commute (Q ⊓ R).Prop).Eq, coe_inf Q, mul_assoc ↑Q, ←
-    mul_assoc, mul_assoc ↑R, (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, zero_mul, mul_zero,
-    zero_add, add_zero, ← mul_assoc, P.prop.proj.eq, R.prop.proj.eq, ← coe_inf Q, mul_assoc,
-    ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, ← mul_assoc, Pᶜ.Prop.proj.Eq]
+    mul_assoc, mul_assoc ↑R, (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, MulZeroClass.zero_mul,
+    MulZeroClass.mul_zero, zero_add, add_zero, ← mul_assoc, P.prop.proj.eq, R.prop.proj.eq, ←
+    coe_inf Q, mul_assoc, ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, ← mul_assoc, Pᶜ.Prop.proj.Eq]
 #align is_Lprojection.distrib_lattice_lemma IsLprojection.distrib_lattice_lemma
 
 instance [FaithfulSMul M X] : DistribLattice { P : M // IsLprojection X P } :=
@@ -314,8 +314,8 @@ instance [FaithfulSMul M X] : DistribLattice { P : M // IsLprojection X P } :=
       have e₁ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, add_mul,
           mul_add, (Pᶜ.Prop.Commute Q.prop).Eq, mul_add, ← mul_assoc, mul_assoc ↑Q,
-          (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, zero_mul, mul_zero, zero_add, add_zero, ←
-          mul_assoc, mul_assoc ↑Q, P.prop.proj.eq, Pᶜ.Prop.proj.Eq, mul_assoc,
+          (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, MulZeroClass.zero_mul, MulZeroClass.mul_zero,
+          zero_add, add_zero, ← mul_assoc, mul_assoc ↑Q, P.prop.proj.eq, Pᶜ.Prop.proj.Eq, mul_assoc,
           (Pᶜ.Prop.Commute R.prop).Eq, ← mul_assoc]
       have e₂ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) * ↑(P ⊔ Q ⊓ R) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, coe_sup, ← add_sub, ← add_sub, ← add_sub, ← compl_mul, ←

@@ -169,7 +169,7 @@ theorem sign_mul_nonneg (r : ℝ) : 0 ≤ sign r * r :=
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
   · rw [sign_of_neg hn]
     exact mul_nonneg_of_nonpos_of_nonpos (by norm_num) hn.le
-  · rw [mul_zero]
+  · rw [MulZeroClass.mul_zero]
   · rw [sign_of_pos hp, one_mul]
     exact hp.le
 #align real.sign_mul_nonneg Real.sign_mul_nonneg

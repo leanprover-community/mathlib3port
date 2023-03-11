@@ -329,7 +329,7 @@ Case conversion may be inaccurate. Consider using '#align not_irreducible_zero n
 @[simp]
 theorem not_irreducible_zero [MonoidWithZero α] : ¬Irreducible (0 : α)
   | ⟨hn0, h⟩ =>
-    have : IsUnit (0 : α) ∨ IsUnit (0 : α) := h 0 0 (mul_zero 0).symm
+    have : IsUnit (0 : α) ∨ IsUnit (0 : α) := h 0 0 (MulZeroClass.mul_zero 0).symm
     this.elim hn0 hn0
 #align not_irreducible_zero not_irreducible_zero
 
@@ -903,7 +903,7 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
   · simp_all
   have hac0 : a * c ≠ 0 := by
     intro con
-    rw [Con, zero_mul] at a_eq
+    rw [Con, MulZeroClass.zero_mul] at a_eq
     apply ha0 a_eq
   have : a * (c * d) = a * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
   have hcd : c * d = 1 := mul_left_cancel₀ ha0 this
@@ -1590,15 +1590,15 @@ instance : CommMonoidWithZero (Associates α) :=
     zero_mul := by
       rintro ⟨a⟩
       show Associates.mk (0 * a) = Associates.mk 0
-      rw [zero_mul]
+      rw [MulZeroClass.zero_mul]
     mul_zero := by
       rintro ⟨a⟩
       show Associates.mk (a * 0) = Associates.mk 0
-      rw [mul_zero] }
+      rw [MulZeroClass.mul_zero] }
 
 instance : OrderTop (Associates α) where
   top := 0
-  le_top a := ⟨0, (mul_zero a).symm⟩
+  le_top a := ⟨0, (MulZeroClass.mul_zero a).symm⟩
 
 instance : BoundedOrder (Associates α) :=
   { Associates.orderTop, Associates.orderBot with }

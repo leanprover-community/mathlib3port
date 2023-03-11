@@ -64,7 +64,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   induction' s using Finset.strongInduction with s ih generalizing P a b
   -- If `a = b = 0`, then `s = ∅` and we can partition into zero parts
   by_cases hab : a = 0 ∧ b = 0
-  · simp only [hab.1, hab.2, add_zero, zero_mul, eq_comm, card_eq_zero] at hs
+  · simp only [hab.1, hab.2, add_zero, MulZeroClass.zero_mul, eq_comm, card_eq_zero] at hs
     subst hs
     exact ⟨Finpartition.empty _, by simp, by simp [Unique.eq_default P], by simp [hab.2]⟩
   simp_rw [not_and_or, ← Ne.def, ← pos_iff_ne_zero] at hab

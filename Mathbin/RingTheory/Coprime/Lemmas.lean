@@ -179,7 +179,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
       convert @add_mul R _ _ _ _ _ _ using 2
       · by_cases hx : x = h.some
         · rw [hx, Pi.single_eq_same, Pi.single_eq_same]
-        · rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, zero_mul]
+        · rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, MulZeroClass.zero_mul]
       · convert (mul_assoc _ _ _).symm
         convert prod_eq_mul_prod_diff_singleton (mem x hx) _ using 3
         convert sdiff_sdiff_comm

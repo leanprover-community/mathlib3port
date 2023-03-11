@@ -1620,7 +1620,7 @@ theorem HasDerivWithinAt.mul_const (hc : HasDerivWithinAt c c' s x) (d : 𝔸) :
     HasDerivWithinAt (fun y => c y * d) (c' * d) s x :=
   by
   convert hc.mul (hasDerivWithinAt_const x s d)
-  rw [mul_zero, add_zero]
+  rw [MulZeroClass.mul_zero, add_zero]
 #align has_deriv_within_at.mul_const HasDerivWithinAt.mul_const
 
 theorem HasDerivAt.mul_const (hc : HasDerivAt c c' x) (d : 𝔸) :
@@ -1638,7 +1638,7 @@ theorem HasStrictDerivAt.mul_const (hc : HasStrictDerivAt c c' x) (d : 𝔸) :
     HasStrictDerivAt (fun y => c y * d) (c' * d) x :=
   by
   convert hc.mul (hasStrictDerivAt_const x d)
-  rw [mul_zero, add_zero]
+  rw [MulZeroClass.mul_zero, add_zero]
 #align has_strict_deriv_at.mul_const HasStrictDerivAt.mul_const
 
 theorem derivWithin_mul_const (hxs : UniqueDiffWithinAt 𝕜 s x) (hc : DifferentiableWithinAt 𝕜 c s x)
@@ -1655,9 +1655,9 @@ theorem deriv_mul_const_field (v : 𝕜') : deriv (fun y => u y * v) x = deriv u
   by
   by_cases hu : DifferentiableAt 𝕜 u x
   · exact deriv_mul_const hu v
-  · rw [deriv_zero_of_not_differentiableAt hu, zero_mul]
+  · rw [deriv_zero_of_not_differentiableAt hu, MulZeroClass.zero_mul]
     rcases eq_or_ne v 0 with (rfl | hd)
-    · simp only [mul_zero, deriv_const]
+    · simp only [MulZeroClass.mul_zero, deriv_const]
     · refine' deriv_zero_of_not_differentiableAt (mt (fun H => _) hu)
       simpa only [mul_inv_cancel_right₀ hd] using H.mul_const v⁻¹
 #align deriv_mul_const_field deriv_mul_const_field
@@ -1671,7 +1671,7 @@ theorem HasDerivWithinAt.const_mul (c : 𝔸) (hd : HasDerivWithinAt d d' s x) :
     HasDerivWithinAt (fun y => c * d y) (c * d') s x :=
   by
   convert (hasDerivWithinAt_const x s c).mul hd
-  rw [zero_mul, zero_add]
+  rw [MulZeroClass.zero_mul, zero_add]
 #align has_deriv_within_at.const_mul HasDerivWithinAt.const_mul
 
 theorem HasDerivAt.const_mul (c : 𝔸) (hd : HasDerivAt d d' x) :
@@ -1685,7 +1685,7 @@ theorem HasStrictDerivAt.const_mul (c : 𝔸) (hd : HasStrictDerivAt d d' x) :
     HasStrictDerivAt (fun y => c * d y) (c * d') x :=
   by
   convert (hasStrictDerivAt_const _ _).mul hd
-  rw [zero_mul, zero_add]
+  rw [MulZeroClass.zero_mul, zero_add]
 #align has_strict_deriv_at.const_mul HasStrictDerivAt.const_mul
 
 theorem derivWithin_const_mul (hxs : UniqueDiffWithinAt 𝕜 s x) (c : 𝔸)
@@ -2153,9 +2153,9 @@ protected theorem hasStrictDerivAt (x : 𝕜) :
     convert h.mul (hasStrictDerivAt_id x)
     · ext y
       simp [pow_add, mul_assoc]
-    · simp only [pow_add, pow_one, derivative_mul, derivative_C, zero_mul, derivative_X_pow,
-        derivative_X, mul_one, zero_add, eval_mul, eval_C, eval_add, eval_nat_cast, eval_pow,
-        eval_X, id.def]
+    · simp only [pow_add, pow_one, derivative_mul, derivative_C, MulZeroClass.zero_mul,
+        derivative_X_pow, derivative_X, mul_one, zero_add, eval_mul, eval_C, eval_add,
+        eval_nat_cast, eval_pow, eval_X, id.def]
       ring
 #align polynomial.has_strict_deriv_at Polynomial.hasStrictDerivAt
 
@@ -2329,7 +2329,7 @@ theorem hasStrictDerivAt_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
       zpow_add₀ hx]
     congr
     abel
-  · simp only [hm, zpow_zero, Int.cast_zero, zero_mul, hasStrictDerivAt_const]
+  · simp only [hm, zpow_zero, Int.cast_zero, MulZeroClass.zero_mul, hasStrictDerivAt_const]
   · exact this m hm
 #align has_strict_deriv_at_zpow hasStrictDerivAt_zpow
 
@@ -2365,7 +2365,7 @@ theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m 
   · rw [deriv_zero_of_not_differentiableAt (mt differentiableAt_zpow.1 H)]
     push_neg  at H
     rcases H with ⟨rfl, hm⟩
-    rw [zero_zpow _ ((sub_one_lt _).trans hm).Ne, mul_zero]
+    rw [zero_zpow _ ((sub_one_lt _).trans hm).Ne, MulZeroClass.mul_zero]
 #align deriv_zpow deriv_zpow
 
 @[simp]
@@ -2402,7 +2402,7 @@ theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
   · rw [Int.ofNat_sub hkn]
   · have : (∏ i in Finset.range k, (n - i : 𝕜)) = 0 :=
       Finset.prod_eq_zero (Finset.mem_range.2 hnk) (sub_self _)
-    simp only [this, zero_mul]
+    simp only [this, MulZeroClass.zero_mul]
 #align iter_deriv_pow iter_deriv_pow
 
 @[simp]

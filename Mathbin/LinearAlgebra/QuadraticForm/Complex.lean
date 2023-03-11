@@ -54,13 +54,14 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
       smul_eq_mul, smul_eq_mul, mul_one]
     intro i _ hij
     rw [Pi.basisFun_apply, LinearMap.stdBasis_apply, Pi.smul_apply, Pi.smul_apply,
-      Function.update_noteq hij.symm, Pi.zero_apply, smul_eq_mul, smul_eq_mul, mul_zero, mul_zero]
+      Function.update_noteq hij.symm, Pi.zero_apply, smul_eq_mul, smul_eq_mul,
+      MulZeroClass.mul_zero, MulZeroClass.mul_zero]
     intro hj'
     exact False.elim (hj' hj)
   simp_rw [Basis.unitsSmul_apply]
   erw [hsum, smul_eq_mul]
   split_ifs
-  · simp only [h, zero_smul, zero_mul]
+  · simp only [h, zero_smul, MulZeroClass.zero_mul]
   have hww' : w' j = w j := by simp only [w, dif_neg h, Units.val_mk0]
   simp only [hww', one_mul]
   change v j * v j = ↑(w j) * (v j * ↑(w j) ^ (-(1 / 2 : ℂ)) * (v j * ↑(w j) ^ (-(1 / 2 : ℂ))))

@@ -140,7 +140,7 @@ namespace Num
 def lor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => pos (p.lor q)
+  | Pos p, Pos q => pos (p.lor' q)
 #align num.lor Num.lor
 -/
 
@@ -149,7 +149,7 @@ def lor : Num → Num → Num
 def land : Num → Num → Num
   | 0, q => 0
   | p, 0 => 0
-  | Pos p, Pos q => p.land q
+  | Pos p, Pos q => p.land' q
 #align num.land Num.land
 -/
 

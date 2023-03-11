@@ -1303,7 +1303,7 @@ protected def inv : R[R⁰⁻¹] → R[R⁰⁻¹] :=
       · by_cases ht : t = 0
         · exfalso
           apply nonZeroDivisors.coe_ne_zero ⟨_, hst⟩
-          simp [ht, mul_zero]
+          simp [ht, MulZeroClass.mul_zero]
         · simp only [hr, ht, [anonymous], dif_neg, not_false_iff, or_self_iff, mul_eq_zero]
           apply OreLocalization.expand)
 #align ore_localization.inv OreLocalization.inv

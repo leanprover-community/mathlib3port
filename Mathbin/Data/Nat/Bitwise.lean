@@ -72,7 +72,8 @@ theorem zero_of_testBit_eq_false {n : ℕ} (h : ∀ i, testBit n i = false) : n 
   induction' n using Nat.binaryRec with b n hn
   · rfl
   · have : b = ff := by simpa using h 0
-    rw [this, bit_ff, bit0_val, hn fun i => by rw [← h (i + 1), test_bit_succ], mul_zero]
+    rw [this, bit_ff, bit0_val, hn fun i => by rw [← h (i + 1), test_bit_succ],
+      MulZeroClass.mul_zero]
 #align nat.zero_of_test_bit_eq_ff Nat.zero_of_testBit_eq_false
 -/
 
@@ -192,42 +193,30 @@ theorem testBit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) :=
     simp [h]
 #align nat.test_bit_two_pow Nat.testBit_two_pow
 
-/- warning: nat.bitwise_comm -> Nat.bitwise'_comm is a dubious translation:
-lean 3 declaration is
-  forall {f : Bool -> Bool -> Bool}, (forall (b : Bool) (b' : Bool), Eq.{1} Bool (f b b') (f b' b)) -> (Eq.{1} Bool (f Bool.false Bool.false) Bool.false) -> (forall (n : Nat) (m : Nat), Eq.{1} Nat (Nat.bitwise f n m) (Nat.bitwise f m n))
-but is expected to have type
-  forall {f : Bool -> Bool -> Bool}, (forall (b : Bool) (b' : Bool), Eq.{1} Bool (f b b') (f b' b)) -> (Eq.{1} Bool (f Bool.false Bool.false) Bool.false) -> (forall (n : Nat) (m : Nat), Eq.{1} Nat (Nat.bitwise' f n m) (Nat.bitwise' f m n))
-Case conversion may be inaccurate. Consider using '#align nat.bitwise_comm Nat.bitwise'_commₓ'. -/
+#print Nat.bitwise'_comm /-
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
     commutative. -/
 theorem bitwise'_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b)
-    (hf' : f false false = false) (n m : ℕ) : bitwise f n m = bitwise f m n :=
-  suffices bitwise f = swap (bitwise f) by conv_lhs => rw [this]
+    (hf' : f false false = false) (n m : ℕ) : bitwise' f n m = bitwise' f m n :=
+  suffices bitwise' f = swap (bitwise' f) by conv_lhs => rw [this]
   calc
-    bitwise f = bitwise (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
-    _ = swap (bitwise f) := bitwise'_swap hf'
+    bitwise' f = bitwise' (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
+    _ = swap (bitwise' f) := bitwise'_swap hf'
     
 #align nat.bitwise_comm Nat.bitwise'_comm
+-/
 
-/- warning: nat.lor_comm -> Nat.lor'_comm is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat), Eq.{1} Nat (Nat.lor n m) (Nat.lor m n)
-but is expected to have type
-  forall (n : Nat) (m : Nat), Eq.{1} Nat (Nat.lor' n m) (Nat.lor' m n)
-Case conversion may be inaccurate. Consider using '#align nat.lor_comm Nat.lor'_commₓ'. -/
-theorem lor'_comm (n m : ℕ) : lor n m = lor m n :=
+#print Nat.lor'_comm /-
+theorem lor'_comm (n m : ℕ) : lor' n m = lor' m n :=
   bitwise'_comm Bool.or_comm rfl n m
 #align nat.lor_comm Nat.lor'_comm
+-/
 
-/- warning: nat.land_comm -> Nat.land'_comm is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat), Eq.{1} Nat (Nat.land n m) (Nat.land m n)
-but is expected to have type
-  forall (n : Nat) (m : Nat), Eq.{1} Nat (Nat.land' n m) (Nat.land' m n)
-Case conversion may be inaccurate. Consider using '#align nat.land_comm Nat.land'_commₓ'. -/
-theorem land'_comm (n m : ℕ) : land n m = land m n :=
+#print Nat.land'_comm /-
+theorem land'_comm (n m : ℕ) : land' n m = land' m n :=
   bitwise'_comm Bool.and_comm rfl n m
 #align nat.land_comm Nat.land'_comm
+-/
 
 #print Nat.lxor'_comm /-
 theorem lxor'_comm (n m : ℕ) : lxor' n m = lxor' m n :=
@@ -249,35 +238,27 @@ theorem lxor'_zero (n : ℕ) : lxor' n 0 = n := by simp [lxor]
 
 #print Nat.zero_land' /-
 @[simp]
-theorem zero_land' (n : ℕ) : land 0 n = 0 := by simp [land]
+theorem zero_land' (n : ℕ) : land' 0 n = 0 := by simp [land]
 #align nat.zero_land Nat.zero_land'
 -/
 
-/- warning: nat.land_zero -> Nat.land'_zero is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Nat.land n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Nat.land' n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
-Case conversion may be inaccurate. Consider using '#align nat.land_zero Nat.land'_zeroₓ'. -/
+#print Nat.land'_zero /-
 @[simp]
-theorem land'_zero (n : ℕ) : land n 0 = 0 := by simp [land]
+theorem land'_zero (n : ℕ) : land' n 0 = 0 := by simp [land]
 #align nat.land_zero Nat.land'_zero
+-/
 
 #print Nat.zero_lor' /-
 @[simp]
-theorem zero_lor' (n : ℕ) : lor 0 n = n := by simp [lor]
+theorem zero_lor' (n : ℕ) : lor' 0 n = n := by simp [lor]
 #align nat.zero_lor Nat.zero_lor'
 -/
 
-/- warning: nat.lor_zero -> Nat.lor'_zero is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} Nat (Nat.lor n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) n
-but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Nat.lor' n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) n
-Case conversion may be inaccurate. Consider using '#align nat.lor_zero Nat.lor'_zeroₓ'. -/
+#print Nat.lor'_zero /-
 @[simp]
-theorem lor'_zero (n : ℕ) : lor n 0 = n := by simp [lor]
+theorem lor'_zero (n : ℕ) : lor' n 0 = n := by simp [lor]
 #align nat.lor_zero Nat.lor'_zero
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
@@ -294,29 +275,21 @@ theorem lxor'_assoc (n m k : ℕ) : lxor' (lxor' n m) k = lxor' n (lxor' m k) :=
 #align nat.lxor_assoc Nat.lxor'_assoc
 -/
 
-/- warning: nat.land_assoc -> Nat.land'_assoc is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat) (k : Nat), Eq.{1} Nat (Nat.land (Nat.land n m) k) (Nat.land n (Nat.land m k))
-but is expected to have type
-  forall (n : Nat) (m : Nat) (k : Nat), Eq.{1} Nat (Nat.land' (Nat.land' n m) k) (Nat.land' n (Nat.land' m k))
-Case conversion may be inaccurate. Consider using '#align nat.land_assoc Nat.land'_assocₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
-theorem land'_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
+#print Nat.land'_assoc /-
+theorem land'_assoc (n m k : ℕ) : land' (land' n m) k = land' n (land' m k) := by
   run_tac
     bitwise_assoc_tac
 #align nat.land_assoc Nat.land'_assoc
+-/
 
-/- warning: nat.lor_assoc -> Nat.lor'_assoc is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat) (m : Nat) (k : Nat), Eq.{1} Nat (Nat.lor (Nat.lor n m) k) (Nat.lor n (Nat.lor m k))
-but is expected to have type
-  forall (n : Nat) (m : Nat) (k : Nat), Eq.{1} Nat (Nat.lor' (Nat.lor' n m) k) (Nat.lor' n (Nat.lor' m k))
-Case conversion may be inaccurate. Consider using '#align nat.lor_assoc Nat.lor'_assocₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
-theorem lor'_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
+#print Nat.lor'_assoc /-
+theorem lor'_assoc (n m k : ℕ) : lor' (lor' n m) k = lor' n (lor' m k) := by
   run_tac
     bitwise_assoc_tac
 #align nat.lor_assoc Nat.lor'_assoc
+-/
 
 #print Nat.lxor'_self /-
 @[simp]

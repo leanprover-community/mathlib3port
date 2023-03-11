@@ -222,8 +222,8 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     rcases hv' with ⟨t₂, rfl⟩
     exact ⟨t₁, t₂, hv⟩
   rcases hv (p -ᵥ p₁) (vsub_mem_direction hps hp₁s) with ⟨t₁, t₂, hpt⟩
-  simp only [hpt, inner_add_right, inner_smul_right, ho, mul_zero, add_zero, mul_eq_zero,
-    inner_self_eq_zero, vsub_eq_zero_iff_eq, hc.symm, or_false_iff] at hop
+  simp only [hpt, inner_add_right, inner_smul_right, ho, MulZeroClass.mul_zero, add_zero,
+    mul_eq_zero, inner_self_eq_zero, vsub_eq_zero_iff_eq, hc.symm, or_false_iff] at hop
   rw [hop, zero_smul, zero_add, ← eq_vadd_iff_vsub_eq] at hpt
   subst hpt
   have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by simp [hp.symm]
@@ -1097,7 +1097,7 @@ theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
     rwa [sphere.second_inter, eq_comm, eq_vadd_iff_vsub_eq, vsub_self, eq_comm, smul_eq_zero,
       or_iff_left hv, div_eq_zero_iff, inner_self_eq_zero, or_iff_left hv, mul_eq_zero,
       or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp
-  · rw [sphere.second_inter, hp, mul_zero, zero_div, zero_smul, zero_vadd]
+  · rw [sphere.second_inter, hp, MulZeroClass.mul_zero, zero_div, zero_smul, zero_vadd]
 #align euclidean_geometry.sphere.second_inter_eq_self_iff EuclideanGeometry.Sphere.secondInter_eq_self_iff
 
 /-- A point on a line through a point on a sphere equals that point or `second_inter`. -/

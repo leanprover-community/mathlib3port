@@ -298,7 +298,7 @@ theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 :=
   by
   by_cases hq : u.q = 0
   · let h := u.rq_eq
-    rw [hr, hq, mul_zero, add_zero] at h
+    rw [hr, hq, MulZeroClass.mul_zero, add_zero] at h
     cases h
   · exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
 #align pnat.xgcd_type.qp_eq PNat.XgcdType.qp_eq
@@ -327,7 +327,7 @@ theorem start_isSpecial (a b : ℕ+) : (start a b).IsSpecial :=
 theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ :=
   by
   dsimp [start, v, xgcd_type.a, xgcd_type.b, w, z]
-  rw [one_mul, one_mul, zero_mul, zero_mul, zero_add, add_zero]
+  rw [one_mul, one_mul, MulZeroClass.zero_mul, MulZeroClass.zero_mul, zero_add, add_zero]
   rw [← Nat.pred_eq_sub_one, ← Nat.pred_eq_sub_one]
   rw [Nat.succ_pred_eq_of_pos a.pos, Nat.succ_pred_eq_of_pos b.pos]
 #align pnat.xgcd_type.start_v PNat.XgcdType.start_v

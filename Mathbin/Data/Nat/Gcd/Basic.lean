@@ -124,8 +124,8 @@ theorem gcd_one_right (n : ℕ) : gcd n 1 = 1 :=
 
 #print Nat.gcd_mul_left /-
 theorem gcd_mul_left (m n k : ℕ) : gcd (m * n) (m * k) = m * gcd n k :=
-  gcd.induction n k (fun k => by repeat' first |rw [mul_zero]|rw [gcd_zero_left]) fun k n H IH => by
-    rwa [← mul_mod_mul_left, ← gcd_rec, ← gcd_rec] at IH
+  gcd.induction n k (fun k => by repeat' first |rw [MulZeroClass.mul_zero]|rw [gcd_zero_left])
+    fun k n H IH => by rwa [← mul_mod_mul_left, ← gcd_rec, ← gcd_rec] at IH
 #align nat.gcd_mul_left Nat.gcd_mul_left
 -/
 
@@ -384,7 +384,8 @@ theorem lcm_comm (m n : ℕ) : lcm m n = lcm n m := by delta lcm <;> rw [mul_com
 
 #print Nat.lcm_zero_left /-
 @[simp]
-theorem lcm_zero_left (m : ℕ) : lcm 0 m = 0 := by delta lcm <;> rw [zero_mul, Nat.zero_div]
+theorem lcm_zero_left (m : ℕ) : lcm 0 m = 0 := by
+  delta lcm <;> rw [MulZeroClass.zero_mul, Nat.zero_div]
 #align nat.lcm_zero_left Nat.lcm_zero_left
 -/
 
@@ -986,7 +987,7 @@ def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) :
   case zero =>
     obtain rfl : k = 0 := eq_zero_of_gcd_eq_zero_left h0
     obtain rfl : m = 0 := eq_zero_of_gcd_eq_zero_right h0
-    exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
+    exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (MulZeroClass.zero_mul n).symm⟩
   case
     succ tmp =>
     have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succ _ <;> clear h0 tmp

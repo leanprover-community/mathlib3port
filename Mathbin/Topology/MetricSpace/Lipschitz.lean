@@ -1142,7 +1142,8 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
   have E : eq_on f g s := by
     intro x hx
     refine' le_antisymm (le_cinfᵢ fun y => hf.le_add_mul hx y.2) _
-    simpa only [add_zero, Subtype.coe_mk, mul_zero, dist_self] using cinfᵢ_le (B x) ⟨x, hx⟩
+    simpa only [add_zero, Subtype.coe_mk, MulZeroClass.mul_zero, dist_self] using
+      cinfᵢ_le (B x) ⟨x, hx⟩
   refine' ⟨g, LipschitzWith.of_le_add_mul K fun x y => _, E⟩
   rw [← sub_le_iff_le_add]
   refine' le_cinfᵢ fun z => _

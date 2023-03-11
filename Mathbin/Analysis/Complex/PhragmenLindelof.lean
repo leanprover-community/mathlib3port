@@ -214,7 +214,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       rwa [of_real_mul_im, sub_im, mul_I_im, of_real_re, _root_.abs_mul, abs_of_pos hd₀,
         mul_le_mul_left hd₀]
     simpa only [of_real_mul_re, _root_.abs_mul, abs_of_pos hd₀, sub_re, mul_I_re, of_real_im,
-      zero_mul, neg_zero, sub_zero] using
+      MulZeroClass.zero_mul, neg_zero, sub_zero] using
       abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le ε₀.le hw hb'.le
   -- `abs (g ε w) ≤ 1` on the lines `w.im = a ± b` (actually, it holds everywhere in the strip)
   have hg₁ : ∀ w, im w = a - b ∨ im w = a + b → abs (g ε w) ≤ 1 :=
@@ -244,7 +244,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
           (Real.exp_pos _).le
     refine' real.tendsto_exp_at_bot.comp _
     suffices H : tendsto (fun R => δ + B * (expR ((d - c) * R))⁻¹) at_top (𝓝 (δ + B * 0))
-    · rw [mul_zero, add_zero] at H
+    · rw [MulZeroClass.mul_zero, add_zero] at H
       refine' tendsto.at_bot_add _ tendsto_const_nhds
       simpa only [id, (· ∘ ·), add_mul, mul_assoc, ← div_eq_inv_mul, ← Real.exp_sub, ← sub_mul,
         sub_sub_cancel] using
@@ -953,7 +953,8 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     have h₀ : tendsto (fun x : ℝ => expR (ε * x)) at_top (𝓝 0) :=
       real.tendsto_exp_at_bot.comp (tendsto_const_nhds.neg_mul_at_top ε₀ tendsto_id)
     exact h₀.zero_smul_is_bounded_under_le hre
-  · rw [hgn, of_real_mul_re, I_re, mul_zero, mul_zero, Real.exp_zero, one_mul]
+  · rw [hgn, of_real_mul_re, I_re, MulZeroClass.mul_zero, MulZeroClass.mul_zero, Real.exp_zero,
+      one_mul]
     exact him y
 #align phragmen_lindelof.right_half_plane_of_bounded_on_real PhragmenLindelof.right_half_plane_of_bounded_on_real
 
@@ -1023,7 +1024,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
   · rw [tendsto_zero_iff_norm_tendsto_zero]
     simp only [hg]
     exact hre n
-  · rw [hg, of_real_mul_re, I_re, mul_zero, Real.exp_zero, one_pow, one_mul]
+  · rw [hg, of_real_mul_re, I_re, MulZeroClass.mul_zero, Real.exp_zero, one_pow, one_mul]
     exact hC y
 #align phragmen_lindelof.eq_zero_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_zero_on_right_half_plane_of_superexponential_decay
 

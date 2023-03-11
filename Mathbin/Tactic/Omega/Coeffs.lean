@@ -37,7 +37,7 @@ def valBetween (v : Nat → Int) (as : List Int) (l : Nat) : Nat → Int
 theorem valBetween_nil {l : Nat} : ∀ m, valBetween v [] l m = 0
   | 0 => by simp only [val_between]
   | m + 1 => by
-    simp only [val_between_nil m, Omega.Coeffs.valBetween, get_nil, zero_add, zero_mul,
+    simp only [val_between_nil m, Omega.Coeffs.valBetween, get_nil, zero_add, MulZeroClass.zero_mul,
       Int.default_eq_zero]
 #align omega.coeffs.val_between_nil Omega.Coeffs.valBetween_nil
 
@@ -63,7 +63,7 @@ theorem valBetween_eq_of_le {as : List Int} {l : Nat} :
     have h2 : List.length as ≤ l + m := by
       rw [← Nat.lt_succ_iff]
       apply h1
-    simpa [get_eq_default_of_le _ h2, zero_mul, add_zero, val_between] using
+    simpa [get_eq_default_of_le _ h2, MulZeroClass.zero_mul, add_zero, val_between] using
       val_between_eq_of_le _ h2
 #align omega.coeffs.val_between_eq_of_le Omega.Coeffs.valBetween_eq_of_le
 
@@ -113,7 +113,7 @@ theorem valBetween_set {a : Int} {l n : Nat} :
       simp only [h3, zero_add, List.Func.get_set]
     · have h3 : l + m ≠ n := by apply ne_of_gt h2
       rw [@val_between_set m h1 h2, get_set_eq_of_ne _ _ h3]
-      simp only [h3, get_nil, add_zero, zero_mul, Int.default_eq_zero]
+      simp only [h3, get_nil, add_zero, MulZeroClass.zero_mul, Int.default_eq_zero]
 #align omega.coeffs.val_between_set Omega.Coeffs.valBetween_set
 
 @[simp]
@@ -246,7 +246,7 @@ theorem valExcept_add_eq (n : Nat) {as : List Int} : valExcept n v as + get n as
 @[simp]
 theorem valBetween_map_mul {i : Int} {as : List Int} {l : Nat} :
     ∀ {m}, valBetween v (List.map ((· * ·) i) as) l m = i * valBetween v as l m
-  | 0 => by simp only [val_between, mul_zero, List.map]
+  | 0 => by simp only [val_between, MulZeroClass.mul_zero, List.map]
   | m + 1 => by
     unfold val_between
     rw [@val_between_map_mul m, mul_add]
@@ -322,7 +322,8 @@ theorem valBetween_eq_zero {is : List Int} {l : Nat} :
   | 0, h1 => rfl
   | m + 1, h1 => by
     have h2 := @forall_val_of_forall_mem _ _ is (fun x => x = 0) rfl h1
-    simpa only [val_between, h2 (l + m), zero_mul, add_zero] using @val_between_eq_zero m h1
+    simpa only [val_between, h2 (l + m), MulZeroClass.zero_mul, add_zero] using
+      @val_between_eq_zero m h1
 #align omega.coeffs.val_between_eq_zero Omega.Coeffs.valBetween_eq_zero
 
 theorem val_eq_zero {is : List Int} : (∀ x : Int, x ∈ is → x = 0) → val v is = 0 := by

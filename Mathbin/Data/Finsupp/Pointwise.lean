@@ -44,7 +44,7 @@ variable [MulZeroClass β]
 /-- The product of `f g : α →₀ β` is the finitely supported function
   whose value at `a` is `f a * g a`. -/
 instance : Mul (α →₀ β) :=
-  ⟨zipWith (· * ·) (mul_zero 0)⟩
+  ⟨zipWith (· * ·) (MulZeroClass.mul_zero 0)⟩
 
 /- warning: finsupp.coe_mul -> Finsupp.coe_mul is a dubious translation:
 lean 3 declaration is

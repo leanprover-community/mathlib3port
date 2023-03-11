@@ -736,7 +736,7 @@ theorem tendsto_translationNumber_of_dist_bounded_aux (x : ℕ → ℝ) (C : ℝ
     rw [transnum_aux_seq, Real.dist_eq, ← sub_div, abs_div, abs_of_pos this, Real.dist_eq]
   ·
     exact
-      mul_zero C ▸
+      MulZeroClass.mul_zero C ▸
         tendsto_const_nhds.mul
           (tendsto_inv_at_top_zero.comp <| tendsto_pow_atTop_atTop_of_one_lt one_lt_two)
 #align circle_deg1_lift.tendsto_translation_number_of_dist_bounded_aux CircleDeg1Lift.tendsto_translationNumber_of_dist_bounded_aux

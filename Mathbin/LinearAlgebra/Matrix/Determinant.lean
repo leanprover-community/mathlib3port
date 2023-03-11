@@ -85,7 +85,7 @@ theorem det_diagonal {d : n → R} : det (diagonal d) = ∏ i, d i :=
   refine' (Finset.sum_eq_single 1 _ _).trans _
   · intro σ h1 h2
     cases' not_forall.1 (mt Equiv.ext h2) with x h3
-    convert mul_zero _
+    convert MulZeroClass.mul_zero _
     apply Finset.prod_eq_zero
     · change x ∈ _
       simp
@@ -500,7 +500,7 @@ theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Fin
       simp [hs]
     congr
     ext (i j)
-    rw [A_eq, this, zero_mul, add_zero]
+    rw [A_eq, this, MulZeroClass.zero_mul, add_zero]
   · intro i s hi ih B c hs k hk A_eq
     have hAi : A i = B i + c i • B k := funext (A_eq i)
     rw [@ih (update_row B i (A i)) (Function.update c i 0), hAi, det_update_row_add_smul_self]
@@ -538,7 +538,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   · congr
     ext (i j)
     refine' Fin.cases (h0 j) (fun i => _) i
-    rw [hsucc, hc i (Fin.succ_pos _), zero_mul, add_zero]
+    rw [hsucc, hc i (Fin.succ_pos _), MulZeroClass.zero_mul, add_zero]
   set M' := update_row M k.succ (N k.succ) with hM'
   have hM : M = update_row M' k.succ (M' k.succ + c k • M k.cast_succ) :=
     by
@@ -559,7 +559,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   intro i j
   rw [Function.update_apply]
   split_ifs with hik
-  · rw [zero_mul, add_zero, hM', hik, update_row_self]
+  · rw [MulZeroClass.zero_mul, add_zero, hM', hik, update_row_self]
   rw [hM', update_row_ne ((Fin.succ_injective _).Ne hik), hsucc]
   by_cases hik2 : k < i
   · simp [hc i (fin.succ_lt_succ_iff.mpr hik2)]
@@ -657,7 +657,7 @@ theorem det_blockDiagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Ma
   · intro σ _ hσ
     rw [mem_preserving_snd] at hσ
     obtain ⟨⟨k, x⟩, hkx⟩ := not_forall.mp hσ
-    rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), mul_zero]
+    rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), MulZeroClass.mul_zero]
     rw [← @Prod.mk.eta _ _ (σ (k, x)), block_diagonal_apply_ne]
     exact hkx
 #align matrix.det_block_diagonal Matrix.det_blockDiagonal
@@ -718,7 +718,7 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
       cases' hx : σ (Sum.inl a) with a2 b
       · have hn := (not_exists.mp ha) a2
         exact absurd hx.symm hn
-      · rw [Finset.prod_eq_zero (Finset.mem_univ (Sum.inl a)), mul_zero]
+      · rw [Finset.prod_eq_zero (Finset.mem_univ (Sum.inl a)), MulZeroClass.mul_zero]
         rw [hx, from_blocks_apply₂₁]
         rfl
 #align matrix.det_from_blocks_zero₂₁ Matrix.det_fromBlocks_zero₂₁

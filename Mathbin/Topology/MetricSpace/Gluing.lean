@@ -70,6 +70,7 @@ variable [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ
 
 open _Root_.Sum (inl inr)
 
+#print Metric.glueDist /-
 /-- Define a predistance on `X ⊕ Y`, for which `Φ p` and `Ψ p` are at distance `ε` -/
 def glueDist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → ℝ
   | inl x, inl y => dist x y
@@ -77,12 +78,14 @@ def glueDist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → 
   | inl x, inr y => (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε
   | inr x, inl y => (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε
 #align metric.glue_dist Metric.glueDist
+-/
 
 private theorem glue_dist_self (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x, glueDist Φ Ψ ε x x = 0
   | inl x => dist_self _
   | inr x => dist_self _
 #align metric.glue_dist_self metric.glue_dist_self
 
+#print Metric.glueDist_glued_points /-
 theorem glueDist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (p : Z) :
     glueDist Φ Ψ ε (inl (Φ p)) (inr (Ψ p)) = ε :=
   by
@@ -96,6 +99,7 @@ theorem glueDist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : �
     exact cinfᵢ_le ⟨0, forall_range_iff.2 A⟩ p
   rw [glue_dist, this, zero_add]
 #align metric.glue_dist_glued_points Metric.glueDist_glued_points
+-/
 
 private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) :
     ∀ x y, glueDist Φ Ψ ε x y = glueDist Φ Ψ ε y x
@@ -267,6 +271,12 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
   | inr x, inr y, h => by rw [eq_of_dist_eq_zero h]
 #align metric.glue_eq_of_dist_eq_zero metric.glue_eq_of_dist_eq_zero
 
+/- warning: metric.glue_metric_approx -> Metric.glueMetricApprox is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] [_inst_3 : Nonempty.{succ u3} Z] (Φ : Z -> X) (Ψ : Z -> Y) (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (forall (p : Z) (q : Z), LE.le.{0} Real Real.hasLe (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.hasNeg Real.hasSup) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (Dist.dist.{u1} X (PseudoMetricSpace.toHasDist.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1)) (Φ p) (Φ q)) (Dist.dist.{u2} Y (PseudoMetricSpace.toHasDist.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)) (Ψ p) (Ψ q)))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) ε)) -> (MetricSpace.{max u1 u2} (Sum.{u1, u2} X Y))
+but is expected to have type
+  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] [_inst_3 : Nonempty.{succ u3} Z] (Φ : Z -> X) (Ψ : Z -> Y) (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (forall (p : Z) (q : Z), LE.le.{0} Real Real.instLEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Dist.dist.{u1} X (PseudoMetricSpace.toDist.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1)) (Φ p) (Φ q)) (Dist.dist.{u2} Y (PseudoMetricSpace.toDist.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)) (Ψ p) (Ψ q)))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) ε)) -> (MetricSpace.{max u2 u1} (Sum.{u1, u2} X Y))
+Case conversion may be inaccurate. Consider using '#align metric.glue_metric_approx Metric.glueMetricApproxₓ'. -/
 /-- Given two maps `Φ` and `Ψ` intro metric spaces `X` and `Y` such that the distances between
 `Φ p` and `Φ q`, and between `Ψ p` and `Ψ q`, coincide up to `2 ε` where `ε > 0`, one can almost
 glue the two spaces `X` and `Y` along the images of `Φ` and `Ψ`, so that `Φ p` and `Ψ p` are
@@ -295,6 +305,7 @@ variable [MetricSpace X] [MetricSpace Y]
 
 open Sum (inl inr)
 
+#print Metric.Sum.dist /-
 /-- Distance on a disjoint union. There are many (noncanonical) ways to put a distance compatible
 with each factor.
 If the two spaces are bounded, one can say for instance that each point in the first is at distance
@@ -311,7 +322,14 @@ def Sum.dist : Sum X Y → Sum X Y → ℝ
   | inl a, inr b => dist a (Nonempty.some ⟨a⟩) + 1 + dist (Nonempty.some ⟨b⟩) b
   | inr b, inl a => dist b (Nonempty.some ⟨b⟩) + 1 + dist (Nonempty.some ⟨a⟩) a
 #align metric.sum.dist Metric.Sum.dist
+-/
 
+/- warning: metric.sum.dist_eq_glue_dist -> Metric.Sum.dist_eq_glueDist is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {p : Sum.{u1, u2} X Y} {q : Sum.{u1, u2} X Y} (x : X) (y : Y), Eq.{1} Real (Metric.Sum.dist.{u1, u2} X Y _inst_1 _inst_2 p q) (Metric.glueDist.{u1, u2, 0} X Y Unit _inst_1 _inst_2 (fun (_x : Unit) => Nonempty.some.{succ u1} X (Nonempty.intro.{succ u1} X x)) (fun (_x : Unit) => Nonempty.some.{succ u2} Y (Nonempty.intro.{succ u2} Y y)) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) p q)
+but is expected to have type
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {p : Sum.{u1, u2} X Y} {q : Sum.{u1, u2} X Y} (x : X) (y : Y), Eq.{1} Real (Metric.Sum.dist.{u1, u2} X Y _inst_1 _inst_2 p q) (Metric.glueDist.{u1, u2, 0} X Y Unit _inst_1 _inst_2 (fun (_x : Unit) => Nonempty.some.{succ u1} X (Nonempty.intro.{succ u1} X x)) (fun (_x : Unit) => Nonempty.some.{succ u2} Y (Nonempty.intro.{succ u2} Y y)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) p q)
+Case conversion may be inaccurate. Consider using '#align metric.sum.dist_eq_glue_dist Metric.Sum.dist_eq_glueDistₓ'. -/
 theorem Sum.dist_eq_glueDist {p q : Sum X Y} (x : X) (y : Y) :
     Sum.dist p q =
       glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q :=
@@ -323,14 +341,26 @@ private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := b
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_comm, add_left_comm]
 #align metric.sum.dist_comm metric.sum.dist_comm
 
-theorem Sum.one_dist_le {x : X} {y : Y} : 1 ≤ Sum.dist (inl x) (inr y) :=
+/- warning: metric.sum.one_dist_le -> Metric.Sum.one_le_dist_inl_inr is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {x : X} {y : Y}, LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (Metric.Sum.dist.{u1, u2} X Y _inst_1 _inst_2 (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y y))
+but is expected to have type
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {x : X} {y : Y}, LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (Metric.Sum.dist.{u1, u2} X Y _inst_1 _inst_2 (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y y))
+Case conversion may be inaccurate. Consider using '#align metric.sum.one_dist_le Metric.Sum.one_le_dist_inl_inrₓ'. -/
+theorem Sum.one_le_dist_inl_inr {x : X} {y : Y} : 1 ≤ Sum.dist (inl x) (inr y) :=
   le_trans (le_add_of_nonneg_right dist_nonneg) <|
     add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
-#align metric.sum.one_dist_le Metric.Sum.one_dist_le
+#align metric.sum.one_dist_le Metric.Sum.one_le_dist_inl_inr
 
-theorem Sum.one_dist_le' {x : X} {y : Y} : 1 ≤ Sum.dist (inr y) (inl x) := by
+/- warning: metric.sum.one_dist_le' -> Metric.Sum.one_le_dist_inr_inl is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {x : X} {y : Y}, LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (Metric.Sum.dist.{u1, u2} X Y _inst_1 _inst_2 (Sum.inr.{u1, u2} X Y y) (Sum.inl.{u1, u2} X Y x))
+but is expected to have type
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {x : X} {y : Y}, LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (Metric.Sum.dist.{u1, u2} X Y _inst_1 _inst_2 (Sum.inr.{u1, u2} X Y y) (Sum.inl.{u1, u2} X Y x))
+Case conversion may be inaccurate. Consider using '#align metric.sum.one_dist_le' Metric.Sum.one_le_dist_inr_inlₓ'. -/
+theorem Sum.one_le_dist_inr_inl {x : X} {y : Y} : 1 ≤ Sum.dist (inr y) (inl x) := by
   rw [sum.dist_comm] <;> exact sum.one_dist_le
-#align metric.sum.one_dist_le' Metric.Sum.one_dist_le'
+#align metric.sum.one_dist_le' Metric.Sum.one_le_dist_inr_inl
 
 private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
     s ∈ 𝓤 (Sum X Y) ↔ ∃ ε > 0, ∀ a b, Sum.dist a b < ε → (a, b) ∈ s :=
@@ -350,6 +380,7 @@ private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
       exact ⟨ε, ε0, fun x y h => H _ _ h⟩
 #align metric.sum.mem_uniformity metric.sum.mem_uniformity
 
+#print Metric.metricSpaceSum /-
 /-- The distance on the disjoint union indeed defines a metric space. All the distance properties
 follow from our choice of the distance. The harder work is to show that the uniform structure
 defined by the distance coincides with the disjoint union uniform structure. -/
@@ -387,22 +418,29 @@ def metricSpaceSum : MetricSpace (Sum X Y)
   toUniformSpace := Sum.uniformSpace
   uniformity_dist := uniformity_dist_of_mem_uniformity _ _ Sum.mem_uniformity
 #align metric.metric_space_sum Metric.metricSpaceSum
+-/
 
 attribute [local instance] metric_space_sum
 
+#print Metric.Sum.dist_eq /-
 theorem Sum.dist_eq {x y : Sum X Y} : dist x y = Sum.dist x y :=
   rfl
 #align metric.sum.dist_eq Metric.Sum.dist_eq
+-/
 
+#print Metric.isometry_inl /-
 /-- The left injection of a space in a disjoint union is an isometry -/
 theorem isometry_inl : Isometry (Sum.inl : X → Sum X Y) :=
   Isometry.of_dist_eq fun x y => rfl
 #align metric.isometry_inl Metric.isometry_inl
+-/
 
+#print Metric.isometry_inr /-
 /-- The right injection of a space in a disjoint union is an isometry -/
 theorem isometry_inr : Isometry (Sum.inr : Y → Sum X Y) :=
   Isometry.of_dist_eq fun x y => rfl
 #align metric.isometry_inr Metric.isometry_inr
+-/
 
 end Sum
 
@@ -414,6 +452,7 @@ variable {ι : Type _} {E : ι → Type _} [∀ i, MetricSpace (E i)]
 
 open Classical
 
+#print Metric.Sigma.dist /-
 /-- Distance on a disjoint union. There are many (noncanonical) ways to put a distance compatible
 with each factor.
 We choose a construction that works for unbounded spaces, but requires basepoints,
@@ -429,29 +468,46 @@ protected def dist : (Σi, E i) → (Σi, E i) → ℝ
       Dist.dist x (cast this y)
     else Dist.dist x (Nonempty.some ⟨x⟩) + 1 + Dist.dist (Nonempty.some ⟨y⟩) y
 #align metric.sigma.dist Metric.Sigma.dist
+-/
 
+#print Metric.Sigma.instDist /-
 /-- A `has_dist` instance on the disjoint union `Σ i, E i`.
 We embed isometrically each factor, set the basepoints at distance 1, arbitrarily,
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-def hasDist : Dist (Σi, E i) :=
+def instDist : Dist (Σi, E i) :=
   ⟨Sigma.dist⟩
-#align metric.sigma.has_dist Metric.Sigma.hasDist
+#align metric.sigma.has_dist Metric.Sigma.instDist
+-/
 
 attribute [local instance] sigma.has_dist
 
+#print Metric.Sigma.dist_same /-
 @[simp]
 theorem dist_same (i : ι) (x : E i) (y : E i) : dist (⟨i, x⟩ : Σj, E j) ⟨i, y⟩ = dist x y := by
   simp [Dist.dist, sigma.dist]
 #align metric.sigma.dist_same Metric.Sigma.dist_same
+-/
 
+/- warning: metric.sigma.dist_ne -> Metric.Sigma.dist_ne is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), MetricSpace.{u2} (E i)] {i : ι} {j : ι}, (Ne.{succ u1} ι i j) -> (forall (x : E i) (y : E j), Eq.{1} Real (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (k : ι) => E k)) (Metric.Sigma.instDist.{u1, u2} ι (fun (k : ι) => E k) (fun (i : ι) => _inst_1 i)) (Sigma.mk.{u1, u2} ι (fun (k : ι) => E k) i x) (Sigma.mk.{u1, u2} ι (fun (k : ι) => E k) j y)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{u2} (E i) (PseudoMetricSpace.toHasDist.{u2} (E i) (MetricSpace.toPseudoMetricSpace.{u2} (E i) (_inst_1 i))) x (Nonempty.some.{succ u2} (E i) (Nonempty.intro.{succ u2} (E i) x))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) (Dist.dist.{u2} (E j) (PseudoMetricSpace.toHasDist.{u2} (E j) (MetricSpace.toPseudoMetricSpace.{u2} (E j) (_inst_1 j))) (Nonempty.some.{succ u2} (E j) (Nonempty.intro.{succ u2} (E j) y)) y)))
+but is expected to have type
+  forall {ι : Type.{u2}} {E : ι -> Type.{u1}} [_inst_1 : forall (i : ι), MetricSpace.{u1} (E i)] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (forall (x : E i) (y : E j), Eq.{1} Real (Dist.dist.{max u2 u1} (Sigma.{u2, u1} ι (fun (k : ι) => E k)) (Metric.Sigma.instDist.{u2, u1} ι (fun (k : ι) => E k) (fun (i : ι) => _inst_1 i)) (Sigma.mk.{u2, u1} ι (fun (k : ι) => E k) i x) (Sigma.mk.{u2, u1} ι (fun (k : ι) => E k) j y)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{u1} (E i) (PseudoMetricSpace.toDist.{u1} (E i) (MetricSpace.toPseudoMetricSpace.{u1} (E i) (_inst_1 i))) x (Nonempty.some.{succ u1} (E i) (Nonempty.intro.{succ u1} (E i) x))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) (Dist.dist.{u1} (E j) (PseudoMetricSpace.toDist.{u1} (E j) (MetricSpace.toPseudoMetricSpace.{u1} (E j) (_inst_1 j))) (Nonempty.some.{succ u1} (E j) (Nonempty.intro.{succ u1} (E j) y)) y)))
+Case conversion may be inaccurate. Consider using '#align metric.sigma.dist_ne Metric.Sigma.dist_neₓ'. -/
 @[simp]
 theorem dist_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
     dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y :=
   by simp [Dist.dist, sigma.dist, h]
 #align metric.sigma.dist_ne Metric.Sigma.dist_ne
 
+/- warning: metric.sigma.one_le_dist_of_ne -> Metric.Sigma.one_le_dist_of_ne is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), MetricSpace.{u2} (E i)] {i : ι} {j : ι}, (Ne.{succ u1} ι i j) -> (forall (x : E i) (y : E j), LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (k : ι) => E k)) (Metric.Sigma.instDist.{u1, u2} ι (fun (k : ι) => E k) (fun (i : ι) => _inst_1 i)) (Sigma.mk.{u1, u2} ι (fun (k : ι) => E k) i x) (Sigma.mk.{u1, u2} ι (fun (k : ι) => E k) j y)))
+but is expected to have type
+  forall {ι : Type.{u2}} {E : ι -> Type.{u1}} [_inst_1 : forall (i : ι), MetricSpace.{u1} (E i)] {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (forall (x : E i) (y : E j), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (Dist.dist.{max u2 u1} (Sigma.{u2, u1} ι (fun (k : ι) => E k)) (Metric.Sigma.instDist.{u2, u1} ι (fun (k : ι) => E k) (fun (i : ι) => _inst_1 i)) (Sigma.mk.{u2, u1} ι (fun (k : ι) => E k) i x) (Sigma.mk.{u2, u1} ι (fun (k : ι) => E k) j y)))
+Case conversion may be inaccurate. Consider using '#align metric.sigma.one_le_dist_of_ne Metric.Sigma.one_le_dist_of_neₓ'. -/
 theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
     1 ≤ dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ :=
   by
@@ -459,6 +515,12 @@ theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
   linarith [@dist_nonneg _ _ x (Nonempty.some ⟨x⟩), @dist_nonneg _ _ (Nonempty.some ⟨y⟩) y]
 #align metric.sigma.one_le_dist_of_ne Metric.Sigma.one_le_dist_of_ne
 
+/- warning: metric.sigma.fst_eq_of_dist_lt_one -> Metric.Sigma.fst_eq_of_dist_lt_one is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), MetricSpace.{u2} (E i)] (x : Sigma.{u1, u2} ι (fun (i : ι) => E i)) (y : Sigma.{u1, u2} ι (fun (i : ι) => E i)), (LT.lt.{0} Real Real.hasLt (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u1, u2} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x y) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (Eq.{succ u1} ι (Sigma.fst.{u1, u2} ι (fun (i : ι) => E i) x) (Sigma.fst.{u1, u2} ι (fun (i : ι) => E i) y))
+but is expected to have type
+  forall {ι : Type.{u2}} {E : ι -> Type.{u1}} [_inst_1 : forall (i : ι), MetricSpace.{u1} (E i)] (x : Sigma.{u2, u1} ι (fun (i : ι) => E i)) (y : Sigma.{u2, u1} ι (fun (i : ι) => E i)), (LT.lt.{0} Real Real.instLTReal (Dist.dist.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u2, u1} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x y) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => E i) x) (Sigma.fst.{u2, u1} ι (fun (i : ι) => E i) y))
+Case conversion may be inaccurate. Consider using '#align metric.sigma.fst_eq_of_dist_lt_one Metric.Sigma.fst_eq_of_dist_lt_oneₓ'. -/
 theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
   by
   cases x; cases y
@@ -466,6 +528,12 @@ theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
   apply one_le_dist_of_ne h
 #align metric.sigma.fst_eq_of_dist_lt_one Metric.Sigma.fst_eq_of_dist_lt_one
 
+/- warning: metric.sigma.dist_triangle -> Metric.Sigma.dist_triangle is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), MetricSpace.{u2} (E i)] (x : Sigma.{u1, u2} ι (fun (i : ι) => E i)) (y : Sigma.{u1, u2} ι (fun (i : ι) => E i)) (z : Sigma.{u1, u2} ι (fun (i : ι) => E i)), LE.le.{0} Real Real.hasLe (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u1, u2} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u1, u2} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x y) (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u1, u2} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) y z))
+but is expected to have type
+  forall {ι : Type.{u2}} {E : ι -> Type.{u1}} [_inst_1 : forall (i : ι), MetricSpace.{u1} (E i)] (x : Sigma.{u2, u1} ι (fun (i : ι) => E i)) (y : Sigma.{u2, u1} ι (fun (i : ι) => E i)) (z : Sigma.{u2, u1} ι (fun (i : ι) => E i)), LE.le.{0} Real Real.instLEReal (Dist.dist.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u2, u1} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x z) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Dist.dist.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u2, u1} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x y) (Dist.dist.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u2, u1} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) y z))
+Case conversion may be inaccurate. Consider using '#align metric.sigma.dist_triangle Metric.Sigma.dist_triangleₓ'. -/
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z :=
   by
   rcases x with ⟨i, x⟩; rcases y with ⟨j, y⟩; rcases z with ⟨k, z⟩
@@ -503,6 +571,12 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 
+/- warning: metric.sigma.is_open_iff -> Metric.Sigma.isOpen_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), MetricSpace.{u2} (E i)] (s : Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))), Iff (IsOpen.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Sigma.topologicalSpace.{u1, u2} ι (fun (i : ι) => E i) (fun (a : ι) => UniformSpace.toTopologicalSpace.{u2} (E a) (PseudoMetricSpace.toUniformSpace.{u2} (E a) (MetricSpace.toPseudoMetricSpace.{u2} (E a) (_inst_1 a))))) s) (forall (x : Sigma.{u1, u2} ι (fun (i : ι) => E i)), (Membership.Mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) (Set.hasMem.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) x s) -> (Exists.{1} Real (fun (ε : Real) => Exists.{0} (GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (H : GT.gt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) => forall (y : Sigma.{u1, u2} ι (fun (i : ι) => E i)), (LT.lt.{0} Real Real.hasLt (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u1, u2} ι (fun (i : ι) => E i) (fun (a : ι) => _inst_1 a)) x y) ε) -> (Membership.Mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) (Set.hasMem.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) y s)))))
+but is expected to have type
+  forall {ι : Type.{u1}} {E : ι -> Type.{u2}} [_inst_1 : forall (i : ι), MetricSpace.{u2} (E i)] (s : Set.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => E i))), Iff (IsOpen.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (instTopologicalSpaceSigma.{u1, u2} ι (fun (i : ι) => E i) (fun (a : ι) => UniformSpace.toTopologicalSpace.{u2} (E a) (PseudoMetricSpace.toUniformSpace.{u2} (E a) (MetricSpace.toPseudoMetricSpace.{u2} (E a) (_inst_1 a))))) s) (forall (x : Sigma.{u1, u2} ι (fun (i : ι) => E i)), (Membership.mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Set.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) (Set.instMembershipSet.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) x s) -> (Exists.{1} Real (fun (ε : Real) => And (GT.gt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (forall (y : Sigma.{u1, u2} ι (fun (i : ι) => E i)), (LT.lt.{0} Real Real.instLTReal (Dist.dist.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Metric.Sigma.instDist.{u1, u2} ι (fun (i : ι) => E i) (fun (i : ι) => _inst_1 i)) x y) ε) -> (Membership.mem.{max u1 u2, max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i)) (Set.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) (Set.instMembershipSet.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => E i))) y s)))))
+Case conversion may be inaccurate. Consider using '#align metric.sigma.is_open_iff Metric.Sigma.isOpen_iffₓ'. -/
 protected theorem isOpen_iff (s : Set (Σi, E i)) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s :=
   by
@@ -531,6 +605,7 @@ protected theorem isOpen_iff (s : Set (Σi, E i)) :
     exact mem_ball'.1 hy
 #align metric.sigma.is_open_iff Metric.Sigma.isOpen_iff
 
+#print Metric.Sigma.metricSpace /-
 /-- A metric space structure on the disjoint union `Σ i, E i`.
 We embed isometrically each factor, set the basepoints at distance 1, arbitrarily,
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
@@ -558,6 +633,7 @@ protected def metricSpace : MetricSpace (Σi, E i) :=
           exact zero_lt_one
         
 #align metric.sigma.metric_space Metric.Sigma.metricSpace
+-/
 
 attribute [local instance] sigma.metric_space
 
@@ -565,11 +641,14 @@ open Topology
 
 open Filter
 
+#print Metric.Sigma.isometry_mk /-
 /-- The injection of a space in a disjoint union is an isometry -/
 theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
   Isometry.of_dist_eq fun x y => by simp
 #align metric.sigma.isometry_mk Metric.Sigma.isometry_mk
+-/
 
+#print Metric.Sigma.completeSpace /-
 /-- A disjoint union of complete metric spaces is complete. -/
 protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) :=
   by
@@ -585,6 +664,7 @@ protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σ
   convert isComplete_unionᵢ_separated hc (dist_mem_uniformity zero_lt_one) hd
   simp [s, ← preimage_Union]
 #align metric.sigma.complete_space Metric.Sigma.completeSpace
+-/
 
 end Sigma
 
@@ -600,6 +680,7 @@ open _Root_.Sum (inl inr)
 
 attribute [local instance] UniformSpace.separationSetoid
 
+#print Metric.gluePremetric /-
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a pseudo metric space
 structure on `X ⊕ Y` by declaring that `Φ x` and `Ψ x` are at distance `0`. -/
 def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (Sum X Y)
@@ -609,34 +690,46 @@ def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (S
   dist_comm := glueDist_comm Φ Ψ 0
   dist_triangle := glueDist_triangle Φ Ψ 0 fun p q => by rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
 #align metric.glue_premetric Metric.gluePremetric
+-/
 
+#print Metric.GlueSpace /-
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
 space  `glue_space hΦ hΨ` by identifying in `X ⊕ Y` the points `Φ x` and `Ψ x`. -/
 def GlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
   @UniformSpace.SeparationQuotient _ (gluePremetric hΦ hΨ).toUniformSpace deriving MetricSpace
 #align metric.glue_space Metric.GlueSpace
+-/
 
+#print Metric.toGlueL /-
 /-- The canonical map from `X` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
 def toGlueL (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (x : X) : GlueSpace hΦ hΨ :=
   Quotient.mk'' (inl x)
 #align metric.to_glue_l Metric.toGlueL
+-/
 
+#print Metric.toGlueR /-
 /-- The canonical map from `Y` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
 def toGlueR (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : GlueSpace hΦ hΨ :=
   Quotient.mk'' (inr y)
 #align metric.to_glue_r Metric.toGlueR
+-/
 
+#print Metric.inhabitedLeft /-
 instance inhabitedLeft (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] :
     Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueL _ _ default⟩
 #align metric.inhabited_left Metric.inhabitedLeft
+-/
 
+#print Metric.inhabitedRight /-
 instance inhabitedRight (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] :
     Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueR _ _ default⟩
 #align metric.inhabited_right Metric.inhabitedRight
+-/
 
-theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
+#print Metric.toGlue_commute /-
+theorem toGlue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
     toGlueL hΦ hΨ ∘ Φ = toGlueR hΦ hΨ ∘ Ψ :=
   by
   letI i : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
@@ -645,12 +738,25 @@ theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
   simp only [comp, to_glue_l, to_glue_r]
   refine' UniformSpace.SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
   exact glue_dist_glued_points Φ Ψ 0 x
-#align metric.to_glue_commute Metric.to_glue_commute
+#align metric.to_glue_commute Metric.toGlue_commute
+-/
 
+/- warning: metric.to_glue_l_isometry -> Metric.toGlueL_isometry is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : Nonempty.{succ u3} Z] [_inst_2 : MetricSpace.{u3} Z] [_inst_3 : MetricSpace.{u1} X] [_inst_4 : MetricSpace.{u2} Y] {Φ : Z -> X} {Ψ : Z -> Y} (hΦ : Isometry.{u3, u1} Z X (PseudoMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toPseudoMetricSpace.{u3} Z _inst_2)) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_3)) Φ) (hΨ : Isometry.{u3, u2} Z Y (PseudoMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toPseudoMetricSpace.{u3} Z _inst_2)) (PseudoMetricSpace.toPseudoEMetricSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)) Ψ), Isometry.{u1, max u1 u2} X (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_3)) (PseudoMetricSpace.toPseudoEMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (MetricSpace.toPseudoMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (Metric.GlueSpace.metricSpace.{u2, u3, u1} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ))) (Metric.toGlueL.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ)
+but is expected to have type
+  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : Nonempty.{succ u3} Z] [_inst_2 : MetricSpace.{u3} Z] [_inst_3 : MetricSpace.{u1} X] [_inst_4 : MetricSpace.{u2} Y] {Φ : Z -> X} {Ψ : Z -> Y} (hΦ : Isometry.{u3, u1} Z X (EMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toEMetricSpace.{u3} Z _inst_2)) (EMetricSpace.toPseudoEMetricSpace.{u1} X (MetricSpace.toEMetricSpace.{u1} X _inst_3)) Φ) (hΨ : Isometry.{u3, u2} Z Y (EMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toEMetricSpace.{u3} Z _inst_2)) (EMetricSpace.toPseudoEMetricSpace.{u2} Y (MetricSpace.toEMetricSpace.{u2} Y _inst_4)) Ψ), Isometry.{u1, max u1 u2} X (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (EMetricSpace.toPseudoEMetricSpace.{u1} X (MetricSpace.toEMetricSpace.{u1} X _inst_3)) (EMetricSpace.toPseudoEMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (MetricSpace.toEMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (Metric.instMetricSpaceGlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ hΦ Ψ hΨ))) (Metric.toGlueL.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ)
+Case conversion may be inaccurate. Consider using '#align metric.to_glue_l_isometry Metric.toGlueL_isometryₓ'. -/
 theorem toGlueL_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueL hΦ hΨ) :=
   Isometry.of_dist_eq fun _ _ => rfl
 #align metric.to_glue_l_isometry Metric.toGlueL_isometry
 
+/- warning: metric.to_glue_r_isometry -> Metric.toGlueR_isometry is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : Nonempty.{succ u3} Z] [_inst_2 : MetricSpace.{u3} Z] [_inst_3 : MetricSpace.{u1} X] [_inst_4 : MetricSpace.{u2} Y] {Φ : Z -> X} {Ψ : Z -> Y} (hΦ : Isometry.{u3, u1} Z X (PseudoMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toPseudoMetricSpace.{u3} Z _inst_2)) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_3)) Φ) (hΨ : Isometry.{u3, u2} Z Y (PseudoMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toPseudoMetricSpace.{u3} Z _inst_2)) (PseudoMetricSpace.toPseudoEMetricSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)) Ψ), Isometry.{u2, max u1 u2} Y (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (PseudoMetricSpace.toPseudoEMetricSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)) (PseudoMetricSpace.toPseudoEMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (MetricSpace.toPseudoMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (Metric.GlueSpace.metricSpace.{u2, u3, u1} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ))) (Metric.toGlueR.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ)
+but is expected to have type
+  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : Nonempty.{succ u3} Z] [_inst_2 : MetricSpace.{u3} Z] [_inst_3 : MetricSpace.{u1} X] [_inst_4 : MetricSpace.{u2} Y] {Φ : Z -> X} {Ψ : Z -> Y} (hΦ : Isometry.{u3, u1} Z X (EMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toEMetricSpace.{u3} Z _inst_2)) (EMetricSpace.toPseudoEMetricSpace.{u1} X (MetricSpace.toEMetricSpace.{u1} X _inst_3)) Φ) (hΨ : Isometry.{u3, u2} Z Y (EMetricSpace.toPseudoEMetricSpace.{u3} Z (MetricSpace.toEMetricSpace.{u3} Z _inst_2)) (EMetricSpace.toPseudoEMetricSpace.{u2} Y (MetricSpace.toEMetricSpace.{u2} Y _inst_4)) Ψ), Isometry.{u2, max u1 u2} Y (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (EMetricSpace.toPseudoEMetricSpace.{u2} Y (MetricSpace.toEMetricSpace.{u2} Y _inst_4)) (EMetricSpace.toPseudoEMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (MetricSpace.toEMetricSpace.{max u1 u2} (Metric.GlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ) (Metric.instMetricSpaceGlueSpace.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ hΦ Ψ hΨ))) (Metric.toGlueR.{u1, u2, u3} X Y Z _inst_1 _inst_2 _inst_3 _inst_4 Φ Ψ hΦ hΨ)
+Case conversion may be inaccurate. Consider using '#align metric.to_glue_r_isometry Metric.toGlueR_isometryₓ'. -/
 theorem toGlueR_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueR hΦ hΨ) :=
   Isometry.of_dist_eq fun _ _ => rfl
 #align metric.to_glue_r_isometry Metric.toGlueR_isometry
@@ -672,12 +778,15 @@ open Nat
 
 variable {X : ℕ → Type u} [∀ n, MetricSpace (X n)] {f : ∀ n, X n → X (n + 1)}
 
+#print Metric.inductiveLimitDist /-
 /-- Predistance on the disjoint union `Σ n, X n`. -/
 def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σn, X n) : ℝ :=
   dist (leRecOn (le_max_left x.1 y.1) f x.2 : X (max x.1 y.1))
     (leRecOn (le_max_right x.1 y.1) f y.2 : X (max x.1 y.1))
 #align metric.inductive_limit_dist Metric.inductiveLimitDist
+-/
 
+#print Metric.inductiveLimitDist_eq_dist /-
 /-- The predistance on the disjoint union `Σ n, X n` can be computed in any `X k` for large
 enough `k`. -/
 theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) (m : ℕ) :
@@ -704,7 +813,9 @@ theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) 
       rw [le_rec_on_succ xm, le_rec_on_succ ym, (I m).dist_eq]
       exact hm xm ym
 #align metric.inductive_limit_dist_eq_dist Metric.inductiveLimitDist_eq_dist
+-/
 
+#print Metric.inductivePremetric /-
 /-- Premetric space structure on `Σ n, X n`.-/
 def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n)
     where
@@ -733,22 +844,33 @@ def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n
         rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y z m hy hz]
       
 #align metric.inductive_premetric Metric.inductivePremetric
+-/
 
 attribute [local instance] inductive_premetric UniformSpace.separationSetoid
 
+#print Metric.InductiveLimit /-
 /-- The type giving the inductive limit in a metric space context. -/
 def InductiveLimit (I : ∀ n, Isometry (f n)) : Type _ :=
   @UniformSpace.SeparationQuotient _ (inductivePremetric I).toUniformSpace deriving MetricSpace
 #align metric.inductive_limit Metric.InductiveLimit
+-/
 
+#print Metric.toInductiveLimit /-
 /-- Mapping each `X n` to the inductive limit. -/
 def toInductiveLimit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.InductiveLimit I :=
   Quotient.mk'' (Sigma.mk n x)
 #align metric.to_inductive_limit Metric.toInductiveLimit
+-/
 
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLimit I) :=
   ⟨toInductiveLimit _ 0 default⟩
 
+/- warning: metric.to_inductive_limit_isometry -> Metric.toInductiveLimit_isometry is a dubious translation:
+lean 3 declaration is
+  forall {X : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), MetricSpace.{u1} (X n)] {f : forall (n : Nat), (X n) -> (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))} (I : forall (n : Nat), Isometry.{u1, u1} (X n) (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} (X n) (MetricSpace.toPseudoMetricSpace.{u1} (X n) (_inst_1 n))) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (MetricSpace.toPseudoMetricSpace.{u1} (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (_inst_1 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (f n)) (n : Nat), Isometry.{u1, u1} (X n) (Metric.InductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} (X n) (MetricSpace.toPseudoMetricSpace.{u1} (X n) (_inst_1 n))) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} (Metric.InductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I) (MetricSpace.toPseudoMetricSpace.{u1} (Metric.InductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I) (Metric.InductiveLimit.metricSpace.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I))) (Metric.toInductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I n)
+but is expected to have type
+  forall {X : Nat -> Type.{u1}} [_inst_1 : forall (n : Nat), MetricSpace.{u1} (X n)] {f : forall (n : Nat), (X n) -> (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))} (I : forall (n : Nat), Isometry.{u1, u1} (X n) (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (EMetricSpace.toPseudoEMetricSpace.{u1} (X n) (MetricSpace.toEMetricSpace.{u1} (X n) (_inst_1 n))) (EMetricSpace.toPseudoEMetricSpace.{u1} (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (MetricSpace.toEMetricSpace.{u1} (X (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (_inst_1 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (f n)) (n : Nat), Isometry.{u1, u1} (X n) (Metric.InductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I) (EMetricSpace.toPseudoEMetricSpace.{u1} (X n) (MetricSpace.toEMetricSpace.{u1} (X n) (_inst_1 n))) (EMetricSpace.toPseudoEMetricSpace.{u1} (Metric.InductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I) (MetricSpace.toEMetricSpace.{u1} (Metric.InductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I) (Metric.instMetricSpaceInductiveLimitNat.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I))) (Metric.toInductiveLimit.{u1} (fun (n : Nat) => X n) (fun (n : Nat) => _inst_1 n) (fun (n : Nat) => f n) I n)
+Case conversion may be inaccurate. Consider using '#align metric.to_inductive_limit_isometry Metric.toInductiveLimit_isometryₓ'. -/
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
 theorem toInductiveLimit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
     Isometry (toInductiveLimit I n) :=
@@ -759,6 +881,7 @@ theorem toInductiveLimit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
       le_rec_on_self]
 #align metric.to_inductive_limit_isometry Metric.toInductiveLimit_isometry
 
+#print Metric.toInductiveLimit_commute /-
 /-- The maps `to_inductive_limit n` are compatible with the maps `f n`. -/
 theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     toInductiveLimit I n.succ ∘ f n = toInductiveLimit I n :=
@@ -774,6 +897,7 @@ theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     exact le_rfl
     exact le_succ _
 #align metric.to_inductive_limit_commute Metric.toInductiveLimit_commute
+-/
 
 end InductiveLimit
 

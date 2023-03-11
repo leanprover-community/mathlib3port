@@ -564,7 +564,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
     have cauchy_y : CauchySeq y :=
       by
       have : tendsto (fun n => 2 * u n) at_top (𝓝 0) := by
-        simpa only [mul_zero] using u_lim.const_mul 2
+        simpa only [MulZeroClass.mul_zero] using u_lim.const_mul 2
       apply cauchySeq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => _) this
       rcases I m n with ⟨z, zsm, zsn⟩
       calc

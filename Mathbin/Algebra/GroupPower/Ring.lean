@@ -41,7 +41,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} M] {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M (MonoidWithZero.toMonoid.{u1} M _inst_1))) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (MonoidWithZero.toZero.{u1} M _inst_1))) n) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (MonoidWithZero.toZero.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align zero_pow zero_powₓ'. -/
 theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
-  | n + 1, _ => by rw [pow_succ, zero_mul]
+  | n + 1, _ => by rw [pow_succ, MulZeroClass.zero_mul]
 #align zero_pow zero_pow
 
 /- warning: zero_pow' -> zero_pow' is a dubious translation:
@@ -55,7 +55,7 @@ theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
   | k + 1, h => by
     rw [pow_succ]
-    exact zero_mul _
+    exact MulZeroClass.zero_mul _
 #align zero_pow' zero_pow'
 
 /- warning: zero_pow_eq -> zero_pow_eq is a dubious translation:
@@ -78,7 +78,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} M] {x : M} {n : Nat} {m : Nat}, (LE.le.{0} Nat instLENat n m) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M (MonoidWithZero.toMonoid.{u1} M _inst_1))) x n) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (MonoidWithZero.toZero.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M (MonoidWithZero.toMonoid.{u1} M _inst_1))) x m) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (MonoidWithZero.toZero.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align pow_eq_zero_of_le pow_eq_zero_of_leₓ'. -/
 theorem pow_eq_zero_of_le {x : M} {n m : ℕ} (hn : n ≤ m) (hx : x ^ n = 0) : x ^ m = 0 := by
-  rw [← tsub_add_cancel_of_le hn, pow_add, hx, mul_zero]
+  rw [← tsub_add_cancel_of_le hn, pow_add, hx, MulZeroClass.mul_zero]
 #align pow_eq_zero_of_le pow_eq_zero_of_le
 
 /- warning: pow_eq_zero -> pow_eq_zero is a dubious translation:
@@ -91,7 +91,7 @@ theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0
   by
   induction' n with n ih
   · rw [pow_zero] at H
-    rw [← mul_one x, H, mul_zero]
+    rw [← mul_one x, H, MulZeroClass.mul_zero]
   · rw [pow_succ] at H
     exact Or.cases_on (mul_eq_zero.1 H) id ih
 #align pow_eq_zero pow_eq_zero

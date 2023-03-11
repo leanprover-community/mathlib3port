@@ -90,8 +90,8 @@ theorem exists_int_int_abs_mul_sub_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
     have hm₀ : 0 < m :=
       by
       have hf₀ : f 0 = 0 := by
-        simp only [floor_eq_zero_iff, algebraMap.coe_zero, mul_zero, fract_zero, zero_mul,
-          Set.left_mem_Ico, zero_lt_one]
+        simp only [floor_eq_zero_iff, algebraMap.coe_zero, MulZeroClass.mul_zero, fract_zero,
+          MulZeroClass.zero_mul, Set.left_mem_Ico, zero_lt_one]
       refine' Ne.lt_of_le (fun h => n_pos.ne _) (mem_Icc.mp hm).1
       exact_mod_cast hf₀.symm.trans (h.symm ▸ hf : f 0 = n)
     refine' ⟨⌊ξ * m⌋ + 1, m, hm₀, (mem_Icc.mp hm).2, _⟩

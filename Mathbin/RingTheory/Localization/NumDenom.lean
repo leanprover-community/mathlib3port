@@ -92,7 +92,7 @@ theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} :
 #align is_fraction_ring.num_mul_denom_eq_num_mul_denom_iff_eq IsFractionRing.num_mul_denom_eq_num_mul_denom_iff_eq
 
 theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=
-  num_mul_denom_eq_num_iff_eq'.mp (by rw [zero_mul, h, RingHom.map_zero])
+  num_mul_denom_eq_num_iff_eq'.mp (by rw [MulZeroClass.zero_mul, h, RingHom.map_zero])
 #align is_fraction_ring.eq_zero_of_num_eq_zero IsFractionRing.eq_zero_of_num_eq_zero
 
 theorem isInteger_of_isUnit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInteger A x :=

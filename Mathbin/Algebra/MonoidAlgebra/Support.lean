@@ -37,13 +37,13 @@ theorem support_single_mul_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G
   have : ∀ y, a * y = x → f y = 0 := by
     simpa only [not_and', mem_image, mem_support_iff, exists_prop, not_exists,
       Classical.not_not] using hx
-  simp only [mem_support_iff, mul_apply, sum_single_index, zero_mul, if_t_t, sum_zero,
+  simp only [mem_support_iff, mul_apply, sum_single_index, MulZeroClass.zero_mul, if_t_t, sum_zero,
     Classical.not_not]
   exact
     Finset.sum_eq_zero
       (by
-        simp (config := { contextual := true }) only [this, mem_support_iff, mul_zero, Ne.def,
-          ite_eq_right_iff, eq_self_iff_true, imp_true_iff])
+        simp (config := { contextual := true }) only [this, mem_support_iff, MulZeroClass.mul_zero,
+          Ne.def, ite_eq_right_iff, eq_self_iff_true, imp_true_iff])
 #align monoid_algebra.support_single_mul_subset MonoidAlgebra.support_single_mul_subset
 
 /- warning: monoid_algebra.support_mul_single_subset -> MonoidAlgebra.support_mul_single_subset is a dubious translation:
@@ -60,13 +60,13 @@ theorem support_mul_single_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G
   have : ∀ y, y * a = x → f y = 0 := by
     simpa only [not_and', mem_image, mem_support_iff, exists_prop, not_exists,
       Classical.not_not] using hx
-  simp only [mem_support_iff, mul_apply, sum_single_index, zero_mul, if_t_t, sum_zero,
+  simp only [mem_support_iff, mul_apply, sum_single_index, MulZeroClass.zero_mul, if_t_t, sum_zero,
     Classical.not_not]
   exact
     Finset.sum_eq_zero
       (by
         simp (config := { contextual := true }) only [this, sum_single_index, ite_eq_right_iff,
-          eq_self_iff_true, imp_true_iff, zero_mul])
+          eq_self_iff_true, imp_true_iff, MulZeroClass.zero_mul])
 #align monoid_algebra.support_mul_single_subset MonoidAlgebra.support_mul_single_subset
 
 /- warning: monoid_algebra.support_single_mul_eq_image -> MonoidAlgebra.support_single_mul_eq_image is a dubious translation:
@@ -83,7 +83,8 @@ theorem support_single_mul_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k
   obtain ⟨y, yf, rfl⟩ : ∃ a : G, a ∈ f.support ∧ x * a = y := by
     simpa only [Finset.mem_image, exists_prop] using hy
   simp only [mul_apply, mem_support_iff.mp yf, hr, mem_support_iff, sum_single_index,
-    Finsupp.sum_ite_eq', Ne.def, not_false_iff, if_true, zero_mul, if_t_t, sum_zero, lx.eq_iff]
+    Finsupp.sum_ite_eq', Ne.def, not_false_iff, if_true, MulZeroClass.zero_mul, if_t_t, sum_zero,
+    lx.eq_iff]
 #align monoid_algebra.support_single_mul_eq_image MonoidAlgebra.support_single_mul_eq_image
 
 /- warning: monoid_algebra.support_mul_single_eq_image -> MonoidAlgebra.support_mul_single_eq_image is a dubious translation:
@@ -100,7 +101,8 @@ theorem support_mul_single_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k
   obtain ⟨y, yf, rfl⟩ : ∃ a : G, a ∈ f.support ∧ a * x = y := by
     simpa only [Finset.mem_image, exists_prop] using hy
   simp only [mul_apply, mem_support_iff.mp yf, hr, mem_support_iff, sum_single_index,
-    Finsupp.sum_ite_eq', Ne.def, not_false_iff, if_true, mul_zero, if_t_t, sum_zero, rx.eq_iff]
+    Finsupp.sum_ite_eq', Ne.def, not_false_iff, if_true, MulZeroClass.mul_zero, if_t_t, sum_zero,
+    rx.eq_iff]
 #align monoid_algebra.support_mul_single_eq_image MonoidAlgebra.support_mul_single_eq_image
 
 #print MonoidAlgebra.support_mul /-

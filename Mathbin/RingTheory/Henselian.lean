@@ -230,7 +230,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
           Finset.sum_range_add_sum_Ico _ (Nat.le_add_left _ _)]
         swap
         · intro i
-          rw [zero_mul]
+          rw [MulZeroClass.zero_mul]
         refine' Ideal.add_mem _ _ _
         · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_one, pow_one, taylor_coeff_zero,
             mul_neg, Finset.sum_singleton, Finset.range_one, pow_zero]

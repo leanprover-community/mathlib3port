@@ -61,7 +61,7 @@ theorem hasStrictDerivAt_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
   by
   rcases em (x = 0) with (rfl | hx)
   · replace h := h.neg_resolve_left rfl
-    rw [log_zero, mul_zero]
+    rw [log_zero, MulZeroClass.mul_zero]
     refine' (hasStrictDerivAt_const _ 0).congr_of_eventuallyEq _
     exact (is_open_ne.eventually_mem h).mono fun y hy => (zero_cpow hy).symm
   ·
@@ -180,7 +180,7 @@ theorem HasStrictDerivAt.const_cpow (hf : HasStrictDerivAt f f' x) (h : c ≠ 0 
 
 theorem Complex.hasStrictDerivAt_cpow_const (h : 0 < x.re ∨ x.im ≠ 0) :
     HasStrictDerivAt (fun z : ℂ => z ^ c) (c * x ^ (c - 1)) x := by
-  simpa only [mul_zero, add_zero, mul_one] using
+  simpa only [MulZeroClass.mul_zero, add_zero, mul_one] using
     (hasStrictDerivAt_id x).cpow (hasStrictDerivAt_const x c) h
 #align complex.has_strict_deriv_at_cpow_const Complex.hasStrictDerivAt_cpow_const
 

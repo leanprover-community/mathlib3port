@@ -433,7 +433,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align left.mul_pos Left.mul_posₓ'. -/
 /-- Assumes left covariance. -/
 theorem Left.mul_pos [PosMulStrictMono α] (ha : 0 < a) (hb : 0 < b) : 0 < a * b := by
-  simpa only [mul_zero] using mul_lt_mul_of_pos_left hb ha
+  simpa only [MulZeroClass.mul_zero] using mul_lt_mul_of_pos_left hb ha
 #align left.mul_pos Left.mul_pos
 
 /- warning: mul_pos -> mul_pos is a dubious translation:
@@ -452,7 +452,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulStrictMono.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_neg_of_pos_of_neg mul_neg_of_pos_of_negₓ'. -/
 theorem mul_neg_of_pos_of_neg [PosMulStrictMono α] (ha : 0 < a) (hb : b < 0) : a * b < 0 := by
-  simpa only [mul_zero] using mul_lt_mul_of_pos_left hb ha
+  simpa only [MulZeroClass.mul_zero] using mul_lt_mul_of_pos_left hb ha
 #align mul_neg_of_pos_of_neg mul_neg_of_pos_of_neg
 
 /- warning: zero_lt_mul_left -> zero_lt_mul_left is a dubious translation:
@@ -476,7 +476,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right.mul_pos Right.mul_posₓ'. -/
 /-- Assumes right covariance. -/
 theorem Right.mul_pos [MulPosStrictMono α] (ha : 0 < a) (hb : 0 < b) : 0 < a * b := by
-  simpa only [zero_mul] using mul_lt_mul_of_pos_right ha hb
+  simpa only [MulZeroClass.zero_mul] using mul_lt_mul_of_pos_right ha hb
 #align right.mul_pos Right.mul_pos
 
 /- warning: mul_neg_of_neg_of_pos -> mul_neg_of_neg_of_pos is a dubious translation:
@@ -486,7 +486,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : MulPosStrictMono.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_neg_of_neg_of_pos mul_neg_of_neg_of_posₓ'. -/
 theorem mul_neg_of_neg_of_pos [MulPosStrictMono α] (ha : a < 0) (hb : 0 < b) : a * b < 0 := by
-  simpa only [zero_mul] using mul_lt_mul_of_pos_right ha hb
+  simpa only [MulZeroClass.zero_mul] using mul_lt_mul_of_pos_right ha hb
 #align mul_neg_of_neg_of_pos mul_neg_of_neg_of_pos
 
 /- warning: zero_lt_mul_right -> zero_lt_mul_right is a dubious translation:
@@ -510,7 +510,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align left.mul_nonneg Left.mul_nonnegₓ'. -/
 /-- Assumes left covariance. -/
 theorem Left.mul_nonneg [PosMulMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
-  simpa only [mul_zero] using mul_le_mul_of_nonneg_left hb ha
+  simpa only [MulZeroClass.mul_zero] using mul_le_mul_of_nonneg_left hb ha
 #align left.mul_nonneg Left.mul_nonneg
 
 /- warning: mul_nonneg -> mul_nonneg is a dubious translation:
@@ -529,7 +529,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulMono.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_nonpos_of_nonneg_of_nonpos mul_nonpos_of_nonneg_of_nonposₓ'. -/
 theorem mul_nonpos_of_nonneg_of_nonpos [PosMulMono α] (ha : 0 ≤ a) (hb : b ≤ 0) : a * b ≤ 0 := by
-  simpa only [mul_zero] using mul_le_mul_of_nonneg_left hb ha
+  simpa only [MulZeroClass.mul_zero] using mul_le_mul_of_nonneg_left hb ha
 #align mul_nonpos_of_nonneg_of_nonpos mul_nonpos_of_nonneg_of_nonpos
 
 /- warning: right.mul_nonneg -> Right.mul_nonneg is a dubious translation:
@@ -540,7 +540,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right.mul_nonneg Right.mul_nonnegₓ'. -/
 /-- Assumes right covariance. -/
 theorem Right.mul_nonneg [MulPosMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
-  simpa only [zero_mul] using mul_le_mul_of_nonneg_right ha hb
+  simpa only [MulZeroClass.zero_mul] using mul_le_mul_of_nonneg_right ha hb
 #align right.mul_nonneg Right.mul_nonneg
 
 /- warning: mul_nonpos_of_nonpos_of_nonneg -> mul_nonpos_of_nonpos_of_nonneg is a dubious translation:
@@ -550,7 +550,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : MulPosMono.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_nonpos_of_nonpos_of_nonneg mul_nonpos_of_nonpos_of_nonnegₓ'. -/
 theorem mul_nonpos_of_nonpos_of_nonneg [MulPosMono α] (ha : a ≤ 0) (hb : 0 ≤ b) : a * b ≤ 0 := by
-  simpa only [zero_mul] using mul_le_mul_of_nonneg_right ha hb
+  simpa only [MulZeroClass.zero_mul] using mul_le_mul_of_nonneg_right ha hb
 #align mul_nonpos_of_nonpos_of_nonneg mul_nonpos_of_nonpos_of_nonneg
 
 /- warning: pos_of_mul_pos_right -> pos_of_mul_pos_right is a dubious translation:
@@ -560,7 +560,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulReflectLT.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) b)
 Case conversion may be inaccurate. Consider using '#align pos_of_mul_pos_right pos_of_mul_pos_rightₓ'. -/
 theorem pos_of_mul_pos_right [PosMulReflectLT α] (h : 0 < a * b) (ha : 0 ≤ a) : 0 < b :=
-  lt_of_mul_lt_mul_left ((mul_zero a).symm ▸ h : a * 0 < a * b) ha
+  lt_of_mul_lt_mul_left ((MulZeroClass.mul_zero a).symm ▸ h : a * 0 < a * b) ha
 #align pos_of_mul_pos_right pos_of_mul_pos_right
 
 /- warning: pos_of_mul_pos_left -> pos_of_mul_pos_left is a dubious translation:
@@ -570,7 +570,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : MulPosReflectLT.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) a)
 Case conversion may be inaccurate. Consider using '#align pos_of_mul_pos_left pos_of_mul_pos_leftₓ'. -/
 theorem pos_of_mul_pos_left [MulPosReflectLT α] (h : 0 < a * b) (hb : 0 ≤ b) : 0 < a :=
-  lt_of_mul_lt_mul_right ((zero_mul b).symm ▸ h : 0 * b < a * b) hb
+  lt_of_mul_lt_mul_right ((MulZeroClass.zero_mul b).symm ▸ h : 0 * b < a * b) hb
 #align pos_of_mul_pos_left pos_of_mul_pos_left
 
 /- warning: pos_iff_pos_of_mul_pos -> pos_iff_pos_of_mul_pos is a dubious translation:
@@ -678,7 +678,7 @@ theorem posMulMono_iff_covariant_pos :
   ⟨@PosMulMono.to_covariantClass_pos_mul_le _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
-      · simp only [ha, zero_mul]
+      · simp only [ha, MulZeroClass.zero_mul]
       · exact @CovariantClass.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, ha⟩ _ _ h⟩⟩
 #align pos_mul_mono_iff_covariant_pos posMulMono_iff_covariant_pos
 
@@ -693,7 +693,7 @@ theorem mulPosMono_iff_covariant_pos :
   ⟨@MulPosMono.to_covariantClass_pos_mul_le _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
-      · simp only [ha, mul_zero]
+      · simp only [ha, MulZeroClass.mul_zero]
       · exact @CovariantClass.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, ha⟩ _ _ h⟩⟩
 #align mul_pos_mono_iff_covariant_pos mulPosMono_iff_covariant_pos
 
@@ -860,7 +860,7 @@ theorem pos_and_pos_or_neg_and_neg_of_mul_pos [PosMulMono α] [MulPosMono α] (h
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
   · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
     exact mul_nonpos_of_nonneg_of_nonpos ha.le hb
-  · rw [zero_mul] at hab
+  · rw [MulZeroClass.zero_mul] at hab
     exact hab.false.elim
   · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
     exact mul_nonpos_of_nonpos_of_nonneg ha.le hb

@@ -400,7 +400,7 @@ private theorem newton_seq_dist_to_a :
 
 private theorem bound' : Tendsto (fun n : ℕ => ‖F.derivative.eval a‖ * T ^ 2 ^ n) atTop (𝓝 0) :=
   by
-  rw [← mul_zero ‖F.derivative.eval a‖]
+  rw [← MulZeroClass.mul_zero ‖F.derivative.eval a‖]
   exact
     tendsto_const_nhds.mul
       (tendsto.comp (tendsto_pow_atTop_nhds_0_of_lt_1 (norm_nonneg _) (T_lt_one hnorm))
@@ -421,7 +421,7 @@ private theorem bound :
 private theorem bound'_sq :
     Tendsto (fun n : ℕ => ‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ n) atTop (𝓝 0) :=
   by
-  rw [← mul_zero ‖F.derivative.eval a‖, sq]
+  rw [← MulZeroClass.mul_zero ‖F.derivative.eval a‖, sq]
   simp only [mul_assoc]
   apply tendsto.mul
   · apply tendsto_const_nhds

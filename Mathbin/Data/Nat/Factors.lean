@@ -89,7 +89,7 @@ theorem prod_factors : ∀ {n}, n ≠ 0 → List.prod (factors n) = n
       have h₁ : n / m ≠ 0 := fun h =>
         by
         have : n = 0 * m := (Nat.div_eq_iff_eq_mul_left (minFac_pos _) (minFac_dvd _)).1 h
-        rw [zero_mul] at this <;> exact (show k + 2 ≠ 0 by decide) this
+        rw [MulZeroClass.zero_mul] at this <;> exact (show k + 2 ≠ 0 by decide) this
       rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel' (min_fac_dvd _)]
 #align nat.prod_factors Nat.prod_factors
 -/
@@ -273,7 +273,7 @@ theorem perm_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) :
 theorem factors_sublist_right {n k : ℕ} (h : k ≠ 0) : n.factors <+ (n * k).factors :=
   by
   cases n
-  · rw [zero_mul]
+  · rw [MulZeroClass.zero_mul]
   apply sublist_of_subperm_of_sorted _ (factors_sorted _) (factors_sorted _)
   rw [(perm_factors_mul n.succ_ne_zero h).subperm_left]
   exact (sublist_append_left _ _).Subperm

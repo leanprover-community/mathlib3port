@@ -231,7 +231,7 @@ namespace Real
 def fourierChar : Multiplicative ℝ →* 𝕊
     where
   toFun z := expMapCircle (2 * π * z.toAdd)
-  map_one' := by rw [toAdd_one, mul_zero, expMapCircle_zero]
+  map_one' := by rw [toAdd_one, MulZeroClass.mul_zero, expMapCircle_zero]
   map_mul' x y := by rw [toAdd_mul, mul_add, expMapCircle_add]
 #align real.fourier_char Real.fourierChar
 

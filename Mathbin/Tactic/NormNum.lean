@@ -319,11 +319,11 @@ unsafe def prove_mul_nat : instance_cache → expr → expr → tactic (instance
     match match_numeral a, match_numeral b with
     | zero, _ => do
       let (ic, z) ← ic.mk_app `` Zero.zero []
-      let (ic, p) ← ic.mk_app `` zero_mul [b]
+      let (ic, p) ← ic.mk_app `` MulZeroClass.zero_mul [b]
       return (ic, z, p)
     | _, zero => do
       let (ic, z) ← ic.mk_app `` Zero.zero []
-      let (ic, p) ← ic.mk_app `` mul_zero [a]
+      let (ic, p) ← ic.mk_app `` MulZeroClass.mul_zero [a]
       return (ic, z, p)
     | one, _ => do
       let (ic, p) ← ic.mk_app `` one_mul [b]
@@ -1127,11 +1127,11 @@ unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     return (ic, c, p)
   | Sum.inr ff, _ => do
     let (ic, z) ← ic.mk_app `` Zero.zero []
-    let (ic, p) ← ic.mk_app `` zero_mul [b]
+    let (ic, p) ← ic.mk_app `` MulZeroClass.zero_mul [b]
     return (ic, z, p)
   | _, Sum.inr ff => do
     let (ic, z) ← ic.mk_app `` Zero.zero []
-    let (ic, p) ← ic.mk_app `` mul_zero [a]
+    let (ic, p) ← ic.mk_app `` MulZeroClass.mul_zero [a]
     return (ic, z, p)
   | Sum.inl a, Sum.inr tt => do
     let (ic, c, p) ← prove_mul_nonneg_rat ic a b (-na) nb

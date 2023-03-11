@@ -305,7 +305,7 @@ theorem add_to_nat : ∀ m n, ((m + n : Num) : ℕ) = m + n
 @[norm_cast]
 theorem mul_to_nat : ∀ m n, ((m * n : Num) : ℕ) = m * n
   | 0, 0 => rfl
-  | 0, Pos q => (zero_mul _).symm
+  | 0, Pos q => (MulZeroClass.zero_mul _).symm
   | Pos p, 0 => rfl
   | Pos p, Pos q => PosNum.mul_to_nat _ _
 #align num.mul_to_nat Num.mul_to_nat
@@ -773,9 +773,9 @@ theorem cast_bit1 [Semiring α] (n : Num) : (n.bit1 : α) = bit1 n := by
 
 @[simp, norm_cast]
 theorem cast_mul [Semiring α] : ∀ m n, ((m * n : Num) : α) = m * n
-  | 0, 0 => (zero_mul _).symm
-  | 0, Pos q => (zero_mul _).symm
-  | Pos p, 0 => (mul_zero _).symm
+  | 0, 0 => (MulZeroClass.zero_mul _).symm
+  | 0, Pos q => (MulZeroClass.zero_mul _).symm
+  | Pos p, 0 => (MulZeroClass.mul_zero _).symm
   | Pos p, Pos q => PosNum.cast_mul _ _
 #align num.cast_mul Num.cast_mul
 
@@ -915,7 +915,7 @@ theorem le_iff_cmp {m n} : m ≤ n ↔ cmp m n ≠ Ordering.gt :=
   not_congr <| lt_iff_cmp.trans <| by rw [← cmp_swap] <;> cases cmp m n <;> exact by decide
 #align num.le_iff_cmp Num.le_iff_cmp
 
-theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p : PosNum → PosNum → Num)
+theorem bitwise'_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p : PosNum → PosNum → Num)
     (gff : g false false = false) (f00 : f 0 0 = 0)
     (f0n : ∀ n, f 0 (pos n) = cond (g false true) (pos n) 0)
     (fn0 : ∀ n, f (pos n) 0 = cond (g true false) (pos n) 0)
@@ -923,16 +923,16 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     (p1b : ∀ b n, p 1 (PosNum.bit b n) = bit (g true b) (cond (g false true) (pos n) 0))
     (pb1 : ∀ a m, p (PosNum.bit a m) 1 = bit (g a true) (cond (g true false) (pos m) 0))
     (pbb : ∀ a b m n, p (PosNum.bit a m) (PosNum.bit b n) = bit (g a b) (p m n)) :
-    ∀ m n : Num, (f m n : ℕ) = Nat.bitwise g m n :=
+    ∀ m n : Num, (f m n : ℕ) = Nat.bitwise' g m n :=
   by
   intros ;
   cases' m with m <;> cases' n with n <;> try change zero with 0 <;>
     try change ((0 : Num) : ℕ) with 0
   · rw [f00, Nat.bitwise'_zero] <;> rfl
-  · unfold Nat.bitwise
+  · unfold Nat.bitwise'
     rw [f0n, Nat.binaryRec_zero]
     cases g ff tt <;> rfl
-  · unfold Nat.bitwise
+  · unfold Nat.bitwise'
     generalize h : (Pos m : ℕ) = m'
     revert h
     apply Nat.bitCasesOn m' _
@@ -958,19 +958,19 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     any_goals rw [Nat.bitwise'_zero_left, this, ← bit_to_nat, p1b]
     any_goals rw [Nat.bitwise'_zero_right _ gff, this, ← bit_to_nat, pb1]
     all_goals
-      rw [← show ∀ n, ↑(p m n) = Nat.bitwise g ↑m ↑n from IH]
+      rw [← show ∀ n, ↑(p m n) = Nat.bitwise' g ↑m ↑n from IH]
       rw [← bit_to_nat, pbb]
-#align num.bitwise_to_nat Num.bitwise_to_nat
+#align num.bitwise_to_nat Num.bitwise'_to_nat
 
 @[simp, norm_cast]
-theorem lor_to_nat : ∀ m n, (lor m n : ℕ) = Nat.lor m n := by
+theorem lor_to_nat : ∀ m n, (lor m n : ℕ) = Nat.lor' m n := by
   apply bitwise_to_nat fun x y => Pos (PosNum.lor x y) <;> intros <;> try cases a <;>
       try cases b <;>
     rfl
 #align num.lor_to_nat Num.lor_to_nat
 
 @[simp, norm_cast]
-theorem land_to_nat : ∀ m n, (land m n : ℕ) = Nat.land m n := by
+theorem land_to_nat : ∀ m n, (land m n : ℕ) = Nat.land' m n := by
   apply bitwise_to_nat PosNum.land <;> intros <;> try cases a <;> try cases b <;> rfl
 #align num.land_to_nat Num.land_to_nat
 

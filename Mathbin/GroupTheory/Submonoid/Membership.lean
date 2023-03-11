@@ -996,7 +996,9 @@ theorem mul_right_mem_add_closure (ha : a ∈ AddSubmonoid.closure (S : Set R)) 
   revert b
   refine' AddSubmonoid.closure_induction ha _ _ _ <;> clear ha a
   · exact fun r hr b hb => add_submonoid.mem_closure.mpr fun y hy => hy (mul_mem hr hb)
-  · exact fun b hb => by simp only [zero_mul, (AddSubmonoid.closure (S : Set R)).zero_mem]
+  ·
+    exact fun b hb => by
+      simp only [MulZeroClass.zero_mul, (AddSubmonoid.closure (S : Set R)).zero_mem]
   · simp_rw [add_mul]
     exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr hb) (hs hb)
 #align mul_mem_class.mul_right_mem_add_closure MulMemClass.mul_right_mem_add_closure
@@ -1015,7 +1017,9 @@ theorem mul_mem_add_closure (ha : a ∈ AddSubmonoid.closure (S : Set R))
   revert a
   refine' AddSubmonoid.closure_induction hb _ _ _ <;> clear hb b
   · exact fun r hr b hb => MulMemClass.mul_right_mem_add_closure hb hr
-  · exact fun b hb => by simp only [mul_zero, (AddSubmonoid.closure (S : Set R)).zero_mem]
+  ·
+    exact fun b hb => by
+      simp only [MulZeroClass.mul_zero, (AddSubmonoid.closure (S : Set R)).zero_mem]
   · simp_rw [mul_add]
     exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr hb) (hs hb)
 #align mul_mem_class.mul_mem_add_closure MulMemClass.mul_mem_add_closure

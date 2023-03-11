@@ -598,7 +598,7 @@ theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
       rw [valuation_p_pow_mul _ _ this, le_add_iff_nonneg_right]
       apply valuation_nonneg
     contrapose! hx
-    rw [hx, mul_zero]
+    rw [hx, MulZeroClass.mul_zero]
   · rw [unit_coeff_spec hx]
     lift x.valuation to ℕ using x.valuation_nonneg with k hk
     simp only [Int.natAbs_ofNat, Units.isUnit, IsUnit.dvd_mul_left, Int.ofNat_le]

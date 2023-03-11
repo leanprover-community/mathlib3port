@@ -1029,7 +1029,7 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
         exact fun hb => ne_of_gt (hb.trans_le (le_mul_left this)) h
       · rintro rfl
         apply this
-        rw [mul_zero] at h
+        rw [MulZeroClass.mul_zero] at h
         exact h.symm
     right
     by_cases h2a : a = 0
@@ -1037,7 +1037,7 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
     have hb : b ≠ 0 := by
       rintro rfl
       apply h2a
-      rw [mul_zero] at h
+      rw [MulZeroClass.mul_zero] at h
       exact h.symm
     left
     rw [← h, mul_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha

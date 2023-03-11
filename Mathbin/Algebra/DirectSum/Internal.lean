@@ -96,9 +96,11 @@ namespace SetLike
 instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetLike σ R]
     [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.GradedMul A] :
     DirectSum.GnonUnitalNonAssocSemiring fun i => A i :=
-  { SetLike.gMul A with
-    mul_zero := fun i j _ => Subtype.ext (mul_zero _)
-    zero_mul := fun i j _ => Subtype.ext (zero_mul _)
+  {
+    SetLike.gMul
+      A with
+    mul_zero := fun i j _ => Subtype.ext (MulZeroClass.mul_zero _)
+    zero_mul := fun i j _ => Subtype.ext (MulZeroClass.zero_mul _)
     mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
     add_mul := fun i j _ _ _ => Subtype.ext (add_mul _ _ _) }
 #align set_like.gnon_unital_non_assoc_semiring SetLike.gnonUnitalNonAssocSemiring
@@ -106,9 +108,11 @@ instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetL
 /-- Build a `gsemiring` instance for a collection of additive submonoids. -/
 instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.Gsemiring fun i => A i :=
-  { SetLike.gMonoid A with
-    mul_zero := fun i j _ => Subtype.ext (mul_zero _)
-    zero_mul := fun i j _ => Subtype.ext (zero_mul _)
+  {
+    SetLike.gMonoid
+      A with
+    mul_zero := fun i j _ => Subtype.ext (MulZeroClass.mul_zero _)
+    zero_mul := fun i j _ => Subtype.ext (MulZeroClass.zero_mul _)
     mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
     add_mul := fun i j _ _ _ => Subtype.ext (add_mul _ _ _)
     natCast := fun n => ⟨n, SetLike.nat_cast_mem_graded _ _⟩
@@ -191,12 +195,12 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, zero_mul, if_t_t]
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]
       exact Dfinsupp.sum_zero
     simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
     split_ifs
     rfl
-    rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, mul_zero]
+    rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, MulZeroClass.mul_zero]
 #align direct_sum.coe_of_mul_apply_aux DirectSum.coe_of_mul_apply_aux
 
 theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι}
@@ -205,12 +209,12 @@ theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i,
     rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, mul_zero, if_t_t]
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]
       exact Dfinsupp.sum_zero
     simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
     split_ifs
     rfl
-    rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, zero_mul]
+    rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, MulZeroClass.zero_mul]
 #align direct_sum.coe_mul_of_apply_aux DirectSum.coe_mul_of_apply_aux
 
 theorem coe_of_mul_apply_add [AddLeftCancelMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i)
@@ -237,7 +241,7 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, zero_mul, if_t_t]
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]
       exact Dfinsupp.sum_zero
     · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
       exact h ((self_le_add_right i x).trans_eq H)
@@ -249,7 +253,7 @@ theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι)
     rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, mul_zero, if_t_t]
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]
       exact Dfinsupp.sum_zero
     · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
       exact h ((self_le_add_left i x).trans_eq H)

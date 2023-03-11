@@ -168,7 +168,13 @@ open Expr Polynomial
                         `(
                           dite
                             ( $ ( n ) = 0 )
-                              ( fun n0 : $ ( n ) = 0 => by simp only [ n0 , zero_mul , zero_le ] )
+                              (
+                                fun
+                                  n0
+                                    : $ ( n ) = 0
+                                    =>
+                                    by simp only [ n0 , MulZeroClass.zero_mul , zero_le ]
+                                )
                               _
                           )
                     let n0 ← get_unused_name "n0" >>= intro

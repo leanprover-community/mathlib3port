@@ -250,12 +250,12 @@ theorem closure.isSubring : IsSubring (closure s) :=
         (fun c hc =>
           AddGroup.InClosure.rec_on ha
             (fun d hd => AddGroup.subset_closure ((Monoid.closure.isSubmonoid _).mul_mem hd hc))
-            ((zero_mul c).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
+            ((MulZeroClass.zero_mul c).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
             (fun d hd hdc =>
               neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.isAddSubgroup _).neg_mem hdc)
             fun d e hd he hdc hec =>
             (add_mul d e c).symm ▸ (AddGroup.closure.isAddSubgroup _).add_mem hdc hec)
-        ((mul_zero a).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
+        ((MulZeroClass.mul_zero a).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
         (fun c hc hac => neg_mul_eq_mul_neg a c ▸ (AddGroup.closure.isAddSubgroup _).neg_mem hac)
         fun c d hc hd hac had =>
         (mul_add a c d).symm ▸ (AddGroup.closure.isAddSubgroup _).add_mem hac had }

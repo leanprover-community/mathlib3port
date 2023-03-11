@@ -63,7 +63,7 @@ theorem pythagoreanTriple_comm {x y z : ℤ} : PythagoreanTriple x y z ↔ Pytha
 
 /-- The zeroth Pythagorean triple is all zeros. -/
 theorem PythagoreanTriple.zero : PythagoreanTriple 0 0 0 := by
-  simp only [PythagoreanTriple, zero_mul, zero_add]
+  simp only [PythagoreanTriple, MulZeroClass.zero_mul, zero_add]
 #align pythagorean_triple.zero PythagoreanTriple.zero
 
 namespace PythagoreanTriple
@@ -187,7 +187,8 @@ theorem gcd_dvd : (Int.gcd x y : ℤ) ∣ z :=
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_right h0
     have hz : z = 0 := by
-      simpa only [PythagoreanTriple, hx, hy, add_zero, zero_eq_mul, mul_zero, or_self_iff] using h
+      simpa only [PythagoreanTriple, hx, hy, add_zero, zero_eq_mul, MulZeroClass.mul_zero,
+        or_self_iff] using h
     simp only [hz, dvd_zero]
   obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ :
     ∃ (k : ℕ)(x0 y0 : _), 0 < k ∧ Int.gcd x0 y0 = 1 ∧ x = x0 * k ∧ y = y0 * k :=
@@ -208,7 +209,8 @@ theorem normalize : PythagoreanTriple (x / Int.gcd x y) (y / Int.gcd x y) (z / I
       apply int.nat_abs_eq_zero.mp
       apply Nat.eq_zero_of_gcd_eq_zero_right h0
     have hz : z = 0 := by
-      simpa only [PythagoreanTriple, hx, hy, add_zero, zero_eq_mul, mul_zero, or_self_iff] using h
+      simpa only [PythagoreanTriple, hx, hy, add_zero, zero_eq_mul, MulZeroClass.mul_zero,
+        or_self_iff] using h
     simp only [hx, hy, hz, Int.zero_div]
     exact zero
   rcases h.gcd_dvd with ⟨z0, rfl⟩
@@ -597,7 +599,7 @@ theorem isPrimitiveClassified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) (h
         rw [Int.ediv_mul_cancel h1.1, Int.ediv_mul_cancel h1.2.1, hw2]
         norm_cast
       · apply (mul_lt_mul_right (by norm_num : 0 < (2 : ℤ))).mp
-        rw [Int.ediv_mul_cancel h1.1, zero_mul]
+        rw [Int.ediv_mul_cancel h1.1, MulZeroClass.zero_mul]
         exact hm2n2
     rw [h2.1, h1.2.2.1] at hyo
     revert hyo

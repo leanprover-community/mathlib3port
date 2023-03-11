@@ -365,7 +365,7 @@ and `algebra.lmul`.
 def AddMonoidHom.mul : R →+ R →+ R
     where
   toFun := AddMonoidHom.mulLeft
-  map_zero' := AddMonoidHom.ext <| zero_mul
+  map_zero' := AddMonoidHom.ext <| MulZeroClass.zero_mul
   map_add' a b := AddMonoidHom.ext <| add_mul a b
 #align add_monoid_hom.mul AddMonoidHom.mul
 -/

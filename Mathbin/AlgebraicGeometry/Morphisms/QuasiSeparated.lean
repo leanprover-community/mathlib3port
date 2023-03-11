@@ -578,8 +578,8 @@ theorem is_localization_basicOpen_of_qcqs {X : Scheme} {U : Opens X.carrier} (hU
       refine' ⟨⟨_, n, rfl⟩, _⟩
       simpa [mul_comm z] using e
     · rintro ⟨⟨_, n, rfl⟩, e : f ^ n * z = 0⟩
-      rw [← ((RingedSpace.is_unit_res_basic_open _ f).pow n).mul_right_inj, mul_zero, ← map_pow, ←
-        map_mul, e, map_zero]
+      rw [← ((RingedSpace.is_unit_res_basic_open _ f).pow n).mul_right_inj, MulZeroClass.mul_zero, ←
+        map_pow, ← map_mul, e, map_zero]
 #align algebraic_geometry.is_localization_basic_open_of_qcqs AlgebraicGeometry.is_localization_basicOpen_of_qcqs
 
 end AlgebraicGeometry

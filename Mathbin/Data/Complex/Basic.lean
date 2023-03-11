@@ -2101,11 +2101,11 @@ protected def Complex.ComplexOrder.starOrderedRing : StarOrderedRing ℂ :=
           exact hr.2.symm
         ext
         ·
-          simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re, mul_zero, ←
-            Real.sqrt_mul h₁ r.re, Real.sqrt_mul_self h₁]
+          simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re,
+            MulZeroClass.mul_zero, ← Real.sqrt_mul h₁ r.re, Real.sqrt_mul_self h₁]
         ·
-          simp only [h₂, add_zero, of_real_im, star_def, zero_mul, conj_im, mul_im, mul_zero,
-            neg_zero]
+          simp only [h₂, add_zero, of_real_im, star_def, MulZeroClass.zero_mul, conj_im, mul_im,
+            MulZeroClass.mul_zero, neg_zero]
       · obtain ⟨s, rfl⟩ := h
         simp only [← norm_sq_eq_conj_mul_self, norm_sq_nonneg, zero_le_real, star_def] }
 #align complex.star_ordered_ring Complex.ComplexOrder.starOrderedRing

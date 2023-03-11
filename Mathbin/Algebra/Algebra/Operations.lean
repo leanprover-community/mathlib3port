@@ -1025,7 +1025,7 @@ instance : Div (Submodule R A) :=
   ⟨fun I J =>
     { carrier := { x | ∀ y ∈ J, x * y ∈ I }
       zero_mem' := fun y hy => by
-        rw [zero_mul]
+        rw [MulZeroClass.zero_mul]
         apply Submodule.zero_mem
       add_mem' := fun a b ha hb y hy => by
         rw [add_mul]

@@ -312,7 +312,7 @@ theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
     refine'
       ContinuousAt.continuousOn fun b hb =>
         (continuousAt_cpow_const (Or.inl _)).comp (continuous_at_const.div continuousAt_id (nv hb))
-    rw [div_re, of_real_im, of_real_re, zero_mul, zero_div, add_zero]
+    rw [div_re, of_real_im, of_real_re, MulZeroClass.zero_mul, zero_div, add_zero]
     exact div_pos (mul_pos pi_pos hb) (norm_sq_pos.mpr (nv hb))
   · -- squares of both sides agree
     dsimp only [Pi.pow_apply]
@@ -559,9 +559,9 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
         (by
           refine' Differentiable.differentiableOn (Differentiable.const_mul _ _).cexp
           exact differentiable_pow 2)
-    simpa only [neg_im, of_real_im, neg_zero, of_real_zero, zero_mul, add_zero, neg_re, of_real_re,
-      add_re, mul_re, I_re, mul_zero, I_im, tsub_zero, add_im, mul_im, mul_one, zero_add,
-      Algebra.id.smul_eq_mul, of_real_neg] using this
+    simpa only [neg_im, of_real_im, neg_zero, of_real_zero, MulZeroClass.zero_mul, add_zero, neg_re,
+      of_real_re, add_re, mul_re, I_re, MulZeroClass.mul_zero, I_im, tsub_zero, add_im, mul_im,
+      mul_one, zero_add, Algebra.id.smul_eq_mul, of_real_neg] using this
   simp_rw [id.def, ← HI₁]
   have : I₁ = fun T : ℝ => I₂ T + vertical_integral b c T :=
     by

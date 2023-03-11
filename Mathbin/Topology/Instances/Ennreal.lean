@@ -927,8 +927,8 @@ theorem infᵢ_mul_left' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = 
   by
   by_cases H : a = ⊤ ∧ (⨅ i, f i) = 0
   · rcases h H.1 H.2 with ⟨i, hi⟩
-    rw [H.2, mul_zero, ← bot_eq_zero, infᵢ_eq_bot]
-    exact fun b hb => ⟨i, by rwa [hi, mul_zero, ← bot_eq_zero]⟩
+    rw [H.2, MulZeroClass.mul_zero, ← bot_eq_zero, infᵢ_eq_bot]
+    exact fun b hb => ⟨i, by rwa [hi, MulZeroClass.mul_zero, ← bot_eq_zero]⟩
   · rw [not_and_or] at H
     cases isEmpty_or_nonempty ι
     · rw [infᵢ_of_empty, infᵢ_of_empty, mul_top, if_neg]
@@ -1247,8 +1247,8 @@ theorem mul_supᵢ {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * 
   by_cases hf : ∀ i, f i = 0
   · obtain rfl : f = fun _ => 0
     exact funext hf
-    simp only [supr_zero_eq_zero, mul_zero]
-  · refine' (monotone_id.const_mul' _).map_supᵢ_of_continuousAt _ (mul_zero a)
+    simp only [supr_zero_eq_zero, MulZeroClass.mul_zero]
+  · refine' (monotone_id.const_mul' _).map_supᵢ_of_continuousAt _ (MulZeroClass.mul_zero a)
     refine' ENNReal.Tendsto.const_mul tendsto_id (Or.inl _)
     exact mt supr_eq_zero.1 hf
 #align ennreal.mul_supr ENNReal.mul_supᵢ
@@ -2825,7 +2825,7 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
     (h : ∀ x y, f x ≤ f y + C * edist x y) : Continuous f :=
   by
   rcases eq_or_ne C 0 with (rfl | C0)
-  · simp only [zero_mul, add_zero] at h
+  · simp only [MulZeroClass.zero_mul, add_zero] at h
     exact continuous_of_const fun x y => le_antisymm (h _ _) (h _ _)
   · refine' continuous_iff_continuousAt.2 fun x => _
     by_cases hx : f x = ∞

@@ -320,8 +320,10 @@ theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).symm = a.symm / b.symm
 instance [MulZeroClass M] [MulZeroClass N] : MulZeroClass (M × N) :=
   { Prod.hasZero,
     Prod.hasMul with
-    zero_mul := fun a => Prod.recOn a fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩
-    mul_zero := fun a => Prod.recOn a fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
+    zero_mul := fun a =>
+      Prod.recOn a fun a b => mk.inj_iff.mpr ⟨MulZeroClass.zero_mul _, MulZeroClass.zero_mul _⟩
+    mul_zero := fun a =>
+      Prod.recOn a fun a b => mk.inj_iff.mpr ⟨MulZeroClass.mul_zero _, MulZeroClass.mul_zero _⟩ }
 
 @[to_additive]
 instance [Semigroup M] [Semigroup N] : Semigroup (M × N) :=
@@ -1243,7 +1245,7 @@ Case conversion may be inaccurate. Consider using '#align mul_monoid_with_zero_h
 /-- Multiplication as a multiplicative homomorphism with zero. -/
 @[simps]
 def mulMonoidWithZeroHom [CommMonoidWithZero α] : α × α →*₀ α :=
-  { mulMonoidHom with map_zero' := mul_zero _ }
+  { mulMonoidHom with map_zero' := MulZeroClass.mul_zero _ }
 #align mul_monoid_with_zero_hom mulMonoidWithZeroHom
 
 /- warning: div_monoid_hom -> divMonoidHom is a dubious translation:

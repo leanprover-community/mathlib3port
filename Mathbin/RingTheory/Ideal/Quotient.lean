@@ -482,7 +482,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι)
   smul_zero := by
     rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-    congr with i; exact mul_zero a
+    congr with i; exact MulZeroClass.mul_zero a
   add_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
@@ -490,7 +490,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι)
   zero_smul := by
     rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-    congr with i; exact zero_mul (a i)
+    congr with i; exact MulZeroClass.zero_mul (a i)
 #align ideal.module_pi Ideal.modulePi
 -/
 

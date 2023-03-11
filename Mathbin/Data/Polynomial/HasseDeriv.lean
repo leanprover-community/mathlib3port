@@ -72,13 +72,13 @@ theorem hasseDeriv_coeff (n : ℕ) : (hasseDeriv k f).coeff n = (n + k).choose k
   · intro i hi hink
     rw [coeff_monomial]
     by_cases hik : i < k
-    · simp only [Nat.choose_eq_zero_of_lt hik, if_t_t, Nat.cast_zero, zero_mul]
+    · simp only [Nat.choose_eq_zero_of_lt hik, if_t_t, Nat.cast_zero, MulZeroClass.zero_mul]
     · push_neg  at hik
       rw [if_neg]
       contrapose! hink
       exact (tsub_eq_iff_eq_add_of_le hik).mp hink
   · intro h
-    simp only [not_mem_support_iff.mp h, monomial_zero_right, mul_zero, coeff_zero]
+    simp only [not_mem_support_iff.mp h, monomial_zero_right, MulZeroClass.mul_zero, coeff_zero]
 #align polynomial.hasse_deriv_coeff Polynomial.hasseDeriv_coeff
 
 theorem hasseDeriv_zero' : hasseDeriv 0 f = f := by
@@ -118,17 +118,17 @@ theorem hasseDeriv_monomial (n : ℕ) (r : R) :
   · rw [if_pos hnik, if_pos, ← hnik]
     apply tsub_eq_of_eq_add_rev
     rwa [add_comm]
-  · rw [if_neg hnik, mul_zero]
+  · rw [if_neg hnik, MulZeroClass.mul_zero]
     by_cases hkn : k ≤ n
     · rw [← tsub_eq_iff_eq_add_of_le hkn] at hnik
       rw [if_neg hnik]
     · push_neg  at hkn
-      rw [Nat.choose_eq_zero_of_lt hkn, Nat.cast_zero, zero_mul, if_t_t]
+      rw [Nat.choose_eq_zero_of_lt hkn, Nat.cast_zero, MulZeroClass.zero_mul, if_t_t]
 #align polynomial.hasse_deriv_monomial Polynomial.hasseDeriv_monomial
 
 theorem hasseDeriv_c (r : R) (hk : 0 < k) : hasseDeriv k (C r) = 0 := by
   rw [← monomial_zero_left, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
-    zero_mul, monomial_zero_right]
+    MulZeroClass.zero_mul, monomial_zero_right]
 #align polynomial.hasse_deriv_C Polynomial.hasseDeriv_c
 
 theorem hasseDeriv_apply_one (hk : 0 < k) : hasseDeriv k (1 : R[X]) = 0 := by
@@ -137,7 +137,7 @@ theorem hasseDeriv_apply_one (hk : 0 < k) : hasseDeriv k (1 : R[X]) = 0 := by
 
 theorem hasseDeriv_x (hk : 1 < k) : hasseDeriv k (X : R[X]) = 0 := by
   rw [← monomial_one_one_eq_X, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
-    zero_mul, monomial_zero_right]
+    MulZeroClass.zero_mul, monomial_zero_right]
 #align polynomial.hasse_deriv_X Polynomial.hasseDeriv_x
 
 theorem factorial_smul_hasseDeriv : ⇑(k ! • @hasseDeriv R _ k) = @derivative R _^[k] :=
@@ -173,17 +173,17 @@ theorem hasseDeriv_comp (k l : ℕ) :
   by
   ext i : 2
   simp only [LinearMap.smul_apply, comp_app, LinearMap.coe_comp, smul_monomial, hasse_deriv_apply,
-    mul_one, monomial_eq_zero_iff, sum_monomial_index, mul_zero, ← tsub_add_eq_tsub_tsub,
-    add_comm l k]
+    mul_one, monomial_eq_zero_iff, sum_monomial_index, MulZeroClass.mul_zero, ←
+    tsub_add_eq_tsub_tsub, add_comm l k]
   rw_mod_cast [nsmul_eq_mul]
   congr 2
   by_cases hikl : i < k + l
-  · rw [choose_eq_zero_of_lt hikl, mul_zero]
+  · rw [choose_eq_zero_of_lt hikl, MulZeroClass.mul_zero]
     by_cases hil : i < l
-    · rw [choose_eq_zero_of_lt hil, mul_zero]
+    · rw [choose_eq_zero_of_lt hil, MulZeroClass.mul_zero]
     · push_neg  at hil
       rw [← tsub_lt_iff_right hil] at hikl
-      rw [choose_eq_zero_of_lt hikl, zero_mul]
+      rw [choose_eq_zero_of_lt hikl, MulZeroClass.zero_mul]
   push_neg  at hikl
   apply @cast_injective ℚ
   have h1 : l ≤ i := le_of_add_le_right hikl
@@ -261,11 +261,13 @@ theorem hasseDeriv_mul (f g : R[X]) :
     rw [Finset.Nat.mem_antidiagonal] at hx
     subst hx
     by_cases hm : m < x.1
-    · simp only [Nat.choose_eq_zero_of_lt hm, Nat.cast_zero, zero_mul, monomial_zero_right]
+    ·
+      simp only [Nat.choose_eq_zero_of_lt hm, Nat.cast_zero, MulZeroClass.zero_mul,
+        monomial_zero_right]
     by_cases hn : n < x.2
     ·
-      simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, zero_mul, mul_zero,
-        monomial_zero_right]
+      simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, MulZeroClass.zero_mul,
+        MulZeroClass.mul_zero, monomial_zero_right]
     push_neg  at hm hn
     rw [tsub_add_eq_add_tsub hm, ← add_tsub_assoc_of_le hn, ← tsub_add_eq_tsub_tsub,
       add_comm x.2 x.1, mul_assoc, ← mul_assoc r, ← (Nat.cast_commute _ r).Eq, mul_assoc, mul_assoc]

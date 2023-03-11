@@ -1377,7 +1377,7 @@ theorem Integrable.simpleFuncMul (g : SimpleFunc β ℝ) (hf : Integrable f μ) 
     ext1 x
     by_cases hx : x ∈ s
     · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul]
-    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
+    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, MulZeroClass.zero_mul]
   rw [this, integrable_indicator_iff hs]
   exact (hf.smul c).IntegrableOn
 #align measure_theory.integrable.simple_func_mul MeasureTheory.Integrable.simpleFuncMul

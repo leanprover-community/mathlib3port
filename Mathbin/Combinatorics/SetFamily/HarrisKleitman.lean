@@ -76,9 +76,9 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
   induction' s using Finset.induction with a s hs ih generalizing 𝒜 ℬ
   · simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs
     obtain rfl | rfl := h𝒜s
-    · simp only [card_empty, empty_inter, mul_zero, zero_mul]
+    · simp only [card_empty, empty_inter, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
     obtain rfl | rfl := hℬs
-    · simp only [card_empty, inter_empty, mul_zero, zero_mul]
+    · simp only [card_empty, inter_empty, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
     · simp only [card_empty, pow_zero, inter_singleton_of_mem, mem_singleton, card_singleton]
   rw [card_insert_of_not_mem hs, ← card_member_subfamily_add_card_non_member_subfamily a 𝒜, ←
     card_member_subfamily_add_card_non_member_subfamily a ℬ, add_mul, mul_add, mul_add,

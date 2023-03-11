@@ -216,7 +216,7 @@ theorem mulShift_mul (ψ : AddChar R R') (a b : R) :
 theorem mulShift_zero (ψ : AddChar R R') : mulShift ψ 0 = 1 :=
   by
   ext
-  simp only [mul_shift_apply, zero_mul, map_zero_one, MonoidHom.one_apply]
+  simp only [mul_shift_apply, MulZeroClass.zero_mul, map_zero_one, MonoidHom.one_apply]
 #align add_char.mul_shift_zero AddChar.mulShift_zero
 
 /-- An additive character is *primitive* iff all its multiplicative shifts by nonzero
@@ -421,7 +421,7 @@ theorem sum_mul_shift [DecidableEq R] [IsDomain R'] {ψ : AddChar R R'} (b : R)
   by
   split_ifs with h
   · -- case `b = 0`
-    simp only [h, mul_zero, map_zero_one, Finset.sum_const, Nat.smul_one_eq_coe]
+    simp only [h, MulZeroClass.mul_zero, map_zero_one, Finset.sum_const, Nat.smul_one_eq_coe]
     rfl
   · -- case `b ≠ 0`
     simp_rw [mul_comm]

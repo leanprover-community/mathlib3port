@@ -184,10 +184,12 @@ Case conversion may be inaccurate. Consider using '#align with_top.untop'_zero_m
 @[simp]
 theorem untop'_zero_mul (a b : WithTop α) : (a * b).untop' 0 = a.untop' 0 * b.untop' 0 :=
   by
-  by_cases ha : a = 0; · rw [ha, zero_mul, ← coe_zero, untop'_coe, zero_mul]
-  by_cases hb : b = 0; · rw [hb, mul_zero, ← coe_zero, untop'_coe, mul_zero]
-  induction a using WithTop.recTopCoe; · rw [top_mul hb, untop'_top, zero_mul]
-  induction b using WithTop.recTopCoe; · rw [mul_top ha, untop'_top, mul_zero]
+  by_cases ha : a = 0;
+  · rw [ha, MulZeroClass.zero_mul, ← coe_zero, untop'_coe, MulZeroClass.zero_mul]
+  by_cases hb : b = 0;
+  · rw [hb, MulZeroClass.mul_zero, ← coe_zero, untop'_coe, MulZeroClass.mul_zero]
+  induction a using WithTop.recTopCoe; · rw [top_mul hb, untop'_top, MulZeroClass.zero_mul]
+  induction b using WithTop.recTopCoe; · rw [mul_top ha, untop'_top, MulZeroClass.mul_zero]
   rw [← coe_mul, untop'_coe, untop'_coe, untop'_coe]
 #align with_top.untop'_zero_mul WithTop.untop'_zero_mul
 
@@ -243,9 +245,10 @@ instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop
     mul := (· * ·)
     zero := 0
     mul_assoc := fun a b c => by
-      rcases eq_or_ne a 0 with (rfl | ha); · simp only [zero_mul]
-      rcases eq_or_ne b 0 with (rfl | hb); · simp only [zero_mul, mul_zero]
-      rcases eq_or_ne c 0 with (rfl | hc); · simp only [mul_zero]
+      rcases eq_or_ne a 0 with (rfl | ha); · simp only [MulZeroClass.zero_mul]
+      rcases eq_or_ne b 0 with (rfl | hb);
+      · simp only [MulZeroClass.zero_mul, MulZeroClass.mul_zero]
+      rcases eq_or_ne c 0 with (rfl | hc); · simp only [MulZeroClass.mul_zero]
       induction a using WithTop.recTopCoe; · simp [hb, hc]
       induction b using WithTop.recTopCoe; · simp [ha, hc]
       induction c using WithTop.recTopCoe; · simp [ha, hb]

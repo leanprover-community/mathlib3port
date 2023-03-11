@@ -174,8 +174,8 @@ theorem mul_mem_nonZeroDivisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M₁�
   constructor
   · intro h
     constructor <;> intro x h' <;> apply h
-    · rw [← mul_assoc, h', zero_mul]
-    · rw [mul_comm a b, ← mul_assoc, h', zero_mul]
+    · rw [← mul_assoc, h', MulZeroClass.zero_mul]
+    · rw [mul_comm a b, ← mul_assoc, h', MulZeroClass.zero_mul]
   · rintro ⟨ha, hb⟩ x hx
     apply ha
     apply hb
@@ -298,7 +298,8 @@ theorem map_le_nonZeroDivisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroH
     exact
       le_nonZeroDivisors_of_noZeroDivisors fun h =>
         let ⟨x, hx, hx0⟩ := h
-        zero_ne_one (hS (hf (trans hx0 (map_zero f).symm) ▸ hx : 0 ∈ S) 1 (mul_zero 1)).symm
+        zero_ne_one
+          (hS (hf (trans hx0 (map_zero f).symm) ▸ hx : 0 ∈ S) 1 (MulZeroClass.mul_zero 1)).symm
 #align map_le_non_zero_divisors_of_injective map_le_nonZeroDivisors_of_injective
 
 /- warning: non_zero_divisors_le_comap_non_zero_divisors_of_injective -> nonZeroDivisors_le_comap_nonZeroDivisors_of_injective is a dubious translation:

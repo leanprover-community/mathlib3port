@@ -108,7 +108,8 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} [_inst_1 : LinearOrderedCommMonoidWithZero.{u1} α], LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (LinearOrderedCommMonoidWithZero.toZero.{u1} α _inst_1))) a
 Case conversion may be inaccurate. Consider using '#align zero_le' zero_le'ₓ'. -/
 @[simp]
-theorem zero_le' : 0 ≤ a := by simpa only [mul_zero, mul_one] using mul_le_mul_left' zero_le_one a
+theorem zero_le' : 0 ≤ a := by
+  simpa only [MulZeroClass.mul_zero, mul_one] using mul_le_mul_left' zero_le_one a
 #align zero_le' zero_le'
 
 /- warning: not_lt_zero' -> not_lt_zero' is a dubious translation:
@@ -156,7 +157,7 @@ instance : LinearOrderedAddCommMonoidWithTop (Additive αᵒᵈ) :=
   { Additive.orderedAddCommMonoid,
     Additive.linearOrder with
     top := (0 : α)
-    top_add' := fun a => (zero_mul a : (0 : α) * a = 0)
+    top_add' := fun a => (MulZeroClass.zero_mul a : (0 : α) * a = 0)
     le_top := fun _ => zero_le' }
 
 end LinearOrderedCommMonoid
@@ -296,11 +297,11 @@ Case conversion may be inaccurate. Consider using '#align mul_lt_mul_of_lt_of_le
 theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) : a * c < b * d :=
   have hd : d ≠ 0 := ne_zero_of_lt hcd
   if ha : a = 0 then by
-    rw [ha, zero_mul, zero_lt_iff]
+    rw [ha, MulZeroClass.zero_mul, zero_lt_iff]
     exact mul_ne_zero hb hd
   else
     if hc : c = 0 then by
-      rw [hc, mul_zero, zero_lt_iff]
+      rw [hc, MulZeroClass.mul_zero, zero_lt_iff]
       exact mul_ne_zero hb hd
     else
       show Units.mk0 a ha * Units.mk0 c hc < Units.mk0 b hb * Units.mk0 d hd from

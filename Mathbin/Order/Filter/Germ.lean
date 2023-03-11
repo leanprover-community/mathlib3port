@@ -756,11 +756,11 @@ instance [MulZeroClass R] : MulZeroClass (Germ l R)
   mul_zero f :=
     inductionOn f fun f => by
       norm_cast
-      rw [mul_zero]
+      rw [MulZeroClass.mul_zero]
   zero_mul f :=
     inductionOn f fun f => by
       norm_cast
-      rw [zero_mul]
+      rw [MulZeroClass.zero_mul]
 
 instance [Distrib R] : Distrib (Germ l R)
     where

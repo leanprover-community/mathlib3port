@@ -89,7 +89,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.opow_succ Ordinal.opow_succₓ'. -/
 @[simp]
 theorem opow_succ (a b : Ordinal) : (a^succ b) = (a^b) * a :=
-  if h : a = 0 then by subst a <;> simp only [zero_opow (succ_ne_zero _), mul_zero]
+  if h : a = 0 then by subst a <;> simp only [zero_opow (succ_ne_zero _), MulZeroClass.mul_zero]
   else by simp only [opow_def, limit_rec_on_succ, if_neg h]
 #align ordinal.opow_succ Ordinal.opow_succ
 
@@ -340,7 +340,7 @@ theorem opow_add (a b c : Ordinal) : (a^b + c) = (a^b) * (a^c) :=
   · rcases eq_or_ne c 0 with (rfl | c0)
     · simp
     have : b + c ≠ 0 := ((Ordinal.pos_iff_ne_zero.2 c0).trans_le (le_add_left _ _)).ne'
-    simp only [zero_opow c0, zero_opow this, mul_zero]
+    simp only [zero_opow c0, zero_opow this, MulZeroClass.mul_zero]
   rcases eq_or_lt_of_le (one_le_iff_ne_zero.2 a0) with (rfl | a1)
   · simp only [one_opow, mul_one]
   apply limit_rec_on c
@@ -402,17 +402,17 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.opow_mul Ordinal.opow_mulₓ'. -/
 theorem opow_mul (a b c : Ordinal) : (a^b * c) = ((a^b)^c) :=
   by
-  by_cases b0 : b = 0; · simp only [b0, zero_mul, opow_zero, one_opow]
+  by_cases b0 : b = 0; · simp only [b0, MulZeroClass.zero_mul, opow_zero, one_opow]
   by_cases a0 : a = 0
   · subst a
     by_cases c0 : c = 0
-    · simp only [c0, mul_zero, opow_zero]
+    · simp only [c0, MulZeroClass.mul_zero, opow_zero]
     simp only [zero_opow b0, zero_opow c0, zero_opow (mul_ne_zero b0 c0)]
   cases' eq_or_lt_of_le (one_le_iff_ne_zero.2 a0) with a1 a1
   · subst a1
     simp only [one_opow]
   apply limit_rec_on c
-  · simp only [mul_zero, opow_zero]
+  · simp only [MulZeroClass.mul_zero, opow_zero]
   · intro c IH
     rw [mul_succ, opow_add, IH, opow_succ]
   · intro c l IH

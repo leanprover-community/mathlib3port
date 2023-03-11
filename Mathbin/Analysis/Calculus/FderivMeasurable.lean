@@ -758,7 +758,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     -- We need to show that `f y - f x - f' (y - x)` is small. For this, we will work at scale
     -- `k` where `k` is chosen with `‖y - x‖ ∼ 2 ^ (-k)`.
     rcases eq_or_lt_of_le hy.1 with (rfl | xy)
-    · simp only [sub_self, zero_smul, norm_zero, mul_zero]
+    · simp only [sub_self, zero_smul, norm_zero, MulZeroClass.mul_zero]
     have yzero : 0 < y - x := sub_pos.2 xy
     have y_le : y - x ≤ (1 / 2) ^ (n e + 1) := by linarith [hy.2]
     have yone : y - x ≤ 1 := le_trans y_le (pow_le_one _ (by norm_num) (by norm_num))

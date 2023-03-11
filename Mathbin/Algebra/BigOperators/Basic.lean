@@ -2729,7 +2729,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_eq_zero Fi
 theorem prod_eq_zero (ha : a ∈ s) (h : f a = 0) : (∏ x in s, f x) = 0 :=
   by
   haveI := Classical.decEq α
-  rw [← prod_erase_mul _ _ ha, h, mul_zero]
+  rw [← prod_erase_mul _ _ ha, h, MulZeroClass.mul_zero]
 #align finset.prod_eq_zero Finset.prod_eq_zero
 
 /- warning: finset.prod_boole -> Finset.prod_boole is a dubious translation:

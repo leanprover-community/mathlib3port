@@ -80,7 +80,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_4 : MulZeroClass.{u1} M₀], IsIdempotentElem.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_4) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_4)))
 Case conversion may be inaccurate. Consider using '#align is_idempotent_elem.zero IsIdempotentElem.zeroₓ'. -/
 theorem zero : IsIdempotentElem (0 : M₀) :=
-  mul_zero _
+  MulZeroClass.mul_zero _
 #align is_idempotent_elem.zero IsIdempotentElem.zero
 
 /- warning: is_idempotent_elem.one -> IsIdempotentElem.one is a dubious translation:

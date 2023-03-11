@@ -323,8 +323,8 @@ theorem support_binomial {k m : ℕ} (hkm : k ≠ m) {x y : R} (hx : x ≠ 0) (h
   by
   apply subset_antisymm (support_binomial' k m x y)
   simp_rw [insert_subset, singleton_subset_iff, mem_support_iff, coeff_add, coeff_C_mul,
-    coeff_X_pow_self, mul_one, coeff_X_pow, if_neg hkm, if_neg hkm.symm, mul_zero, zero_add,
-    add_zero, Ne.def, hx, hy, and_self_iff, not_false_iff]
+    coeff_X_pow_self, mul_one, coeff_X_pow, if_neg hkm, if_neg hkm.symm, MulZeroClass.mul_zero,
+    zero_add, add_zero, Ne.def, hx, hy, and_self_iff, not_false_iff]
 #align polynomial.support_binomial Polynomial.support_binomial
 
 /- warning: polynomial.support_trinomial -> Polynomial.support_trinomial is a dubious translation:
@@ -339,8 +339,8 @@ theorem support_trinomial {k m n : ℕ} (hkm : k < m) (hmn : m < n) {x y z : R} 
   apply subset_antisymm (support_trinomial' k m n x y z)
   simp_rw [insert_subset, singleton_subset_iff, mem_support_iff, coeff_add, coeff_C_mul,
     coeff_X_pow_self, mul_one, coeff_X_pow, if_neg hkm.ne, if_neg hkm.ne', if_neg hmn.ne,
-    if_neg hmn.ne', if_neg (hkm.trans hmn).Ne, if_neg (hkm.trans hmn).ne', mul_zero, add_zero,
-    zero_add, Ne.def, hx, hy, hz, and_self_iff, not_false_iff]
+    if_neg hmn.ne', if_neg (hkm.trans hmn).Ne, if_neg (hkm.trans hmn).ne', MulZeroClass.mul_zero,
+    add_zero, zero_add, Ne.def, hx, hy, hz, and_self_iff, not_false_iff]
 #align polynomial.support_trinomial Polynomial.support_trinomial
 
 /- warning: polynomial.card_support_binomial -> Polynomial.card_support_binomial is a dubious translation:
@@ -376,7 +376,7 @@ theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) : coeff (p * Polynomial.X ^ n) (d
   by
   rw [coeff_mul, sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
   · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, mul_zero]
+    rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]
     rintro rfl
     apply h2
     rw [nat.mem_antidiagonal, add_right_cancel_iff] at h1
@@ -404,7 +404,7 @@ theorem coeff_mul_X_pow' (p : R[X]) (n d : ℕ) :
   split_ifs
   · rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
   · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
-    rw [coeff_X_pow, if_neg, mul_zero]
+    rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]
     exact ((le_of_add_le_right (finset.nat.mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).Ne
 #align polynomial.coeff_mul_X_pow' Polynomial.coeff_mul_X_pow'
 
@@ -517,7 +517,7 @@ theorem coeff_X_add_C_pow (r : R) (n k : ℕ) :
     simp [coeff_X_pow, h.symm]
   · simp only [coeff_X_pow_self, one_mul, not_lt, Finset.mem_range]
     intro h
-    rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
+    rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, MulZeroClass.mul_zero]
 #align polynomial.coeff_X_add_C_pow Polynomial.coeff_X_add_C_pow
 
 #print Polynomial.coeff_X_add_one_pow /-
@@ -556,7 +556,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ
       split_ifs with hi hi
       · rw [hc]
       · rw [Classical.not_not] at hi
-        rwa [mul_zero]
+        rwa [MulZeroClass.mul_zero]
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.C_dvd_iff_dvd_coeff
 
 /- warning: polynomial.coeff_bit0_mul -> Polynomial.coeff_bit0_mul is a dubious translation:

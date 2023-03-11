@@ -115,8 +115,8 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
       field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
     have h1 : (fr (t • x) : 𝕜) = lm (t • x) := by
       apply ext
-      · simp only [lm, of_real_re, LinearMap.extendTo𝕜'_apply, mul_re, I_re, of_real_im, zero_mul,
-          AddMonoidHom.map_sub, sub_zero, mul_zero]
+      · simp only [lm, of_real_re, LinearMap.extendTo𝕜'_apply, mul_re, I_re, of_real_im,
+          MulZeroClass.zero_mul, AddMonoidHom.map_sub, sub_zero, MulZeroClass.mul_zero]
         rfl
       · symm
         calc
