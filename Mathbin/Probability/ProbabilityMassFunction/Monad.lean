@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.monad
-! leanprover-community/mathlib commit 3f5c9d30716c775bda043456728a1a3ee31412e7
+! leanprover-community/mathlib commit 4ac69b290818724c159de091daa3acd31da0ee6d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,6 +56,15 @@ theorem support_pure : (pure a).support = {a} :=
 
 theorem mem_support_pure_iff : a' ∈ (pure a).support ↔ a' = a := by simp
 #align pmf.mem_support_pure_iff Pmf.mem_support_pure_iff
+
+@[simp]
+theorem pure_apply_self : pure a a = 1 :=
+  if_pos rfl
+#align pmf.pure_apply_self Pmf.pure_apply_self
+
+theorem pure_apply_of_ne (h : a' ≠ a) : pure a a' = 0 :=
+  if_neg h
+#align pmf.pure_apply_of_ne Pmf.pure_apply_of_ne
 
 instance [Inhabited α] : Inhabited (Pmf α) :=
   ⟨pure default⟩
@@ -133,11 +142,16 @@ theorem pure_bind (a : α) (f : α → Pmf β) : (pure a).bind f = f a :=
 
 @[simp]
 theorem bind_pure : p.bind pure = p :=
-  by
-  have : ∀ a a', p a * ite (a' = a) 1 0 = ite (a = a') (p a') 0 := fun a a' => by
-    split_ifs <;> try subst a <;> try subst a' <;> simp_all
-  ext b <;> simp [this]
+  Pmf.ext fun x =>
+    (bind_apply _ _ _).trans
+      (trans (tsum_eq_single x fun y hy => by rw [pure_apply_of_ne _ _ hy.symm, mul_zero]) <| by
+        rw [pure_apply_self, mul_one])
 #align pmf.bind_pure Pmf.bind_pure
+
+@[simp]
+theorem bind_const (p : Pmf α) (q : Pmf β) : (p.bind fun _ => q) = q :=
+  Pmf.ext fun x => by rw [bind_apply, ENNReal.tsum_mul_right, tsum_coe, one_mul]
+#align pmf.bind_const Pmf.bind_const
 
 @[simp]
 theorem bind_bind : (p.bind f).bind g = p.bind fun a => (f a).bind g :=

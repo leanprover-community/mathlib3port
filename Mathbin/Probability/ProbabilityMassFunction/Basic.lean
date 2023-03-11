@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.basic
-! leanprover-community/mathlib commit 3f5c9d30716c775bda043456728a1a3ee31412e7
+! leanprover-community/mathlib commit 4ac69b290818724c159de091daa3acd31da0ee6d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,13 +49,20 @@ def Pmf.{u} (α : Type u) : Type u :=
 
 namespace Pmf
 
-instance : CoeFun (Pmf α) fun p => α → ℝ≥0∞ :=
-  ⟨fun p a => p.1 a⟩
+instance funLike : FunLike (Pmf α) α fun p => ℝ≥0∞
+    where
+  coe p a := p.1 a
+  coe_injective' p q h := Subtype.eq h
+#align pmf.fun_like Pmf.funLike
 
 @[ext]
-protected theorem ext : ∀ {p q : Pmf α}, (∀ a, p a = q a) → p = q
-  | ⟨f, hf⟩, ⟨g, hg⟩, Eq => Subtype.eq <| funext Eq
+protected theorem ext {p q : Pmf α} (h : ∀ x, p x = q x) : p = q :=
+  FunLike.ext p q h
 #align pmf.ext Pmf.ext
+
+theorem ext_iff {p q : Pmf α} : p = q ↔ ∀ x, p x = q x :=
+  FunLike.ext_iff
+#align pmf.ext_iff Pmf.ext_iff
 
 theorem hasSum_coe_one (p : Pmf α) : HasSum p 1 :=
   p.2
@@ -78,6 +85,11 @@ theorem tsum_coe_indicator_ne_top (p : Pmf α) (s : Set α) : (∑' a, s.indicat
       (lt_of_le_of_ne le_top p.tsum_coe_ne_top))
 #align pmf.tsum_coe_indicator_ne_top Pmf.tsum_coe_indicator_ne_top
 
+@[simp]
+theorem coe_ne_zero (p : Pmf α) : ⇑p ≠ 0 := fun hp =>
+  zero_ne_one ((tsum_zero.symm.trans (tsum_congr fun x => symm (congr_fun hp x))).trans p.tsum_coe)
+#align pmf.coe_ne_zero Pmf.coe_ne_zero
+
 /-- The support of a `pmf` is the set where it is nonzero. -/
 def support (p : Pmf α) : Set α :=
   Function.support p
@@ -87,6 +99,11 @@ def support (p : Pmf α) : Set α :=
 theorem mem_support_iff (p : Pmf α) (a : α) : a ∈ p.support ↔ p a ≠ 0 :=
   Iff.rfl
 #align pmf.mem_support_iff Pmf.mem_support_iff
+
+@[simp]
+theorem support_nonempty (p : Pmf α) : p.support.Nonempty :=
+  Function.support_nonempty_iff.2 p.coe_ne_zero
+#align pmf.support_nonempty Pmf.support_nonempty
 
 theorem apply_eq_zero_iff (p : Pmf α) (a : α) : p a = 0 ↔ a ∉ p.support := by
   rw [mem_support_iff, Classical.not_not]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.constructions
-! leanprover-community/mathlib commit e50b8c261b0a000b806ec0e1356b41945eda61f7
+! leanprover-community/mathlib commit 4ac69b290818724c159de091daa3acd31da0ee6d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,14 +66,30 @@ theorem bind_pure_comp : bind p (pure ∘ f) = map f p :=
   rfl
 #align pmf.bind_pure_comp Pmf.bind_pure_comp
 
-theorem map_id : map id p = p := by simp [map]
+theorem map_id : map id p = p :=
+  bind_pure _
 #align pmf.map_id Pmf.map_id
 
 theorem map_comp (g : β → γ) : (p.map f).map g = p.map (g ∘ f) := by simp [map]
 #align pmf.map_comp Pmf.map_comp
 
-theorem pure_map (a : α) : (pure a).map f = pure (f a) := by simp [map]
+theorem pure_map (a : α) : (pure a).map f = pure (f a) :=
+  pure_bind _ _
 #align pmf.pure_map Pmf.pure_map
+
+theorem map_bind (q : α → Pmf β) (f : β → γ) : (p.bind q).map f = p.bind fun a => (q a).map f :=
+  bind_bind _ _ _
+#align pmf.map_bind Pmf.map_bind
+
+@[simp]
+theorem bind_map (p : Pmf α) (f : α → β) (q : β → Pmf γ) : (p.map f).bind q = p.bind (q ∘ f) :=
+  (bind_bind _ _ _).trans (congr_arg _ (funext fun a => pure_bind _ _))
+#align pmf.bind_map Pmf.bind_map
+
+@[simp]
+theorem map_const : p.map (Function.const α b) = pure b := by
+  simp only [map, bind_const, Function.comp_const]
+#align pmf.map_const Pmf.map_const
 
 section Measure
 
