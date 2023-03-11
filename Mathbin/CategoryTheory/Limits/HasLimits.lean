@@ -912,22 +912,22 @@ instance limMap_mono {F G : J ⥤ C} [HasLimit F] [HasLimit G] (α : F ⟶ G) [�
     limit.hom_ext fun j => (cancel_mono (α.app j)).1 <| by simpa using h =≫ limit.π _ j⟩
 #align category_theory.limits.lim_map_mono CategoryTheory.Limits.limMap_mono
 
-/- warning: category_theory.limits.has_limits_of_shape_of_equivalence -> CategoryTheory.Limits.hasLimitsOfShapeOfEquivalence is a dubious translation:
+/- warning: category_theory.limits.has_limits_of_shape_of_equivalence -> CategoryTheory.Limits.hasLimitsOfShape_of_equivalence is a dubious translation:
 lean 3 declaration is
   forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u5, u6} C] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u3, u4} J'], (CategoryTheory.Equivalence.{u1, u3, u2, u4} J _inst_1 J' _inst_4) -> (forall [_inst_5 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u5, u6} J _inst_1 C _inst_3], CategoryTheory.Limits.HasLimitsOfShape.{u3, u4, u5, u6} J' _inst_4 C _inst_3)
 but is expected to have type
   forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u5, u6} C] {J' : Type.{u4}} [_inst_4 : CategoryTheory.Category.{u3, u4} J'], (CategoryTheory.Equivalence.{u1, u3, u2, u4} J J' _inst_1 _inst_4) -> (forall [_inst_5 : CategoryTheory.Limits.HasLimitsOfShape.{u1, u2, u5, u6} J _inst_1 C _inst_3], CategoryTheory.Limits.HasLimitsOfShape.{u3, u4, u5, u6} J' _inst_4 C _inst_3)
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.has_limits_of_shape_of_equivalence CategoryTheory.Limits.hasLimitsOfShapeOfEquivalenceₓ'. -/
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.has_limits_of_shape_of_equivalence CategoryTheory.Limits.hasLimitsOfShape_of_equivalenceₓ'. -/
 /-- We can transport limits of shape `J` along an equivalence `J ≌ J'`.
 -/
-theorem hasLimitsOfShapeOfEquivalence {J' : Type u₂} [Category.{v₂} J'] (e : J ≌ J')
+theorem hasLimitsOfShape_of_equivalence {J' : Type u₂} [Category.{v₂} J'] (e : J ≌ J')
     [HasLimitsOfShape J C] : HasLimitsOfShape J' C :=
   by
   constructor
   intro F
   apply has_limit_of_equivalence_comp e
   infer_instance
-#align category_theory.limits.has_limits_of_shape_of_equivalence CategoryTheory.Limits.hasLimitsOfShapeOfEquivalence
+#align category_theory.limits.has_limits_of_shape_of_equivalence CategoryTheory.Limits.hasLimitsOfShape_of_equivalence
 
 variable (C)
 

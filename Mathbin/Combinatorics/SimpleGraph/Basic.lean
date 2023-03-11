@@ -2238,17 +2238,13 @@ theorem neighborFinset_eq_filter {v : V} [DecidableRel G.Adj] :
 #align simple_graph.neighbor_finset_eq_filter SimpleGraph.neighborFinset_eq_filter
 -/
 
-/- warning: simple_graph.neighbor_finset_compl -> SimpleGraph.neighborFinset_compl is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] (v : V), Eq.{succ u1} (Finset.{u1} V) (SimpleGraph.neighborFinset.{u1} V (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasCompl.{u1} V) G) v (SimpleGraph.neighborSetFintype.{u1} V (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasCompl.{u1} V) G) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Compl.adjDecidable.{u1} V G (fun (a : V) (b : V) => _inst_3 a b) (fun (a : V) (b : V) => _inst_2 a b) a b) v)) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.hasSdiff.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) v))
-but is expected to have type
-  forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] (v : V), Eq.{succ u1} (Finset.{u1} V) (SimpleGraph.neighborFinset.{u1} V (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instHasComplSimpleGraph.{u1} V) G) v (SimpleGraph.neighborSetFintype.{u1} V (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instHasComplSimpleGraph.{u1} V) G) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Compl.adjDecidable.{u1} V G (fun (a : V) (b : V) => _inst_3 a b) (fun (a : V) (b : V) => _inst_2 a b) a b) v)) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.instSDiffFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) v))
-Case conversion may be inaccurate. Consider using '#align simple_graph.neighbor_finset_compl SimpleGraph.neighborFinset_complₓ'. -/
+#print SimpleGraph.neighborFinset_compl /-
 theorem neighborFinset_compl [DecidableEq V] [DecidableRel G.Adj] (v : V) :
     Gᶜ.neighborFinset v = G.neighborFinset vᶜ \ {v} := by
   simp only [neighbor_finset, neighbor_set_compl, Set.toFinset_diff, Set.toFinset_compl,
     Set.toFinset_singleton]
 #align simple_graph.neighbor_finset_compl SimpleGraph.neighborFinset_compl
+-/
 
 /- warning: simple_graph.complete_graph_degree -> SimpleGraph.complete_graph_degree is a dubious translation:
 lean 3 declaration is

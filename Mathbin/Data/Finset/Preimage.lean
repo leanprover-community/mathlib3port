@@ -89,18 +89,14 @@ theorem preimage_union [DecidableEq α] [DecidableEq β] {f : α → β} {s t : 
 #align finset.preimage_union Finset.preimage_union
 -/
 
-/- warning: finset.preimage_compl -> Finset.preimage_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : Fintype.{u1} α] [_inst_4 : Fintype.{u2} β] {f : α -> β} (s : Finset.{u2} β) (hf : Function.Injective.{succ u1, succ u2} α β f), Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u2} α β (HasCompl.compl.{u2} (Finset.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} β) (Finset.booleanAlgebra.{u2} β _inst_4 (fun (a : β) (b : β) => _inst_2 a b))) s) f (Function.Injective.injOn.{u1, u2} α β f hf (Set.preimage.{u1, u2} α β f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) (HasCompl.compl.{u2} (Finset.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} β) (Finset.booleanAlgebra.{u2} β _inst_4 (fun (a : β) (b : β) => _inst_2 a b))) s))))) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_3 (fun (a : α) (b : α) => _inst_1 a b))) (Finset.preimage.{u1, u2} α β s f (Function.Injective.injOn.{u1, u2} α β f hf (Set.preimage.{u1, u2} α β f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) s)))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : Fintype.{u1} α] [_inst_4 : Fintype.{u2} β] {f : α -> β} (s : Finset.{u2} β) (hf : Function.Injective.{succ u1, succ u2} α β f), Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u2} α β (HasCompl.compl.{u2} (Finset.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} β) (Finset.instBooleanAlgebraFinset.{u2} β _inst_4 (fun (a : β) (b : β) => _inst_2 a b))) s) f (Function.Injective.injOn.{u2, u1} α β f hf (Set.preimage.{u1, u2} α β f (Finset.toSet.{u2} β (HasCompl.compl.{u2} (Finset.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Finset.{u2} β) (Finset.instBooleanAlgebraFinset.{u2} β _inst_4 (fun (a : β) (b : β) => _inst_2 a b))) s))))) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_3 (fun (a : α) (b : α) => _inst_1 a b))) (Finset.preimage.{u1, u2} α β s f (Function.Injective.injOn.{u2, u1} α β f hf (Set.preimage.{u1, u2} α β f (Finset.toSet.{u2} β s)))))
-Case conversion may be inaccurate. Consider using '#align finset.preimage_compl Finset.preimage_complₓ'. -/
+#print Finset.preimage_compl /-
 @[simp]
 theorem preimage_compl [DecidableEq α] [DecidableEq β] [Fintype α] [Fintype β] {f : α → β}
     (s : Finset β) (hf : Function.Injective f) :
     preimage (sᶜ) f (hf.InjOn _) = preimage s f (hf.InjOn _)ᶜ :=
   Finset.coe_injective (by simp)
 #align finset.preimage_compl Finset.preimage_compl
+-/
 
 #print Finset.monotone_preimage /-
 theorem monotone_preimage {f : α → β} (h : Injective f) :

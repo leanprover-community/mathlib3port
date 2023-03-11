@@ -342,16 +342,12 @@ theorem Finset.card_lt_iff_ne_univ [Fintype α] (s : Finset α) :
 #align finset.card_lt_iff_ne_univ Finset.card_lt_iff_ne_univ
 -/
 
-/- warning: finset.card_compl_lt_iff_nonempty -> Finset.card_compl_lt_iff_nonempty is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Iff (LT.lt.{0} Nat Nat.hasLt (Finset.card.{u1} α (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s)) (Fintype.card.{u1} α _inst_1)) (Finset.Nonempty.{u1} α s)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Iff (LT.lt.{0} Nat instLTNat (Finset.card.{u1} α (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s)) (Fintype.card.{u1} α _inst_1)) (Finset.Nonempty.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align finset.card_compl_lt_iff_nonempty Finset.card_compl_lt_iff_nonemptyₓ'. -/
+#print Finset.card_compl_lt_iff_nonempty /-
 theorem Finset.card_compl_lt_iff_nonempty [Fintype α] [DecidableEq α] (s : Finset α) :
     sᶜ.card < Fintype.card α ↔ s.Nonempty :=
   sᶜ.card_lt_iff_ne_univ.trans s.compl_ne_univ_iff_nonempty
 #align finset.card_compl_lt_iff_nonempty Finset.card_compl_lt_iff_nonempty
+-/
 
 #print Finset.card_univ_diff /-
 theorem Finset.card_univ_diff [DecidableEq α] [Fintype α] (s : Finset α) :
@@ -360,16 +356,12 @@ theorem Finset.card_univ_diff [DecidableEq α] [Fintype α] (s : Finset α) :
 #align finset.card_univ_diff Finset.card_univ_diff
 -/
 
-/- warning: finset.card_compl -> Finset.card_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (s : Finset.{u1} α), Eq.{1} Nat (Finset.card.{u1} α (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b))) s)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} α _inst_2) (Finset.card.{u1} α s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (s : Finset.{u1} α), Eq.{1} Nat (Finset.card.{u1} α (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b))) s)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} α _inst_2) (Finset.card.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.card_compl Finset.card_complₓ'. -/
+#print Finset.card_compl /-
 theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) :
     sᶜ.card = Fintype.card α - s.card :=
   Finset.card_univ_diff s
 #align finset.card_compl Finset.card_compl
+-/
 
 /- warning: fintype.card_compl_set -> Fintype.card_compl_set is a dubious translation:
 lean 3 declaration is
@@ -457,26 +449,18 @@ theorem Fintype.card_pempty : Fintype.card PEmpty = 0 :=
 #align fintype.card_pempty Fintype.card_pempty
 -/
 
-/- warning: fintype.card_unit -> Fintype.card_unit is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Nat (Fintype.card.{0} Unit PUnit.fintype.{0}) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
-but is expected to have type
-  Eq.{1} Nat (Fintype.card.{0} Unit instFintypePUnit.{0}) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
-Case conversion may be inaccurate. Consider using '#align fintype.card_unit Fintype.card_unitₓ'. -/
+#print Fintype.card_unit /-
 theorem Fintype.card_unit : Fintype.card Unit = 1 :=
   rfl
 #align fintype.card_unit Fintype.card_unit
+-/
 
-/- warning: fintype.card_punit -> Fintype.card_punit is a dubious translation:
-lean 3 declaration is
-  Eq.{1} Nat (Fintype.card.{u1} PUnit.{succ u1} PUnit.fintype.{u1}) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
-but is expected to have type
-  Eq.{1} Nat (Fintype.card.{u1} PUnit.{succ u1} instFintypePUnit.{u1}) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
-Case conversion may be inaccurate. Consider using '#align fintype.card_punit Fintype.card_punitₓ'. -/
+#print Fintype.card_punit /-
 @[simp]
 theorem Fintype.card_punit : Fintype.card PUnit = 1 :=
   rfl
 #align fintype.card_punit Fintype.card_punit
+-/
 
 #print Fintype.card_bool /-
 @[simp]
@@ -489,7 +473,7 @@ theorem Fintype.card_bool : Fintype.card Bool = 2 :=
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{max u1 u2} (ULift.{u2, u1} α) (ULift.fintype.{u1, u2} α _inst_1)) (Fintype.card.{u1} α _inst_1)
 but is expected to have type
-  forall (α : Type.{u2}) [_inst_1 : Fintype.{u2} α], Eq.{1} Nat (Fintype.card.{max u2 u1} (ULift.{u1, u2} α) (instFintypeULift.{u2, u1} α _inst_1)) (Fintype.card.{u2} α _inst_1)
+  forall (α : Type.{u2}) [_inst_1 : Fintype.{u2} α], Eq.{1} Nat (Fintype.card.{max u2 u1} (ULift.{u1, u2} α) (ULift.fintype.{u2, u1} α _inst_1)) (Fintype.card.{u2} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align fintype.card_ulift Fintype.card_uliftₓ'. -/
 @[simp]
 theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (ULift α) = Fintype.card α :=

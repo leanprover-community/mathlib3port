@@ -32,7 +32,7 @@ variable (J : Type u₂) [Category.{v₂} J] (C : Type u₁) [Category.{v₁} C]
 #print CategoryTheory.Limits.hasLimitsOfShape_of_essentiallySmall /-
 theorem hasLimitsOfShape_of_essentiallySmall [EssentiallySmall.{w₁} J]
     [HasLimitsOfSize.{w₁, w₁} C] : HasLimitsOfShape J C :=
-  hasLimitsOfShapeOfEquivalence <| Equivalence.symm <| equivSmallModel.{w₁} J
+  hasLimitsOfShape_of_equivalence <| Equivalence.symm <| equivSmallModel.{w₁} J
 #align category_theory.limits.has_limits_of_shape_of_essentially_small CategoryTheory.Limits.hasLimitsOfShape_of_essentiallySmall
 -/
 
@@ -46,7 +46,7 @@ theorem hasColimitsOfShape_of_essentiallySmall [EssentiallySmall.{w₁} J]
 #print CategoryTheory.Limits.hasProductsOfShape_of_small /-
 theorem hasProductsOfShape_of_small (β : Type w₂) [Small.{w₁} β] [HasProducts.{w₁} C] :
     HasProductsOfShape β C :=
-  hasLimitsOfShapeOfEquivalence <| Discrete.equivalence <| Equiv.symm <| equivShrink β
+  hasLimitsOfShape_of_equivalence <| Discrete.equivalence <| Equiv.symm <| equivShrink β
 #align category_theory.limits.has_products_of_shape_of_small CategoryTheory.Limits.hasProductsOfShape_of_small
 -/
 

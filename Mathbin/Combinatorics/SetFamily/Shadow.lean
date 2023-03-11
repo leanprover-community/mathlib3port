@@ -366,12 +366,7 @@ theorem mem_upShadow_iff_exists_mem_card_add :
     rfl
 #align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_upShadow_iff_exists_mem_card_add
 
-/- warning: finset.shadow_image_compl -> Finset.shadow_image_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) 𝒜))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) 𝒜)) (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) 𝒜))
-Case conversion may be inaccurate. Consider using '#align finset.shadow_image_compl Finset.shadow_image_complₓ'. -/
+#print Finset.shadow_image_compl /-
 @[simp]
 theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) :=
   by
@@ -383,13 +378,9 @@ theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image c
   · rintro ⟨_, ⟨s, hs, rfl⟩, a, ha, rfl⟩
     exact ⟨s.erase a, ⟨s, hs, a, not_mem_compl.1 ha, rfl⟩, compl_erase⟩
 #align finset.shadow_image_compl Finset.shadow_image_compl
+-/
 
-/- warning: finset.up_shadow_image_compl -> Finset.upShadow_image_compl is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) 𝒜))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Finset.shadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) 𝒜))
-Case conversion may be inaccurate. Consider using '#align finset.up_shadow_image_compl Finset.upShadow_image_complₓ'. -/
+#print Finset.upShadow_image_compl /-
 @[simp]
 theorem upShadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) :=
   by
@@ -401,6 +392,7 @@ theorem upShadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image
   · rintro ⟨_, ⟨s, hs, rfl⟩, a, ha, rfl⟩
     exact ⟨insert a s, ⟨s, hs, a, mem_compl.1 ha, rfl⟩, compl_insert⟩
 #align finset.up_shadow_image_compl Finset.upShadow_image_compl
+-/
 
 end UpShadow
 

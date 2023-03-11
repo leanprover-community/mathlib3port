@@ -45,7 +45,7 @@ namespace Fintype
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (f : Bool -> α), Eq.{succ u1} α (Finset.prod.{u1, 0} α Bool _inst_1 (Finset.univ.{0} Bool Bool.fintype) (fun (b : Bool) => f b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (f Bool.true) (f Bool.false))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (f : Bool -> α), Eq.{succ u1} α (Finset.prod.{u1, 0} α Bool _inst_1 (Finset.univ.{0} Bool instFintypeBool) (fun (b : Bool) => f b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (f Bool.true) (f Bool.false))
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (f : Bool -> α), Eq.{succ u1} α (Finset.prod.{u1, 0} α Bool _inst_1 (Finset.univ.{0} Bool Bool.fintype) (fun (b : Bool) => f b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (f Bool.true) (f Bool.false))
 Case conversion may be inaccurate. Consider using '#align fintype.prod_bool Fintype.prod_boolₓ'. -/
 @[to_additive]
 theorem prod_bool [CommMonoid α] (f : Bool → α) : (∏ b, f b) = f true * f false := by simp
