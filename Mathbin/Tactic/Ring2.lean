@@ -561,7 +561,7 @@ local postfix:1024 "?" => optional
           let ( r₁ , l₁ ) := reflect_expr e₁
           let ( r₂ , l₂ ) := reflect_expr e₂
           let L := ( l₁ ++ l₂ ) . toList
-          let s := Tree.ofRbnode ( rbtreeOf L ) . 1
+          let s := Tree.ofRBNode ( rbtreeOf L ) . 1
           let ( r₁ , L ) ← ( StateT.run ( r₁ . replace s ) L : Option _ )
           let ( r₂ , _ ) ← ( StateT.run ( r₂ . replace s ) L : Option _ )
           let se : expr := s . reflect' u α

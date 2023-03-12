@@ -189,7 +189,7 @@ private unsafe def explain_tree_aux (rs : List (expr × Bool)) :
 
 /-- Construct a string of Lean code that does a rewrite for the provided tree. -/
 private unsafe def explain_tree (rs : List (expr × Bool)) (tree : AppAddr) : tactic (List String) :=
-  List.join <$> Option.toList <$> explain_tree_aux rs tree
+  List.join <$> Option.toList <$> explain_tree_aux rs Tree
 #align tactic.rewrite_search.using_conv.explain_tree tactic.rewrite_search.using_conv.explain_tree
 
 /-- Gather all rewrites into trees, then generate a line of code for each tree.
@@ -198,22 +198,22 @@ The return value has one `conv_x` tactic on each line.
 private unsafe def explanation_lines (rs : List (expr × Bool)) (s : Side) :
     Option AppAddr → List how → tactic (List String)
   | none, [] => return []
-  | some tree, [] => do
-    let tacs ← explain_tree rs tree
+  | some Tree, [] => do
+    let tacs ← explain_tree rs Tree
     return <|
         if tacs = 0 then [] else ["conv_" ++ s ++ " { " ++ String.intercalate ", " tacs ++ " }"]
-  | tree, h :: rest => do
+  | Tree, h :: rest => do
     let (new_tree, rest_if_fail) ←
       match h.addr with
         | some addr => do
-          let new_tree ← splice_in tree [h.rule_index] addr
+          let new_tree ← splice_in Tree [h.rule_index] addr
           return (some new_tree, List.cons h rest)
         | none => do
           return (none, rest)
     match new_tree with
       | some (new new_tree) => explanation_lines new_tree rest
       | _ => do
-        let line ← explanation_lines tree []
+        let line ← explanation_lines Tree []
         let lines ← explanation_lines none rest_if_fail
         return <| line ++ lines
 #align tactic.rewrite_search.using_conv.explanation_lines tactic.rewrite_search.using_conv.explanation_lines
