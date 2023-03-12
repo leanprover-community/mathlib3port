@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.zmod.quotient
-! leanprover-community/mathlib commit d8ac338019a0b33162d0e09cd823cae696a718f8
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Zmod.Basic
 import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.RingTheory.Int.Basic
+import Mathbin.RingTheory.Ideal.QuotientOperations
 
 /-!
 # `zmod n` and quotient groups / rings

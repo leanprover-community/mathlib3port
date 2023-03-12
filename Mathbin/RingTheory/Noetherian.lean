@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.noetherian
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -539,11 +539,6 @@ theorem isNoetherian_of_tower (R) {S M} [Semiring R] [Semiring S] [AddCommMonoid
   rw [isNoetherian_iff_wellFounded] at h⊢
   refine' (Submodule.restrictScalarsEmbedding R S M).dual.WellFounded h
 #align is_noetherian_of_tower isNoetherian_of_tower
-
-instance Ideal.Quotient.isNoetherianRing {R : Type _} [CommRing R] [h : IsNoetherianRing R]
-    (I : Ideal R) : IsNoetherianRing (R ⧸ I) :=
-  isNoetherianRing_iff.mpr <| isNoetherian_of_tower R <| Submodule.Quotient.isNoetherian _
-#align ideal.quotient.is_noetherian_ring Ideal.Quotient.isNoetherianRing
 
 theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module R M]
     (N : Submodule R M) [IsNoetherianRing R] (hN : N.Fg) : IsNoetherian R N :=

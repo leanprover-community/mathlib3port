@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,7 @@ import Mathbin.RingTheory.FinitePresentation
 import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.PowerBasis
 import Mathbin.RingTheory.PrincipalIdealDomain
+import Mathbin.RingTheory.QuotientNoetherian
 
 /-!
 # Adjoining roots of polynomials

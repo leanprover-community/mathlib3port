@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.nonsingular_inverse
-! leanprover-community/mathlib commit 25cf7631da8ddc2d5f957c388bf5e4b25a77d8dc
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -547,6 +547,7 @@ theorem invOf_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inve
     ⅟ (diagonal v) = diagonal (⅟ v) :=
   by
   letI := diagonal_invertible v
+  haveI := Invertible.subsingleton (diagonal v)
   convert (rfl : ⅟ (diagonal v) = _)
 #align matrix.inv_of_diagonal_eq Matrix.invOf_diagonal_eq
 

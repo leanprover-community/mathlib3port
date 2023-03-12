@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.jacobson_ideal
-! leanprover-community/mathlib commit 79de90f7beca025f469dcda978ae655c4d985946
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Ideal.Quotient
-import Mathbin.RingTheory.Polynomial.Basic
+import Mathbin.RingTheory.Polynomial.Quotient
 
 /-!
 # Jacobson radical

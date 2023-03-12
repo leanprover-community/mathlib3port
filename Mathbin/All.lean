@@ -2547,6 +2547,7 @@ import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
 import Mathbin.RingTheory.Polynomial.GaussLemma
 import Mathbin.RingTheory.Polynomial.Opposites
 import Mathbin.RingTheory.Polynomial.Pochhammer
+import Mathbin.RingTheory.Polynomial.Quotient
 import Mathbin.RingTheory.Polynomial.RationalRoot
 import Mathbin.RingTheory.Polynomial.ScaleRoots
 import Mathbin.RingTheory.Polynomial.Selmer
@@ -2558,6 +2559,8 @@ import Mathbin.RingTheory.PowerSeries.Basic
 import Mathbin.RingTheory.PowerSeries.WellKnown
 import Mathbin.RingTheory.Prime
 import Mathbin.RingTheory.PrincipalIdealDomain
+import Mathbin.RingTheory.QuotientNilpotent
+import Mathbin.RingTheory.QuotientNoetherian
 import Mathbin.RingTheory.ReesAlgebra
 import Mathbin.RingTheory.RingHom.Finite
 import Mathbin.RingTheory.RingHom.FiniteType
@@ -2578,6 +2581,7 @@ import Mathbin.RingTheory.Valuation.Basic
 import Mathbin.RingTheory.Valuation.ExtendToLocalization
 import Mathbin.RingTheory.Valuation.Integers
 import Mathbin.RingTheory.Valuation.Integral
+import Mathbin.RingTheory.Valuation.Quotient
 import Mathbin.RingTheory.Valuation.RamificationGroup
 import Mathbin.RingTheory.Valuation.Tfae
 import Mathbin.RingTheory.Valuation.ValuationRing

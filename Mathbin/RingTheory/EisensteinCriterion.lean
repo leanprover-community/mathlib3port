@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.eisenstein_criterion
-! leanprover-community/mathlib commit cead93130da7100f8a9fe22ee210f7636a91168f
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Cast.WithTop
 import Mathbin.RingTheory.Prime
 import Mathbin.RingTheory.Polynomial.Content
+import Mathbin.RingTheory.Ideal.QuotientOperations
 
 /-!
 # Eisenstein's criterion

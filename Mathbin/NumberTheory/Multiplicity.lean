@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module number_theory.multiplicity
-! leanprover-community/mathlib commit 3d32bf9cef95940e3fe1ca0dd2412e0f21579f46
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Algebra.GeomSum
 import Mathbin.Data.Int.Parity
 import Mathbin.Data.Zmod.Basic
 import Mathbin.NumberTheory.Padics.PadicVal
+import Mathbin.RingTheory.Ideal.QuotientOperations
 
 /-!
 # Multiplicity in Number Theory

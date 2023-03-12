@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.div
-! leanprover-community/mathlib commit 742aa2cb249f23408bba420f8b6fe7a2b8093407
+! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -516,28 +516,6 @@ theorem ker_evalRingHom (x : R) : (evalRingHom x).ker = Ideal.span {X - C x} :=
   ext y
   simpa only [Ideal.mem_span_singleton, dvd_iff_is_root]
 #align polynomial.ker_eval_ring_hom Polynomial.ker_evalRingHom
-
-/-- For a commutative ring $R$, evaluating a polynomial at an element $x \in R$ induces an
-isomorphism of $R$-algebras $R[X] / \langle X - x \rangle \cong R$. -/
-noncomputable def quotientSpanXSubCAlgEquiv (x : R) :
-    (R[X] ⧸ Ideal.span ({X - C x} : Set R[X])) ≃ₐ[R] R :=
-  (AlgEquiv.restrictScalars R <|
-          Ideal.quotientEquivAlgOfEq R
-            (ker_eval_ring_hom x : RingHom.ker (aeval x).toRingHom = _)).symm.trans <|
-    Ideal.quotientKerAlgEquivOfRightInverse fun _ => eval_C
-#align polynomial.quotient_span_X_sub_C_alg_equiv Polynomial.quotientSpanXSubCAlgEquiv
-
-@[simp]
-theorem quotientSpanXSubCAlgEquiv_mk (x : R) (p : R[X]) :
-    quotientSpanXSubCAlgEquiv x (Ideal.Quotient.mk _ p) = p.eval x :=
-  rfl
-#align polynomial.quotient_span_X_sub_C_alg_equiv_mk Polynomial.quotientSpanXSubCAlgEquiv_mk
-
-@[simp]
-theorem quotientSpanXSubCAlgEquiv_symm_apply (x : R) (y : R) :
-    (quotientSpanXSubCAlgEquiv x).symm y = algebraMap R _ y :=
-  rfl
-#align polynomial.quotient_span_X_sub_C_alg_equiv_symm_apply Polynomial.quotientSpanXSubCAlgEquiv_symm_apply
 
 section multiplicity
 
