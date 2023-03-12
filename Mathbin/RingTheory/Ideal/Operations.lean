@@ -1489,7 +1489,7 @@ theorem le_radical : I ≤ radical I := fun r hri => ⟨1, (pow_one r).symm ▸ 
 #print Ideal.radical_eq_iff /-
 /-- An ideal is radical iff it is equal to its radical. -/
 theorem radical_eq_iff : I.radical = I ↔ I.IsRadical := by
-  rw [le_antisymm_iff, and_iff_left le_radical, is_radical]
+  rw [le_antisymm_iff, and_iff_left le_radical, IsRadical]
 #align ideal.radical_eq_iff Ideal.radical_eq_iff
 -/
 

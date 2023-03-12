@@ -262,7 +262,7 @@ theorem flip_b : (flip u).b = u.a :=
 #print PNat.XgcdType.flip_isReduced /-
 theorem flip_isReduced : (flip u).IsReduced ↔ u.IsReduced :=
   by
-  dsimp [is_reduced, flip]
+  dsimp [IsReduced, flip]
   constructor <;> intro h <;> exact h.symm
 #align pnat.xgcd_type.flip_is_reduced PNat.XgcdType.flip_isReduced
 -/
@@ -342,7 +342,7 @@ def finish : XgcdType :=
 #print PNat.XgcdType.finish_isReduced /-
 theorem finish_isReduced : u.finish.IsReduced :=
   by
-  dsimp [is_reduced]
+  dsimp [IsReduced]
   rfl
 #align pnat.xgcd_type.finish_is_reduced PNat.XgcdType.finish_isReduced
 -/

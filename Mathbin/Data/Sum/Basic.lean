@@ -908,10 +908,12 @@ theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f)
 #align function.surjective.sum_map Function.Surjective.sum_map
 -/
 
+#print Function.Bijective.sum_map /-
 theorem Bijective.sum_map {f : α → β} {g : α' → β'} (hf : Bijective f) (hg : Bijective g) :
     Bijective (Sum.map f g) :=
   ⟨hf.Injective.sum_map hg.Injective, hf.Surjective.sum_map hg.Surjective⟩
 #align function.bijective.sum_map Function.Bijective.sum_map
+-/
 
 end Function
 
@@ -919,6 +921,12 @@ namespace Sum
 
 open Function
 
+/- warning: sum.map_injective -> Sum.map_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {f : α -> γ} {g : β -> δ}, Iff (Function.Injective.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (Sum.{u1, u2} α β) (Sum.{u3, u4} γ δ) (Sum.map.{u1, u2, u3, u4} α γ β δ f g)) (And (Function.Injective.{succ u1, succ u3} α γ f) (Function.Injective.{succ u2, succ u4} β δ g))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u1}} {δ : Type.{u2}} {f : α -> γ} {g : β -> δ}, Iff (Function.Injective.{max (succ u4) (succ u3), max (succ u2) (succ u1)} (Sum.{u3, u4} α β) (Sum.{u1, u2} γ δ) (Sum.map.{u3, u4, u1, u2} α γ β δ f g)) (And (Function.Injective.{succ u3, succ u1} α γ f) (Function.Injective.{succ u4, succ u2} β δ g))
+Case conversion may be inaccurate. Consider using '#align sum.map_injective Sum.map_injectiveₓ'. -/
 @[simp]
 theorem map_injective {f : α → γ} {g : β → δ} :
     Injective (Sum.map f g) ↔ Injective f ∧ Injective g :=
@@ -928,6 +936,12 @@ theorem map_injective {f : α → γ} {g : β → δ} :
     fun h => h.1.sum_map h.2⟩
 #align sum.map_injective Sum.map_injective
 
+/- warning: sum.map_surjective -> Sum.map_surjective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {f : α -> γ} {g : β -> δ}, Iff (Function.Surjective.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (Sum.{u1, u2} α β) (Sum.{u3, u4} γ δ) (Sum.map.{u1, u2, u3, u4} α γ β δ f g)) (And (Function.Surjective.{succ u1, succ u3} α γ f) (Function.Surjective.{succ u2, succ u4} β δ g))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u1}} {δ : Type.{u2}} {f : α -> γ} {g : β -> δ}, Iff (Function.Surjective.{max (succ u4) (succ u3), max (succ u2) (succ u1)} (Sum.{u3, u4} α β) (Sum.{u1, u2} γ δ) (Sum.map.{u3, u4, u1, u2} α γ β δ f g)) (And (Function.Surjective.{succ u3, succ u1} α γ f) (Function.Surjective.{succ u4, succ u2} β δ g))
+Case conversion may be inaccurate. Consider using '#align sum.map_surjective Sum.map_surjectiveₓ'. -/
 @[simp]
 theorem map_surjective {f : α → γ} {g : β → δ} :
     Surjective (Sum.map f g) ↔ Surjective f ∧ Surjective g :=
@@ -942,6 +956,12 @@ theorem map_surjective {f : α → γ} {g : β → δ} :
     fun h => h.1.sum_map h.2⟩
 #align sum.map_surjective Sum.map_surjective
 
+/- warning: sum.map_bijective -> Sum.map_bijective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {f : α -> γ} {g : β -> δ}, Iff (Function.Bijective.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (Sum.{u1, u2} α β) (Sum.{u3, u4} γ δ) (Sum.map.{u1, u2, u3, u4} α γ β δ f g)) (And (Function.Bijective.{succ u1, succ u3} α γ f) (Function.Bijective.{succ u2, succ u4} β δ g))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u1}} {δ : Type.{u2}} {f : α -> γ} {g : β -> δ}, Iff (Function.Bijective.{max (succ u4) (succ u3), max (succ u2) (succ u1)} (Sum.{u3, u4} α β) (Sum.{u1, u2} γ δ) (Sum.map.{u3, u4, u1, u2} α γ β δ f g)) (And (Function.Bijective.{succ u3, succ u1} α γ f) (Function.Bijective.{succ u4, succ u2} β δ g))
+Case conversion may be inaccurate. Consider using '#align sum.map_bijective Sum.map_bijectiveₓ'. -/
 @[simp]
 theorem map_bijective {f : α → γ} {g : β → δ} :
     Bijective (Sum.map f g) ↔ Bijective f ∧ Bijective g :=

@@ -674,6 +674,12 @@ namespace Prod
 
 open Function
 
+/- warning: prod.map_injective -> Prod.map_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Nonempty.{succ u2} β] {f : α -> γ} {g : β -> δ}, Iff (Function.Injective.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.map.{u1, u3, u2, u4} α γ β δ f g)) (And (Function.Injective.{succ u1, succ u3} α γ f) (Function.Injective.{succ u2, succ u4} β δ g))
+but is expected to have type
+  forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u1}} {δ : Type.{u2}} [_inst_1 : Nonempty.{succ u4} α] [_inst_2 : Nonempty.{succ u3} β] {f : α -> γ} {g : β -> δ}, Iff (Function.Injective.{max (succ u3) (succ u4), max (succ u2) (succ u1)} (Prod.{u4, u3} α β) (Prod.{u1, u2} γ δ) (Prod.map.{u4, u1, u3, u2} α γ β δ f g)) (And (Function.Injective.{succ u4, succ u1} α γ f) (Function.Injective.{succ u3, succ u2} β δ g))
+Case conversion may be inaccurate. Consider using '#align prod.map_injective Prod.map_injectiveₓ'. -/
 @[simp]
 theorem map_injective [Nonempty α] [Nonempty β] {f : α → γ} {g : β → δ} :
     Injective (map f g) ↔ Injective f ∧ Injective g :=
@@ -688,6 +694,12 @@ theorem map_injective [Nonempty α] [Nonempty β] {f : α → γ} {g : β → δ
     fun h => h.1.Prod_map h.2⟩
 #align prod.map_injective Prod.map_injective
 
+/- warning: prod.map_surjective -> Prod.map_surjective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Nonempty.{succ u3} γ] [_inst_2 : Nonempty.{succ u4} δ] {f : α -> γ} {g : β -> δ}, Iff (Function.Surjective.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.map.{u1, u3, u2, u4} α γ β δ f g)) (And (Function.Surjective.{succ u1, succ u3} α γ f) (Function.Surjective.{succ u2, succ u4} β δ g))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u4}} {δ : Type.{u3}} [_inst_1 : Nonempty.{succ u4} γ] [_inst_2 : Nonempty.{succ u3} δ] {f : α -> γ} {g : β -> δ}, Iff (Function.Surjective.{max (succ u2) (succ u1), max (succ u3) (succ u4)} (Prod.{u1, u2} α β) (Prod.{u4, u3} γ δ) (Prod.map.{u1, u4, u2, u3} α γ β δ f g)) (And (Function.Surjective.{succ u1, succ u4} α γ f) (Function.Surjective.{succ u2, succ u3} β δ g))
+Case conversion may be inaccurate. Consider using '#align prod.map_surjective Prod.map_surjectiveₓ'. -/
 @[simp]
 theorem map_surjective [Nonempty γ] [Nonempty δ] {f : α → γ} {g : β → δ} :
     Surjective (map f g) ↔ Surjective f ∧ Surjective g :=
@@ -703,6 +715,12 @@ theorem map_surjective [Nonempty γ] [Nonempty δ] {f : α → γ} {g : β → �
     fun h => h.1.Prod_map h.2⟩
 #align prod.map_surjective Prod.map_surjective
 
+/- warning: prod.map_bijective -> Prod.map_bijective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Nonempty.{succ u2} β] {f : α -> γ} {g : β -> δ}, Iff (Function.Bijective.{max (succ u1) (succ u2), max (succ u3) (succ u4)} (Prod.{u1, u2} α β) (Prod.{u3, u4} γ δ) (Prod.map.{u1, u3, u2, u4} α γ β δ f g)) (And (Function.Bijective.{succ u1, succ u3} α γ f) (Function.Bijective.{succ u2, succ u4} β δ g))
+but is expected to have type
+  forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u1}} {δ : Type.{u2}} [_inst_1 : Nonempty.{succ u4} α] [_inst_2 : Nonempty.{succ u3} β] {f : α -> γ} {g : β -> δ}, Iff (Function.Bijective.{max (succ u3) (succ u4), max (succ u2) (succ u1)} (Prod.{u4, u3} α β) (Prod.{u1, u2} γ δ) (Prod.map.{u4, u1, u3, u2} α γ β δ f g)) (And (Function.Bijective.{succ u4, succ u1} α γ f) (Function.Bijective.{succ u3, succ u2} β δ g))
+Case conversion may be inaccurate. Consider using '#align prod.map_bijective Prod.map_bijectiveₓ'. -/
 @[simp]
 theorem map_bijective [Nonempty α] [Nonempty β] {f : α → γ} {g : β → δ} :
     Bijective (map f g) ↔ Bijective f ∧ Bijective g :=
@@ -712,6 +730,12 @@ theorem map_bijective [Nonempty α] [Nonempty β] {f : α → γ} {g : β → δ
   exact (map_injective.and map_surjective).trans (and_and_and_comm _ _ _ _)
 #align prod.map_bijective Prod.map_bijective
 
+/- warning: prod.map_left_inverse -> Prod.map_leftInverse is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Nonempty.{succ u2} β] [_inst_2 : Nonempty.{succ u4} δ] {f₁ : α -> β} {g₁ : γ -> δ} {f₂ : β -> α} {g₂ : δ -> γ}, Iff (Function.LeftInverse.{max (succ u2) (succ u4), max (succ u1) (succ u3)} (Prod.{u2, u4} β δ) (Prod.{u1, u3} α γ) (Prod.map.{u1, u2, u3, u4} α β γ δ f₁ g₁) (Prod.map.{u2, u1, u4, u3} β α δ γ f₂ g₂)) (And (Function.LeftInverse.{succ u2, succ u1} β α f₁ f₂) (Function.LeftInverse.{succ u4, succ u3} δ γ g₁ g₂))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u4}} {γ : Type.{u2}} {δ : Type.{u3}} [_inst_1 : Nonempty.{succ u4} β] [_inst_2 : Nonempty.{succ u3} δ] {f₁ : α -> β} {g₁ : γ -> δ} {f₂ : β -> α} {g₂ : δ -> γ}, Iff (Function.LeftInverse.{max (succ u3) (succ u4), max (succ u2) (succ u1)} (Prod.{u4, u3} β δ) (Prod.{u1, u2} α γ) (Prod.map.{u1, u4, u2, u3} α β γ δ f₁ g₁) (Prod.map.{u4, u1, u3, u2} β α δ γ f₂ g₂)) (And (Function.LeftInverse.{succ u4, succ u1} β α f₁ f₂) (Function.LeftInverse.{succ u3, succ u2} δ γ g₁ g₂))
+Case conversion may be inaccurate. Consider using '#align prod.map_left_inverse Prod.map_leftInverseₓ'. -/
 @[simp]
 theorem map_leftInverse [Nonempty β] [Nonempty δ] {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α}
     {g₂ : δ → γ} : LeftInverse (map f₁ g₁) (map f₂ g₂) ↔ LeftInverse f₁ f₂ ∧ LeftInverse g₁ g₂ :=
@@ -725,12 +749,24 @@ theorem map_leftInverse [Nonempty β] [Nonempty δ] {f₁ : α → β} {g₁ : �
     fun h => h.1.Prod_map h.2⟩
 #align prod.map_left_inverse Prod.map_leftInverse
 
+/- warning: prod.map_right_inverse -> Prod.map_rightInverse is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Nonempty.{succ u3} γ] {f₁ : α -> β} {g₁ : γ -> δ} {f₂ : β -> α} {g₂ : δ -> γ}, Iff (Function.RightInverse.{max (succ u2) (succ u4), max (succ u1) (succ u3)} (Prod.{u2, u4} β δ) (Prod.{u1, u3} α γ) (Prod.map.{u1, u2, u3, u4} α β γ δ f₁ g₁) (Prod.map.{u2, u1, u4, u3} β α δ γ f₂ g₂)) (And (Function.RightInverse.{succ u2, succ u1} β α f₁ f₂) (Function.RightInverse.{succ u4, succ u3} δ γ g₁ g₂))
+but is expected to have type
+  forall {α : Type.{u4}} {β : Type.{u1}} {γ : Type.{u3}} {δ : Type.{u2}} [_inst_1 : Nonempty.{succ u4} α] [_inst_2 : Nonempty.{succ u3} γ] {f₁ : α -> β} {g₁ : γ -> δ} {f₂ : β -> α} {g₂ : δ -> γ}, Iff (Function.RightInverse.{max (succ u2) (succ u1), max (succ u3) (succ u4)} (Prod.{u1, u2} β δ) (Prod.{u4, u3} α γ) (Prod.map.{u4, u1, u3, u2} α β γ δ f₁ g₁) (Prod.map.{u1, u4, u2, u3} β α δ γ f₂ g₂)) (And (Function.RightInverse.{succ u1, succ u4} β α f₁ f₂) (Function.RightInverse.{succ u2, succ u3} δ γ g₁ g₂))
+Case conversion may be inaccurate. Consider using '#align prod.map_right_inverse Prod.map_rightInverseₓ'. -/
 @[simp]
 theorem map_rightInverse [Nonempty α] [Nonempty γ] {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α}
     {g₂ : δ → γ} : RightInverse (map f₁ g₁) (map f₂ g₂) ↔ RightInverse f₁ f₂ ∧ RightInverse g₁ g₂ :=
   map_leftInverse
 #align prod.map_right_inverse Prod.map_rightInverse
 
+/- warning: prod.map_involutive -> Prod.map_involutive is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Nonempty.{succ u2} β] {f : α -> α} {g : β -> β}, Iff (Function.Involutive.{max (succ u1) (succ u2)} (Prod.{u1, u2} α β) (Prod.map.{u1, u1, u2, u2} α α β β f g)) (And (Function.Involutive.{succ u1} α f) (Function.Involutive.{succ u2} β g))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Nonempty.{succ u1} β] {f : α -> α} {g : β -> β}, Iff (Function.Involutive.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.map.{u2, u2, u1, u1} α α β β f g)) (And (Function.Involutive.{succ u2} α f) (Function.Involutive.{succ u1} β g))
+Case conversion may be inaccurate. Consider using '#align prod.map_involutive Prod.map_involutiveₓ'. -/
 @[simp]
 theorem map_involutive [Nonempty α] [Nonempty β] {f : α → α} {g : β → β} :
     Involutive (map f g) ↔ Involutive f ∧ Involutive g :=
