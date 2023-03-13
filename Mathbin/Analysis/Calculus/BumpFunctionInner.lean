@@ -342,8 +342,8 @@ def someContDiffBumpBase (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
 #align some_cont_diff_bump_base someContDiffBumpBase
 
 /-- Any inner product space has smooth bump functions. -/
-instance (priority := 100) hasContDiffBumpOfInnerProductSpace (E : Type _) [InnerProductSpace ℝ E] :
-    HasContDiffBump E :=
+instance (priority := 100) hasContDiffBump_of_innerProductSpace (E : Type _)
+    [InnerProductSpace ℝ E] : HasContDiffBump E :=
   let e : ContDiffBumpBase E :=
     { toFun := fun R x => Real.smoothTransition ((R - ‖x‖) / (R - 1))
       mem_Icc := fun R x => ⟨Real.smoothTransition.nonneg _, Real.smoothTransition.le_one _⟩
@@ -390,7 +390,7 @@ instance (priority := 100) hasContDiffBumpOfInnerProductSpace (E : Type _) [Inne
           apply (Real.smoothTransition.pos_of_pos _).ne'
           apply div_pos <;> linarith }
   ⟨⟨e⟩⟩
-#align has_cont_diff_bump_of_inner_product_space hasContDiffBumpOfInnerProductSpace
+#align has_cont_diff_bump_of_inner_product_space hasContDiffBump_of_innerProductSpace
 
 namespace ContDiffBump
 

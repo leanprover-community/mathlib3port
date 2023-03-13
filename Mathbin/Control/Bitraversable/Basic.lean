@@ -89,11 +89,11 @@ export IsLawfulBitraversable (id_bitraverse comp_bitraverse bitraverse_eq_bimap_
 
 open IsLawfulBitraversable
 
-attribute [higher_order bitraverse_id_id] id_bitraverse
+attribute [higher_order.1bitraverse_id_id] id_bitraverse
 
-attribute [higher_order bitraverse_comp] comp_bitraverse
+attribute [higher_order.1bitraverse_comp] comp_bitraverse
 
-attribute [higher_order] binaturality bitraverse_eq_bimap_id
+attribute [higher_order.1] binaturality bitraverse_eq_bimap_id
 
 export IsLawfulBitraversable (bitraverse_id_id bitraverse_comp)
 

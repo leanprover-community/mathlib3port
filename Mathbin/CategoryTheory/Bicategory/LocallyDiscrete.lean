@@ -33,12 +33,14 @@ universe w₂ v v₁ v₂ u u₁ u₂
 
 variable {C : Type u}
 
+#print CategoryTheory.LocallyDiscrete /-
 /-- A type synonym for promoting any type to a category,
 with the only morphisms being equalities.
 -/
 def LocallyDiscrete (C : Type u) :=
   C
 #align category_theory.locally_discrete CategoryTheory.LocallyDiscrete
+-/
 
 namespace LocallyDiscrete
 
@@ -53,21 +55,26 @@ instance [CategoryStruct.{v} C] : CategoryStruct (LocallyDiscrete C)
 
 variable {C} [CategoryStruct.{v} C]
 
+#print CategoryTheory.LocallyDiscrete.homSmallCategory /-
 instance (priority := 900) homSmallCategory (X Y : LocallyDiscrete C) : SmallCategory (X ⟶ Y) :=
   CategoryTheory.discreteCategory (X ⟶ Y)
 #align category_theory.locally_discrete.hom_small_category CategoryTheory.LocallyDiscrete.homSmallCategory
+-/
 
+#print CategoryTheory.LocallyDiscrete.eq_of_hom /-
 /-- Extract the equation from a 2-morphism in a locally discrete 2-category. -/
 theorem eq_of_hom {X Y : LocallyDiscrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f = g :=
   by
   have : discrete.mk f.as = discrete.mk g.as := congr_arg discrete.mk (eq_of_hom η)
   simpa using this
 #align category_theory.locally_discrete.eq_of_hom CategoryTheory.LocallyDiscrete.eq_of_hom
+-/
 
 end LocallyDiscrete
 
 variable (C) [Category.{v} C]
 
+#print CategoryTheory.locallyDiscreteBicategory /-
 /-- The locally discrete bicategory on a category is a bicategory in which the objects and the
 1-morphisms are the same as those in the underlying category, and the 2-morphisms are the
 equalities between 1-morphisms.
@@ -89,7 +96,9 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C)
       unfold_projs
       simp only [category.comp_id, mk_as]
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
+-/
 
+#print CategoryTheory.locallyDiscreteBicategory.strict /-
 /-- A locally discrete bicategory is strict. -/
 instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C)
     where
@@ -109,9 +118,11 @@ instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C)
     unfold_projs
     apply category.assoc
 #align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
+-/
 
 variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
 
+#print CategoryTheory.Functor.toOplaxFunctor /-
 /--
 If `B` is a strict bicategory and `I` is a (1-)category, any functor (of 1-categories) `I ⥤ B` can
 be promoted to an oplax functor from `locally_discrete I` to `B`.
@@ -125,6 +136,7 @@ def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B
   map_id i := eqToHom (F.map_id i)
   map_comp i j k f g := eqToHom (F.map_comp f.as g.as)
 #align category_theory.functor.to_oplax_functor CategoryTheory.Functor.toOplaxFunctor
+-/
 
 end CategoryTheory
 

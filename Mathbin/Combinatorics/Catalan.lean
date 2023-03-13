@@ -57,6 +57,7 @@ open Finset
 
 open Finset.Nat.antidiagonal (fst_le snd_le)
 
+#print catalan /-
 /-- The recursive definition of the sequence of Catalan numbers:
 `catalan (n + 1) = ∑ i : fin n.succ, catalan i * catalan (n - i)` -/
 def catalan : ℕ → ℕ
@@ -67,24 +68,33 @@ def catalan : ℕ → ℕ
       have := Nat.lt_succ_iff.mpr (n.sub_le i)
       catalan i * catalan (n - i)
 #align catalan catalan
+-/
 
+#print catalan_zero /-
 @[simp]
 theorem catalan_zero : catalan 0 = 1 := by rw [catalan]
 #align catalan_zero catalan_zero
+-/
 
+#print catalan_succ /-
 theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Fin n.succ, catalan i * catalan (n - i) := by
   rw [catalan]
 #align catalan_succ catalan_succ
+-/
 
+#print catalan_succ' /-
 theorem catalan_succ' (n : ℕ) :
     catalan (n + 1) = ∑ ij in Nat.antidiagonal n, catalan ij.1 * catalan ij.2 := by
   rw [catalan_succ, nat.sum_antidiagonal_eq_sum_range_succ (fun x y => catalan x * catalan y) n,
     sum_range]
 #align catalan_succ' catalan_succ'
+-/
 
+#print catalan_one /-
 @[simp]
 theorem catalan_one : catalan 1 = 1 := by simp [catalan_succ]
 #align catalan_one catalan_one
+-/
 
 /-- A helper sequence that can be used to prove the equality of the recursive and the explicit
 definition using a telescoping sum argument. -/
@@ -125,6 +135,7 @@ private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
   ring
 #align gosper_catalan_sub_eq_central_binom_div gosper_catalan_sub_eq_central_binom_div
 
+#print catalan_eq_centralBinom_div /-
 theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n + 1) :=
   by
   suffices (catalan n : ℚ) = Nat.centralBinom n / (n + 1)
@@ -151,31 +162,41 @@ theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n 
           sum_range_sub, Nat.succ_eq_add_one]
         exact_mod_cast gosper_catalan_sub_eq_central_binom_div d
 #align catalan_eq_central_binom_div catalan_eq_centralBinom_div
+-/
 
+#print succ_mul_catalan_eq_centralBinom /-
 theorem succ_mul_catalan_eq_centralBinom (n : ℕ) : (n + 1) * catalan n = n.centralBinom :=
   (Nat.eq_mul_of_div_eq_right n.succ_dvd_centralBinom (catalan_eq_centralBinom_div n).symm).symm
 #align succ_mul_catalan_eq_central_binom succ_mul_catalan_eq_centralBinom
+-/
 
+#print catalan_two /-
 theorem catalan_two : catalan 2 = 2 := by
   norm_num [catalan_eq_centralBinom_div, Nat.centralBinom, Nat.choose]
 #align catalan_two catalan_two
+-/
 
+#print catalan_three /-
 theorem catalan_three : catalan 3 = 5 := by
   norm_num [catalan_eq_centralBinom_div, Nat.centralBinom, Nat.choose]
 #align catalan_three catalan_three
+-/
 
 namespace Tree
 
 open Tree
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Tree.pairwiseNode /-
 /-- Given two finsets, find all trees that can be formed with
   left child in `a` and right child in `b` -/
 @[reducible]
 def pairwiseNode (a b : Finset (Tree Unit)) : Finset (Tree Unit) :=
   (a ×ˢ b).map ⟨fun x => x.1 △ x.2, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => fun h => by simpa using h⟩
 #align tree.pairwise_node Tree.pairwiseNode
+-/
 
+#print Tree.treesOfNumNodesEq /-
 /-- A finset of all trees with `n` nodes. See `mem_trees_of_nodes_eq` -/
 def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
   | 0 => {nil}
@@ -185,12 +206,21 @@ def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
       have := Nat.lt_succ_of_le (snd_le ijh.2)
       pairwiseNode (trees_of_num_nodes_eq ijh.1.1) (trees_of_num_nodes_eq ijh.1.2)
 #align tree.trees_of_num_nodes_eq Tree.treesOfNumNodesEq
+-/
 
+#print Tree.treesOfNodesEq_zero /-
 @[simp]
-theorem trees_of_nodes_eq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_num_nodes_eq]
-#align tree.trees_of_nodes_eq_zero Tree.trees_of_nodes_eq_zero
+theorem treesOfNodesEq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_num_nodes_eq]
+#align tree.trees_of_nodes_eq_zero Tree.treesOfNodesEq_zero
+-/
 
-theorem trees_of_nodes_eq_succ (n : ℕ) :
+/- warning: tree.trees_of_nodes_eq_succ -> Tree.treesOfNodesEq_succ is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.bunionᵢ.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => Tree.decidableEq.{0} Unit (fun (a : Unit) (b : Unit) => PUnit.decidableEq.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
+but is expected to have type
+  forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.bunionᵢ.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => instDecidableEqTree.{0} Unit (fun (a : Unit) (b : Unit) => instDecidableEqPUnit.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
+Case conversion may be inaccurate. Consider using '#align tree.trees_of_nodes_eq_succ Tree.treesOfNodesEq_succₓ'. -/
+theorem treesOfNodesEq_succ (n : ℕ) :
     treesOfNumNodesEq (n + 1) =
       (Nat.antidiagonal n).bunionᵢ fun ij =>
         pairwiseNode (treesOfNumNodesEq ij.1) (treesOfNumNodesEq ij.2) :=
@@ -198,27 +228,33 @@ theorem trees_of_nodes_eq_succ (n : ℕ) :
   rw [trees_of_num_nodes_eq]
   ext
   simp
-#align tree.trees_of_nodes_eq_succ Tree.trees_of_nodes_eq_succ
+#align tree.trees_of_nodes_eq_succ Tree.treesOfNodesEq_succ
 
+#print Tree.mem_treesOfNodesEq /-
 @[simp]
-theorem mem_trees_of_nodes_eq {x : Tree Unit} {n : ℕ} : x ∈ treesOfNumNodesEq n ↔ x.numNodes = n :=
+theorem mem_treesOfNodesEq {x : Tree Unit} {n : ℕ} : x ∈ treesOfNumNodesEq n ↔ x.numNodes = n :=
   by
   induction x using Tree.unitRecOn generalizing n <;> cases n <;>
     simp [trees_of_nodes_eq_succ, Nat.succ_eq_add_one, *]
   trivial
-#align tree.mem_trees_of_nodes_eq Tree.mem_trees_of_nodes_eq
+#align tree.mem_trees_of_nodes_eq Tree.mem_treesOfNodesEq
+-/
 
+#print Tree.mem_trees_of_nodes_eq_numNodes /-
 theorem mem_trees_of_nodes_eq_numNodes (x : Tree Unit) : x ∈ treesOfNumNodesEq x.numNodes :=
-  mem_trees_of_nodes_eq.mpr rfl
+  mem_treesOfNodesEq.mpr rfl
 #align tree.mem_trees_of_nodes_eq_num_nodes Tree.mem_trees_of_nodes_eq_numNodes
+-/
 
+#print Tree.coe_treesOfNodesEq /-
 @[simp, norm_cast]
-theorem coe_trees_of_nodes_eq (n : ℕ) :
-    ↑(treesOfNumNodesEq n) = { x : Tree Unit | x.numNodes = n } :=
+theorem coe_treesOfNodesEq (n : ℕ) : ↑(treesOfNumNodesEq n) = { x : Tree Unit | x.numNodes = n } :=
   Set.ext (by simp)
-#align tree.coe_trees_of_nodes_eq Tree.coe_trees_of_nodes_eq
+#align tree.coe_trees_of_nodes_eq Tree.coe_treesOfNodesEq
+-/
 
-theorem trees_of_nodes_eq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = catalan n :=
+#print Tree.treesOfNodesEq_card_eq_catalan /-
+theorem treesOfNodesEq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = catalan n :=
   by
   induction' n using Nat.case_strong_induction_on with n ih
   · simp
@@ -230,7 +266,8 @@ theorem trees_of_nodes_eq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card
     rintro ⟨i, j⟩ _ ⟨i', j'⟩ _
     clear * -
     tidy
-#align tree.trees_of_nodes_eq_card_eq_catalan Tree.trees_of_nodes_eq_card_eq_catalan
+#align tree.trees_of_nodes_eq_card_eq_catalan Tree.treesOfNodesEq_card_eq_catalan
+-/
 
 end Tree
 

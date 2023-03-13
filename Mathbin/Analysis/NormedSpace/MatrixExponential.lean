@@ -152,7 +152,7 @@ variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [
 theorem exp_add_of_commute (A B : Matrix m m 𝔸) (h : Commute A B) :
     exp 𝕂 (A + B) = exp 𝕂 A ⬝ exp 𝕂 B :=
   by
-  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_add_of_commute h
@@ -163,7 +163,7 @@ theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸)
     exp 𝕂 (∑ i in s, f i) =
       s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj _ => (h.of_refl hi hj).exp 𝕂 :=
   by
-  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_sum_of_commute s f h
@@ -171,7 +171,7 @@ theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸)
 
 theorem exp_nsmul (n : ℕ) (A : Matrix m m 𝔸) : exp 𝕂 (n • A) = exp 𝕂 A ^ n :=
   by
-  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_nsmul n A
@@ -179,7 +179,7 @@ theorem exp_nsmul (n : ℕ) (A : Matrix m m 𝔸) : exp 𝕂 (n • A) = exp �
 
 theorem isUnit_exp (A : Matrix m m 𝔸) : IsUnit (exp 𝕂 A) :=
   by
-  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact isUnit_exp _ A
@@ -188,7 +188,7 @@ theorem isUnit_exp (A : Matrix m m 𝔸) : IsUnit (exp 𝕂 A) :=
 theorem exp_units_conj (U : (Matrix m m 𝔸)ˣ) (A : Matrix m m 𝔸) :
     exp 𝕂 (↑U ⬝ A ⬝ ↑U⁻¹ : Matrix m m 𝔸) = ↑U ⬝ exp 𝕂 A ⬝ ↑U⁻¹ :=
   by
-  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_units_conj _ U A
@@ -209,7 +209,7 @@ variable [IsROrC 𝕂] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] [
 theorem exp_neg (A : Matrix m m 𝔸) : exp 𝕂 (-A) = (exp 𝕂 A)⁻¹ :=
   by
   rw [nonsing_inv_eq_ring_inverse]
-  letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
+  letI : SeminormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact (Ring.inverse_exp _ A).symm

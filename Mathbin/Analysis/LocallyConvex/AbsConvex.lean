@@ -86,7 +86,7 @@ end NontriviallyNormedField
 
 section AbsolutelyConvexSets
 
-variable [TopologicalSpace E] [AddCommMonoid E] [Zero E] [SemiNormedRing 𝕜]
+variable [TopologicalSpace E] [AddCommMonoid E] [Zero E] [SeminormedRing 𝕜]
 
 variable [SMul 𝕜 E] [SMul ℝ E]
 

@@ -1224,19 +1224,19 @@ theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concy
 #align euclidean_geometry.concyclic.subset EuclideanGeometry.Concyclic.subset
 
 /-- The empty set is concyclic. -/
-theorem concyclicEmpty : Concyclic (∅ : Set P) :=
+theorem concyclic_empty : Concyclic (∅ : Set P) :=
   ⟨cospherical_empty, coplanar_empty ℝ P⟩
-#align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclicEmpty
+#align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclic_empty
 
 /-- A single point is concyclic. -/
-theorem concyclicSingleton (p : P) : Concyclic ({p} : Set P) :=
+theorem concyclic_singleton (p : P) : Concyclic ({p} : Set P) :=
   ⟨cospherical_singleton p, coplanar_singleton ℝ p⟩
-#align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclicSingleton
+#align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclic_singleton
 
 /-- Two points are concyclic. -/
-theorem concyclicPair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
+theorem concyclic_pair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
   ⟨cospherical_pair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
-#align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclicPair
+#align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclic_pair
 
 end EuclideanGeometry
 

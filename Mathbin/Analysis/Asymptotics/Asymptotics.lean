@@ -63,8 +63,8 @@ variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' 
 variable [Norm E] [Norm F] [Norm G]
 
 variable [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F'] [SeminormedAddCommGroup G']
-  [NormedAddCommGroup E''] [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SemiNormedRing R]
-  [SemiNormedRing R']
+  [NormedAddCommGroup E''] [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SeminormedRing R]
+  [SeminormedRing R']
 
 variable [NormedField 𝕜] [NormedField 𝕜']
 

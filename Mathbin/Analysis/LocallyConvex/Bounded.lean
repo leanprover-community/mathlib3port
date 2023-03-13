@@ -52,13 +52,13 @@ open Topology Pointwise
 
 namespace Bornology
 
-section SemiNormedRing
+section SeminormedRing
 
 section Zero
 
 variable (𝕜)
 
-variable [SemiNormedRing 𝕜] [SMul 𝕜 E] [Zero E]
+variable [SeminormedRing 𝕜] [SMul 𝕜 E] [Zero E]
 
 variable [TopologicalSpace E]
 
@@ -99,11 +99,11 @@ theorem IsVonNBounded.union {s₁ s₂ : Set E} (hs₁ : IsVonNBounded 𝕜 s₁
 
 end Zero
 
-end SemiNormedRing
+end SeminormedRing
 
 section MultipleTopologies
 
-variable [SemiNormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
+variable [SeminormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 /-- If a topology `t'` is coarser than `t`, then any set `s` that is bounded with respect to
 `t` is bounded with respect to `t'`. -/

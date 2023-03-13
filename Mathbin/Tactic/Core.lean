@@ -2102,7 +2102,7 @@ add_tactic_doc
     declNames := [`tactic.higher_order_attr]
     tags := ["lemma derivation"] }
 
-attribute [higher_order map_comp_pure] map_pure
+attribute [higher_order.1map_comp_pure] map_pure
 
 /-- Copies a definition into the `tactic.interactive` namespace to make it usable
 in proof scripts. It allows one to write

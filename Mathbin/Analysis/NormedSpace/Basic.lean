@@ -491,12 +491,12 @@ variables [normed_field 𝕜] [non_unital_semi_normed_ring 𝕜']
 variables [normed_module 𝕜 𝕜'] [smul_comm_class 𝕜 𝕜' 𝕜'] [is_scalar_tower 𝕜 𝕜' 𝕜']
 ```
 -/
-class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] extends
+class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SeminormedRing 𝕜'] extends
   Algebra 𝕜 𝕜' where
   norm_smul_le : ∀ (r : 𝕜) (x : 𝕜'), ‖r • x‖ ≤ ‖r‖ * ‖x‖
 #align normed_algebra NormedAlgebra
 
-variable {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
+variable {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SeminormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
 instance (priority := 100) NormedAlgebra.toNormedSpace : NormedSpace 𝕜 𝕜'
     where norm_smul_le := NormedAlgebra.norm_smul_le
@@ -586,18 +586,18 @@ instance : NormedAlgebra 𝕜 (ULift 𝕜') :=
   { ULift.normedSpace with }
 
 /-- The product of two normed algebras is a normed algebra, with the sup norm. -/
-instance Prod.normedAlgebra {E F : Type _} [SemiNormedRing E] [SemiNormedRing F] [NormedAlgebra 𝕜 E]
+instance Prod.normedAlgebra {E F : Type _} [SeminormedRing E] [SeminormedRing F] [NormedAlgebra 𝕜 E]
     [NormedAlgebra 𝕜 F] : NormedAlgebra 𝕜 (E × F) :=
   { Prod.normedSpace with }
 #align prod.normed_algebra Prod.normedAlgebra
 
 /-- The product of finitely many normed algebras is a normed algebra, with the sup norm. -/
-instance Pi.normedAlgebra {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedRing (E i)]
+instance Pi.normedAlgebra {E : ι → Type _} [Fintype ι] [∀ i, SeminormedRing (E i)]
     [∀ i, NormedAlgebra 𝕜 (E i)] : NormedAlgebra 𝕜 (∀ i, E i) :=
   { Pi.normedSpace, Pi.algebra _ E with }
 #align pi.normed_algebra Pi.normedAlgebra
 
-instance MulOpposite.normedAlgebra {E : Type _} [SemiNormedRing E] [NormedAlgebra 𝕜 E] :
+instance MulOpposite.normedAlgebra {E : Type _} [SeminormedRing E] [NormedAlgebra 𝕜 E] :
     NormedAlgebra 𝕜 Eᵐᵒᵖ :=
   { MulOpposite.normedSpace with }
 #align mul_opposite.normed_algebra MulOpposite.normedAlgebra
@@ -610,14 +610,14 @@ end NormedAlgebra
 See note [reducible non-instances] -/
 @[reducible]
 def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Ring β] [Algebra α β]
-    [SemiNormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
-    @NormedAlgebra α β _ (SemiNormedRing.induced β γ f)
+    [SeminormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
+    @NormedAlgebra α β _ (SeminormedRing.induced β γ f)
     where norm_smul_le a b := by
     unfold norm
     exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
 #align normed_algebra.induced NormedAlgebra.induced
 
-instance Subalgebra.toNormedAlgebra {𝕜 A : Type _} [SemiNormedRing A] [NormedField 𝕜]
+instance Subalgebra.toNormedAlgebra {𝕜 A : Type _} [SeminormedRing A] [NormedField 𝕜]
     [NormedAlgebra 𝕜 A] (S : Subalgebra 𝕜 A) : NormedAlgebra 𝕜 S :=
   @NormedAlgebra.induced _ 𝕜 S A _ (SubringClass.toRing S) S.Algebra _ _ _ S.val
 #align subalgebra.to_normed_algebra Subalgebra.toNormedAlgebra

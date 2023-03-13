@@ -48,9 +48,9 @@ open Pointwise Topology
 
 variable {𝕜 𝕝 E : Type _} {ι : Sort _} {κ : ι → Sort _}
 
-section SemiNormedRing
+section SeminormedRing
 
-variable [SemiNormedRing 𝕜]
+variable [SeminormedRing 𝕜]
 
 section SMul
 
@@ -259,7 +259,7 @@ theorem balanced_zero : Balanced 𝕜 (0 : Set E) := fun a ha => (smul_zero _).S
 
 end Module
 
-end SemiNormedRing
+end SeminormedRing
 
 section NormedField
 

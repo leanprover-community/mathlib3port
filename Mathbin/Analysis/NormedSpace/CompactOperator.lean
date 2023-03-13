@@ -99,7 +99,7 @@ end
 
 section Bounded
 
-variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [SemiNormedRing 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂}
+variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [SeminormedRing 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂}
   {M₁ M₂ : Type _} [TopologicalSpace M₁] [AddCommMonoid M₁] [TopologicalSpace M₂] [AddCommMonoid M₂]
   [Module 𝕜₁ M₁] [Module 𝕜₂ M₂] [ContinuousConstSMul 𝕜₂ M₂]
 
@@ -125,7 +125,7 @@ end Bounded
 
 section NormedSpace
 
-variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [SemiNormedRing 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂}
+variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [SeminormedRing 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂}
   {M₁ M₂ M₃ : Type _} [SeminormedAddCommGroup M₁] [TopologicalSpace M₂] [AddCommMonoid M₂]
   [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂]
 

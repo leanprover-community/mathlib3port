@@ -372,7 +372,7 @@ theorem mem_conjInvariantSubalgebra {A : Subalgebra ℝ C(X, 𝕜)} (hA : ConjIn
 #align continuous_map.mem_conj_invariant_subalgebra ContinuousMap.mem_conjInvariantSubalgebra
 
 /-- If a set `S` is conjugation-invariant, then its `𝕜`-span is conjugation-invariant. -/
-theorem subalgebraConjInvariant {S : Set C(X, 𝕜)}
+theorem subalgebra_conj_invariant {S : Set C(X, 𝕜)}
     (hS : ∀ f, f ∈ S → (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ S) :
     ConjInvariantSubalgebra ((Algebra.adjoin 𝕜 S).restrictScalars ℝ) :=
   by
@@ -389,7 +389,7 @@ theorem subalgebraConjInvariant {S : Set C(X, 𝕜)}
   · intro f g hf hg
     convert Subalgebra.mul_mem _ hf hg
     exact AlgHom.map_mul _ f g
-#align continuous_map.subalgebra_conj_invariant ContinuousMap.subalgebraConjInvariant
+#align continuous_map.subalgebra_conj_invariant ContinuousMap.subalgebra_conj_invariant
 
 end ContinuousMap
 

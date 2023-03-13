@@ -429,11 +429,11 @@ theorem cospherical_of_two_zsmul_oangle_eq_of_not_collinear {p₁ p₂ p₃ p₄
 
 /-- Converse of "angles in same segment are equal" and "opposite angles of a cyclic quadrilateral
 add to π", for oriented angles mod π, with a "concyclic" conclusion. -/
-theorem concyclicOfTwoZsmulOangleEqOfNotCollinear {p₁ p₂ p₃ p₄ : P}
+theorem concyclic_of_two_zsmul_oangle_eq_of_not_collinear {p₁ p₂ p₃ p₄ : P}
     (h : (2 : ℤ) • ∡ p₁ p₂ p₄ = (2 : ℤ) • ∡ p₁ p₃ p₄) (hn : ¬Collinear ℝ ({p₁, p₂, p₄} : Set P)) :
     Concyclic ({p₁, p₂, p₃, p₄} : Set P) :=
   ⟨cospherical_of_two_zsmul_oangle_eq_of_not_collinear h hn, coplanar_of_fact_finrank_eq_two _⟩
-#align euclidean_geometry.concyclic_of_two_zsmul_oangle_eq_of_not_collinear EuclideanGeometry.concyclicOfTwoZsmulOangleEqOfNotCollinear
+#align euclidean_geometry.concyclic_of_two_zsmul_oangle_eq_of_not_collinear EuclideanGeometry.concyclic_of_two_zsmul_oangle_eq_of_not_collinear
 
 /-- Converse of "angles in same segment are equal" and "opposite angles of a cyclic quadrilateral
 add to π", for oriented angles mod π, with a "cospherical or collinear" conclusion. -/

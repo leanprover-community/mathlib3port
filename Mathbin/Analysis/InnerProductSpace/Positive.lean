@@ -70,16 +70,16 @@ theorem IsPositive.inner_nonneg_right {T : E →L[𝕜] E} (hT : IsPositive T) (
     0 ≤ re ⟪x, T x⟫ := by rw [inner_re_symm] <;> exact hT.inner_nonneg_left x
 #align continuous_linear_map.is_positive.inner_nonneg_right ContinuousLinearMap.IsPositive.inner_nonneg_right
 
-theorem isPositiveZero : IsPositive (0 : E →L[𝕜] E) :=
+theorem isPositive_zero : IsPositive (0 : E →L[𝕜] E) :=
   by
   refine' ⟨isSelfAdjoint_zero _, fun x => _⟩
   change 0 ≤ re ⟪_, _⟫
   rw [zero_apply, inner_zero_left, ZeroHomClass.map_zero]
-#align continuous_linear_map.is_positive_zero ContinuousLinearMap.isPositiveZero
+#align continuous_linear_map.is_positive_zero ContinuousLinearMap.isPositive_zero
 
-theorem isPositiveOne : IsPositive (1 : E →L[𝕜] E) :=
+theorem isPositive_one : IsPositive (1 : E →L[𝕜] E) :=
   ⟨isSelfAdjoint_one _, fun x => inner_self_nonneg⟩
-#align continuous_linear_map.is_positive_one ContinuousLinearMap.isPositiveOne
+#align continuous_linear_map.is_positive_one ContinuousLinearMap.isPositive_one
 
 theorem IsPositive.add {T S : E →L[𝕜] E} (hT : T.IsPositive) (hS : S.IsPositive) :
     (T + S).IsPositive :=
@@ -89,35 +89,35 @@ theorem IsPositive.add {T S : E →L[𝕜] E} (hT : T.IsPositive) (hS : S.IsPosi
   exact add_nonneg (hT.inner_nonneg_left x) (hS.inner_nonneg_left x)
 #align continuous_linear_map.is_positive.add ContinuousLinearMap.IsPositive.add
 
-theorem IsPositive.conjAdjoint {T : E →L[𝕜] E} (hT : T.IsPositive) (S : E →L[𝕜] F) :
+theorem IsPositive.conj_adjoint {T : E →L[𝕜] E} (hT : T.IsPositive) (S : E →L[𝕜] F) :
     (S ∘L T ∘L S†).IsPositive :=
   by
   refine' ⟨hT.is_self_adjoint.conj_adjoint S, fun x => _⟩
   rw [re_apply_inner_self, comp_apply, ← adjoint_inner_right]
   exact hT.inner_nonneg_left _
-#align continuous_linear_map.is_positive.conj_adjoint ContinuousLinearMap.IsPositive.conjAdjoint
+#align continuous_linear_map.is_positive.conj_adjoint ContinuousLinearMap.IsPositive.conj_adjoint
 
-theorem IsPositive.adjointConj {T : E →L[𝕜] E} (hT : T.IsPositive) (S : F →L[𝕜] E) :
+theorem IsPositive.adjoint_conj {T : E →L[𝕜] E} (hT : T.IsPositive) (S : F →L[𝕜] E) :
     (S† ∘L T ∘L S).IsPositive := by
   convert hT.conj_adjoint (S†)
   rw [adjoint_adjoint]
-#align continuous_linear_map.is_positive.adjoint_conj ContinuousLinearMap.IsPositive.adjointConj
+#align continuous_linear_map.is_positive.adjoint_conj ContinuousLinearMap.IsPositive.adjoint_conj
 
-theorem IsPositive.conjOrthogonalProjection (U : Submodule 𝕜 E) {T : E →L[𝕜] E} (hT : T.IsPositive)
+theorem IsPositive.conj_orthogonalProjection (U : Submodule 𝕜 E) {T : E →L[𝕜] E} (hT : T.IsPositive)
     [CompleteSpace U] :
     (U.subtypeL ∘L
         orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U).IsPositive :=
   by
   have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
   rwa [(orthogonalProjection_isSelfAdjoint U).adjoint_eq] at this
-#align continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conjOrthogonalProjection
+#align continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conj_orthogonalProjection
 
-theorem IsPositive.orthogonalProjectionComp {T : E →L[𝕜] E} (hT : T.IsPositive) (U : Submodule 𝕜 E)
+theorem IsPositive.orthogonalProjection_comp {T : E →L[𝕜] E} (hT : T.IsPositive) (U : Submodule 𝕜 E)
     [CompleteSpace U] : (orthogonalProjection U ∘L T ∘L U.subtypeL).IsPositive :=
   by
   have := hT.conj_adjoint (orthogonalProjection U : E →L[𝕜] U)
   rwa [U.adjoint_orthogonal_projection] at this
-#align continuous_linear_map.is_positive.orthogonal_projection_comp ContinuousLinearMap.IsPositive.orthogonalProjectionComp
+#align continuous_linear_map.is_positive.orthogonal_projection_comp ContinuousLinearMap.IsPositive.orthogonalProjection_comp
 
 section Complex
 

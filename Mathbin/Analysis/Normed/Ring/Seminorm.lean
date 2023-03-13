@@ -160,7 +160,7 @@ end Ring
 end RingSeminorm
 
 /-- The norm of a `non_unital_semi_normed_ring` as a `ring_seminorm`. -/
-def normRingSeminorm (R : Type _) [NonUnitalSemiNormedRing R] : RingSeminorm R :=
+def normRingSeminorm (R : Type _) [NonUnitalSeminormedRing R] : RingSeminorm R :=
   { normAddGroupSeminorm R with
     toFun := norm
     mul_le' := norm_mul_le }

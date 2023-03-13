@@ -689,7 +689,7 @@ open CauSeq
 instance : IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p]
     where prec' x hx :=
     by
-    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, Smodeq.sub_mem, maximal_ideal_eq_span_p,
+    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, SModEq.sub_mem, maximal_ideal_eq_span_p,
       Ideal.span_singleton_pow, ← norm_le_pow_iff_mem_span_pow] at hx⊢
     let x' : CauSeq ℤ_[p] norm := ⟨x, _⟩; swap
     · intro ε hε

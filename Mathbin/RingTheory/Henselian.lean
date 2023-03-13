@@ -208,9 +208,9 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         · rfl
         rw [Nat.succ_eq_add_one, hc, sub_eq_add_neg, ← add_zero a₀]
         refine' ih.add _
-        rw [Smodeq.zero, Ideal.neg_mem_iff]
+        rw [SModEq.zero, Ideal.neg_mem_iff]
         refine' I.mul_mem_right _ _
-        rw [← Smodeq.zero] at h₁⊢
+        rw [← SModEq.zero] at h₁⊢
         exact (ih.eval f).trans h₁
       have hf'c : ∀ n, IsUnit (f'.eval (c n)) := by
         intro n
@@ -255,7 +255,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         rw [Nat.succ_eq_add_one, ← add_assoc, hc, ← add_zero (c m), sub_eq_add_neg]
         refine' ih.add _
         symm
-        rw [Smodeq.zero, Ideal.neg_mem_iff]
+        rw [SModEq.zero, Ideal.neg_mem_iff]
         refine' Ideal.mul_mem_right _ _ (Ideal.pow_le_pow _ (hfcI _))
         rw [add_assoc]
         exact le_self_add
@@ -268,14 +268,14 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         specialize ha n
         rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one] at ha⊢
         refine' (ha.symm.eval f).trans _
-        rw [Smodeq.zero]
+        rw [SModEq.zero]
         exact Ideal.pow_le_pow le_self_add (hfcI _)
       · show a - a₀ ∈ I
         specialize ha 1
         rw [hc, pow_one, ← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one, sub_eq_add_neg] at ha
-        rw [← Smodeq.sub_mem, ← add_zero a₀]
+        rw [← SModEq.sub_mem, ← add_zero a₀]
         refine' ha.symm.trans (smodeq.rfl.add _)
-        rw [Smodeq.zero, Ideal.neg_mem_iff]
+        rw [SModEq.zero, Ideal.neg_mem_iff]
         exact Ideal.mul_mem_right _ _ h₁
 #align is_adic_complete.henselian_ring IsAdicComplete.henselianRing
 

@@ -507,7 +507,7 @@ instance (R : Type _) [CommRing R] [IsDomain R] [DiscreteValuationRing R] :
     IsHausdorff (maximalIdeal R) R
     where haus' x hx := by
     obtain ⟨ϖ, hϖ⟩ := exists_irreducible R
-    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, Smodeq.zero, hϖ.maximal_ideal_eq,
+    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, SModEq.zero, hϖ.maximal_ideal_eq,
       Ideal.span_singleton_pow, Ideal.mem_span_singleton, ← add_val_le_iff_dvd, hϖ.add_val_pow] at
       hx
     rwa [← add_val_eq_top_iff, PartENat.eq_top_iff_forall_le]

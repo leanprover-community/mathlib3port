@@ -1305,7 +1305,7 @@ section NonUnital
 
 section SemiNormed
 
-variable [NonUnitalSemiNormedRing R]
+variable [NonUnitalSeminormedRing R]
 
 instance : Mul (α →ᵇ R)
     where mul f g :=
@@ -1326,7 +1326,7 @@ instance : NonUnitalRing (α →ᵇ R) :=
   FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => coe_nsmul _ _) fun _ _ => coe_zsmul _ _
 
-instance : NonUnitalSemiNormedRing (α →ᵇ R) :=
+instance : NonUnitalSeminormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.seminormedAddCommGroup with
     norm_mul := fun f g =>
       norm_ofNormedAddCommGroup_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _ }
@@ -1341,7 +1341,7 @@ end NonUnital
 
 section SemiNormed
 
-variable [SemiNormedRing R]
+variable [SeminormedRing R]
 
 @[simp]
 theorem coe_npowRec (f : α →ᵇ R) : ∀ n, ⇑(npowRec n f) = f ^ n
@@ -1386,7 +1386,7 @@ instance : Ring (α →ᵇ R) :=
     (fun _ _ => coe_nsmul _ _) (fun _ _ => coe_zsmul _ _) (fun _ _ => coe_pow _ _) coe_nat_cast
     coe_int_cast
 
-instance : SemiNormedRing (α →ᵇ R) :=
+instance : SeminormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.nonUnitalSemiNormedRing with }
 
 end SemiNormed
@@ -1408,10 +1408,10 @@ pointwise operations and checking that they are compatible with the uniform dist
 
 variable [TopologicalSpace α] {R : Type _}
 
-instance [SemiNormedCommRing R] : CommRing (α →ᵇ R) :=
+instance [SeminormedCommRing R] : CommRing (α →ᵇ R) :=
   { BoundedContinuousFunction.ring with mul_comm := fun f₁ f₂ => ext fun x => mul_comm _ _ }
 
-instance [SemiNormedCommRing R] : SemiNormedCommRing (α →ᵇ R) :=
+instance [SeminormedCommRing R] : SeminormedCommRing (α →ᵇ R) :=
   { BoundedContinuousFunction.commRing, BoundedContinuousFunction.seminormedAddCommGroup with }
 
 instance [NormedCommRing R] : NormedCommRing (α →ᵇ R) :=

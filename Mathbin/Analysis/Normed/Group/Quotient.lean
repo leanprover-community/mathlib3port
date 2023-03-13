@@ -632,7 +632,7 @@ end Submodule
 
 section Ideal
 
-variable {R : Type _} [SemiNormedCommRing R] (I : Ideal R)
+variable {R : Type _} [SeminormedCommRing R] (I : Ideal R)
 
 theorem Ideal.Quotient.norm_mk_lt {I : Ideal R} (x : R ⧸ I) {ε : ℝ} (hε : 0 < ε) :
     ∃ r : R, Ideal.Quotient.mk I r = x ∧ ‖r‖ < ‖x‖ + ε :=
@@ -643,7 +643,7 @@ theorem Ideal.Quotient.norm_mk_le (r : R) : ‖Ideal.Quotient.mk I r‖ ≤ ‖r
   quotient_norm_mk_le I.toAddSubgroup r
 #align ideal.quotient.norm_mk_le Ideal.Quotient.norm_mk_le
 
-instance Ideal.Quotient.semiNormedCommRing : SemiNormedCommRing (R ⧸ I) :=
+instance Ideal.Quotient.semiNormedCommRing : SeminormedCommRing (R ⧸ I) :=
   {
     Submodule.Quotient.seminormedAddCommGroup
       I with

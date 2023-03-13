@@ -81,7 +81,7 @@ section Algebra
 
 variable (𝕜) (A : Type _)
 
-instance [SemiNormedRing A] : NormedRing (Completion A) :=
+instance [SeminormedRing A] : NormedRing (Completion A) :=
   { Completion.ring,
     Completion.metricSpace with
     dist_eq := fun x y => by
@@ -101,7 +101,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
         simp only [← coe_mul, norm_coe]
         exact norm_mul_le x y }
 
-instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSMul 𝕜 A] :
+instance [SeminormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSMul 𝕜 A] :
     NormedAlgebra 𝕜 (Completion A) :=
   { Completion.algebra A 𝕜 with
     norm_smul_le := fun r x =>

@@ -484,7 +484,7 @@ theorem op_nnnorm_comp_le [RingHomIsometric σ₁₃] (f : E →SL[σ₁₂] F) 
 omit σ₁₃
 
 /-- Continuous linear maps form a seminormed ring with respect to the operator norm. -/
-instance toSemiNormedRing : SemiNormedRing (E →L[𝕜] E) :=
+instance toSemiNormedRing : SeminormedRing (E →L[𝕜] E) :=
   { ContinuousLinearMap.toSeminormedAddCommGroup, ContinuousLinearMap.ring with
     norm_mul := fun f g => op_norm_comp_le f g }
 #align continuous_linear_map.to_semi_normed_ring ContinuousLinearMap.toSemiNormedRing
@@ -1059,7 +1059,7 @@ section MultiplicationLinear
 
 section NonUnital
 
-variable (𝕜) (𝕜' : Type _) [NonUnitalSemiNormedRing 𝕜'] [NormedSpace 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' 𝕜']
+variable (𝕜) (𝕜' : Type _) [NonUnitalSeminormedRing 𝕜'] [NormedSpace 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' 𝕜']
   [SMulCommClass 𝕜 𝕜' 𝕜']
 
 /-- Multiplication in a non-unital normed algebra as a continuous bilinear map. -/
@@ -1109,7 +1109,7 @@ end NonUnital
 
 section Unital
 
-variable (𝕜) (𝕜' : Type _) [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormOneClass 𝕜']
+variable (𝕜) (𝕜' : Type _) [SeminormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormOneClass 𝕜']
 
 /-- Multiplication in a normed algebra as a linear isometry to the space of
 continuous linear maps. -/

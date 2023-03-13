@@ -291,9 +291,9 @@ theorem linfty_op_norm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v�
 
 end SeminormedAddCommGroup
 
-section NonUnitalSemiNormedRing
+section NonUnitalSeminormedRing
 
-variable [NonUnitalSemiNormedRing α]
+variable [NonUnitalSeminormedRing α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k j) -/
 theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
@@ -328,21 +328,21 @@ theorem linfty_op_norm_mulVec (A : Matrix l m α) (v : m → α) : ‖Matrix.mul
   linfty_op_nnnorm_mulVec _ _
 #align matrix.linfty_op_norm_mul_vec Matrix.linfty_op_norm_mulVec
 
-end NonUnitalSemiNormedRing
+end NonUnitalSeminormedRing
 
 /-- Seminormed non-unital ring instance (using sup norm of L1 norm) for matrices over a semi normed
 non-unital ring. Not declared as an instance because there are several natural choices for defining
 the norm of a matrix. -/
 @[local instance]
-protected def linftyOpNonUnitalSemiNormedRing [NonUnitalSemiNormedRing α] :
-    NonUnitalSemiNormedRing (Matrix n n α) :=
+protected def linftyOpNonUnitalSemiNormedRing [NonUnitalSeminormedRing α] :
+    NonUnitalSeminormedRing (Matrix n n α) :=
   { Matrix.linftyOpSeminormedAddCommGroup, Matrix.nonUnitalRing with
     norm_mul := linfty_op_norm_mul }
 #align matrix.linfty_op_non_unital_semi_normed_ring Matrix.linftyOpNonUnitalSemiNormedRing
 
 /-- The `L₁-L∞` norm preserves one on non-empty matrices. Note this is safe as an instance, as it
 carries no data. -/
-instance linfty_op_normOneClass [SemiNormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
+instance linfty_op_normOneClass [SeminormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
     NormOneClass (Matrix n n α) where norm_one := (linfty_op_norm_diagonal _).trans norm_one
 #align matrix.linfty_op_norm_one_class Matrix.linfty_op_normOneClass
 
@@ -350,8 +350,8 @@ instance linfty_op_normOneClass [SemiNormedRing α] [NormOneClass α] [Decidable
 declared as an instance because there are several natural choices for defining the norm of a
 matrix. -/
 @[local instance]
-protected def linftyOpSemiNormedRing [SemiNormedRing α] [DecidableEq n] :
-    SemiNormedRing (Matrix n n α) :=
+protected def linftyOpSemiNormedRing [SeminormedRing α] [DecidableEq n] :
+    SeminormedRing (Matrix n n α) :=
   { Matrix.linftyOpNonUnitalSemiNormedRing, Matrix.ring with }
 #align matrix.linfty_op_semi_normed_ring Matrix.linftyOpSemiNormedRing
 
@@ -376,7 +376,7 @@ protected def linftyOpNormedRing [NormedRing α] [DecidableEq n] : NormedRing (M
 declared as an instance because there are several natural choices for defining the norm of a
 matrix. -/
 @[local instance]
-protected def linftyOpNormedAlgebra [NormedField R] [SemiNormedRing α] [NormedAlgebra R α]
+protected def linftyOpNormedAlgebra [NormedField R] [SeminormedRing α] [NormedAlgebra R α]
     [DecidableEq n] : NormedAlgebra R (Matrix n n α) :=
   { Matrix.linftyOpNormedSpace with }
 #align matrix.linfty_op_normed_algebra Matrix.linftyOpNormedAlgebra

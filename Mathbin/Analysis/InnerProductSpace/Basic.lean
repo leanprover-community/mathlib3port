@@ -1014,10 +1014,10 @@ theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
 
 /-- If `v : ι → E` is an orthonormal family, then `coe : (range v) → E` is an orthonormal
 family. -/
-theorem Orthonormal.toSubtypeRange {v : ι → E} (hv : Orthonormal 𝕜 v) :
+theorem Orthonormal.to_subtype_range {v : ι → E} (hv : Orthonormal 𝕜 v) :
     Orthonormal 𝕜 (coe : Set.range v → E) :=
   (orthonormal_subtype_range hv.LinearIndependent.Injective).2 hv
-#align orthonormal.to_subtype_range Orthonormal.toSubtypeRange
+#align orthonormal.to_subtype_range Orthonormal.to_subtype_range
 
 /-- A linear combination of some subset of an orthonormal set is orthogonal to other members of the
 set. -/
@@ -1031,7 +1031,7 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
 
 /-- Given an orthonormal family, a second family of vectors is orthonormal if every vector equals
 the corresponding vector in the original family or its negation. -/
-theorem Orthonormal.orthonormalOfForallEqOrEqNeg {v w : ι → E} (hv : Orthonormal 𝕜 v)
+theorem Orthonormal.orthonormal_of_forall_eq_or_eq_neg {v w : ι → E} (hv : Orthonormal 𝕜 v)
     (hw : ∀ i, w i = v i ∨ w i = -v i) : Orthonormal 𝕜 w := by
   classical
     rw [orthonormal_iff_ite] at *
@@ -1039,20 +1039,20 @@ theorem Orthonormal.orthonormalOfForallEqOrEqNeg {v w : ι → E} (hv : Orthonor
     cases' hw i with hi hi <;> cases' hw j with hj hj <;> split_ifs with h <;>
       simpa only [hi, hj, h, inner_neg_right, inner_neg_left, neg_neg, eq_self_iff_true,
         neg_eq_zero] using hv i j
-#align orthonormal.orthonormal_of_forall_eq_or_eq_neg Orthonormal.orthonormalOfForallEqOrEqNeg
+#align orthonormal.orthonormal_of_forall_eq_or_eq_neg Orthonormal.orthonormal_of_forall_eq_or_eq_neg
 
 /- The material that follows, culminating in the existence of a maximal orthonormal subset, is
 adapted from the corresponding development of the theory of linearly independents sets.  See
 `exists_linear_independent` in particular. -/
 variable (𝕜 E)
 
-theorem orthonormalEmpty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) := by
+theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) := by
   classical simp [orthonormal_subtype_iff_ite]
-#align orthonormal_empty orthonormalEmpty
+#align orthonormal_empty orthonormal_empty
 
 variable {𝕜 E}
 
-theorem orthonormalUnionOfDirected {η : Type _} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
+theorem orthonormal_unionᵢ_of_directed {η : Type _} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
     (h : ∀ i, Orthonormal 𝕜 (fun x => x : s i → E)) : Orthonormal 𝕜 (fun x => x : (⋃ i, s i) → E) :=
   by
   classical
@@ -1062,13 +1062,14 @@ theorem orthonormalUnionOfDirected {η : Type _} {s : η → Set E} (hs : Direct
     have h_orth : Orthonormal 𝕜 (fun x => x : s k → E) := h k
     rw [orthonormal_subtype_iff_ite] at h_orth
     exact h_orth x (hik hxi) y (hjk hyj)
-#align orthonormal_Union_of_directed orthonormalUnionOfDirected
+#align orthonormal_Union_of_directed orthonormal_unionᵢ_of_directed
 
-theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
+theorem orthonormal_unionₛ_of_directed {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) :
     Orthonormal 𝕜 (fun x => x : ⋃₀ s → E) := by
-  rw [Set.unionₛ_eq_unionᵢ] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
-#align orthonormal_sUnion_of_directed orthonormalSUnionOfDirected
+  rw [Set.unionₛ_eq_unionᵢ] <;>
+    exact orthonormal_unionᵢ_of_directed hs.directed_coe (by simpa using h)
+#align orthonormal_sUnion_of_directed orthonormal_unionₛ_of_directed
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ⊇ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » w) -/
@@ -1082,7 +1083,7 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s �
   · refine' ⟨b, sb, bi, _⟩
     exact fun u hus hu => h u hu hus
   · refine' fun c hc cc c0 => ⟨⋃₀ c, _, _⟩
-    · exact orthonormalSUnionOfDirected cc.directed_on fun x xc => hc xc
+    · exact orthonormal_unionₛ_of_directed cc.directed_on fun x xc => hc xc
     · exact fun _ => Set.subset_unionₛ_of_mem
 #align exists_maximal_orthonormal exists_maximal_orthonormal
 
@@ -1475,22 +1476,22 @@ theorem LinearIsometry.orthonormal_comp_iff {v : ι → E} (f : E →ₗᵢ[𝕜
 #align linear_isometry.orthonormal_comp_iff LinearIsometry.orthonormal_comp_iff
 
 /-- A linear isometry preserves the property of being orthonormal. -/
-theorem Orthonormal.compLinearIsometry {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E →ₗᵢ[𝕜] E') :
+theorem Orthonormal.comp_linearIsometry {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E →ₗᵢ[𝕜] E') :
     Orthonormal 𝕜 (f ∘ v) := by rwa [f.orthonormal_comp_iff]
-#align orthonormal.comp_linear_isometry Orthonormal.compLinearIsometry
+#align orthonormal.comp_linear_isometry Orthonormal.comp_linearIsometry
 
 /-- A linear isometric equivalence preserves the property of being orthonormal. -/
-theorem Orthonormal.compLinearIsometryEquiv {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E ≃ₗᵢ[𝕜] E') :
+theorem Orthonormal.comp_linearIsometryEquiv {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E ≃ₗᵢ[𝕜] E') :
     Orthonormal 𝕜 (f ∘ v) :=
-  hv.compLinearIsometry f.toLinearIsometry
-#align orthonormal.comp_linear_isometry_equiv Orthonormal.compLinearIsometryEquiv
+  hv.comp_linearIsometry f.toLinearIsometry
+#align orthonormal.comp_linear_isometry_equiv Orthonormal.comp_linearIsometryEquiv
 
 /-- A linear isometric equivalence, applied with `basis.map`, preserves the property of being
 orthonormal. -/
-theorem Orthonormal.mapLinearIsometryEquiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+theorem Orthonormal.map_linearIsometryEquiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
     (f : E ≃ₗᵢ[𝕜] E') : Orthonormal 𝕜 (v.map f.toLinearEquiv) :=
-  hv.compLinearIsometryEquiv f
-#align orthonormal.map_linear_isometry_equiv Orthonormal.mapLinearIsometryEquiv
+  hv.comp_linearIsometryEquiv f
+#align orthonormal.map_linear_isometry_equiv Orthonormal.map_linearIsometryEquiv
 
 /-- A linear map that sends an orthonormal basis to orthonormal vectors is a linear isometry. -/
 def LinearMap.isometryOfOrthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
@@ -2183,12 +2184,12 @@ theorem Orthonormal.codRestrict {ι : Type _} {v : ι → E} (hv : Orthonormal �
   s.subtypeₗᵢ.orthonormal_comp_iff.mp hv
 #align orthonormal.cod_restrict Orthonormal.codRestrict
 
-theorem orthonormalSpan {ι : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v) :
+theorem orthonormal_span {ι : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v) :
     @Orthonormal 𝕜 (Submodule.span 𝕜 (Set.range v)) _ _ ι fun i : ι =>
       ⟨v i, Submodule.subset_span (Set.mem_range_self i)⟩ :=
   hv.codRestrict (Submodule.span 𝕜 (Set.range v)) fun i =>
     Submodule.subset_span (Set.mem_range_self i)
-#align orthonormal_span orthonormalSpan
+#align orthonormal_span orthonormal_span
 
 /-! ### Families of mutually-orthogonal subspaces of an inner product space -/
 
@@ -2297,7 +2298,7 @@ theorem OrthogonalFamily.comp {γ : Type _} {f : γ → ι} (hf : Function.Injec
   hV (hf.Ne hij) v w
 #align orthogonal_family.comp OrthogonalFamily.comp
 
-theorem OrthogonalFamily.orthonormalSigmaOrthonormal {α : ι → Type _} {v_family : ∀ i, α i → G i}
+theorem OrthogonalFamily.orthonormal_sigma_orthonormal {α : ι → Type _} {v_family : ∀ i, α i → G i}
     (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) :
     Orthonormal 𝕜 fun a : Σi, α i => V a.1 (v_family a.1 a.2) :=
   by
@@ -2312,7 +2313,7 @@ theorem OrthogonalFamily.orthonormalSigmaOrthonormal {α : ι → Type _} {v_fam
       exact hvw rfl
     simpa only [LinearIsometry.inner_map_map] using (hv_family i).2 this
   · exact hV hij (v_family i v) (v_family j w)
-#align orthogonal_family.orthonormal_sigma_orthonormal OrthogonalFamily.orthonormalSigmaOrthonormal
+#align orthogonal_family.orthonormal_sigma_orthonormal OrthogonalFamily.orthonormal_sigma_orthonormal
 
 include dec_ι
 
@@ -2418,13 +2419,13 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
 
 include dec_ι
 
-theorem DirectSum.IsInternal.collectedBasisOrthonormal {V : ι → Submodule 𝕜 E}
+theorem DirectSum.IsInternal.collectedBasis_orthonormal {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
     (hV_sum : DirectSum.IsInternal fun i => V i) {α : ι → Type _}
     {v_family : ∀ i, Basis (α i) 𝕜 (V i)} (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) :
     Orthonormal 𝕜 (hV_sum.collectedBasis v_family) := by
   simpa only [hV_sum.collected_basis_coe] using hV.orthonormal_sigma_orthonormal hv_family
-#align direct_sum.is_internal.collected_basis_orthonormal DirectSum.IsInternal.collectedBasisOrthonormal
+#align direct_sum.is_internal.collected_basis_orthonormal DirectSum.IsInternal.collectedBasis_orthonormal
 
 end OrthogonalFamily
 
@@ -2758,14 +2759,14 @@ theorem Submodule.orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ :=
   rwa [h, inf_comm, top_inf_eq] at this
 #align submodule.orthogonal_eq_top_iff Submodule.orthogonal_eq_top_iff
 
-theorem Submodule.orthogonalFamilySelf :
+theorem Submodule.orthogonalFamily_self :
     @OrthogonalFamily 𝕜 E _ _ _ (fun b => ((cond b K Kᗮ : Submodule 𝕜 E) : Type _)) _ fun b =>
       (cond b K Kᗮ).subtypeₗᵢ
   | tt, tt => absurd rfl
   | tt, ff => fun _ x y => Submodule.inner_right_of_mem_orthogonal x.Prop y.Prop
   | ff, tt => fun _ x y => Submodule.inner_left_of_mem_orthogonal y.Prop x.Prop
   | ff, ff => absurd rfl
-#align submodule.orthogonal_family_self Submodule.orthogonalFamilySelf
+#align submodule.orthogonal_family_self Submodule.orthogonalFamily_self
 
 end Orthogonal
 

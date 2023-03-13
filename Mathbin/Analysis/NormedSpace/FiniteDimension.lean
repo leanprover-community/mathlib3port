@@ -593,7 +593,7 @@ theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [Topologic
     isCompact_of_isClosed_subset hf Metric.isClosed_ball (hr.trans (subset_mulTSupport _))
   exact finiteDimensional_of_isCompact_closedBall 𝕜 rpos this
 #align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finiteDimensional
-#align has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finite_dimensional
+#align has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finiteDimensional
 
 end Riesz
 

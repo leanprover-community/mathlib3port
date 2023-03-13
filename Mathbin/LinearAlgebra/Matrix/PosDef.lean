@@ -85,14 +85,14 @@ theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef :=
   rw [mul_vec_transpose, Matrix.dotProduct_mulVec, star_star, dot_product_comm]
 #align matrix.pos_def.transpose Matrix.PosDef.transpose
 
-theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
+theorem posDef_of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
   by
   refine' ⟨hM, fun x hx => _⟩
   simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
     Matrix.toBilin'_apply'] at hMq
   apply hMq x hx
-#align matrix.pos_def_of_to_quadratic_form' Matrix.posDefOfToQuadraticForm'
+#align matrix.pos_def_of_to_quadratic_form' Matrix.posDef_of_toQuadraticForm'
 
 theorem posDefToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
@@ -135,13 +135,13 @@ theorem posDefOfToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (h
   apply Matrix.posDefToQuadraticForm' hQ
 #align quadratic_form.pos_def_of_to_matrix' QuadraticForm.posDefOfToMatrix'
 
-theorem posDefToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
+theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
     Q.toMatrix'.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ←
     bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ
-  apply Matrix.posDefOfToQuadraticForm' (is_symm_to_matrix' Q) hQ
-#align quadratic_form.pos_def_to_matrix' QuadraticForm.posDefToMatrix'
+  apply Matrix.posDef_of_toQuadraticForm' (is_symm_to_matrix' Q) hQ
+#align quadratic_form.pos_def_to_matrix' QuadraticForm.posDef_toMatrix'
 
 end QuadraticForm
 

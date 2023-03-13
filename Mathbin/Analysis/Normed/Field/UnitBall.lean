@@ -26,7 +26,7 @@ open Set Metric
 variable {𝕜 : Type _}
 
 /-- Unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
-def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subsemigroup 𝕜
+def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSeminormedRing 𝕜] : Subsemigroup 𝕜
     where
   carrier := ball (0 : 𝕜) 1
   mul_mem' x y hx hy := by
@@ -34,26 +34,26 @@ def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subse
     exact (norm_mul_le x y).trans_lt (mul_lt_one_of_nonneg_of_lt_one_left (norm_nonneg _) hx hy.le)
 #align subsemigroup.unit_ball Subsemigroup.unitBall
 
-instance [NonUnitalSemiNormedRing 𝕜] : Semigroup (ball (0 : 𝕜) 1) :=
+instance [NonUnitalSeminormedRing 𝕜] : Semigroup (ball (0 : 𝕜) 1) :=
   MulMemClass.toSemigroup (Subsemigroup.unitBall 𝕜)
 
-instance [NonUnitalSemiNormedRing 𝕜] : ContinuousMul (ball (0 : 𝕜) 1) :=
+instance [NonUnitalSeminormedRing 𝕜] : ContinuousMul (ball (0 : 𝕜) 1) :=
   (Subsemigroup.unitBall 𝕜).ContinuousMul
 
-instance [SemiNormedCommRing 𝕜] : CommSemigroup (ball (0 : 𝕜) 1) :=
+instance [SeminormedCommRing 𝕜] : CommSemigroup (ball (0 : 𝕜) 1) :=
   MulMemClass.toCommSemigroup (Subsemigroup.unitBall 𝕜)
 
-instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (ball (0 : 𝕜) 1) :=
+instance [NonUnitalSeminormedRing 𝕜] : HasDistribNeg (ball (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : ball (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
 @[simp, norm_cast]
-theorem coe_mul_unit_ball [NonUnitalSemiNormedRing 𝕜] (x y : ball (0 : 𝕜) 1) :
+theorem coe_mul_unit_ball [NonUnitalSeminormedRing 𝕜] (x y : ball (0 : 𝕜) 1) :
     ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_ball coe_mul_unit_ball
 
 /-- Closed unit ball in a non unital semi normed ring as a bundled `subsemigroup`. -/
-def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subsemigroup 𝕜
+def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSeminormedRing 𝕜] : Subsemigroup 𝕜
     where
   carrier := closedBall 0 1
   mul_mem' x y hx hy := by
@@ -61,42 +61,42 @@ def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] :
     exact (norm_mul_le x y).trans (mul_le_one hx (norm_nonneg _) hy)
 #align subsemigroup.unit_closed_ball Subsemigroup.unitClosedBall
 
-instance [NonUnitalSemiNormedRing 𝕜] : Semigroup (closedBall (0 : 𝕜) 1) :=
+instance [NonUnitalSeminormedRing 𝕜] : Semigroup (closedBall (0 : 𝕜) 1) :=
   MulMemClass.toSemigroup (Subsemigroup.unitClosedBall 𝕜)
 
-instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (closedBall (0 : 𝕜) 1) :=
+instance [NonUnitalSeminormedRing 𝕜] : HasDistribNeg (closedBall (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : closedBall (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
-instance [NonUnitalSemiNormedRing 𝕜] : ContinuousMul (closedBall (0 : 𝕜) 1) :=
+instance [NonUnitalSeminormedRing 𝕜] : ContinuousMul (closedBall (0 : 𝕜) 1) :=
   (Subsemigroup.unitClosedBall 𝕜).ContinuousMul
 
 @[simp, norm_cast]
-theorem coe_mul_unit_closedBall [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
+theorem coe_mul_unit_closedBall [NonUnitalSeminormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
     ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_closed_ball coe_mul_unit_closedBall
 
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
-def Submonoid.unitClosedBall (𝕜 : Type _) [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
+def Submonoid.unitClosedBall (𝕜 : Type _) [SeminormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
   { Subsemigroup.unitClosedBall 𝕜 with
     carrier := closedBall 0 1
     one_mem' := mem_closedBall_zero_iff.2 norm_one.le }
 #align submonoid.unit_closed_ball Submonoid.unitClosedBall
 
-instance [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Monoid (closedBall (0 : 𝕜) 1) :=
+instance [SeminormedRing 𝕜] [NormOneClass 𝕜] : Monoid (closedBall (0 : 𝕜) 1) :=
   SubmonoidClass.toMonoid (Submonoid.unitClosedBall 𝕜)
 
-instance [SemiNormedCommRing 𝕜] [NormOneClass 𝕜] : CommMonoid (closedBall (0 : 𝕜) 1) :=
+instance [SeminormedCommRing 𝕜] [NormOneClass 𝕜] : CommMonoid (closedBall (0 : 𝕜) 1) :=
   SubmonoidClass.toCommMonoid (Submonoid.unitClosedBall 𝕜)
 
 @[simp, norm_cast]
-theorem coe_one_unit_closedBall [SemiNormedRing 𝕜] [NormOneClass 𝕜] :
+theorem coe_one_unit_closedBall [SeminormedRing 𝕜] [NormOneClass 𝕜] :
     ((1 : closedBall (0 : 𝕜) 1) : 𝕜) = 1 :=
   rfl
 #align coe_one_unit_closed_ball coe_one_unit_closedBall
 
 @[simp, norm_cast]
-theorem coe_pow_unit_closedBall [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1)
+theorem coe_pow_unit_closedBall [SeminormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1)
     (n : ℕ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
   rfl
 #align coe_pow_unit_closed_ball coe_pow_unit_closedBall

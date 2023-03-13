@@ -47,7 +47,7 @@ variable {R R' 𝕜 𝕜₂ 𝕜₃ 𝕝 E E₂ E₃ F G ι : Type _}
 
 /-- A seminorm on a module over a normed ring is a function to the reals that is positive
 semidefinite, positive homogeneous, and subadditive. -/
-structure Seminorm (𝕜 : Type _) (E : Type _) [SemiNormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] extends
+structure Seminorm (𝕜 : Type _) (E : Type _) [SeminormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] extends
   AddGroupSeminorm E where
   smul' : ∀ (a : 𝕜) (x : E), to_fun (a • x) = ‖a‖ * to_fun x
 #align seminorm Seminorm
@@ -57,7 +57,7 @@ attribute [nolint doc_blame] Seminorm.toAddGroupSeminorm
 /-- `seminorm_class F 𝕜 E` states that `F` is a type of seminorms on the `𝕜`-module E.
 
 You should extend this class when you extend `seminorm`. -/
-class SeminormClass (F : Type _) (𝕜 E : outParam <| Type _) [SemiNormedRing 𝕜] [AddGroup E]
+class SeminormClass (F : Type _) (𝕜 E : outParam <| Type _) [SeminormedRing 𝕜] [AddGroup E]
   [SMul 𝕜 E] extends AddGroupSeminormClass F E ℝ where
   map_smul_eq_mul (f : F) (a : 𝕜) (x : E) : f (a • x) = ‖a‖ * f x
 #align seminorm_class SeminormClass
@@ -71,7 +71,7 @@ section Of
 
 /-- Alternative constructor for a `seminorm` on an `add_comm_group E` that is a module over a
 `semi_norm_ring 𝕜`. -/
-def Seminorm.of [SemiNormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E] (f : E → ℝ)
+def Seminorm.of [SeminormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E] (f : E → ℝ)
     (add_le : ∀ x y : E, f (x + y) ≤ f x + f y) (smul : ∀ (a : 𝕜) (x : E), f (a • x) = ‖a‖ * f x) :
     Seminorm 𝕜 E where
   toFun := f
@@ -103,9 +103,9 @@ end Of
 
 namespace Seminorm
 
-section SemiNormedRing
+section SeminormedRing
 
-variable [SemiNormedRing 𝕜]
+variable [SeminormedRing 𝕜]
 
 section AddGroup
 
@@ -272,7 +272,7 @@ end AddGroup
 
 section Module
 
-variable [SemiNormedRing 𝕜₂] [SemiNormedRing 𝕜₃]
+variable [SeminormedRing 𝕜₂] [SeminormedRing 𝕜₃]
 
 variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
@@ -413,11 +413,11 @@ theorem norm_sub_map_le_sub (p : Seminorm 𝕜 E) (x y : E) : ‖p x - p y‖ �
 
 end Module
 
-end SemiNormedRing
+end SeminormedRing
 
-section SemiNormedCommRing
+section SeminormedCommRing
 
-variable [SemiNormedRing 𝕜] [SemiNormedCommRing 𝕜₂]
+variable [SeminormedRing 𝕜] [SeminormedCommRing 𝕜₂]
 
 variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
@@ -435,7 +435,7 @@ theorem comp_smul_apply (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E
   map_smul_eq_mul p _ _
 #align seminorm.comp_smul_apply Seminorm.comp_smul_apply
 
-end SemiNormedCommRing
+end SeminormedCommRing
 
 section NormedField
 
@@ -601,9 +601,9 @@ end NormedField
 /-! ### Seminorm ball -/
 
 
-section SemiNormedRing
+section SeminormedRing
 
-variable [SemiNormedRing 𝕜]
+variable [SeminormedRing 𝕜]
 
 section AddCommGroup
 
@@ -771,7 +771,7 @@ section Module
 
 variable [Module 𝕜 E]
 
-variable [SemiNormedRing 𝕜₂] [AddCommGroup E₂] [Module 𝕜₂ E₂]
+variable [SeminormedRing 𝕜₂] [AddCommGroup E₂] [Module 𝕜₂ E₂]
 
 variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
@@ -920,7 +920,7 @@ end Module
 
 end AddCommGroup
 
-end SemiNormedRing
+end SeminormedRing
 
 section NormedField
 
@@ -1081,7 +1081,7 @@ end Convex
 
 section RestrictScalars
 
-variable (𝕜) {𝕜' : Type _} [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
+variable (𝕜) {𝕜' : Type _} [NormedField 𝕜] [SeminormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
   [NormOneClass 𝕜'] [AddCommGroup E] [Module 𝕜' E] [SMul 𝕜 E] [IsScalarTower 𝕜 𝕜' E]
 
 /-- Reinterpret a seminorm over a field `𝕜'` as a seminorm over a smaller field `𝕜`. This will
@@ -1114,7 +1114,7 @@ end RestrictScalars
 
 section Continuity
 
-variable [NontriviallyNormedField 𝕜] [SemiNormedRing 𝕝] [AddCommGroup E] [Module 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [SeminormedRing 𝕝] [AddCommGroup E] [Module 𝕜 E]
 
 variable [Module 𝕝 E]
 
