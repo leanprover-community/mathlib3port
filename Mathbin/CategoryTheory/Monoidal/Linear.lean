@@ -52,17 +52,17 @@ attribute [simp] monoidal_linear.tensor_smul monoidal_linear.smul_tensor
 
 variable {C} [MonoidalLinear R C]
 
-instance tensorLeftLinear (X : C) : (tensorLeft X).Linear R where
-#align category_theory.tensor_left_linear CategoryTheory.tensorLeftLinear
+instance tensorLeft_linear (X : C) : (tensorLeft X).Linear R where
+#align category_theory.tensor_left_linear CategoryTheory.tensorLeft_linear
 
-instance tensorRightLinear (X : C) : (tensorRight X).Linear R where
-#align category_theory.tensor_right_linear CategoryTheory.tensorRightLinear
+instance tensorRight_linear (X : C) : (tensorRight X).Linear R where
+#align category_theory.tensor_right_linear CategoryTheory.tensorRight_linear
 
-instance tensoringLeftLinear (X : C) : ((tensoringLeft C).obj X).Linear R where
-#align category_theory.tensoring_left_linear CategoryTheory.tensoringLeftLinear
+instance tensoringLeft_linear (X : C) : ((tensoringLeft C).obj X).Linear R where
+#align category_theory.tensoring_left_linear CategoryTheory.tensoringLeft_linear
 
-instance tensoringRightLinear (X : C) : ((tensoringRight C).obj X).Linear R where
-#align category_theory.tensoring_right_linear CategoryTheory.tensoringRightLinear
+instance tensoringRight_linear (X : C) : ((tensoringRight C).obj X).Linear R where
+#align category_theory.tensoring_right_linear CategoryTheory.tensoringRight_linear
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

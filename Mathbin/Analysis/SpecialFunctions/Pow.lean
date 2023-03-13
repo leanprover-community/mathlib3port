@@ -394,7 +394,7 @@ theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * 
     ring
   · rw [this, Complex.exp_add_mul_i, ← Complex.of_real_exp, ← Complex.of_real_cos, ←
       Complex.of_real_sin, mul_add, ← Complex.ofReal_mul, ← mul_assoc, ← Complex.ofReal_mul,
-      Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.i_re, Complex.ofReal_im,
+      Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.ofReal_im,
       Real.log_neg_eq_log]
     ring
   · rw [Complex.ofReal_eq_zero]
@@ -509,16 +509,13 @@ theorem of_real_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
 #align complex.of_real_cpow_of_nonpos Complex.of_real_cpow_of_nonpos
 
 theorem abs_cpow_of_ne_zero {z : ℂ} (hz : z ≠ 0) (w : ℂ) :
-    Complex.AbsTheory.Complex.abs (z ^ w) =
-      Complex.AbsTheory.Complex.abs z ^ w.re / Real.exp (arg z * im w) :=
-  by
+    abs (z ^ w) = abs z ^ w.re / Real.exp (arg z * im w) := by
   rw [cpow_def_of_ne_zero hz, abs_exp, mul_re, log_re, log_im, Real.exp_sub,
     Real.rpow_def_of_pos (abs.pos hz)]
 #align complex.abs_cpow_of_ne_zero Complex.abs_cpow_of_ne_zero
 
 theorem abs_cpow_of_imp {z w : ℂ} (h : z = 0 → w.re = 0 → w = 0) :
-    Complex.AbsTheory.Complex.abs (z ^ w) =
-      Complex.AbsTheory.Complex.abs z ^ w.re / Real.exp (arg z * im w) :=
+    abs (z ^ w) = abs z ^ w.re / Real.exp (arg z * im w) :=
   by
   rcases ne_or_eq z 0 with (hz | rfl) <;> [exact abs_cpow_of_ne_zero hz w, rw [map_zero]]
   cases' eq_or_ne w.re 0 with hw hw
@@ -527,9 +524,7 @@ theorem abs_cpow_of_imp {z w : ℂ} (h : z = 0 → w.re = 0 → w = 0) :
     exact ne_of_apply_ne re hw
 #align complex.abs_cpow_of_imp Complex.abs_cpow_of_imp
 
-theorem abs_cpow_le (z w : ℂ) :
-    Complex.AbsTheory.Complex.abs (z ^ w) ≤
-      Complex.AbsTheory.Complex.abs z ^ w.re / Real.exp (arg z * im w) :=
+theorem abs_cpow_le (z w : ℂ) : abs (z ^ w) ≤ abs z ^ w.re / Real.exp (arg z * im w) :=
   by
   rcases ne_or_eq z 0 with (hz | rfl) <;> [exact (abs_cpow_of_ne_zero hz w).le, rw [map_zero]]
   rcases eq_or_ne w 0 with (rfl | hw); · simp
@@ -555,34 +550,30 @@ theorem isTheta_exp_arg_mul_im (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x
 #align complex.is_Theta_exp_arg_mul_im Complex.isTheta_exp_arg_mul_im
 
 theorem isO_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|) :
-    (fun x => f x ^ g x) =O[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ (g x).re :=
+    (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re :=
   calc
-    (fun x => f x ^ g x) =O[l] fun x =>
-        Complex.AbsTheory.Complex.abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
+    (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
       isO_of_le _ fun x => (abs_cpow_le _ _).trans (le_abs_self _)
-    _ =Θ[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ (g x).re / (1 : ℝ) :=
+    _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl))
-    _ =ᶠ[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ (g x).re := by
-      simp only [of_real_one, div_one]
+    _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
     
 #align complex.is_O_cpow_rpow Complex.isO_cpow_rpow
 
 theorem isTheta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|)
     (hl : ∀ᶠ x in l, f x = 0 → re (g x) = 0 → g x = 0) :
-    (fun x => f x ^ g x) =Θ[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ (g x).re :=
+    (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re :=
   calc
-    (fun x => f x ^ g x) =Θ[l] fun x =>
-        Complex.AbsTheory.Complex.abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
+    (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
       isTheta_of_norm_eventually_eq' <| hl.mono fun x => abs_cpow_of_imp
-    _ =Θ[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ (g x).re / (1 : ℝ) :=
+    _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl_im))
-    _ =ᶠ[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ (g x).re := by
-      simp only [of_real_one, div_one]
+    _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
     
 #align complex.is_Theta_cpow_rpow Complex.isTheta_cpow_rpow
 
 theorem isTheta_cpow_const_rpow {b : ℂ} (hl : b.re = 0 → b ≠ 0 → ∀ᶠ x in l, f x ≠ 0) :
-    (fun x => f x ^ b) =Θ[l] fun x => Complex.AbsTheory.Complex.abs (f x) ^ b.re :=
+    (fun x => f x ^ b) =Θ[l] fun x => abs (f x) ^ b.re :=
   isTheta_cpow_rpow isBoundedUnder_const <| by
     simpa only [eventually_imp_distrib_right, Ne.def, ← not_frequently, not_imp_not, Imp.swap] using
       hl
@@ -591,27 +582,23 @@ theorem isTheta_cpow_const_rpow {b : ℂ} (hl : b.re = 0 → b ≠ 0 → ∀ᶠ 
 end
 
 @[simp]
-theorem abs_cpow_real (x : ℂ) (y : ℝ) : Complex.AbsTheory.Complex.abs (x ^ (y : ℂ)) = x.abs ^ y :=
-  by
+theorem abs_cpow_real (x : ℂ) (y : ℝ) : abs (x ^ (y : ℂ)) = x.abs ^ y := by
   rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip] <;>
     simp [*, abs_cpow_of_ne_zero]
 #align complex.abs_cpow_real Complex.abs_cpow_real
 
 @[simp]
-theorem abs_cpow_inv_nat (x : ℂ) (n : ℕ) :
-    Complex.AbsTheory.Complex.abs (x ^ (n⁻¹ : ℂ)) = x.abs ^ (n⁻¹ : ℝ) := by
+theorem abs_cpow_inv_nat (x : ℂ) (n : ℕ) : abs (x ^ (n⁻¹ : ℂ)) = x.abs ^ (n⁻¹ : ℝ) := by
   rw [← abs_cpow_real] <;> simp [-abs_cpow_real]
 #align complex.abs_cpow_inv_nat Complex.abs_cpow_inv_nat
 
-theorem abs_cpow_eq_rpow_re_of_pos {x : ℝ} (hx : 0 < x) (y : ℂ) :
-    Complex.AbsTheory.Complex.abs (x ^ y) = x ^ y.re := by
+theorem abs_cpow_eq_rpow_re_of_pos {x : ℝ} (hx : 0 < x) (y : ℂ) : abs (x ^ y) = x ^ y.re := by
   rw [abs_cpow_of_ne_zero (of_real_ne_zero.mpr hx.ne'), arg_of_real_of_nonneg hx.le,
     MulZeroClass.zero_mul, Real.exp_zero, div_one, abs_of_nonneg hx.le]
 #align complex.abs_cpow_eq_rpow_re_of_pos Complex.abs_cpow_eq_rpow_re_of_pos
 
 theorem abs_cpow_eq_rpow_re_of_nonneg {x : ℝ} (hx : 0 ≤ x) {y : ℂ} (hy : re y ≠ 0) :
-    Complex.AbsTheory.Complex.abs (x ^ y) = x ^ re y :=
-  by
+    abs (x ^ y) = x ^ re y := by
   rcases hx.eq_or_lt with (rfl | hlt)
   · rw [of_real_zero, zero_cpow, map_zero, Real.zero_rpow hy]
     exact ne_of_apply_ne re hy

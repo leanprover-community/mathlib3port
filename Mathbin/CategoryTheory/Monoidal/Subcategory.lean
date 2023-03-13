@@ -120,10 +120,10 @@ instance [MonoidalPreadditive C] : MonoidalPreadditive (FullSubcategory P) :=
 
 variable (R : Type _) [Ring R] [Linear R C]
 
-instance fullMonoidalSubcategoryInclusionLinear :
+instance fullMonoidalSubcategoryInclusion_linear :
     (fullMonoidalSubcategoryInclusion P).toFunctor.Linear R :=
   Functor.fullSubcategoryInclusionLinear R _
-#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion_linear CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusionLinear
+#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion_linear CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusion_linear
 
 instance [MonoidalPreadditive C] [MonoidalLinear R C] : MonoidalLinear R (FullSubcategory P) :=
   monoidalLinearOfFaithful R (fullMonoidalSubcategoryInclusion P)

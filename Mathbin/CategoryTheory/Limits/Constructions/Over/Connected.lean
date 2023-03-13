@@ -37,6 +37,12 @@ namespace CategoryTheory.Over
 
 namespace CreatesConnected
 
+/- warning: category_theory.over.creates_connected.nat_trans_in_over -> CategoryTheory.Over.CreatesConnected.natTransInOver is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] {C : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} C] {B : C} (F : CategoryTheory.Functor.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.Over.category.{u2, u1} C _inst_2 B)), Quiver.Hom.{succ u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Category.toCategoryStruct.{u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.category.{u1, u1, u1, u2} J _inst_1 C _inst_2))) (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.Over.category.{u2, u1} C _inst_2 B) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B)) (CategoryTheory.Functor.obj.{u1, u1, u2, max u1 u2} C _inst_2 (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.category.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.const.{u1, u1, u1, u2} J _inst_1 C _inst_2) B)
+but is expected to have type
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] {C : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} C] {B : C} (F : CategoryTheory.Functor.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_2 B)), Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.category.{u1, u1, u1, u2} J _inst_1 C _inst_2))) (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_2 B) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B)) (Prefunctor.obj.{succ u1, succ u1, u2, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_2)) (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Category.toCategoryStruct.{u1, max u1 u2} (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.category.{u1, u1, u1, u2} J _inst_1 C _inst_2))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u1 u2} C _inst_2 (CategoryTheory.Functor.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.category.{u1, u1, u1, u2} J _inst_1 C _inst_2) (CategoryTheory.Functor.const.{u1, u1, u1, u2} J _inst_1 C _inst_2)) B)
+Case conversion may be inaccurate. Consider using '#align category_theory.over.creates_connected.nat_trans_in_over CategoryTheory.Over.CreatesConnected.natTransInOverₓ'. -/
 /-- (Impl) Given a diagram in the over category, produce a natural transformation from the
 diagram legs to the specific object.
 -/
@@ -46,6 +52,7 @@ def natTransInOver {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheo
 
 attribute [local tidy] tactic.case_bash
 
+#print CategoryTheory.Over.CreatesConnected.raiseCone /-
 /-- (Impl) Given a cone in the base category, raise it to a cone in the over category. Note this is
 where the connected assumption is used.
 -/
@@ -58,11 +65,19 @@ def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget
       app := fun j =>
         Over.homMk (c.π.app j) (nat_trans_from_is_connected (c.π ≫ natTransInOver F) j _) }
 #align category_theory.over.creates_connected.raise_cone CategoryTheory.Over.CreatesConnected.raiseCone
+-/
 
+/- warning: category_theory.over.creates_connected.raised_cone_lowers_to_original -> CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_original is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] {C : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} C] [_inst_3 : CategoryTheory.IsConnected.{u1, u1} J _inst_1] {B : C} {F : CategoryTheory.Functor.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.Over.category.{u2, u1} C _inst_2 B)} (c : CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.Over.category.{u2, u1} C _inst_2 B) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B))), (CategoryTheory.Limits.IsLimit.{u1, u1, u1, u2} J _inst_1 C _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.Over.category.{u2, u1} C _inst_2 B) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B)) c) -> (Eq.{max (succ u2) (succ u1)} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.commaCategory.{u1, u1, u1, u2, u1, u2} C _inst_2 (CategoryTheory.Discrete.{u1} PUnit.{succ u1}) (CategoryTheory.discreteCategory.{u1} PUnit.{succ u1}) C _inst_2 (CategoryTheory.Functor.id.{u1, u2} C _inst_2) (CategoryTheory.Functor.fromPUnit.{u1, u2} C _inst_2 B)) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B))) (CategoryTheory.Functor.mapCone.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.commaCategory.{u1, u1, u1, u2, u1, u2} C _inst_2 (CategoryTheory.Discrete.{u1} PUnit.{succ u1}) (CategoryTheory.discreteCategory.{u1} PUnit.{succ u1}) C _inst_2 (CategoryTheory.Functor.id.{u1, u2} C _inst_2) (CategoryTheory.Functor.fromPUnit.{u1, u2} C _inst_2 B)) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B) (CategoryTheory.Over.CreatesConnected.raiseCone.{u1, u2} J _inst_1 C _inst_2 _inst_3 B F c)) c)
+but is expected to have type
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] {C : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} C] [_inst_3 : CategoryTheory.IsConnected.{u1, u1} J _inst_1] {B : C} {F : CategoryTheory.Functor.{u1, u1, u1, max u2 u1} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_2 B)} (c : CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_2 B) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B))), Eq.{max (succ u2) (succ u1)} (CategoryTheory.Limits.Cone.{u1, u1, u1, u2} J _inst_1 C _inst_2 (CategoryTheory.Functor.comp.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_2 B) C _inst_2 F (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B))) (CategoryTheory.Functor.mapCone.{u1, u1, u1, u1, max u2 u1, u2} J _inst_1 (CategoryTheory.Over.{u1, u2} C _inst_2 B) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_2 B) C _inst_2 (CategoryTheory.Over.forget.{u1, u2} C _inst_2 B) F (CategoryTheory.Over.CreatesConnected.raiseCone.{u1, u2} J _inst_1 C _inst_2 _inst_3 B F c)) c
+Case conversion may be inaccurate. Consider using '#align category_theory.over.creates_connected.raised_cone_lowers_to_original CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_originalₓ'. -/
 theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B}
     (c : Cone (F ⋙ forget B)) (t : IsLimit c) : (forget B).mapCone (raiseCone c) = c := by tidy
 #align category_theory.over.creates_connected.raised_cone_lowers_to_original CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_original
 
+#print CategoryTheory.Over.CreatesConnected.raisedConeIsLimit /-
 /-- (Impl) Show that the raised cone is a limit. -/
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)}
     (t : IsLimit c) : IsLimit (raiseCone c)
@@ -78,9 +93,11 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F �
     intro j
     simp [← K j]
 #align category_theory.over.creates_connected.raised_cone_is_limit CategoryTheory.Over.CreatesConnected.raisedConeIsLimit
+-/
 
 end CreatesConnected
 
+#print CategoryTheory.Over.forgetCreatesConnectedLimits /-
 /-- The forgetful functor from the over category creates any connected limit. -/
 instance forgetCreatesConnectedLimits [IsConnected J] {B : C} : CreatesLimitsOfShape J (forget B)
     where CreatesLimit K :=
@@ -89,11 +106,14 @@ instance forgetCreatesConnectedLimits [IsConnected J] {B : C} : CreatesLimitsOfS
         validLift := eqToIso (CreatesConnected.raised_cone_lowers_to_original c t)
         makesLimit := CreatesConnected.raisedConeIsLimit t }
 #align category_theory.over.forget_creates_connected_limits CategoryTheory.Over.forgetCreatesConnectedLimits
+-/
 
+#print CategoryTheory.Over.has_connected_limits /-
 /-- The over category has any connected limit which the original category has. -/
 instance has_connected_limits {B : C} [IsConnected J] [HasLimitsOfShape J C] :
     HasLimitsOfShape J (Over B) where HasLimit F := hasLimit_of_created F (forget B)
 #align category_theory.over.has_connected_limits CategoryTheory.Over.has_connected_limits
+-/
 
 end CategoryTheory.Over
 

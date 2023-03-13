@@ -78,7 +78,7 @@ theorem Complex.hasSum_cos (z : ℂ) :
     HasSum (fun n : ℕ => (-1) ^ n * z ^ (2 * n) / ↑(2 * n)!) (Complex.cos z) :=
   by
   convert Complex.hasSum_cos' z using 1
-  simp_rw [mul_pow, pow_mul, Complex.i_sq, mul_comm]
+  simp_rw [mul_pow, pow_mul, Complex.I_sq, mul_comm]
 #align complex.has_sum_cos Complex.hasSum_cos
 
 /-- The power series expansion of `complex.sin`. -/
@@ -86,8 +86,8 @@ theorem Complex.hasSum_sin (z : ℂ) :
     HasSum (fun n : ℕ => (-1) ^ n * z ^ (2 * n + 1) / ↑(2 * n + 1)!) (Complex.sin z) :=
   by
   convert Complex.hasSum_sin' z using 1
-  simp_rw [mul_pow, pow_succ', pow_mul, Complex.i_sq, ← mul_assoc, mul_div_assoc, div_right_comm,
-    div_self Complex.i_ne_zero, mul_comm _ ((-1 : ℂ) ^ _), mul_one_div, mul_div_assoc, mul_assoc]
+  simp_rw [mul_pow, pow_succ', pow_mul, Complex.I_sq, ← mul_assoc, mul_div_assoc, div_right_comm,
+    div_self Complex.I_ne_zero, mul_comm _ ((-1 : ℂ) ^ _), mul_one_div, mul_div_assoc, mul_assoc]
 #align complex.has_sum_sin Complex.hasSum_sin
 
 theorem Complex.cos_eq_tsum' (z : ℂ) :

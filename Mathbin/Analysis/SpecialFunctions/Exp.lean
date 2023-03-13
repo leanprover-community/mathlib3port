@@ -410,10 +410,9 @@ end Real
 
 namespace Complex
 
-theorem comap_exp_comap_abs_atTop :
-    comap exp (comap Complex.AbsTheory.Complex.abs atTop) = comap re atTop :=
+theorem comap_exp_comap_abs_atTop : comap exp (comap abs atTop) = comap re atTop :=
   calc
-    comap exp (comap Complex.AbsTheory.Complex.abs atTop) = comap re (comap Real.exp atTop) := by
+    comap exp (comap abs atTop) = comap re (comap Real.exp atTop) := by
       simp only [comap_comap, (· ∘ ·), abs_exp]
     _ = comap re atTop := by rw [Real.comap_exp_atTop]
     
@@ -439,8 +438,7 @@ theorem tendsto_exp_nhds_zero_iff {α : Type _} {l : Filter α} {f : α → ℂ}
 #align complex.tendsto_exp_nhds_zero_iff Complex.tendsto_exp_nhds_zero_iff
 
 /-- `complex.abs (complex.exp z) → ∞` as `complex.re z → ∞`. TODO: use `bornology.cobounded`. -/
-theorem tendsto_exp_comap_re_atTop :
-    Tendsto exp (comap re atTop) (comap Complex.AbsTheory.Complex.abs atTop) :=
+theorem tendsto_exp_comap_re_atTop : Tendsto exp (comap re atTop) (comap abs atTop) :=
   comap_exp_comap_abs_atTop ▸ tendsto_comap
 #align complex.tendsto_exp_comap_re_at_top Complex.tendsto_exp_comap_re_atTop
 

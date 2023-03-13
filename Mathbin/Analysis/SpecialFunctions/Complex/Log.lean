@@ -180,9 +180,7 @@ alias countable_preimage_exp ↔ _ _root_.set.countable.preimage_cexp
 #align set.countable.preimage_cexp Set.Countable.preimage_cexp
 
 theorem tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) :
-    Tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z)
-      (𝓝 <| Real.log (Complex.AbsTheory.Complex.abs z) - π * I) :=
+    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 <| Real.log (abs z) - π * I) :=
   by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at
@@ -211,10 +209,7 @@ theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
 #align complex.continuous_within_at_log_of_re_neg_of_im_zero Complex.continuousWithinAt_log_of_re_neg_of_im_zero
 
 theorem tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) :
-    Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z)
-      (𝓝 <| Real.log (Complex.AbsTheory.Complex.abs z) + π * I) :=
-  by
+    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * I) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using
     (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 #align complex.tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
@@ -225,8 +220,7 @@ theorem map_exp_comap_re_atBot : map exp (comap re atBot) = 𝓝[≠] 0 := by
 #align complex.map_exp_comap_re_at_bot Complex.map_exp_comap_re_atBot
 
 @[simp]
-theorem map_exp_comap_re_atTop :
-    map exp (comap re atTop) = comap Complex.AbsTheory.Complex.abs atTop :=
+theorem map_exp_comap_re_atTop : map exp (comap re atTop) = comap abs atTop :=
   by
   rw [← comap_exp_comap_abs_at_top, map_comap, range_exp, inf_eq_left, le_principal_iff]
   exact eventually_ne_of_tendsto_norm_atTop tendsto_comap 0

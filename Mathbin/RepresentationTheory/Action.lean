@@ -454,15 +454,15 @@ instance : Linear R (Action V G)
     ext
     exact linear.comp_smul _ _ _ _ _ _
 
-instance forgetLinear : Functor.Linear R (forget V G) where
-#align Action.forget_linear Action.forgetLinear
+instance forget_linear : Functor.Linear R (forget V G) where
+#align Action.forget_linear Action.forget_linear
 
-instance forget₂Linear [ConcreteCategory V] : Functor.Linear R (forget₂ (Action V G) V) where
-#align Action.forget₂_linear Action.forget₂Linear
+instance forget₂_linear [ConcreteCategory V] : Functor.Linear R (forget₂ (Action V G) V) where
+#align Action.forget₂_linear Action.forget₂_linear
 
-instance functorCategoryEquivalenceLinear :
+instance functorCategoryEquivalence_linear :
     Functor.Linear R (functorCategoryEquivalence V G).Functor where
-#align Action.functor_category_equivalence_linear Action.functorCategoryEquivalenceLinear
+#align Action.functor_category_equivalence_linear Action.functorCategoryEquivalence_linear
 
 @[simp]
 theorem smul_hom {X Y : Action V G} (r : R) (f : X ⟶ Y) : (r • f).Hom = r • f.Hom :=
@@ -753,8 +753,8 @@ instance res_additive [Preadditive V] : (res V f).Additive where
 
 variable {R : Type _} [Semiring R]
 
-instance resLinear [Preadditive V] [Linear R V] : (res V f).Linear R where
-#align Action.res_linear Action.resLinear
+instance res_linear [Preadditive V] [Linear R V] : (res V f).Linear R where
+#align Action.res_linear Action.res_linear
 
 /-- Bundles a type `H` with a multiplicative action of `G` as an `Action`. -/
 def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : Action (Type u) (Mon.of G)
@@ -842,8 +842,8 @@ instance mapAction_preadditive [F.Additive] : (F.mapAction G).Additive where
 
 variable {R : Type _} [Semiring R] [CategoryTheory.Linear R V] [CategoryTheory.Linear R W]
 
-instance mapActionLinear [F.Additive] [F.Linear R] : (F.mapAction G).Linear R where
-#align category_theory.functor.map_Action_linear CategoryTheory.Functor.mapActionLinear
+instance mapAction_linear [F.Additive] [F.Linear R] : (F.mapAction G).Linear R where
+#align category_theory.functor.map_Action_linear CategoryTheory.Functor.mapAction_linear
 
 end CategoryTheory.Functor
 

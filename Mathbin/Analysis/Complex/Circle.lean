@@ -49,21 +49,20 @@ def circle : Submonoid ℂ :=
 #align circle circle
 
 @[simp]
-theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ Complex.AbsTheory.Complex.abs z = 1 :=
+theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
   mem_sphere_zero_iff_norm
 #align mem_circle_iff_abs mem_circle_iff_abs
 
-theorem circle_def : ↑circle = { z : ℂ | Complex.AbsTheory.Complex.abs z = 1 } :=
+theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
   Set.ext fun z => mem_circle_iff_abs
 #align circle_def circle_def
 
 @[simp]
-theorem abs_coe_circle (z : circle) : Complex.AbsTheory.Complex.abs z = 1 :=
+theorem abs_coe_circle (z : circle) : abs z = 1 :=
   mem_circle_iff_abs.mp z.2
 #align abs_coe_circle abs_coe_circle
 
-theorem mem_circle_iff_normSq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by
-  simp [Complex.AbsTheory.Complex.abs]
+theorem mem_circle_iff_normSq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by simp [Complex.abs]
 #align mem_circle_iff_norm_sq mem_circle_iff_normSq
 
 @[simp]

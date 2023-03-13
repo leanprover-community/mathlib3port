@@ -405,7 +405,7 @@ instance : IsometricSMul SL(2, ℝ) ℍ :=
       Isometry.of_dist_eq fun y₁ y₂ =>
         by
         have h₁ : 0 ≤ im y₁ * im y₂ := mul_nonneg y₁.property.le y₂.property.le
-        have h₂ : Complex.AbsTheory.Complex.abs (y₁ * y₂) ≠ 0 := by simp [y₁.ne_zero, y₂.ne_zero]
+        have h₂ : Complex.abs (y₁ * y₂) ≠ 0 := by simp [y₁.ne_zero, y₂.ne_zero]
         simp only [dist_eq, modular_S_smul, inv_neg, neg_div, div_mul_div_comm, coe_mk, mk_im,
           div_one, Complex.inv_im, Complex.neg_im, coe_im, neg_neg, Complex.normSq_neg,
           mul_eq_mul_left_iff, Real.arsinh_inj, bit0_eq_zero, one_ne_zero, or_false_iff,

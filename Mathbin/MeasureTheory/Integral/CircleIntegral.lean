@@ -99,7 +99,7 @@ theorem Set.Countable.preimage_circleMap {s : Set ℂ} (hs : s.Countable) (c : �
   show (coe ⁻¹' ((· * I) ⁻¹' (exp ⁻¹' ((· * ·) R ⁻¹' ((· + ·) c ⁻¹' s))))).Countable from
     (((hs.Preimage (add_right_injective _)).Preimage <|
                 mul_right_injective₀ <| ofReal_ne_zero.2 hR).preimage_cexp.Preimage <|
-          mul_left_injective₀ i_ne_zero).Preimage
+          mul_left_injective₀ I_ne_zero).Preimage
       ofReal_injective
 #align set.countable.preimage_circle_map Set.Countable.preimage_circleMap
 
@@ -113,8 +113,7 @@ theorem circleMap_zero (R θ : ℝ) : circleMap 0 R θ = R * exp (θ * I) :=
 #align circle_map_zero circleMap_zero
 
 @[simp]
-theorem abs_circleMap_zero (R : ℝ) (θ : ℝ) :
-    Complex.AbsTheory.Complex.abs (circleMap 0 R θ) = |R| := by simp [circleMap]
+theorem abs_circleMap_zero (R : ℝ) (θ : ℝ) : abs (circleMap 0 R θ) = |R| := by simp [circleMap]
 #align abs_circle_map_zero abs_circleMap_zero
 
 theorem circleMap_mem_sphere' (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ ∈ sphere c (|R|) := by simp
@@ -625,7 +624,7 @@ theorem le_radius_cauchyPowerSeries (f : ℂ → E) (c : ℂ) (R : ℝ≥0) :
 by `2πI` converges to the integral `∮ z in C(c, R), (z - w)⁻¹ • f z` on the open disc
 `metric.ball c R`. -/
 theorem hasSum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} {R : ℝ} {w : ℂ}
-    (hf : CircleIntegrable f c R) (hw : Complex.AbsTheory.Complex.abs w < R) :
+    (hf : CircleIntegrable f c R) (hw : abs w < R) :
     HasSum (fun n : ℕ => ∮ z in C(c, R), (w / (z - c)) ^ n • (z - c)⁻¹ • f z)
       (∮ z in C(c, R), (z - (c + w))⁻¹ • f z) :=
   by
@@ -656,7 +655,7 @@ theorem hasSum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} {
 converges to the Cauchy integral `(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z` on the open
 disc `metric.ball c R`. -/
 theorem hasSum_cauchyPowerSeries_integral {f : ℂ → E} {c : ℂ} {R : ℝ} {w : ℂ}
-    (hf : CircleIntegrable f c R) (hw : Complex.AbsTheory.Complex.abs w < R) :
+    (hf : CircleIntegrable f c R) (hw : abs w < R) :
     HasSum (fun n => cauchyPowerSeries f c R n fun _ => w)
       ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - (c + w))⁻¹ • f z) :=
   by
@@ -668,7 +667,7 @@ theorem hasSum_cauchyPowerSeries_integral {f : ℂ → E} {c : ℂ} {R : ℝ} {w
 converges to the Cauchy integral `(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z` on the open
 disc `metric.ball c R`. -/
 theorem sum_cauchyPowerSeries_eq_integral {f : ℂ → E} {c : ℂ} {R : ℝ} {w : ℂ}
-    (hf : CircleIntegrable f c R) (hw : Complex.AbsTheory.Complex.abs w < R) :
+    (hf : CircleIntegrable f c R) (hw : abs w < R) :
     (cauchyPowerSeries f c R).Sum w = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - (c + w))⁻¹ • f z :=
   (hasSum_cauchyPowerSeries_integral hf hw).tsum_eq
 #align sum_cauchy_power_series_eq_integral sum_cauchyPowerSeries_eq_integral

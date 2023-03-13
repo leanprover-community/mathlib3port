@@ -396,13 +396,13 @@ def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A)
 
 -- When applied to `complex.I` itself, `lift` is the identity.
 @[simp]
-theorem liftAux_i : liftAux I i_mul_I = AlgHom.id ℝ ℂ :=
+theorem liftAux_i : liftAux I I_mul_I = AlgHom.id ℝ ℂ :=
   algHom_ext <| liftAux_apply_i _ _
 #align complex.lift_aux_I Complex.liftAux_i
 
 -- When applied to `-complex.I`, `lift` is conjugation, `conj`.
 @[simp]
-theorem liftAux_neg_i : liftAux (-I) ((neg_mul_neg _ _).trans i_mul_I) = conjAe :=
+theorem liftAux_neg_i : liftAux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conjAe :=
   algHom_ext <| (liftAux_apply_i _ _).trans conj_I.symm
 #align complex.lift_aux_neg_I Complex.liftAux_neg_i
 

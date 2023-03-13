@@ -318,11 +318,11 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
       Units.val_le_val, ← NNReal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.val_mk0,
       Real.coe_toNNReal, coe_nnnorm, Complex.norm_eq_abs, max_le_iff]
     intro x hx
-    have : Complex.AbsTheory.Complex.abs _ ≤ _ := hfor x hx
+    have : Complex.abs _ ≤ _ := hfor x hx
     simp [this]
   · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ←
       NNReal.coe_lt_coe, ← Units.val_lt_val, Units.val_mk0 _, coe_nnnorm]
-    obtain ⟨ζ, hζ, hhζ : Complex.AbsTheory.Complex.abs _ < _⟩ := hex
+    obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
     exact ⟨ζ, hζ, by simp [hhζ]⟩
 #align polynomial.cyclotomic_eval_lt_add_one_pow_totient Polynomial.cyclotomic_eval_lt_add_one_pow_totient
 

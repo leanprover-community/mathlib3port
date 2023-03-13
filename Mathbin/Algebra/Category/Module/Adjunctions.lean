@@ -343,11 +343,11 @@ instance lift_additive (F : C ⥤ D) : (lift R F).Additive
     rw [Finsupp.sum_add_index'] <;> simp [add_smul]
 #align category_theory.Free.lift_additive CategoryTheory.Free.lift_additive
 
-instance liftLinear (F : C ⥤ D) : (lift R F).Linear R
+instance lift_linear (F : C ⥤ D) : (lift R F).Linear R
     where map_smul' X Y f r := by
     dsimp
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_smul]
-#align category_theory.Free.lift_linear CategoryTheory.Free.liftLinear
+#align category_theory.Free.lift_linear CategoryTheory.Free.lift_linear
 
 /-- The embedding into the `R`-linear completion, followed by the lift,
 is isomorphic to the original functor.

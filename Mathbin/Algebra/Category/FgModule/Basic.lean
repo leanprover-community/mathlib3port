@@ -147,11 +147,11 @@ instance forget₂Monoidal_additive : (forget₂Monoidal R).toFunctor.Additive :
   infer_instance
 #align fgModule.forget₂_monoidal_additive FgModule.forget₂Monoidal_additive
 
-instance forget₂MonoidalLinear : (forget₂Monoidal R).toFunctor.Linear R :=
+instance forget₂Monoidal_linear : (forget₂Monoidal R).toFunctor.Linear R :=
   by
   dsimp [forget₂_monoidal]
   infer_instance
-#align fgModule.forget₂_monoidal_linear FgModule.forget₂MonoidalLinear
+#align fgModule.forget₂_monoidal_linear FgModule.forget₂Monoidal_linear
 
 theorem Iso.conj_eq_conj {V W : FgModule R} (i : V ≅ W) (f : End V) :
     Iso.conj i f = LinearEquiv.conj (isoToLinearEquiv i) f :=

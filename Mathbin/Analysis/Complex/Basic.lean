@@ -47,10 +47,10 @@ namespace Complex
 open ComplexConjugate Topology
 
 instance : Norm ℂ :=
-  ⟨Complex.AbsTheory.Complex.abs⟩
+  ⟨abs⟩
 
 @[simp]
-theorem norm_eq_abs (z : ℂ) : ‖z‖ = Complex.AbsTheory.Complex.abs z :=
+theorem norm_eq_abs (z : ℂ) : ‖z‖ = abs z :=
   rfl
 #align complex.norm_eq_abs Complex.norm_eq_abs
 
@@ -60,18 +60,17 @@ theorem norm_exp_of_real_mul_i (t : ℝ) : ‖exp (t * I)‖ = 1 := by
 
 instance : NormedAddCommGroup ℂ :=
   AddGroupNorm.toNormedAddCommGroup
-    {
-      Complex.AbsTheory.Complex.abs with
-      map_zero' := map_zero Complex.AbsTheory.Complex.abs
-      neg' := Complex.AbsTheory.Complex.abs.map_neg
-      eq_zero_of_map_eq_zero' := fun _ => Complex.AbsTheory.Complex.abs.eq_zero.1 }
+    { abs with
+      map_zero' := map_zero abs
+      neg' := abs.map_neg
+      eq_zero_of_map_eq_zero' := fun _ => abs.eq_zero.1 }
 
 instance : NormedField ℂ :=
   { Complex.field,
     Complex.normedAddCommGroup with
-    norm := Complex.AbsTheory.Complex.abs
+    norm := abs
     dist_eq := fun _ _ => rfl
-    norm_mul' := map_mul Complex.AbsTheory.Complex.abs }
+    norm_mul' := map_mul abs }
 
 instance : DenselyNormedField ℂ
     where lt_norm_lt r₁ r₂ h₀ hr :=
@@ -96,7 +95,7 @@ instance (priority := 900) NormedSpace.complexToReal : NormedSpace ℝ E :=
   NormedSpace.restrictScalars ℝ ℂ E
 #align normed_space.complex_to_real NormedSpace.complexToReal
 
-theorem dist_eq (z w : ℂ) : dist z w = Complex.AbsTheory.Complex.abs (z - w) :=
+theorem dist_eq (z w : ℂ) : dist z w = abs (z - w) :=
   rfl
 #align complex.dist_eq Complex.dist_eq
 
@@ -153,7 +152,7 @@ theorem nndist_self_conj (z : ℂ) : nndist z (conj z) = 2 * Real.nnabs z.im := 
 #align complex.nndist_self_conj Complex.nndist_self_conj
 
 @[simp]
-theorem comap_abs_nhds_zero : Filter.comap Complex.AbsTheory.Complex.abs (𝓝 0) = 𝓝 0 :=
+theorem comap_abs_nhds_zero : Filter.comap abs (𝓝 0) = 𝓝 0 :=
   comap_norm_nhds_zero
 #align complex.comap_abs_nhds_zero Complex.comap_abs_nhds_zero
 
@@ -182,7 +181,7 @@ theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ‖(n : ℂ)‖ = n := by 
 #align complex.norm_int_of_nonneg Complex.norm_int_of_nonneg
 
 @[continuity]
-theorem continuous_abs : Continuous Complex.AbsTheory.Complex.abs :=
+theorem continuous_abs : Continuous abs :=
   continuous_norm
 #align complex.continuous_abs Complex.continuous_abs
 
@@ -216,12 +215,12 @@ theorem norm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n 
   congr_arg coe (nnnorm_eq_one_of_pow_eq_one h hn)
 #align complex.norm_eq_one_of_pow_eq_one Complex.norm_eq_one_of_pow_eq_one
 
-theorem equivRealProd_apply_le (z : ℂ) : ‖equivRealProd z‖ ≤ Complex.AbsTheory.Complex.abs z := by
+theorem equivRealProd_apply_le (z : ℂ) : ‖equivRealProd z‖ ≤ abs z := by
   simp [Prod.norm_def, abs_re_le_abs, abs_im_le_abs]
 #align complex.equiv_real_prod_apply_le Complex.equivRealProd_apply_le
 
-theorem equivRealProd_apply_le' (z : ℂ) : ‖equivRealProd z‖ ≤ 1 * Complex.AbsTheory.Complex.abs z :=
-  by simpa using equiv_real_prod_apply_le z
+theorem equivRealProd_apply_le' (z : ℂ) : ‖equivRealProd z‖ ≤ 1 * abs z := by
+  simpa using equiv_real_prod_apply_le z
 #align complex.equiv_real_prod_apply_le' Complex.equivRealProd_apply_le'
 
 theorem lipschitz_equivRealProd : LipschitzWith 1 equivRealProd := by
@@ -250,8 +249,7 @@ instance : ProperSpace ℂ :=
   (id lipschitz_equivRealProd : LipschitzWith 1 equivRealProdClm.toHomeomorph).ProperSpace
 
 /-- The `abs` function on `ℂ` is proper. -/
-theorem tendsto_abs_cocompact_atTop :
-    Filter.Tendsto Complex.AbsTheory.Complex.abs (Filter.cocompact ℂ) Filter.atTop :=
+theorem tendsto_abs_cocompact_atTop : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
   tendsto_norm_cocompact_atTop
 #align complex.tendsto_abs_cocompact_at_top Complex.tendsto_abs_cocompact_atTop
 
@@ -433,8 +431,8 @@ noncomputable instance : IsROrC ℂ
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   I := Complex.I
-  i_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.i_re]
-  i_mul_i_ax := by simp only [Complex.i_mul_I, eq_self_iff_true, or_true_iff]
+  i_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.I_re]
+  i_mul_i_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_true_iff]
   re_add_im_ax z := by
     simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebraMap,
       Complex.ofReal_eq_coe]
@@ -452,7 +450,7 @@ noncomputable instance : IsROrC ℂ
   norm_sq_eq_def_ax z := by
     simp only [← Complex.normSq_eq_abs, ← Complex.normSq_apply, AddMonoidHom.coe_mk,
       Complex.norm_eq_abs]
-  mul_im_i_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.i_im]
+  mul_im_i_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.I_im]
   inv_def_ax z := by
     simp only [Complex.inv_def, Complex.normSq_eq_abs, Complex.coe_algebraMap,
       Complex.ofReal_eq_coe, Complex.norm_eq_abs]
@@ -519,8 +517,7 @@ theorem normSq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
 #align is_R_or_C.norm_sq_to_complex IsROrC.normSq_to_complex
 
 @[simp]
-theorem abs_to_complex {x : ℂ} : absC x = Complex.AbsTheory.Complex.abs x := by
-  simp [IsROrC.abs, Complex.AbsTheory.Complex.abs]
+theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by simp [IsROrC.abs, Complex.abs]
 #align is_R_or_C.abs_to_complex IsROrC.abs_to_complex
 
 section tsum

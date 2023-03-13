@@ -522,7 +522,7 @@ theorem kahler_rightAngleRotation_left (x y : E) : o.kahler (J x) y = -Complex.I
   by
   simp only [o.area_form_right_angle_rotation_left, o.inner_right_angle_rotation_left,
     o.kahler_apply_apply, Complex.ofReal_neg, Complex.real_smul]
-  linear_combination ω x y * Complex.i_sq
+  linear_combination ω x y * Complex.I_sq
 #align orientation.kahler_right_angle_rotation_left Orientation.kahler_rightAngleRotation_left
 
 @[simp]
@@ -530,14 +530,14 @@ theorem kahler_rightAngleRotation_right (x y : E) : o.kahler x (J y) = Complex.I
   by
   simp only [o.area_form_right_angle_rotation_right, o.inner_right_angle_rotation_right,
     o.kahler_apply_apply, Complex.ofReal_neg, Complex.real_smul]
-  linear_combination -ω x y * Complex.i_sq
+  linear_combination -ω x y * Complex.I_sq
 #align orientation.kahler_right_angle_rotation_right Orientation.kahler_rightAngleRotation_right
 
 @[simp]
 theorem kahler_comp_rightAngleRotation (x y : E) : o.kahler (J x) (J y) = o.kahler x y :=
   by
   simp only [kahler_right_angle_rotation_left, kahler_right_angle_rotation_right]
-  linear_combination -o.kahler x y * Complex.i_sq
+  linear_combination -o.kahler x y * Complex.I_sq
 #align orientation.kahler_comp_right_angle_rotation Orientation.kahler_comp_rightAngleRotation
 
 @[simp]
@@ -549,11 +549,11 @@ theorem kahler_mul (a x y : E) : o.kahler x a * o.kahler a y = ‖a‖ ^ 2 * o.k
   by
   trans (↑(‖a‖ ^ 2) : ℂ) * o.kahler x y
   · ext
-    · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.i_im, Complex.i_re,
+    · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.I_im, Complex.I_re,
         Complex.mul_im, Complex.mul_re, Complex.ofReal_im, Complex.ofReal_re, Complex.real_smul]
       rw [real_inner_comm a x, o.area_form_swap x a]
       linear_combination o.inner_mul_inner_add_area_form_mul_area_form a x y
-    · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.i_im, Complex.i_re,
+    · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.I_im, Complex.I_re,
         Complex.mul_im, Complex.mul_re, Complex.ofReal_im, Complex.ofReal_re, Complex.real_smul]
       rw [real_inner_comm a x, o.area_form_swap x a]
       linear_combination o.inner_mul_area_form_sub a x y
@@ -564,7 +564,7 @@ theorem normSq_kahler (x y : E) : Complex.normSq (o.kahler x y) = ‖x‖ ^ 2 * 
   simpa [kahler_apply_apply, Complex.normSq, sq] using o.inner_sq_add_area_form_sq x y
 #align orientation.norm_sq_kahler Orientation.normSq_kahler
 
-theorem abs_kahler (x y : E) : Complex.AbsTheory.Complex.abs (o.kahler x y) = ‖x‖ * ‖y‖ :=
+theorem abs_kahler (x y : E) : Complex.abs (o.kahler x y) = ‖x‖ * ‖y‖ :=
   by
   rw [← sq_eq_sq, Complex.sq_abs]
   · linear_combination o.norm_sq_kahler x y

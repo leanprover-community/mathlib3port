@@ -80,15 +80,13 @@ theorem IsBoundedAtImInfty.mul {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f)
 #align upper_half_plane.is_bounded_at_im_infty.mul UpperHalfPlane.IsBoundedAtImInfty.mul
 
 theorem bounded_mem (f : ℍ → ℂ) :
-    IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → Complex.AbsTheory.Complex.abs (f z) ≤ M :=
-  by
+    IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
   simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.isO_iff, Filter.Eventually,
     at_im_infty_mem]
 #align upper_half_plane.bounded_mem UpperHalfPlane.bounded_mem
 
 theorem zero_at_im_infty (f : ℍ → ℂ) :
-    IsZeroAtImInfty f ↔
-      ∀ ε : ℝ, 0 < ε → ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → Complex.AbsTheory.Complex.abs (f z) ≤ ε :=
+    IsZeroAtImInfty f ↔ ∀ ε : ℝ, 0 < ε → ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ ε :=
   by
   rw [is_zero_at_im_infty, zero_at_filter, tendsto_iff_forall_eventually_mem]
   constructor
