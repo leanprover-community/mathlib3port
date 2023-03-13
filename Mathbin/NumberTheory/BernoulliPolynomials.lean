@@ -269,8 +269,8 @@ theorem bernoulli_generating_function (t : A) :
   simp only [Nat.cast_choose ℚ (mem_range_le hi), coeff_mk, if_neg (mem_range_sub_ne_zero hi),
     one_div, AlgHom.map_smul, PowerSeries.coeff_one, coeff_exp, sub_zero, LinearMap.map_sub,
     Algebra.smul_mul_assoc, Algebra.smul_def, mul_right_comm _ ((aeval t) _), ← mul_assoc, ←
-    RingHom.map_mul, succ_eq_add_one, ← Polynomial.c_eq_algebraMap, Polynomial.aeval_mul,
-    Polynomial.aeval_c]
+    RingHom.map_mul, succ_eq_add_one, ← Polynomial.C_eq_algebraMap, Polynomial.aeval_mul,
+    Polynomial.aeval_C]
   -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
   apply congr_arg

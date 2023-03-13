@@ -298,7 +298,7 @@ polynomials with coefficients in `mv_polynomial S₁ R`.
 def optionEquivLeft : MvPolynomial (Option S₁) R ≃ₐ[R] Polynomial (MvPolynomial S₁ R) :=
   AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.X fun s => Polynomial.C (x s))
     (Polynomial.aevalTower (MvPolynomial.rename some) (x none))
-    (by ext : 2 <;> simp [← Polynomial.c_eq_algebraMap]) (by ext i : 2 <;> cases i <;> simp)
+    (by ext : 2 <;> simp [← Polynomial.C_eq_algebraMap]) (by ext i : 2 <;> cases i <;> simp)
 #align mv_polynomial.option_equiv_left MvPolynomial.optionEquivLeft
 
 end
@@ -312,12 +312,12 @@ def optionEquivRight : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ 
     (by
       ext : 2 <;>
         simp only [MvPolynomial.algebraMap_eq, Option.elim', AlgHom.coe_comp, AlgHom.id_comp,
-          IsScalarTower.coe_to_alg_hom', comp_app, aeval_tower_C, Polynomial.aeval_x, aeval_X,
+          IsScalarTower.coe_to_alg_hom', comp_app, aeval_tower_C, Polynomial.aeval_X, aeval_X,
           Option.elim', aeval_tower_X, AlgHom.coe_id, id.def, eq_self_iff_true, imp_true_iff])
     (by
       ext ⟨i⟩ : 2 <;>
         simp only [Option.elim', AlgHom.coe_comp, comp_app, aeval_X, aeval_tower_C,
-          Polynomial.aeval_x, AlgHom.coe_id, id.def, aeval_tower_X])
+          Polynomial.aeval_X, AlgHom.coe_id, id.def, aeval_tower_X])
 #align mv_polynomial.option_equiv_right MvPolynomial.optionEquivRight
 
 variable (n : ℕ)

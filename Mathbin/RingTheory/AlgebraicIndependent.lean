@@ -471,7 +471,7 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
   have h : IsScalarTower R (MvPolynomial ι R) (Polynomial (MvPolynomial ι R)) :=
     @Polynomial.isScalarTower (MvPolynomial ι R) _ R _ _ _ _ _ _ _
   rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_C,
-    @IsScalarTower.algebraMap_apply _ _ _ _ _ _ _ _ _ h, ← Polynomial.c_eq_algebraMap,
+    @IsScalarTower.algebraMap_apply _ _ _ _ _ _ _ _ _ h, ← Polynomial.C_eq_algebraMap,
     Polynomial.map_C, RingHom.coe_coe, AlgEquiv.commutes]
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_C AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
 
@@ -504,14 +504,14 @@ theorem AlgebraicIndependent.aeval_comp_mvPolynomialOptionEquivPolynomialAdjoin
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
       AlgHom.coe_toRingHom, AlgHom.coe_toRingHom]
   · intro r
-    rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_c,
+    rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_C,
       IsScalarTower.algebraMap_apply R (adjoin R (range x)) A]
   · rintro (⟨⟩ | ⟨i⟩)
     ·
-      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_x,
+      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_X,
         Option.elim']
     ·
-      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_c,
+      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_C,
         hx.algebra_map_aeval_equiv, aeval_X, aeval_X, Option.elim']
 #align algebraic_independent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin AlgebraicIndependent.aeval_comp_mvPolynomialOptionEquivPolynomialAdjoin
 

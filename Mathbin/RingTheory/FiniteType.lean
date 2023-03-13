@@ -81,7 +81,7 @@ theorem self : FiniteType R R :=
 protected theorem polynomial : FiniteType R R[X] :=
   ⟨⟨{Polynomial.X}, by
       rw [Finset.coe_singleton]
-      exact Polynomial.adjoin_x⟩⟩
+      exact Polynomial.adjoin_X⟩⟩
 #align algebra.finite_type.polynomial Algebra.FiniteType.polynomial
 
 open Classical

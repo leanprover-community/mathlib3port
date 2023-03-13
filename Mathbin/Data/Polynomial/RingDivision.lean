@@ -406,7 +406,7 @@ section Roots
 open Multiset
 
 theorem prime_x_sub_c (r : R) : Prime (X - C r) :=
-  ⟨X_sub_C_ne_zero r, not_isUnit_x_sub_c r, fun _ _ =>
+  ⟨X_sub_C_ne_zero r, not_isUnit_X_sub_C r, fun _ _ =>
     by
     simp_rw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
     exact id⟩
