@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit a47cda9662ff3925c6df271090b5808adbca5b46
+! leanprover-community/mathlib commit 2af0836443b4cfb5feda0df0051acdb398304931
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,57 +231,28 @@ instance : Ring (ℤ√d) := by infer_instance
 instance : Distrib (ℤ√d) := by infer_instance
 
 /-- Conjugation in `ℤ√d`. The conjugate of `a + b √d` is `a - b √d`. -/
-def conj (z : ℤ√d) : ℤ√d :=
-  ⟨z.1, -z.2⟩
-#align zsqrtd.conj Zsqrtd.conj
+instance : Star (ℤ√d) where unit z := ⟨z.1, -z.2⟩
 
 @[simp]
-theorem conj_re (z : ℤ√d) : (conj z).re = z.re :=
+theorem star_mk (x y : ℤ) : star (⟨x, y⟩ : ℤ√d) = ⟨x, -y⟩ :=
   rfl
-#align zsqrtd.conj_re Zsqrtd.conj_re
+#align zsqrtd.star_mk Zsqrtd.star_mk
 
 @[simp]
-theorem conj_im (z : ℤ√d) : (conj z).im = -z.im :=
+theorem star_re (z : ℤ√d) : (star z).re = z.re :=
   rfl
-#align zsqrtd.conj_im Zsqrtd.conj_im
-
-/-- `conj` as an `add_monoid_hom`. -/
-def conjHom : ℤ√d →+ ℤ√d where
-  toFun := conj
-  map_add' := fun ⟨a, ai⟩ ⟨b, bi⟩ => ext.mpr ⟨rfl, neg_add _ _⟩
-  map_zero' := ext.mpr ⟨rfl, neg_zero⟩
-#align zsqrtd.conj_hom Zsqrtd.conjHom
+#align zsqrtd.star_re Zsqrtd.star_re
 
 @[simp]
-theorem conj_zero : conj (0 : ℤ√d) = 0 :=
-  conj_hom.map_zero
-#align zsqrtd.conj_zero Zsqrtd.conj_zero
-
-@[simp]
-theorem conj_one : conj (1 : ℤ√d) = 1 := by
-  simp only [Zsqrtd.ext, Zsqrtd.conj_re, Zsqrtd.conj_im, Zsqrtd.one_im, neg_zero, eq_self_iff_true,
-    and_self_iff]
-#align zsqrtd.conj_one Zsqrtd.conj_one
-
-@[simp]
-theorem conj_neg (x : ℤ√d) : (-x).conj = -x.conj :=
+theorem star_im (z : ℤ√d) : (star z).im = -z.im :=
   rfl
-#align zsqrtd.conj_neg Zsqrtd.conj_neg
+#align zsqrtd.star_im Zsqrtd.star_im
 
-@[simp]
-theorem conj_add (x y : ℤ√d) : (x + y).conj = x.conj + y.conj :=
-  conj_hom.map_add x y
-#align zsqrtd.conj_add Zsqrtd.conj_add
-
-@[simp]
-theorem conj_sub (x y : ℤ√d) : (x - y).conj = x.conj - y.conj :=
-  conj_hom.map_sub x y
-#align zsqrtd.conj_sub Zsqrtd.conj_sub
-
-@[simp]
-theorem conj_conj {d : ℤ} (x : ℤ√d) : x.conj.conj = x := by
-  simp only [ext, true_and_iff, conj_re, eq_self_iff_true, neg_neg, conj_im]
-#align zsqrtd.conj_conj Zsqrtd.conj_conj
+instance : StarRing (ℤ√d)
+    where
+  star_involutive x := ext.mpr ⟨rfl, neg_neg _⟩
+  star_mul a b := ext.mpr ⟨by simp <;> ring, by simp <;> ring⟩
+  star_add a b := ext.mpr ⟨rfl, neg_add _ _⟩
 
 instance : Nontrivial (ℤ√d) :=
   ⟨⟨0, 1, by decide⟩⟩
@@ -342,15 +313,9 @@ theorem smuld_val (n x y : ℤ) : sqrtd * (n : ℤ√d) * ⟨x, y⟩ = ⟨d * n 
 theorem decompose {x y : ℤ} : (⟨x, y⟩ : ℤ√d) = x + sqrtd * y := by simp [ext]
 #align zsqrtd.decompose Zsqrtd.decompose
 
-theorem mul_conj {x y : ℤ} : (⟨x, y⟩ * conj ⟨x, y⟩ : ℤ√d) = x * x - d * y * y := by
+theorem mul_star {x y : ℤ} : (⟨x, y⟩ * star ⟨x, y⟩ : ℤ√d) = x * x - d * y * y := by
   simp [ext, sub_eq_add_neg, mul_comm]
-#align zsqrtd.mul_conj Zsqrtd.mul_conj
-
-theorem conj_mul {a b : ℤ√d} : conj (a * b) = conj a * conj b :=
-  by
-  simp [ext]
-  ring
-#align zsqrtd.conj_mul Zsqrtd.conj_mul
+#align zsqrtd.mul_star Zsqrtd.mul_star
 
 protected theorem coe_int_add (m n : ℤ) : (↑(m + n) : ℤ√d) = ↑m + ↑n :=
   (Int.castRingHom _).map_add _ _
@@ -571,18 +536,18 @@ def normMonoidHom : ℤ√d →* ℤ where
   map_one' := norm_one
 #align zsqrtd.norm_monoid_hom Zsqrtd.normMonoidHom
 
-theorem norm_eq_mul_conj (n : ℤ√d) : (norm n : ℤ√d) = n * n.conj := by
-  cases n <;> simp [norm, conj, Zsqrtd.ext, mul_comm, sub_eq_add_neg]
+theorem norm_eq_mul_conj (n : ℤ√d) : (norm n : ℤ√d) = n * star n := by
+  cases n <;> simp [norm, star, Zsqrtd.ext, mul_comm, sub_eq_add_neg]
 #align zsqrtd.norm_eq_mul_conj Zsqrtd.norm_eq_mul_conj
 
 @[simp]
 theorem norm_neg (x : ℤ√d) : (-x).norm = x.norm :=
-  coe_int_inj <| by simp only [norm_eq_mul_conj, conj_neg, neg_mul, mul_neg, neg_neg]
+  coe_int_inj <| by simp only [norm_eq_mul_conj, star_neg, neg_mul, mul_neg, neg_neg]
 #align zsqrtd.norm_neg Zsqrtd.norm_neg
 
 @[simp]
-theorem norm_conj (x : ℤ√d) : x.conj.norm = x.norm :=
-  coe_int_inj <| by simp only [norm_eq_mul_conj, conj_conj, mul_comm]
+theorem norm_conj (x : ℤ√d) : (star x).norm = x.norm :=
+  coe_int_inj <| by simp only [norm_eq_mul_conj, star_star, mul_comm]
 #align zsqrtd.norm_conj Zsqrtd.norm_conj
 
 theorem norm_nonneg (hd : d ≤ 0) (n : ℤ√d) : 0 ≤ n.norm :=
@@ -597,12 +562,12 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
       (le_total 0 (norm x)).casesOn
         (fun hx =>
           show x ∣ 1 from
-            ⟨x.conj, by
+            ⟨star x, by
               rwa [← Int.coe_nat_inj', Int.natAbs_of_nonneg hx, ← @Int.cast_inj (ℤ√d) _ _,
                 norm_eq_mul_conj, eq_comm] at h⟩)
         fun hx =>
         show x ∣ 1 from
-          ⟨-x.conj, by
+          ⟨-star x, by
             rwa [← Int.coe_nat_inj', Int.ofNat_natAbs_of_nonpos hx, ← @Int.cast_inj (ℤ√d) _ _,
               Int.cast_neg, norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
     fun h => by

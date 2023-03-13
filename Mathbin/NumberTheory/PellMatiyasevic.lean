@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.pell_matiyasevic
-! leanprover-community/mathlib commit a66d07e27d5b5b8ac1147cacfe353478e5c14002
+! leanprover-community/mathlib commit 2af0836443b4cfb5feda0df0051acdb398304931
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.Star.Unitary
 import Mathbin.Data.Nat.Modeq
 import Mathbin.NumberTheory.Zsqrtd.Basic
 
@@ -196,19 +197,22 @@ theorem isPell_nat {x y : ℕ} : is_pell ⟨x, y⟩ ↔ x * x - d * y * y = 1 :=
       rw [← Int.ofNat_sub <| le_of_lt <| Nat.lt_of_sub_eq_succ h, h] <;> rfl⟩
 #align pell.is_pell_nat Pell.isPell_nat
 
-theorem isPell_norm : ∀ {b : ℤ√d}, is_pell b ↔ b * b.conj = 1
+theorem isPell_norm : ∀ {b : ℤ√d}, is_pell b ↔ b * star b = 1
   | ⟨x, y⟩ => by simp [Zsqrtd.ext, is_pell, mul_comm] <;> ring_nf
 #align pell.is_pell_norm Pell.isPell_norm
 
+theorem isPell_iff_mem_unitary : ∀ {b : ℤ√d}, is_pell b ↔ b ∈ unitary (ℤ√d)
+  | ⟨x, y⟩ => by rw [unitary.mem_iff, is_pell_norm, mul_comm (star _), and_self_iff]
+#align pell.is_pell_iff_mem_unitary Pell.isPell_iff_mem_unitary
+
 theorem isPell_mul {b c : ℤ√d} (hb : is_pell b) (hc : is_pell c) : is_pell (b * c) :=
   is_pell_norm.2
-    (by
-      simp [mul_comm, mul_left_comm, Zsqrtd.conj_mul, Pell.isPell_norm.1 hb, Pell.isPell_norm.1 hc])
+    (by simp [mul_comm, mul_left_comm, star_mul, Pell.isPell_norm.1 hb, Pell.isPell_norm.1 hc])
 #align pell.is_pell_mul Pell.isPell_mul
 
-theorem isPell_conj : ∀ {b : ℤ√d}, is_pell b ↔ is_pell b.conj
-  | ⟨x, y⟩ => by simp [is_pell, Zsqrtd.conj]
-#align pell.is_pell_conj Pell.isPell_conj
+theorem isPell_star : ∀ {b : ℤ√d}, is_pell b ↔ is_pell (star b)
+  | ⟨x, y⟩ => by simp [is_pell, Zsqrtd.star_mk]
+#align pell.is_pell_star Pell.isPell_star
 
 @[simp]
 theorem pellZd_succ (n : ℕ) : pell_zd (n + 1) = pell_zd n * ⟨a, 1⟩ := by simp [Zsqrtd.ext]
@@ -286,7 +290,7 @@ theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → is_pell b → b ≤ pel
     if ha : (⟨↑a, 1⟩ : ℤ√d) ≤ b then
       let ⟨m, e⟩ :=
         eq_pell_lem n (b * ⟨a, -1⟩) (by rw [← a1m] <;> exact mul_le_mul_of_nonneg_right ha am1p)
-          (is_pell_mul hp (is_pell_conj.1 is_pell_one))
+          (is_pell_mul hp (is_pell_star.1 is_pell_one))
           (by
             have t := mul_le_mul_of_nonneg_right h am1p <;>
               rwa [pell_zd_succ, mul_assoc, a1m, mul_one] at t)
@@ -365,7 +369,7 @@ theorem yn_add (m n) : yn (m + n) = xn m * yn n + yn m * xn n := by
     exact Int.ofNat.inj h
 #align pell.yn_add Pell.yn_add
 
-theorem pellZd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m * (pell_zd n).conj :=
+theorem pellZd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m * star (pell_zd n) :=
   by
   let t := pell_zd_add n (m - n)
   rw [add_tsub_cancel_of_le h] at t <;>

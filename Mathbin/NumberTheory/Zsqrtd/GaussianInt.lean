@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.gaussian_int
-! leanprover-community/mathlib commit e1bccd6e40ae78370f01659715d3c948716e3b7e
+! leanprover-community/mathlib commit 2af0836443b4cfb5feda0df0051acdb398304931
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,6 +43,8 @@ and definitions about `zsqrtd` can easily be used.
 
 
 open Zsqrtd Complex
+
+open ComplexConjugate
 
 /-- The Gaussian integers, defined as `ℤ√(-1)`. -/
 @[reducible]
@@ -134,6 +136,13 @@ theorem to_complex_sub (x y : ℤ[i]) : ((x - y : ℤ[i]) : ℂ) = x - y :=
 #align gaussian_int.to_complex_sub GaussianInt.to_complex_sub
 
 @[simp]
+theorem to_complex_star (x : ℤ[i]) : ((star x : ℤ[i]) : ℂ) = conj (x : ℂ) :=
+  by
+  rw [to_complex_def₂, to_complex_def₂]
+  exact congr_arg₂ _ rfl (Int.cast_neg _)
+#align gaussian_int.to_complex_star GaussianInt.to_complex_star
+
+@[simp]
 theorem to_complex_inj {x y : ℤ[i]} : (x : ℂ) = y ↔ x = y := by
   cases x <;> cases y <;> simp [to_complex_def₂]
 #align gaussian_int.to_complex_inj GaussianInt.to_complex_inj
@@ -182,11 +191,11 @@ theorem natAbs_norm_eq (x : ℤ[i]) :
 instance : Div ℤ[i] :=
   ⟨fun x y =>
     let n := (norm y : ℚ)⁻¹
-    let c := y.conj
+    let c := star y
     ⟨round ((x * c).re * n : ℚ), round ((x * c).im * n : ℚ)⟩⟩
 
 theorem div_def (x y : ℤ[i]) :
-    x / y = ⟨round ((x * conj y).re / norm y : ℚ), round ((x * conj y).im / norm y : ℚ)⟩ :=
+    x / y = ⟨round ((x * star y).re / norm y : ℚ), round ((x * star y).im / norm y : ℚ)⟩ :=
   show Zsqrtd.mk _ _ = _ by simp [div_eq_mul_inv]
 #align gaussian_int.div_def GaussianInt.div_def
 
