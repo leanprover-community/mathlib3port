@@ -64,54 +64,71 @@ namespace CommSq
 
 variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
+#print CategoryTheory.CommSq.cone /-
 /-- The (not necessarily limiting) `pullback_cone h i` implicit in the statement
 that we have `comm_sq f g h i`.
 -/
 def cone (s : CommSq f g h i) : PullbackCone h i :=
   PullbackCone.mk _ _ s.w
 #align category_theory.comm_sq.cone CategoryTheory.CommSq.cone
+-/
 
+#print CategoryTheory.CommSq.cocone /-
 /-- The (not necessarily limiting) `pushout_cocone f g` implicit in the statement
 that we have `comm_sq f g h i`.
 -/
 def cocone (s : CommSq f g h i) : PushoutCocone f g :=
   PushoutCocone.mk _ _ s.w
 #align category_theory.comm_sq.cocone CategoryTheory.CommSq.cocone
+-/
 
+#print CategoryTheory.CommSq.cone_fst /-
 @[simp]
 theorem cone_fst (s : CommSq f g h i) : s.Cone.fst = f :=
   rfl
 #align category_theory.comm_sq.cone_fst CategoryTheory.CommSq.cone_fst
+-/
 
+#print CategoryTheory.CommSq.cone_snd /-
 @[simp]
 theorem cone_snd (s : CommSq f g h i) : s.Cone.snd = g :=
   rfl
 #align category_theory.comm_sq.cone_snd CategoryTheory.CommSq.cone_snd
+-/
 
+#print CategoryTheory.CommSq.cocone_inl /-
 @[simp]
 theorem cocone_inl (s : CommSq f g h i) : s.Cocone.inl = h :=
   rfl
 #align category_theory.comm_sq.cocone_inl CategoryTheory.CommSq.cocone_inl
+-/
 
+#print CategoryTheory.CommSq.cocone_inr /-
 @[simp]
 theorem cocone_inr (s : CommSq f g h i) : s.Cocone.inr = i :=
   rfl
 #align category_theory.comm_sq.cocone_inr CategoryTheory.CommSq.cocone_inr
+-/
 
+#print CategoryTheory.CommSq.coneOp /-
 /-- The pushout cocone in the opposite category associated to the cone of
 a commutative square identifies to the cocone of the flipped commutative square in
 the opposite category -/
 def coneOp (p : CommSq f g h i) : p.Cone.op ≅ p.flip.op.Cocone :=
   PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy)
 #align category_theory.comm_sq.cone_op CategoryTheory.CommSq.coneOp
+-/
 
+#print CategoryTheory.CommSq.coconeOp /-
 /-- The pullback cone in the opposite category associated to the cocone of
 a commutative square identifies to the cone of the flipped commutative square in
 the opposite category -/
 def coconeOp (p : CommSq f g h i) : p.Cocone.op ≅ p.flip.op.Cone :=
   PullbackCone.ext (Iso.refl _) (by tidy) (by tidy)
 #align category_theory.comm_sq.cocone_op CategoryTheory.CommSq.coconeOp
+-/
 
+#print CategoryTheory.CommSq.coneUnop /-
 /-- The pushout cocone obtained from the pullback cone associated to a
 commutative square in the opposite category identifies to the cocone associated
 to the flipped square. -/
@@ -119,7 +136,9 @@ def coneUnop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : 
     p.Cone.unop ≅ p.flip.unop.Cocone :=
   PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy)
 #align category_theory.comm_sq.cone_unop CategoryTheory.CommSq.coneUnop
+-/
 
+#print CategoryTheory.CommSq.coconeUnop /-
 /-- The pullback cone obtained from the pushout cone associated to a
 commutative square in the opposite category identifies to the cone associated
 to the flipped square. -/
@@ -127,9 +146,11 @@ def coconeUnop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i 
     (p : CommSq f g h i) : p.Cocone.unop ≅ p.flip.unop.Cone :=
   PullbackCone.ext (Iso.refl _) (by tidy) (by tidy)
 #align category_theory.comm_sq.cocone_unop CategoryTheory.CommSq.coconeUnop
+-/
 
 end CommSq
 
+#print CategoryTheory.IsPullback /-
 /-- The proposition that a square
 ```
   P --fst--> X
@@ -146,7 +167,9 @@ structure IsPullback {P X Y Z : C} (fst : P ⟶ X) (snd : P ⟶ Y) (f : X ⟶ Z)
   CommSq fst snd f g : Prop where
   is_limit' : Nonempty (IsLimit (PullbackCone.mk _ _ w))
 #align category_theory.is_pullback CategoryTheory.IsPullback
+-/
 
+#print CategoryTheory.IsPushout /-
 /-- The proposition that a square
 ```
   Z ---f---> X
@@ -163,9 +186,11 @@ structure IsPushout {Z X Y P : C} (f : Z ⟶ X) (g : Z ⟶ Y) (inl : X ⟶ P) (i
   CommSq f g inl inr : Prop where
   is_colimit' : Nonempty (IsColimit (PushoutCocone.mk _ _ w))
 #align category_theory.is_pushout CategoryTheory.IsPushout
+-/
 
 section
 
+#print CategoryTheory.BicartesianSq /-
 /-- A *bicartesian* square is a commutative square
 ```
   W ---f---> X
@@ -181,6 +206,7 @@ that is both a pullback square and a pushout square.
 structure BicartesianSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y ⟶ Z) extends
   IsPullback f g h i, IsPushout f g h i : Prop
 #align category_theory.bicartesian_sq CategoryTheory.BicartesianSq
+-/
 
 -- Lean should make these parent projections as `lemma`, not `def`.
 attribute [nolint def_lemma doc_blame] bicartesian_sq.to_is_pullback bicartesian_sq.to_is_pushout
@@ -197,47 +223,66 @@ namespace IsPullback
 
 variable {P X Y Z : C} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ Z}
 
+#print CategoryTheory.IsPullback.cone /-
 /-- The (limiting) `pullback_cone f g` implicit in the statement
 that we have a `is_pullback fst snd f g`.
 -/
 def cone (h : IsPullback fst snd f g) : PullbackCone f g :=
   h.to_commSq.Cone
 #align category_theory.is_pullback.cone CategoryTheory.IsPullback.cone
+-/
 
+#print CategoryTheory.IsPullback.cone_fst /-
 @[simp]
 theorem cone_fst (h : IsPullback fst snd f g) : h.Cone.fst = fst :=
   rfl
 #align category_theory.is_pullback.cone_fst CategoryTheory.IsPullback.cone_fst
+-/
 
+#print CategoryTheory.IsPullback.cone_snd /-
 @[simp]
 theorem cone_snd (h : IsPullback fst snd f g) : h.Cone.snd = snd :=
   rfl
 #align category_theory.is_pullback.cone_snd CategoryTheory.IsPullback.cone_snd
+-/
 
+#print CategoryTheory.IsPullback.isLimit /-
 /-- The cone obtained from `is_pullback fst snd f g` is a limit cone.
 -/
 noncomputable def isLimit (h : IsPullback fst snd f g) : IsLimit h.Cone :=
   h.is_limit'.some
 #align category_theory.is_pullback.is_limit CategoryTheory.IsPullback.isLimit
+-/
 
+#print CategoryTheory.IsPullback.of_isLimit /-
 /-- If `c` is a limiting pullback cone, then we have a `is_pullback c.fst c.snd f g`. -/
 theorem of_isLimit {c : PullbackCone f g} (h : Limits.IsLimit c) : IsPullback c.fst c.snd f g :=
   { w := c.condition
     is_limit' := ⟨IsLimit.ofIsoLimit h (Limits.PullbackCone.ext (Iso.refl _) (by tidy) (by tidy))⟩ }
 #align category_theory.is_pullback.of_is_limit CategoryTheory.IsPullback.of_isLimit
+-/
 
+#print CategoryTheory.IsPullback.of_isLimit' /-
 /-- A variant of `of_is_limit` that is more useful with `apply`. -/
-theorem of_is_limit' (w : CommSq fst snd f g) (h : Limits.IsLimit w.Cone) :
-    IsPullback fst snd f g :=
+theorem of_isLimit' (w : CommSq fst snd f g) (h : Limits.IsLimit w.Cone) : IsPullback fst snd f g :=
   of_isLimit h
-#align category_theory.is_pullback.of_is_limit' CategoryTheory.IsPullback.of_is_limit'
+#align category_theory.is_pullback.of_is_limit' CategoryTheory.IsPullback.of_isLimit'
+-/
 
+#print CategoryTheory.IsPullback.of_hasPullback /-
 /-- The pullback provided by `has_pullback f g` fits into a `is_pullback`. -/
 theorem of_hasPullback (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] :
     IsPullback (pullback.fst : pullback f g ⟶ X) (pullback.snd : pullback f g ⟶ Y) f g :=
   of_isLimit (limit.isLimit (cospan f g))
 #align category_theory.is_pullback.of_has_pullback CategoryTheory.IsPullback.of_hasPullback
+-/
 
+/- warning: category_theory.is_pullback.of_is_product -> CategoryTheory.IsPullback.of_is_product is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} {Z : C} {c : CategoryTheory.Limits.BinaryFan.{u1, u2} C _inst_1 X Y}, (CategoryTheory.Limits.IsLimit.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c) -> (forall (t : CategoryTheory.Limits.IsTerminal.{u1, u2} C _inst_1 Z), CategoryTheory.IsPullback.{u1, u2} C _inst_1 (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Functor.obj.{u1, u1, u2, max u1 u2} C _inst_1 (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.category.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.const.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Limits.Cone.pt.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right)) Z (CategoryTheory.Limits.BinaryFan.fst.{u1, u2} C _inst_1 X Y c) (CategoryTheory.Limits.BinaryFan.snd.{u1, u2} C _inst_1 X Y c) (CategoryTheory.Limits.IsTerminal.from.{u1, u2} C _inst_1 Z t (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left))) (CategoryTheory.Limits.IsTerminal.from.{u1, u2} C _inst_1 Z t (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right))))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} {Z : C} {c : CategoryTheory.Limits.BinaryFan.{u1, u2} C _inst_1 X Y}, (CategoryTheory.Limits.IsLimit.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c) -> (forall (t : CategoryTheory.Limits.IsTerminal.{u1, u2} C _inst_1 Z), CategoryTheory.IsPullback.{u1, u2} C _inst_1 (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (Prefunctor.obj.{succ u1, succ u1, u2, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.category.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.category.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.const.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1)) (CategoryTheory.Limits.Cone.pt.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c))) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right)) Z (CategoryTheory.Limits.BinaryFan.fst.{u1, u2} C _inst_1 X Y c) (CategoryTheory.Limits.BinaryFan.snd.{u1, u2} C _inst_1 X Y c) (CategoryTheory.Limits.IsTerminal.from.{u1, u2} C _inst_1 Z t (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left))) (CategoryTheory.Limits.IsTerminal.from.{u1, u2} C _inst_1 Z t (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right))))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.of_is_product CategoryTheory.IsPullback.of_is_productₓ'. -/
 /-- If `c` is a limiting binary product cone, and we have a terminal object,
 then we have `is_pullback c.fst c.snd 0 0`
 (where each `0` is the unique morphism to the terminal object). -/
@@ -253,34 +298,43 @@ theorem of_is_product {c : BinaryFan X Y} (h : Limits.IsLimit c) (t : IsTerminal
                 simp))))
 #align category_theory.is_pullback.of_is_product CategoryTheory.IsPullback.of_is_product
 
+#print CategoryTheory.IsPullback.of_is_product' /-
 /-- A variant of `of_is_product` that is more useful with `apply`. -/
 theorem of_is_product' (h : Limits.IsLimit (BinaryFan.mk fst snd)) (t : IsTerminal Z) :
     IsPullback fst snd (t.from _) (t.from _) :=
   of_is_product h t
 #align category_theory.is_pullback.of_is_product' CategoryTheory.IsPullback.of_is_product'
+-/
 
 variable (X Y)
 
-theorem of_has_binary_product' [HasBinaryProduct X Y] [HasTerminal C] :
+#print CategoryTheory.IsPullback.of_hasBinaryProduct' /-
+theorem of_hasBinaryProduct' [HasBinaryProduct X Y] [HasTerminal C] :
     IsPullback Limits.prod.fst Limits.prod.snd (terminal.from X) (terminal.from Y) :=
   of_is_product (limit.isLimit _) terminalIsTerminal
-#align category_theory.is_pullback.of_has_binary_product' CategoryTheory.IsPullback.of_has_binary_product'
+#align category_theory.is_pullback.of_has_binary_product' CategoryTheory.IsPullback.of_hasBinaryProduct'
+-/
 
 open ZeroObject
 
+#print CategoryTheory.IsPullback.of_hasBinaryProduct /-
 theorem of_hasBinaryProduct [HasBinaryProduct X Y] [HasZeroObject C] [HasZeroMorphisms C] :
     IsPullback Limits.prod.fst Limits.prod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
   convert of_is_product (limit.is_limit _) has_zero_object.zero_is_terminal
 #align category_theory.is_pullback.of_has_binary_product CategoryTheory.IsPullback.of_hasBinaryProduct
+-/
 
 variable {X Y}
 
+#print CategoryTheory.IsPullback.isoPullback /-
 /-- Any object at the top left of a pullback square is
 isomorphic to the pullback provided by the `has_limit` API. -/
 noncomputable def isoPullback (h : IsPullback fst snd f g) [HasPullback f g] : P ≅ pullback f g :=
   (limit.isoLimitCone ⟨_, h.IsLimit⟩).symm
 #align category_theory.is_pullback.iso_pullback CategoryTheory.IsPullback.isoPullback
+-/
 
+#print CategoryTheory.IsPullback.isoPullback_hom_fst /-
 @[simp]
 theorem isoPullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.Hom ≫ pullback.fst = fst :=
@@ -288,7 +342,9 @@ theorem isoPullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
 #align category_theory.is_pullback.iso_pullback_hom_fst CategoryTheory.IsPullback.isoPullback_hom_fst
+-/
 
+#print CategoryTheory.IsPullback.isoPullback_hom_snd /-
 @[simp]
 theorem isoPullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.Hom ≫ pullback.snd = snd :=
@@ -296,31 +352,40 @@ theorem isoPullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
 #align category_theory.is_pullback.iso_pullback_hom_snd CategoryTheory.IsPullback.isoPullback_hom_snd
+-/
 
+#print CategoryTheory.IsPullback.isoPullback_inv_fst /-
 @[simp]
 theorem isoPullback_inv_fst (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.inv ≫ fst = pullback.fst := by simp [iso.inv_comp_eq]
 #align category_theory.is_pullback.iso_pullback_inv_fst CategoryTheory.IsPullback.isoPullback_inv_fst
+-/
 
+#print CategoryTheory.IsPullback.isoPullback_inv_snd /-
 @[simp]
 theorem isoPullback_inv_snd (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.inv ≫ snd = pullback.snd := by simp [iso.inv_comp_eq]
 #align category_theory.is_pullback.iso_pullback_inv_snd CategoryTheory.IsPullback.isoPullback_inv_snd
+-/
 
+#print CategoryTheory.IsPullback.of_iso_pullback /-
 theorem of_iso_pullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pullback f g)
     (w₁ : i.Hom ≫ pullback.fst = fst) (w₂ : i.Hom ≫ pullback.snd = snd) : IsPullback fst snd f g :=
-  of_is_limit' h
+  of_isLimit' h
     (Limits.IsLimit.ofIsoLimit (limit.isLimit _)
       (@PullbackCone.ext _ _ _ _ _ _ _ (PullbackCone.mk _ _ _) _ i w₁.symm w₂.symm).symm)
 #align category_theory.is_pullback.of_iso_pullback CategoryTheory.IsPullback.of_iso_pullback
+-/
 
+#print CategoryTheory.IsPullback.of_horiz_isIso /-
 theorem of_horiz_isIso [IsIso fst] [IsIso g] (sq : CommSq fst snd f g) : IsPullback fst snd f g :=
-  of_is_limit' sq
+  of_isLimit' sq
     (by
       refine'
         pullback_cone.is_limit.mk _ (fun s => s.fst ≫ inv fst) (by tidy) (fun s => _) (by tidy)
       simp only [← cancel_mono g, category.assoc, ← sq.w, is_iso.inv_hom_id_assoc, s.condition])
 #align category_theory.is_pullback.of_horiz_is_iso CategoryTheory.IsPullback.of_horiz_isIso
+-/
 
 end IsPullback
 
@@ -328,48 +393,68 @@ namespace IsPushout
 
 variable {Z X Y P : C} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P}
 
+#print CategoryTheory.IsPushout.cocone /-
 /-- The (colimiting) `pushout_cocone f g` implicit in the statement
 that we have a `is_pushout f g inl inr`.
 -/
 def cocone (h : IsPushout f g inl inr) : PushoutCocone f g :=
   h.to_commSq.Cocone
 #align category_theory.is_pushout.cocone CategoryTheory.IsPushout.cocone
+-/
 
+#print CategoryTheory.IsPushout.cocone_inl /-
 @[simp]
 theorem cocone_inl (h : IsPushout f g inl inr) : h.Cocone.inl = inl :=
   rfl
 #align category_theory.is_pushout.cocone_inl CategoryTheory.IsPushout.cocone_inl
+-/
 
+#print CategoryTheory.IsPushout.cocone_inr /-
 @[simp]
 theorem cocone_inr (h : IsPushout f g inl inr) : h.Cocone.inr = inr :=
   rfl
 #align category_theory.is_pushout.cocone_inr CategoryTheory.IsPushout.cocone_inr
+-/
 
+#print CategoryTheory.IsPushout.isColimit /-
 /-- The cocone obtained from `is_pushout f g inl inr` is a colimit cocone.
 -/
 noncomputable def isColimit (h : IsPushout f g inl inr) : IsColimit h.Cocone :=
   h.is_colimit'.some
 #align category_theory.is_pushout.is_colimit CategoryTheory.IsPushout.isColimit
+-/
 
+#print CategoryTheory.IsPushout.of_isColimit /-
 /-- If `c` is a colimiting pushout cocone, then we have a `is_pushout f g c.inl c.inr`. -/
 theorem of_isColimit {c : PushoutCocone f g} (h : Limits.IsColimit c) : IsPushout f g c.inl c.inr :=
   { w := c.condition
     is_colimit' :=
       ⟨IsColimit.ofIsoColimit h (Limits.PushoutCocone.ext (Iso.refl _) (by tidy) (by tidy))⟩ }
 #align category_theory.is_pushout.of_is_colimit CategoryTheory.IsPushout.of_isColimit
+-/
 
+#print CategoryTheory.IsPushout.of_isColimit' /-
 /-- A variant of `of_is_colimit` that is more useful with `apply`. -/
-theorem of_is_colimit' (w : CommSq f g inl inr) (h : Limits.IsColimit w.Cocone) :
+theorem of_isColimit' (w : CommSq f g inl inr) (h : Limits.IsColimit w.Cocone) :
     IsPushout f g inl inr :=
   of_isColimit h
-#align category_theory.is_pushout.of_is_colimit' CategoryTheory.IsPushout.of_is_colimit'
+#align category_theory.is_pushout.of_is_colimit' CategoryTheory.IsPushout.of_isColimit'
+-/
 
+#print CategoryTheory.IsPushout.of_hasPushout /-
 /-- The pushout provided by `has_pushout f g` fits into a `is_pushout`. -/
 theorem of_hasPushout (f : Z ⟶ X) (g : Z ⟶ Y) [HasPushout f g] :
     IsPushout f g (pushout.inl : X ⟶ pushout f g) (pushout.inr : Y ⟶ pushout f g) :=
   of_isColimit (colimit.isColimit (span f g))
 #align category_theory.is_pushout.of_has_pushout CategoryTheory.IsPushout.of_hasPushout
+-/
 
+/- warning: category_theory.is_pushout.of_is_coproduct -> CategoryTheory.IsPushout.of_is_coproduct is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {Z : C} {X : C} {Y : C} {c : CategoryTheory.Limits.BinaryCofan.{u1, u2} C _inst_1 X Y}, (CategoryTheory.Limits.IsColimit.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c) -> (forall (t : CategoryTheory.Limits.IsInitial.{u1, u2} C _inst_1 Z), CategoryTheory.IsPushout.{u1, u2} C _inst_1 Z (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right)) (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Functor.obj.{u1, u1, u2, max u1 u2} C _inst_1 (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.category.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.const.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Limits.Cocone.pt.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (CategoryTheory.Limits.IsInitial.to.{u1, u2} C _inst_1 Z t (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left))) (CategoryTheory.Limits.IsInitial.to.{u1, u2} C _inst_1 Z t (CategoryTheory.Functor.obj.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right))) (CategoryTheory.Limits.BinaryCofan.inl.{u1, u2} C _inst_1 X Y c) (CategoryTheory.Limits.BinaryCofan.inr.{u1, u2} C _inst_1 X Y c))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {Z : C} {X : C} {Y : C} {c : CategoryTheory.Limits.BinaryCofan.{u1, u2} C _inst_1 X Y}, (CategoryTheory.Limits.IsColimit.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c) -> (forall (t : CategoryTheory.Limits.IsInitial.{u1, u2} C _inst_1 Z), CategoryTheory.IsPushout.{u1, u2} C _inst_1 Z (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right)) (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (Prefunctor.obj.{succ u1, succ u1, u2, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.category.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Functor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.category.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1) (CategoryTheory.Functor.const.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y) c))) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left)) (CategoryTheory.Limits.IsInitial.to.{u1, u2} C _inst_1 Z t (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.left))) (CategoryTheory.Limits.IsInitial.to.{u1, u2} C _inst_1 Z t (Prefunctor.obj.{1, succ u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Category.toCategoryStruct.{0, 0} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) C _inst_1 (CategoryTheory.Limits.pair.{u1, u2} C _inst_1 X Y)) (CategoryTheory.Discrete.mk.{0} CategoryTheory.Limits.WalkingPair CategoryTheory.Limits.WalkingPair.right))) (CategoryTheory.Limits.BinaryCofan.inl.{u1, u2} C _inst_1 X Y c) (CategoryTheory.Limits.BinaryCofan.inr.{u1, u2} C _inst_1 X Y c))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.of_is_coproduct CategoryTheory.IsPushout.of_is_coproductₓ'. -/
 /-- If `c` is a colimiting binary coproduct cocone, and we have an initial object,
 then we have `is_pushout 0 0 c.inl c.inr`
 (where each `0` is the unique morphism from the initial object). -/
@@ -385,34 +470,43 @@ theorem of_is_coproduct {c : BinaryCofan X Y} (h : Limits.IsColimit c) (t : IsIn
                 simp))))
 #align category_theory.is_pushout.of_is_coproduct CategoryTheory.IsPushout.of_is_coproduct
 
+#print CategoryTheory.IsPushout.of_is_coproduct' /-
 /-- A variant of `of_is_coproduct` that is more useful with `apply`. -/
 theorem of_is_coproduct' (h : Limits.IsColimit (BinaryCofan.mk inl inr)) (t : IsInitial Z) :
     IsPushout (t.to _) (t.to _) inl inr :=
   of_is_coproduct h t
 #align category_theory.is_pushout.of_is_coproduct' CategoryTheory.IsPushout.of_is_coproduct'
+-/
 
 variable (X Y)
 
-theorem of_has_binary_coproduct' [HasBinaryCoproduct X Y] [HasInitial C] :
+#print CategoryTheory.IsPushout.of_hasBinaryCoproduct' /-
+theorem of_hasBinaryCoproduct' [HasBinaryCoproduct X Y] [HasInitial C] :
     IsPushout (initial.to _) (initial.to _) (coprod.inl : X ⟶ _) (coprod.inr : Y ⟶ _) :=
   of_is_coproduct (colimit.isColimit _) initialIsInitial
-#align category_theory.is_pushout.of_has_binary_coproduct' CategoryTheory.IsPushout.of_has_binary_coproduct'
+#align category_theory.is_pushout.of_has_binary_coproduct' CategoryTheory.IsPushout.of_hasBinaryCoproduct'
+-/
 
 open ZeroObject
 
+#print CategoryTheory.IsPushout.of_hasBinaryCoproduct /-
 theorem of_hasBinaryCoproduct [HasBinaryCoproduct X Y] [HasZeroObject C] [HasZeroMorphisms C] :
     IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) coprod.inl coprod.inr := by
   convert of_is_coproduct (colimit.is_colimit _) has_zero_object.zero_is_initial
 #align category_theory.is_pushout.of_has_binary_coproduct CategoryTheory.IsPushout.of_hasBinaryCoproduct
+-/
 
 variable {X Y}
 
+#print CategoryTheory.IsPushout.isoPushout /-
 /-- Any object at the top left of a pullback square is
 isomorphic to the pullback provided by the `has_limit` API. -/
 noncomputable def isoPushout (h : IsPushout f g inl inr) [HasPushout f g] : P ≅ pushout f g :=
   (colimit.isoColimitCocone ⟨_, h.IsColimit⟩).symm
 #align category_theory.is_pushout.iso_pushout CategoryTheory.IsPushout.isoPushout
+-/
 
+#print CategoryTheory.IsPushout.inl_isoPushout_inv /-
 @[simp]
 theorem inl_isoPushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
     pushout.inl ≫ h.isoPushout.inv = inl :=
@@ -420,7 +514,9 @@ theorem inl_isoPushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
   dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
 #align category_theory.is_pushout.inl_iso_pushout_inv CategoryTheory.IsPushout.inl_isoPushout_inv
+-/
 
+#print CategoryTheory.IsPushout.inr_isoPushout_inv /-
 @[simp]
 theorem inr_isoPushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
     pushout.inr ≫ h.isoPushout.inv = inr :=
@@ -428,23 +524,30 @@ theorem inr_isoPushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
   dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
 #align category_theory.is_pushout.inr_iso_pushout_inv CategoryTheory.IsPushout.inr_isoPushout_inv
+-/
 
+#print CategoryTheory.IsPushout.inl_isoPushout_hom /-
 @[simp]
 theorem inl_isoPushout_hom (h : IsPushout f g inl inr) [HasPushout f g] :
     inl ≫ h.isoPushout.Hom = pushout.inl := by simp [← iso.eq_comp_inv]
 #align category_theory.is_pushout.inl_iso_pushout_hom CategoryTheory.IsPushout.inl_isoPushout_hom
+-/
 
+#print CategoryTheory.IsPushout.inr_isoPushout_hom /-
 @[simp]
 theorem inr_isoPushout_hom (h : IsPushout f g inl inr) [HasPushout f g] :
     inr ≫ h.isoPushout.Hom = pushout.inr := by simp [← iso.eq_comp_inv]
 #align category_theory.is_pushout.inr_iso_pushout_hom CategoryTheory.IsPushout.inr_isoPushout_hom
+-/
 
+#print CategoryTheory.IsPushout.of_iso_pushout /-
 theorem of_iso_pushout (h : CommSq f g inl inr) [HasPushout f g] (i : P ≅ pushout f g)
     (w₁ : inl ≫ i.Hom = pushout.inl) (w₂ : inr ≫ i.Hom = pushout.inr) : IsPushout f g inl inr :=
-  of_is_colimit' h
+  of_isColimit' h
     (Limits.IsColimit.ofIsoColimit (colimit.isColimit _)
       (@PushoutCocone.ext _ _ _ _ _ _ _ (PushoutCocone.mk _ _ _) _ i w₁ w₂).symm)
 #align category_theory.is_pushout.of_iso_pushout CategoryTheory.IsPushout.of_iso_pushout
+-/
 
 end IsPushout
 
@@ -452,13 +555,17 @@ namespace IsPullback
 
 variable {P X Y Z : C} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ Z}
 
+#print CategoryTheory.IsPullback.flip /-
 theorem flip (h : IsPullback fst snd f g) : IsPullback snd fst g f :=
   of_isLimit (@PullbackCone.flipIsLimit _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsLimit)
 #align category_theory.is_pullback.flip CategoryTheory.IsPullback.flip
+-/
 
+#print CategoryTheory.IsPullback.flip_iff /-
 theorem flip_iff : IsPullback fst snd f g ↔ IsPullback snd fst g f :=
   ⟨flip, flip⟩
 #align category_theory.is_pullback.flip_iff CategoryTheory.IsPullback.flip_iff
+-/
 
 section
 
@@ -466,6 +573,7 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 
 open ZeroObject
 
+#print CategoryTheory.IsPullback.zero_left /-
 /-- The square with `0 : 0 ⟶ 0` on the left and `𝟙 X` on the right is a pullback square. -/
 @[simp]
 theorem zero_left (X : C) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 : 0 ⟶ X) :=
@@ -477,28 +585,36 @@ theorem zero_left (X : C) : IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 :
               @pullback_cone.equalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _)
                 (by simpa using (pullback_cone.condition s).symm) }⟩ }
 #align category_theory.is_pullback.zero_left CategoryTheory.IsPullback.zero_left
+-/
 
+#print CategoryTheory.IsPullback.zero_top /-
 /-- The square with `0 : 0 ⟶ 0` on the top and `𝟙 X` on the bottom is a pullback square. -/
 @[simp]
 theorem zero_top (X : C) : IsPullback (0 : 0 ⟶ 0) (0 : 0 ⟶ X) (0 : 0 ⟶ X) (𝟙 X) :=
   (zero_left X).flip
 #align category_theory.is_pullback.zero_top CategoryTheory.IsPullback.zero_top
+-/
 
+#print CategoryTheory.IsPullback.zero_right /-
 /-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pullback square. -/
 @[simp]
 theorem zero_right (X : C) : IsPullback (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : X ⟶ 0) :=
   of_iso_pullback (by simp) ((zeroProdIso X).symm ≪≫ (pullbackZeroZeroIso _ _).symm) (by simp)
     (by simp)
 #align category_theory.is_pullback.zero_right CategoryTheory.IsPullback.zero_right
+-/
 
+#print CategoryTheory.IsPullback.zero_bot /-
 /-- The square with `0 : 0 ⟶ 0` on the bottom and `𝟙 X` on the top is a pullback square. -/
 @[simp]
 theorem zero_bot (X : C) : IsPullback (𝟙 X) (0 : X ⟶ 0) (0 : X ⟶ 0) (0 : 0 ⟶ 0) :=
   (zero_right X).flip
 #align category_theory.is_pullback.zero_bot CategoryTheory.IsPullback.zero_bot
+-/
 
 end
 
+#print CategoryTheory.IsPullback.paste_vert /-
 -- Objects here are arranged in a 3x2 grid, and indexed by their xy coordinates.
 -- Morphisms are named `hᵢⱼ` for a horizontal morphism starting at `(i,j)`,
 -- and `vᵢⱼ` for a vertical morphism starting at `(i,j)`.
@@ -509,7 +625,9 @@ theorem paste_vert {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁�
     IsPullback h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ :=
   of_isLimit (bigSquareIsPullback _ _ _ _ _ _ _ s.w t.w t.IsLimit s.IsLimit)
 #align category_theory.is_pullback.paste_vert CategoryTheory.IsPullback.paste_vert
+-/
 
+#print CategoryTheory.IsPullback.paste_horiz /-
 /-- Paste two pullback squares "horizontally" to obtain another pullback square. -/
 theorem paste_horiz {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃}
     {h₂₁ : X₂₁ ⟶ X₂₂} {h₂₂ : X₂₂ ⟶ X₂₃} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃}
@@ -517,7 +635,9 @@ theorem paste_horiz {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁�
     IsPullback (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂) :=
   (paste_vert s.flip t.flip).flip
 #align category_theory.is_pullback.paste_horiz CategoryTheory.IsPullback.paste_horiz
+-/
 
+#print CategoryTheory.IsPullback.of_bot /-
 /-- Given a pullback square assembled from a commuting square on the top and
 a pullback square on the bottom, the top square is a pullback square. -/
 theorem of_bot {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂} {h₃₁ : X₃₁ ⟶ X₃₂}
@@ -526,7 +646,9 @@ theorem of_bot {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : 
     (t : IsPullback h₂₁ v₂₁ v₂₂ h₃₁) : IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   of_isLimit (leftSquareIsPullback _ _ _ _ _ _ _ p _ t.IsLimit s.IsLimit)
 #align category_theory.is_pullback.of_bot CategoryTheory.IsPullback.of_bot
+-/
 
+#print CategoryTheory.IsPullback.of_right /-
 /-- Given a pullback square assembled from a commuting square on the left and
 a pullback square on the right, the left square is a pullback square. -/
 theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃} {h₂₁ : X₂₁ ⟶ X₂₂}
@@ -535,20 +657,25 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     (t : IsPullback h₁₂ v₁₂ v₁₃ h₂₂) : IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   (of_bot s.flip p.symm t.flip).flip
 #align category_theory.is_pullback.of_right CategoryTheory.IsPullback.of_right
+-/
 
+#print CategoryTheory.IsPullback.paste_vert_iff /-
 theorem paste_vert_iff {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂}
     {h₃₁ : X₃₁ ⟶ X₃₂} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₂₁ : X₂₁ ⟶ X₃₁} {v₂₂ : X₂₂ ⟶ X₃₂}
     (s : IsPullback h₂₁ v₂₁ v₂₂ h₃₁) (e : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) :
     IsPullback h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ ↔ IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   ⟨fun h => h.of_bot e s, fun h => h.paste_vert s⟩
 #align category_theory.is_pullback.paste_vert_iff CategoryTheory.IsPullback.paste_vert_iff
+-/
 
+#print CategoryTheory.IsPullback.paste_horiz_iff /-
 theorem paste_horiz_iff {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃}
     {h₂₁ : X₂₁ ⟶ X₂₂} {h₂₂ : X₂₂ ⟶ X₂₃} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃}
     (s : IsPullback h₁₂ v₁₂ v₁₃ h₂₂) (e : h₁₁ ≫ v₁₂ = v₁₁ ≫ h₂₁) :
     IsPullback (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂) ↔ IsPullback h₁₁ v₁₁ v₁₂ h₂₁ :=
   ⟨fun h => h.of_right e s, fun h => h.paste_horiz s⟩
 #align category_theory.is_pullback.paste_horiz_iff CategoryTheory.IsPullback.paste_horiz_iff
+-/
 
 section
 
@@ -556,24 +683,31 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 
 open ZeroObject
 
+#print CategoryTheory.IsPullback.of_isBilimit /-
 theorem of_isBilimit {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPullback b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
   convert is_pullback.of_is_product' h.is_limit has_zero_object.zero_is_terminal
 #align category_theory.is_pullback.of_is_bilimit CategoryTheory.IsPullback.of_isBilimit
+-/
 
+#print CategoryTheory.IsPullback.of_has_biproduct /-
 @[simp]
 theorem of_has_biproduct (X Y : C) [HasBinaryBiproduct X Y] :
     IsPullback biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
   of_isBilimit (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pullback.of_has_biproduct CategoryTheory.IsPullback.of_has_biproduct
+-/
 
+#print CategoryTheory.IsPullback.inl_snd' /-
 theorem inl_snd' {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPullback b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) :=
   by
   refine' of_right _ (by simp) (of_is_bilimit h)
   simp
 #align category_theory.is_pullback.inl_snd' CategoryTheory.IsPullback.inl_snd'
+-/
 
+#print CategoryTheory.IsPullback.inl_snd /-
 /-- The square
 ```
   X --inl--> X ⊞ Y
@@ -590,7 +724,9 @@ theorem inl_snd (X Y : C) [HasBinaryBiproduct X Y] :
     IsPullback biprod.inl (0 : X ⟶ 0) biprod.snd (0 : 0 ⟶ Y) :=
   inl_snd' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pullback.inl_snd CategoryTheory.IsPullback.inl_snd
+-/
 
+#print CategoryTheory.IsPullback.inr_fst' /-
 theorem inr_fst' {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPullback b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) :=
   by
@@ -598,7 +734,9 @@ theorem inr_fst' {b : BinaryBicone X Y} (h : b.IsBilimit) :
   refine' of_bot _ (by simp) (of_is_bilimit h)
   simp
 #align category_theory.is_pullback.inr_fst' CategoryTheory.IsPullback.inr_fst'
+-/
 
+#print CategoryTheory.IsPullback.inr_fst /-
 /-- The square
 ```
   Y --inr--> X ⊞ Y
@@ -615,38 +753,50 @@ theorem inr_fst (X Y : C) [HasBinaryBiproduct X Y] :
     IsPullback biprod.inr (0 : Y ⟶ 0) biprod.fst (0 : 0 ⟶ X) :=
   inr_fst' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pullback.inr_fst CategoryTheory.IsPullback.inr_fst
+-/
 
+#print CategoryTheory.IsPullback.of_is_bilimit' /-
 theorem of_is_bilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr :=
   by
   refine' is_pullback.of_right _ (by simp) (is_pullback.inl_snd' h).flip
   simp
 #align category_theory.is_pullback.of_is_bilimit' CategoryTheory.IsPullback.of_is_bilimit'
+-/
 
+#print CategoryTheory.IsPullback.of_hasBinaryBiproduct /-
 theorem of_hasBinaryBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
     IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr :=
   of_is_bilimit' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pullback.of_has_binary_biproduct CategoryTheory.IsPullback.of_hasBinaryBiproduct
+-/
 
+#print CategoryTheory.IsPullback.hasPullback_biprod_fst_biprod_snd /-
 instance hasPullback_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
     HasPullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) :=
   HasLimit.mk ⟨_, (of_hasBinaryBiproduct X Y).IsLimit⟩
 #align category_theory.is_pullback.has_pullback_biprod_fst_biprod_snd CategoryTheory.IsPullback.hasPullback_biprod_fst_biprod_snd
+-/
 
+#print CategoryTheory.IsPullback.pullbackBiprodInlBiprodInr /-
 /-- The pullback of `biprod.inl` and `biprod.inr` is the zero object. -/
 def pullbackBiprodInlBiprodInr [HasBinaryBiproduct X Y] :
     pullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) ≅ 0 :=
   limit.isoLimitCone ⟨_, (of_hasBinaryBiproduct X Y).IsLimit⟩
 #align category_theory.is_pullback.pullback_biprod_inl_biprod_inr CategoryTheory.IsPullback.pullbackBiprodInlBiprodInr
+-/
 
 end
 
+#print CategoryTheory.IsPullback.op /-
 theorem op (h : IsPullback fst snd f g) : IsPushout g.op f.op snd.op fst.op :=
   IsPushout.of_isColimit
     (IsColimit.ofIsoColimit (Limits.PullbackCone.isLimitEquivIsColimitOp h.flip.Cone h.flip.IsLimit)
       h.to_commSq.flip.coneOp)
 #align category_theory.is_pullback.op CategoryTheory.IsPullback.op
+-/
 
+#print CategoryTheory.IsPullback.unop /-
 theorem unop {P X Y Z : Cᵒᵖ} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ Z}
     (h : IsPullback fst snd f g) : IsPushout g.unop f.unop snd.unop fst.unop :=
   IsPushout.of_isColimit
@@ -654,10 +804,13 @@ theorem unop {P X Y Z : Cᵒᵖ} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {
       (Limits.PullbackCone.isLimitEquivIsColimitUnop h.flip.Cone h.flip.IsLimit)
       h.to_commSq.flip.coneUnop)
 #align category_theory.is_pullback.unop CategoryTheory.IsPullback.unop
+-/
 
+#print CategoryTheory.IsPullback.of_vert_isIso /-
 theorem of_vert_isIso [IsIso snd] [IsIso f] (sq : CommSq fst snd f g) : IsPullback fst snd f g :=
   IsPullback.flip (of_horiz_isIso sq.flip)
 #align category_theory.is_pullback.of_vert_is_iso CategoryTheory.IsPullback.of_vert_isIso
+-/
 
 end IsPullback
 
@@ -665,13 +818,17 @@ namespace IsPushout
 
 variable {Z X Y P : C} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P}
 
+#print CategoryTheory.IsPushout.flip /-
 theorem flip (h : IsPushout f g inl inr) : IsPushout g f inr inl :=
   of_isColimit (@PushoutCocone.flipIsColimit _ _ _ _ _ _ _ _ _ _ h.w.symm h.IsColimit)
 #align category_theory.is_pushout.flip CategoryTheory.IsPushout.flip
+-/
 
+#print CategoryTheory.IsPushout.flip_iff /-
 theorem flip_iff : IsPushout f g inl inr ↔ IsPushout g f inr inl :=
   ⟨flip, flip⟩
 #align category_theory.is_pushout.flip_iff CategoryTheory.IsPushout.flip_iff
+-/
 
 section
 
@@ -679,6 +836,7 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 
 open ZeroObject
 
+#print CategoryTheory.IsPushout.zero_right /-
 /-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pushout square. -/
 @[simp]
 theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : X ⟶ 0) :=
@@ -693,28 +851,36 @@ theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 :
             dsimp at c
             simpa using c }⟩ }
 #align category_theory.is_pushout.zero_right CategoryTheory.IsPushout.zero_right
+-/
 
+#print CategoryTheory.IsPushout.zero_bot /-
 /-- The square with `0 : 0 ⟶ 0` on the bottom and `𝟙 X` on the top is a pushout square. -/
 @[simp]
 theorem zero_bot (X : C) : IsPushout (𝟙 X) (0 : X ⟶ 0) (0 : X ⟶ 0) (0 : 0 ⟶ 0) :=
   (zero_right X).flip
 #align category_theory.is_pushout.zero_bot CategoryTheory.IsPushout.zero_bot
+-/
 
+#print CategoryTheory.IsPushout.zero_left /-
 /-- The square with `0 : 0 ⟶ 0` on the right left `𝟙 X` on the right is a pushout square. -/
 @[simp]
 theorem zero_left (X : C) : IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ 0) (𝟙 X) (0 : 0 ⟶ X) :=
   of_iso_pushout (by simp) ((coprodZeroIso X).symm ≪≫ (pushoutZeroZeroIso _ _).symm) (by simp)
     (by simp)
 #align category_theory.is_pushout.zero_left CategoryTheory.IsPushout.zero_left
+-/
 
+#print CategoryTheory.IsPushout.zero_top /-
 /-- The square with `0 : 0 ⟶ 0` on the top and `𝟙 X` on the bottom is a pushout square. -/
 @[simp]
 theorem zero_top (X : C) : IsPushout (0 : 0 ⟶ 0) (0 : 0 ⟶ X) (0 : 0 ⟶ X) (𝟙 X) :=
   (zero_left X).flip
 #align category_theory.is_pushout.zero_top CategoryTheory.IsPushout.zero_top
+-/
 
 end
 
+#print CategoryTheory.IsPushout.paste_vert /-
 -- Objects here are arranged in a 3x2 grid, and indexed by their xy coordinates.
 -- Morphisms are named `hᵢⱼ` for a horizontal morphism starting at `(i,j)`,
 -- and `vᵢⱼ` for a vertical morphism starting at `(i,j)`.
@@ -725,7 +891,9 @@ theorem paste_vert {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁�
     IsPushout h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ :=
   of_isColimit (bigSquareIsPushout _ _ _ _ _ _ _ s.w t.w t.IsColimit s.IsColimit)
 #align category_theory.is_pushout.paste_vert CategoryTheory.IsPushout.paste_vert
+-/
 
+#print CategoryTheory.IsPushout.paste_horiz /-
 /-- Paste two pushout squares "horizontally" to obtain another pushout square. -/
 theorem paste_horiz {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃}
     {h₂₁ : X₂₁ ⟶ X₂₂} {h₂₂ : X₂₂ ⟶ X₂₃} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃}
@@ -733,7 +901,9 @@ theorem paste_horiz {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁�
     IsPushout (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂) :=
   (paste_vert s.flip t.flip).flip
 #align category_theory.is_pushout.paste_horiz CategoryTheory.IsPushout.paste_horiz
+-/
 
+#print CategoryTheory.IsPushout.of_bot /-
 /-- Given a pushout square assembled from a pushout square on the top and
 a commuting square on the bottom, the bottom square is a pushout square. -/
 theorem of_bot {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂} {h₃₁ : X₃₁ ⟶ X₃₂}
@@ -742,7 +912,9 @@ theorem of_bot {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : 
     (t : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) : IsPushout h₂₁ v₂₁ v₂₂ h₃₁ :=
   of_isColimit (rightSquareIsPushout _ _ _ _ _ _ _ _ p t.IsColimit s.IsColimit)
 #align category_theory.is_pushout.of_bot CategoryTheory.IsPushout.of_bot
+-/
 
+#print CategoryTheory.IsPushout.of_right /-
 /-- Given a pushout square assembled from a pushout square on the left and
 a commuting square on the right, the right square is a pushout square. -/
 theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃} {h₂₁ : X₂₁ ⟶ X₂₂}
@@ -751,20 +923,25 @@ theorem of_right {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ 
     (t : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) : IsPushout h₁₂ v₁₂ v₁₃ h₂₂ :=
   (of_bot s.flip p.symm t.flip).flip
 #align category_theory.is_pushout.of_right CategoryTheory.IsPushout.of_right
+-/
 
+#print CategoryTheory.IsPushout.paste_vert_iff /-
 theorem paste_vert_iff {X₁₁ X₁₂ X₂₁ X₂₂ X₃₁ X₃₂ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₂₁ : X₂₁ ⟶ X₂₂}
     {h₃₁ : X₃₁ ⟶ X₃₂} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₂₁ : X₂₁ ⟶ X₃₁} {v₂₂ : X₂₂ ⟶ X₃₂}
     (s : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) (e : h₂₁ ≫ v₂₂ = v₂₁ ≫ h₃₁) :
     IsPushout h₁₁ (v₁₁ ≫ v₂₁) (v₁₂ ≫ v₂₂) h₃₁ ↔ IsPushout h₂₁ v₂₁ v₂₂ h₃₁ :=
   ⟨fun h => h.of_bot e s, s.paste_vert⟩
 #align category_theory.is_pushout.paste_vert_iff CategoryTheory.IsPushout.paste_vert_iff
+-/
 
+#print CategoryTheory.IsPushout.paste_horiz_iff /-
 theorem paste_horiz_iff {X₁₁ X₁₂ X₁₃ X₂₁ X₂₂ X₂₃ : C} {h₁₁ : X₁₁ ⟶ X₁₂} {h₁₂ : X₁₂ ⟶ X₁₃}
     {h₂₁ : X₂₁ ⟶ X₂₂} {h₂₂ : X₂₂ ⟶ X₂₃} {v₁₁ : X₁₁ ⟶ X₂₁} {v₁₂ : X₁₂ ⟶ X₂₂} {v₁₃ : X₁₃ ⟶ X₂₃}
     (s : IsPushout h₁₁ v₁₁ v₁₂ h₂₁) (e : h₁₂ ≫ v₁₃ = v₁₂ ≫ h₂₂) :
     IsPushout (h₁₁ ≫ h₁₂) v₁₁ v₁₃ (h₂₁ ≫ h₂₂) ↔ IsPushout h₁₂ v₁₂ v₁₃ h₂₂ :=
   ⟨fun h => h.of_right e s, s.paste_horiz⟩
 #align category_theory.is_pushout.paste_horiz_iff CategoryTheory.IsPushout.paste_horiz_iff
+-/
 
 section
 
@@ -772,17 +949,22 @@ variable [HasZeroObject C] [HasZeroMorphisms C]
 
 open ZeroObject
 
+#print CategoryTheory.IsPushout.of_isBilimit /-
 theorem of_isBilimit {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr := by
   convert is_pushout.of_is_coproduct' h.is_colimit has_zero_object.zero_is_initial
 #align category_theory.is_pushout.of_is_bilimit CategoryTheory.IsPushout.of_isBilimit
+-/
 
+#print CategoryTheory.IsPushout.of_has_biproduct /-
 @[simp]
 theorem of_has_biproduct (X Y : C) [HasBinaryBiproduct X Y] :
     IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr :=
   of_isBilimit (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pushout.of_has_biproduct CategoryTheory.IsPushout.of_has_biproduct
+-/
 
+#print CategoryTheory.IsPushout.inl_snd' /-
 theorem inl_snd' {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPushout b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) :=
   by
@@ -790,7 +972,9 @@ theorem inl_snd' {b : BinaryBicone X Y} (h : b.IsBilimit) :
   refine' of_right _ (by simp) (of_is_bilimit h)
   simp
 #align category_theory.is_pushout.inl_snd' CategoryTheory.IsPushout.inl_snd'
+-/
 
+#print CategoryTheory.IsPushout.inl_snd /-
 /-- The square
 ```
   X --inl--> X ⊞ Y
@@ -806,14 +990,18 @@ theorem inl_snd (X Y : C) [HasBinaryBiproduct X Y] :
     IsPushout biprod.inl (0 : X ⟶ 0) biprod.snd (0 : 0 ⟶ Y) :=
   inl_snd' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pushout.inl_snd CategoryTheory.IsPushout.inl_snd
+-/
 
+#print CategoryTheory.IsPushout.inr_fst' /-
 theorem inr_fst' {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPushout b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) :=
   by
   refine' of_bot _ (by simp) (of_is_bilimit h)
   simp
 #align category_theory.is_pushout.inr_fst' CategoryTheory.IsPushout.inr_fst'
+-/
 
+#print CategoryTheory.IsPushout.inr_fst /-
 /-- The square
 ```
   Y --inr--> X ⊞ Y
@@ -829,39 +1017,51 @@ theorem inr_fst (X Y : C) [HasBinaryBiproduct X Y] :
     IsPushout biprod.inr (0 : Y ⟶ 0) biprod.fst (0 : 0 ⟶ X) :=
   inr_fst' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pushout.inr_fst CategoryTheory.IsPushout.inr_fst
+-/
 
+#print CategoryTheory.IsPushout.of_is_bilimit' /-
 theorem of_is_bilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) :
     IsPushout b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
   by
   refine' is_pushout.of_right _ (by simp) (is_pushout.inl_snd' h)
   simp
 #align category_theory.is_pushout.of_is_bilimit' CategoryTheory.IsPushout.of_is_bilimit'
+-/
 
+#print CategoryTheory.IsPushout.of_hasBinaryBiproduct /-
 theorem of_hasBinaryBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
     IsPushout biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
   of_is_bilimit' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pushout.of_has_binary_biproduct CategoryTheory.IsPushout.of_hasBinaryBiproduct
+-/
 
+#print CategoryTheory.IsPushout.hasPushout_biprod_fst_biprod_snd /-
 instance hasPushout_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
     HasPushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) :=
   HasColimit.mk ⟨_, (of_hasBinaryBiproduct X Y).IsColimit⟩
 #align category_theory.is_pushout.has_pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.hasPushout_biprod_fst_biprod_snd
+-/
 
+#print CategoryTheory.IsPushout.pushoutBiprodFstBiprodSnd /-
 /-- The pushout of `biprod.fst` and `biprod.snd` is the zero object. -/
 def pushoutBiprodFstBiprodSnd [HasBinaryBiproduct X Y] :
     pushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) ≅ 0 :=
   colimit.isoColimitCocone ⟨_, (of_hasBinaryBiproduct X Y).IsColimit⟩
 #align category_theory.is_pushout.pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.pushoutBiprodFstBiprodSnd
+-/
 
 end
 
+#print CategoryTheory.IsPushout.op /-
 theorem op (h : IsPushout f g inl inr) : IsPullback inr.op inl.op g.op f.op :=
   IsPullback.of_isLimit
     (IsLimit.ofIsoLimit
       (Limits.PushoutCocone.isColimitEquivIsLimitOp h.flip.Cocone h.flip.IsColimit)
       h.to_commSq.flip.coconeOp)
 #align category_theory.is_pushout.op CategoryTheory.IsPushout.op
+-/
 
+#print CategoryTheory.IsPushout.unop /-
 theorem unop {Z X Y P : Cᵒᵖ} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P}
     (h : IsPushout f g inl inr) : IsPullback inr.unop inl.unop g.unop f.unop :=
   IsPullback.of_isLimit
@@ -869,18 +1069,23 @@ theorem unop {Z X Y P : Cᵒᵖ} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {in
       (Limits.PushoutCocone.isColimitEquivIsLimitUnop h.flip.Cocone h.flip.IsColimit)
       h.to_commSq.flip.coconeUnop)
 #align category_theory.is_pushout.unop CategoryTheory.IsPushout.unop
+-/
 
+#print CategoryTheory.IsPushout.of_horiz_isIso /-
 theorem of_horiz_isIso [IsIso f] [IsIso inr] (sq : CommSq f g inl inr) : IsPushout f g inl inr :=
-  of_is_colimit' sq
+  of_isColimit' sq
     (by
       refine'
         pushout_cocone.is_colimit.mk _ (fun s => inv inr ≫ s.inr) (fun s => _) (by tidy) (by tidy)
       simp only [← cancel_epi f, s.condition, sq.w_assoc, is_iso.hom_inv_id_assoc])
 #align category_theory.is_pushout.of_horiz_is_iso CategoryTheory.IsPushout.of_horiz_isIso
+-/
 
+#print CategoryTheory.IsPushout.of_vert_isIso /-
 theorem of_vert_isIso [IsIso g] [IsIso inl] (sq : CommSq f g inl inr) : IsPushout f g inl inr :=
   (of_horiz_isIso sq.flip).flip
 #align category_theory.is_pushout.of_vert_is_iso CategoryTheory.IsPushout.of_vert_isIso
+-/
 
 end IsPushout
 
@@ -888,6 +1093,7 @@ section Equalizer
 
 variable {X Y Z : C} {f f' : X ⟶ Y} {g g' : Y ⟶ Z}
 
+#print CategoryTheory.IsPullback.isLimitFork /-
 /-- If `f : X ⟶ Y`, `g g' : Y ⟶ Z` forms a pullback square, then `f` is the equalizer of
 `g` and `g'`. -/
 noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fork.ofι f H.w) :=
@@ -899,7 +1105,9 @@ noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fo
     apply pullback_cone.is_limit.hom_ext H.is_limit <;> refine' e.trans _ <;> symm <;>
       exact H.is_limit.fac _ _
 #align category_theory.is_pullback.is_limit_fork CategoryTheory.IsPullback.isLimitFork
+-/
 
+#print CategoryTheory.IsPushout.isLimitFork /-
 /-- If `f f' : X ⟶ Y`, `g : Y ⟶ Z` forms a pushout square, then `g` is the coequalizer of
 `f` and `f'`. -/
 noncomputable def IsPushout.isLimitFork (H : IsPushout f f' g g) : IsColimit (Cofork.ofπ g H.w) :=
@@ -911,6 +1119,7 @@ noncomputable def IsPushout.isLimitFork (H : IsPushout f f' g g) : IsColimit (Co
     apply pushout_cocone.is_colimit.hom_ext H.is_colimit <;> refine' e.trans _ <;> symm <;>
       exact H.is_colimit.fac _ _
 #align category_theory.is_pushout.is_limit_fork CategoryTheory.IsPushout.isLimitFork
+-/
 
 end Equalizer
 
@@ -918,19 +1127,24 @@ namespace BicartesianSq
 
 variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
+#print CategoryTheory.BicartesianSq.of_isPullback_isPushout /-
 theorem of_isPullback_isPushout (p₁ : IsPullback f g h i) (p₂ : IsPushout f g h i) :
     BicartesianSq f g h i :=
   BicartesianSq.mk p₁.to_commSq ⟨p₁.IsLimit⟩ ⟨p₂.IsColimit⟩
 #align category_theory.bicartesian_sq.of_is_pullback_is_pushout CategoryTheory.BicartesianSq.of_isPullback_isPushout
+-/
 
+#print CategoryTheory.BicartesianSq.flip /-
 theorem flip (p : BicartesianSq f g h i) : BicartesianSq g f i h :=
   of_isPullback_isPushout p.to_isPullback.flip p.to_isPushout.flip
 #align category_theory.bicartesian_sq.flip CategoryTheory.BicartesianSq.flip
+-/
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
 open ZeroObject
 
+#print CategoryTheory.BicartesianSq.of_is_biproduct₁ /-
 /-- ```
  X ⊞ Y --fst--> X
    |            |
@@ -945,7 +1159,9 @@ theorem of_is_biproduct₁ {b : BinaryBicone X Y} (h : b.IsBilimit) :
     BicartesianSq b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
   of_isPullback_isPushout (IsPullback.of_isBilimit h) (IsPushout.of_is_bilimit' h)
 #align category_theory.bicartesian_sq.of_is_biproduct₁ CategoryTheory.BicartesianSq.of_is_biproduct₁
+-/
 
+#print CategoryTheory.BicartesianSq.of_is_biproduct₂ /-
 /-- ```
    0 -----0---> X
    |            |
@@ -960,7 +1176,9 @@ theorem of_is_biproduct₂ {b : BinaryBicone X Y} (h : b.IsBilimit) :
     BicartesianSq (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr :=
   of_isPullback_isPushout (IsPullback.of_is_bilimit' h) (IsPushout.of_isBilimit h)
 #align category_theory.bicartesian_sq.of_is_biproduct₂ CategoryTheory.BicartesianSq.of_is_biproduct₂
+-/
 
+#print CategoryTheory.BicartesianSq.of_has_biproduct₁ /-
 /-- ```
  X ⊞ Y --fst--> X
    |            |
@@ -976,7 +1194,9 @@ theorem of_has_biproduct₁ [HasBinaryBiproduct X Y] :
     BicartesianSq biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
   convert of_is_biproduct₁ (binary_biproduct.is_bilimit X Y)
 #align category_theory.bicartesian_sq.of_has_biproduct₁ CategoryTheory.BicartesianSq.of_has_biproduct₁
+-/
 
+#print CategoryTheory.BicartesianSq.of_has_biproduct₂ /-
 /-- ```
    0 -----0---> X
    |            |
@@ -992,6 +1212,7 @@ theorem of_has_biproduct₂ [HasBinaryBiproduct X Y] :
     BicartesianSq (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr := by
   convert of_is_biproduct₂ (binary_biproduct.is_bilimit X Y)
 #align category_theory.bicartesian_sq.of_has_biproduct₂ CategoryTheory.BicartesianSq.of_has_biproduct₂
+-/
 
 end BicartesianSq
 
@@ -1001,6 +1222,12 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
+/- warning: category_theory.functor.map_is_pullback -> CategoryTheory.Functor.map_isPullback is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F], (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F], (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i))
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_is_pullback CategoryTheory.Functor.map_isPullbackₓ'. -/
 theorem Functor.map_isPullback [PreservesLimit (cospan h i) F] (s : IsPullback f g h i) :
     IsPullback (F.map f) (F.map g) (F.map h) (F.map i) :=
   by
@@ -1017,6 +1244,12 @@ theorem Functor.map_isPullback [PreservesLimit (cospan h i) F] (s : IsPullback f
     simp
 #align category_theory.functor.map_is_pullback CategoryTheory.Functor.map_isPullback
 
+/- warning: category_theory.functor.map_is_pushout -> CategoryTheory.Functor.map_isPushout is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F], (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F], (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i))
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_is_pushout CategoryTheory.Functor.map_isPushoutₓ'. -/
 theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) :=
   by
@@ -1031,12 +1264,30 @@ theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g
     simp
 #align category_theory.functor.map_is_pushout CategoryTheory.Functor.map_isPushout
 
+/- warning: category_theory.is_pullback.map -> CategoryTheory.IsPullback.map is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F], (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F], (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.map CategoryTheory.IsPullback.mapₓ'. -/
 alias functor.map_is_pullback ← is_pullback.map
 #align category_theory.is_pullback.map CategoryTheory.IsPullback.map
 
+/- warning: category_theory.is_pushout.map -> CategoryTheory.IsPushout.map is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F], (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.PreservesColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F], (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i) -> (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.map CategoryTheory.IsPushout.mapₓ'. -/
 alias functor.map_is_pushout ← is_pushout.map
 #align category_theory.is_pushout.map CategoryTheory.IsPushout.map
 
+/- warning: category_theory.is_pullback.of_map -> CategoryTheory.IsPullback.of_map is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F], (Eq.{succ u1} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W Y Z g i)) -> (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i)) -> (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F], (Eq.{succ u1} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W Y Z g i)) -> (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i)) -> (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.of_map CategoryTheory.IsPullback.of_mapₓ'. -/
 theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
   by
@@ -1048,17 +1299,35 @@ theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
     (category.comp_id _).trans (category.id_comp _).symm]
 #align category_theory.is_pullback.of_map CategoryTheory.IsPullback.of_map
 
+/- warning: category_theory.is_pullback.of_map_of_faithful -> CategoryTheory.IsPullback.of_map_of_faithful is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F] [_inst_4 : CategoryTheory.Faithful.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i)) -> (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsLimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u3} C _inst_1 X Y Z h i) F] [_inst_4 : CategoryTheory.Faithful.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], (CategoryTheory.IsPullback.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i)) -> (CategoryTheory.IsPullback.{u1, u3} C _inst_1 W X Y Z f g h i)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.of_map_of_faithful CategoryTheory.IsPullback.of_map_of_faithfulₓ'. -/
 theorem IsPullback.of_map_of_faithful [ReflectsLimit (cospan h i) F] [Faithful F]
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
   H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
 #align category_theory.is_pullback.of_map_of_faithful CategoryTheory.IsPullback.of_map_of_faithful
 
+/- warning: category_theory.is_pullback.map_iff -> CategoryTheory.IsPullback.map_iff is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y Z} {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimit.{0, 0, u1, u4, u2, u3} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u2} C _inst_1 X Y Z h i) F] [_inst_5 : CategoryTheory.Limits.ReflectsLimit.{0, 0, u1, u4, u2, u3} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u1, u2} C _inst_1 X Y Z h i) F], (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) W Y Z g i)) -> (Iff (CategoryTheory.IsPullback.{u4, u3} D _inst_3 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F W) (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F Y) (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F Z) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F W X f) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F W Y g) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F X Z h) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F Y Z i)) (CategoryTheory.IsPullback.{u1, u2} C _inst_1 W X Y Z f g h i))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) W X} {g : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) W Y} {h : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) X Z} {i : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) Y Z} {D : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} D] (F : CategoryTheory.Functor.{u3, u1, u4, u2} C _inst_1 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimit.{0, 0, u3, u1, u4, u2} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u3, u4} C _inst_1 X Y Z h i) F] [_inst_5 : CategoryTheory.Limits.ReflectsLimit.{0, 0, u3, u1, u4, u2} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingCospan (CategoryTheory.Limits.WidePullbackShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.cospan.{u3, u4} C _inst_1 X Y Z h i) F], (Eq.{succ u3} (Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) W Y Z g i)) -> (Iff (CategoryTheory.IsPullback.{u1, u2} D _inst_3 (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) W) (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) Y) (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) Z) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) W X f) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) W Y g) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) X Z h) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) Y Z i)) (CategoryTheory.IsPullback.{u3, u4} C _inst_1 W X Y Z f g h i))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pullback.map_iff CategoryTheory.IsPullback.map_iffₓ'. -/
 theorem IsPullback.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesLimit (cospan h i) F]
     [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i) :
     IsPullback (F.map f) (F.map g) (F.map h) (F.map i) ↔ IsPullback f g h i :=
   ⟨fun h => h.of_map F e, fun h => h.map F⟩
 #align category_theory.is_pullback.map_iff CategoryTheory.IsPullback.map_iff
 
+/- warning: category_theory.is_pushout.of_map -> CategoryTheory.IsPushout.of_map is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F], (Eq.{succ u1} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W Y Z g i)) -> (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i)) -> (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F], (Eq.{succ u1} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) W Y Z g i)) -> (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i)) -> (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.of_map CategoryTheory.IsPushout.of_mapₓ'. -/
 theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
     (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
   by
@@ -1070,11 +1339,23 @@ theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
     (category.comp_id _).trans (category.id_comp _)]
 #align category_theory.is_pushout.of_map CategoryTheory.IsPushout.of_map
 
+/- warning: category_theory.is_pushout.of_map_of_faithful -> CategoryTheory.IsPushout.of_map_of_faithful is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F] [_inst_4 : CategoryTheory.Faithful.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Z) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W X f) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F W Y g) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F X Z h) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F Y Z i)) -> (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Y Z} [_inst_3 : CategoryTheory.Limits.ReflectsColimit.{0, 0, u1, u2, u3, u4} C _inst_1 D _inst_2 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u3} C _inst_1 W X Y f g) F] [_inst_4 : CategoryTheory.Faithful.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], (CategoryTheory.IsPushout.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Z) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W X f) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) W Y g) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Z h) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y Z i)) -> (CategoryTheory.IsPushout.{u1, u3} C _inst_1 W X Y Z f g h i)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.of_map_of_faithful CategoryTheory.IsPushout.of_map_of_faithfulₓ'. -/
 theorem IsPushout.of_map_of_faithful [ReflectsColimit (span f g) F] [Faithful F]
     (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
   H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
 #align category_theory.is_pushout.of_map_of_faithful CategoryTheory.IsPushout.of_map_of_faithful
 
+/- warning: category_theory.is_pushout.map_iff -> CategoryTheory.IsPushout.map_iff is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) W X} {g : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) W Y} {h : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Z} {i : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y Z} {D : Type.{u3}} [_inst_3 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimit.{0, 0, u1, u4, u2, u3} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u2} C _inst_1 W X Y f g) F] [_inst_5 : CategoryTheory.Limits.ReflectsColimit.{0, 0, u1, u4, u2, u3} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u1, u2} C _inst_1 W X Y f g) F], (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) W Y Z g i)) -> (Iff (CategoryTheory.IsPushout.{u4, u3} D _inst_3 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F W) (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F X) (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F Y) (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_3 F Z) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F W X f) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F W Y g) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F X Z h) (CategoryTheory.Functor.map.{u1, u4, u2, u3} C _inst_1 D _inst_3 F Y Z i)) (CategoryTheory.IsPushout.{u1, u2} C _inst_1 W X Y Z f g h i))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {W : C} {X : C} {Y : C} {Z : C} {f : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) W X} {g : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) W Y} {h : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) X Z} {i : Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) Y Z} {D : Type.{u2}} [_inst_3 : CategoryTheory.Category.{u1, u2} D] (F : CategoryTheory.Functor.{u3, u1, u4, u2} C _inst_1 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimit.{0, 0, u3, u1, u4, u2} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u3, u4} C _inst_1 W X Y f g) F] [_inst_5 : CategoryTheory.Limits.ReflectsColimit.{0, 0, u3, u1, u4, u2} C _inst_1 D _inst_3 CategoryTheory.Limits.WalkingSpan (CategoryTheory.Limits.WidePushoutShape.category.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.Limits.span.{u3, u4} C _inst_1 W X Y f g) F], (Eq.{succ u3} (Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) W Z) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) W X Z f h) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) W Y Z g i)) -> (Iff (CategoryTheory.IsPushout.{u1, u2} D _inst_3 (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) W) (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) X) (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) Y) (Prefunctor.obj.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) Z) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) W X f) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) W Y g) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) X Z h) (Prefunctor.map.{succ u3, succ u1, u4, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} D (CategoryTheory.Category.toCategoryStruct.{u1, u2} D _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} C _inst_1 D _inst_3 F) Y Z i)) (CategoryTheory.IsPushout.{u3, u4} C _inst_1 W X Y Z f g h i))
+Case conversion may be inaccurate. Consider using '#align category_theory.is_pushout.map_iff CategoryTheory.IsPushout.map_iffₓ'. -/
 theorem IsPushout.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesColimit (span f g) F]
     [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) ↔ IsPushout f g h i :=
