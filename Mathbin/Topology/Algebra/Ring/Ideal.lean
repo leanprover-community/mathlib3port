@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.ring.ideal
-! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Ideal.Quotient
 
 /-!
 # Ideals and quotients of topological rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define `ideal.closure` to be the topological closure of an ideal in a topological
 ring. We also define a `topological_space` structure on the quotient of a topological ring by an

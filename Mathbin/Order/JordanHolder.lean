@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module order.jordan_holder
-! leanprover-community/mathlib commit 91288e351d51b3f0748f0a38faa7613fb0ae2ada
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Data.Fintype.Card
 
 /-!
 # Jordan-Hölder Theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves the Jordan Hölder theorem for a `jordan_holder_lattice`, a class also defined in
 this file. Examples of `jordan_holder_lattice` include `subgroup G` if `G` is a group, and

@@ -200,7 +200,7 @@ theorem fourier_neg {n : ℤ} {x : AddCircle T} : fourier (-n) x = conj (fourier
 
 @[simp]
 theorem fourier_add {m n : ℤ} {x : AddCircle T} : fourier (m + n) x = fourier m x * fourier n x :=
-  by simp_rw [fourier_apply, add_zsmul, to_circle_add, coe_mul_unit_sphere]
+  by simp_rw [fourier_apply, add_zsmul, to_circle_add, coe_mul_unitSphere]
 #align fourier_add fourier_add
 
 theorem fourier_norm [Fact (0 < T)] (n : ℤ) : ‖@fourier T n‖ = 1 :=
@@ -215,7 +215,7 @@ theorem fourier_norm [Fact (0 < T)] (n : ℤ) : ‖@fourier T n‖ = 1 :=
 theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (hT : 0 < T) (x : AddCircle T) :
     fourier n (x + (T / 2 / n : ℝ)) = -fourier n x :=
   by
-  rw [fourier_apply, zsmul_add, ← QuotientAddGroup.mk_zsmul, to_circle_add, coe_mul_unit_sphere]
+  rw [fourier_apply, zsmul_add, ← QuotientAddGroup.mk_zsmul, to_circle_add, coe_mul_unitSphere]
   have : (n : ℂ) ≠ 0 := by simpa using hn
   have : (@to_circle T (n • (T / 2 / n) : ℝ) : ℂ) = -1 :=
     by

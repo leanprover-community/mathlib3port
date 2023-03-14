@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.exponential
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,20 +31,11 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [StarRing A] [Continu
 
 open Complex
 
-theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) :
-    exp ℂ (I • a) ∈ unitary A := by
-  rw [unitary.mem_iff, star_exp]
-  simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_I, neg_smul]
-  rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
-  rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_right]
-  simpa only [add_right_neg, add_left_neg, and_self_iff] using (exp_zero : exp ℂ (0 : A) = 1)
-#align is_self_adjoint.exp_i_smul_unitary IsSelfAdjoint.exp_i_smul_unitary
-
 /-- The map from the selfadjoint real subspace to the unitary group. This map only makes sense
 over ℂ. -/
 @[simps]
 noncomputable def selfAdjoint.expUnitary (a : selfAdjoint A) : unitary A :=
-  ⟨exp ℂ (I • a), a.Prop.exp_i_smul_unitary⟩
+  ⟨exp ℂ (I • a), exp_mem_unitary_of_mem_skewAdjoint _ (a.Prop.smul_mem_skewAdjoint conj_I)⟩
 #align self_adjoint.exp_unitary selfAdjoint.expUnitary
 
 open selfAdjoint

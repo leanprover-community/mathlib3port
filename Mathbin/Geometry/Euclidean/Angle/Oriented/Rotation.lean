@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.rotation
-! leanprover-community/mathlib commit fb319896dcaa409bd4a3cc0f8484297ef9dae2c3
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,7 +205,7 @@ theorem neg_rotation_neg_pi_div_two (x : V) :
 
 /-- Negating a rotation by π / 2 is equivalent to rotation by -π / 2. -/
 theorem neg_rotation_pi_div_two (x : V) : -o.rotation (π / 2 : ℝ) x = o.rotation (-π / 2 : ℝ) x :=
-  neg_eq_iff_neg_eq.1 <| o.neg_rotation_neg_pi_div_two _
+  (neg_eq_iff_eq_neg.mp <| o.neg_rotation_neg_pi_div_two _).symm
 #align orientation.neg_rotation_pi_div_two Orientation.neg_rotation_pi_div_two
 
 /-- Rotating the first of two vectors by `θ` scales their Kahler form by `cos (-θ) + sin (-θ) * I`.

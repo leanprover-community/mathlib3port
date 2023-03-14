@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.abs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] [_inst_2 : LinearOrder.{u1} α] {a : α} {b : α}, (Eq.{succ u1} α (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))) a) b) -> (Or (Eq.{succ u1} α a b) (Eq.{succ u1} α a (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) b)))
 Case conversion may be inaccurate. Consider using '#align eq_or_eq_neg_of_abs_eq eq_or_eq_neg_of_abs_eqₓ'. -/
 theorem eq_or_eq_neg_of_abs_eq {a b : α} (h : |a| = b) : a = b ∨ a = -b := by
-  simpa only [← h, eq_comm, eq_neg_iff_eq_neg] using abs_choice a
+  simpa only [← h, eq_comm, neg_eq_iff_eq_neg] using abs_choice a
 #align eq_or_eq_neg_of_abs_eq eq_or_eq_neg_of_abs_eq
 
 /- warning: abs_eq_abs -> abs_eq_abs is a dubious translation:
@@ -175,7 +175,7 @@ theorem abs_eq_abs {a b : α} : |a| = |b| ↔ a = b ∨ a = -b :=
   refine' ⟨fun h => _, fun h => _⟩
   ·
     obtain rfl | rfl := eq_or_eq_neg_of_abs_eq h <;>
-      simpa only [neg_eq_iff_neg_eq, neg_inj, or_comm, @eq_comm _ (-b)] using abs_choice b
+      simpa only [neg_eq_iff_eq_neg, neg_inj, or_comm] using abs_choice b
   · cases h <;> simp only [h, abs_neg]
 #align abs_eq_abs abs_eq_abs
 

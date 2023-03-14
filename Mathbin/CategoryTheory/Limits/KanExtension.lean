@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.limits.kan_extension
-! leanprover-community/mathlib commit c9c9fa15fec7ca18e9ec97306fb8764bfe988a7e
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.StructuredArrow
 /-!
 
 # Kan extensions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the right and left Kan extensions of a functor.
 They exist under the assumption that the target category has enough limits

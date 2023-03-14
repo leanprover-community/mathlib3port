@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.comma
-! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.StructuredArrow
 
 /-!
 # Properties of comma categories relating to adjunctions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file shows that for a functor `G : D ⥤ C` the data of an initial object in each
 `structured_arrow` category on `G` is equivalent to a left adjoint to `G`, as well as the dual.

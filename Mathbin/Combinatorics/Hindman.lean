@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.hindman
-! leanprover-community/mathlib commit 1e6b748c175e64dd033d7a1a1bfe3e9fe72011d3
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Stream.Init
 
 /-!
 # Hindman's theorem on finite sums
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove Hindman's theorem on finite sums, using idempotent ultrafilters.
 

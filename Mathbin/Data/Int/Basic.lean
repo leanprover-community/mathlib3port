@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit e1bccd6e40ae78370f01659715d3c948716e3b7e
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,7 +291,7 @@ theorem succ_neg_succ (a : ℤ) : succ (-succ a) = -a := by rw [neg_succ, succ_p
 
 #print Int.neg_pred /-
 theorem neg_pred (a : ℤ) : -pred a = succ (-a) := by
-  rw [eq_neg_of_eq_neg (neg_succ (-a)).symm, neg_neg]
+  rw [neg_eq_iff_eq_neg.mp (neg_succ (-a)), neg_neg]
 #align int.neg_pred Int.neg_pred
 -/
 
@@ -606,9 +606,8 @@ theorem emod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
 
 theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[m+1] :=
   by
-  rw [← sub_sub, neg_succ_of_nat_coe, sub_sub (n : ℤ)]
-  apply eq_neg_of_eq_neg
-  rw [neg_sub, sub_sub_self, add_right_comm]
+  rw [← sub_sub, neg_succ_of_nat_coe, sub_sub (n : ℤ), eq_comm, neg_eq_iff_eq_neg, neg_sub,
+    sub_sub_self, add_right_comm]
   exact @congr_arg ℕ ℤ _ _ (fun i => (i + 1 : ℤ)) (Nat.mod_add_div _ _).symm
 #align int.mod_add_div_aux Int.mod_add_div_aux
 

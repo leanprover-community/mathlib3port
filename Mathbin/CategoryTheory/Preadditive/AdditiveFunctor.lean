@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.additive_functor
-! leanprover-community/mathlib commit ee89acdf96a0b45afe3eea493bceb2a80a0f2efa
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 
 /-!
 # Additive Functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A functor between two preadditive categories is called *additive*
 provided that the induced map on hom types is a morphism of abelian

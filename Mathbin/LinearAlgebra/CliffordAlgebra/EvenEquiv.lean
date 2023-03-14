@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.even_equiv
-! leanprover-community/mathlib commit 9264b15ee696b7ca83f13c8ad67c83d6eb70b730
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,8 +91,8 @@ theorem neg_e0_mul_v (m : M) : -(e0 Q * v Q m) = v Q m * e0 Q :=
 
 theorem neg_v_mul_e0 (m : M) : -(v Q m * e0 Q) = e0 Q * v Q m :=
   by
-  rw [neg_eq_iff_neg_eq]
-  exact neg_e0_mul_v _ m
+  rw [neg_eq_iff_eq_neg]
+  exact (neg_e0_mul_v _ m).symm
 #align clifford_algebra.equiv_even.neg_v_mul_e0 CliffordAlgebra.EquivEven.neg_v_mul_e0
 
 @[simp]

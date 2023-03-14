@@ -27,6 +27,12 @@ open Topology Classical
 
 variable {β : Type v}
 
+/- warning: cau_seq.tendsto_limit -> CauSeq.tendsto_limit is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_1 : NormedRing.{u1} β] [hn : IsAbsoluteValue.{0, u1} Real Real.orderedSemiring β (Ring.toSemiring.{u1} β (NormedRing.toRing.{u1} β _inst_1)) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1))] (f : CauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1))) [_inst_2 : CauSeq.IsComplete.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1)) hn], Filter.Tendsto.{0, u1} Nat β (coeFn.{succ u1, succ u1} (CauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1))) (fun (_x : CauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1))) => Nat -> β) (CauSeq.hasCoeToFun.{0, u1} Real β Real.linearOrderedField (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1))) f) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{u1} β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (NormedRing.toSeminormedRing.{u1} β _inst_1)))) (CauSeq.lim.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toHasNorm.{u1} β _inst_1)) hn _inst_2 f))
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_1 : NormedRing.{u1} β] [hn : IsAbsoluteValue.{0, u1} Real Real.orderedSemiring β (Ring.toSemiring.{u1} β (NormedRing.toRing.{u1} β _inst_1)) (Norm.norm.{u1} β (NormedRing.toNorm.{u1} β _inst_1))] (f : CauSeq.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toNorm.{u1} β _inst_1))) [_inst_2 : CauSeq.IsComplete.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toNorm.{u1} β _inst_1)) hn], Filter.Tendsto.{0, u1} Nat β (Subtype.val.{succ u1} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toNorm.{u1} β _inst_1)) f) f) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} β (UniformSpace.toTopologicalSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (NormedRing.toSeminormedRing.{u1} β _inst_1)))) (CauSeq.lim.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β _inst_1) (Norm.norm.{u1} β (NormedRing.toNorm.{u1} β _inst_1)) hn _inst_2 f))
+Case conversion may be inaccurate. Consider using '#align cau_seq.tendsto_limit CauSeq.tendsto_limitₓ'. -/
 theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β → ℝ)]
     (f : CauSeq β norm) [CauSeq.IsComplete β norm] : Tendsto f atTop (𝓝 f.lim) :=
   tendsto_nhds.mpr
@@ -54,6 +60,12 @@ variable [NormedField β]
 -/
 open Metric
 
+/- warning: cauchy_seq.is_cau_seq -> CauchySeq.isCauSeq is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] {f : Nat -> β}, (CauchySeq.{u1, 0} β Nat (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSemiNormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))))) (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) f) -> (IsCauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1)) f)
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] {f : Nat -> β}, (CauchySeq.{u1, 0} β Nat (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSeminormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))))) (Lattice.toSemilatticeSup.{0} Nat Nat.instLatticeNat) f) -> (IsCauSeq.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toNorm.{u1} β _inst_1)) f)
+Case conversion may be inaccurate. Consider using '#align cauchy_seq.is_cau_seq CauchySeq.isCauSeqₓ'. -/
 theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f :=
   by
   cases' cauchy_iff.1 hf with hf1 hf2
@@ -67,6 +79,12 @@ theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f
   apply Set.mk_mem_prod <;> solve_by_elim [le_refl]
 #align cauchy_seq.is_cau_seq CauchySeq.isCauSeq
 
+/- warning: cau_seq.cauchy_seq -> CauSeq.cauchySeq is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] (f : CauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1))), CauchySeq.{u1, 0} β Nat (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSemiNormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))))) (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) (coeFn.{succ u1, succ u1} (CauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1))) (fun (_x : CauSeq.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1))) => Nat -> β) (CauSeq.hasCoeToFun.{0, u1} Real β Real.linearOrderedField (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1))) f)
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] (f : CauSeq.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toNorm.{u1} β _inst_1))), CauchySeq.{u1, 0} β Nat (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSeminormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))))) (Lattice.toSemilatticeSup.{0} Nat Nat.instLatticeNat) (Subtype.val.{succ u1} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toNorm.{u1} β _inst_1)) f) f)
+Case conversion may be inaccurate. Consider using '#align cau_seq.cauchy_seq CauSeq.cauchySeqₓ'. -/
 theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
   by
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩
@@ -87,12 +105,24 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
     apply hN <;> assumption
 #align cau_seq.cauchy_seq CauSeq.cauchySeq
 
+/- warning: cau_seq_iff_cauchy_seq -> cau_seq_iff_cauchySeq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_2 : NormedField.{u1} α] {u : Nat -> α}, Iff (IsCauSeq.{0, u1} Real Real.linearOrderedField α (NormedRing.toRing.{u1} α (NormedCommRing.toNormedRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))) (Norm.norm.{u1} α (NormedField.toHasNorm.{u1} α _inst_2)) u) (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α (SeminormedRing.toPseudoMetricSpace.{u1} α (SeminormedCommRing.toSemiNormedRing.{u1} α (NormedCommRing.toSeminormedCommRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))))) (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_2 : NormedField.{u1} α] {u : Nat -> α}, Iff (IsCauSeq.{0, u1} Real Real.instLinearOrderedFieldReal α (NormedRing.toRing.{u1} α (NormedCommRing.toNormedRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))) (Norm.norm.{u1} α (NormedField.toNorm.{u1} α _inst_2)) u) (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α (SeminormedRing.toPseudoMetricSpace.{u1} α (SeminormedCommRing.toSeminormedRing.{u1} α (NormedCommRing.toSeminormedCommRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))))) (Lattice.toSemilatticeSup.{0} Nat Nat.instLatticeNat) u)
+Case conversion may be inaccurate. Consider using '#align cau_seq_iff_cauchy_seq cau_seq_iff_cauchySeqₓ'. -/
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem cau_seq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :
     IsCauSeq norm u ↔ CauchySeq u :=
   ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
 #align cau_seq_iff_cauchy_seq cau_seq_iff_cauchySeq
 
+/- warning: complete_space_of_cau_seq_complete -> completeSpace_of_cau_seq_complete is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] [_inst_2 : CauSeq.IsComplete.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1)) (isAbsoluteValue_norm.{u1} β (NormedField.toNormedDivisionRing.{u1} β _inst_1))], CompleteSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSemiNormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1)))))
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] [_inst_2 : CauSeq.IsComplete.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toNorm.{u1} β _inst_1)) (isAbsoluteValue_norm.{u1} β (NormedField.toNormedDivisionRing.{u1} β _inst_1))], CompleteSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSeminormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align complete_space_of_cau_seq_complete completeSpace_of_cau_seq_completeₓ'. -/
 -- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Alexey Soloyev, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.real.golden_ratio
-! leanprover-community/mathlib commit 10b4e499f43088dd3bb7b5796184ad5216648ab1
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem inv_gold : φ⁻¹ = -ψ :=
 /-- The opposite of the golden ratio is the inverse of its conjugate. -/
 theorem inv_gold_conj : ψ⁻¹ = -φ :=
   by
-  rw [inv_eq_iff_inv_eq, ← neg_inv, neg_eq_iff_neg_eq]
+  rw [inv_eq_iff_eq_inv, ← neg_inv, ← neg_eq_iff_eq_neg]
   exact inv_gold.symm
 #align inv_gold_conj inv_gold_conj
 

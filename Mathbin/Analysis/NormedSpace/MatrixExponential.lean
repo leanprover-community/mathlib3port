@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.matrix_exponential
-! leanprover-community/mathlib commit 31263840fccb6bc5ea3d3d49676a1d16d596cfc0
+! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Exponential
 import Mathbin.Analysis.Matrix
 import Mathbin.LinearAlgebra.Matrix.Zpow
+import Mathbin.LinearAlgebra.Matrix.Hermitian
+import Mathbin.LinearAlgebra.Matrix.Symmetric
 import Mathbin.Topology.UniformSpace.Matrix
 
 /-!
@@ -129,6 +131,11 @@ theorem exp_conjTranspose [StarRing 𝔸] [ContinuousStar 𝔸] (A : Matrix m m 
   (star_exp A).symm
 #align matrix.exp_conj_transpose Matrix.exp_conjTranspose
 
+theorem IsHermitian.exp [StarRing 𝔸] [ContinuousStar 𝔸] {A : Matrix m m 𝔸} (h : A.IsHermitian) :
+    (exp 𝕂 A).IsHermitian :=
+  (exp_conjTranspose _ _).symm.trans <| congr_arg _ h
+#align matrix.is_hermitian.exp Matrix.IsHermitian.exp
+
 end Ring
 
 section CommRing
@@ -139,6 +146,10 @@ variable [Fintype m] [DecidableEq m] [Field 𝕂] [CommRing 𝔸] [TopologicalSp
 theorem exp_transpose (A : Matrix m m 𝔸) : exp 𝕂 Aᵀ = (exp 𝕂 A)ᵀ := by
   simp_rw [exp_eq_tsum, transpose_tsum, transpose_smul, transpose_pow]
 #align matrix.exp_transpose Matrix.exp_transpose
+
+theorem IsSymm.exp {A : Matrix m m 𝔸} (h : A.IsSymm) : (exp 𝕂 A).IsSymm :=
+  (exp_transpose _ _).symm.trans <| congr_arg _ h
+#align matrix.is_symm.exp Matrix.IsSymm.exp
 
 end CommRing
 

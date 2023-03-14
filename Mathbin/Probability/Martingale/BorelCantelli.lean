@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.borel_cantelli
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,7 +277,7 @@ theorem Martingale.bddAbove_range_iff_bddBelow_range [IsFiniteMeasure μ] (hf : 
     refine' neg_le.2 (hc _ _)
     simpa only [Pi.neg_apply, Set.mem_range, neg_inj]
   · rw [mem_lowerBounds] at hc
-    simp_rw [Set.mem_range, Pi.neg_apply, neg_eq_iff_neg_eq, eq_comm] at hω
+    simp_rw [Set.mem_range, Pi.neg_apply, neg_eq_iff_eq_neg] at hω
     refine' le_neg.1 (hc _ _)
     simpa only [Set.mem_range]
 #align measure_theory.martingale.bdd_above_range_iff_bdd_below_range MeasureTheory.Martingale.bddAbove_range_iff_bddBelow_range

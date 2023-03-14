@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit 671d5d9a0cca76de2933cff8ee3c29b7533f9caf
+! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,6 +38,7 @@ We also define `is_star_normal R`, a `Prop` that states that an element `x` sati
 
 ## TODO
 
+* Define `is_skew_adjoint` to match `is_self_adjoint`.
 * Define `λ z x, z * x * star z` (i.e. conjugation by `z`) as a monoid action of `R` on `R`
   (similar to the existing `conj_act` for groups), and then state the fact that `self_adjoint R` is
   invariant under it.
@@ -758,6 +759,22 @@ instance [Semiring R] [Module R A] [StarModule R A] : Module R (skewAdjoint A) :
 end SMul
 
 end skewAdjoint
+
+/-- Scalar multiplication of a self-adjoint element by a skew-adjoint element produces a
+skew-adjoint element. -/
+theorem IsSelfAdjoint.smul_mem_skewAdjoint [Ring R] [AddCommGroup A] [Module R A] [StarAddMonoid R]
+    [StarAddMonoid A] [StarModule R A] {r : R} (hr : r ∈ skewAdjoint R) {a : A}
+    (ha : IsSelfAdjoint a) : r • a ∈ skewAdjoint A :=
+  (star_smul _ _).trans <| (congr_arg₂ _ hr ha).trans <| neg_smul _ _
+#align is_self_adjoint.smul_mem_skew_adjoint IsSelfAdjoint.smul_mem_skewAdjoint
+
+/-- Scalar multiplication of a skew-adjoint element by a skew-adjoint element produces a
+self-adjoint element. -/
+theorem isSelfAdjoint_smul_of_mem_skewAdjoint [Ring R] [AddCommGroup A] [Module R A]
+    [StarAddMonoid R] [StarAddMonoid A] [StarModule R A] {r : R} (hr : r ∈ skewAdjoint R) {a : A}
+    (ha : a ∈ skewAdjoint A) : IsSelfAdjoint (r • a) :=
+  (star_smul _ _).trans <| (congr_arg₂ _ hr ha).trans <| neg_smul_neg _ _
+#align is_self_adjoint_smul_of_mem_skew_adjoint isSelfAdjoint_smul_of_mem_skewAdjoint
 
 /- warning: is_star_normal_zero -> isStarNormal_zero is a dubious translation:
 lean 3 declaration is

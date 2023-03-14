@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -378,7 +378,7 @@ theorem toIcoDiv_neg (a : α) {b : α} (hb : 0 < b) (x : α) :
   by
   suffices toIcoDiv a hb (-x) = -toIocDiv (-(a + b)) hb x by
     rwa [neg_add, ← sub_eq_add_neg, ← toIocDiv_add_right', toIocDiv_add_right] at this
-  rw [eq_neg_iff_eq_neg, eq_comm]
+  rw [← neg_eq_iff_eq_neg]
   apply eq_toIocDiv_of_sub_zsmul_mem_Ioc
   obtain ⟨hc, ho⟩ := sub_toIcoDiv_zsmul_mem_Ico a hb (-x)
   rw [← neg_lt_neg_iff, neg_sub' (-x), neg_neg, ← neg_smul] at ho

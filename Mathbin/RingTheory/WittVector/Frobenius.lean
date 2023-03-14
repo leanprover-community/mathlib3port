@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius
-! leanprover-community/mathlib commit 114ff8a4a7935cb7531062200bff375e7b1d6d85
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,7 +179,7 @@ theorem map_frobeniusPoly (n : ℕ) :
     add_mul, mul_right_comm, mul_right_comm (C (↑p ^ (n + 1))), ← C_mul, ← C_mul, pow_succ,
     mul_assoc (↑p) (↑p ^ n), h1, mul_one, C_1, one_mul, add_comm _ (X n ^ p), add_assoc, ← add_sub,
     add_right_inj, frobenius_poly_aux_eq, RingHom.map_sub, map_X, mul_sub, sub_eq_add_neg,
-    add_comm _ (C ↑p * X (n + 1)), ← add_sub, add_right_inj, neg_eq_iff_neg_eq, neg_sub]
+    add_comm _ (C ↑p * X (n + 1)), ← add_sub, add_right_inj, neg_eq_iff_eq_neg, neg_sub, eq_comm]
   simp only [RingHom.map_sum, mul_sum, sum_mul, ← sum_sub_distrib]
   apply sum_congr rfl
   intro i hi

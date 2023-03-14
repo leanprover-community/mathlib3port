@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1236,8 +1236,8 @@ theorem isOption_neg {x y : Pgame} : IsOption x (-y) ↔ IsOption (-x) y :=
   apply or_congr <;>
     · apply exists_congr
       intro
-      rw [← neg_eq_iff_neg_eq]
-      exact eq_comm
+      rw [neg_eq_iff_eq_neg]
+      rfl
 #align pgame.is_option_neg Pgame.isOption_neg
 
 @[simp]

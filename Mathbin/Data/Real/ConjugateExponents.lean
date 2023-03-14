@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.conjugate_exponents
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,8 +146,8 @@ Case conversion may be inaccurate. Consider using '#align real.is_conjugate_expo
 theorem conj_eq : q = p / (p - 1) :=
   by
   have := h.inv_add_inv_conj
-  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_inv_eq] at this
-  field_simp [← this, h.ne_zero]
+  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_eq_inv] at this
+  field_simp [this, h.ne_zero]
 #align real.is_conjugate_exponent.conj_eq Real.IsConjugateExponent.conj_eq
 
 #print Real.IsConjugateExponent.conjugate_eq /-

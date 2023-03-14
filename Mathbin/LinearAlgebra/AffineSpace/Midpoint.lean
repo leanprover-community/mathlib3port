@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.midpoint
-! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,7 +180,7 @@ theorem right_eq_midpoint_iff {x y : P} : y = midpoint R x y ↔ x = y := by
 theorem midpoint_eq_midpoint_iff_vsub_eq_vsub {x x' y y' : P} :
     midpoint R x y = midpoint R x' y' ↔ x -ᵥ x' = y' -ᵥ y := by
   rw [← @vsub_eq_zero_iff_eq V, midpoint_vsub_midpoint, midpoint_eq_iff, point_reflection_apply,
-    vsub_eq_sub, zero_sub, vadd_eq_add, add_zero, neg_eq_iff_neg_eq, neg_vsub_eq_vsub_rev, eq_comm]
+    vsub_eq_sub, zero_sub, vadd_eq_add, add_zero, neg_eq_iff_eq_neg, neg_vsub_eq_vsub_rev]
 #align midpoint_eq_midpoint_iff_vsub_eq_vsub midpoint_eq_midpoint_iff_vsub_eq_vsub
 
 theorem midpoint_eq_iff' {x y z : P} : midpoint R x y = z ↔ Equiv.pointReflection z x = y :=

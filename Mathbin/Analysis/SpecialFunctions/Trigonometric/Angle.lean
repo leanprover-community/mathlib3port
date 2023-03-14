@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit a0ed43b3a5734e36d5af48cbe3332732988bfdbc
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -980,8 +980,8 @@ theorem eq_iff_sign_eq_and_abs_toReal_eq {θ ψ : Angle} :
   rcases hr with (hr | hr)
   · exact to_real_injective hr
   · by_cases h : θ = π
-    · rw [h, to_real_pi, eq_neg_iff_eq_neg] at hr
-      exact False.elim ((neg_pi_lt_to_real ψ).Ne hr.symm)
+    · rw [h, to_real_pi, ← neg_eq_iff_eq_neg] at hr
+      exact False.elim ((neg_pi_lt_to_real ψ).Ne hr)
     · by_cases h' : ψ = π
       · rw [h', to_real_pi] at hr
         exact False.elim ((neg_pi_lt_to_real θ).Ne hr.symm)

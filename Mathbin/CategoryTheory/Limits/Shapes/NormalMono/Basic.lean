@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.normal_mono.basic
-! leanprover-community/mathlib commit bbe25d4d92565a5fd773e52e041a90387eee3c93
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Preserves.Basic
 
 /-!
 # Definitions and basic properties of normal monomorphisms and epimorphisms.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A normal monomorphism is a morphism that is the kernel of some other morphism.
 

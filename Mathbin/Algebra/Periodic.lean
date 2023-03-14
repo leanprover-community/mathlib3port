@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module algebra.periodic
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -723,7 +723,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.antiperiodic.funext' Function.Antiperiodic.funext'ₓ'. -/
 protected theorem Antiperiodic.funext' [Add α] [InvolutiveNeg β] (h : Antiperiodic f c) :
     (fun x => -f (x + c)) = f :=
-  (eq_neg_iff_eq_neg.mp h.funext).symm
+  neg_eq_iff_eq_neg.mpr h.funext
 #align function.antiperiodic.funext' Function.Antiperiodic.funext'
 
 /- warning: function.antiperiodic.periodic -> Function.Antiperiodic.periodic is a dubious translation:
@@ -799,7 +799,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : AddGroup.{u2} α] [_inst_2 : InvolutiveNeg.{u1} β], (Function.Antiperiodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) (InvolutiveNeg.toNeg.{u1} β _inst_2) f c) -> (forall (x : α), Eq.{succ u1} β (f (HSub.hSub.{u2, u2, u2} α α α (instHSub.{u2} α (SubNegMonoid.toSub.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1))) x c)) (Neg.neg.{u1} β (InvolutiveNeg.toNeg.{u1} β _inst_2) (f x)))
 Case conversion may be inaccurate. Consider using '#align function.antiperiodic.sub_eq Function.Antiperiodic.sub_eqₓ'. -/
 theorem Antiperiodic.sub_eq [AddGroup α] [InvolutiveNeg β] (h : Antiperiodic f c) (x : α) :
-    f (x - c) = -f x := by simp only [eq_neg_iff_eq_neg.mp (h (x - c)), sub_add_cancel]
+    f (x - c) = -f x := by rw [← neg_eq_iff_eq_neg, ← h (x - c), sub_add_cancel]
 #align function.antiperiodic.sub_eq Function.Antiperiodic.sub_eq
 
 /- warning: function.antiperiodic.sub_eq' -> Function.Antiperiodic.sub_eq' is a dubious translation:

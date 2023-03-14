@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit ccf84e0d918668460a34aa19d02fe2e0e2286da0
+! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,6 +142,11 @@ theorem star_exp [T2Space 𝔸] [StarRing 𝔸] [ContinuousStar 𝔸] (x : 𝔸)
 #align star_exp star_exp
 
 variable (𝕂)
+
+theorem IsSelfAdjoint.exp [T2Space 𝔸] [StarRing 𝔸] [ContinuousStar 𝔸] {x : 𝔸}
+    (h : IsSelfAdjoint x) : IsSelfAdjoint (exp 𝕂 x) :=
+  (star_exp x).trans <| h.symm ▸ rfl
+#align is_self_adjoint.exp IsSelfAdjoint.exp
 
 theorem Commute.exp_right [T2Space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute x (exp 𝕂 y) :=
   by
@@ -494,6 +499,13 @@ theorem Ring.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-x) 
   letI := invertibleExp 𝕂 x
   Ring.inverse_invertible _
 #align ring.inverse_exp Ring.inverse_exp
+
+theorem exp_mem_unitary_of_mem_skewAdjoint [StarRing 𝔸] [ContinuousStar 𝔸] {x : 𝔸}
+    (h : x ∈ skewAdjoint 𝔸) : exp 𝕂 x ∈ unitary 𝔸 := by
+  rw [unitary.mem_iff, star_exp, skew_adjoint.mem_iff.mp h, ←
+    exp_add_of_commute (Commute.refl x).neg_left, ← exp_add_of_commute (Commute.refl x).neg_right,
+    add_left_neg, add_right_neg, exp_zero, and_self_iff]
+#align exp_mem_unitary_of_mem_skew_adjoint exp_mem_unitary_of_mem_skewAdjoint
 
 end
 

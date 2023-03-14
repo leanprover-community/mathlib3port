@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit fb319896dcaa409bd4a3cc0f8484297ef9dae2c3
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -437,7 +437,7 @@ theorem oangle_eq_zero_iff_sameRay {x y : V} : o.oangle x y = 0 ↔ SameRay ℝ 
 /-- The oriented angle between two vectors is `π` if and only if the angle with the vectors
 swapped is `π`. -/
 theorem oangle_eq_pi_iff_oangle_rev_eq_pi {x y : V} : o.oangle x y = π ↔ o.oangle y x = π := by
-  rw [oangle_rev, neg_eq_iff_neg_eq, eq_comm, Real.Angle.neg_coe_pi]
+  rw [oangle_rev, neg_eq_iff_eq_neg, Real.Angle.neg_coe_pi]
 #align orientation.oangle_eq_pi_iff_oangle_rev_eq_pi Orientation.oangle_eq_pi_iff_oangle_rev_eq_pi
 
 /-- The oriented angle between two vectors is `π` if and only they are nonzero and the first is
@@ -784,7 +784,7 @@ theorem oangle_eq_angle_of_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) :
     simpa [hy] using h
   refine' (o.oangle_eq_angle_or_eq_neg_angle hx hy).resolve_right _
   intro hxy
-  rw [hxy, Real.Angle.sign_neg, neg_eq_iff_neg_eq, eq_comm, ← SignType.neg_iff, ← not_le] at h
+  rw [hxy, Real.Angle.sign_neg, neg_eq_iff_eq_neg, ← SignType.neg_iff, ← not_le] at h
   exact
     h
       (Real.Angle.sign_coe_nonneg_of_nonneg_of_le_pi (InnerProductGeometry.angle_nonneg _ _)

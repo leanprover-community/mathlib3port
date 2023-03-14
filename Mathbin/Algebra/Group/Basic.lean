@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit 4060545f1f2b865a399c46f14391e2dba0fe3667
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -424,40 +424,11 @@ theorem inv_inj {a b : G} : a⁻¹ = b⁻¹ ↔ a = b :=
 #align inv_inj inv_inj
 #align neg_inj neg_inj
 
-/- warning: eq_inv_of_eq_inv -> eq_inv_of_eq_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b)) -> (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b)) -> (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a))
-Case conversion may be inaccurate. Consider using '#align eq_inv_of_eq_inv eq_inv_of_eq_invₓ'. -/
 @[to_additive]
-theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by simp [h]
-#align eq_inv_of_eq_inv eq_inv_of_eq_inv
-#align eq_neg_of_eq_neg eq_neg_of_eq_neg
-
-/- warning: eq_inv_iff_eq_inv -> eq_inv_iff_eq_inv is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b)) (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a))
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G a (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b)) (Eq.{succ u1} G b (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a))
-Case conversion may be inaccurate. Consider using '#align eq_inv_iff_eq_inv eq_inv_iff_eq_invₓ'. -/
-@[to_additive]
-theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
-  ⟨eq_inv_of_eq_inv, eq_inv_of_eq_inv⟩
-#align eq_inv_iff_eq_inv eq_inv_iff_eq_inv
-#align eq_neg_iff_eq_neg eq_neg_iff_eq_neg
-
-/- warning: inv_eq_iff_inv_eq -> inv_eq_iff_inv_eq is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) a) b) (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toHasInv.{u1} G _inst_1) b) a)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} G] {a : G} {b : G}, Iff (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) a) b) (Eq.{succ u1} G (Inv.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_1) b) a)
-Case conversion may be inaccurate. Consider using '#align inv_eq_iff_inv_eq inv_eq_iff_inv_eqₓ'. -/
-@[to_additive]
-theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
-  eq_comm.trans <| eq_inv_iff_eq_inv.trans eq_comm
-#align inv_eq_iff_inv_eq inv_eq_iff_inv_eq
-#align neg_eq_iff_neg_eq neg_eq_iff_neg_eq
+theorem inv_eq_iff_eq_inv : a⁻¹ = b ↔ a = b⁻¹ :=
+  ⟨fun h => h ▸ (inv_inv a).symm, fun h => h.symm ▸ inv_inv b⟩
+#align inv_eq_iff_eq_inv inv_eq_iff_eq_inv
+#align neg_eq_iff_eq_neg neg_eq_iff_eq_neg
 
 variable (G)
 
@@ -1269,7 +1240,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_eq_one_iff_inv_eq mul_eq_one_iff_inv_eqₓ'. -/
 @[to_additive]
 theorem mul_eq_one_iff_inv_eq : a * b = 1 ↔ a⁻¹ = b := by
-  rw [mul_eq_one_iff_eq_inv, eq_inv_iff_eq_inv, eq_comm]
+  rw [mul_eq_one_iff_eq_inv, inv_eq_iff_eq_inv]
 #align mul_eq_one_iff_inv_eq mul_eq_one_iff_inv_eq
 #align add_eq_zero_iff_neg_eq add_eq_zero_iff_neg_eq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module logic.equiv.functor
-! leanprover-community/mathlib commit 9407b03373c8cd201df99d6bc5514fc2db44054f
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Logic.Equiv.Defs
 
 /-!
 # Functor and bifunctors can be applied to `equiv`s.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define
 ```lean

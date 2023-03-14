@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module data.real.ereal
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1348,18 +1348,14 @@ theorem toReal_neg : ∀ {a : EReal}, toReal (-a) = -toReal a
 #print EReal.neg_eq_top_iff /-
 @[simp]
 theorem neg_eq_top_iff {x : EReal} : -x = ⊤ ↔ x = ⊥ :=
-  by
-  rw [neg_eq_iff_neg_eq]
-  simp [eq_comm]
+  neg_eq_iff_eq_neg
 #align ereal.neg_eq_top_iff EReal.neg_eq_top_iff
 -/
 
 #print EReal.neg_eq_bot_iff /-
 @[simp]
 theorem neg_eq_bot_iff {x : EReal} : -x = ⊥ ↔ x = ⊤ :=
-  by
-  rw [neg_eq_iff_neg_eq]
-  simp [eq_comm]
+  neg_eq_iff_eq_neg
 #align ereal.neg_eq_bot_iff EReal.neg_eq_bot_iff
 -/
 
@@ -1370,10 +1366,7 @@ but is expected to have type
   forall {x : EReal}, Iff (Eq.{1} EReal (Neg.neg.{0} EReal EReal.instNegEReal x) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) (Eq.{1} EReal x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)))
 Case conversion may be inaccurate. Consider using '#align ereal.neg_eq_zero_iff EReal.neg_eq_zero_iffₓ'. -/
 @[simp]
-theorem neg_eq_zero_iff {x : EReal} : -x = 0 ↔ x = 0 :=
-  by
-  rw [neg_eq_iff_neg_eq]
-  simp [eq_comm]
+theorem neg_eq_zero_iff {x : EReal} : -x = 0 ↔ x = 0 := by rw [neg_eq_iff_eq_neg, neg_zero]
 #align ereal.neg_eq_zero_iff EReal.neg_eq_zero_iff
 
 /- warning: ereal.neg_le_of_neg_le -> EReal.neg_le_of_neg_le is a dubious translation:

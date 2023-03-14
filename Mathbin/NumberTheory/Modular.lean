@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module number_theory.modular
-! leanprover-community/mathlib commit f06058e64b7e8397234455038f3f8aec83aaba5a
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -577,7 +577,7 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
   have hn : ↑ₘg 1 0 ≠ -1 := by
     intro hc
     replace hc : ↑ₘ(-g) 1 0 = 1
-    · simp [eq_neg_of_eq_neg hc]
+    · simp [← neg_eq_iff_eq_neg.mpr hc]
     replace hg : -g • z ∈ 𝒟ᵒ := (SL_neg_smul g z).symm ▸ hg
     exact hp hg hc
   specialize hp hg

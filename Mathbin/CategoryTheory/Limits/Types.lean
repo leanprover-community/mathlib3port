@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.limits.types
-! leanprover-community/mathlib commit 4aa2a2e17940311e47007f087c9df229e7f12942
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Tactic.EquivRw
 
 /-!
 # Limits in the category of types.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that the category of types has all (co)limits, by providing the usual concrete models.
 

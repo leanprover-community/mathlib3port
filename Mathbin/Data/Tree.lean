@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Wojciech Nawrocki
 
 ! This file was ported from Lean 3 source module data.tree
-! leanprover-community/mathlib commit ed989ff568099019c6533a4d94b27d852a5710d8
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Basic
 
 /-!
 # Binary tree
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Provides binary tree storage for values of any type, with O(lg n) retrieval.
 See also `data.rbtree` for red-black trees - this version allows more operations

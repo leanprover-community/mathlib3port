@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.basic
-! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -522,14 +522,14 @@ theorem isEquiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
       by_contra h_1
       cases ne_iff_lt_or_gt.1 h_1
       · simpa [hh, lt_self_iff_false] using h.2 h_2
-      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
-        exact hh.le.not_lt (h.2 ((one_lt_val_iff v' hx).1 h_2))
+      · rw [← inv_one, ← inv_eq_iff_eq_inv, ← map_inv₀] at hh
+        exact hh.not_lt (h.2 ((one_lt_val_iff v' hx).1 h_2))
     · intro hh
       by_contra h_1
       cases ne_iff_lt_or_gt.1 h_1
       · simpa [hh, lt_self_iff_false] using h.1 h_2
-      · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
-        exact hh.le.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
+      · rw [← inv_one, ← inv_eq_iff_eq_inv, ← map_inv₀] at hh
+        exact hh.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
 #align valuation.is_equiv_iff_val_lt_one Valuation.isEquiv_iff_val_lt_one
 
 theorem isEquiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]

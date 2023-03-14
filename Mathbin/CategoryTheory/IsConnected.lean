@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.is_connected
-! leanprover-community/mathlib commit 024a4231815538ac739f52d08dd20a55da0d6b23
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Category.Ulift
 
 /-!
 # Connected category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Define a connected category as a _nonempty_ category for which every functor
 to a discrete category is isomorphic to the constant functor.

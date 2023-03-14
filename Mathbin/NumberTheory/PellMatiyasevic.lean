@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.pell_matiyasevic
-! leanprover-community/mathlib commit 2af0836443b4cfb5feda0df0051acdb398304931
+! leanprover-community/mathlib commit 795b501869b9fa7aa716d5fdadd00c03f983a605
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,6 +57,34 @@ Pell's equation, Matiyasevic's theorem, Hilbert's tenth problem
 namespace Pell
 
 open Nat
+
+section
+
+variable {d : ℤ}
+
+/-- The property of being a solution to the Pell equation, expressed
+  as a property of elements of `ℤ√d`. -/
+def IsPell : ℤ√d → Prop
+  | ⟨x, y⟩ => x * x - d * y * y = 1
+#align pell.is_pell Pell.IsPell
+
+theorem isPell_norm : ∀ {b : ℤ√d}, IsPell b ↔ b * star b = 1
+  | ⟨x, y⟩ => by simp [Zsqrtd.ext, is_pell, mul_comm] <;> ring_nf
+#align pell.is_pell_norm Pell.isPell_norm
+
+theorem isPell_iff_mem_unitary : ∀ {b : ℤ√d}, IsPell b ↔ b ∈ unitary (ℤ√d)
+  | ⟨x, y⟩ => by rw [unitary.mem_iff, is_pell_norm, mul_comm (star _), and_self_iff]
+#align pell.is_pell_iff_mem_unitary Pell.isPell_iff_mem_unitary
+
+theorem isPell_mul {b c : ℤ√d} (hb : IsPell b) (hc : IsPell c) : IsPell (b * c) :=
+  isPell_norm.2 (by simp [mul_comm, mul_left_comm, star_mul, is_pell_norm.1 hb, is_pell_norm.1 hc])
+#align pell.is_pell_mul Pell.isPell_mul
+
+theorem isPell_star : ∀ {b : ℤ√d}, IsPell b ↔ IsPell (star b)
+  | ⟨x, y⟩ => by simp [is_pell, Zsqrtd.star_mk]
+#align pell.is_pell_star Pell.isPell_star
+
+end
 
 section
 
@@ -182,13 +210,7 @@ theorem pellZd_im (n : ℕ) : (pell_zd n).im = yn n :=
   rfl
 #align pell.pell_zd_im Pell.pellZd_im
 
-/-- The property of being a solution to the Pell equation, expressed
-  as a property of elements of `ℤ√d`. -/
-def IsPell : ℤ√d → Prop
-  | ⟨x, y⟩ => x * x - d * y * y = 1
-#align pell.is_pell Pell.IsPell
-
-theorem isPell_nat {x y : ℕ} : is_pell ⟨x, y⟩ ↔ x * x - d * y * y = 1 :=
+theorem isPell_nat {x y : ℕ} : IsPell (⟨x, y⟩ : ℤ√d) ↔ x * x - d * y * y = 1 :=
   ⟨fun h =>
     Int.ofNat.inj
       (by rw [Int.ofNat_sub (Int.le_of_ofNat_le_ofNat <| Int.le.intro_sub h)] <;> exact h),
@@ -197,32 +219,15 @@ theorem isPell_nat {x y : ℕ} : is_pell ⟨x, y⟩ ↔ x * x - d * y * y = 1 :=
       rw [← Int.ofNat_sub <| le_of_lt <| Nat.lt_of_sub_eq_succ h, h] <;> rfl⟩
 #align pell.is_pell_nat Pell.isPell_nat
 
-theorem isPell_norm : ∀ {b : ℤ√d}, is_pell b ↔ b * star b = 1
-  | ⟨x, y⟩ => by simp [Zsqrtd.ext, is_pell, mul_comm] <;> ring_nf
-#align pell.is_pell_norm Pell.isPell_norm
-
-theorem isPell_iff_mem_unitary : ∀ {b : ℤ√d}, is_pell b ↔ b ∈ unitary (ℤ√d)
-  | ⟨x, y⟩ => by rw [unitary.mem_iff, is_pell_norm, mul_comm (star _), and_self_iff]
-#align pell.is_pell_iff_mem_unitary Pell.isPell_iff_mem_unitary
-
-theorem isPell_mul {b c : ℤ√d} (hb : is_pell b) (hc : is_pell c) : is_pell (b * c) :=
-  is_pell_norm.2
-    (by simp [mul_comm, mul_left_comm, star_mul, Pell.isPell_norm.1 hb, Pell.isPell_norm.1 hc])
-#align pell.is_pell_mul Pell.isPell_mul
-
-theorem isPell_star : ∀ {b : ℤ√d}, is_pell b ↔ is_pell (star b)
-  | ⟨x, y⟩ => by simp [is_pell, Zsqrtd.star_mk]
-#align pell.is_pell_star Pell.isPell_star
-
 @[simp]
 theorem pellZd_succ (n : ℕ) : pell_zd (n + 1) = pell_zd n * ⟨a, 1⟩ := by simp [Zsqrtd.ext]
 #align pell.pell_zd_succ Pell.pellZd_succ
 
-theorem isPell_one : is_pell ⟨a, 1⟩ :=
+theorem isPell_one : IsPell (⟨a, 1⟩ : ℤ√d) :=
   show az * az - d * 1 * 1 = 1 by simp [dz_val] <;> ring
 #align pell.is_pell_one Pell.isPell_one
 
-theorem isPell_pellZd : ∀ n : ℕ, is_pell (pell_zd n)
+theorem isPell_pellZd : ∀ n : ℕ, IsPell (pell_zd n)
   | 0 => rfl
   | n + 1 => by
     let o := is_pell_one
@@ -281,16 +286,16 @@ theorem x_pos (n) : 0 < xn n :=
   lt_of_le_of_lt (Nat.zero_le n) (n_lt_xn n)
 #align pell.x_pos Pell.x_pos
 
-theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → is_pell b → b ≤ pell_zd n → ∃ n, b = pell_zd n
+theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → IsPell b → b ≤ pell_zd n → ∃ n, b = pell_zd n
   | 0, b => fun h1 hp hl => ⟨0, @Zsqrtd.le_antisymm _ dnsq _ _ hl h1⟩
   | n + 1, b => fun h1 hp h =>
     have a1p : (0 : ℤ√d) ≤ ⟨a, 1⟩ := trivial
     have am1p : (0 : ℤ√d) ≤ ⟨a, -1⟩ := show (_ : Nat) ≤ _ by simp <;> exact Nat.pred_le _
-    have a1m : (⟨a, 1⟩ * ⟨a, -1⟩ : ℤ√d) = 1 := is_pell_norm.1 is_pell_one
+    have a1m : (⟨a, 1⟩ * ⟨a, -1⟩ : ℤ√d) = 1 := isPell_norm.1 is_pell_one
     if ha : (⟨↑a, 1⟩ : ℤ√d) ≤ b then
       let ⟨m, e⟩ :=
         eq_pell_lem n (b * ⟨a, -1⟩) (by rw [← a1m] <;> exact mul_le_mul_of_nonneg_right ha am1p)
-          (is_pell_mul hp (is_pell_star.1 is_pell_one))
+          (isPell_mul hp (isPell_star.1 is_pell_one))
           (by
             have t := mul_le_mul_of_nonneg_right h am1p <;>
               rwa [pell_zd_succ, mul_assoc, a1m, mul_one] at t)
@@ -328,7 +333,7 @@ theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → is_pell b → b ≤ pel
               | -[y+1], y0l, yl2 => y0l trivial
 #align pell.eq_pell_lem Pell.eq_pell_lem
 
-theorem eq_pellZd (b : ℤ√d) (b1 : 1 ≤ b) (hp : is_pell b) : ∃ n, b = pell_zd n :=
+theorem eq_pellZd (b : ℤ√d) (b1 : 1 ≤ b) (hp : IsPell b) : ∃ n, b = pell_zd n :=
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b
   eq_pell_lem n b b1 hp <|
     h.trans <| by
@@ -373,7 +378,7 @@ theorem pellZd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m * star (pel
   by
   let t := pell_zd_add n (m - n)
   rw [add_tsub_cancel_of_le h] at t <;>
-    rw [t, mul_comm (pell_zd _ n) _, mul_assoc, (is_pell_norm _).1 (is_pell_pell_zd _ _), mul_one]
+    rw [t, mul_comm (pell_zd _ n) _, mul_assoc, is_pell_norm.1 (is_pell_pell_zd _ _), mul_one]
 #align pell.pell_zd_sub Pell.pellZd_sub
 
 theorem xz_sub {m n} (h : n ≤ m) : xz (m - n) = xz m * xz n - d * yz m * yz n :=

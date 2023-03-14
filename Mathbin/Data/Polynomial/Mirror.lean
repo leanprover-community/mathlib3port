@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module data.polynomial.mirror
-! leanprover-community/mathlib commit 63417e01fbc711beaf25fa73b6edb395c0cfddd0
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -257,9 +257,9 @@ theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     have hk := h2 k key
     rcases hk with (hk | hk | hk | hk)
     · exact Or.inr (h3 h h_dvd_f (by rwa [← hk]))
-    · exact Or.inr (h3 h h_dvd_f (by rwa [eq_neg_iff_eq_neg.mp hk, mirror_neg, dvd_neg]))
+    · exact Or.inr (h3 h h_dvd_f (by rwa [← neg_eq_iff_eq_neg.mpr hk, mirror_neg, dvd_neg]))
     · exact Or.inl (h3 g g_dvd_f (by rwa [← hk]))
-    · exact Or.inl (h3 g g_dvd_f (by rwa [eq_neg_iff_eq_neg.mp hk, dvd_neg]))
+    · exact Or.inl (h3 g g_dvd_f (by rwa [← neg_eq_iff_eq_neg.mpr hk, dvd_neg]))
 #align polynomial.irreducible_of_mirror Polynomial.irreducible_of_mirror
 
 end CommRing

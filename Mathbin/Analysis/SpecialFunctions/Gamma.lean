@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma
-! leanprover-community/mathlib commit 372edc36e5d2caafdd135769e0136b5a59186834
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1708,8 +1708,8 @@ theorem gamma_mul_gamma_one_sub (z : ℂ) : gamma z * gamma (1 - z) = π / sin (
     rw [← neg_eq_zero, ← Complex.sin_neg, ← mul_neg, Complex.sin_eq_zero_iff, mul_comm] at hs
     obtain ⟨k, hk⟩ := hs
     rw [mul_eq_mul_right_iff, eq_false (of_real_ne_zero.mpr pi_pos.ne'), or_false_iff,
-      neg_eq_iff_neg_eq] at hk
-    rw [← hk]
+      neg_eq_iff_eq_neg] at hk
+    rw [hk]
     cases k
     · rw [Int.cast_ofNat, Complex.gamma_neg_nat_eq_zero, MulZeroClass.zero_mul]
     ·

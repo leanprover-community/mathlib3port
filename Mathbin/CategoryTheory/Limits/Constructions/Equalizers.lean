@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.equalizers
-! leanprover-community/mathlib commit 3424a5932a77dcec2c177ce7d805acace6149299
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 
 /-!
 # Constructing equalizers from pullbacks and binary products.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If a category has pullbacks and binary products, then it has equalizers.
 

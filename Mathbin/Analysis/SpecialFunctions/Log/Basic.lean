@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.basic
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,9 +244,9 @@ theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 :=
   constructor
   · intro h
     rcases lt_trichotomy x 0 with (x_lt_zero | rfl | x_gt_zero)
-    · refine' Or.inr (Or.inr (eq_neg_iff_eq_neg.mp _))
+    · refine' Or.inr (Or.inr (neg_eq_iff_eq_neg.mp _))
       rw [← log_neg_eq_log x] at h
-      exact (eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h).symm
+      exact eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h
     · exact Or.inl rfl
     · exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
   · rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]

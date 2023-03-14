@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.free_non_unital_non_assoc_algebra
-! leanprover-community/mathlib commit 2f1a4aff21c9aadf7cfb96911734754d6c228029
+! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.MonoidAlgebra.Basic
 
 /-!
 # Free algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a semiring `R` and a type `X`, we construct the free non-unital, non-associative algebra on
 `X` with coefficients in `R`, together with its universal property. The construction is valuable

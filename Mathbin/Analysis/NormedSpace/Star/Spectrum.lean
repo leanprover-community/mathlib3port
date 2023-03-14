@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.spectrum
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,7 +15,7 @@ import Mathbin.Analysis.SpecialFunctions.Exponential
 import Mathbin.Algebra.Star.StarAlgHom
 
 /-! # Spectral properties in C⋆-algebras
-In this file, we establish various propreties related to the spectrum of elements in C⋆-algebras.
+In this file, we establish various properties related to the spectrum of elements in C⋆-algebras.
 -/
 
 
@@ -99,6 +99,7 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
 theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) {z : ℂ}
     (hz : z ∈ spectrum ℂ a) : z = z.re :=
   by
+  have hu := exp_mem_unitary_of_mem_skewAdjoint ℂ (ha.smul_mem_skew_adjoint conj_I)
   let Iu := Units.mk0 I I_ne_zero
   have : exp ℂ (I • z) ∈ spectrum ℂ (exp ℂ (I • a)) := by
     simpa only [Units.smul_def, Units.val_mk0] using
@@ -108,7 +109,7 @@ theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelf
       (by
         simpa only [← Complex.exp_eq_exp_ℂ, mem_sphere_zero_iff_norm, norm_eq_abs, abs_exp,
           Real.exp_eq_one_iff, smul_eq_mul, I_mul, neg_eq_zero] using
-          spectrum.subset_circle_of_unitary ha.exp_i_smul_unitary this)
+          spectrum.subset_circle_of_unitary hu this)
 #align is_self_adjoint.mem_spectrum_eq_re IsSelfAdjoint.mem_spectrum_eq_re
 
 /-- Any element of the spectrum of a selfadjoint is real. -/

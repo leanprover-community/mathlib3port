@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu, Jack McKoen
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_subring
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -731,7 +731,7 @@ theorem principalUnitGroup_le_principalUnitGroup {A B : ValuationSubring K} :
     by_cases h_1 : x = 0
     · simp only [h_1, zero_mem]
     by_cases h_2 : x⁻¹ + 1 = 0
-    · rw [add_eq_zero_iff_eq_neg, inv_eq_iff_inv_eq, inv_neg, inv_one] at h_2
+    · rw [add_eq_zero_iff_eq_neg, inv_eq_iff_eq_inv, inv_neg, inv_one] at h_2
       simpa only [h_2] using B.neg_mem _ B.one_mem
     · rw [← valuation_le_one_iff, ← not_lt, Valuation.one_lt_val_iff _ h_1, ← add_sub_cancel x⁻¹, ←
         Units.val_mk0 h_2, ← mem_principal_unit_group_iff] at hx⊢

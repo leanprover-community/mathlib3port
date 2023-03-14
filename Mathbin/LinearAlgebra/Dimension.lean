@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -416,7 +416,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
     -- by expressing the `v i` in the basis `b`, and using that the `v i` have no `b b'` term.
     have l₀ : l none = 0 := by
       rw [← eq_neg_iff_add_eq_zero] at z
-      replace z := eq_neg_of_eq_neg z
+      replace z := neg_eq_iff_eq_neg.mpr z
       apply_fun fun x => b.repr x b'  at z
       simp only [repr_self, LinearEquiv.map_smul, mul_one, Finsupp.single_eq_same, Pi.neg_apply,
         Finsupp.smul_single', LinearEquiv.map_neg, Finsupp.coe_neg] at z

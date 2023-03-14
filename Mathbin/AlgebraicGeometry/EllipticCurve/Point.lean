@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.point
-! leanprover-community/mathlib commit 03994e05d8bfc59a41d2ec99523d6553d21848ac
+! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -693,7 +693,7 @@ theorem add_eq_zero (P Q : W.Point) : P + Q = 0 ↔ P = -Q :=
   by
   rcases P, Q with ⟨_ | @⟨x₁, y₁, _⟩, _ | @⟨x₂, y₂, _⟩⟩
   any_goals rfl
-  · rw [zero_def, zero_add, eq_neg_iff_eq_neg, neg_zero]
+  · rw [zero_def, zero_add, ← neg_eq_iff_eq_neg, neg_zero, eq_comm]
   · simp only [neg_some]
     constructor
     · intro h
