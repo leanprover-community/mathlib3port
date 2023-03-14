@@ -147,7 +147,7 @@ include G hG
 /-- The lifting of a functor to the path category of `loc_quiver W` -/
 @[simps]
 def liftToPathCategory : Paths (LocQuiver W) ⥤ D :=
-  Quiv.lift
+  QuivCat.lift
     { obj := fun X => G.obj X.obj
       map := fun X Y => by
         rintro (f | ⟨g, hg⟩)

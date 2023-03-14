@@ -24,31 +24,38 @@ universe v u
 
 namespace CategoryTheory
 
+#print CategoryTheory.QuivCat /-
 -- intended to be used with explicit universe parameters
 /-- Category of quivers. -/
 @[nolint check_univs]
-def Quiv :=
+def QuivCat :=
   Bundled Quiver.{v + 1, u}
-#align category_theory.Quiv CategoryTheory.Quiv
+#align category_theory.Quiv CategoryTheory.QuivCat
+-/
 
 namespace Quiv
 
-instance : CoeSort Quiv (Type u) where coe := Bundled.α
+instance : CoeSort QuivCat (Type u) where coe := Bundled.α
 
-instance str (C : Quiv.{v, u}) : Quiver.{v + 1, u} C :=
+#print CategoryTheory.QuivCat.str' /-
+instance str' (C : QuivCat.{v, u}) : Quiver.{v + 1, u} C :=
   C.str
-#align category_theory.Quiv.str CategoryTheory.Quiv.str
+#align category_theory.Quiv.str CategoryTheory.QuivCat.str'
+-/
 
+#print CategoryTheory.QuivCat.of /-
 /-- Construct a bundled `Quiv` from the underlying type and the typeclass. -/
-def of (C : Type u) [Quiver.{v + 1} C] : Quiv.{v, u} :=
+def of (C : Type u) [Quiver.{v + 1} C] : QuivCat.{v, u} :=
   Bundled.of C
-#align category_theory.Quiv.of CategoryTheory.Quiv.of
+#align category_theory.Quiv.of CategoryTheory.QuivCat.of
+-/
 
-instance : Inhabited Quiv :=
-  ⟨Quiv.of (Quiver.Empty PEmpty)⟩
+instance : Inhabited QuivCat :=
+  ⟨QuivCat.of (Quiver.Empty PEmpty)⟩
 
+#print CategoryTheory.QuivCat.category /-
 /-- Category structure on `Quiv` -/
-instance category : LargeCategory.{max v u} Quiv.{v, u}
+instance category : LargeCategory.{max v u} QuivCat.{v, u}
     where
   Hom C D := Prefunctor C D
   id C := Prefunctor.id C
@@ -56,23 +63,27 @@ instance category : LargeCategory.{max v u} Quiv.{v, u}
   id_comp' C D F := by cases F <;> rfl
   comp_id' C D F := by cases F <;> rfl
   assoc' := by intros <;> rfl
-#align category_theory.Quiv.category CategoryTheory.Quiv.category
+#align category_theory.Quiv.category CategoryTheory.QuivCat.category
+-/
 
+#print CategoryTheory.QuivCat.forget /-
 /-- The forgetful functor from categories to quivers. -/
 @[simps]
-def forget : Cat.{v, u} ⥤ Quiv.{v, u}
+def forget : Cat.{v, u} ⥤ QuivCat.{v, u}
     where
-  obj C := Quiv.of C
+  obj C := QuivCat.of C
   map C D F := F.toPrefunctor
-#align category_theory.Quiv.forget CategoryTheory.Quiv.forget
+#align category_theory.Quiv.forget CategoryTheory.QuivCat.forget
+-/
 
 end Quiv
 
 namespace Cat
 
+#print CategoryTheory.Cat.free /-
 /-- The functor sending each quiver to its path category. -/
 @[simps]
-def free : Quiv.{v, u} ⥤ Cat.{max u v, u}
+def free : QuivCat.{v, u} ⥤ Cat.{max u v, u}
     where
   obj V := Cat.of (Paths V)
   map V W F :=
@@ -90,26 +101,35 @@ def free : Quiv.{v, u} ⥤ Cat.{max u v, u}
     apply eq_conj_eq_to_hom
     rfl
 #align category_theory.Cat.free CategoryTheory.Cat.free
+-/
 
 end Cat
 
 namespace Quiv
 
+#print CategoryTheory.QuivCat.lift /-
 /-- Any prefunctor into a category lifts to a functor from the path category. -/
 @[simps]
 def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) :
     Paths V ⥤ C where
   obj X := F.obj X
   map X Y f := composePath (F.mapPath f)
-#align category_theory.Quiv.lift CategoryTheory.Quiv.lift
+#align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
+-/
 
+/- warning: category_theory.Quiv.adj -> CategoryTheory.QuivCat.adj is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Adjunction.{max u1 u2, max u1 u2, max (succ u1) u1 (succ (max u1 u2)), max (succ u1) u1 (succ (max u1 u2))} CategoryTheory.QuivCat.{max u1 u2, u1} CategoryTheory.QuivCat.category.{max u1 u2, u1} CategoryTheory.Cat.{max u1 u2, u1} CategoryTheory.Cat.category.{max u1 u2, u1} CategoryTheory.Cat.free.{max u1 u2, u1} CategoryTheory.QuivCat.forget.{max u1 u2, u1}
+but is expected to have type
+  CategoryTheory.Adjunction.{max u1 u2, max u1 u2, max (succ u2) (succ (max u1 u2)), max (succ u2) (succ (max u1 u2))} CategoryTheory.QuivCat.{max u1 u2, u2} CategoryTheory.QuivCat.category.{max u1 u2, u2} CategoryTheory.Cat.{max u1 u2, u2} CategoryTheory.Cat.category.{max u1 u2, u2} CategoryTheory.Cat.free.{max u1 u2, u2} CategoryTheory.QuivCat.forget.{max u1 u2, u2}
+Case conversion may be inaccurate. Consider using '#align category_theory.Quiv.adj CategoryTheory.QuivCat.adjₓ'. -/
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
 -- but it would require lifting quite a bit of machinery to quivers!
 /--
 The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
 -/
-def adj : Cat.free ⊣ Quiv.forget :=
+def adj : Cat.free ⊣ QuivCat.forget :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun V C =>
         { toFun := fun F => Paths.of.comp F.toPrefunctor
@@ -131,7 +151,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
         ext
         apply eq_conj_eq_to_hom
         rfl }
-#align category_theory.Quiv.adj CategoryTheory.Quiv.adj
+#align category_theory.Quiv.adj CategoryTheory.QuivCat.adj
 
 end Quiv
 
