@@ -271,7 +271,7 @@ theorem equal_charZero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → Cha
   intro p p_pos
   by_contra hp_mixed_char
   rcases hp_mixed_char.char_p_quotient with ⟨I, hI_ne_top, hI_p⟩
-  replace hI_zero : CharP (R ⧸ I) 0 := @CharP.of_charZero _ _ (h I hI_ne_top)
+  replace hI_zero : CharP (R ⧸ I) 0 := @CharP.ofCharZero _ _ (h I hI_ne_top)
   exact absurd (CharP.eq (R ⧸ I) hI_p hI_zero) (ne_of_gt p_pos)
 #align equal_char_zero_to_not_mixed_char equal_charZero_to_not_mixed_char
 

@@ -526,7 +526,7 @@ variable [Finite F]
 /-- In a finite field of characteristic `2`, all elements are squares. -/
 theorem isSquare_of_char_two (hF : ringChar F = 2) (a : F) : IsSquare a :=
   haveI hF' : CharP F 2 := ringChar.of_eq hF
-  isSquare_of_char_two' a
+  isSquare_of_charTwo' a
 #align finite_field.is_square_of_char_two FiniteField.isSquare_of_char_two
 
 /-- In a finite field of odd characteristic, not every element is a square. -/

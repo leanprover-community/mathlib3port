@@ -458,7 +458,7 @@ end CharEq
 end UniversalProperty
 
 theorem int_coe_eq_int_coe_iff (a b : ℤ) (c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a ≡ b [ZMOD c] :=
-  CharP.int_coe_eq_int_coe_iff (ZMod c) c a b
+  CharP.int_cast_eq_int_cast_iff (ZMod c) c a b
 #align zmod.int_coe_eq_int_coe_iff ZMod.int_coe_eq_int_coe_iff
 
 theorem int_coe_eq_int_coe_iff' (a b : ℤ) (c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a % c = b % c :=

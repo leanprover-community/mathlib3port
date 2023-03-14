@@ -70,7 +70,7 @@ theorem charP_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : â
     haveI K_char_zero : CharZero K := CharP.charP_to_charZero K
     haveI R_char_zero := RingHom.charZero (LocalRing.residue R)
     -- Finally, `r = 0` would lead to a contradiction:
-    have q_zero := CharP.eq R char_R_q (CharP.of_charZero R)
+    have q_zero := CharP.eq R char_R_q (CharP.ofCharZero R)
     exact absurd q_zero q_pos
 #align char_p_zero_or_prime_power charP_zero_or_prime_power
 

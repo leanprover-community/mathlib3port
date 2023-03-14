@@ -117,7 +117,7 @@ theorem smul (m : M) (x : FixedPoints.subfield M F) : m • x = x :=
 theorem smul_polynomial (m : M) (p : Polynomial (FixedPoints.subfield M F)) : m • p = p :=
   Polynomial.induction_on p (fun x => by rw [Polynomial.smul_C, smul])
     (fun p q ihp ihq => by rw [smul_add, ihp, ihq]) fun n x ih => by
-    rw [smul_mul', Polynomial.smul_C, smul, smul_pow', Polynomial.smul_x]
+    rw [smul_mul', Polynomial.smul_C, smul, smul_pow', Polynomial.smul_X]
 #align fixed_points.smul_polynomial FixedPoints.smul_polynomial
 
 instance : Algebra (FixedPoints.subfield M F) F := by infer_instance
