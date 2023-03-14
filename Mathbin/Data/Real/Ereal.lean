@@ -84,7 +84,7 @@ namespace EReal
 lean 3 declaration is
   DecidableRel.{1} EReal (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder))))))
 but is expected to have type
-  DecidableRel.{1} EReal (fun (x._@.Mathlib.Data.Real.EReal._hyg.222 : EReal) (x._@.Mathlib.Data.Real.EReal._hyg.224 : EReal) => LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x._@.Mathlib.Data.Real.EReal._hyg.222 x._@.Mathlib.Data.Real.EReal._hyg.224)
+  DecidableRel.{1} EReal (fun (x._@.Mathlib.Data.Real.EReal._hyg.238 : EReal) (x._@.Mathlib.Data.Real.EReal._hyg.240 : EReal) => LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x._@.Mathlib.Data.Real.EReal._hyg.238 x._@.Mathlib.Data.Real.EReal._hyg.240)
 Case conversion may be inaccurate. Consider using '#align ereal.decidable_lt EReal.decidableLtₓ'. -/
 -- things unify with `with_bot.decidable_lt` later if we we don't provide this explicitly.
 instance decidableLt : DecidableRel ((· < ·) : EReal → EReal → Prop) :=

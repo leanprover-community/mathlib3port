@@ -2031,7 +2031,7 @@ theorem AeMeasurable.nnrealTsum {α : Type _} [MeasurableSpace α] {ι : Type _}
 
 @[measurability]
 theorem measurable_coe_real_eReal : Measurable (coe : ℝ → EReal) :=
-  continuous_coe_real_eReal.Measurable
+  continuous_coe_real_ereal.Measurable
 #align measurable_coe_real_ereal measurable_coe_real_eReal
 
 @[measurability]
@@ -2076,7 +2076,7 @@ theorem AeMeasurable.erealToReal {f : α → EReal} {μ : Measure α} (hf : AeMe
 
 @[measurability]
 theorem measurable_coe_eNNReal_eReal : Measurable (coe : ℝ≥0∞ → EReal) :=
-  continuous_coe_eNNReal_eReal.Measurable
+  continuous_coe_ennreal_ereal.Measurable
 #align measurable_coe_ennreal_ereal measurable_coe_eNNReal_eReal
 
 @[measurability]
