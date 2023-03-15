@@ -38,20 +38,30 @@ section Ring
 
 variable [Ring R] (p q : R[X])
 
+#print Polynomial.cancelLeads /-
 /-- `cancel_leads p q` is formed by multiplying `p` and `q` by monomials so that they
   have the same leading term, and then subtracting. -/
 def cancelLeads : R[X] :=
   C p.leadingCoeff * X ^ (p.natDegree - q.natDegree) * q -
     C q.leadingCoeff * X ^ (q.natDegree - p.natDegree) * p
 #align polynomial.cancel_leads Polynomial.cancelLeads
+-/
 
 variable {p q}
 
+#print Polynomial.neg_cancelLeads /-
 @[simp]
 theorem neg_cancelLeads : -p.cancelLeads q = q.cancelLeads p :=
   neg_sub _ _
 #align polynomial.neg_cancel_leads Polynomial.neg_cancelLeads
+-/
 
+/- warning: polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm -> Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {p : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)} {q : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)}, (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) p) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) q)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) q) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) p))) -> (LE.le.{0} Nat Nat.hasLe (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) p) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q)) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q)) -> (LT.lt.{0} Nat Nat.hasLt (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) (Polynomial.cancelLeads.{u1} R _inst_1 p q)) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {p : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)} {q : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)}, (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) p) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) q)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) q) (Polynomial.leadingCoeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) p))) -> (LE.le.{0} Nat instLENat (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) p) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q)) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q)) -> (LT.lt.{0} Nat instLTNat (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) (Polynomial.cancelLeads.{u1} R _inst_1 p q)) (Polynomial.natDegree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q))
+Case conversion may be inaccurate. Consider using '#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_commₓ'. -/
 theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
     (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff)
     (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) :
@@ -81,14 +91,18 @@ section CommRing
 
 variable [CommRing R] {p q : R[X]}
 
+#print Polynomial.dvd_cancelLeads_of_dvd_of_dvd /-
 theorem dvd_cancelLeads_of_dvd_of_dvd {r : R[X]} (pq : p ∣ q) (pr : p ∣ r) : p ∣ q.cancelLeads r :=
   dvd_sub (pr.trans (Dvd.intro_left _ rfl)) (pq.trans (Dvd.intro_left _ rfl))
 #align polynomial.dvd_cancel_leads_of_dvd_of_dvd Polynomial.dvd_cancelLeads_of_dvd_of_dvd
+-/
 
+#print Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree /-
 theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree (h : p.natDegree ≤ q.natDegree)
     (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree :=
   natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm (mul_comm _ _) h hq
 #align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree
+-/
 
 end CommRing
 

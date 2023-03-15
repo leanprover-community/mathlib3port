@@ -32,7 +32,7 @@ theorem tan_add {x y : ℝ}
         (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y = (2 * l + 1) * π / 2) :
     tan (x + y) = (tan x + tan y) / (1 - tan x * tan y) := by
   simpa only [← Complex.ofReal_inj, Complex.ofReal_sub, Complex.ofReal_add, Complex.ofReal_div,
-    Complex.ofReal_mul, Complex.of_real_tan] using
+    Complex.ofReal_mul, Complex.ofReal_tan] using
     @Complex.tan_add (x : ℂ) (y : ℂ) (by convert h <;> norm_cast)
 #align real.tan_add Real.tan_add
 
@@ -44,12 +44,12 @@ theorem tan_add' {x y : ℝ}
 
 theorem tan_two_mul {x : ℝ} : tan (2 * x) = 2 * tan x / (1 - tan x ^ 2) := by
   simpa only [← Complex.ofReal_inj, Complex.ofReal_sub, Complex.ofReal_div, Complex.ofReal_pow,
-    Complex.ofReal_mul, Complex.of_real_tan, Complex.ofReal_bit0, Complex.ofReal_one] using
+    Complex.ofReal_mul, Complex.ofReal_tan, Complex.ofReal_bit0, Complex.ofReal_one] using
     Complex.tan_two_mul
 #align real.tan_two_mul Real.tan_two_mul
 
 theorem tan_ne_zero_iff {θ : ℝ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
-  rw [← Complex.ofReal_ne_zero, Complex.of_real_tan, Complex.tan_ne_zero_iff] <;> norm_cast
+  rw [← Complex.ofReal_ne_zero, Complex.ofReal_tan, Complex.tan_ne_zero_iff] <;> norm_cast
 #align real.tan_ne_zero_iff Real.tan_ne_zero_iff
 
 theorem tan_eq_zero_iff {θ : ℝ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2 := by

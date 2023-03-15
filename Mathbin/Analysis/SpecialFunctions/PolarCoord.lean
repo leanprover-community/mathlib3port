@@ -67,8 +67,8 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
       congr 1
       ring
     · convert Complex.arg_mul_cos_add_sin_mul_i hr ⟨hθ.1, hθ.2.le⟩
-      simp only [Complex.equivRealProd_symm_apply, Complex.ofReal_mul, Complex.of_real_cos,
-        Complex.of_real_sin]
+      simp only [Complex.equivRealProd_symm_apply, Complex.ofReal_mul, Complex.ofReal_cos,
+        Complex.ofReal_sin]
       ring
   left_inv' := by
     rintro ⟨x, y⟩ hxy
@@ -77,9 +77,9 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
         Complex.ofReal_re, Complex.mul_re, Complex.I_re, MulZeroClass.mul_zero, Complex.ofReal_im,
         Complex.I_im, sub_self, add_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add]
     have Z := Complex.abs_mul_cos_add_sin_mul_i (x + y * Complex.I)
-    simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_add, ← Complex.ofReal_mul, ←
+    simp only [← Complex.ofReal_cos, ← Complex.ofReal_sin, mul_add, ← Complex.ofReal_mul, ←
       mul_assoc] at Z
-    simpa [A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
+    simpa [A, -Complex.ofReal_cos, -Complex.ofReal_sin] using Complex.ext_iff.1 Z
   open_target := isOpen_Ioi.Prod isOpen_Ioo
   open_source :=
     (isOpen_lt continuous_const continuous_fst).union

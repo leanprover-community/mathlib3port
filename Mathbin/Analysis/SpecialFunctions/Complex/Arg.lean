@@ -86,7 +86,7 @@ theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z 
       _ = z := abs_mul_exp_arg_mul_I z
       
   · rintro ⟨θ, rfl⟩
-    exact Complex.abs_exp_of_real_mul_i θ
+    exact Complex.abs_exp_ofReal_mul_I θ
 #align complex.abs_eq_one_iff Complex.abs_eq_one_iff
 
 @[simp]

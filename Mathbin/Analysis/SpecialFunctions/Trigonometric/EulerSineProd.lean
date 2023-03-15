@@ -114,8 +114,8 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     have c := HasDerivAt.comp (x : ℂ) (hasDerivAt_pow (n - 1) _) (Complex.hasDerivAt_cos x)
     convert ((Complex.hasDerivAt_sin x).mul c).comp_of_real using 1
     · ext1 y
-      simp only [Complex.of_real_sin, Complex.of_real_cos]
-    · simp only [Complex.of_real_cos, Complex.of_real_sin]
+      simp only [Complex.ofReal_sin, Complex.ofReal_cos]
+    · simp only [Complex.ofReal_cos, Complex.ofReal_sin]
       rw [mul_neg, mul_neg, ← sub_eq_add_neg, Function.comp_apply]
       congr 1
       · rw [← pow_succ, Nat.sub_add_cancel (by linarith : 1 ≤ n)]
@@ -148,7 +148,7 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     refine' integral_congr fun x hx => _
     dsimp only
     -- get rid of real trig functions and divions by 2 * z:
-    rw [Complex.of_real_cos, Complex.of_real_sin, Complex.sin_sq, ← mul_div_right_comm, ←
+    rw [Complex.ofReal_cos, Complex.ofReal_sin, Complex.sin_sq, ← mul_div_right_comm, ←
       mul_div_right_comm, ← sub_div, mul_div, ← neg_div]
     congr 1
     have : Complex.cos ↑x ^ n = Complex.cos ↑x ^ (n - 2) * Complex.cos ↑x ^ 2 := by
@@ -383,7 +383,7 @@ theorem Real.tendsto_euler_sin_prod (x : ℝ) :
     rw [Complex.ofReal_prod]
     refine' Finset.prod_congr (by rfl) fun n hn => _
     norm_cast
-  · rw [← Complex.ofReal_mul, ← Complex.of_real_sin, Complex.ofReal_re]
+  · rw [← Complex.ofReal_mul, ← Complex.ofReal_sin, Complex.ofReal_re]
 #align real.tendsto_euler_sin_prod Real.tendsto_euler_sin_prod
 
 end EulerSine

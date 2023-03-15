@@ -126,7 +126,7 @@ theorem Real.Angle.expMapCircle_coe (x : ℝ) : Real.Angle.expMapCircle x = expM
 theorem Real.Angle.coe_expMapCircle (θ : Real.Angle) : (θ.expMapCircle : ℂ) = θ.cos + θ.sin * I :=
   by
   induction θ using Real.Angle.induction_on
-  simp [Complex.exp_mul_i]
+  simp [Complex.exp_mul_I]
 #align real.angle.coe_exp_map_circle Real.Angle.coe_expMapCircle
 
 @[simp]

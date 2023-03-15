@@ -1792,7 +1792,7 @@ theorem gammaSeq_tendsto_gamma (s : ℝ) : Tendsto (gammaSeq s) atTop (𝓝 <| g
 /-- Euler's reflection formula for the real Gamma function. -/
 theorem gamma_mul_gamma_one_sub (s : ℝ) : gamma s * gamma (1 - s) = π / sin (π * s) :=
   by
-  simp_rw [← Complex.ofReal_inj, Complex.ofReal_div, Complex.of_real_sin, Complex.ofReal_mul, ←
+  simp_rw [← Complex.ofReal_inj, Complex.ofReal_div, Complex.ofReal_sin, Complex.ofReal_mul, ←
     Complex.gamma_of_real, Complex.ofReal_sub, Complex.ofReal_one]
   exact Complex.gamma_mul_gamma_one_sub s
 #align real.Gamma_mul_Gamma_one_sub Real.gamma_mul_gamma_one_sub

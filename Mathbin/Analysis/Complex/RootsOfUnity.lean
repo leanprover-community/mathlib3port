@@ -140,7 +140,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
   by
   rw [Complex.isPrimitiveRoot_iff _ _ hn] at h
   obtain ⟨i, h, hin, rfl⟩ := h
-  rw [mul_comm, ← mul_assoc, Complex.exp_mul_i]
+  rw [mul_comm, ← mul_assoc, Complex.exp_mul_I]
   refine' ⟨if i * 2 ≤ n then i else i - n, _, _, _⟩
   on_goal 2 =>
     replace hin := nat.is_coprime_iff_coprime.mpr hin

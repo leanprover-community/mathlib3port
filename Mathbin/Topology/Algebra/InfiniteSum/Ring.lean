@@ -330,7 +330,7 @@ where the `n`-th term is a sum over all pairs `(k, l)` such that `k+l=n`, which 
 -/
 
 
-section CauchyProduct
+section cauchy_product
 
 variable [TopologicalSpace α] [NonUnitalNonAssocSemiring α] {f g : ℕ → α}
 
@@ -425,5 +425,5 @@ theorem tsum_mul_tsum_eq_tsum_sum_range (hf : Summable f) (hg : Summable g)
   exact tsum_mul_tsum_eq_tsum_sum_antidiagonal hf hg hfg
 #align tsum_mul_tsum_eq_tsum_sum_range tsum_mul_tsum_eq_tsum_sum_range
 
-end CauchyProduct
+end cauchy_product
 

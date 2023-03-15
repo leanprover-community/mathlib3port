@@ -362,7 +362,7 @@ theorem rpow_def_of_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) :
     x ^ y = if x = 0 then if y = 0 then 1 else 0 else exp (log x * y) := by
   simp only [rpow_def, Complex.cpow_def] <;> split_ifs <;>
     simp_all [(Complex.of_real_log hx).symm, -Complex.ofReal_mul, -IsROrC.of_real_mul,
-      (Complex.ofReal_mul _ _).symm, Complex.exp_of_real_re]
+      (Complex.ofReal_mul _ _).symm, Complex.exp_ofReal_re]
 #align real.rpow_def_of_nonneg Real.rpow_def_of_nonneg
 
 theorem rpow_def_of_pos {x : ℝ} (hx : 0 < x) (y : ℝ) : x ^ y = exp (log x * y) := by
@@ -392,8 +392,8 @@ theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * 
     simp only [Complex.log, abs_of_neg hx, Complex.arg_of_real_of_neg hx, Complex.abs_ofReal,
       Complex.ofReal_mul]
     ring
-  · rw [this, Complex.exp_add_mul_i, ← Complex.of_real_exp, ← Complex.of_real_cos, ←
-      Complex.of_real_sin, mul_add, ← Complex.ofReal_mul, ← mul_assoc, ← Complex.ofReal_mul,
+  · rw [this, Complex.exp_add_mul_I, ← Complex.ofReal_exp, ← Complex.ofReal_cos, ←
+      Complex.ofReal_sin, mul_add, ← Complex.ofReal_mul, ← mul_assoc, ← Complex.ofReal_mul,
       Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.ofReal_im,
       Real.log_neg_eq_log]
     ring
