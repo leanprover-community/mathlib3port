@@ -39,12 +39,15 @@ section Semiring
 
 variable [Semiring R]
 
+#print ExpChar /-
 /-- The definition of the exponential characteristic of a semiring. -/
 class inductive ExpChar (R : Type u) [Semiring R] : ℕ → Prop
   | zero [CharZero R] : ExpChar 1
   | Prime {q : ℕ} (hprime : q.Prime) [hchar : CharP R q] : ExpChar q
 #align exp_char ExpChar
+-/
 
+#print expChar_one_of_char_zero /-
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem expChar_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] : q = 1 :=
   by
@@ -52,7 +55,9 @@ theorem expChar_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] :
   · rfl
   · exact False.elim (lt_irrefl _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).Pos)
 #align exp_char_one_of_char_zero expChar_one_of_char_zero
+-/
 
+#print char_eq_expChar_iff /-
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
 theorem char_eq_expChar_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime :=
   by
@@ -65,11 +70,13 @@ theorem char_eq_expChar_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p 
       exact Nat.not_prime_zero pprime
   · exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
 #align char_eq_exp_char_iff char_eq_expChar_iff
+-/
 
 section Nontrivial
 
 variable [Nontrivial R]
 
+#print char_zero_of_expChar_one /-
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem char_zero_of_expChar_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] : p = 0 :=
   by
@@ -77,7 +84,9 @@ theorem char_zero_of_expChar_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] :
   · exact CharP.eq R hp inferInstance
   · exact False.elim (CharP.char_ne_one R 1 rfl)
 #align char_zero_of_exp_char_one char_zero_of_expChar_one
+-/
 
+#print charZero_of_expChar_one' /-
 -- see Note [lower instance priority]
 /-- The characteristic is zero if the exponential characteristic is one. -/
 instance (priority := 100) charZero_of_expChar_one' [hq : ExpChar R 1] : CharZero R :=
@@ -86,7 +95,9 @@ instance (priority := 100) charZero_of_expChar_one' [hq : ExpChar R 1] : CharZer
   · assumption
   · exact False.elim (CharP.char_ne_one R 1 rfl)
 #align char_zero_of_exp_char_one' charZero_of_expChar_one'
+-/
 
+#print expChar_one_iff_char_zero /-
 /-- The exponential characteristic is one iff the characteristic is zero. -/
 theorem expChar_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 ↔ p = 0 :=
   by
@@ -96,11 +107,18 @@ theorem expChar_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 
   · rintro rfl
     exact expChar_one_of_char_zero R q
 #align exp_char_one_iff_char_zero expChar_one_iff_char_zero
+-/
 
 section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
+/- warning: char_prime_of_ne_zero -> char_prime_of_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))] {p : Nat} [hp : CharP.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) p], (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Nat.Prime p)
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))] {p : Nat} [hp : CharP.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) p], (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Nat.Prime p)
+Case conversion may be inaccurate. Consider using '#align char_prime_of_ne_zero char_prime_of_ne_zeroₓ'. -/
 /-- A helper lemma: the characteristic is prime if it is non-zero. -/
 theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) : Nat.Prime p :=
   by
@@ -109,6 +127,12 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
   · contradiction
 #align char_prime_of_ne_zero char_prime_of_ne_zero
 
+/- warning: exp_char_is_prime_or_one -> expChar_is_prime_or_one is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))] (q : Nat) [hq : ExpChar.{u1} R _inst_1 q], Or (Nat.Prime q) (Eq.{1} Nat q (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))] (q : Nat) [hq : ExpChar.{u1} R _inst_1 q], Or (Nat.Prime q) (Eq.{1} Nat q (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align exp_char_is_prime_or_one expChar_is_prime_or_oneₓ'. -/
 /-- The exponential characteristic is a prime number or one. -/
 theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
   or_iff_not_imp_right.mpr fun h =>
