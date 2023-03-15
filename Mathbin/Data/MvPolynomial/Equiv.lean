@@ -70,10 +70,10 @@ polynomials over the ground ring.
 def punitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X]
     where
   toFun := eval₂ Polynomial.C fun u : PUnit => Polynomial.X
-  invFun := Polynomial.eval₂ MvPolynomial.c (x PUnit.unit)
+  invFun := Polynomial.eval₂ MvPolynomial.C (X PUnit.unit)
   left_inv :=
     by
-    let f : R[X] →+* MvPolynomial PUnit R := Polynomial.eval₂RingHom MvPolynomial.c (X PUnit.unit)
+    let f : R[X] →+* MvPolynomial PUnit R := Polynomial.eval₂RingHom MvPolynomial.C (X PUnit.unit)
     let g : MvPolynomial PUnit R →+* R[X] := eval₂_hom Polynomial.C fun u : PUnit => Polynomial.X
     show ∀ p, f.comp g p = p
     apply is_id
@@ -84,14 +84,14 @@ def punitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X]
       dsimp
       rw [eval₂_X, Polynomial.eval₂_X]
   right_inv p :=
-    Polynomial.induction_on p (fun a => by rw [Polynomial.eval₂_C, MvPolynomial.eval₂_c])
+    Polynomial.induction_on p (fun a => by rw [Polynomial.eval₂_C, MvPolynomial.eval₂_C])
       (fun p q hp hq => by rw [Polynomial.eval₂_add, MvPolynomial.eval₂_add, hp, hq]) fun p n hp =>
       by
       rw [Polynomial.eval₂_mul, Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_C,
         eval₂_mul, eval₂_C, eval₂_pow, eval₂_X]
   map_mul' _ _ := eval₂_mul _ _
   map_add' _ _ := eval₂_add _ _
-  commutes' _ := eval₂_c _ _ _
+  commutes' _ := eval₂_C _ _ _
 #align mv_polynomial.punit_alg_equiv MvPolynomial.punitAlgEquiv
 
 section Map
@@ -165,22 +165,22 @@ with coefficents in multivariable polynomials in the other type.
 See `sum_ring_equiv` for the ring isomorphism.
 -/
 def sumToIter : MvPolynomial (Sum S₁ S₂) R →+* MvPolynomial S₁ (MvPolynomial S₂ R) :=
-  eval₂Hom (c.comp c) fun bc => Sum.recOn bc x (c ∘ x)
+  eval₂Hom (C.comp C) fun bc => Sum.recOn bc X (C ∘ X)
 #align mv_polynomial.sum_to_iter MvPolynomial.sumToIter
 
 @[simp]
-theorem sumToIter_c (a : R) : sumToIter R S₁ S₂ (c a) = c (c a) :=
-  eval₂_c _ _ a
+theorem sumToIter_c (a : R) : sumToIter R S₁ S₂ (C a) = C (C a) :=
+  eval₂_C _ _ a
 #align mv_polynomial.sum_to_iter_C MvPolynomial.sumToIter_c
 
 @[simp]
-theorem sumToIter_Xl (b : S₁) : sumToIter R S₁ S₂ (x (Sum.inl b)) = x b :=
-  eval₂_x _ _ (Sum.inl b)
+theorem sumToIter_Xl (b : S₁) : sumToIter R S₁ S₂ (X (Sum.inl b)) = X b :=
+  eval₂_X _ _ (Sum.inl b)
 #align mv_polynomial.sum_to_iter_Xl MvPolynomial.sumToIter_Xl
 
 @[simp]
-theorem sumToIter_Xr (c : S₂) : sumToIter R S₁ S₂ (x (Sum.inr c)) = c (x c) :=
-  eval₂_x _ _ (Sum.inr c)
+theorem sumToIter_Xr (c : S₂) : sumToIter R S₁ S₂ (X (Sum.inr c)) = C (X c) :=
+  eval₂_X _ _ (Sum.inr c)
 #align mv_polynomial.sum_to_iter_Xr MvPolynomial.sumToIter_Xr
 
 /-- The function from multivariable polynomials in one type,
@@ -190,19 +190,19 @@ to multivariable polynomials in the sum of the two types.
 See `sum_ring_equiv` for the ring isomorphism.
 -/
 def iterToSum : MvPolynomial S₁ (MvPolynomial S₂ R) →+* MvPolynomial (Sum S₁ S₂) R :=
-  eval₂Hom (eval₂Hom c (x ∘ Sum.inr)) (x ∘ Sum.inl)
+  eval₂Hom (eval₂Hom C (X ∘ Sum.inr)) (X ∘ Sum.inl)
 #align mv_polynomial.iter_to_sum MvPolynomial.iterToSum
 
-theorem iterToSum_c_c (a : R) : iterToSum R S₁ S₂ (c (c a)) = c a :=
-  Eq.trans (eval₂_c _ _ (c a)) (eval₂_c _ _ _)
+theorem iterToSum_c_c (a : R) : iterToSum R S₁ S₂ (C (C a)) = C a :=
+  Eq.trans (eval₂_C _ _ (C a)) (eval₂_C _ _ _)
 #align mv_polynomial.iter_to_sum_C_C MvPolynomial.iterToSum_c_c
 
-theorem iterToSum_x (b : S₁) : iterToSum R S₁ S₂ (x b) = x (Sum.inl b) :=
-  eval₂_x _ _ _
+theorem iterToSum_x (b : S₁) : iterToSum R S₁ S₂ (X b) = X (Sum.inl b) :=
+  eval₂_X _ _ _
 #align mv_polynomial.iter_to_sum_X MvPolynomial.iterToSum_x
 
-theorem iterToSum_c_x (c : S₂) : iterToSum R S₁ S₂ (c (x c)) = x (Sum.inr c) :=
-  Eq.trans (eval₂_c _ _ (x c)) (eval₂_x _ _ _)
+theorem iterToSum_c_x (c : S₂) : iterToSum R S₁ S₂ (C (X c)) = X (Sum.inr c) :=
+  Eq.trans (eval₂_C _ _ (X c)) (eval₂_X _ _ _)
 #align mv_polynomial.iter_to_sum_C_X MvPolynomial.iterToSum_c_x
 
 variable (σ)
@@ -232,8 +232,8 @@ variable {σ}
 /-- A helper function for `sum_ring_equiv`. -/
 @[simps]
 def mvPolynomialEquivMvPolynomial [CommSemiring S₃] (f : MvPolynomial S₁ R →+* MvPolynomial S₂ S₃)
-    (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp c = c)
-    (hfgX : ∀ n, f (g (x n)) = x n) (hgfC : (g.comp f).comp c = c) (hgfX : ∀ n, g (f (x n)) = x n) :
+    (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp C = C)
+    (hfgX : ∀ n, f (g (X n)) = X n) (hgfC : (g.comp f).comp C = C) (hgfX : ∀ n, g (f (X n)) = X n) :
     MvPolynomial S₁ R ≃+* MvPolynomial S₂ S₃
     where
   toFun := f
@@ -296,8 +296,8 @@ polynomials with coefficients in `mv_polynomial S₁ R`.
 -/
 @[simps]
 def optionEquivLeft : MvPolynomial (Option S₁) R ≃ₐ[R] Polynomial (MvPolynomial S₁ R) :=
-  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.X fun s => Polynomial.C (x s))
-    (Polynomial.aevalTower (MvPolynomial.rename some) (x none))
+  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim Polynomial.X fun s => Polynomial.C (X s))
+    (Polynomial.aevalTower (MvPolynomial.rename some) (X none))
     (by ext : 2 <;> simp [← Polynomial.C_eq_algebraMap]) (by ext i : 2 <;> cases i <;> simp)
 #align mv_polynomial.option_equiv_left MvPolynomial.optionEquivLeft
 
@@ -307,8 +307,8 @@ end
 multivariable polynomials with coefficients in polynomials.
 -/
 def optionEquivRight : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ R[X] :=
-  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim (c Polynomial.X) x)
-    (MvPolynomial.aevalTower (Polynomial.aeval (x none)) fun i => x (Option.some i))
+  AlgEquiv.ofAlgHom (MvPolynomial.aeval fun o => o.elim (C Polynomial.X) X)
+    (MvPolynomial.aevalTower (Polynomial.aeval (X none)) fun i => X (Option.some i))
     (by
       ext : 2 <;>
         simp only [MvPolynomial.algebraMap_eq, Option.elim', AlgHom.coe_comp, AlgHom.id_comp,
@@ -331,8 +331,8 @@ def finSuccEquiv : MvPolynomial (Fin (n + 1)) R ≃ₐ[R] Polynomial (MvPolynomi
 
 theorem finSuccEquiv_eq :
     (finSuccEquiv R n : MvPolynomial (Fin (n + 1)) R →+* Polynomial (MvPolynomial (Fin n) R)) =
-      eval₂Hom (Polynomial.C.comp (c : R →+* MvPolynomial (Fin n) R)) fun i : Fin (n + 1) =>
-        Fin.cases Polynomial.X (fun k => Polynomial.C (x k)) i :=
+      eval₂Hom (Polynomial.C.comp (C : R →+* MvPolynomial (Fin n) R)) fun i : Fin (n + 1) =>
+        Fin.cases Polynomial.X (fun k => Polynomial.C (X k)) i :=
   by
   ext : 2
   · simp only [finSuccEquiv, option_equiv_left_apply, aeval_C, AlgEquiv.coe_trans, RingHom.coe_coe,
@@ -345,8 +345,8 @@ theorem finSuccEquiv_eq :
 @[simp]
 theorem finSuccEquiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
     finSuccEquiv R n p =
-      eval₂Hom (Polynomial.C.comp (c : R →+* MvPolynomial (Fin n) R))
-        (fun i : Fin (n + 1) => Fin.cases Polynomial.X (fun k => Polynomial.C (x k)) i) p :=
+      eval₂Hom (Polynomial.C.comp (C : R →+* MvPolynomial (Fin n) R))
+        (fun i : Fin (n + 1) => Fin.cases Polynomial.X (fun k => Polynomial.C (X k)) i) p :=
   by
   rw [← fin_succ_equiv_eq]
   rfl
@@ -354,23 +354,23 @@ theorem finSuccEquiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
 
 theorem finSuccEquiv_comp_c_eq_c {R : Type u} [CommSemiring R] (n : ℕ) :
     (↑(MvPolynomial.finSuccEquiv R n).symm : Polynomial (MvPolynomial (Fin n) R) →+* _).comp
-        (Polynomial.C.comp MvPolynomial.c) =
-      (MvPolynomial.c : R →+* MvPolynomial (Fin n.succ) R) :=
+        (Polynomial.C.comp MvPolynomial.C) =
+      (MvPolynomial.C : R →+* MvPolynomial (Fin n.succ) R) :=
   by
   refine' RingHom.ext fun x => _
   rw [RingHom.comp_apply]
   refine'
     (MvPolynomial.finSuccEquiv R n).Injective
       (trans ((MvPolynomial.finSuccEquiv R n).apply_symm_apply _) _)
-  simp only [MvPolynomial.finSuccEquiv_apply, MvPolynomial.eval₂Hom_c]
+  simp only [MvPolynomial.finSuccEquiv_apply, MvPolynomial.eval₂Hom_C]
 #align mv_polynomial.fin_succ_equiv_comp_C_eq_C MvPolynomial.finSuccEquiv_comp_c_eq_c
 
 variable {n} {R}
 
-theorem finSuccEquiv_x_zero : finSuccEquiv R n (x 0) = Polynomial.X := by simp
+theorem finSuccEquiv_x_zero : finSuccEquiv R n (X 0) = Polynomial.X := by simp
 #align mv_polynomial.fin_succ_equiv_X_zero MvPolynomial.finSuccEquiv_x_zero
 
-theorem finSuccEquiv_x_succ {j : Fin n} : finSuccEquiv R n (x j.succ) = Polynomial.C (x j) := by
+theorem finSuccEquiv_x_succ {j : Fin n} : finSuccEquiv R n (X j.succ) = Polynomial.C (X j) := by
   simp
 #align mv_polynomial.fin_succ_equiv_X_succ MvPolynomial.finSuccEquiv_x_succ
 

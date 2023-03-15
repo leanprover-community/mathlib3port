@@ -143,7 +143,7 @@ theorem isHomogeneous_of_totalDegree_zero {p : MvPolynomial σ R} (hp : p.totalD
   exact hp
 #align mv_polynomial.is_homogeneous_of_total_degree_zero MvPolynomial.isHomogeneous_of_totalDegree_zero
 
-theorem isHomogeneous_c (r : R) : IsHomogeneous (c r : MvPolynomial σ R) 0 :=
+theorem isHomogeneous_c (r : R) : IsHomogeneous (C r : MvPolynomial σ R) 0 :=
   by
   apply is_homogeneous_monomial
   simp only [Finsupp.zero_apply, Finset.sum_const_zero]
@@ -161,7 +161,7 @@ theorem isHomogeneous_one : IsHomogeneous (1 : MvPolynomial σ R) 0 :=
 
 variable {σ} (R)
 
-theorem isHomogeneous_x (i : σ) : IsHomogeneous (x i : MvPolynomial σ R) 1 :=
+theorem isHomogeneous_x (i : σ) : IsHomogeneous (X i : MvPolynomial σ R) 1 :=
   by
   apply is_homogeneous_monomial
   simp only [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton]
@@ -286,7 +286,7 @@ theorem homogeneousComponent_isHomogeneous : (homogeneousComponent n φ).Homogen
 #align mv_polynomial.homogeneous_component_is_homogeneous MvPolynomial.homogeneousComponent_isHomogeneous
 
 @[simp]
-theorem homogeneousComponent_zero : homogeneousComponent 0 φ = c (coeff 0 φ) :=
+theorem homogeneousComponent_zero : homogeneousComponent 0 φ = C (coeff 0 φ) :=
   by
   ext1 d
   rcases em (d = 0) with (rfl | hd)
@@ -300,7 +300,7 @@ theorem homogeneousComponent_zero : homogeneousComponent 0 φ = c (coeff 0 φ) :
 
 @[simp]
 theorem homogeneousComponent_c_mul (n : ℕ) (r : R) :
-    homogeneousComponent n (c r * φ) = c r * homogeneousComponent n φ := by
+    homogeneousComponent n (C r * φ) = C r * homogeneousComponent n φ := by
   simp only [C_mul', LinearMap.map_smul]
 #align mv_polynomial.homogeneous_component_C_mul MvPolynomial.homogeneousComponent_c_mul
 

@@ -57,17 +57,17 @@ section Rename
 
 /-- Rename all the variables in a multivariable polynomial. -/
 def rename (f : σ → τ) : MvPolynomial σ R →ₐ[R] MvPolynomial τ R :=
-  aeval (x ∘ f)
+  aeval (X ∘ f)
 #align mv_polynomial.rename MvPolynomial.rename
 
 @[simp]
-theorem rename_c (f : σ → τ) (r : R) : rename f (c r) = c r :=
-  eval₂_c _ _ _
+theorem rename_c (f : σ → τ) (r : R) : rename f (C r) = C r :=
+  eval₂_C _ _ _
 #align mv_polynomial.rename_C MvPolynomial.rename_c
 
 @[simp]
-theorem rename_x (f : σ → τ) (i : σ) : rename f (x i : MvPolynomial σ R) = x (f i) :=
-  eval₂_x _ _ _
+theorem rename_x (f : σ → τ) (i : σ) : rename f (X i : MvPolynomial σ R) = X (f i) :=
+  eval₂_X _ _ _
 #align mv_polynomial.rename_X MvPolynomial.rename_x
 
 theorem map_rename (f : R →+* S) (g : σ → τ) (p : MvPolynomial σ R) :
@@ -80,7 +80,7 @@ theorem map_rename (f : R →+* S) (g : σ → τ) (p : MvPolynomial σ R) :
 @[simp]
 theorem rename_rename (f : σ → τ) (g : τ → α) (p : MvPolynomial σ R) :
     rename g (rename f p) = rename (g ∘ f) p :=
-  show rename g (eval₂ c (x ∘ f) p) = _
+  show rename g (eval₂ C (X ∘ f) p) = _
     by
     simp only [rename, aeval_eq_eval₂_hom]
     simp [eval₂_comp_left _ C (X ∘ f) p, (· ∘ ·), eval₂_C, eval_X]
@@ -130,7 +130,7 @@ open Classical
   `kill_compl hf` is the `alg_hom` from `R[τ]` to `R[σ]` that is left inverse to
   `rename f : R[σ] → R[τ]` and sends the variables in the complement of the range of `f` to `0`. -/
 def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
-  aeval fun i => if h : i ∈ Set.range f then x <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
+  aeval fun i => if h : i ∈ Set.range f then X <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
 #align mv_polynomial.kill_compl MvPolynomial.killCompl
 
 theorem killCompl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
@@ -197,14 +197,14 @@ theorem aeval_rename [Algebra R S] : aeval g (rename k p) = aeval (g ∘ k) p :=
 #align mv_polynomial.aeval_rename MvPolynomial.aeval_rename
 
 theorem rename_eval₂ (g : τ → MvPolynomial σ R) :
-    rename k (p.eval₂ c (g ∘ k)) = (rename k p).eval₂ c (rename k ∘ g) := by
+    rename k (p.eval₂ C (g ∘ k)) = (rename k p).eval₂ C (rename k ∘ g) := by
   apply MvPolynomial.induction_on p <;>
     · intros
       simp [*]
 #align mv_polynomial.rename_eval₂ MvPolynomial.rename_eval₂
 
 theorem rename_prodmk_eval₂ (j : τ) (g : σ → MvPolynomial σ R) :
-    rename (Prod.mk j) (p.eval₂ c g) = p.eval₂ c fun x => rename (Prod.mk j) (g x) := by
+    rename (Prod.mk j) (p.eval₂ C g) = p.eval₂ C fun x => rename (Prod.mk j) (g x) := by
   apply MvPolynomial.induction_on p <;>
     · intros
       simp [*]

@@ -22,8 +22,8 @@ invertible elements in the ring of polynomials.
 open MvPolynomial
 
 noncomputable instance MvPolynomial.invertibleC (σ : Type _) {R : Type _} [CommSemiring R] (r : R)
-    [Invertible r] : Invertible (c r : MvPolynomial σ R) :=
-  Invertible.map (c : R →+* MvPolynomial σ R) _
+    [Invertible r] : Invertible (C r : MvPolynomial σ R) :=
+  Invertible.map (C : R →+* MvPolynomial σ R) _
 #align mv_polynomial.invertible_C MvPolynomial.invertibleC
 
 /-- A natural number that is invertible when coerced to a commutative semiring `R`

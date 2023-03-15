@@ -34,7 +34,7 @@ variable (m n R)
 /-- The matrix with variable `X (i,j)` at location `(i,j)`. -/
 @[simp]
 noncomputable def mvPolynomialX [CommSemiring R] : Matrix m n (MvPolynomial (m × n) R)
-  | i, j => MvPolynomial.x (i, j)
+  | i, j => MvPolynomial.X (i, j)
 #align matrix.mv_polynomial_X Matrix.mvPolynomialX
 
 variable {m n R S}
@@ -46,7 +46,7 @@ not, as if the `mv_polynomial.eval₂` can be pulled to the outside of a goal, i
 under cancellative assumptions. -/
 theorem mvPolynomialX_map_eval₂ [CommSemiring R] [CommSemiring S] (f : R →+* S) (A : Matrix m n S) :
     (mvPolynomialX m n R).map (MvPolynomial.eval₂ f fun p : m × n => A p.1 p.2) = A :=
-  ext fun i j => MvPolynomial.eval₂_x _ (fun p : m × n => A p.1 p.2) (i, j)
+  ext fun i j => MvPolynomial.eval₂_X _ (fun p : m × n => A p.1 p.2) (i, j)
 #align matrix.mv_polynomial_X_map_eval₂ Matrix.mvPolynomialX_map_eval₂
 
 /-- A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `ring_hom` on the LHS. -/

@@ -105,7 +105,7 @@ section CommSemiring
 variable [CommSemiring R] [CommSemiring S] {φ ψ : MvPolynomial σ R}
 
 @[simp]
-theorem c (r : R) : IsSymmetric (c r : MvPolynomial σ R) :=
+theorem c (r : R) : IsSymmetric (C r : MvPolynomial σ R) :=
   (symmetricSubalgebra σ R).algebraMap_mem r
 #align mv_polynomial.is_symmetric.C MvPolynomial.IsSymmetric.c
 
@@ -162,13 +162,13 @@ variable (σ R) [CommSemiring R] [CommSemiring S] [Fintype σ] [Fintype τ]
 
 /-- The `n`th elementary symmetric `mv_polynomial σ R`. -/
 def esymm (n : ℕ) : MvPolynomial σ R :=
-  ∑ t in powersetLen n univ, ∏ i in t, x i
+  ∑ t in powersetLen n univ, ∏ i in t, X i
 #align mv_polynomial.esymm MvPolynomial.esymm
 
 /-- The `n`th elementary symmetric `mv_polynomial σ R` is obtained by evaluating the
 `n`th elementary symmetric at the `multiset` of the monomials -/
-theorem esymm_eq_multiset_esymm : esymm σ R = (Finset.univ.val.map x).esymm :=
-  funext fun n => (Finset.univ.esymm_map_val x n).symm
+theorem esymm_eq_multiset_esymm : esymm σ R = (Finset.univ.val.map X).esymm :=
+  funext fun n => (Finset.univ.esymm_map_val X n).symm
 #align mv_polynomial.esymm_eq_multiset_esymm MvPolynomial.esymm_eq_multiset_esymm
 
 theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :
@@ -178,7 +178,7 @@ theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
 theorem esymm_eq_sum_subtype (n : ℕ) :
-    esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), x i :=
+    esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), X i :=
   sum_subtype _ (fun _ => mem_powerset_len_univ_iff) _
 #align mv_polynomial.esymm_eq_sum_subtype MvPolynomial.esymm_eq_sum_subtype
 
@@ -201,11 +201,11 @@ theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S 
 
 theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n :=
   calc
-    rename e (esymm σ R n) = ∑ x in powersetLen n univ, ∏ i in x, x (e i) := by
+    rename e (esymm σ R n) = ∑ x in powersetLen n univ, ∏ i in x, X (e i) := by
       simp_rw [esymm, map_sum, map_prod, rename_X]
-    _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, x i := by
+    _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, X i := by
       simp [Finset.powersetLen_map, -Finset.map_univ_equiv]
-    _ = ∑ t in powersetLen n univ, ∏ i in t, x i := by rw [Finset.map_univ_equiv]
+    _ = ∑ t in powersetLen n univ, ∏ i in t, X i := by rw [Finset.map_univ_equiv]
     
 #align mv_polynomial.rename_esymm MvPolynomial.rename_esymm
 

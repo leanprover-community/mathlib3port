@@ -66,12 +66,12 @@ instance : CommRing (MvPolynomial σ R) :=
 variable (σ a a')
 
 @[simp]
-theorem c_sub : (c (a - a') : MvPolynomial σ R) = c a - c a' :=
+theorem c_sub : (C (a - a') : MvPolynomial σ R) = C a - C a' :=
   RingHom.map_sub _ _ _
 #align mv_polynomial.C_sub MvPolynomial.c_sub
 
 @[simp]
-theorem c_neg : (c (-a) : MvPolynomial σ R) = -c a :=
+theorem c_neg : (C (-a) : MvPolynomial σ R) = -C a :=
   RingHom.map_neg _ _
 #align mv_polynomial.C_neg MvPolynomial.c_neg
 
@@ -147,15 +147,15 @@ theorem eval₂_neg : (-p).eval₂ f g = -p.eval₂ f g :=
   (eval₂Hom f g).map_neg _
 #align mv_polynomial.eval₂_neg MvPolynomial.eval₂_neg
 
-theorem hom_c (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (c n) = (n : S) :=
-  eq_intCast (f.comp c) n
+theorem hom_c (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (C n) = (n : S) :=
+  eq_intCast (f.comp C) n
 #align mv_polynomial.hom_C MvPolynomial.hom_c
 
 /-- A ring homomorphism f : Z[X_1, X_2, ...] → R
 is determined by the evaluations f(X_1), f(X_2), ... -/
 @[simp]
 theorem eval₂_hom_x {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →+* S) (x : MvPolynomial R ℤ) :
-    eval₂ c (f ∘ x) x = f x :=
+    eval₂ c (f ∘ X) x = f x :=
   MvPolynomial.induction_on x
     (fun n => by
       rw [hom_C f, eval₂_C]
@@ -172,7 +172,7 @@ theorem eval₂_hom_x {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
 functions out of the type `σ`, -/
 def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S)
     where
-  toFun f := ⇑f ∘ x
+  toFun f := ⇑f ∘ X
   invFun f := eval₂Hom (Int.castRingHom S) f
   left_inv f := RingHom.ext <| eval₂_hom_x _ _
   right_inv f := funext fun x => by simp only [coe_eval₂_hom, Function.comp_apply, eval₂_X]

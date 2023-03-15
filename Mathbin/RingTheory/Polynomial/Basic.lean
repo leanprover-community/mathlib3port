@@ -798,7 +798,7 @@ end Polynomial
 
 namespace MvPolynomial
 
-private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
+private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
   by
   rw [(rename_equiv R (Fintype.equivFin σ)).toMulEquiv.prime_iff]
   convert_to Prime (C r) ↔ _;
@@ -813,8 +813,8 @@ private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (c r : MvPolynomial 
       rfl
 #align mv_polynomial.prime_C_iff_of_fintype mv_polynomial.prime_C_iff_of_fintype
 
-theorem prime_c_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
-  ⟨comap_prime c constantCoeff (constantCoeff_c _), fun hr =>
+theorem prime_c_iff : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
+  ⟨comap_prime C constantCoeff (constantCoeff_C _), fun hr =>
     ⟨fun h =>
       hr.1 <| by
         rw [← C_inj, h]
@@ -917,7 +917,7 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
       have hs2 : ∀ {x}, x ∈ I.degreeLe N → x ∈ Ideal.span (↑s : Set R[X]) :=
         hs ▸ fun x hx =>
           Submodule.span_induction hx (fun _ hx => Ideal.subset_span hx) (Ideal.zero_mem _)
-            (fun _ _ => Ideal.add_mem _) fun c f hf => f.c_mul' c ▸ Ideal.mul_mem_left _ _ hf
+            (fun _ _ => Ideal.add_mem _) fun c f hf => f.C_mul' c ▸ Ideal.mul_mem_left _ _ hf
       ⟨s,
         le_antisymm
             (Ideal.span_le.2 fun x hx =>
@@ -1164,7 +1164,7 @@ instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPoly
 
 theorem map_mvPolynomial_eq_eval₂ {S : Type _} [CommRing S] [Finite σ] (ϕ : MvPolynomial σ R →+* S)
     (p : MvPolynomial σ R) :
-    ϕ p = MvPolynomial.eval₂ (ϕ.comp MvPolynomial.c) (fun s => ϕ (MvPolynomial.x s)) p :=
+    ϕ p = MvPolynomial.eval₂ (ϕ.comp MvPolynomial.C) (fun s => ϕ (MvPolynomial.X s)) p :=
   by
   cases nonempty_fintype σ
   refine' trans (congr_arg ϕ (MvPolynomial.as_sum p)) _
@@ -1177,7 +1177,7 @@ theorem map_mvPolynomial_eq_eval₂ {S : Type _} [CommRing S] [Finite σ] (ϕ : 
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself,
 multivariate version. -/
 theorem mem_ideal_of_coeff_mem_ideal (I : Ideal (MvPolynomial σ R)) (p : MvPolynomial σ R)
-    (hcoe : ∀ m : σ →₀ ℕ, p.coeff m ∈ I.comap (c : R →+* MvPolynomial σ R)) : p ∈ I :=
+    (hcoe : ∀ m : σ →₀ ℕ, p.coeff m ∈ I.comap (C : R →+* MvPolynomial σ R)) : p ∈ I :=
   by
   rw [as_sum p]
   suffices ∀ m ∈ p.support, monomial m (MvPolynomial.coeff m p) ∈ I by
@@ -1191,7 +1191,7 @@ theorem mem_ideal_of_coeff_mem_ideal (I : Ideal (MvPolynomial σ R)) (p : MvPoly
 /-- The push-forward of an ideal `I` of `R` to `mv_polynomial σ R` via inclusion
  is exactly the set of polynomials whose coefficients are in `I` -/
 theorem mem_map_c_iff {I : Ideal R} {f : MvPolynomial σ R} :
-    f ∈ (Ideal.map (c : R →+* MvPolynomial σ R) I : Ideal (MvPolynomial σ R)) ↔
+    f ∈ (Ideal.map (C : R →+* MvPolynomial σ R) I : Ideal (MvPolynomial σ R)) ↔
       ∀ m : σ →₀ ℕ, f.coeff m ∈ I :=
   by
   constructor
@@ -1221,7 +1221,7 @@ theorem mem_map_c_iff {I : Ideal R} {f : MvPolynomial σ R} :
 #align mv_polynomial.mem_map_C_iff MvPolynomial.mem_map_c_iff
 
 theorem ker_map (f : R →+* S) :
-    (map f : MvPolynomial σ R →+* MvPolynomial σ S).ker = f.ker.map (c : R →+* MvPolynomial σ R) :=
+    (map f : MvPolynomial σ R →+* MvPolynomial σ S).ker = f.ker.map (C : R →+* MvPolynomial σ R) :=
   by
   ext
   rw [MvPolynomial.mem_map_c_iff, RingHom.mem_ker, MvPolynomial.ext_iff]

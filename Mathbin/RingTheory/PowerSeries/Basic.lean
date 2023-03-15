@@ -687,10 +687,10 @@ theorem trunc_one (hnn : n ≠ 0) : trunc R n 1 = 1 :=
 #align mv_power_series.trunc_one MvPowerSeries.trunc_one
 
 @[simp]
-theorem trunc_c (hnn : n ≠ 0) (a : R) : trunc R n (c σ R a) = MvPolynomial.c a :=
+theorem trunc_c (hnn : n ≠ 0) (a : R) : trunc R n (c σ R a) = MvPolynomial.C a :=
   MvPolynomial.ext _ _ fun m =>
     by
-    rw [coeff_trunc, coeff_C, MvPolynomial.coeff_c]
+    rw [coeff_trunc, coeff_C, MvPolynomial.coeff_C]
     split_ifs with H <;> first |rfl|try simp_all
     exfalso; apply H; subst m; exact Ne.bot_lt hnn
 #align mv_power_series.trunc_C MvPowerSeries.trunc_c
@@ -1062,7 +1062,7 @@ theorem coe_mul : ((φ * ψ : MvPolynomial σ R) : MvPowerSeries σ R) = φ * ψ
 #align mv_polynomial.coe_mul MvPolynomial.coe_mul
 
 @[simp, norm_cast]
-theorem coe_c (a : R) : ((c a : MvPolynomial σ R) : MvPowerSeries σ R) = MvPowerSeries.c σ R a :=
+theorem coe_c (a : R) : ((C a : MvPolynomial σ R) : MvPowerSeries σ R) = MvPowerSeries.c σ R a :=
   coe_monomial _ _
 #align mv_polynomial.coe_C MvPolynomial.coe_c
 
@@ -1079,7 +1079,7 @@ theorem coe_bit1 :
 #align mv_polynomial.coe_bit1 MvPolynomial.coe_bit1
 
 @[simp, norm_cast]
-theorem coe_x (s : σ) : ((x s : MvPolynomial σ R) : MvPowerSeries σ R) = MvPowerSeries.x s :=
+theorem coe_x (s : σ) : ((X s : MvPolynomial σ R) : MvPowerSeries σ R) = MvPowerSeries.x s :=
   coe_monomial _ _
 #align mv_polynomial.coe_X MvPolynomial.coe_x
 
@@ -1135,7 +1135,7 @@ section Algebra
 
 variable (A : Type _) [CommSemiring A] [Algebra R A]
 
-theorem algebraMap_apply (r : R) : algebraMap R (MvPolynomial σ A) r = c (algebraMap R A r) :=
+theorem algebraMap_apply (r : R) : algebraMap R (MvPolynomial σ A) r = C (algebraMap R A r) :=
   rfl
 #align mv_polynomial.algebra_map_apply MvPolynomial.algebraMap_apply
 

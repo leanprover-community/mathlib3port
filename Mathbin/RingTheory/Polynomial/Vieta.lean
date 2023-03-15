@@ -165,10 +165,10 @@ variable (R σ : Type _) [CommSemiring R] [Fintype σ]
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
 theorem MvPolynomial.prod_c_add_x_eq_sum_esymm :
-    (∏ i : σ, X + C (MvPolynomial.x i)) =
+    (∏ i : σ, X + C (MvPolynomial.X i)) =
       ∑ j in range (card σ + 1), C (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
   by
-  let s := finset.univ.val.map fun i : σ => MvPolynomial.x i
+  let s := finset.univ.val.map fun i : σ => MvPolynomial.X i
   rw [(_ : card σ = s.card)]
   · simp_rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
     convert Multiset.prod_x_add_c_eq_sum_esymm s
@@ -178,9 +178,9 @@ theorem MvPolynomial.prod_c_add_x_eq_sum_esymm :
 #align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_c_add_x_eq_sum_esymm
 
 theorem MvPolynomial.prod_x_add_c_coeff (k : ℕ) (h : k ≤ card σ) :
-    (∏ i : σ, X + C (MvPolynomial.x i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
+    (∏ i : σ, X + C (MvPolynomial.X i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
   by
-  let s := finset.univ.val.map fun i => (MvPolynomial.x i : MvPolynomial σ R)
+  let s := finset.univ.val.map fun i => (MvPolynomial.X i : MvPolynomial σ R)
   rw [(_ : card σ = s.card)] at h⊢
   · rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
     convert Multiset.prod_x_add_c_coeff s h

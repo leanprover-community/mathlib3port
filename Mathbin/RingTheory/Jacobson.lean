@@ -677,7 +677,7 @@ variable {n : ℕ}
 
 theorem quotient_mk_comp_c_isIntegral_of_jacobson {R : Type _} [CommRing R] [IsJacobson R]
     (P : Ideal (MvPolynomial (Fin n) R)) [P.IsMaximal] :
-    ((Quotient.mk P).comp MvPolynomial.c : R →+* MvPolynomial _ R ⧸ P).IsIntegral :=
+    ((Quotient.mk P).comp MvPolynomial.C : R →+* MvPolynomial _ R ⧸ P).IsIntegral :=
   by
   induction' n with n IH
   · refine' RingHom.isIntegral_of_surjective _ (Function.Surjective.comp quotient.mk_surjective _)
@@ -708,7 +708,7 @@ theorem quotient_mk_comp_c_isIntegral_of_jacobson {R : Type _} [CommRing R] [IsJ
 
 theorem comp_c_integral_of_surjective_of_jacobson {R : Type _} [CommRing R] [IsJacobson R]
     {σ : Type _} [Finite σ] {S : Type _} [Field S] (f : MvPolynomial σ R →+* S)
-    (hf : Function.Surjective f) : (f.comp c).IsIntegral :=
+    (hf : Function.Surjective f) : (f.comp C).IsIntegral :=
   by
   cases nonempty_fintype σ
   have e := (Fintype.equivFin σ).symm

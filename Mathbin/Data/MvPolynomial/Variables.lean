@@ -105,16 +105,16 @@ theorem degrees_monomial_eq (s : σ →₀ ℕ) (a : R) (ha : a ≠ 0) :
     Finset.le_sup <| by rw [support_monomial, if_neg ha, Finset.mem_singleton]
 #align mv_polynomial.degrees_monomial_eq MvPolynomial.degrees_monomial_eq
 
-theorem degrees_c (a : R) : degrees (c a : MvPolynomial σ R) = 0 :=
+theorem degrees_c (a : R) : degrees (C a : MvPolynomial σ R) = 0 :=
   Multiset.le_zero.1 <| degrees_monomial _ _
 #align mv_polynomial.degrees_C MvPolynomial.degrees_c
 
-theorem degrees_X' (n : σ) : degrees (x n : MvPolynomial σ R) ≤ {n} :=
+theorem degrees_X' (n : σ) : degrees (X n : MvPolynomial σ R) ≤ {n} :=
   le_trans (degrees_monomial _ _) <| le_of_eq <| toMultiset_single _ _
 #align mv_polynomial.degrees_X' MvPolynomial.degrees_X'
 
 @[simp]
-theorem degrees_x [Nontrivial R] (n : σ) : degrees (x n : MvPolynomial σ R) = {n} :=
+theorem degrees_x [Nontrivial R] (n : σ) : degrees (X n : MvPolynomial σ R) = {n} :=
   (degrees_monomial_eq _ (1 : R) one_ne_zero).trans (toMultiset_single _ _)
 #align mv_polynomial.degrees_X MvPolynomial.degrees_x
 
@@ -276,12 +276,12 @@ theorem vars_monomial (h : r ≠ 0) : (monomial s r).vars = s.support := by
 #align mv_polynomial.vars_monomial MvPolynomial.vars_monomial
 
 @[simp]
-theorem vars_c : (c r : MvPolynomial σ R).vars = ∅ := by
+theorem vars_c : (C r : MvPolynomial σ R).vars = ∅ := by
   rw [vars, degrees_C, Multiset.toFinset_zero]
 #align mv_polynomial.vars_C MvPolynomial.vars_c
 
 @[simp]
-theorem vars_x [Nontrivial R] : (x n : MvPolynomial σ R).vars = {n} := by
+theorem vars_x [Nontrivial R] : (X n : MvPolynomial σ R).vars = {n} := by
   rw [X, vars_monomial (one_ne_zero' R), Finsupp.support_single_ne_zero _ (one_ne_zero' ℕ)]
 #align mv_polynomial.vars_X MvPolynomial.vars_x
 
@@ -377,7 +377,7 @@ section IsDomain
 
 variable {A : Type _} [CommRing A] [IsDomain A]
 
-theorem vars_c_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (c a * φ).vars = φ.vars :=
+theorem vars_c_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (C a * φ).vars = φ.vars :=
   by
   ext1 i
   simp only [mem_vars, exists_prop, mem_support_iff]
@@ -486,12 +486,12 @@ theorem degreeOf_zero (n : σ) : degreeOf n (0 : MvPolynomial σ R) = 0 := by
 #align mv_polynomial.degree_of_zero MvPolynomial.degreeOf_zero
 
 @[simp]
-theorem degreeOf_c (a : R) (x : σ) : degreeOf x (c a : MvPolynomial σ R) = 0 := by
+theorem degreeOf_c (a : R) (x : σ) : degreeOf x (C a : MvPolynomial σ R) = 0 := by
   simp [degree_of, degrees_C]
 #align mv_polynomial.degree_of_C MvPolynomial.degreeOf_c
 
 theorem degreeOf_x (i j : σ) [Nontrivial R] :
-    degreeOf i (x j : MvPolynomial σ R) = if i = j then 1 else 0 :=
+    degreeOf i (X j : MvPolynomial σ R) = if i = j then 1 else 0 :=
   by
   by_cases c : i = j
   · simp only [c, if_true, eq_self_iff_true, degree_of, degrees_X, Multiset.count_singleton]
@@ -523,7 +523,7 @@ theorem degreeOf_mul_le (i : σ) (f g : MvPolynomial σ R) :
 #align mv_polynomial.degree_of_mul_le MvPolynomial.degreeOf_mul_le
 
 theorem degreeOf_mul_x_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
-    degreeOf i (f * x j) = degreeOf i f :=
+    degreeOf i (f * X j) = degreeOf i f :=
   by
   repeat' rw [degree_of_eq_sup i]
   rw [support_mul_X]
@@ -536,7 +536,7 @@ theorem degreeOf_mul_x_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
 
 -- TODO in the following we have equality iff f ≠ 0
 theorem degreeOf_mul_x_eq (j : σ) (f : MvPolynomial σ R) :
-    degreeOf j (f * x j) ≤ degreeOf j f + 1 :=
+    degreeOf j (f * X j) ≤ degreeOf j f + 1 :=
   by
   repeat' rw [degree_of]
   apply (Multiset.count_le_of_le j (degrees_mul f (X j))).trans
@@ -577,7 +577,7 @@ theorem totalDegree_le_degrees_card (p : MvPolynomial σ R) : p.totalDegree ≤ 
 #align mv_polynomial.total_degree_le_degrees_card MvPolynomial.totalDegree_le_degrees_card
 
 @[simp]
-theorem totalDegree_c (a : R) : (c a : MvPolynomial σ R).totalDegree = 0 :=
+theorem totalDegree_c (a : R) : (C a : MvPolynomial σ R).totalDegree = 0 :=
   Nat.eq_zero_of_le_zero <|
     Finset.sup_le fun n hn => by
       have := Finsupp.support_single_subset hn
@@ -598,7 +598,7 @@ theorem totalDegree_one : (1 : MvPolynomial σ R).totalDegree = 0 :=
 
 @[simp]
 theorem totalDegree_x {R} [CommSemiring R] [Nontrivial R] (s : σ) :
-    (x s : MvPolynomial σ R).totalDegree = 1 :=
+    (X s : MvPolynomial σ R).totalDegree = 1 :=
   by
   rw [total_degree, support_X]
   simp only [Finset.sup, sum_single_index, Finset.fold_singleton, sup_bot_eq]
@@ -682,7 +682,7 @@ theorem totalDegree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
 
 @[simp]
 theorem totalDegree_x_pow [Nontrivial R] (s : σ) (n : ℕ) :
-    (x s ^ n : MvPolynomial σ R).totalDegree = n := by simp [X_pow_eq_monomial, one_ne_zero]
+    (X s ^ n : MvPolynomial σ R).totalDegree = n := by simp [X_pow_eq_monomial, one_ne_zero]
 #align mv_polynomial.total_degree_X_pow MvPolynomial.totalDegree_x_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -829,18 +829,18 @@ theorem eval₂Hom_congr' {f₁ f₂ : R →+* S} {g₁ g₂ : σ → S} {p₁ p
   then `f₁ p₁ = f₂ p₂` if `p₁ = p₂` and `f₁` and `f₂` are equal on `R` and on the variables
   of `p₁`.  -/
 theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPolynomial σ R}
-    (hC : f₁.comp c = f₂.comp c) (hv : ∀ i, i ∈ p₁.vars → i ∈ p₂.vars → f₁ (x i) = f₂ (x i))
+    (hC : f₁.comp C = f₂.comp C) (hv : ∀ i, i ∈ p₁.vars → i ∈ p₂.vars → f₁ (X i) = f₂ (X i))
     (hp : p₁ = p₂) : f₁ p₁ = f₂ p₂ :=
   calc
-    f₁ p₁ = eval₂Hom (f₁.comp c) (f₁ ∘ x) p₁ := RingHom.congr_fun (by ext <;> simp) _
-    _ = eval₂Hom (f₂.comp c) (f₂ ∘ x) p₂ := (eval₂Hom_congr' hC hv hp)
+    f₁ p₁ = eval₂Hom (f₁.comp C) (f₁ ∘ X) p₁ := RingHom.congr_fun (by ext <;> simp) _
+    _ = eval₂Hom (f₂.comp C) (f₂ ∘ X) p₂ := (eval₂Hom_congr' hC hv hp)
     _ = f₂ p₂ := RingHom.congr_fun (by ext <;> simp) _
     
 #align mv_polynomial.hom_congr_vars MvPolynomial.hom_congr_vars
 
 theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : Injective f)
     (hf : ↑p.vars ⊆ Set.range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
-  ⟨bind₁ (fun i : σ => Option.elim' 0 x <| partialInv f i) p,
+  ⟨bind₁ (fun i : σ => Option.elim' 0 X <| partialInv f i) p,
     by
     show (rename f).toRingHom.comp _ p = RingHom.id _ p
     refine' hom_congr_vars _ _ _

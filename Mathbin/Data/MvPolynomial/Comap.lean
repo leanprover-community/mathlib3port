@@ -38,12 +38,12 @@ and a variable evaluation `v : τ → R`,
 `comap f v` produces a variable evaluation `σ → R`.
 -/
 noncomputable def comap (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) : (τ → R) → σ → R :=
-  fun x i => aeval x (f (x i))
+  fun x i => aeval x (f (X i))
 #align mv_polynomial.comap MvPolynomial.comap
 
 @[simp]
 theorem comap_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (x : τ → R) (i : σ) :
-    comap f x i = aeval x (f (x i)) :=
+    comap f x i = aeval x (f (X i)) :=
   rfl
 #align mv_polynomial.comap_apply MvPolynomial.comap_apply
 

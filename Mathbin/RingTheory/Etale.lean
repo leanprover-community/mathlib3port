@@ -261,12 +261,12 @@ instance FormallySmooth.mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynom
   by
   constructor
   intro C _ _ I hI f
-  have : ∀ s : σ, ∃ c : C, Ideal.Quotient.mk I c = f (MvPolynomial.x s) := fun s =>
+  have : ∀ s : σ, ∃ c : C, Ideal.Quotient.mk I c = f (MvPolynomial.X s) := fun s =>
     Ideal.Quotient.mk_surjective _
   choose g hg
   refine' ⟨MvPolynomial.aeval g, _⟩
   ext s
-  rw [← hg, AlgHom.comp_apply, MvPolynomial.aeval_x]
+  rw [← hg, AlgHom.comp_apply, MvPolynomial.aeval_X]
   rfl
 #align algebra.formally_smooth.mv_polynomial Algebra.FormallySmooth.mvPolynomial
 

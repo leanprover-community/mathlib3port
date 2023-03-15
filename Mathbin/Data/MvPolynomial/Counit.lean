@@ -46,20 +46,20 @@ noncomputable def acounit : MvPolynomial B A →ₐ[A] B :=
 variable {B}
 
 @[simp]
-theorem acounit_x (b : B) : acounit A B (x b) = b :=
-  aeval_x _ b
+theorem acounit_x (b : B) : acounit A B (X b) = b :=
+  aeval_X _ b
 #align mv_polynomial.acounit_X MvPolynomial.acounit_x
 
 variable {A} (B)
 
 @[simp]
-theorem acounit_c (a : A) : acounit A B (c a) = algebraMap A B a :=
-  aeval_c _ a
+theorem acounit_c (a : A) : acounit A B (C a) = algebraMap A B a :=
+  aeval_C _ a
 #align mv_polynomial.acounit_C MvPolynomial.acounit_c
 
 variable (A)
 
-theorem acounit_surjective : Surjective (acounit A B) := fun b => ⟨x b, acounit_x A b⟩
+theorem acounit_surjective : Surjective (acounit A B) := fun b => ⟨X b, acounit_x A b⟩
 #align mv_polynomial.acounit_surjective MvPolynomial.acounit_surjective
 
 /-- `mv_polynomial.counit R` is the natural surjective ring homomorphism
@@ -88,23 +88,23 @@ theorem counitNat_surjective : Surjective (counitNat A) :=
   acounit_surjective ℕ A
 #align mv_polynomial.counit_nat_surjective MvPolynomial.counitNat_surjective
 
-theorem counit_c (n : ℤ) : counit R (c n) = n :=
+theorem counit_c (n : ℤ) : counit R (C n) = n :=
   acounit_c _ _
 #align mv_polynomial.counit_C MvPolynomial.counit_c
 
-theorem counitNat_c (n : ℕ) : counitNat A (c n) = n :=
+theorem counitNat_c (n : ℕ) : counitNat A (C n) = n :=
   acounit_c _ _
 #align mv_polynomial.counit_nat_C MvPolynomial.counitNat_c
 
 variable {R A}
 
 @[simp]
-theorem counit_x (r : R) : counit R (x r) = r :=
+theorem counit_x (r : R) : counit R (X r) = r :=
   acounit_x _ _
 #align mv_polynomial.counit_X MvPolynomial.counit_x
 
 @[simp]
-theorem counitNat_x (a : A) : counitNat A (x a) = a :=
+theorem counitNat_x (a : A) : counitNat A (X a) = a :=
   acounit_x _ _
 #align mv_polynomial.counit_nat_X MvPolynomial.counitNat_x
 

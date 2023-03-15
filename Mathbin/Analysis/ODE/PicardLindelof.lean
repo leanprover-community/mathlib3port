@@ -75,7 +75,7 @@ structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
   (tMin tMax : ℝ)
   t₀ : Icc t_min t_max
   x₀ : E
-  (c r l : ℝ≥0)
+  (C r l : ℝ≥0)
   is_pl : IsPicardLindelof to_fun t_min t₀ t_max x₀ L R C
 #align picard_lindelof PicardLindelof
 
@@ -120,7 +120,7 @@ protected theorem continuousOn :
 #align picard_lindelof.continuous_on PicardLindelof.continuousOn
 
 theorem norm_le {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) {x : E} (hx : x ∈ closedBall v.x₀ v.r) :
-    ‖v t x‖ ≤ v.c :=
+    ‖v t x‖ ≤ v.C :=
   v.is_pl.norm_le _ ht _ hx
 #align picard_lindelof.norm_le PicardLindelof.norm_le
 
@@ -169,7 +169,7 @@ point is a solution of the ODE $\dot x=v(t, x)$. -/
 structure FunSpace where
   toFun : Icc v.tMin v.tMax → E
   map_t₀' : to_fun v.t₀ = v.x₀
-  lipschitz' : LipschitzWith v.c to_fun
+  lipschitz' : LipschitzWith v.C to_fun
 #align picard_lindelof.fun_space PicardLindelof.FunSpace
 
 namespace FunSpace
@@ -182,7 +182,7 @@ instance : CoeFun (FunSpace v) fun _ => Icc v.tMin v.tMax → E :=
 instance : Inhabited v.FunSpace :=
   ⟨⟨fun _ => v.x₀, rfl, (LipschitzWith.const _).weaken (zero_le _)⟩⟩
 
-protected theorem lipschitz : LipschitzWith v.c f :=
+protected theorem lipschitz : LipschitzWith v.C f :=
   f.lipschitz'
 #align picard_lindelof.fun_space.lipschitz PicardLindelof.FunSpace.lipschitz
 
@@ -206,7 +206,7 @@ theorem uniformInducing_toContinuousMap : UniformInducing (@toContinuousMap _ _ 
 #align picard_lindelof.fun_space.uniform_inducing_to_continuous_map PicardLindelof.FunSpace.uniformInducing_toContinuousMap
 
 theorem range_toContinuousMap :
-    range toContinuousMap = { f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.c f } :=
+    range toContinuousMap = { f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f } :=
   by
   ext f; constructor
   · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
@@ -223,8 +223,8 @@ theorem map_t₀ : f v.t₀ = v.x₀ :=
 protected theorem mem_closedBall (t : Icc v.tMin v.tMax) : f t ∈ closedBall v.x₀ v.r :=
   calc
     dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by rw [f.map_t₀']
-    _ ≤ v.c * dist t v.t₀ := (f.lipschitz.dist_le_mul _ _)
-    _ ≤ v.c * v.tDist := (mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.c.2)
+    _ ≤ v.C * dist t v.t₀ := (f.lipschitz.dist_le_mul _ _)
+    _ ≤ v.C * v.tDist := (mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.C.2)
     _ ≤ v.r := v.is_pl.C_mul_le_R
     
 #align picard_lindelof.fun_space.mem_closed_ball PicardLindelof.FunSpace.mem_closedBall
@@ -247,7 +247,7 @@ theorem continuous_vComp : Continuous f.vComp :=
   exact ⟨(v.proj x).2, f.mem_closed_ball _⟩
 #align picard_lindelof.fun_space.continuous_v_comp PicardLindelof.FunSpace.continuous_vComp
 
-theorem norm_vComp_le (t : ℝ) : ‖f.vComp t‖ ≤ v.c :=
+theorem norm_vComp_le (t : ℝ) : ‖f.vComp t‖ ≤ v.C :=
   v.norm_le (v.proj t).2 <| f.mem_closedBall _
 #align picard_lindelof.fun_space.norm_v_comp_le PicardLindelof.FunSpace.norm_vComp_le
 

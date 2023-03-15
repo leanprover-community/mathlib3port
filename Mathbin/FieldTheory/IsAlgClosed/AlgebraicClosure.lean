@@ -53,7 +53,7 @@ def MonicIrreducible : Type u :=
 
 /-- Sends a monic irreducible polynomial `f` to `f(x_f)` where `x_f` is a formal indeterminate. -/
 def evalXSelf (f : MonicIrreducible k) : MvPolynomial (MonicIrreducible k) k :=
-  Polynomial.eval₂ MvPolynomial.c (x f) f
+  Polynomial.eval₂ MvPolynomial.C (X f) f
 #align algebraic_closure.eval_X_self AlgebraicClosure.evalXSelf
 
 /-- The span of `f(x_f)` across monic irreducible polynomials `f` where `x_f` is an
@@ -80,7 +80,7 @@ theorem toSplittingField_evalXSelf {s : Finset (MonicIrreducible k)} {f} (hf : f
     toSplittingField k s (evalXSelf k f) = 0 :=
   by
   rw [to_splitting_field, eval_X_self, ← AlgHom.coe_toRingHom, hom_eval₂, AlgHom.coe_toRingHom,
-    MvPolynomial.aeval_x, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebraMap]
+    MvPolynomial.aeval_X, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebraMap]
   exact map_root_of_splits _ _ _
 #align algebraic_closure.to_splitting_field_eval_X_self AlgebraicClosure.toSplittingField_evalXSelf
 
@@ -124,14 +124,14 @@ instance AdjoinMonic.inhabited : Inhabited (AdjoinMonic k) :=
 
 /-- The canonical ring homomorphism to `adjoin_monic k`. -/
 def toAdjoinMonic : k →+* AdjoinMonic k :=
-  (Ideal.Quotient.mk _).comp c
+  (Ideal.Quotient.mk _).comp C
 #align algebraic_closure.to_adjoin_monic AlgebraicClosure.toAdjoinMonic
 
 instance AdjoinMonic.algebra : Algebra k (AdjoinMonic k) :=
   (toAdjoinMonic k).toAlgebra
 #align algebraic_closure.adjoin_monic.algebra AlgebraicClosure.AdjoinMonic.algebra
 
-theorem AdjoinMonic.algebraMap : algebraMap k (AdjoinMonic k) = (Ideal.Quotient.mk _).comp c :=
+theorem AdjoinMonic.algebraMap : algebraMap k (AdjoinMonic k) = (Ideal.Quotient.mk _).comp C :=
   rfl
 #align algebraic_closure.adjoin_monic.algebra_map AlgebraicClosure.AdjoinMonic.algebraMap
 
@@ -149,7 +149,7 @@ theorem AdjoinMonic.isIntegral (z : AdjoinMonic k) : IsIntegral k z :=
 
 theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f) :
     ∃ x : AdjoinMonic k, f.eval₂ (toAdjoinMonic k) x = 0 :=
-  ⟨Ideal.Quotient.mk _ <| x (⟨f, hfm, hfi⟩ : MonicIrreducible k),
+  ⟨Ideal.Quotient.mk _ <| X (⟨f, hfm, hfi⟩ : MonicIrreducible k),
     by
     rw [to_adjoin_monic, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
     exact le_max_ideal k (Ideal.subset_span <| ⟨_, rfl⟩)⟩

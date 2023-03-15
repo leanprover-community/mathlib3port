@@ -49,7 +49,7 @@ variable (p)
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
 noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
   | 0 => 0
-  | n + 1 => fun k => bind₁ (Function.uncurry <| ![witt_mul_n n, x]) (wittAdd p k)
+  | n + 1 => fun k => bind₁ (Function.uncurry <| ![witt_mul_n n, X]) (wittAdd p k)
 #align witt_vector.witt_mul_n WittVector.wittMulN
 
 variable {p}

@@ -196,7 +196,7 @@ theorem mvPolynomial_of_finitePresentation (hfp : FinitePresentation R A) (ι : 
     · convert Submodule.fg_bot
       exact RingHom.ker_coe_equiv (MvPolynomial.sumAlgEquiv R ι ι').toRingEquiv
     · rw [AlgHom.toRingHom_eq_coe, MvPolynomial.mapAlgHom_coe_ringHom, MvPolynomial.ker_map]
-      exact hf_ker.map MvPolynomial.c
+      exact hf_ker.map MvPolynomial.C
 #align algebra.finite_presentation.mv_polynomial_of_finite_presentation Algebra.FinitePresentation.mvPolynomial_of_finitePresentation
 
 /-- If `A` is an `R`-algebra and `S` is an `A`-algebra, both finitely presented, then `S` is

@@ -85,7 +85,7 @@ noncomputable def wittPolynomial (n : ℕ) : MvPolynomial ℕ R :=
 #align witt_polynomial wittPolynomial
 
 theorem wittPolynomial_eq_sum_c_mul_x_pow (n : ℕ) :
-    wittPolynomial p R n = ∑ i in range (n + 1), c (p ^ i : R) * x i ^ p ^ (n - i) :=
+    wittPolynomial p R n = ∑ i in range (n + 1), C (p ^ i : R) * X i ^ p ^ (n - i) :=
   by
   apply sum_congr rfl
   rintro i -
@@ -139,12 +139,12 @@ theorem constantCoeff_wittPolynomial [hp : Fact p.Prime] (n : ℕ) :
 #align constant_coeff_witt_polynomial constantCoeff_wittPolynomial
 
 @[simp]
-theorem wittPolynomial_zero : wittPolynomial p R 0 = x 0 := by
+theorem wittPolynomial_zero : wittPolynomial p R 0 = X 0 := by
   simp only [wittPolynomial, X, sum_singleton, range_one, pow_zero]
 #align witt_polynomial_zero wittPolynomial_zero
 
 @[simp]
-theorem wittPolynomial_one : wittPolynomial p R 1 = c ↑p * x 1 + x 0 ^ p := by
+theorem wittPolynomial_one : wittPolynomial p R 1 = C ↑p * X 1 + X 0 ^ p := by
   simp only [wittPolynomial_eq_sum_c_mul_x_pow, sum_range_succ_comm, range_one, sum_singleton,
     one_mul, pow_one, C_1, pow_zero]
 #align witt_polynomial_one wittPolynomial_one
@@ -217,16 +217,16 @@ The polynomials `X_in_terms_of_W` give the coordinate transformation in the back
 that corresponds to the ordinary `X n`. -/
 noncomputable def xInTermsOfW [Invertible (p : R)] : ℕ → MvPolynomial ℕ R
   | n =>
-    (x n -
+    (X n -
         ∑ i : Fin n,
           have := i.2
-          c (p ^ (i : ℕ) : R) * xInTermsOfW i ^ p ^ (n - i)) *
-      c (⅟ p ^ n : R)
+          C (p ^ (i : ℕ) : R) * xInTermsOfW i ^ p ^ (n - i)) *
+      C (⅟ p ^ n : R)
 #align X_in_terms_of_W xInTermsOfW
 
 theorem xInTermsOfW_eq [Invertible (p : R)] {n : ℕ} :
     xInTermsOfW p R n =
-      (x n - ∑ i in range n, c (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i)) * c (⅟ p ^ n : R) :=
+      (X n - ∑ i in range n, C (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i)) * C (⅟ p ^ n : R) :=
   by rw [xInTermsOfW, ← Fin.sum_univ_eq_sum_range]
 #align X_in_terms_of_W_eq xInTermsOfW_eq
 
@@ -247,7 +247,7 @@ theorem constantCoeff_xInTermsOfW [hp : Fact p.Prime] [Invertible (p : R)] (n : 
 #align constant_coeff_X_in_terms_of_W constantCoeff_xInTermsOfW
 
 @[simp]
-theorem xInTermsOfW_zero [Invertible (p : R)] : xInTermsOfW p R 0 = x 0 := by
+theorem xInTermsOfW_zero [Invertible (p : R)] : xInTermsOfW p R 0 = X 0 := by
   rw [xInTermsOfW_eq, range_zero, sum_empty, pow_zero, C_1, mul_one, sub_zero]
 #align X_in_terms_of_W_zero xInTermsOfW_zero
 
@@ -295,14 +295,14 @@ theorem xInTermsOfW_vars_subset (n : ℕ) : (xInTermsOfW p ℚ n).vars ⊆ range
 end PPrime
 
 theorem xInTermsOfW_aux [Invertible (p : R)] (n : ℕ) :
-    xInTermsOfW p R n * c (p ^ n : R) =
-      x n - ∑ i in range n, c (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i) :=
+    xInTermsOfW p R n * C (p ^ n : R) =
+      X n - ∑ i in range n, C (p ^ i : R) * xInTermsOfW p R i ^ p ^ (n - i) :=
   by rw [xInTermsOfW_eq, mul_assoc, ← C_mul, ← mul_pow, invOf_mul_self, one_pow, C_1, mul_one]
 #align X_in_terms_of_W_aux xInTermsOfW_aux
 
 @[simp]
 theorem bind₁_xInTermsOfW_wittPolynomial [Invertible (p : R)] (k : ℕ) :
-    bind₁ (xInTermsOfW p R) (W_ R k) = x k :=
+    bind₁ (xInTermsOfW p R) (W_ R k) = X k :=
   by
   rw [wittPolynomial_eq_sum_c_mul_x_pow, AlgHom.map_sum]
   simp only [AlgHom.map_pow, C_pow, AlgHom.map_mul, alg_hom_C]
@@ -313,7 +313,7 @@ theorem bind₁_xInTermsOfW_wittPolynomial [Invertible (p : R)] (k : ℕ) :
 
 @[simp]
 theorem bind₁_wittPolynomial_xInTermsOfW [Invertible (p : R)] (n : ℕ) :
-    bind₁ (W_ R) (xInTermsOfW p R n) = x n :=
+    bind₁ (W_ R) (xInTermsOfW p R n) = X n :=
   by
   apply Nat.strong_induction_on n
   clear n

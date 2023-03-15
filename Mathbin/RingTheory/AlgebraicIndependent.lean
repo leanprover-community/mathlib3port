@@ -114,8 +114,8 @@ include hx
 
 theorem algebraMap_injective : Injective (algebraMap R A) := by
   simpa [← MvPolynomial.algebraMap_eq, Function.comp] using
-    (injective.of_comp_iff (algebraicIndependent_iff_injective_aeval.1 hx) MvPolynomial.c).2
-      (MvPolynomial.c_injective _ _)
+    (injective.of_comp_iff (algebraicIndependent_iff_injective_aeval.1 hx) MvPolynomial.C).2
+      (MvPolynomial.C_injective _ _)
 #align algebraic_independent.algebra_map_injective AlgebraicIndependent.algebraMap_injective
 
 theorem linearIndependent : LinearIndependent R x :=
@@ -458,14 +458,14 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply
     (hx : AlgebraicIndependent R x) (y) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin y =
       Polynomial.map (hx.aevalEquiv : MvPolynomial ι R →+* adjoin R (range x))
-        (aeval (fun o : Option ι => o.elim Polynomial.X fun s : ι => Polynomial.C (x s)) y) :=
+        (aeval (fun o : Option ι => o.elim Polynomial.X fun s : ι => Polynomial.C (X s)) y) :=
   rfl
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_apply AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply
 
 @[simp]
 theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
     (hx : AlgebraicIndependent R x) (r) :
-    hx.mvPolynomialOptionEquivPolynomialAdjoin (c r) = Polynomial.C (algebraMap _ _ r) :=
+    hx.mvPolynomialOptionEquivPolynomialAdjoin (C r) = Polynomial.C (algebraMap _ _ r) :=
   by
   -- TODO: this instance is slow to infer
   have h : IsScalarTower R (MvPolynomial ι R) (Polynomial (MvPolynomial ι R)) :=
@@ -478,7 +478,7 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
 @[simp]
 theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_none
     (hx : AlgebraicIndependent R x) :
-    hx.mvPolynomialOptionEquivPolynomialAdjoin (x none) = Polynomial.X := by
+    hx.mvPolynomialOptionEquivPolynomialAdjoin (X none) = Polynomial.X := by
   rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_X, Option.elim',
     Polynomial.map_X]
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_none AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_none
@@ -486,7 +486,7 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_none
 @[simp]
 theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_some
     (hx : AlgebraicIndependent R x) (i) :
-    hx.mvPolynomialOptionEquivPolynomialAdjoin (x (some i)) = Polynomial.C (hx.aevalEquiv (x i)) :=
+    hx.mvPolynomialOptionEquivPolynomialAdjoin (X (some i)) = Polynomial.C (hx.aevalEquiv (X i)) :=
   by
   rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_X, Option.elim',
     Polynomial.map_C, RingHom.coe_coe]

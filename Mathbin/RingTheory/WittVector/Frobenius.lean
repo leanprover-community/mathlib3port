@@ -99,12 +99,12 @@ This makes it easy to show that `frobenius_poly p n` is congruent to `X n ^ p`
 modulo `p`. -/
 noncomputable def frobeniusPolyAux : ℕ → MvPolynomial ℕ ℤ
   | n =>
-    x (n + 1) -
+    X (n + 1) -
       ∑ i : Fin n,
         have := i.is_lt
         ∑ j in range (p ^ (n - i)),
-          (x i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobenius_poly_aux i ^ (j + 1) *
-            c
+          (X i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobenius_poly_aux i ^ (j + 1) *
+            C
               ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_pos j⟩) *
                     ↑p ^ (j - v p ⟨j + 1, Nat.succ_pos j⟩) :
                   ℕ)
@@ -112,11 +112,11 @@ noncomputable def frobeniusPolyAux : ℕ → MvPolynomial ℕ ℤ
 
 theorem frobeniusPolyAux_eq (n : ℕ) :
     frobeniusPolyAux p n =
-      x (n + 1) -
+      X (n + 1) -
         ∑ i in range n,
           ∑ j in range (p ^ (n - i)),
-            (x i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobeniusPolyAux p i ^ (j + 1) *
-              c
+            (X i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobeniusPolyAux p i ^ (j + 1) *
+              C
                 ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_pos j⟩) *
                       ↑p ^ (j - v p ⟨j + 1, Nat.succ_pos j⟩) :
                     ℕ) :=
@@ -126,7 +126,7 @@ theorem frobeniusPolyAux_eq (n : ℕ) :
 /-- The polynomials that give the coefficients of `frobenius x`,
 in terms of the coefficients of `x`. -/
 def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
-  x n ^ p + c ↑p * frobeniusPolyAux p n
+  X n ^ p + C ↑p * frobeniusPolyAux p n
 #align witt_vector.frobenius_poly WittVector.frobeniusPoly
 
 /-
@@ -218,7 +218,7 @@ theorem map_frobeniusPoly (n : ℕ) :
 #align witt_vector.map_frobenius_poly WittVector.map_frobeniusPoly
 
 theorem frobeniusPoly_zMod (n : ℕ) :
-    MvPolynomial.map (Int.castRingHom (ZMod p)) (frobeniusPoly p n) = x n ^ p :=
+    MvPolynomial.map (Int.castRingHom (ZMod p)) (frobeniusPoly p n) = X n ^ p :=
   by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
   simp only [Int.cast_ofNat, add_zero, eq_intCast, ZMod.nat_cast_self, MulZeroClass.zero_mul, C_0]

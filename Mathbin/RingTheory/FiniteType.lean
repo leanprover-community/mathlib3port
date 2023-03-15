@@ -89,10 +89,10 @@ open Classical
 protected theorem mvPolynomial (ι : Type _) [Finite ι] : FiniteType R (MvPolynomial ι R) := by
   cases nonempty_fintype ι <;>
     exact
-      ⟨⟨finset.univ.image MvPolynomial.x,
+      ⟨⟨finset.univ.image MvPolynomial.X,
           by
           rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
-          exact MvPolynomial.adjoin_range_x⟩⟩
+          exact MvPolynomial.adjoin_range_X⟩⟩
 #align algebra.finite_type.mv_polynomial Algebra.FiniteType.mvPolynomial
 
 theorem of_restrict_scalars_finiteType [Algebra A B] [IsScalarTower R A B] [hB : FiniteType R B] :
@@ -447,7 +447,7 @@ theorem mvPolynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M}
   refine' fun f => induction_on f (fun m => _) _ _
   · have : m ∈ closure S := hS.symm ▸ mem_top _
     refine' closure_induction this (fun m hm => _) _ _
-    · exact ⟨MvPolynomial.x ⟨m, hm⟩, MvPolynomial.aeval_x _ _⟩
+    · exact ⟨MvPolynomial.X ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
     · exact ⟨1, AlgHom.map_one _⟩
     · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
       exact
@@ -608,7 +608,7 @@ theorem mvPolynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M}
   refine' fun f => induction_on f (fun m => _) _ _
   · have : m ∈ closure S := hS.symm ▸ mem_top _
     refine' closure_induction this (fun m hm => _) _ _
-    · exact ⟨MvPolynomial.x ⟨m, hm⟩, MvPolynomial.aeval_x _ _⟩
+    · exact ⟨MvPolynomial.X ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
     · exact ⟨1, AlgHom.map_one _⟩
     · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
       exact

@@ -127,37 +127,37 @@ def wittOne : ℕ → MvPolynomial (Fin 0 × ℕ) ℤ :=
 
 /-- The polynomials used for defining the addition of the ring of Witt vectors. -/
 def wittAdd : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ :=
-  wittStructureInt p (x 0 + x 1)
+  wittStructureInt p (X 0 + X 1)
 #align witt_vector.witt_add WittVector.wittAdd
 
 /-- The polynomials used for defining repeated addition of the ring of Witt vectors. -/
 def wittNsmul (n : ℕ) : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
-  wittStructureInt p (n • x 0)
+  wittStructureInt p (n • X 0)
 #align witt_vector.witt_nsmul WittVector.wittNsmul
 
 /-- The polynomials used for defining repeated addition of the ring of Witt vectors. -/
 def wittZsmul (n : ℤ) : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
-  wittStructureInt p (n • x 0)
+  wittStructureInt p (n • X 0)
 #align witt_vector.witt_zsmul WittVector.wittZsmul
 
 /-- The polynomials used for describing the subtraction of the ring of Witt vectors. -/
 def wittSub : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ :=
-  wittStructureInt p (x 0 - x 1)
+  wittStructureInt p (X 0 - X 1)
 #align witt_vector.witt_sub WittVector.wittSub
 
 /-- The polynomials used for defining the multiplication of the ring of Witt vectors. -/
 def wittMul : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ :=
-  wittStructureInt p (x 0 * x 1)
+  wittStructureInt p (X 0 * X 1)
 #align witt_vector.witt_mul WittVector.wittMul
 
 /-- The polynomials used for defining the negation of the ring of Witt vectors. -/
 def wittNeg : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
-  wittStructureInt p (-x 0)
+  wittStructureInt p (-X 0)
 #align witt_vector.witt_neg WittVector.wittNeg
 
 /-- The polynomials used for defining repeated addition of the ring of Witt vectors. -/
 def wittPow (n : ℕ) : ℕ → MvPolynomial (Fin 1 × ℕ) ℤ :=
-  wittStructureInt p (x 0 ^ n)
+  wittStructureInt p (X 0 ^ n)
 #align witt_vector.witt_pow WittVector.wittPow
 
 variable {p}
@@ -270,7 +270,7 @@ theorem wittOne_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 :=
 #align witt_vector.witt_one_pos_eq_zero WittVector.wittOne_pos_eq_zero
 
 @[simp]
-theorem wittAdd_zero : wittAdd p 0 = x (0, 0) + x (1, 0) :=
+theorem wittAdd_zero : wittAdd p 0 = X (0, 0) + X (1, 0) :=
   by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_add, wittStructureRat, AlgHom.map_add, RingHom.map_add, rename_X,
@@ -278,7 +278,7 @@ theorem wittAdd_zero : wittAdd p 0 = x (0, 0) + x (1, 0) :=
 #align witt_vector.witt_add_zero WittVector.wittAdd_zero
 
 @[simp]
-theorem wittSub_zero : wittSub p 0 = x (0, 0) - x (1, 0) :=
+theorem wittSub_zero : wittSub p 0 = X (0, 0) - X (1, 0) :=
   by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_sub, wittStructureRat, AlgHom.map_sub, RingHom.map_sub, rename_X,
@@ -286,7 +286,7 @@ theorem wittSub_zero : wittSub p 0 = x (0, 0) - x (1, 0) :=
 #align witt_vector.witt_sub_zero WittVector.wittSub_zero
 
 @[simp]
-theorem wittMul_zero : wittMul p 0 = x (0, 0) * x (1, 0) :=
+theorem wittMul_zero : wittMul p 0 = X (0, 0) * X (1, 0) :=
   by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_mul, wittStructureRat, rename_X, xInTermsOfW_zero, map_X, wittPolynomial_zero,
@@ -294,7 +294,7 @@ theorem wittMul_zero : wittMul p 0 = x (0, 0) * x (1, 0) :=
 #align witt_vector.witt_mul_zero WittVector.wittMul_zero
 
 @[simp]
-theorem wittNeg_zero : wittNeg p 0 = -x (0, 0) :=
+theorem wittNeg_zero : wittNeg p 0 = -X (0, 0) :=
   by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_neg, wittStructureRat, rename_X, xInTermsOfW_zero, map_X, wittPolynomial_zero,

@@ -26,8 +26,8 @@ variable {σ : Type _}
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
 theorem c_dvd_iff_zMod (n : ℕ) (φ : MvPolynomial σ ℤ) :
-    c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (ZMod n)) φ = 0 :=
-  c_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (ZMod n) n) _
+    C (n : ℤ) ∣ φ ↔ map (Int.castRingHom (ZMod n)) φ = 0 :=
+  C_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (ZMod n) n) _
 #align mv_polynomial.C_dvd_iff_zmod MvPolynomial.c_dvd_iff_zMod
 
 section frobenius
@@ -71,7 +71,7 @@ variable [Fintype K] [Fintype σ]
 
 /-- Over a field, this is the indicator function as an `mv_polynomial`. -/
 def indicator [CommRing K] (a : σ → K) : MvPolynomial σ K :=
-  ∏ n, 1 - (x n - c (a n)) ^ (Fintype.card K - 1)
+  ∏ n, 1 - (X n - C (a n)) ^ (Fintype.card K - 1)
 #align mv_polynomial.indicator MvPolynomial.indicator
 
 section CommRing

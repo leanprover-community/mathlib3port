@@ -98,7 +98,7 @@ variable (P : ℕ → Prop)
 /-- The polynomial that witnesses that `witt_vector.select` is a polynomial function.
 `select_poly n` is `X n` if `P n` holds, and `0` otherwise. -/
 def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
-  if P n then x n else 0
+  if P n then X n else 0
 #align witt_vector.select_poly WittVector.selectPoly
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) :=

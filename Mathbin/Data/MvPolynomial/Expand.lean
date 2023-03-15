@@ -33,23 +33,23 @@ variable {σ τ R S : Type _} [CommSemiring R] [CommSemiring S]
 
 See also `polynomial.expand`. -/
 noncomputable def expand (p : ℕ) : MvPolynomial σ R →ₐ[R] MvPolynomial σ R :=
-  { (eval₂Hom c fun i => x i ^ p : MvPolynomial σ R →+* MvPolynomial σ R) with
-    commutes' := fun r => eval₂Hom_c _ _ _ }
+  { (eval₂Hom C fun i => X i ^ p : MvPolynomial σ R →+* MvPolynomial σ R) with
+    commutes' := fun r => eval₂Hom_C _ _ _ }
 #align mv_polynomial.expand MvPolynomial.expand
 
 @[simp]
-theorem expand_c (p : ℕ) (r : R) : expand p (c r : MvPolynomial σ R) = c r :=
-  eval₂Hom_c _ _ _
+theorem expand_c (p : ℕ) (r : R) : expand p (C r : MvPolynomial σ R) = C r :=
+  eval₂Hom_C _ _ _
 #align mv_polynomial.expand_C MvPolynomial.expand_c
 
 @[simp]
-theorem expand_x (p : ℕ) (i : σ) : expand p (x i : MvPolynomial σ R) = x i ^ p :=
+theorem expand_x (p : ℕ) (i : σ) : expand p (X i : MvPolynomial σ R) = X i ^ p :=
   eval₂Hom_X' _ _ _
 #align mv_polynomial.expand_X MvPolynomial.expand_x
 
 @[simp]
 theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
-    expand p (monomial d r) = c r * ∏ i in d.support, (x i ^ p) ^ d i :=
+    expand p (monomial d r) = C r * ∏ i in d.support, (X i ^ p) ^ d i :=
   bind₁_monomial _ _ _
 #align mv_polynomial.expand_monomial MvPolynomial.expand_monomial
 

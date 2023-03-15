@@ -40,7 +40,7 @@ variable (R)
 
 /-- The set of polynomials whose variables are contained in `s` as a `subalgebra` over `R`. -/
 noncomputable def supported (s : Set σ) : Subalgebra R (MvPolynomial σ R) :=
-  Algebra.adjoin R (x '' s)
+  Algebra.adjoin R (X '' s)
 #align mv_polynomial.supported MvPolynomial.supported
 
 variable {σ R}
@@ -61,7 +61,7 @@ noncomputable def supportedEquivMvPolynomial (s : Set σ) : supported R s ≃ₐ
 
 @[simp]
 theorem supportedEquivMvPolynomial_symm_c (s : Set σ) (x : R) :
-    (supportedEquivMvPolynomial s).symm (c x) = algebraMap R (supported R s) x :=
+    (supportedEquivMvPolynomial s).symm (C x) = algebraMap R (supported R s) x :=
   by
   ext1
   simp [supported_equiv_mv_polynomial, MvPolynomial.algebraMap_eq]
@@ -69,7 +69,7 @@ theorem supportedEquivMvPolynomial_symm_c (s : Set σ) (x : R) :
 
 @[simp]
 theorem supportedEquivMvPolynomial_symm_x (s : Set σ) (i : s) :
-    (↑((supportedEquivMvPolynomial s).symm (x i : MvPolynomial s R)) : MvPolynomial σ R) = x i := by
+    (↑((supportedEquivMvPolynomial s).symm (X i : MvPolynomial s R)) : MvPolynomial σ R) = X i := by
   simp [supported_equiv_mv_polynomial]
 #align mv_polynomial.supported_equiv_mv_polynomial_symm_X MvPolynomial.supportedEquivMvPolynomial_symm_x
 
@@ -97,7 +97,7 @@ theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R (↑p.var
 
 variable (s)
 
-theorem supported_eq_adjoin_x : supported R s = Algebra.adjoin R (x '' s) :=
+theorem supported_eq_adjoin_x : supported R s = Algebra.adjoin R (X '' s) :=
   rfl
 #align mv_polynomial.supported_eq_adjoin_X MvPolynomial.supported_eq_adjoin_x
 
@@ -117,7 +117,7 @@ theorem supported_mono (st : s ⊆ t) : supported R s ≤ supported R t :=
 #align mv_polynomial.supported_mono MvPolynomial.supported_mono
 
 @[simp]
-theorem x_mem_supported [Nontrivial R] {i : σ} : x i ∈ supported R s ↔ i ∈ s := by
+theorem x_mem_supported [Nontrivial R] {i : σ} : X i ∈ supported R s ↔ i ∈ s := by
   simp [mem_supported]
 #align mv_polynomial.X_mem_supported MvPolynomial.x_mem_supported
 

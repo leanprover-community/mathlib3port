@@ -86,7 +86,7 @@ omit hp
 variable `X (n-1)`.
 -/
 def verschiebungPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
-  if n = 0 then 0 else x (n - 1)
+  if n = 0 then 0 else X (n - 1)
 #align witt_vector.verschiebung_poly WittVector.verschiebungPoly
 
 @[simp]
