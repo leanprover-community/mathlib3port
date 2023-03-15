@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.behrend
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ceb887ddf3344dab425292e497fa2af91498437c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,11 @@ Salem-Spencer, Behrend construction, arithmetic progression, sphere, strictly co
 -/
 
 
-open Finset Nat Real
+open Finset
+
+open Nat hiding log
+
+open Real
 
 open BigOperators Pointwise
 
@@ -490,7 +494,7 @@ theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dVa
       rw [one_le_cast]
       exact hN.trans' (by norm_num1)
     · rw [cast_pos, lt_ceil, cast_zero, Real.sqrt_pos]
-      apply log_pos
+      refine' log_pos _
       rw [one_lt_cast]
       exact hN.trans_lt' (by norm_num1)
     apply le_sqrt_of_sq_le

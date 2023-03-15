@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.pos_def
-! leanprover-community/mathlib commit 68ead6e664f4a86b2405055689683ebdcf44c177
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
     InnerProductSpace 𝕜 (n → 𝕜) :=
   InnerProductSpace.ofCore
     { inner := fun x y => dotProduct (star x) (M.mulVec y)
-      conj_sym := fun x y => by
+      conj_symm := fun x y => by
         rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
           hM.is_hermitian.eq]
       nonneg_re := fun x => by

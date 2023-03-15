@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit 639b66d9330da2cd8dd02be1a51b6d10d058e5e4
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,11 +133,11 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         
       · norm_num
       · exact summable_inner f f
-    conj_sym := fun f g => by
+    conj_symm := fun f g => by
       calc
         conj _ = conj (∑' i, ⟪g i, f i⟫) := by congr
         _ = ∑' i, conj ⟪g i, f i⟫ := is_R_or_C.conj_cle.map_tsum
-        _ = ∑' i, ⟪f i, g i⟫ := by simp only [inner_conj_sym]
+        _ = ∑' i, ⟪f i, g i⟫ := by simp only [inner_conj_symm]
         _ = _ := by congr
         
     add_left := fun f₁ f₂ g =>
@@ -183,7 +183,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
 #align lp.inner_single_left lp.inner_single_left
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
-  simpa [inner_conj_sym] using congr_arg conj (inner_single_left i a f)
+  simpa [inner_conj_symm] using congr_arg conj (inner_single_left i a f)
 #align lp.inner_single_right lp.inner_single_right
 
 end lp

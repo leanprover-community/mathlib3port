@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.basic
-! leanprover-community/mathlib commit 800f52292ec9385fdd2466f66d288d07c39cb7e3
+! leanprover-community/mathlib commit af8f9bc2aab1dd99a26f3dc982b7957f7762e7ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -931,7 +931,7 @@ theorem innerDualCone_empty : (∅ : Set H).innerDualCone = ⊤ :=
 /-- Dual cone of the convex cone {0} is the total space. -/
 @[simp]
 theorem innerDualCone_zero : (0 : Set H).innerDualCone = ⊤ :=
-  eq_top_iff.mpr fun x hy y (hy : y = 0) => hy.symm ▸ inner_zero_left.ge
+  eq_top_iff.mpr fun x hy y (hy : y = 0) => hy.symm ▸ (inner_zero_left _).ge
 #align inner_dual_cone_zero innerDualCone_zero
 
 /-- Dual cone of the total space is the convex cone {0}. -/
@@ -941,7 +941,7 @@ theorem innerDualCone_univ : (univ : Set H).innerDualCone = 0 :=
   suffices ∀ x : H, x ∈ (univ : Set H).innerDualCone → x = 0
     by
     apply SetLike.coe_injective
-    exact eq_singleton_iff_unique_mem.mpr ⟨fun x hx => inner_zero_right.ge, this⟩
+    exact eq_singleton_iff_unique_mem.mpr ⟨fun x hx => (inner_zero_right _).ge, this⟩
   exact fun x hx => by simpa [← real_inner_self_nonpos] using hx (-x) (mem_univ _)
 #align inner_dual_cone_univ innerDualCone_univ
 
@@ -1063,7 +1063,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
       0 < ⟪b - z, b - z⟫_ℝ := lt_of_not_le ((Iff.not real_inner_self_nonpos).2 hbz)
       _ = ⟪b - z, b - z⟫_ℝ + 0 := (add_zero _).symm
       _ ≤ ⟪b - z, b - z⟫_ℝ + ⟪b - z, z⟫_ℝ := (add_le_add rfl.ge hinner₀)
-      _ = ⟪b - z, b - z + z⟫_ℝ := inner_add_right.symm
+      _ = ⟪b - z, b - z + z⟫_ℝ := (inner_add_right _ _ _).symm
       _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
       
 #align convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem

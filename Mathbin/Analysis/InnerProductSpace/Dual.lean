@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.dual
-! leanprover-community/mathlib commit a148d797a1094ab554ad4183a4ad6f130358ef64
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,8 +90,8 @@ theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
   refine' (Function.Injective.eq_iff ContinuousLinearMap.coe_injective).mp (Basis.ext b _)
   intro i
   simp only [to_dual_map_apply, ContinuousLinearMap.coe_coe]
-  rw [← inner_conj_sym]
-  nth_rw_rhs 1 [← inner_conj_sym]
+  rw [← inner_conj_symm]
+  nth_rw_rhs 1 [← inner_conj_symm]
   exact congr_arg conj (h i)
 #align inner_product_space.ext_inner_left_basis InnerProductSpace.ext_inner_left_basis
 
@@ -99,8 +99,8 @@ theorem ext_inner_right_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
     (h : ∀ i : ι, ⟪x, b i⟫ = ⟪y, b i⟫) : x = y :=
   by
   refine' ext_inner_left_basis b fun i => _
-  rw [← inner_conj_sym]
-  nth_rw_rhs 1 [← inner_conj_sym]
+  rw [← inner_conj_symm]
+  nth_rw_rhs 1 [← inner_conj_symm]
   exact congr_arg conj (h i)
 #align inner_product_space.ext_inner_right_basis InnerProductSpace.ext_inner_right_basis
 

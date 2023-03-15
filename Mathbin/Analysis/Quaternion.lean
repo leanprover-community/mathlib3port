@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit d90149e913bf65828b011379540c3379e01105fd
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
 noncomputable instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
     { inner := HasInner.inner
-      conj_sym := fun x y => by simp [inner_def, mul_comm]
+      conj_symm := fun x y => by simp [inner_def, mul_comm]
       nonneg_re := fun x => normSq_nonneg
       definite := fun x => normSq_eq_zero.1
       add_left := fun x y z => by simp only [inner_def, add_mul, add_re]

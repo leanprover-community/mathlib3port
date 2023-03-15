@@ -304,7 +304,7 @@ theorem comap_of_ker_isPGroup {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} 
   rw [Subtype.ext_iff, H.coe_pow, Subtype.coe_mk, ← ϕ.map_pow] at hj
   obtain ⟨k, hk⟩ := hϕ ⟨g.1 ^ p ^ j, hj⟩
   rwa [Subtype.ext_iff, ϕ.ker.coe_pow, Subtype.coe_mk, ← pow_mul, ← pow_add] at hk
-  exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).val_pow_eq_pow_val]⟩
+  exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).coe_pow]⟩
 #align is_p_group.comap_of_ker_is_p_group IsPGroup.comap_of_ker_isPGroup
 
 theorem ker_isPGroup_of_injective {K : Type _} [Group K] {ϕ : K →* G} (hϕ : Function.Injective ϕ) :

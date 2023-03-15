@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.multiplicity
-! leanprover-community/mathlib commit 114ff8a4a7935cb7531062200bff375e7b1d6d85
+! leanprover-community/mathlib commit ceb887ddf3344dab425292e497fa2af91498437c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,7 +235,9 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) :
     exact dvd_mul_right _ _
 #align nat.prime.multiplicity_le_multiplicity_choose_add Nat.Prime.multiplicity_le_multiplicity_choose_add
 
-theorem multiplicity_choose_prime_pow_add_multiplicity {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n)
+variable {p n k : ℕ}
+
+theorem multiplicity_choose_prime_pow_add_multiplicity (hp : p.Prime) (hkn : k ≤ p ^ n)
     (hk0 : k ≠ 0) : multiplicity p (choose (p ^ n) k) + multiplicity p k = n :=
   le_antisymm
     (by
@@ -261,6 +263,21 @@ theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ 
   PartENat.eq_natCast_sub_of_add_eq_natCast <|
     multiplicity_choose_prime_pow_add_multiplicity hp hkn hk0
 #align nat.prime.multiplicity_choose_prime_pow Nat.Prime.multiplicity_choose_prime_pow
+
+theorem dvd_choose_pow (hp : Prime p) (hk : k ≠ 0) (hkp : k ≠ p ^ n) : p ∣ (p ^ n).choose k :=
+  by
+  obtain hkp | hkp := hkp.symm.lt_or_lt
+  · simp [choose_eq_zero_of_lt hkp]
+  refine' multiplicity_ne_zero.1 fun h => hkp.not_le <| Nat.le_of_dvd hk.bot_lt _
+  have H := hp.multiplicity_choose_prime_pow_add_multiplicity hkp.le hk
+  rw [h, zero_add, eq_coe_iff] at H
+  exact H.1
+#align nat.prime.dvd_choose_pow Nat.Prime.dvd_choose_pow
+
+theorem dvd_choose_pow_iff (hp : Prime p) : p ∣ (p ^ n).choose k ↔ k ≠ 0 ∧ k ≠ p ^ n := by
+  refine' ⟨fun h => ⟨_, _⟩, fun h => dvd_choose_pow hp h.1 h.2⟩ <;> rintro rfl <;>
+    simpa [hp.ne_one] using h
+#align nat.prime.dvd_choose_pow_iff Nat.Prime.dvd_choose_pow_iff
 
 end Prime
 

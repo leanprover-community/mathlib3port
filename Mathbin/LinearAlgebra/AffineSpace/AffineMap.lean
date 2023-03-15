@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
+! leanprover-community/mathlib commit bd1fc183335ea95a9519a1630bcf901fe9326d83
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,10 +68,24 @@ structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 :
 -- mathport name: «expr →ᵃ[ ] »
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
 
-instance (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ring k]
-    [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
+instance AffineMap.funLike (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
+    [Ring k] [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
+    [affine_space V2 P2] : FunLike (P1 →ᵃ[k] P2) P1 fun _ => P2
+    where
+  coe := AffineMap.toFun
+  coe_injective' := fun ⟨f, f_linear, f_add⟩ ⟨g, g_linear, g_add⟩ (h : f = g) =>
+    by
+    cases' (AddTorsor.nonempty : Nonempty P1) with p
+    congr with v
+    apply vadd_right_cancel (f p)
+    erw [← f_add, h, ← g_add]
+#align affine_map.fun_like AffineMap.funLike
+
+instance AffineMap.hasCoeToFun (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _)
+    [Ring k] [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
     [affine_space V2 P2] : CoeFun (P1 →ᵃ[k] P2) fun _ => P1 → P2 :=
-  ⟨AffineMap.toFun⟩
+  FunLike.hasCoeToFun
+#align affine_map.has_coe_to_fun AffineMap.hasCoeToFun
 
 namespace LinearMap
 
@@ -176,14 +190,7 @@ Case conversion may be inaccurate. Consider using '#align affine_map.ext AffineM
 /-- Two affine maps are equal if they coerce to the same function. -/
 @[ext]
 theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g :=
-  by
-  rcases f with ⟨f, f_linear, f_add⟩
-  rcases g with ⟨g, g_linear, g_add⟩
-  obtain rfl : f = g := funext h
-  congr with v
-  cases' (AddTorsor.nonempty : Nonempty P1) with p
-  apply vadd_right_cancel (f p)
-  erw [← f_add, ← g_add]
+  FunLike.ext _ _ h
 #align affine_map.ext AffineMap.ext
 
 /- warning: affine_map.ext_iff -> AffineMap.ext_iff is a dubious translation:
@@ -197,8 +204,8 @@ theorem ext_iff {f g : P1 →ᵃ[k] P2} : f = g ↔ ∀ p, f p = g p :=
 #align affine_map.ext_iff AffineMap.ext_iff
 
 #print AffineMap.coeFn_injective /-
-theorem coeFn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn := fun f g H =>
-  ext <| congr_fun H
+theorem coeFn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn :=
+  FunLike.coe_injective
 #align affine_map.coe_fn_injective AffineMap.coeFn_injective
 -/
 

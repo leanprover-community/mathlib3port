@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
+! leanprover-community/mathlib commit 2fd0de23fbbf0f8a84dbb7bc2e7a2da45de67f8b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ instance (p : ℝ≥0∞) {ι : Type _} (α : ι → Type _) [∀ i, Inhabited (
 
 namespace PiLp
 
-variable (p : ℝ≥0∞) (𝕜 : Type _) {ι : Type _} (α : ι → Type _) (β : ι → Type _)
+variable (p : ℝ≥0∞) (𝕜 𝕜' : Type _) {ι : Type _} (α : ι → Type _) (β : ι → Type _)
 
 /-- Canonical bijection between `pi_Lp p α` and the original Pi type. We introduce it to be able
 to compare the `L^p` and `L^∞` distances through it. -/
@@ -617,7 +617,7 @@ theorem edist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i
     edist x y = (∑ i, edist (x i) (y i) ^ 2) ^ (1 / 2 : ℝ) := by simp [PiLp.edist_eq_sum]
 #align pi_Lp.edist_eq_of_L2 PiLp.edist_eq_of_L2
 
-variable [NormedField 𝕜]
+variable [NormedField 𝕜] [NormedField 𝕜']
 
 /-- The product of finitely many normed spaces is a normed space, with the `L^p` norm. -/
 instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] :
@@ -636,6 +636,16 @@ instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 
         exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _ }
 #align pi_Lp.normed_space PiLp.normedSpace
 
+instance isScalarTower [∀ i, SeminormedAddCommGroup (β i)] [SMul 𝕜 𝕜'] [∀ i, NormedSpace 𝕜 (β i)]
+    [∀ i, NormedSpace 𝕜' (β i)] [∀ i, IsScalarTower 𝕜 𝕜' (β i)] : IsScalarTower 𝕜 𝕜' (PiLp p β) :=
+  Pi.isScalarTower
+#align pi_Lp.is_scalar_tower PiLp.isScalarTower
+
+instance sMulCommClass [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)]
+    [∀ i, NormedSpace 𝕜' (β i)] [∀ i, SMulCommClass 𝕜 𝕜' (β i)] : SMulCommClass 𝕜 𝕜' (PiLp p β) :=
+  Pi.smulCommClass
+#align pi_Lp.smul_comm_class PiLp.sMulCommClass
+
 instance finiteDimensional [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)]
     [I : ∀ i, FiniteDimensional 𝕜 (β i)] : FiniteDimensional 𝕜 (PiLp p β) :=
   FiniteDimensional.finiteDimensional_pi' _ _
@@ -643,7 +653,7 @@ instance finiteDimensional [∀ i, SeminormedAddCommGroup (β i)] [∀ i, Normed
 
 /- Register simplification lemmas for the applications of `pi_Lp` elements, as the usual lemmas
 for Pi types will not trigger. -/
-variable {𝕜 p α} [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜)
+variable {𝕜 𝕜' p α} [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜)
 
 variable (x y : PiLp p β) (x' y' : ∀ i, β i) (i : ι)
 

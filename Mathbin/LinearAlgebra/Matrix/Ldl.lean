@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.ldl
-! leanprover-community/mathlib commit 0fc5496584478976b86f17941b3ff25ad7c4ebd6
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem LDL.diag_eq_lowerInv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL
       Pi.star_apply, IsROrC.star_def, starRingEnd_self_apply]
   · simp only [LDL.diag, hij, diagonal_apply_ne, Ne.def, not_false_iff, mul_mul_apply]
     rw [conj_transpose, transpose_map, transpose_transpose, dot_product_mul_vec,
-      (LDL.lowerInv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_sym,
+      (LDL.lowerInv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_symm,
       mul_vec_transpose, EuclideanSpace.inner_eq_star_dotProduct, ← IsROrC.star_def, ←
       star_dot_product_star, dot_product_comm, star_star]
     rfl

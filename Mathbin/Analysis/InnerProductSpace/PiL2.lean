@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,13 +88,13 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _)
   inner x y := ∑ i, inner (x i) (y i)
   norm_sq_eq_inner x := by
     simp only [PiLp.norm_sq_eq_of_L2, AddMonoidHom.map_sum, ← norm_sq_eq_inner, one_div]
-  conj_sym := by
+  conj_symm := by
     intro x y
     unfold inner
     rw [RingHom.map_sum]
     apply Finset.sum_congr rfl
     rintro z -
-    apply inner_conj_sym
+    apply inner_conj_symm
   add_left x y z :=
     show (∑ i, inner (x i + y i) (z i)) = (∑ i, inner (x i) (z i)) + ∑ i, inner (y i) (z i) by
       simp only [inner_add_left, Finset.sum_add_distrib]

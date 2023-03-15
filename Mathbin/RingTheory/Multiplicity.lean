@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.multiplicity
-! leanprover-community/mathlib commit 3d32bf9cef95940e3fe1ca0dd2412e0f21579f46
+! leanprover-community/mathlib commit ceb887ddf3344dab425292e497fa2af91498437c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,6 +215,10 @@ theorem multiplicity_eq_zero {a b : α} : multiplicity a b = 0 ↔ ¬a ∣ b :=
   rw [← Nat.cast_zero, eq_coe_iff]
   simp
 #align multiplicity.multiplicity_eq_zero multiplicity.multiplicity_eq_zero
+
+theorem multiplicity_ne_zero {a b : α} : multiplicity a b ≠ 0 ↔ a ∣ b :=
+  multiplicity_eq_zero.not_left
+#align multiplicity.multiplicity_ne_zero multiplicity.multiplicity_ne_zero
 
 theorem eq_top_iff_not_finite {a b : α} : multiplicity a b = ⊤ ↔ ¬Finite a b :=
   Part.eq_none_iff'

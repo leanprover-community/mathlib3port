@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
 instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E)
     where
   norm_sq_eq_inner := norm_sq_eq_inner'
-  conj_sym _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
+  conj_symm _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_symm]
   add_left := add_left'
   smul_left := smul_left'
 #align measure_theory.L2.inner_product_space MeasureTheory.L2.innerProductSpace
@@ -216,7 +216,7 @@ theorem inner_indicatorConstLp_eq_set_integral_inner (f : lp E 2 μ) (hs : Measu
       indicator_const_Lp_coe_fn_nmem
     refine' h_indicator.mono fun x hx hxs => _
     rw [hx hxs]
-    exact inner_zero_left
+    exact inner_zero_left _
   rw [h_left, h_right, add_zero]
 #align measure_theory.L2.inner_indicator_const_Lp_eq_set_integral_inner MeasureTheory.L2.inner_indicatorConstLp_eq_set_integral_inner
 

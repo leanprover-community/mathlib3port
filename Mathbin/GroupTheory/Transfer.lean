@@ -177,10 +177,9 @@ theorem transfer_eq_pow [FiniteIndex H] (g : G)
     change ∀ (k g₀) (hk : g₀⁻¹ * g ^ k * g₀ ∈ H), ↑(⟨g₀⁻¹ * g ^ k * g₀, hk⟩ : H) = g ^ k at key
     rw [transfer_eq_prod_quotient_orbit_rel_zpowers_quot, ← Finset.prod_to_list, List.prod_map_hom]
     refine' congr_arg ϕ (Subtype.coe_injective _)
-    rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).val_pow_eq_pow_val,
-      (zpowers g).coe_mk, index_eq_card,
-      Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), Fintype.card_sigma, ←
-      Finset.prod_pow_eq_pow_sum, ← Finset.prod_to_list]
+    rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).coe_pow, (zpowers g).coe_mk,
+      index_eq_card, Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)),
+      Fintype.card_sigma, ← Finset.prod_pow_eq_pow_sum, ← Finset.prod_to_list]
     simp only [coe_list_prod, List.map_map, ← minimal_period_eq_card]
     congr 2
     funext

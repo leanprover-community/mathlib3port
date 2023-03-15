@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem isSymmetric_iff_sesq_form (T : E →ₗ[𝕜] E) :
 end Real
 
 theorem IsSymmetric.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) (x y : E) :
-    conj ⟪T x, y⟫ = ⟪T y, x⟫ := by rw [hT x y, inner_conj_sym]
+    conj ⟪T x, y⟫ = ⟪T y, x⟫ := by rw [hT x y, inner_conj_symm]
 #align linear_map.is_symmetric.conj_inner_sym LinearMap.IsSymmetric.conj_inner_sym
 
 @[simp]
@@ -85,7 +85,7 @@ theorem IsSymmetric.apply_clm {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →�
 #align linear_map.is_symmetric.apply_clm LinearMap.IsSymmetric.apply_clm
 
 theorem isSymmetric_zero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
-  (inner_zero_right : ⟪x, 0⟫ = 0).symm ▸ (inner_zero_left : ⟪0, y⟫ = 0)
+  (inner_zero_right x : ⟪x, 0⟫ = 0).symm ▸ (inner_zero_left y : ⟪0, y⟫ = 0)
 #align linear_map.is_symmetric_zero LinearMap.isSymmetric_zero
 
 theorem isSymmetric_id : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
@@ -112,7 +112,7 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
     rw [← T.map_sub, hT]
   refine' tendsto_nhds_unique ((hTu.sub_const _).inner tendsto_const_nhds) _
   simp_rw [hlhs]
-  rw [← @inner_zero_left 𝕜 E _ _ (T (y - T x))]
+  rw [← inner_zero_left (T (y - T x))]
   refine' Filter.Tendsto.inner _ tendsto_const_nhds
   rw [← sub_self x]
   exact hu.sub_const _
@@ -155,7 +155,7 @@ theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
   · intro hT v
     apply is_symmetric.conj_inner_sym hT
   · intro h x y
-    nth_rw 2 [← inner_conj_sym]
+    nth_rw 2 [← inner_conj_symm]
     nth_rw 2 [inner_map_polarization]
     simp only [starRingEnd_apply, star_div', star_sub, star_add, star_mul]
     simp only [← starRingEnd_apply]

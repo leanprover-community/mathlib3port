@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Roca González
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.lax_milgram
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit af8f9bc2aab1dd99a26f3dc982b7957f7762e7ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ :=
         _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
         
     · exact mul_nonneg (mul_nonneg C_pos.le (norm_nonneg w)) (norm_nonneg w)
-  exact inner_zero_left
+  exact inner_zero_left _
 #align is_coercive.range_eq_top IsCoercive.range_eq_top
 
 /-- The Lax-Milgram equivalence of a coercive bounded bilinear operator:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.adjoint
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem adjointAux_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪adjointA
 #align continuous_linear_map.adjoint_aux_inner_left ContinuousLinearMap.adjointAux_inner_left
 
 theorem adjointAux_inner_right (A : E →L[𝕜] F) (x : E) (y : F) : ⟪x, adjointAux A y⟫ = ⟪A x, y⟫ :=
-  by rw [← inner_conj_sym, adjoint_aux_inner_left, inner_conj_sym]
+  by rw [← inner_conj_symm, adjoint_aux_inner_left, inner_conj_symm]
 #align continuous_linear_map.adjoint_aux_inner_right ContinuousLinearMap.adjointAux_inner_right
 
 variable [CompleteSpace F]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.enat.basic
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit ceb887ddf3344dab425292e497fa2af91498437c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,8 @@ instance : IsWellOrder ℕ∞ (· < ·) where
 variable {m n : ℕ∞}
 
 #print ENat.coe_zero /-
-@[simp, norm_cast]
+-- eligible for `dsimp`
+@[simp, nolint simp_nf, norm_cast]
 theorem coe_zero : ((0 : ℕ) : ℕ∞) = 0 :=
   rfl
 #align enat.coe_zero ENat.coe_zero

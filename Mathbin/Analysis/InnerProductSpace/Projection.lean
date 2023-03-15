@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,7 +316,7 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
             rw [sq]
             refine' le_add_of_nonneg_right _
             exact sq_nonneg _
-          _ = ‖u - v - (w - v)‖ ^ 2 := norm_sub_sq.symm
+          _ = ‖u - v - (w - v)‖ ^ 2 := (norm_sub_sq _ _).symm
           _ = ‖u - w‖ * ‖u - w‖ := by
             have : u - v - (w - v) = u - w
             abel
@@ -542,7 +542,7 @@ theorem orthogonalProjection_inner_eq_zero (v : E) :
 theorem sub_orthogonalProjection_mem_orthogonal (v : E) : v - orthogonalProjection K v ∈ Kᗮ :=
   by
   intro w hw
-  rw [inner_eq_zero_sym]
+  rw [inner_eq_zero_symm]
   exact orthogonalProjection_inner_eq_zero _ _ hw
 #align sub_orthogonal_projection_mem_orthogonal sub_orthogonalProjection_mem_orthogonal
 
@@ -644,7 +644,7 @@ theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
       norm_cast
       simp [norm_sq_eq_inner]
     simp [inner_sub_left, inner_smul_left, inner_smul_right, map_div₀, mul_comm, hv,
-      InnerProductSpace.conj_sym, hv]
+      InnerProductSpace.conj_symm, hv]
 #align smul_orthogonal_projection_singleton smul_orthogonalProjection_singleton
 
 /-- Formula for orthogonal projection onto a single vector. -/
@@ -833,11 +833,11 @@ theorem Submodule.orthogonal_orthogonal [CompleteSpace K] : Kᗮᗮ = K :=
     intro hv
     have hz' : z = 0 :=
       by
-      have hyz : ⟪z, y⟫ = 0 := by simp [hz y hy, inner_eq_zero_sym]
+      have hyz : ⟪z, y⟫ = 0 := by simp [hz y hy, inner_eq_zero_symm]
       simpa [inner_add_right, hyz] using hv z hz
     simp [hy, hz']
   · intro hv w hw
-    rw [inner_eq_zero_sym]
+    rw [inner_eq_zero_symm]
     exact hw v hv
 #align submodule.orthogonal_orthogonal Submodule.orthogonal_orthogonal
 
@@ -871,7 +871,7 @@ theorem Submodule.orthogonal_eq_bot_iff [CompleteSpace (K : Set E)] : Kᗮ = ⊥
 orthogonal projection. -/
 theorem eq_orthogonalProjection_of_mem_orthogonal [CompleteSpace K] {u v : E} (hv : v ∈ K)
     (hvo : u - v ∈ Kᗮ) : (orthogonalProjection K u : E) = v :=
-  eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero hv fun w => inner_eq_zero_sym.mp ∘ hvo w
+  eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero hv fun w => inner_eq_zero_symm.mp ∘ hvo w
 #align eq_orthogonal_projection_of_mem_orthogonal eq_orthogonalProjection_of_mem_orthogonal
 
 /-- A point in `K` with the orthogonality property (here characterized in terms of `Kᗮ`) must be the
@@ -1105,7 +1105,7 @@ theorem inner_orthogonalProjection_eq_of_mem_right [CompleteSpace K] (u : K) (v 
 @[simp]
 theorem inner_orthogonalProjection_eq_of_mem_left [CompleteSpace K] (u : K) (v : E) :
     ⟪u, orthogonalProjection K v⟫ = ⟪(u : E), v⟫ := by
-  rw [← inner_conj_sym, ← inner_conj_sym (u : E), inner_orthogonalProjection_eq_of_mem_right]
+  rw [← inner_conj_symm, ← inner_conj_symm (u : E), inner_orthogonalProjection_eq_of_mem_right]
 #align inner_orthogonal_projection_eq_of_mem_left inner_orthogonalProjection_eq_of_mem_left
 
 /-- The orthogonal projection is self-adjoint. -/
@@ -1358,7 +1358,7 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
           intro hbe'
           apply hab'
           simp [ha, hbe']
-        rw [inner_eq_zero_sym]
+        rw [inner_eq_zero_symm]
         simpa [ha] using h_end b hb
       rintro ⟨b, hb'⟩ hab'
       cases' eq_or_mem_of_mem_insert hb' with hb hb

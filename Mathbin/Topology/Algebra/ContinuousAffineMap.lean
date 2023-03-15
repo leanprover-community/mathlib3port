@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_affine_map
-! leanprover-community/mathlib commit 806bbb0132ba63b93d5edbe4789ea226f8329979
+! leanprover-community/mathlib commit bd1fc183335ea95a9519a1630bcf901fe9326d83
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,39 +54,47 @@ variable [AddCommGroup W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
 
 include V W
 
-/-- see Note [function coercion] -/
+instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
+  ⟨toAffineMap⟩
+
+theorem to_affineMap_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
+  by
+  cases f
+  cases g
+  congr
+#align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affineMap_injective
+
+instance : ContinuousMapClass (P →A[R] Q) P Q
+    where
+  coe f := f.toAffineMap
+  coe_injective' f g h := to_affineMap_injective <| FunLike.coe_injective h
+  map_continuous := cont
+
+/-- Helper instance for when there's too many metavariables to apply
+`fun_like.has_coe_to_fun` directly. -/
 instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
-  ⟨fun f => f.toAffineMap.toFun⟩
+  FunLike.hasCoeToFun
 
 theorem toFun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
   rfl
 #align continuous_affine_map.to_fun_eq_coe ContinuousAffineMap.toFun_eq_coe
 
 theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn :=
-  by
-  rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h
-  have : f = g ∧ f' = g' := by simpa only using AffineMap.coeFn_injective h
-  congr
-  exacts[this.1, this.2]
+  FunLike.coe_injective
 #align continuous_affine_map.coe_injective ContinuousAffineMap.coe_injective
 
 @[ext]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective <| funext h
+  FunLike.ext _ _ h
 #align continuous_affine_map.ext ContinuousAffineMap.ext
 
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
-    rintro rfl x
-    rfl, ext⟩
+  FunLike.ext_iff
 #align continuous_affine_map.ext_iff ContinuousAffineMap.ext_iff
 
 theorem congr_fun {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
-  h ▸ rfl
+  FunLike.congr_fun h _
 #align continuous_affine_map.congr_fun ContinuousAffineMap.congr_fun
-
-instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
-  ⟨toAffineMap⟩
 
 /-- Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
 def toContinuousMap (f : P →A[R] Q) : C(P, Q) :=
@@ -115,12 +123,6 @@ theorem coe_to_affineMap (f : P →A[R] Q) : ((f : P →ᵃ[R] Q) : P → Q) = f
 theorem coe_to_continuousMap (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f :=
   rfl
 #align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuousMap
-
-theorem to_affineMap_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
-  by
-  ext a
-  exact AffineMap.congr_fun h a
-#align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affineMap_injective
 
 theorem to_continuousMap_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
   by
