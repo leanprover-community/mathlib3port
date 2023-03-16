@@ -745,24 +745,24 @@ theorem coe_trans : (f.trans g : C(α, γ)) = (g : C(β, γ)).comp f :=
   rfl
 #align homeomorph.coe_trans Homeomorph.coe_trans
 
-/- warning: homeomorph.symm_comp_to_continuous_map -> Homeomorph.symm_comp_to_continuousMap is a dubious translation:
+/- warning: homeomorph.symm_comp_to_continuous_map -> Homeomorph.symm_comp_toContinuousMap is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (f : Homeomorph.{u1, u2} α β _inst_1 _inst_2), Eq.{succ u1} (ContinuousMap.{u1, u1} α α _inst_1 _inst_1) (ContinuousMap.comp.{u1, u2, u1} α β α _inst_1 _inst_2 _inst_1 ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Sort.{max (succ u2) (succ u1)}) [self : HasLiftT.{max (succ u2) (succ u1), max (succ u2) (succ u1)} a b] => self.0) (Homeomorph.{u2, u1} β α _inst_2 _inst_1) (ContinuousMap.{u2, u1} β α _inst_2 _inst_1) (HasLiftT.mk.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Homeomorph.{u2, u1} β α _inst_2 _inst_1) (ContinuousMap.{u2, u1} β α _inst_2 _inst_1) (CoeTCₓ.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Homeomorph.{u2, u1} β α _inst_2 _inst_1) (ContinuousMap.{u2, u1} β α _inst_2 _inst_1) (coeBase.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Homeomorph.{u2, u1} β α _inst_2 _inst_1) (ContinuousMap.{u2, u1} β α _inst_2 _inst_1) (Homeomorph.ContinuousMap.hasCoe.{u2, u1} β α _inst_2 _inst_1)))) (Homeomorph.symm.{u1, u2} α β _inst_1 _inst_2 f)) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (Homeomorph.{u1, u2} α β _inst_1 _inst_2) (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (Homeomorph.ContinuousMap.hasCoe.{u1, u2} α β _inst_1 _inst_2)))) f)) (ContinuousMap.id.{u1} α _inst_1)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (f : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{succ u2} (ContinuousMap.{u2, u2} α α _inst_1 _inst_1) (ContinuousMap.comp.{u2, u1, u2} α β α _inst_1 _inst_2 _inst_1 (Homeomorph.toContinuousMap.{u1, u2} β α _inst_2 _inst_1 (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 f)) (Homeomorph.toContinuousMap.{u2, u1} α β _inst_1 _inst_2 f)) (ContinuousMap.id.{u2} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_to_continuousMapₓ'. -/
+Case conversion may be inaccurate. Consider using '#align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_toContinuousMapₓ'. -/
 /-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
 @[simp]
-theorem symm_comp_to_continuousMap : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α :=
-  by rw [← coeTrans, self_trans_symm, coe_refl]
-#align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_to_continuousMap
+theorem symm_comp_toContinuousMap : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α := by
+  rw [← coeTrans, self_trans_symm, coe_refl]
+#align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_toContinuousMap
 
-#print Homeomorph.to_continuousMap_comp_symm /-
+#print Homeomorph.toContinuousMap_comp_symm /-
 /-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
 @[simp]
-theorem to_continuousMap_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β :=
-  by rw [← coeTrans, symm_trans_self, coe_refl]
-#align homeomorph.to_continuous_map_comp_symm Homeomorph.to_continuousMap_comp_symm
+theorem toContinuousMap_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β := by
+  rw [← coeTrans, symm_trans_self, coe_refl]
+#align homeomorph.to_continuous_map_comp_symm Homeomorph.toContinuousMap_comp_symm
 -/
 
 end Homeomorph
