@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit eb0cb4511aaef0da2462207b67358a0e1fe1e2ee
+! leanprover-community/mathlib commit ce7e9d53d4bbc38065db3b595cd5bd73c323bc1d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -672,9 +672,31 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐ�
           rw [List.mem_range, Nat.lt_succ_iff] at hi
           rw [Nat.sub_add_comm hi]) }
 
+theorem fst_list_prod [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐᵒᵖ M]
+    [SMulCommClass R Rᵐᵒᵖ M] (l : List (tsze R M)) : l.Prod.fst = (l.map fst).Prod :=
+  map_list_prod (⟨fst, fst_one, fst_mul⟩ : tsze R M →* R) _
+#align triv_sq_zero_ext.fst_list_prod TrivSqZeroExt.fst_list_prod
+
 instance [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] [SMulCommClass R Rᵐᵒᵖ M] :
     Semiring (tsze R M) :=
   { TrivSqZeroExt.monoid, TrivSqZeroExt.nonAssocSemiring with }
+
+/-- The second element of a product $\prod_{i=0}^n (r_i + m_i)$ is a sum of terms of the form
+$r_0\cdots r_{i-1}m_ir_{i+1}\cdots r_n$. -/
+theorem snd_list_prod [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M]
+    [SMulCommClass R Rᵐᵒᵖ M] (l : List (tsze R M)) :
+    l.Prod.snd =
+      (l.enum.map fun x : ℕ × tsze R M =>
+          ((l.map fst).take x.1).Prod • op ((l.map fst).drop x.1.succ).Prod • x.snd.snd).Sum :=
+  by
+  induction' l with x xs ih
+  · simp
+  · rw [List.enum_cons, ← List.map_fst_add_enum_eq_enumFrom]
+    simp_rw [List.map_cons, List.map_map, Function.comp, Prod.map_snd, Prod.map_fst, id,
+      List.take_zero, List.take_cons, List.prod_nil, List.prod_cons, snd_mul, one_smul, List.drop,
+      mul_smul, List.sum_cons, fst_list_prod, ih, List.smul_sum, List.map_map]
+    exact add_comm _ _
+#align triv_sq_zero_ext.snd_list_prod TrivSqZeroExt.snd_list_prod
 
 instance [Ring R] [AddCommGroup M] [Module R M] [Module Rᵐᵒᵖ M] [SMulCommClass R Rᵐᵒᵖ M] :
     Ring (tsze R M) :=

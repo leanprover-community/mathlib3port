@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.smodeq
-! leanprover-community/mathlib commit 146d3d1fa59c091fedaad8a4afa09d6802886d24
+! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Ideal.Quotient
 
 /-!
 # modular equivalence for submodule
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

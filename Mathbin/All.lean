@@ -644,6 +644,7 @@ import Mathbin.Analysis.Normed.Group.Quotient
 import Mathbin.Analysis.Normed.Group.Seminorm
 import Mathbin.Analysis.Normed.Order.Basic
 import Mathbin.Analysis.Normed.Order.Lattice
+import Mathbin.Analysis.Normed.Order.UpperLower
 import Mathbin.Analysis.Normed.Ring.Seminorm
 import Mathbin.Analysis.NormedSpace.MStructure
 import Mathbin.Analysis.NormedSpace.AddTorsor

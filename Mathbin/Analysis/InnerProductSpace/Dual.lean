@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.dual
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,12 +148,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
             ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by simp [inner_smul_left, conj_conj]
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by rw [h₂]
-            _ = ℓ x :=
-              by
-              have : ⟪z, z⟫ ≠ 0 := by
-                change z = 0 → False at z_ne_0
-                rwa [← inner_self_eq_zero] at z_ne_0
-              field_simp [this]
+            _ = ℓ x := by field_simp [inner_self_ne_zero.2 z_ne_0]
             
         exact h₄)
 #align inner_product_space.to_dual InnerProductSpace.toDual

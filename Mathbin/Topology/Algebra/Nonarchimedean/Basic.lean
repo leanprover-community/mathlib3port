@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.basic
-! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
+! leanprover-community/mathlib commit 83f81aea33931a1edb94ce0f32b9a5d484de6978
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,12 +155,12 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
     prod_self_subset
       (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)
         (by
-          simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero,
-            MulZeroClass.mul_zero] using U.zero_mem))
+          simpa only [Set.mem_preimage, SetLike.mem_coe, Prod.snd_zero, MulZeroClass.mul_zero] using
+            U.zero_mem))
   use V
   rintro v ⟨a, b, ha, hb, hv⟩
   have hy := H (Set.mk_mem_prod ha hb)
-  simp only [Set.mem_preimage, OpenAddSubgroup.mem_coe] at hy
+  simp only [Set.mem_preimage, SetLike.mem_coe] at hy
   rwa [hv] at hy
 #align nonarchimedean_ring.mul_subset NonarchimedeanRing.mul_subset
 

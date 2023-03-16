@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.scale_roots
-! leanprover-community/mathlib commit 40ac1b258344e0c2b4568dc37bfad937ec35a727
+! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Polynomial.AlgebraMap
 
 /-!
 # Scaling the roots of a polynomial
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `scale_roots p s` for a polynomial `p` in one variable and a ring element `s` to
 be the polynomial with root `r * s` for each root `r` of `p` and proves some basic results about it.

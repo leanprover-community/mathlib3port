@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module combinatorics.catalan
-! leanprover-community/mathlib commit 26b40791e4a5772a4e53d0e28e4df092119dc7da
+! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.Tactic.LinearCombination
 
 /-!
 # Catalan numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The Catalan numbers (http://oeis.org/A000108) are probably the most ubiquitous sequence of integers
 in mathematics. They enumerate several important objects like binary trees, Dyck paths, and

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.filtered
-! leanprover-community/mathlib commit e4ee4e30418efcb8cf304ba76ad653aeec04ba6e
+! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.Opposites
 
 /-!
 # Constructing colimits from finite colimits and filtered colimits
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We construct colimits of size `w` from finite colimits and filtered colimits of size `w`. Since
 `w`-sized colimits are constructured from coequalizers and `w`-sized coproducts, it suffices to

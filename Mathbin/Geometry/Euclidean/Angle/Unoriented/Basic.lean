@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.basic
-! leanprover-community/mathlib commit aedfb56fb0c32c0146e5dd15f5a1c5fe2088d15a
+! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,8 +138,7 @@ theorem angle_zero_right (x : V) : angle x 0 = π / 2 :=
 theorem angle_self {x : V} (hx : x ≠ 0) : angle x x = 0 :=
   by
   unfold angle
-  rw [← real_inner_self_eq_norm_mul_norm, div_self fun h => hx (inner_self_eq_zero.1 h),
-    Real.arccos_one]
+  rw [← real_inner_self_eq_norm_mul_norm, div_self (inner_self_ne_zero.2 hx), Real.arccos_one]
 #align inner_product_geometry.angle_self InnerProductGeometry.angle_self
 
 /-- The angle between a nonzero vector and its negation. -/

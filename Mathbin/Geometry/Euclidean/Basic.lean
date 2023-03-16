@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.basic
-! leanprover-community/mathlib commit ea9c24f633dbd90e37891c05bac8f5027986853d
+! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1145,7 +1145,7 @@ theorem Sphere.secondInter_secondInter (s : Sphere P) (p : P) (v : V) :
     s.secondInter (s.secondInter p v) v = p :=
   by
   by_cases hv : v = 0; · simp [hv]
-  have hv' : ⟪v, v⟫ ≠ 0 := inner_self_eq_zero.not.2 hv
+  have hv' : ⟪v, v⟫ ≠ 0 := inner_self_ne_zero.2 hv
   simp only [sphere.second_inter, vadd_vsub_assoc, vadd_vadd, inner_add_right, inner_smul_right,
     div_mul_cancel _ hv']
   rw [← @vsub_eq_zero_iff_eq V, vadd_vsub, ← add_smul, ← add_div]

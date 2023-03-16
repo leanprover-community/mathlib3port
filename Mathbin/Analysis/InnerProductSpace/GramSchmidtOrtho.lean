@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao, Kevin Buzzard, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.gram_schmidt_ortho
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ theorem gramSchmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) :
   · by_cases h : gramSchmidt 𝕜 f a = 0
     · simp only [h, inner_zero_left, zero_div, MulZeroClass.zero_mul, sub_zero]
     · rw [← inner_self_eq_norm_sq_to_K, div_mul_cancel, sub_self]
-      rwa [Ne.def, inner_self_eq_zero]
+      rwa [inner_self_ne_zero]
   simp_intro i hi hia only [Finset.mem_range]
   simp only [mul_eq_zero, div_eq_zero_iff, inner_self_eq_zero]
   right

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.opposites
-! leanprover-community/mathlib commit 9ed4366659f4fcca0ee70310d26ac5518dcb6dd0
+! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.Preserves.Finite
 
 /-!
 # Limit preservation properties of `functor.op` and related constructions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We formulate conditions about `F` which imply that `F.op`, `F.unop`, `F.left_op` and `F.right_op`
 preserve certain (co)limits.

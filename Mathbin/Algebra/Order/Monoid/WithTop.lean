@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 0111834459f5d7400215223ea95ae38a1265a907
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,7 +16,8 @@ import Mathbin.Data.Nat.Cast.Defs
 /-! # Adjoining top/bottom elements to ordered monoids.
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.-/
+> Any changes to this file require a corresponding PR to mathlib4.
+-/
 
 
 universe u v
@@ -50,6 +51,18 @@ theorem coe_eq_one {a : α} : (a : WithTop α) = 1 ↔ a = 1 :=
 #align with_top.coe_eq_one WithTop.coe_eq_one
 #align with_top.coe_eq_zero WithTop.coe_eq_zero
 -/
+
+@[simp, to_additive]
+theorem untop_one : (1 : WithTop α).untop coe_ne_top = 1 :=
+  rfl
+#align with_top.untop_one WithTop.untop_one
+#align with_top.untop_zero WithTop.untop_zero
+
+@[simp, to_additive]
+theorem untop_one' (d : α) : (1 : WithTop α).untop' d = 1 :=
+  rfl
+#align with_top.untop_one' WithTop.untop_one'
+#align with_top.untop_zero' WithTop.untop_zero'
 
 /- warning: with_top.one_le_coe -> WithTop.one_le_coe is a dubious translation:
 lean 3 declaration is
@@ -632,6 +645,18 @@ theorem coe_eq_one [One α] {a : α} : (a : WithBot α) = 1 ↔ a = 1 :=
 #align with_bot.coe_eq_one WithBot.coe_eq_one
 #align with_bot.coe_eq_zero WithBot.coe_eq_zero
 -/
+
+@[simp, to_additive]
+theorem unbot_one [One α] : (1 : WithBot α).unbot coe_ne_bot = 1 :=
+  rfl
+#align with_bot.unbot_one WithBot.unbot_one
+#align with_bot.unbot_zero WithBot.unbot_zero
+
+@[simp, to_additive]
+theorem unbot_one' [One α] (d : α) : (1 : WithBot α).unbot' d = 1 :=
+  rfl
+#align with_bot.unbot_one' WithBot.unbot_one'
+#align with_bot.unbot_zero' WithBot.unbot_zero'
 
 /- warning: with_bot.one_le_coe -> WithBot.one_le_coe is a dubious translation:
 lean 3 declaration is

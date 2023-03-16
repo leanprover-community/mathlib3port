@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Monnet
 
 ! This file was ported from Lean 3 source module field_theory.krull_topology
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 83f81aea33931a1edb94ce0f32b9a5d484de6978
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,9 +226,7 @@ theorem IntermediateField.fixingSubgroup_isOpen {K L : Type _} [Field K] [Field 
   have h_basis : E.fixing_subgroup.carrier ∈ galGroupBasis K L :=
     ⟨E.fixing_subgroup, ⟨E, ‹_›, rfl⟩, rfl⟩
   have h_nhd := GroupFilterBasis.mem_nhds_one (galGroupBasis K L) h_basis
-  rw [mem_nhds_iff] at h_nhd
-  rcases h_nhd with ⟨U, hU_le, hU_open, h1U⟩
-  exact Subgroup.isOpen_of_one_mem_interior ⟨U, ⟨hU_open, hU_le⟩, h1U⟩
+  exact Subgroup.isOpen_of_mem_nhds _ h_nhd
 #align intermediate_field.fixing_subgroup_is_open IntermediateField.fixingSubgroup_isOpen
 
 /-- Given a tower of fields `L/E/K`, with `E/K` finite, the subgroup `Gal(L/E) ≤ L ≃ₐ[K] L` is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.basic
-! leanprover-community/mathlib commit 11c53f174270aa43140c0b26dabce5fc4a253e80
+! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.UnitInterval
 
 /-!
 # Homotopy between functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we define a homotopy between two functions `f₀` and `f₁`. First we define
 `continuous_map.homotopy` between the two functions, with no restrictions on the intermediate
