@@ -863,18 +863,34 @@ theorem abs_sum_le_sum_abs [LinearOrderedAddCommGroup α] {s : Multiset α} :
   le_sum_of_subadditive _ abs_zero abs_add s
 #align multiset.abs_sum_le_sum_abs Multiset.abs_sum_le_sum_abs
 
+#print Multiset.sum_nat_mod /-
 theorem sum_nat_mod (s : Multiset ℕ) (n : ℕ) : s.Sum % n = (s.map (· % n)).Sum % n := by
   induction s using Multiset.induction <;> simp [Nat.add_mod, *]
 #align multiset.sum_nat_mod Multiset.sum_nat_mod
+-/
 
+#print Multiset.prod_nat_mod /-
 theorem prod_nat_mod (s : Multiset ℕ) (n : ℕ) : s.Prod % n = (s.map (· % n)).Prod % n := by
   induction s using Multiset.induction <;> simp [Nat.mul_mod, *]
 #align multiset.prod_nat_mod Multiset.prod_nat_mod
+-/
 
+/- warning: multiset.sum_int_mod -> Multiset.sum_int_mod is a dubious translation:
+lean 3 declaration is
+  forall (s : Multiset.{0} Int) (n : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Multiset.sum.{0} Int Int.addCommMonoid s) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Multiset.sum.{0} Int Int.addCommMonoid (Multiset.map.{0, 0} Int Int (fun (_x : Int) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) _x n) s)) n)
+but is expected to have type
+  forall (s : Multiset.{0} Int) (n : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Multiset.sum.{0} Int Int.instAddCommMonoidInt s) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Multiset.sum.{0} Int Int.instAddCommMonoidInt (Multiset.map.{0, 0} Int Int (fun (_x : Int) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) _x n) s)) n)
+Case conversion may be inaccurate. Consider using '#align multiset.sum_int_mod Multiset.sum_int_modₓ'. -/
 theorem sum_int_mod (s : Multiset ℤ) (n : ℤ) : s.Sum % n = (s.map (· % n)).Sum % n := by
   induction s using Multiset.induction <;> simp [Int.add_emod, *]
 #align multiset.sum_int_mod Multiset.sum_int_mod
 
+/- warning: multiset.prod_int_mod -> Multiset.prod_int_mod is a dubious translation:
+lean 3 declaration is
+  forall (s : Multiset.{0} Int) (n : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Multiset.prod.{0} Int Int.commMonoid s) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Multiset.prod.{0} Int Int.commMonoid (Multiset.map.{0, 0} Int Int (fun (_x : Int) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) _x n) s)) n)
+but is expected to have type
+  forall (s : Multiset.{0} Int) (n : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Multiset.prod.{0} Int Int.instCommMonoidInt s) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Multiset.prod.{0} Int Int.instCommMonoidInt (Multiset.map.{0, 0} Int Int (fun (_x : Int) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) _x n) s)) n)
+Case conversion may be inaccurate. Consider using '#align multiset.prod_int_mod Multiset.prod_int_modₓ'. -/
 theorem prod_int_mod (s : Multiset ℤ) (n : ℤ) : s.Prod % n = (s.map (· % n)).Prod % n := by
   induction s using Multiset.induction <;> simp [Int.mul_emod, *]
 #align multiset.prod_int_mod Multiset.prod_int_mod

@@ -2025,11 +2025,13 @@ theorem prod_const (b : β) : (∏ x in s, b) = b ^ s.card :=
 #align finset.sum_const Finset.sum_const
 -/
 
+#print Finset.prod_eq_pow_card /-
 @[to_additive sum_eq_card_nsmul]
 theorem prod_eq_pow_card {b : β} (hf : ∀ a ∈ s, f a = b) : (∏ a in s, f a) = b ^ s.card :=
   (prod_congr rfl hf).trans <| prod_const _
 #align finset.prod_eq_pow_card Finset.prod_eq_pow_card
 #align finset.sum_eq_card_nsmul Finset.sum_eq_card_nsmul
+-/
 
 #print Finset.pow_eq_prod_const /-
 @[to_additive]
@@ -2384,7 +2386,7 @@ theorem prod_ite_one {f : α → Prop} [DecidablePred f] (hf : (s : Set α).Pair
 lean 3 declaration is
   forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : OrderedAddCommMonoid.{u2} γ] [_inst_4 : CovariantClass.{u2, u2} γ γ (HAdd.hAdd.{u2, u2, u2} γ γ γ (instHAdd.{u2} γ (AddZeroClass.toHasAdd.{u2} γ (AddMonoid.toAddZeroClass.{u2} γ (AddCommMonoid.toAddMonoid.{u2} γ (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3)))))) (LT.lt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ (OrderedAddCommMonoid.toPartialOrder.{u2} γ _inst_3))))] {s : Finset.{u1} α} {d : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) d s) -> (forall {f : α -> γ}, (LT.lt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ (OrderedAddCommMonoid.toPartialOrder.{u2} γ _inst_3))) (OfNat.ofNat.{u2} γ 0 (OfNat.mk.{u2} γ 0 (Zero.zero.{u2} γ (AddZeroClass.toHasZero.{u2} γ (AddMonoid.toAddZeroClass.{u2} γ (AddCommMonoid.toAddMonoid.{u2} γ (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3))))))) (f d)) -> (LT.lt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ (OrderedAddCommMonoid.toPartialOrder.{u2} γ _inst_3))) (Finset.sum.{u2, u1} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s d) (fun (m : α) => f m)) (Finset.sum.{u2, u1} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3) s (fun (m : α) => f m))))
 but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : OrderedAddCommMonoid.{u1} γ] [_inst_4 : CovariantClass.{u1, u1} γ γ (fun (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22561 : γ) (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22563 : γ) => HAdd.hAdd.{u1, u1, u1} γ γ γ (instHAdd.{u1} γ (AddZeroClass.toAdd.{u1} γ (AddMonoid.toAddZeroClass.{u1} γ (AddCommMonoid.toAddMonoid.{u1} γ (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3))))) x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22561 x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22563) (fun (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22576 : γ) (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22578 : γ) => LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22576 x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22578)] {s : Finset.{u2} α} {d : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) d s) -> (forall {f : α -> γ}, (LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) (OfNat.ofNat.{u1} γ 0 (Zero.toOfNat0.{u1} γ (AddMonoid.toZero.{u1} γ (AddCommMonoid.toAddMonoid.{u1} γ (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3))))) (f d)) -> (LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) (Finset.sum.{u1, u2} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3) (Finset.erase.{u2} α (fun (a : α) (b : α) => _inst_2 a b) s d) (fun (m : α) => f m)) (Finset.sum.{u1, u2} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3) s (fun (m : α) => f m))))
+  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : OrderedAddCommMonoid.{u1} γ] [_inst_4 : CovariantClass.{u1, u1} γ γ (fun (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22630 : γ) (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22632 : γ) => HAdd.hAdd.{u1, u1, u1} γ γ γ (instHAdd.{u1} γ (AddZeroClass.toAdd.{u1} γ (AddMonoid.toAddZeroClass.{u1} γ (AddCommMonoid.toAddMonoid.{u1} γ (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3))))) x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22630 x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22632) (fun (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22645 : γ) (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22647 : γ) => LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22645 x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22647)] {s : Finset.{u2} α} {d : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) d s) -> (forall {f : α -> γ}, (LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) (OfNat.ofNat.{u1} γ 0 (Zero.toOfNat0.{u1} γ (AddMonoid.toZero.{u1} γ (AddCommMonoid.toAddMonoid.{u1} γ (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3))))) (f d)) -> (LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) (Finset.sum.{u1, u2} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3) (Finset.erase.{u2} α (fun (a : α) (b : α) => _inst_2 a b) s d) (fun (m : α) => f m)) (Finset.sum.{u1, u2} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3) s (fun (m : α) => f m))))
 Case conversion may be inaccurate. Consider using '#align finset.sum_erase_lt_of_pos Finset.sum_erase_lt_of_posₓ'. -/
 theorem sum_erase_lt_of_pos {γ : Type _} [DecidableEq α] [OrderedAddCommMonoid γ]
     [CovariantClass γ γ (· + ·) (· < ·)] {s : Finset α} {d : α} (hd : d ∈ s) {f : α → γ}
@@ -2794,21 +2796,37 @@ theorem prod_unique_nonempty {α β : Type _} [CommMonoid β] [Unique α] (s : F
 #align finset.prod_unique_nonempty Finset.prod_unique_nonempty
 #align finset.sum_unique_nonempty Finset.sum_unique_nonempty
 
+#print Finset.sum_nat_mod /-
 theorem sum_nat_mod (s : Finset α) (n : ℕ) (f : α → ℕ) :
     (∑ i in s, f i) % n = (∑ i in s, f i % n) % n :=
   (Multiset.sum_nat_mod _ _).trans <| by rw [Finset.sum, Multiset.map_map]
 #align finset.sum_nat_mod Finset.sum_nat_mod
+-/
 
+#print Finset.prod_nat_mod /-
 theorem prod_nat_mod (s : Finset α) (n : ℕ) (f : α → ℕ) :
     (∏ i in s, f i) % n = (∏ i in s, f i % n) % n :=
   (Multiset.prod_nat_mod _ _).trans <| by rw [Finset.prod, Multiset.map_map]
 #align finset.prod_nat_mod Finset.prod_nat_mod
+-/
 
+/- warning: finset.sum_int_mod -> Finset.sum_int_mod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) (n : Int) (f : α -> Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Finset.sum.{0, u1} Int α Int.addCommMonoid s (fun (i : α) => f i)) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Finset.sum.{0, u1} Int α Int.addCommMonoid s (fun (i : α) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (f i) n)) n)
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) (n : Int) (f : α -> Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Finset.sum.{0, u1} Int α Int.instAddCommMonoidInt s (fun (i : α) => f i)) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Finset.sum.{0, u1} Int α Int.instAddCommMonoidInt s (fun (i : α) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (f i) n)) n)
+Case conversion may be inaccurate. Consider using '#align finset.sum_int_mod Finset.sum_int_modₓ'. -/
 theorem sum_int_mod (s : Finset α) (n : ℤ) (f : α → ℤ) :
     (∑ i in s, f i) % n = (∑ i in s, f i % n) % n :=
   (Multiset.sum_int_mod _ _).trans <| by rw [Finset.sum, Multiset.map_map]
 #align finset.sum_int_mod Finset.sum_int_mod
 
+/- warning: finset.prod_int_mod -> Finset.prod_int_mod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) (n : Int) (f : α -> Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Finset.prod.{0, u1} Int α Int.commMonoid s (fun (i : α) => f i)) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (Finset.prod.{0, u1} Int α Int.commMonoid s (fun (i : α) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (f i) n)) n)
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) (n : Int) (f : α -> Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Finset.prod.{0, u1} Int α Int.instCommMonoidInt s (fun (i : α) => f i)) n) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (Finset.prod.{0, u1} Int α Int.instCommMonoidInt s (fun (i : α) => HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (f i) n)) n)
+Case conversion may be inaccurate. Consider using '#align finset.prod_int_mod Finset.prod_int_modₓ'. -/
 theorem prod_int_mod (s : Finset α) (n : ℤ) (f : α → ℤ) :
     (∏ i in s, f i) % n = (∏ i in s, f i % n) % n :=
   (Multiset.prod_int_mod _ _).trans <| by rw [Finset.prod, Multiset.map_map]
