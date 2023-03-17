@@ -590,17 +590,17 @@ theorem smul_inf (a : α) (S T : Subgroup G) : a • (S ⊓ T) = a • S ⊓ a �
   simp [SetLike.ext_iff, mem_pointwise_smul_iff_inv_smul_mem]
 #align subgroup.smul_inf Subgroup.smul_inf
 
-/- warning: subgroup.equiv_smul -> Subgroup.equivSmul is a dubious translation:
+/- warning: subgroup.equiv_smul -> Subgroup.equivSMul is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {G : Type.{u2}} [_inst_1 : Group.{u2} G] [_inst_3 : Group.{u1} α] [_inst_4 : MulDistribMulAction.{u1, u2} α G (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))] (a : α) (H : Subgroup.{u2} G _inst_1), MulEquiv.{u2, u2} (coeSort.{succ u2, succ (succ u2)} (Subgroup.{u2} G _inst_1) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.setLike.{u2} G _inst_1)) H) (coeSort.{succ u2, succ (succ u2)} (Subgroup.{u2} G _inst_1) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.setLike.{u2} G _inst_1)) (SMul.smul.{u1, u2} α (Subgroup.{u2} G _inst_1) (MulAction.toHasSmul.{u1, u2} α (Subgroup.{u2} G _inst_1) (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) (Subgroup.pointwiseMulAction.{u1, u2} α G _inst_1 (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) _inst_4)) a H)) (Subgroup.mul.{u2} G _inst_1 H) (Subgroup.mul.{u2} G _inst_1 (SMul.smul.{u1, u2} α (Subgroup.{u2} G _inst_1) (MulAction.toHasSmul.{u1, u2} α (Subgroup.{u2} G _inst_1) (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) (Subgroup.pointwiseMulAction.{u1, u2} α G _inst_1 (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) _inst_4)) a H))
 but is expected to have type
   forall {α : Type.{u1}} {G : Type.{u2}} [_inst_1 : Group.{u2} G] [_inst_3 : Group.{u1} α] [_inst_4 : MulDistribMulAction.{u1, u2} α G (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))] (a : α) (H : Subgroup.{u2} G _inst_1), MulEquiv.{u2, u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x H)) (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Subgroup.{u2} G _inst_1) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u2} G _inst_1)) x (HSMul.hSMul.{u1, u2, u2} α (Subgroup.{u2} G _inst_1) (Subgroup.{u2} G _inst_1) (instHSMul.{u1, u2} α (Subgroup.{u2} G _inst_1) (MulAction.toSMul.{u1, u2} α (Subgroup.{u2} G _inst_1) (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) (Subgroup.pointwiseMulAction.{u1, u2} α G _inst_1 (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) _inst_4))) a H))) (Subgroup.mul.{u2} G _inst_1 H) (Subgroup.mul.{u2} G _inst_1 (HSMul.hSMul.{u1, u2, u2} α (Subgroup.{u2} G _inst_1) (Subgroup.{u2} G _inst_1) (instHSMul.{u1, u2} α (Subgroup.{u2} G _inst_1) (MulAction.toSMul.{u1, u2} α (Subgroup.{u2} G _inst_1) (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) (Subgroup.pointwiseMulAction.{u1, u2} α G _inst_1 (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)) _inst_4))) a H))
-Case conversion may be inaccurate. Consider using '#align subgroup.equiv_smul Subgroup.equivSmulₓ'. -/
+Case conversion may be inaccurate. Consider using '#align subgroup.equiv_smul Subgroup.equivSMulₓ'. -/
 /-- Applying a `mul_distrib_mul_action` results in an isomorphic subgroup -/
 @[simps]
-def equivSmul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
+def equivSMul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
   (MulDistribMulAction.toMulEquiv G a).subgroupMap H
-#align subgroup.equiv_smul Subgroup.equivSmul
+#align subgroup.equiv_smul Subgroup.equivSMul
 
 /- warning: subgroup.subgroup_mul_singleton -> Subgroup.subgroup_mul_singleton is a dubious translation:
 lean 3 declaration is

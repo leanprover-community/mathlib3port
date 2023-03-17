@@ -90,12 +90,12 @@ Case conversion may be inaccurate. Consider using '#align commensurable.quot_con
 /-- Equivalence of `K/H ⊓ K` with `gKg⁻¹/gHg⁻¹ ⊓ gKg⁻¹`-/
 def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
     K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
-  Quotient.congr (K.equivSmul g).toEquiv fun a b =>
+  Quotient.congr (K.equivSMul g).toEquiv fun a b =>
     by
     dsimp
     rw [← Quotient.eq'', ← Quotient.eq'', QuotientGroup.eq', QuotientGroup.eq',
       Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
-      Subgroup.equivSmul_apply_coe]
+      Subgroup.equivSMul_apply_coe]
     exact subgroup.smul_mem_pointwise_smul_iff.symm
 #align commensurable.quot_conj_equiv Commensurable.quotConjEquiv
 

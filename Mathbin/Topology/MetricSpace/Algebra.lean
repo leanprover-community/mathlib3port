@@ -178,48 +178,48 @@ instance NNReal.hasLipschitzAdd : LipschitzAdd ℝ≥0
 
 end LipschitzMul
 
-section BoundedSmul
+section BoundedSMul
 
 variable [Zero α] [Zero β] [SMul α β]
 
-#print BoundedSmul /-
+#print BoundedSMul /-
 /-- Mixin typeclass on a scalar action of a metric space `α` on a metric space `β` both with
 distinguished points `0`, requiring compatibility of the action in the sense that
 `dist (x • y₁) (x • y₂) ≤ dist x 0 * dist y₁ y₂` and
 `dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0`. -/
-class BoundedSmul : Prop where
+class BoundedSMul : Prop where
   dist_smul_pair' : ∀ x : α, ∀ y₁ y₂ : β, dist (x • y₁) (x • y₂) ≤ dist x 0 * dist y₁ y₂
   dist_pair_smul' : ∀ x₁ x₂ : α, ∀ y : β, dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0
-#align has_bounded_smul BoundedSmul
+#align has_bounded_smul BoundedSMul
 -/
 
-variable {α β} [BoundedSmul α β]
+variable {α β} [BoundedSMul α β]
 
 /- warning: dist_smul_pair -> dist_smul_pair is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSmul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x : α) (y₁ : β) (y₂ : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (SMul.smul.{u1, u2} α β _inst_5 x y₁) (SMul.smul.{u1, u2} α β _inst_5 x y₂)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_3)))) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) y₁ y₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x : α) (y₁ : β) (y₂ : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (SMul.smul.{u1, u2} α β _inst_5 x y₁) (SMul.smul.{u1, u2} α β _inst_5 x y₂)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_3)))) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) y₁ y₂))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSmul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x : α) (y₁ : β) (y₂ : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x y₁) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x y₂)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_3))) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) y₁ y₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x : α) (y₁ : β) (y₂ : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x y₁) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x y₂)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_3))) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) y₁ y₂))
 Case conversion may be inaccurate. Consider using '#align dist_smul_pair dist_smul_pairₓ'. -/
 theorem dist_smul_pair (x : α) (y₁ y₂ : β) : dist (x • y₁) (x • y₂) ≤ dist x 0 * dist y₁ y₂ :=
-  BoundedSmul.dist_smul_pair' x y₁ y₂
+  BoundedSMul.dist_smul_pair' x y₁ y₂
 #align dist_smul_pair dist_smul_pair
 
 /- warning: dist_pair_smul -> dist_pair_smul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSmul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x₁ : α) (x₂ : α) (y : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (SMul.smul.{u1, u2} α β _inst_5 x₁ y) (SMul.smul.{u1, u2} α β _inst_5 x₂ y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_4)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x₁ : α) (x₂ : α) (y : β), LE.le.{0} Real Real.hasLe (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) (SMul.smul.{u1, u2} α β _inst_5 x₁ y) (SMul.smul.{u1, u2} α β _inst_5 x₂ y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u2} β (PseudoMetricSpace.toHasDist.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_4)))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSmul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x₁ : α) (x₂ : α) (y : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x₁ y) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x₂ y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_4))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] [_inst_3 : Zero.{u1} α] [_inst_4 : Zero.{u2} β] [_inst_5 : SMul.{u1, u2} α β] [_inst_6 : BoundedSMul.{u1, u2} α β _inst_1 _inst_2 _inst_3 _inst_4 _inst_5] (x₁ : α) (x₂ : α) (y : β), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x₁ y) (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_5) x₂ y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x₁ x₂) (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_4))))
 Case conversion may be inaccurate. Consider using '#align dist_pair_smul dist_pair_smulₓ'. -/
 theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0 :=
-  BoundedSmul.dist_pair_smul' x₁ x₂ y
+  BoundedSMul.dist_pair_smul' x₁ x₂ y
 #align dist_pair_smul dist_pair_smul
 
-#print BoundedSmul.continuousSMul /-
+#print BoundedSMul.continuousSMul /-
 -- see Note [lower instance priority]
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
-instance (priority := 100) BoundedSmul.continuousSMul : ContinuousSMul α β
+instance (priority := 100) BoundedSMul.continuousSMul : ContinuousSMul α β
     where continuous_smul := by
     rw [Metric.continuous_iff]
     rintro ⟨a, b⟩ ε hε
@@ -252,48 +252,48 @@ instance (priority := 100) BoundedSmul.continuousSMul : ContinuousSMul α β
       have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by
         rw [inv_mul_lt_iff] <;> nlinarith
       nlinarith
-#align has_bounded_smul.has_continuous_smul BoundedSmul.continuousSMul
+#align has_bounded_smul.has_continuous_smul BoundedSMul.continuousSMul
 -/
 
-/- warning: real.has_bounded_smul -> Real.hasBoundedSmul is a dubious translation:
+/- warning: real.has_bounded_smul -> Real.boundedSMul is a dubious translation:
 lean 3 declaration is
-  BoundedSmul.{0, 0} Real Real Real.pseudoMetricSpace Real.pseudoMetricSpace Real.hasZero Real.hasZero (Mul.toSMul.{0} Real Real.hasMul)
+  BoundedSMul.{0, 0} Real Real Real.pseudoMetricSpace Real.pseudoMetricSpace Real.hasZero Real.hasZero (Mul.toSMul.{0} Real Real.hasMul)
 but is expected to have type
-  BoundedSmul.{0, 0} Real Real Real.pseudoMetricSpace Real.pseudoMetricSpace Real.instZeroReal Real.instZeroReal (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (Algebra.id.{0} Real Real.instCommSemiringReal))
-Case conversion may be inaccurate. Consider using '#align real.has_bounded_smul Real.hasBoundedSmulₓ'. -/
+  BoundedSMul.{0, 0} Real Real Real.pseudoMetricSpace Real.pseudoMetricSpace Real.instZeroReal Real.instZeroReal (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (Algebra.id.{0} Real Real.instCommSemiringReal))
+Case conversion may be inaccurate. Consider using '#align real.has_bounded_smul Real.boundedSMulₓ'. -/
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
-instance Real.hasBoundedSmul : BoundedSmul ℝ ℝ
+instance Real.boundedSMul : BoundedSMul ℝ ℝ
     where
   dist_smul_pair' x y₁ y₂ := by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
   dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
-#align real.has_bounded_smul Real.hasBoundedSmul
+#align real.has_bounded_smul Real.boundedSMul
 
-/- warning: nnreal.has_bounded_smul -> NNReal.hasBoundedSmul is a dubious translation:
+/- warning: nnreal.has_bounded_smul -> NNReal.boundedSMul is a dubious translation:
 lean 3 declaration is
-  BoundedSmul.{0, 0} NNReal NNReal NNReal.pseudoMetricSpace NNReal.pseudoMetricSpace (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (Mul.toSMul.{0} NNReal (Distrib.toHasMul.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))
+  BoundedSMul.{0, 0} NNReal NNReal NNReal.pseudoMetricSpace NNReal.pseudoMetricSpace (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (Mul.toSMul.{0} NNReal (Distrib.toHasMul.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))
 but is expected to have type
-  BoundedSmul.{0, 0} NNReal NNReal instPseudoMetricSpaceNNReal instPseudoMetricSpaceNNReal instNNRealZero instNNRealZero (Algebra.toSMul.{0, 0} NNReal NNReal instNNRealCommSemiring instNNRealSemiring (Algebra.id.{0} NNReal instNNRealCommSemiring))
-Case conversion may be inaccurate. Consider using '#align nnreal.has_bounded_smul NNReal.hasBoundedSmulₓ'. -/
-instance NNReal.hasBoundedSmul : BoundedSmul ℝ≥0 ℝ≥0
+  BoundedSMul.{0, 0} NNReal NNReal instPseudoMetricSpaceNNReal instPseudoMetricSpaceNNReal instNNRealZero instNNRealZero (Algebra.toSMul.{0, 0} NNReal NNReal instNNRealCommSemiring instNNRealSemiring (Algebra.id.{0} NNReal instNNRealCommSemiring))
+Case conversion may be inaccurate. Consider using '#align nnreal.has_bounded_smul NNReal.boundedSMulₓ'. -/
+instance NNReal.boundedSMul : BoundedSMul ℝ≥0 ℝ≥0
     where
   dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
   dist_pair_smul' x₁ x₂ y := by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
-#align nnreal.has_bounded_smul NNReal.hasBoundedSmul
+#align nnreal.has_bounded_smul NNReal.boundedSMul
 
-#print BoundedSmul.op /-
+#print BoundedSMul.op /-
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
-instance BoundedSmul.op [SMul αᵐᵒᵖ β] [IsCentralScalar α β] : BoundedSmul αᵐᵒᵖ β
+instance BoundedSMul.op [SMul αᵐᵒᵖ β] [IsCentralScalar α β] : BoundedSMul αᵐᵒᵖ β
     where
   dist_smul_pair' :=
     MulOpposite.rec' fun x y₁ y₂ => by simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=
     MulOpposite.rec' fun x₁ =>
       MulOpposite.rec' fun x₂ y => by simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
-#align has_bounded_smul.op BoundedSmul.op
+#align has_bounded_smul.op BoundedSMul.op
 -/
 
-end BoundedSmul
+end BoundedSMul
 
 instance [Monoid α] [LipschitzMul α] : LipschitzAdd (Additive α) :=
   ⟨@LipschitzMul.lipschitz_mul α _ _ _⟩

@@ -357,7 +357,7 @@ variable {p} {G}
 
 /-- Sylow subgroups are isomorphic -/
 def Sylow.equivSmul (P : Sylow p G) (g : G) : P ≃* (g • P : Sylow p G) :=
-  equivSmul (MulAut.conj g) ↑P
+  equivSMul (MulAut.conj g) ↑P
 #align sylow.equiv_smul Sylow.equivSmul
 
 /-- Sylow subgroups are isomorphic -/

@@ -51,16 +51,16 @@ Ramsey theory, ultrafilter
 
 open Filter
 
-#print Ultrafilter.hasMul /-
+#print Ultrafilter.mul /-
 /-- Multiplication of ultrafilters given by `∀ᶠ m in U*V, p m ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m*m')`. -/
 @[to_additive
       "Addition of ultrafilters given by\n`∀ᶠ m in U+V, p m ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m+m')`."]
-def Ultrafilter.hasMul {M} [Mul M] : Mul (Ultrafilter M) where mul U V := (· * ·) <$> U <*> V
-#align ultrafilter.has_mul Ultrafilter.hasMul
-#align ultrafilter.has_add Ultrafilter.hasAdd
+def Ultrafilter.mul {M} [Mul M] : Mul (Ultrafilter M) where mul U V := (· * ·) <$> U <*> V
+#align ultrafilter.has_mul Ultrafilter.mul
+#align ultrafilter.has_add Ultrafilter.add
 -/
 
-attribute [local instance] Ultrafilter.hasMul Ultrafilter.hasAdd
+attribute [local instance] Ultrafilter.mul Ultrafilter.add
 
 #print Ultrafilter.eventually_mul /-
 /- We could have taken this as the definition of `U * V`, but then we would have to prove that it
@@ -78,7 +78,7 @@ theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → 
 @[to_additive
       "Additive semigroup structure on `ultrafilter M` induced by an additive semigroup\nstructure on `M`."]
 def Ultrafilter.semigroup {M} [Semigroup M] : Semigroup (Ultrafilter M) :=
-  { Ultrafilter.hasMul with
+  { Ultrafilter.mul with
     mul_assoc := fun U V W =>
       Ultrafilter.coe_inj.mp <|
         Filter.ext' fun p => by simp only [Ultrafilter.eventually_mul, mul_assoc] }
@@ -90,9 +90,9 @@ attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
 /- warning: ultrafilter.continuous_mul_left -> Ultrafilter.continuous_mul_left is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (V : Ultrafilter.{u1} M), Continuous.{u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (fun (_x : Ultrafilter.{u1} M) => HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.hasMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) _x V)
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (V : Ultrafilter.{u1} M), Continuous.{u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (fun (_x : Ultrafilter.{u1} M) => HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) _x V)
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (V : Ultrafilter.{u1} M), Continuous.{u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (fun (_x : Ultrafilter.{u1} M) => HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.hasMul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) _x V)
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (V : Ultrafilter.{u1} M), Continuous.{u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (Ultrafilter.topologicalSpace.{u1} M) (fun (_x : Ultrafilter.{u1} M) => HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) _x V)
 Case conversion may be inaccurate. Consider using '#align ultrafilter.continuous_mul_left Ultrafilter.continuous_mul_leftₓ'. -/
 -- We don't prove `continuous_mul_right`, because in general it is false!
 @[to_additive]
@@ -156,9 +156,9 @@ theorem FP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ FP a) :
 
 /- warning: hindman.exists_idempotent_ultrafilter_le_FP -> Hindman.exists_idempotent_ultrafilter_le_FP is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M), Exists.{succ u1} (Ultrafilter.{u1} M) (fun (U : Ultrafilter.{u1} M) => And (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.hasMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) U U) U) (Filter.Eventually.{u1} M (fun (m : M) => Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} M) (Filter.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} M) (Filter.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} M) (Filter.{u1} M) (Ultrafilter.Filter.hasCoeT.{u1} M))) U)))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M), Exists.{succ u1} (Ultrafilter.{u1} M) (fun (U : Ultrafilter.{u1} M) => And (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) U U) U) (Filter.Eventually.{u1} M (fun (m : M) => Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} M) (Filter.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} M) (Filter.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} M) (Filter.{u1} M) (Ultrafilter.Filter.hasCoeT.{u1} M))) U)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M), Exists.{succ u1} (Ultrafilter.{u1} M) (fun (U : Ultrafilter.{u1} M) => And (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.hasMul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) U U) U) (Filter.Eventually.{u1} M (fun (m : M) => Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) (Ultrafilter.toFilter.{u1} M U)))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M), Exists.{succ u1} (Ultrafilter.{u1} M) (fun (U : Ultrafilter.{u1} M) => And (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) U U) U) (Filter.Eventually.{u1} M (fun (m : M) => Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) m (Hindman.FP.{u1} M _inst_1 a)) (Ultrafilter.toFilter.{u1} M U)))
 Case conversion may be inaccurate. Consider using '#align hindman.exists_idempotent_ultrafilter_le_FP Hindman.exists_idempotent_ultrafilter_le_FPₓ'. -/
 @[to_additive exists_idempotent_ultrafilter_le_FS]
 theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
@@ -196,9 +196,9 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
 
 /- warning: hindman.exists_FP_of_large -> Hindman.exists_FP_of_large is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (U : Ultrafilter.{u1} M), (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.hasMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) U U) U) -> (forall (s₀ : Set.{u1} M), (Membership.Mem.{u1, u1} (Set.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.hasMem.{u1} M) s₀ U) -> (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) s₀)))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (U : Ultrafilter.{u1} M), (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))) U U) U) -> (forall (s₀ : Set.{u1} M), (Membership.Mem.{u1, u1} (Set.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.hasMem.{u1} M) s₀ U) -> (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) s₀)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (U : Ultrafilter.{u1} M), (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.hasMul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) U U) U) -> (forall (s₀ : Set.{u1} M), (Membership.mem.{u1, u1} (Set.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.instMembershipSetUltrafilter.{u1} M) s₀ U) -> (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) s₀)))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (U : Ultrafilter.{u1} M), (Eq.{succ u1} (Ultrafilter.{u1} M) (HMul.hMul.{u1, u1, u1} (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.{u1} M) (instHMul.{u1} (Ultrafilter.{u1} M) (Ultrafilter.mul.{u1} M (Semigroup.toMul.{u1} M _inst_1))) U U) U) -> (forall (s₀ : Set.{u1} M), (Membership.mem.{u1, u1} (Set.{u1} M) (Ultrafilter.{u1} M) (Ultrafilter.instMembershipSetUltrafilter.{u1} M) s₀ U) -> (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) s₀)))
 Case conversion may be inaccurate. Consider using '#align hindman.exists_FP_of_large Hindman.exists_FP_of_largeₓ'. -/
 @[to_additive exists_FS_of_large]
 theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U = U) (s₀ : Set M)

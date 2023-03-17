@@ -61,7 +61,7 @@ theorem coe_of {X : Type _} (point : X) : ↥(of point) = X :=
 -/
 
 alias of ← _root_.prod.Pointed
-#align prod.Pointed prod.Pointed
+#align prod.Pointed Prod.Pointed
 
 instance : Inhabited Pointed :=
   ⟨of ((), ())⟩

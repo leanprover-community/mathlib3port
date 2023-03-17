@@ -1115,7 +1115,7 @@ theorem norm_compContinuous_le [TopologicalSpace γ] (f : α →ᵇ β) (g : C(�
 
 end NormedAddCommGroup
 
-section BoundedSmul
+section BoundedSMul
 
 /-!
 ### `has_bounded_smul` (in particular, topological module) structure
@@ -1131,7 +1131,7 @@ variable {𝕜 : Type _} [PseudoMetricSpace 𝕜] [TopologicalSpace α] [PseudoM
 
 section SMul
 
-variable [Zero 𝕜] [Zero β] [SMul 𝕜 β] [BoundedSmul 𝕜 β]
+variable [Zero 𝕜] [Zero β] [SMul 𝕜 β] [BoundedSMul 𝕜 β]
 
 instance : SMul 𝕜 (α →ᵇ β)
     where smul c f :=
@@ -1156,7 +1156,7 @@ theorem smul_apply (c : 𝕜) (f : α →ᵇ β) (x : α) : (c • f) x = c • 
 instance [SMul 𝕜ᵐᵒᵖ β] [IsCentralScalar 𝕜 β] : IsCentralScalar 𝕜 (α →ᵇ β)
     where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
-instance : BoundedSmul 𝕜 (α →ᵇ β)
+instance : BoundedSMul 𝕜 (α →ᵇ β)
     where
   dist_smul_pair' c f₁ f₂ :=
     by
@@ -1176,7 +1176,7 @@ end SMul
 
 section MulAction
 
-variable [MonoidWithZero 𝕜] [Zero β] [MulAction 𝕜 β] [BoundedSmul 𝕜 β]
+variable [MonoidWithZero 𝕜] [Zero β] [MulAction 𝕜 β] [BoundedSMul 𝕜 β]
 
 instance : MulAction 𝕜 (α →ᵇ β) :=
   FunLike.coe_injective.MulAction _ coe_smul
@@ -1185,7 +1185,7 @@ end MulAction
 
 section DistribMulAction
 
-variable [MonoidWithZero 𝕜] [AddMonoid β] [DistribMulAction 𝕜 β] [BoundedSmul 𝕜 β]
+variable [MonoidWithZero 𝕜] [AddMonoid β] [DistribMulAction 𝕜 β] [BoundedSMul 𝕜 β]
 
 variable [LipschitzAdd β]
 
@@ -1196,7 +1196,7 @@ end DistribMulAction
 
 section Module
 
-variable [Semiring 𝕜] [AddCommMonoid β] [Module 𝕜 β] [BoundedSmul 𝕜 β]
+variable [Semiring 𝕜] [AddCommMonoid β] [Module 𝕜 β] [BoundedSMul 𝕜 β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
@@ -1232,7 +1232,7 @@ def toContinuousMapLinearMap : (α →ᵇ β) →ₗ[𝕜] C(α, β)
 
 end Module
 
-end BoundedSmul
+end BoundedSMul
 
 section NormedSpace
 

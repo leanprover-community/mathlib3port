@@ -200,12 +200,6 @@ instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
 #align ulift.add_monoid_with_one ULift.addMonoidWithOne
 -/
 
-/- warning: ulift.nat_cast_down -> ULift.nat_cast_down is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Nat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (Nat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (AddMonoidWithOne.toNatCast.{max u1 u2} (ULift.{u2, u1} α) (ULift.addMonoidWithOne.{u1, u2} α _inst_1))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : AddMonoidWithOne.{u2} α] (n : Nat), Eq.{succ u2} α (ULift.down.{u1, u2} α (Nat.cast.{max u2 u1} (ULift.{u1, u2} α) (AddMonoidWithOne.toNatCast.{max u2 u1} (ULift.{u1, u2} α) (ULift.addMonoidWithOne.{u2, u1} α _inst_1)) n)) (Nat.cast.{u2} α (AddMonoidWithOne.toNatCast.{u2} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align ulift.nat_cast_down ULift.nat_cast_downₓ'. -/
 @[simp]
 theorem nat_cast_down [AddMonoidWithOne α] (n : ℕ) : (n : ULift α).down = n :=
   rfl
@@ -259,12 +253,6 @@ instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
 #align ulift.add_group_with_one ULift.addGroupWithOne
 -/
 
-/- warning: ulift.int_cast_down -> ULift.int_cast_down is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Int (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (Int.castCoe.{max u1 u2} (ULift.{u2, u1} α) (AddGroupWithOne.toHasIntCast.{max u1 u2} (ULift.{u2, u1} α) (ULift.addGroupWithOne.{u1, u2} α _inst_1))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : AddGroupWithOne.{u2} α] (n : Int), Eq.{succ u2} α (ULift.down.{u1, u2} α (Int.cast.{max u2 u1} (ULift.{u1, u2} α) (AddGroupWithOne.toIntCast.{max u2 u1} (ULift.{u1, u2} α) (ULift.addGroupWithOne.{u2, u1} α _inst_1)) n)) (Int.cast.{u2} α (AddGroupWithOne.toIntCast.{u2} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align ulift.int_cast_down ULift.int_cast_downₓ'. -/
 @[simp]
 theorem int_cast_down [AddGroupWithOne α] (n : ℤ) : (n : ULift α).down = n :=
   rfl
