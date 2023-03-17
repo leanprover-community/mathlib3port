@@ -535,7 +535,7 @@ theorem supᵢ_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : �
       · exact le_sup_of_le_right (le_supᵢ₂ n h)
       · exact h ▸ le_sup_left
     · refine' sup_le _ (bsupᵢ_mono fun n hn => hn.trans m.le_succ)
-      convert @le_supᵢ₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
+      convert@le_supᵢ₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
       rfl
 #align measure_theory.measure.lebesgue_decomposition.supr_succ_eq_sup MeasureTheory.Measure.LebesgueDecomposition.supᵢ_succ_eq_sup
 
@@ -625,7 +625,7 @@ theorem haveLebesgueDecompositionOfFiniteMeasure [IsFiniteMeasure μ] [IsFiniteM
           exact le_supₛ ⟨⨆ (k : ℕ) (hk : k ≤ n), f k, supr_mem_measurable_le' _ hf₁ _, rfl⟩
       · intro n
         refine' Measurable.aeMeasurable _
-        convert (supr_mem_measurable_le _ hf₁ n).1
+        convert(supr_mem_measurable_le _ hf₁ n).1
         ext
         simp
       · refine' Filter.eventually_of_forall fun a => _

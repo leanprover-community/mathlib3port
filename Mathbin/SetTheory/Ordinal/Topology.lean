@@ -59,7 +59,7 @@ theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
     · convert isOpen_gt' (1 : Ordinal)
       ext
       exact ordinal.lt_one_iff_zero.symm
-    · convert @isOpen_Ioo _ _ _ _ b (a + 1)
+    · convert@isOpen_Ioo _ _ _ _ b (a + 1)
       ext c
       refine' ⟨fun hc => _, _⟩
       · rw [Set.mem_singleton_iff.1 hc]

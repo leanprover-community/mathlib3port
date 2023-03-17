@@ -2366,7 +2366,7 @@ Case conversion may be inaccurate. Consider using '#align finset.min'_image Fins
 theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
     (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) :=
   by
-  convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
+  convert@max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
     convert h
   rw [nonempty.image_iff]
 #align finset.min'_image Finset.min'_image
@@ -2469,7 +2469,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithTop.{u1} α) (Finset.min.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)) (WithTop.some.{u1} α x)
 Case conversion may be inaccurate. Consider using '#align finset.min_erase_ne_self Finset.min_erase_ne_selfₓ'. -/
 theorem min_erase_ne_self {s : Finset α} : (s.eraseₓ x).min ≠ x := by
-  convert @max_erase_ne_self αᵒᵈ _ _ _
+  convert@max_erase_ne_self αᵒᵈ _ _ _
 #align finset.min_erase_ne_self Finset.min_erase_ne_self
 
 /- warning: finset.exists_next_right -> Finset.exists_next_right is a dubious translation:

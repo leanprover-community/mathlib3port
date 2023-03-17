@@ -111,8 +111,7 @@ theorem hasFderivAt_polarCoord_symm (p : ℝ × ℝ) :
       p :=
   by
   rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
-  convert
-      HasFderivAt.prod
+  convert HasFderivAt.prod
         (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_hasFderivAt p hasFderivAt_snd))
         (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_hasFderivAt p hasFderivAt_snd)) using
       2 <;>

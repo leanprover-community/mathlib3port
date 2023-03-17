@@ -140,8 +140,8 @@ theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| Fractio
   · rintro ⟨x, y, hx, hy, h⟩
     constructor
     rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
-    convert
-      (mk'_mul_coe_ideal_eq_coe_ideal (FractionRing R) <| mem_nonZeroDivisors_of_ne_zero hy).2 h
+    convert(mk'_mul_coe_ideal_eq_coe_ideal (FractionRing R) <| mem_nonZeroDivisors_of_ne_zero hy).2
+        h
     apply (Ne.isUnit _).unit_spec
     rwa [Ne, mk'_eq_zero_iff_eq_zero]
 #align class_group.mk_eq_mk_of_coe_ideal ClassGroup.mk_eq_mk_of_coe_ideal

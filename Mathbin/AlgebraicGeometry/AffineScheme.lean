@@ -239,8 +239,7 @@ theorem IsAffineOpen.fromSpec_image_top {X : Scheme} {U : Opens X.carrier} (hU :
 theorem IsAffineOpen.isCompact {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
     IsCompact (U : Set X.carrier) :=
   by
-  convert
-    @IsCompact.image _ _ _ _ Set.univ hU.from_Spec.1.base PrimeSpectrum.compactSpace.1
+  convert@IsCompact.image _ _ _ _ Set.univ hU.from_Spec.1.base PrimeSpectrum.compactSpace.1
       (by continuity)
   convert hU.from_Spec_range.symm
   exact Set.image_univ
@@ -340,8 +339,7 @@ theorem IsAffineOpen.fromSpec_app_eq {X : Scheme} {U : Opens X.carrier} (hU : Is
 theorem IsAffineOpen.basicOpen_is_affine {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U)
     (f : X.Presheaf.obj (op U)) : IsAffineOpen (X.basicOpen f) :=
   by
-  convert
-    range_is_affine_open_of_open_immersion
+  convert range_is_affine_open_of_open_immersion
       (Scheme.Spec.map
           (CommRingCat.ofHom (algebraMap (X.presheaf.obj (op U)) (Localization.Away f))).op ≫
         hU.from_Spec)
@@ -414,8 +412,7 @@ theorem isBasis_basicOpen (X : Scheme) [IsAffine X] :
     Opens.IsBasis (Set.range (X.basicOpen : X.Presheaf.obj (op ⊤) → Opens X.carrier)) :=
   by
   delta opens.is_basis
-  convert
-    prime_spectrum.is_basis_basic_opens.inducing
+  convert prime_spectrum.is_basis_basic_opens.inducing
       (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso X.iso_Spec)).Inducing using
     1
   ext
@@ -655,8 +652,9 @@ theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.carrier} (h
   simp only [← category.assoc]
   trans _ ≫ (structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ ⟨_, _⟩
   · rfl
-  convert
-    (structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ_res (hom_of_le le_top) ⟨_, _⟩ using 2
+  convert(structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ_res (hom_of_le le_top)
+      ⟨_, _⟩ using
+    2
   rw [category.assoc]
   erw [nat_trans.naturality]
   rw [← LocallyRingedSpace.Γ_map_op, ← LocallyRingedSpace.Γ.map_comp_assoc, ← op_comp]

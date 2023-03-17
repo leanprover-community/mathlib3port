@@ -52,7 +52,7 @@ theorem Submartingale.expected_stoppedValue_mono [SigmaFiniteFiltration μ 𝒢]
       by
       intro i
       refine' (hτ i).inter _
-      convert (hπ i).compl
+      convert(hπ i).compl
       ext x
       simpa
     rw [integral_finset_sum]

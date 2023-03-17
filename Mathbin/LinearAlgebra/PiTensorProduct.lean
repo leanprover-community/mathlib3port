@@ -222,7 +222,7 @@ protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s 
   refine' AddCon.induction_on z fun x => FreeAddMonoid.recOn x C0 _
   simp_rw [AddCon.coe_add]
   refine' fun f y ih => Cp _ ih
-  convert @C1 f.1 f.2
+  convert@C1 f.1 f.2
   simp only [Prod.mk.eta]
 #align pi_tensor_product.induction_on' PiTensorProduct.induction_on'
 

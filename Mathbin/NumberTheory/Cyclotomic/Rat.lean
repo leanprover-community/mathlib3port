@@ -276,8 +276,8 @@ noncomputable def subOneIntegralPowerBasis [IsCyclotomicExtension {p ^ k} ℚ K]
       Subalgebra.sub_mem _ (hζ.IsIntegral (p ^ k).Pos) (Subalgebra.one_mem _))
     (by
       simp only [integral_power_basis_gen]
-      convert
-        Subalgebra.add_mem _ (self_mem_adjoin_singleton ℤ (⟨ζ - 1, _⟩ : 𝓞 K)) (Subalgebra.one_mem _)
+      convert Subalgebra.add_mem _ (self_mem_adjoin_singleton ℤ (⟨ζ - 1, _⟩ : 𝓞 K))
+          (Subalgebra.one_mem _)
       simp)
 #align is_primitive_root.sub_one_integral_power_basis IsPrimitiveRoot.subOneIntegralPowerBasis
 

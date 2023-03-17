@@ -393,7 +393,7 @@ theorem bUnionIndex_le (πi : ∀ J, Prepartition J) (J : Box ι) : π.bUnionInd
 #align box_integral.prepartition.bUnion_index_le BoxIntegral.Prepartition.bUnionIndex_le
 
 theorem mem_bUnionIndex (hJ : J ∈ π.bunionᵢ πi) : J ∈ πi (π.bUnionIndex πi J) := by
-  convert (π.mem_bUnion.1 hJ).choose_spec.snd <;> exact dif_pos hJ
+  convert(π.mem_bUnion.1 hJ).choose_spec.snd <;> exact dif_pos hJ
 #align box_integral.prepartition.mem_bUnion_index BoxIntegral.Prepartition.mem_bUnionIndex
 
 theorem le_bUnionIndex (hJ : J ∈ π.bunionᵢ πi) : J ≤ π.bUnionIndex πi J :=
@@ -656,7 +656,7 @@ theorem union_filter_not (π : Prepartition I) (p : Box ι → Prop) :
     (π.filterₓ fun J => ¬p J).unionᵢ = π.unionᵢ \ (π.filterₓ p).unionᵢ :=
   by
   simp only [prepartition.Union]
-  convert (@Set.bunionᵢ_diff_bunionᵢ_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
+  convert(@Set.bunionᵢ_diff_bunionᵢ_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
   · ext (J x)
     simp (config := { contextual := true })
   · convert π.pairwise_disjoint

@@ -1613,9 +1613,8 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AeS
     intro x hx
     rw [← ENNReal.tsum_coe_ne_top_iff_summable_coe]
     exact hx.ne
-  convert
-    (MeasureTheory.hasSum_integral_of_dominated_convergence (fun i a => ‖f i a‖₊) hf _ hhh ⟨_, _⟩
-          _).tsum_eq.symm
+  convert(MeasureTheory.hasSum_integral_of_dominated_convergence (fun i a => ‖f i a‖₊) hf _ hhh
+          ⟨_, _⟩ _).tsum_eq.symm
   · intro n
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
@@ -1663,8 +1662,7 @@ theorem integral_map_of_stronglyMeasurable {β} [MeasurableSpace β] {φ : α �
   refine'
     tendsto_nhds_unique
       (tendsto_integral_approx_on_of_measurable_of_range_subset hfm.measurable hfi _ subset.rfl) _
-  convert
-    tendsto_integral_approx_on_of_measurable_of_range_subset (hfm.measurable.comp hφ)
+  convert tendsto_integral_approx_on_of_measurable_of_range_subset (hfm.measurable.comp hφ)
       ((integrable_map_measure hfm.ae_strongly_measurable hφ.ae_measurable).1 hfi) (range f ∪ {0})
       (by simp [insert_subset_insert, Set.range_comp_subset_range]) using
     1

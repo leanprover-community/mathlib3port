@@ -277,8 +277,7 @@ theorem IsROrC.measurable_of_real : Measurable (coe : ℝ → 𝕜) :=
 theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x))
     (him : Measurable fun x => IsROrC.im (f x)) : Measurable f :=
   by
-  convert
-    (is_R_or_C.measurable_of_real.comp hre).add
+  convert(is_R_or_C.measurable_of_real.comp hre).add
       ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
   · ext1 x
     exact (IsROrC.re_add_im _).symm
@@ -288,8 +287,7 @@ theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x))
 theorem aeMeasurableOfReIm (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ)
     (him : AeMeasurable (fun x => IsROrC.im (f x)) μ) : AeMeasurable f μ :=
   by
-  convert
-    (is_R_or_C.measurable_of_real.comp_ae_measurable hre).add
+  convert(is_R_or_C.measurable_of_real.comp_ae_measurable hre).add
       ((is_R_or_C.measurable_of_real.comp_ae_measurable him).mul_const IsROrC.i)
   · ext1 x
     exact (IsROrC.re_add_im _).symm

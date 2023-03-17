@@ -1620,7 +1620,7 @@ variable [CommSemiring R]
 theorem x_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} :
     (x : PowerSeries R) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 :=
   by
-  convert @MvPowerSeries.x_pow_dvd_iff Unit R _ () n φ; apply propext
+  convert@MvPowerSeries.x_pow_dvd_iff Unit R _ () n φ; apply propext
   classical
     constructor <;> intro h m hm
     · rw [Finsupp.unique_single m]

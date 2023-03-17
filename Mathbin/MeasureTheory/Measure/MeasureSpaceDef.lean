@@ -267,7 +267,7 @@ theorem measure_unionᵢ_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b
 theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
     (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) : μ (⋃ i ∈ s, f i) < ∞ :=
   by
-  convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
+  convert(measure_bUnion_finset_le hs.to_finset f).trans_lt _
   · ext
     rw [finite.mem_to_finset]
   apply ENNReal.sum_lt_top; simpa only [finite.mem_to_finset]

@@ -541,8 +541,8 @@ theorem integral_sub_zpow_of_ne {n : ℤ} (hn : n ≠ -1) (c w : ℂ) (R : ℝ) 
     ∀ z, z ≠ w ∨ -1 ≤ n → HasDerivAt (fun z => (z - w) ^ (n + 1) / (n + 1)) ((z - w) ^ n) z :=
     by
     intro z hne
-    convert
-      ((hasDerivAt_zpow (n + 1) _ (hne.imp _ _)).comp z ((hasDerivAt_id z).sub_const w)).div_const
+    convert((hasDerivAt_zpow (n + 1) _ (hne.imp _ _)).comp z
+            ((hasDerivAt_id z).sub_const w)).div_const
         _ using
       1
     · have hn' : (n + 1 : ℂ) ≠ 0 := by
@@ -647,7 +647,7 @@ theorem hasSum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} {
     simp only [smul_smul]
     refine' HasSum.smul_const _ _
     have : ‖w / (circleMap c R θ - c)‖ < 1 := by simpa [abs_of_pos hR] using hwR.2
-    convert (hasSum_geometric_of_norm_lt_1 this).mul_right _
+    convert(hasSum_geometric_of_norm_lt_1 this).mul_right _
     simp [← sub_sub, ← mul_inv, sub_mul, div_mul_cancel _ (circleMap_ne_center hR.ne')]
 #align has_sum_two_pi_I_cauchy_power_series_integral hasSum_two_pi_I_cauchy_power_series_integral
 

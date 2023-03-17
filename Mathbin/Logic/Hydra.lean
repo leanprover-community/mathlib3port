@@ -69,13 +69,13 @@ theorem cutExpand_le_invImage_lex [hi : IsIrrefl α r] :
     refine' ⟨a, fun b h => _, _⟩ <;> simp_rw [to_finsupp_apply]
     · apply_fun count b  at he
       simp_rw [count_add] at he
-      convert he <;> convert (add_zero _).symm <;> rw [count_eq_zero] <;> intro hb
+      convert he <;> convert(add_zero _).symm <;> rw [count_eq_zero] <;> intro hb
       exacts[h.2 (mem_singleton.1 hb), h.1 (hr b hb)]
     · apply_fun count a  at he
       simp_rw [count_add, count_singleton_self] at he
       apply Nat.lt_of_succ_le
       convert he.le
-      convert (add_zero _).symm
+      convert(add_zero _).symm
       exact count_eq_zero.2 fun ha => hi.irrefl a <| hr a ha
 #align relation.cut_expand_le_inv_image_lex Relation.cutExpand_le_invImage_lex
 

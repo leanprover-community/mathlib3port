@@ -699,12 +699,12 @@ theorem toReal_coe_eq_self_sub_two_mul_int_mul_pi_iff {θ : ℝ} {k : ℤ} :
 
 theorem toReal_coe_eq_self_sub_two_pi_iff {θ : ℝ} :
     (θ : Angle).toReal = θ - 2 * π ↔ θ ∈ Set.Ioc π (3 * π) := by
-  convert @to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ 1 <;> norm_num
+  convert@to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ 1 <;> norm_num
 #align real.angle.to_real_coe_eq_self_sub_two_pi_iff Real.Angle.toReal_coe_eq_self_sub_two_pi_iff
 
 theorem toReal_coe_eq_self_add_two_pi_iff {θ : ℝ} :
     (θ : Angle).toReal = θ + 2 * π ↔ θ ∈ Set.Ioc (-3 * π) (-π) := by
-  convert @to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ (-1) <;> norm_num
+  convert@to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ (-1) <;> norm_num
 #align real.angle.to_real_coe_eq_self_add_two_pi_iff Real.Angle.toReal_coe_eq_self_add_two_pi_iff
 
 theorem two_nsmul_toReal_eq_two_mul_sub_two_pi {θ : Angle} :

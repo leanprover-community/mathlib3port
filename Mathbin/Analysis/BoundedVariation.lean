@@ -161,7 +161,7 @@ theorem sum_le_of_monotoneOn_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
         ∑ i in Finset.range (n - m), edist (f (u (m + i + 1))) (f (u (m + i))) :=
       by
       rw [Finset.range_eq_Ico]
-      convert (Finset.sum_Ico_add (fun i => edist (f (u (i + 1))) (f (u i))) 0 (n - m) m).symm
+      convert(Finset.sum_Ico_add (fun i => edist (f (u (i + 1))) (f (u i))) 0 (n - m) m).symm
       · rw [zero_add]
       · rw [tsub_add_cancel_of_le hmn.le]
     _ = ∑ i in Finset.range (n - m), edist (f (v (i + 1))) (f (v i)) :=

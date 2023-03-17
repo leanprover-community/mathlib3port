@@ -247,7 +247,7 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
     · rw [pow_zero, Fintype.sum_subsingleton]
       swap
       · exact ⟨0, Or.inl rfl⟩
-      convert (one_mul _).symm
+      convert(one_mul _).symm
       apply Nat.cast_one
     · rw [pow_succ, MulZeroClass.zero_mul]
       apply (Fintype.sum_empty _).symm

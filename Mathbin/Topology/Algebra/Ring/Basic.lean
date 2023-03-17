@@ -251,8 +251,7 @@ open AddOpposite
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousMul α] : ContinuousMul αᵃᵒᵖ
     where continuous_mul := by
-    convert
-      continuous_op.comp <|
+    convert continuous_op.comp <|
         (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :

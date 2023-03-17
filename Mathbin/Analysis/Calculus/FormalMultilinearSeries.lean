@@ -273,7 +273,7 @@ theorem mkPiField_coeff_eq (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ) :
 @[simp]
 theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n :=
   by
-  convert (p n).toMultilinearMap.map_smul_univ y 1
+  convert(p n).toMultilinearMap.map_smul_univ y 1
   funext <;> simp only [Pi.one_apply, Algebra.id.smul_eq_mul, mul_one]
 #align formal_multilinear_series.apply_eq_prod_smul_coeff FormalMultilinearSeries.apply_eq_prod_smul_coeff
 

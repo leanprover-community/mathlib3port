@@ -872,16 +872,14 @@ theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
   · exact (hq rfl).elim
   cases' le_or_lt dp (dq + 1) with hpq hpq
   ·
-    convert
-          (degree_sub_eq_right_of_degree_lt <|
+    convert(degree_sub_eq_right_of_degree_lt <|
                 (degree_sub_le _ _).trans_lt <|
                   max_lt_iff.mpr ⟨hdp.trans_lt _, hdpq.trans_lt _⟩).trans
             (max_eq_right_of_lt _).symm <;>
         rw [hdq] <;>
       exact with_bot.coe_lt_coe.mpr (by linarith only [hpq])
   · rw [sub_sub]
-    convert
-          (degree_sub_eq_left_of_degree_lt <|
+    convert(degree_sub_eq_left_of_degree_lt <|
                 (degree_add_le _ _).trans_lt <|
                   max_lt_iff.mpr ⟨hdpq.trans_lt _, hdq.trans_lt _⟩).trans
             (max_eq_left_of_lt _).symm <;>

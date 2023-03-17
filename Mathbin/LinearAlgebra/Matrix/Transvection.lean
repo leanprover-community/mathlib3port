@@ -703,7 +703,7 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [F
       by
       refine' Fintype.equivOfCardEq _
       rw [hn]
-      convert (@Fintype.card_sum (Fin r) Unit _ _).symm
+      convert(@Fintype.card_sum (Fin r) Unit _ _).symm
       simp
     apply reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal M e
     apply

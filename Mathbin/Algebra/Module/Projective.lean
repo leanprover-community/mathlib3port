@@ -160,7 +160,7 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
       Function.comp.left_id, Dfinsupp.single_apply]
     rw [← Dfinsupp.lapply_apply j, apply_total R]
     obtain rfl | hij := eq_or_ne i j
-    · convert (hs i) x
+    · convert(hs i) x
       · ext
         simp
       · simp

@@ -253,8 +253,7 @@ noncomputable def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂))
   right_inv' x := Prod.right_inv
   open_source :=
     by
-    convert
-      (e₁.open_source.prod e₂.open_source).Preimage
+    convert(e₁.open_source.prod e₂.open_source).Preimage
         (FiberBundle.Prod.inducing_diag E₁ E₂).Continuous
     ext x
     simp only [Trivialization.source_eq, mfld_simps]

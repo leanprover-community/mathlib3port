@@ -183,7 +183,7 @@ theorem two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add (a b : A) :
   by
   suffices 2 • ⁅L a, L (a * b)⁆ + 2 • ⁅L b, L (b * a)⁆ + ⁅L b, L (a * a)⁆ + ⁅L a, L (b * b)⁆ = 0 by
     rwa [← sub_eq_zero, ← sub_sub, sub_eq_add_neg, sub_eq_add_neg, lie_skew, lie_skew, nsmul_add]
-  convert (commute_lmul_lmul_sq (a + b)).lie_eq
+  convert(commute_lmul_lmul_sq (a + b)).lie_eq
   simp only [add_mul, mul_add, map_add, lie_add, add_lie, IsCommJordan.mul_comm b a,
     (commute_lmul_lmul_sq a).lie_eq, (commute_lmul_lmul_sq b).lie_eq]
   abel

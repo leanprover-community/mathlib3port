@@ -197,7 +197,7 @@ theorem inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center {s : Sp
       s.center :=
   by
   convert tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center hp₁ hp₃ hp₁p₃
-  convert (Real.Angle.tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi _).symm
+  convert(Real.Angle.tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi _).symm
   rw [add_comm,
     two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi hp₁ hp₂ hp₃ hp₁p₂.symm hp₂p₃ hp₁p₃]
 #align euclidean_geometry.sphere.inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center EuclideanGeometry.Sphere.inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center

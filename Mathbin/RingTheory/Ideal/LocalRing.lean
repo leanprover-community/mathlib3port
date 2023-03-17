@@ -236,7 +236,7 @@ instance isLocalRingHom_comp (g : S →+* T) (f : R →+* S) [IsLocalRingHom g] 
 
 instance isLocalRingHom_equiv (f : R ≃+* S) : IsLocalRingHom (f : R →+* S)
     where map_nonunit a ha := by
-    convert (f.symm : S →+* R).isUnit_map ha
+    convert(f.symm : S →+* R).isUnit_map ha
     exact (RingEquiv.symm_apply_apply f a).symm
 #align is_local_ring_hom_equiv isLocalRingHom_equiv
 

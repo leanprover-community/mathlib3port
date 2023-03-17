@@ -520,8 +520,7 @@ theorem IndepSet.indepGenerateFromLt [Preorder ι] [IsProbabilityMeasure μ] {s 
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (i : ι) :
     IndepCat (generateFrom {s i}) (generateFrom { t | ∃ j < i, s j = t }) μ :=
   by
-  convert
-    hs.indep_generate_from_of_disjoint hsm {i} { j | j < i }
+  convert hs.indep_generate_from_of_disjoint hsm {i} { j | j < i }
       (set.disjoint_singleton_left.mpr (lt_irrefl _))
   simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.setOf_eq_eq_singleton']
 #align probability_theory.Indep_set.indep_generate_from_lt ProbabilityTheory.IndepSet.indepGenerateFromLt
@@ -530,8 +529,7 @@ theorem IndepSet.indepGenerateFromLe [LinearOrder ι] [IsProbabilityMeasure μ] 
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (i : ι) {k : ι} (hk : i < k) :
     IndepCat (generateFrom {s k}) (generateFrom { t | ∃ j ≤ i, s j = t }) μ :=
   by
-  convert
-    hs.indep_generate_from_of_disjoint hsm {k} { j | j ≤ i }
+  convert hs.indep_generate_from_of_disjoint hsm {k} { j | j ≤ i }
       (set.disjoint_singleton_left.mpr hk.not_le)
   simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.setOf_eq_eq_singleton']
 #align probability_theory.Indep_set.indep_generate_from_le ProbabilityTheory.IndepSet.indepGenerateFromLe

@@ -699,7 +699,7 @@ theorem hasSum_eval {α : Type _} {p : α → ContinuousMultilinearMap 𝕜 E G}
     {q : ContinuousMultilinearMap 𝕜 E G} (h : HasSum p q) (m : ∀ i, E i) :
     HasSum (fun a => p a m) (q m) := by
   dsimp [HasSum] at h⊢
-  convert ((continuous_eval_left m).Tendsto _).comp h
+  convert((continuous_eval_left m).Tendsto _).comp h
   ext s
   simp
 #align continuous_multilinear_map.has_sum_eval ContinuousMultilinearMap.hasSum_eval

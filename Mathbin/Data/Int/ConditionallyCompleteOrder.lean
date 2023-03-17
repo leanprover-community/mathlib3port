@@ -139,7 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cSup_mem Int.csupₛ_memₓ'. -/
 theorem csupₛ_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : supₛ s ∈ s :=
   by
-  convert (greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
+  convert(greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cSup_mem Int.csupₛ_mem
 
@@ -151,7 +151,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cInf_mem Int.cinfₛ_memₓ'. -/
 theorem cinfₛ_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : infₛ s ∈ s :=
   by
-  convert (least_of_bdd _ (Classical.choose_spec h2) h1).2.1
+  convert(least_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cInf_mem Int.cinfₛ_mem
 

@@ -133,7 +133,7 @@ theorem Real.tsum_eq_tsum_fourierIntegral {f : C(ℝ, ℂ)}
   have : Summable (fourierCoeff F) := by
     convert h_sum
     exact funext fun n => Real.fourierCoeff_tsum_comp_add h_norm n
-  convert (has_pointwise_sum_fourier_series_of_summable this 0).tsum_eq.symm using 1
+  convert(has_pointwise_sum_fourier_series_of_summable this 0).tsum_eq.symm using 1
   · have := (has_sum_apply (summable_of_locally_summable_norm h_norm).HasSum 0).tsum_eq
     simpa only [coe_mk, ← QuotientAddGroup.mk_zero, periodic.lift_coe, zsmul_one, comp_apply,
       coe_add_right, zero_add] using this

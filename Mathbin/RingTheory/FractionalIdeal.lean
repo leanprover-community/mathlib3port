@@ -477,7 +477,7 @@ theorem IsFractional.nsmul {I : Submodule R P} :
     ∀ n : ℕ, IsFractional S I → IsFractional S (n • I : Submodule R P)
   | 0, _ => by
     rw [zero_smul]
-    convert ((0 : Ideal R) : FractionalIdeal S P).IsFractional
+    convert((0 : Ideal R) : FractionalIdeal S P).IsFractional
     simp
   | n + 1, h => by
     rw [succ_nsmul]
@@ -962,7 +962,7 @@ omit loc'
 theorem canonicalEquiv_self : canonicalEquiv S P P = RingEquiv.refl _ :=
   by
   rw [← canonical_equiv_trans_canonical_equiv S P P]
-  convert (canonical_equiv S P P).symm_trans_self
+  convert(canonical_equiv S P P).symm_trans_self
   exact (canonical_equiv_symm S P P).symm
 #align fractional_ideal.canonical_equiv_self FractionalIdeal.canonicalEquiv_self
 

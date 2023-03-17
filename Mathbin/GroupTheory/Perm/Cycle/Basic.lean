@@ -810,7 +810,7 @@ theorem IsCycleOn.conj (h : f.IsCycleOn s) : (g * f * g⁻¹).IsCycleOn ((g : Pe
   ⟨(g.bijOn_image.comp h.1).comp g.bijOn_symm_image, fun x hx y hy =>
     by
     rw [← preimage_inv] at hx hy
-    convert (h.2 hx hy).conj <;> rw [apply_inv_self]⟩
+    convert(h.2 hx hy).conj <;> rw [apply_inv_self]⟩
 #align equiv.perm.is_cycle_on.conj Equiv.Perm.IsCycleOn.conj
 
 theorem isCycleOn_swap [DecidableEq α] (hab : a ≠ b) : (swap a b).IsCycleOn {a, b} :=
@@ -871,7 +871,7 @@ protected theorem IsCycleOn.subtypePerm (hf : f.IsCycleOn s) :
   obtain hs | hs := s.subsingleton_or_nontrivial
   · haveI := hs.coe_sort
     exact is_cycle_on_of_subsingleton _ _
-  convert (hf.is_cycle_subtype_perm hs).IsCycleOn
+  convert(hf.is_cycle_subtype_perm hs).IsCycleOn
   rw [eq_comm, Set.eq_univ_iff_forall]
   exact fun x => ne_of_apply_ne (coe : s → α) (hf.apply_ne hs x.Prop)
 #align equiv.perm.is_cycle_on.subtype_perm Equiv.Perm.IsCycleOn.subtypePerm

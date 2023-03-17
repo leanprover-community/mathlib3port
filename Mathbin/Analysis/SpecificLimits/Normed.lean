@@ -497,7 +497,7 @@ theorem NormedRing.tsum_geometric_of_norm_lt_1 (x : R) (h : ‖x‖ < 1) :
   have : ‖∑' b : ℕ, (fun n => x ^ (n + 1)) b‖ ≤ (1 - ‖x‖)⁻¹ - 1 :=
     by
     refine' tsum_of_norm_bounded _ fun b => norm_pow_le' _ (Nat.succ_pos b)
-    convert (hasSum_nat_add_iff' 1).mpr (hasSum_geometric_of_lt_1 (norm_nonneg x) h)
+    convert(hasSum_nat_add_iff' 1).mpr (hasSum_geometric_of_lt_1 (norm_nonneg x) h)
     simp
   linarith
 #align normed_ring.tsum_geometric_of_norm_lt_1 NormedRing.tsum_geometric_of_norm_lt_1
@@ -508,7 +508,7 @@ theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * 
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
   have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (𝓝 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_atTop_nhds_0_of_norm_lt_1 h)
-  convert ← this
+  convert← this
   ext n
   rw [← geom_sum_mul_neg, Finset.sum_mul]
 #align geom_series_mul_neg geom_series_mul_neg
@@ -519,7 +519,7 @@ theorem mul_neg_geom_series (x : R) (h : ‖x‖ < 1) : ((1 - x) * ∑' i : ℕ,
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
   have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (nhds 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_atTop_nhds_0_of_norm_lt_1 h)
-  convert ← this
+  convert← this
   ext n
   rw [← mul_neg_geom_sum, Finset.mul_sum]
 #align mul_neg_geom_series mul_neg_geom_series
@@ -639,7 +639,7 @@ theorem Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone
     by
     convert hf0.neg
     norm_num
-  convert (hfa'.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0' hzb).neg
+  convert(hfa'.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0' hzb).neg
   funext
   simp
 #align antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded

@@ -169,8 +169,7 @@ theorem tendsto_integral_mul_exp_atBot_of_continuous_compact_support (hf1 : Cont
   by
   have hg2 : HasCompactSupport (f ∘ Neg.neg) := by
     simpa only [neg_one_smul] using hf2.comp_smul (neg_ne_zero.mpr <| one_ne_zero' ℝ)
-  convert
-    (tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1.comp continuous_neg)
+  convert(tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1.comp continuous_neg)
           hg2).comp
       tendsto_neg_at_bot_at_top
   ext1 t

@@ -469,7 +469,7 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing : Topolo
       intro x hx
       cases hx.symm.lt_or_lt
       · exact this h
-      convert (this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
+      convert(this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
       ext
       simp [neg_inv]
     intro t ht

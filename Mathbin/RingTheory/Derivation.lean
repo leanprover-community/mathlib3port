@@ -870,8 +870,7 @@ def KaehlerDifferential.d : Derivation R S (Ω[S⁄R]) :=
       dsimp [KaehlerDifferential.dLinearMap_apply]
       rw [← LinearMap.map_smul_of_tower, ← LinearMap.map_smul_of_tower, ← map_add,
         Ideal.toCotangent_eq, pow_two]
-      convert
-        Submodule.mul_mem_mul (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R a : _)
+      convert Submodule.mul_mem_mul (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R a : _)
           (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R b : _) using
         1
       simp only [AddSubgroupClass.coe_sub, Submodule.coe_add, Submodule.coe_mk,
@@ -1243,7 +1242,7 @@ theorem KaehlerDifferential.quotKerTotalEquiv_symm_comp_d :
     (KaehlerDifferential.quotKerTotalEquiv R S).symm.toLinearMap.compDer
         (KaehlerDifferential.d R S) =
       KaehlerDifferential.derivationQuotKerTotal R S :=
-  by convert (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential_comp using 0
+  by convert(KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential_comp using 0
 #align kaehler_differential.quot_ker_total_equiv_symm_comp_D KaehlerDifferential.quotKerTotalEquiv_symm_comp_d
 
 variable (A B : Type _) [CommRing A] [CommRing B] [Algebra R A] [Algebra S B] [Algebra R B]

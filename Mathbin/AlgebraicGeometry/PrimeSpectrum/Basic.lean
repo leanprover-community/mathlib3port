@@ -508,7 +508,7 @@ theorem vanishingIdeal_anti_mono_iff {s t : Set (PrimeSpectrum R)} (ht : IsClose
   ⟨vanishingIdeal_anti_mono, fun h =>
     by
     rw [← ht.closure_subset_iff, ← ht.closure_eq]
-    convert ← zero_locus_anti_mono_ideal h <;> apply zero_locus_vanishing_ideal_eq_closure⟩
+    convert← zero_locus_anti_mono_ideal h <;> apply zero_locus_vanishing_ideal_eq_closure⟩
 #align prime_spectrum.vanishing_ideal_anti_mono_iff PrimeSpectrum.vanishingIdeal_anti_mono_iff
 
 theorem vanishingIdeal_strict_anti_mono_iff {s t : Set (PrimeSpectrum R)} (hs : IsClosed s)

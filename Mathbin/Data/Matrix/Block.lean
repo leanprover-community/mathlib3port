@@ -904,7 +904,7 @@ theorem toBlock_mul_eq_add {m n k : Type _} [Fintype n] (p : m → Prop) (q : n 
   classical
     ext (i k)
     simp only [to_block_apply, mul_apply, Pi.add_apply]
-    convert (Fintype.sum_subtype_add_sum_subtype q fun x => A (↑i) x * B x ↑k).symm
+    convert(Fintype.sum_subtype_add_sum_subtype q fun x => A (↑i) x * B x ↑k).symm
 #align matrix.to_block_mul_eq_add Matrix.toBlock_mul_eq_add
 
 end

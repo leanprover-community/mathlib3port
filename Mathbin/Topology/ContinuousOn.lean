@@ -1895,7 +1895,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_on.is_open_
 theorem ContinuousOn.isOpen_preimage {f : α → β} {s : Set α} {t : Set β} (h : ContinuousOn f s)
     (hs : IsOpen s) (hp : f ⁻¹' t ⊆ s) (ht : IsOpen t) : IsOpen (f ⁻¹' t) :=
   by
-  convert (continuousOn_open_iff hs).mp h t ht
+  convert(continuousOn_open_iff hs).mp h t ht
   rw [inter_comm, inter_eq_self_of_subset_left hp]
 #align continuous_on.is_open_preimage ContinuousOn.isOpen_preimage
 

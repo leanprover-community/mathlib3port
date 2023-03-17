@@ -808,7 +808,7 @@ private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (C r : MvPolynomial 
     induction' Fintype.card σ with d hd
     · exact (is_empty_alg_equiv R (Fin 0)).toMulEquiv.symm.prime_iff
     · rw [hd, ← Polynomial.prime_c_iff]
-      convert (finSuccEquiv R d).toMulEquiv.symm.prime_iff
+      convert(finSuccEquiv R d).toMulEquiv.symm.prime_iff
       rw [← fin_succ_equiv_comp_C_eq_C]
       rfl
 #align mv_polynomial.prime_C_iff_of_fintype mv_polynomial.prime_C_iff_of_fintype
@@ -828,7 +828,7 @@ theorem prime_c_iff : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
       rw [← algebra_map_eq] at hd
       have : algebraMap R _ r ∣ a' * b' :=
         by
-        convert (kill_compl Subtype.coe_injective).toRingHom.map_dvd hd
+        convert(kill_compl Subtype.coe_injective).toRingHom.map_dvd hd
         simpa
         simp
       rw [← rename_C (coe : s → σ)]

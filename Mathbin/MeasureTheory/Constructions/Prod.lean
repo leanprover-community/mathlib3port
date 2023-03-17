@@ -782,8 +782,7 @@ theorem prodOfLeft {α β γ} [MeasurableSpace α] [MeasurableSpace β] [Measura
     QuasiMeasurePreserving f (μ.Prod ν) τ :=
   by
   rw [← prod_swap]
-  convert
-    (quasi_measure_preserving.prod_of_right (hf.comp measurable_swap) h2f).comp
+  convert(quasi_measure_preserving.prod_of_right (hf.comp measurable_swap) h2f).comp
       ((measurable_swap.measure_preserving (ν.prod μ)).symm
           MeasurableEquiv.prodComm).QuasiMeasurePreserving
   ext ⟨x, y⟩; rfl

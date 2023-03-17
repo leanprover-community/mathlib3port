@@ -2066,7 +2066,7 @@ protected theorem add_left_neg (x : M ⊗[R] N) : -x + x = 0 :=
       rw [add_zero]
       apply (neg.aux R).map_zero)
     (fun x y => by
-      convert (add_tmul (-x) x y).symm
+      convert(add_tmul (-x) x y).symm
       rw [add_left_neg, zero_tmul])
     fun x y hx hy => by
     unfold Neg.neg SubNegMonoid.neg

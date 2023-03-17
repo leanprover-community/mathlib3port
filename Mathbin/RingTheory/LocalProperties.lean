@@ -224,8 +224,7 @@ theorem RingHom.PropertyIsLocal.ofLocalizationSpan (hP : RingHom.PropertyIsLocal
   apply hP.of_localization_span_target _ _ hs
   rintro ⟨_, r, hr, rfl⟩
   have := hs' ⟨r, hr⟩
-  convert
-    hP.stable_under_composition _ _ (hP.holds_for_localization_away (Localization.Away r) r)
+  convert hP.stable_under_composition _ _ (hP.holds_for_localization_away (Localization.Away r) r)
       (hs' ⟨r, hr⟩) using
     1
   exact (IsLocalization.map_comp _).symm
@@ -428,8 +427,7 @@ theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite :=
     rw [Submodule.span_le]
     exact Submodule.subset_span
   -- Now, since `y ∈ span T`, and `(f r)⁻¹ ∈ R'`, `x / (f r)` is in `span T` as well.
-  convert
-    (Submodule.span R' (algebraMap S S' '' T)).smul_mem (IsLocalization.mk' R' (1 : R) ⟨r, hr⟩)
+  convert(Submodule.span R' (algebraMap S S' '' T)).smul_mem (IsLocalization.mk' R' (1 : R) ⟨r, hr⟩)
       (H hy) using
     1
   rw [Algebra.smul_def]
@@ -477,8 +475,7 @@ theorem IsLocalization.smul_mem_finsetIntegerMultiple_span [Algebra R S] [Algebr
   obtain ⟨⟨_, a, ha₁, rfl⟩, ha₂⟩ :=
     (IsLocalization.eq_iff_exists (M.map (algebraMap R S)) S').mp hx''
   use (⟨a, ha₁⟩ : M) * (⟨y', hy'⟩ : M)
-  convert
-    (Submodule.span R
+  convert(Submodule.span R
           (IsLocalization.finsetIntegerMultiple (Submonoid.map (algebraMap R S) M) s :
             Set S)).smul_mem
       a hx' using
@@ -614,8 +611,7 @@ theorem localization_finiteType : RingHom.LocalizationPreserves @RingHom.FiniteT
     by
     rw [Algebra.adjoin_le_iff]
     exact Algebra.subset_adjoin
-  convert
-    (Algebra.adjoin R' (algebraMap S S' '' T)).smul_mem (H hy)
+  convert(Algebra.adjoin R' (algebraMap S S' '' T)).smul_mem (H hy)
       (IsLocalization.mk' R' (1 : R) ⟨r, hr⟩) using
     1
   rw [Algebra.smul_def]
@@ -703,7 +699,7 @@ theorem finiteType_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Fini
   choose s₁ s₂ using H
   let sf := fun x : s => IsLocalization.finsetIntegerMultiple (Submonoid.powers (f x)) (s₁ x)
   use s.attach.bUnion sf
-  convert (Algebra.adjoin_attach_bunionᵢ sf).trans _
+  convert(Algebra.adjoin_attach_bunionᵢ sf).trans _
   rw [eq_top_iff]
   rintro x -
   apply

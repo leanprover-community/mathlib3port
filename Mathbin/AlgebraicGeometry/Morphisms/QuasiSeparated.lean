@@ -521,10 +521,8 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
     · rw [X.basic_open_res, X.basic_open_res]
       erw [← inf_sup_right]
       refine' le_inf_iff.mpr ⟨X.basic_open_le f, le_of_eq rfl⟩
-    · convert
-        congr_arg (X.presheaf.map (hom_of_le _).op)
-          (X.sheaf.obj_sup_iso_prod_eq_locus_inv_fst S U.1 ⟨⟨_ * _, _ * _⟩, this⟩) using
-        1
+    · convert congr_arg (X.presheaf.map (hom_of_le _).op)
+          (X.sheaf.obj_sup_iso_prod_eq_locus_inv_fst S U.1 ⟨⟨_ * _, _ * _⟩, this⟩) using 1
       · delta Scheme.sheaf SheafedSpace.sheaf
         simp only [← comp_apply (X.presheaf.map _) (X.presheaf.map _), ← functor.map_comp, ←
           op_comp]
@@ -538,10 +536,8 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
         congr 1
         rw [mul_comm, ← comp_apply, ← functor.map_comp]
         congr
-    · convert
-        congr_arg (X.presheaf.map (hom_of_le _).op)
-          (X.sheaf.obj_sup_iso_prod_eq_locus_inv_snd S U.1 ⟨⟨_ * _, _ * _⟩, this⟩) using
-        1
+    · convert congr_arg (X.presheaf.map (hom_of_le _).op)
+          (X.sheaf.obj_sup_iso_prod_eq_locus_inv_snd S U.1 ⟨⟨_ * _, _ * _⟩, this⟩) using 1
       · delta Scheme.sheaf SheafedSpace.sheaf
         simp only [← comp_apply (X.presheaf.map _) (X.presheaf.map _), ← functor.map_comp, ←
           op_comp]

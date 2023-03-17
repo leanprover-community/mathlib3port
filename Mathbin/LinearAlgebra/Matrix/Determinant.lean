@@ -670,8 +670,8 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
     (Matrix.fromBlocks A B 0 D).det = A.det * D.det := by
   classical
     simp_rw [det_apply']
-    convert
-      (sum_subset (subset_univ ((sum_congr_hom m n).range : Set (perm (Sum m n))).toFinset) _).symm
+    convert(sum_subset (subset_univ ((sum_congr_hom m n).range : Set (perm (Sum m n))).toFinset)
+          _).symm
     rw [sum_mul_sum]
     simp_rw [univ_product_univ]
     rw [(sum_bij (fun (σ : perm m × perm n) _ => Equiv.sumCongr σ.fst σ.snd) _ _ _ _).symm]

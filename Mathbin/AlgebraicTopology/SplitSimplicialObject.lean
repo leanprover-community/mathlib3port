@@ -342,7 +342,7 @@ def ofIso (e : X ≅ Y) : Splitting Y where
   n := s.n
   ι n := s.ι n ≫ e.Hom.app (op [n])
   map_is_iso' Δ := by
-    convert (inferInstance : is_iso ((s.iso Δ).Hom ≫ e.hom.app Δ))
+    convert(inferInstance : is_iso ((s.iso Δ).Hom ≫ e.hom.app Δ))
     tidy
 #align simplicial_object.splitting.of_iso SimplicialObject.Splitting.ofIso
 

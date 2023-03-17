@@ -1485,7 +1485,7 @@ instance topologicalGroup_quotient [N.Normal] : TopologicalGroup (G ⧸ N)
       · exact continuous_quot_mk.prod_map continuous_quot_mk
       · exact (surjective_quot_mk _).Prod_map (surjective_quot_mk _)
     exact (QuotientMap.continuous_iff Quot).2 cont
-  continuous_inv := by convert (@continuous_inv G _ _ _).quotient_map' _
+  continuous_inv := by convert(@continuous_inv G _ _ _).quotient_map' _
 #align topological_group_quotient topologicalGroup_quotient
 #align topological_add_group_quotient topologicalAddGroup_quotient
 -/
@@ -2482,7 +2482,7 @@ variable [Group G] [TopologicalSpace G] [TopologicalGroup G] {Γ : Subgroup G}
 @[to_additive]
 instance QuotientGroup.continuousConstSMul : ContinuousConstSMul G (G ⧸ Γ)
     where continuous_const_smul g := by
-    convert ((@continuous_const _ _ _ _ g).mul continuous_id).quotient_map' _
+    convert((@continuous_const _ _ _ _ g).mul continuous_id).quotient_map' _
 #align quotient_group.has_continuous_const_smul QuotientGroup.continuousConstSMul
 #align quotient_add_group.has_continuous_const_vadd QuotientAddGroup.continuousConstVAdd
 -/

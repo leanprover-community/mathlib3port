@@ -58,8 +58,7 @@ theorem isUnit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x
     convert hx using 1
     ext
     push_cast
-    convert_to
-      (((univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x) *
+    convert_to(((univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x) *
           ∏ σ : L ≃ₐ[K] L in {AlgEquiv.refl}, σ (x : L)) =
         _
     · rw [prod_singleton, AlgEquiv.coe_refl, id]

@@ -137,7 +137,7 @@ theorem MeasureTheory.Memℒp.variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2
     ENNReal.toReal_ofReal]
   · rfl
   · exact integral_nonneg fun ω => pow_two_nonneg _
-  · convert (hX.sub <| mem_ℒp_const (μ[X])).integrableNormRpow two_ne_zero ENNReal.two_ne_top
+  · convert(hX.sub <| mem_ℒp_const (μ[X])).integrableNormRpow two_ne_zero ENNReal.two_ne_top
     ext ω
     simp only [Pi.sub_apply, Real.norm_eq_abs, [anonymous], ENNReal.one_toReal, Real.rpow_two,
       pow_bit0_abs]
@@ -304,7 +304,7 @@ theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measure Ω)] {X : Ω 
     {c : ℝ} (hc : 0 < c) : ℙ { ω | c ≤ |X ω - 𝔼[X]| } ≤ ENNReal.ofReal (Var[X] / c ^ 2) :=
   by
   rw [ENNReal.ofReal_div_of_pos (sq_pos_of_ne_zero _ hc.ne.symm), hX.of_real_variance_eq]
-  convert @meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
+  convert@meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
   · simp only [Real.coe_toNNReal', max_le_iff, abs_nonneg, and_true_iff]
   · rw [ENNReal.ofReal_pow hc.le]
     rfl

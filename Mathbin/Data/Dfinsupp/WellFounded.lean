@@ -103,7 +103,7 @@ theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
     (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.eraseₓ i) :
     Acc (Dfinsupp.Lex r s) x := by
   classical
-    convert ←
+    convert←
       @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
         (InvImage.accessible snd <| hs.prod_game_add hu)
     convert piecewise_single_erase x i

@@ -142,7 +142,7 @@ def partialSups.gi : GaloisInsertion (partialSups : (ℕ → α) → ℕ →o α
     where
   choice f h :=
     ⟨f, by
-      convert (partialSups f).Monotone
+      convert(partialSups f).Monotone
       exact (le_partialSups f).antisymm h⟩
   gc f g := by
     refine' ⟨(le_partialSups f).trans, fun h => _⟩

@@ -334,7 +334,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.card_to_enum_
 theorem Multiset.card_toEnumFinset (m : Multiset α) : m.toEnumFinset.card = m.card :=
   by
   change Multiset.card _ = _
-  convert_to (m.to_enum_finset.val.map Prod.fst).card = _
+  convert_to(m.to_enum_finset.val.map Prod.fst).card = _
   · rw [Multiset.card_map]
   · rw [m.map_to_enum_finset_fst]
 #align multiset.card_to_enum_finset Multiset.card_toEnumFinset

@@ -712,7 +712,7 @@ end Convex
 theorem convexHull_toCone_isLeast (s : Set E) :
     IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } ((convex_convexHull 𝕜 s).toCone _) :=
   by
-  convert (convex_convexHull 𝕜 s).toCone_isLeast
+  convert(convex_convexHull 𝕜 s).toCone_isLeast
   ext t
   exact ⟨fun h => convexHull_min h t.convex, (subset_convexHull 𝕜 s).trans⟩
 #align convex_hull_to_cone_is_least convexHull_toCone_isLeast
@@ -831,7 +831,7 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
       directedOn_image.2 (c_chain.directed_on.mono linear_pmap.domain_mono.monotone)
     rcases(mem_Sup_of_directed (cne.image _) hdir).1 hx with ⟨_, ⟨f, hfc, rfl⟩, hfx⟩
     have : f ≤ LinearPMap.supₛ c c_chain.directed_on := LinearPMap.le_supₛ _ hfc
-    convert ← hcs hfc ⟨x, hfx⟩ hxs
+    convert← hcs hfc ⟨x, hfx⟩ hxs
     apply this.2
     rfl
 #align riesz_extension.exists_top RieszExtension.exists_top

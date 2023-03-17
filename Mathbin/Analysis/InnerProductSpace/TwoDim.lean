@@ -361,7 +361,7 @@ theorem rightAngleRotation_map {F : Type _} [InnerProductSpace ℝ F] [Fact (fin
 theorem linearIsometryEquiv_comp_rightAngleRotation (φ : E ≃ₗᵢ[ℝ] E)
     (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) (x : E) : φ (J x) = J (φ x) :=
   by
-  convert (o.right_angle_rotation_map φ (φ x)).symm
+  convert(o.right_angle_rotation_map φ (φ x)).symm
   · simp
   · symm
     rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ

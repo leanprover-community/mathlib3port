@@ -83,7 +83,7 @@ open Measure TopologicalSpace.PositiveCompacts FiniteDimensional
 /-- The Haar measure equals the Lebesgue measure on `ℝ`. -/
 theorem add_haar_measure_eq_volume : add_haar_measure icc01 = volume :=
   by
-  convert (add_haar_measure_unique volume Icc01).symm
+  convert(add_haar_measure_unique volume Icc01).symm
   simp [Icc01]
 #align measure_theory.add_haar_measure_eq_volume MeasureTheory.add_haar_measure_eq_volume
 
@@ -91,7 +91,7 @@ theorem add_haar_measure_eq_volume : add_haar_measure icc01 = volume :=
 theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] :
     add_haar_measure (piIcc01 ι) = volume :=
   by
-  convert (add_haar_measure_unique volume (pi_Icc01 ι)).symm
+  convert(add_haar_measure_unique volume (pi_Icc01 ι)).symm
   simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, positive_compacts.coe_mk,
     compacts.coe_mk, Finset.prod_const_one, ENNReal.ofReal_one, Real.volume_Icc, one_smul, sub_zero]
 #align measure_theory.add_haar_measure_eq_volume_pi MeasureTheory.add_haar_measure_eq_volume_pi
@@ -890,9 +890,8 @@ theorem tendsto_add_haar_inter_smul_one_of_density_one_aux (s : Set E) (hs : Mea
     apply B.congr' _
     filter_upwards [self_mem_nhdsWithin]
     rintro r (rpos : 0 < r)
-    convert
-      I (closed_ball x r) (sᶜ) (measure_closed_ball_pos μ _ rpos).ne' measure_closed_ball_lt_top.Ne
-        hs.compl
+    convert I (closed_ball x r) (sᶜ) (measure_closed_ball_pos μ _ rpos).ne'
+        measure_closed_ball_lt_top.Ne hs.compl
     rw [compl_compl]
   have L' : tendsto (fun r : ℝ => μ (sᶜ ∩ ({x} + r • t)) / μ ({x} + r • t)) (𝓝[>] 0) (𝓝 0) :=
     tendsto_add_haar_inter_smul_zero_of_density_zero μ (sᶜ) x L t ht h''t

@@ -90,7 +90,7 @@ other is antitone), the scalar product of their sum is less than the size of the
 scalar product. -/
 theorem Antivary.card_smul_sum_le_sum_smul_sum (hfg : Antivary f g) :
     (Fintype.card ι • ∑ i, f i • g i) ≤ (∑ i, f i) • ∑ i, g i := by
-  convert (hfg.dual_right.monovary_on _).sum_smul_sum_le_card_smul_sum
+  convert(hfg.dual_right.monovary_on _).sum_smul_sum_le_card_smul_sum
 #align antivary.card_smul_sum_le_sum_smul_sum Antivary.card_smul_sum_le_sum_smul_sum
 
 end Smul

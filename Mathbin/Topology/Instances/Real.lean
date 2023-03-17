@@ -393,7 +393,7 @@ inverse images of compact sets are finite. -/
 theorem tendsto_zmultiplesHom_cofinite {a : ℝ} (ha : a ≠ 0) :
     Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) :=
   by
-  convert (tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
+  convert(tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
   ext n
   simp
 #align int.tendsto_zmultiples_hom_cofinite Int.tendsto_zmultiplesHom_cofinite

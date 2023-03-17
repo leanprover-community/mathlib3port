@@ -312,8 +312,7 @@ theorem tendstoInMeasureOfTendstoSnormOfStronglyMeasurable (hp_ne_zero : p ≠ 0
   refine' le_trans _ hn
   rw [ENNReal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), ENNReal.ofReal_one, mul_comm,
     mul_one_div, ENNReal.le_div_iff_mul_le _ (Or.inl ENNReal.ofReal_ne_top), mul_comm]
-  · convert
-      mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable
+  · convert mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable
         (ENNReal.ofReal ε)
     · exact (ENNReal.ofReal_rpow_of_pos hε).symm
     · ext x

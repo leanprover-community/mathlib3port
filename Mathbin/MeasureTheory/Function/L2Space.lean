@@ -47,7 +47,7 @@ theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasur
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
-  convert (mem_ℒp_norm_rpow_iff hf two_ne_zero ENNReal.two_ne_top).symm
+  convert(mem_ℒp_norm_rpow_iff hf two_ne_zero ENNReal.two_ne_top).symm
   · simp
   · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.two_ne_top]
 #align measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.memℒp_two_iff_integrable_sq_norm

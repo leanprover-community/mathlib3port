@@ -100,7 +100,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
     hs.inter (MeasurableSet.bunionᵢ (to_countable _) fun _ _ => hf.measurable.iterate _ hs)
   have hμT : μ T = 0 :=
     by
-    convert (measure_bUnion_null_iff <| to_countable _).2 hN
+    convert(measure_bUnion_null_iff <| to_countable _).2 hN
     rw [← inter_Union₂]
     rfl
   have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by rwa [measure_diff_null hμT]

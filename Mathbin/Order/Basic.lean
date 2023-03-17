@@ -1681,7 +1681,7 @@ instance OrderDual.denselyOrdered (α : Type u) [LT α] [DenselyOrdered α] : De
 @[simp]
 theorem denselyOrdered_orderDual [LT α] : DenselyOrdered αᵒᵈ ↔ DenselyOrdered α :=
   ⟨by
-    convert @OrderDual.denselyOrdered αᵒᵈ _
+    convert@OrderDual.denselyOrdered αᵒᵈ _
     cases ‹LT α›
     rfl, @OrderDual.denselyOrdered α _⟩
 #align densely_ordered_order_dual denselyOrdered_orderDual

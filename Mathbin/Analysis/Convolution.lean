@@ -354,8 +354,7 @@ theorem HasCompactSupport.convolutionExistsAt {x₀ : G}
     by
     apply (hg.comp v.continuous).ContinuousOn.aeStronglyMeasurableOfIsCompact h
     exact (isClosed_tsupport _).MeasurableSet
-  convert
-    ((v.continuous.measurable.measure_preserving
+  convert((v.continuous.measurable.measure_preserving
               (μ.restrict (tsupport fun t => L (f t) (g (x₀ - t))))).aeStronglyMeasurable_comp_iff
           v.to_measurable_equiv.measurable_embedding).1
       A
@@ -1013,7 +1012,7 @@ theorem dist_convolution_le {f : G → ℝ} {x₀ : G} {R ε : ℝ} {z₀ : E'} 
   have hif : integrable f μ := by
     by_contra hif
     exact zero_ne_one ((integral_undef hif).symm.trans hintf)
-  convert (dist_convolution_le' _ hε hif hf hmg hg).trans _
+  convert(dist_convolution_le' _ hε hif hf hmg hg).trans _
   · simp_rw [lsmul_apply, integral_smul_const, hintf, one_smul]
   · simp_rw [Real.norm_of_nonneg (hnf _), hintf, mul_one]
     exact (mul_le_mul_of_nonneg_right op_norm_lsmul_le hε).trans_eq (one_mul ε)
@@ -1367,7 +1366,7 @@ theorem HasCompactSupport.hasDerivAt_convolution_right (hf : LocallyIntegrable f
     (hcg : HasCompactSupport g₀) (hg : ContDiff 𝕜 1 g₀) (x₀ : 𝕜) :
     HasDerivAt (f₀ ⋆[L, μ] g₀) ((f₀ ⋆[L, μ] deriv g₀) x₀) x₀ :=
   by
-  convert (hcg.has_fderiv_at_convolution_right L hf hg x₀).HasDerivAt
+  convert(hcg.has_fderiv_at_convolution_right L hf hg x₀).HasDerivAt
   rw [convolution_precompR_apply L hf (hcg.fderiv 𝕜) (hg.continuous_fderiv le_rfl)]
   rfl
 #align has_compact_support.has_deriv_at_convolution_right HasCompactSupport.hasDerivAt_convolution_right
@@ -1800,7 +1799,7 @@ theorem posConvolution_eq_convolution_indicator (f : ℝ → E) (g : ℝ → E')
     ·
       rw [indicator_of_not_mem (not_mem_Ioo_of_ge ht),
         indicator_of_not_mem (not_mem_Ioi.mpr (sub_nonpos_of_le ht)), ContinuousLinearMap.map_zero]
-  · convert (integral_zero ℝ F).symm
+  · convert(integral_zero ℝ F).symm
     ext1 t
     by_cases ht : 0 < t
     · rw [indicator_of_not_mem (_ : x - t ∉ Ioi 0), ContinuousLinearMap.map_zero]

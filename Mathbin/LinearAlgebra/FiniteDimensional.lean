@@ -1405,7 +1405,7 @@ theorem finrank_eq_one_iff' : finrank K V = 1 ↔ ∃ (v : V)(n : v ≠ 0), ∀ 
   by
   convert finrank_eq_one_iff PUnit
   simp only [exists_prop, eq_iff_iff, Ne.def]
-  convert (Basis.basis_singleton_iff PUnit).symm
+  convert(Basis.basis_singleton_iff PUnit).symm
   funext v
   simp
   infer_instance; infer_instance

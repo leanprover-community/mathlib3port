@@ -257,7 +257,7 @@ section SqrtMulLog
 theorem hasDerivAt_sqrt_mul_log {x : ℝ} (hx : x ≠ 0) :
     HasDerivAt (fun x => sqrt x * log x) ((2 + log x) / (2 * sqrt x)) x :=
   by
-  convert (has_deriv_at_sqrt hx).mul (has_deriv_at_log hx)
+  convert(has_deriv_at_sqrt hx).mul (has_deriv_at_log hx)
   rw [add_div, div_mul_right (sqrt x) two_ne_zero, ← div_eq_mul_inv, sqrt_div_self', add_comm,
     div_eq_mul_one_div, mul_comm]
 #align has_deriv_at_sqrt_mul_log hasDerivAt_sqrt_mul_log
@@ -288,8 +288,7 @@ theorem deriv2_sqrt_mul_log (x : ℝ) :
     refine' (hasDerivWithinAt_const _ _ 0).congr_of_mem (fun x hx => _) hx
     rw [sqrt_eq_zero_of_nonpos hx, MulZeroClass.mul_zero, div_zero]
   · have h₀ : sqrt x ≠ 0 := sqrt_ne_zero'.2 hx
-    convert
-      (((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) <|
+    convert(((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) <|
           mul_ne_zero two_ne_zero h₀).deriv using
       1
     nth_rw 3 [← mul_self_sqrt hx.le]

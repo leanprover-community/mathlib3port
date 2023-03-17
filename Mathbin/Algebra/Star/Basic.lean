@@ -866,7 +866,7 @@ theorem star_invOf {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible
     [Invertible (star r)] : star (⅟ r) = ⅟ (star r) :=
   by
   letI := Invertible.star r
-  convert (rfl : star (⅟ r) = _)
+  convert(rfl : star (⅟ r) = _)
 #align star_inv_of star_invOf
 
 namespace MulOpposite

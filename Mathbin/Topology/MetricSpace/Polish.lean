@@ -381,7 +381,7 @@ theorem completeSpace_completeCopy [CompleteSpace α] (hs : IsOpen s) (h's : s�
       by
       apply embedding_subtype_coe.tendsto_nhds_iff.2
       exact xlim
-    convert ((complete_copy_id_homeo hs h's).symm.Continuous.Tendsto _).comp L
+    convert((complete_copy_id_homeo hs h's).symm.Continuous.Tendsto _).comp L
     ext1 n
     simp [complete_copy_id_homeo]
   obtain ⟨C, hC⟩ : ∃ C, ∀ n, 1 / inf_dist (u n).1 (sᶜ) < C :=

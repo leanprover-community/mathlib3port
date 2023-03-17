@@ -129,7 +129,7 @@ theorem id (X : PresheafedSpace.{v} C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (X.s
   dsimp [stalk_map]
   simp only [stalk_pushforward.id]
   rw [← map_comp]
-  convert (stalk_functor C x).map_id X.presheaf
+  convert(stalk_functor C x).map_id X.presheaf
   tidy
 #align algebraic_geometry.PresheafedSpace.stalk_map.id AlgebraicGeometry.PresheafedSpace.stalkMap.id
 

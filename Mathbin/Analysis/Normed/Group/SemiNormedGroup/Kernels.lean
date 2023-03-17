@@ -199,7 +199,7 @@ theorem explicitCokernelπ_surjective {X Y : SemiNormedGroup.{u}} {f : X ⟶ Y} 
 theorem comp_explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
     f ≫ explicitCokernelπ f = 0 :=
   by
-  convert (cokernel_cocone f).w walking_parallel_pair_hom.left
+  convert(cokernel_cocone f).w walking_parallel_pair_hom.left
   simp
 #align SemiNormedGroup.comp_explicit_cokernel_π SemiNormedGroup.comp_explicitCokernelπ
 

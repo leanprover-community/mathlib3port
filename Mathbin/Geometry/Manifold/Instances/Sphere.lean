@@ -153,16 +153,15 @@ theorem hasFderivAt_stereoInvFunAux (v : E) :
   by
   have h₀ : HasFderivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 :=
     by
-    convert (hasStrictFderivAt_norm_sq _).HasFderivAt
+    convert(hasStrictFderivAt_norm_sq _).HasFderivAt
     simp
   have h₁ : HasFderivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
-    convert (hasFderivAt_inv _).comp _ (h₀.add (hasFderivAt_const 4 0)) <;> simp
+    convert(hasFderivAt_inv _).comp _ (h₀.add (hasFderivAt_const 4 0)) <;> simp
   have h₂ :
     HasFderivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E)
       0 :=
     by
-    convert
-      ((hasFderivAt_const (4 : ℝ) 0).smul (hasFderivAt_id 0)).add
+    convert((hasFderivAt_const (4 : ℝ) 0).smul (hasFderivAt_id 0)).add
         ((h₀.sub (hasFderivAt_const (4 : ℝ) 0)).smul (hasFderivAt_const v 0))
     ext w
     simp
@@ -273,8 +272,9 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
       nlinarith
     ring
   -- deduce the result
-  convert
-    congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
+  convert congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁)
+      (congr_arg (fun t => t • v) h₂) using
+    1
   ·
     simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul,
       mul_pow, Real.norm_eq_abs, sq_abs, norm_smul]
@@ -500,7 +500,7 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
   have h : ContDiffOn ℝ ⊤ _ Set.univ := U.cont_diff.cont_diff_on
   have H₁ := (h.comp' contDiffOn_stereoToFun).ContMdiffOn
   have H₂ : ContMdiffOn _ _ _ _ Set.univ := hf.cont_mdiff_on
-  convert (H₁.of_le le_top).comp' H₂ using 1
+  convert(H₁.of_le le_top).comp' H₂ using 1
   ext x
   have hfxv : f x = -↑v ↔ ⟪f x, -↑v⟫_ℝ = 1 :=
     by
@@ -545,8 +545,7 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
     convert hasFderivAt_stereoInvFunAux_comp_coe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
-  convert
-    (U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
+  convert(U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
       (ℝ ∙ (↑(-v) : E))ᗮ.Subtype using
     1
   simp only [Submodule.range_subtype, coe_neg_sphere]

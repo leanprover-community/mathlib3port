@@ -521,7 +521,7 @@ theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
   by_contra hc
   replace hc := pos_iff_ne_zero.mpr hc
   apply Nat.not_succ_le_self n
-  convert_to (⊤ : SimpleGraph { m | m < n + 1 }).chromaticNumber ≤ _
+  convert_to(⊤ : SimpleGraph { m | m < n + 1 }).chromaticNumber ≤ _
   · simp
   refine' (colorable_of_chromatic_number_pos hc).chromaticNumber_mono_of_embedding _
   apply embedding.complete_graph

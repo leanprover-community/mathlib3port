@@ -243,7 +243,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
         skip
         congr
         rw [← P_sa]
-      convert (star_mul_self_nonneg : 0 ≤ star P * P)
+      convert(star_mul_self_nonneg : 0 ≤ star P * P)
     have Q2_nonneg : 0 ≤ Q ^ 2 := by
       rw [sq]
       conv =>
@@ -251,9 +251,9 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
         skip
         congr
         rw [← Q_sa]
-      convert (star_mul_self_nonneg : 0 ≤ star Q * Q)
-    convert
-      smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg) (le_of_lt (show 0 < √2⁻¹ by norm_num))
+      convert(star_mul_self_nonneg : 0 ≤ star Q * Q)
+    convert smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg)
+        (le_of_lt (show 0 < √2⁻¹ by norm_num))
     -- `norm_num` can't directly show `0 ≤ √2⁻¹`
     simp
   apply le_of_sub_nonneg

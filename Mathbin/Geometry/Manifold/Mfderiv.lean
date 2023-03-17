@@ -156,7 +156,7 @@ theorem differentiable_within_at_localInvariantProp :
       rw [this] at h
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ Set.range I := by simp only [hx, mfld_simps]
       have := (mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this
-      convert (h.comp' _ (this.differentiable_within_at le_top)).mono_of_mem _ using 1
+      convert(h.comp' _ (this.differentiable_within_at le_top)).mono_of_mem _ using 1
       · ext y
         simp only [mfld_simps]
       refine'
@@ -177,7 +177,7 @@ theorem differentiable_within_at_localInvariantProp :
       have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ Set.range I' := by
         simp only [hx, mfld_simps]
       have := (mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A
-      convert (this.differentiable_within_at le_top).comp _ h _
+      convert(this.differentiable_within_at le_top).comp _ h _
       · ext y
         simp only [mfld_simps]
       · intro y hy

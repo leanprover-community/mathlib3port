@@ -296,8 +296,7 @@ theorem subalgebra_topologicalClosure_eq_top_of_separatesPoints (A : Subalgebra 
   apply SetLike.ext'
   let L := A.topological_closure
   have n : Set.Nonempty (L : Set C(X, ℝ)) := ⟨(1 : C(X, ℝ)), A.le_topological_closure A.one_mem⟩
-  convert
-    sublattice_closure_eq_top (L : Set C(X, ℝ)) n
+  convert sublattice_closure_eq_top (L : Set C(X, ℝ)) n
       (fun f fm g gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (fun f fm g gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (Subalgebra.SeparatesPoints.strongly
@@ -417,7 +416,7 @@ theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜
   refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values
     rw [SetLike.mem_coe, Subalgebra.mem_comap]
-    convert (A.restrict_scalars ℝ).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
+    convert(A.restrict_scalars ℝ).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
     ext1
     rw [mul_comm]
     exact (IsROrC.mul_conj _).symm

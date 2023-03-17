@@ -304,8 +304,8 @@ theorem coeFn_fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) :
 theorem span_fourierLp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ∞) :
     (span ℂ (range (@fourierLp T _ p _))).topologicalClosure = ⊤ :=
   by
-  convert
-    (ContinuousMap.toLp_denseRange ℂ hp (@haar_add_circle T hT) ℂ).topologicalClosure_map_submodule
+  convert(ContinuousMap.toLp_denseRange ℂ hp (@haar_add_circle T hT)
+          ℂ).topologicalClosure_map_submodule
       span_fourier_closure_eq_top
   rw [map_span, range_comp]
   simp only [ContinuousLinearMap.coe_coe]
@@ -559,7 +559,7 @@ theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0
     HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * I * n) * fourier (-n) (y : AddCircle T))
       (fourier (-n) (x : AddCircle T)) x :=
   by
-  convert (hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
+  convert(hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
   · ext1 y
     rw [div_div_eq_mul_div]
     ring

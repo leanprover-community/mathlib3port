@@ -1682,12 +1682,12 @@ theorem add_left_neg_le_zero : ∀ x : Pgame, -x + x ≤ 0
       cases i
       · -- If Left played in -x, Right responds with the same move in x.
         refine' ⟨@to_right_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), _⟩
-        convert @add_left_neg_le_zero (xR i)
+        convert@add_left_neg_le_zero (xR i)
         apply add_move_right_inr
       · -- If Left in x, Right responds with the same move in -x.
         dsimp
         refine' ⟨@to_right_moves_add ⟨_, _, _, _⟩ _ (Sum.inl i), _⟩
-        convert @add_left_neg_le_zero (xL i)
+        convert@add_left_neg_le_zero (xL i)
         apply add_move_right_inl
 #align pgame.add_left_neg_le_zero Pgame.add_left_neg_le_zero
 

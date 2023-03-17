@@ -139,8 +139,7 @@ theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     by
     simp only [left_inv, ContinuousMultilinearMap.neg_apply, neg_inj,
       ContinuousMultilinearMap.sum_apply]
-    convert
-      (sum_to_finset_eq_subtype (fun c : Composition (n + 2) => c.length < n + 2)
+    convert(sum_to_finset_eq_subtype (fun c : Composition (n + 2) => c.length < n + 2)
               fun c : Composition (n + 2) =>
               (ContinuousMultilinearMap.compAlongComposition (p.comp_continuous_linear_map ↑i.symm)
                   c (p.left_inv i c.length))

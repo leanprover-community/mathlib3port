@@ -295,8 +295,7 @@ theorem dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle (
   by
   rw [dist_eq_norm_vsub V p1 p3, dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p3 p2]
   unfold angle
-  convert
-    norm_sub_sq_eq_norm_sq_add_norm_sq_sub_two_mul_norm_mul_norm_mul_cos_angle (p1 -ᵥ p2 : V)
+  convert norm_sub_sq_eq_norm_sq_add_norm_sq_sub_two_mul_norm_mul_norm_mul_cos_angle (p1 -ᵥ p2 : V)
       (p3 -ᵥ p2 : V)
   · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
   · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm

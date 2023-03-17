@@ -83,7 +83,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     have hderiv : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
       by
       intro x hx
-      convert (Real.hasDerivAt_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
+      convert(Real.hasDerivAt_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
       field_simp [(by linarith : r + 1 ≠ 0)]
       ring
     apply integrable_on_deriv_of_nonneg hc _ hderiv
@@ -505,7 +505,7 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
       congr
       skip
       rw [← mul_div_cancel (Complex.exp (c * x)) hc]
-    convert ((Complex.hasDerivAt_exp _).comp x _).div_const c using 1
+    convert((Complex.hasDerivAt_exp _).comp x _).div_const c using 1
     simpa only [mul_one] using ((hasDerivAt_id (x : ℂ)).const_mul _).comp_of_real
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
   · ring_nf
@@ -518,8 +518,7 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) :
     (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
   by
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
-  convert
-      integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx))
+  convert integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx))
         (fun x hx => hasDerivAt_id x)
         (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
@@ -602,7 +601,7 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
   · intro x hx
     have f : HasDerivAt (fun y : ℂ => 1 + y ^ 2) (2 * x) x :=
       by
-      convert (hasDerivAt_pow 2 (x : ℂ)).const_add 1
+      convert(hasDerivAt_pow 2 (x : ℂ)).const_add 1
       · norm_cast
       · simp
     have g :
@@ -612,10 +611,10 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
       have : z ≠ 0 := by
         contrapose! hz
         rw [hz, zero_re]
-      convert (HasDerivAt.cpow_const (hasDerivAt_id _) (Or.inl hz)).div_const (2 * (t + 1)) using 1
+      convert(HasDerivAt.cpow_const (hasDerivAt_id _) (Or.inl hz)).div_const (2 * (t + 1)) using 1
       field_simp
       ring
-    convert (HasDerivAt.comp (↑x) (g _) f).comp_of_real using 1
+    convert(HasDerivAt.comp (↑x) (g _) f).comp_of_real using 1
     · field_simp
       ring
     · rw [add_re, one_re, ← of_real_pow, of_real_re]

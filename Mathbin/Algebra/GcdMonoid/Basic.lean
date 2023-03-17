@@ -1063,7 +1063,7 @@ theorem isUnit_gcd_of_eq_mul_gcd {α : Type _} [CancelCommMonoidWithZero α] [GC
     IsUnit (gcd x' y') := by
   rw [← associated_one_iff_isUnit]
   refine' Associated.of_mul_left _ (Associated.refl <| gcd x y) h
-  convert (gcd_mul_left' _ _ _).symm using 1
+  convert(gcd_mul_left' _ _ _).symm using 1
   rw [← ex, ← ey, mul_one]
 #align is_unit_gcd_of_eq_mul_gcd isUnit_gcd_of_eq_mul_gcd
 
@@ -1668,7 +1668,7 @@ noncomputable def normalizedGCDMonoidOfGCD [NormalizationMonoid α] [DecidableEq
           · apply (a0 _).elim
             rw [← zero_dvd_iff, ← ha]
             exact gcd_dvd_left _ _
-          · convert @normalize_zero α _ _
+          · convert@normalize_zero α _ _
         have h1 : gcd a b ≠ 0 := by
           have hab : a * b ≠ 0 := mul_ne_zero a0 hb
           contrapose! hab

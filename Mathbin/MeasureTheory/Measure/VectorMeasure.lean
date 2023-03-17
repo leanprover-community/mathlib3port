@@ -735,8 +735,7 @@ def restrict (v : VectorMeasure α M) (i : Set α) : VectorMeasure α M :=
       not_measurable' := fun i hi => if_neg hi
       m_Union' := by
         intro f hf₁ hf₂
-        convert
-          v.m_Union (fun n => (hf₁ n).inter hi)
+        convert v.m_Union (fun n => (hf₁ n).inter hi)
             (hf₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left)
         · ext n
           rw [if_pos (hf₁ n)]

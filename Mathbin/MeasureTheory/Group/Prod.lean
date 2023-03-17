@@ -160,7 +160,7 @@ where `S` is the map `(x, y) ↦ (x, xy)` and `R` is `prod.swap`. -/
 theorem measurePreservingMulProdInv [IsMulLeftInvariant ν] :
     MeasurePreserving (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.Prod ν) (μ.Prod ν) :=
   by
-  convert (measure_preserving_prod_inv_mul_swap ν μ).comp (measure_preserving_prod_mul_swap μ ν)
+  convert(measure_preserving_prod_inv_mul_swap ν μ).comp (measure_preserving_prod_mul_swap μ ν)
   ext1 ⟨x, y⟩
   simp_rw [Function.comp_apply, mul_inv_rev, inv_mul_cancel_right]
 #align measure_theory.measure_preserving_mul_prod_inv MeasureTheory.measurePreservingMulProdInv
@@ -449,7 +449,7 @@ theorem measurePreservingDivProd [IsMulRightInvariant μ] :
 theorem measurePreservingMulProdInvRight [IsMulRightInvariant μ] [IsMulRightInvariant ν] :
     MeasurePreserving (fun z : G × G => (z.1 * z.2, z.1⁻¹)) (μ.Prod ν) (μ.Prod ν) :=
   by
-  convert (measure_preserving_prod_div_swap ν μ).comp (measure_preserving_prod_mul_swap_right μ ν)
+  convert(measure_preserving_prod_div_swap ν μ).comp (measure_preserving_prod_mul_swap_right μ ν)
   ext1 ⟨x, y⟩
   simp_rw [Function.comp_apply, div_mul_eq_div_div_swap, div_self', one_div]
 #align measure_theory.measure_preserving_mul_prod_inv_right MeasureTheory.measurePreservingMulProdInvRight

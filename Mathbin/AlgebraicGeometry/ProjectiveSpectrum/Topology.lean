@@ -251,7 +251,7 @@ theorem zeroLocus_union (s s' : Set A) : zeroLocus 𝒜 (s ∪ s') = zeroLocus _
 
 theorem vanishingIdeal_union (t t' : Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (t ∪ t') = vanishingIdeal t ⊓ vanishingIdeal t' := by
-  ext1 <;> convert (gc_ideal 𝒜).u_inf
+  ext1 <;> convert(gc_ideal 𝒜).u_inf
 #align projective_spectrum.vanishing_ideal_union ProjectiveSpectrum.vanishingIdeal_union
 
 theorem zeroLocus_supᵢ_ideal {γ : Sort _} (I : γ → Ideal A) :
@@ -276,7 +276,7 @@ theorem zeroLocus_bUnion (s : Set (Set A)) :
 theorem vanishingIdeal_unionᵢ {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
   HomogeneousIdeal.toIdeal_injective <| by
-    convert (gc_ideal 𝒜).u_infᵢ <;> exact HomogeneousIdeal.toIdeal_infᵢ _
+    convert(gc_ideal 𝒜).u_infᵢ <;> exact HomogeneousIdeal.toIdeal_infᵢ _
 #align projective_spectrum.vanishing_ideal_Union ProjectiveSpectrum.vanishingIdeal_unionᵢ
 
 theorem zeroLocus_inf (I J : Ideal A) :

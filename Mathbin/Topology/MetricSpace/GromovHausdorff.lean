@@ -1207,7 +1207,7 @@ instance : CompleteSpace GHSpace :=
     rw [nonempty_compacts.to_GH_space, ← (u n).toGHSpace_rep,
       to_GH_space_eq_to_GH_space_iff_isometry_equiv]
     constructor
-    convert (isom n).isometryEquivOnRange.symm
+    convert(isom n).isometryEquivOnRange.symm
   -- Finally, we have proved the convergence of `u n`
   exact ⟨L.to_GH_space, by simpa only [this] using M⟩
 

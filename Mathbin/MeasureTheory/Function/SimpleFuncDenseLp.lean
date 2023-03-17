@@ -623,8 +623,9 @@ protected theorem aeStronglyMeasurable (f : lp.simpleFunc E p μ) :
 theorem toSimpleFunc_eq_to_fun (f : lp.simpleFunc E p μ) : toSimpleFunc f =ᵐ[μ] f :=
   show ⇑(toSimpleFunc f) =ᵐ[μ] ⇑(f : α →ₘ[μ] E)
     by
-    convert
-      (ae_eq_fun.coe_fn_mk (to_simple_func f) (to_simple_func f).AeStronglyMeasurable).symm using 2
+    convert(ae_eq_fun.coe_fn_mk (to_simple_func f)
+          (to_simple_func f).AeStronglyMeasurable).symm using
+      2
     exact (Classical.choose_spec f.2).symm
 #align measure_theory.Lp.simple_func.to_simple_func_eq_to_fun MeasureTheory.lp.simpleFunc.toSimpleFunc_eq_to_fun
 
@@ -795,8 +796,8 @@ protected theorem denseEmbedding (hp_ne_top : p ≠ ∞) :
             n)
           (simple_func.mem_ℒp_approx_on_range (Lp.strongly_measurable f).Measurable hfi' n)),
       fun n => mem_range_self _, _⟩
-  convert
-    simple_func.tendsto_approx_on_range_Lp hp_ne_top (Lp.strongly_measurable f).Measurable hfi'
+  convert simple_func.tendsto_approx_on_range_Lp hp_ne_top (Lp.strongly_measurable f).Measurable
+      hfi'
   rw [to_Lp_coe_fn f (Lp.mem_ℒp f)]
 #align measure_theory.Lp.simple_func.dense_embedding MeasureTheory.lp.simpleFunc.denseEmbedding
 

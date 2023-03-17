@@ -935,7 +935,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.max_rig
 theorem Filter.Tendsto.max_right {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
     Tendsto (fun i => max a (f i)) l (𝓝 a) :=
   by
-  convert ((continuous_max.comp (@Continuous.Prod.mk α α _ _ a)).Tendsto a).comp h
+  convert((continuous_max.comp (@Continuous.Prod.mk α α _ _ a)).Tendsto a).comp h
   simp
 #align filter.tendsto.max_right Filter.Tendsto.max_right
 
@@ -1215,7 +1215,7 @@ include t
 
 instance : OrderTopology αᵒᵈ :=
   ⟨by
-    convert @OrderTopology.topology_eq_generate_intervals α _ _ _ <;>
+    convert@OrderTopology.topology_eq_generate_intervals α _ _ _ <;>
         conv in _ ∨ _ => rw [or_comm] <;>
       rfl⟩
 
@@ -1559,7 +1559,7 @@ theorem nhdsWithin_Ici_basis' [TopologicalSpace α] [LinearOrder α] [OrderTopol
 theorem nhdsWithin_Iic_basis' [TopologicalSpace α] [LinearOrder α] [OrderTopology α] {a : α}
     (ha : ∃ l, l < a) : (𝓝[≤] a).HasBasis (fun l => l < a) fun l => Ioc l a :=
   by
-  convert @nhdsWithin_Ici_basis' αᵒᵈ _ _ _ (to_dual a) ha
+  convert@nhdsWithin_Ici_basis' αᵒᵈ _ _ _ (to_dual a) ha
   exact funext fun x => (@dual_Ico _ _ _ _).symm
 #align nhds_within_Iic_basis' nhdsWithin_Iic_basis'
 -/
@@ -2020,7 +2020,7 @@ second-countable. -/
 theorem countable_of_isolated_left' [SecondCountableTopology α] :
     Set.Countable { x : α | ∃ y, y < x ∧ Ioo y x = ∅ } :=
   by
-  convert @countable_of_isolated_right' αᵒᵈ _ _ _ _
+  convert@countable_of_isolated_right' αᵒᵈ _ _ _ _
   have : ∀ x y : α, Ioo x y = { z | z < y ∧ x < z } :=
     by
     simp_rw [and_comm', Ioo]
@@ -2640,7 +2640,7 @@ with `l < a`. -/
 theorem mem_nhdsWithin_Iic_iff_exists_Icc_subset [NoMinOrder α] [DenselyOrdered α] {a : α}
     {s : Set α} : s ∈ 𝓝[≤] a ↔ ∃ l, l < a ∧ Icc l a ⊆ s :=
   by
-  convert @mem_nhdsWithin_Ici_iff_exists_Icc_subset αᵒᵈ _ _ _ _ _ _ _
+  convert@mem_nhdsWithin_Ici_iff_exists_Icc_subset αᵒᵈ _ _ _ _ _ _ _
   simp_rw [show ∀ u : αᵒᵈ, @Icc αᵒᵈ _ a u = @Icc α _ u a from fun u => dual_Icc]
   rfl
 #align mem_nhds_within_Iic_iff_exists_Icc_subset mem_nhdsWithin_Iic_iff_exists_Icc_subset

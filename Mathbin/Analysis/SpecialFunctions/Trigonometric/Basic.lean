@@ -1141,8 +1141,7 @@ theorem tendsto_cos_neg_pi_div_two : Tendsto cos (𝓝[>] (-(π / 2))) (𝓝[>] 
 
 theorem tendsto_tan_neg_pi_div_two : Tendsto tan (𝓝[>] (-(π / 2))) atBot :=
   by
-  convert
-    tendsto_cos_neg_pi_div_two.inv_tendsto_zero.at_top_mul_neg (by norm_num)
+  convert tendsto_cos_neg_pi_div_two.inv_tendsto_zero.at_top_mul_neg (by norm_num)
       tendsto_sin_neg_pi_div_two
   simp only [Pi.inv_apply, ← div_eq_inv_mul, ← tan_eq_sin_div_cos]
 #align real.tendsto_tan_neg_pi_div_two Real.tendsto_tan_neg_pi_div_two

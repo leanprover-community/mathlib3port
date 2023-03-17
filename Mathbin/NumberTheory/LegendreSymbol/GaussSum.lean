@@ -301,11 +301,11 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (ZMod 8) :=
     by
     rw [hχ, one_mul, card, gaussSum]
-    convert ← congr_arg (· ^ 2) (Fin.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)
+    convert← congr_arg (· ^ 2) (Fin.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)
     · ext
       congr
       apply pow_one
-    convert_to (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
+    convert_to(0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
     · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
         Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_vecAppend,
         Matrix.cons_vecAlt0, Matrix.cons_vecAlt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
@@ -319,7 +319,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   have h := Char.card_pow_char_pow hq ψ₈.char (ringChar FF) n hu hFF hg
   rw [card, ← hchar, hχ, one_mul, ← hc, ← Nat.cast_pow (ringChar F), ← hc] at h
   -- finally, we change `2` to `8` on the left hand side
-  convert_to (8 : F) ^ (Fintype.card F / 2) = _
+  convert_to(8 : F) ^ (Fintype.card F / 2) = _
   ·
     rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
       (FiniteField.isSquare_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]

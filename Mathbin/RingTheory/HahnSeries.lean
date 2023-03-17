@@ -1223,7 +1223,7 @@ theorem ofPowerSeries_c (r : R) : ofPowerSeries Γ R (PowerSeries.c R r) = HahnS
   simp only [C, single_coeff, of_power_series_apply, RingHom.coe_mk]
   split_ifs with hn hn
   · subst hn
-    convert @emb_domain_coeff _ _ _ _ _ _ _ _ 0 <;> simp
+    convert@emb_domain_coeff _ _ _ _ _ _ _ _ 0 <;> simp
   · rw [emb_domain_notin_image_support]
     simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support,
       PowerSeries.coeff_c]
@@ -1238,7 +1238,7 @@ theorem ofPowerSeries_x : ofPowerSeries Γ R PowerSeries.x = single 1 1 :=
   simp only [single_coeff, of_power_series_apply, RingHom.coe_mk]
   split_ifs with hn hn
   · rw [hn]
-    convert @emb_domain_coeff _ _ _ _ _ _ _ _ 1 <;> simp
+    convert@emb_domain_coeff _ _ _ _ _ _ _ _ 1 <;> simp
   · rw [emb_domain_notin_image_support]
     simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support,
       PowerSeries.coeff_x]

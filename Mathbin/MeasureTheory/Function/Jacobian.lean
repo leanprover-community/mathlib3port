@@ -1366,8 +1366,7 @@ theorem integral_image_eq_integral_abs_deriv_smul {s : Set ℝ} {f : ℝ → ℝ
     [CompleteSpace F] (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x)
     (hf : InjOn f s) (g : ℝ → F) : (∫ x in f '' s, g x) = ∫ x in s, |f' x| • g (f x) :=
   by
-  convert
-    integral_image_eq_integral_abs_det_fderiv_smul volume hs
+  convert integral_image_eq_integral_abs_det_fderiv_smul volume hs
       (fun x hx => (hf' x hx).HasFderivWithinAt) hf g
   ext1 x
   rw [(by

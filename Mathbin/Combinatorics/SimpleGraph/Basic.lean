@@ -2949,7 +2949,7 @@ def mapNeighborSet (v : V) : G.neighborSet v ≃ G'.neighborSet (f v)
 
 #print SimpleGraph.Iso.card_eq_of_iso /-
 theorem card_eq_of_iso [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V = Fintype.card W := by
-  convert (Fintype.ofEquiv_card f.to_equiv).symm
+  convert(Fintype.ofEquiv_card f.to_equiv).symm
 #align simple_graph.iso.card_eq_of_iso SimpleGraph.Iso.card_eq_of_iso
 -/
 

@@ -167,7 +167,7 @@ theorem extendSubtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) (x) (hx :
 #print Equiv.extendSubtype_mem /-
 theorem extendSubtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) :
     q (e.extendSubtype x) := by
-  convert (e ⟨x, hx⟩).2
+  convert(e ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_mem _ hx, Subtype.val_eq_coe]
 #align equiv.extend_subtype_mem Equiv.extendSubtype_mem
 -/
@@ -185,7 +185,7 @@ theorem extendSubtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) (x) (
 #print Equiv.extendSubtype_not_mem /-
 theorem extendSubtype_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :
     ¬q (e.extendSubtype x) := by
-  convert (e.to_compl ⟨x, hx⟩).2
+  convert(e.to_compl ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_not_mem _ hx, Subtype.val_eq_coe]
 #align equiv.extend_subtype_not_mem Equiv.extendSubtype_not_mem
 -/

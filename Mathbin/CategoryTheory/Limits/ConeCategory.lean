@@ -130,7 +130,7 @@ theorem IsLimit.liftConeMorphism_eq_isTerminal_from {F : J ⥤ C} {c : Cone F} (
 theorem IsTerminal.from_eq_liftConeMorphism {F : J ⥤ C} {c : Cone F} (hc : IsTerminal c)
     (s : Cone F) :
     IsTerminal.from hc s = ((Cone.isLimitEquivIsTerminal _).symm hc).liftConeMorphism s := by
-  convert (is_limit.lift_cone_morphism_eq_is_terminal_from _ s).symm
+  convert(is_limit.lift_cone_morphism_eq_is_terminal_from _ s).symm
 #align category_theory.limits.is_terminal.from_eq_lift_cone_morphism CategoryTheory.Limits.IsTerminal.from_eq_liftConeMorphism
 -/
 
@@ -182,7 +182,7 @@ def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ C
   map c d f :=
     { Hom := f.right
       w' := fun j => by
-        convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
+        convert(congr_fun (congr_arg nat_trans.app f.w) j).symm
         dsimp
         simp }
 #align category_theory.limits.cocone.from_structured_arrow CategoryTheory.Limits.Cocone.fromStructuredArrow
@@ -248,7 +248,7 @@ theorem IsColimit.descCoconeMorphism_eq_isInitial_to {F : J ⥤ C} {c : Cocone F
 theorem IsInitial.to_eq_descCoconeMorphism {F : J ⥤ C} {c : Cocone F} (hc : IsInitial c)
     (s : Cocone F) :
     IsInitial.to hc s = ((Cocone.isColimitEquivIsInitial _).symm hc).descCoconeMorphism s := by
-  convert (is_colimit.desc_cocone_morphism_eq_is_initial_to _ s).symm
+  convert(is_colimit.desc_cocone_morphism_eq_is_initial_to _ s).symm
 #align category_theory.limits.is_initial.to_eq_desc_cocone_morphism CategoryTheory.Limits.IsInitial.to_eq_descCoconeMorphism
 -/
 

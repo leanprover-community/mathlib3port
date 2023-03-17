@@ -380,7 +380,7 @@ theorem quadratic_reciprocity' {a b : ℕ} (ha : Odd a) (hb : Odd b) :
   let rhs : ℕ → ℕ →* ℤ := fun a =>
     { toFun := fun x => qrSign x a * J(x | a)
       map_one' := by
-        convert ← mul_one _
+        convert← mul_one _
         symm
         all_goals apply one_left
       map_mul' := fun x y => by rw [qrSign.mul_left, Nat.cast_mul, mul_left, mul_mul_mul_comm] }

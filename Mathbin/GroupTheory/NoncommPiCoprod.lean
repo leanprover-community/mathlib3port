@@ -136,8 +136,7 @@ def noncommPiCoprod : (∀ i : ι, N i) →* M
     simp
   map_mul' f g := by
     classical
-      convert
-        @Finset.noncommProd_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
+      convert@Finset.noncommProd_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
       · ext i
         exact map_mul (ϕ i) (f i) (g i)
       · rintro i - j - h
@@ -332,7 +331,7 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
       exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
     change f = 1
     rw [← pow_one f, ← orderOf_dvd_iff_pow_eq_one]
-    convert ← Nat.dvd_gcd hxp hxi
+    convert← Nat.dvd_gcd hxp hxi
     rw [← Nat.coprime_iff_gcd_eq_one]
     apply Nat.coprime_prod_left
     intro j _

@@ -59,7 +59,7 @@ theorem closedEmbedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤
     closed_range :=
       isClosed_induced_iff.2
         ⟨S₁, hS₁, by
-          convert (Set.range_subtype_map id _).symm
+          convert(Set.range_subtype_map id _).symm
           rw [Set.image_id]
           rfl⟩ }
 #align star_subalgebra.closed_embedding_inclusion StarSubalgebra.closedEmbedding_inclusion

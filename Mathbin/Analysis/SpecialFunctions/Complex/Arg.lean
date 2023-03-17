@@ -495,8 +495,7 @@ theorem arg_cos_add_sin_mul_i_coe_angle (θ : Real.Angle) :
 theorem arg_mul_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
     (arg (x * y) : Real.Angle) = arg x + arg y :=
   by
-  convert
-    arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs.pos hx) (abs.pos hy))
+  convert arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs.pos hx) (abs.pos hy))
       (arg x + arg y : Real.Angle) using
     3
   simp_rw [← Real.Angle.coe_add, Real.Angle.sin_coe, Real.Angle.cos_coe, of_real_cos, of_real_sin,
@@ -591,8 +590,7 @@ theorem tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
     have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
     filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds this]with _ him hre
     rw [arg, if_neg hre.not_le, if_neg him.not_le]
-  convert
-    (real.continuous_at_arcsin.comp_continuous_within_at
+  convert(real.continuous_at_arcsin.comp_continuous_within_at
           ((continuous_im.continuous_at.comp_continuous_within_at continuousWithinAt_neg).div
             continuous_abs.continuous_within_at _)).sub
       tendsto_const_nhds

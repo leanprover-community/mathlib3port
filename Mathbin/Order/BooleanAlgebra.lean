@@ -1328,7 +1328,7 @@ protected def Function.Injective.booleanAlgebra [Sup α] [Inf α] [Top α] [Bot 
       hf <|
         (map_sdiff _ _).trans <|
           sdiff_eq.trans <| by
-            convert (map_inf _ _).symm
+            convert(map_inf _ _).symm
             exact (map_compl _).symm }
 #align function.injective.boolean_algebra Function.Injective.booleanAlgebra
 

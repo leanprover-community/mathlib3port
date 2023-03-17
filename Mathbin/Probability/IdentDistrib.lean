@@ -307,7 +307,7 @@ theorem constDiv [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c 
 theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) :
     evariance f μ = evariance g ν :=
   by
-  convert (h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nNReal_eNNReal.sq.lintegral_eq
+  convert(h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nNReal_eNNReal.sq.lintegral_eq
   rw [h.integral_eq]
   rfl
 #align probability_theory.ident_distrib.evariance_eq ProbabilityTheory.IdentDistrib.evariance_eq

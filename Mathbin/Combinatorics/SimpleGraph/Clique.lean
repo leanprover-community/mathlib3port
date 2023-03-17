@@ -263,7 +263,7 @@ noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) :
     apply iso.complete_graph
     simpa using (Fintype.equivFin h.some).symm
   rw [← ha] at this
-  convert (embedding.induce ↑h.some).comp this.to_embedding <;> exact hb.symm
+  convert(embedding.induce ↑h.some).comp this.to_embedding <;> exact hb.symm
 #align simple_graph.top_embedding_of_not_clique_free SimpleGraph.topEmbeddingOfNotCliqueFree
 
 /- warning: simple_graph.not_clique_free_iff -> SimpleGraph.not_cliqueFree_iff is a dubious translation:

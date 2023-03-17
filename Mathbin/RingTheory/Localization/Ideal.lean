@@ -220,8 +220,7 @@ theorem bot_lt_comap_prime [IsDomain R] (hM : M ≤ R⁰) (p : Ideal S) [hpp : p
     (hp0 : p ≠ ⊥) : ⊥ < Ideal.comap (algebraMap R S) p :=
   by
   haveI : IsDomain S := is_domain_of_le_non_zero_divisors _ hM
-  convert
-    (order_iso_of_prime M S).lt_iff_lt.mpr
+  convert(order_iso_of_prime M S).lt_iff_lt.mpr
       (show (⟨⊥, Ideal.bot_prime⟩ : { p : Ideal S // p.IsPrime }) < ⟨p, hpp⟩ from hp0.bot_lt)
   exact (Ideal.comap_bot_of_injective (algebraMap R S) (IsLocalization.injective _ hM)).symm
 #align is_localization.bot_lt_comap_prime IsLocalization.bot_lt_comap_prime

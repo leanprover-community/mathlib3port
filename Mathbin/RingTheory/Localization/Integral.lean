@@ -95,7 +95,7 @@ theorem integerNormalization_spec (p : S[X]) :
       Classical.choose_spec
         (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.image p.coeff))
           (p.coeff i) (finset.mem_image.mpr ⟨i, hi, rfl⟩))
-  · convert (smul_zero _).symm
+  · convert(smul_zero _).symm
     · apply RingHom.map_zero
     · exact not_mem_support_iff.mp hi
 #align is_localization.integer_normalization_spec IsLocalization.integerNormalization_spec

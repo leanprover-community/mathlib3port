@@ -177,9 +177,8 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
     exact Subtype.ext (mul_left_cancel (subtype.ext_iff.mp hbc))
   have mono : Monotone (fun n => Fintype.card ↥(S ^ n) : ℕ → ℕ) :=
     monotone_nat_of_le_succ fun n => key a _ _ fun b hb => Set.mul_mem_mul ha hb
-  convert
-    card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n)) fun n h =>
-      le_antisymm (mono (n + 1).le_succ) (key a⁻¹ _ _ _)
+  convert card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n))
+      fun n h => le_antisymm (mono (n + 1).le_succ) (key a⁻¹ _ _ _)
   · simp only [[anonymous], Fintype.card_ofFinset]
   replace h : {a} * S ^ n = S ^ (n + 1)
   · refine' Set.eq_of_subset_of_card_le _ (le_trans (ge_of_eq h) _)

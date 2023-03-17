@@ -364,7 +364,7 @@ theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
     suffices im z = 0 by
       use re z
       rw [← add_zero (coe _)]
-      convert (re_add_im z).symm
+      convert(re_add_im z).symm
       simp [this]
     contrapose! h
     rw [← re_add_im z]

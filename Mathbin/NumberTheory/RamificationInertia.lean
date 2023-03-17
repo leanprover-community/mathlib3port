@@ -474,8 +474,7 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
     exact add_mem (Submodule.mem_sup_left y_mem) (neg_mem <| Submodule.mem_sup_right y_eq)
   · have := b.linear_independent
     rw [b_eq_b'] at this
-    convert
-      finrank_quotient_map.linear_independent_of_nontrivial K _
+    convert finrank_quotient_map.linear_independent_of_nontrivial K _
         ((Algebra.linearMap S L).restrictScalars R) _ ((Submodule.mkQ _).restrictScalars R) this
     · rw [quotient.algebra_map_eq, Ideal.mk_ker]
       exact hp.ne_top

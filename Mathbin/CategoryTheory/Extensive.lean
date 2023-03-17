@@ -444,8 +444,8 @@ def finitaryExtensiveTopAux (Z : TopCat.{u}) (f : Z ⟶ TopCat.of (Sum PUnit.{u 
     · revert h x
       apply (IsOpen.continuousOn_iff _).mp
       · rw [continuousOn_iff_continuous_restrict]
-        convert_to
-          Continuous fun x : { x | f x = Sum.inl PUnit.unit } => s.inl ⟨(x, PUnit.unit), x.2⟩
+        convert_to Continuous fun x : { x | f x = Sum.inl PUnit.unit } =>
+            s.inl ⟨(x, PUnit.unit), x.2⟩
         · ext ⟨x, hx⟩
           exact dif_pos hx
         continuity
@@ -457,8 +457,7 @@ def finitaryExtensiveTopAux (Z : TopCat.{u}) (f : Z ⟶ TopCat.of (Sum PUnit.{u 
     · revert h x
       apply (IsOpen.continuousOn_iff _).mp
       · rw [continuousOn_iff_continuous_restrict]
-        convert_to
-          Continuous fun x : { x | f x ≠ Sum.inl PUnit.unit } =>
+        convert_to Continuous fun x : { x | f x ≠ Sum.inl PUnit.unit } =>
             s.inr ⟨(x, PUnit.unit), (this _).resolve_left x.2⟩
         · ext ⟨x, hx⟩
           exact dif_neg hx

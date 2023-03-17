@@ -303,8 +303,7 @@ theorem plusMap_toPlus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) :=
   dsimp
   simp only [limit.lift_π, multifork.of_ι_π_app, multiequalizer.lift_ι, category.assoc]
   dsimp [multifork.of_ι]
-  convert
-    multiequalizer.condition (S.unop.index P)
+  convert multiequalizer.condition (S.unop.index P)
       ⟨_, _, _, II.f, 𝟙 _, I.f, II.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by simp⟩
   · cases I
     rfl

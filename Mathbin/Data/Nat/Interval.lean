@@ -445,7 +445,7 @@ Case conversion may be inaccurate. Consider using '#align finset.range_add_eq_un
 theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) :=
   by
   rw [Finset.range_eq_Ico, map_eq_image]
-  convert (Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
+  convert(Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
   exact image_add_left_Ico _ _ _
 #align finset.range_add_eq_union Finset.range_add_eq_union
 
@@ -492,7 +492,7 @@ theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ)
     (hm : ∀ x, seed < x → P x → P (k * x)) (n : ℕ) : P n :=
   by
   apply Nat.cauchy_induction h _ hs ((· * ·) k) fun x hl hP => ⟨_, hm x hl hP⟩
-  convert (mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
+  convert(mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
   rw [one_mul]
 #align nat.cauchy_induction_mul Nat.cauchy_induction_mul
 -/

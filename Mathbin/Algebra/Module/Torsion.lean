@@ -465,8 +465,7 @@ theorem supᵢ_torsionBy_eq_torsionBy_prod :
 
 theorem supIndep_torsionBy : S.SupIndep fun i => torsionBy R M <| q i :=
   by
-  convert
-    sup_indep_torsion_by_ideal fun i hi j hj ij =>
+  convert sup_indep_torsion_by_ideal fun i hi j hj ij =>
       (Ideal.sup_eq_top_iff_isCoprime (q i) _).mpr <| hq hi hj ij
   ext : 1; exact (torsion_by_span_singleton_eq _).symm
 #align submodule.sup_indep_torsion_by Submodule.supIndep_torsionBy
@@ -508,8 +507,7 @@ theorem torsionBy_isInternal {q : ι → R} (hq : (S : Set ι).Pairwise <| (IsCo
   by
   rw [← Module.isTorsionBy_span_singleton_iff, Ideal.submodule_span_eq, ←
     Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_infᵢ] at hM
-  convert
-    torsion_by_set_is_internal
+  convert torsion_by_set_is_internal
       (fun i hi j hj ij => (Ideal.sup_eq_top_iff_isCoprime (q i) _).mpr <| hq hi hj ij) hM
   ext : 1; exact (torsion_by_span_singleton_eq _).symm
 #align submodule.torsion_by_is_internal Submodule.torsionBy_isInternal

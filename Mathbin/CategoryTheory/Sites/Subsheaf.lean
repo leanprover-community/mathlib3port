@@ -333,7 +333,7 @@ theorem Subpresheaf.sheafify_le (h : G ≤ G') (hF : Presieve.IsSheaf J F)
     (hG' : Presieve.IsSheaf J G'.toPresheaf) : G.sheafify J ≤ G' :=
   by
   intro U x hx
-  convert ((G.sheafify_lift (subpresheaf.hom_of_le h) hG').app U ⟨x, hx⟩).2
+  convert((G.sheafify_lift (subpresheaf.hom_of_le h) hG').app U ⟨x, hx⟩).2
   apply (hF _ hx).IsSeparatedFor.ext
   intro V i hi
   have :=

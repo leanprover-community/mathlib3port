@@ -2435,7 +2435,7 @@ theorem continuousAt_iff {f : α → β} {g : β → γ} (hf : OpenEmbedding f) 
     ContinuousAt (g ∘ f) x ↔ ContinuousAt g (f x) :=
   by
   haveI : Nonempty α := ⟨x⟩
-  convert ((hf.to_local_homeomorph f).continuousAt_iff_continuousAt_comp_right _).symm
+  convert((hf.to_local_homeomorph f).continuousAt_iff_continuousAt_comp_right _).symm
   · apply (LocalHomeomorph.left_inv _ _).symm
     simp
   · simp

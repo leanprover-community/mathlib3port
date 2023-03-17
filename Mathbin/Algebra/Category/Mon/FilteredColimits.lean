@@ -216,7 +216,7 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit
   toFun := (Types.colimitCocone (F ⋙ forget Mon)).ι.app j
   map_one' := (colimit_one_eq j).symm
   map_mul' x y := by
-    convert (colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 j) (𝟙 j)).symm
+    convert(colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 j) (𝟙 j)).symm
     rw [F.map_id, id_apply, id_apply]; rfl
 #align Mon.filtered_colimits.cocone_morphism Mon.FilteredColimits.coconeMorphism
 #align AddMon.filtered_colimits.cocone_morphism AddMon.FilteredColimits.coconeMorphism

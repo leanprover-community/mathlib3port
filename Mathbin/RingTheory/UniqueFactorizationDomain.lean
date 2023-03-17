@@ -317,7 +317,7 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
         _ = Multiset.card (Classical.choose (pf b h)) :=
           Multiset.card_eq_card_of_rel (prime_factors_unique _ (Classical.choose_spec (pf _ h)).1 _)
         
-      · convert (Classical.choose_spec (pf c cne0)).2.symm
+      · convert(Classical.choose_spec (pf c cne0)).2.symm
         rw [Con, Multiset.prod_zero]
       · intro x hadd
         rw [Multiset.mem_add] at hadd
@@ -365,7 +365,7 @@ theorem MulEquiv.uniqueFactorizationMonoid (e : α ≃* β) (hα : UniqueFactori
   obtain ⟨w, hp, u, h⟩ :=
     hα (e.symm a) fun h =>
       ha <| by
-        convert ← map_zero e
+        convert← map_zero e
         simp [← h]
   exact
     ⟨w.map e, fun b hb =>
@@ -573,7 +573,7 @@ theorem factors_eq_normalizedFactors {M : Type _} [CancelCommMonoidWithZero M] [
     [UniqueFactorizationMonoid M] [Unique Mˣ] (x : M) : factors x = normalizedFactors x :=
   by
   unfold normalized_factors
-  convert (Multiset.map_id (factors x)).symm
+  convert(Multiset.map_id (factors x)).symm
   ext p
   exact normalize_eq p
 #align unique_factorization_monoid.factors_eq_normalized_factors UniqueFactorizationMonoid.factors_eq_normalizedFactors
@@ -629,8 +629,7 @@ theorem normalizedFactors_eq_of_dvd (a : α) :
     ∀ (p) (_ : p ∈ normalizedFactors a) (q) (_ : q ∈ normalizedFactors a), p ∣ q → p = q :=
   by
   intro p hp q hq hdvd
-  convert
-        normalize_eq_normalize hdvd
+  convert normalize_eq_normalize hdvd
           ((prime_of_normalized_factor _ hp).Irreducible.dvd_symm
             (prime_of_normalized_factor _ hq).Irreducible hdvd) <;>
       apply (normalize_normalized_factor _ _).symm <;>
@@ -1042,7 +1041,7 @@ theorem count_normalizedFactors_eq {p x : R} (hp : Irreducible p) (hnorm : norma
   · simp [hx0] at hlt
     contradiction
   rw [← PartENat.natCast_inj]
-  convert (multiplicity_eq_count_normalized_factors hp hx0).symm
+  convert(multiplicity_eq_count_normalized_factors hp hx0).symm
   · exact hnorm.symm
   exact (multiplicity.eq_coe_iff.mpr ⟨hle, hlt⟩).symm
 #align unique_factorization_monoid.count_normalized_factors_eq UniqueFactorizationMonoid.count_normalizedFactors_eq

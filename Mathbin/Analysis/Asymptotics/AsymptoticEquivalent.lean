@@ -262,8 +262,8 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
   have :
     ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x) :=
     by
-    convert
-      (habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
+    convert(habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub
+        (eventually_eq.refl _ fun x => b x • v x)
     ext
     rw [Pi.mul_apply, mul_comm, mul_smul, ← smul_sub]
   refine' (is_o_congr this.symm <| eventually_eq.rfl).mp ((is_O_refl b l).smul_isOCat _)
@@ -342,8 +342,8 @@ theorem IsEquivalent.tendsto_atTop_iff [OrderTopology β] (huv : u ~[l] v) :
 theorem IsEquivalent.tendsto_atBot [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atBot) :
     Tendsto v l atBot :=
   by
-  convert
-    tendsto_neg_at_top_at_bot.comp (huv.neg.tendsto_at_top <| tendsto_neg_at_bot_at_top.comp hu)
+  convert tendsto_neg_at_top_at_bot.comp
+      (huv.neg.tendsto_at_top <| tendsto_neg_at_bot_at_top.comp hu)
   ext
   simp
 #align asymptotics.is_equivalent.tendsto_at_bot Asymptotics.IsEquivalent.tendsto_atBot

@@ -512,7 +512,7 @@ This means you may not be able to `simp` using this lemma unless you `open_local
 @[reassoc.1]
 theorem biproduct.ι_π [DecidableEq J] (f : J → C) [HasBiproduct f] (j j' : J) :
     biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_arg f h) else 0 := by
-  convert (biproduct.bicone f).ι_π j j'
+  convert(biproduct.bicone f).ι_π j j'
 #align category_theory.limits.biproduct.ι_π CategoryTheory.Limits.biproduct.ι_π
 -/
 

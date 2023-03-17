@@ -65,7 +65,7 @@ theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
     (Set.range fun n => Nat.rec x f n : Set α) =
       {x} ∪ Set.range fun n => Nat.rec (f 0 x) (f ∘ succ) n :=
   by
-  convert (range_of_succ _).symm
+  convert(range_of_succ _).symm
   ext n
   induction' n with n ihn
   · rfl

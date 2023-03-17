@@ -95,7 +95,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_submonoid.fg_iff_mul_fg AddSubmonoid.fg_iff_mul_fgₓ'. -/
 theorem AddSubmonoid.fg_iff_mul_fg (P : AddSubmonoid N) : P.Fg ↔ P.toSubmonoid.Fg :=
   by
-  convert (Submonoid.fg_iff_add_fg P.to_submonoid).symm
+  convert(Submonoid.fg_iff_add_fg P.to_submonoid).symm
   exact SetLike.ext' rfl
 #align add_submonoid.fg_iff_mul_fg AddSubmonoid.fg_iff_mul_fg
 

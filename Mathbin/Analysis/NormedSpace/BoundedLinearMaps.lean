@@ -417,14 +417,14 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     by
     refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_isOCat _
     rw [Asymptotics.isOCat_const_iff one_ne]
-    convert ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
+    convert((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
     · simp
     infer_instance
   have h₂ : (fun e : E × F => f (x.1, e.2 - x.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
     refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_isOCat _
     rw [Asymptotics.isOCat_const_iff one_ne]
-    convert (continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
+    convert(continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
     · simp
     infer_instance
   have := h₁.add h₂

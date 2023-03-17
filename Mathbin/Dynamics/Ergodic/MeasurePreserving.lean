@@ -106,7 +106,7 @@ protected theorem comp_left_iff {g : α → β} {e : β ≃ᵐ γ} (h : MeasureP
     MeasurePreserving (e ∘ g) μa μc ↔ MeasurePreserving g μa μb :=
   by
   refine' ⟨fun hg => _, fun hg => h.comp hg⟩
-  convert (measure_preserving.symm e h).comp hg
+  convert(measure_preserving.symm e h).comp hg
   simp [← Function.comp.assoc e.symm e g]
 #align measure_theory.measure_preserving.comp_left_iff MeasureTheory.MeasurePreserving.comp_left_iff
 

@@ -1046,8 +1046,8 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
   refine' ⟨fun n => (fs n).1 n, ⟨fun n => (fs n).2.1.1 n, fun m n mn => _⟩, fun n g hg1 hg2 => _⟩
   · dsimp
     rw [← Subtype.val_eq_coe, h m n (le_of_lt mn)]
-    convert (fs n).2.1.2 m n mn
-  · convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 le_rfl)
+    convert(fs n).2.1.2 m n mn
+  · convert(fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 le_rfl)
     rw [← h m n (le_of_lt mn)]
 #align set.partially_well_ordered_on.exists_min_bad_of_exists_bad Set.PartiallyWellOrderedOn.exists_min_bad_of_exists_bad
 -/

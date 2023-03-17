@@ -167,7 +167,7 @@ theorem mem_closure_iff_infEdist_zero : x ∈ closure s ↔ infEdist x s = 0 :=
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum edistance to this set vanishes -/
 theorem mem_iff_infEdist_zero_of_closed (h : IsClosed s) : x ∈ s ↔ infEdist x s = 0 :=
   by
-  convert ← mem_closure_iff_inf_edist_zero
+  convert← mem_closure_iff_inf_edist_zero
   exact h.closure_eq
 #align emetric.mem_iff_inf_edist_zero_of_closed Emetric.mem_iff_infEdist_zero_of_closed
 

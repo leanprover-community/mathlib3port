@@ -626,7 +626,7 @@ theorem strong_law_aux3 :
   by
   have A : tendsto (fun i => 𝔼[truncation (X i) i]) at_top (𝓝 𝔼[X 0]) :=
     by
-    convert (tendsto_integral_truncation hint).comp tendsto_nat_cast_atTop_atTop
+    convert(tendsto_integral_truncation hint).comp tendsto_nat_cast_atTop_atTop
     ext i
     exact (hident i).truncation.integral_eq
   convert Asymptotics.isOCat_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 A)

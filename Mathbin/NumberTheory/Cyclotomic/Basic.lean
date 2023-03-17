@@ -166,9 +166,9 @@ theorem subsingleton_iff [Subsingleton B] : IsCyclotomicExtension S A B ↔ S = 
     rw [mem_singleton_iff, ← PNat.coe_eq_one_iff]
     exact_mod_cast hζ.unique (IsPrimitiveRoot.of_subsingleton ζ)
   · rintro (rfl | rfl)
-    · refine' ⟨fun _ h => h.elim, fun x => by convert (mem_top : x ∈ ⊤)⟩
+    · refine' ⟨fun _ h => h.elim, fun x => by convert(mem_top : x ∈ ⊤)⟩
     · rw [iff_singleton]
-      refine' ⟨⟨0, IsPrimitiveRoot.of_subsingleton 0⟩, fun x => by convert (mem_top : x ∈ ⊤)⟩
+      refine' ⟨⟨0, IsPrimitiveRoot.of_subsingleton 0⟩, fun x => by convert(mem_top : x ∈ ⊤)⟩
 #align is_cyclotomic_extension.subsingleton_iff IsCyclotomicExtension.subsingleton_iff
 
 /-- If `B` is a cyclotomic extension of `A` given by roots of unity of order in `S ∪ T`, then `B`
@@ -277,7 +277,7 @@ variable {A B}
 theorem singleton_one_of_bot_eq_top (h : (⊥ : Subalgebra A B) = ⊤) :
     IsCyclotomicExtension {1} A B :=
   by
-  convert (iff_union_singleton_one _ _ _).1 (singleton_zero_of_bot_eq_top h)
+  convert(iff_union_singleton_one _ _ _).1 (singleton_zero_of_bot_eq_top h)
   simp
 #align is_cyclotomic_extension.singleton_one_of_bot_eq_top IsCyclotomicExtension.singleton_one_of_bot_eq_top
 

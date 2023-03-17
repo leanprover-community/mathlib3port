@@ -755,7 +755,7 @@ theorem QuotientMap.continuous_lift_prod_right (hf : QuotientMap f) {g : Y × X 
   have : Continuous fun p : X₀ × Y => g ((Prod.swap p).1, f (Prod.swap p).2) :=
     hg.comp continuous_swap
   have : Continuous fun p : X₀ × Y => (g ∘ Prod.swap) (f p.1, p.2) := this
-  convert (hf.continuous_lift_prod_left this).comp continuous_swap
+  convert(hf.continuous_lift_prod_left this).comp continuous_swap
   ext x
   simp
 #align quotient_map.continuous_lift_prod_right QuotientMap.continuous_lift_prod_right

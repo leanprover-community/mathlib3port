@@ -155,7 +155,7 @@ theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
   by
   simp_rw [sub_eq_neg_add]
   rw [← neg_one_mul, mul_comm (-1 : ℝ), mul_assoc, mul_comm (-1 : ℝ), ← mul_assoc]
-  convert @HasDerivAt.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.AddConst x)
+  convert@HasDerivAt.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.AddConst x)
   simp only [Nat.cast_add, Nat.cast_one]
 #align monomial_has_deriv_aux monomial_has_deriv_aux
 
@@ -172,7 +172,7 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
     HasDerivWithinAt (fun t => iteratedDerivWithin (k + 1) f s t)
       (iteratedDerivWithin (k + 2) f s y) s' y :=
     by
-    convert (hf' y hy).HasDerivWithinAt
+    convert(hf' y hy).HasDerivWithinAt
     rw [iteratedDerivWithin_succ (hs'_unique.mono h)]
     refine' (derivWithin_subset h hs'_unique _).symm
     exact (hf' y hy).antimono h hs'

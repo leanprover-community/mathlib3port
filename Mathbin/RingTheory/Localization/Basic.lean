@@ -1228,7 +1228,7 @@ theorem isLocalization_of_algEquiv [Algebra R P] [IsLocalization M S] (h : S ≃
     IsLocalization M P := by
   constructor
   · intro y
-    convert (IsLocalization.map_units S y).map h.to_alg_hom.to_ring_hom.to_monoid_hom
+    convert(IsLocalization.map_units S y).map h.to_alg_hom.to_ring_hom.to_monoid_hom
     exact (h.commutes y).symm
   · intro y
     obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj M (h.symm y)
@@ -1310,7 +1310,7 @@ theorem isLocalization_iff_of_base_ringEquiv (h : R ≃+* P) :
   refine' ⟨fun _ => is_localization_of_base_ring_equiv _ _ h, _⟩
   letI := ((algebraMap R S).comp h.symm.to_ring_hom).toAlgebra
   intro H
-  convert @is_localization_of_base_ring_equiv _ _ _ _ _ _ H h.symm
+  convert@is_localization_of_base_ring_equiv _ _ _ _ _ _ H h.symm
   · erw [Submonoid.map_equiv_eq_comap_symm, Submonoid.comap_map_eq_of_injective]
     exact h.to_equiv.injective
   rw [RingHom.algebraMap_toAlgebra, RingHom.comp_assoc]

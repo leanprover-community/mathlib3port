@@ -110,7 +110,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε
     clear_value g
     obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
-    convert_to ‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
+    convert_to‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
     · congr 1
       have := Fin.insertNth_sub_same i (I.upper i) (I.lower i) y
       simp only [← this, f'.map_sub]

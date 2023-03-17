@@ -289,7 +289,7 @@ theorem tendsto_abs_re_smul {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
     exact_mod_cast hp.sq_add_sq_ne_zero
   let f := Homeomorph.mulRight₀ _ this
   let ff := Homeomorph.addRight (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
-  convert (f.trans ff).ClosedEmbedding.tendsto_cocompact.comp (tendsto_lc_row0 hp)
+  convert(f.trans ff).ClosedEmbedding.tendsto_cocompact.comp (tendsto_lc_row0 hp)
   ext g
   change
     ((g : SL(2, ℤ)) • z).re =

@@ -493,7 +493,7 @@ theorem Submartingale.sum_mul_upcrossingStrat_le [IsFiniteMeasure μ] (hf : Subm
         (integrable.sub (integrable_finset_sum _ fun i hi => hf.integrable _)
           (integrable_finset_sum _ fun i hi => hf.integrable _))
         _
-    convert (hf.sum_upcrossing_strat_mul a b N).Integrable n
+    convert(hf.sum_upcrossing_strat_mul a b N).Integrable n
     ext
     simp
   rw [h₂, sub_nonneg] at h₁

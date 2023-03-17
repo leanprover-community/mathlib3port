@@ -237,8 +237,7 @@ theorem isClassified_of_isPrimitiveClassified (hp : h.IsPrimitiveClassified) : h
 theorem isClassified_of_normalize_isPrimitiveClassified (hc : h.normalize.IsPrimitiveClassified) :
     h.IsClassified :=
   by
-  convert
-      h.normalize.mul_is_classified (Int.gcd x y)
+  convert h.normalize.mul_is_classified (Int.gcd x y)
         (is_classified_of_is_primitive_classified h.normalize hc) <;>
     rw [Int.mul_ediv_cancel']
   · exact Int.gcd_dvd_left x y

@@ -941,8 +941,7 @@ theorem stalkAlgebra_map (p : PrimeSpectrum R) (r : R) :
 instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
     IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal :=
   by
-  convert
-    (IsLocalization.isLocalization_iff_of_ringEquiv _
+  convert(IsLocalization.isLocalization_iff_of_ringEquiv _
           (stalk_iso R p).symm.commRingIsoToRingEquiv).mp
       Localization.isLocalization
   apply Algebra.algebra_ext
@@ -967,8 +966,7 @@ theorem openAlgebra_map (U : (Opens (PrimeSpectrum R))ᵒᵖ) (r : R) :
 instance IsLocalization.to_basicOpen (r : R) :
     IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) :=
   by
-  convert
-    (IsLocalization.isLocalization_iff_of_ringEquiv _
+  convert(IsLocalization.isLocalization_iff_of_ringEquiv _
           (basic_open_iso R r).symm.commRingIsoToRingEquiv).mp
       Localization.isLocalization
   apply Algebra.algebra_ext

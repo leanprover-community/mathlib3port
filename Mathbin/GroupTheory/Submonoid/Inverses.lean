@@ -254,7 +254,7 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
       dsimp
       ext
       rw [from_left_inv_eq_iff]
-      convert (hS x.prop).some.inv_val
+      convert(hS x.prop).some.inv_val
       exact (hS x.prop).choose_spec.symm }
 #align submonoid.left_inv_equiv Submonoid.leftInvEquiv
 #align add_submonoid.left_neg_equiv AddSubmonoid.leftNegEquiv

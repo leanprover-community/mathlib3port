@@ -595,7 +595,7 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [Topolo
   simp_rw [ContinuousAt, f.map_zero, q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.tendsto_infᵢ,
     Filter.tendsto_comap_iff]
   intro i
-  convert (hf i).ContinuousAt
+  convert(hf i).ContinuousAt
   exact (map_zero _).symm
 #align seminorm.continuous_of_continuous_comp Seminorm.continuous_of_continuous_comp
 

@@ -106,8 +106,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       ⟨x, by
         convert x.prop
         simpa only [id.def, Set.image_id'] ⟩
-    convert
-      DenseRange.comp (Function.Surjective.denseRange _)
+    convert DenseRange.comp (Function.Surjective.denseRange _)
         (DenseEmbedding.subtype denseEmbedding_id (K : Set ℂ)).dense (by continuity : Continuous j)
     rintro ⟨y, hy⟩
     use

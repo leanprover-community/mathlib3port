@@ -310,7 +310,7 @@ Case conversion may be inaccurate. Consider using '#align list.argmin_cons List.
 theorem argmin_cons (f : α → β) (a : α) (l : List α) :
     argmin f (a :: l) =
       Option.casesOn (argmin f l) (some a) fun c => if f c < f a then some c else some a :=
-  by convert @argmax_cons _ βᵒᵈ _ _ _ _
+  by convert@argmax_cons _ βᵒᵈ _ _ _ _
 #align list.argmin_cons List.argmin_cons
 
 variable [DecidableEq α]

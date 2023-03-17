@@ -3108,8 +3108,7 @@ theorem range_toLpHom [Fact (1 ≤ p)] :
       MeasureTheory.lp.boundedContinuousFunction E p μ :=
   by
   symm
-  convert
-    AddMonoidHom.addSubgroupOf_range_eq_of_le
+  convert AddMonoidHom.addSubgroupOf_range_eq_of_le
       ((ContinuousMap.to_ae_eq_fun_add_hom μ).comp (to_continuous_map_add_hom α E))
       (by
         rintro - ⟨f, rfl⟩

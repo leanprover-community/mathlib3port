@@ -435,7 +435,7 @@ protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] 
   cases' hc with hE hc
   · haveI : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elim _ hE _ _⟩
     exact AntilipschitzWith.of_subsingleton
-  convert (f'.antilipschitz.restrict s).add_lipschitzWith hf.lipschitz_sub hc
+  convert(f'.antilipschitz.restrict s).add_lipschitzWith hf.lipschitz_sub hc
   simp [restrict]
 #align approximates_linear_on.antilipschitz ApproximatesLinearOn.antilipschitz
 

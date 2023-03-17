@@ -220,8 +220,7 @@ theorem smulAux'_im (g : GL(2, ℝ)⁺) (z : ℍ) :
 def smulAux (g : GL(2, ℝ)⁺) (z : ℍ) : ℍ :=
   ⟨smulAux' g z, by
     rw [smul_aux'_im]
-    convert
-      mul_pos ((mem_GL_pos _).1 g.prop)
+    convert mul_pos ((mem_GL_pos _).1 g.prop)
         (div_pos z.im_pos (complex.norm_sq_pos.mpr (denom_ne_zero g z)))
     simp only [general_linear_group.coe_det_apply, coe_coe]
     ring⟩

@@ -122,7 +122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ereal.open_embedding_coe EReal.openEmbedding_coeₓ'. -/
 theorem openEmbedding_coe : OpenEmbedding (coe : ℝ → EReal) :=
   ⟨embedding_coe, by
-    convert @isOpen_Ioo EReal _ _ _ ⊥ ⊤
+    convert@isOpen_Ioo EReal _ _ _ ⊥ ⊤
     ext x
     induction x using EReal.rec
     · simp only [left_mem_Ioo, mem_range, coe_ne_bot, exists_false, not_false_iff]

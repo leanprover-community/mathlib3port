@@ -160,16 +160,15 @@ theorem affineIndependent_set_iff_linearIndependent_vsub {s : Set P} {p₁ : P} 
     let f : (fun p : P => (p -ᵥ p₁ : V)) '' (s \ {p₁}) → { x : s // x ≠ ⟨p₁, hp₁⟩ } := fun x =>
       ⟨⟨(x : V) +ᵥ p₁, Set.mem_of_mem_diff (hv x)⟩, fun hx =>
         Set.not_mem_of_mem_diff (hv x) (Subtype.ext_iff.1 hx)⟩
-    convert
-      h.comp f fun x1 x2 hx =>
+    convert h.comp f fun x1 x2 hx =>
         Subtype.ext (vadd_right_cancel p₁ (Subtype.ext_iff.1 (Subtype.ext_iff.1 hx)))
     ext v
     exact (vadd_vsub (v : V) p₁).symm
   · intro h
     let f : { x : s // x ≠ ⟨p₁, hp₁⟩ } → (fun p : P => (p -ᵥ p₁ : V)) '' (s \ {p₁}) := fun x =>
       ⟨((x : s) : P) -ᵥ p₁, ⟨x, ⟨⟨(x : s).property, fun hx => x.property (Subtype.ext hx)⟩, rfl⟩⟩⟩
-    convert
-      h.comp f fun x1 x2 hx => Subtype.ext (Subtype.ext (vsub_left_cancel (Subtype.ext_iff.1 hx)))
+    convert h.comp f fun x1 x2 hx =>
+        Subtype.ext (Subtype.ext (vsub_left_cancel (Subtype.ext_iff.1 hx)))
 #align affine_independent_set_iff_linear_independent_vsub affineIndependent_set_iff_linearIndependent_vsub
 
 /-- A set of nonzero vectors is linearly independent if and only if,
@@ -963,7 +962,7 @@ the points. -/
 theorem face_centroid_eq_centroid {n : ℕ} (s : Simplex k P n) {fs : Finset (Fin (n + 1))} {m : ℕ}
     (h : fs.card = m + 1) : Finset.univ.centroid k (s.face h).points = fs.centroid k s.points :=
   by
-  convert (finset.univ.centroid_map k (fs.order_emb_of_fin h).toEmbedding s.points).symm
+  convert(finset.univ.centroid_map k (fs.order_emb_of_fin h).toEmbedding s.points).symm
   rw [← Finset.coe_inj, Finset.coe_map, Finset.coe_univ, Set.image_univ]
   simp
 #align affine.simplex.face_centroid_eq_centroid Affine.Simplex.face_centroid_eq_centroid

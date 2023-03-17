@@ -619,7 +619,7 @@ def mkInductive : Homotopy e 0
   zero' i j w := by rwa [dif_neg]
   comm i := by
     dsimp; simp only [add_zero]
-    convert (mk_inductive_aux₂ e zero comm_zero one comm_one succ i).2.2
+    convert(mk_inductive_aux₂ e zero comm_zero one comm_one succ i).2.2
     · cases i
       · dsimp [fromNext]
         rw [dif_neg]
@@ -769,7 +769,7 @@ def mkCoinductive : Homotopy e 0
   comm i := by
     dsimp
     rw [add_zero, add_comm]
-    convert (mk_coinductive_aux₂ e zero comm_zero one comm_one succ i).2.2 using 2
+    convert(mk_coinductive_aux₂ e zero comm_zero one comm_one succ i).2.2 using 2
     · cases i
       · dsimp [toPrev]
         rw [dif_neg]

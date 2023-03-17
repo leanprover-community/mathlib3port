@@ -191,7 +191,7 @@ theorem read_appendList_right (b : Buffer α) (l : List α) {i : ℕ} (h : i < l
   by
   induction' l with hd tl hl generalizing b i
   · exact absurd i.zero_le (not_le_of_lt h)
-  · convert_to ((b.push_back hd).appendList tl).read _ = _
+  · convert_to((b.push_back hd).appendList tl).read _ = _
     cases i
     · convert read_append_list_left _ _ _ <;> simp
     · rw [List.length, Nat.succ_lt_succ_iff] at h
@@ -207,7 +207,7 @@ theorem read_to_buffer' (l : List α) {i : ℕ} (h : i < l.toBuffer.size) (h' : 
   cases' l with hd tl
   · simpa using h'
   · have hi : i < ([hd].toBuffer.appendList tl).size := by simpa [add_comm] using h
-    convert_to ([hd].toBuffer.appendList tl).read ⟨i, hi⟩ = _
+    convert_to([hd].toBuffer.appendList tl).read ⟨i, hi⟩ = _
     cases i
     · convert read_append_list_left _ _ _
       simp

@@ -820,7 +820,7 @@ is an isometry if `f` is one. -/
 theorem vadd_vsub {f : P → P₂} (hf : Isometry f) {p : P} {g : V → V₂}
     (hg : ∀ v, g v = f (v +ᵥ p) -ᵥ f p) : Isometry g :=
   by
-  convert (vadd_const 𝕜 (f p)).symm.Isometry.comp (hf.comp (vadd_const 𝕜 p).Isometry)
+  convert(vadd_const 𝕜 (f p)).symm.Isometry.comp (hf.comp (vadd_const 𝕜 p).Isometry)
   exact funext hg
 #align affine_isometry_equiv.vadd_vsub AffineIsometryEquiv.vadd_vsub
 

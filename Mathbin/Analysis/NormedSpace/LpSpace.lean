@@ -284,7 +284,7 @@ theorem const_smul {f : ∀ i, E i} (hf : Memℓp f p) (c : 𝕜) : Memℓp (c �
     rintro a ⟨i, rfl⟩
     simpa [norm_smul] using mul_le_mul_of_nonneg_left (hA ⟨i, rfl⟩) (norm_nonneg c)
   · apply memℓp_gen
-    convert (hf.summable hp).mul_left (‖c‖ ^ p.to_real)
+    convert(hf.summable hp).mul_left (‖c‖ ^ p.to_real)
     ext i
     simp [norm_smul, Real.mul_rpow (norm_nonneg c) (norm_nonneg (f i))]
 #align mem_ℓp.const_smul Memℓp.const_smul
@@ -661,7 +661,7 @@ theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ‖c • f‖ =
   · cases isEmpty_or_nonempty α <;> skip
     · simp [lp.eq_zero' f]
     apply (lp.isLUB_norm (c • f)).unique
-    convert (lp.isLUB_norm f).mul_left (norm_nonneg c)
+    convert(lp.isLUB_norm f).mul_left (norm_nonneg c)
     ext a
     simp [coe_fn_smul, norm_smul]
   · suffices ‖c • f‖ ^ p.to_real = (‖c‖ * ‖f‖) ^ p.to_real
@@ -670,7 +670,7 @@ theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ‖c • f‖ =
       · exact norm_nonneg' _
       · exact mul_nonneg (norm_nonneg _) (norm_nonneg' _)
     apply (lp.hasSum_norm hp (c • f)).unique
-    convert (lp.hasSum_norm hp f).mul_left (‖c‖ ^ p.to_real)
+    convert(lp.hasSum_norm hp f).mul_left (‖c‖ ^ p.to_real)
     · simp [coe_fn_smul, norm_smul, Real.mul_rpow (norm_nonneg c) (norm_nonneg _)]
     have hf : 0 ≤ ‖f‖ := lp.norm_nonneg' f
     simp [coe_fn_smul, norm_smul, Real.mul_rpow (norm_nonneg c) hf]

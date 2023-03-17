@@ -254,7 +254,7 @@ def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y :=
   by
   apply equivalence.mk (πₘ hequiv.to_fun : πₓ X ⥤ πₓ Y) (πₘ hequiv.inv_fun : πₓ Y ⥤ πₓ X) <;>
     simp only [Groupoid.hom_to_functor, Groupoid.id_to_functor]
-  · convert (as_iso (homotopic_maps_nat_iso hequiv.left_inv.some)).symm
+  · convert(as_iso (homotopic_maps_nat_iso hequiv.left_inv.some)).symm
     exacts[(π.map_id X).symm, (π.map_comp _ _).symm]
   · convert as_iso (homotopic_maps_nat_iso hequiv.right_inv.some)
     exacts[(π.map_comp _ _).symm, (π.map_id Y).symm]

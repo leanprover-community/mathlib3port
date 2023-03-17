@@ -109,8 +109,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
   have : Nontrivial (Localization (Submonoid.map f p.prime_compl)) :=
     by
     refine' ⟨⟨1, 0, _⟩⟩
-    convert
-      (IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
+    convert(IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
             (Localization <| p.prime_compl.map f) hf).Ne
         one_ne_zero
     · rw [map_one]

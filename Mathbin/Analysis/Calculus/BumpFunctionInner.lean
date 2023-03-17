@@ -90,8 +90,7 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
       ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
   simp only [P_aux, eval_add, eval_sub, eval_mul, eval_pow, eval_X, eval_C, eval_one]
-  convert
-    (((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (hasDerivAt_inv hx).neg)).div
+  convert(((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (hasDerivAt_inv hx).neg)).div
       (hasDerivAt_pow (2 * n) x) (pow_ne_zero _ hx) using
     1
   rw [div_eq_div_iff]
@@ -125,7 +124,7 @@ theorem f_aux_limit (n : ℕ) :
     (P_aux n).ContinuousWithinAt
   have B : tendsto (fun x => exp (-x⁻¹) / x ^ (2 * n)) (𝓝[>] 0) (𝓝 0) :=
     by
-    convert (tendsto_pow_mul_exp_neg_at_top_nhds_0 (2 * n)).comp tendsto_inv_zero_atTop
+    convert(tendsto_pow_mul_exp_neg_at_top_nhds_0 (2 * n)).comp tendsto_inv_zero_atTop
     ext x
     field_simp
   convert A.mul B <;> simp [mul_div_assoc]

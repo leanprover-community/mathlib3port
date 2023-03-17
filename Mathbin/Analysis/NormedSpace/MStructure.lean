@@ -177,7 +177,7 @@ theorem mul [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : IsLp
 theorem join [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : IsLprojection X Q) :
     IsLprojection X (P + Q - P * Q) :=
   by
-  convert (Lcomplement_iff _).mp (h₁.Lcomplement.mul h₂.Lcomplement) using 1
+  convert(Lcomplement_iff _).mp (h₁.Lcomplement.mul h₂.Lcomplement) using 1
   noncomm_ring
 #align is_Lprojection.join IsLprojection.join
 
@@ -223,7 +223,7 @@ instance [FaithfulSMul M X] : PartialOrder { P : M // IsLprojection X P }
   le_trans P Q R h₁ h₂ := by
     simp only [coe_inf] at h₁ h₂⊢
     rw [h₁, mul_assoc, ← h₂]
-  le_antisymm P Q h₁ h₂ := Subtype.eq (by convert (P.prop.commute Q.prop).Eq)
+  le_antisymm P Q h₁ h₂ := Subtype.eq (by convert(P.prop.commute Q.prop).Eq)
 
 theorem le_def [FaithfulSMul M X] (P Q : { P : M // IsLprojection X P }) :
     P ≤ Q ↔ (P : M) = ↑(P ⊓ Q) :=

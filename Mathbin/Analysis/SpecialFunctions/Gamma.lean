@@ -211,7 +211,7 @@ private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 
 private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
     IntervalIntegrable (fun x => -((-x).exp * x ^ s) : ℝ → ℂ) volume 0 X :=
   by
-  convert (Gamma_integrand_interval_integrable (s + 1) _ hX).neg
+  convert(Gamma_integrand_interval_integrable (s + 1) _ hX).neg
   · ext1
     simp only [add_sub_cancel, Pi.neg_apply]
   · simp only [add_re, one_re]
@@ -406,7 +406,7 @@ theorem gamma_eq_gammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = ga
       refine' lt_add_of_lt_of_nonneg i0 _
       rw [← Nat.cast_zero, Nat.cast_le]
       exact Nat.zero_le k
-  convert (u <| n - ⌊1 - s.re⌋₊).symm
+  convert(u <| n - ⌊1 - s.re⌋₊).symm
   rw [Nat.add_sub_of_le]
   by_cases 0 ≤ 1 - s.re
   · apply Nat.le_of_lt_succ
@@ -890,9 +890,8 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
       · exact continuous_at_rpow_const _ _ (Or.inl (ne_of_lt hx).symm)
   -- now apply Hölder:
   rw [Gamma_eq_integral hs, Gamma_eq_integral ht, Gamma_eq_integral hst]
-  convert
-    MeasureTheory.integral_mul_le_Lp_mul_Lq_of_nonneg e (posf' a s) (posf' b t) (f_mem_Lp ha hs)
-      (f_mem_Lp hb ht) using
+  convert MeasureTheory.integral_mul_le_Lp_mul_Lq_of_nonneg e (posf' a s) (posf' b t)
+      (f_mem_Lp ha hs) (f_mem_Lp hb ht) using
     1
   · refine' set_integral_congr measurableSet_Ioi fun x hx => _
     dsimp only [f]
@@ -1221,8 +1220,7 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
 
 theorem gamma_strictMonoOn_Ici : StrictMonoOn gamma (Ici 2) :=
   by
-  convert
-    convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
+  convert convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
       (by norm_num : (3 / 2 : ℝ) < 2) (Gamma_two.symm ▸ Gamma_three_div_two_lt_one)
   symm
   rw [inter_eq_right_iff_subset]
@@ -1271,7 +1269,7 @@ theorem betaIntegralConvergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
   by
   refine' (beta_integral_convergent_left hu v).trans _
   rw [IntervalIntegrable.iff_comp_neg]
-  convert ((beta_integral_convergent_left hv u).comp_add_right 1).symm
+  convert((beta_integral_convergent_left hv u).comp_add_right 1).symm
   · ext1 x
     conv_lhs => rw [mul_comm]
     congr 2 <;>
@@ -1412,7 +1410,7 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
         apply hasDerivAt_id
       convert HasDerivAt.comp (↑x) A B using 1
       ring
-    convert (U.mul V).comp_of_real
+    convert(U.mul V).comp_of_real
     ring
   have h_int :=
     ((beta_integral_convergent hu hv').const_mul u).sub
@@ -1589,8 +1587,7 @@ theorem approx_gamma_integral_tendsto_gamma_integral {s : ℂ} (hs : 0 < re s) :
       ext1 n
       rw [neg_div, ← sub_eq_add_neg]
   -- let `convert` identify the remaining goals
-  convert
-    tendsto_integral_of_dominated_convergence _ (fun n => (f_ible n).1)
+  convert tendsto_integral_of_dominated_convergence _ (fun n => (f_ible n).1)
       (Real.gammaIntegralConvergent hs) _
       ((ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ f_tends))
   -- limit of f is the integrand we want

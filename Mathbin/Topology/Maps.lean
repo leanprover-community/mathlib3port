@@ -980,7 +980,7 @@ theorem OpenEmbedding.open_iff_image_open {f : α → β} (hf : OpenEmbedding f)
     IsOpen s ↔ IsOpen (f '' s) :=
   ⟨hf.IsOpenMap s, fun h =>
     by
-    convert ← h.preimage hf.to_embedding.continuous
+    convert← h.preimage hf.to_embedding.continuous
     apply preimage_image_eq _ hf.inj⟩
 #align open_embedding.open_iff_image_open OpenEmbedding.open_iff_image_open
 
@@ -1014,7 +1014,7 @@ Case conversion may be inaccurate. Consider using '#align open_embedding.open_if
 theorem OpenEmbedding.open_iff_preimage_open {f : α → β} (hf : OpenEmbedding f) {s : Set β}
     (hs : s ⊆ range f) : IsOpen s ↔ IsOpen (f ⁻¹' s) :=
   by
-  convert ← hf.open_iff_image_open.symm
+  convert← hf.open_iff_image_open.symm
   rwa [image_preimage_eq_inter_range, inter_eq_self_of_subset_left]
 #align open_embedding.open_iff_preimage_open OpenEmbedding.open_iff_preimage_open
 
@@ -1174,7 +1174,7 @@ theorem ClosedEmbedding.closed_iff_image_closed (hf : ClosedEmbedding f) {s : Se
     IsClosed s ↔ IsClosed (f '' s) :=
   ⟨hf.IsClosedMap s, fun h =>
     by
-    convert ← continuous_iff_is_closed.mp hf.continuous _ h
+    convert← continuous_iff_is_closed.mp hf.continuous _ h
     apply preimage_image_eq _ hf.inj⟩
 #align closed_embedding.closed_iff_image_closed ClosedEmbedding.closed_iff_image_closed
 
@@ -1187,7 +1187,7 @@ Case conversion may be inaccurate. Consider using '#align closed_embedding.close
 theorem ClosedEmbedding.closed_iff_preimage_closed (hf : ClosedEmbedding f) {s : Set β}
     (hs : s ⊆ range f) : IsClosed s ↔ IsClosed (f ⁻¹' s) :=
   by
-  convert ← hf.closed_iff_image_closed.symm
+  convert← hf.closed_iff_image_closed.symm
   rwa [image_preimage_eq_inter_range, inter_eq_self_of_subset_left]
 #align closed_embedding.closed_iff_preimage_closed ClosedEmbedding.closed_iff_preimage_closed
 

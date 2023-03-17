@@ -498,7 +498,7 @@ theorem compAddRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   have Am : measure.map (fun x => x + c) volume = volume :=
     is_add_left_invariant.is_add_right_invariant.map_add_right_eq_self _
   rw [← Am] at hf
-  convert (MeasurableEmbedding.integrableOn_map_iff A).mp hf
+  convert(MeasurableEmbedding.integrableOn_map_iff A).mp hf
   rw [preimage_add_const_uIcc]
 #align interval_integrable.comp_add_right IntervalIntegrable.compAddRight
 
@@ -1812,7 +1812,7 @@ theorem measure_integral_sub_linear_isOCat_of_tendsto_ae' [IsMeasurablyGenerated
   have A := hf.integral_sub_linear_is_o_ae hfm hl (hu.Ioc hv)
   have B := hf.integral_sub_linear_is_o_ae hfm hl (hv.Ioc hu)
   simp only [integral_const']
-  convert (A.trans_le _).sub (B.trans_le _)
+  convert(A.trans_le _).sub (B.trans_le _)
   · ext t
     simp_rw [intervalIntegral, sub_smul]
     abel
@@ -2693,9 +2693,8 @@ theorem integral_le_sub_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
     (hφg : ∀ x ∈ Ioo a b, φ x ≤ g' x) : (∫ y in a..b, φ y) ≤ g b - g a :=
   by
   rw [← neg_le_neg_iff]
-  convert
-    sub_le_integral_of_has_deriv_right_of_le hab hcont.neg (fun x hx => (hderiv x hx).neg) φint.neg
-      fun x hx => neg_le_neg (hφg x hx)
+  convert sub_le_integral_of_has_deriv_right_of_le hab hcont.neg (fun x hx => (hderiv x hx).neg)
+      φint.neg fun x hx => neg_le_neg (hφg x hx)
   · abel
   · simp only [← integral_neg]
     rfl

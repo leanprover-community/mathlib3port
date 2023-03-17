@@ -204,7 +204,7 @@ def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F
   map X Y f :=
     ⟨f.unop.1.op,
       by
-      convert (congr_fun ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
+      convert(congr_fun ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
       simp only [Equiv.toFun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply,
         category.comp_id, yoneda_obj_map]
       have : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom :=

@@ -441,7 +441,7 @@ theorem linearIndependent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b
         rw [h]
       simpa [mem_map] using hx
     have hi : f.ker = ⊥ := ker_subtype _
-    convert (linearIndependent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
+    convert(linearIndependent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
 #align linear_independent_iff_card_eq_finrank_span linearIndependent_iff_card_eq_finrank_span
 
 theorem linearIndependent_iff_card_le_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :

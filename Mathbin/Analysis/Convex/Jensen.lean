@@ -52,7 +52,7 @@ theorem ConvexOn.map_centerMass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t,
   by
   have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi =>
     ⟨hmem i hi, le_rfl⟩
-  convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
+  convert(hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
     simp only [center_mass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
 #align convex_on.map_center_mass_le ConvexOn.map_centerMass_le
 

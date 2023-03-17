@@ -75,7 +75,7 @@ theorem hasDerivWithinAt_arcsin_Ici {x : ℝ} (h : x ≠ -1) :
   by
   rcases em (x = 1) with (rfl | h')
   ·
-    convert (hasDerivWithinAt_const _ _ (π / 2)).congr _ _ <;>
+    convert(hasDerivWithinAt_const _ _ (π / 2)).congr _ _ <;>
       simp (config := { contextual := true }) [arcsin_of_one_le]
   · exact (has_deriv_at_arcsin h h').HasDerivWithinAt
 #align real.has_deriv_within_at_arcsin_Ici Real.hasDerivWithinAt_arcsin_Ici
@@ -85,7 +85,7 @@ theorem hasDerivWithinAt_arcsin_Iic {x : ℝ} (h : x ≠ 1) :
   by
   rcases em (x = -1) with (rfl | h')
   ·
-    convert (hasDerivWithinAt_const _ _ (-(π / 2))).congr _ _ <;>
+    convert(hasDerivWithinAt_const _ _ (-(π / 2))).congr _ _ <;>
       simp (config := { contextual := true }) [arcsin_of_le_neg_one]
   · exact (has_deriv_at_arcsin h' h).HasDerivWithinAt
 #align real.has_deriv_within_at_arcsin_Iic Real.hasDerivWithinAt_arcsin_Iic

@@ -611,7 +611,7 @@ noncomputable def liftCover : C(α, β) :=
     exact ⟨i, mem_of_mem_nhds hi⟩
   refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_subtype_nhds_cover hS _⟩
   intro i
-  convert (φ i).Continuous
+  convert(φ i).Continuous
   ext x
   exact Set.liftCover_coe x
 #align continuous_map.lift_cover ContinuousMap.liftCover

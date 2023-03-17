@@ -267,12 +267,12 @@ theorem tendsto_div_pow_mul_exp_add_atTop (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) :
   have H : ∀ d e, 0 < d → tendsto (fun x : ℝ => x ^ n / (d * exp x + e)) at_top (𝓝 0) :=
     by
     intro b' c' h
-    convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_atTop
+    convert(tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_atTop
     ext x
     simpa only [Pi.inv_apply] using (inv_div _ _).symm
   cases lt_or_gt_of_ne hb
   · exact H b c h
-  · convert (H (-b) (-c) (neg_pos.mpr h)).neg
+  · convert(H (-b) (-c) (neg_pos.mpr h)).neg
     · ext x
       field_simp
       rw [← neg_add (b * exp x) c, neg_div_neg_eq]

@@ -128,7 +128,7 @@ variable {R}
 theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) :
     (lift R f).toLinearMap.comp (ι R) = f :=
   by
-  convert (lift R).symm_apply_apply f
+  convert(lift R).symm_apply_apply f
   simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.ι_comp_lift TensorAlgebra.ι_comp_lift
 

@@ -76,9 +76,8 @@ theorem skyscraperPresheaf_eq_pushforward
     skyscraperPresheaf p₀ A =
       ContinuousMap.const (TopCat.of PUnit) p₀ _* skyscraperPresheaf PUnit.unit A :=
   by
-  convert_to
-      @skyscraperPresheaf X p₀ (fun U => hd <| (opens.map <| ContinuousMap.const _ p₀).obj U) C _ _
-          A =
+  convert_to@skyscraperPresheaf X p₀ (fun U => hd <| (opens.map <| ContinuousMap.const _ p₀).obj U)
+          C _ _ A =
         _ <;>
     first |congr |rfl
 #align skyscraper_presheaf_eq_pushforward skyscraperPresheaf_eq_pushforward

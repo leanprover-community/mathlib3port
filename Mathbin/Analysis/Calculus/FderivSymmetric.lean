@@ -275,8 +275,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
   by
   have A : (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) =o[𝓝[>] 0] fun h => h ^ 2 :=
     by
-    convert
-      (s_conv.is_o_alternate_sum_square hf xs hx h4v h4w).sub
+    convert(s_conv.is_o_alternate_sum_square hf xs hx h4v h4w).sub
         (s_conv.is_o_alternate_sum_square hf xs hx h4w h4v)
     ext h
     simp only [add_comm, smul_add, smul_sub]

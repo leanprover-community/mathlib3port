@@ -216,7 +216,7 @@ noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
   Set.Finite.fintype
     (by
       have h : minpoly K f ≠ 0 := minpoly.ne_zero f.is_integral
-      convert (minpoly K f).rootSet_finite K
+      convert(minpoly K f).rootSet_finite K
       ext μ
       have : μ ∈ { μ : K | f.eigenspace μ = ⊥ → False } ↔ ¬f.eigenspace μ = ⊥ := by tauto
       convert rfl.mpr this

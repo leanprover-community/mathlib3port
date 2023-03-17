@@ -519,7 +519,7 @@ theorem FormallySmooth.of_isLocalization : FormallySmooth R Rₘ :=
   have : ∀ x : M, IsUnit (algebraMap R Q x) := by
     intro x
     apply (IsNilpotent.isUnit_quotient_mk_iff ⟨2, e⟩).mp
-    convert (IsLocalization.map_units Rₘ x).map f
+    convert(IsLocalization.map_units Rₘ x).map f
     simp only [Ideal.Quotient.mk_algebraMap, AlgHom.commutes]
   let this : Rₘ →ₐ[R] Q :=
     { IsLocalization.lift this with commutes' := IsLocalization.lift_eq this }

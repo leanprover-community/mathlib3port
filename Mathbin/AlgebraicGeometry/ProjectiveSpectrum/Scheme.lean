@@ -509,7 +509,7 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
     congr
     zify [le_of_not_lt h2, le_of_not_le h1]
     abel
-  convert_to (∑ i in range (m + m + 1), g i) ∈ q.1; swap
+  convert_to(∑ i in range (m + m + 1), g i) ∈ q.1; swap
   · refine' q.1.sum_mem fun j hj => nsmul_mem _ _
     split_ifs
     exacts[q.1.zero_mem, q.1.mul_mem_left _ (hb i), q.1.mul_mem_right _ (ha i)]
@@ -552,16 +552,14 @@ theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ ca
   · rintro n ⟨a, ha⟩ i
     simp_rw [Subtype.coe_mk, proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
     split_ifs
-    · convert_to
-        (Quotient.mk'' ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, _⟩, ⟨n, rfl⟩⟩ *
+    · convert_to(Quotient.mk'' ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, _⟩, ⟨n, rfl⟩⟩ *
               Quotient.mk''
                 ⟨_,
                   ⟨proj 𝒜 (i - n) x ^ m, by
                     run_tac
                       mem_tac⟩,
                   ⟨_, _⟩, ⟨i - n, rfl⟩⟩ :
-            A⁰_ f) ∈
-          q.1
+            A⁰_ f) ∈ q.1
       · erw [ext_iff_val, val_mk', mul_val, val_mk', val_mk', Subtype.coe_mk]
         simp_rw [mul_pow, Subtype.coe_mk]
         rw [Localization.mk_mul]

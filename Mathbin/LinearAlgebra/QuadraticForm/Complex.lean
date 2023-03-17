@@ -39,8 +39,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     by
     intro i hi
     exact (w i).NeZero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
-  convert
-    (weighted_sum_squares ℂ w').isometryBasisRepr
+  convert(weighted_sum_squares ℂ w').isometryBasisRepr
       ((Pi.basisFun ℂ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hw' i).Unit)
   ext1 v
   erw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]

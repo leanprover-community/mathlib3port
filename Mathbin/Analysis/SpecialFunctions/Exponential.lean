@@ -64,7 +64,7 @@ variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedRing 𝔸] [
 theorem hasStrictFderivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).radius) :
     HasStrictFderivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 :=
   by
-  convert (hasFpowerSeriesAtExpZeroOfRadiusPos h).HasStrictFderivAt
+  convert(hasFpowerSeriesAtExpZeroOfRadiusPos h).HasStrictFderivAt
   ext x
   change x = expSeries 𝕂 𝔸 1 fun _ => x
   simp [expSeries_apply_eq]

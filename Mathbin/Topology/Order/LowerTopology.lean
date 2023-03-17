@@ -213,7 +213,7 @@ def withLowerTopologyHomeomorph : WithLowerTopology α ≃ₜ α :=
       convert continuous_id
       apply topology_eq_lower_topology
     continuous_invFun := by
-      convert ← continuous_id
+      convert← continuous_id
       apply topology_eq_lower_topology }
 #align lower_topology.with_lower_topology_homeomorph LowerTopology.withLowerTopologyHomeomorph
 

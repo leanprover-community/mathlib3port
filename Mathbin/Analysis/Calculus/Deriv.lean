@@ -325,7 +325,7 @@ theorem hasDerivWithinAt_iff_tendsto_slope :
 theorem hasDerivWithinAt_iff_tendsto_slope' (hs : x ∉ s) :
     HasDerivWithinAt f f' s x ↔ Tendsto (slope f x) (𝓝[s] x) (𝓝 f') :=
   by
-  convert ← hasDerivWithinAt_iff_tendsto_slope
+  convert← hasDerivWithinAt_iff_tendsto_slope
   exact diff_singleton_eq_self hs
 #align has_deriv_within_at_iff_tendsto_slope' hasDerivWithinAt_iff_tendsto_slope'
 
@@ -1408,7 +1408,7 @@ theorem HasDerivAtFilter.comp_hasFderivAtFilter {f : E → 𝕜'} {f' : E →L[�
     (hh₂ : HasDerivAtFilter h₂ h₂' (f x) L') (hf : HasFderivAtFilter f f' x L'')
     (hL : Tendsto f L'' L') : HasFderivAtFilter (h₂ ∘ f) (h₂' • f') x L'' :=
   by
-  convert (hh₂.restrict_scalars 𝕜).comp x hf hL
+  convert(hh₂.restrict_scalars 𝕜).comp x hf hL
   ext x
   simp [mul_comm]
 #align has_deriv_at_filter.comp_has_fderiv_at_filter HasDerivAtFilter.comp_hasFderivAtFilter
@@ -1418,7 +1418,7 @@ theorem HasStrictDerivAt.comp_hasStrictFderivAt {f : E → 𝕜'} {f' : E →L[�
     HasStrictFderivAt (h₂ ∘ f) (h₂' • f') x :=
   by
   rw [HasStrictDerivAt] at hh
-  convert (hh.restrict_scalars 𝕜).comp x hf
+  convert(hh.restrict_scalars 𝕜).comp x hf
   ext x
   simp [mul_comm]
 #align has_strict_deriv_at.comp_has_strict_fderiv_at HasStrictDerivAt.comp_hasStrictFderivAt
@@ -1670,7 +1670,7 @@ theorem deriv_mul_const_field' (v : 𝕜') : (deriv fun x => u x * v) = fun x =>
 theorem HasDerivWithinAt.const_mul (c : 𝔸) (hd : HasDerivWithinAt d d' s x) :
     HasDerivWithinAt (fun y => c * d y) (c * d') s x :=
   by
-  convert (hasDerivWithinAt_const x s c).mul hd
+  convert(hasDerivWithinAt_const x s c).mul hd
   rw [MulZeroClass.zero_mul, zero_add]
 #align has_deriv_within_at.const_mul HasDerivWithinAt.const_mul
 
@@ -1684,7 +1684,7 @@ theorem HasDerivAt.const_mul (c : 𝔸) (hd : HasDerivAt d d' x) :
 theorem HasStrictDerivAt.const_mul (c : 𝔸) (hd : HasStrictDerivAt d d' x) :
     HasStrictDerivAt (fun y => c * d y) (c * d') x :=
   by
-  convert (hasStrictDerivAt_const _ _).mul hd
+  convert(hasStrictDerivAt_const _ _).mul hd
   rw [MulZeroClass.zero_mul, zero_add]
 #align has_strict_deriv_at.const_mul HasStrictDerivAt.const_mul
 
@@ -1801,7 +1801,7 @@ variable {c : 𝕜 → 𝕜} {h : E → 𝕜} {c' : 𝕜} {z : E} {S : Set E}
 theorem HasDerivWithinAt.inv (hc : HasDerivWithinAt c c' s x) (hx : c x ≠ 0) :
     HasDerivWithinAt (fun y => (c y)⁻¹) (-c' / c x ^ 2) s x :=
   by
-  convert (hasDerivAt_inv hx).comp_hasDerivWithinAt x hc
+  convert(hasDerivAt_inv hx).comp_hasDerivWithinAt x hc
   field_simp
 #align has_deriv_within_at.inv HasDerivWithinAt.inv
 
@@ -2231,7 +2231,7 @@ variable (n : ℕ)
 theorem hasStrictDerivAt_pow (n : ℕ) (x : 𝕜) :
     HasStrictDerivAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) x :=
   by
-  convert (Polynomial.C (1 : 𝕜) * Polynomial.X ^ n).HasStrictDerivAt x
+  convert(Polynomial.C (1 : 𝕜) * Polynomial.X ^ n).HasStrictDerivAt x
   · simp
   · rw [Polynomial.derivative_C_mul_X_pow]
     simp

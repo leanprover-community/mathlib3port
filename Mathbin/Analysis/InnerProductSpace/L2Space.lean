@@ -200,7 +200,7 @@ include cplt hV
 protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) :=
   by
   rw [hV.summable_iff_norm_sq_summable]
-  convert (lp.memℓp f).Summable _
+  convert(lp.memℓp f).Summable _
   · norm_cast
   · norm_num
 #align orthogonal_family.summable_of_lp OrthogonalFamily.summable_of_lp
@@ -223,7 +223,7 @@ protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E
       suffices ‖∑' i : ι, V i (f i)‖ ^ (2 : ℝ≥0∞).toReal = ‖f‖ ^ (2 : ℝ≥0∞).toReal by
         exact Real.rpow_left_injOn H.ne' (norm_nonneg _) (norm_nonneg _) this
       refine' tendsto_nhds_unique _ (lp.hasSum_norm H f)
-      convert (hV.summable_of_lp f).HasSum.norm.rpow_const (Or.inr H.le)
+      convert(hV.summable_of_lp f).HasSum.norm.rpow_const (Or.inr H.le)
       ext s
       exact_mod_cast (hV.norm_sum f s).symm
 #align orthogonal_family.linear_isometry OrthogonalFamily.linearIsometry
@@ -501,7 +501,7 @@ protected theorem dense_span (b : HilbertBasis ι 𝕜 E) :
 protected theorem hasSum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
     HasSum (fun i => ⟪x, b i⟫ * ⟪b i, y⟫) ⟪x, y⟫ :=
   by
-  convert (b.has_sum_repr y).mapL (innerSL x)
+  convert(b.has_sum_repr y).mapL (innerSL x)
   ext i
   rw [innerSL_apply, b.repr_apply_apply, inner_smul_right, mul_comm]
 #align hilbert_basis.has_sum_inner_mul_inner HilbertBasis.hasSum_inner_mul_inner

@@ -159,7 +159,6 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     · simp [J]
     simp only [pow_succ', J_succ, upper_sub_lower_split_center_box, ihm, div_div]
   have h0 : J 0 = I := rfl
-  -- Now we clear unneeded assumptions
   clear_value J
   clear hpI hs J_succ s
   -- Let `z` be the unique common point of all `(J m).Icc`. Then `H_nhds` proves `p (J m)` for

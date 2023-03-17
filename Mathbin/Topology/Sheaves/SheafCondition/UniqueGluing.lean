@@ -192,7 +192,7 @@ theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUnique
   use s
   dsimp
   constructor
-  · convert (is_gluing_iff_eq_res F U sf' _).mpr s_spec
+  · convert(is_gluing_iff_eq_res F U sf' _).mpr s_spec
     rw [inv_hom_id_apply]
   · intro y hy
     apply s_uniq

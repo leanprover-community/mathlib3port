@@ -783,8 +783,7 @@ theorem stronglyMeasurable_of_stronglyMeasurable_union_cover {m : MeasurableSpac
           else hd.approx n ⟨x, by simpa [hx] using h (mem_univ x)⟩
         measurableSet_fiber' := by
           intro x
-          convert
-            (hs.subtype_image ((hc.approx n).measurableSet_fiber x)).union
+          convert(hs.subtype_image ((hc.approx n).measurableSet_fiber x)).union
               ((ht.subtype_image ((hd.approx n).measurableSet_fiber x)).diffₓ hs)
           ext1 y
           simp only [mem_union, mem_preimage, mem_singleton_iff, mem_image, SetCoe.exists,

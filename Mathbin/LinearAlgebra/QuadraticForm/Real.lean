@@ -43,8 +43,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     by
     intro i
     refine' (ne_of_lt (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
-  convert
-    (weighted_sum_squares ℝ w).isometryBasisRepr
+  convert(weighted_sum_squares ℝ w).isometryBasisRepr
       ((Pi.basisFun ℝ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hu' i).Unit)
   ext1 v
   rw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]

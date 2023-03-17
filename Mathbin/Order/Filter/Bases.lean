@@ -1574,7 +1574,7 @@ theorem map_sigma_mk_comap {π : α → Type _} {π' : β → Type _} {f : α �
     map (Sigma.mk a) (comap (g a) l) = comap (Sigma.map f g) (map (Sigma.mk (f a)) l) :=
   by
   refine' (((basis_sets _).comap _).map _).eq_of_same_basis _
-  convert ((basis_sets _).map _).comap _
+  convert((basis_sets _).map _).comap _
   ext1 s
   apply image_sigma_mk_preimage_sigma_map hf
 #align filter.map_sigma_mk_comap Filter.map_sigma_mk_comap

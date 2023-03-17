@@ -385,7 +385,7 @@ theorem ker_fg_of_surjective (f : A →ₐ[R] B) (hf : Function.Surjective f)
     (hRA : FinitePresentation R A) (hRB : FinitePresentation R B) : f.toRingHom.ker.Fg :=
   by
   obtain ⟨n, g, hg, hg'⟩ := hRA
-  convert (ker_fg_of_mv_polynomial (f.comp g) (hf.comp hg) hRB).map g.to_ring_hom
+  convert(ker_fg_of_mv_polynomial (f.comp g) (hf.comp hg) hRB).map g.to_ring_hom
   simp_rw [RingHom.ker_eq_comap_bot, AlgHom.toRingHom_eq_coe, AlgHom.comp_toRingHom]
   rw [← Ideal.comap_comap, Ideal.map_comap_of_surjective (g : MvPolynomial (Fin n) R →+* A) hg]
 #align algebra.finite_presentation.ker_fg_of_surjective Algebra.FinitePresentation.ker_fg_of_surjective

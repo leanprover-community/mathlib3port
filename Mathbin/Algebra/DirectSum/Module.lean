@@ -276,7 +276,7 @@ variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
-  { sigmaCurry with map_smul' := fun r => by convert @Dfinsupp.sigmaCurry_smul _ _ _ δ _ _ _ r }
+  { sigmaCurry with map_smul' := fun r => by convert@Dfinsupp.sigmaCurry_smul _ _ _ δ _ _ _ r }
 #align direct_sum.sigma_lcurry DirectSum.sigmaLcurry
 
 @[simp]

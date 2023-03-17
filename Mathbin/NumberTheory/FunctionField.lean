@@ -81,7 +81,7 @@ protected theorem functionField_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] Fq
   · let b := FiniteDimensional.finBasis Fqt F
     refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
     intro c x
-    convert (this (e.symm c) x).symm
+    convert(this (e.symm c) x).symm
     simp only [e.apply_symm_apply]
 #align function_field_iff functionField_iff
 

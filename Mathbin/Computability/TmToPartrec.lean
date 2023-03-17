@@ -1288,7 +1288,7 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁
     rw [e₃, split_at_pred] at e
     cases e
     simp [e₂]
-    convert @IH (update (update S k₁ Sk) k₂ (a::S k₂)) _ _ using 2 <;>
+    convert@IH (update (update S k₁ Sk) k₂ (a::S k₂)) _ _ using 2 <;>
       simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseAux]
     simp [Function.update_comm h₁.symm]
 #align turing.partrec_to_TM2.move_ok Turing.PartrecToTM2.move_ok
@@ -1346,7 +1346,7 @@ theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p 
     rw [e₃, split_at_pred] at e
     cases e
     simp [e₂]
-    convert @IH (update S k Sk) _ _ using 2 <;> simp [e₃]
+    convert@IH (update S k Sk) _ _ using 2 <;> simp [e₃]
 #align turing.partrec_to_TM2.clear_ok Turing.PartrecToTM2.clear_ok
 
 theorem copy_ok (q s a b c d) :

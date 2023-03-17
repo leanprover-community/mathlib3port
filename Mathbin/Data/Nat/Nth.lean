@@ -82,7 +82,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
   have hle' := Nat.sub_pos_of_lt hle
   specialize hk hp'' (k.le_succ.trans hle)
   rw [Nat.sub_succ', ← hk]
-  convert_to (Finset.erase hp''.to_finset (nth p k)).card = _
+  convert_to(Finset.erase hp''.to_finset (nth p k)).card = _
   · congr
     ext a
     simp only [Set.Finite.mem_toFinset, Ne.def, Set.mem_setOf_eq, Finset.mem_erase]
@@ -152,7 +152,7 @@ theorem nth_mem_of_infinite_aux (hp : (setOf p).Infinite) (n : ℕ) :
   rw [nth]
   apply cinfₛ_mem
   let s : Set ℕ := ⋃ k < n, { i : ℕ | nth p k ≥ i }
-  convert_to (setOf p \ s).Nonempty
+  convert_to(setOf p \ s).Nonempty
   · ext i
     simp
   refine' (hp.diff <| (Set.finite_lt_nat _).bunionᵢ _).Nonempty

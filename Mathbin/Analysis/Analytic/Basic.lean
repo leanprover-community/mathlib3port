@@ -754,7 +754,7 @@ theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
     set A : ℕ → F := fun n => (p n fun _ => y.1 - x) - p n fun _ => y.2 - x
     have hA : HasSum (fun n => A (n + 2)) (f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) :=
       by
-      convert (hasSum_nat_add_iff' 2).2 ((hf.has_sum_sub hy.1).sub (hf.has_sum_sub hy.2)) using 1
+      convert(hasSum_nat_add_iff' 2).2 ((hf.has_sum_sub hy.1).sub (hf.has_sum_sub hy.2)) using 1
       rw [Finset.sum_range_succ, Finset.sum_range_one, hf.coeff_zero, hf.coeff_zero, sub_self,
         zero_add, ← Subsingleton.pi_single_eq (0 : Fin 1) (y.1 - x), Pi.single, ←
         Subsingleton.pi_single_eq (0 : Fin 1) (y.2 - x), Pi.single, ← (p 1).map_sub, ← Pi.single,
@@ -783,8 +783,7 @@ theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
       apply HasSum.mul_left
       simp only [add_mul]
       have : ‖a‖ < 1 := by simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
-      convert
-        (hasSum_coe_mul_geometric_of_norm_lt_1 this).add
+      convert(hasSum_coe_mul_geometric_of_norm_lt_1 this).add
           ((hasSum_geometric_of_norm_lt_1 this).mul_left 2)
     exact hA.norm_le_of_bounded hBL hAB
   suffices L =O[𝓟 (EMetric.ball (x, x) r')] fun y => ‖y - (x, x)‖ * ‖y.1 - y.2‖
@@ -866,7 +865,7 @@ theorem HasFpowerSeriesOnBall.tendsto_uniformly_on' {r' : ℝ≥0} (hf : HasFpow
     (h : (r' : ℝ≥0∞) < r) :
     TendstoUniformlyOn (fun n y => p.partialSum n (y - x)) f atTop (Metric.ball (x : E) r') :=
   by
-  convert (hf.tendsto_uniformly_on h).comp fun y => y - x
+  convert(hf.tendsto_uniformly_on h).comp fun y => y - x
   · simp [(· ∘ ·)]
   · ext z
     simp [dist_eq_norm]
@@ -1394,7 +1393,7 @@ theorem HasFpowerSeriesOnBall.changeOrigin (hf : HasFpowerSeriesOnBall f p x r)
       exact tsub_le_tsub hf.r_le le_rfl
     r_pos := by simp [h]
     HasSum := fun z hz => by
-      convert (p.change_origin y).HasSum _
+      convert(p.change_origin y).HasSum _
       · rw [mem_emetric_ball_zero_iff, lt_tsub_iff_right, add_comm] at hz
         rw [p.change_origin_eval (hz.trans_le hf.r_le), add_assoc, hf.sum]
         refine' mem_emetric_ball_zero_iff.2 (lt_of_le_of_lt _ hz)

@@ -703,7 +703,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.opow_mul_add_l
 theorem opow_mul_add_lt_opow_succ {b u v w : Ordinal} (hvb : v < b) (hw : w < (b^u)) :
     (b^u) * v + w < (b^succ u) :=
   by
-  convert (opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le_of_lt hvb) _)
+  convert(opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le_of_lt hvb) _)
   exact opow_succ b u
 #align ordinal.opow_mul_add_lt_opow_succ Ordinal.opow_mul_add_lt_opow_succ
 

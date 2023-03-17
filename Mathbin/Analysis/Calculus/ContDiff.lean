@@ -615,7 +615,7 @@ theorem contDiffWithinAt_succ_iff_hasFderivWithinAt {n : ℕ} :
           HasFderivWithinAt (fun z => (continuousMultilinearCurryFin0 𝕜 E F).symm (f z))
             (FormalMultilinearSeries.unshift (p' y) (f y) 1).curryLeft (v ∩ u) y
         rw [LinearIsometryEquiv.comp_hasFderivWithinAt_iff']
-        convert (f'_eq_deriv y hy.2).mono (inter_subset_right v u)
+        convert(f'_eq_deriv y hy.2).mono (inter_subset_right v u)
         rw [← Hp'.zero_eq y hy.1]
         ext z
         change
@@ -623,7 +623,7 @@ theorem contDiffWithinAt_succ_iff_hasFderivWithinAt {n : ℕ} :
             ((p' y 0) 0) z
         unfold_coes
         congr
-      · convert (Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
+      · convert(Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
         · ext (x y)
           change p' x 0 (init (@snoc 0 (fun i : Fin 1 => E) 0 y)) y = p' x 0 0 y
           rw [init_snoc]
@@ -1098,7 +1098,7 @@ theorem contDiffOn_of_continuousOn_differentiableOn
     simp only [ftaylorSeriesWithin, ContinuousMultilinearMap.uncurry0_apply,
       iteratedFderivWithin_zero_apply]
   · intro k hk y hy
-    convert (Hdiff k (lt_of_lt_of_le hk hm) y hy).HasFderivWithinAt
+    convert(Hdiff k (lt_of_lt_of_le hk hm) y hy).HasFderivWithinAt
     simp only [ftaylorSeriesWithin, iteratedFderivWithin_succ_eq_comp_left,
       ContinuousLinearEquiv.coe_apply, Function.comp_apply, coeFn_coeBase]
     exact ContinuousLinearMap.curry_uncurryLeft _
@@ -1885,9 +1885,9 @@ theorem HasFtaylorSeriesUpToOn.continuousLinearMapComp (g : F →L[𝕜] G)
   constructor
   · exact fun x hx => congr_arg g (hf.zero_eq x hx)
   · intro m hm x hx
-    convert (L m).HasFderivAt.comp_hasFderivWithinAt x (hf.fderiv_within m hm x hx)
+    convert(L m).HasFderivAt.comp_hasFderivWithinAt x (hf.fderiv_within m hm x hx)
   · intro m hm
-    convert (L m).Continuous.comp_continuousOn (hf.cont m hm)
+    convert(L m).Continuous.comp_continuousOn (hf.cont m hm)
 #align has_ftaylor_series_up_to_on.continuous_linear_map_comp HasFtaylorSeriesUpToOn.continuousLinearMapComp
 
 /-- Composition by continuous linear maps on the left preserves `C^n` functions in a domain
@@ -1965,8 +1965,7 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
     rw [ContinuousLinearMap.map_zero]
     rfl
   · intro m hm x hx
-    convert
-      (hA m).HasFderivAt.comp_hasFderivWithinAt x
+    convert(hA m).HasFderivAt.comp_hasFderivWithinAt x
         ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))
     ext (y v)
     change p (g x) (Nat.succ m) (g ∘ cons y v) = p (g x) m.succ (cons (g y) (g ∘ v))
@@ -2063,8 +2062,7 @@ theorem HasFtaylorSeriesUpToOn.prod (hf : HasFtaylorSeriesUpToOn n f p s) {g : E
     rw [← hf.zero_eq x hx, ← hg.zero_eq x hx]
     rfl
   · intro m hm x hx
-    convert
-      (L m).HasFderivAt.comp_hasFderivWithinAt x
+    convert(L m).HasFderivAt.comp_hasFderivWithinAt x
         ((hf.fderiv_within m hm x hx).Prod (hg.fderiv_within m hm x hx))
   · intro m hm
     exact (L m).Continuous.comp_continuousOn ((hf.cont m hm).Prod (hg.cont m hm))
@@ -2720,10 +2718,10 @@ theorem hasFtaylorSeriesUpToOn_pi :
     exact (h i).zero_eq x hx
   · intro m hm x hx
     have := hasFderivWithinAt_pi.2 fun i => (h i).fderivWithin m hm x hx
-    convert (L m).HasFderivAt.comp_hasFderivWithinAt x this
+    convert(L m).HasFderivAt.comp_hasFderivWithinAt x this
   · intro m hm
     have := continuousOn_pi.2 fun i => (h i).cont m hm
-    convert (L m).Continuous.comp_continuousOn this
+    convert(L m).Continuous.comp_continuousOn this
 #align has_ftaylor_series_up_to_on_pi hasFtaylorSeriesUpToOn_pi
 
 @[simp]
@@ -3314,8 +3312,8 @@ theorem contDiffAt_ring_inverse [CompleteSpace R] (x : Rˣ) : ContDiffAt 𝕜 n 
       rw [inverse_unit]
       exact hasFderivAt_ring_inverse y
     ·
-      convert
-        (mul_left_right_is_bounded_bilinear 𝕜 R).ContDiff.neg.comp_contDiffAt (x : R) (IH.prod IH)
+      convert(mul_left_right_is_bounded_bilinear 𝕜 R).ContDiff.neg.comp_contDiffAt (x : R)
+          (IH.prod IH)
   · exact cont_diff_at_top.mpr Itop
 #align cont_diff_at_ring_inverse contDiffAt_ring_inverse
 
@@ -3861,8 +3859,7 @@ theorem HasFtaylorSeriesUpToOn.restrictScalars (h : HasFtaylorSeriesUpToOn n f p
   { zero_eq := fun x hx => h.zero_eq x hx
     fderivWithin := by
       intro m hm x hx
-      convert
-        (ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.comp_hasFderivWithinAt _
+      convert(ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.comp_hasFderivWithinAt _
           ((h.fderiv_within m hm x hx).restrictScalars 𝕜)
     cont := fun m hm =>
       ContinuousMultilinearMap.continuous_restrictScalars.comp_continuousOn (h.cont m hm) }

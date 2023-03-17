@@ -116,7 +116,7 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=
   · intro h
     exact
       ⟨⟨finset_basis_index K V, by
-          convert (finset_basis K V).span_eq
+          convert(finset_basis K V).span_eq
           simp⟩⟩
   · rintro ⟨s, hs⟩
     rw [IsNoetherian.iff_dim_lt_aleph0, ← dim_top, ← hs]

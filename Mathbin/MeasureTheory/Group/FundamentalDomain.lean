@@ -162,7 +162,7 @@ theorem preimageOfEquiv {ν : Measure β} (h : IsFundamentalDomain G s μ) {f : 
     AeDisjoint := fun a b hab => by
       lift e to G ≃ H using he
       have : (e.symm a⁻¹)⁻¹ ≠ (e.symm b⁻¹)⁻¹ := by simp [hab]
-      convert (h.ae_disjoint this).Preimage hf using 1
+      convert(h.ae_disjoint this).Preimage hf using 1
       simp only [← preimage_smul_inv, preimage_preimage, ← hef _ _, e.apply_symm_apply, inv_inv] }
 #align measure_theory.is_fundamental_domain.preimage_of_equiv MeasureTheory.IsFundamentalDomain.preimageOfEquiv
 #align measure_theory.is_add_fundamental_domain.preimage_of_equiv MeasureTheory.IsAddFundamentalDomain.preimage_of_equiv
@@ -347,7 +347,7 @@ theorem measure_set_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDoma
     by
     refine' hs.set_lintegral_eq ht (Set.indicator A fun _ => 1) _
     intro g x
-    convert (Set.indicator_comp_right fun x : α => g • x).symm
+    convert(Set.indicator_comp_right fun x : α => g • x).symm
     rw [hA g]
   simpa [measure.restrict_apply hA₀, lintegral_indicator _ hA₀] using this
 #align measure_theory.is_fundamental_domain.measure_set_eq MeasureTheory.IsFundamentalDomain.measure_set_eq

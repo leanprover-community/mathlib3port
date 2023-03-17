@@ -2509,7 +2509,7 @@ theorem IsBoundedBilinearMap.hasStrictFderivAt (h : IsBoundedBilinearMap 𝕜 b)
   simp only [mul_one, is_o_norm_right] at this
   refine' (is_o.congr_of_sub _).1 this
   clear this
-  convert_to (fun q : T => h.deriv (p - q.2) (q.1 - q.2)) =o[𝓝 (p, p)] fun q : T => q.1 - q.2
+  convert_to(fun q : T => h.deriv (p - q.2) (q.1 - q.2)) =o[𝓝 (p, p)] fun q : T => q.1 - q.2
   · ext ⟨⟨x₁, y₁⟩, ⟨x₂, y₂⟩⟩
     rcases p with ⟨x, y⟩
     simp only [isBoundedBilinearMap_deriv_coe, Prod.mk_sub_mk, h.map_sub_left, h.map_sub_right]
@@ -3043,7 +3043,7 @@ theorem hasFderivAt_ring_inverse (x : Rˣ) :
     refine' (inverse_add_norm_diff_second_order x).trans_isOCat (is_o_norm_norm.mp _)
     simp only [norm_pow, norm_norm]
     have h12 : 1 < 2 := by norm_num
-    convert (Asymptotics.isOCat_pow_pow h12).comp_tendsto tendsto_norm_zero
+    convert(Asymptotics.isOCat_pow_pow h12).comp_tendsto tendsto_norm_zero
     ext
     simp
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) :=

@@ -205,8 +205,7 @@ def isLimitOpensLeEquivGenerate₂ (R : Presieve Y)
     IsLimit (F.mapCone (opensLeCoverCocone (coveringOfPresieve Y R)).op) ≃
       IsLimit (F.mapCone (Sieve.generate R).arrows.Cocone.op) :=
   by
-  convert
-      is_limit_opens_le_equiv_generate₁ F (covering_of_presieve Y R)
+  convert is_limit_opens_le_equiv_generate₁ F (covering_of_presieve Y R)
         (covering_of_presieve.supr_eq_of_mem_grothendieck Y R hR).symm using
       2 <;>
     rw [covering_presieve_eq_self R]

@@ -1794,8 +1794,7 @@ theorem op_norm_comp_linearIsometryEquiv (f : F →SL[σ₂₃] G) (g : F' ≃�
   refine' le_antisymm _ _
   · convert f.op_norm_comp_le g.to_linear_isometry.to_continuous_linear_map
     simp [g.to_linear_isometry.norm_to_continuous_linear_map]
-  · convert
-      (f.comp g.to_linear_isometry.to_continuous_linear_map).op_norm_comp_le
+  · convert(f.comp g.to_linear_isometry.to_continuous_linear_map).op_norm_comp_le
         g.symm.to_linear_isometry.to_continuous_linear_map
     · ext
       simp
@@ -1929,7 +1928,7 @@ theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e 
     1 ≤ ‖(e : E →SL[σ₁₂] F)‖ * ‖(e.symm : F →SL[σ₂₁] E)‖ :=
   by
   rw [mul_comm]
-  convert (e.symm : F →SL[σ₂₁] E).op_norm_comp_le (e : E →SL[σ₁₂] F)
+  convert(e.symm : F →SL[σ₂₁] E).op_norm_comp_le (e : E →SL[σ₁₂] F)
   rw [e.coe_symm_comp_coe, ContinuousLinearMap.norm_id]
 #align continuous_linear_equiv.one_le_norm_mul_norm_symm ContinuousLinearEquiv.one_le_norm_mul_norm_symm
 

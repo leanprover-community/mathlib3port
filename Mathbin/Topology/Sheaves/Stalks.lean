@@ -206,8 +206,7 @@ theorem stalkPushforward_iso_of_openEmbedding {f : X ⟶ Y} (hf : OpenEmbedding 
     (x : X) : IsIso (F.stalkPushforward _ f x) :=
   by
   haveI := functor.initial_of_adjunction (hf.is_open_map.adjunction_nhds x)
-  convert
-    is_iso.of_iso
+  convert is_iso.of_iso
       ((functor.final.colimit_iso (hf.is_open_map.functor_nhds x).op
               ((open_nhds.inclusion (f x)).op ⋙ f _* F) :
             _).symm ≪≫

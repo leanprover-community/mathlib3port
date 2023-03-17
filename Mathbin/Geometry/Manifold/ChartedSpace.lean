@@ -1103,8 +1103,8 @@ instance [ClosedUnderRestriction G] : HasGroupoid s G
     simp only [hc.symm, mem_singleton_iff, Subtype.val_eq_coe] at he
     simp only [hc'.symm, mem_singleton_iff, Subtype.val_eq_coe] at he'
     rw [he, he']
-    convert
-      G.eq_on_source _ (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
+    convert G.eq_on_source _
+        (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
     apply closed_under_restriction'
     · exact G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')
     · exact preimage_open_of_open_symm (chart_at H x) s.2

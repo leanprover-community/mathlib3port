@@ -312,7 +312,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     have :
       l.mem_base_set I c ((hfi' n).convergenceR (δ n) c) (π.filter fun J => Nx (π.tag J) = n) :=
       (hπ.filter _).mono' _ le_rfl le_rfl fun J hJ => (hrn J hJ).le
-    convert (hfi' n).dist_integralSum_sum_integral_le_of_memBaseSet (δ0 _) this using 2
+    convert(hfi' n).dist_integralSum_sum_integral_le_of_memBaseSet (δ0 _) this using 2
     · refine' sum_congr rfl fun J hJ => _
       simp [hNxn J hJ]
     · refine' sum_congr rfl fun J hJ => _

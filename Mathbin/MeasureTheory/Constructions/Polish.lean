@@ -241,7 +241,7 @@ theorem MeasurableSet.analyticSet {α : Type _} [t : TopologicalSpace α] [Polis
     ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ is_closed[t'] s ∧ is_open[t'] s :=
     hs.is_clopenable
   have A := @IsClosed.analyticSet α t' t'_polish s s_closed
-  convert @analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
+  convert@analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
   simp only [id.def, image_id']
 #align measurable_set.analytic_set MeasurableSet.analyticSet
 
@@ -381,7 +381,7 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α] 
   have M : ∀ n, ¬measurably_separable (f '' cylinder x n) (g '' cylinder y n) :=
     by
     intro n
-    convert (p n).2 using 3
+    convert(p n).2 using 3
     · rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
       intro i hi
       rw [hx]

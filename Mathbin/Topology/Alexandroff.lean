@@ -769,7 +769,7 @@ instance : CompactSpace (Alexandroff X)
       by
       rw [nhds_infty_eq]
       exact (tendsto_map.mono_left cocompact_le_coclosed_compact).mono_right le_sup_left
-    convert ← this.is_compact_insert_range_of_cocompact continuous_coe
+    convert← this.is_compact_insert_range_of_cocompact continuous_coe
     exact insert_none_range_some X
 
 /-- The one point compactification of a `t0_space` space is a `t0_space`. -/

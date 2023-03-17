@@ -1527,7 +1527,7 @@ theorem supᵢ_lintegral_le {ι : Sort _} (f : ι → α → ℝ≥0∞) :
 theorem supr₂_lintegral_le {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
     (⨆ (i) (j), ∫⁻ a, f i j a ∂μ) ≤ ∫⁻ a, ⨆ (i) (j), f i j a ∂μ :=
   by
-  convert (monotone_lintegral μ).le_map_supᵢ₂ f
+  convert(monotone_lintegral μ).le_map_supᵢ₂ f
   ext1 a
   simp only [supᵢ_apply]
 #align measure_theory.supr₂_lintegral_le MeasureTheory.supr₂_lintegral_le
@@ -1542,7 +1542,7 @@ theorem le_infᵢ_lintegral {ι : Sort _} (f : ι → α → ℝ≥0∞) :
 theorem le_infi₂_lintegral {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
     (∫⁻ a, ⨅ (i) (h : ι' i), f i h a ∂μ) ≤ ⨅ (i) (h : ι' i), ∫⁻ a, f i h a ∂μ :=
   by
-  convert (monotone_lintegral μ).map_infᵢ₂_le f
+  convert(monotone_lintegral μ).map_infᵢ₂_le f
   ext1 a
   simp only [infᵢ_apply]
 #align measure_theory.le_infi₂_lintegral MeasureTheory.le_infi₂_lintegral

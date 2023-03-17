@@ -528,8 +528,7 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
     infer_instance
   · rintro ⟨i, j, k⟩
     dsimp
-    convert
-      (affine_cancel_left_is_iso hP.1
+    convert(affine_cancel_left_is_iso hP.1
             (pullback_diagonal_map_iso _ _ ((𝒰' i).map j) ((𝒰' i).map k)).inv pullback.snd).mp
         _
     pick_goal 3
