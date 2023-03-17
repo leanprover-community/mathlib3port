@@ -161,7 +161,7 @@ alias is_unit_iff_nat_abs_eq ↔ is_unit.nat_abs_eq _
 lean 3 declaration is
   forall {n : Nat}, Iff (IsUnit.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (IsUnit.{0} Nat Nat.monoid n)
 but is expected to have type
-  forall {n : Nat}, Iff (IsUnit.{0} Int Int.instMonoidInt (Nat.cast.{0} Int Int.instNatCastInt n)) (IsUnit.{0} Nat Nat.monoid n)
+  forall {n : Nat}, Iff (IsUnit.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt n)) (IsUnit.{0} Nat Nat.monoid n)
 Case conversion may be inaccurate. Consider using '#align int.of_nat_is_unit Int.ofNat_isUnitₓ'. -/
 @[norm_cast]
 theorem ofNat_isUnit {n : ℕ} : IsUnit (n : ℤ) ↔ IsUnit n := by

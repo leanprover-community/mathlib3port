@@ -307,7 +307,7 @@ protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm ↑m ↑n = Nat.lcm m n :=
 lean 3 declaration is
   forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd i j)) i
 but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt (Int.gcd i j)) i
+  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Int.gcd i j)) i
 Case conversion may be inaccurate. Consider using '#align int.gcd_dvd_left Int.gcd_dvd_leftₓ'. -/
 theorem gcd_dvd_left (i j : ℤ) : (gcd i j : ℤ) ∣ i :=
   dvd_natAbs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_left _ _
@@ -317,7 +317,7 @@ theorem gcd_dvd_left (i j : ℤ) : (gcd i j : ℤ) ∣ i :=
 lean 3 declaration is
   forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd i j)) j
 but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt (Int.gcd i j)) j
+  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Int.gcd i j)) j
 Case conversion may be inaccurate. Consider using '#align int.gcd_dvd_right Int.gcd_dvd_rightₓ'. -/
 theorem gcd_dvd_right (i j : ℤ) : (gcd i j : ℤ) ∣ j :=
   dvd_natAbs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_right _ _
@@ -327,7 +327,7 @@ theorem gcd_dvd_right (i j : ℤ) : (gcd i j : ℤ) ∣ j :=
 lean 3 declaration is
   forall {i : Int} {j : Int} {k : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k i) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k j) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) k ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd i j)))
 but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt k i) -> (Dvd.dvd.{0} Int Int.instDvdInt k j) -> (Dvd.dvd.{0} Int Int.instDvdInt k (Nat.cast.{0} Int Int.instNatCastInt (Int.gcd i j)))
+  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt k i) -> (Dvd.dvd.{0} Int Int.instDvdInt k j) -> (Dvd.dvd.{0} Int Int.instDvdInt k (Nat.cast.{0} Int instNatCastInt (Int.gcd i j)))
 Case conversion may be inaccurate. Consider using '#align int.dvd_gcd Int.dvd_gcdₓ'. -/
 theorem dvd_gcd {i j k : ℤ} (h1 : k ∣ i) (h2 : k ∣ j) : k ∣ gcd i j :=
   natAbs_dvd.1 <| coe_nat_dvd.2 <| Nat.dvd_gcd (natAbs_dvd_natAbs.2 h1) (natAbs_dvd_natAbs.2 h2)
@@ -585,7 +585,7 @@ theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ x y : ℤ, ↑
 lean 3 declaration is
   forall {a : Int} {b : Int} {d : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) d) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) d a) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) d b) -> (forall (e : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) e a) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) e b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) e d)) -> (Eq.{1} Int d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.gcd a b)))
 but is expected to have type
-  forall {a : Int} {b : Int} {d : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) -> (Dvd.dvd.{0} Int Int.instDvdInt d a) -> (Dvd.dvd.{0} Int Int.instDvdInt d b) -> (forall (e : Int), (Dvd.dvd.{0} Int Int.instDvdInt e a) -> (Dvd.dvd.{0} Int Int.instDvdInt e b) -> (Dvd.dvd.{0} Int Int.instDvdInt e d)) -> (Eq.{1} Int d (Nat.cast.{0} Int Int.instNatCastInt (Int.gcd a b)))
+  forall {a : Int} {b : Int} {d : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) -> (Dvd.dvd.{0} Int Int.instDvdInt d a) -> (Dvd.dvd.{0} Int Int.instDvdInt d b) -> (forall (e : Int), (Dvd.dvd.{0} Int Int.instDvdInt e a) -> (Dvd.dvd.{0} Int Int.instDvdInt e b) -> (Dvd.dvd.{0} Int Int.instDvdInt e d)) -> (Eq.{1} Int d (Nat.cast.{0} Int instNatCastInt (Int.gcd a b)))
 Case conversion may be inaccurate. Consider using '#align int.gcd_greatest Int.gcd_greatestₓ'. -/
 theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d ∣ b)
     (hd : ∀ e : ℤ, e ∣ a → e ∣ b → e ∣ d) : d = gcd a b :=
@@ -708,7 +708,7 @@ theorem lcm_self (i : ℤ) : lcm i i = natAbs i :=
 lean 3 declaration is
   forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.lcm i j))
 but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt i (Nat.cast.{0} Int Int.instNatCastInt (Int.lcm i j))
+  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt i (Nat.cast.{0} Int instNatCastInt (Int.lcm i j))
 Case conversion may be inaccurate. Consider using '#align int.dvd_lcm_left Int.dvd_lcm_leftₓ'. -/
 theorem dvd_lcm_left (i j : ℤ) : i ∣ lcm i j :=
   by
@@ -721,7 +721,7 @@ theorem dvd_lcm_left (i j : ℤ) : i ∣ lcm i j :=
 lean 3 declaration is
   forall (i : Int) (j : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) j ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.lcm i j))
 but is expected to have type
-  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt j (Nat.cast.{0} Int Int.instNatCastInt (Int.lcm i j))
+  forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt j (Nat.cast.{0} Int instNatCastInt (Int.lcm i j))
 Case conversion may be inaccurate. Consider using '#align int.dvd_lcm_right Int.dvd_lcm_rightₓ'. -/
 theorem dvd_lcm_right (i j : ℤ) : j ∣ lcm i j :=
   by
@@ -734,7 +734,7 @@ theorem dvd_lcm_right (i j : ℤ) : j ∣ lcm i j :=
 lean 3 declaration is
   forall {i : Int} {j : Int} {k : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) i k) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) j k) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.lcm i j)) k)
 but is expected to have type
-  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt i k) -> (Dvd.dvd.{0} Int Int.instDvdInt j k) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt (Int.lcm i j)) k)
+  forall {i : Int} {j : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt i k) -> (Dvd.dvd.{0} Int Int.instDvdInt j k) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (Int.lcm i j)) k)
 Case conversion may be inaccurate. Consider using '#align int.lcm_dvd Int.lcm_dvdₓ'. -/
 theorem lcm_dvd {i j k : ℤ} : i ∣ k → j ∣ k → (lcm i j : ℤ) ∣ k :=
   by

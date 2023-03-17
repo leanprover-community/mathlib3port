@@ -362,7 +362,7 @@ theorem even_coe_nat (n : ℕ) : Even (n : ℤ) ↔ Even n := by rw_mod_cast [ev
 lean 3 declaration is
   forall (n : Nat), Iff (Odd.{0} Int Int.semiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Odd.{0} Nat Nat.semiring n)
 but is expected to have type
-  forall (n : Nat), Iff (Odd.{0} Int Int.instSemiringInt (Nat.cast.{0} Int Int.instNatCastInt n)) (Odd.{0} Nat Nat.semiring n)
+  forall (n : Nat), Iff (Odd.{0} Int Int.instSemiringInt (Nat.cast.{0} Int instNatCastInt n)) (Odd.{0} Nat Nat.semiring n)
 Case conversion may be inaccurate. Consider using '#align int.odd_coe_nat Int.odd_coe_natₓ'. -/
 @[simp, norm_cast]
 theorem odd_coe_nat (n : ℕ) : Odd (n : ℤ) ↔ Odd n := by

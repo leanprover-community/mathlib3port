@@ -960,7 +960,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
 lean 3 declaration is
   forall {p : Nat}, Iff (Nat.Prime p) (Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.commSemiring) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p))
 but is expected to have type
-  forall {p : Nat}, Iff (Nat.Prime p) (Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.instCommSemiringInt) (Nat.cast.{0} Int Int.instNatCastInt p))
+  forall {p : Nat}, Iff (Nat.Prime p) (Prime.{0} Int (CommSemiring.toCommMonoidWithZero.{0} Int Int.instCommSemiringInt) (Nat.cast.{0} Int instNatCastInt p))
 Case conversion may be inaccurate. Consider using '#align nat.prime_iff_prime_int Nat.prime_iff_prime_intₓ'. -/
 theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
   ⟨fun hp =>

@@ -27,7 +27,7 @@ namespace Int
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Dvd.Dvd.{0} Nat Nat.hasDvd m n)
 but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt m) (Nat.cast.{0} Int Int.instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat m n)
+  forall {m : Nat} {n : Nat}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat m n)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd Int.coe_nat_dvdₓ'. -/
 @[norm_cast]
 theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
@@ -47,7 +47,7 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
 lean 3 declaration is
   forall {n : Nat} {z : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) z) (Dvd.Dvd.{0} Nat Nat.hasDvd n (Int.natAbs z))
 but is expected to have type
-  forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt n) z) (Dvd.dvd.{0} Nat Nat.instDvdNat n (Int.natAbs z))
+  forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt n) z) (Dvd.dvd.{0} Nat Nat.instDvdNat n (Int.natAbs z))
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd_left Int.coe_nat_dvd_leftₓ'. -/
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
@@ -57,7 +57,7 @@ theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.na
 lean 3 declaration is
   forall {n : Nat} {z : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) z ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Dvd.Dvd.{0} Nat Nat.hasDvd (Int.natAbs z) n)
 but is expected to have type
-  forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt z (Nat.cast.{0} Int Int.instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.natAbs z) n)
+  forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt z (Nat.cast.{0} Int instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.natAbs z) n)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd_right Int.coe_nat_dvd_rightₓ'. -/
 theorem coe_nat_dvd_right {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
@@ -102,7 +102,7 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
 lean 3 declaration is
   forall {a : Nat} {z : Int}, (Dvd.Dvd.{0} Nat Nat.hasDvd a (Int.natAbs z)) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a) z)
 but is expected to have type
-  forall {a : Nat} {z : Int}, (Dvd.dvd.{0} Nat Nat.instDvdNat a (Int.natAbs z)) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt a) z)
+  forall {a : Nat} {z : Int}, (Dvd.dvd.{0} Nat Nat.instDvdNat a (Int.natAbs z)) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt a) z)
 Case conversion may be inaccurate. Consider using '#align int.of_nat_dvd_of_dvd_nat_abs Int.ofNat_dvd_of_dvd_natAbsₓ'. -/
 theorem ofNat_dvd_of_dvd_natAbs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAbs), ↑a ∣ z
   | Int.ofNat _, haz => Int.coe_nat_dvd.2 haz
@@ -117,7 +117,7 @@ theorem ofNat_dvd_of_dvd_natAbs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAbs)
 lean 3 declaration is
   forall {a : Nat} {z : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a) z) -> (Dvd.Dvd.{0} Nat Nat.hasDvd a (Int.natAbs z))
 but is expected to have type
-  forall {a : Nat} {z : Int}, (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt a) z) -> (Dvd.dvd.{0} Nat Nat.instDvdNat a (Int.natAbs z))
+  forall {a : Nat} {z : Int}, (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt a) z) -> (Dvd.dvd.{0} Nat Nat.instDvdNat a (Int.natAbs z))
 Case conversion may be inaccurate. Consider using '#align int.dvd_nat_abs_of_of_nat_dvd Int.dvd_natAbs_of_ofNat_dvdₓ'. -/
 theorem dvd_natAbs_of_ofNat_dvd {a : ℕ} : ∀ {z : ℤ} (haz : ↑a ∣ z), a ∣ z.natAbs
   | Int.ofNat _, haz => Int.coe_nat_dvd.1 (Int.dvd_natAbs.2 haz)

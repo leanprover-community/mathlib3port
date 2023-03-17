@@ -43,7 +43,7 @@ theorem dist_eq (x y : ℕ) : dist x y = |x - y| :=
 lean 3 declaration is
   forall (x : Nat) (y : Nat), Eq.{1} Real (Dist.dist.{0} Int Int.hasDist ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) y)) (Dist.dist.{0} Nat Nat.hasDist x y)
 but is expected to have type
-  forall (x : Nat) (y : Nat), Eq.{1} Real (Dist.dist.{0} Int Int.instDistInt (Nat.cast.{0} Int Int.instNatCastInt x) (Nat.cast.{0} Int Int.instNatCastInt y)) (Dist.dist.{0} Nat Nat.instDistNat x y)
+  forall (x : Nat) (y : Nat), Eq.{1} Real (Dist.dist.{0} Int Int.instDistInt (Nat.cast.{0} Int instNatCastInt x) (Nat.cast.{0} Int instNatCastInt y)) (Dist.dist.{0} Nat Nat.instDistNat x y)
 Case conversion may be inaccurate. Consider using '#align nat.dist_coe_int Nat.dist_coe_intₓ'. -/
 theorem dist_coe_int (x y : ℕ) : dist (x : ℤ) (y : ℤ) = dist x y :=
   rfl

@@ -41,7 +41,7 @@ open Classical
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Nat.coprime m n)
 but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int Int.instNatCastInt m) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.coprime m n)
+  forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n)) (Nat.coprime m n)
 Case conversion may be inaccurate. Consider using '#align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprimeₓ'. -/
 theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
@@ -61,13 +61,13 @@ theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.co
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) -> (Nat.coprime m n)
 but is expected to have type
-  forall {m : Nat} {n : Nat}, (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int Int.instNatCastInt m) (Nat.cast.{0} Int Int.instNatCastInt n)) -> (Nat.coprime m n)
+  forall {m : Nat} {n : Nat}, (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n)) -> (Nat.coprime m n)
 Case conversion may be inaccurate. Consider using '#align is_coprime.nat_coprime IsCoprime.nat_coprimeₓ'. -/
 /- warning: nat.coprime.is_coprime -> Nat.coprime.isCoprime is a dubious translation:
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))
 but is expected to have type
-  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int Int.instNatCastInt m) (Nat.cast.{0} Int Int.instNatCastInt n))
+  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int instNatCastInt m) (Nat.cast.{0} Int instNatCastInt n))
 Case conversion may be inaccurate. Consider using '#align nat.coprime.is_coprime Nat.coprime.isCoprimeₓ'. -/
 alias Nat.isCoprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
 #align is_coprime.nat_coprime IsCoprime.nat_coprime

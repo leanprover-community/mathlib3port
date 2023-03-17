@@ -754,7 +754,7 @@ theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
 lean 3 declaration is
   forall (n : Nat) (m : Nat), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) n m)) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) m)
 but is expected to have type
-  forall (n : Nat) (m : Nat), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n m)) (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat (Nat.cast.{0} Int Int.instNatCastInt n) m)
+  forall (n : Nat) (m : Nat), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n m)) (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat (Nat.cast.{0} Int instNatCastInt n) m)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_pow Int.coe_nat_powₓ'. -/
 @[simp, norm_cast]
 theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
@@ -1112,7 +1112,7 @@ namespace Int
 lean 3 declaration is
   forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_sq Int.natAbs_sqₓ'. -/
 theorem natAbs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.natAbs_mul_self', sq]
 #align int.nat_abs_sq Int.natAbs_sq
@@ -1121,7 +1121,7 @@ theorem natAbs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.nat
 lean 3 declaration is
   forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_pow_two Int.natAbs_pow_twoₓ'. -/
 alias nat_abs_sq ← nat_abs_pow_two
 #align int.nat_abs_pow_two Int.natAbs_pow_two
@@ -1130,7 +1130,7 @@ alias nat_abs_sq ← nat_abs_pow_two
 lean 3 declaration is
   forall (a : Int), LE.le.{0} Int Int.hasLe ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs a)) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall (a : Int), LE.le.{0} Int Int.instLEInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs a)) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+  forall (a : Int), LE.le.{0} Int Int.instLEInt (Nat.cast.{0} Int instNatCastInt (Int.natAbs a)) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align int.abs_le_self_sq Int.natAbs_le_self_sqₓ'. -/
 theorem natAbs_le_self_sq (a : ℤ) : (Int.natAbs a : ℤ) ≤ a ^ 2 :=
   by

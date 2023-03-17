@@ -220,7 +220,7 @@ theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 lean 3 declaration is
   StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))))
 but is expected to have type
-  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.840 : Nat) => Nat.cast.{0} Int Int.instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.840)
+  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.840 : Nat) => Nat.cast.{0} Int instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.840)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_strict_mono Int.coe_nat_strictMonoₓ'. -/
 theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.ofNat_lt.2
 #align int.coe_nat_strict_mono Int.coe_nat_strictMono
@@ -793,7 +793,7 @@ theorem negSucc_add_negSucc (m n : ℕ) : -[m+1] + -[n+1] = -[Nat.succ (m + n)+1
 lean 3 declaration is
   forall (a : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.toNat a)) (LinearOrder.max.{0} Int Int.linearOrder a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall (a : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Int.toNat a)) (Max.max.{0} Int Int.instMaxInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall (a : Int), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (Int.toNat a)) (Max.max.{0} Int Int.instMaxInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.to_nat_eq_max Int.toNat_eq_maxₓ'. -/
 theorem toNat_eq_max : ∀ a : ℤ, (toNat a : ℤ) = max a 0
   | (n : ℕ) => (max_eq_left (ofNat_zero_le n)).symm

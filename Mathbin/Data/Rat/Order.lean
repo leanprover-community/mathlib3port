@@ -219,7 +219,7 @@ instance : Preorder ℚ := by infer_instance
 lean 3 declaration is
   forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.hasLe p q) (LE.le.{0} Int Int.hasLe (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den p))))
 but is expected to have type
-  forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.instLERat p q) (LE.le.{0} Int Int.instLEInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den p))))
+  forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.instLERat p q) (LE.le.{0} Int Int.instLEInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den p))))
 Case conversion may be inaccurate. Consider using '#align rat.le_def' Rat.le_def'ₓ'. -/
 protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.den :=
   by
@@ -338,7 +338,7 @@ theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [
 lean 3 declaration is
   forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) q) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs (Rat.num q))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)))
 but is expected to have type
-  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) q) (Rat.divInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
+  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instSupRat) q) (Rat.divInt (Nat.cast.{0} Int instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.abs_def Rat.abs_defₓ'. -/
 theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by
