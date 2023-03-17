@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.power
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit acb3d204d4ee883eb686f45d486a2a6811a01329
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,6 +213,10 @@ Case conversion may be inaccurate. Consider using '#align zpow_two_nonneg zpow_t
 theorem zpow_two_nonneg (a : α) : 0 ≤ a ^ (2 : ℤ) :=
   zpow_bit0_nonneg _ _
 #align zpow_two_nonneg zpow_two_nonneg
+
+theorem zpow_neg_two_nonneg (a : α) : 0 ≤ a ^ (-2 : ℤ) :=
+  zpow_bit0_nonneg _ (-1)
+#align zpow_neg_two_nonneg zpow_neg_two_nonneg
 
 /- warning: zpow_bit0_pos -> zpow_bit0_pos is a dubious translation:
 lean 3 declaration is

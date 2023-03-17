@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.basic
-! leanprover-community/mathlib commit f06058e64b7e8397234455038f3f8aec83aaba5a
+! leanprover-community/mathlib commit 34d3797325d202bd7250431275bb871133cdb611
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -460,12 +460,25 @@ theorem vadd_im : (x +ᵥ z).im = z.im :=
 
 end RealAddAction
 
-@[simp]
+/- these next few lemmas are *not* flagged `@simp` because of the constructors on the RHS;
+instead we use the versions with coercions to `ℂ` as simp lemmas instead. -/
 theorem modular_s_smul (z : ℍ) : ModularGroup.s • z = mk (-z : ℂ)⁻¹ z.im_inv_neg_coe_pos :=
   by
   rw [special_linear_group_apply]
   simp [ModularGroup.s, neg_div, inv_neg]
 #align upper_half_plane.modular_S_smul UpperHalfPlane.modular_s_smul
+
+theorem modular_t_zpow_smul (z : ℍ) (n : ℤ) : ModularGroup.t ^ n • z = (n : ℝ) +ᵥ z :=
+  by
+  rw [← Subtype.coe_inj, coe_vadd, add_comm, special_linear_group_apply, coe_mk,
+    ModularGroup.coe_t_zpow]
+  simp only [of_apply, cons_val_zero, algebraMap.coe_one, Complex.ofReal_one, one_mul, cons_val_one,
+    head_cons, algebraMap.coe_zero, MulZeroClass.zero_mul, zero_add, div_one]
+#align upper_half_plane.modular_T_zpow_smul UpperHalfPlane.modular_t_zpow_smul
+
+theorem modular_t_smul (z : ℍ) : ModularGroup.t • z = (1 : ℝ) +ᵥ z := by
+  simpa only [algebraMap.coe_one] using modular_T_zpow_smul z 1
+#align upper_half_plane.modular_T_smul UpperHalfPlane.modular_t_smul
 
 theorem exists_SL2_smul_eq_of_apply_zero_one_eq_zero (g : SL(2, ℝ)) (hc : ↑ₘ[ℝ] g 1 0 = 0) :
     ∃ (u : { x : ℝ // 0 < x })(v : ℝ), ((· • ·) g : ℍ → ℍ) = (fun z => v +ᵥ z) ∘ fun z => u • z :=
@@ -497,7 +510,8 @@ theorem exists_SL2_smul_eq_of_apply_zero_one_ne_zero (g : SL(2, ℝ)) (hc : ↑�
   suffices (↑a * z + b) / (↑c * z + d) = a / c - (c * d + ↑c * ↑c * z)⁻¹
     by
     rw [special_linear_group_apply]
-    simpa [-neg_add_rev, inv_neg, ← sub_eq_add_neg]
+    simpa only [inv_neg, modular_S_smul, Subtype.coe_mk, coe_vadd, Complex.ofReal_mul,
+      coe_pos_real_smul, Complex.real_smul, Function.comp_apply, Complex.ofReal_div]
   replace hc : (c : ℂ) ≠ 0
   · norm_cast
     assumption

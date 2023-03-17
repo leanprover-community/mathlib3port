@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, David Kurniadi Angdinata, Devon Tuma, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.quotient
-! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
+! leanprover-community/mathlib commit 5120cf49cb659e2499edd7e4d336a04efd598f2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,26 +221,24 @@ def quotientEquivQuotientMvPolynomial (I : Ideal R) :
     apply induction_on f
     · rintro ⟨r⟩
       rw [coe_eval₂_hom, eval₂_C]
-      simp only [eval₂_hom_eq_bind₂, Submodule.Quotient.quot_mk_eq_mk, Ideal.Quotient.lift_mk,
-        Ideal.Quotient.mk_eq_mk, bind₂_C_right, RingHom.coe_comp]
+      simp only [Submodule.Quotient.quot_mk_eq_mk, Ideal.Quotient.lift_mk, MvPolynomial.eval₂Hom_C,
+        Function.comp_apply, Ideal.Quotient.mk_eq_mk, MvPolynomial.C_inj, RingHom.coe_comp]
     · simp_intro p q hp hq only [RingHom.map_add, MvPolynomial.coe_eval₂Hom, coe_eval₂_hom,
-        MvPolynomial.eval₂_add, MvPolynomial.eval₂Hom_eq_bind₂, eval₂_hom_eq_bind₂]
+        MvPolynomial.eval₂_add]
       rw [hp, hq]
-    · simp_intro p i hp only [eval₂_hom_eq_bind₂, coe_eval₂_hom]
-      simp only [hp, eval₂_hom_eq_bind₂, coe_eval₂_hom, Ideal.Quotient.lift_mk, bind₂_X_right,
-        eval₂_mul, RingHom.map_mul, eval₂_X]
+    · simp_intro p i hp only [coe_eval₂_hom]
+      simp only [hp, coe_eval₂_hom, Ideal.Quotient.lift_mk, eval₂_mul, RingHom.map_mul, eval₂_X]
   right_inv := by
     rintro ⟨f⟩
     apply induction_on f
     · intro r
       simp only [Submodule.Quotient.quot_mk_eq_mk, Ideal.Quotient.lift_mk, Ideal.Quotient.mk_eq_mk,
         RingHom.coe_comp, eval₂_hom_C]
-    · simp_intro p q hp hq only [eval₂_hom_eq_bind₂, Submodule.Quotient.quot_mk_eq_mk, eval₂_add,
-        RingHom.map_add, coe_eval₂_hom, Ideal.Quotient.lift_mk, Ideal.Quotient.mk_eq_mk]
+    · simp_intro p q hp hq only [Submodule.Quotient.quot_mk_eq_mk, eval₂_add, RingHom.map_add,
+        coe_eval₂_hom, Ideal.Quotient.lift_mk, Ideal.Quotient.mk_eq_mk]
       rw [hp, hq]
-    · simp_intro p i hp only [eval₂_hom_eq_bind₂, Submodule.Quotient.quot_mk_eq_mk, coe_eval₂_hom,
-        Ideal.Quotient.lift_mk, Ideal.Quotient.mk_eq_mk, bind₂_X_right, eval₂_mul, RingHom.map_mul,
-        eval₂_X]
+    · simp_intro p i hp only [Submodule.Quotient.quot_mk_eq_mk, coe_eval₂_hom,
+        Ideal.Quotient.lift_mk, Ideal.Quotient.mk_eq_mk, eval₂_mul, RingHom.map_mul, eval₂_X]
       simp only [hp]
   commutes' r := eval₂Hom_C _ _ (Ideal.Quotient.mk I r)
 #align mv_polynomial.quotient_equiv_quotient_mv_polynomial MvPolynomial.quotientEquivQuotientMvPolynomial

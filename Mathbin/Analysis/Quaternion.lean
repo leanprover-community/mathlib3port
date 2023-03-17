@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,6 +238,35 @@ instance : CompleteSpace ℍ :=
   haveI : UniformEmbedding linear_isometry_equiv_tuple.to_linear_equiv.to_equiv.symm :=
     linear_isometry_equiv_tuple.to_continuous_linear_equiv.symm.uniform_embedding
   (completeSpace_congr this).1 (by infer_instance)
+
+section infinite_sum
+
+variable {α : Type _}
+
+@[simp, norm_cast]
+theorem hasSum_coe {f : α → ℝ} {r : ℝ} : HasSum (fun a => (f a : ℍ)) (↑r : ℍ) ↔ HasSum f r :=
+  ⟨fun h => by
+    simpa only using h.map (show ℍ →ₗ[ℝ] ℝ from QuaternionAlgebra.reLm _ _) continuous_re, fun h =>
+    by simpa only using h.map (algebraMap ℝ ℍ) (continuous_algebraMap _ _)⟩
+#align quaternion.has_sum_coe Quaternion.hasSum_coe
+
+@[simp, norm_cast]
+theorem summable_coe {f : α → ℝ} : (Summable fun a => (f a : ℍ)) ↔ Summable f := by
+  simpa only using
+    Summable.map_iff_of_leftInverse (algebraMap ℝ ℍ)
+      (show ℍ →ₗ[ℝ] ℝ from QuaternionAlgebra.reLm _ _) (continuous_algebraMap _ _) continuous_re
+      coe_re
+#align quaternion.summable_coe Quaternion.summable_coe
+
+@[norm_cast]
+theorem tsum_coe (f : α → ℝ) : (∑' a, (f a : ℍ)) = ↑(∑' a, f a) :=
+  by
+  by_cases hf : Summable f
+  · exact (has_sum_coe.mpr hf.has_sum).tsum_eq
+  · simp [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable (summable_coe.not.mpr hf)]
+#align quaternion.tsum_coe Quaternion.tsum_coe
+
+end infinite_sum
 
 end Quaternion
 

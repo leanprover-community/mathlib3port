@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit d90149e913bf65828b011379540c3379e01105fd
+! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -688,13 +688,22 @@ theorem eq_re_iff_mem_range_coe {a : ℍ[R,c₁,c₂]} :
   ⟨fun h => ⟨a.re, h.symm⟩, fun ⟨x, h⟩ => eq_re_of_eq_coe h.symm⟩
 #align quaternion_algebra.eq_re_iff_mem_range_coe QuaternionAlgebra.eq_re_iff_mem_range_coe
 
-@[simp]
-theorem conj_fixed {R : Type _} [CommRing R] [NoZeroDivisors R] [CharZero R] {c₁ c₂ : R}
-    {a : ℍ[R,c₁,c₂]} : conj a = a ↔ a = a.re := by
-  simp [ext_iff, neg_eq_iff_add_eq_zero, add_self_eq_zero]
-#align quaternion_algebra.conj_fixed QuaternionAlgebra.conj_fixed
+section CharZero
 
--- Can't use `rw ← conj_fixed` in the proof without additional assumptions
+variable [NoZeroDivisors R] [CharZero R]
+
+@[simp]
+theorem conj_eq_self {c₁ c₂ : R} {a : ℍ[R,c₁,c₂]} : conj a = a ↔ a = a.re := by
+  simp [ext_iff, neg_eq_iff_add_eq_zero, add_self_eq_zero]
+#align quaternion_algebra.conj_eq_self QuaternionAlgebra.conj_eq_self
+
+theorem conj_eq_neg {c₁ c₂ : R} {a : ℍ[R,c₁,c₂]} : conj a = -a ↔ a.re = 0 := by
+  simp [ext_iff, eq_neg_iff_add_eq_zero]
+#align quaternion_algebra.conj_eq_neg QuaternionAlgebra.conj_eq_neg
+
+end CharZero
+
+-- Can't use `rw ← conj_eq_self` in the proof without additional assumptions
 theorem conj_mul_eq_coe : conj a * a = (conj a * a).re := by ext <;> simp <;> ring
 #align quaternion_algebra.conj_mul_eq_coe QuaternionAlgebra.conj_mul_eq_coe
 
@@ -1336,11 +1345,21 @@ theorem eq_re_iff_mem_range_coe {a : ℍ[R]} : a = a.re ↔ a ∈ Set.range (coe
   QuaternionAlgebra.eq_re_iff_mem_range_coe
 #align quaternion.eq_re_iff_mem_range_coe Quaternion.eq_re_iff_mem_range_coe
 
+section CharZero
+
+variable [NoZeroDivisors R] [CharZero R]
+
 @[simp]
-theorem conj_fixed {R : Type _} [CommRing R] [NoZeroDivisors R] [CharZero R] {a : ℍ[R]} :
-    conj a = a ↔ a = a.re :=
-  QuaternionAlgebra.conj_fixed
-#align quaternion.conj_fixed Quaternion.conj_fixed
+theorem conj_eq_self {a : ℍ[R]} : conj a = a ↔ a = a.re :=
+  QuaternionAlgebra.conj_eq_self
+#align quaternion.conj_eq_self Quaternion.conj_eq_self
+
+@[simp]
+theorem conj_eq_neg {a : ℍ[R]} : conj a = -a ↔ a.re = 0 :=
+  QuaternionAlgebra.conj_eq_neg
+#align quaternion.conj_eq_neg Quaternion.conj_eq_neg
+
+end CharZero
 
 theorem conj_mul_eq_coe : conj a * a = (conj a * a).re :=
   a.conj_mul_eq_coe
@@ -1437,6 +1456,20 @@ theorem coe_normSq_add : (normSq (a + b) : ℍ[R]) = normSq a + a * b.conj + b *
   by simp [← self_mul_conj, mul_add, add_mul, add_assoc]
 #align quaternion.coe_norm_sq_add Quaternion.coe_normSq_add
 
+theorem normSq_smul (r : R) (q : ℍ[R]) : normSq (r • q) = r ^ 2 * normSq q := by
+  simp_rw [norm_sq_def, conj_smul, smul_mul_smul, smul_re, sq, smul_eq_mul]
+#align quaternion.norm_sq_smul Quaternion.normSq_smul
+
+theorem normSq_add (a b : ℍ[R]) : normSq (a + b) = normSq a + normSq b + 2 * (a * conj b).re :=
+  calc
+    normSq (a + b) = normSq a + (a * conj b).re + ((b * conj a).re + normSq b) := by
+      simp_rw [norm_sq_def, conj_add, add_mul, mul_add, add_re]
+    _ = normSq a + normSq b + ((a * conj b).re + (b * conj a).re) := by abel
+    _ = normSq a + normSq b + 2 * (a * conj b).re := by
+      rw [← add_re, ← conj_mul_conj a b, self_add_conj', coe_re]
+    
+#align quaternion.norm_sq_add Quaternion.normSq_add
+
 end Quaternion
 
 namespace Quaternion
@@ -1481,6 +1514,22 @@ instance : NoZeroDivisors ℍ[R] :=
 
 instance : IsDomain ℍ[R] :=
   NoZeroDivisors.to_isDomain _
+
+theorem sq_eq_normSq : a ^ 2 = normSq a ↔ a = a.re :=
+  by
+  simp_rw [← conj_eq_self]
+  obtain rfl | hq0 := eq_or_ne a 0
+  · simp
+  · rw [← conj_mul_self, sq, mul_left_inj' hq0, eq_comm]
+#align quaternion.sq_eq_norm_sq Quaternion.sq_eq_normSq
+
+theorem sq_eq_neg_normSq : a ^ 2 = -normSq a ↔ a.re = 0 :=
+  by
+  simp_rw [← conj_eq_neg]
+  obtain rfl | hq0 := eq_or_ne a 0
+  · simp
+  rw [← conj_mul_self, ← mul_neg, ← neg_sq, sq, mul_left_inj' (neg_ne_zero.mpr hq0), eq_comm]
+#align quaternion.sq_eq_neg_norm_sq Quaternion.sq_eq_neg_normSq
 
 end LinearOrderedCommRing
 

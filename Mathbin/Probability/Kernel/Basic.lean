@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.basic
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,6 +404,10 @@ def const (α : Type _) {β : Type _} [MeasurableSpace α] {mβ : MeasurableSpac
 #align probability_theory.kernel.const ProbabilityTheory.kernel.const
 
 include mα mβ
+
+theorem const_apply (μβ : Measure β) (a : α) : const α μβ a = μβ :=
+  rfl
+#align probability_theory.kernel.const_apply ProbabilityTheory.kernel.const_apply
 
 instance isFiniteKernelConst {μβ : Measure β} [hμβ : IsFiniteMeasure μβ] :
     IsFiniteKernel (const α μβ) :=

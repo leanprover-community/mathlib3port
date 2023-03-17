@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.special_functions.bernstein
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit acb3d204d4ee883eb686f45d486a2a6811a01329
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -240,7 +240,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   have npos : 0 < (n : ℝ) := by exact_mod_cast npos'
   -- Two easy inequalities we'll need later:
   have w₁ : 0 ≤ 2 * ‖f‖ := mul_nonneg (by norm_num) (norm_nonneg f)
-  have w₂ : 0 ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) := mul_nonneg w₁ pow_minus_two_nonneg
+  have w₂ : 0 ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) := mul_nonneg w₁ (zpow_neg_two_nonneg _)
   -- As `[0,1]` is compact, it suffices to check the inequality pointwise.
   rw [ContinuousMap.norm_lt_iff _ h]
   intro x
@@ -300,7 +300,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
           2 * ‖f‖ * ∑ k : Fin (n + 1), δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
         (mul_le_mul_of_nonneg_left
           (Finset.sum_le_univ_sum_of_nonneg fun k =>
-            mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
+            mul_nonneg (mul_nonneg (zpow_neg_two_nonneg _) (sq_nonneg _)) bernstein_nonneg)
           w₁)
       _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x := by
         conv_rhs =>

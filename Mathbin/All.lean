@@ -328,6 +328,7 @@ import Mathbin.Algebra.Order.Monoid.WithTop
 import Mathbin.Algebra.Order.Monoid.WithZero.Basic
 import Mathbin.Algebra.Order.Monoid.WithZero.Defs
 import Mathbin.Algebra.Order.Nonneg.Field
+import Mathbin.Algebra.Order.Nonneg.Floor
 import Mathbin.Algebra.Order.Nonneg.Ring
 import Mathbin.Algebra.Order.Pi
 import Mathbin.Algebra.Order.Pointwise
@@ -683,6 +684,7 @@ import Mathbin.Analysis.NormedSpace.Multilinear
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.PiLp
 import Mathbin.Analysis.NormedSpace.Pointwise
+import Mathbin.Analysis.NormedSpace.QuaternionExponential
 import Mathbin.Analysis.NormedSpace.Ray
 import Mathbin.Analysis.NormedSpace.RieszLemma
 import Mathbin.Analysis.NormedSpace.Spectrum
@@ -1770,7 +1772,10 @@ import Mathbin.Geometry.Euclidean.Basic
 import Mathbin.Geometry.Euclidean.Circumcenter
 import Mathbin.Geometry.Euclidean.Inversion
 import Mathbin.Geometry.Euclidean.MongePoint
-import Mathbin.Geometry.Euclidean.Sphere
+import Mathbin.Geometry.Euclidean.Sphere.Basic
+import Mathbin.Geometry.Euclidean.Sphere.Power
+import Mathbin.Geometry.Euclidean.Sphere.Ptolemy
+import Mathbin.Geometry.Euclidean.Sphere.SecondInter
 import Mathbin.Geometry.Euclidean.Triangle
 import Mathbin.Geometry.Manifold.Algebra.LeftInvariantDerivation
 import Mathbin.Geometry.Manifold.Algebra.LieGroup
@@ -2238,6 +2243,7 @@ import Mathbin.NumberTheory.LucasPrimality
 import Mathbin.NumberTheory.Modular
 import Mathbin.NumberTheory.ModularForms.Basic
 import Mathbin.NumberTheory.ModularForms.CongruenceSubgroups
+import Mathbin.NumberTheory.ModularForms.JacobiTheta
 import Mathbin.NumberTheory.ModularForms.SlashActions
 import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
 import Mathbin.NumberTheory.Multiplicity
@@ -2409,6 +2415,7 @@ import Mathbin.Probability.Independence
 import Mathbin.Probability.Integration
 import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition
+import Mathbin.Probability.Kernel.Invariance
 import Mathbin.Probability.Martingale.Basic
 import Mathbin.Probability.Martingale.BorelCantelli
 import Mathbin.Probability.Martingale.Centering

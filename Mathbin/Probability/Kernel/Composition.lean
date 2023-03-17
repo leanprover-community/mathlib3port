@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit 3180fab693e2cee3bff62675571264cb8778b212
+! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -418,7 +418,7 @@ variable {γ : Type _} {mγ : MeasurableSpace γ} {f : β → γ} {g : γ → α
 
 include mγ
 
-/-- The pushforward of a kernel along a measurable function. 
+/-- The pushforward of a kernel along a measurable function.
 We include measurability in the assumptions instead of using junk values
 to make sure that typeclass inference can infer that the `map` of a Markov kernel
 is again a Markov kernel. -/

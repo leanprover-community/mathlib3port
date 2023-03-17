@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.circumcenter
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit eea141bc9cf205beebfd46e2068c7c01ee8db4f6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Geometry.Euclidean.Basic
+import Mathbin.Geometry.Euclidean.Sphere.Basic
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathbin.Tactic.DeriveFintype
 

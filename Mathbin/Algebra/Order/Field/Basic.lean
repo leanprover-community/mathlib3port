@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.basic
-! leanprover-community/mathlib commit 5a82b0671532663333e205f422124a98bdfe673f
+! leanprover-community/mathlib commit acb3d204d4ee883eb686f45d486a2a6811a01329
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1268,9 +1268,8 @@ theorem StrictMono.div_const {β : Type _} [Preorder β] {f : β → α} (hf : S
   simpa only [div_eq_mul_inv] using hf.mul_const (inv_pos.2 hc)
 #align strict_mono.div_const StrictMono.div_const
 
-#print LinearOrderedField.toDenselyOrdered /-
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedField.toDenselyOrdered : DenselyOrdered α
+instance (priority := 100) LinearOrderedSemifield.to_denselyOrdered : DenselyOrdered α
     where dense a₁ a₂ h :=
     ⟨(a₁ + a₂) / 2,
       calc
@@ -1281,8 +1280,7 @@ instance (priority := 100) LinearOrderedField.toDenselyOrdered : DenselyOrdered 
         (a₁ + a₂) / 2 < (a₂ + a₂) / 2 := div_lt_div_of_lt zero_lt_two (add_lt_add_right h _)
         _ = a₂ := add_self_div_two a₂
         ⟩
-#align linear_ordered_field.to_densely_ordered LinearOrderedField.toDenselyOrdered
--/
+#align linear_ordered_semifield.to_densely_ordered LinearOrderedSemifield.to_denselyOrdered
 
 /- warning: min_div_div_right -> min_div_div_right is a dubious translation:
 lean 3 declaration is
@@ -2178,20 +2176,6 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align abs_one_div abs_one_divₓ'. -/
 theorem abs_one_div (a : α) : |1 / a| = 1 / |a| := by rw [abs_div, abs_one]
 #align abs_one_div abs_one_div
-
-/- warning: pow_minus_two_nonneg -> pow_minus_two_nonneg is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {a : α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (StrictOrderedRing.toOrderedAddCommGroup.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))))) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionRing.toDivInvMonoid.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))))) a (Neg.neg.{0} Int Int.hasNeg (OfNat.ofNat.{0} Int 2 (OfNat.mk.{0} Int 2 (bit0.{0} Int Int.hasAdd (One.one.{0} Int Int.hasOne))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {a : α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α (LinearOrderedSemifield.toSemifield.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))))) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionRing.toDivInvMonoid.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))))) a (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))))
-Case conversion may be inaccurate. Consider using '#align pow_minus_two_nonneg pow_minus_two_nonnegₓ'. -/
-theorem pow_minus_two_nonneg : 0 ≤ a ^ (-2 : ℤ) :=
-  by
-  simp only [inv_nonneg, zpow_neg]
-  change 0 ≤ a ^ ((2 : ℕ) : ℤ)
-  rw [zpow_ofNat]
-  apply sq_nonneg
-#align pow_minus_two_nonneg pow_minus_two_nonneg
 
 end
 

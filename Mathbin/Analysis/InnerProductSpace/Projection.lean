@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 4681620dafca6a7d710f437bd10fb69428ec2209
+! leanprover-community/mathlib commit 22f577237f96d87d9084104feba75f3deccd4dd5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -888,6 +888,22 @@ theorem orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero [Complet
   ext
   convert eq_orthogonalProjection_of_mem_orthogonal _ _ <;> simp [hv]
 #align orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero
+
+theorem orthogonalProjection_eq_linear_proj [CompleteSpace K] (x : E) :
+    orthogonalProjection K x =
+      K.linearProjOfIsCompl _ Submodule.isCompl_orthogonal_of_completeSpace x :=
+  by
+  have : IsCompl K Kᗮ := Submodule.isCompl_orthogonal_of_completeSpace
+  nth_rw 1 [← Submodule.linear_proj_add_linearProjOfIsCompl_eq_self this x]
+  rw [map_add, orthogonalProjection_mem_subspace_eq_self,
+    orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero (Submodule.coe_mem _), add_zero]
+#align orthogonal_projection_eq_linear_proj orthogonalProjection_eq_linear_proj
+
+theorem orthogonalProjection_coe_linearMap_eq_linear_proj [CompleteSpace K] :
+    (orthogonalProjection K : E →ₗ[𝕜] K) =
+      K.linearProjOfIsCompl _ Submodule.isCompl_orthogonal_of_completeSpace :=
+  LinearMap.ext <| orthogonalProjection_eq_linear_proj
+#align orthogonal_projection_coe_linear_map_eq_linear_proj orthogonalProjection_coe_linearMap_eq_linear_proj
 
 /-- The reflection in `K` of an element of `Kᗮ` is its negation. -/
 theorem reflection_mem_subspace_orthogonal_complement_eq_neg [CompleteSpace K] {v : E}

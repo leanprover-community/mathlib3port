@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -798,8 +798,13 @@ theorem coe_zero {m : MeasurableSpace α} : ⇑(0 : Measure α) = 0 :=
   rfl
 #align measure_theory.measure.coe_zero MeasureTheory.Measure.coe_zero
 
+instance [IsEmpty α] {m : MeasurableSpace α} : Subsingleton (Measure α) :=
+  ⟨fun μ ν => by
+    ext1 s hs
+    simp only [eq_empty_of_is_empty s, measure_empty]⟩
+
 theorem eq_zero_of_isEmpty [IsEmpty α] {m : MeasurableSpace α} (μ : Measure α) : μ = 0 :=
-  ext fun s hs => by simp only [eq_empty_of_is_empty s, measure_empty]
+  Subsingleton.elim μ 0
 #align measure_theory.measure.eq_zero_of_is_empty MeasureTheory.Measure.eq_zero_of_isEmpty
 
 instance [MeasurableSpace α] : Inhabited (Measure α) :=

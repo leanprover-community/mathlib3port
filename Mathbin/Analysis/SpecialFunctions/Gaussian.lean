@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
+! leanprover-community/mathlib commit 34d3797325d202bd7250431275bb871133cdb611
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,7 @@ import Mathbin.Analysis.Convex.Complex
 import Mathbin.Analysis.Normed.Group.Basic
 import Mathbin.Analysis.Complex.CauchyIntegral
 import Mathbin.MeasureTheory.Group.Integration
+import Mathbin.Analysis.Fourier.PoissonSummation
 
 /-!
 # Gaussian integral
@@ -25,16 +26,20 @@ We prove various versions of the formula for the Gaussian integral:
 * `integral_gaussian_Ioi` and `integral_gaussian_complex_Ioi`: variants for integrals over `Ioi 0`.
 * `complex.Gamma_one_half_eq`: the formula `Γ (1 / 2) = √π`.
 
-We also prove, more generally, that the Fourier transform of the Gaussian
-is another Gaussian:
+We also prove, more generally, that the Fourier transform of the Gaussian is another Gaussian:
 
 * `integral_cexp_neg_mul_sq_add_const`: for all complex `b` and `c` with `0 < re b` we have
   `∫ (x : ℝ), exp (-b * (x + c) ^ 2) = (π / b) ^ (1 / 2)`.
 * `fourier_transform_gaussian`: for all complex `b` and `t` with `0 < re b`, we have
   `∫ x:ℝ, exp (I * t * x) * exp (-b * x^2) = (π / b) ^ (1 / 2) * exp (-t ^ 2 / (4 * b))`.
 * `fourier_transform_gaussian_pi`: a variant with `b` and `t` scaled to give a more symmetric
-  statement, `∫ x:ℝ, exp (2 * π * I * t * x) * exp (-π * b * x^2) =
-  (1 / b) ^ (1 / 2) * exp (-π * (1 / b) * t ^ 2)`.
+  statement, and formulated in terms of the Fourier transform operator `𝓕`.
+
+As an application, in `real.tsum_exp_neg_mul_int_sq` and `complex.tsum_exp_neg_mul_int_sq`, we use
+Poisson summation to prove the identity
+`∑' (n : ℤ), exp (-π * a * n ^ 2) = 1 / a ^ (1 / 2) * ∑' (n : ℤ), exp (-π / a * n ^ 2)`
+for positive real `a`, or complex `a` with positive real part. (See also
+`number_theory.modular_forms.jacobi_theta`.)
 -/
 
 
@@ -42,12 +47,15 @@ noncomputable section
 
 open Real Set MeasureTheory Filter Asymptotics
 
-open Real Topology
+open Real Topology FourierTransform
 
-open Complex hiding exp continuous_exp abs_of_nonneg
+open Complex hiding exp continuous_exp abs_of_nonneg sq_abs
 
 -- mathport name: exprcexp
 notation "cexp" => Complex.exp
+
+-- mathport name: exprrexp
+notation "rexp" => Real.exp
 
 theorem exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) :
     (fun x : ℝ => exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-x) :=
@@ -612,32 +620,109 @@ theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
   simp_rw [this, Complex.exp_add, integral_mul_left, integral_cexp_neg_mul_sq_add_const hb]
 #align fourier_transform_gaussian fourier_transform_gaussian
 
-theorem fourier_transform_gaussian_pi (hb : 0 < b.re) (t : ℂ) :
-    (∫ x : ℝ, cexp (2 * π * I * t * x) * cexp (-π * b * x ^ 2)) =
-      1 / b ^ (1 / 2 : ℂ) * cexp (-π * (1 / b) * t ^ 2) :=
+theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
+    (𝓕 fun x : ℝ => cexp (-π * b * x ^ 2)) = fun t : ℝ =>
+      1 / b ^ (1 / 2 : ℂ) * cexp (-π / b * t ^ 2) :=
   by
+  ext1 t
+  simp_rw [fourier_integral_eq_integral_exp_smul, smul_eq_mul]
   have h1 : 0 < re (π * b) := by
     rw [of_real_mul_re]
     exact mul_pos pi_pos hb
   have h2 : b ≠ 0 := by
     contrapose! hb
     rw [hb, zero_re]
-  convert _root_.fourier_transform_gaussian h1 (2 * π * t) using 1
-  · congr 1
-    ext1 x
+  convert _root_.fourier_transform_gaussian h1 (-2 * π * t) using 1
+  · congr 1 with x : 1
     congr 2
-    all_goals ring
+    all_goals push_cast ; ring
   · conv_lhs => rw [mul_comm]
     congr 2
     · field_simp [of_real_ne_zero.mpr pi_ne_zero]
       ring
-    · rw [← div_div, div_self (of_real_ne_zero.mpr pi_ne_zero), cpow_def_of_ne_zero h2,
-        cpow_def_of_ne_zero (one_div_ne_zero h2), one_div, ← Complex.exp_neg, ← neg_mul]
-      congr 2
-      rw [one_div, Complex.log_inv]
+    · rw [← div_div, div_self (of_real_ne_zero.mpr pi_ne_zero), one_div, one_div b, inv_cpow]
       rw [Ne.def, arg_eq_pi_iff, not_and_or, not_lt]
       exact Or.inl hb.le
 #align fourier_transform_gaussian_pi fourier_transform_gaussian_pi
 
 end GaussianFourier
+
+section GaussianPoisson
+
+/-! ## Poisson summation applied to the Gaussian -/
+
+
+variable {E : Type _} [NormedAddCommGroup E]
+
+theorem tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact {a : ℝ} (ha : 0 < a) (s : ℝ) :
+    Tendsto (fun x : ℝ => |x| ^ s * rexp (-a * x ^ 2)) (cocompact ℝ) (𝓝 0) :=
+  by
+  conv in rexp _ => rw [← sq_abs]
+  rw [cocompact_eq, ← comap_abs_at_top,
+    @tendsto_comap'_iff _ _ _ (fun y => y ^ s * rexp (-a * y ^ 2)) _ _ _
+      (mem_at_top_sets.mpr ⟨0, fun b hb => ⟨b, abs_of_nonneg hb⟩⟩)]
+  exact
+    (rpow_mul_exp_neg_mul_sq_isOCat_exp_neg ha s).tendsto_zero_of_tendsto
+      (tendsto_exp_at_bot.comp <| tendsto_id.neg_const_mul_at_top (neg_lt_zero.mpr one_half_pos))
+#align tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact
+
+theorem isOCat_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
+    (fun x : ℝ => Complex.exp (-a * x ^ 2)) =o[cocompact ℝ] fun x : ℝ => |x| ^ s :=
+  by
+  rw [← is_o_norm_left]
+  simp_rw [norm_cexp_neg_mul_sq]
+  apply is_o_of_tendsto'
+  · refine' eventually.filter_mono cocompact_le_cofinite _
+    refine' (eventually_cofinite_ne 0).mp (eventually_of_forall fun x hx h => _)
+    exact ((rpow_pos_of_pos (abs_pos.mpr hx) _).ne' h).elim
+  · refine'
+      tendsto.congr' (eventually.filter_mono cocompact_le_cofinite _)
+        (tendsto_zero_iff_norm_tendsto_zero.mp <|
+          tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact ha (-s))
+    refine' (eventually_cofinite_ne 0).mp (eventually_of_forall fun x hx => _)
+    rw [norm_mul, norm_of_nonneg (rpow_nonneg_of_nonneg (abs_nonneg _) _), mul_comm,
+      rpow_neg (abs_nonneg x), div_eq_mul_inv, norm_of_nonneg (exp_pos _).le]
+#align is_o_exp_neg_mul_sq_cocompact isOCat_exp_neg_mul_sq_cocompact
+
+theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
+    (∑' n : ℤ, cexp (-π * a * n ^ 2)) = 1 / a ^ (1 / 2 : ℂ) * ∑' n : ℤ, cexp (-π / a * n ^ 2) :=
+  by
+  let f := fun x : ℝ => cexp (-π * a * x ^ 2)
+  have h1 : 0 < (↑π * a).re := by
+    rw [of_real_mul_re]
+    exact mul_pos pi_pos ha
+  have h2 : 0 < (↑π / a).re :=
+    by
+    rw [div_eq_mul_inv, of_real_mul_re, inv_re]
+    refine' mul_pos pi_pos (div_pos ha <| norm_sq_pos.mpr _)
+    contrapose! ha
+    rw [ha, zero_re]
+  have f_bd : f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
+    by
+    convert(isOCat_exp_neg_mul_sq_cocompact h1 _).IsO
+    ext1 x
+    dsimp only [f]
+    congr 1
+    ring
+  have Ff_bd : 𝓕 f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
+    by
+    rw [fourier_transform_gaussian_pi ha]
+    convert(isOCat_exp_neg_mul_sq_cocompact h2 _).IsO.const_mul_left _
+    ext1 x
+    congr 1
+    ring_nf
+  simpa only [fourier_transform_gaussian_pi ha, tsum_mul_left] using
+    Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay
+      (complex.continuous_exp.comp (continuous_const.mul (continuous_of_real.pow 2)) : Continuous f)
+      one_lt_two f_bd Ff_bd
+#align complex.tsum_exp_neg_mul_int_sq Complex.tsum_exp_neg_mul_int_sq
+
+theorem Real.tsum_exp_neg_mul_int_sq {a : ℝ} (ha : 0 < a) :
+    (∑' n : ℤ, exp (-π * a * n ^ 2)) = 1 / a ^ (1 / 2 : ℝ) * ∑' n : ℤ, exp (-π / a * n ^ 2) := by
+  simpa only [← of_real_inj, of_real_mul, of_real_tsum, of_real_exp, of_real_div, of_real_pow,
+    of_real_int_cast, of_real_neg, of_real_cpow ha.le, of_real_bit0, of_real_one] using
+    Complex.tsum_exp_neg_mul_int_sq (by rwa [of_real_re] : 0 < (a : ℂ).re)
+#align real.tsum_exp_neg_mul_int_sq Real.tsum_exp_neg_mul_int_sq
+
+end GaussianPoisson
 

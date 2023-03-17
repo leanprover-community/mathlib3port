@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
+! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,18 +112,17 @@ theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂)
   funext expSeries_sum_eq
 #align exp_eq_tsum exp_eq_tsum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
-@[simp]
-theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 :=
+theorem expSeries_apply_zero (n : ℕ) : (expSeries 𝕂 𝔸 n fun _ => (0 : 𝔸)) = Pi.single 0 1 n :=
   by
-  suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0
-    by
-    have key : ∀ (n) (_ : n ∉ ({0} : Finset ℕ)), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>
-      if_neg (finset.not_mem_singleton.mp hn)
-    rw [exp_eq_tsum, this, tsum_eq_sum key, Finset.sum_singleton]
-    simp
-  refine' tsum_congr fun n => _
-  split_ifs with h h <;> simp [h]
+  rw [expSeries_apply_eq]
+  cases n
+  · rw [pow_zero, Nat.factorial_zero, Nat.cast_one, inv_one, one_smul, Pi.single_eq_same]
+  · rw [zero_pow (Nat.succ_pos _), smul_zero, Pi.single_eq_of_ne n.succ_ne_zero]
+#align exp_series_apply_zero expSeries_apply_zero
+
+@[simp]
+theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
+  simp_rw [exp_eq_tsum, ← expSeries_apply_eq, expSeries_apply_zero, tsum_pi_single]
 #align exp_zero exp_zero
 
 @[simp]
