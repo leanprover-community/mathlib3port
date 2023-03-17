@@ -211,19 +211,19 @@ def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
 #align tree.trees_of_num_nodes_eq Tree.treesOfNumNodesEq
 -/
 
-#print Tree.treesOfNodesEq_zero /-
+#print Tree.treesOfNumNodesEq_zero /-
 @[simp]
-theorem treesOfNodesEq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_num_nodes_eq]
-#align tree.trees_of_nodes_eq_zero Tree.treesOfNodesEq_zero
+theorem treesOfNumNodesEq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_num_nodes_eq]
+#align tree.trees_of_nodes_eq_zero Tree.treesOfNumNodesEq_zero
 -/
 
-/- warning: tree.trees_of_nodes_eq_succ -> Tree.treesOfNodesEq_succ is a dubious translation:
+/- warning: tree.trees_of_nodes_eq_succ -> Tree.treesOfNumNodesEq_succ is a dubious translation:
 lean 3 declaration is
   forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.bunionᵢ.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => Tree.decidableEq.{0} Unit (fun (a : Unit) (b : Unit) => PUnit.decidableEq.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
 but is expected to have type
   forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.bunionᵢ.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => instDecidableEqTree.{0} Unit (fun (a : Unit) (b : Unit) => instDecidableEqPUnit.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
-Case conversion may be inaccurate. Consider using '#align tree.trees_of_nodes_eq_succ Tree.treesOfNodesEq_succₓ'. -/
-theorem treesOfNodesEq_succ (n : ℕ) :
+Case conversion may be inaccurate. Consider using '#align tree.trees_of_nodes_eq_succ Tree.treesOfNumNodesEq_succₓ'. -/
+theorem treesOfNumNodesEq_succ (n : ℕ) :
     treesOfNumNodesEq (n + 1) =
       (Nat.antidiagonal n).bunionᵢ fun ij =>
         pairwiseNode (treesOfNumNodesEq ij.1) (treesOfNumNodesEq ij.2) :=
@@ -231,33 +231,34 @@ theorem treesOfNodesEq_succ (n : ℕ) :
   rw [trees_of_num_nodes_eq]
   ext
   simp
-#align tree.trees_of_nodes_eq_succ Tree.treesOfNodesEq_succ
+#align tree.trees_of_nodes_eq_succ Tree.treesOfNumNodesEq_succ
 
-#print Tree.mem_treesOfNodesEq /-
+#print Tree.mem_treesOfNumNodesEq /-
 @[simp]
-theorem mem_treesOfNodesEq {x : Tree Unit} {n : ℕ} : x ∈ treesOfNumNodesEq n ↔ x.numNodes = n :=
+theorem mem_treesOfNumNodesEq {x : Tree Unit} {n : ℕ} : x ∈ treesOfNumNodesEq n ↔ x.numNodes = n :=
   by
   induction x using Tree.unitRecOn generalizing n <;> cases n <;>
     simp [trees_of_nodes_eq_succ, Nat.succ_eq_add_one, *]
   trivial
-#align tree.mem_trees_of_nodes_eq Tree.mem_treesOfNodesEq
+#align tree.mem_trees_of_nodes_eq Tree.mem_treesOfNumNodesEq
 -/
 
-#print Tree.mem_trees_of_nodes_eq_numNodes /-
-theorem mem_trees_of_nodes_eq_numNodes (x : Tree Unit) : x ∈ treesOfNumNodesEq x.numNodes :=
-  mem_treesOfNodesEq.mpr rfl
-#align tree.mem_trees_of_nodes_eq_num_nodes Tree.mem_trees_of_nodes_eq_numNodes
+#print Tree.mem_treesOfNumNodesEq_numNodes /-
+theorem mem_treesOfNumNodesEq_numNodes (x : Tree Unit) : x ∈ treesOfNumNodesEq x.numNodes :=
+  mem_treesOfNumNodesEq.mpr rfl
+#align tree.mem_trees_of_nodes_eq_num_nodes Tree.mem_treesOfNumNodesEq_numNodes
 -/
 
-#print Tree.coe_treesOfNodesEq /-
+#print Tree.coe_treesOfNumNodesEq /-
 @[simp, norm_cast]
-theorem coe_treesOfNodesEq (n : ℕ) : ↑(treesOfNumNodesEq n) = { x : Tree Unit | x.numNodes = n } :=
+theorem coe_treesOfNumNodesEq (n : ℕ) :
+    ↑(treesOfNumNodesEq n) = { x : Tree Unit | x.numNodes = n } :=
   Set.ext (by simp)
-#align tree.coe_trees_of_nodes_eq Tree.coe_treesOfNodesEq
+#align tree.coe_trees_of_nodes_eq Tree.coe_treesOfNumNodesEq
 -/
 
-#print Tree.treesOfNodesEq_card_eq_catalan /-
-theorem treesOfNodesEq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = catalan n :=
+#print Tree.treesOfNumNodesEq_card_eq_catalan /-
+theorem treesOfNumNodesEq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = catalan n :=
   by
   induction' n using Nat.case_strong_induction_on with n ih
   · simp
@@ -269,7 +270,7 @@ theorem treesOfNodesEq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = 
     rintro ⟨i, j⟩ _ ⟨i', j'⟩ _
     clear * -
     tidy
-#align tree.trees_of_nodes_eq_card_eq_catalan Tree.treesOfNodesEq_card_eq_catalan
+#align tree.trees_of_nodes_eq_card_eq_catalan Tree.treesOfNumNodesEq_card_eq_catalan
 -/
 
 end Tree
