@@ -72,112 +72,180 @@ section SameCycle
 
 variable {f g : Perm α} {p : α → Prop} {x y z : α}
 
+#print Equiv.Perm.SameCycle /-
 /-- The equivalence relation indicating that two points are in the same cycle of a permutation. -/
 def SameCycle (f : Perm α) (x y : α) : Prop :=
   ∃ i : ℤ, (f ^ i) x = y
 #align equiv.perm.same_cycle Equiv.Perm.SameCycle
+-/
 
+#print Equiv.Perm.SameCycle.refl /-
 @[refl]
 theorem SameCycle.refl (f : Perm α) (x : α) : SameCycle f x x :=
   ⟨0, rfl⟩
 #align equiv.perm.same_cycle.refl Equiv.Perm.SameCycle.refl
+-/
 
+#print Equiv.Perm.SameCycle.rfl /-
 theorem SameCycle.rfl : SameCycle f x x :=
   SameCycle.refl _ _
 #align equiv.perm.same_cycle.rfl Equiv.Perm.SameCycle.rfl
+-/
 
+#print Eq.sameCycle /-
 protected theorem Eq.sameCycle (h : x = y) (f : Perm α) : f.SameCycle x y := by rw [h]
 #align eq.same_cycle Eq.sameCycle
+-/
 
+#print Equiv.Perm.SameCycle.symm /-
 @[symm]
 theorem SameCycle.symm : SameCycle f x y → SameCycle f y x := fun ⟨i, hi⟩ =>
   ⟨-i, by rw [zpow_neg, ← hi, inv_apply_self]⟩
 #align equiv.perm.same_cycle.symm Equiv.Perm.SameCycle.symm
+-/
 
+#print Equiv.Perm.sameCycle_comm /-
 theorem sameCycle_comm : SameCycle f x y ↔ SameCycle f y x :=
   ⟨SameCycle.symm, SameCycle.symm⟩
 #align equiv.perm.same_cycle_comm Equiv.Perm.sameCycle_comm
+-/
 
+#print Equiv.Perm.SameCycle.trans /-
 @[trans]
 theorem SameCycle.trans : SameCycle f x y → SameCycle f y z → SameCycle f x z :=
   fun ⟨i, hi⟩ ⟨j, hj⟩ => ⟨j + i, by rw [zpow_add, mul_apply, hi, hj]⟩
 #align equiv.perm.same_cycle.trans Equiv.Perm.SameCycle.trans
+-/
 
+/- warning: equiv.perm.same_cycle_one -> Equiv.Perm.sameCycle_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {x : α} {y : α}, Iff (Equiv.Perm.SameCycle.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) x y) (Eq.{succ u1} α x y)
+but is expected to have type
+  forall {α : Type.{u1}} {x : α} {y : α}, Iff (Equiv.Perm.SameCycle.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) x y) (Eq.{succ u1} α x y)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.same_cycle_one Equiv.Perm.sameCycle_oneₓ'. -/
 @[simp]
 theorem sameCycle_one : SameCycle 1 x y ↔ x = y := by simp [same_cycle]
 #align equiv.perm.same_cycle_one Equiv.Perm.sameCycle_one
 
+/- warning: equiv.perm.same_cycle_inv -> Equiv.Perm.sameCycle_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, Iff (Equiv.Perm.SameCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) x y) (Equiv.Perm.SameCycle.{u1} α f x y)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, Iff (Equiv.Perm.SameCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) x y) (Equiv.Perm.SameCycle.{u1} α f x y)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.same_cycle_inv Equiv.Perm.sameCycle_invₓ'. -/
 @[simp]
 theorem sameCycle_inv : SameCycle f⁻¹ x y ↔ SameCycle f x y :=
   (Equiv.neg _).exists_congr_left.trans <| by simp [same_cycle]
 #align equiv.perm.same_cycle_inv Equiv.Perm.sameCycle_inv
 
+/- warning: equiv.perm.same_cycle.of_inv -> Equiv.Perm.SameCycle.of_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Equiv.Perm.SameCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) x y) -> (Equiv.Perm.SameCycle.{u1} α f x y)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Equiv.Perm.SameCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) x y) -> (Equiv.Perm.SameCycle.{u1} α f x y)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.same_cycle.of_inv Equiv.Perm.SameCycle.of_invₓ'. -/
+/- warning: equiv.perm.same_cycle.inv -> Equiv.Perm.SameCycle.inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Equiv.Perm.SameCycle.{u1} α f x y) -> (Equiv.Perm.SameCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) x y)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Equiv.Perm.SameCycle.{u1} α f x y) -> (Equiv.Perm.SameCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) x y)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.same_cycle.inv Equiv.Perm.SameCycle.invₓ'. -/
 alias same_cycle_inv ↔ same_cycle.of_inv same_cycle.inv
 #align equiv.perm.same_cycle.of_inv Equiv.Perm.SameCycle.of_inv
 #align equiv.perm.same_cycle.inv Equiv.Perm.SameCycle.inv
 
+/- warning: equiv.perm.same_cycle_conj -> Equiv.Perm.sameCycle_conj is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α} {x : α} {y : α}, Iff (Equiv.Perm.SameCycle.{u1} α (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g f) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) g)) x y) (Equiv.Perm.SameCycle.{u1} α f (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) g) x) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) g) y))
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α} {x : α} {y : α}, Iff (Equiv.Perm.SameCycle.{u1} α (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g f) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) g)) x y) (Equiv.Perm.SameCycle.{u1} α f (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) g) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) g) y))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.same_cycle_conj Equiv.Perm.sameCycle_conjₓ'. -/
 @[simp]
 theorem sameCycle_conj : SameCycle (g * f * g⁻¹) x y ↔ SameCycle f (g⁻¹ x) (g⁻¹ y) :=
   exists_congr fun i => by simp [conj_zpow, eq_inv_iff_eq]
 #align equiv.perm.same_cycle_conj Equiv.Perm.sameCycle_conj
 
+#print Equiv.Perm.SameCycle.conj /-
 theorem SameCycle.conj : SameCycle f x y → SameCycle (g * f * g⁻¹) (g x) (g y) := by
   simp [same_cycle_conj]
 #align equiv.perm.same_cycle.conj Equiv.Perm.SameCycle.conj
+-/
 
+#print Equiv.Perm.SameCycle.apply_eq_self_iff /-
 theorem SameCycle.apply_eq_self_iff : SameCycle f x y → (f x = x ↔ f y = y) := fun ⟨i, hi⟩ => by
   rw [← hi, ← mul_apply, ← zpow_one_add, add_comm, zpow_add_one, mul_apply,
     (f ^ i).Injective.eq_iff]
 #align equiv.perm.same_cycle.apply_eq_self_iff Equiv.Perm.SameCycle.apply_eq_self_iff
+-/
 
+#print Equiv.Perm.SameCycle.eq_of_left /-
 theorem SameCycle.eq_of_left (h : SameCycle f x y) (hx : IsFixedPt f x) : x = y :=
   let ⟨n, hn⟩ := h
   (hx.perm_zpow _).Eq.symm.trans hn
 #align equiv.perm.same_cycle.eq_of_left Equiv.Perm.SameCycle.eq_of_left
+-/
 
+#print Equiv.Perm.SameCycle.eq_of_right /-
 theorem SameCycle.eq_of_right (h : SameCycle f x y) (hy : IsFixedPt f y) : x = y :=
   h.eq_of_left <| h.apply_eq_self_iff.2 hy
 #align equiv.perm.same_cycle.eq_of_right Equiv.Perm.SameCycle.eq_of_right
+-/
 
+#print Equiv.Perm.sameCycle_apply_left /-
 @[simp]
 theorem sameCycle_apply_left : SameCycle f (f x) y ↔ SameCycle f x y :=
   (Equiv.addRight 1).exists_congr_left.trans <| by simp [zpow_sub, same_cycle]
 #align equiv.perm.same_cycle_apply_left Equiv.Perm.sameCycle_apply_left
+-/
 
+#print Equiv.Perm.sameCycle_apply_right /-
 @[simp]
 theorem sameCycle_apply_right : SameCycle f x (f y) ↔ SameCycle f x y := by
   rw [same_cycle_comm, same_cycle_apply_left, same_cycle_comm]
 #align equiv.perm.same_cycle_apply_right Equiv.Perm.sameCycle_apply_right
+-/
 
+#print Equiv.Perm.sameCycle_inv_apply_left /-
 @[simp]
 theorem sameCycle_inv_apply_left : SameCycle f (f⁻¹ x) y ↔ SameCycle f x y := by
   rw [← same_cycle_apply_left, apply_inv_self]
 #align equiv.perm.same_cycle_inv_apply_left Equiv.Perm.sameCycle_inv_apply_left
+-/
 
+#print Equiv.Perm.sameCycle_inv_apply_right /-
 @[simp]
 theorem sameCycle_inv_apply_right : SameCycle f x (f⁻¹ y) ↔ SameCycle f x y := by
   rw [← same_cycle_apply_right, apply_inv_self]
 #align equiv.perm.same_cycle_inv_apply_right Equiv.Perm.sameCycle_inv_apply_right
+-/
 
+#print Equiv.Perm.sameCycle_zpow_left /-
 @[simp]
 theorem sameCycle_zpow_left {n : ℤ} : SameCycle f ((f ^ n) x) y ↔ SameCycle f x y :=
   (Equiv.addRight (n : ℤ)).exists_congr_left.trans <| by simp [same_cycle, zpow_add]
 #align equiv.perm.same_cycle_zpow_left Equiv.Perm.sameCycle_zpow_left
+-/
 
+#print Equiv.Perm.sameCycle_zpow_right /-
 @[simp]
 theorem sameCycle_zpow_right {n : ℤ} : SameCycle f x ((f ^ n) y) ↔ SameCycle f x y := by
   rw [same_cycle_comm, same_cycle_zpow_left, same_cycle_comm]
 #align equiv.perm.same_cycle_zpow_right Equiv.Perm.sameCycle_zpow_right
+-/
 
+#print Equiv.Perm.sameCycle_pow_left /-
 @[simp]
 theorem sameCycle_pow_left {n : ℕ} : SameCycle f ((f ^ n) x) y ↔ SameCycle f x y := by
   rw [← zpow_ofNat, same_cycle_zpow_left]
 #align equiv.perm.same_cycle_pow_left Equiv.Perm.sameCycle_pow_left
+-/
 
+#print Equiv.Perm.sameCycle_pow_right /-
 @[simp]
 theorem sameCycle_pow_right {n : ℕ} : SameCycle f x ((f ^ n) y) ↔ SameCycle f x y := by
   rw [← zpow_ofNat, same_cycle_zpow_right]
 #align equiv.perm.same_cycle_pow_right Equiv.Perm.sameCycle_pow_right
+-/
 
 alias same_cycle_apply_left ↔ same_cycle.of_apply_left same_cycle.apply_left
 #align equiv.perm.same_cycle.of_apply_left Equiv.Perm.SameCycle.of_apply_left
@@ -211,33 +279,47 @@ alias same_cycle_zpow_right ↔ same_cycle.of_zpow_right same_cycle.zpow_right
 #align equiv.perm.same_cycle.of_zpow_right Equiv.Perm.SameCycle.of_zpow_right
 #align equiv.perm.same_cycle.zpow_right Equiv.Perm.SameCycle.zpow_right
 
+#print Equiv.Perm.SameCycle.of_pow /-
 theorem SameCycle.of_pow {n : ℕ} : SameCycle (f ^ n) x y → SameCycle f x y := fun ⟨m, h⟩ =>
   ⟨n * m, by simp [zpow_mul, h]⟩
 #align equiv.perm.same_cycle.of_pow Equiv.Perm.SameCycle.of_pow
+-/
 
+#print Equiv.Perm.SameCycle.of_zpow /-
 theorem SameCycle.of_zpow {n : ℤ} : SameCycle (f ^ n) x y → SameCycle f x y := fun ⟨m, h⟩ =>
   ⟨n * m, by simp [zpow_mul, h]⟩
 #align equiv.perm.same_cycle.of_zpow Equiv.Perm.SameCycle.of_zpow
+-/
 
+#print Equiv.Perm.sameCycle_subtypePerm /-
 @[simp]
 theorem sameCycle_subtypePerm {h} {x y : { x // p x }} :
     (f.subtypePerm h).SameCycle x y ↔ f.SameCycle x y :=
   exists_congr fun n => by simp [Subtype.ext_iff]
 #align equiv.perm.same_cycle_subtype_perm Equiv.Perm.sameCycle_subtypePerm
+-/
 
 alias same_cycle_subtype_perm ↔ _ same_cycle.subtype_perm
 #align equiv.perm.same_cycle.subtype_perm Equiv.Perm.SameCycle.subtypePerm
 
+#print Equiv.Perm.sameCycle_extendDomain /-
 @[simp]
 theorem sameCycle_extendDomain {p : β → Prop} [DecidablePred p] {f : α ≃ Subtype p} :
     SameCycle (g.extendDomain f) (f x) (f y) ↔ g.SameCycle x y :=
   exists_congr fun n => by
     rw [← extend_domain_zpow, extend_domain_apply_image, Subtype.coe_inj, f.injective.eq_iff]
 #align equiv.perm.same_cycle_extend_domain Equiv.Perm.sameCycle_extendDomain
+-/
 
 alias same_cycle_extend_domain ↔ _ same_cycle.extend_domain
 #align equiv.perm.same_cycle.extend_domain Equiv.Perm.SameCycle.extendDomain
 
+/- warning: equiv.perm.same_cycle.exists_pow_eq' -> Equiv.Perm.SameCycle.exists_pow_eq' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α} [_inst_1 : Finite.{succ u1} α], (Equiv.Perm.SameCycle.{u1} α f x y) -> (Exists.{1} Nat (fun (i : Nat) => Exists.{0} (LT.lt.{0} Nat Nat.hasLt i (orderOf.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f)) (fun (H : LT.lt.{0} Nat Nat.hasLt i (orderOf.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f)) => Eq.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f i) x) y)))
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {x : α} {y : α} [_inst_1 : Finite.{succ u1} α], (Equiv.Perm.SameCycle.{u1} α f x y) -> (Exists.{1} Nat (fun (i : Nat) => And (LT.lt.{0} Nat instLTNat i (orderOf.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f)) (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f i) x) y)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.same_cycle.exists_pow_eq' Equiv.Perm.SameCycle.exists_pow_eq'ₓ'. -/
 theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < orderOf f, (f ^ i) x = y := by
   classical
     rintro ⟨k, rfl⟩
@@ -250,6 +332,7 @@ theorem SameCycle.exists_pow_eq' [Finite α] : SameCycle f x y → ∃ i < order
     exact Int.emod_lt_of_pos _ h₀
 #align equiv.perm.same_cycle.exists_pow_eq' Equiv.Perm.SameCycle.exists_pow_eq'
 
+#print Equiv.Perm.SameCycle.exists_pow_eq'' /-
 theorem SameCycle.exists_pow_eq'' [Finite α] (h : SameCycle f x y) :
     ∃ (i : ℕ)(hpos : 0 < i)(h : i ≤ orderOf f), (f ^ i) x = y := by
   classical
@@ -258,6 +341,7 @@ theorem SameCycle.exists_pow_eq'' [Finite α] (h : SameCycle f x y) :
       rw [pow_orderOf_eq_one, pow_zero]
     · exact ⟨i.succ, i.zero_lt_succ, hi.le, rfl⟩
 #align equiv.perm.same_cycle.exists_pow_eq'' Equiv.Perm.SameCycle.exists_pow_eq''
+-/
 
 instance [Fintype α] [DecidableEq α] (f : Perm α) : DecidableRel (SameCycle f) := fun x y =>
   decidable_of_iff (∃ n ∈ List.range (Fintype.card (Perm α)), (f ^ n) x = y)
@@ -289,19 +373,34 @@ section IsCycle
 
 variable {f g : Perm α} {x y : α}
 
+#print Equiv.Perm.IsCycle /-
 /-- A cycle is a non identity permutation where any two nonfixed points of the permutation are
 related by repeated application of the permutation. -/
 def IsCycle (f : Perm α) : Prop :=
   ∃ x, f x ≠ x ∧ ∀ ⦃y⦄, f y ≠ y → SameCycle f x y
 #align equiv.perm.is_cycle Equiv.Perm.IsCycle
+-/
 
+/- warning: equiv.perm.is_cycle.ne_one -> Equiv.Perm.IsCycle.ne_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.ne_one Equiv.Perm.IsCycle.ne_oneₓ'. -/
 theorem IsCycle.ne_one (h : IsCycle f) : f ≠ 1 := fun hf => by simpa [hf, is_cycle] using h
 #align equiv.perm.is_cycle.ne_one Equiv.Perm.IsCycle.ne_one
 
+/- warning: equiv.perm.not_is_cycle_one -> Equiv.Perm.not_isCycle_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Not (Equiv.Perm.IsCycle.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+but is expected to have type
+  forall {α : Type.{u1}}, Not (Equiv.Perm.IsCycle.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.not_is_cycle_one Equiv.Perm.not_isCycle_oneₓ'. -/
 @[simp]
 theorem not_isCycle_one : ¬(1 : Perm α).IsCycle := fun H => H.ne_one rfl
 #align equiv.perm.not_is_cycle_one Equiv.Perm.not_isCycle_one
 
+#print Equiv.Perm.IsCycle.sameCycle /-
 protected theorem IsCycle.sameCycle (hf : IsCycle f) (hx : f x ≠ x) (hy : f y ≠ y) :
     SameCycle f x y :=
   let ⟨g, hg⟩ := hf
@@ -309,16 +408,31 @@ protected theorem IsCycle.sameCycle (hf : IsCycle f) (hx : f x ≠ x) (hy : f y 
   let ⟨b, hb⟩ := hg.2 hy
   ⟨b - a, by rw [← ha, ← mul_apply, ← zpow_add, sub_add_cancel, hb]⟩
 #align equiv.perm.is_cycle.same_cycle Equiv.Perm.IsCycle.sameCycle
+-/
 
+#print Equiv.Perm.IsCycle.exists_zpow_eq /-
 theorem IsCycle.exists_zpow_eq : IsCycle f → f x ≠ x → f y ≠ y → ∃ i : ℤ, (f ^ i) x = y :=
   IsCycle.sameCycle
 #align equiv.perm.is_cycle.exists_zpow_eq Equiv.Perm.IsCycle.exists_zpow_eq
+-/
 
+/- warning: equiv.perm.is_cycle.inv -> Equiv.Perm.IsCycle.inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Equiv.Perm.IsCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f))
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Equiv.Perm.IsCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.inv Equiv.Perm.IsCycle.invₓ'. -/
 theorem IsCycle.inv (hf : IsCycle f) : IsCycle f⁻¹ :=
   hf.imp fun x ⟨hx, h⟩ =>
     ⟨inv_eq_iff_eq.Not.2 hx.symm, fun y hy => (h <| inv_eq_iff_eq.Not.2 hy.symm).inv⟩
 #align equiv.perm.is_cycle.inv Equiv.Perm.IsCycle.inv
 
+/- warning: equiv.perm.is_cycle_inv -> Equiv.Perm.isCycle_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α}, Iff (Equiv.Perm.IsCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f)) (Equiv.Perm.IsCycle.{u1} α f)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α}, Iff (Equiv.Perm.IsCycle.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f)) (Equiv.Perm.IsCycle.{u1} α f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_inv Equiv.Perm.isCycle_invₓ'. -/
 @[simp]
 theorem isCycle_inv : IsCycle f⁻¹ ↔ IsCycle f :=
   ⟨fun h => by
@@ -326,6 +440,12 @@ theorem isCycle_inv : IsCycle f⁻¹ ↔ IsCycle f :=
     rw [inv_inv], IsCycle.inv⟩
 #align equiv.perm.is_cycle_inv Equiv.Perm.isCycle_inv
 
+/- warning: equiv.perm.is_cycle.conj -> Equiv.Perm.IsCycle.conj is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Equiv.Perm.IsCycle.{u1} α (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g f) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) g)))
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Equiv.Perm.IsCycle.{u1} α (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g f) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) g)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.conj Equiv.Perm.IsCycle.conjₓ'. -/
 theorem IsCycle.conj : IsCycle f → IsCycle (g * f * g⁻¹) :=
   by
   rintro ⟨x, hx, h⟩
@@ -334,6 +454,7 @@ theorem IsCycle.conj : IsCycle f → IsCycle (g * f * g⁻¹) :=
   exact (h <| eq_inv_iff_eq.not.2 hy).conj
 #align equiv.perm.is_cycle.conj Equiv.Perm.IsCycle.conj
 
+#print Equiv.Perm.IsCycle.extendDomain /-
 protected theorem IsCycle.extendDomain {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p) :
     IsCycle g → IsCycle (g.extendDomain f) :=
   by
@@ -347,7 +468,9 @@ protected theorem IsCycle.extendDomain {p : β → Prop} [DecidablePred p] (f : 
   simp only [extend_domain_apply_image, subtype.coe_injective.ne_iff, f.injective.ne_iff] at hb
   exact (ha' hb).extendDomain
 #align equiv.perm.is_cycle.extend_domain Equiv.Perm.IsCycle.extendDomain
+-/
 
+#print Equiv.Perm.isCycle_iff_sameCycle /-
 theorem isCycle_iff_sameCycle (hx : f x ≠ x) : IsCycle f ↔ ∀ {y}, SameCycle f x y ↔ f y ≠ y :=
   ⟨fun hf y =>
     ⟨fun ⟨i, hi⟩ hy =>
@@ -357,11 +480,13 @@ theorem isCycle_iff_sameCycle (hx : f x ≠ x) : IsCycle f ↔ ∀ {y}, SameCycl
       hf.exists_zpow_eq hx⟩,
     fun h => ⟨x, hx, fun y hy => h.2 hy⟩⟩
 #align equiv.perm.is_cycle_iff_same_cycle Equiv.Perm.isCycle_iff_sameCycle
+-/
 
 section Finite
 
 variable [Finite α]
 
+#print Equiv.Perm.IsCycle.exists_pow_eq /-
 theorem IsCycle.exists_pow_eq (hf : IsCycle f) (hx : f x ≠ x) (hy : f y ≠ y) :
     ∃ i : ℕ, (f ^ i) x = y := by
   let ⟨n, hn⟩ := hf.exists_zpow_eq hx hy
@@ -371,11 +496,13 @@ theorem IsCycle.exists_pow_eq (hf : IsCycle f) (hx : f x ≠ x) (hy : f y ≠ y)
         have := n.mod_nonneg (int.coe_nat_ne_zero.mpr (ne_of_gt (orderOf_pos f)))
         rwa [← zpow_ofNat, Int.toNat_of_nonneg this, ← zpow_eq_mod_orderOf]⟩
 #align equiv.perm.is_cycle.exists_pow_eq Equiv.Perm.IsCycle.exists_pow_eq
+-/
 
 end Finite
 
 variable [DecidableEq α]
 
+#print Equiv.Perm.isCycle_swap /-
 theorem isCycle_swap (hxy : x ≠ y) : IsCycle (swap x y) :=
   ⟨y, by rwa [swap_apply_right], fun a (ha : ite (a = x) y (ite (a = y) x a) ≠ a) =>
     if hya : y = a then ⟨0, hya⟩
@@ -384,19 +511,30 @@ theorem isCycle_swap (hxy : x ≠ y) : IsCycle (swap x y) :=
         rw [zpow_one, swap_apply_def]
         split_ifs  at * <;> cc⟩⟩
 #align equiv.perm.is_cycle_swap Equiv.Perm.isCycle_swap
+-/
 
+#print Equiv.Perm.IsSwap.isCycle /-
 protected theorem IsSwap.isCycle : IsSwap f → IsCycle f :=
   by
   rintro ⟨x, y, hxy, rfl⟩
   exact is_cycle_swap hxy
 #align equiv.perm.is_swap.is_cycle Equiv.Perm.IsSwap.isCycle
+-/
 
 variable [Fintype α]
 
-theorem IsCycle.two_le_card_support (h : IsCycle f) : 2 ≤ f.Support.card :=
+#print Equiv.Perm.IsCycle.two_le_card_support /-
+theorem IsCycle.two_le_card_support (h : IsCycle f) : 2 ≤ f.support.card :=
   two_le_card_support_of_ne_one h.ne_one
 #align equiv.perm.is_cycle.two_le_card_support Equiv.Perm.IsCycle.two_le_card_support
+-/
 
+/- warning: equiv.perm.is_cycle.exists_pow_eq_one -> Equiv.Perm.IsCycle.exists_pow_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {f : Equiv.Perm.{succ u1} β}, (Equiv.Perm.IsCycle.{u1} β f) -> (Exists.{1} Nat (fun (k : Nat) => Exists.{0} (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) k) (fun (hk : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) k) => Eq.{succ u1} (Equiv.Perm.{succ u1} β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f k) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} β) 1 (One.one.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))))))
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {f : Equiv.Perm.{succ u1} β}, (Equiv.Perm.IsCycle.{u1} β f) -> (Exists.{1} Nat (fun (k : Nat) => Exists.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) k) (fun (hk : LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) k) => Eq.{succ u1} (Equiv.Perm.{succ u1} β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f k) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.exists_pow_eq_one Equiv.Perm.IsCycle.exists_pow_eq_oneₓ'. -/
 theorem IsCycle.exists_pow_eq_one [Finite β] {f : Perm β} (hf : IsCycle f) :
     ∃ (k : ℕ)(hk : 1 < k), f ^ k = 1 := by
   classical
@@ -410,9 +548,15 @@ theorem IsCycle.exists_pow_eq_one [Finite β] {f : Perm β} (hf : IsCycle f) :
     · exact ⟨k + 2, by simp, hk'⟩
 #align equiv.perm.is_cycle.exists_pow_eq_one Equiv.Perm.IsCycle.exists_pow_eq_one
 
+/- warning: equiv.perm.is_cycle.zpowers_equiv_support -> Equiv.Perm.IsCycle.zpowersEquivSupport is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α σ) -> (Equiv.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α σ) -> (Equiv.{succ u1, succ u1} (Subtype.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.zpowers_equiv_support Equiv.Perm.IsCycle.zpowersEquivSupportₓ'. -/
 /-- The subgroup generated by a cycle is in bijection with its support -/
 noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) :
-    (↑(Subgroup.zpowers σ) : Set (Perm α)) ≃ (↑σ.Support : Set α) :=
+    (↑(Subgroup.zpowers σ) : Set (Perm α)) ≃ (↑σ.support : Set α) :=
   Equiv.ofBijective
     (fun τ =>
       ⟨τ (Classical.choose hσ), by
@@ -434,6 +578,7 @@ noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) 
         exact ⟨⟨σ ^ n, n, rfl⟩, rfl⟩)
 #align equiv.perm.is_cycle.zpowers_equiv_support Equiv.Perm.IsCycle.zpowersEquivSupport
 
+#print Equiv.Perm.IsCycle.zpowersEquivSupport_apply /-
 @[simp]
 theorem IsCycle.zpowersEquivSupport_apply {σ : Perm α} (hσ : IsCycle σ) {n : ℕ} :
     hσ.zpowersEquivSupport ⟨σ ^ n, n, rfl⟩ =
@@ -441,7 +586,14 @@ theorem IsCycle.zpowersEquivSupport_apply {σ : Perm α} (hσ : IsCycle σ) {n :
         pow_apply_mem_support.2 (mem_support.2 (Classical.choose_spec hσ).1)⟩ :=
   rfl
 #align equiv.perm.is_cycle.zpowers_equiv_support_apply Equiv.Perm.IsCycle.zpowersEquivSupport_apply
+-/
 
+/- warning: equiv.perm.is_cycle.zpowers_equiv_support_symm_apply -> Equiv.Perm.IsCycle.zpowersEquivSupport_symm_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} (hσ : Equiv.Perm.IsCycle.{u1} α σ) (n : Nat), Eq.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)))) (fun (_x : Equiv.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)))) => (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) -> (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)))) (Equiv.hasCoeToFun.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)))) (Equiv.symm.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (Equiv.Perm.IsCycle.zpowersEquivSupport.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ hσ)) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Iff.mpr (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Equiv.Perm.pow_apply_mem_support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ n (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Iff.mpr (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Equiv.Perm.mem_support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (And.left (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) y)) (Classical.choose_spec.{succ u1} α (fun (x : α) => And (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)))))) (Subtype.mk.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.hasMem.{u1} (Equiv.Perm.{succ u1} α)) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.setLike.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Exists.intro.{1} Int (fun (y : Int) => Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Int (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Int (DivInvMonoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) σ y) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (rfl.{succ u1} (Equiv.Perm.{succ u1} α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Int (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Int (DivInvMonoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) σ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} (hσ : Equiv.Perm.IsCycle.{u1} α σ) (n : Nat), Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) => Subtype.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Iff.mpr (Membership.mem.{u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Equiv.Perm.pow_apply_mem_support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ n (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Iff.mpr (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Equiv.Perm.mem_support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (And.left (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) y)) (Classical.choose_spec.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)))))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (Subtype.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)))) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (fun (_x : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) => Subtype.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (Subtype.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)))) (Equiv.symm.{succ u1, succ u1} (Subtype.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ))) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ))) (Equiv.Perm.IsCycle.zpowersEquivSupport.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ hσ)) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Iff.mpr (Membership.mem.{u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Equiv.Perm.pow_apply_mem_support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ n (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Iff.mpr (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)) (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Equiv.Perm.mem_support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (And.left (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ (Classical.choose.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ) y)) (Classical.choose_spec.{succ u1} α (fun (x : α) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (forall {{y : α}}, (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) y) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ y) y) -> (Equiv.Perm.SameCycle.{u1} α σ x y))) hσ)))))) (Subtype.mk.{succ u1} (Equiv.Perm.{succ u1} α) (fun (x : Equiv.Perm.{succ u1} α) => Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Equiv.Perm.{succ u1} α) (Subgroup.instSetLikeSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) x (Subgroup.zpowers.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) σ)) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n) (Exists.intro.{1} Int (fun (y : Int) => Eq.{succ u1} (Equiv.Perm.{succ u1} α) ((fun (x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.75 : Equiv.Perm.{succ u1} α) (x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.77 : Int) => HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Int (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Int (DivInvMonoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.75 x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.77) σ y) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ n)) (Nat.cast.{0} Int instNatCastInt n) (rfl.{succ u1} (Equiv.Perm.{succ u1} α) ((fun (x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.75 : Equiv.Perm.{succ u1} α) (x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.77 : Int) => HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Int (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Int (DivInvMonoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.75 x._@.Mathlib.GroupTheory.Subgroup.Zpowers._hyg.77) σ (Nat.cast.{0} Int instNatCastInt n)))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.zpowers_equiv_support_symm_apply Equiv.Perm.IsCycle.zpowersEquivSupport_symm_applyₓ'. -/
 @[simp]
 theorem IsCycle.zpowersEquivSupport_symm_apply {σ : Perm α} (hσ : IsCycle σ) (n : ℕ) :
     hσ.zpowersEquivSupport.symm
@@ -451,13 +603,16 @@ theorem IsCycle.zpowersEquivSupport_symm_apply {σ : Perm α} (hσ : IsCycle σ)
   (Equiv.symm_apply_eq _).2 hσ.zpowersEquivSupport_apply
 #align equiv.perm.is_cycle.zpowers_equiv_support_symm_apply Equiv.Perm.IsCycle.zpowersEquivSupport_symm_apply
 
-protected theorem IsCycle.orderOf (hf : IsCycle f) : orderOf f = f.Support.card :=
+#print Equiv.Perm.IsCycle.orderOf /-
+protected theorem IsCycle.orderOf (hf : IsCycle f) : orderOf f = f.support.card :=
   by
   rw [orderOf_eq_card_zpowers, ← Fintype.card_coe]
   convert Fintype.card_congr (is_cycle.zpowers_equiv_support hf)
 #align equiv.perm.is_cycle.order_of Equiv.Perm.IsCycle.orderOf
+-/
 
-theorem is_cycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
+#print Equiv.Perm.isCycle_swap_mul_aux₁ /-
+theorem isCycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
     ∀ (n : ℕ) {b x : α} {f : Perm α} (hb : (swap x (f x) * f) b ≠ b) (h : (f ^ n) (f x) = b),
       ∃ i : ℤ, ((swap x (f x) * f) ^ i) (f x) = b
   | 0 => fun b x f hb h => ⟨0, h⟩
@@ -478,12 +633,14 @@ theorem is_cycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
       ⟨i + 1, by
         rw [add_comm, zpow_add, mul_apply, hi, zpow_one, mul_apply, apply_inv_self,
           swap_apply_of_ne_of_ne (ne_and_ne_of_swap_mul_apply_ne_self hb).2 (Ne.symm hfbx)]⟩
-#align equiv.perm.is_cycle_swap_mul_aux₁ Equiv.Perm.is_cycle_swap_mul_aux₁
+#align equiv.perm.is_cycle_swap_mul_aux₁ Equiv.Perm.isCycle_swap_mul_aux₁
+-/
 
-theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
+#print Equiv.Perm.isCycle_swap_mul_aux₂ /-
+theorem isCycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
     ∀ (n : ℤ) {b x : α} {f : Perm α} (hb : (swap x (f x) * f) b ≠ b) (h : (f ^ n) (f x) = b),
       ∃ i : ℤ, ((swap x (f x) * f) ^ i) (f x) = b
-  | (n : ℕ) => fun b x f => is_cycle_swap_mul_aux₁ n
+  | (n : ℕ) => fun b x f => isCycle_swap_mul_aux₁ n
   | -[n+1] => fun b x f hb h =>
     if hfbx' : f x = b then ⟨0, hfbx'⟩
     else
@@ -496,7 +653,7 @@ theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
               * <;>
           cc
       let ⟨i, hi⟩ :=
-        is_cycle_swap_mul_aux₁ n hb
+        isCycle_swap_mul_aux₁ n hb
           (show (f⁻¹ ^ n) (f⁻¹ x) = f⁻¹ b by
             rw [← zpow_ofNat, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_negSucc, ← inv_pow,
               pow_succ', mul_assoc, mul_assoc, inv_mul_self, mul_one, zpow_ofNat, ← pow_succ', ←
@@ -508,8 +665,10 @@ theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
           mul_inv_rev, swap_inv, mul_swap_eq_swap_mul, inv_apply_self, swap_comm _ x, zpow_add,
           zpow_one, mul_apply, mul_apply (_ ^ i), h, hi, mul_apply, apply_inv_self,
           swap_apply_of_ne_of_ne this.2 (Ne.symm hfbx')]⟩
-#align equiv.perm.is_cycle_swap_mul_aux₂ Equiv.Perm.is_cycle_swap_mul_aux₂
+#align equiv.perm.is_cycle_swap_mul_aux₂ Equiv.Perm.isCycle_swap_mul_aux₂
+-/
 
+#print Equiv.Perm.IsCycle.eq_swap_of_apply_apply_eq_self /-
 theorem IsCycle.eq_swap_of_apply_apply_eq_self {α : Type _} [DecidableEq α] {f : Perm α}
     (hf : IsCycle f) {x : α} (hfx : f x ≠ x) (hffx : f (f x) = x) : f = swap x (f x) :=
   Equiv.ext fun y =>
@@ -529,7 +688,9 @@ theorem IsCycle.eq_swap_of_apply_apply_eq_self {α : Type _} [DecidableEq α] {f
         · rw [← hj, hji] at hfyx
           cc
 #align equiv.perm.is_cycle.eq_swap_of_apply_apply_eq_self Equiv.Perm.IsCycle.eq_swap_of_apply_apply_eq_self
+-/
 
+#print Equiv.Perm.IsCycle.swap_mul /-
 theorem IsCycle.swap_mul {α : Type _} [DecidableEq α] {f : Perm α} (hf : IsCycle f) {x : α}
     (hx : f x ≠ x) (hffx : f (f x) ≠ x) : IsCycle (swap x (f x) * f) :=
   ⟨f x, by simp [swap_apply_def, mul_apply, if_neg hffx, f.injective.eq_iff, if_neg hx, hx],
@@ -540,16 +701,23 @@ theorem IsCycle.swap_mul {α : Type _} [DecidableEq α] {f : Perm α} (hf : IsCy
         (f ^ (i - 1)) (f x) = (f ^ (i - 1) * f ^ (1 : ℤ)) x := by rw [zpow_one, mul_apply]
         _ = y := by rwa [← zpow_add, sub_add_cancel]
         
-    is_cycle_swap_mul_aux₂ (i - 1) hy hi⟩
+    isCycle_swap_mul_aux₂ (i - 1) hy hi⟩
 #align equiv.perm.is_cycle.swap_mul Equiv.Perm.IsCycle.swap_mul
+-/
 
-theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.Support.card
+/- warning: equiv.perm.is_cycle.sign -> Equiv.Perm.IsCycle.sign is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Eq.{1} (Units.{0} Int Int.monoid) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.monoid) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.mulOneClass.{0} Int Int.monoid)) (fun (_x : MonoidHom.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.monoid) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.mulOneClass.{0} Int Int.monoid)) => (Equiv.Perm.{succ u1} α) -> (Units.{0} Int Int.monoid)) (MonoidHom.hasCoeToFun.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.monoid) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.mulOneClass.{0} Int Int.monoid)) (Equiv.Perm.sign.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) f) (Neg.neg.{0} (Units.{0} Int Int.monoid) (Units.hasNeg.{0} Int Int.monoid (NonUnitalNonAssocRing.toHasDistribNeg.{0} Int (NonAssocRing.toNonUnitalNonAssocRing.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))) (HPow.hPow.{0, 0, 0} (Units.{0} Int Int.monoid) Nat (Units.{0} Int Int.monoid) (instHPow.{0, 0} (Units.{0} Int Int.monoid) Nat (Monoid.Pow.{0} (Units.{0} Int Int.monoid) (DivInvMonoid.toMonoid.{0} (Units.{0} Int Int.monoid) (Group.toDivInvMonoid.{0} (Units.{0} Int Int.monoid) (Units.group.{0} Int Int.monoid))))) (Neg.neg.{0} (Units.{0} Int Int.monoid) (Units.hasNeg.{0} Int Int.monoid (NonUnitalNonAssocRing.toHasDistribNeg.{0} Int (NonAssocRing.toNonUnitalNonAssocRing.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))) (OfNat.ofNat.{0} (Units.{0} Int Int.monoid) 1 (OfNat.mk.{0} (Units.{0} Int Int.monoid) 1 (One.one.{0} (Units.{0} Int Int.monoid) (MulOneClass.toHasOne.{0} (Units.{0} Int Int.monoid) (Units.mulOneClass.{0} Int Int.monoid)))))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α f) -> (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (FunLike.coe.{succ u1, succ u1, 1} (MonoidHom.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.instMonoidInt) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.instMulOneClassUnits.{0} Int Int.instMonoidInt)) (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.Perm.{succ u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) _x) (MulHomClass.toFunLike.{u1, u1, 0} (MonoidHom.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.instMonoidInt) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.instMulOneClassUnits.{0} Int Int.instMonoidInt)) (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.instMonoidInt) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toMul.{0} (Units.{0} Int Int.instMonoidInt) (Units.instMulOneClassUnits.{0} Int Int.instMonoidInt)) (MonoidHomClass.toMulHomClass.{u1, u1, 0} (MonoidHom.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.instMonoidInt) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.instMulOneClassUnits.{0} Int Int.instMonoidInt)) (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.instMonoidInt) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.instMulOneClassUnits.{0} Int Int.instMonoidInt) (MonoidHom.monoidHomClass.{u1, 0} (Equiv.Perm.{succ u1} α) (Units.{0} Int Int.instMonoidInt) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Units.instMulOneClassUnits.{0} Int Int.instMonoidInt)))) (Equiv.Perm.sign.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) f) (Neg.neg.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (Units.instNegUnits.{0} Int Int.instMonoidInt (NonUnitalNonAssocRing.toHasDistribNeg.{0} Int (NonAssocRing.toNonUnitalNonAssocRing.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)))) (HPow.hPow.{0, 0, 0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) Nat ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (instHPow.{0, 0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) Nat (Monoid.Pow.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (DivInvMonoid.toMonoid.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (Group.toDivInvMonoid.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (Units.instGroupUnits.{0} Int Int.instMonoidInt))))) (Neg.neg.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (Units.instNegUnits.{0} Int Int.instMonoidInt (NonUnitalNonAssocRing.toHasDistribNeg.{0} Int (NonAssocRing.toNonUnitalNonAssocRing.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)))) (OfNat.ofNat.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) 1 (One.toOfNat1.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (InvOneClass.toOne.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (DivInvOneMonoid.toInvOneClass.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (DivisionMonoid.toDivInvOneMonoid.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (DivisionCommMonoid.toDivisionMonoid.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (CommGroup.toDivisionCommMonoid.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Equiv.Perm.{succ u1} α) => Units.{0} Int Int.instMonoidInt) f) (Units.instCommGroupUnitsToMonoid.{0} Int Int.instCommMonoidInt))))))))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.sign Equiv.Perm.IsCycle.signₓ'. -/
+theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.support.card
   | f => fun hf =>
     let ⟨x, hx⟩ := hf
     calc
       sign f = sign (swap x (f x) * (swap x (f x) * f)) := by
         rw [← mul_assoc, mul_def, mul_def, swap_swap, trans_refl]
-      _ = -(-1) ^ f.Support.card :=
+      _ = -(-1) ^ f.support.card :=
         if h1 : f (f x) = x then
           by
           have h : swap x (f x) * f = 1 :=
@@ -561,10 +729,10 @@ theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.Su
           rfl
         else
           by
-          have h : card (Support (swap x (f x) * f)) + 1 = card (Support f) := by
+          have h : card (support (swap x (f x) * f)) + 1 = card (support f) := by
             rw [← insert_erase (mem_support.2 hx.1), support_swap_mul_eq _ _ h1,
               card_insert_of_not_mem (not_mem_erase _ _), sdiff_singleton_eq_erase]
-          have wf : card (Support (swap x (f x) * f)) < card (Support f) :=
+          have wf : card (support (swap x (f x) * f)) < card (support f) :=
             card_support_swap_mul hx.1
           rw [sign_mul, sign_swap hx.1.symm, (hf.swap_mul hx.1 h1).sign, ← h]
           simp only [pow_add, mul_one, neg_neg, one_mul, mul_neg, eq_self_iff_true, pow_one,
@@ -573,7 +741,8 @@ theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.Su
   ⟨_, measure_wf fun f => f.support.card⟩
 #align equiv.perm.is_cycle.sign Equiv.Perm.IsCycle.sign
 
-theorem IsCycle.of_pow {n : ℕ} (h1 : IsCycle (f ^ n)) (h2 : f.Support ⊆ (f ^ n).Support) :
+#print Equiv.Perm.IsCycle.of_pow /-
+theorem IsCycle.of_pow {n : ℕ} (h1 : IsCycle (f ^ n)) (h2 : f.support ⊆ (f ^ n).support) :
     IsCycle f :=
   by
   have key : ∀ x : α, (f ^ n) x ≠ x ↔ f x ≠ x :=
@@ -585,26 +754,32 @@ theorem IsCycle.of_pow {n : ℕ} (h1 : IsCycle (f ^ n)) (h2 : f.Support ⊆ (f ^
   cases' hx2 ((key y).mpr hy) with i _
   exact ⟨n * i, by rwa [zpow_mul]⟩
 #align equiv.perm.is_cycle.of_pow Equiv.Perm.IsCycle.of_pow
+-/
 
+#print Equiv.Perm.IsCycle.of_zpow /-
 -- The lemma `support_zpow_le` is relevant. It means that `h2` is equivalent to
 -- `σ.support = (σ ^ n).support`, as well as to `σ.support.card ≤ (σ ^ n).support.card`.
-theorem IsCycle.of_zpow {n : ℤ} (h1 : IsCycle (f ^ n)) (h2 : f.Support ⊆ (f ^ n).Support) :
+theorem IsCycle.of_zpow {n : ℤ} (h1 : IsCycle (f ^ n)) (h2 : f.support ⊆ (f ^ n).support) :
     IsCycle f := by
   cases n
   · exact h1.of_pow h2
   · simp only [le_eq_subset, zpow_negSucc, perm.support_inv] at h1 h2
     simpa using h1.inv.of_pow h2
 #align equiv.perm.is_cycle.of_zpow Equiv.Perm.IsCycle.of_zpow
+-/
 
+#print Equiv.Perm.nodup_of_pairwise_disjoint_cycles /-
 theorem nodup_of_pairwise_disjoint_cycles {l : List (Perm β)} (h1 : ∀ f ∈ l, IsCycle f)
     (h2 : l.Pairwise Disjoint) : l.Nodup :=
   nodup_of_pairwise_disjoint (fun h => (h1 1 h).ne_one rfl) h2
 #align equiv.perm.nodup_of_pairwise_disjoint_cycles Equiv.Perm.nodup_of_pairwise_disjoint_cycles
+-/
 
+#print Equiv.Perm.IsCycle.support_congr /-
 /-- Unlike `support_congr`, which assumes that `∀ (x ∈ g.support), f x = g x)`, here
 we have the weaker assumption that `∀ (x ∈ f.support), f x = g x`. -/
-theorem IsCycle.support_congr (hf : IsCycle f) (hg : IsCycle g) (h : f.Support ⊆ g.Support)
-    (h' : ∀ x ∈ f.Support, f x = g x) : f = g :=
+theorem IsCycle.support_congr (hf : IsCycle f) (hg : IsCycle g) (h : f.support ⊆ g.support)
+    (h' : ∀ x ∈ f.support, f x = g x) : f = g :=
   by
   have : f.support = g.support := by
     refine' le_antisymm h _
@@ -623,11 +798,13 @@ theorem IsCycle.support_congr (hf : IsCycle f) (hg : IsCycle g) (h : f.Support �
   refine' support_congr h _
   simpa [← this] using h'
 #align equiv.perm.is_cycle.support_congr Equiv.Perm.IsCycle.support_congr
+-/
 
+#print Equiv.Perm.IsCycle.eq_on_support_inter_nonempty_congr /-
 /-- If two cyclic permutations agree on all terms in their intersection,
 and that intersection is not empty, then the two cyclic permutations must be equal. -/
 theorem IsCycle.eq_on_support_inter_nonempty_congr (hf : IsCycle f) (hg : IsCycle g)
-    (h : ∀ x ∈ f.Support ∩ g.Support, f x = g x) (hx : f x = g x) (hx' : x ∈ f.Support) : f = g :=
+    (h : ∀ x ∈ f.support ∩ g.support, f x = g x) (hx : f x = g x) (hx' : x ∈ f.support) : f = g :=
   by
   have hx'' : x ∈ g.support := by rwa [mem_support, ← hx, ← mem_support]
   have : f.support ⊆ g.support := by
@@ -637,9 +814,11 @@ theorem IsCycle.eq_on_support_inter_nonempty_congr (hf : IsCycle f) (hg : IsCycl
   rw [(inter_eq_left_iff_subset _ _).mpr this] at h
   exact hf.support_congr hg this h
 #align equiv.perm.is_cycle.eq_on_support_inter_nonempty_congr Equiv.Perm.IsCycle.eq_on_support_inter_nonempty_congr
+-/
 
+#print Equiv.Perm.IsCycle.support_pow_eq_iff /-
 theorem IsCycle.support_pow_eq_iff (hf : IsCycle f) {n : ℕ} :
-    Support (f ^ n) = Support f ↔ ¬orderOf f ∣ n :=
+    support (f ^ n) = support f ↔ ¬orderOf f ∣ n :=
   by
   rw [orderOf_dvd_iff_pow_eq_one]
   constructor
@@ -658,12 +837,16 @@ theorem IsCycle.support_pow_eq_iff (hf : IsCycle f) {n : ℕ} :
       rw [← mul_apply, (Commute.pow_pow_self _ _ _).Eq, mul_apply]
       simpa using H
 #align equiv.perm.is_cycle.support_pow_eq_iff Equiv.Perm.IsCycle.support_pow_eq_iff
+-/
 
+#print Equiv.Perm.IsCycle.support_pow_of_pos_of_lt_orderOf /-
 theorem IsCycle.support_pow_of_pos_of_lt_orderOf (hf : IsCycle f) {n : ℕ} (npos : 0 < n)
-    (hn : n < orderOf f) : (f ^ n).Support = f.Support :=
+    (hn : n < orderOf f) : (f ^ n).support = f.support :=
   hf.support_pow_eq_iff.2 <| Nat.not_dvd_of_pos_of_lt npos hn
 #align equiv.perm.is_cycle.support_pow_of_pos_of_lt_order_of Equiv.Perm.IsCycle.support_pow_of_pos_of_lt_orderOf
+-/
 
+#print Equiv.Perm.IsCycle.pow_iff /-
 theorem IsCycle.pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
     IsCycle (f ^ n) ↔ n.coprime (orderOf f) := by
   classical
@@ -688,7 +871,14 @@ theorem IsCycle.pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
       rw [hm]
       exact support_pow_le _ n hx
 #align equiv.perm.is_cycle.pow_iff Equiv.Perm.IsCycle.pow_iff
+-/
 
+/- warning: equiv.perm.is_cycle.pow_eq_one_iff -> Equiv.Perm.IsCycle.pow_eq_one_iff is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {f : Equiv.Perm.{succ u1} β}, (Equiv.Perm.IsCycle.{u1} β f) -> (forall {n : Nat}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} β) 1 (One.one.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))))))) (Exists.{succ u1} β (fun (x : β) => And (Ne.{succ u1} β (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} β) (fun (_x : Equiv.{succ u1, succ u1} β β) => β -> β) (Equiv.hasCoeToFun.{succ u1, succ u1} β β) f x) x) (Eq.{succ u1} β (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} β) (fun (_x : Equiv.{succ u1, succ u1} β β) => β -> β) (Equiv.hasCoeToFun.{succ u1, succ u1} β β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) x) x))))
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {f : Equiv.Perm.{succ u1} β}, (Equiv.Perm.IsCycle.{u1} β f) -> (forall {n : Nat}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))) (Exists.{succ u1} β (fun (x : β) => And (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} β β) f x) x) (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} β β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) x) x))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.pow_eq_one_iff Equiv.Perm.IsCycle.pow_eq_one_iffₓ'. -/
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_one_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
     f ^ n = 1 ↔ ∃ x, f x ≠ x ∧ (f ^ n) x = x := by
@@ -707,12 +897,20 @@ theorem IsCycle.pow_eq_one_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : �
         rw [pow_mul, pow_orderOf_eq_one, one_pow]
 #align equiv.perm.is_cycle.pow_eq_one_iff Equiv.Perm.IsCycle.pow_eq_one_iff
 
+#print Equiv.Perm.IsCycle.pow_eq_one_iff' /-
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_one_iff' [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} {x : β}
     (hx : f x ≠ x) : f ^ n = 1 ↔ (f ^ n) x = x :=
   ⟨fun h => FunLike.congr_fun h x, fun h => hf.pow_eq_one_iff.2 ⟨x, hx, h⟩⟩
 #align equiv.perm.is_cycle.pow_eq_one_iff' Equiv.Perm.IsCycle.pow_eq_one_iff'
+-/
 
+/- warning: equiv.perm.is_cycle.pow_eq_one_iff'' -> Equiv.Perm.IsCycle.pow_eq_one_iff'' is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {f : Equiv.Perm.{succ u1} β}, (Equiv.Perm.IsCycle.{u1} β f) -> (forall {n : Nat}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} β) 1 (One.one.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))))))) (forall (x : β), (Ne.{succ u1} β (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} β) (fun (_x : Equiv.{succ u1, succ u1} β β) => β -> β) (Equiv.hasCoeToFun.{succ u1, succ u1} β β) f x) x) -> (Eq.{succ u1} β (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} β) (fun (_x : Equiv.{succ u1, succ u1} β β) => β -> β) (Equiv.hasCoeToFun.{succ u1, succ u1} β β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) x) x)))
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_3 : Finite.{succ u1} β] {f : Equiv.Perm.{succ u1} β}, (Equiv.Perm.IsCycle.{u1} β f) -> (forall {n : Nat}, Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))) (forall (x : β), (Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} β β) f x) x) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => β) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} β β) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} β) Nat (Equiv.Perm.{succ u1} β) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} β) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) f n) x) x)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle.pow_eq_one_iff'' Equiv.Perm.IsCycle.pow_eq_one_iff''ₓ'. -/
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_one_iff'' [Finite β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
     f ^ n = 1 ↔ ∀ x, f x ≠ x → (f ^ n) x = x :=
@@ -721,6 +919,7 @@ theorem IsCycle.pow_eq_one_iff'' [Finite β] {f : Perm β} (hf : IsCycle f) {n :
     (hf.pow_eq_one_iff' hx).2 (h _ hx)⟩
 #align equiv.perm.is_cycle.pow_eq_one_iff'' Equiv.Perm.IsCycle.pow_eq_one_iff''
 
+#print Equiv.Perm.IsCycle.pow_eq_pow_iff /-
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b : ℕ} :
     f ^ a = f ^ b ↔ ∃ x, f x ≠ x ∧ (f ^ a) x = (f ^ b) x := by
@@ -745,7 +944,9 @@ theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b :
         rw [not_mem_support, h, Function.Injective.eq_iff (f ^ a).Injective] at hfa
         contradiction
 #align equiv.perm.is_cycle.pow_eq_pow_iff Equiv.Perm.IsCycle.pow_eq_pow_iff
+-/
 
+#print Equiv.Perm.IsCycle.isCycle_pow_pos_of_lt_prime_order /-
 theorem IsCycle.isCycle_pow_pos_of_lt_prime_order [Finite β] {f : Perm β} (hf : IsCycle f)
     (hf' : (orderOf f).Prime) (n : ℕ) (hn : 0 < n) (hn' : n < orderOf f) : IsCycle (f ^ n) := by
   classical
@@ -761,6 +962,7 @@ theorem IsCycle.isCycle_pow_pos_of_lt_prime_order [Finite β] {f : Perm β} (hf 
     rw [hm]
     exact support_pow_le f n
 #align equiv.perm.is_cycle.is_cycle_pow_pos_of_lt_prime_order Equiv.Perm.IsCycle.isCycle_pow_pos_of_lt_prime_order
+-/
 
 end IsCycle
 
@@ -771,48 +973,95 @@ section IsCycleOn
 
 variable {f g : Perm α} {s t : Set α} {a b x y : α}
 
+#print Equiv.Perm.IsCycleOn /-
 /-- A permutation is a cycle on `s` when any two points of `s` are related by repeated application
 of the permutation. Note that this means the identity is a cycle of subsingleton sets. -/
 def IsCycleOn (f : Perm α) (s : Set α) : Prop :=
   Set.BijOn f s s ∧ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → f.SameCycle x y
 #align equiv.perm.is_cycle_on Equiv.Perm.IsCycleOn
+-/
 
+#print Equiv.Perm.isCycleOn_empty /-
 @[simp]
 theorem isCycleOn_empty : f.IsCycleOn ∅ := by simp [is_cycle_on]
 #align equiv.perm.is_cycle_on_empty Equiv.Perm.isCycleOn_empty
+-/
 
+/- warning: equiv.perm.is_cycle_on_one -> Equiv.Perm.isCycleOn_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Equiv.Perm.IsCycleOn.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) s) (Set.Subsingleton.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Equiv.Perm.IsCycleOn.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) s) (Set.Subsingleton.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_on_one Equiv.Perm.isCycleOn_oneₓ'. -/
 @[simp]
 theorem isCycleOn_one : (1 : Perm α).IsCycleOn s ↔ s.Subsingleton := by
   simp [is_cycle_on, Set.bijOn_id, Set.Subsingleton]
 #align equiv.perm.is_cycle_on_one Equiv.Perm.isCycleOn_one
 
+/- warning: equiv.perm.is_cycle_on.subsingleton -> Equiv.Perm.IsCycleOn.subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) s) -> (Set.Subsingleton.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) s) -> (Set.Subsingleton.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_on.subsingleton Equiv.Perm.IsCycleOn.subsingletonₓ'. -/
+/- warning: set.subsingleton.is_cycle_on_one -> Set.Subsingleton.isCycleOn_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Equiv.Perm.IsCycleOn.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Equiv.Perm.IsCycleOn.{u1} α (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) s)
+Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_cycle_on_one Set.Subsingleton.isCycleOn_oneₓ'. -/
 alias is_cycle_on_one ↔ is_cycle_on.subsingleton _root_.set.subsingleton.is_cycle_on_one
 #align equiv.perm.is_cycle_on.subsingleton Equiv.Perm.IsCycleOn.subsingleton
 #align set.subsingleton.is_cycle_on_one Set.Subsingleton.isCycleOn_one
 
+#print Equiv.Perm.isCycleOn_singleton /-
 @[simp]
 theorem isCycleOn_singleton : f.IsCycleOn {a} ↔ f a = a := by simp [is_cycle_on, same_cycle.rfl]
 #align equiv.perm.is_cycle_on_singleton Equiv.Perm.isCycleOn_singleton
+-/
 
+#print Equiv.Perm.isCycleOn_of_subsingleton /-
 theorem isCycleOn_of_subsingleton [Subsingleton α] (f : Perm α) (s : Set α) : f.IsCycleOn s :=
   ⟨s.bijOn_of_subsingleton _, fun x _ y _ => (Subsingleton.elim x y).SameCycle _⟩
 #align equiv.perm.is_cycle_on_of_subsingleton Equiv.Perm.isCycleOn_of_subsingleton
+-/
 
+/- warning: equiv.perm.is_cycle_on_inv -> Equiv.Perm.isCycleOn_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, Iff (Equiv.Perm.IsCycleOn.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) s) (Equiv.Perm.IsCycleOn.{u1} α f s)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, Iff (Equiv.Perm.IsCycleOn.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) s) (Equiv.Perm.IsCycleOn.{u1} α f s)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_on_inv Equiv.Perm.isCycleOn_invₓ'. -/
 @[simp]
 theorem isCycleOn_inv : f⁻¹.IsCycleOn s ↔ f.IsCycleOn s := by simp [is_cycle_on, Set.bijOn_perm_inv]
 #align equiv.perm.is_cycle_on_inv Equiv.Perm.isCycleOn_inv
 
+/- warning: equiv.perm.is_cycle_on.of_inv -> Equiv.Perm.IsCycleOn.of_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) s) -> (Equiv.Perm.IsCycleOn.{u1} α f s)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) s) -> (Equiv.Perm.IsCycleOn.{u1} α f s)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_on.of_inv Equiv.Perm.IsCycleOn.of_invₓ'. -/
+/- warning: equiv.perm.is_cycle_on.inv -> Equiv.Perm.IsCycleOn.inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α f s) -> (Equiv.Perm.IsCycleOn.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) s)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α f s) -> (Equiv.Perm.IsCycleOn.{u1} α (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) s)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_on.inv Equiv.Perm.IsCycleOn.invₓ'. -/
 alias is_cycle_on_inv ↔ is_cycle_on.of_inv is_cycle_on.inv
 #align equiv.perm.is_cycle_on.of_inv Equiv.Perm.IsCycleOn.of_inv
 #align equiv.perm.is_cycle_on.inv Equiv.Perm.IsCycleOn.inv
 
+#print Equiv.Perm.IsCycleOn.conj /-
 theorem IsCycleOn.conj (h : f.IsCycleOn s) : (g * f * g⁻¹).IsCycleOn ((g : Perm α) '' s) :=
   ⟨(g.bijOn_image.comp h.1).comp g.bijOn_symm_image, fun x hx y hy =>
     by
     rw [← preimage_inv] at hx hy
     convert(h.2 hx hy).conj <;> rw [apply_inv_self]⟩
 #align equiv.perm.is_cycle_on.conj Equiv.Perm.IsCycleOn.conj
+-/
 
+#print Equiv.Perm.isCycleOn_swap /-
 theorem isCycleOn_swap [DecidableEq α] (hab : a ≠ b) : (swap a b).IsCycleOn {a, b} :=
   ⟨bijOn_swap (by simp) (by simp), fun x hx y hy =>
     by
@@ -823,18 +1072,24 @@ theorem isCycleOn_swap [DecidableEq α] (hab : a ≠ b) : (swap a b).IsCycleOn {
     · exact ⟨1, by rw [zpow_one, swap_apply_right]⟩
     · exact ⟨0, by rw [zpow_zero, coe_one, id.def]⟩⟩
 #align equiv.perm.is_cycle_on_swap Equiv.Perm.isCycleOn_swap
+-/
 
+#print Equiv.Perm.IsCycleOn.apply_ne /-
 protected theorem IsCycleOn.apply_ne (hf : f.IsCycleOn s) (hs : s.Nontrivial) (ha : a ∈ s) :
     f a ≠ a := by
   obtain ⟨b, hb, hba⟩ := hs.exists_ne a
   obtain ⟨n, rfl⟩ := hf.2 ha hb
   exact fun h => hba (is_fixed_pt.perm_zpow h n)
 #align equiv.perm.is_cycle_on.apply_ne Equiv.Perm.IsCycleOn.apply_ne
+-/
 
+#print Equiv.Perm.IsCycle.isCycleOn /-
 protected theorem IsCycle.isCycleOn (hf : f.IsCycle) : f.IsCycleOn { x | f x ≠ x } :=
   ⟨f.BijOn fun x => f.apply_eq_iff_eq.Not, fun a ha b => hf.SameCycle ha⟩
 #align equiv.perm.is_cycle.is_cycle_on Equiv.Perm.IsCycle.isCycleOn
+-/
 
+#print Equiv.Perm.isCycle_iff_exists_isCycleOn /-
 /-- This lemma demonstrates the relation between `equiv.perm.is_cycle` and `equiv.perm.is_cycle_on`
 in non-degenerate cases. -/
 theorem isCycle_iff_exists_isCycleOn :
@@ -847,13 +1102,17 @@ theorem isCycle_iff_exists_isCycleOn :
     obtain ⟨a, ha⟩ := hs.nonempty
     exact ⟨a, hf.apply_ne hs ha, fun b hb => hf.2 ha <| hsf hb⟩
 #align equiv.perm.is_cycle_iff_exists_is_cycle_on Equiv.Perm.isCycle_iff_exists_isCycleOn
+-/
 
+#print Equiv.Perm.IsCycleOn.apply_mem_iff /-
 theorem IsCycleOn.apply_mem_iff (hf : f.IsCycleOn s) : f x ∈ s ↔ x ∈ s :=
   ⟨fun hx => by
     convert hf.1.perm_inv.1 hx
     rw [inv_apply_self], fun hx => hf.1.MapsTo hx⟩
 #align equiv.perm.is_cycle_on.apply_mem_iff Equiv.Perm.IsCycleOn.apply_mem_iff
+-/
 
+#print Equiv.Perm.IsCycleOn.isCycle_subtypePerm /-
 /-- Note that the identity satisfies `is_cycle_on` for any subsingleton set, but not `is_cycle`. -/
 theorem IsCycleOn.isCycle_subtypePerm (hf : f.IsCycleOn s) (hs : s.Nontrivial) :
     (f.subtypePerm fun _ => hf.apply_mem_iff.symm : Perm s).IsCycle :=
@@ -863,7 +1122,9 @@ theorem IsCycleOn.isCycle_subtypePerm (hf : f.IsCycleOn s) (hs : s.Nontrivial) :
     ⟨⟨a, ha⟩, ne_of_apply_ne (coe : s → α) (hf.apply_ne hs ha), fun b hb =>
       (hf.2 (⟨a, ha⟩ : s).Prop b.Prop).subtypePerm⟩
 #align equiv.perm.is_cycle_on.is_cycle_subtype_perm Equiv.Perm.IsCycleOn.isCycle_subtypePerm
+-/
 
+#print Equiv.Perm.IsCycleOn.subtypePerm /-
 /-- Note that the identity is a cycle on any subsingleton set, but not a cycle. -/
 protected theorem IsCycleOn.subtypePerm (hf : f.IsCycleOn s) :
     (f.subtypePerm fun _ => hf.apply_mem_iff.symm : Perm s).IsCycleOn Set.univ :=
@@ -875,7 +1136,9 @@ protected theorem IsCycleOn.subtypePerm (hf : f.IsCycleOn s) :
   rw [eq_comm, Set.eq_univ_iff_forall]
   exact fun x => ne_of_apply_ne (coe : s → α) (hf.apply_ne hs x.Prop)
 #align equiv.perm.is_cycle_on.subtype_perm Equiv.Perm.IsCycleOn.subtypePerm
+-/
 
+#print Equiv.Perm.IsCycleOn.pow_apply_eq /-
 -- TODO: Theory of order of an element under an action
 theorem IsCycleOn.pow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) {n : ℕ} :
     (f ^ n) a = a ↔ s.card ∣ n :=
@@ -892,7 +1155,9 @@ theorem IsCycleOn.pow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ 
         (ne_of_apply_ne (coe : s → α) <| hf.apply_ne hs (⟨a, ha⟩ : s).Prop)]
     simp only [Subtype.coe_mk, subtype_perm_pow, subtype_perm_apply]
 #align equiv.perm.is_cycle_on.pow_apply_eq Equiv.Perm.IsCycleOn.pow_apply_eq
+-/
 
+#print Equiv.Perm.IsCycleOn.zpow_apply_eq /-
 theorem IsCycleOn.zpow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) :
     ∀ {n : ℤ}, (f ^ n) a = a ↔ (s.card : ℤ) ∣ n
   | Int.ofNat n => (hf.pow_apply_eq ha).trans Int.coe_nat_dvd.symm
@@ -900,26 +1165,39 @@ theorem IsCycleOn.zpow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈
     rw [zpow_negSucc, ← inv_pow]
     exact (hf.inv.pow_apply_eq ha).trans ((dvd_neg _ _).trans Int.coe_nat_dvd).symm
 #align equiv.perm.is_cycle_on.zpow_apply_eq Equiv.Perm.IsCycleOn.zpow_apply_eq
+-/
 
+#print Equiv.Perm.IsCycleOn.pow_apply_eq_pow_apply /-
 theorem IsCycleOn.pow_apply_eq_pow_apply {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s)
     {m n : ℕ} : (f ^ m) a = (f ^ n) a ↔ m ≡ n [MOD s.card] :=
   by
   rw [Nat.modEq_iff_dvd, ← hf.zpow_apply_eq ha]
   simp [sub_eq_neg_add, zpow_add, eq_inv_iff_eq, eq_comm]
 #align equiv.perm.is_cycle_on.pow_apply_eq_pow_apply Equiv.Perm.IsCycleOn.pow_apply_eq_pow_apply
+-/
 
+#print Equiv.Perm.IsCycleOn.zpow_apply_eq_zpow_apply /-
 theorem IsCycleOn.zpow_apply_eq_zpow_apply {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s)
     {m n : ℤ} : (f ^ m) a = (f ^ n) a ↔ m ≡ n [ZMOD s.card] :=
   by
   rw [Int.modEq_iff_dvd, ← hf.zpow_apply_eq ha]
   simp [sub_eq_neg_add, zpow_add, eq_inv_iff_eq, eq_comm]
 #align equiv.perm.is_cycle_on.zpow_apply_eq_zpow_apply Equiv.Perm.IsCycleOn.zpow_apply_eq_zpow_apply
+-/
 
+#print Equiv.Perm.IsCycleOn.pow_card_apply /-
 theorem IsCycleOn.pow_card_apply {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) :
     (f ^ s.card) a = a :=
   (hf.pow_apply_eq ha).2 dvd_rfl
 #align equiv.perm.is_cycle_on.pow_card_apply Equiv.Perm.IsCycleOn.pow_card_apply
+-/
 
+/- warning: equiv.perm.is_cycle_on.exists_pow_eq -> Equiv.Perm.IsCycleOn.exists_pow_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {a : α} {b : α} {s : Finset.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b s) -> (Exists.{1} Nat (fun (n : Nat) => Exists.{0} (LT.lt.{0} Nat Nat.hasLt n (Finset.card.{u1} α s)) (fun (H : LT.lt.{0} Nat Nat.hasLt n (Finset.card.{u1} α s)) => Eq.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f n) a) b)))
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {a : α} {b : α} {s : Finset.{u1} α}, (Equiv.Perm.IsCycleOn.{u1} α f (Finset.toSet.{u1} α s)) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b s) -> (Exists.{1} Nat (fun (n : Nat) => And (LT.lt.{0} Nat instLTNat n (Finset.card.{u1} α s)) (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f n) a) b)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_on.exists_pow_eq Equiv.Perm.IsCycleOn.exists_pow_eqₓ'. -/
 theorem IsCycleOn.exists_pow_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ s) (hb : b ∈ s) :
     ∃ n < s.card, (f ^ n) a = b := by
   classical
@@ -933,46 +1211,60 @@ theorem IsCycleOn.exists_pow_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈
     exact is_fixed_pt.perm_zpow (hf.pow_card_apply ha) _
 #align equiv.perm.is_cycle_on.exists_pow_eq Equiv.Perm.IsCycleOn.exists_pow_eq
 
+#print Equiv.Perm.IsCycleOn.exists_pow_eq' /-
 theorem IsCycleOn.exists_pow_eq' (hs : s.Finite) (hf : f.IsCycleOn s) (ha : a ∈ s) (hb : b ∈ s) :
     ∃ n : ℕ, (f ^ n) a = b := by
   lift s to Finset α using id hs
   obtain ⟨n, -, hn⟩ := hf.exists_pow_eq ha hb
   exact ⟨n, hn⟩
 #align equiv.perm.is_cycle_on.exists_pow_eq' Equiv.Perm.IsCycleOn.exists_pow_eq'
+-/
 
+#print Equiv.Perm.IsCycleOn.range_pow /-
 theorem IsCycleOn.range_pow (hs : s.Finite) (h : f.IsCycleOn s) (ha : a ∈ s) :
     Set.range (fun n => (f ^ n) a : ℕ → α) = s :=
   Set.Subset.antisymm (Set.range_subset_iff.2 fun n => h.1.MapsTo.perm_pow _ ha) fun x =>
     h.exists_pow_eq' hs ha
 #align equiv.perm.is_cycle_on.range_pow Equiv.Perm.IsCycleOn.range_pow
+-/
 
+#print Equiv.Perm.IsCycleOn.range_zpow /-
 theorem IsCycleOn.range_zpow (h : f.IsCycleOn s) (ha : a ∈ s) :
     Set.range (fun n => (f ^ n) a : ℤ → α) = s :=
   Set.Subset.antisymm (Set.range_subset_iff.2 fun n => (h.1.perm_zpow _).MapsTo ha) <| h.2 ha
 #align equiv.perm.is_cycle_on.range_zpow Equiv.Perm.IsCycleOn.range_zpow
+-/
 
+#print Equiv.Perm.IsCycleOn.of_pow /-
 theorem IsCycleOn.of_pow {n : ℕ} (hf : (f ^ n).IsCycleOn s) (h : Set.BijOn f s s) : f.IsCycleOn s :=
   ⟨h, fun x hx y hy => (hf.2 hx hy).ofPow⟩
 #align equiv.perm.is_cycle_on.of_pow Equiv.Perm.IsCycleOn.of_pow
+-/
 
+#print Equiv.Perm.IsCycleOn.of_zpow /-
 theorem IsCycleOn.of_zpow {n : ℤ} (hf : (f ^ n).IsCycleOn s) (h : Set.BijOn f s s) :
     f.IsCycleOn s :=
   ⟨h, fun x hx y hy => (hf.2 hx hy).of_zpow⟩
 #align equiv.perm.is_cycle_on.of_zpow Equiv.Perm.IsCycleOn.of_zpow
+-/
 
+#print Equiv.Perm.IsCycleOn.extendDomain /-
 theorem IsCycleOn.extendDomain {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p)
     (h : g.IsCycleOn s) : (g.extendDomain f).IsCycleOn (coe ∘ f '' s) :=
   ⟨h.1.extendDomain, by
     rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩
     exact (h.2 ha hb).extendDomain⟩
 #align equiv.perm.is_cycle_on.extend_domain Equiv.Perm.IsCycleOn.extendDomain
+-/
 
+#print Equiv.Perm.IsCycleOn.countable /-
 protected theorem IsCycleOn.countable (hs : f.IsCycleOn s) : s.Countable :=
   by
   obtain rfl | ⟨a, ha⟩ := s.eq_empty_or_nonempty
   · exact Set.countable_empty
   · exact (Set.countable_range fun n : ℤ => (⇑(f ^ n) : α → α) a).mono (hs.2 ha)
 #align equiv.perm.is_cycle_on.countable Equiv.Perm.IsCycleOn.countable
+-/
 
 end IsCycleOn
 
@@ -985,11 +1277,14 @@ section CycleOf
 
 variable [DecidableEq α] [Fintype α] {f g : Perm α} {x y : α}
 
+#print Equiv.Perm.cycleOf /-
 /-- `f.cycle_of x` is the cycle of the permutation `f` to which `x` belongs. -/
 def cycleOf (f : Perm α) (x : α) : Perm α :=
   ofSubtype (subtypePerm f fun _ => sameCycle_apply_right.symm : Perm { y // SameCycle f x y })
 #align equiv.perm.cycle_of Equiv.Perm.cycleOf
+-/
 
+#print Equiv.Perm.cycleOf_apply /-
 theorem cycleOf_apply (f : Perm α) (x y : α) : cycleOf f x y = if SameCycle f x y then f y else y :=
   by
   dsimp only [cycle_of]
@@ -999,13 +1294,21 @@ theorem cycleOf_apply (f : Perm α) (x y : α) : cycleOf f x y = if SameCycle f 
   · apply of_subtype_apply_of_not_mem
     exact h
 #align equiv.perm.cycle_of_apply Equiv.Perm.cycleOf_apply
+-/
 
+/- warning: equiv.perm.cycle_of_inv -> Equiv.Perm.cycleOf_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x)) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f) x)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x)) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f) x)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_of_inv Equiv.Perm.cycleOf_invₓ'. -/
 theorem cycleOf_inv (f : Perm α) (x : α) : (cycleOf f x)⁻¹ = cycleOf f⁻¹ x :=
   Equiv.ext fun y => by
     rw [inv_eq_iff_eq, cycle_of_apply, cycle_of_apply]
     split_ifs <;> simp_all [same_cycle_inv, same_cycle_inv_apply_right]
 #align equiv.perm.cycle_of_inv Equiv.Perm.cycleOf_inv
 
+#print Equiv.Perm.cycleOf_pow_apply_self /-
 @[simp]
 theorem cycleOf_pow_apply_self (f : Perm α) (x : α) : ∀ n : ℕ, (cycleOf f x ^ n) x = (f ^ n) x
   | 0 => rfl
@@ -1014,22 +1317,30 @@ theorem cycleOf_pow_apply_self (f : Perm α) (x : α) : ∀ n : ℕ, (cycleOf f 
     rw [pow_succ, mul_apply, cycle_of_apply, cycle_of_pow_apply_self, if_pos, pow_succ, mul_apply]
     exact ⟨n, rfl⟩
 #align equiv.perm.cycle_of_pow_apply_self Equiv.Perm.cycleOf_pow_apply_self
+-/
 
+#print Equiv.Perm.cycleOf_zpow_apply_self /-
 @[simp]
 theorem cycleOf_zpow_apply_self (f : Perm α) (x : α) : ∀ n : ℤ, (cycleOf f x ^ n) x = (f ^ n) x
   | (n : ℕ) => cycleOf_pow_apply_self f x n
   | -[n+1] => by
     rw [zpow_negSucc, ← inv_pow, cycle_of_inv, zpow_negSucc, ← inv_pow, cycle_of_pow_apply_self]
 #align equiv.perm.cycle_of_zpow_apply_self Equiv.Perm.cycleOf_zpow_apply_self
+-/
 
+#print Equiv.Perm.SameCycle.cycleOf_apply /-
 theorem SameCycle.cycleOf_apply : SameCycle f x y → cycleOf f x y = f y :=
   ofSubtype_apply_of_mem _
 #align equiv.perm.same_cycle.cycle_of_apply Equiv.Perm.SameCycle.cycleOf_apply
+-/
 
+#print Equiv.Perm.cycleOf_apply_of_not_sameCycle /-
 theorem cycleOf_apply_of_not_sameCycle : ¬SameCycle f x y → cycleOf f x y = y :=
   ofSubtype_apply_of_not_mem _
 #align equiv.perm.cycle_of_apply_of_not_same_cycle Equiv.Perm.cycleOf_apply_of_not_sameCycle
+-/
 
+#print Equiv.Perm.SameCycle.cycleOf_eq /-
 theorem SameCycle.cycleOf_eq (h : SameCycle f x y) : cycleOf f x = cycleOf f y :=
   by
   ext z
@@ -1038,7 +1349,9 @@ theorem SameCycle.cycleOf_eq (h : SameCycle f x y) : cycleOf f x = cycleOf f y :
   · exact (h.symm.trans hz).cycleOf_apply.symm
   · exact (cycle_of_apply_of_not_same_cycle (mt h.trans hz)).symm
 #align equiv.perm.same_cycle.cycle_of_eq Equiv.Perm.SameCycle.cycleOf_eq
+-/
 
+#print Equiv.Perm.cycleOf_apply_apply_zpow_self /-
 @[simp]
 theorem cycleOf_apply_apply_zpow_self (f : Perm α) (x : α) (k : ℤ) :
     cycleOf f x ((f ^ k) x) = (f ^ (k + 1)) x :=
@@ -1047,23 +1360,31 @@ theorem cycleOf_apply_apply_zpow_self (f : Perm α) (x : α) (k : ℤ) :
   · rw [add_comm, zpow_add, zpow_one, mul_apply]
   · exact ⟨k, rfl⟩
 #align equiv.perm.cycle_of_apply_apply_zpow_self Equiv.Perm.cycleOf_apply_apply_zpow_self
+-/
 
+#print Equiv.Perm.cycleOf_apply_apply_pow_self /-
 @[simp]
 theorem cycleOf_apply_apply_pow_self (f : Perm α) (x : α) (k : ℕ) :
     cycleOf f x ((f ^ k) x) = (f ^ (k + 1)) x := by
   convert cycle_of_apply_apply_zpow_self f x k using 1
 #align equiv.perm.cycle_of_apply_apply_pow_self Equiv.Perm.cycleOf_apply_apply_pow_self
+-/
 
+#print Equiv.Perm.cycleOf_apply_apply_self /-
 @[simp]
 theorem cycleOf_apply_apply_self (f : Perm α) (x : α) : cycleOf f x (f x) = f (f x) := by
   convert cycle_of_apply_apply_pow_self f x 1 using 1
 #align equiv.perm.cycle_of_apply_apply_self Equiv.Perm.cycleOf_apply_apply_self
+-/
 
+#print Equiv.Perm.cycleOf_apply_self /-
 @[simp]
 theorem cycleOf_apply_self (f : Perm α) (x : α) : cycleOf f x x = f x :=
   SameCycle.rfl.cycleOf_apply
 #align equiv.perm.cycle_of_apply_self Equiv.Perm.cycleOf_apply_self
+-/
 
+#print Equiv.Perm.IsCycle.cycleOf_eq /-
 theorem IsCycle.cycleOf_eq (hf : IsCycle f) (hx : f x ≠ x) : cycleOf f x = f :=
   Equiv.ext fun y =>
     if h : SameCycle f x y then by rw [h.cycle_of_apply]
@@ -1071,7 +1392,14 @@ theorem IsCycle.cycleOf_eq (hf : IsCycle f) (hx : f x ≠ x) : cycleOf f x = f :
       rw [cycle_of_apply_of_not_same_cycle h,
         Classical.not_not.1 (mt ((is_cycle_iff_same_cycle hx).1 hf).2 h)]
 #align equiv.perm.is_cycle.cycle_of_eq Equiv.Perm.IsCycle.cycleOf_eq
+-/
 
+/- warning: equiv.perm.cycle_of_eq_one_iff -> Equiv.Perm.cycleOf_eq_one_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {x : α} (f : Equiv.Perm.{succ u1} α), Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (Eq.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f x) x)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {x : α} (f : Equiv.Perm.{succ u1} α), Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) f x) x)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_of_eq_one_iff Equiv.Perm.cycleOf_eq_one_iffₓ'. -/
 @[simp]
 theorem cycleOf_eq_one_iff (f : Perm α) : cycleOf f x = 1 ↔ f x = x :=
   by
@@ -1082,33 +1410,48 @@ theorem cycleOf_eq_one_iff (f : Perm α) : cycleOf f x = 1 ↔ f x = x :=
   · exact if_neg (mt same_cycle.apply_eq_self_iff (by tauto))
 #align equiv.perm.cycle_of_eq_one_iff Equiv.Perm.cycleOf_eq_one_iff
 
+#print Equiv.Perm.cycleOf_self_apply /-
 @[simp]
 theorem cycleOf_self_apply (f : Perm α) (x : α) : cycleOf f (f x) = cycleOf f x :=
   (sameCycle_apply_right.2 SameCycle.rfl).symm.cycleOf_eq
 #align equiv.perm.cycle_of_self_apply Equiv.Perm.cycleOf_self_apply
+-/
 
+#print Equiv.Perm.cycleOf_self_apply_pow /-
 @[simp]
 theorem cycleOf_self_apply_pow (f : Perm α) (n : ℕ) (x : α) : cycleOf f ((f ^ n) x) = cycleOf f x :=
   SameCycle.rfl.pow_leftₓ.cycleOf_eq
 #align equiv.perm.cycle_of_self_apply_pow Equiv.Perm.cycleOf_self_apply_pow
+-/
 
+#print Equiv.Perm.cycleOf_self_apply_zpow /-
 @[simp]
 theorem cycleOf_self_apply_zpow (f : Perm α) (n : ℤ) (x : α) :
     cycleOf f ((f ^ n) x) = cycleOf f x :=
   SameCycle.rfl.zpow_left.cycleOf_eq
 #align equiv.perm.cycle_of_self_apply_zpow Equiv.Perm.cycleOf_self_apply_zpow
+-/
 
+#print Equiv.Perm.IsCycle.cycleOf /-
 protected theorem IsCycle.cycleOf (hf : IsCycle f) : cycleOf f x = if f x = x then 1 else f :=
   by
   by_cases hx : f x = x
   · rwa [if_pos hx, cycle_of_eq_one_iff]
   · rwa [if_neg hx, hf.cycle_of_eq]
 #align equiv.perm.is_cycle.cycle_of Equiv.Perm.IsCycle.cycleOf
+-/
 
+/- warning: equiv.perm.cycle_of_one -> Equiv.Perm.cycleOf_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) x) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) x) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_of_one Equiv.Perm.cycleOf_oneₓ'. -/
 theorem cycleOf_one (x : α) : cycleOf 1 x = 1 :=
   (cycleOf_eq_one_iff 1).mpr rfl
 #align equiv.perm.cycle_of_one Equiv.Perm.cycleOf_one
 
+#print Equiv.Perm.isCycle_cycleOf /-
 theorem isCycle_cycleOf (f : Perm α) (hx : f x ≠ x) : IsCycle (cycleOf f x) :=
   have : cycleOf f x x ≠ x := by rwa [same_cycle.rfl.cycle_of_apply]
   (isCycle_iff_sameCycle this).2 fun y =>
@@ -1120,28 +1463,41 @@ theorem isCycle_cycleOf (f : Perm α) (hx : f x ≠ x) : IsCycle (cycleOf f x) :
         rw [cycle_of_apply_of_not_same_cycle hxy] at h
         exact (h rfl).elim⟩
 #align equiv.perm.is_cycle_cycle_of Equiv.Perm.isCycle_cycleOf
+-/
 
+#print Equiv.Perm.two_le_card_support_cycleOf_iff /-
 @[simp]
-theorem two_le_card_support_cycleOf_iff : 2 ≤ card (cycleOf f x).Support ↔ f x ≠ x :=
+theorem two_le_card_support_cycleOf_iff : 2 ≤ card (cycleOf f x).support ↔ f x ≠ x :=
   by
   refine' ⟨fun h => _, fun h => by simpa using (is_cycle_cycle_of _ h).two_le_card_support⟩
   contrapose! h
   rw [← cycle_of_eq_one_iff] at h
   simp [h]
 #align equiv.perm.two_le_card_support_cycle_of_iff Equiv.Perm.two_le_card_support_cycleOf_iff
+-/
 
+#print Equiv.Perm.card_support_cycleOf_pos_iff /-
 @[simp]
-theorem card_support_cycleOf_pos_iff : 0 < card (cycleOf f x).Support ↔ f x ≠ x :=
+theorem card_support_cycleOf_pos_iff : 0 < card (cycleOf f x).support ↔ f x ≠ x :=
   by
   rw [← two_le_card_support_cycle_of_iff, ← Nat.succ_le_iff]
   exact ⟨fun h => Or.resolve_left h.eq_or_lt (card_support_ne_one _).symm, zero_lt_two.trans_le⟩
 #align equiv.perm.card_support_cycle_of_pos_iff Equiv.Perm.card_support_cycleOf_pos_iff
+-/
 
+#print Equiv.Perm.pow_apply_eq_pow_mod_orderOf_cycleOf_apply /-
 theorem pow_apply_eq_pow_mod_orderOf_cycleOf_apply (f : Perm α) (n : ℕ) (x : α) :
     (f ^ n) x = (f ^ (n % orderOf (cycleOf f x))) x := by
   rw [← cycle_of_pow_apply_self f, ← cycle_of_pow_apply_self f, pow_eq_mod_orderOf]
 #align equiv.perm.pow_apply_eq_pow_mod_order_of_cycle_of_apply Equiv.Perm.pow_apply_eq_pow_mod_orderOf_cycleOf_apply
+-/
 
+/- warning: equiv.perm.cycle_of_mul_of_apply_right_eq_self -> Equiv.Perm.cycleOf_mul_of_apply_right_eq_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Commute.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f g) -> (forall (x : α), (Eq.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g x) x) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g) x) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Commute.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f g) -> (forall (x : α), (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) g x) x) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g) x) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_of_mul_of_apply_right_eq_self Equiv.Perm.cycleOf_mul_of_apply_right_eq_selfₓ'. -/
 theorem cycleOf_mul_of_apply_right_eq_self (h : Commute f g) (x : α) (hx : g x = x) :
     (f * g).cycleOf x = f.cycleOf x := by
   ext y
@@ -1156,6 +1512,12 @@ theorem cycleOf_mul_of_apply_right_eq_self (h : Commute f g) (x : α) (hx : g x 
     simp [h.mul_zpow, zpow_apply_eq_self_of_apply_eq_self hx]
 #align equiv.perm.cycle_of_mul_of_apply_right_eq_self Equiv.Perm.cycleOf_mul_of_apply_right_eq_self
 
+/- warning: equiv.perm.disjoint.cycle_of_mul_distrib -> Equiv.Perm.Disjoint.cycleOf_mul_distrib is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (forall (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g) x) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g x)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (forall (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g) x) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x) (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g x)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.cycle_of_mul_distrib Equiv.Perm.Disjoint.cycleOf_mul_distribₓ'. -/
 theorem Disjoint.cycleOf_mul_distrib (h : f.Disjoint g) (x : α) :
     (f * g).cycleOf x = f.cycleOf x * g.cycleOf x :=
   by
@@ -1164,10 +1526,13 @@ theorem Disjoint.cycleOf_mul_distrib (h : f.Disjoint g) (x : α) :
   · simp [cycle_of_mul_of_apply_right_eq_self h.commute, hgx]
 #align equiv.perm.disjoint.cycle_of_mul_distrib Equiv.Perm.Disjoint.cycleOf_mul_distrib
 
-theorem support_cycleOf_eq_nil_iff : (f.cycleOf x).Support = ∅ ↔ x ∉ f.Support := by simp
+#print Equiv.Perm.support_cycleOf_eq_nil_iff /-
+theorem support_cycleOf_eq_nil_iff : (f.cycleOf x).support = ∅ ↔ x ∉ f.support := by simp
 #align equiv.perm.support_cycle_of_eq_nil_iff Equiv.Perm.support_cycleOf_eq_nil_iff
+-/
 
-theorem support_cycleOf_le (f : Perm α) (x : α) : Support (f.cycleOf x) ≤ Support f :=
+#print Equiv.Perm.support_cycleOf_le /-
+theorem support_cycleOf_le (f : Perm α) (x : α) : support (f.cycleOf x) ≤ support f :=
   by
   intro y hy
   rw [mem_support, cycle_of_apply] at hy
@@ -1175,8 +1540,10 @@ theorem support_cycleOf_le (f : Perm α) (x : α) : Support (f.cycleOf x) ≤ Su
   · exact mem_support.mpr hy
   · exact absurd rfl hy
 #align equiv.perm.support_cycle_of_le Equiv.Perm.support_cycleOf_le
+-/
 
-theorem mem_support_cycleOf_iff : y ∈ Support (f.cycleOf x) ↔ SameCycle f x y ∧ x ∈ Support f :=
+#print Equiv.Perm.mem_support_cycleOf_iff /-
+theorem mem_support_cycleOf_iff : y ∈ support (f.cycleOf x) ↔ SameCycle f x y ∧ x ∈ support f :=
   by
   by_cases hx : f x = x
   · rw [(cycle_of_eq_one_iff _).mpr hx]
@@ -1189,18 +1556,24 @@ theorem mem_support_cycleOf_iff : y ∈ Support (f.cycleOf x) ↔ SameCycle f x 
       simpa using hx
     · simpa [hx] using hy
 #align equiv.perm.mem_support_cycle_of_iff Equiv.Perm.mem_support_cycleOf_iff
+-/
 
-theorem mem_support_cycleOf_iff' (hx : f x ≠ x) : y ∈ Support (f.cycleOf x) ↔ SameCycle f x y := by
+#print Equiv.Perm.mem_support_cycleOf_iff' /-
+theorem mem_support_cycleOf_iff' (hx : f x ≠ x) : y ∈ support (f.cycleOf x) ↔ SameCycle f x y := by
   rw [mem_support_cycle_of_iff, and_iff_left (mem_support.2 hx)]
 #align equiv.perm.mem_support_cycle_of_iff' Equiv.Perm.mem_support_cycleOf_iff'
+-/
 
-theorem SameCycle.mem_support_iff (h : SameCycle f x y) : x ∈ Support f ↔ y ∈ Support f :=
+#print Equiv.Perm.SameCycle.mem_support_iff /-
+theorem SameCycle.mem_support_iff (h : SameCycle f x y) : x ∈ support f ↔ y ∈ support f :=
   ⟨fun hx => support_cycleOf_le f x (mem_support_cycleOf_iff.mpr ⟨h, hx⟩), fun hy =>
     support_cycleOf_le f y (mem_support_cycleOf_iff.mpr ⟨h.symm, hy⟩)⟩
 #align equiv.perm.same_cycle.mem_support_iff Equiv.Perm.SameCycle.mem_support_iff
+-/
 
+#print Equiv.Perm.pow_mod_card_support_cycleOf_self_apply /-
 theorem pow_mod_card_support_cycleOf_self_apply (f : Perm α) (n : ℕ) (x : α) :
-    (f ^ (n % (f.cycleOf x).Support.card)) x = (f ^ n) x :=
+    (f ^ (n % (f.cycleOf x).support.card)) x = (f ^ n) x :=
   by
   by_cases hx : f x = x
   · rw [pow_apply_eq_self_of_apply_eq_self hx, pow_apply_eq_self_of_apply_eq_self hx]
@@ -1208,7 +1581,9 @@ theorem pow_mod_card_support_cycleOf_self_apply (f : Perm α) (n : ℕ) (x : α)
     rw [← cycle_of_pow_apply_self, ← cycle_of_pow_apply_self f, ← (is_cycle_cycle_of f hx).orderOf,
       ← pow_eq_mod_orderOf]
 #align equiv.perm.pow_mod_card_support_cycle_of_self_apply Equiv.Perm.pow_mod_card_support_cycleOf_self_apply
+-/
 
+#print Equiv.Perm.isCycle_cycleOf_iff /-
 /-- `x` is in the support of `f` iff `equiv.perm.cycle_of f x` is a cycle. -/
 theorem isCycle_cycleOf_iff (f : Perm α) : IsCycle (cycleOf f x) ↔ f x ≠ x :=
   by
@@ -1216,29 +1591,35 @@ theorem isCycle_cycleOf_iff (f : Perm α) : IsCycle (cycleOf f x) ↔ f x ≠ x 
   rw [Ne.def, ← cycle_of_eq_one_iff f]
   exact hx.ne_one
 #align equiv.perm.is_cycle_cycle_of_iff Equiv.Perm.isCycle_cycleOf_iff
+-/
 
-theorem isCycleOn_support_cycleOf (f : Perm α) (x : α) : f.IsCycleOn (f.cycleOf x).Support :=
+#print Equiv.Perm.isCycleOn_support_cycleOf /-
+theorem isCycleOn_support_cycleOf (f : Perm α) (x : α) : f.IsCycleOn (f.cycleOf x).support :=
   ⟨f.BijOn <| by simp [mem_support_cycle_of_iff], fun a ha b hb =>
     by
     rw [mem_coe, mem_support_cycle_of_iff] at ha hb
     exact ha.1.symm.trans hb.1⟩
 #align equiv.perm.is_cycle_on_support_cycle_of Equiv.Perm.isCycleOn_support_cycleOf
+-/
 
-theorem SameCycle.exists_pow_eq_of_mem_support (h : SameCycle f x y) (hx : x ∈ f.Support) :
-    ∃ (i : ℕ)(hi' : i < (f.cycleOf x).Support.card), (f ^ i) x = y :=
+#print Equiv.Perm.SameCycle.exists_pow_eq_of_mem_support /-
+theorem SameCycle.exists_pow_eq_of_mem_support (h : SameCycle f x y) (hx : x ∈ f.support) :
+    ∃ (i : ℕ)(hi' : i < (f.cycleOf x).support.card), (f ^ i) x = y :=
   by
   rw [mem_support] at hx
   refine' (f.is_cycle_on_support_cycle_of _).exists_pow_eq _ _ <;>
     rwa [mem_support_cycle_of_iff' hx]
 #align equiv.perm.same_cycle.exists_pow_eq_of_mem_support Equiv.Perm.SameCycle.exists_pow_eq_of_mem_support
+-/
 
+#print Equiv.Perm.SameCycle.exists_pow_eq /-
 theorem SameCycle.exists_pow_eq (f : Perm α) (h : SameCycle f x y) :
-    ∃ (i : ℕ)(hi : 0 < i)(hi' : i ≤ (f.cycleOf x).Support.card + 1), (f ^ i) x = y :=
+    ∃ (i : ℕ)(hi : 0 < i)(hi' : i ≤ (f.cycleOf x).support.card + 1), (f ^ i) x = y :=
   by
   by_cases hx : x ∈ f.support
   · obtain ⟨k, hk, hk'⟩ := h.exists_pow_eq_of_mem_support hx
     cases k
-    · refine' ⟨(f.cycle_of x).Support.card, _, self_le_add_right _ _, _⟩
+    · refine' ⟨(f.cycle_of x).support.card, _, self_le_add_right _ _, _⟩
       · refine' zero_lt_one.trans (one_lt_card_support_of_ne_one _)
         simpa using hx
       · simp only [perm.coe_one, id.def, pow_zero] at hk'
@@ -1251,6 +1632,7 @@ theorem SameCycle.exists_pow_eq (f : Perm α) (h : SameCycle f x y) :
     rw [not_mem_support] at hx
     rw [pow_apply_eq_self_of_apply_eq_self hx, zpow_apply_eq_self_of_apply_eq_self hx]
 #align equiv.perm.same_cycle.exists_pow_eq Equiv.Perm.SameCycle.exists_pow_eq
+-/
 
 end CycleOf
 
@@ -1261,15 +1643,10 @@ end CycleOf
 
 variable [DecidableEq α]
 
-/- warning: equiv.perm.cycle_factors_aux -> Equiv.Perm.cycleFactorsAux is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (f : Equiv.Perm.{succ u1} α), (forall {x : α}, (Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f x) x) -> (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l)) -> (Subtype.{succ u1} (List.{u1} (Equiv.Perm.{succ u1} α)) (fun (l : List.{u1} (Equiv.Perm.{succ u1} α)) => And (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) f) (And (forall (g : Equiv.Perm.{succ u1} α), (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) g l) -> (Equiv.Perm.IsCycle.{u1} α g)) (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l))))
-but is expected to have type
-  PUnit.{succ (succ u1)}
-Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_aux Equiv.Perm.cycleFactorsAuxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Equiv.Perm.cycleFactorsAux /-
 /-- Given a list `l : list α` and a permutation `f : perm α` whose nonfixed points are all in `l`,
   recursively factors `f` into cycles. -/
 def cycleFactorsAux [Fintype α] :
@@ -1323,7 +1700,9 @@ def cycleFactorsAux [Fintype α] :
                     inv_eq_iff_eq, eq_comm],
             hm₃⟩⟩
 #align equiv.perm.cycle_factors_aux Equiv.Perm.cycleFactorsAux
+-/
 
+#print Equiv.Perm.mem_list_cycles_iff /-
 theorem mem_list_cycles_iff {α : Type _} [Finite α] {l : List (Perm α)}
     (h1 : ∀ σ : Perm α, σ ∈ l → σ.IsCycle) (h2 : l.Pairwise Disjoint) {σ : Perm α} :
     σ ∈ l ↔ σ.IsCycle ∧ ∀ (a : α) (h4 : σ a ≠ a), σ a = l.Prod a :=
@@ -1353,7 +1732,14 @@ theorem mem_list_cycles_iff {α : Type _} [Finite α] {l : List (Perm α)}
       refine' h3.eq_on_support_inter_nonempty_congr (h1 _ hτ) key _ ha
       exact key a (mem_inter_of_mem ha hτa)
 #align equiv.perm.mem_list_cycles_iff Equiv.Perm.mem_list_cycles_iff
+-/
 
+/- warning: equiv.perm.list_cycles_perm_list_cycles -> Equiv.Perm.list_cycles_perm_list_cycles is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_2 : Finite.{succ u1} α] {l₁ : List.{u1} (Equiv.Perm.{succ u1} α)} {l₂ : List.{u1} (Equiv.Perm.{succ u1} α)}, (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l₁) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l₂)) -> (forall (σ : Equiv.Perm.{succ u1} α), (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) σ l₁) -> (Equiv.Perm.IsCycle.{u1} α σ)) -> (forall (σ : Equiv.Perm.{succ u1} α), (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) σ l₂) -> (Equiv.Perm.IsCycle.{u1} α σ)) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l₁) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l₂) -> (List.Perm.{u1} (Equiv.Perm.{succ u1} α) l₁ l₂)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_2 : Finite.{succ u1} α] {l₁ : List.{u1} (Equiv.Perm.{succ u1} α)} {l₂ : List.{u1} (Equiv.Perm.{succ u1} α)}, (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l₁) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l₂)) -> (forall (σ : Equiv.Perm.{succ u1} α), (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) σ l₁) -> (Equiv.Perm.IsCycle.{u1} α σ)) -> (forall (σ : Equiv.Perm.{succ u1} α), (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) σ l₂) -> (Equiv.Perm.IsCycle.{u1} α σ)) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l₁) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l₂) -> (List.Perm.{u1} (Equiv.Perm.{succ u1} α) l₁ l₂)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.list_cycles_perm_list_cycles Equiv.Perm.list_cycles_perm_list_cyclesₓ'. -/
 theorem list_cycles_perm_list_cycles {α : Type _} [Finite α] {l₁ l₂ : List (Perm α)}
     (h₀ : l₁.Prod = l₂.Prod) (h₁l₁ : ∀ σ : Perm α, σ ∈ l₁ → σ.IsCycle)
     (h₁l₂ : ∀ σ : Perm α, σ ∈ l₂ → σ.IsCycle) (h₂l₁ : l₁.Pairwise Disjoint)
@@ -1369,12 +1755,24 @@ theorem list_cycles_perm_list_cycles {α : Type _} [Finite α] {l₁ l₂ : List
     · exact iff_of_false (mt (h₁l₁ σ) hσ) (mt (h₁l₂ σ) hσ)
 #align equiv.perm.list_cycles_perm_list_cycles Equiv.Perm.list_cycles_perm_list_cycles
 
+/- warning: equiv.perm.cycle_factors -> Equiv.Perm.cycleFactors is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] [_inst_3 : LinearOrder.{u1} α] (f : Equiv.Perm.{succ u1} α), Subtype.{succ u1} (List.{u1} (Equiv.Perm.{succ u1} α)) (fun (l : List.{u1} (Equiv.Perm.{succ u1} α)) => And (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) f) (And (forall (g : Equiv.Perm.{succ u1} α), (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) g l) -> (Equiv.Perm.IsCycle.{u1} α g)) (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] [_inst_3 : LinearOrder.{u1} α] (f : Equiv.Perm.{succ u1} α), Subtype.{succ u1} (List.{u1} (Equiv.Perm.{succ u1} α)) (fun (l : List.{u1} (Equiv.Perm.{succ u1} α)) => And (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) f) (And (forall (g : Equiv.Perm.{succ u1} α), (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) g l) -> (Equiv.Perm.IsCycle.{u1} α g)) (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors Equiv.Perm.cycleFactorsₓ'. -/
 /-- Factors a permutation `f` into a list of disjoint cyclic permutations that multiply to `f`. -/
 def cycleFactors [Fintype α] [LinearOrder α] (f : Perm α) :
     { l : List (Perm α) // l.Prod = f ∧ (∀ g ∈ l, IsCycle g) ∧ l.Pairwise Disjoint } :=
   cycleFactorsAux (univ.sort (· ≤ ·)) f fun _ _ => (mem_sort _).2 (mem_univ _)
 #align equiv.perm.cycle_factors Equiv.Perm.cycleFactors
 
+/- warning: equiv.perm.trunc_cycle_factors -> Equiv.Perm.truncCycleFactors is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α), Trunc.{succ u1} (Subtype.{succ u1} (List.{u1} (Equiv.Perm.{succ u1} α)) (fun (l : List.{u1} (Equiv.Perm.{succ u1} α)) => And (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) f) (And (forall (g : Equiv.Perm.{succ u1} α), (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) g l) -> (Equiv.Perm.IsCycle.{u1} α g)) (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α), Trunc.{succ u1} (Subtype.{succ u1} (List.{u1} (Equiv.Perm.{succ u1} α)) (fun (l : List.{u1} (Equiv.Perm.{succ u1} α)) => And (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) f) (And (forall (g : Equiv.Perm.{succ u1} α), (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) g l) -> (Equiv.Perm.IsCycle.{u1} α g)) (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.trunc_cycle_factors Equiv.Perm.truncCycleFactorsₓ'. -/
 /-- Factors a permutation `f` into a list of disjoint cyclic permutations that multiply to `f`,
   without a linear order. -/
 def truncCycleFactors [Fintype α] (f : Perm α) :
@@ -1387,6 +1785,7 @@ section CycleFactorsFinset
 
 variable [Fintype α] (f : Perm α)
 
+#print Equiv.Perm.cycleFactorsFinset /-
 /-- Factors a permutation `f` into a `finset` of disjoint cyclic permutations that multiply to `f`.
 -/
 def cycleFactorsFinset : Finset (Perm α) :=
@@ -1398,7 +1797,14 @@ def cycleFactorsFinset : Finset (Perm α) :=
       (list_cycles_perm_list_cycles (hl'.left.symm ▸ hl.left) hl.right.left hl'.right.left
         hl.right.right hl'.right.right)
 #align equiv.perm.cycle_factors_finset Equiv.Perm.cycleFactorsFinset
+-/
 
+/- warning: equiv.perm.cycle_factors_finset_eq_list_to_finset -> Equiv.Perm.cycleFactorsFinset_eq_list_toFinset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Nodup.{u1} (Equiv.Perm.{succ u1} α) l) -> (Iff (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ) (List.toFinset.{u1} (Equiv.Perm.{succ u1} α) (fun (a : Equiv.Perm.{succ u1} α) (b : Equiv.Perm.{succ u1} α) => Fintype.decidableEqEquivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 a b) l)) (And (forall (f : Equiv.Perm.{succ u1} α), (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (Equiv.Perm.IsCycle.{u1} α f)) (And (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) σ))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Nodup.{u1} (Equiv.Perm.{succ u1} α) l) -> (Iff (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ) (List.toFinset.{u1} (Equiv.Perm.{succ u1} α) (fun (a : Equiv.Perm.{succ u1} α) (b : Equiv.Perm.{succ u1} α) => Fintype.decidableEqEquivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 a b) l)) (And (forall (f : Equiv.Perm.{succ u1} α), (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (Equiv.Perm.IsCycle.{u1} α f)) (And (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l) σ))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_finset_eq_list_to_finset Equiv.Perm.cycleFactorsFinset_eq_list_toFinsetₓ'. -/
 theorem cycleFactorsFinset_eq_list_toFinset {σ : Perm α} {l : List (Perm α)} (hn : l.Nodup) :
     σ.cycleFactorsFinset = l.toFinset ↔
       (∀ f : Perm α, f ∈ l → f.IsCycle) ∧ l.Pairwise Disjoint ∧ l.Prod = σ :=
@@ -1423,6 +1829,7 @@ theorem cycleFactorsFinset_eq_list_toFinset {σ : Perm α} {l : List (Perm α)} 
     rw [hp, hp']
 #align equiv.perm.cycle_factors_finset_eq_list_to_finset Equiv.Perm.cycleFactorsFinset_eq_list_toFinset
 
+#print Equiv.Perm.cycleFactorsFinset_eq_finset /-
 theorem cycleFactorsFinset_eq_finset {σ : Perm α} {s : Finset (Perm α)} :
     σ.cycleFactorsFinset = s ↔
       (∀ f : Perm α, f ∈ s → f.IsCycle) ∧
@@ -1432,16 +1839,31 @@ theorem cycleFactorsFinset_eq_finset {σ : Perm α} {s : Finset (Perm α)} :
   obtain ⟨l, hl, rfl⟩ := s.exists_list_nodup_eq
   simp [cycle_factors_finset_eq_list_to_finset, hl]
 #align equiv.perm.cycle_factors_finset_eq_finset Equiv.Perm.cycleFactorsFinset_eq_finset
+-/
 
+#print Equiv.Perm.cycleFactorsFinset_pairwise_disjoint /-
 theorem cycleFactorsFinset_pairwise_disjoint :
     (cycleFactorsFinset f : Set (Perm α)).Pairwise Disjoint :=
   (cycleFactorsFinset_eq_finset.mp rfl).2.some
 #align equiv.perm.cycle_factors_finset_pairwise_disjoint Equiv.Perm.cycleFactorsFinset_pairwise_disjoint
+-/
 
+/- warning: equiv.perm.cycle_factors_finset_mem_commute -> Equiv.Perm.cycleFactorsFinset_mem_commute is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α), Set.Pairwise.{u1} (Equiv.Perm.{succ u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Finset.Set.hasCoeT.{u1} (Equiv.Perm.{succ u1} α)))) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Commute.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α), Set.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Finset.toSet.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Commute.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_finset_mem_commute Equiv.Perm.cycleFactorsFinset_mem_commuteₓ'. -/
 theorem cycleFactorsFinset_mem_commute : (cycleFactorsFinset f : Set (Perm α)).Pairwise Commute :=
   (cycleFactorsFinset_pairwise_disjoint _).mono' fun _ _ => Disjoint.commute
 #align equiv.perm.cycle_factors_finset_mem_commute Equiv.Perm.cycleFactorsFinset_mem_commute
 
+/- warning: equiv.perm.cycle_factors_finset_noncomm_prod -> Equiv.Perm.cycleFactorsFinset_noncommProd is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (comm : optParam.{0} (Set.Pairwise.{u1} (Equiv.Perm.{succ u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Finset.Set.hasCoeT.{u1} (Equiv.Perm.{succ u1} α)))) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Commute.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) (Equiv.Perm.cycleFactorsFinset_mem_commute.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Finset.noncommProd.{u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (id.{succ u1} (Equiv.Perm.{succ u1} α)) comm) f
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (comm : optParam.{0} (Set.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Finset.toSet.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Commute.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))) (Equiv.Perm.cycleFactorsFinset_mem_commute.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Finset.noncommProd.{u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (id.{succ u1} (Equiv.Perm.{succ u1} α)) comm) f
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_finset_noncomm_prod Equiv.Perm.cycleFactorsFinset_noncommProdₓ'. -/
 /-- The product of cycle factors is equal to the original `f : perm α`. -/
 theorem cycleFactorsFinset_noncommProd
     (comm : (cycleFactorsFinset f : Set (Perm α)).Pairwise Commute :=
@@ -1450,8 +1872,9 @@ theorem cycleFactorsFinset_noncommProd
   (cycleFactorsFinset_eq_finset.mp rfl).2.choose_spec
 #align equiv.perm.cycle_factors_finset_noncomm_prod Equiv.Perm.cycleFactorsFinset_noncommProd
 
+#print Equiv.Perm.mem_cycleFactorsFinset_iff /-
 theorem mem_cycleFactorsFinset_iff {f p : Perm α} :
-    p ∈ cycleFactorsFinset f ↔ p.IsCycle ∧ ∀ a ∈ p.Support, p a = f a :=
+    p ∈ cycleFactorsFinset f ↔ p.IsCycle ∧ ∀ a ∈ p.support, p a = f a :=
   by
   obtain ⟨l, hl, hl'⟩ := f.cycle_factors_finset.exists_list_nodup_eq
   rw [← hl']
@@ -1459,9 +1882,11 @@ theorem mem_cycleFactorsFinset_iff {f p : Perm α} :
   simpa [List.mem_toFinset, Ne.def, ← hl'.right.right] using
     mem_list_cycles_iff hl'.left hl'.right.left
 #align equiv.perm.mem_cycle_factors_finset_iff Equiv.Perm.mem_cycleFactorsFinset_iff
+-/
 
+#print Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff /-
 theorem cycleOf_mem_cycleFactorsFinset_iff {f : Perm α} {x : α} :
-    cycleOf f x ∈ cycleFactorsFinset f ↔ x ∈ f.Support :=
+    cycleOf f x ∈ cycleFactorsFinset f ↔ x ∈ f.support :=
   by
   rw [mem_cycle_factors_finset_iff]
   constructor
@@ -1479,33 +1904,53 @@ theorem cycleOf_mem_cycleFactorsFinset_iff {f : Perm α} {x : α} :
     · rw [cycle_of_apply_of_not_same_cycle H] at hy
       contradiction
 #align equiv.perm.cycle_of_mem_cycle_factors_finset_iff Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff
+-/
 
+#print Equiv.Perm.mem_cycleFactorsFinset_support_le /-
 theorem mem_cycleFactorsFinset_support_le {p f : Perm α} (h : p ∈ cycleFactorsFinset f) :
-    p.Support ≤ f.Support := by
+    p.support ≤ f.support := by
   rw [mem_cycle_factors_finset_iff] at h
   intro x hx
   rwa [mem_support, ← h.right x hx, ← mem_support]
 #align equiv.perm.mem_cycle_factors_finset_support_le Equiv.Perm.mem_cycleFactorsFinset_support_le
+-/
 
+/- warning: equiv.perm.cycle_factors_finset_eq_empty_iff -> Equiv.Perm.cycleFactorsFinset_eq_empty_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasEmptyc.{u1} (Equiv.Perm.{succ u1} α)))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instEmptyCollectionFinset.{u1} (Equiv.Perm.{succ u1} α)))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_finset_eq_empty_iff Equiv.Perm.cycleFactorsFinset_eq_empty_iffₓ'. -/
 theorem cycleFactorsFinset_eq_empty_iff {f : Perm α} : cycleFactorsFinset f = ∅ ↔ f = 1 := by
   simpa [cycle_factors_finset_eq_finset] using eq_comm
 #align equiv.perm.cycle_factors_finset_eq_empty_iff Equiv.Perm.cycleFactorsFinset_eq_empty_iff
 
+/- warning: equiv.perm.cycle_factors_finset_one -> Equiv.Perm.cycleFactorsFinset_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasEmptyc.{u1} (Equiv.Perm.{succ u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instEmptyCollectionFinset.{u1} (Equiv.Perm.{succ u1} α)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_finset_one Equiv.Perm.cycleFactorsFinset_oneₓ'. -/
 @[simp]
 theorem cycleFactorsFinset_one : cycleFactorsFinset (1 : Perm α) = ∅ := by
   simp [cycle_factors_finset_eq_empty_iff]
 #align equiv.perm.cycle_factors_finset_one Equiv.Perm.cycleFactorsFinset_one
 
+#print Equiv.Perm.cycleFactorsFinset_eq_singleton_self_iff /-
 @[simp]
 theorem cycleFactorsFinset_eq_singleton_self_iff {f : Perm α} :
     f.cycleFactorsFinset = {f} ↔ f.IsCycle := by simp [cycle_factors_finset_eq_finset]
 #align equiv.perm.cycle_factors_finset_eq_singleton_self_iff Equiv.Perm.cycleFactorsFinset_eq_singleton_self_iff
+-/
 
+#print Equiv.Perm.IsCycle.cycleFactorsFinset_eq_singleton /-
 theorem IsCycle.cycleFactorsFinset_eq_singleton {f : Perm α} (hf : IsCycle f) :
     f.cycleFactorsFinset = {f} :=
   cycleFactorsFinset_eq_singleton_self_iff.mpr hf
 #align equiv.perm.is_cycle.cycle_factors_finset_eq_singleton Equiv.Perm.IsCycle.cycleFactorsFinset_eq_singleton
+-/
 
+#print Equiv.Perm.cycleFactorsFinset_eq_singleton_iff /-
 theorem cycleFactorsFinset_eq_singleton_iff {f g : Perm α} :
     f.cycleFactorsFinset = {g} ↔ f.IsCycle ∧ f = g :=
   by
@@ -1513,7 +1958,9 @@ theorem cycleFactorsFinset_eq_singleton_iff {f g : Perm α} :
   rintro rfl
   exact Iff.rfl
 #align equiv.perm.cycle_factors_finset_eq_singleton_iff Equiv.Perm.cycleFactorsFinset_eq_singleton_iff
+-/
 
+#print Equiv.Perm.cycleFactorsFinset_injective /-
 /-- Two permutations `f g : perm α` have the same cycle factors iff they are the same. -/
 theorem cycleFactorsFinset_injective : Function.Injective (@cycleFactorsFinset α _ _) :=
   by
@@ -1521,7 +1968,14 @@ theorem cycleFactorsFinset_injective : Function.Injective (@cycleFactorsFinset �
   rw [← cycle_factors_finset_noncomm_prod f]
   simpa [h] using cycle_factors_finset_noncomm_prod g
 #align equiv.perm.cycle_factors_finset_injective Equiv.Perm.cycleFactorsFinset_injective
+-/
 
+/- warning: equiv.perm.disjoint.disjoint_cycle_factors_finset -> Equiv.Perm.Disjoint.disjoint_cycleFactorsFinset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Disjoint.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.partialOrder.{u1} (Equiv.Perm.{succ u1} α)) (Finset.orderBot.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Disjoint.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.partialOrder.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.disjoint_cycle_factors_finset Equiv.Perm.Disjoint.disjoint_cycleFactorsFinsetₓ'. -/
 theorem Disjoint.disjoint_cycleFactorsFinset {f g : Perm α} (h : Disjoint f g) :
     Disjoint (cycleFactorsFinset f) (cycleFactorsFinset g) :=
   by
@@ -1534,6 +1988,12 @@ theorem Disjoint.disjoint_cycleFactorsFinset {f g : Perm α} (h : Disjoint f g) 
   simp [ha, ← hf a ha, ← hg a ha]
 #align equiv.perm.disjoint.disjoint_cycle_factors_finset Equiv.Perm.Disjoint.disjoint_cycleFactorsFinset
 
+/- warning: equiv.perm.disjoint.cycle_factors_finset_mul_eq_union -> Equiv.Perm.Disjoint.cycleFactorsFinset_mul_eq_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Union.union.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasUnion.{u1} (Equiv.Perm.{succ u1} α) (fun (a : Equiv.Perm.{succ u1} α) (b : Equiv.Perm.{succ u1} α) => Fintype.decidableEqEquivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 a b)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Union.union.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instUnionFinset.{u1} (Equiv.Perm.{succ u1} α) (fun (a : Equiv.Perm.{succ u1} α) (b : Equiv.Perm.{succ u1} α) => Fintype.decidableEqEquivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 a b)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.cycle_factors_finset_mul_eq_union Equiv.Perm.Disjoint.cycleFactorsFinset_mul_eq_unionₓ'. -/
 theorem Disjoint.cycleFactorsFinset_mul_eq_union {f g : Perm α} (h : Disjoint f g) :
     cycleFactorsFinset (f * g) = cycleFactorsFinset f ∪ cycleFactorsFinset g :=
   by
@@ -1549,6 +2009,12 @@ theorem Disjoint.cycleFactorsFinset_mul_eq_union {f g : Perm α} (h : Disjoint f
     rw [cycle_factors_finset_noncomm_prod, cycle_factors_finset_noncomm_prod]
 #align equiv.perm.disjoint.cycle_factors_finset_mul_eq_union Equiv.Perm.Disjoint.cycleFactorsFinset_mul_eq_union
 
+/- warning: equiv.perm.disjoint_mul_inv_of_mem_cycle_factors_finset -> Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)) -> (Equiv.Perm.Disjoint.{u1} α (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f)) f)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instMembershipFinset.{u1} (Equiv.Perm.{succ u1} α)) f (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)) -> (Equiv.Perm.Disjoint.{u1} α (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f)) f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint_mul_inv_of_mem_cycle_factors_finset Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinsetₓ'. -/
 theorem disjoint_mul_inv_of_mem_cycleFactorsFinset {f g : Perm α} (h : f ∈ cycleFactorsFinset g) :
     Disjoint (g * f⁻¹) f := by
   rw [mem_cycle_factors_finset_iff] at h
@@ -1560,8 +2026,9 @@ theorem disjoint_mul_inv_of_mem_cycleFactorsFinset {f g : Perm α} (h : f ∈ cy
     rwa [← support_inv, apply_mem_support, support_inv, mem_support]
 #align equiv.perm.disjoint_mul_inv_of_mem_cycle_factors_finset Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset
 
+#print Equiv.Perm.cycle_is_cycleOf /-
 /-- If c is a cycle, a ∈ c.support and c is a cycle of f, then `c = f.cycle_of a` -/
-theorem cycle_is_cycleOf {f c : Equiv.Perm α} {a : α} (ha : a ∈ c.Support)
+theorem cycle_is_cycleOf {f c : Equiv.Perm α} {a : α} (ha : a ∈ c.support)
     (hc : c ∈ f.cycleFactorsFinset) : c = f.cycleOf a :=
   by
   suffices f.cycle_of a = c.cycle_of a by
@@ -1579,9 +2046,16 @@ theorem cycle_is_cycleOf {f c : Equiv.Perm α} {a : α} (ha : a ∈ c.Support)
     equiv.perm.not_mem_support.mp
       (finset.disjoint_left.mp (Equiv.Perm.Disjoint.disjoint_support hfc) ha)
 #align equiv.perm.cycle_is_cycle_of Equiv.Perm.cycle_is_cycleOf
+-/
 
 end CycleFactorsFinset
 
+/- warning: equiv.perm.cycle_induction_on -> Equiv.Perm.cycle_induction_on is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_2 : Finite.{succ u1} β] (P : (Equiv.Perm.{succ u1} β) -> Prop) (σ : Equiv.Perm.{succ u1} β), (P (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} β) 1 (One.one.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))))))) -> (forall (σ : Equiv.Perm.{succ u1} β), (Equiv.Perm.IsCycle.{u1} β σ) -> (P σ)) -> (forall (σ : Equiv.Perm.{succ u1} β) (τ : Equiv.Perm.{succ u1} β), (Equiv.Perm.Disjoint.{u1} β σ τ) -> (Equiv.Perm.IsCycle.{u1} β σ) -> (P σ) -> (P τ) -> (P (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.{succ u1} β) (Equiv.Perm.{succ u1} β) (instHMul.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))) σ τ))) -> (P σ)
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_2 : Finite.{succ u1} β] (P : (Equiv.Perm.{succ u1} β) -> Prop) (σ : Equiv.Perm.{succ u1} β), (P (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} β) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} β) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} β) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))))) -> (forall (σ : Equiv.Perm.{succ u1} β), (Equiv.Perm.IsCycle.{u1} β σ) -> (P σ)) -> (forall (σ : Equiv.Perm.{succ u1} β) (τ : Equiv.Perm.{succ u1} β), (Equiv.Perm.Disjoint.{u1} β σ τ) -> (Equiv.Perm.IsCycle.{u1} β σ) -> (P σ) -> (P τ) -> (P (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.{succ u1} β) (Equiv.Perm.{succ u1} β) (instHMul.{u1} (Equiv.Perm.{succ u1} β) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))))) σ τ))) -> (P σ)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_induction_on Equiv.Perm.cycle_induction_onₓ'. -/
 @[elab_as_elim]
 theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (base_one : P 1)
     (base_cycles : ∀ σ : Perm β, σ.IsCycle → P σ)
@@ -1604,6 +2078,12 @@ theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (ba
         (ih (fun τ hτ => h1 τ (List.mem_cons_of_mem σ hτ)) h2.of_cons)
 #align equiv.perm.cycle_induction_on Equiv.Perm.cycle_induction_on
 
+/- warning: equiv.perm.cycle_factors_finset_mul_inv_mem_eq_sdiff -> Equiv.Perm.cycleFactorsFinset_mul_inv_mem_eq_sdiff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)) -> (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f))) (SDiff.sdiff.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasSdiff.{u1} (Equiv.Perm.{succ u1} α) (fun (a : Equiv.Perm.{succ u1} α) (b : Equiv.Perm.{succ u1} α) => Fintype.decidableEqEquivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 a b)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g) (Singleton.singleton.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasSingleton.{u1} (Equiv.Perm.{succ u1} α)) f)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instMembershipFinset.{u1} (Equiv.Perm.{succ u1} α)) f (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)) -> (Eq.{succ u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f))) (SDiff.sdiff.{u1} (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instSDiffFinset.{u1} (Equiv.Perm.{succ u1} α) (fun (a : Equiv.Perm.{succ u1} α) (b : Equiv.Perm.{succ u1} α) => Fintype.decidableEqEquivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 a b)) (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g) (Singleton.singleton.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instSingletonFinset.{u1} (Equiv.Perm.{succ u1} α)) f)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.cycle_factors_finset_mul_inv_mem_eq_sdiff Equiv.Perm.cycleFactorsFinset_mul_inv_mem_eq_sdiffₓ'. -/
 theorem cycleFactorsFinset_mul_inv_mem_eq_sdiff [Fintype α] {f g : Perm α}
     (h : f ∈ cycleFactorsFinset g) : cycleFactorsFinset (g * f⁻¹) = cycleFactorsFinset g \ {f} :=
   by
@@ -1653,6 +2133,12 @@ variable [Finite β]
 
 open Subgroup
 
+/- warning: equiv.perm.closure_is_cycle -> Equiv.Perm.closure_isCycle is a dubious translation:
+lean 3 declaration is
+  forall {β : Type.{u1}} [_inst_2 : Finite.{succ u1} β], Eq.{succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)) (Subgroup.closure.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β) (setOf.{u1} (Equiv.Perm.{succ u1} β) (fun (σ : Equiv.Perm.{succ u1} β) => Equiv.Perm.IsCycle.{u1} β σ))) (Top.top.{u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)) (Subgroup.hasTop.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))
+but is expected to have type
+  forall {β : Type.{u1}} [_inst_2 : Finite.{succ u1} β], Eq.{succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)) (Subgroup.closure.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β) (setOf.{u1} (Equiv.Perm.{succ u1} β) (fun (σ : Equiv.Perm.{succ u1} β) => Equiv.Perm.IsCycle.{u1} β σ))) (Top.top.{u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)) (Subgroup.instTopSubgroup.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.closure_is_cycle Equiv.Perm.closure_isCycleₓ'. -/
 theorem closure_isCycle : closure { σ : Perm β | IsCycle σ } = ⊤ := by
   classical
     cases nonempty_fintype β
@@ -1662,7 +2148,13 @@ theorem closure_isCycle : closure { σ : Perm β | IsCycle σ } = ⊤ := by
 
 variable [Fintype α]
 
-theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.Support = ⊤) (x : α) :
+/- warning: equiv.perm.closure_cycle_adjacent_swap -> Equiv.Perm.closure_cycle_adjacent_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α σ) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_3 σ) (Top.top.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasTop.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_3 (fun (a : α) (b : α) => _inst_1 a b))))) -> (forall (x : α), Eq.{succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.closure.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) (Insert.insert.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.hasInsert.{u1} (Equiv.Perm.{succ u1} α)) σ (Singleton.singleton.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.hasSingleton.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x))))) (Top.top.{u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.hasTop.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, (Equiv.Perm.IsCycle.{u1} α σ) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_3 σ) (Top.top.{u1} (Finset.{u1} α) (BooleanAlgebra.toTop.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_3 (fun (a : α) (b : α) => _inst_1 a b))))) -> (forall (x : α), Eq.{succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.closure.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) (Insert.insert.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.instInsertSet.{u1} (Equiv.Perm.{succ u1} α)) σ (Singleton.singleton.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.instSingletonSet.{u1} (Equiv.Perm.{succ u1} α)) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x))))) (Top.top.{u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.instTopSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.closure_cycle_adjacent_swap Equiv.Perm.closure_cycle_adjacent_swapₓ'. -/
+theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.support = ⊤) (x : α) :
     closure ({σ, swap x (σ x)} : Set (Perm α)) = ⊤ :=
   by
   let H := closure ({σ, swap x (σ x)} : Set (perm α))
@@ -1715,13 +2207,14 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.Su
   exact step4 y z
 #align equiv.perm.closure_cycle_adjacent_swap Equiv.Perm.closure_cycle_adjacent_swap
 
+#print Equiv.Perm.closure_cycle_coprime_swap /-
 theorem closure_cycle_coprime_swap {n : ℕ} {σ : Perm α} (h0 : Nat.coprime n (Fintype.card α))
-    (h1 : IsCycle σ) (h2 : σ.Support = Finset.univ) (x : α) :
+    (h1 : IsCycle σ) (h2 : σ.support = Finset.univ) (x : α) :
     closure ({σ, swap x ((σ ^ n) x)} : Set (Perm α)) = ⊤ :=
   by
   rw [← Finset.card_univ, ← h2, ← h1.order_of] at h0
   cases' exists_pow_eq_self_of_coprime h0 with m hm
-  have h2' : (σ ^ n).Support = ⊤ := Eq.trans (support_pow_coprime h0) h2
+  have h2' : (σ ^ n).support = ⊤ := Eq.trans (support_pow_coprime h0) h2
   have h1' : is_cycle ((σ ^ n) ^ (m : ℤ)) := by rwa [← hm] at h1
   replace h1' : is_cycle (σ ^ n) :=
     h1'.of_pow (le_trans (support_pow_le σ n) (ge_of_eq (congr_arg support hm)))
@@ -1730,9 +2223,16 @@ theorem closure_cycle_coprime_swap {n : ℕ} {σ : Perm α} (h0 : Nat.coprime n 
     ⟨Subgroup.pow_mem (closure _) (subset_closure (Set.mem_insert σ _)) n,
       set.singleton_subset_iff.mpr (subset_closure (Set.mem_insert_of_mem _ (Set.mem_singleton _)))⟩
 #align equiv.perm.closure_cycle_coprime_swap Equiv.Perm.closure_cycle_coprime_swap
+-/
 
+/- warning: equiv.perm.closure_prime_cycle_swap -> Equiv.Perm.closure_prime_cycle_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α}, (Nat.Prime (Fintype.card.{u1} α _inst_3)) -> (Equiv.Perm.IsCycle.{u1} α σ) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_3 σ) (Finset.univ.{u1} α _inst_3)) -> (Equiv.Perm.IsSwap.{u1} α (fun (a : α) (b : α) => _inst_1 a b) τ) -> (Eq.{succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.closure.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) (Insert.insert.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.hasInsert.{u1} (Equiv.Perm.{succ u1} α)) σ (Singleton.singleton.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.hasSingleton.{u1} (Equiv.Perm.{succ u1} α)) τ))) (Top.top.{u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.hasTop.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α}, (Nat.Prime (Fintype.card.{u1} α _inst_3)) -> (Equiv.Perm.IsCycle.{u1} α σ) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_3 σ) (Finset.univ.{u1} α _inst_3)) -> (Equiv.Perm.IsSwap.{u1} α (fun (a : α) (b : α) => _inst_1 a b) τ) -> (Eq.{succ u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.closure.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α) (Insert.insert.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.instInsertSet.{u1} (Equiv.Perm.{succ u1} α)) σ (Singleton.singleton.{u1, u1} (Equiv.Perm.{succ u1} α) (Set.{u1} (Equiv.Perm.{succ u1} α)) (Set.instSingletonSet.{u1} (Equiv.Perm.{succ u1} α)) τ))) (Top.top.{u1} (Subgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)) (Subgroup.instTopSubgroup.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.closure_prime_cycle_swap Equiv.Perm.closure_prime_cycle_swapₓ'. -/
 theorem closure_prime_cycle_swap {σ τ : Perm α} (h0 : (Fintype.card α).Prime) (h1 : IsCycle σ)
-    (h2 : σ.Support = Finset.univ) (h3 : IsSwap τ) : closure ({σ, τ} : Set (Perm α)) = ⊤ :=
+    (h2 : σ.support = Finset.univ) (h3 : IsSwap τ) : closure ({σ, τ} : Set (Perm α)) = ⊤ :=
   by
   obtain ⟨x, y, h4, h5⟩ := h3
   obtain ⟨i, hi⟩ :=
@@ -1754,10 +2254,11 @@ variable [Fintype α] {σ τ : Perm α}
 
 noncomputable section
 
+#print Equiv.Perm.isConj_of_support_equiv /-
 theorem isConj_of_support_equiv
-    (f : { x // x ∈ (σ.Support : Set α) } ≃ { x // x ∈ (τ.Support : Set α) })
+    (f : { x // x ∈ (σ.support : Set α) } ≃ { x // x ∈ (τ.support : Set α) })
     (hf :
-      ∀ (x : α) (hx : x ∈ (σ.Support : Set α)),
+      ∀ (x : α) (hx : x ∈ (σ.support : Set α)),
         (f ⟨σ x, apply_mem_support.2 hx⟩ : α) = τ ↑(f ⟨x, hx⟩)) :
     IsConj σ τ := by
   refine' isConj_iff.2 ⟨Equiv.extendSubtype f, _⟩
@@ -1771,8 +2272,10 @@ theorem isConj_of_support_equiv
     rwa [Classical.not_not.1 ((not_congr mem_support).1 (Equiv.extendSubtype_not_mem f _ _)),
       Classical.not_not.1 ((not_congr mem_support).mp hx)]
 #align equiv.perm.is_conj_of_support_equiv Equiv.Perm.isConj_of_support_equiv
+-/
 
-theorem IsCycle.isConj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.Support.card = τ.Support.card) :
+#print Equiv.Perm.IsCycle.isConj /-
+theorem IsCycle.isConj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.support.card = τ.support.card) :
     IsConj σ τ :=
   by
   refine'
@@ -1791,9 +2294,11 @@ theorem IsCycle.isConj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.Support.car
     zpowersEquivZpowers_apply]
   rw [pow_succ, perm.mul_apply]
 #align equiv.perm.is_cycle.is_conj Equiv.Perm.IsCycle.isConj
+-/
 
+#print Equiv.Perm.IsCycle.isConj_iff /-
 theorem IsCycle.isConj_iff (hσ : IsCycle σ) (hτ : IsCycle τ) :
-    IsConj σ τ ↔ σ.Support.card = τ.Support.card :=
+    IsConj σ τ ↔ σ.support.card = τ.support.card :=
   ⟨by
     intro h
     obtain ⟨π, rfl⟩ := isConj_iff.1 h
@@ -1807,20 +2312,39 @@ theorem IsCycle.isConj_iff (hσ : IsCycle σ) (hτ : IsCycle τ) :
       rw [mem_support, Classical.not_not, perm.mul_apply, perm.mul_apply, hb, perm.apply_inv_self],
     hσ.IsConj hτ⟩
 #align equiv.perm.is_cycle.is_conj_iff Equiv.Perm.IsCycle.isConj_iff
+-/
 
+/- warning: equiv.perm.support_conj -> Equiv.Perm.support_conj is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α}, Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ τ) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) σ))) (Finset.map.{u1, u1} α α (Equiv.toEmbedding.{succ u1, succ u1} α α σ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 τ))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α}, Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ τ) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ))) (Finset.map.{u1, u1} α α (Equiv.toEmbedding.{succ u1, succ u1} α α σ) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 τ))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.support_conj Equiv.Perm.support_conjₓ'. -/
 @[simp]
-theorem support_conj : (σ * τ * σ⁻¹).Support = τ.Support.map σ.toEmbedding :=
+theorem support_conj : (σ * τ * σ⁻¹).support = τ.support.map σ.toEmbedding :=
   by
   ext
   simp only [mem_map_equiv, perm.coe_mul, comp_app, Ne.def, perm.mem_support, Equiv.eq_symm_apply]
   rfl
 #align equiv.perm.support_conj Equiv.Perm.support_conj
 
-theorem card_support_conj : (σ * τ * σ⁻¹).Support.card = τ.Support.card := by simp
+/- warning: equiv.perm.card_support_conj -> Equiv.Perm.card_support_conj is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α}, Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ τ) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) σ)))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 τ))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α}, Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ τ) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ)))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 τ))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_conj Equiv.Perm.card_support_conjₓ'. -/
+theorem card_support_conj : (σ * τ * σ⁻¹).support.card = τ.support.card := by simp
 #align equiv.perm.card_support_conj Equiv.Perm.card_support_conj
 
 end
 
+/- warning: equiv.perm.disjoint.is_conj_mul -> Equiv.Perm.Disjoint.isConj_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_2 : Finite.{succ u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α} {π : Equiv.Perm.{succ u1} α} {ρ : Equiv.Perm.{succ u1} α}, (IsConj.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) σ π) -> (IsConj.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) τ ρ) -> (Equiv.Perm.Disjoint.{u1} α σ τ) -> (Equiv.Perm.Disjoint.{u1} α π ρ) -> (IsConj.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ τ) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) π ρ))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_2 : Finite.{succ u1} α] {σ : Equiv.Perm.{succ u1} α} {τ : Equiv.Perm.{succ u1} α} {π : Equiv.Perm.{succ u1} α} {ρ : Equiv.Perm.{succ u1} α}, (IsConj.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) σ π) -> (IsConj.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) τ ρ) -> (Equiv.Perm.Disjoint.{u1} α σ τ) -> (Equiv.Perm.Disjoint.{u1} α π ρ) -> (IsConj.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) σ τ) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) π ρ))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.is_conj_mul Equiv.Perm.Disjoint.isConj_mulₓ'. -/
 theorem Disjoint.isConj_mul {α : Type _} [Finite α] {σ τ π ρ : Perm α} (hc1 : IsConj σ π)
     (hc2 : IsConj τ ρ) (hd1 : Disjoint σ τ) (hd2 : Disjoint π ρ) : IsConj (σ * τ) (π * ρ) := by
   classical
@@ -1879,6 +2403,12 @@ section FixedPoints
 -/
 
 
+/- warning: equiv.perm.fixed_point_card_lt_of_ne_one -> Equiv.Perm.fixed_point_card_lt_of_ne_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) σ (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) -> (LT.lt.{0} Nat Nat.hasLt (Finset.card.{u1} α (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ x) x) (fun (a : α) => _inst_1 (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) σ a) a) (Finset.univ.{u1} α _inst_2))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Fintype.card.{u1} α _inst_2) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) σ (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) -> (LT.lt.{0} Nat instLTNat (Finset.card.{u1} α (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ x) x) (fun (a : α) => _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) σ a) a) (Finset.univ.{u1} α _inst_2))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} α _inst_2) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.fixed_point_card_lt_of_ne_one Equiv.Perm.fixed_point_card_lt_of_ne_oneₓ'. -/
 theorem fixed_point_card_lt_of_ne_one [Fintype α] {σ : Perm α} (h : σ ≠ 1) :
     (filter (fun x => σ x = x) univ).card < Fintype.card α - 1 :=
   by
@@ -1896,6 +2426,7 @@ namespace List
 
 variable [DecidableEq α] {l : List α}
 
+#print List.Nodup.isCycleOn_formPerm /-
 theorem Nodup.isCycleOn_formPerm (h : l.Nodup) : l.formPerm.IsCycleOn { a | a ∈ l } :=
   by
   refine' ⟨l.form_perm.bij_on fun _ => form_perm_mem_iff_mem, fun a ha b hb => _⟩
@@ -1906,6 +2437,7 @@ theorem Nodup.isCycleOn_formPerm (h : l.Nodup) : l.formPerm.IsCycleOn { a | a �
     Equiv.Perm.coe_mul, form_perm_pow_apply_nth_le _ h]
   rw [add_comm]
 #align list.nodup.is_cycle_on_form_perm List.Nodup.isCycleOn_formPerm
+-/
 
 end List
 
@@ -1913,10 +2445,22 @@ namespace Int
 
 open Equiv
 
+/- warning: int.add_left_one_is_cycle -> Int.addLeft_one_isCycle is a dubious translation:
+lean 3 declaration is
+  Equiv.Perm.IsCycle.{0} Int (Equiv.addLeft.{0} Int Int.addGroup (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+but is expected to have type
+  Equiv.Perm.IsCycle.{0} Int (Equiv.addLeft.{0} Int Int.instAddGroupInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+Case conversion may be inaccurate. Consider using '#align int.add_left_one_is_cycle Int.addLeft_one_isCycleₓ'. -/
 theorem addLeft_one_isCycle : (Equiv.addLeft 1 : Perm ℤ).IsCycle :=
   ⟨0, one_ne_zero, fun n _ => ⟨n, by simp⟩⟩
 #align int.add_left_one_is_cycle Int.addLeft_one_isCycle
 
+/- warning: int.add_right_one_is_cycle -> Int.addRight_one_isCycle is a dubious translation:
+lean 3 declaration is
+  Equiv.Perm.IsCycle.{0} Int (Equiv.addRight.{0} Int Int.addGroup (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+but is expected to have type
+  Equiv.Perm.IsCycle.{0} Int (Equiv.addRight.{0} Int Int.instAddGroupInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+Case conversion may be inaccurate. Consider using '#align int.add_right_one_is_cycle Int.addRight_one_isCycleₓ'. -/
 theorem addRight_one_isCycle : (Equiv.addRight 1 : Perm ℤ).IsCycle :=
   ⟨0, one_ne_zero, fun n _ => ⟨n, by simp⟩⟩
 #align int.add_right_one_is_cycle Int.addRight_one_isCycle
@@ -1927,14 +2471,16 @@ namespace Finset
 
 variable [DecidableEq α] [Fintype α]
 
-theorem exists_cycle_on (s : Finset α) : ∃ f : Perm α, f.IsCycleOn s ∧ f.Support ⊆ s :=
+#print Finset.exists_cycleOn /-
+theorem exists_cycleOn (s : Finset α) : ∃ f : Perm α, f.IsCycleOn s ∧ f.support ⊆ s :=
   by
   refine'
     ⟨s.to_list.form_perm, _, fun x hx => by
       simpa using List.mem_of_formPerm_apply_ne _ _ (perm.mem_support.1 hx)⟩
   convert s.nodup_to_list.is_cycle_on_form_perm
   simp
-#align finset.exists_cycle_on Finset.exists_cycle_on
+#align finset.exists_cycle_on Finset.exists_cycleOn
+-/
 
 end Finset
 
@@ -1942,7 +2488,13 @@ namespace Set
 
 variable {f : Perm α} {s : Set α}
 
-theorem Countable.exists_cycle_on (hs : s.Countable) :
+/- warning: set.countable.exists_cycle_on -> Set.Countable.exists_cycleOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Countable.{u1} α s) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Equiv.Perm.IsCycleOn.{u1} α f s) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (setOf.{u1} α (fun (x : α) => Ne.{succ u1} α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f x) x)) s)))
+but is expected to have type
+  forall {α : Type.{u1}} [s : DecidableEq.{succ u1} α] {hs : Set.{u1} α}, (Set.Countable.{u1} α hs) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Equiv.Perm.IsCycleOn.{u1} α f hs) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (setOf.{u1} α (fun (x : α) => Ne.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) a) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) f x) x)) hs)))
+Case conversion may be inaccurate. Consider using '#align set.countable.exists_cycle_on Set.Countable.exists_cycleOnₓ'. -/
+theorem Countable.exists_cycleOn (hs : s.Countable) :
     ∃ f : Perm α, f.IsCycleOn s ∧ { x | f x ≠ x } ⊆ s := by
   classical
     obtain hs' | hs' := s.finite_or_infinite
@@ -1961,9 +2513,10 @@ theorem Countable.exists_cycle_on (hs : s.Countable) :
     rw [image_comp, Equiv.image_eq_preimage]
     ext
     simp
-#align set.countable.exists_cycle_on Set.Countable.exists_cycle_on
+#align set.countable.exists_cycle_on Set.Countable.exists_cycleOn
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.prod_self_eq_unionᵢ_perm /-
 theorem prod_self_eq_unionᵢ_perm (hf : f.IsCycleOn s) :
     s ×ˢ s = ⋃ n : ℤ, (fun a => (a, (f ^ n) a)) '' s :=
   by
@@ -1975,6 +2528,7 @@ theorem prod_self_eq_unionᵢ_perm (hf : f.IsCycleOn s) :
   · rintro ⟨n, a, ha, ⟨⟩⟩
     exact ⟨ha, (hf.1.perm_zpow _).MapsTo ha⟩
 #align set.prod_self_eq_Union_perm Set.prod_self_eq_unionᵢ_perm
+-/
 
 end Set
 
@@ -1982,6 +2536,7 @@ namespace Finset
 
 variable {f : Perm α} {s : Finset α}
 
+#print Finset.product_self_eq_disj_Union_perm_aux /-
 theorem product_self_eq_disj_Union_perm_aux (hf : f.IsCycleOn s) :
     (range s.card : Set ℕ).PairwiseDisjoint fun k =>
       s.map ⟨fun i => (i, (f ^ k) i), fun i j => congr_arg Prod.fst⟩ :=
@@ -1999,6 +2554,7 @@ theorem product_self_eq_disj_Union_perm_aux (hf : f.IsCycleOn s) :
     rw [mem_coe, mem_range] at hm hn
     exact hmn.symm (h.eq_of_lt_of_lt hn hm)
 #align finset.product_self_eq_disj_Union_perm_aux Finset.product_self_eq_disj_Union_perm_aux
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- We can partition the square `s ×ˢ s` into shifted diagonals as such:
@@ -2034,6 +2590,12 @@ namespace Finset
 
 variable [Semiring α] [AddCommMonoid β] [Module α β] {s : Finset ι} {σ : Perm ι}
 
+/- warning: finset.sum_smul_sum_eq_sum_perm -> Finset.sum_smul_sum_eq_sum_perm is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Semiring.{u2} α] [_inst_2 : AddCommMonoid.{u3} β] [_inst_3 : Module.{u2, u3} α β _inst_1 _inst_2] {s : Finset.{u1} ι} {σ : Equiv.Perm.{succ u1} ι}, (Equiv.Perm.IsCycleOn.{u1} ι σ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s)) -> (forall (f : ι -> α) (g : ι -> β), Eq.{succ u3} β (SMul.smul.{u2, u3} α β (SMulZeroClass.toHasSmul.{u2, u3} α β (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β _inst_2))) (SMulWithZero.toSmulZeroClass.{u2, u3} α β (MulZeroClass.toHasZero.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α (MonoidWithZero.toMulZeroOneClass.{u2} α (Semiring.toMonoidWithZero.{u2} α _inst_1)))) (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β _inst_2))) (MulActionWithZero.toSMulWithZero.{u2, u3} α β (Semiring.toMonoidWithZero.{u2} α _inst_1) (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β _inst_2))) (Module.toMulActionWithZero.{u2, u3} α β _inst_1 _inst_2 _inst_3)))) (Finset.sum.{u2, u1} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) s (fun (i : ι) => f i)) (Finset.sum.{u3, u1} β ι _inst_2 s (fun (i : ι) => g i))) (Finset.sum.{u3, 0} β Nat _inst_2 (Finset.range (Finset.card.{u1} ι s)) (fun (k : Nat) => Finset.sum.{u3, u1} β ι _inst_2 s (fun (i : ι) => SMul.smul.{u2, u3} α β (SMulZeroClass.toHasSmul.{u2, u3} α β (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β _inst_2))) (SMulWithZero.toSmulZeroClass.{u2, u3} α β (MulZeroClass.toHasZero.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α (MonoidWithZero.toMulZeroOneClass.{u2} α (Semiring.toMonoidWithZero.{u2} α _inst_1)))) (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β _inst_2))) (MulActionWithZero.toSMulWithZero.{u2, u3} α β (Semiring.toMonoidWithZero.{u2} α _inst_1) (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β _inst_2))) (Module.toMulActionWithZero.{u2, u3} α β _inst_1 _inst_2 _inst_3)))) (f i) (g (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} ι) (fun (_x : Equiv.{succ u1, succ u1} ι ι) => ι -> ι) (Equiv.hasCoeToFun.{succ u1, succ u1} ι ι) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} ι) Nat (Equiv.Perm.{succ u1} ι) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} ι) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} ι) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} ι) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} ι) (Equiv.Perm.permGroup.{u1} ι))))) σ k) i))))))
+but is expected to have type
+  forall {ι : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Semiring.{u1} α] [_inst_2 : AddCommMonoid.{u2} β] [_inst_3 : Module.{u1, u2} α β _inst_1 _inst_2] {s : Finset.{u3} ι} {σ : Equiv.Perm.{succ u3} ι}, (Equiv.Perm.IsCycleOn.{u3} ι σ (Finset.toSet.{u3} ι s)) -> (forall (f : ι -> α) (g : ι -> β), Eq.{succ u2} β (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (SMulWithZero.toSMulZeroClass.{u1, u2} α β (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} α β (Semiring.toMonoidWithZero.{u1} α _inst_1) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (Module.toMulActionWithZero.{u1, u2} α β _inst_1 _inst_2 _inst_3))))) (Finset.sum.{u1, u3} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) s (fun (i : ι) => f i)) (Finset.sum.{u2, u3} β ι _inst_2 s (fun (i : ι) => g i))) (Finset.sum.{u2, 0} β Nat _inst_2 (Finset.range (Finset.card.{u3} ι s)) (fun (k : Nat) => Finset.sum.{u2, u3} β ι _inst_2 s (fun (i : ι) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (SMulWithZero.toSMulZeroClass.{u1, u2} α β (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} α β (Semiring.toMonoidWithZero.{u1} α _inst_1) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (Module.toMulActionWithZero.{u1, u2} α β _inst_1 _inst_2 _inst_3))))) (f i) (g (FunLike.coe.{succ u3, succ u3, succ u3} (Equiv.Perm.{succ u3} ι) ι (fun (_x : ι) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : ι) => ι) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u3} ι ι) (HPow.hPow.{u3, 0, u3} (Equiv.Perm.{succ u3} ι) Nat (Equiv.Perm.{succ u3} ι) (instHPow.{u3, 0} (Equiv.Perm.{succ u3} ι) Nat (Monoid.Pow.{u3} (Equiv.Perm.{succ u3} ι) (DivInvMonoid.toMonoid.{u3} (Equiv.Perm.{succ u3} ι) (Group.toDivInvMonoid.{u3} (Equiv.Perm.{succ u3} ι) (Equiv.Perm.permGroup.{u3} ι))))) σ k) i))))))
+Case conversion may be inaccurate. Consider using '#align finset.sum_smul_sum_eq_sum_perm Finset.sum_smul_sum_eq_sum_permₓ'. -/
 theorem sum_smul_sum_eq_sum_perm (hσ : σ.IsCycleOn s) (f : ι → α) (g : ι → β) :
     ((∑ i in s, f i) • ∑ i in s, g i) = ∑ k in range s.card, ∑ i in s, f i • g ((σ ^ k) i) :=
   by
@@ -2041,6 +2603,12 @@ theorem sum_smul_sum_eq_sum_perm (hσ : σ.IsCycleOn s) (f : ι → α) (g : ι 
   rfl
 #align finset.sum_smul_sum_eq_sum_perm Finset.sum_smul_sum_eq_sum_perm
 
+/- warning: finset.sum_mul_sum_eq_sum_perm -> Finset.sum_mul_sum_eq_sum_perm is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Semiring.{u2} α] {s : Finset.{u1} ι} {σ : Equiv.Perm.{succ u1} ι}, (Equiv.Perm.IsCycleOn.{u1} ι σ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s)) -> (forall (f : ι -> α) (g : ι -> α), Eq.{succ u2} α (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α (Distrib.toHasMul.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))))) (Finset.sum.{u2, u1} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) s (fun (i : ι) => f i)) (Finset.sum.{u2, u1} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) s (fun (i : ι) => g i))) (Finset.sum.{u2, 0} α Nat (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) (Finset.range (Finset.card.{u1} ι s)) (fun (k : Nat) => Finset.sum.{u2, u1} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) s (fun (i : ι) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α (Distrib.toHasMul.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))))) (f i) (g (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} ι) (fun (_x : Equiv.{succ u1, succ u1} ι ι) => ι -> ι) (Equiv.hasCoeToFun.{succ u1, succ u1} ι ι) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} ι) Nat (Equiv.Perm.{succ u1} ι) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} ι) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} ι) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} ι) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} ι) (Equiv.Perm.permGroup.{u1} ι))))) σ k) i))))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {s : Finset.{u2} ι} {σ : Equiv.Perm.{succ u2} ι}, (Equiv.Perm.IsCycleOn.{u2} ι σ (Finset.toSet.{u2} ι s)) -> (forall (f : ι -> α) (g : ι -> α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (Finset.sum.{u1, u2} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) s (fun (i : ι) => f i)) (Finset.sum.{u1, u2} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) s (fun (i : ι) => g i))) (Finset.sum.{u1, 0} α Nat (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) (Finset.range (Finset.card.{u2} ι s)) (fun (k : Nat) => Finset.sum.{u1, u2} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) s (fun (i : ι) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (f i) (g (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} ι) ι (fun (_x : ι) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : ι) => ι) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} ι ι) (HPow.hPow.{u2, 0, u2} (Equiv.Perm.{succ u2} ι) Nat (Equiv.Perm.{succ u2} ι) (instHPow.{u2, 0} (Equiv.Perm.{succ u2} ι) Nat (Monoid.Pow.{u2} (Equiv.Perm.{succ u2} ι) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} ι) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} ι) (Equiv.Perm.permGroup.{u2} ι))))) σ k) i))))))
+Case conversion may be inaccurate. Consider using '#align finset.sum_mul_sum_eq_sum_perm Finset.sum_mul_sum_eq_sum_permₓ'. -/
 theorem sum_mul_sum_eq_sum_perm (hσ : σ.IsCycleOn s) (f g : ι → α) :
     ((∑ i in s, f i) * ∑ i in s, g i) = ∑ k in range s.card, ∑ i in s, f i * g ((σ ^ k) i) :=
   sum_smul_sum_eq_sum_perm hσ f g

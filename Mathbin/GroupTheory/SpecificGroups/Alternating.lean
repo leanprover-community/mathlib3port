@@ -107,7 +107,7 @@ instance normal : (alternatingGroup α).Normal :=
 #align alternating_group.normal alternatingGroup.normal
 
 theorem isConj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ : Perm α))
-    (hσ : (σ : Perm α).Support.card + 2 ≤ Fintype.card α) : IsConj σ τ :=
+    (hσ : (σ : Perm α).support.card + 2 ≤ Fintype.card α) : IsConj σ τ :=
   by
   obtain ⟨σ, hσ⟩ := σ
   obtain ⟨τ, hτ⟩ := τ
@@ -209,7 +209,7 @@ theorem isThreeCycle_sq_of_three_mem_cycleType_five {g : Perm (Fin 5)} (h : 3 �
   rw [le_antisymm (two_le_of_mem_cycle_type hn) (le_trans (le_card_support_of_mem_cycle_type hn) _)]
   apply le_of_add_le_add_left
   rw [← hd.card_support_mul, h3]
-  exact (c * g').Support.card_le_univ
+  exact (c * g').support.card_le_univ
 #align equiv.perm.is_three_cycle_sq_of_three_mem_cycle_type_five Equiv.Perm.isThreeCycle_sq_of_three_mem_cycleType_five
 
 end Equiv.Perm

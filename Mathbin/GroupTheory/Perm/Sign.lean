@@ -244,7 +244,7 @@ variable [Fintype α]
 
 #print Equiv.Perm.support_pow_coprime /-
 theorem support_pow_coprime {σ : Perm α} {n : ℕ} (h : Nat.coprime n (orderOf σ)) :
-    (σ ^ n).Support = σ.Support :=
+    (σ ^ n).support = σ.support :=
   by
   obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
   exact

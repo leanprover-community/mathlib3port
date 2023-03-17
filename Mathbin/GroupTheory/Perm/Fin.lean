@@ -118,13 +118,13 @@ theorem sign_finRotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n :=
 #align sign_fin_rotate sign_finRotate
 
 @[simp]
-theorem support_finRotate {n : ℕ} : Support (finRotate (n + 2)) = Finset.univ :=
+theorem support_finRotate {n : ℕ} : support (finRotate (n + 2)) = Finset.univ :=
   by
   ext
   simp
 #align support_fin_rotate support_finRotate
 
-theorem support_finRotate_of_le {n : ℕ} (h : 2 ≤ n) : Support (finRotate n) = Finset.univ :=
+theorem support_finRotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n) = Finset.univ :=
   by
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_comm, support_finRotate]

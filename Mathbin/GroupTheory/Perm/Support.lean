@@ -432,27 +432,27 @@ end Set
 
 variable [DecidableEq α] [Fintype α] {f g : Perm α}
 
-#print Equiv.Perm.Support /-
+#print Equiv.Perm.support /-
 /-- The `finset` of nonfixed points of a permutation. -/
-def Support (f : Perm α) : Finset α :=
+def support (f : Perm α) : Finset α :=
   univ.filterₓ fun x => f x ≠ x
-#align equiv.perm.support Equiv.Perm.Support
+#align equiv.perm.support Equiv.Perm.support
 -/
 
 #print Equiv.Perm.mem_support /-
 @[simp]
-theorem mem_support {x : α} : x ∈ f.Support ↔ f x ≠ x := by
+theorem mem_support {x : α} : x ∈ f.support ↔ f x ≠ x := by
   rw [support, mem_filter, and_iff_right (mem_univ x)]
 #align equiv.perm.mem_support Equiv.Perm.mem_support
 -/
 
 #print Equiv.Perm.not_mem_support /-
-theorem not_mem_support {x : α} : x ∉ f.Support ↔ f x = x := by simp
+theorem not_mem_support {x : α} : x ∉ f.support ↔ f x = x := by simp
 #align equiv.perm.not_mem_support Equiv.Perm.not_mem_support
 -/
 
 #print Equiv.Perm.coe_support_eq_set_support /-
-theorem coe_support_eq_set_support (f : Perm α) : (f.Support : Set α) = { x | f x ≠ x } :=
+theorem coe_support_eq_set_support (f : Perm α) : (f.support : Set α) = { x | f x ≠ x } :=
   by
   ext
   simp
@@ -461,35 +461,35 @@ theorem coe_support_eq_set_support (f : Perm α) : (f.Support : Set α) = { x | 
 
 /- warning: equiv.perm.support_eq_empty_iff -> Equiv.Perm.support_eq_empty_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) σ (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) σ (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) σ (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {σ : Equiv.Perm.{succ u1} α}, Iff (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) σ (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_eq_empty_iff Equiv.Perm.support_eq_empty_iffₓ'. -/
 @[simp]
-theorem support_eq_empty_iff {σ : Perm α} : σ.Support = ∅ ↔ σ = 1 := by
+theorem support_eq_empty_iff {σ : Perm α} : σ.support = ∅ ↔ σ = 1 := by
   simp_rw [Finset.ext_iff, mem_support, Finset.not_mem_empty, iff_false_iff, Classical.not_not,
     Equiv.Perm.ext_iff, one_apply]
 #align equiv.perm.support_eq_empty_iff Equiv.Perm.support_eq_empty_iff
 
 /- warning: equiv.perm.support_one -> Equiv.Perm.support_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_one Equiv.Perm.support_oneₓ'. -/
 @[simp]
-theorem support_one : (1 : Perm α).Support = ∅ := by rw [support_eq_empty_iff]
+theorem support_one : (1 : Perm α).support = ∅ := by rw [support_eq_empty_iff]
 #align equiv.perm.support_one Equiv.Perm.support_one
 
 #print Equiv.Perm.support_refl /-
 @[simp]
-theorem support_refl : Support (Equiv.refl α) = ∅ :=
+theorem support_refl : support (Equiv.refl α) = ∅ :=
   support_one
 #align equiv.perm.support_refl Equiv.Perm.support_refl
 -/
 
 #print Equiv.Perm.support_congr /-
-theorem support_congr (h : f.Support ⊆ g.Support) (h' : ∀ x ∈ g.Support, f x = g x) : f = g :=
+theorem support_congr (h : f.support ⊆ g.support) (h' : ∀ x ∈ g.support, f x = g x) : f = g :=
   by
   ext x
   by_cases hx : x ∈ g.support
@@ -501,11 +501,11 @@ theorem support_congr (h : f.Support ⊆ g.Support) (h' : ∀ x ∈ g.Support, f
 
 /- warning: equiv.perm.support_mul_le -> Equiv.Perm.support_mul_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (g : Equiv.Perm.{succ u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (g : Equiv.Perm.{succ u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (g : Equiv.Perm.{succ u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (g : Equiv.Perm.{succ u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_mul_le Equiv.Perm.support_mul_leₓ'. -/
-theorem support_mul_le (f g : Perm α) : (f * g).Support ≤ f.Support ⊔ g.Support := fun x =>
+theorem support_mul_le (f g : Perm α) : (f * g).support ≤ f.support ⊔ g.support := fun x =>
   by
   rw [sup_eq_union, mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_or,
     not_imp_not]
@@ -515,12 +515,12 @@ theorem support_mul_le (f g : Perm α) : (f * g).Support ≤ f.Support ⊔ g.Sup
 
 /- warning: equiv.perm.exists_mem_support_of_mem_support_prod -> Equiv.Perm.exists_mem_support_of_mem_support_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)} {x : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f l) (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)} {x : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f l) (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)} {x : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)} {x : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.exists_mem_support_of_mem_support_prod Equiv.Perm.exists_mem_support_of_mem_support_prodₓ'. -/
 theorem exists_mem_support_of_mem_support_prod {l : List (Perm α)} {x : α}
-    (hx : x ∈ l.Prod.Support) : ∃ f : Perm α, f ∈ l ∧ x ∈ f.Support :=
+    (hx : x ∈ l.Prod.support) : ∃ f : Perm α, f ∈ l ∧ x ∈ f.support :=
   by
   contrapose! hx
   simp_rw [mem_support, Classical.not_not] at hx⊢
@@ -530,33 +530,33 @@ theorem exists_mem_support_of_mem_support_prod {l : List (Perm α)} {x : α}
 #align equiv.perm.exists_mem_support_of_mem_support_prod Equiv.Perm.exists_mem_support_of_mem_support_prod
 
 #print Equiv.Perm.support_pow_le /-
-theorem support_pow_le (σ : Perm α) (n : ℕ) : (σ ^ n).Support ≤ σ.Support := fun x h1 =>
+theorem support_pow_le (σ : Perm α) (n : ℕ) : (σ ^ n).support ≤ σ.support := fun x h1 =>
   mem_support.mpr fun h2 => mem_support.mp h1 (pow_apply_eq_self_of_apply_eq_self h2 n)
 #align equiv.perm.support_pow_le Equiv.Perm.support_pow_le
 -/
 
 /- warning: equiv.perm.support_inv -> Equiv.Perm.support_inv is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) σ)) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) σ)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ)) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (σ : Equiv.Perm.{succ u1} α), Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) σ)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 σ)
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_inv Equiv.Perm.support_invₓ'. -/
 @[simp]
-theorem support_inv (σ : Perm α) : Support σ⁻¹ = σ.Support := by
+theorem support_inv (σ : Perm α) : support σ⁻¹ = σ.support := by
   simp_rw [Finset.ext_iff, mem_support, not_iff_not, inv_eq_iff_eq.trans eq_comm, iff_self_iff,
     imp_true_iff]
 #align equiv.perm.support_inv Equiv.Perm.support_inv
 
 #print Equiv.Perm.apply_mem_support /-
 @[simp]
-theorem apply_mem_support {x : α} : f x ∈ f.Support ↔ x ∈ f.Support := by
+theorem apply_mem_support {x : α} : f x ∈ f.support ↔ x ∈ f.support := by
   rw [mem_support, mem_support, Ne.def, Ne.def, not_iff_not, apply_eq_iff_eq]
 #align equiv.perm.apply_mem_support Equiv.Perm.apply_mem_support
 -/
 
 #print Equiv.Perm.pow_apply_mem_support /-
 @[simp]
-theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.Support ↔ x ∈ f.Support :=
+theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.support ↔ x ∈ f.support :=
   by
   induction' n with n ih
   · rfl
@@ -566,7 +566,7 @@ theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.Support ↔ x
 
 #print Equiv.Perm.zpow_apply_mem_support /-
 @[simp]
-theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.Support ↔ x ∈ f.Support :=
+theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.support ↔ x ∈ f.support :=
   by
   cases n
   · rw [Int.ofNat_eq_coe, zpow_ofNat, pow_apply_mem_support]
@@ -575,8 +575,8 @@ theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.Support ↔ 
 -/
 
 #print Equiv.Perm.pow_eq_on_of_mem_support /-
-theorem pow_eq_on_of_mem_support (h : ∀ x ∈ f.Support ∩ g.Support, f x = g x) (k : ℕ) :
-    ∀ x ∈ f.Support ∩ g.Support, (f ^ k) x = (g ^ k) x :=
+theorem pow_eq_on_of_mem_support (h : ∀ x ∈ f.support ∩ g.support, f x = g x) (k : ℕ) :
+    ∀ x ∈ f.support ∩ g.support, (f ^ k) x = (g ^ k) x :=
   by
   induction' k with k hk
   · simp
@@ -588,31 +588,31 @@ theorem pow_eq_on_of_mem_support (h : ∀ x ∈ f.Support ∩ g.Support, f x = g
 
 /- warning: equiv.perm.disjoint_iff_disjoint_support -> Equiv.Perm.disjoint_iff_disjoint_support is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, Iff (Equiv.Perm.Disjoint.{u1} α f g) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, Iff (Equiv.Perm.Disjoint.{u1} α f g) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, Iff (Equiv.Perm.Disjoint.{u1} α f g) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, Iff (Equiv.Perm.Disjoint.{u1} α f g) (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint_iff_disjoint_support Equiv.Perm.disjoint_iff_disjoint_supportₓ'. -/
-theorem disjoint_iff_disjoint_support : Disjoint f g ↔ Disjoint f.Support g.Support := by
+theorem disjoint_iff_disjoint_support : Disjoint f g ↔ Disjoint f.support g.support := by
   simp [disjoint_iff_eq_or_eq, disjoint_iff, Finset.ext_iff, not_and_or]
 #align equiv.perm.disjoint_iff_disjoint_support Equiv.Perm.disjoint_iff_disjoint_support
 
 /- warning: equiv.perm.disjoint.disjoint_support -> Equiv.Perm.Disjoint.disjoint_support is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.disjoint_support Equiv.Perm.Disjoint.disjoint_supportₓ'. -/
-theorem Disjoint.disjoint_support (h : Disjoint f g) : Disjoint f.Support g.Support :=
+theorem Disjoint.disjoint_support (h : Disjoint f g) : Disjoint f.support g.support :=
   disjoint_iff_disjoint_support.1 h
 #align equiv.perm.disjoint.disjoint_support Equiv.Perm.Disjoint.disjoint_support
 
 /- warning: equiv.perm.disjoint.support_mul -> Equiv.Perm.Disjoint.support_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g)) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.support_mul Equiv.Perm.Disjoint.support_mulₓ'. -/
-theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).Support = f.Support ∪ g.Support :=
+theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).support = f.support ∪ g.support :=
   by
   refine' le_antisymm (support_mul_le _ _) fun a => _
   rw [mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_or, not_imp_not]
@@ -623,12 +623,12 @@ theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).Support = f.Support �
 
 /- warning: equiv.perm.support_prod_of_pairwise_disjoint -> Equiv.Perm.support_prod_of_pairwise_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4137 : Finset.{u1} α) (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4139 : Finset.{u1} α) => Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) x._@.Mathlib.GroupTheory.Perm.Support._hyg.4137 x._@.Mathlib.GroupTheory.Perm.Support._hyg.4139) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4137 : Finset.{u1} α) (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4139 : Finset.{u1} α) => Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) x._@.Mathlib.GroupTheory.Perm.Support._hyg.4137 x._@.Mathlib.GroupTheory.Perm.Support._hyg.4139) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_prod_of_pairwise_disjoint Equiv.Perm.support_prod_of_pairwise_disjointₓ'. -/
 theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise Disjoint) :
-    l.Prod.Support = (l.map Support).foldr (· ⊔ ·) ⊥ :=
+    l.Prod.support = (l.map support).foldr (· ⊔ ·) ⊥ :=
   by
   induction' l with hd tl hl
   · simp
@@ -639,11 +639,11 @@ theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise D
 
 /- warning: equiv.perm.support_prod_le -> Equiv.Perm.support_prod_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b))))) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4248 : Finset.{u1} α) (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4250 : Finset.{u1} α) => Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) x._@.Mathlib.GroupTheory.Perm.Support._hyg.4248 x._@.Mathlib.GroupTheory.Perm.Support._hyg.4250) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4248 : Finset.{u1} α) (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4250 : Finset.{u1} α) => Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) x._@.Mathlib.GroupTheory.Perm.Support._hyg.4248 x._@.Mathlib.GroupTheory.Perm.Support._hyg.4250) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_prod_le Equiv.Perm.support_prod_leₓ'. -/
-theorem support_prod_le (l : List (Perm α)) : l.Prod.Support ≤ (l.map Support).foldr (· ⊔ ·) ⊥ :=
+theorem support_prod_le (l : List (Perm α)) : l.Prod.support ≤ (l.map support).foldr (· ⊔ ·) ⊥ :=
   by
   induction' l with hd tl hl
   · simp
@@ -653,14 +653,14 @@ theorem support_prod_le (l : List (Perm α)) : l.Prod.Support ≤ (l.map Support
 #align equiv.perm.support_prod_le Equiv.Perm.support_prod_le
 
 #print Equiv.Perm.support_zpow_le /-
-theorem support_zpow_le (σ : Perm α) (n : ℤ) : (σ ^ n).Support ≤ σ.Support := fun x h1 =>
+theorem support_zpow_le (σ : Perm α) (n : ℤ) : (σ ^ n).support ≤ σ.support := fun x h1 =>
   mem_support.mpr fun h2 => mem_support.mp h1 (zpow_apply_eq_self_of_apply_eq_self h2 n)
 #align equiv.perm.support_zpow_le Equiv.Perm.support_zpow_le
 -/
 
 #print Equiv.Perm.support_swap /-
 @[simp]
-theorem support_swap {x y : α} (h : x ≠ y) : Support (swap x y) = {x, y} :=
+theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} :=
   by
   ext z
   by_cases hx : z = x
@@ -670,7 +670,7 @@ theorem support_swap {x y : α} (h : x ≠ y) : Support (swap x y) = {x, y} :=
 -/
 
 #print Equiv.Perm.support_swap_iff /-
-theorem support_swap_iff (x y : α) : Support (swap x y) = {x, y} ↔ x ≠ y :=
+theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
   by
   refine' ⟨fun h H => _, support_swap⟩
   subst H
@@ -684,12 +684,12 @@ theorem support_swap_iff (x y : α) : Support (swap x y) = {x, y} ↔ x ≠ y :=
 
 /- warning: equiv.perm.support_swap_mul_swap -> Equiv.Perm.support_swap_mul_swap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {x : α} {y : α} {z : α}, (List.Nodup.{u1} α (List.cons.{u1} α x (List.cons.{u1} α y (List.cons.{u1} α z (List.nil.{u1} α))))) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z))) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) y (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) z))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {x : α} {y : α} {z : α}, (List.Nodup.{u1} α (List.cons.{u1} α x (List.cons.{u1} α y (List.cons.{u1} α z (List.nil.{u1} α))))) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z))) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) y (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) z))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {x : α} {y : α} {z : α}, (List.Nodup.{u1} α (List.cons.{u1} α x (List.cons.{u1} α y (List.cons.{u1} α z (List.nil.{u1} α))))) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z))) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) y (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) z))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {x : α} {y : α} {z : α}, (List.Nodup.{u1} α (List.cons.{u1} α x (List.cons.{u1} α y (List.cons.{u1} α z (List.nil.{u1} α))))) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) y z))) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) y (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) z))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_swap_mul_swap Equiv.Perm.support_swap_mul_swapₓ'. -/
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodup [x, y, z]) :
-    Support (swap x y * swap y z) = {x, y, z} :=
+    support (swap x y * swap y z) = {x, y, z} :=
   by
   simp only [List.not_mem_nil, and_true_iff, List.mem_cons, not_false_iff, List.nodup_cons,
     List.mem_singleton, and_self_iff, List.nodup_nil] at h
@@ -708,12 +708,12 @@ theorem support_swap_mul_swap {x y z : α} (h : List.Nodup [x, y, z]) :
 
 /- warning: equiv.perm.support_swap_mul_ge_support_diff -> Equiv.Perm.support_swap_mul_ge_support_diff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) y))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) f))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) y))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) f))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) y))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) f))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) y))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) f))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_swap_mul_ge_support_diff Equiv.Perm.support_swap_mul_ge_support_diffₓ'. -/
 theorem support_swap_mul_ge_support_diff (f : Perm α) (x y : α) :
-    f.Support \ {x, y} ≤ (swap x y * f).Support :=
+    f.support \ {x, y} ≤ (swap x y * f).support :=
   by
   intro
   simp only [and_imp, perm.coe_mul, Function.comp_apply, Ne.def, mem_support, mem_insert, mem_sdiff,
@@ -726,7 +726,7 @@ theorem support_swap_mul_ge_support_diff (f : Perm α) (x y : α) :
 
 #print Equiv.Perm.support_swap_mul_eq /-
 theorem support_swap_mul_eq (f : Perm α) (x : α) (h : f (f x) ≠ x) :
-    (swap x (f x) * f).Support = f.Support \ {x} :=
+    (swap x (f x) * f).support = f.support \ {x} :=
   by
   by_cases hx : f x = x
   · simp [hx, sdiff_singleton_eq_erase, not_mem_support.mpr hx, erase_eq_of_not_mem]
@@ -743,12 +743,12 @@ theorem support_swap_mul_eq (f : Perm α) (x : α) (h : f (f x) ≠ x) :
 
 /- warning: equiv.perm.mem_support_swap_mul_imp_mem_support_ne -> Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) y (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f x)) f))) -> (And (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) y (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Ne.{succ u1} α y x))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) y (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f x)) f))) -> (And (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) y (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Ne.{succ u1} α y x))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) f x)) f))) -> (And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Ne.{succ u1} α y x))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {x : α} {y : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) f x)) f))) -> (And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Ne.{succ u1} α y x))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.mem_support_swap_mul_imp_mem_support_ne Equiv.Perm.mem_support_swap_mul_imp_mem_support_neₓ'. -/
-theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ Support (swap x (f x) * f)) :
-    y ∈ Support f ∧ y ≠ x :=
+theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ support (swap x (f x) * f)) :
+    y ∈ support f ∧ y ≠ x :=
   by
   simp only [mem_support, swap_apply_def, mul_apply, f.injective.eq_iff] at *
   by_cases h : f y = x
@@ -757,14 +757,14 @@ theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ Support (
 #align equiv.perm.mem_support_swap_mul_imp_mem_support_ne Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne
 
 #print Equiv.Perm.Disjoint.mem_imp /-
-theorem Disjoint.mem_imp (h : Disjoint f g) {x : α} (hx : x ∈ f.Support) : x ∉ g.Support :=
+theorem Disjoint.mem_imp (h : Disjoint f g) {x : α} (hx : x ∈ f.support) : x ∉ g.support :=
   disjoint_left.mp h.disjoint_support hx
 #align equiv.perm.disjoint.mem_imp Equiv.Perm.Disjoint.mem_imp
 -/
 
 #print Equiv.Perm.eq_on_support_mem_disjoint /-
 theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pairwise Disjoint) :
-    ∀ x ∈ f.Support, f x = l.Prod x :=
+    ∀ x ∈ f.support, f x = l.Prod x :=
   by
   induction' l with hd tl IH
   · simpa using h
@@ -782,8 +782,8 @@ theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pa
 -/
 
 #print Equiv.Perm.Disjoint.mono /-
-theorem Disjoint.mono {x y : Perm α} (h : Disjoint f g) (hf : x.Support ≤ f.Support)
-    (hg : y.Support ≤ g.Support) : Disjoint x y :=
+theorem Disjoint.mono {x y : Perm α} (h : Disjoint f g) (hf : x.support ≤ f.support)
+    (hg : y.support ≤ g.support) : Disjoint x y :=
   by
   rw [disjoint_iff_disjoint_support] at h⊢
   exact h.mono hf hg
@@ -792,12 +792,12 @@ theorem Disjoint.mono {x y : Perm α} (h : Disjoint f g) (hf : x.Support ≤ f.S
 
 /- warning: equiv.perm.support_le_prod_of_mem -> Equiv.Perm.support_le_prod_of_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.hasMem.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_le_prod_of_mem Equiv.Perm.support_le_prod_of_memₓ'. -/
 theorem support_le_prod_of_mem {l : List (Perm α)} (h : f ∈ l) (hl : l.Pairwise Disjoint) :
-    f.Support ≤ l.Prod.Support := by
+    f.support ≤ l.Prod.support := by
   intro x hx
   rwa [mem_support, ← eq_on_support_mem_disjoint h hl _ hx, ← mem_support]
 #align equiv.perm.support_le_prod_of_mem Equiv.Perm.support_le_prod_of_mem
@@ -808,13 +808,13 @@ variable {β : Type _} [DecidableEq β] [Fintype β] {p : β → Prop} [Decidabl
 
 /- warning: equiv.perm.support_extend_domain -> Equiv.Perm.support_extend_domain is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {β : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} β] [_inst_4 : Fintype.{u2} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) {g : Equiv.Perm.{succ u1} α}, Eq.{succ u2} (Finset.{u2} β) (Equiv.Perm.Support.{u2} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_5 a) f)) (Finset.map.{u1, u2} α β (Equiv.asEmbedding.{succ u1, succ u2} α β p f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {β : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} β] [_inst_4 : Fintype.{u2} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) {g : Equiv.Perm.{succ u1} α}, Eq.{succ u2} (Finset.{u2} β) (Equiv.Perm.support.{u2} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_5 a) f)) (Finset.map.{u1, u2} α β (Equiv.asEmbedding.{succ u1, succ u2} α β p f) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] {β : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} β] [_inst_4 : Fintype.{u1} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u1} β p] (f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) {g : Equiv.Perm.{succ u2} α}, Eq.{succ u1} (Finset.{u1} β) (Equiv.Perm.Support.{u1} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_5 a) f)) (Finset.map.{u2, u1} α β (Equiv.asEmbedding.{succ u1, succ u2} β α p f) (Equiv.Perm.Support.{u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] {β : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} β] [_inst_4 : Fintype.{u1} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u1} β p] (f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) {g : Equiv.Perm.{succ u2} α}, Eq.{succ u1} (Finset.{u1} β) (Equiv.Perm.support.{u1} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_5 a) f)) (Finset.map.{u2, u1} α β (Equiv.asEmbedding.{succ u1, succ u2} β α p f) (Equiv.Perm.support.{u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_extend_domain Equiv.Perm.support_extend_domainₓ'. -/
 @[simp]
 theorem support_extend_domain (f : α ≃ Subtype p) {g : Perm α} :
-    Support (g.extendDomain f) = g.Support.map f.asEmbedding :=
+    support (g.extendDomain f) = g.support.map f.asEmbedding :=
   by
   ext b
   simp only [exists_prop, Function.Embedding.coeFn_mk, to_embedding_apply, mem_map, Ne.def,
@@ -841,12 +841,12 @@ theorem support_extend_domain (f : α ≃ Subtype p) {g : Perm α} :
 
 /- warning: equiv.perm.card_support_extend_domain -> Equiv.Perm.card_support_extend_domain is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {β : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} β] [_inst_4 : Fintype.{u2} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) {g : Equiv.Perm.{succ u1} α}, Eq.{1} Nat (Finset.card.{u2} β (Equiv.Perm.Support.{u2} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_5 a) f))) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {β : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} β] [_inst_4 : Fintype.{u2} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u2} β p] (f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) {g : Equiv.Perm.{succ u1} α}, Eq.{1} Nat (Finset.card.{u2} β (Equiv.Perm.support.{u2} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_5 a) f))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] {β : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} β] [_inst_4 : Fintype.{u1} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u1} β p] (f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) {g : Equiv.Perm.{succ u2} α}, Eq.{1} Nat (Finset.card.{u1} β (Equiv.Perm.Support.{u1} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_5 a) f))) (Finset.card.{u2} α (Equiv.Perm.Support.{u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
+  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : Fintype.{u2} α] {β : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} β] [_inst_4 : Fintype.{u1} β] {p : β -> Prop} [_inst_5 : DecidablePred.{succ u1} β p] (f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) {g : Equiv.Perm.{succ u2} α}, Eq.{1} Nat (Finset.card.{u1} β (Equiv.Perm.support.{u1} β (fun (a : β) (b : β) => _inst_3 a b) _inst_4 (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_5 a) f))) (Finset.card.{u2} α (Equiv.Perm.support.{u2} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_extend_domain Equiv.Perm.card_support_extend_domainₓ'. -/
 theorem card_support_extend_domain (f : α ≃ Subtype p) {g : Perm α} :
-    (g.extendDomain f).Support.card = g.Support.card := by simp
+    (g.extendDomain f).support.card = g.support.card := by simp
 #align equiv.perm.card_support_extend_domain Equiv.Perm.card_support_extend_domain
 
 end ExtendDomain
@@ -855,22 +855,22 @@ section Card
 
 /- warning: equiv.perm.card_support_eq_zero -> Equiv.Perm.card_support_eq_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_eq_zero Equiv.Perm.card_support_eq_zeroₓ'. -/
 @[simp]
-theorem card_support_eq_zero {f : Perm α} : f.Support.card = 0 ↔ f = 1 := by
+theorem card_support_eq_zero {f : Perm α} : f.support.card = 0 ↔ f = 1 := by
   rw [Finset.card_eq_zero, support_eq_empty_iff]
 #align equiv.perm.card_support_eq_zero Equiv.Perm.card_support_eq_zero
 
 /- warning: equiv.perm.one_lt_card_support_of_ne_one -> Equiv.Perm.one_lt_card_support_of_ne_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.one_lt_card_support_of_ne_one Equiv.Perm.one_lt_card_support_of_ne_oneₓ'. -/
-theorem one_lt_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 1 < f.Support.card :=
+theorem one_lt_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 1 < f.support.card :=
   by
   simp_rw [one_lt_card_iff, mem_support, ← not_or]
   contrapose! h
@@ -880,7 +880,7 @@ theorem one_lt_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 1 < f.Suppor
 #align equiv.perm.one_lt_card_support_of_ne_one Equiv.Perm.one_lt_card_support_of_ne_one
 
 #print Equiv.Perm.card_support_ne_one /-
-theorem card_support_ne_one (f : Perm α) : f.Support.card ≠ 1 :=
+theorem card_support_ne_one (f : Perm α) : f.support.card ≠ 1 :=
   by
   by_cases h : f = 1
   · exact ne_of_eq_of_ne (card_support_eq_zero.mpr h) zero_ne_one
@@ -890,29 +890,29 @@ theorem card_support_ne_one (f : Perm α) : f.Support.card ≠ 1 :=
 
 /- warning: equiv.perm.card_support_le_one -> Equiv.Perm.card_support_le_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, Iff (LE.le.{0} Nat instLENat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Eq.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_le_one Equiv.Perm.card_support_le_oneₓ'. -/
 @[simp]
-theorem card_support_le_one {f : Perm α} : f.Support.card ≤ 1 ↔ f = 1 := by
+theorem card_support_le_one {f : Perm α} : f.support.card ≤ 1 ↔ f = 1 := by
   rw [le_iff_lt_or_eq, Nat.lt_succ_iff, le_zero_iff, card_support_eq_zero, or_iff_not_imp_right,
     imp_iff_right f.card_support_ne_one]
 #align equiv.perm.card_support_le_one Equiv.Perm.card_support_le_one
 
 /- warning: equiv.perm.two_le_card_support_of_ne_one -> Equiv.Perm.two_le_card_support_of_ne_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) -> (LE.le.{0} Nat Nat.hasLe (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) -> (LE.le.{0} Nat Nat.hasLe (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) -> (LE.le.{0} Nat instLENat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α}, (Ne.{succ u1} (Equiv.Perm.{succ u1} α) f (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) -> (LE.le.{0} Nat instLENat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.two_le_card_support_of_ne_one Equiv.Perm.two_le_card_support_of_ne_oneₓ'. -/
-theorem two_le_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 2 ≤ f.Support.card :=
+theorem two_le_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 2 ≤ f.support.card :=
   one_lt_card_support_of_ne_one h
 #align equiv.perm.two_le_card_support_of_ne_one Equiv.Perm.two_le_card_support_of_ne_one
 
 #print Equiv.Perm.card_support_swap_mul /-
 theorem card_support_swap_mul {f : Perm α} {x : α} (hx : f x ≠ x) :
-    (swap x (f x) * f).Support.card < f.Support.card :=
+    (swap x (f x) * f).support.card < f.support.card :=
   Finset.card_lt_card
     ⟨fun z hz => (mem_support_swap_mul_imp_mem_support_ne hz).left, fun h =>
       absurd (h (mem_support.2 hx)) (mt mem_support.1 (by simp))⟩
@@ -920,15 +920,15 @@ theorem card_support_swap_mul {f : Perm α} {x : α} (hx : f x ≠ x) :
 -/
 
 #print Equiv.Perm.card_support_swap /-
-theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).Support.card = 2 :=
-  show (swap x y).Support.card = Finset.card ⟨x ::ₘ y ::ₘ 0, by simp [hxy]⟩ from
+theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card = 2 :=
+  show (swap x y).support.card = Finset.card ⟨x ::ₘ y ::ₘ 0, by simp [hxy]⟩ from
     congr_arg card <| by simp [support_swap hxy, *, Finset.ext_iff]
 #align equiv.perm.card_support_swap Equiv.Perm.card_support_swap
 -/
 
 #print Equiv.Perm.card_support_eq_two /-
 @[simp]
-theorem card_support_eq_two {f : Perm α} : f.Support.card = 2 ↔ IsSwap f :=
+theorem card_support_eq_two {f : Perm α} : f.support.card = 2 ↔ IsSwap f :=
   by
   constructor <;> intro h
   · obtain ⟨x, t, hmem, hins, ht⟩ := card_eq_succ.1 h
@@ -951,12 +951,12 @@ theorem card_support_eq_two {f : Perm α} : f.Support.card = 2 ↔ IsSwap f :=
 
 /- warning: equiv.perm.disjoint.card_support_mul -> Equiv.Perm.Disjoint.card_support_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f g))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 g))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.card_support_mul Equiv.Perm.Disjoint.card_support_mulₓ'. -/
 theorem Disjoint.card_support_mul (h : Disjoint f g) :
-    (f * g).Support.card = f.Support.card + g.Support.card :=
+    (f * g).support.card = f.support.card + g.support.card :=
   by
   rw [← Finset.card_disjoint_union]
   · congr
@@ -967,12 +967,12 @@ theorem Disjoint.card_support_mul (h : Disjoint f g) :
 
 /- warning: equiv.perm.card_support_prod_list_of_pairwise_disjoint -> Equiv.Perm.card_support_prod_list_of_pairwise_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) (List.sum.{0} Nat Nat.hasAdd Nat.hasZero (List.map.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Function.comp.{succ u1, succ u1, 1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) Nat (Finset.card.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)) l)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) (List.sum.{0} Nat Nat.hasAdd Nat.hasZero (List.map.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Function.comp.{succ u1, succ u1, 1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) Nat (Finset.card.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)) l)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Function.comp.{succ u1, succ u1, 1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) Nat (Finset.card.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)) l)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Function.comp.{succ u1, succ u1, 1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) Nat (Finset.card.{u1} α) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_prod_list_of_pairwise_disjoint Equiv.Perm.card_support_prod_list_of_pairwise_disjointₓ'. -/
 theorem card_support_prod_list_of_pairwise_disjoint {l : List (Perm α)} (h : l.Pairwise Disjoint) :
-    l.Prod.Support.card = (l.map (Finset.card ∘ Support)).Sum :=
+    l.Prod.support.card = (l.map (Finset.card ∘ support)).Sum :=
   by
   induction' l with a t ih
   · exact card_support_eq_zero.mpr rfl
@@ -988,7 +988,7 @@ end Support
 #print Equiv.Perm.support_subtype_perm /-
 @[simp]
 theorem support_subtype_perm [DecidableEq α] {s : Finset α} (f : Perm α) (h) :
-    (f.subtypePerm h : Perm { x // x ∈ s }).Support = s.attach.filterₓ fun x => f x ≠ x :=
+    (f.subtypePerm h : Perm { x // x ∈ s }).support = s.attach.filterₓ fun x => f x ≠ x :=
   by
   ext
   simp [Subtype.ext_iff]

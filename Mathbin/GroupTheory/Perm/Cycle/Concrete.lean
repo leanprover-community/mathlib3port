@@ -172,7 +172,7 @@ theorem isCycle_formPerm (s : Cycle α) (h : Nodup s) (hn : Nontrivial s) : IsCy
 #align cycle.is_cycle_form_perm Cycle.isCycle_formPerm
 
 theorem support_formPerm [Fintype α] (s : Cycle α) (h : Nodup s) (hn : Nontrivial s) :
-    Support (formPerm s h) = s.toFinset :=
+    support (formPerm s h) = s.toFinset :=
   by
   induction s using Quot.inductionOn
   refine' support_form_perm_of_nodup s h _
@@ -224,7 +224,7 @@ variable [Fintype α] [DecidableEq α] (p : Equiv.Perm α) (x : α)
 until looping. That means when `f x = x`, `to_list f x = []`.
 -/
 def toList : List α :=
-  (List.range (cycleOf p x).Support.card).map fun k => (p ^ k) x
+  (List.range (cycleOf p x).support.card).map fun k => (p ^ k) x
 #align equiv.perm.to_list Equiv.Perm.toList
 
 @[simp]
@@ -232,11 +232,11 @@ theorem toList_one : toList (1 : Perm α) x = [] := by simp [to_list, cycle_of_o
 #align equiv.perm.to_list_one Equiv.Perm.toList_one
 
 @[simp]
-theorem toList_eq_nil_iff {p : Perm α} {x} : toList p x = [] ↔ x ∉ p.Support := by simp [to_list]
+theorem toList_eq_nil_iff {p : Perm α} {x} : toList p x = [] ↔ x ∉ p.support := by simp [to_list]
 #align equiv.perm.to_list_eq_nil_iff Equiv.Perm.toList_eq_nil_iff
 
 @[simp]
-theorem length_toList : length (toList p x) = (cycleOf p x).Support.card := by simp [to_list]
+theorem length_toList : length (toList p x) = (cycleOf p x).support.card := by simp [to_list]
 #align equiv.perm.length_to_list Equiv.Perm.length_toList
 
 theorem toList_ne_singleton (y : α) : toList p x ≠ [y] :=
@@ -246,10 +246,10 @@ theorem toList_ne_singleton (y : α) : toList p x ≠ [y] :=
 #align equiv.perm.to_list_ne_singleton Equiv.Perm.toList_ne_singleton
 
 theorem two_le_length_toList_iff_mem_support {p : Perm α} {x : α} :
-    2 ≤ length (toList p x) ↔ x ∈ p.Support := by simp
+    2 ≤ length (toList p x) ↔ x ∈ p.support := by simp
 #align equiv.perm.two_le_length_to_list_iff_mem_support Equiv.Perm.two_le_length_toList_iff_mem_support
 
-theorem length_toList_pos_of_mem_support (h : x ∈ p.Support) : 0 < length (toList p x) :=
+theorem length_toList_pos_of_mem_support (h : x ∈ p.support) : 0 < length (toList p x) :=
   zero_lt_two.trans_le (two_le_length_toList_iff_mem_support.mpr h)
 #align equiv.perm.length_to_list_pos_of_mem_support Equiv.Perm.length_toList_pos_of_mem_support
 
@@ -257,13 +257,13 @@ theorem nthLe_toList (n : ℕ) (hn : n < length (toList p x)) : nthLe (toList p 
   by simp [to_list]
 #align equiv.perm.nth_le_to_list Equiv.Perm.nthLe_toList
 
-theorem toList_nthLe_zero (h : x ∈ p.Support) :
+theorem toList_nthLe_zero (h : x ∈ p.support) :
     (toList p x).nthLe 0 (length_toList_pos_of_mem_support _ _ h) = x := by simp [to_list]
 #align equiv.perm.to_list_nth_le_zero Equiv.Perm.toList_nthLe_zero
 
 variable {p} {x}
 
-theorem mem_toList_iff {y : α} : y ∈ toList p x ↔ SameCycle p x y ∧ x ∈ p.Support :=
+theorem mem_toList_iff {y : α} : y ∈ toList p x ↔ SameCycle p x y ∧ x ∈ p.support :=
   by
   simp only [to_list, mem_range, mem_map]
   constructor
@@ -344,7 +344,7 @@ theorem SameCycle.toList_isRotated {f : Perm α} {x y : α} (h : SameCycle f x y
     rwa [← h.mem_support_iff]
 #align equiv.perm.same_cycle.to_list_is_rotated Equiv.Perm.SameCycle.toList_isRotated
 
-theorem pow_apply_mem_toList_iff_mem_support {n : ℕ} : (p ^ n) x ∈ p.toList x ↔ x ∈ p.Support :=
+theorem pow_apply_mem_toList_iff_mem_support {n : ℕ} : (p ^ n) x ∈ p.toList x ↔ x ∈ p.support :=
   by
   rw [mem_to_list_iff, and_iff_right_iff_imp]
   refine' fun _ => same_cycle.symm _

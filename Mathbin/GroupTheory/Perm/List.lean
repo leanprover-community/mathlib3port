@@ -238,12 +238,12 @@ theorem zipWith_swap_prod_support' (l l' : List α) :
 
 /- warning: list.zip_with_swap_prod_support -> List.zipWith_swap_prod_support is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (l' : List.{u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.zipWith.{u1, u1, u1} α α (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b)) l l'))) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l'))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (l' : List.{u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.zipWith.{u1, u1, u1} α α (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b)) l l'))) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l'))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (l' : List.{u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.zipWith.{u1, u1, u1} α α (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b)) l l'))) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l'))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (l' : List.{u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.zipWith.{u1, u1, u1} α α (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b)) l l'))) (Sup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l'))
 Case conversion may be inaccurate. Consider using '#align list.zip_with_swap_prod_support List.zipWith_swap_prod_supportₓ'. -/
 theorem zipWith_swap_prod_support [Fintype α] (l l' : List α) :
-    (zipWith swap l l').Prod.Support ≤ l.toFinset ⊔ l'.toFinset :=
+    (zipWith swap l l').Prod.support ≤ l.toFinset ⊔ l'.toFinset :=
   by
   intro x hx
   have hx' : x ∈ { x | (zip_with swap l l').Prod x ≠ x } := by simpa using hx
@@ -259,7 +259,7 @@ theorem support_formPerm_le' : { x | formPerm l x ≠ x } ≤ l.toFinset :=
 -/
 
 #print List.support_formPerm_le /-
-theorem support_formPerm_le [Fintype α] : Support (formPerm l) ≤ l.toFinset :=
+theorem support_formPerm_le [Fintype α] : support (formPerm l) ≤ l.toFinset :=
   by
   intro x hx
   have hx' : x ∈ { x | form_perm l x ≠ x } := by simpa using hx
@@ -325,7 +325,7 @@ theorem support_formPerm_of_nodup' (l : List α) (h : Nodup l) (h' : ∀ x : α,
 
 #print List.support_formPerm_of_nodup /-
 theorem support_formPerm_of_nodup [Fintype α] (l : List α) (h : Nodup l) (h' : ∀ x : α, l ≠ [x]) :
-    Support (formPerm l) = l.toFinset :=
+    support (formPerm l) = l.toFinset :=
   by
   rw [← Finset.coe_inj]
   convert support_form_perm_of_nodup' _ h h'
