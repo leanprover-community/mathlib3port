@@ -170,7 +170,7 @@ of vectors. -/
 theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     (hr :
       ∀ (v) (h : v ∈ (ι Q).range ^ n.val),
-        P v (Submodule.mem_supᵢ_of_mem ⟨n.val, n.nat_cast_zMod_val⟩ h))
+        P v (Submodule.mem_supᵢ_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},
@@ -181,7 +181,7 @@ theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
   by
   apply Submodule.supᵢ_induction' _ _ (hr 0 (Submodule.zero_mem _)) @hadd
   refine' Subtype.rec _
-  simp_rw [Subtype.coe_mk, ZMod.nat_coe_zMod_eq_iff, add_comm n.val]
+  simp_rw [Subtype.coe_mk, ZMod.nat_coe_zmod_eq_iff, add_comm n.val]
   rintro n' ⟨k, rfl⟩ xv
   simp_rw [pow_add, pow_mul]
   refine' Submodule.mul_induction_on' _ _

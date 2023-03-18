@@ -89,7 +89,7 @@ theorem equiv_directSum_zMod_of_fintype [Finite G] :
 #align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zMod_of_fintype
 
 theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=
-  @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_add_group_fg.mpr hG') <|
+  @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_addGroup_fg.mpr hG') <|
     AddMonoid.isTorsion_iff_isTorsion_int.mp hG
 #align add_comm_group.finite_of_fg_torsion AddCommGroup.finite_of_fg_torsion
 

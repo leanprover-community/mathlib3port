@@ -279,7 +279,7 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
 -/
 theorem orderOf_a [NeZero n] (i : ZMod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
   by
-  conv_lhs => rw [← ZMod.nat_cast_zMod_val i]
+  conv_lhs => rw [← ZMod.nat_cast_zmod_val i]
   rw [← a_one_pow, orderOf_pow, order_of_a_one]
 #align quaternion_group.order_of_a QuaternionGroup.orderOf_a
 

@@ -119,7 +119,7 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : �
 theorem norm_sub_mod_part_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
     ↑p ∣ r.num - r.num * r.den.gcdA p % p * ↑r.den :=
   by
-  rw [← ZMod.int_coe_zMod_eq_zero_iff_dvd]
+  rw [← ZMod.int_cast_zmod_eq_zero_iff_dvd]
   simp only [Int.cast_ofNat, ZMod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
   have := congr_arg (coe : ℤ → ZMod p) (gcd_eq_gcd_ab r.denom p)
   simp only [Int.cast_ofNat, add_zero, Int.cast_add, ZMod.nat_cast_self, Int.cast_mul,
@@ -162,7 +162,7 @@ theorem zMod_congr_of_sub_mem_span_aux (n : ℕ) (x : ℤ_[p]) (a b : ℤ)
     (hb : x - b ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p])) : (a : ZMod (p ^ n)) = b :=
   by
   rw [Ideal.mem_span_singleton] at ha hb
-  rw [← sub_eq_zero, ← Int.cast_sub, ZMod.int_coe_zMod_eq_zero_iff_dvd, Int.coe_nat_pow]
+  rw [← sub_eq_zero, ← Int.cast_sub, ZMod.int_cast_zmod_eq_zero_iff_dvd, Int.coe_nat_pow]
   rw [← dvd_neg, neg_sub] at ha
   have := dvd_add ha hb
   rwa [sub_eq_add_neg, sub_eq_add_neg, add_assoc, neg_add_cancel_left, ← sub_eq_add_neg, ←
@@ -437,7 +437,7 @@ theorem ker_toZmodPow (n : ℕ) : (toZmodPow n : ℤ_[p] →+* ZMod (p ^ n)).ker
       convert appr_spec n x
       simp only [this, sub_zero, cast_zero]
     dsimp [to_zmod_pow, to_zmod_hom] at h
-    rw [ZMod.nat_coe_zMod_eq_zero_iff_dvd] at h
+    rw [ZMod.nat_cast_zmod_eq_zero_iff_dvd] at h
     apply eq_zero_of_dvd_of_lt h (appr_lt _ _)
   · intro h
     rw [← sub_zero x] at h
@@ -532,7 +532,7 @@ include f_compat
 theorem pow_dvd_nthHom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nthHom f r j - nthHom f r i :=
   by
   specialize f_compat i j h
-  rw [← Int.coe_nat_pow, ← ZMod.int_coe_zMod_eq_zero_iff_dvd, Int.cast_sub]
+  rw [← Int.coe_nat_pow, ← ZMod.int_cast_zmod_eq_zero_iff_dvd, Int.cast_sub]
   dsimp [nth_hom]
   rw [← f_compat, RingHom.comp_apply]
   simp only [ZMod.cast_id, ZMod.castHom_apply, sub_self, ZMod.nat_cast_val, ZMod.int_cast_cast]
@@ -580,7 +580,7 @@ theorem nthHomSeq_add (r s : R) :
   dsimp [nth_hom_seq]
   apply lt_of_le_of_lt _ hn
   rw [← Int.cast_add, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ←
-    ZMod.int_coe_zMod_eq_zero_iff_dvd]
+    ZMod.int_cast_zmod_eq_zero_iff_dvd]
   dsimp [nth_hom]
   simp only [ZMod.nat_cast_val, RingHom.map_add, Int.cast_sub, ZMod.int_cast_cast, Int.cast_add]
   rw [ZMod.cast_add (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
@@ -597,7 +597,7 @@ theorem nthHomSeq_mul (r s : R) :
   dsimp [nth_hom_seq]
   apply lt_of_le_of_lt _ hn
   rw [← Int.cast_mul, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ←
-    ZMod.int_coe_zMod_eq_zero_iff_dvd]
+    ZMod.int_cast_zmod_eq_zero_iff_dvd]
   dsimp [nth_hom]
   simp only [ZMod.nat_cast_val, RingHom.map_mul, Int.cast_sub, ZMod.int_cast_cast, Int.cast_mul]
   rw [ZMod.cast_mul (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
@@ -680,7 +680,7 @@ See also `padic_int.lift_unique`.
 theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n :=
   by
   ext r
-  rw [RingHom.comp_apply, ← ZMod.nat_cast_zMod_val (f n r), ← map_natCast <| to_zmod_pow n, ←
+  rw [RingHom.comp_apply, ← ZMod.nat_cast_zmod_val (f n r), ← map_natCast <| to_zmod_pow n, ←
     sub_eq_zero, ← RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span
 #align padic_int.lift_spec PadicInt.lift_spec

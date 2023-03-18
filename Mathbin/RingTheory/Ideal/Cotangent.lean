@@ -248,7 +248,7 @@ instance : IsScalarTower R (ResidueField R) (CotangentSpace R) :=
   Module.IsTorsionBySet.isScalarTower _
 
 instance [IsNoetherianRing R] : FiniteDimensional (ResidueField R) (CotangentSpace R) :=
-  Module.Finite.of_restrict_scalars_finite R _ _
+  Module.Finite.of_restrictScalars_finite R _ _
 
 end LocalRing
 

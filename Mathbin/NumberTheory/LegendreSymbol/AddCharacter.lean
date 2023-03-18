@@ -302,7 +302,7 @@ theorem zMod_char_isNontrivial_iff (n : ℕ+) (ψ : AddChar (ZMod n) C) : IsNont
   rintro h₁ ⟨a, ha⟩
   have ha₁ : a = a.val • 1 := by
     rw [nsmul_eq_mul, mul_one]
-    exact (ZMod.nat_cast_zMod_val a).symm
+    exact (ZMod.nat_cast_zmod_val a).symm
   rw [ha₁, map_nsmul_pow, h₁, one_pow] at ha
   exact ha rfl
 #align add_char.zmod_char_is_nontrivial_iff AddChar.zMod_char_isNontrivial_iff

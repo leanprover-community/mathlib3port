@@ -40,7 +40,7 @@ theorem sq_ne_two_fin_zMod_four (z : ZMod 4) : z * z ≠ 2 :=
 theorem Int.sq_ne_two_mod_four (z : ℤ) : z * z % 4 ≠ 2 :=
   by
   suffices ¬z * z % (4 : ℕ) = 2 % (4 : ℕ) by norm_num at this
-  rw [← ZMod.int_coe_eq_int_coe_iff']
+  rw [← ZMod.int_cast_eq_int_cast_iff']
   simpa using sq_ne_two_fin_zMod_four _
 #align int.sq_ne_two_mod_four Int.sq_ne_two_mod_four
 

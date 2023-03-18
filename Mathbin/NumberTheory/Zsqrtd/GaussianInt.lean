@@ -310,7 +310,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
         generalize p % 4 = m; decide!
       let ⟨k, hk⟩ := ZMod.exists_sq_eq_neg_one_iff.2 <| by rw [hp41] <;> exact by decide
       obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : ZMod p) = k := by
-        refine' ⟨k.val, k.val_lt, ZMod.nat_cast_zMod_val k⟩
+        refine' ⟨k.val, k.val_lt, ZMod.nat_cast_zmod_val k⟩
       have hpk : p ∣ k ^ 2 + 1 := by
         rw [pow_two, ← CharP.cast_eq_zero_iff (ZMod p) p, Nat.cast_add, Nat.cast_mul, Nat.cast_one,
           ← hk, add_left_neg]

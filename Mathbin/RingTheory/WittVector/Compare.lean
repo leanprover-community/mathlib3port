@@ -105,7 +105,7 @@ and the horizontal arrow at the bottom is `truncated_witt_vector.truncate`.
 theorem commutes {m : ℕ} (hm : n ≤ m) :
     (truncate hm).comp (zmodEquivTrunc p m).toRingHom =
       (zmodEquivTrunc p n).toRingHom.comp (ZMod.castHom (pow_dvd_pow p hm) _) :=
-  RingHom.ext_zMod _ _
+  RingHom.ext_zmod _ _
 #align truncated_witt_vector.commutes TruncatedWittVector.commutes
 
 theorem commutes' {m : ℕ} (hm : n ≤ m) (x : ZMod (p ^ m)) :

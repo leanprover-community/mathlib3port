@@ -230,7 +230,7 @@ theorem eq_neg_one_iff' {a : ℕ} : legendreSym p a = -1 ↔ ¬IsSquare (a : ZMo
 /-- The number of square roots of `a` modulo `p` is determined by the Legendre symbol. -/
 theorem card_sqrts (hp : p ≠ 2) (a : ℤ) :
     ↑{ x : ZMod p | x ^ 2 = a }.toFinset.card = legendreSym p a + 1 :=
-  quadraticChar_card_sqrts ((ringChar_zMod_n p).substr hp) a
+  quadraticChar_card_sqrts ((ringChar_zmod_n p).substr hp) a
 #align legendre_sym.card_sqrts legendreSym.card_sqrts
 
 end legendreSym

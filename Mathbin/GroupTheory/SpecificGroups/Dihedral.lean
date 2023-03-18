@@ -195,7 +195,7 @@ theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
 -/
 theorem orderOf_r [NeZero n] (i : ZMod n) : orderOf (r i) = n / Nat.gcd n i.val :=
   by
-  conv_lhs => rw [← ZMod.nat_cast_zMod_val i]
+  conv_lhs => rw [← ZMod.nat_cast_zmod_val i]
   rw [← r_one_pow, orderOf_pow, order_of_r_one]
 #align dihedral_group.order_of_r DihedralGroup.orderOf_r
 
