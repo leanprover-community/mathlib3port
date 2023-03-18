@@ -22,10 +22,12 @@ universe u
 
 open CategoryTheory
 
+#print Born /-
 /-- The category of bornologies. -/
 def Born :=
   Bundled Bornology
 #align Born Born
+-/
 
 namespace Born
 
@@ -35,10 +37,12 @@ instance : CoeSort Born (Type _) :=
 instance (X : Born) : Bornology X :=
   X.str
 
+#print Born.of /-
 /-- Construct a bundled `Born` from a `bornology`. -/
 def of (α : Type _) [Bornology α] : Born :=
   Bundled.of α
 #align Born.of Born.of
+-/
 
 instance : Inhabited Born :=
   ⟨of PUnit⟩

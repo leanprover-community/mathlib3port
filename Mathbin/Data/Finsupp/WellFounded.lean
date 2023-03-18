@@ -54,7 +54,7 @@ theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded
 theorem Lex.well_founded' [IsTrichotomous α r] (hr : WellFounded r.symm) :
     WellFounded (Finsupp.Lex r s) :=
   (lex_eq_invImage_dfinsupp_lex r s).symm ▸
-    InvImage.wf _ (Dfinsupp.Lex.well_founded' (fun a => hbot) (fun a => hs) hr)
+    InvImage.wf _ (Dfinsupp.Lex.wellFounded' (fun a => hbot) (fun a => hs) hr)
 #align finsupp.lex.well_founded' Finsupp.Lex.well_founded'
 
 omit hbot hs

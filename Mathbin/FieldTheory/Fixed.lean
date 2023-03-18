@@ -226,9 +226,9 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
       QuotientGroup.induction_on y fun g => _
   rw [Polynomial.dvd_iff_isRoot, Polynomial.IsRoot.def, MulAction.ofQuotientStabilizer_mk,
     Polynomial.eval_smul', ← Subfield.toSubring_subtype_eq_subtype, ←
-    IsInvariantSubring.coe_subtype_hom' G (FixedPoints.subfield G F).toSubring, ←
+    IsInvariantSubring.coe_subtypeHom' G (FixedPoints.subfield G F).toSubring, ←
     MulSemiringActionHom.coe_polynomial, ← MulSemiringActionHom.map_smul, smul_polynomial,
-    MulSemiringActionHom.coe_polynomial, IsInvariantSubring.coe_subtype_hom', Polynomial.eval_map,
+    MulSemiringActionHom.coe_polynomial, IsInvariantSubring.coe_subtypeHom', Polynomial.eval_map,
     Subfield.toSubring_subtype_eq_subtype, hf, smul_zero]
 #align fixed_points.minpoly.of_eval₂ FixedPoints.minpoly.of_eval₂
 

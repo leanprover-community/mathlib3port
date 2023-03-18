@@ -1715,27 +1715,27 @@ theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
   mt fun e => e ▸ h
 #align ne_of_mem_of_not_mem' ne_of_mem_of_not_mem'
 
-/- warning: has_mem.mem.ne_of_not_mem -> Membership.Mem.ne_of_not_mem is a dubious translation:
+/- warning: has_mem.mem.ne_of_not_mem -> Membership.mem.ne_of_not_mem is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {a : α} {b : α}, (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Not (Membership.Mem.{u1, u2} α β _inst_1 b s)) -> (Ne.{succ u1} α a b)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {a : α} {b : α}, (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Not (Membership.mem.{u2, u1} α β _inst_1 b s)) -> (Ne.{succ u2} α a b)
-Case conversion may be inaccurate. Consider using '#align has_mem.mem.ne_of_not_mem Membership.Mem.ne_of_not_memₓ'. -/
+Case conversion may be inaccurate. Consider using '#align has_mem.mem.ne_of_not_mem Membership.mem.ne_of_not_memₓ'. -/
 /-- **Alias** of `ne_of_mem_of_not_mem`. -/
-theorem Membership.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
+theorem Membership.mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
   ne_of_mem_of_not_mem
-#align has_mem.mem.ne_of_not_mem Membership.Mem.ne_of_not_mem
+#align has_mem.mem.ne_of_not_mem Membership.mem.ne_of_not_mem
 
-/- warning: has_mem.mem.ne_of_not_mem' -> Membership.Mem.ne_of_not_mem' is a dubious translation:
+/- warning: has_mem.mem.ne_of_not_mem' -> Membership.mem.ne_of_not_mem' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Membership.{u1, u2} α β] {s : β} {t : β} {a : α}, (Membership.Mem.{u1, u2} α β _inst_1 a s) -> (Not (Membership.Mem.{u1, u2} α β _inst_1 a t)) -> (Ne.{succ u2} β s t)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {t : β} {a : α}, (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Not (Membership.mem.{u2, u1} α β _inst_1 a t)) -> (Ne.{succ u1} β s t)
-Case conversion may be inaccurate. Consider using '#align has_mem.mem.ne_of_not_mem' Membership.Mem.ne_of_not_mem'ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align has_mem.mem.ne_of_not_mem' Membership.mem.ne_of_not_mem'ₓ'. -/
 /-- **Alias** of `ne_of_mem_of_not_mem'`. -/
-theorem Membership.Mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
+theorem Membership.mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
   ne_of_mem_of_not_mem'
-#align has_mem.mem.ne_of_not_mem' Membership.Mem.ne_of_not_mem'
+#align has_mem.mem.ne_of_not_mem' Membership.mem.ne_of_not_mem'
 
 end Mem
 
@@ -1911,7 +1911,7 @@ theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast
 lean 3 declaration is
   forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} (e : Eq.{u1} α a b), (HEq.{u2} (C a) x β y) -> (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b e) β y)
 but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (e : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.rec.{u1, u2} α a (fun (x._@.Mathlib.Logic.Basic._hyg.4253 : α) (h._@.Mathlib.Logic.Basic._hyg.4254 : Eq.{u2} α a x._@.Mathlib.Logic.Basic._hyg.4253) => C x._@.Mathlib.Logic.Basic._hyg.4253) x β e) b y)
+  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (e : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.rec.{u1, u2} α a (fun (x._@.Mathlib.Logic.Basic._hyg.4255 : α) (h._@.Mathlib.Logic.Basic._hyg.4256 : Eq.{u2} α a x._@.Mathlib.Logic.Basic._hyg.4255) => C x._@.Mathlib.Logic.Basic._hyg.4255) x β e) b y)
 Case conversion may be inaccurate. Consider using '#align rec_heq_of_heq rec_heq_of_heqₓ'. -/
 theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (e : a = b) (h : HEq x y) :
     HEq (@Eq.ndrec α a C x b e) y := by subst e <;> exact h
@@ -1921,7 +1921,7 @@ theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (e : a = b) (
 lean 3 declaration is
   forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} {e : Eq.{u1} α a b}, Iff (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b e) β y) (HEq.{u2} (C a) x β y)
 but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} {e : Eq.{u2} α a β}, Iff (HEq.{u1} (C β) (Eq.rec.{u1, u2} α a (fun (x._@.Mathlib.Logic.Basic._hyg.4313 : α) (h._@.Mathlib.Logic.Basic._hyg.4314 : Eq.{u2} α a x._@.Mathlib.Logic.Basic._hyg.4313) => C x._@.Mathlib.Logic.Basic._hyg.4313) x β e) b y) (HEq.{u1} (C a) x b y)
+  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} {e : Eq.{u2} α a β}, Iff (HEq.{u1} (C β) (Eq.rec.{u1, u2} α a (fun (x._@.Mathlib.Logic.Basic._hyg.4315 : α) (h._@.Mathlib.Logic.Basic._hyg.4316 : Eq.{u2} α a x._@.Mathlib.Logic.Basic._hyg.4315) => C x._@.Mathlib.Logic.Basic._hyg.4315) x β e) b y) (HEq.{u1} (C a) x b y)
 Case conversion may be inaccurate. Consider using '#align rec_heq_iff_heq rec_heq_iff_heqₓ'. -/
 theorem rec_heq_iff_heq {β} {C : α → Sort _} {x : C a} {y : β} {e : a = b} :
     HEq (@Eq.ndrec α a C x b e) y ↔ HEq x y := by subst e
@@ -1931,7 +1931,7 @@ theorem rec_heq_iff_heq {β} {C : α → Sort _} {x : C a} {y : β} {e : a = b} 
 lean 3 declaration is
   forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : β} {y : C a} {e : Eq.{u1} α a b}, Iff (HEq.{u2} β x (C b) (Eq.ndrec.{u2, u1} α a C y b e)) (HEq.{u2} β x (C a) y)
 but is expected to have type
-  forall {α : Sort.{u2}} {a : Sort.{u1}} {b : α} {β : α} {C : α -> Sort.{u1}} {x : a} {y : C b} {e : Eq.{u2} α b β}, Iff (HEq.{u1} a x (C β) (Eq.rec.{u1, u2} α b (fun (x._@.Mathlib.Logic.Basic._hyg.4375 : α) (h._@.Mathlib.Logic.Basic._hyg.4376 : Eq.{u2} α b x._@.Mathlib.Logic.Basic._hyg.4375) => C x._@.Mathlib.Logic.Basic._hyg.4375) y β e)) (HEq.{u1} a x (C b) y)
+  forall {α : Sort.{u2}} {a : Sort.{u1}} {b : α} {β : α} {C : α -> Sort.{u1}} {x : a} {y : C b} {e : Eq.{u2} α b β}, Iff (HEq.{u1} a x (C β) (Eq.rec.{u1, u2} α b (fun (x._@.Mathlib.Logic.Basic._hyg.4377 : α) (h._@.Mathlib.Logic.Basic._hyg.4378 : Eq.{u2} α b x._@.Mathlib.Logic.Basic._hyg.4377) => C x._@.Mathlib.Logic.Basic._hyg.4377) y β e)) (HEq.{u1} a x (C b) y)
 Case conversion may be inaccurate. Consider using '#align heq_rec_iff_heq heq_rec_iff_heqₓ'. -/
 theorem heq_rec_iff_heq {β} {C : α → Sort _} {x : β} {y : C a} {e : a = b} :
     HEq x (@Eq.ndrec α a C y b e) ↔ HEq x y := by subst e
