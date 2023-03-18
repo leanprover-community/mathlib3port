@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.ldl
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,9 +37,8 @@ variable {𝕜 : Type _} [IsROrC 𝕜]
 
 variable {n : Type _} [LinearOrder n] [IsWellOrder n (· < ·)] [LocallyFiniteOrderBot n]
 
--- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" =>
-  @inner 𝕜 (n → 𝕜) (PiLp.innerProductSpace fun _ => 𝕜).toHasInner x y
+-- mathport name: «expr⟪ , ⟫ₑ»
+local notation "⟪" x ", " y "⟫ₑ" => @inner 𝕜 _ _ ((PiLp.equiv 2 _).symm x) ((PiLp.equiv _ _).symm y)
 
 open Matrix
 
@@ -51,8 +50,7 @@ variable {S : Matrix n n 𝕜} [Fintype n] (hS : S.PosDef)
 applying Gram-Schmidt-Orthogonalization w.r.t. the inner product induced by `Sᵀ` on the standard
 basis vectors `pi.basis_fun`. -/
 noncomputable def LDL.lowerInv : Matrix n n 𝕜 :=
-  @gramSchmidt 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _ fun k =>
-    Pi.basisFun 𝕜 n k
+  @gramSchmidt 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _ (Pi.basisFun 𝕜 n)
 #align LDL.lower_inv LDL.lowerInv
 
 theorem LDL.lowerInv_eq_gramSchmidtBasis :
@@ -77,7 +75,7 @@ noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
 #align LDL.invertible_lower_inv LDL.invertibleLowerInv
 
 theorem LDL.lowerInv_orthogonal {i j : n} (h₀ : i ≠ j) :
-    ⟪LDL.lowerInv hS i, Sᵀ.mulVec (LDL.lowerInv hS j)⟫ = 0 :=
+    ⟪LDL.lowerInv hS i, Sᵀ.mulVec (LDL.lowerInv hS j)⟫ₑ = 0 :=
   show
     @inner 𝕜 (n → 𝕜) (InnerProductSpace.ofMatrix hS.transpose).toHasInner (LDL.lowerInv hS i)
         (LDL.lowerInv hS j) =
@@ -87,7 +85,7 @@ theorem LDL.lowerInv_orthogonal {i j : n} (h₀ : i ≠ j) :
 
 /-- The entries of the diagonal matrix `D` of the LDL decomposition. -/
 noncomputable def LDL.diagEntries : n → 𝕜 := fun i =>
-  ⟪star (LDL.lowerInv hS i), S.mulVec (star (LDL.lowerInv hS i))⟫
+  ⟪star (LDL.lowerInv hS i), S.mulVec (star (LDL.lowerInv hS i))⟫ₑ
 #align LDL.diag_entries LDL.diagEntries
 
 /-- The diagonal matrix `D` of the LDL decomposition. -/
@@ -109,12 +107,12 @@ theorem LDL.diag_eq_lowerInv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL
   ext (i j)
   by_cases hij : i = j
   ·
-    simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc, inner,
-      Pi.star_apply, IsROrC.star_def, starRingEnd_self_apply]
+    simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc,
+      EuclideanSpace.inner_piLp_equiv_symm, star_star]
   · simp only [LDL.diag, hij, diagonal_apply_ne, Ne.def, not_false_iff, mul_mul_apply]
     rw [conj_transpose, transpose_map, transpose_transpose, dot_product_mul_vec,
       (LDL.lowerInv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_symm,
-      mul_vec_transpose, EuclideanSpace.inner_eq_star_dotProduct, ← IsROrC.star_def, ←
+      mul_vec_transpose, EuclideanSpace.inner_piLp_equiv_symm, ← IsROrC.star_def, ←
       star_dot_product_star, dot_product_comm, star_star]
     rfl
 #align LDL.diag_eq_lower_inv_conj LDL.diag_eq_lowerInv_conj

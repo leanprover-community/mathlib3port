@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.basic
-! leanprover-community/mathlib commit 65902a4a1a39ff6fdfb657a35dde2579dbb4a155
+! leanprover-community/mathlib commit 2d5739b61641ee4e7e53eca5688a08f66f2e6a60
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2429,6 +2429,10 @@ section Aeval
 variable [Algebra R S₁] [CommSemiring S₂]
 
 variable (f : σ → S₁)
+
+theorem algebraMap_apply (r : R) : algebraMap R (MvPolynomial σ S₁) r = C (algebraMap R S₁ r) :=
+  rfl
+#align mv_polynomial.algebra_map_apply MvPolynomial.algebraMap_apply
 
 #print MvPolynomial.aeval /-
 /-- A map `σ → S₁` where `S₁` is an algebra over `R` generates an `R`-algebra homomorphism

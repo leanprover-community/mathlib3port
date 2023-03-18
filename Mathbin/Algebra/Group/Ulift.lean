@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.group.ulift
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 13e18cfa070ea337ea960176414f5ae3a1534aae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,26 +191,77 @@ instance monoid [Monoid α] : Monoid (ULift α) :=
 #align ulift.add_monoid ULift.addMonoid
 -/
 
-#print ULift.addMonoidWithOne /-
-instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
-  { ULift.one, ULift.addMonoid with
-    natCast := fun n => ⟨n⟩
-    natCast_zero := congr_arg ULift.up Nat.cast_zero
-    natCast_succ := fun n => congr_arg ULift.up (Nat.cast_succ _) }
-#align ulift.add_monoid_with_one ULift.addMonoidWithOne
--/
-
-@[simp]
-theorem nat_cast_down [AddMonoidWithOne α] (n : ℕ) : (n : ULift α).down = n :=
-  rfl
-#align ulift.nat_cast_down ULift.nat_cast_down
-
 #print ULift.commMonoid /-
 @[to_additive]
 instance commMonoid [CommMonoid α] : CommMonoid (ULift α) :=
   Equiv.ulift.Injective.CommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_monoid ULift.commMonoid
 #align ulift.add_comm_monoid ULift.addCommMonoid
+-/
+
+instance [NatCast α] : NatCast (ULift α) :=
+  ⟨fun n => up n⟩
+
+instance [IntCast α] : IntCast (ULift α) :=
+  ⟨fun n => up n⟩
+
+/- warning: ulift.up_nat_cast -> ULift.up_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NatCast.{u1} α] (n : Nat), Eq.{succ (max u1 u2)} (ULift.{u2, u1} α) (ULift.up.{u2, u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α _inst_1))) n)) ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Nat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (Nat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.natCast.{u1, u2} α _inst_1)))) n)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : NatCast.{u2} α] (n : Nat), Eq.{max (succ u2) (succ u1)} (ULift.{u1, u2} α) (ULift.up.{u1, u2} α (Nat.cast.{u2} α _inst_1 n)) (Nat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.natCast.{u2, u1} α _inst_1) n)
+Case conversion may be inaccurate. Consider using '#align ulift.up_nat_cast ULift.up_natCastₓ'. -/
+@[simp, norm_cast]
+theorem up_natCast [NatCast α] (n : ℕ) : up (n : α) = n :=
+  rfl
+#align ulift.up_nat_cast ULift.up_natCast
+
+/- warning: ulift.up_int_cast -> ULift.up_intCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : IntCast.{u1} α] (n : Int), Eq.{succ (max u1 u2)} (ULift.{u2, u1} α) (ULift.up.{u2, u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α _inst_1))) n)) ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Int (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (Int.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.intCast.{u1, u2} α _inst_1)))) n)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : IntCast.{u2} α] (n : Int), Eq.{max (succ u2) (succ u1)} (ULift.{u1, u2} α) (ULift.up.{u1, u2} α (Int.cast.{u2} α _inst_1 n)) (Int.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.intCast.{u2, u1} α _inst_1) n)
+Case conversion may be inaccurate. Consider using '#align ulift.up_int_cast ULift.up_intCastₓ'. -/
+@[simp, norm_cast]
+theorem up_intCast [IntCast α] (n : ℤ) : up (n : α) = n :=
+  rfl
+#align ulift.up_int_cast ULift.up_intCast
+
+/- warning: ulift.down_nat_cast -> ULift.down_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NatCast.{u1} α] (n : Nat), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Nat (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Nat (ULift.{u2, u1} α) (Nat.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.natCast.{u1, u2} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α _inst_1))) n)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : NatCast.{u2} α] (n : Nat), Eq.{succ u2} α (ULift.down.{u1, u2} α (Nat.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.natCast.{u2, u1} α _inst_1) n)) (Nat.cast.{u2} α _inst_1 n)
+Case conversion may be inaccurate. Consider using '#align ulift.down_nat_cast ULift.down_natCastₓ'. -/
+@[simp, norm_cast]
+theorem down_natCast [NatCast α] (n : ℕ) : down (n : ULift α) = n :=
+  rfl
+#align ulift.down_nat_cast ULift.down_natCast
+
+/- warning: ulift.down_int_cast -> ULift.down_intCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : IntCast.{u1} α] (n : Int), Eq.{succ u1} α (ULift.down.{u2, u1} α ((fun (a : Type) (b : Type.{max u1 u2}) [self : HasLiftT.{1, succ (max u1 u2)} a b] => self.0) Int (ULift.{u2, u1} α) (HasLiftT.mk.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (CoeTCₓ.coe.{1, succ (max u1 u2)} Int (ULift.{u2, u1} α) (Int.castCoe.{max u1 u2} (ULift.{u2, u1} α) (ULift.intCast.{u1, u2} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α _inst_1))) n)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : IntCast.{u2} α] (n : Int), Eq.{succ u2} α (ULift.down.{u1, u2} α (Int.cast.{max u2 u1} (ULift.{u1, u2} α) (ULift.intCast.{u2, u1} α _inst_1) n)) (Int.cast.{u2} α _inst_1 n)
+Case conversion may be inaccurate. Consider using '#align ulift.down_int_cast ULift.down_intCastₓ'. -/
+@[simp, norm_cast]
+theorem down_intCast [IntCast α] (n : ℤ) : down (n : ULift α) = n :=
+  rfl
+#align ulift.down_int_cast ULift.down_intCast
+
+#print ULift.addMonoidWithOne /-
+instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
+  { ULift.one, ULift.addMonoid,
+    ULift.natCast with
+    natCast_zero := congr_arg ULift.up Nat.cast_zero
+    natCast_succ := fun n => congr_arg ULift.up (Nat.cast_succ _) }
+#align ulift.add_monoid_with_one ULift.addMonoidWithOne
+-/
+
+#print ULift.addCommMonoidWithOne /-
+instance addCommMonoidWithOne [AddCommMonoidWithOne α] : AddCommMonoidWithOne (ULift α) :=
+  { ULift.addMonoidWithOne, ULift.addCommMonoid with }
+#align ulift.add_comm_monoid_with_one ULift.addCommMonoidWithOne
 -/
 
 #print ULift.monoidWithZero /-
@@ -243,6 +294,15 @@ instance group [Group α] : Group (ULift α) :=
 #align ulift.add_group ULift.addGroup
 -/
 
+#print ULift.commGroup /-
+@[to_additive]
+instance commGroup [CommGroup α] : CommGroup (ULift α) :=
+  Equiv.ulift.Injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
+#align ulift.comm_group ULift.commGroup
+#align ulift.add_comm_group ULift.addCommGroup
+-/
+
 #print ULift.addGroupWithOne /-
 instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
   { ULift.addMonoidWithOne,
@@ -253,18 +313,10 @@ instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
 #align ulift.add_group_with_one ULift.addGroupWithOne
 -/
 
-@[simp]
-theorem int_cast_down [AddGroupWithOne α] (n : ℤ) : (n : ULift α).down = n :=
-  rfl
-#align ulift.int_cast_down ULift.int_cast_down
-
-#print ULift.commGroup /-
-@[to_additive]
-instance commGroup [CommGroup α] : CommGroup (ULift α) :=
-  Equiv.ulift.Injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) fun _ _ => rfl
-#align ulift.comm_group ULift.commGroup
-#align ulift.add_comm_group ULift.addCommGroup
+#print ULift.addCommGroupWithOne /-
+instance addCommGroupWithOne [AddCommGroupWithOne α] : AddCommGroupWithOne (ULift α) :=
+  { ULift.addGroupWithOne, ULift.addCommGroup with }
+#align ulift.add_comm_group_with_one ULift.addCommGroupWithOne
 -/
 
 #print ULift.groupWithZero /-

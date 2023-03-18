@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.hermitian
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ variable {α β : Type _} {m n : Type _} {A : Matrix n n α}
 open Matrix
 
 -- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" => @inner α (PiLp 2 fun _ : n => α) _ x y
+local notation "⟪" x ", " y "⟫" => @inner α _ _ x y
 
 section NonUnitalSemiring
 
@@ -251,14 +251,10 @@ theorem IsHermitian.coe_re_diag {A : Matrix n n α} (h : A.IsHermitian) :
 
 /-- A matrix is hermitian iff the corresponding linear map is self adjoint. -/
 theorem isHermitian_iff_isSymmetric [Fintype n] [DecidableEq n] {A : Matrix n n α} :
-    IsHermitian A ↔
-      LinearMap.IsSymmetric
-        ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
+    IsHermitian A ↔ A.toEuclideanLin.IsSymmetric :=
   by
   rw [LinearMap.IsSymmetric, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
-  simp only [LinearEquiv.conj_apply, LinearMap.comp_apply, LinearEquiv.coe_coe,
-    PiLp.linearEquiv_apply, PiLp.linearEquiv_symm_apply, LinearEquiv.symm_symm]
-  simp_rw [EuclideanSpace.inner_eq_star_dotProduct, Equiv.apply_symm_apply, to_lin'_apply,
+  simp only [to_euclidean_lin_pi_Lp_equiv_symm, EuclideanSpace.inner_piLp_equiv_symm, to_lin'_apply,
     star_mul_vec, dot_product_mul_vec]
   constructor
   · rintro (h : Aᴴ = A) x y

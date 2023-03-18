@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 4681620dafca6a7d710f437bd10fb69428ec2209
+! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -164,6 +164,11 @@ theorem EuclideanSpace.inner_eq_star_dotProduct (x y : EuclideanSpace 𝕜 ι) :
     ⟪x, y⟫ = Matrix.dotProduct (star <| PiLp.equiv _ _ x) (PiLp.equiv _ _ y) :=
   rfl
 #align euclidean_space.inner_eq_star_dot_product EuclideanSpace.inner_eq_star_dotProduct
+
+theorem EuclideanSpace.inner_piLp_equiv_symm (x y : ι → 𝕜) :
+    ⟪(PiLp.equiv 2 _).symm x, (PiLp.equiv 2 _).symm y⟫ = Matrix.dotProduct (star x) y :=
+  rfl
+#align euclidean_space.inner_pi_Lp_equiv_symm EuclideanSpace.inner_piLp_equiv_symm
 
 /-- A finite, mutually orthogonal family of subspaces of `E`, which span `E`, induce an isometry
 from `E` to `pi_Lp 2` of the subspaces equipped with the `L2` inner product. -/
@@ -906,23 +911,53 @@ section Matrix
 
 open Matrix
 
-variable {n m : ℕ}
+variable {m n : Type _}
 
--- mathport name: «expr⟪ , ⟫ₘ»
-local notation "⟪" x ", " y "⟫ₘ" => @inner 𝕜 (EuclideanSpace 𝕜 (Fin m)) _ x y
+namespace Matrix
 
--- mathport name: «expr⟪ , ⟫ₙ»
-local notation "⟪" x ", " y "⟫ₙ" => @inner 𝕜 (EuclideanSpace 𝕜 (Fin n)) _ x y
+variable [Fintype m] [Fintype n] [DecidableEq n]
 
-/-- The inner product of a row of A and a row of B is an entry of B ⬝ Aᴴ. -/
-theorem inner_matrix_row_row (A B : Matrix (Fin n) (Fin m) 𝕜) (i j : Fin n) :
-    ⟪A i, B j⟫ₘ = (B ⬝ Aᴴ) j i := by
-  simp only [inner, Matrix.mul_apply, starRingEnd_apply, Matrix.conjTranspose_apply, mul_comm]
+/-- `matrix.to_lin'` adapted for `euclidean_space 𝕜 _`. -/
+def toEuclideanLin : Matrix m n 𝕜 ≃ₗ[𝕜] EuclideanSpace 𝕜 n →ₗ[𝕜] EuclideanSpace 𝕜 m :=
+  Matrix.toLin' ≪≫ₗ
+    LinearEquiv.arrowCongr (PiLp.linearEquiv _ 𝕜 fun _ : n => 𝕜).symm
+      (PiLp.linearEquiv _ 𝕜 fun _ : m => 𝕜).symm
+#align matrix.to_euclidean_lin Matrix.toEuclideanLin
+
+@[simp]
+theorem toEuclideanLin_piLp_equiv_symm (A : Matrix m n 𝕜) (x : n → 𝕜) :
+    A.toEuclideanLin ((PiLp.equiv _ _).symm x) = (PiLp.equiv _ _).symm (A.toLin' x) :=
+  rfl
+#align matrix.to_euclidean_lin_pi_Lp_equiv_symm Matrix.toEuclideanLin_piLp_equiv_symm
+
+@[simp]
+theorem piLp_equiv_toEuclideanLin (A : Matrix m n 𝕜) (x : EuclideanSpace 𝕜 n) :
+    PiLp.equiv _ _ (A.toEuclideanLin x) = A.toLin' (PiLp.equiv _ _ x) :=
+  rfl
+#align matrix.pi_Lp_equiv_to_euclidean_lin Matrix.piLp_equiv_toEuclideanLin
+
+-- `matrix.to_euclidean_lin` is the same as `matrix.to_lin` applied to `pi_Lp.basis_fun`,
+theorem toEuclideanLin_eq_toLin :
+    (toEuclideanLin : Matrix m n 𝕜 ≃ₗ[𝕜] _) =
+      Matrix.toLin (PiLp.basisFun _ _ _) (PiLp.basisFun _ _ _) :=
+  rfl
+#align matrix.to_euclidean_lin_eq_to_lin Matrix.toEuclideanLin_eq_toLin
+
+end Matrix
+
+-- mathport name: «expr⟪ , ⟫ₑ»
+local notation "⟪" x ", " y "⟫ₑ" => @inner 𝕜 _ _ ((PiLp.equiv 2 _).symm x) ((PiLp.equiv 2 _).symm y)
+
+/-- The inner product of a row of `A` and a row of `B` is an entry of `B ⬝ Aᴴ`. -/
+theorem inner_matrix_row_row [Fintype n] (A B : Matrix m n 𝕜) (i j : m) :
+    ⟪A i, B j⟫ₑ = (B ⬝ Aᴴ) j i := by
+  simp_rw [EuclideanSpace.inner_piLp_equiv_symm, Matrix.mul_apply', Matrix.dotProduct_comm,
+    Matrix.conjTranspose_apply, Pi.star_def]
 #align inner_matrix_row_row inner_matrix_row_row
 
-/-- The inner product of a column of A and a column of B is an entry of Aᴴ ⬝ B -/
-theorem inner_matrix_col_col (A B : Matrix (Fin n) (Fin m) 𝕜) (i j : Fin m) :
-    ⟪Aᵀ i, Bᵀ j⟫ₙ = (Aᴴ ⬝ B) i j :=
+/-- The inner product of a column of `A` and a column of `B` is an entry of `Aᴴ ⬝ B`. -/
+theorem inner_matrix_col_col [Fintype m] (A B : Matrix m n 𝕜) (i j : n) :
+    ⟪Aᵀ i, Bᵀ j⟫ₑ = (Aᴴ ⬝ B) i j :=
   rfl
 #align inner_matrix_col_col inner_matrix_col_col
 

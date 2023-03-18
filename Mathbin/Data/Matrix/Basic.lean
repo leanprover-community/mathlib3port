@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 21e3562c5e12d846c7def5eff8cdbc520d7d4936
+! leanprover-community/mathlib commit 30413fc89f202a090a54d78e540963ed3de0056e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2146,7 +2146,7 @@ theorem conjTranspose_int_cast_smul [Ring R] [AddCommGroup α] [StarAddMonoid α
 #align matrix.conj_transpose_int_cast_smul Matrix.conjTranspose_int_cast_smul
 
 @[simp]
-theorem conjTranspose_inv_nat_cast_smul [DivisionRing R] [AddCommGroup α] [StarAddMonoid α]
+theorem conjTranspose_inv_nat_cast_smul [DivisionSemiring R] [AddCommMonoid α] [StarAddMonoid α]
     [Module R α] (c : ℕ) (M : Matrix m n α) : ((c : R)⁻¹ • M)ᴴ = (c : R)⁻¹ • Mᴴ :=
   Matrix.ext <| by simp
 #align matrix.conj_transpose_inv_nat_cast_smul Matrix.conjTranspose_inv_nat_cast_smul

@@ -4,18 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module field_theory.cardinality
-! leanprover-community/mathlib commit c946d6097a6925ad16d7ec55677bbc977f9846de
+! leanprover-community/mathlib commit 13e18cfa070ea337ea960176414f5ae3a1534aae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Ring.Ulift
+import Mathbin.Algebra.Field.Ulift
 import Mathbin.Data.MvPolynomial.Cardinal
+import Mathbin.Data.Nat.Factorization.PrimePow
 import Mathbin.Data.Rat.Denumerable
 import Mathbin.FieldTheory.Finite.GaloisField
 import Mathbin.Logic.Equiv.TransferInstance
 import Mathbin.RingTheory.Localization.Cardinality
 import Mathbin.SetTheory.Cardinal.Divisibility
-import Mathbin.Data.Nat.Factorization.PrimePow
 
 /-!
 # Cardinality of Fields

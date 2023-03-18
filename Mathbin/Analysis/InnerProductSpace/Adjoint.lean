@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.adjoint
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -530,15 +530,14 @@ open ComplexConjugate
 
 /-- The adjoint of the linear map associated to a matrix is the linear map associated to the
 conjugate transpose of that matrix. -/
-theorem conjTranspose_eq_adjoint (A : Matrix m n 𝕜) :
-    toLin' A.conjTranspose =
-      @LinearMap.adjoint _ (EuclideanSpace 𝕜 n) (EuclideanSpace 𝕜 m) _ _ _ _ _ (toLin' A) :=
+theorem toEuclideanLin_conjTranspose_eq_adjoint (A : Matrix m n 𝕜) :
+    A.conjTranspose.toEuclideanLin = A.toEuclideanLin.adjoint :=
   by
-  rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
+  rw [LinearMap.eq_adjoint_iff]
   intro x y
-  convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1
-  simp [dot_product, mul_vec, RingHom.map_sum, ← starRingEnd_apply, mul_comm]
-#align matrix.conj_transpose_eq_adjoint Matrix.conjTranspose_eq_adjoint
+  simp_rw [EuclideanSpace.inner_eq_star_dotProduct, pi_Lp_equiv_to_euclidean_lin, to_lin'_apply,
+    star_mul_vec, conj_transpose_conj_transpose, dot_product_mul_vec]
+#align matrix.to_euclidean_lin_conj_transpose_eq_adjoint Matrix.toEuclideanLin_conjTranspose_eq_adjoint
 
 end Matrix
 

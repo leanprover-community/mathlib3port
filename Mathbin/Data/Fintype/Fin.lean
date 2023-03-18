@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fintype.fin
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit 759575657f189ccb424b990164c8b1fa9f55cdfe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,6 +29,13 @@ namespace Fin
 
 variable {α β : Type _} {n : ℕ}
 
+-- TODO: replace `subtype` with `coe` in the name of this lemma and `fin.map_subtype_embedding_Iio`
+theorem map_subtype_embedding_univ : (Finset.univ : Finset (Fin n)).map Fin.valEmbedding = Iio n :=
+  by
+  ext
+  simp [order_iso_subtype.symm.surjective.exists, OrderIso.symm]
+#align fin.map_subtype_embedding_univ Fin.map_subtype_embedding_univ
+
 /- warning: fin.Ioi_zero_eq_map -> Fin.Ioi_zero_eq_map is a dubious translation:
 lean 3 declaration is
   forall {n : Nat}, Eq.{1} (Finset.{0} (Fin (Nat.succ n))) (Finset.Ioi.{0} (Fin (Nat.succ n)) (PartialOrder.toPreorder.{0} (Fin (Nat.succ n)) (Fin.partialOrder (Nat.succ n))) (Fin.locallyFiniteOrderTop (Nat.succ n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (Finset.map.{0, 0} (Fin n) (Fin (Nat.succ n)) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Preorder.toLE.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (PartialOrder.toPreorder.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.partialOrder (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))) (Fin.succEmbedding n)) (Finset.univ.{0} (Fin n) (Fin.fintype n)))
@@ -48,6 +55,14 @@ theorem Ioi_zero_eq_map : Ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).
   · rintro ⟨i, _, rfl⟩
     exact succ_pos _
 #align fin.Ioi_zero_eq_map Fin.Ioi_zero_eq_map
+
+@[simp]
+theorem Iio_last_eq_map : Iio (Fin.last n) = Finset.univ.map Fin.castSucc.toEmbedding :=
+  by
+  apply Finset.map_injective Fin.valEmbedding
+  rw [Finset.map_map, Fin.map_subtype_embedding_Iio, Fin.val_last]
+  exact map_subtype_embedding_univ.symm
+#align fin.Iio_last_eq_map Fin.Iio_last_eq_map
 
 /- warning: fin.Ioi_succ -> Fin.Ioi_succ is a dubious translation:
 lean 3 declaration is
@@ -69,6 +84,14 @@ theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmbedding _).to
   · rintro ⟨i, hi, rfl⟩
     simpa
 #align fin.Ioi_succ Fin.Ioi_succ
+
+@[simp]
+theorem Iio_castSucc (i : Fin n) : Iio (castSucc i) = (Iio i).map Fin.castSucc.toEmbedding :=
+  by
+  apply Finset.map_injective Fin.valEmbedding
+  rw [Finset.map_map, Fin.map_subtype_embedding_Iio]
+  exact (Fin.map_subtype_embedding_Iio i).symm
+#align fin.Iio_cast_succ Fin.Iio_castSucc
 
 /- warning: fin.card_filter_univ_succ' -> Fin.card_filter_univ_succ' is a dubious translation:
 lean 3 declaration is

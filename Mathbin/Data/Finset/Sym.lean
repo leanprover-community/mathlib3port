@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.sym
-! leanprover-community/mathlib commit 99624c1a1c3d353ed60e0a13e03246ce4807b56d
+! leanprover-community/mathlib commit 02ba8949f486ebecf93fe7460f1ed0564b5e442c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,11 +202,6 @@ theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
 theorem sym_nonempty : (s.Sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by
   simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_or, not_ne_iff]
 #align finset.sym_nonempty Finset.sym_nonempty
-
-alias sym_nonempty ↔ _ nonempty.sym
-#align finset.nonempty.sym Finset.Nonempty.sym
-
-attribute [protected] nonempty.sym
 
 @[simp]
 theorem sym_univ [Fintype α] (n : ℕ) : (univ : Finset α).Sym n = univ :=

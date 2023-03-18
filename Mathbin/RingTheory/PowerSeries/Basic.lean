@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.basic
-! leanprover-community/mathlib commit 7d6cd0411fa5334c211f4657e971f2666d08b15a
+! leanprover-community/mathlib commit 2d5739b61641ee4e7e53eca5688a08f66f2e6a60
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -697,9 +697,9 @@ theorem trunc_c (hnn : n ≠ 0) (a : R) : trunc R n (c σ R a) = MvPolynomial.C 
 
 end Trunc
 
-section CommSemiring
+section Semiring
 
-variable [CommSemiring R]
+variable [Semiring R]
 
 theorem x_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     (x s : MvPowerSeries σ R) ^ n ∣ φ ↔ ∀ m : σ →₀ ℕ, m s < n → coeff R m φ = 0 :=
@@ -766,7 +766,7 @@ theorem x_dvd_iff {s : σ} {φ : MvPowerSeries σ R} :
   · exact h m (Nat.eq_zero_of_le_zero <| Nat.le_of_succ_le_succ hm)
 #align mv_power_series.X_dvd_iff MvPowerSeries.x_dvd_iff
 
-end CommSemiring
+end Semiring
 
 section Ring
 
@@ -1134,10 +1134,6 @@ theorem coeToMvPowerSeries.ringHom_apply : coeToMvPowerSeries.ringHom φ = φ :=
 section Algebra
 
 variable (A : Type _) [CommSemiring A] [Algebra R A]
-
-theorem algebraMap_apply (r : R) : algebraMap R (MvPolynomial σ A) r = C (algebraMap R A r) :=
-  rfl
-#align mv_polynomial.algebra_map_apply MvPolynomial.algebraMap_apply
 
 /-- The coercion from multivariable polynomials to multivariable power series
 as an algebra homomorphism.
@@ -1611,12 +1607,6 @@ theorem map_x : map f x = x := by
 
 end Map
 
-end Semiring
-
-section CommSemiring
-
-variable [CommSemiring R]
-
 theorem x_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} :
     (x : PowerSeries R) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 :=
   by
@@ -1637,6 +1627,12 @@ theorem x_dvd_iff {φ : PowerSeries R} : (x : PowerSeries R) ∣ φ ↔ constant
   · intro m hm
     rwa [Nat.eq_zero_of_le_zero (Nat.le_of_succ_le_succ hm)]
 #align power_series.X_dvd_iff PowerSeries.x_dvd_iff
+
+end Semiring
+
+section CommSemiring
+
+variable [CommSemiring R]
 
 open Finset Nat
 

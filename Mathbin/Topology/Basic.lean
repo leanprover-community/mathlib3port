@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 88b8a77d63a702923d9bee05e9e454ebc22aa766
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -233,16 +233,11 @@ theorem isOpen_binterᵢ {s : Set β} {f : β → Set α} (hs : s.Finite) :
 #align is_open_bInter isOpen_binterᵢ
 -/
 
-/- warning: is_open_Inter -> isOpen_interᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Finite.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (i : β), IsOpen.{u1} α _inst_1 (s i)) -> (IsOpen.{u1} α _inst_1 (Set.interᵢ.{u1, succ u2} α β (fun (i : β) => s i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Sort.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Finite.{u2} β] {s : β -> (Set.{u1} α)}, (forall (i : β), IsOpen.{u1} α _inst_1 (s i)) -> (IsOpen.{u1} α _inst_1 (Set.interᵢ.{u1, u2} α β (fun (i : β) => s i)))
-Case conversion may be inaccurate. Consider using '#align is_open_Inter isOpen_interᵢₓ'. -/
-theorem isOpen_interᵢ [Finite β] {s : β → Set α} (h : ∀ i, IsOpen (s i)) : IsOpen (⋂ i, s i) :=
-  suffices IsOpen (⋂ (i : β) (hi : i ∈ @univ β), s i) by simpa
-  isOpen_binterᵢ finite_univ fun i _ => h i
+#print isOpen_interᵢ /-
+theorem isOpen_interᵢ [Finite ι] {s : ι → Set α} (h : ∀ i, IsOpen (s i)) : IsOpen (⋂ i, s i) :=
+  isOpen_interₛ (finite_range _) (forall_range_iff.2 h)
 #align is_open_Inter isOpen_interᵢ
+-/
 
 #print isOpen_interᵢ_prop /-
 theorem isOpen_interᵢ_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsOpen (s h)) :

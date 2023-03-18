@@ -131,6 +131,7 @@ import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.Field.Power
+import Mathbin.Algebra.Field.Ulift
 import Mathbin.Algebra.Free
 import Mathbin.Algebra.FreeAlgebra
 import Mathbin.Algebra.FreeMonoid.Basic

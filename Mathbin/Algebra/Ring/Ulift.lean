@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.ring.ulift
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 13e18cfa070ea337ea960176414f5ae3a1534aae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Group.Ulift
-import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.Ring.Equiv
 
 /-!
@@ -223,40 +222,6 @@ instance nonUnitalCommRing [NonUnitalCommRing α] : NonUnitalCommRing (ULift α)
 instance commRing [CommRing α] : CommRing (ULift α) := by
   refine_struct { ULift.ring with } <;> pi_instance_derive_field
 #align ulift.comm_ring ULift.commRing
--/
-
-instance [HasRatCast α] : HasRatCast (ULift α) :=
-  ⟨fun a => ULift.up (coe a)⟩
-
-@[simp]
-theorem rat_cast_down [HasRatCast α] (n : ℚ) : ULift.down (n : ULift α) = n :=
-  rfl
-#align ulift.rat_cast_down ULift.rat_cast_down
-
-#print ULift.field /-
-instance field [Field α] : Field (ULift α) :=
-  by
-  have of_rat_mk : ∀ a b h1 h2, ((⟨a, b, h1, h2⟩ : ℚ) : ULift α) = ↑a * (↑b)⁻¹ :=
-    by
-    intro a b h1 h2
-    ext
-    rw [rat_cast_down, mul_down, inv_down, nat_cast_down, int_cast_down]
-    exact Field.ratCast_mk a b h1 h2
-  refine_struct
-      { @ULift.nontrivial α _,
-        ULift.commRing with
-        zero := (0 : ULift α)
-        inv := Inv.inv
-        div := Div.div
-        zpow := fun n a => ULift.up (a.down ^ n)
-        ratCast := coe
-        ratCast_mk := of_rat_mk
-        qsmul := (· • ·) } <;>
-    pi_instance_derive_field
-  -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.
-  cases a
-  tauto
-#align ulift.field ULift.field
 -/
 
 end ULift

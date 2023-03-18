@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.spectrum
-! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
+! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,15 +105,14 @@ theorem spectral_theorem :
   by
   rw [eigenvector_matrix_inv, PiLp.basis_toMatrix_basisFun_mul]
   ext (i j)
-  have : LinearMap.IsSymmetric _ := is_hermitian_iff_is_symmetric.1 hA
+  have := is_hermitian_iff_is_symmetric.1 hA
   convert this.diagonalization_basis_apply_self_apply finrank_euclideanSpace
-      (EuclideanSpace.single j 1) ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)
-  · dsimp only [LinearEquiv.conj_apply_apply, PiLp.linearEquiv_apply, PiLp.linearEquiv_symm_apply,
-      PiLp.equiv_single, LinearMap.stdBasis, LinearMap.coe_single, PiLp.equiv_symm_single,
-      LinearEquiv.symm_symm, eigenvector_basis, to_lin'_apply]
-    simp only [Basis.toMatrix, Basis.coe_toOrthonormalBasis_repr, Basis.equivFun_apply]
-    simp_rw [OrthonormalBasis.coe_toBasis_repr_apply, OrthonormalBasis.repr_reindex,
-      LinearEquiv.symm_symm, PiLp.linearEquiv_apply, PiLp.equiv_single, mul_vec_single, mul_one]
+      (EuclideanSpace.single j 1) ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i) using
+    1
+  · dsimp only [EuclideanSpace.single, to_euclidean_lin_pi_Lp_equiv_symm, to_lin'_apply,
+      Matrix.of_apply, is_hermitian.eigenvector_basis]
+    simp_rw [mul_vec_single, mul_one, OrthonormalBasis.coe_toBasis_repr_apply,
+      OrthonormalBasis.repr_reindex]
     rfl
   · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]
     rw [Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
