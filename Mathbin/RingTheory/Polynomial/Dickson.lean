@@ -152,7 +152,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
 variable (R)
 
 theorem dickson_one_one_eq_chebyshev_t [Invertible (2 : R)] :
-    ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (C (⅟ 2) * X)
+    ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.T R n).comp (C (⅟ 2) * X)
   | 0 => by
     simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
     norm_num
@@ -169,7 +169,7 @@ theorem dickson_one_one_eq_chebyshev_t [Invertible (2 : R)] :
 #align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_t
 
 theorem chebyshev_t_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
-    Chebyshev.t R n = C (⅟ 2) * (dickson 1 1 n).comp (2 * X) :=
+    Chebyshev.T R n = C (⅟ 2) * (dickson 1 1 n).comp (2 * X) :=
   by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
