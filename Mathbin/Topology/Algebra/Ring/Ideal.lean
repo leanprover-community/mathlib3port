@@ -38,27 +38,19 @@ protected def Ideal.closure (I : Ideal R) : Ideal R :=
 #align ideal.closure Ideal.closure
 -/
 
-/- warning: ideal.coe_closure -> Ideal.coe_closure is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} R] [_inst_2 : Ring.{u1} R] [_inst_3 : TopologicalRing.{u1} R _inst_1 (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_2))] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)), Eq.{succ u1} (Set.{u1} R) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R _inst_2)))))) (Ideal.closure.{u1} R _inst_1 _inst_2 _inst_3 I)) (closure.{u1} R _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R _inst_2)))))) I))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} R] [_inst_2 : Ring.{u1} R] [_inst_3 : TopologicalRing.{u1} R _inst_1 (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_2))] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)), Eq.{succ u1} (Set.{u1} R) (SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) R (Submodule.instSetLikeSubmodule.{u1, u1} R R (Ring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R _inst_2))) (Ideal.closure.{u1} R _inst_1 _inst_2 _inst_3 I)) (closure.{u1} R _inst_1 (SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) R (Submodule.instSetLikeSubmodule.{u1, u1} R R (Ring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R _inst_2))) I))
-Case conversion may be inaccurate. Consider using '#align ideal.coe_closure Ideal.coe_closureₓ'. -/
+#print Ideal.coe_closure /-
 @[simp]
 theorem Ideal.coe_closure (I : Ideal R) : (I.closure : Set R) = closure I :=
   rfl
 #align ideal.coe_closure Ideal.coe_closure
+-/
 
-/- warning: ideal.closure_eq_of_is_closed -> Ideal.closure_eq_of_isClosed is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} R] [_inst_2 : Ring.{u1} R] [_inst_3 : TopologicalRing.{u1} R _inst_1 (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_2))] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) [hI : IsClosed.{u1} R _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R _inst_2)))))) I)], Eq.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Ideal.closure.{u1} R _inst_1 _inst_2 _inst_3 I) I
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} R] [_inst_2 : Ring.{u1} R] [_inst_3 : TopologicalRing.{u1} R _inst_1 (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_2))] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) [hI : IsClosed.{u1} R _inst_1 (SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) R (Submodule.instSetLikeSubmodule.{u1, u1} R R (Ring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R _inst_2))) I)], Eq.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Ideal.closure.{u1} R _inst_1 _inst_2 _inst_3 I) I
-Case conversion may be inaccurate. Consider using '#align ideal.closure_eq_of_is_closed Ideal.closure_eq_of_isClosedₓ'. -/
+#print Ideal.closure_eq_of_isClosed /-
 @[simp]
 theorem Ideal.closure_eq_of_isClosed (I : Ideal R) [hI : IsClosed (I : Set R)] : I.closure = I :=
   SetLike.ext' hI.closure_eq
 #align ideal.closure_eq_of_is_closed Ideal.closure_eq_of_isClosed
+-/
 
 end Ring
 
