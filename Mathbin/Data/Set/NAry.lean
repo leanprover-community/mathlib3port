@@ -634,6 +634,12 @@ theorem image2_right_comm {f : δ → γ → ε} {g : α → β → δ} {f' : α
   exact image2_assoc fun _ _ _ => h_right_comm _ _ _
 #align set.image2_right_comm Set.image2_right_comm
 
+/- warning: set.image2_image2_image2_comm -> Set.image2_image2_image2_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {ε : Type.{u5}} {ε' : Type.{u6}} {ζ : Type.{u7}} {ζ' : Type.{u8}} {ν : Type.{u9}} {s : Set.{u1} α} {t : Set.{u2} β} {u : Set.{u3} γ} {v : Set.{u4} δ} {f : ε -> ζ -> ν} {g : α -> β -> ε} {h : γ -> δ -> ζ} {f' : ε' -> ζ' -> ν} {g' : α -> γ -> ε'} {h' : β -> δ -> ζ'}, (forall (a : α) (b : β) (c : γ) (d : δ), Eq.{succ u9} ν (f (g a b) (h c d)) (f' (g' a c) (h' b d))) -> (Eq.{succ u9} (Set.{u9} ν) (Set.image2.{u5, u7, u9} ε ζ ν f (Set.image2.{u1, u2, u5} α β ε g s t) (Set.image2.{u3, u4, u7} γ δ ζ h u v)) (Set.image2.{u6, u8, u9} ε' ζ' ν f' (Set.image2.{u1, u3, u6} α γ ε' g' s u) (Set.image2.{u2, u4, u8} β δ ζ' h' t v)))
+but is expected to have type
+  forall {α : Type.{u6}} {β : Type.{u5}} {γ : Type.{u4}} {δ : Type.{u3}} {ε : Type.{u8}} {ε' : Type.{u2}} {ζ : Type.{u7}} {ζ' : Type.{u1}} {ν : Type.{u9}} {s : Set.{u6} α} {t : Set.{u5} β} {u : Set.{u4} γ} {v : Set.{u3} δ} {f : ε -> ζ -> ν} {g : α -> β -> ε} {h : γ -> δ -> ζ} {f' : ε' -> ζ' -> ν} {g' : α -> γ -> ε'} {h' : β -> δ -> ζ'}, (forall (a : α) (b : β) (c : γ) (d : δ), Eq.{succ u9} ν (f (g a b) (h c d)) (f' (g' a c) (h' b d))) -> (Eq.{succ u9} (Set.{u9} ν) (Set.image2.{u8, u7, u9} ε ζ ν f (Set.image2.{u6, u5, u8} α β ε g s t) (Set.image2.{u4, u3, u7} γ δ ζ h u v)) (Set.image2.{u2, u1, u9} ε' ζ' ν f' (Set.image2.{u6, u4, u2} α γ ε' g' s u) (Set.image2.{u5, u3, u1} β δ ζ' h' t v)))
+Case conversion may be inaccurate. Consider using '#align set.image2_image2_image2_comm Set.image2_image2_image2_commₓ'. -/
 theorem image2_image2_image2_comm {f : ε → ζ → ν} {g : α → β → ε} {h : γ → δ → ζ} {f' : ε' → ζ' → ν}
     {g' : α → γ → ε'} {h' : β → δ → ζ'}
     (h_comm : ∀ a b c d, f (g a b) (h c d) = f' (g' a c) (h' b d)) :
