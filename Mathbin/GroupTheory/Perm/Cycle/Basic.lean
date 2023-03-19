@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.basic
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Logic.Equiv.Fintype
 
 /-!
 # Cyclic permutations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file develops the theory of cycles in permutations.
 

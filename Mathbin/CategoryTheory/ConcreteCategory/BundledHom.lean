@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.bundled_hom
-! leanprover-community/mathlib commit 77ca1ed347337ecbafa9d9f4a55e330e44e9f9f8
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.ConcreteCategory.Bundled
 
 /-!
 # Category instances for algebraic structures that use bundled homs.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Many algebraic structures in Lean initially used unbundled homs (e.g. a bare function between types,
 along with an `is_monoid_hom` typeclass), but the general trend is towards using bundled homs.

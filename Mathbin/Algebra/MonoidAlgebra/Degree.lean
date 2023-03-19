@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.degree
-! leanprover-community/mathlib commit f694c7dead66f5d4c80f446c796a5aad14707f0e
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.MonoidAlgebra.Support
 
 /-!
 # Lemmas about the `sup` and `inf` of the support of `add_monoid_algebra`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## TODO
 The current plan is to state and prove lemmas about `finset.sup (finsupp.support f) D` with a

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.prod
-! leanprover-community/mathlib commit 052f6013363326d50cb99c6939814a4b8eb7b301
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.Ideal.Operations
 
 /-!
 # Ideals in product rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For commutative rings `R` and `S` and ideals `I ≤ R`, `J ≤ S`, we define `ideal.prod I J` as the
 product `I × J`, viewed as an ideal of `R × S`. In `ideal_prod_eq` we show that every ideal of

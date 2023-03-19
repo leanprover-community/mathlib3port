@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.rename
-! leanprover-community/mathlib commit eabc6192c84ccce3936a8577a987b80b95ba75f6
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.MvPolynomial.Basic
 
 /-!
 # Renaming variables of polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file establishes the `rename` operation on multivariate polynomials,
 which modifies the set of variables.

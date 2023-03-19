@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.subring.pointwise
-! leanprover-community/mathlib commit c982179ec21091d3e102d8a5d9f5fe06c8fafb73
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Subsemiring.Pointwise
 import Mathbin.Data.Set.Pointwise.Basic
 
 /-! # Pointwise instances on `subring`s
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides the action `subring.pointwise_mul_action` which matches the action of
 `mul_action_set`.

@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
+! leanprover-community/mathlib commit f430769b562e0cedef59ee1ed968d67e0e0c86ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,7 +17,6 @@ import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.Projection
 import Mathbin.LinearAlgebra.Pi
-import Mathbin.RingTheory.SimpleModule
 
 /-!
 # Theory of topological modules and continuous linear maps.
@@ -185,9 +184,8 @@ end Submodule
 
 section closure
 
-variable {R R' : Type u} {M M' : Type v} [Semiring R] [TopologicalSpace R] [Ring R']
-  [TopologicalSpace R'] [TopologicalSpace M] [AddCommMonoid M] [TopologicalSpace M']
-  [AddCommGroup M'] [Module R M] [ContinuousSMul R M] [Module R' M'] [ContinuousSMul R' M']
+variable {R : Type u} {M : Type v} [Semiring R] [TopologicalSpace R] [TopologicalSpace M]
+  [AddCommMonoid M] [Module R M] [ContinuousSMul R M]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -277,16 +275,6 @@ theorem Submodule.isClosed_or_dense_of_isCoatom (s : Submodule R M) (hs : IsCoat
   (hs.le_iff.mp s.le_topologicalClosure).symm.imp (isClosed_of_closure_subset ∘ Eq.le)
     Submodule.dense_iff_topologicalClosure_eq_top.mpr
 #align submodule.is_closed_or_dense_of_is_coatom Submodule.isClosed_or_dense_of_isCoatom
-
-theorem LinearMap.isClosed_or_dense_ker [ContinuousAdd M'] [IsSimpleModule R' R']
-    (l : M' →ₗ[R'] R') : IsClosed (l.ker : Set M') ∨ Dense (l.ker : Set M') :=
-  by
-  rcases l.surjective_or_eq_zero with (hl | rfl)
-  · refine' l.ker.is_closed_or_dense_of_is_coatom (LinearMap.isCoatom_ker_of_surjective hl)
-  · rw [LinearMap.ker_zero]
-    left
-    exact isClosed_univ
-#align linear_map.is_closed_or_dense_ker LinearMap.isClosed_or_dense_ker
 
 end closure
 

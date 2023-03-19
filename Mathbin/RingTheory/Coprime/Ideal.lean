@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.ideal
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Ideal.Operations
 
 /-!
 # An additional lemma about coprime ideals
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This lemma generalises `exists_sum_eq_one_iff_pairwise_coprime` to the case of non-principal ideals.
 It is on a separate file due to import requirements.

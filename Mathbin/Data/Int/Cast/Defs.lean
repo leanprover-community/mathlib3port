@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.int.cast.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit acebd8d49928f6ed8920e502a6c90674e75bd441
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,8 @@ class AddGroupWithOne (R : Type u) extends IntCast R, AddGroup R, AddMonoidWithO
 #print AddCommGroupWithOne /-
 /-- An `add_comm_group_with_one` is an `add_group_with_one` satisfying `a + b = b + a`. -/
 @[protect_proj]
-class AddCommGroupWithOne (R : Type u) extends AddCommGroup R, AddGroupWithOne R
+class AddCommGroupWithOne (R : Type u) extends AddCommGroup R, AddGroupWithOne R,
+  AddCommMonoidWithOne R
 #align add_comm_group_with_one AddCommGroupWithOne
 -/
 

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.sups
-! leanprover-community/mathlib commit 1990ff7e1ce55c2d37ad7e357976f1afb0da6618
+! leanprover-community/mathlib commit 20715f4ac6819ef2453d9e5106ecd086a5dc2a5e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.NAry
+import Mathbin.Data.Set.Sups
 
 /-!
 # Set family operations
@@ -17,16 +18,16 @@ This file defines a few binary operations on `finset α` for use in set family c
 
 ## Main declarations
 
-* `finset.sups s t`: Finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t`.
-* `finset.infs s t`: Finset of elements of the form `a ⊓ b` where `a ∈ s`, `b ∈ t`.
+* `s ⊻ t`: Finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t`.
+* `s ⊼ t`: Finset of elements of the form `a ⊓ b` where `a ∈ s`, `b ∈ t`.
 * `finset.disj_sups s t`: Finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t` and `a`
   and `b` are disjoint.
 
 ## Notation
 
 We define the following notation in locale `finset_family`:
-* `s ⊻ t` for `finset.sups s t`
-* `s ⊼ t` for `finset.infs s t`
+* `s ⊻ t`
+* `s ⊼ t`
 * `s ○ t` for `finset.disj_sups s t`
 
 ## References
@@ -37,32 +38,33 @@ We define the following notation in locale `finset_family`:
 
 open Function
 
+open SetFamily
+
 variable {α : Type _} [DecidableEq α]
 
 namespace Finset
 
 section Sups
 
-variable [SemilatticeSup α] (s s₁ s₂ t t₁ t₂ u : Finset α)
+variable [SemilatticeSup α] (s s₁ s₂ t t₁ t₂ u v : Finset α)
 
-/-- The finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t`. -/
-def sups (s t : Finset α) : Finset α :=
-  image₂ (· ⊔ ·) s t
-#align finset.sups Finset.sups
+/-- `s ⊻ t` is the finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t`. -/
+protected def hasSups : HasSups (Finset α) :=
+  ⟨image₂ (· ⊔ ·)⟩
+#align finset.has_sups Finset.hasSups
 
--- mathport name: finset.sups
-scoped[FinsetFamily] infixl:74 " ⊻ " => Finset.sups
+scoped[FinsetFamily] attribute [instance] Finset.hasSups
 
 variable {s t} {a b c : α}
 
 @[simp]
-theorem mem_sups : c ∈ s ⊻ t ↔ ∃ a ∈ s, ∃ b ∈ t, a ⊔ b = c := by simp [sups]
+theorem mem_sups : c ∈ s ⊻ t ↔ ∃ a ∈ s, ∃ b ∈ t, a ⊔ b = c := by simp [(· ⊻ ·)]
 #align finset.mem_sups Finset.mem_sups
 
 variable (s t)
 
 @[simp, norm_cast]
-theorem coe_sups : (s ⊻ t : Set α) = Set.image2 (· ⊔ ·) s t :=
+theorem coe_sups : (↑(s ⊻ t) : Set α) = s ⊻ t :=
   coe_image₂ _ _ _
 #align finset.coe_sups Finset.coe_sups
 
@@ -94,11 +96,11 @@ theorem sups_subset_right : s₁ ⊆ s₂ → s₁ ⊻ t ⊆ s₂ ⊻ t :=
   image₂_subset_right
 #align finset.sups_subset_right Finset.sups_subset_right
 
-theorem image_subset_sups_left : b ∈ t → (fun a => a ⊔ b) '' s ⊆ s ⊻ t :=
+theorem image_subset_sups_left : b ∈ t → (s.image fun a => a ⊔ b) ⊆ s ⊻ t :=
   image_subset_image₂_left
 #align finset.image_subset_sups_left Finset.image_subset_sups_left
 
-theorem image_subset_sups_right : a ∈ s → (· ⊔ ·) a '' t ⊆ s ⊻ t :=
+theorem image_subset_sups_right : a ∈ s → t.image ((· ⊔ ·) a) ⊆ s ⊻ t :=
   image_subset_image₂_right
 #align finset.image_subset_sups_right Finset.image_subset_sups_right
 
@@ -112,11 +114,11 @@ theorem sups_subset_iff : s ⊻ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, a ⊔ b �
 #align finset.sups_subset_iff Finset.sups_subset_iff
 
 @[simp]
-theorem sups_nonempty_iff : (s ⊻ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+theorem sups_nonempty : (s ⊻ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image₂_nonempty_iff
-#align finset.sups_nonempty_iff Finset.sups_nonempty_iff
+#align finset.sups_nonempty Finset.sups_nonempty
 
-theorem Nonempty.sups : s.Nonempty → t.Nonempty → (s ⊻ t).Nonempty :=
+protected theorem Nonempty.sups : s.Nonempty → t.Nonempty → (s ⊻ t).Nonempty :=
   Nonempty.image₂
 #align finset.nonempty.sups Finset.Nonempty.sups
 
@@ -129,37 +131,33 @@ theorem Nonempty.of_sups_right : (s ⊻ t).Nonempty → t.Nonempty :=
 #align finset.nonempty.of_sups_right Finset.Nonempty.of_sups_right
 
 @[simp]
-theorem sups_empty_left : ∅ ⊻ t = ∅ :=
+theorem empty_sups : ∅ ⊻ t = ∅ :=
   image₂_empty_left
-#align finset.sups_empty_left Finset.sups_empty_left
+#align finset.empty_sups Finset.empty_sups
 
 @[simp]
-theorem sups_empty_right : s ⊻ ∅ = ∅ :=
+theorem sups_empty : s ⊻ ∅ = ∅ :=
   image₂_empty_right
-#align finset.sups_empty_right Finset.sups_empty_right
+#align finset.sups_empty Finset.sups_empty
 
 @[simp]
-theorem sups_eq_empty_iff : s ⊻ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+theorem sups_eq_empty : s ⊻ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
   image₂_eq_empty_iff
-#align finset.sups_eq_empty_iff Finset.sups_eq_empty_iff
+#align finset.sups_eq_empty Finset.sups_eq_empty
 
 @[simp]
-theorem sups_singleton_left : {a} ⊻ t = t.image fun b => a ⊔ b :=
+theorem singleton_sups : {a} ⊻ t = t.image fun b => a ⊔ b :=
   image₂_singleton_left
-#align finset.sups_singleton_left Finset.sups_singleton_left
+#align finset.singleton_sups Finset.singleton_sups
 
 @[simp]
-theorem sups_singleton_right : s ⊻ {b} = s.image fun a => a ⊔ b :=
+theorem sups_singleton : s ⊻ {b} = s.image fun a => a ⊔ b :=
   image₂_singleton_right
-#align finset.sups_singleton_right Finset.sups_singleton_right
-
-theorem sups_singleton_left' : {a} ⊻ t = t.image ((· ⊔ ·) a) :=
-  image₂_singleton_left'
-#align finset.sups_singleton_left' Finset.sups_singleton_left'
-
-theorem sups_singleton : ({a} ⊻ {b} : Finset α) = {a ⊔ b} :=
-  image₂_singleton
 #align finset.sups_singleton Finset.sups_singleton
+
+theorem singleton_sups_singleton : ({a} ⊻ {b} : Finset α) = {a ⊔ b} :=
+  image₂_singleton
+#align finset.singleton_sups_singleton Finset.singleton_sups_singleton
 
 theorem sups_union_left : (s₁ ∪ s₂) ⊻ t = s₁ ⊻ t ∪ s₂ ⊻ t :=
   image₂_union_left
@@ -178,11 +176,11 @@ theorem sups_inter_subset_right : s ⊻ (t₁ ∩ t₂) ⊆ s ⊻ t₁ ∩ s ⊻
 #align finset.sups_inter_subset_right Finset.sups_inter_subset_right
 
 theorem subset_sups {s t : Set α} :
-    ↑u ⊆ Set.image2 (· ⊔ ·) s t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊻ t' :=
+    ↑u ⊆ s ⊻ t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊻ t' :=
   subset_image₂
 #align finset.subset_sups Finset.subset_sups
 
-variable (s t u)
+variable (s t u v)
 
 theorem bunionᵢ_image_sup_left : (s.bunionᵢ fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
   bunionᵢ_image_left
@@ -214,30 +212,33 @@ theorem sups_right_comm : s ⊻ t ⊻ u = s ⊻ u ⊻ t :=
   image₂_right_comm sup_right_comm
 #align finset.sups_right_comm Finset.sups_right_comm
 
+theorem sups_sups_sups_comm : s ⊻ t ⊻ (u ⊻ v) = s ⊻ u ⊻ (t ⊻ v) :=
+  image₂_image₂_image₂_comm sup_sup_sup_comm
+#align finset.sups_sups_sups_comm Finset.sups_sups_sups_comm
+
 end Sups
 
 section Infs
 
-variable [SemilatticeInf α] (s s₁ s₂ t t₁ t₂ u : Finset α)
+variable [SemilatticeInf α] (s s₁ s₂ t t₁ t₂ u v : Finset α)
 
-/-- The finset of elements of the form `a ⊓ b` where `a ∈ s`, `b ∈ t`. -/
-def infs (s t : Finset α) : Finset α :=
-  image₂ (· ⊓ ·) s t
-#align finset.infs Finset.infs
+/-- `s ⊼ t` is the finset of elements of the form `a ⊓ b` where `a ∈ s`, `b ∈ t`. -/
+protected def hasInfs : HasInfs (Finset α) :=
+  ⟨image₂ (· ⊓ ·)⟩
+#align finset.has_infs Finset.hasInfs
 
--- mathport name: finset.infs
-scoped[FinsetFamily] infixl:74 " ⊼ " => Finset.infs
+scoped[FinsetFamily] attribute [instance] Finset.hasInfs
 
 variable {s t} {a b c : α}
 
 @[simp]
-theorem mem_infs : c ∈ s ⊼ t ↔ ∃ a ∈ s, ∃ b ∈ t, a ⊓ b = c := by simp [infs]
+theorem mem_infs : c ∈ s ⊼ t ↔ ∃ a ∈ s, ∃ b ∈ t, a ⊓ b = c := by simp [(· ⊼ ·)]
 #align finset.mem_infs Finset.mem_infs
 
 variable (s t)
 
 @[simp, norm_cast]
-theorem coe_infs : (s ⊼ t : Set α) = Set.image2 (· ⊓ ·) s t :=
+theorem coe_infs : (↑(s ⊼ t) : Set α) = s ⊼ t :=
   coe_image₂ _ _ _
 #align finset.coe_infs Finset.coe_infs
 
@@ -269,11 +270,11 @@ theorem infs_subset_right : s₁ ⊆ s₂ → s₁ ⊼ t ⊆ s₂ ⊼ t :=
   image₂_subset_right
 #align finset.infs_subset_right Finset.infs_subset_right
 
-theorem image_subset_infs_left : b ∈ t → (fun a => a ⊓ b) '' s ⊆ s ⊼ t :=
+theorem image_subset_infs_left : b ∈ t → (s.image fun a => a ⊓ b) ⊆ s ⊼ t :=
   image_subset_image₂_left
 #align finset.image_subset_infs_left Finset.image_subset_infs_left
 
-theorem image_subset_infs_right : a ∈ s → (· ⊓ ·) a '' t ⊆ s ⊼ t :=
+theorem image_subset_infs_right : a ∈ s → t.image ((· ⊓ ·) a) ⊆ s ⊼ t :=
   image_subset_image₂_right
 #align finset.image_subset_infs_right Finset.image_subset_infs_right
 
@@ -287,11 +288,11 @@ theorem infs_subset_iff : s ⊼ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, a ⊓ b �
 #align finset.infs_subset_iff Finset.infs_subset_iff
 
 @[simp]
-theorem infs_nonempty_iff : (s ⊼ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+theorem infs_nonempty : (s ⊼ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image₂_nonempty_iff
-#align finset.infs_nonempty_iff Finset.infs_nonempty_iff
+#align finset.infs_nonempty Finset.infs_nonempty
 
-theorem Nonempty.infs : s.Nonempty → t.Nonempty → (s ⊼ t).Nonempty :=
+protected theorem Nonempty.infs : s.Nonempty → t.Nonempty → (s ⊼ t).Nonempty :=
   Nonempty.image₂
 #align finset.nonempty.infs Finset.Nonempty.infs
 
@@ -304,37 +305,33 @@ theorem Nonempty.of_infs_right : (s ⊼ t).Nonempty → t.Nonempty :=
 #align finset.nonempty.of_infs_right Finset.Nonempty.of_infs_right
 
 @[simp]
-theorem infs_empty_left : ∅ ⊼ t = ∅ :=
+theorem empty_infs : ∅ ⊼ t = ∅ :=
   image₂_empty_left
-#align finset.infs_empty_left Finset.infs_empty_left
+#align finset.empty_infs Finset.empty_infs
 
 @[simp]
-theorem infs_empty_right : s ⊼ ∅ = ∅ :=
+theorem infs_empty : s ⊼ ∅ = ∅ :=
   image₂_empty_right
-#align finset.infs_empty_right Finset.infs_empty_right
+#align finset.infs_empty Finset.infs_empty
 
 @[simp]
-theorem infs_eq_empty_iff : s ⊼ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+theorem infs_eq_empty : s ⊼ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
   image₂_eq_empty_iff
-#align finset.infs_eq_empty_iff Finset.infs_eq_empty_iff
+#align finset.infs_eq_empty Finset.infs_eq_empty
 
 @[simp]
-theorem infs_singleton_left : {a} ⊼ t = t.image fun b => a ⊓ b :=
+theorem singleton_infs : {a} ⊼ t = t.image fun b => a ⊓ b :=
   image₂_singleton_left
-#align finset.infs_singleton_left Finset.infs_singleton_left
+#align finset.singleton_infs Finset.singleton_infs
 
 @[simp]
-theorem infs_singleton_right : s ⊼ {b} = s.image fun a => a ⊓ b :=
+theorem infs_singleton : s ⊼ {b} = s.image fun a => a ⊓ b :=
   image₂_singleton_right
-#align finset.infs_singleton_right Finset.infs_singleton_right
-
-theorem infs_singleton_left' : {a} ⊼ t = t.image ((· ⊓ ·) a) :=
-  image₂_singleton_left'
-#align finset.infs_singleton_left' Finset.infs_singleton_left'
-
-theorem infs_singleton : ({a} ⊼ {b} : Finset α) = {a ⊓ b} :=
-  image₂_singleton
 #align finset.infs_singleton Finset.infs_singleton
+
+theorem singleton_infs_singleton : ({a} ⊼ {b} : Finset α) = {a ⊓ b} :=
+  image₂_singleton
+#align finset.singleton_infs_singleton Finset.singleton_infs_singleton
 
 theorem infs_union_left : (s₁ ∪ s₂) ⊼ t = s₁ ⊼ t ∪ s₂ ⊼ t :=
   image₂_union_left
@@ -353,11 +350,11 @@ theorem infs_inter_subset_right : s ⊼ (t₁ ∩ t₂) ⊆ s ⊼ t₁ ∩ s ⊼
 #align finset.infs_inter_subset_right Finset.infs_inter_subset_right
 
 theorem subset_infs {s t : Set α} :
-    ↑u ⊆ Set.image2 (· ⊓ ·) s t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊼ t' :=
+    ↑u ⊆ s ⊼ t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊼ t' :=
   subset_image₂
 #align finset.subset_infs Finset.subset_infs
 
-variable (s t u)
+variable (s t u v)
 
 theorem bunionᵢ_image_inf_left : (s.bunionᵢ fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
   bunionᵢ_image_left
@@ -389,9 +386,35 @@ theorem infs_right_comm : s ⊼ t ⊼ u = s ⊼ u ⊼ t :=
   image₂_right_comm inf_right_comm
 #align finset.infs_right_comm Finset.infs_right_comm
 
+theorem infs_infs_infs_comm : s ⊼ t ⊼ (u ⊼ v) = s ⊼ u ⊼ (t ⊼ v) :=
+  image₂_image₂_image₂_comm inf_inf_inf_comm
+#align finset.infs_infs_infs_comm Finset.infs_infs_infs_comm
+
 end Infs
 
 open FinsetFamily
+
+section DistribLattice
+
+variable [DistribLattice α] (s t u : Finset α)
+
+theorem sups_infs_subset_left : s ⊻ t ⊼ u ⊆ (s ⊻ t) ⊼ (s ⊻ u) :=
+  image₂_distrib_subset_left fun _ _ _ => sup_inf_left
+#align finset.sups_infs_subset_left Finset.sups_infs_subset_left
+
+theorem sups_infs_subset_right : t ⊼ u ⊻ s ⊆ (t ⊻ s) ⊼ (u ⊻ s) :=
+  image₂_distrib_subset_right fun _ _ _ => sup_inf_right
+#align finset.sups_infs_subset_right Finset.sups_infs_subset_right
+
+theorem infs_sups_subset_left : s ⊼ (t ⊻ u) ⊆ s ⊼ t ⊻ s ⊼ u :=
+  image₂_distrib_subset_left fun _ _ _ => inf_sup_left
+#align finset.infs_sups_subset_left Finset.infs_sups_subset_left
+
+theorem infs_sups_subset_right : (t ⊻ u) ⊼ s ⊆ t ⊼ s ⊻ u ⊼ s :=
+  image₂_distrib_subset_right fun _ _ _ => inf_sup_right
+#align finset.infs_sups_subset_right Finset.infs_sups_subset_right
+
+end DistribLattice
 
 section DisjSups
 
@@ -508,7 +531,7 @@ open FinsetFamily
 
 section DistribLattice
 
-variable [DistribLattice α] [OrderBot α] [@DecidableRel α Disjoint] (s t u : Finset α)
+variable [DistribLattice α] [OrderBot α] [@DecidableRel α Disjoint] (s t u v : Finset α)
 
 theorem disjSups_assoc : ∀ s t u : Finset α, s ○ t ○ u = s ○ (t ○ u) :=
   by
@@ -525,6 +548,10 @@ theorem disjSups_left_comm : s ○ (t ○ u) = t ○ (s ○ u) := by
 
 theorem disjSups_right_comm : s ○ t ○ u = s ○ u ○ t := by simp_rw [disj_sups_assoc, disj_sups_comm]
 #align finset.disj_sups_right_comm Finset.disjSups_right_comm
+
+theorem disjSups_disjSups_disjSups_comm : s ○ t ○ (u ○ v) = s ○ u ○ (t ○ v) := by
+  simp_rw [← disj_sups_assoc, disj_sups_right_comm]
+#align finset.disj_sups_disj_sups_disj_sups_comm Finset.disjSups_disjSups_disjSups_comm
 
 end DistribLattice
 

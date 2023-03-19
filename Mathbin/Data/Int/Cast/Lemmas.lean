@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.cast.lemmas
-! leanprover-community/mathlib commit 7a89b1aed52bcacbcc4a8ad515e72c5c07268940
+! leanprover-community/mathlib commit acebd8d49928f6ed8920e502a6c90674e75bd441
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -639,34 +639,6 @@ variable {π : ι → Type _} [∀ i, AddGroupWithOne (π i)]
 instance : AddGroupWithOne (∀ i, π i) := by refine_struct { .. } <;> pi_instance_derive_field
 
 end Pi
-
-namespace MulOpposite
-
-variable [AddGroupWithOne α]
-
-/- warning: mul_opposite.op_int_cast -> MulOpposite.op_intCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (z : Int), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) z)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Int (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Int (MulOpposite.{u1} α) (Int.castCoe.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toHasIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addGroupWithOne.{u1} α _inst_1))))) z)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (z : Int), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) z)) (Int.cast.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instAddGroupWithOneMulOpposite.{u1} α _inst_1)) z)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_int_cast MulOpposite.op_intCastₓ'. -/
-@[simp, norm_cast]
-theorem op_intCast (z : ℤ) : op (z : α) = z :=
-  rfl
-#align mul_opposite.op_int_cast MulOpposite.op_intCast
-
-/- warning: mul_opposite.unop_int_cast -> MulOpposite.unop_intCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (MulOpposite.unop.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Int (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Int (MulOpposite.{u1} α) (Int.castCoe.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toHasIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addGroupWithOne.{u1} α _inst_1))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (MulOpposite.unop.{u1} α (Int.cast.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instAddGroupWithOneMulOpposite.{u1} α _inst_1)) n)) (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_int_cast MulOpposite.unop_intCastₓ'. -/
-@[simp, norm_cast]
-theorem unop_intCast (n : ℤ) : unop (n : αᵐᵒᵖ) = n :=
-  rfl
-#align mul_opposite.unop_int_cast MulOpposite.unop_intCast
-
-end MulOpposite
 
 /-! ### Order dual -/
 

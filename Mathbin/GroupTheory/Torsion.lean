@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Berman
 
 ! This file was ported from Lean 3 source module group_theory.torsion
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 1f4705ccdfe1e557fc54a0ce081a05e33d2e6240
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -276,11 +276,25 @@ theorem torsion_eq_top (tG : IsTorsion G) : torsion G = ⊤ := by ext <;> tauto
 #align add_monoid.is_torsion.torsion_eq_top AddMonoid.IsTorsion.torsion_eq_top
 
 /-- A torsion monoid is isomorphic to its torsion submonoid. -/
-@[to_additive "An additive torsion monoid is isomorphic to its torsion submonoid.", simps]
+@[to_additive "An additive torsion monoid is isomorphic to its torsion submonoid."]
 def torsionMulEquiv (tG : IsTorsion G) : torsion G ≃* G :=
   (MulEquiv.submonoidCongr tG.torsion_eq_top).trans Submonoid.topEquiv
 #align monoid.is_torsion.torsion_mul_equiv Monoid.IsTorsion.torsionMulEquiv
 #align add_monoid.is_torsion.torsion_add_equiv AddMonoid.IsTorsion.torsionAddEquiv
+
+@[to_additive]
+theorem torsionMulEquiv_apply (tG : IsTorsion G) (a : torsion G) :
+    tG.torsionMulEquiv a = MulEquiv.submonoidCongr tG.torsion_eq_top a :=
+  rfl
+#align monoid.is_torsion.torsion_mul_equiv_apply Monoid.IsTorsion.torsionMulEquiv_apply
+#align add_monoid.is_torsion.torsion_add_equiv_apply AddMonoid.IsTorsion.torsion_add_equiv_apply
+
+@[to_additive]
+theorem torsionMulEquiv_symm_apply_coe (tG : IsTorsion G) (a : G) :
+    tG.torsionMulEquiv.symm a = ⟨Submonoid.topEquiv.symm a, tG _⟩ :=
+  rfl
+#align monoid.is_torsion.torsion_mul_equiv_symm_apply_coe Monoid.IsTorsion.torsionMulEquiv_symm_apply_coe
+#align add_monoid.is_torsion.torsion_add_equiv_symm_apply_coe AddMonoid.IsTorsion.torsion_add_equiv_symm_apply_coe
 
 end Monoid.IsTorsion
 

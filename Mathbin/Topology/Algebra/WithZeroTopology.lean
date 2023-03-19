@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.with_zero_topology
-! leanprover-community/mathlib commit 3e0c4d76b6ebe9dfafb67d16f7286d2731ed6064
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Algebra.Order.Field
 
 /-!
 # The topology on linearly ordered commutative groups with zero
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `Γ₀` be a linearly ordered commutative group to which we have adjoined a zero element.
 Then `Γ₀` may naturally be endowed with a topology that turns `Γ₀` into a topological monoid.

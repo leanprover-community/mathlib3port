@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.cast
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
+! leanprover-community/mathlib commit acebd8d49928f6ed8920e502a6c90674e75bd441
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -866,36 +866,6 @@ Case conversion may be inaccurate. Consider using '#align rat.subsingleton_ring_
 instance Rat.subsingleton_ringHom {R : Type _} [Semiring R] : Subsingleton (ℚ →+* R) :=
   ⟨RingHom.ext_rat⟩
 #align rat.subsingleton_ring_hom Rat.subsingleton_ringHom
-
-namespace MulOpposite
-
-variable [DivisionRing α]
-
-/- warning: mul_opposite.op_rat_cast -> MulOpposite.op_ratCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] (r : Rat), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat α (HasLiftT.mk.{1, succ u1} Rat α (CoeTCₓ.coe.{1, succ u1} Rat α (Rat.castCoe.{u1} α (DivisionRing.toHasRatCast.{u1} α _inst_1)))) r)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Rat (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Rat (MulOpposite.{u1} α) (Rat.castCoe.{u1} (MulOpposite.{u1} α) (DivisionRing.toHasRatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.divisionRing.{u1} α _inst_1))))) r)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] (r : Rat), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (Rat.cast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) r)) (Rat.cast.{u1} (MulOpposite.{u1} α) (DivisionRing.toRatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instDivisionRingMulOpposite.{u1} α _inst_1)) r)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_rat_cast MulOpposite.op_ratCastₓ'. -/
-@[simp, norm_cast]
-theorem op_ratCast (r : ℚ) : op (r : α) = (↑r : αᵐᵒᵖ) := by
-  rw [cast_def, div_eq_mul_inv, op_mul, op_inv, op_nat_cast, op_int_cast,
-    (Commute.cast_int_right _ r.num).Eq, cast_def, div_eq_mul_inv]
-#align mul_opposite.op_rat_cast MulOpposite.op_ratCast
-
-/- warning: mul_opposite.unop_rat_cast -> MulOpposite.unop_ratCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] (r : Rat), Eq.{succ u1} α (MulOpposite.unop.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Rat (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Rat (MulOpposite.{u1} α) (Rat.castCoe.{u1} (MulOpposite.{u1} α) (DivisionRing.toHasRatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.divisionRing.{u1} α _inst_1))))) r)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat α (HasLiftT.mk.{1, succ u1} Rat α (CoeTCₓ.coe.{1, succ u1} Rat α (Rat.castCoe.{u1} α (DivisionRing.toHasRatCast.{u1} α _inst_1)))) r)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] (r : Rat), Eq.{succ u1} α (MulOpposite.unop.{u1} α (Rat.cast.{u1} (MulOpposite.{u1} α) (DivisionRing.toRatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instDivisionRingMulOpposite.{u1} α _inst_1)) r)) (Rat.cast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) r)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_rat_cast MulOpposite.unop_ratCastₓ'. -/
-@[simp, norm_cast]
-theorem unop_ratCast (r : ℚ) : unop (r : αᵐᵒᵖ) = r := by
-  rw [cast_def, div_eq_mul_inv, unop_mul, unop_inv, unop_nat_cast, unop_int_cast,
-    (Commute.cast_int_right _ r.num).Eq, cast_def, div_eq_mul_inv]
-#align mul_opposite.unop_rat_cast MulOpposite.unop_ratCast
-
-end MulOpposite
 
 section Smul
 

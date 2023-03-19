@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.pointwise
-! leanprover-community/mathlib commit b2c707cd190a58ea0565c86695a19e99ccecc215
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
 # Pointwise actions on subalgebras.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `R'` acts on an `R`-algebra `A` (so that `R'` and `R` actions commute)
 then we get an `R'` action on the collection of `R`-subalgebras.

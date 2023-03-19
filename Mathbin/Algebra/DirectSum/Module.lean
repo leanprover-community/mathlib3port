@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.module
-! leanprover-community/mathlib commit 6623e6af705e97002a9054c1c05a980180276fc1
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Dfinsupp
 
 /-!
 # Direct sum of modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The first part of the file provides constructors for direct sums of modules. It provides a
 construction of the direct sum using the universal property and proves its uniqueness

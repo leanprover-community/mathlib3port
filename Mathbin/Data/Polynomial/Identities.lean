@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.identities
-! leanprover-community/mathlib commit 4e1eeebe63ac6d44585297e89c6e7ee5cbda487a
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Tactic.RingExp
 
 /-!
 # Theory of univariate polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The main def is `binom_expansion`.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.free_ring
-! leanprover-community/mathlib commit d6814c584384ddf2825ff038e868451a7c956f31
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.GroupTheory.FreeAbelianGroup
 
 /-!
 # Free rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The theory of the free ring over a type.
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.no_zero_divisors
-! leanprover-community/mathlib commit 3e067975886cf5801e597925328c335609511b1a
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.MonoidAlgebra.Support
 
 /-!
 # Variations on non-zero divisors in `add_monoid_algebra`s
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file studies the interaction between typeclass assumptions on two Types `R` and `A` and
 whether `add_monoid_algebra R A` has non-zero zero-divisors.  For some background on related

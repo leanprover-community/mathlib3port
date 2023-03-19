@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.counit
-! leanprover-community/mathlib commit abb3121f210743a930dea73cd766d988079bdf8b
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.MvPolynomial.Basic
 
 /-!
 ## Counit morphisms for multivariate polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 One may consider the ring of multivariate polynomials `mv_polynomial A R` with coefficients in `R`
 and variables indexed by `A`. If `A` is not just a type, but an algebra over `R`,

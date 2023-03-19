@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.n_ary
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
+! leanprover-community/mathlib commit 20715f4ac6819ef2453d9e5106ecd086a5dc2a5e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,8 +33,8 @@ open Function Set
 
 namespace Finset
 
-variable {α α' β β' γ γ' δ δ' ε ε' : Type _} [DecidableEq α'] [DecidableEq β'] [DecidableEq γ]
-  [DecidableEq γ'] [DecidableEq δ] [DecidableEq δ'] [DecidableEq ε] [DecidableEq ε']
+variable {α α' β β' γ γ' δ δ' ε ε' ζ ζ' ν : Type _} [DecidableEq α'] [DecidableEq β']
+  [DecidableEq γ] [DecidableEq γ'] [DecidableEq δ] [DecidableEq δ'] [DecidableEq ε] [DecidableEq ε']
   {f f' : α → β → γ} {g g' : α → β → γ → δ} {s s' : Finset α} {t t' : Finset β} {u u' : Finset γ}
   {a a' : α} {b b' : β} {c : γ}
 
@@ -160,22 +160,22 @@ theorem image₂_subset_right (hs : s ⊆ s') : image₂ f s t ⊆ image₂ f s'
 
 /- warning: finset.image_subset_image₂_left -> Finset.image_subset_image₂_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {b : β}, (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b t) -> (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image.{u1, u3} α γ (fun (a : α) => f a b) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (Finset.{u3} γ) (Set.{u3} γ) (HasLiftT.mk.{succ u3, succ u3} (Finset.{u3} γ) (Set.{u3} γ) (CoeTCₓ.coe.{succ u3, succ u3} (Finset.{u3} γ) (Set.{u3} γ) (Finset.Set.hasCoeT.{u3} γ))) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {b : β}, (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b t) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image.{u1, u3} α γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (a : α) => f a b) s) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u3} β} {b : β}, (Membership.mem.{u3, u3} β (Finset.{u3} β) (Finset.instMembershipFinset.{u3} β) b t) -> (HasSubset.Subset.{u2} (Set.{u2} γ) (Set.instHasSubsetSet.{u2} γ) (Set.image.{u1, u2} α γ (fun (a : α) => f a b) (Finset.toSet.{u1} α s)) (Finset.toSet.{u2} γ (Finset.image₂.{u1, u3, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)))
 Case conversion may be inaccurate. Consider using '#align finset.image_subset_image₂_left Finset.image_subset_image₂_leftₓ'. -/
-theorem image_subset_image₂_left (hb : b ∈ t) : (fun a => f a b) '' s ⊆ image₂ f s t :=
-  ball_image_of_ball fun a ha => mem_image₂_of_mem ha hb
+theorem image_subset_image₂_left (hb : b ∈ t) : (s.image fun a => f a b) ⊆ image₂ f s t :=
+  image_subset_iff.2 fun a ha => mem_image₂_of_mem ha hb
 #align finset.image_subset_image₂_left Finset.image_subset_image₂_left
 
 /- warning: finset.image_subset_image₂_right -> Finset.image_subset_image₂_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {a : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image.{u2, u3} β γ (f a) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) t)) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (Finset.{u3} γ) (Set.{u3} γ) (HasLiftT.mk.{succ u3, succ u3} (Finset.{u3} γ) (Set.{u3} γ) (CoeTCₓ.coe.{succ u3, succ u3} (Finset.{u3} γ) (Set.{u3} γ) (Finset.Set.hasCoeT.{u3} γ))) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {a : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (f a) t) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u3} α} {t : Finset.{u1} β} {a : α}, (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) -> (HasSubset.Subset.{u2} (Set.{u2} γ) (Set.instHasSubsetSet.{u2} γ) (Set.image.{u1, u2} β γ (f a) (Finset.toSet.{u1} β t)) (Finset.toSet.{u2} γ (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)))
 Case conversion may be inaccurate. Consider using '#align finset.image_subset_image₂_right Finset.image_subset_image₂_rightₓ'. -/
-theorem image_subset_image₂_right (ha : a ∈ s) : f a '' t ⊆ image₂ f s t :=
-  ball_image_of_ball fun b => mem_image₂_of_mem ha
+theorem image_subset_image₂_right (ha : a ∈ s) : t.image (f a) ⊆ image₂ f s t :=
+  image_subset_iff.2 fun b => mem_image₂_of_mem ha
 #align finset.image_subset_image₂_right Finset.image_subset_image₂_right
 
 /- warning: finset.forall_image₂_iff -> Finset.forall_image₂_iff is a dubious translation:
@@ -702,6 +702,16 @@ theorem image₂_right_comm {γ : Type _} {u : Finset γ} {f : δ → γ → ε}
     push_cast
     exact image2_right_comm h_right_comm
 #align finset.image₂_right_comm Finset.image₂_right_comm
+
+theorem image₂_image₂_image₂_comm {γ δ : Type _} {u : Finset γ} {v : Finset δ} [DecidableEq ζ]
+    [DecidableEq ζ'] [DecidableEq ν] {f : ε → ζ → ν} {g : α → β → ε} {h : γ → δ → ζ}
+    {f' : ε' → ζ' → ν} {g' : α → γ → ε'} {h' : β → δ → ζ'}
+    (h_comm : ∀ a b c d, f (g a b) (h c d) = f' (g' a c) (h' b d)) :
+    image₂ f (image₂ g s t) (image₂ h u v) = image₂ f' (image₂ g' s u) (image₂ h' t v) :=
+  coe_injective <| by
+    push_cast
+    exact image2_image2_image2_comm h_comm
+#align finset.image₂_image₂_image₂_comm Finset.image₂_image₂_image₂_comm
 
 /- warning: finset.image_image₂_distrib -> Finset.image_image₂_distrib is a dubious translation:
 lean 3 declaration is

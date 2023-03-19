@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.basic
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Ideal.Operations
 /-!
 
 # The basics of valuation theory.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The basic theory of valuations (non-archimedean norms) on a commutative ring,
 following T. Wedhorn's unpublished notes “Adic Spaces” ([wedhorn_adic]).

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.sphere.basic
-! leanprover-community/mathlib commit eea141bc9cf205beebfd46e2068c7c01ee8db4f6
+! leanprover-community/mathlib commit 027ff1e4f0b337893269a7dcd90476ceab95570b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,19 +36,23 @@ open RealInnerProductSpace
 
 namespace EuclideanGeometry
 
-variable {V : Type _} (P : Type _) [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+variable {V : Type _} (P : Type _)
 
 open FiniteDimensional
 
 /-- A `sphere P` bundles a `center` and `radius`. This definition does not require the radius to
 be positive; that should be given as a hypothesis to lemmas that require it. -/
 @[ext]
-structure Sphere where
+structure Sphere [MetricSpace P] where
   center : P
   radius : ℝ
 #align euclidean_geometry.sphere EuclideanGeometry.Sphere
 
 variable {P}
+
+section MetricSpace
+
+variable [MetricSpace P]
 
 instance [Nonempty P] : Nonempty (Sphere P) :=
   ⟨⟨Classical.arbitrary P, 0⟩⟩
@@ -172,16 +176,11 @@ theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Co
   exact ⟨c, r, fun p hp => hcr p (hs hp)⟩
 #align euclidean_geometry.cospherical.subset EuclideanGeometry.Cospherical.subset
 
-include V
-
 /-- The empty set is cospherical. -/
-theorem cospherical_empty : Cospherical (∅ : Set P) :=
-  by
-  use add_torsor.nonempty.some
-  simp
+theorem cospherical_empty [Nonempty P] : Cospherical (∅ : Set P) :=
+  let ⟨p⟩ := ‹Nonempty P›
+  ⟨p, 0, fun p => False.elim⟩
 #align euclidean_geometry.cospherical_empty EuclideanGeometry.cospherical_empty
-
-omit V
 
 /-- A single point is cospherical. -/
 theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) :=
@@ -190,26 +189,57 @@ theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) :=
   simp
 #align euclidean_geometry.cospherical_singleton EuclideanGeometry.cospherical_singleton
 
+end MetricSpace
+
+section NormedSpace
+
+variable [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+
 include V
 
 /-- Two points are cospherical. -/
 theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
-  by
-  use (2⁻¹ : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁, (2⁻¹ : ℝ) * dist p₂ p₁
-  intro p
-  rw [Set.mem_insert_iff, Set.mem_singleton_iff]
-  rintro ⟨_ | _⟩
-  · rw [dist_eq_norm_vsub V p₁, vsub_vadd_eq_vsub_sub, vsub_self, zero_sub, norm_neg, norm_smul,
-      dist_eq_norm_vsub V p₂]
-    simp
-  · rw [H, dist_eq_norm_vsub V p₂, vsub_vadd_eq_vsub_sub, dist_eq_norm_vsub V p₂]
-    conv_lhs =>
-      congr
-      congr
-      rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
-    rw [← sub_smul, norm_smul]
-    norm_num
+  ⟨midpoint ℝ p₁ p₂, ‖(2 : ℝ)‖⁻¹ * dist p₁ p₂,
+    by
+    rintro p (rfl | rfl | _)
+    · rw [dist_comm, dist_midpoint_left]
+    · rw [dist_comm, dist_midpoint_right]⟩
 #align euclidean_geometry.cospherical_pair EuclideanGeometry.cospherical_pair
+
+/-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
+directly in terms of `cospherical` instead of using `concyclic`.) -/
+structure Concyclic (ps : Set P) : Prop where
+  Cospherical : Cospherical ps
+  Coplanar : Coplanar ℝ ps
+#align euclidean_geometry.concyclic EuclideanGeometry.Concyclic
+
+/-- A subset of a concyclic set is concyclic. -/
+theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concyclic ps₂) : Concyclic ps₁ :=
+  ⟨h.1.Subset hs, h.2.Subset hs⟩
+#align euclidean_geometry.concyclic.subset EuclideanGeometry.Concyclic.subset
+
+/-- The empty set is concyclic. -/
+theorem concyclic_empty : Concyclic (∅ : Set P) :=
+  ⟨cospherical_empty, coplanar_empty ℝ P⟩
+#align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclic_empty
+
+/-- A single point is concyclic. -/
+theorem concyclic_singleton (p : P) : Concyclic ({p} : Set P) :=
+  ⟨cospherical_singleton p, coplanar_singleton ℝ p⟩
+#align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclic_singleton
+
+/-- Two points are concyclic. -/
+theorem concyclic_pair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
+  ⟨cospherical_pair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
+#align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclic_pair
+
+end NormedSpace
+
+section EuclideanSpace
+
+variable [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+
+include V
 
 /-- Any three points in a cospherical set are affinely independent. -/
 theorem Cospherical.affineIndependent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P}
@@ -373,32 +403,7 @@ theorem sbtw_of_collinear_of_dist_center_lt_radius {s : Sphere P} {p₁ p₂ p�
   h.sbtw_of_dist_eq_of_dist_lt hp₁ hp₂ hp₃ hp₁p₃
 #align euclidean_geometry.sbtw_of_collinear_of_dist_center_lt_radius EuclideanGeometry.sbtw_of_collinear_of_dist_center_lt_radius
 
-/-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
-directly in terms of `cospherical` instead of using `concyclic`.) -/
-structure Concyclic (ps : Set P) : Prop where
-  Cospherical : Cospherical ps
-  Coplanar : Coplanar ℝ ps
-#align euclidean_geometry.concyclic EuclideanGeometry.Concyclic
-
-/-- A subset of a concyclic set is concyclic. -/
-theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concyclic ps₂) : Concyclic ps₁ :=
-  ⟨h.1.Subset hs, h.2.Subset hs⟩
-#align euclidean_geometry.concyclic.subset EuclideanGeometry.Concyclic.subset
-
-/-- The empty set is concyclic. -/
-theorem concyclic_empty : Concyclic (∅ : Set P) :=
-  ⟨cospherical_empty, coplanar_empty ℝ P⟩
-#align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclic_empty
-
-/-- A single point is concyclic. -/
-theorem concyclic_singleton (p : P) : Concyclic ({p} : Set P) :=
-  ⟨cospherical_singleton p, coplanar_singleton ℝ p⟩
-#align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclic_singleton
-
-/-- Two points are concyclic. -/
-theorem concyclic_pair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
-  ⟨cospherical_pair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
-#align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclic_pair
+end EuclideanSpace
 
 end EuclideanGeometry
 

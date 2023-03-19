@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.cast.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit acebd8d49928f6ed8920e502a6c90674e75bd441
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -453,34 +453,6 @@ instance Nat.uniqueRingHom {R : Type _} [NonAssocSemiring R] : Unique (ℕ →+*
   uniq := RingHom.eq_natCast'
 #align nat.unique_ring_hom Nat.uniqueRingHom
 -/
-
-namespace MulOpposite
-
-variable [AddMonoidWithOne α]
-
-/- warning: mul_opposite.op_nat_cast -> MulOpposite.op_natCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Nat (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Nat (MulOpposite.{u1} α) (Nat.castCoe.{u1} (MulOpposite.{u1} α) (AddMonoidWithOne.toNatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addMonoidWithOne.{u1} α _inst_1))))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1) n)) (Nat.cast.{u1} (MulOpposite.{u1} α) (AddMonoidWithOne.toNatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instAddMonoidWithOneMulOpposite.{u1} α _inst_1)) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_nat_cast MulOpposite.op_natCastₓ'. -/
-@[simp, norm_cast]
-theorem op_natCast (n : ℕ) : op (n : α) = n :=
-  rfl
-#align mul_opposite.op_nat_cast MulOpposite.op_natCast
-
-/- warning: mul_opposite.unop_nat_cast -> MulOpposite.unop_natCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} α (MulOpposite.unop.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Nat (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Nat (MulOpposite.{u1} α) (Nat.castCoe.{u1} (MulOpposite.{u1} α) (AddMonoidWithOne.toNatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addMonoidWithOne.{u1} α _inst_1))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} α (MulOpposite.unop.{u1} α (Nat.cast.{u1} (MulOpposite.{u1} α) (AddMonoidWithOne.toNatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instAddMonoidWithOneMulOpposite.{u1} α _inst_1)) n)) (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_nat_cast MulOpposite.unop_natCastₓ'. -/
-@[simp, norm_cast]
-theorem unop_natCast (n : ℕ) : unop (n : αᵐᵒᵖ) = n :=
-  rfl
-#align mul_opposite.unop_nat_cast MulOpposite.unop_natCast
-
-end MulOpposite
 
 namespace Pi
 

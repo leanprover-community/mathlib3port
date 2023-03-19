@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.complex.exponential
-! leanprover-community/mathlib commit 372edc36e5d2caafdd135769e0136b5a59186834
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Nat.Choose.Sum
 
 /-!
 # Exponential, trigonometric and hyperbolic trigonometric functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the definitions of the real and complex exponential, sine, cosine, tangent,
 hyperbolic sine, hyperbolic cosine, and hyperbolic tangent functions.

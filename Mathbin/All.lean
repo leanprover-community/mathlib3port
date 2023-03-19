@@ -1678,6 +1678,7 @@ import Mathbin.Data.Set.Pointwise.Support
 import Mathbin.Data.Set.Prod
 import Mathbin.Data.Set.Semiring
 import Mathbin.Data.Set.Sigma
+import Mathbin.Data.Set.Sups
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.SetLike.Fintype
 import Mathbin.Data.Setoid.Basic
@@ -2840,6 +2841,7 @@ import Mathbin.Topology.Algebra.Module.FiniteDimension
 import Mathbin.Topology.Algebra.Module.LinearPmap
 import Mathbin.Topology.Algebra.Module.LocallyConvex
 import Mathbin.Topology.Algebra.Module.Multilinear
+import Mathbin.Topology.Algebra.Module.Simple
 import Mathbin.Topology.Algebra.Module.StrongTopology
 import Mathbin.Topology.Algebra.Module.WeakDual
 import Mathbin.Topology.Algebra.Monoid

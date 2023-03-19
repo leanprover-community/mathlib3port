@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit ce7e9d53d4bbc38065db3b595cd5bd73c323bc1d
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Prod
 
 /-!
 # Trivial Square-Zero Extension
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a ring `R` together with an `(R, R)`-bimodule `M`, the trivial square-zero extension of `M`
 over `R` is defined to be the `R`-algebra `R ⊕ M` with multiplication given by

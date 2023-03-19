@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.of_biproducts
-! leanprover-community/mathlib commit 061ea99a5610cfc72c286aa930d3c1f47f74f3d0
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.GroupTheory.EckmannHilton
 
 /-!
 # Constructing a semiadditive structure from binary biproducts
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that any category with zero morphisms and binary biproducts is enriched over the category
 of commutative monoids.

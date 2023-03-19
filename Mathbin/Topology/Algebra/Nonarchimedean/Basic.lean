@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.basic
-! leanprover-community/mathlib commit 83f81aea33931a1edb94ce0f32b9a5d484de6978
+! leanprover-community/mathlib commit 932872382355f00112641d305ba0619305dc8642
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Algebra.Ring.Basic
 
 /-!
 # Nonarchimedean Topology
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we set up the theory of nonarchimedean topological groups and rings.
 
