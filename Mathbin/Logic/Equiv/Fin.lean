@@ -740,6 +740,7 @@ def finProdFinEquiv : Fin m × Fin n ≃ Fin (m * n)
 #align fin_prod_fin_equiv finProdFinEquiv
 -/
 
+#print Nat.divModEquiv /-
 /-- The equivalence induced by `a ↦ (a / n, a % n)` for nonzero `n`.
 
 This is like `fin_prod_fin_equiv.symm` but with `m` infinite.
@@ -756,7 +757,9 @@ def Nat.divModEquiv (n : ℕ) [NeZero n] : ℕ ≃ ℕ × Fin n
     dsimp only
     rw [add_comm, Nat.add_mul_div_right _ _ (NeZero.pos n), Nat.div_eq_of_lt p.2.is_lt, zero_add]
 #align nat.div_mod_equiv Nat.divModEquiv
+-/
 
+#print Int.divModEquiv /-
 /-- The equivalence induced by `a ↦ (a / n, a % n)` for nonzero `n`.
 
 See `int.div_mod_unique` for a similar propositional statement. -/
@@ -778,6 +781,7 @@ def Int.divModEquiv (n : ℕ) [NeZero n] : ℤ ≃ ℤ × Fin n
       Int.add_mul_emod_self, Int.emod_eq_of_lt h1 h2, Int.toNat_coe_nat]
     exact ⟨zero_add q, Fin.val_cast_of_lt hrn⟩
 #align int.div_mod_equiv Int.divModEquiv
+-/
 
 #print Fin.castLeOrderIso /-
 /-- Promote a `fin n` into a larger `fin m`, as a subtype where the underlying
