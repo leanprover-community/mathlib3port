@@ -215,7 +215,7 @@ theorem divByMonic_eq_div (p : R[X]) (hq : Monic q) : p /ₘ q = p / q :=
 #align polynomial.div_by_monic_eq_div Polynomial.divByMonic_eq_div
 
 theorem mod_x_sub_c_eq_c_eval (p : R[X]) (a : R) : p % (X - C a) = C (p.eval a) :=
-  modByMonic_eq_mod p (monic_X_sub_C a) ▸ modByMonic_x_sub_c_eq_c_eval _ _
+  modByMonic_eq_mod p (monic_X_sub_C a) ▸ modByMonic_X_sub_C_eq_C_eval _ _
 #align polynomial.mod_X_sub_C_eq_C_eval Polynomial.mod_x_sub_c_eq_c_eval
 
 theorem mul_div_eq_iff_isRoot : (X - C a) * (p / (X - C a)) = p ↔ IsRoot p a :=
