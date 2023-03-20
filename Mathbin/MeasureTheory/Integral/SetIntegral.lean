@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 733fa0048f88bd38678c283c8c1bb1445ac5e23b
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1236,7 +1236,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 
 theorem integral_inner {f : α → E'} (hf : Integrable f μ) (c : E') :
     (∫ x, ⟪c, f x⟫ ∂μ) = ⟪c, ∫ x, f x ∂μ⟫ :=
-  ((@innerSL 𝕜 E' _ _ c).restrictScalars ℝ).integral_comp_comm hf
+  ((innerSL 𝕜 c).restrictScalars ℝ).integral_comp_comm hf
 #align integral_inner integral_inner
 
 theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : Integrable f μ)

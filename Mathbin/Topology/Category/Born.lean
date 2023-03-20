@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.category.Born
-! leanprover-community/mathlib commit 2143571557740bf69d0631339deea0d0e479df54
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Bornology.Hom
 
 /-!
 # The category of bornologies
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This defines `Born`, the category of bornologies.
 -/

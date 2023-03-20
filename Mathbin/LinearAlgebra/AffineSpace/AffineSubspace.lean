@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_subspace
-! leanprover-community/mathlib commit b875cbb7f2aa2b4c685aaa2f99705689c95322ad
+! leanprover-community/mathlib commit e96bdfbd1e8c98a09ff75f7ac6204d142debc840
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,12 +203,10 @@ variable (k : Type _) {V : Type _} (P : Type _) [Ring k] [AddCommGroup V] [Modul
 
 include V
 
--- TODO Refactor to use `instance : set_like (affine_subspace k P) P :=` instead
-instance : Coe (AffineSubspace k P) (Set P) :=
-  ⟨carrier⟩
-
-instance : Membership P (AffineSubspace k P) :=
-  ⟨fun p s => p ∈ (s : Set P)⟩
+instance : SetLike (AffineSubspace k P) P
+    where
+  coe := carrier
+  coe_injective' p q _ := by cases p <;> cases q <;> congr
 
 /-- A point is in an affine subspace coerced to a set if and only if
 it is in that affine subspace. -/
@@ -388,18 +386,18 @@ theorem vsub_left_mem_direction_iff_mem {s : AffineSubspace k P} {p : P} (hp : p
 #align affine_subspace.vsub_left_mem_direction_iff_mem AffineSubspace.vsub_left_mem_direction_iff_mem
 
 /-- Two affine subspaces are equal if they have the same points. -/
-@[ext]
-theorem coe_injective : Function.Injective (coe : AffineSubspace k P → Set P) := fun s1 s2 h =>
-  by
-  cases s1
-  cases s2
-  congr
-  exact h
+theorem coe_injective : Function.Injective (coe : AffineSubspace k P → Set P) :=
+  SetLike.coe_injective
 #align affine_subspace.coe_injective AffineSubspace.coe_injective
+
+@[ext]
+theorem ext {p q : AffineSubspace k P} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
+  SetLike.ext h
+#align affine_subspace.ext AffineSubspace.ext
 
 @[simp]
 theorem ext_iff (s₁ s₂ : AffineSubspace k P) : (s₁ : Set P) = s₂ ↔ s₁ = s₂ :=
-  ⟨fun h => coe_injective h, by tidy⟩
+  SetLike.ext'_iff.symm
 #align affine_subspace.ext_iff AffineSubspace.ext_iff
 
 /-- Two affine subspaces with the same direction and nonempty

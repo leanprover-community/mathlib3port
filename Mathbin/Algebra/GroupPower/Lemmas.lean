@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.lemmas
-! leanprover-community/mathlib commit e1bccd6e40ae78370f01659715d3c948716e3b7e
+! leanprover-community/mathlib commit 05101c3df9d9cfe9430edc205860c79b6d660102
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1683,36 +1683,38 @@ theorem cast_nat_mul_cast_nat_mul (h : Commute a b) (m n : ℕ) : Commute (m * a
   h.cast_nat_mul_cast_nat_mul m n
 #align commute.cast_nat_mul_cast_nat_mul Commute.cast_nat_mul_cast_nat_mul
 
+variable (a) (m n : ℕ)
+
 /- warning: commute.self_cast_nat_mul -> Commute.self_cast_nat_mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} (n : Nat), Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) a (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) n) a)
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (a : R) (n : Nat), Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) a (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) n) a)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} (n : Nat), Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) a (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R _inst_1) n) a)
 Case conversion may be inaccurate. Consider using '#align commute.self_cast_nat_mul Commute.self_cast_nat_mulₓ'. -/
 @[simp]
-theorem self_cast_nat_mul (n : ℕ) : Commute a (n * a : R) :=
+theorem self_cast_nat_mul : Commute a (n * a : R) :=
   (Commute.refl a).cast_nat_mul_right n
 #align commute.self_cast_nat_mul Commute.self_cast_nat_mul
 
 /- warning: commute.cast_nat_mul_self -> Commute.cast_nat_mul_self is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} (n : Nat), Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) n) a) a
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (a : R) (n : Nat), Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) n) a) a
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} (n : Nat), Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R _inst_1) n) a) a
 Case conversion may be inaccurate. Consider using '#align commute.cast_nat_mul_self Commute.cast_nat_mul_selfₓ'. -/
 @[simp]
-theorem cast_nat_mul_self (n : ℕ) : Commute ((n : R) * a) a :=
+theorem cast_nat_mul_self : Commute ((n : R) * a) a :=
   (Commute.refl a).cast_nat_mul_left n
 #align commute.cast_nat_mul_self Commute.cast_nat_mul_self
 
 /- warning: commute.self_cast_nat_mul_cast_nat_mul -> Commute.self_cast_nat_mul_cast_nat_mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} (m : Nat) (n : Nat), Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) m) a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) n) a)
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (a : R) (m : Nat) (n : Nat), Commute.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) m) a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))))) n) a)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} (m : Nat) (n : Nat), Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R _inst_1) m) a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R _inst_1) n) a)
 Case conversion may be inaccurate. Consider using '#align commute.self_cast_nat_mul_cast_nat_mul Commute.self_cast_nat_mul_cast_nat_mulₓ'. -/
 @[simp]
-theorem self_cast_nat_mul_cast_nat_mul (m n : ℕ) : Commute (m * a : R) (n * a : R) :=
+theorem self_cast_nat_mul_cast_nat_mul : Commute (m * a : R) (n * a : R) :=
   (Commute.refl a).cast_nat_mul_cast_nat_mul m n
 #align commute.self_cast_nat_mul_cast_nat_mul Commute.self_cast_nat_mul_cast_nat_mul
 
@@ -1788,9 +1790,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.cast_int_left Commute.cast_int_leftₓ'. -/
 @[simp]
 theorem cast_int_left : Commute (m : R) a :=
-  by
-  rw [← mul_one (m : R)]
-  exact (one_left a).cast_int_mul_left m
+  Int.cast_commute _ _
 #align commute.cast_int_left Commute.cast_int_left
 
 /- warning: commute.cast_int_right -> Commute.cast_int_right is a dubious translation:
@@ -1801,9 +1801,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.cast_int_right Commute.cast_int_rightₓ'. -/
 @[simp]
 theorem cast_int_right : Commute a m :=
-  by
-  rw [← mul_one (m : R)]
-  exact (one_right a).cast_int_mul_right m
+  Int.commute_cast _ _
 #align commute.cast_int_right Commute.cast_int_right
 
 /- warning: commute.self_cast_int_mul -> Commute.self_cast_int_mul is a dubious translation:

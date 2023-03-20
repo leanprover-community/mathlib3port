@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit ce613251beb65cb746070b76d9be5765e5968003
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ variable {F : Type _} [InnerProductSpace ℝ F]
 
 theorem LinearMap.IsSymmetric.hasStrictFderivAt_reApplyInnerSelf {T : F →L[ℝ] F}
     (hT : (T : F →ₗ[ℝ] F).IsSymmetric) (x₀ : F) :
-    HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀) : F →L[ℝ] ℝ)) x₀ :=
+    HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL ℝ (T x₀))) x₀ :=
   by
   convert T.has_strict_fderiv_at.inner (hasStrictFderivAt_id x₀)
   ext y
@@ -141,7 +141,7 @@ theorem linearly_dependent_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : F}
   refine' ⟨a, b, h₁, _⟩
   apply (InnerProductSpace.toDualMap ℝ F).Injective
   simp only [LinearIsometry.map_add, LinearIsometry.map_smul, LinearIsometry.map_zero]
-  change a • innerSL x₀ + b • innerSL (T x₀) = 0
+  change a • innerSL _ x₀ + b • innerSL _ (T x₀) = 0
   apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
   simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zero] using h₂
 #align is_self_adjoint.linearly_dependent_of_is_local_extr_on IsSelfAdjoint.linearly_dependent_of_isLocalExtrOn

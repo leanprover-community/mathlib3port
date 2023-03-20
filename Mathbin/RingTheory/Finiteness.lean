@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit f5edf4694f7c478cbca7a2451bddbd221fc7f869
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.Ideal.Operations
 
 /-!
 # Finiteness conditions in commutative algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define a notion of finiteness that is common in commutative algebra.
 

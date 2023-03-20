@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 297619ec79dedf23525458b6bf5bf35c736fd2b8
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.FinCases
 
 /-!
 # Integers mod `n`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Definition of the integers mod n, and the field structure on the integers mod p.
 

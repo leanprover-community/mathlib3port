@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.dual
-! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ If `E` is complete, this operation is surjective, hence a conjugate-linear isome
 see `to_dual`.
 -/
 def toDualMap : E →ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
-  { innerSL with norm_map' := fun _ => innerSL_apply_norm }
+  { innerSL 𝕜 with norm_map' := innerSL_apply_norm _ }
 #align inner_product_space.to_dual_map InnerProductSpace.toDualMap
 
 variable {E}
@@ -77,7 +77,7 @@ theorem toDualMap_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 #align inner_product_space.to_dual_map_apply InnerProductSpace.toDualMap_apply
 
-theorem innerSL_norm [Nontrivial E] : ‖(innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜)‖ = 1 :=
+theorem innerSL_norm [Nontrivial E] : ‖(innerSL 𝕜 : E →L⋆[𝕜] E →L[𝕜] 𝕜)‖ = 1 :=
   show ‖(toDualMap 𝕜 E).toContinuousLinearMap‖ = 1 from LinearIsometry.norm_toContinuousLinearMap _
 #align inner_product_space.innerSL_norm InnerProductSpace.innerSL_norm
 

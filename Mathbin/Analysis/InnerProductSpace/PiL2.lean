@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,7 +380,7 @@ protected theorem sum_repr_symm (b : OrthonormalBasis ι 𝕜 E) (v : EuclideanS
 protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E) :
     (∑ i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ :=
   by
-  have := congr_arg (@innerSL 𝕜 _ _ _ x) (b.sum_repr y)
+  have := congr_arg (innerSL 𝕜 x) (b.sum_repr y)
   rw [map_sum] at this
   convert this
   ext i

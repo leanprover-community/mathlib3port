@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 05101c3df9d9cfe9430edc205860c79b6d660102
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Ring.InjSurj
+import Mathbin.Algebra.Ring.Commute
 
 /-!
 # Lemmas about division (semi)rings and (semi)fields
@@ -30,7 +30,7 @@ variable {α β K : Type _}
 
 section DivisionSemiring
 
-variable [DivisionSemiring α] {a b c : α}
+variable [DivisionSemiring α] {a b c d : α}
 
 /- warning: add_div -> add_div is a dubious translation:
 lean 3 declaration is
@@ -133,6 +133,21 @@ Case conversion may be inaccurate. Consider using '#align div_add' div_add'ₓ'.
 theorem div_add' (a b c : α) (hc : c ≠ 0) : a / c + b = (a + b * c) / c := by
   rwa [add_comm, add_div', add_comm]
 #align div_add' div_add'
+
+protected theorem Commute.div_add_div (hbc : Commute b c) (hbd : Commute b d) (hb : b ≠ 0)
+    (hd : d ≠ 0) : a / b + c / d = (a * d + b * c) / (b * d) := by
+  rw [add_div, mul_div_mul_right _ b hd, hbc.eq, hbd.eq, mul_div_mul_right c d hb]
+#align commute.div_add_div Commute.div_add_div
+
+protected theorem Commute.one_div_add_one_div (hab : Commute a b) (ha : a ≠ 0) (hb : b ≠ 0) :
+    1 / a + 1 / b = (a + b) / (a * b) := by
+  rw [(Commute.one_right a).div_add_div hab ha hb, one_mul, mul_one, add_comm]
+#align commute.one_div_add_one_div Commute.one_div_add_one_div
+
+protected theorem Commute.inv_add_inv (hab : Commute a b) (ha : a ≠ 0) (hb : b ≠ 0) :
+    a⁻¹ + b⁻¹ = (a + b) / (a * b) := by
+  rw [inv_eq_one_div, inv_eq_one_div, hab.one_div_add_one_div ha hb]
+#align commute.inv_add_inv Commute.inv_add_inv
 
 end DivisionSemiring
 
@@ -241,7 +256,7 @@ end DivisionMonoid
 
 section DivisionRing
 
-variable [DivisionRing K] {a b : K}
+variable [DivisionRing K] {a b c d : K}
 
 /- warning: div_neg_self -> div_neg_self is a dubious translation:
 lean 3 declaration is
@@ -353,6 +368,16 @@ instance (priority := 100) DivisionRing.isDomain : IsDomain K :=
 #align division_ring.is_domain DivisionRing.isDomain
 -/
 
+protected theorem Commute.div_sub_div (hbc : Commute b c) (hbd : Commute b d) (hb : b ≠ 0)
+    (hd : d ≠ 0) : a / b - c / d = (a * d - b * c) / (b * d) := by
+  simpa only [mul_neg, neg_div, ← sub_eq_add_neg] using hbc.neg_right.div_add_div hbd hb hd
+#align commute.div_sub_div Commute.div_sub_div
+
+protected theorem Commute.inv_sub_inv (hab : Commute a b) (ha : a ≠ 0) (hb : b ≠ 0) :
+    a⁻¹ - b⁻¹ = (b - a) / (a * b) := by
+  simp only [inv_eq_one_div, (Commute.one_right a).div_sub_div hab ha hb, one_mul, mul_one]
+#align commute.inv_sub_inv Commute.inv_sub_inv
+
 end DivisionRing
 
 section Semifield
@@ -366,8 +391,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semifield.{u1} α] {b : α} {d : α} (a : α) (c : α), (Ne.{succ u1} α b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α _inst_1)))))) -> (Ne.{succ u1} α d (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α _inst_1)))))) -> (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))))) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) a b) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) c d)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1)))))) a d) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1)))))) b c)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1)))))) b d)))
 Case conversion may be inaccurate. Consider using '#align div_add_div div_add_divₓ'. -/
 theorem div_add_div (a : α) (c : α) (hb : b ≠ 0) (hd : d ≠ 0) :
-    a / b + c / d = (a * d + b * c) / (b * d) := by
-  rw [← mul_div_mul_right _ b hd, ← mul_div_mul_left c d hb, div_add_div_same]
+    a / b + c / d = (a * d + b * c) / (b * d) :=
+  (Commute.all b _).div_add_div (Commute.all _ _) hb hd
 #align div_add_div div_add_div
 
 /- warning: one_div_add_one_div -> one_div_add_one_div is a dubious translation:
@@ -376,8 +401,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semifield.{u1} α] {a : α} {b : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α _inst_1)))))) -> (Ne.{succ u1} α b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α _inst_1)))))) -> (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))))) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))) a) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))) b)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align one_div_add_one_div one_div_add_one_divₓ'. -/
-theorem one_div_add_one_div (ha : a ≠ 0) (hb : b ≠ 0) : 1 / a + 1 / b = (a + b) / (a * b) := by
-  rw [div_add_div _ _ ha hb, one_mul, mul_one, add_comm]
+theorem one_div_add_one_div (ha : a ≠ 0) (hb : b ≠ 0) : 1 / a + 1 / b = (a + b) / (a * b) :=
+  (Commute.all a _).one_div_add_one_div ha hb
 #align one_div_add_one_div one_div_add_one_div
 
 /- warning: inv_add_inv -> inv_add_inv is a dubious translation:
@@ -386,8 +411,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semifield.{u1} α] {a : α} {b : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α _inst_1)))))) -> (Ne.{succ u1} α b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α _inst_1)))))) -> (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))))) (Inv.inv.{u1} α (Semifield.toInv.{u1} α _inst_1) a) (Inv.inv.{u1} α (Semifield.toInv.{u1} α _inst_1) b)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (Semifield.toDiv.{u1} α _inst_1)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1))))))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align inv_add_inv inv_add_invₓ'. -/
-theorem inv_add_inv (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ + b⁻¹ = (a + b) / (a * b) := by
-  rw [inv_eq_one_div, inv_eq_one_div, one_div_add_one_div ha hb]
+theorem inv_add_inv (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ + b⁻¹ = (a + b) / (a * b) :=
+  (Commute.all a _).inv_add_inv ha hb
 #align inv_add_inv inv_add_inv
 
 end Semifield
@@ -407,10 +432,7 @@ Case conversion may be inaccurate. Consider using '#align div_sub_div div_sub_di
 @[field_simps]
 theorem div_sub_div (a : K) {b : K} (c : K) {d : K} (hb : b ≠ 0) (hd : d ≠ 0) :
     a / b - c / d = (a * d - b * c) / (b * d) :=
-  by
-  simp [sub_eq_add_neg]
-  rw [neg_eq_neg_one_mul, ← mul_div_assoc, div_add_div _ _ hb hd, ← mul_assoc, mul_comm b,
-    mul_assoc, ← neg_eq_neg_one_mul]
+  (Commute.all b _).div_sub_div (Commute.all _ _) hb hd
 #align div_sub_div div_sub_div
 
 /- warning: inv_sub_inv -> inv_sub_inv is a dubious translation:
@@ -419,8 +441,8 @@ lean 3 declaration is
 but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] {a : K} {b : K}, (Ne.{succ u1} K a (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K _inst_1))))))) -> (Ne.{succ u1} K b (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K _inst_1))))))) -> (Eq.{succ u1} K (HSub.hSub.{u1, u1, u1} K K K (instHSub.{u1} K (Ring.toSub.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))) (Inv.inv.{u1} K (Field.toInv.{u1} K _inst_1) a) (Inv.inv.{u1} K (Field.toInv.{u1} K _inst_1) b)) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (Field.toDiv.{u1} K _inst_1)) (HSub.hSub.{u1, u1, u1} K K K (instHSub.{u1} K (Ring.toSub.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))) b a) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align inv_sub_inv inv_sub_invₓ'. -/
-theorem inv_sub_inv {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ - b⁻¹ = (b - a) / (a * b) := by
-  rw [inv_eq_one_div, inv_eq_one_div, div_sub_div _ _ ha hb, one_mul, mul_one]
+theorem inv_sub_inv {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : a⁻¹ - b⁻¹ = (b - a) / (a * b) :=
+  (Commute.all a _).inv_sub_inv ha hb
 #align inv_sub_inv inv_sub_inv
 
 /- warning: sub_div' -> sub_div' is a dubious translation:

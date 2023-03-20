@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 5b05c634aa9ed56cce0f5dedd4ccf4ca0c1dcd95
+! leanprover-community/mathlib commit 7ec294687917cbc5c73620b4414ae9b5dd9ae1b4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Tactic.Qify
 import Mathbin.Data.Zmod.Basic
 import Mathbin.NumberTheory.DiophantineApproximation
+import Mathbin.NumberTheory.Zsqrtd.Basic
 
 /-!
 # Pell's Equation
@@ -152,6 +153,151 @@ theorem exists_pos_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
 #align pell.exists_pos_of_not_is_square Pell.exists_pos_of_not_isSquare
 
 end Existence
+
+/-!
+### Group structure of the solution set
+
+We define a structure of a commutative multiplicative group with distributive negation
+on the set of all solutions to the Pell equation `x^2 - d*y^2 = 1`.
+
+The type of such solutions is `pell.solution₁ d`. It corresponds to a pair of integers `x` and `y`
+and a proof that `(x, y)` is indeed a solution.
+
+The multiplication is given by `(x, y) * (x', y') = (x*y' + d*y*y', x*y' + y*x')`.
+This is obtained by mapping `(x, y)` to `x + y*√d` and multiplying the results.
+In fact, we define `pell.solution₁ d` to be `↥(unitary (ℤ√d))` and transport
+the "commutative group with distributive negation" structure from `↥(unitary (ℤ√d))`.
+
+We then set up an API for `pell.solution₁ d`.
+-/
+
+
+open Zsqrtd
+
+/-- An element of `ℤ√d` has norm one (i.e., `a.re^2 - d*a.im^2 = 1`) if and only if
+it is contained in the submonoid of unitary elements.
+
+TODO: merge this result with `pell.is_pell_iff_mem_unitary`. -/
+theorem is_pell_solution_iff_mem_unitary {d : ℤ} {a : ℤ√d} :
+    a.re ^ 2 - d * a.im ^ 2 = 1 ↔ a ∈ unitary (ℤ√d) := by
+  rw [← norm_eq_one_iff_mem_unitary, norm_def, sq, sq, ← mul_assoc]
+#align pell.is_pell_solution_iff_mem_unitary Pell.is_pell_solution_iff_mem_unitary
+
+-- We use `solution₁ d` to allow for a more general structure `solution d m` that
+-- encodes solutions to `x^2 - d*y^2 = m` to be added later.
+/-- `pell.solution₁ d` is the type of solutions to the Pell equation `x^2 - d*y^2 = 1`.
+We define this in terms of elements of `ℤ√d` of norm one.
+-/
+def Solution₁ (d : ℤ) : Type :=
+  ↥(unitary (ℤ√d))deriving CommGroup, HasDistribNeg, Inhabited
+#align pell.solution₁ Pell.Solution₁
+
+namespace Solution₁
+
+variable {d : ℤ}
+
+instance : Coe (Solution₁ d) (ℤ√d) where coe := Subtype.val
+
+/-- The `x` component of a solution to the Pell equation `x^2 - d*y^2 = 1` -/
+protected def x (a : Solution₁ d) : ℤ :=
+  (a : ℤ√d).re
+#align pell.solution₁.x Pell.Solution₁.x
+
+/-- The `y` component of a solution to the Pell equation `x^2 - d*y^2 = 1` -/
+protected def y (a : Solution₁ d) : ℤ :=
+  (a : ℤ√d).im
+#align pell.solution₁.y Pell.Solution₁.y
+
+/-- The proof that `a` is a solution to the Pell equation `x^2 - d*y^2 = 1` -/
+theorem prop (a : Solution₁ d) : a.x ^ 2 - d * a.y ^ 2 = 1 :=
+  is_pell_solution_iff_mem_unitary.mpr a.property
+#align pell.solution₁.prop Pell.Solution₁.prop
+
+/-- An alternative form of the equation, suitable for rewriting `x^2`. -/
+theorem prop_x (a : Solution₁ d) : a.x ^ 2 = 1 + d * a.y ^ 2 :=
+  by
+  rw [← a.prop]
+  ring
+#align pell.solution₁.prop_x Pell.Solution₁.prop_x
+
+/-- An alternative form of the equation, suitable for rewriting `d * y^2`. -/
+theorem prop_y (a : Solution₁ d) : d * a.y ^ 2 = a.x ^ 2 - 1 :=
+  by
+  rw [← a.prop]
+  ring
+#align pell.solution₁.prop_y Pell.Solution₁.prop_y
+
+/-- Two solutions are equal if their `x` and `y` components are equal. -/
+@[ext]
+theorem ext {a b : Solution₁ d} (hx : a.x = b.x) (hy : a.y = b.y) : a = b :=
+  Subtype.ext <| ext.mpr ⟨hx, hy⟩
+#align pell.solution₁.ext Pell.Solution₁.ext
+
+/-- Construct a solution from `x`, `y` and a proof that the equation is satisfied. -/
+def mk (x y : ℤ) (prop : x ^ 2 - d * y ^ 2 = 1) : Solution₁ d
+    where
+  val := ⟨x, y⟩
+  property := is_pell_solution_iff_mem_unitary.mp prop
+#align pell.solution₁.mk Pell.Solution₁.mk
+
+@[simp]
+theorem x_mk (x y : ℤ) (prop : x ^ 2 - d * y ^ 2 = 1) : (mk x y prop).x = x :=
+  rfl
+#align pell.solution₁.x_mk Pell.Solution₁.x_mk
+
+@[simp]
+theorem y_mk (x y : ℤ) (prop : x ^ 2 - d * y ^ 2 = 1) : (mk x y prop).y = y :=
+  rfl
+#align pell.solution₁.y_mk Pell.Solution₁.y_mk
+
+@[simp]
+theorem coe_mk (x y : ℤ) (prop : x ^ 2 - d * y ^ 2 = 1) : (↑(mk x y prop) : ℤ√d) = ⟨x, y⟩ :=
+  Zsqrtd.ext.mpr ⟨x_mk x y prop, y_mk x y prop⟩
+#align pell.solution₁.coe_mk Pell.Solution₁.coe_mk
+
+@[simp]
+theorem x_one : (1 : Solution₁ d).x = 1 :=
+  rfl
+#align pell.solution₁.x_one Pell.Solution₁.x_one
+
+@[simp]
+theorem y_one : (1 : Solution₁ d).y = 0 :=
+  rfl
+#align pell.solution₁.y_one Pell.Solution₁.y_one
+
+@[simp]
+theorem x_mul (a b : Solution₁ d) : (a * b).x = a.x * b.x + d * (a.y * b.y) :=
+  by
+  rw [← mul_assoc]
+  rfl
+#align pell.solution₁.x_mul Pell.Solution₁.x_mul
+
+@[simp]
+theorem y_mul (a b : Solution₁ d) : (a * b).y = a.x * b.y + a.y * b.x :=
+  rfl
+#align pell.solution₁.y_mul Pell.Solution₁.y_mul
+
+@[simp]
+theorem x_inv (a : Solution₁ d) : a⁻¹.x = a.x :=
+  rfl
+#align pell.solution₁.x_inv Pell.Solution₁.x_inv
+
+@[simp]
+theorem y_inv (a : Solution₁ d) : a⁻¹.y = -a.y :=
+  rfl
+#align pell.solution₁.y_inv Pell.Solution₁.y_inv
+
+@[simp]
+theorem x_neg (a : Solution₁ d) : (-a).x = -a.x :=
+  rfl
+#align pell.solution₁.x_neg Pell.Solution₁.x_neg
+
+@[simp]
+theorem y_neg (a : Solution₁ d) : (-a).y = -a.y :=
+  rfl
+#align pell.solution₁.y_neg Pell.Solution₁.y_neg
+
+end Solution₁
 
 end Pell
 

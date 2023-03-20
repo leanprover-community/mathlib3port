@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.basic
-! leanprover-community/mathlib commit af8f9bc2aab1dd99a26f3dc982b7957f7762e7ba
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -955,7 +955,7 @@ theorem pointed_innerDualCone : s.innerDualCone.Pointed := fun x hx => by rw [in
 /-- The inner dual cone of a singleton is given by the preimage of the positive cone under the
 linear map `λ y, ⟪x, y⟫`. -/
 theorem innerDualCone_singleton (x : H) :
-    ({x} : Set H).innerDualCone = (ConvexCone.positive ℝ ℝ).comap (innerₛₗ x) :=
+    ({x} : Set H).innerDualCone = (ConvexCone.positive ℝ ℝ).comap (innerₛₗ ℝ x) :=
   ConvexCone.ext fun i => forall_eq
 #align inner_dual_cone_singleton innerDualCone_singleton
 

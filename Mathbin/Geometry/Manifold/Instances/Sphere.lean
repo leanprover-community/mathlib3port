@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit 29d5700b0872ffc82431073f46c5b1092f74151c
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,29 +83,29 @@ the orthogonal complement of an element `v` of `E`. It is smooth away from the a
 through `v` parallel to the orthogonal complement.  It restricts on the sphere to the stereographic
 projection. -/
 def stereoToFun [CompleteSpace E] (x : E) : (ℝ ∙ v)ᗮ :=
-  (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x
+  (2 / ((1 : ℝ) - innerSL _ v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x
 #align stereo_to_fun stereoToFun
 
 variable {v}
 
 @[simp]
 theorem stereoToFun_apply [CompleteSpace E] (x : E) :
-    stereoToFun v x = (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x :=
+    stereoToFun v x = (2 / ((1 : ℝ) - innerSL _ v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x :=
   rfl
 #align stereo_to_fun_apply stereoToFun_apply
 
 theorem contDiffOn_stereoToFun [CompleteSpace E] :
-    ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } :=
+    ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL _ v x ≠ (1 : ℝ) } :=
   by
   refine' ContDiffOn.smul _ (orthogonalProjection (ℝ ∙ v)ᗮ).ContDiff.ContDiffOn
   refine' cont_diff_const.cont_diff_on.div _ _
-  · exact (cont_diff_const.sub (innerSL v : E →L[ℝ] ℝ).ContDiff).ContDiffOn
+  · exact (cont_diff_const.sub (innerSL ℝ v).ContDiff).ContDiffOn
   · intro x h h'
     exact h (sub_eq_zero.mp h').symm
 #align cont_diff_on_stereo_to_fun contDiffOn_stereoToFun
 
 theorem continuousOn_stereoToFun [CompleteSpace E] :
-    ContinuousOn (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } :=
+    ContinuousOn (stereoToFun v) { x : E | innerSL _ v x ≠ (1 : ℝ) } :=
   (@contDiffOn_stereoToFun E _ v _).ContinuousOn
 #align continuous_on_stereo_to_fun continuousOn_stereoToFun
 
@@ -232,7 +232,7 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   ext
   simp only [stereoToFun_apply, stereoInvFun_apply, smul_add]
   -- name two frequently-occuring quantities and write down their basic properties
-  set a : ℝ := innerSL v x
+  set a : ℝ := innerSL _ v x
   set y := orthogonalProjection (ℝ ∙ v)ᗮ x
   have split : ↑x = a • v + ↑y :=
     by
@@ -293,8 +293,8 @@ theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v
   · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
       orthogonalProjection_orthogonal_complement_singleton_eq_zero v
     have h₂ : orthogonalProjection (ℝ ∙ v)ᗮ w = w := orthogonalProjection_mem_subspace_eq_self w
-    have h₃ : innerSL v w = (0 : ℝ) := submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
-    have h₄ : innerSL v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
+    have h₃ : innerSL _ v w = (0 : ℝ) := submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
+    have h₄ : innerSL _ v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
     simp [h₁, h₂, h₃, h₄, ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, mul_smul]
   · simp
 #align stereo_right_inv stereo_right_inv

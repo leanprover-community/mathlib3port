@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit 4681620dafca6a7d710f437bd10fb69428ec2209
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -501,7 +501,7 @@ protected theorem dense_span (b : HilbertBasis ι 𝕜 E) :
 protected theorem hasSum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
     HasSum (fun i => ⟪x, b i⟫ * ⟪b i, y⟫) ⟪x, y⟫ :=
   by
-  convert(b.has_sum_repr y).mapL (innerSL x)
+  convert(b.has_sum_repr y).mapL (innerSL _ x)
   ext i
   rw [innerSL_apply, b.repr_apply_apply, inner_smul_right, mul_comm]
 #align hilbert_basis.has_sum_inner_mul_inner HilbertBasis.hasSum_inner_mul_inner

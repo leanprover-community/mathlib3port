@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.calculus
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,7 +226,7 @@ theorem ContDiff.dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (hne : ∀
 omit 𝕜
 
 theorem hasStrictFderivAt_norm_sq (x : F) :
-    HasStrictFderivAt (fun x => ‖x‖ ^ 2) (bit0 (innerSL x : F →L[ℝ] ℝ)) x :=
+    HasStrictFderivAt (fun x => ‖x‖ ^ 2) (bit0 (innerSL ℝ x)) x :=
   by
   simp only [sq, ← inner_self_eq_norm_mul_norm]
   convert(hasStrictFderivAt_id x).inner (hasStrictFderivAt_id x)

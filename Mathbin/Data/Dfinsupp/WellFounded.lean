@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.well_founded
-! leanprover-community/mathlib commit e9b8651eb1ad354f4de6be35a38ef31efcd2cfaa
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.SetTheory.Ordinal.Basic
 
 /-!
 # Well-foundedness of the lexicographic and product orders on `dfinsupp` and `pi`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The primary results are `dfinsupp.lex.well_founded` and the two variants that follow it,
 which essentially say that if `(>)` is a well order on `ι`, `(<)` is well-founded on each

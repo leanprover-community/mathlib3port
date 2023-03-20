@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.integers
-! leanprover-community/mathlib commit 7b7da89322fe46a16bf03eeb345b0acfc73fe10e
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.Valuation.Basic
 
 /-!
 # Ring of integers under a given valuation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The elements with valuation less than or equal to 1.
 

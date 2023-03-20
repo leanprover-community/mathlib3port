@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.multiplicity
-! leanprover-community/mathlib commit ceb887ddf3344dab425292e497fa2af91498437c
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Valuation.Basic
 
 /-!
 # Multiplicity of a divisor
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For a commutative monoid, this file introduces the notion of multiplicity of a divisor and proves
 several basic results on it.

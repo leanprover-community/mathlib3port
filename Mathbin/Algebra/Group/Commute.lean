@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.commute
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 05101c3df9d9cfe9430edc205860c79b6d660102
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,6 +137,12 @@ protected theorem left_comm (h : Commute a b) (c) : a * (b * c) = b * (a * c) :=
   simp only [← mul_assoc, h.eq]
 #align commute.left_comm Commute.left_commₓ
 #align add_commute.left_comm AddCommute.left_commₓ
+
+@[to_additive]
+protected theorem mul_mul_mul_comm (hbc : Commute b c) (a d : S) :
+    a * b * (c * d) = a * c * (b * d) := by simp only [hbc.left_comm, mul_assoc]
+#align commute.mul_mul_mul_comm Commute.mul_mul_mul_comm
+#align add_commute.add_add_add_comm AddCommute.add_add_add_comm
 
 end Semigroup
 
@@ -368,7 +374,7 @@ end Monoid
 
 section DivisionMonoid
 
-variable [DivisionMonoid G] {a b : G}
+variable [DivisionMonoid G] {a b c d : G}
 
 /- warning: commute.inv_inv -> Commute.inv_inv is a dubious translation:
 lean 3 declaration is
@@ -377,7 +383,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} G] {a : G} {b : G}, (Commute.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)))) a b) -> (Commute.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (DivisionMonoid.toDivInvMonoid.{u1} G _inst_1)))) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G _inst_1))) a) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G _inst_1))) b))
 Case conversion may be inaccurate. Consider using '#align commute.inv_inv Commute.inv_invₓ'. -/
 @[to_additive]
-theorem inv_inv : Commute a b → Commute a⁻¹ b⁻¹ :=
+protected theorem inv_inv : Commute a b → Commute a⁻¹ b⁻¹ :=
   SemiconjBy.inv_inv_symm
 #align commute.inv_inv Commute.inv_inv
 #align add_commute.neg_neg AddCommute.neg_neg
@@ -393,6 +399,38 @@ theorem inv_inv_iff : Commute a⁻¹ b⁻¹ ↔ Commute a b :=
   SemiconjBy.inv_inv_symm_iff
 #align commute.inv_inv_iff Commute.inv_inv_iff
 #align add_commute.neg_neg_iff AddCommute.neg_neg_iff
+
+@[to_additive]
+protected theorem mul_inv (hab : Commute a b) : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by rw [hab.eq, mul_inv_rev]
+#align commute.mul_inv Commute.mul_inv
+#align add_commute.add_neg AddCommute.add_neg
+
+@[to_additive]
+protected theorem inv (hab : Commute a b) : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by rw [hab.eq, mul_inv_rev]
+#align commute.inv Commute.inv
+#align add_commute.neg AddCommute.neg
+
+@[to_additive]
+protected theorem div_mul_div_comm (hbd : Commute b d) (hbc : Commute b⁻¹ c) :
+    a / b * (c / d) = a * c / (b * d) := by
+  simp_rw [div_eq_mul_inv, mul_inv_rev, hbd.inv_inv.symm.eq, hbc.mul_mul_mul_comm]
+#align commute.div_mul_div_comm Commute.div_mul_div_comm
+#align add_commute.sub_add_sub_comm AddCommute.sub_add_sub_comm
+
+@[to_additive]
+protected theorem mul_div_mul_comm (hcd : Commute c d) (hbc : Commute b c⁻¹) :
+    a * b / (c * d) = a / c * (b / d) :=
+  (hcd.div_mul_div_comm hbc.symm).symm
+#align commute.mul_div_mul_comm Commute.mul_div_mul_comm
+#align add_commute.add_sub_add_comm AddCommute.add_sub_add_comm
+
+@[to_additive]
+protected theorem div_div_div_comm (hbc : Commute b c) (hbd : Commute b⁻¹ d) (hcd : Commute c⁻¹ d) :
+    a / b / (c / d) = a / c / (b / d) := by
+  simp_rw [div_eq_mul_inv, mul_inv_rev, inv_inv, hbd.symm.eq, hcd.symm.eq,
+    hbc.inv_inv.mul_mul_mul_comm]
+#align commute.div_div_div_comm Commute.div_div_div_comm
+#align add_commute.sub_sub_sub_comm AddCommute.sub_sub_sub_comm
 
 end DivisionMonoid
 

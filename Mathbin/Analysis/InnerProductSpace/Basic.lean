@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1978,6 +1978,8 @@ theorem inner_sum_smul_sum_smul_of_sum_eq_zero {ι₁ : Type _} {s₁ : Finset �
     Finset.sum_div, mul_div_assoc, mul_assoc]
 #align inner_sum_smul_sum_smul_of_sum_eq_zero inner_sum_smul_sum_smul_of_sum_eq_zero
 
+variable (𝕜)
+
 /-- The inner product as a sesquilinear map. -/
 def innerₛₗ : E →ₗ⋆[𝕜] E →ₗ[𝕜] 𝕜 :=
   LinearMap.mk₂'ₛₗ _ _ (fun v w => ⟪v, w⟫) inner_add_left (fun _ _ _ => inner_smul_left _ _ _)
@@ -1985,12 +1987,12 @@ def innerₛₗ : E →ₗ⋆[𝕜] E →ₗ[𝕜] 𝕜 :=
 #align innerₛₗ innerₛₗ
 
 @[simp]
-theorem innerₛₗ_apply_coe (v : E) : (innerₛₗ v : E → 𝕜) = fun w => ⟪v, w⟫ :=
+theorem innerₛₗ_apply_coe (v : E) : ⇑(innerₛₗ 𝕜 v) = fun w => ⟪v, w⟫ :=
   rfl
 #align innerₛₗ_apply_coe innerₛₗ_apply_coe
 
 @[simp]
-theorem innerₛₗ_apply (v w : E) : innerₛₗ v w = ⟪v, w⟫ :=
+theorem innerₛₗ_apply (v w : E) : innerₛₗ 𝕜 v w = ⟪v, w⟫ :=
   rfl
 #align innerₛₗ_apply innerₛₗ_apply
 
@@ -1998,28 +2000,27 @@ theorem innerₛₗ_apply (v w : E) : innerₛₗ v w = ⟪v, w⟫ :=
 in `inner_product_space.dual` is a version of this given as a linear isometry (resp. linear
 isometric equivalence). -/
 def innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜 :=
-  LinearMap.mkContinuous₂ innerₛₗ 1 fun x y => by
+  LinearMap.mkContinuous₂ (innerₛₗ 𝕜) 1 fun x y => by
     simp only [norm_inner_le_norm, one_mul, innerₛₗ_apply]
 #align innerSL innerSL
 
 @[simp]
-theorem innerSL_apply_coe (v : E) : (innerSL v : E → 𝕜) = fun w => ⟪v, w⟫ :=
+theorem innerSL_apply_coe (v : E) : ⇑(innerSL 𝕜 v) = fun w => ⟪v, w⟫ :=
   rfl
 #align innerSL_apply_coe innerSL_apply_coe
 
 @[simp]
-theorem innerSL_apply (v w : E) : innerSL v w = ⟪v, w⟫ :=
+theorem innerSL_apply (v w : E) : innerSL 𝕜 v w = ⟪v, w⟫ :=
   rfl
 #align innerSL_apply innerSL_apply
 
 /-- `innerSL` is an isometry. Note that the associated `linear_isometry` is defined in
 `inner_product_space.dual` as `to_dual_map`.  -/
 @[simp]
-theorem innerSL_apply_norm {x : E} : ‖(innerSL x : E →L[𝕜] 𝕜)‖ = ‖x‖ :=
+theorem innerSL_apply_norm (x : E) : ‖innerSL 𝕜 x‖ = ‖x‖ :=
   by
   refine'
-    le_antisymm
-      ((innerSL x : E →L[𝕜] 𝕜).opNorm_le_bound (norm_nonneg _) fun y => norm_inner_le_norm _ _) _
+    le_antisymm ((innerSL 𝕜 x).opNorm_le_bound (norm_nonneg _) fun y => norm_inner_le_norm _ _) _
   cases' eq_or_lt_of_le (norm_nonneg x) with h h
   · have : x = 0 := norm_eq_zero.mp (Eq.symm h)
     simp [this]
@@ -2028,23 +2029,23 @@ theorem innerSL_apply_norm {x : E} : ‖(innerSL x : E →L[𝕜] 𝕜)‖ = ‖
       ‖x‖ * ‖x‖ = ‖x‖ ^ 2 := by ring
       _ = re ⟪x, x⟫ := (norm_sq_eq_inner _)
       _ ≤ abs ⟪x, x⟫ := (re_le_abs _)
-      _ = ‖innerSL x x‖ := by
-        rw [← IsROrC.norm_eq_abs]
-        rfl
-      _ ≤ ‖innerSL x‖ * ‖x‖ := (innerSL x : E →L[𝕜] 𝕜).le_opNorm _
+      _ = ‖⟪x, x⟫‖ := by rw [← IsROrC.norm_eq_abs]
+      _ ≤ ‖innerSL 𝕜 x‖ * ‖x‖ := (innerSL 𝕜 x).le_opNorm _
       
 #align innerSL_apply_norm innerSL_apply_norm
 
 /-- The inner product as a continuous sesquilinear map, with the two arguments flipped. -/
 def innerSLFlip : E →L[𝕜] E →L⋆[𝕜] 𝕜 :=
   @ContinuousLinearMap.flipₗᵢ' 𝕜 𝕜 𝕜 E E 𝕜 _ _ _ _ _ _ _ _ _ (RingHom.id 𝕜) (starRingEnd 𝕜) _ _
-    innerSL
+    (innerSL 𝕜)
 #align innerSL_flip innerSLFlip
 
 @[simp]
-theorem innerSLFlip_apply (x y : E) : innerSLFlip x y = ⟪y, x⟫ :=
+theorem innerSLFlip_apply (x y : E) : innerSLFlip 𝕜 x y = ⟪y, x⟫ :=
   rfl
 #align innerSL_flip_apply innerSLFlip_apply
+
+variable {𝕜}
 
 namespace ContinuousLinearMap
 
@@ -2054,11 +2055,11 @@ variable {E' : Type _} [InnerProductSpace 𝕜 E']
 as a continuous linear map. -/
 def toSesqForm : (E →L[𝕜] E') →L[𝕜] E' →L⋆[𝕜] E →L[𝕜] 𝕜 :=
   ↑(ContinuousLinearMap.flipₗᵢ' E E' 𝕜 (starRingEnd 𝕜) (RingHom.id 𝕜)).toContinuousLinearEquiv ∘L
-    ContinuousLinearMap.compSL E E' (E' →L⋆[𝕜] 𝕜) (RingHom.id 𝕜) (RingHom.id 𝕜) innerSLFlip
+    ContinuousLinearMap.compSL E E' (E' →L⋆[𝕜] 𝕜) (RingHom.id 𝕜) (RingHom.id 𝕜) (innerSLFlip 𝕜)
 #align continuous_linear_map.to_sesq_form ContinuousLinearMap.toSesqForm
 
 @[simp]
-theorem toSesqForm_apply_coe (f : E →L[𝕜] E') (x : E') : toSesqForm f x = (innerSL x).comp f :=
+theorem toSesqForm_apply_coe (f : E →L[𝕜] E') (x : E') : toSesqForm f x = (innerSL 𝕜 x).comp f :=
   rfl
 #align continuous_linear_map.to_sesq_form_apply_coe ContinuousLinearMap.toSesqForm_apply_coe
 
@@ -2664,7 +2665,7 @@ theorem Submodule.orthogonal_disjoint : Disjoint K Kᗮ := by
 
 /-- `Kᗮ` can be characterized as the intersection of the kernels of the operations of
 inner product with each of the elements of `K`. -/
-theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL (v : E) : E →L[𝕜] 𝕜) :=
+theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL 𝕜 (v : E)) :=
   by
   apply le_antisymm
   · rw [le_infᵢ_iff]
@@ -2679,7 +2680,7 @@ theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL (v : E) :
 theorem Submodule.isClosed_orthogonal : IsClosed (Kᗮ : Set E) :=
   by
   rw [orthogonal_eq_inter K]
-  have := fun v : K => ContinuousLinearMap.isClosed_ker (innerSL (v : E) : E →L[𝕜] 𝕜)
+  have := fun v : K => ContinuousLinearMap.isClosed_ker (innerSL 𝕜 (v : E))
   convert isClosed_interᵢ this
   simp only [Submodule.infᵢ_coe]
 #align submodule.is_closed_orthogonal Submodule.isClosed_orthogonal
@@ -2796,7 +2797,7 @@ theorem inner_coe (a b : E) : inner (a : Completion E) (b : Completion E) = (inn
 protected theorem continuous_inner : Continuous (uncurry inner : Completion E × Completion E → 𝕜) :=
   by
   let inner' : E →+ E →+ 𝕜 :=
-    { toFun := fun x => (innerₛₗ x).toAddMonoidHom
+    { toFun := fun x => (innerₛₗ 𝕜 x).toAddMonoidHom
       map_zero' := by ext x <;> exact inner_zero_left _
       map_add' := fun x y => by ext z <;> exact inner_add_left _ _ _ }
   have : Continuous fun p : E × E => inner' p.1 p.2 := continuous_inner

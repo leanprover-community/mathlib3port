@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.quadratic_discriminant
-! leanprover-community/mathlib commit e085d1df33274f4b32f611f483aae678ba0b42df
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Tactic.LinearCombination
 
 /-!
 # Quadratic discriminants and roots of a quadratic
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the discriminant of a quadratic and gives the solution to a quadratic equation.
 

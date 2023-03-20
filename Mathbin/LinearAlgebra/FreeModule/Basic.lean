@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.basic
-! leanprover-community/mathlib commit 5fe298160aa02b0f3cf95690a1265232cdd9563c
+! leanprover-community/mathlib commit 4e7e7009099d4a88a750de710909b95487bf0124
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.LinearAlgebra.DirectSum.Finsupp
 import Mathbin.Logic.Small.Basic
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
+import Mathbin.LinearAlgebra.TensorProductBasis
 
 /-!
 
@@ -194,8 +195,9 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 instance tensor : Module.Free R (M ⊗[R] N) :=
-  of_equiv' (of_equiv' (Free.finsupp _ R _) (finsuppTensorFinsupp' R _ _).symm)
-    (TensorProduct.congr (chooseBasis R M).repr (chooseBasis R N).repr).symm
+  let ⟨bM⟩ := exists_basis R M
+  let ⟨bN⟩ := exists_basis R N
+  of_basis (bM.2.TensorProduct bN.2)
 #align module.free.tensor Module.Free.tensor
 
 end CommRing

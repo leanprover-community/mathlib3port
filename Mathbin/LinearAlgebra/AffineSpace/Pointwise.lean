@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.pointwise
-! leanprover-community/mathlib commit c1faa2ee45665f3590ca56707208ae4ff68e8d00
+! leanprover-community/mathlib commit e96bdfbd1e8c98a09ff75f7ac6204d142debc840
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,10 +62,7 @@ theorem vadd_mem_pointwise_vadd_iff {v : V} {s : AffineSubspace k P} {p : P} :
   vadd_mem_vadd_set_iff
 #align affine_subspace.vadd_mem_pointwise_vadd_iff AffineSubspace.vadd_mem_pointwise_vadd_iff
 
-theorem pointwise_vadd_bot (v : V) : v +ᵥ (⊥ : AffineSubspace k P) = ⊥ :=
-  by
-  ext
-  simp
+theorem pointwise_vadd_bot (v : V) : v +ᵥ (⊥ : AffineSubspace k P) = ⊥ := by simp [SetLike.ext'_iff]
 #align affine_subspace.pointwise_vadd_bot AffineSubspace.pointwise_vadd_bot
 
 theorem pointwise_vadd_direction (v : V) (s : AffineSubspace k P) :

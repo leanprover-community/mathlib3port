@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.invertible
-! leanprover-community/mathlib commit f6c030fea3c2809bb489bc8901f307bf6b4bf0c0
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.AlgebraTower
 
 /-!
 # Invertible polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is a stub containing some basic facts about
 invertible elements in the ring of polynomials.

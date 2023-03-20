@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit 2af0836443b4cfb5feda0df0051acdb398304931
+! leanprover-community/mathlib commit 7ec294687917cbc5c73620b4414ae9b5dd9ae1b4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Associated
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.Tactic.Ring
+import Mathbin.Algebra.Star.Unitary
 
 /-! # ℤ[√d]
 
@@ -1042,6 +1043,19 @@ theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d })
       rwa [← Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this
     rw [norm_eq_mul_conj, RingHom.map_mul, ha, MulZeroClass.zero_mul]
 #align zsqrtd.lift_injective Zsqrtd.lift_injective
+
+/-- An element of `ℤ√d` has norm equal to `1` if and only if it is contained in the submonoid
+of unitary elements. -/
+theorem norm_eq_one_iff_mem_unitary {d : ℤ} {a : ℤ√d} : a.norm = 1 ↔ a ∈ unitary (ℤ√d) :=
+  by
+  rw [unitary.mem_iff_self_mul_star, ← norm_eq_mul_conj]
+  norm_cast
+#align zsqrtd.norm_eq_one_iff_mem_unitary Zsqrtd.norm_eq_one_iff_mem_unitary
+
+/-- The kernel of the norm map on `ℤ√d` equals the submonoid of unitary elements. -/
+theorem mker_norm_eq_unitary {d : ℤ} : (@normMonoidHom d).mker = unitary (ℤ√d) :=
+  Submonoid.ext fun x => norm_eq_one_iff_mem_unitary
+#align zsqrtd.mker_norm_eq_unitary Zsqrtd.mker_norm_eq_unitary
 
 end Zsqrtd
 

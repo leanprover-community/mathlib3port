@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.group_ring_action.invariant
-! leanprover-community/mathlib commit e7bab9a85e92cf46c02cb4725a7be2f04691e3a7
+! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.RingTheory.Subring.Pointwise
 
-/-! # Subrings invariant under an action -/
+/-! # Subrings invariant under an action 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 section Ring

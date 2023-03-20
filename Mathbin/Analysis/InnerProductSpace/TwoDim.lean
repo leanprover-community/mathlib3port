@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.two_dim
-! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
+! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,7 +405,7 @@ theorem coe_basisRightAngleRotation (x : E) (hx : x ≠ 0) :
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ‖a‖ ^ 2 * ⟪x, y⟫`. (See
 `orientation.inner_mul_inner_add_area_form_mul_area_form` for the "applied" form.)-/
 theorem inner_mul_inner_add_areaForm_mul_area_form' (a x : E) :
-    ⟪a, x⟫ • @innerₛₗ ℝ _ _ _ a + ω a x • ω a = ‖a‖ ^ 2 • @innerₛₗ ℝ _ _ _ x :=
+    ⟪a, x⟫ • innerₛₗ ℝ a + ω a x • ω a = ‖a‖ ^ 2 • innerₛₗ ℝ x :=
   by
   by_cases ha : a = 0
   · simp [ha]
@@ -436,8 +436,7 @@ theorem inner_sq_add_areaForm_sq (a b : E) : ⟪a, b⟫ ^ 2 + ω a b ^ 2 = ‖a�
 
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ‖a‖ ^ 2 * ω x y`. (See
 `orientation.inner_mul_area_form_sub` for the "applied" form.) -/
-theorem inner_mul_areaForm_sub' (a x : E) :
-    ⟪a, x⟫ • ω a - ω a x • @innerₛₗ ℝ _ _ _ a = ‖a‖ ^ 2 • ω x :=
+theorem inner_mul_areaForm_sub' (a x : E) : ⟪a, x⟫ • ω a - ω a x • innerₛₗ ℝ a = ‖a‖ ^ 2 • ω x :=
   by
   by_cases ha : a = 0
   · simp [ha]
@@ -497,7 +496,7 @@ real part is the inner product and its imaginary part is `orientation.area_form`
 
 On `ℂ` with the standard orientation, `kahler w z = conj w * z`; see `complex.kahler`. -/
 def kahler : E →ₗ[ℝ] E →ₗ[ℝ] ℂ :=
-  LinearMap.llcomp ℝ E ℝ ℂ Complex.ofRealClm ∘ₗ @innerₛₗ ℝ E _ _ +
+  LinearMap.llcomp ℝ E ℝ ℂ Complex.ofRealClm ∘ₗ innerₛₗ ℝ +
     LinearMap.llcomp ℝ E ℝ ℂ ((LinearMap.lsmul ℝ ℂ).flip Complex.I) ∘ₗ ω
 #align orientation.kahler Orientation.kahler
 
