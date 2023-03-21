@@ -136,15 +136,19 @@ theorem nodupKeys_cons {s : Sigma β} {l : List (Sigma β)} :
 #align list.nodupkeys_cons List.nodupKeys_cons
 -/
 
+#print List.not_mem_keys_of_nodupKeys_cons /-
 theorem not_mem_keys_of_nodupKeys_cons {s : Sigma β} {l : List (Sigma β)} (h : NodupKeys (s :: l)) :
     s.1 ∉ l.keys :=
   (nodupKeys_cons.1 h).1
 #align list.not_mem_keys_of_nodupkeys_cons List.not_mem_keys_of_nodupKeys_cons
+-/
 
+#print List.nodupKeys_of_nodupKeys_cons /-
 theorem nodupKeys_of_nodupKeys_cons {s : Sigma β} {l : List (Sigma β)} (h : NodupKeys (s :: l)) :
     NodupKeys l :=
   (nodupKeys_cons.1 h).2
 #align list.nodupkeys_of_nodupkeys_cons List.nodupKeys_of_nodupKeys_cons
+-/
 
 #print List.NodupKeys.eq_of_fst_eq /-
 theorem NodupKeys.eq_of_fst_eq {l : List (Sigma β)} (nd : NodupKeys l) {s s' : Sigma β} (h : s ∈ l)

@@ -923,7 +923,7 @@ theorem canonicalEquiv_symm : (canonicalEquiv S P P').symm = canonicalEquiv S P'
   RingEquiv.ext fun I =>
     SetLike.ext_iff.mpr fun x =>
       by
-      rw [mem_canonical_equiv_apply, canonical_equiv, map_equiv_symm, map_equiv, [anonymous],
+      rw [mem_canonical_equiv_apply, canonical_equiv, map_equiv_symm, map_equiv, RingEquiv.coe_mk,
         mem_map]
       exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
 #align fractional_ideal.canonical_equiv_symm FractionalIdeal.canonicalEquiv_symm

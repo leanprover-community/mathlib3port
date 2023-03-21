@@ -350,11 +350,13 @@ theorem insert_entries_of_neg {a} {b : β a} {s : AList β} (h : a ∉ s) :
 #align alist.insert_entries_of_neg AList.insert_entries_of_neg
 -/
 
+#print AList.insert_of_neg /-
 -- Todo: rename to `insert_of_not_mem`.
 theorem insert_of_neg {a} {b : β a} {s : AList β} (h : a ∉ s) :
     insert a b s = ⟨⟨a, b⟩ :: s.entries, nodupKeys_cons.2 ⟨h, s.2⟩⟩ :=
   ext <| insert_entries_of_neg h
 #align alist.insert_of_neg AList.insert_of_neg
+-/
 
 #print AList.insert_empty /-
 @[simp]
@@ -449,17 +451,14 @@ theorem toAList_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 #align alist.to_alist_cons AList.toAList_cons
 -/
 
+#print AList.mk_cons_eq_insert /-
 theorem mk_cons_eq_insert (c : Sigma β) (l : List (Sigma β)) (h : (c :: l).NodupKeys) :
     (⟨c :: l, h⟩ : AList β) = insert c.1 c.2 ⟨l, nodupKeys_of_nodupKeys_cons h⟩ := by
   simpa [insert] using (kerase_of_not_mem_keys <| not_mem_keys_of_nodupkeys_cons h).symm
 #align alist.mk_cons_eq_insert AList.mk_cons_eq_insert
+-/
 
-/- warning: alist.insert_rec -> AList.insertRec is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {C : (AList.{u1, u2} α β) -> Sort.{u3}}, (C (EmptyCollection.emptyCollection.{max u1 u2} (AList.{u1, u2} α β) (AList.hasEmptyc.{u1, u2} α β))) -> (forall (a : α) (b : β a) (l : AList.{u1, u2} α β), (Not (Membership.Mem.{u1, max u1 u2} α (AList.{u1, u2} α β) (AList.hasMem.{u1, u2} α β) a l)) -> (C l) -> (C (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))) -> (forall (l : AList.{u1, u2} α β), C l)
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u3}} [_inst_1 : DecidableEq.{succ u2} α] {C : (AList.{u2, u3} α β) -> Sort.{u1}}, (C (EmptyCollection.emptyCollection.{max u2 u3} (AList.{u2, u3} α β) (AList.hasEmptyc.{u2, u3} α β))) -> (forall (a : α) (b : β a) (l : AList.{u2, u3} α β), (Not (Membership.Mem.{u2, max u2 u3} α (AList.{u2, u3} α β) (AList.hasMem.{u2, u3} α β) a l)) -> (C l) -> (C (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))) -> (forall (l : AList.{u2, u3} α β), C l)
-Case conversion may be inaccurate. Consider using '#align alist.insert_rec AList.insertRecₓ'. -/
+#print AList.insertRec /-
 /-- Recursion on an `alist`, using `insert`. Use as `induction l using alist.insert_rec`. -/
 @[elab_as_elim]
 def insertRec {C : AList β → Sort _} (H0 : C ∅)
@@ -471,10 +470,17 @@ def insertRec {C : AList β → Sort _} (H0 : C ∅)
     refine' IH _ _ _ _ (insert_rec _)
     exact not_mem_keys_of_nodupkeys_cons h
 #align alist.insert_rec AList.insertRec
+-/
 
 -- Test that the `induction` tactic works on `insert_rec`.
 example (l : AList β) : True := by induction l using AList.insertRec <;> trivial
 
+/- warning: alist.insert_rec_empty -> AList.insertRec_empty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {C : (AList.{u1, u2} α β) -> Sort.{u3}} (H0 : C (EmptyCollection.emptyCollection.{max u1 u2} (AList.{u1, u2} α β) (AList.hasEmptyc.{u1, u2} α β))) (IH : forall (a : α) (b : β a) (l : AList.{u1, u2} α β), (Not (Membership.Mem.{u1, max u1 u2} α (AList.{u1, u2} α β) (AList.hasMem.{u1, u2} α β) a l)) -> (C l) -> (C (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))), Eq.{u3} (C (EmptyCollection.emptyCollection.{max u1 u2} (AList.{u1, u2} α β) (AList.hasEmptyc.{u1, u2} α β))) (AList.insertRec.{u1, u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH (EmptyCollection.emptyCollection.{max u1 u2} (AList.{u1, u2} α β) (AList.hasEmptyc.{u1, u2} α β))) H0
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u3}} [_inst_1 : DecidableEq.{succ u2} α] {C : (AList.{u2, u3} α β) -> Sort.{u1}} (H0 : C (EmptyCollection.emptyCollection.{max u2 u3} (AList.{u2, u3} α β) (AList.instEmptyCollectionAList.{u2, u3} α β))) (IH : forall (a : α) (b : β a) (l : AList.{u2, u3} α β), (Not (Membership.mem.{u2, max u2 u3} α (AList.{u2, u3} α β) (AList.instMembershipAList.{u2, u3} α β) a l)) -> (C l) -> (C (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))), Eq.{u1} (C (EmptyCollection.emptyCollection.{max u2 u3} (AList.{u2, u3} α β) (AList.instEmptyCollectionAList.{u2, u3} α β))) (AList.insertRec.{u2, u3, u1} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH (EmptyCollection.emptyCollection.{max u2 u3} (AList.{u2, u3} α β) (AList.instEmptyCollectionAList.{u2, u3} α β))) H0
+Case conversion may be inaccurate. Consider using '#align alist.insert_rec_empty AList.insertRec_emptyₓ'. -/
 @[simp]
 theorem insertRec_empty {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) :
@@ -484,6 +490,12 @@ theorem insertRec_empty {C : AList β → Sort _} (H0 : C ∅)
   rw [insert_rec]
 #align alist.insert_rec_empty AList.insertRec_empty
 
+/- warning: alist.insert_rec_insert -> AList.insertRec_insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {C : (AList.{u1, u2} α β) -> Sort.{u3}} (H0 : C (EmptyCollection.emptyCollection.{max u1 u2} (AList.{u1, u2} α β) (AList.hasEmptyc.{u1, u2} α β))) (IH : forall (a : α) (b : β a) (l : AList.{u1, u2} α β), (Not (Membership.Mem.{u1, max u1 u2} α (AList.{u1, u2} α β) (AList.hasMem.{u1, u2} α β) a l)) -> (C l) -> (C (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))) {c : Sigma.{u1, u2} α β} {l : AList.{u1, u2} α β} (h : Not (Membership.Mem.{u1, max u1 u2} α (AList.{u1, u2} α β) (AList.hasMem.{u1, u2} α β) (Sigma.fst.{u1, u2} α β c) l)), Eq.{u3} (C (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (Sigma.fst.{u1, u2} α β c) (Sigma.snd.{u1, u2} α β c) l)) (AList.insertRec.{u1, u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (Sigma.fst.{u1, u2} α β c) (Sigma.snd.{u1, u2} α β c) l)) (IH (Sigma.fst.{u1, u2} α β c) (Sigma.snd.{u1, u2} α β c) l h (AList.insertRec.{u1, u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH l))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u3}} [_inst_1 : DecidableEq.{succ u2} α] {C : (AList.{u2, u3} α β) -> Sort.{u1}} (H0 : C (EmptyCollection.emptyCollection.{max u2 u3} (AList.{u2, u3} α β) (AList.instEmptyCollectionAList.{u2, u3} α β))) (IH : forall (a : α) (b : β a) (l : AList.{u2, u3} α β), (Not (Membership.mem.{u2, max u2 u3} α (AList.{u2, u3} α β) (AList.instMembershipAList.{u2, u3} α β) a l)) -> (C l) -> (C (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))) {c : Sigma.{u2, u3} α β} {l : AList.{u2, u3} α β} (h : Not (Membership.mem.{u2, max u2 u3} α (AList.{u2, u3} α β) (AList.instMembershipAList.{u2, u3} α β) (Sigma.fst.{u2, u3} α β c) l)), Eq.{u1} (C (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) (Sigma.fst.{u2, u3} α β c) (Sigma.snd.{u2, u3} α β c) l)) (AList.insertRec.{u2, u3, u1} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) (Sigma.fst.{u2, u3} α β c) (Sigma.snd.{u2, u3} α β c) l)) (IH (Sigma.fst.{u2, u3} α β c) (Sigma.snd.{u2, u3} α β c) l h (AList.insertRec.{u2, u3, u1} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH l))
+Case conversion may be inaccurate. Consider using '#align alist.insert_rec_insert AList.insertRec_insertₓ'. -/
 theorem insertRec_insert {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) {c : Sigma β}
     {l : AList β} (h : c.1 ∉ l) :
@@ -501,12 +513,18 @@ theorem insertRec_insert {C : AList β → Sort _} (H0 : C ∅)
   apply cast_hEq
 #align alist.insert_rec_insert AList.insertRec_insert
 
-theorem recursion_insert_mk {C : AList β → Sort _} (H0 : C ∅)
+/- warning: alist.recursion_insert_mk -> AList.insertRec_insert_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {C : (AList.{u1, u2} α β) -> Sort.{u3}} (H0 : C (EmptyCollection.emptyCollection.{max u1 u2} (AList.{u1, u2} α β) (AList.hasEmptyc.{u1, u2} α β))) (IH : forall (a : α) (b : β a) (l : AList.{u1, u2} α β), (Not (Membership.Mem.{u1, max u1 u2} α (AList.{u1, u2} α β) (AList.hasMem.{u1, u2} α β) a l)) -> (C l) -> (C (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))) {a : α} (b : β a) {l : AList.{u1, u2} α β} (h : Not (Membership.Mem.{u1, max u1 u2} α (AList.{u1, u2} α β) (AList.hasMem.{u1, u2} α β) a l)), Eq.{u3} (C (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b l)) (AList.insertRec.{u1, u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b l)) (IH a b l h (AList.insertRec.{u1, u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH l))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u3}} [_inst_1 : DecidableEq.{succ u2} α] {C : (AList.{u2, u3} α β) -> Sort.{u1}} (H0 : C (EmptyCollection.emptyCollection.{max u2 u3} (AList.{u2, u3} α β) (AList.instEmptyCollectionAList.{u2, u3} α β))) (IH : forall (a : α) (b : β a) (l : AList.{u2, u3} α β), (Not (Membership.mem.{u2, max u2 u3} α (AList.{u2, u3} α β) (AList.instMembershipAList.{u2, u3} α β) a l)) -> (C l) -> (C (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) a b l))) {a : α} (b : β a) {l : AList.{u2, u3} α β} (h : Not (Membership.mem.{u2, max u2 u3} α (AList.{u2, u3} α β) (AList.instMembershipAList.{u2, u3} α β) a l)), Eq.{u1} (C (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) a b l)) (AList.insertRec.{u2, u3, u1} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH (AList.insert.{u2, u3} α β (fun (a : α) (b : α) => _inst_1 a b) a b l)) (IH a b l h (AList.insertRec.{u2, u3, u1} α β (fun (a : α) (b : α) => _inst_1 a b) C H0 IH l))
+Case conversion may be inaccurate. Consider using '#align alist.recursion_insert_mk AList.insertRec_insert_mkₓ'. -/
+theorem insertRec_insert_mk {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) {a : α} (b : β a)
     {l : AList β} (h : a ∉ l) :
     @insertRec α β _ C H0 IH (l.insert a b) = IH a b l h (@insertRec α β _ C H0 IH l) :=
   @insertRec_insert α β _ C H0 IH ⟨a, b⟩ l h
-#align alist.recursion_insert_mk AList.recursion_insert_mk
+#align alist.recursion_insert_mk AList.insertRec_insert_mk
 
 /-! ### extract -/
 
