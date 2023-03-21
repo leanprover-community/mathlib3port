@@ -454,6 +454,12 @@ theorem single_apply_left {f : α → β} (hf : Function.Injective f) (x z : α)
     single (f x) y (f z) = single x y z := by classical simp only [single_apply, hf.eq_iff]
 #align finsupp.single_apply_left Finsupp.single_apply_left
 
+/- warning: finsupp.single_eq_set_indicator -> Finsupp.single_eq_set_indicator is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : Zero.{u2} M] {a : α} {b : M}, Eq.{max (succ u1) (succ u2)} (α -> M) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Finsupp.{u1, u2} α M _inst_1) (fun (_x : Finsupp.{u1, u2} α M _inst_1) => α -> M) (Finsupp.coeFun.{u1, u2} α M _inst_1) (Finsupp.single.{u1, u2} α M _inst_1 a b)) (Set.indicator.{u1, u2} α M _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) (fun (_x : α) => b))
+but is expected to have type
+  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {a : α} {b : M}, Eq.{max (succ u2) (succ u1)} (forall (ᾰ : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (Finsupp.single.{u2, u1} α M _inst_1 a b)) (Set.indicator.{u2, u1} α M _inst_1 (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a) (fun (_x : α) => b))
+Case conversion may be inaccurate. Consider using '#align finsupp.single_eq_set_indicator Finsupp.single_eq_set_indicatorₓ'. -/
 theorem single_eq_set_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
   classical
     ext
