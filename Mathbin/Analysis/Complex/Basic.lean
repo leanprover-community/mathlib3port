@@ -468,8 +468,7 @@ section ComplexOrder
 open ComplexOrder
 
 theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑‖z‖ := by
-  rw [eq_re_of_real_le hz, IsROrC.norm_of_real,
-    Real.norm_of_nonneg (Complex.ComplexOrder.le_def.2 hz).1]
+  rw [eq_re_of_real_le hz, IsROrC.norm_of_real, Real.norm_of_nonneg (Complex.le_def.2 hz).1]
 #align complex.eq_coe_norm_of_nonneg Complex.eq_coe_norm_of_nonneg
 
 end ComplexOrder

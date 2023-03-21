@@ -2300,27 +2300,27 @@ theorem smul_def [SMul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (
   rfl
 #align subalgebra.smul_def Subalgebra.smul_def
 
-/- warning: subalgebra.smul_comm_class_left -> Subalgebra.sMulCommClass_left is a dubious translation:
+/- warning: subalgebra.smul_comm_class_left -> Subalgebra.smulCommClass_left is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {α : Type.{u3}} {β : Type.{u4}} [_inst_6 : SMul.{u2, u4} A β] [_inst_7 : SMul.{u3, u4} α β] [_inst_8 : SMulCommClass.{u2, u3, u4} A α β _inst_6 _inst_7] (S : Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3), SMulCommClass.{u2, u3, u4} (coeSort.{succ u2, succ (succ u2)} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.setLike.{u1, u2} R A _inst_1 _inst_2 _inst_3)) S) α β (Subalgebra.hasSmul.{u1, u2, u4} R A _inst_1 _inst_2 _inst_3 β _inst_6 S) _inst_7
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {α : Type.{u3}} {β : Type.{u4}} [_inst_6 : SMul.{u2, u4} A β] [_inst_7 : SMul.{u3, u4} α β] [_inst_8 : SMulCommClass.{u2, u3, u4} A α β _inst_6 _inst_7] (S : Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3), SMulCommClass.{u2, u3, u4} (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) α β (Subalgebra.instSMulSubtypeMemSubalgebraInstMembershipInstSetLikeSubalgebra.{u1, u2, u4} R A _inst_1 _inst_2 _inst_3 β _inst_6 S) _inst_7
-Case conversion may be inaccurate. Consider using '#align subalgebra.smul_comm_class_left Subalgebra.sMulCommClass_leftₓ'. -/
-instance sMulCommClass_left [SMul A β] [SMul α β] [SMulCommClass A α β] (S : Subalgebra R A) :
+Case conversion may be inaccurate. Consider using '#align subalgebra.smul_comm_class_left Subalgebra.smulCommClass_leftₓ'. -/
+instance smulCommClass_left [SMul A β] [SMul α β] [SMulCommClass A α β] (S : Subalgebra R A) :
     SMulCommClass S α β :=
   S.toSubsemiring.smulCommClass_left
-#align subalgebra.smul_comm_class_left Subalgebra.sMulCommClass_left
+#align subalgebra.smul_comm_class_left Subalgebra.smulCommClass_left
 
-/- warning: subalgebra.smul_comm_class_right -> Subalgebra.sMulCommClass_right is a dubious translation:
+/- warning: subalgebra.smul_comm_class_right -> Subalgebra.smulCommClass_right is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {α : Type.{u3}} {β : Type.{u4}} [_inst_6 : SMul.{u3, u4} α β] [_inst_7 : SMul.{u2, u4} A β] [_inst_8 : SMulCommClass.{u3, u2, u4} α A β _inst_6 _inst_7] (S : Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3), SMulCommClass.{u3, u2, u4} α (coeSort.{succ u2, succ (succ u2)} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.setLike.{u1, u2} R A _inst_1 _inst_2 _inst_3)) S) β _inst_6 (Subalgebra.hasSmul.{u1, u2, u4} R A _inst_1 _inst_2 _inst_3 β _inst_7 S)
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {α : Type.{u3}} {β : Type.{u4}} [_inst_6 : SMul.{u3, u4} α β] [_inst_7 : SMul.{u2, u4} A β] [_inst_8 : SMulCommClass.{u3, u2, u4} α A β _inst_6 _inst_7] (S : Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3), SMulCommClass.{u3, u2, u4} α (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) β _inst_6 (Subalgebra.instSMulSubtypeMemSubalgebraInstMembershipInstSetLikeSubalgebra.{u1, u2, u4} R A _inst_1 _inst_2 _inst_3 β _inst_7 S)
-Case conversion may be inaccurate. Consider using '#align subalgebra.smul_comm_class_right Subalgebra.sMulCommClass_rightₓ'. -/
-instance sMulCommClass_right [SMul α β] [SMul A β] [SMulCommClass α A β] (S : Subalgebra R A) :
+Case conversion may be inaccurate. Consider using '#align subalgebra.smul_comm_class_right Subalgebra.smulCommClass_rightₓ'. -/
+instance smulCommClass_right [SMul α β] [SMul A β] [SMulCommClass α A β] (S : Subalgebra R A) :
     SMulCommClass α S β :=
   S.toSubsemiring.smulCommClass_right
-#align subalgebra.smul_comm_class_right Subalgebra.sMulCommClass_right
+#align subalgebra.smul_comm_class_right Subalgebra.smulCommClass_right
 
 /- warning: subalgebra.is_scalar_tower_left -> Subalgebra.isScalarTower_left is a dubious translation:
 lean 3 declaration is

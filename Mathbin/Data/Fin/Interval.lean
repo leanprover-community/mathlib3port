@@ -82,49 +82,49 @@ theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Fin n :=
   rfl
 #align fin.Ioo_eq_finset_subtype Fin.Ioo_eq_finset_subtype
 
-/- warning: fin.map_subtype_embedding_Icc -> Fin.map_subtype_embedding_Icc is a dubious translation:
+/- warning: fin.map_subtype_embedding_Icc -> Fin.map_valEmbedding_Icc is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Icc.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrder n) a b)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) b))
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Icc.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Icc Fin.map_subtype_embedding_Iccₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Icc Fin.map_valEmbedding_Iccₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Icc : (Icc a b).map Fin.valEmbedding = Icc a b := by
+theorem map_valEmbedding_Icc : (Icc a b).map Fin.valEmbedding = Icc a b := by
   simp [Icc_eq_finset_subtype, Finset.fin, Finset.map_map, Icc_filter_lt_of_lt_right]
-#align fin.map_subtype_embedding_Icc Fin.map_subtype_embedding_Icc
+#align fin.map_subtype_embedding_Icc Fin.map_valEmbedding_Icc
 
-/- warning: fin.map_subtype_embedding_Ico -> Fin.map_subtype_embedding_Ico is a dubious translation:
+/- warning: fin.map_subtype_embedding_Ico -> Fin.map_valEmbedding_Ico is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ico.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrder n) a b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) b))
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ico.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ico Fin.map_subtype_embedding_Icoₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ico Fin.map_valEmbedding_Icoₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Ico : (Ico a b).map Fin.valEmbedding = Ico a b := by
+theorem map_valEmbedding_Ico : (Ico a b).map Fin.valEmbedding = Ico a b := by
   simp [Ico_eq_finset_subtype, Finset.fin, Finset.map_map]
-#align fin.map_subtype_embedding_Ico Fin.map_subtype_embedding_Ico
+#align fin.map_subtype_embedding_Ico Fin.map_valEmbedding_Ico
 
-/- warning: fin.map_subtype_embedding_Ioc -> Fin.map_subtype_embedding_Ioc is a dubious translation:
+/- warning: fin.map_subtype_embedding_Ioc -> Fin.map_valEmbedding_Ioc is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ioc.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrder n) a b)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) b))
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ioc.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ioc Fin.map_subtype_embedding_Iocₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ioc Fin.map_valEmbedding_Iocₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Ioc : (Ioc a b).map Fin.valEmbedding = Ioc a b := by
+theorem map_valEmbedding_Ioc : (Ioc a b).map Fin.valEmbedding = Ioc a b := by
   simp [Ioc_eq_finset_subtype, Finset.fin, Finset.map_map, Ioc_filter_lt_of_lt_right]
-#align fin.map_subtype_embedding_Ioc Fin.map_subtype_embedding_Ioc
+#align fin.map_subtype_embedding_Ioc Fin.map_valEmbedding_Ioc
 
-/- warning: fin.map_subtype_embedding_Ioo -> Fin.map_subtype_embedding_Ioo is a dubious translation:
+/- warning: fin.map_subtype_embedding_Ioo -> Fin.map_valEmbedding_Ioo is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ioo.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrder n) a b)) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) b))
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ioo.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b)) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ioo Fin.map_subtype_embedding_Iooₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ioo Fin.map_valEmbedding_Iooₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Ioo : (Ioo a b).map Fin.valEmbedding = Ioo a b := by
+theorem map_valEmbedding_Ioo : (Ioo a b).map Fin.valEmbedding = Ioo a b := by
   simp [Ioo_eq_finset_subtype, Finset.fin, Finset.map_map]
-#align fin.map_subtype_embedding_Ioo Fin.map_subtype_embedding_Ioo
+#align fin.map_subtype_embedding_Ioo Fin.map_valEmbedding_Ioo
 
 /- warning: fin.card_Icc -> Fin.card_Icc is a dubious translation:
 lean 3 declaration is
@@ -258,14 +258,14 @@ theorem Iio_eq_finset_subtype : Iio b = (Iio (b : ℕ)).Fin n :=
   rfl
 #align fin.Iio_eq_finset_subtype Fin.Iio_eq_finset_subtype
 
-/- warning: fin.map_subtype_embedding_Ici -> Fin.map_subtype_embedding_Ici is a dubious translation:
+/- warning: fin.map_subtype_embedding_Ici -> Fin.map_valEmbedding_Ici is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (a : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ici.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrderTop n) a)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
   forall {n : Nat} (a : Fin n), (Fin n) -> (Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ici.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ici Fin.map_subtype_embedding_Iciₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ici Fin.map_valEmbedding_Iciₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Ici : (Ici a).map Fin.valEmbedding = Icc a (n - 1) :=
+theorem map_valEmbedding_Ici : (Ici a).map Fin.valEmbedding = Icc a (n - 1) :=
   by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
@@ -275,16 +275,16 @@ theorem map_subtype_embedding_Ici : (Ici a).map Fin.valEmbedding = Icc a (n - 1)
   cases n
   · exact Fin.elim0 a
   · exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
-#align fin.map_subtype_embedding_Ici Fin.map_subtype_embedding_Ici
+#align fin.map_subtype_embedding_Ici Fin.map_valEmbedding_Ici
 
-/- warning: fin.map_subtype_embedding_Ioi -> Fin.map_subtype_embedding_Ioi is a dubious translation:
+/- warning: fin.map_subtype_embedding_Ioi -> Fin.map_valEmbedding_Ioi is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (a : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ioi.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrderTop n) a)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
   forall {n : Nat} (a : Fin n), (Fin n) -> (Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Ioi.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ioi Fin.map_subtype_embedding_Ioiₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Ioi Fin.map_valEmbedding_Ioiₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Ioi : (Ioi a).map Fin.valEmbedding = Ioc a (n - 1) :=
+theorem map_valEmbedding_Ioi : (Ioi a).map Fin.valEmbedding = Ioc a (n - 1) :=
   by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
@@ -294,29 +294,29 @@ theorem map_subtype_embedding_Ioi : (Ioi a).map Fin.valEmbedding = Ioc a (n - 1)
   cases n
   · exact Fin.elim0 a
   · exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
-#align fin.map_subtype_embedding_Ioi Fin.map_subtype_embedding_Ioi
+#align fin.map_subtype_embedding_Ioi Fin.map_valEmbedding_Ioi
 
-/- warning: fin.map_subtype_embedding_Iic -> Fin.map_subtype_embedding_Iic is a dubious translation:
+/- warning: fin.map_subtype_embedding_Iic -> Fin.map_valEmbedding_Iic is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Iic.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrderBot n) b)) (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) b))
 but is expected to have type
   forall {n : Nat} (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Iic.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderBotFinToPreorderInstPartialOrderFin n) b)) (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fin.val n b))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Iic Fin.map_subtype_embedding_Iicₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Iic Fin.map_valEmbedding_Iicₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Iic : (Iic b).map Fin.valEmbedding = Iic b := by
+theorem map_valEmbedding_Iic : (Iic b).map Fin.valEmbedding = Iic b := by
   simp [Iic_eq_finset_subtype, Finset.fin, Finset.map_map, Iic_filter_lt_of_lt_right]
-#align fin.map_subtype_embedding_Iic Fin.map_subtype_embedding_Iic
+#align fin.map_subtype_embedding_Iic Fin.map_valEmbedding_Iic
 
-/- warning: fin.map_subtype_embedding_Iio -> Fin.map_subtype_embedding_Iio is a dubious translation:
+/- warning: fin.map_subtype_embedding_Iio -> Fin.map_valEmbedding_Iio is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Iio.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrderBot n) b)) (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) b))
 but is expected to have type
   forall {n : Nat} (b : Fin n), Eq.{1} (Finset.{0} Nat) (Finset.map.{0, 0} (Fin n) Nat (Fin.valEmbedding n) (Finset.Iio.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderBotFinToPreorderInstPartialOrderFin n) b)) (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fin.val n b))
-Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Iio Fin.map_subtype_embedding_Iioₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedding_Iio Fin.map_valEmbedding_Iioₓ'. -/
 @[simp]
-theorem map_subtype_embedding_Iio : (Iio b).map Fin.valEmbedding = Iio b := by
+theorem map_valEmbedding_Iio : (Iio b).map Fin.valEmbedding = Iio b := by
   simp [Iio_eq_finset_subtype, Finset.fin, Finset.map_map]
-#align fin.map_subtype_embedding_Iio Fin.map_subtype_embedding_Iio
+#align fin.map_subtype_embedding_Iio Fin.map_valEmbedding_Iio
 
 /- warning: fin.card_Ici -> Fin.card_Ici is a dubious translation:
 lean 3 declaration is

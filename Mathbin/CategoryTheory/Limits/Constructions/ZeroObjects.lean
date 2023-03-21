@@ -191,13 +191,13 @@ def coprodZeroIso (X : C) : X ⨿ (0 : C) ≅ X :=
 #align category_theory.limits.coprod_zero_iso CategoryTheory.Limits.coprodZeroIso
 -/
 
-#print CategoryTheory.Limits.inr_coprod_zeroiso_hom /-
+#print CategoryTheory.Limits.inr_coprodZeroIso_hom /-
 @[simp]
-theorem inr_coprod_zeroiso_hom (X : C) : coprod.inl ≫ (coprodZeroIso X).Hom = 𝟙 X :=
+theorem inr_coprodZeroIso_hom (X : C) : coprod.inl ≫ (coprodZeroIso X).Hom = 𝟙 X :=
   by
   dsimp [coprod_zero_iso, binary_cofan_zero_right]
   simp
-#align category_theory.limits.inr_coprod_zeroiso_hom CategoryTheory.Limits.inr_coprod_zeroiso_hom
+#align category_theory.limits.inr_coprod_zeroiso_hom CategoryTheory.Limits.inr_coprodZeroIso_hom
 -/
 
 #print CategoryTheory.Limits.coprodZeroIso_inv /-

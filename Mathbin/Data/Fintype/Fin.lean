@@ -60,7 +60,7 @@ theorem Ioi_zero_eq_map : Ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).
 theorem Iio_last_eq_map : Iio (Fin.last n) = Finset.univ.map Fin.castSucc.toEmbedding :=
   by
   apply Finset.map_injective Fin.valEmbedding
-  rw [Finset.map_map, Fin.map_subtype_embedding_Iio, Fin.val_last]
+  rw [Finset.map_map, Fin.map_valEmbedding_Iio, Fin.val_last]
   exact map_subtype_embedding_univ.symm
 #align fin.Iio_last_eq_map Fin.Iio_last_eq_map
 
@@ -89,8 +89,8 @@ theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmbedding _).to
 theorem Iio_castSucc (i : Fin n) : Iio (castSucc i) = (Iio i).map Fin.castSucc.toEmbedding :=
   by
   apply Finset.map_injective Fin.valEmbedding
-  rw [Finset.map_map, Fin.map_subtype_embedding_Iio]
-  exact (Fin.map_subtype_embedding_Iio i).symm
+  rw [Finset.map_map, Fin.map_valEmbedding_Iio]
+  exact (Fin.map_valEmbedding_Iio i).symm
 #align fin.Iio_cast_succ Fin.Iio_castSucc
 
 /- warning: fin.card_filter_univ_succ' -> Fin.card_filter_univ_succ' is a dubious translation:

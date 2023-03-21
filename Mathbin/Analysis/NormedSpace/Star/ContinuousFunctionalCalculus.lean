@@ -107,8 +107,8 @@ theorem spectrum_star_mul_self_of_isStarNormal :
     rw [gelfand_transform_apply_apply ℂ _ (star a' * a') φ, map_mul φ, map_star φ]
     rw [Complex.eq_coe_norm_of_nonneg star_mul_self_nonneg, ← map_star, ← map_mul]
     exact
-      ⟨Complex.ComplexOrder.zero_le_real.2 (norm_nonneg _),
-        Complex.ComplexOrder.real_le_real.2 (AlgHom.norm_apply_le_self φ (star a' * a'))⟩
+      ⟨Complex.zero_le_real.2 (norm_nonneg _),
+        Complex.real_le_real.2 (AlgHom.norm_apply_le_self φ (star a' * a'))⟩
 #align spectrum_star_mul_self_of_is_star_normal spectrum_star_mul_self_of_isStarNormal
 
 variable {a}
@@ -165,9 +165,7 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
       by
       replace hz := Set.image_subset _ (spectrum_star_mul_self_of_isStarNormal a) hz
       rwa [Set.image_const_sub_Icc, sub_self, sub_zero] at hz
-    refine'
-      lt_of_le_of_ne
-        (Complex.ComplexOrder.real_le_real.1 <| Complex.eq_coe_norm_of_nonneg h₃.1 ▸ h₃.2) _
+    refine' lt_of_le_of_ne (Complex.real_le_real.1 <| Complex.eq_coe_norm_of_nonneg h₃.1 ▸ h₃.2) _
     · intro hz'
       replace hz' := congr_arg (fun x : ℝ≥0 => ((x : ℝ) : ℂ)) hz'
       simp only [coe_nnnorm] at hz'
