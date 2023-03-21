@@ -894,7 +894,7 @@ theorem sup_mul_inf (I J : Ideal A) : (I ⊔ J) * (I ⊓ J) = I * J :=
   by
   letI := Classical.decEq (Ideal A)
   letI := Classical.decEq (Associates (Ideal A))
-  letI := UniqueFactorizationMonoid.toNormalizedGcdMonoid (Ideal A)
+  letI := UniqueFactorizationMonoid.toNormalizedGCDMonoid (Ideal A)
   have hgcd : gcd I J = I ⊔ J :=
     by
     rw [gcd_eq_normalize _ _, normalize_eq]

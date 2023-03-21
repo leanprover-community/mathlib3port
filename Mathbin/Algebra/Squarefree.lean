@@ -267,7 +267,7 @@ theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [Decidabl
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) :
     x ∣ y ^ n ↔ x ∣ y := by
   classical
-    haveI := UniqueFactorizationMonoid.toGcdMonoid R
+    haveI := UniqueFactorizationMonoid.toGCDMonoid R
     exact ⟨hsq.is_radical n y, fun h => h.pow h0⟩
 #align unique_factorization_monoid.dvd_pow_iff_dvd_of_squarefree UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree
 
