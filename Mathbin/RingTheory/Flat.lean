@@ -59,16 +59,19 @@ open LinearMap (lsmul)
 
 open TensorProduct
 
+#print Module.Flat /-
 /-- An `R`-module `M` is flat if for all finitely generated ideals `I` of `R`,
 the canonical map `I ⊗ M →ₗ M` is injective. -/
 class Flat (R : Type u) (M : Type v) [CommRing R] [AddCommGroup M] [Module R M] : Prop where
   out : ∀ ⦃I : Ideal R⦄ (hI : I.Fg), Injective (TensorProduct.lift ((lsmul R M).comp I.Subtype))
 #align module.flat Module.Flat
+-/
 
 namespace Flat
 
 open TensorProduct LinearMap _Root_.Submodule
 
+#print Module.Flat.self /-
 instance self (R : Type u) [CommRing R] : Flat R R :=
   ⟨by
     intro I hI
@@ -78,6 +81,7 @@ instance self (R : Type u) [CommRing R] : Flat R R :=
     simp only [Function.comp_apply, LinearEquiv.coe_toEquiv, rid_symm_apply, comp_apply, mul_one,
       lift.tmul, subtype_apply, Algebra.id.smul_eq_mul, lsmul_apply]⟩
 #align module.flat.self Module.Flat.self
+-/
 
 end Flat
 

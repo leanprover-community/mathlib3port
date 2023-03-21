@@ -210,24 +210,24 @@ theorem toAut_inv (x : αˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : �
 
 end Units
 
-namespace Mon
+namespace MonCat
 
 open CategoryTheory
 
 /-- The fully faithful functor from `Mon` to `Cat`. -/
-def toCat : Mon ⥤ Cat where
+def toCat : MonCat ⥤ Cat where
   obj x := Cat.of (SingleObj x)
   map x y f := SingleObj.mapHom x y f
-#align Mon.to_Cat Mon.toCat
+#align Mon.to_Cat MonCat.toCat
 
 instance toCatFull : Full toCat
     where
   preimage x y := (SingleObj.mapHom x y).invFun
   witness' x y := by apply Equiv.right_inv
-#align Mon.to_Cat_full Mon.toCatFull
+#align Mon.to_Cat_full MonCat.toCatFull
 
 instance toCat_faithful : Faithful toCat where map_injective' x y := by apply Equiv.injective
-#align Mon.to_Cat_faithful Mon.toCat_faithful
+#align Mon.to_Cat_faithful MonCat.toCat_faithful
 
-end Mon
+end MonCat
 

@@ -49,9 +49,9 @@ instance groupObj (F : J ⥤ GroupCat.{max v u}) (j) : Group ((F ⋙ forget Grou
       "The flat sections of a functor into `AddGroup` form an additive subgroup of all sections."]
 def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
   {
-    Mon.sectionsSubmonoid
+    MonCat.sectionsSubmonoid
       (F ⋙ forget₂ GroupCat
-          Mon) with
+          MonCat) with
     carrier := (F ⋙ forget GroupCat).sections
     inv_mem' := fun a ah j j' f =>
       by
@@ -77,17 +77,18 @@ the existing limit. -/
 @[to_additive
       "We show that the forgetful functor `AddGroup ⥤ AddMon` creates limits.\n\nAll we need to do is notice that the limit point has an `add_group` instance available, and then\nreuse the existing limit."]
 instance Forget₂.createsLimit (F : J ⥤ GroupCat.{max v u}) :
-    CreatesLimit F (forget₂ GroupCat.{max v u} Mon.{max v u}) :=
+    CreatesLimit F (forget₂ GroupCat.{max v u} MonCat.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
         { pt := GroupCat.of (Types.limitCone (F ⋙ forget GroupCat)).pt
           π :=
-            { app := Mon.limitπMonoidHom (F ⋙ forget₂ GroupCat Mon.{max v u})
+            { app := MonCat.limitπMonoidHom (F ⋙ forget₂ GroupCat MonCat.{max v u})
               naturality' :=
-                (Mon.HasLimits.limitCone (F ⋙ forget₂ GroupCat Mon.{max v u})).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t
+                (MonCat.HasLimits.limitCone
+                      (F ⋙ forget₂ GroupCat MonCat.{max v u})).π.naturality } }
+      validLift := by apply is_limit.unique_up_to_iso (MonCat.HasLimits.limitConeIsLimit _) t
       makesLimit :=
-        IsLimit.ofFaithful (forget₂ GroupCat Mon.{max v u}) (Mon.HasLimits.limitConeIsLimit _)
+        IsLimit.ofFaithful (forget₂ GroupCat MonCat.{max v u}) (MonCat.HasLimits.limitConeIsLimit _)
           (fun s => _) fun s => rfl }
 #align Group.forget₂.creates_limit GroupCat.Forget₂.createsLimit
 #align AddGroup.forget₂.creates_limit AddGroupCat.Forget₂.createsLimit
@@ -98,7 +99,7 @@ instance Forget₂.createsLimit (F : J ⥤ GroupCat.{max v u}) :
 @[to_additive
       "A choice of limit cone for a functor into `Group`.\n(Generally, you'll just want to use `limit F`.)"]
 def limitCone (F : J ⥤ GroupCat.{max v u}) : Cone F :=
-  liftLimit (limit.isLimit (F ⋙ forget₂ GroupCat Mon.{max v u}))
+  liftLimit (limit.isLimit (F ⋙ forget₂ GroupCat MonCat.{max v u}))
 #align Group.limit_cone GroupCat.limitCone
 #align AddGroup.limit_cone AddGroupCat.limitCone
 
@@ -116,7 +117,7 @@ def limitConeIsLimit (F : J ⥤ GroupCat.{max v u}) : IsLimit (limitCone F) :=
 @[to_additive "The category of additive groups has all limits."]
 instance hasLimitsOfSize : HasLimitsOfSize.{v, v} GroupCat.{max v u}
     where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit_of_created F (forget₂ GroupCat Mon.{max v u}) }
+    { HasLimit := fun F => has_limit_of_created F (forget₂ GroupCat MonCat.{max v u}) }
 #align Group.has_limits_of_size GroupCat.hasLimitsOfSize
 #align AddGroup.has_limits_of_size AddGroupCat.hasLimitsOfSize
 
@@ -133,13 +134,13 @@ This means the underlying monoid of a limit can be computed as a limit in the ca
 @[to_additive AddGroupCat.forget₂AddMonPreservesLimits
       "The forgetful functor from additive groups\nto additive monoids preserves all limits.\n\nThis means the underlying additive monoid of a limit can be computed as a limit in the category of\nadditive monoids."]
 instance forget₂MonPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ GroupCat Mon.{max v u})
+    PreservesLimitsOfSize.{v, v} (forget₂ GroupCat MonCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 := { PreservesLimit := fun F => by infer_instance }
 #align Group.forget₂_Mon_preserves_limits_of_size GroupCat.forget₂MonPreservesLimitsOfSize
 #align AddGroup.forget₂_AddMon_preserves_limits AddGroupCat.forget₂AddMonPreservesLimits
 
 @[to_additive]
-instance forget₂MonPreservesLimits : PreservesLimits (forget₂ GroupCat Mon.{u}) :=
+instance forget₂MonPreservesLimits : PreservesLimits (forget₂ GroupCat MonCat.{u}) :=
   GroupCat.forget₂MonPreservesLimitsOfSize.{u, u}
 #align Group.forget₂_Mon_preserves_limits GroupCat.forget₂MonPreservesLimits
 #align AddGroup.forget₂_Mon_preserves_limits AddGroupCat.forget₂MonPreservesLimits
@@ -151,7 +152,9 @@ This means the underlying type of a limit can be computed as a limit in the cate
       "The forgetful functor from additive groups to types preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
 instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget GroupCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
-    { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ GroupCat Mon) (forget Mon) }
+    {
+      PreservesLimit := fun F =>
+        limits.comp_preserves_limit (forget₂ GroupCat MonCat) (forget MonCat) }
 #align Group.forget_preserves_limits_of_size GroupCat.forgetPreservesLimitsOfSize
 #align AddGroup.forget_preserves_limits_of_size AddGroupCat.forgetPreservesLimitsOfSize
 
@@ -196,13 +199,13 @@ instance Forget₂.createsLimit (F : J ⥤ CommGroupCat.{max v u}) :
         { pt := CommGroupCat.of (Types.limitCone (F ⋙ forget CommGroupCat)).pt
           π :=
             { app :=
-                Mon.limitπMonoidHom
-                  (F ⋙ forget₂ CommGroupCat GroupCat.{max v u} ⋙ forget₂ GroupCat Mon.{max v u})
-              naturality' := (Mon.HasLimits.limitCone _).π.naturality } }
+                MonCat.limitπMonoidHom
+                  (F ⋙ forget₂ CommGroupCat GroupCat.{max v u} ⋙ forget₂ GroupCat MonCat.{max v u})
+              naturality' := (MonCat.HasLimits.limitCone _).π.naturality } }
       validLift := by apply is_limit.unique_up_to_iso (GroupCat.limitConeIsLimit _) t
       makesLimit :=
-        IsLimit.ofFaithful (forget₂ _ GroupCat.{max v u} ⋙ forget₂ _ Mon.{max v u})
-          (by apply Mon.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
+        IsLimit.ofFaithful (forget₂ _ GroupCat.{max v u} ⋙ forget₂ _ MonCat.{max v u})
+          (by apply MonCat.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
 #align CommGroup.forget₂.creates_limit CommGroupCat.Forget₂.createsLimit
 #align AddCommGroup.forget₂.creates_limit AddCommGroupCat.Forget₂.createsLimit
 
@@ -263,8 +266,8 @@ instance forget₂GroupPreservesLimits : PreservesLimits (forget₂ CommGroupCat
 @[to_additive AddCommGroupCat.forget₂AddCommMonPreservesLimitsAux
       "An auxiliary declaration to speed up typechecking."]
 def forget₂CommMonPreservesLimitsAux (F : J ⥤ CommGroupCat.{max v u}) :
-    IsLimit ((forget₂ CommGroupCat CommMon).mapCone (limitCone F)) :=
-  CommMon.limitConeIsLimit (F ⋙ forget₂ CommGroupCat CommMon)
+    IsLimit ((forget₂ CommGroupCat CommMonCat).mapCone (limitCone F)) :=
+  CommMonCat.limitConeIsLimit (F ⋙ forget₂ CommGroupCat CommMonCat)
 #align CommGroup.forget₂_CommMon_preserves_limits_aux CommGroupCat.forget₂CommMonPreservesLimitsAux
 #align AddCommGroup.forget₂_AddCommMon_preserves_limits_aux AddCommGroupCat.forget₂AddCommMonPreservesLimitsAux
 
@@ -275,7 +278,7 @@ in the category of commutative monoids.)
 @[to_additive AddCommGroupCat.forget₂AddCommMonPreservesLimits
       "The forgetful functor from additive commutative groups to additive commutative monoids preserves\nall limits. (That is, the underlying additive commutative monoids could have been computed instead\nas limits in the category of additive commutative monoids.)"]
 instance forget₂CommMonPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ CommGroupCat CommMon.{max v u})
+    PreservesLimitsOfSize.{v, v} (forget₂ CommGroupCat CommMonCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>

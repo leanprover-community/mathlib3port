@@ -63,7 +63,7 @@ instance hasForgetToBipointed : HasForget₂ GroupWithZeroCat Bipointed
       map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
 #align GroupWithZero.has_forget_to_Bipointed GroupWithZeroCat.hasForgetToBipointed
 
-instance hasForgetToMon : HasForget₂ GroupWithZeroCat Mon
+instance hasForgetToMon : HasForget₂ GroupWithZeroCat MonCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => MonoidWithZeroHom.toMonoidHom }

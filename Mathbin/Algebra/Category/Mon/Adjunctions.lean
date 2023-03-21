@@ -33,9 +33,9 @@ open CategoryTheory
 /-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
-def adjoinOne : SemigroupCat.{u} ⥤ Mon.{u}
+def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
     where
-  obj S := Mon.of (WithOne S)
+  obj S := MonCat.of (WithOne S)
   map X Y := WithOne.map
   map_id' X := WithOne.map_id
   map_comp' X Y Z := WithOne.map_comp
@@ -43,7 +43,7 @@ def adjoinOne : SemigroupCat.{u} ⥤ Mon.{u}
 #align adjoin_zero adjoinZero
 
 @[to_additive hasForgetToAddSemigroup]
-instance hasForgetToSemigroup : HasForget₂ Mon SemigroupCat
+instance hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
     where forget₂ :=
     { obj := fun M => SemigroupCat.of M
       map := fun M N => MonoidHom.toMulHom }
@@ -52,7 +52,7 @@ instance hasForgetToSemigroup : HasForget₂ Mon SemigroupCat
 
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
-def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} SemigroupCat.{u} :=
+def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm
       homEquiv_naturality_left_symm := by
@@ -67,8 +67,9 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} SemigroupCat.{u} :=
 #align adjoin_zero_adj adjoinZeroAdj
 
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
-def free : Type u ⥤ Mon.{u} where
-  obj α := Mon.of (FreeMonoid α)
+def free : Type u ⥤ MonCat.{u}
+    where
+  obj α := MonCat.of (FreeMonoid α)
   map X Y := FreeMonoid.map
   map_id' := by
     intros
@@ -81,7 +82,7 @@ def free : Type u ⥤ Mon.{u} where
 #align free free
 
 /-- The free-forgetful adjunction for monoids. -/
-def adj : free ⊣ forget Mon.{u} :=
+def adj : free ⊣ forget MonCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm
       homEquiv_naturality_left_symm := fun X Y G f g =>
@@ -90,6 +91,6 @@ def adj : free ⊣ forget Mon.{u} :=
         rfl }
 #align adj adj
 
-instance : IsRightAdjoint (forget Mon.{u}) :=
+instance : IsRightAdjoint (forget MonCat.{u}) :=
   ⟨_, adj⟩
 

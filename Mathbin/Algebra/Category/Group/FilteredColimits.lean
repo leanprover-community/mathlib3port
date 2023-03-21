@@ -43,7 +43,7 @@ namespace GroupCat.FilteredColimits
 
 section
 
-open Mon.FilteredColimits (colimit_one_eq colimit_mul_mk_eq)
+open MonCat.FilteredColimits (colimit_one_eq colimit_mul_mk_eq)
 
 -- We use parameters here, mainly so we can have the abbreviations `G` and `G.mk` below, without
 -- passing around `F` all the time.
@@ -54,8 +54,8 @@ In the following, we will show that this has the structure of a group.
 -/
 @[to_additive
       "The colimit of `F ⋙ forget₂ AddGroup AddMon` in the category `AddMon`.\nIn the following, we will show that this has the structure of an additive group."]
-abbrev g : Mon :=
-  Mon.FilteredColimits.colimit (F ⋙ forget₂ GroupCat Mon.{max v u})
+abbrev g : MonCat :=
+  MonCat.FilteredColimits.colimit (F ⋙ forget₂ GroupCat MonCat.{max v u})
 #align Group.filtered_colimits.G GroupCat.FilteredColimits.g
 #align AddGroup.filtered_colimits.G AddGroupCat.FilteredColimits.g
 
@@ -118,8 +118,8 @@ instance colimitGroup : Group G :=
       apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_inv_mk_eq,
-        colimit_mul_mk_eq (F ⋙ forget₂ GroupCat Mon.{max v u}) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
-        colimit_one_eq (F ⋙ forget₂ GroupCat Mon.{max v u}) j]
+        colimit_mul_mk_eq (F ⋙ forget₂ GroupCat MonCat.{max v u}) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
+        colimit_one_eq (F ⋙ forget₂ GroupCat MonCat.{max v u}) j]
       dsimp
       simp only [CategoryTheory.Functor.map_id, id_apply, mul_left_inv] }
 #align Group.filtered_colimits.colimit_group GroupCat.FilteredColimits.colimitGroup
@@ -136,7 +136,7 @@ def colimit : GroupCat :=
 @[to_additive "The cocone over the proposed colimit additive group."]
 def colimitCocone : cocone F where
   pt := colimit
-  ι := { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ GroupCat Mon.{max v u})).ι with }
+  ι := { (MonCat.FilteredColimits.colimitCocone (F ⋙ forget₂ GroupCat MonCat.{max v u})).ι with }
 #align Group.filtered_colimits.colimit_cocone GroupCat.FilteredColimits.colimitCocone
 #align AddGroup.filtered_colimits.colimit_cocone AddGroupCat.FilteredColimits.colimitCocone
 
@@ -145,8 +145,8 @@ def colimitCocone : cocone F where
 def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc t :=
-    Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat Mon.{max v u})
-      ((forget₂ GroupCat Mon).mapCocone t)
+    MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat MonCat.{max v u})
+      ((forget₂ GroupCat MonCat).mapCocone t)
   fac t j :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).fac ((forget GroupCat).mapCocone t) j
@@ -158,18 +158,19 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
 #align AddGroup.filtered_colimits.colimit_cocone_is_colimit AddGroupCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
-instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ GroupCat Mon.{u})
+instance forget₂MonPreservesFilteredColimits :
+    PreservesFilteredColimits (forget₂ GroupCat MonCat.{u})
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
-          (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ GroupCat Mon.{u})) }
+          (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ GroupCat MonCat.{u})) }
 #align Group.filtered_colimits.forget₂_Mon_preserves_filtered_colimits GroupCat.FilteredColimits.forget₂MonPreservesFilteredColimits
 #align AddGroup.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddGroupCat.FilteredColimits.forget₂AddMonPreservesFilteredColimits
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget GroupCat.{u}) :=
-  Limits.compPreservesFilteredColimits (forget₂ GroupCat Mon) (forget Mon.{u})
+  Limits.compPreservesFilteredColimits (forget₂ GroupCat MonCat) (forget MonCat.{u})
 #align Group.filtered_colimits.forget_preserves_filtered_colimits GroupCat.FilteredColimits.forgetPreservesFilteredColimits
 #align AddGroup.filtered_colimits.forget_preserves_filtered_colimits AddGroupCat.FilteredColimits.forgetPreservesFilteredColimits
 
@@ -198,7 +199,8 @@ abbrev g : GroupCat :=
 @[to_additive]
 instance colimitCommGroup : CommGroup G :=
   { G.Group,
-    CommMon.FilteredColimits.colimitCommMonoid (F ⋙ forget₂ CommGroupCat CommMon.{max v u}) with }
+    CommMonCat.FilteredColimits.colimitCommMonoid
+      (F ⋙ forget₂ CommGroupCat CommMonCat.{max v u}) with }
 #align CommGroup.filtered_colimits.colimit_comm_group CommGroupCat.FilteredColimits.colimitCommGroup
 #align AddCommGroup.filtered_colimits.colimit_add_comm_group AddCommGroupCat.FilteredColimits.colimitAddCommGroup
 

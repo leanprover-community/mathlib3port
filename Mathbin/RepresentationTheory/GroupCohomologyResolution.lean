@@ -284,7 +284,7 @@ end GroupCohomology.resolution
 variable (G)
 
 /-- The simplicial `G`-set sending `[n]` to `Gⁿ⁺¹` equipped with the diagonal action of `G`. -/
-def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (Action (Type u) <| Mon.of G)
+def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (Action (Type u) <| MonCat.of G)
     where
   obj n := Action.ofMulAction G (Fin (n.unop.len + 1) → G)
   map m n f :=

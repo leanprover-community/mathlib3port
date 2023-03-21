@@ -47,7 +47,7 @@ open CategoryTheory.Limits
 /- ./././Mathport/Syntax/Translate/Command.lean:323:31: unsupported: @[derive] abbrev -/
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoid G] :=
-  Action (FgModule.{u} k) (Mon.of G)
+  Action (FgModule.{u} k) (MonCat.of G)
 #align fdRep FdRep
 
 namespace FdRep
@@ -86,14 +86,14 @@ def ρ (V : FdRep k G) : G →* V →ₗ[k] V :=
 
 /-- The underlying `linear_equiv` of an isomorphism of representations. -/
 def isoToLinearEquiv {V W : FdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
-  FgModule.isoToLinearEquiv ((Action.forget (FgModule k) (Mon.of G)).mapIso i)
+  FgModule.isoToLinearEquiv ((Action.forget (FgModule k) (MonCat.of G)).mapIso i)
 #align fdRep.iso_to_linear_equiv FdRep.isoToLinearEquiv
 
 theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) :
     W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) :=
   by
   rw [FdRep.isoToLinearEquiv, ← FgModule.Iso.conj_eq_conj, iso.conj_apply]
-  rw [iso.eq_inv_comp ((Action.forget (FgModule k) (Mon.of G)).mapIso i)]
+  rw [iso.eq_inv_comp ((Action.forget (FgModule k) (MonCat.of G)).mapIso i)]
   exact (i.hom.comm g).symm
 #align fdRep.iso.conj_ρ FdRep.Iso.conj_ρ
 
@@ -105,7 +105,7 @@ def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
 #align fdRep.of FdRep.of
 
 instance : HasForget₂ (FdRep k G) (Rep k G)
-    where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (Mon.of G)
+    where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
 
 theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (Rep k G)).obj V).ρ = V.ρ :=
   by

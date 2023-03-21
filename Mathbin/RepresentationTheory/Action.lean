@@ -54,9 +54,9 @@ the monoid `G` on an object of some category `V`.
 As an example, when `V = Module R`, this is an `R`-linear representation of `G`,
 while when `V = Type` this is a `G`-action.
 -/
-structure Action (G : Mon.{u}) where
+structure Action (G : MonCat.{u}) where
   V : V
-  ρ : G ⟶ Mon.of (End V)
+  ρ : G ⟶ MonCat.of (End V)
 #align Action Action
 
 namespace Action
@@ -64,7 +64,7 @@ namespace Action
 variable {V}
 
 @[simp]
-theorem ρ_one {G : Mon.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V :=
+theorem ρ_one {G : MonCat.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V :=
   by
   rw [MonoidHom.map_one]
   rfl
@@ -72,7 +72,7 @@ theorem ρ_one {G : Mon.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V :=
 
 /-- When a group acts, we can lift the action to the group of automorphisms. -/
 @[simps]
-def ρAut {G : GroupCat.{u}} (A : Action V (Mon.of G)) : G ⟶ GroupCat.of (Aut A.V)
+def ρAut {G : GroupCat.{u}} (A : Action V (MonCat.of G)) : G ⟶ GroupCat.of (Aut A.V)
     where
   toFun g :=
     { Hom := A.ρ g
@@ -87,7 +87,7 @@ def ρAut {G : GroupCat.{u}} (A : Action V (Mon.of G)) : G ⟶ GroupCat.of (Aut 
     exact A.ρ.map_mul x y
 #align Action.ρ_Aut Action.ρAut
 
-variable (G : Mon.{u})
+variable (G : MonCat.{u})
 
 section
 
@@ -633,7 +633,7 @@ instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor :=
 
 variable (H : GroupCat.{u})
 
-instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : Mon.{u}) ⥤ V) :=
+instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
   by
   change right_rigid_category (single_obj H ⥤ V)
   infer_instance
@@ -642,7 +642,7 @@ instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : Mon.{u}) �
 instance [RightRigidCategory V] : RightRigidCategory (Action V H) :=
   rightRigidCategoryOfEquivalence (functorCategoryMonoidalEquivalence V _)
 
-instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : Mon.{u}) ⥤ V) :=
+instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
   by
   change left_rigid_category (single_obj H ⥤ V)
   infer_instance
@@ -651,7 +651,7 @@ instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : Mon.{u}) ⥤ 
 instance [LeftRigidCategory V] : LeftRigidCategory (Action V H) :=
   leftRigidCategoryOfEquivalence (functorCategoryMonoidalEquivalence V _)
 
-instance [RigidCategory V] : RigidCategory (SingleObj (H : Mon.{u}) ⥤ V) :=
+instance [RigidCategory V] : RigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
   by
   change rigid_category (single_obj H ⥤ V)
   infer_instance
@@ -697,7 +697,7 @@ theorem leftDual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻�
 end Monoidal
 
 /-- Actions/representations of the trivial group are just objects in the ambient category. -/
-def actionPunitEquivalence : Action V (Mon.of PUnit) ≌ V
+def actionPunitEquivalence : Action V (MonCat.of PUnit) ≌ V
     where
   Functor := forget V _
   inverse :=
@@ -716,7 +716,7 @@ taking actions of `H` to actions of `G`.
 (This makes sense for any homomorphism, but the name is natural when `f` is a monomorphism.)
 -/
 @[simps]
-def res {G H : Mon} (f : G ⟶ H) : Action V H ⥤ Action V G
+def res {G H : MonCat} (f : G ⟶ H) : Action V H ⥤ Action V G
     where
   obj M :=
     { V := M.V
@@ -729,7 +729,7 @@ def res {G H : Mon} (f : G ⟶ H) : Action V H ⥤ Action V G
 /-- The natural isomorphism from restriction along the identity homomorphism to
 the identity functor on `Action V G`.
 -/
-def resId {G : Mon} : res V (𝟙 G) ≅ 𝟭 (Action V G) :=
+def resId {G : MonCat} : res V (𝟙 G) ≅ 𝟭 (Action V G) :=
   NatIso.ofComponents (fun M => mkIso (Iso.refl _) (by tidy)) (by tidy)
 #align Action.res_id Action.resId
 
@@ -738,7 +738,7 @@ attribute [simps] res_id
 /-- The natural isomorphism from the composition of restrictions along homomorphisms
 to the restriction along the composition of homomorphism.
 -/
-def resComp {G H K : Mon} (f : G ⟶ H) (g : H ⟶ K) : res V g ⋙ res V f ≅ res V (f ≫ g) :=
+def resComp {G H K : MonCat} (f : G ⟶ H) (g : H ⟶ K) : res V g ⋙ res V f ≅ res V (f ≫ g) :=
   NatIso.ofComponents (fun M => mkIso (Iso.refl _) (by tidy)) (by tidy)
 #align Action.res_comp Action.resComp
 
@@ -746,7 +746,7 @@ attribute [simps] res_comp
 
 -- TODO promote `res` to a pseudofunctor from
 -- the locally discrete bicategory constructed from `Monᵒᵖ` to `Cat`, sending `G` to `Action V G`.
-variable {G} {H : Mon.{u}} (f : G ⟶ H)
+variable {G} {H : MonCat.{u}} (f : G ⟶ H)
 
 instance res_additive [Preadditive V] : (res V f).Additive where
 #align Action.res_additive Action.res_additive
@@ -757,7 +757,7 @@ instance res_linear [Preadditive V] [Linear R V] : (res V f).Linear R where
 #align Action.res_linear Action.res_linear
 
 /-- Bundles a type `H` with a multiplicative action of `G` as an `Action`. -/
-def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : Action (Type u) (Mon.of G)
+def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : Action (Type u) (MonCat.of G)
     where
   V := H
   ρ := @MulAction.toEndHom _ _ _ (by assumption)
@@ -814,7 +814,7 @@ variable {V} {W : Type (u + 1)} [LargeCategory W]
 /-- A functor between categories induces a functor between
 the categories of `G`-actions within those categories. -/
 @[simps]
-def mapAction (F : V ⥤ W) (G : Mon.{u}) : Action V G ⥤ Action W G
+def mapAction (F : V ⥤ W) (G : MonCat.{u}) : Action V G ⥤ Action W G
     where
   obj M :=
     { V := F.obj M.V
@@ -835,7 +835,7 @@ def mapAction (F : V ⥤ W) (G : Mon.{u}) : Action V G ⥤ Action W G
     simp only [Action.comp_hom, F.map_comp]
 #align category_theory.functor.map_Action CategoryTheory.Functor.mapAction
 
-variable (F : V ⥤ W) (G : Mon.{u}) [Preadditive V] [Preadditive W]
+variable (F : V ⥤ W) (G : MonCat.{u}) [Preadditive V] [Preadditive W]
 
 instance mapAction_preadditive [F.Additive] : (F.mapAction G).Additive where
 #align category_theory.functor.map_Action_preadditive CategoryTheory.Functor.mapAction_preadditive
@@ -856,7 +856,8 @@ variable {V} {W : Type (u + 1)} [LargeCategory W] [MonoidalCategory V] [Monoidal
 /-- A monoidal functor induces a monoidal functor between
 the categories of `G`-actions within those categories. -/
 @[simps]
-def mapAction (F : MonoidalFunctor V W) (G : Mon.{u}) : MonoidalFunctor (Action V G) (Action W G) :=
+def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
+    MonoidalFunctor (Action V G) (Action W G) :=
   {-- See note [dsimp, simp].
           F.toFunctor.mapAction
       G with

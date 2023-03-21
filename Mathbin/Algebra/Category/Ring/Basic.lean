@@ -80,15 +80,15 @@ theorem coe_of (R : Type u) [Semiring R] : (SemiRing.of R : Type u) = R :=
   rfl
 #align SemiRing.coe_of SemiRing.coe_of
 
-instance hasForgetToMon : HasForget₂ SemiRing Mon :=
+instance hasForgetToMon : HasForget₂ SemiRing MonCat :=
   BundledHom.mkHasForget₂ (fun R hR => @MonoidWithZero.toMonoid R (@Semiring.toMonoidWithZero R hR))
     (fun R₁ R₂ => RingHom.toMonoidHom) fun _ _ _ => rfl
 #align SemiRing.has_forget_to_Mon SemiRing.hasForgetToMon
 
-instance hasForgetToAddCommMon : HasForget₂ SemiRing AddCommMon
+instance hasForgetToAddCommMon : HasForget₂ SemiRing AddCommMonCat
     where-- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
   forget₂ :=
-    { obj := fun R => AddCommMon.of R
+    { obj := fun R => AddCommMonCat.of R
       map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 #align SemiRing.has_forget_to_AddCommMon SemiRing.hasForgetToAddCommMon
 
@@ -196,8 +196,8 @@ instance hasForgetToSemiRing : HasForget₂ CommSemiRing SemiRing :=
 #align CommSemiRing.has_forget_to_SemiRing CommSemiRing.hasForgetToSemiRing
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
-instance hasForgetToCommMon : HasForget₂ CommSemiRing CommMon :=
-  HasForget₂.mk' (fun R : CommSemiRing => CommMon.of R) (fun R => rfl)
+instance hasForgetToCommMon : HasForget₂ CommSemiRing CommMonCat :=
+  HasForget₂.mk' (fun R : CommSemiRing => CommMonCat.of R) (fun R => rfl)
     (fun R₁ R₂ f => f.toMonoidHom) (by tidy)
 #align CommSemiRing.has_forget_to_CommMon CommSemiRing.hasForgetToCommMon
 

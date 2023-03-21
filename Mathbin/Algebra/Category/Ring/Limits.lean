@@ -52,9 +52,9 @@ instance semiringObj (F : J ⥤ SemiRing.{max v u}) (j) : Semiring ((F ⋙ forge
 -/
 def sectionsSubsemiring (F : J ⥤ SemiRing.{max v u}) : Subsemiring (∀ j, F.obj j) :=
   {
-    AddMon.sectionsAddSubmonoid
-      (F ⋙ forget₂ SemiRing AddCommMon.{max v u} ⋙ forget₂ AddCommMon AddMon.{max v u}),
-    Mon.sectionsSubmonoid (F ⋙ forget₂ SemiRing Mon.{max v u}) with
+    AddMonCat.sectionsAddSubmonoid
+      (F ⋙ forget₂ SemiRing AddCommMonCat.{max v u} ⋙ forget₂ AddCommMonCat AddMonCat.{max v u}),
+    MonCat.sectionsSubmonoid (F ⋙ forget₂ SemiRing MonCat.{max v u}) with
     carrier := (F ⋙ forget SemiRing).sections }
 #align SemiRing.sections_subsemiring SemiRing.sectionsSubsemiring
 
@@ -67,9 +67,9 @@ instance limitSemiring (F : J ⥤ SemiRing.{max v u}) :
 def limitπRingHom (F : J ⥤ SemiRing.{max v u}) (j) :
     (Types.limitCone (F ⋙ forget SemiRing)).pt →+* (F ⋙ forget SemiRing).obj j :=
   {
-    AddMon.limitπAddMonoidHom
-      (F ⋙ forget₂ SemiRing AddCommMon.{max v u} ⋙ forget₂ AddCommMon AddMon.{max v u}) j,
-    Mon.limitπMonoidHom (F ⋙ forget₂ SemiRing Mon.{max v u}) j with
+    AddMonCat.limitπAddMonoidHom
+      (F ⋙ forget₂ SemiRing AddCommMonCat.{max v u} ⋙ forget₂ AddCommMonCat AddMonCat.{max v u}) j,
+    MonCat.limitπMonoidHom (F ⋙ forget₂ SemiRing MonCat.{max v u}) j with
     toFun := (Types.limitCone (F ⋙ forget SemiRing)).π.app j }
 #align SemiRing.limit_π_ring_hom SemiRing.limitπRingHom
 
@@ -123,14 +123,14 @@ instance hasLimits : HasLimits SemiRing.{u} :=
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommMonPreservesLimitsAux (F : J ⥤ SemiRing.{max v u}) :
-    IsLimit ((forget₂ SemiRing AddCommMon).mapCone (limitCone F)) := by
-  apply AddCommMon.limitConeIsLimit (F ⋙ forget₂ SemiRing AddCommMon.{max v u})
+    IsLimit ((forget₂ SemiRing AddCommMonCat).mapCone (limitCone F)) := by
+  apply AddCommMonCat.limitConeIsLimit (F ⋙ forget₂ SemiRing AddCommMonCat.{max v u})
 #align SemiRing.forget₂_AddCommMon_preserves_limits_aux SemiRing.forget₂AddCommMonPreservesLimitsAux
 
 /-- The forgetful functor from semirings to additive commutative monoids preserves all limits.
 -/
 instance forget₂AddCommMonPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ SemiRing AddCommMon.{max v u})
+    PreservesLimitsOfSize.{v, v} (forget₂ SemiRing AddCommMonCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
@@ -138,21 +138,21 @@ instance forget₂AddCommMonPreservesLimitsOfSize :
           (forget₂_AddCommMon_preserves_limits_aux F) }
 #align SemiRing.forget₂_AddCommMon_preserves_limits_of_size SemiRing.forget₂AddCommMonPreservesLimitsOfSize
 
-instance forget₂AddCommMonPreservesLimits : PreservesLimits (forget₂ SemiRing AddCommMon.{u}) :=
+instance forget₂AddCommMonPreservesLimits : PreservesLimits (forget₂ SemiRing AddCommMonCat.{u}) :=
   SemiRing.forget₂AddCommMonPreservesLimitsOfSize.{u, u}
 #align SemiRing.forget₂_AddCommMon_preserves_limits SemiRing.forget₂AddCommMonPreservesLimits
 
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂MonPreservesLimitsAux (F : J ⥤ SemiRing.{max v u}) :
-    IsLimit ((forget₂ SemiRing Mon).mapCone (limitCone F)) := by
-  apply Mon.HasLimits.limitConeIsLimit (F ⋙ forget₂ SemiRing Mon.{max v u})
+    IsLimit ((forget₂ SemiRing MonCat).mapCone (limitCone F)) := by
+  apply MonCat.HasLimits.limitConeIsLimit (F ⋙ forget₂ SemiRing MonCat.{max v u})
 #align SemiRing.forget₂_Mon_preserves_limits_aux SemiRing.forget₂MonPreservesLimitsAux
 
 /-- The forgetful functor from semirings to monoids preserves all limits.
 -/
 instance forget₂MonPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ SemiRing Mon.{max v u})
+    PreservesLimitsOfSize.{v, v} (forget₂ SemiRing MonCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
@@ -160,7 +160,7 @@ instance forget₂MonPreservesLimitsOfSize :
           (forget₂_Mon_preserves_limits_aux F) }
 #align SemiRing.forget₂_Mon_preserves_limits_of_size SemiRing.forget₂MonPreservesLimitsOfSize
 
-instance forget₂MonPreservesLimits : PreservesLimits (forget₂ SemiRing Mon.{u}) :=
+instance forget₂MonPreservesLimits : PreservesLimits (forget₂ SemiRing MonCat.{u}) :=
   SemiRing.forget₂MonPreservesLimitsOfSize.{u, u}
 #align SemiRing.forget₂_Mon_preserves_limits SemiRing.forget₂MonPreservesLimits
 

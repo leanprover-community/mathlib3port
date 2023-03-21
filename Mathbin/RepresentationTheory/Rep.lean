@@ -39,7 +39,7 @@ open CategoryTheory.Limits
 /- ./././Mathport/Syntax/Translate/Command.lean:323:31: unsupported: @[derive] abbrev -/
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev Rep (k G : Type u) [Ring k] [Monoid G] :=
-  Action (ModuleCat.{u} k) (Mon.of G)
+  Action (ModuleCat.{u} k) (MonCat.of G)
 #align Rep Rep
 
 instance (k G : Type u) [CommRing k] [Monoid G] : Linear k (Rep k G) := by infer_instance
@@ -94,26 +94,26 @@ variable (k G)
 
 /-- The monoidal functor sending a type `H` with a `G`-action to the induced `k`-linear
 `G`-representation on `k[H].` -/
-noncomputable def linearization : MonoidalFunctor (Action (Type u) (Mon.of G)) (Rep k G) :=
-  (ModuleCat.monoidalFree k).mapAction (Mon.of G)
+noncomputable def linearization : MonoidalFunctor (Action (Type u) (MonCat.of G)) (Rep k G) :=
+  (ModuleCat.monoidalFree k).mapAction (MonCat.of G)
 #align Rep.linearization Rep.linearization
 
 variable {k G}
 
 @[simp]
-theorem linearization_obj_ρ (X : Action (Type u) (Mon.of G)) (g : G) (x : X.V →₀ k) :
+theorem linearization_obj_ρ (X : Action (Type u) (MonCat.of G)) (g : G) (x : X.V →₀ k) :
     ((linearization k G).1.1.obj X).ρ g x = Finsupp.lmapDomain k k (X.ρ g) x :=
   rfl
 #align Rep.linearization_obj_ρ Rep.linearization_obj_ρ
 
 @[simp]
-theorem linearization_of (X : Action (Type u) (Mon.of G)) (g : G) (x : X.V) :
+theorem linearization_of (X : Action (Type u) (MonCat.of G)) (g : G) (x : X.V) :
     ((linearization k G).1.1.obj X).ρ g (Finsupp.single x (1 : k)) =
       Finsupp.single (X.ρ g x) (1 : k) :=
   by rw [linearization_obj_ρ, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
 #align Rep.linearization_of Rep.linearization_of
 
-variable (X Y : Action (Type u) (Mon.of G)) (f : X ⟶ Y)
+variable (X Y : Action (Type u) (MonCat.of G)) (f : X ⟶ Y)
 
 @[simp]
 theorem linearization_map_hom :
