@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.dual_number
-! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
+! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.TrivSqZeroExt
 
 /-!
 # Dual numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The dual numbers over `R` are of the form `a + bε`, where `a` and `b` are typically elements of a
 commutative ring `R`, and `ε` is a symbol satisfying `ε^2 = 0`. They are a special case of

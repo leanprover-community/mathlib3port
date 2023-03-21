@@ -1315,31 +1315,47 @@ namespace ContinuousMap
 
 variable [Mul X] [ContinuousMul X]
 
+#print ContinuousMap.mulRight /-
 /-- The continuous map `λ y, y * x` -/
 @[to_additive "The continuous map `λ y, y + x"]
 protected def mulRight (x : X) : C(X, X) :=
   mk _ (continuous_mul_right x)
 #align continuous_map.mul_right ContinuousMap.mulRight
 #align continuous_map.add_right ContinuousMap.addRight
+-/
 
+/- warning: continuous_map.coe_mul_right -> ContinuousMap.coe_mulRight is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : Mul.{u1} X] [_inst_3 : ContinuousMul.{u1} X _inst_1 _inst_2] (x : X), Eq.{succ u1} (X -> X) (coeFn.{succ u1, succ u1} (ContinuousMap.{u1, u1} X X _inst_1 _inst_1) (fun (_x : ContinuousMap.{u1, u1} X X _inst_1 _inst_1) => X -> X) (ContinuousMap.hasCoeToFun.{u1, u1} X X _inst_1 _inst_1) (ContinuousMap.mulRight.{u1} X _inst_1 _inst_2 _inst_3 x)) (fun (y : X) => HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X _inst_2) y x)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : Mul.{u1} X] [_inst_3 : ContinuousMul.{u1} X _inst_1 _inst_2] (x : X), Eq.{succ u1} (forall (ᾰ : X), (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => X) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (ContinuousMap.{u1, u1} X X _inst_1 _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => X) _x) (ContinuousMapClass.toFunLike.{u1, u1, u1} (ContinuousMap.{u1, u1} X X _inst_1 _inst_1) X X _inst_1 _inst_1 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u1} X X _inst_1 _inst_1)) (ContinuousMap.mulRight.{u1} X _inst_1 _inst_2 _inst_3 x)) (fun (y : X) => HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X _inst_2) y x)
+Case conversion may be inaccurate. Consider using '#align continuous_map.coe_mul_right ContinuousMap.coe_mulRightₓ'. -/
 @[to_additive, simp]
 theorem coe_mulRight (x : X) : ⇑(ContinuousMap.mulRight x) = fun y => y * x :=
   rfl
 #align continuous_map.coe_mul_right ContinuousMap.coe_mulRight
-#align continuous_map.coe_add_right ContinuousMap.coe_add_right
+#align continuous_map.coe_add_right ContinuousMap.coe_addRight
 
+#print ContinuousMap.mulLeft /-
 /-- The continuous map `λ y, x * y` -/
 @[to_additive "The continuous map `λ y, x + y"]
 protected def mulLeft (x : X) : C(X, X) :=
   mk _ (continuous_mul_left x)
 #align continuous_map.mul_left ContinuousMap.mulLeft
 #align continuous_map.add_left ContinuousMap.addLeft
+-/
 
+/- warning: continuous_map.coe_mul_left -> ContinuousMap.coe_mulLeft is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : Mul.{u1} X] [_inst_3 : ContinuousMul.{u1} X _inst_1 _inst_2] (x : X), Eq.{succ u1} (X -> X) (coeFn.{succ u1, succ u1} (ContinuousMap.{u1, u1} X X _inst_1 _inst_1) (fun (_x : ContinuousMap.{u1, u1} X X _inst_1 _inst_1) => X -> X) (ContinuousMap.hasCoeToFun.{u1, u1} X X _inst_1 _inst_1) (ContinuousMap.mulLeft.{u1} X _inst_1 _inst_2 _inst_3 x)) (fun (y : X) => HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X _inst_2) x y)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : Mul.{u1} X] [_inst_3 : ContinuousMul.{u1} X _inst_1 _inst_2] (x : X), Eq.{succ u1} (forall (ᾰ : X), (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => X) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (ContinuousMap.{u1, u1} X X _inst_1 _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : X) => X) _x) (ContinuousMapClass.toFunLike.{u1, u1, u1} (ContinuousMap.{u1, u1} X X _inst_1 _inst_1) X X _inst_1 _inst_1 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u1} X X _inst_1 _inst_1)) (ContinuousMap.mulLeft.{u1} X _inst_1 _inst_2 _inst_3 x)) (fun (y : X) => HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X _inst_2) x y)
+Case conversion may be inaccurate. Consider using '#align continuous_map.coe_mul_left ContinuousMap.coe_mulLeftₓ'. -/
 @[to_additive, simp]
 theorem coe_mulLeft (x : X) : ⇑(ContinuousMap.mulLeft x) = fun y => x * y :=
   rfl
 #align continuous_map.coe_mul_left ContinuousMap.coe_mulLeft
-#align continuous_map.coe_add_left ContinuousMap.coe_add_left
+#align continuous_map.coe_add_left ContinuousMap.coe_addLeft
 
 end ContinuousMap
 

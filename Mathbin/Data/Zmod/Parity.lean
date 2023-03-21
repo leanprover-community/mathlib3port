@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.zmod.parity
-! leanprover-community/mathlib commit 048240e809f04e2bde02482ab44bc230744cc6c9
+! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Zmod.Basic
 
 /-!
 # Relating parity to natural numbers mod 2
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module provides lemmas relating `zmod 2` to `even` and `odd`.
 

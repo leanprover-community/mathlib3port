@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.finsupp.well_founded
-! leanprover-community/mathlib commit 5fd3186f1ec30a75d5f65732e3ce5e623382556f
+! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Finsupp.Lex
 
 /-!
 # Well-foundedness of the lexicographic and product orders on `finsupp`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 `finsupp.lex.well_founded` and the two variants that follow it essentially say that if
 `(>)` is a well order on `α`, `(<)` is well-founded on `N`, and `0` is a bottom element in `N`,

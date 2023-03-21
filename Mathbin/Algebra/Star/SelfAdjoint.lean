@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit 30413fc89f202a090a54d78e540963ed3de0056e
+! leanprover-community/mathlib commit 9abfa6f0727d5adc99067e325e15d1a9de17fd8e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,6 +196,20 @@ theorem sub {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjo
 #align is_self_adjoint.sub IsSelfAdjoint.sub
 
 end AddGroup
+
+section AddCommMonoid
+
+variable [AddCommMonoid R] [StarAddMonoid R]
+
+theorem isSelfAdjoint_add_star_self (x : R) : IsSelfAdjoint (x + star x) := by
+  simp only [isSelfAdjoint_iff, add_comm, star_add, star_star]
+#align is_self_adjoint_add_star_self isSelfAdjoint_add_star_self
+
+theorem isSelfAdjoint_star_add_self (x : R) : IsSelfAdjoint (star x + x) := by
+  simp only [isSelfAdjoint_iff, add_comm, star_add, star_star]
+#align is_self_adjoint_star_add_self isSelfAdjoint_star_add_self
+
+end AddCommMonoid
 
 section Semigroup
 

@@ -238,7 +238,7 @@ theorem isO_norm_restrict_cocompact (f : C(ℝ, E)) {b : ℝ} (hb : 0 < b)
     rintro ⟨y, hy⟩
     refine' (le_of_eq _).trans (ContinuousMap.norm_coe_le_norm _ ⟨y + x, _⟩)
     exact ⟨by linarith [(hr hy).1], by linarith [(hr hy).2]⟩
-    simp_rw [ContinuousMap.restrict_apply, ContinuousMap.comp_apply, ContinuousMap.coe_add_right,
+    simp_rw [ContinuousMap.restrict_apply, ContinuousMap.comp_apply, ContinuousMap.coe_addRight,
       Subtype.coe_mk]
   simp_rw [cocompact_eq, is_O_sup] at hf⊢
   constructor
