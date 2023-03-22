@@ -172,7 +172,7 @@ instance : Field (hat K) :=
     inv_zero := show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K) by rw [coe_inv, inv_zero] }
 
 instance : TopologicalDivisionRing (hat K) :=
-  { Completion.top_ring_compl with
+  { Completion.topologicalRing with
     continuousAt_inv₀ := by
       intro x x_ne
       have : { y | hat_inv y = y⁻¹ } ∈ 𝓝 x :=

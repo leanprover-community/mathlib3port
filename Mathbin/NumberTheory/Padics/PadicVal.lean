@@ -52,11 +52,13 @@ open Rat
 
 open multiplicity
 
+#print padicValNat /-
 /-- For `p ≠ 1`, the `p`-adic valuation of a natural `n ≠ 0` is the largest natural number `k` such
 that `p^k` divides `z`. If `n = 0` or `p = 1`, then `padic_val_nat p q` defaults to `0`. -/
 def padicValNat (p : ℕ) (n : ℕ) : ℕ :=
   if h : p ≠ 1 ∧ 0 < n then (multiplicity p n).get (multiplicity.finite_nat_iff.2 h) else 0
 #align padic_val_nat padicValNat
+-/
 
 namespace padicValNat
 
@@ -64,11 +66,14 @@ open multiplicity
 
 variable {p : ℕ}
 
+#print padicValNat.zero /-
 /-- `padic_val_nat p 0` is `0` for any `p`. -/
 @[simp]
 protected theorem zero : padicValNat p 0 = 0 := by simp [padicValNat]
 #align padic_val_nat.zero padicValNat.zero
+-/
 
+#print padicValNat.one /-
 /-- `padic_val_nat p 1` is `0` for any `p`. -/
 @[simp]
 protected theorem one : padicValNat p 1 = 0 :=
@@ -77,7 +82,9 @@ protected theorem one : padicValNat p 1 = 0 :=
   split_ifs
   simp
 #align padic_val_nat.one padicValNat.one
+-/
 
+#print padicValNat.self /-
 /-- If `p ≠ 0` and `p ≠ 1`, then `padic_val_rat p p` is `1`. -/
 @[simp]
 theorem self (hp : 1 < p) : padicValNat p p = 1 :=
@@ -86,24 +93,31 @@ theorem self (hp : 1 < p) : padicValNat p p = 1 :=
   have eq_zero_false : p = 0 ↔ False := iff_false_intro (ne_of_lt (trans zero_lt_one hp)).symm
   simp [padicValNat, neq_one, eq_zero_false]
 #align padic_val_nat.self padicValNat.self
+-/
 
+#print padicValNat.eq_zero_iff /-
 @[simp]
 theorem eq_zero_iff {n : ℕ} : padicValNat p n = 0 ↔ p = 1 ∨ n = 0 ∨ ¬p ∣ n := by
   simp only [padicValNat, dite_eq_right_iff, PartENat.get_eq_iff_eq_coe, Nat.cast_zero,
     multiplicity_eq_zero, and_imp, pos_iff_ne_zero, Ne.def, ← or_iff_not_imp_left]
 #align padic_val_nat.eq_zero_iff padicValNat.eq_zero_iff
+-/
 
+#print padicValNat.eq_zero_of_not_dvd /-
 theorem eq_zero_of_not_dvd {n : ℕ} (h : ¬p ∣ n) : padicValNat p n = 0 :=
   eq_zero_iff.2 <| Or.inr <| Or.inr h
 #align padic_val_nat.eq_zero_of_not_dvd padicValNat.eq_zero_of_not_dvd
+-/
 
 end padicValNat
 
+#print padicValInt /-
 /-- For `p ≠ 1`, the `p`-adic valuation of an integer `z ≠ 0` is the largest natural number `k` such
 that `p^k` divides `z`. If `x = 0` or `p = 1`, then `padic_val_int p q` defaults to `0`. -/
 def padicValInt (p : ℕ) (z : ℤ) : ℕ :=
   padicValNat p z.natAbs
 #align padic_val_int padicValInt
+-/
 
 namespace padicValInt
 
@@ -111,6 +125,12 @@ open multiplicity
 
 variable {p : ℕ}
 
+/- warning: padic_val_int.of_ne_one_ne_zero -> padicValInt.of_ne_one_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {z : Int} (hp : Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (hz : Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))), Eq.{1} Nat (padicValInt p z) (Part.get.{0} Nat (multiplicity.{0} Int Int.monoid (fun (a : Int) (b : Int) => Int.decidableDvd a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z) (Iff.mpr (multiplicity.Finite.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z) (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (multiplicity.finite_int_iff ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z) (Eq.mpr.{0} (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) True (id_tag Tactic.IdTag.simp (Eq.{1} Prop (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) True) (Eq.trans.{1} Prop (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (And True True) True ((fun (a : Prop) (a_1 : Prop) (e_1 : Eq.{1} Prop a a_1) (b : Prop) (b_1 : Prop) (e_2 : Eq.{1} Prop b b_1) => congr.{1, 1} Prop Prop (And a) (And a_1) b b_1 (congr_arg.{1, 1} Prop (Prop -> Prop) a a_1 And e_1) e_2) (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) True (Eq.trans.{1} Prop (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Not False) True (Eq.trans.{1} Prop (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Not False) (Eq.trans.{1} Prop (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) ((fun (a : Nat) (a_1 : Nat) (e_1 : Eq.{1} Nat a a_1) (b : Nat) (b_1 : Nat) (e_2 : Eq.{1} Nat b b_1) => congr.{1, 1} Nat Prop (Ne.{1} Nat a) (Ne.{1} Nat a_1) b b_1 (congr_arg.{1, 1} Nat (Nat -> Prop) a a_1 (Ne.{1} Nat) e_1) e_2) (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) p (Int.natAbs_ofNat p) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (rfl.{1} Nat (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Ne.def.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) ((fun (a : Prop) (a_1 : Prop) (e_1 : Eq.{1} Prop a a_1) => congr_arg.{1, 1} Prop Prop a a_1 Not e_1) (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) False (propext (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) False (iff_false_intro (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) hp)))) (propext (Not False) True not_false_iff)) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) True (Eq.trans.{1} Prop (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Not False) True (Eq.trans.{1} Prop (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Not (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (Not False) (Ne.def.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) ((fun (a : Prop) (a_1 : Prop) (e_1 : Eq.{1} Prop a a_1) => congr_arg.{1, 1} Prop Prop a a_1 Not e_1) (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) False (propext (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) False (iff_false_intro (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) hz)))) (propext (Not False) True not_false_iff))) (propext (And True True) True (and_self_iff True)))) trivial)))
+but is expected to have type
+  forall {p : Nat} {z : Int} (hp : Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (hz : Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))), Eq.{1} Nat (padicValInt p z) (Part.get.{0} Nat (multiplicity.{0} Int Int.instMonoidInt (fun (a : Int) (b : Int) => Int.decidableDvd a b) (Nat.cast.{0} Int instNatCastInt p) z) (Iff.mpr (multiplicity.Finite.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt p) z) (And (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) (multiplicity.finite_int_iff (Nat.cast.{0} Int instNatCastInt p) z) (of_eq_true (And (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Not (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))))) (Eq.trans.{1} Prop (And (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Not (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))))) (And True True) True (congr.{1, 1} Prop Prop (And (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (And True) (Not (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) True (congrArg.{1, 1} Prop (Prop -> Prop) (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) True And (Eq.trans.{1} Prop (Not (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Not False) True (congrArg.{1, 1} Prop Prop (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) False Not (eq_false (Eq.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) hp)) Std.Logic._auxLemma.4)) (Eq.trans.{1} Prop (Not (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) (Not False) True (congrArg.{1, 1} Prop Prop (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) False Not (eq_false (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) hz)) Std.Logic._auxLemma.4)) (and_self True)))))
+Case conversion may be inaccurate. Consider using '#align padic_val_int.of_ne_one_ne_zero padicValInt.of_ne_one_ne_zeroₓ'. -/
 theorem of_ne_one_ne_zero {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
     padicValInt p z =
       (multiplicity (p : ℤ) z).get
@@ -123,25 +143,39 @@ theorem of_ne_one_ne_zero {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
   rfl
 #align padic_val_int.of_ne_one_ne_zero padicValInt.of_ne_one_ne_zero
 
+#print padicValInt.zero /-
 /-- `padic_val_int p 0` is `0` for any `p`. -/
 @[simp]
 protected theorem zero : padicValInt p 0 = 0 := by simp [padicValInt]
 #align padic_val_int.zero padicValInt.zero
+-/
 
+#print padicValInt.one /-
 /-- `padic_val_int p 1` is `0` for any `p`. -/
 @[simp]
 protected theorem one : padicValInt p 1 = 0 := by simp [padicValInt]
 #align padic_val_int.one padicValInt.one
+-/
 
+#print padicValInt.of_nat /-
 /-- The `p`-adic value of a natural is its `p`-adic value as an integer. -/
 @[simp]
 theorem of_nat {n : ℕ} : padicValInt p n = padicValNat p n := by simp [padicValInt]
 #align padic_val_int.of_nat padicValInt.of_nat
+-/
 
+#print padicValInt.self /-
 /-- If `p ≠ 0` and `p ≠ 1`, then `padic_val_int p p` is `1`. -/
 theorem self (hp : 1 < p) : padicValInt p p = 1 := by simp [padicValNat.self hp]
 #align padic_val_int.self padicValInt.self
+-/
 
+/- warning: padic_val_int.eq_zero_of_not_dvd -> padicValInt.eq_zero_of_not_dvd is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {z : Int}, (Not (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z)) -> (Eq.{1} Nat (padicValInt p z) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
+but is expected to have type
+  forall {p : Nat} {z : Int}, (Not (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt p) z)) -> (Eq.{1} Nat (padicValInt p z) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
+Case conversion may be inaccurate. Consider using '#align padic_val_int.eq_zero_of_not_dvd padicValInt.eq_zero_of_not_dvdₓ'. -/
 theorem eq_zero_of_not_dvd {z : ℤ} (h : ¬(p : ℤ) ∣ z) : padicValInt p z = 0 :=
   by
   rw [padicValInt, padicValNat]
@@ -150,11 +184,13 @@ theorem eq_zero_of_not_dvd {z : ℤ} (h : ¬(p : ℤ) ∣ z) : padicValInt p z =
 
 end padicValInt
 
+#print padicValRat /-
 /-- `padic_val_rat` defines the valuation of a rational `q` to be the valuation of `q.num` minus the
 valuation of `q.denom`. If `q = 0` or `p = 1`, then `padic_val_rat p q` defaults to `0`. -/
 def padicValRat (p : ℕ) (q : ℚ) : ℤ :=
   padicValInt p q.num - padicValNat p q.den
 #align padic_val_rat padicValRat
+-/
 
 namespace padicValRat
 
@@ -162,33 +198,53 @@ open multiplicity
 
 variable {p : ℕ}
 
+#print padicValRat.neg /-
 /-- `padic_val_rat p q` is symmetric in `q`. -/
 @[simp]
 protected theorem neg (q : ℚ) : padicValRat p (-q) = padicValRat p q := by
   simp [padicValRat, padicValInt]
 #align padic_val_rat.neg padicValRat.neg
+-/
 
+#print padicValRat.zero /-
 /-- `padic_val_rat p 0` is `0` for any `p`. -/
 @[simp]
 protected theorem zero : padicValRat p 0 = 0 := by simp [padicValRat]
 #align padic_val_rat.zero padicValRat.zero
+-/
 
+#print padicValRat.one /-
 /-- `padic_val_rat p 1` is `0` for any `p`. -/
 @[simp]
 protected theorem one : padicValRat p 1 = 0 := by simp [padicValRat]
 #align padic_val_rat.one padicValRat.one
+-/
 
+#print padicValRat.of_int /-
 /-- The `p`-adic value of an integer `z ≠ 0` is its `p`-adic_value as a rational. -/
 @[simp]
 theorem of_int {z : ℤ} : padicValRat p z = padicValInt p z := by simp [padicValRat]
 #align padic_val_rat.of_int padicValRat.of_int
+-/
 
+/- warning: padic_val_rat.of_int_multiplicity -> padicValRat.of_int_multiplicity is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {z : Int} (hp : Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (hz : Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))), Eq.{1} Int (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) z)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Part.get.{0} Nat (multiplicity.{0} Int Int.monoid (fun (a : Int) (b : Int) => Int.decidableDvd a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z) (Iff.mpr (multiplicity.Finite.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z) (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (multiplicity.finite_int_iff ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) z) (And.intro (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) hp hz))))
+but is expected to have type
+  forall {p : Nat} {z : Int} (hp : Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (hz : Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))), Eq.{1} Int (padicValRat p (Int.cast.{0} Rat Rat.instIntCastRat z)) (Nat.cast.{0} Int instNatCastInt (Part.get.{0} Nat (multiplicity.{0} Int Int.instMonoidInt (fun (a : Int) (b : Int) => Int.decidableDvd a b) (Nat.cast.{0} Int instNatCastInt p) z) (Iff.mpr (multiplicity.Finite.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt p) z) (And (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) (multiplicity.finite_int_iff (Nat.cast.{0} Int instNatCastInt p) z) (And.intro (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) hp hz))))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.of_int_multiplicity padicValRat.of_int_multiplicityₓ'. -/
 /-- The `p`-adic value of an integer `z ≠ 0` is the multiplicity of `p` in `z`. -/
 theorem of_int_multiplicity {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
     padicValRat p (z : ℚ) = (multiplicity (p : ℤ) z).get (finite_int_iff.2 ⟨hp, hz⟩) := by
   rw [of_int, padicValInt.of_ne_one_ne_zero hp hz]
 #align padic_val_rat.of_int_multiplicity padicValRat.of_int_multiplicity
 
+/- warning: padic_val_rat.multiplicity_sub_multiplicity -> padicValRat.multiplicity_sub_multiplicity is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {q : Rat} (hp : Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (hq : Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))), Eq.{1} Int (padicValRat p q) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Part.get.{0} Nat (multiplicity.{0} Int Int.monoid (fun (a : Int) (b : Int) => Int.decidableDvd a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) (Rat.num q)) (Iff.mpr (multiplicity.Finite.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) (Rat.num q)) (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int (Rat.num q) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (multiplicity.finite_int_iff ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) (Rat.num q)) (And.intro (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int (Rat.num q) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) hp (Rat.num_ne_zero_of_ne_zero q hq))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Part.get.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q)) (Eq.mpr.{0} (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q))) (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (id_tag Tactic.IdTag.rw (Eq.{1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q))) (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q))) (Eq.ndrec.{0, 1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q))) (fun (_a : Prop) => Eq.{1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q))) _a) (rfl.{1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q)))) (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (Eq.symm.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q))) (propext (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q))) (multiplicity.finite_iff_dom.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p (Rat.den q)))))) (Eq.mpr.{0} (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Rat.den q))) (id_tag Tactic.IdTag.rw (Eq.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Rat.den q)))) (Eq.ndrec.{0, 1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (fun (_a : Prop) => Eq.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) _a) (rfl.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q))) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Rat.den q))) (propext (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Rat.den q))) (multiplicity.finite_nat_iff p (Rat.den q))))) (And.intro (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Rat.den q)) hp (Rat.pos q)))))))
+but is expected to have type
+  forall {p : Nat} {q : Rat} (hp : Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (hq : Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))), Eq.{1} Int (padicValRat p q) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int instNatCastInt (Part.get.{0} Nat (multiplicity.{0} Int Int.instMonoidInt (fun (a : Int) (b : Int) => Int.decidableDvd a b) (Nat.cast.{0} Int instNatCastInt p) (Rat.num q)) (Iff.mpr (multiplicity.Finite.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt p) (Rat.num q)) (And (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int (Rat.num q) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) (multiplicity.finite_int_iff (Nat.cast.{0} Int instNatCastInt p) (Rat.num q)) (And.intro (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int (Rat.num q) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) hp (Rat.num_ne_zero_of_ne_zero q hq))))) (Nat.cast.{0} Int instNatCastInt (Part.get.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q)) (Eq.mpr.{0} (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q))) (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (id.{0} (Eq.{1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q))) (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q))) (Eq.ndrec.{0, 1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q))) (fun (_a : Prop) => Eq.{1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q))) _a) (Eq.refl.{1} Prop (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q)))) (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (Eq.symm.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q))) (propext (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (Part.Dom.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q))) (multiplicity.finite_iff_dom.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p (Rat.den q)))))) (Eq.mpr.{0} (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Rat.den q))) (id.{0} (Eq.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Rat.den q)))) (Eq.ndrec.{0, 1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (fun (_a : Prop) => Eq.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) _a) (Eq.refl.{1} Prop (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q))) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Rat.den q))) (propext (multiplicity.Finite.{0} Nat Nat.monoid p (Rat.den q)) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Rat.den q))) (multiplicity.finite_nat_iff p (Rat.den q))))) (And.intro (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Rat.den q)) hp (Rat.pos q)))))))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.multiplicity_sub_multiplicity padicValRat.multiplicity_sub_multiplicityₓ'. -/
 theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
     padicValRat p q =
       (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Rat.num_ne_zero_of_ne_zero hq⟩) -
@@ -203,11 +259,23 @@ theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
   · exact Rat.num_ne_zero_of_ne_zero hq
 #align padic_val_rat.multiplicity_sub_multiplicity padicValRat.multiplicity_sub_multiplicity
 
+/- warning: padic_val_rat.of_nat -> padicValRat.of_nat is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {n : Nat}, Eq.{1} Int (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (padicValNat p n))
+but is expected to have type
+  forall {p : Nat} {n : Nat}, Eq.{1} Int (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n)) (Nat.cast.{0} Int instNatCastInt (padicValNat p n))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.of_nat padicValRat.of_natₓ'. -/
 /-- The `p`-adic value of an integer `z ≠ 0` is its `p`-adic value as a rational. -/
 @[simp]
 theorem of_nat {n : ℕ} : padicValRat p n = padicValNat p n := by simp [padicValRat]
 #align padic_val_rat.of_nat padicValRat.of_nat
 
+/- warning: padic_val_rat.self -> padicValRat.self is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) p) -> (Eq.{1} Int (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) p)) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+but is expected to have type
+  forall {p : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) p) -> (Eq.{1} Int (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) p)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.self padicValRat.selfₓ'. -/
 /-- If `p ≠ 0` and `p ≠ 1`, then `padic_val_rat p p` is `1`. -/
 theorem self (hp : 1 < p) : padicValRat p p = 1 := by simp [hp]
 #align padic_val_rat.self padicValRat.self
@@ -218,14 +286,32 @@ section padicValNat
 
 variable {p : ℕ}
 
+/- warning: zero_le_padic_val_rat_of_nat -> zero_le_padicValRat_of_nat is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} (n : Nat), LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) n))
+but is expected to have type
+  forall {p : Nat} (n : Nat), LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n))
+Case conversion may be inaccurate. Consider using '#align zero_le_padic_val_rat_of_nat zero_le_padicValRat_of_natₓ'. -/
 theorem zero_le_padicValRat_of_nat (n : ℕ) : 0 ≤ padicValRat p n := by simp
 #align zero_le_padic_val_rat_of_nat zero_le_padicValRat_of_nat
 
+/- warning: padic_val_rat_of_nat -> padicValRat_of_nat is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} (n : Nat), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (padicValNat p n)) (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) n))
+but is expected to have type
+  forall {p : Nat} (n : Nat), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (padicValNat p n)) (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat_of_nat padicValRat_of_natₓ'. -/
 /-- `padic_val_rat` coincides with `padic_val_nat`. -/
 @[norm_cast]
 theorem padicValRat_of_nat (n : ℕ) : ↑(padicValNat p n) = padicValRat p n := by simp
 #align padic_val_rat_of_nat padicValRat_of_nat
 
+/- warning: padic_val_nat_def -> padicValNat_def is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {n : Nat} (hn : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n), Eq.{1} Nat (padicValNat p n) (Part.get.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p n) (Iff.mpr (multiplicity.Finite.{0} Nat Nat.monoid p n) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n)) (multiplicity.finite_nat_iff p n) (And.intro (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (Nat.Prime.ne_one p (Fact.out (Nat.Prime p) hp)) hn)))
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {n : Nat} (hn : LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n), Eq.{1} Nat (padicValNat p n) (Part.get.{0} Nat (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p n) (Iff.mpr (multiplicity.Finite.{0} Nat Nat.monoid p n) (And (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n)) (multiplicity.finite_nat_iff p n) (And.intro (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Nat.Prime.ne_one p (Fact.out (Nat.Prime p) hp)) hn)))
+Case conversion may be inaccurate. Consider using '#align padic_val_nat_def padicValNat_defₓ'. -/
 /-- A simplification of `padic_val_nat` when one input is prime, by analogy with
 `padic_val_rat_def`. -/
 theorem padicValNat_def [hp : Fact p.Prime] {n : ℕ} (hn : 0 < n) :
@@ -233,26 +319,38 @@ theorem padicValNat_def [hp : Fact p.Prime] {n : ℕ} (hn : 0 < n) :
   dif_pos ⟨hp.out.ne_one, hn⟩
 #align padic_val_nat_def padicValNat_def
 
+/- warning: padic_val_nat_def' -> padicValNat_def' is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {n : Nat}, (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Eq.{1} PartENat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat PartENat (HasLiftT.mk.{1, 1} Nat PartENat (CoeTCₓ.coe.{1, 1} Nat PartENat (Nat.castCoe.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.addCommMonoidWithOne))))) (padicValNat p n)) (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) p n))
+but is expected to have type
+  forall {p : Nat} {n : Nat}, (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Eq.{1} PartENat (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) (padicValNat p n)) (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) p n))
+Case conversion may be inaccurate. Consider using '#align padic_val_nat_def' padicValNat_def'ₓ'. -/
 theorem padicValNat_def' {n : ℕ} (hp : p ≠ 1) (hn : 0 < n) :
     ↑(padicValNat p n) = multiplicity p n := by simp [padicValNat, hp, hn]
 #align padic_val_nat_def' padicValNat_def'
 
+#print padicValNat_self /-
 @[simp]
 theorem padicValNat_self [Fact p.Prime] : padicValNat p p = 1 := by
   simp [padicValNat_def (Fact.out p.prime).Pos]
 #align padic_val_nat_self padicValNat_self
+-/
 
+#print one_le_padicValNat_of_dvd /-
 theorem one_le_padicValNat_of_dvd {n : ℕ} [hp : Fact p.Prime] (hn : 0 < n) (div : p ∣ n) :
     1 ≤ padicValNat p n := by
   rwa [← PartENat.coe_le_coe, padicValNat_def' hp.out.ne_one hn, ← pow_dvd_iff_le_multiplicity,
     pow_one]
 #align one_le_padic_val_nat_of_dvd one_le_padicValNat_of_dvd
+-/
 
+#print dvd_iff_padicValNat_ne_zero /-
 theorem dvd_iff_padicValNat_ne_zero {p n : ℕ} [Fact p.Prime] (hn0 : n ≠ 0) :
     p ∣ n ↔ padicValNat p n ≠ 0 :=
   ⟨fun h => one_le_iff_ne_zero.mp (one_le_padicValNat_of_dvd hn0.bot_lt h), fun h =>
     Classical.not_not.1 (mt padicValNat.eq_zero_of_not_dvd h)⟩
 #align dvd_iff_padic_val_nat_ne_zero dvd_iff_padicValNat_ne_zero
+-/
 
 end padicValNat
 
@@ -264,11 +362,23 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 include hp
 
+/- warning: padic_val_rat.finite_int_prime_iff -> padicValRat.finite_int_prime_iff is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {a : Int}, Iff (multiplicity.Finite.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) a) (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {a : Int}, Iff (multiplicity.Finite.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt p) a) (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.finite_int_prime_iff padicValRat.finite_int_prime_iffₓ'. -/
 /-- The multiplicity of `p : ℕ` in `a : ℤ` is finite exactly when `a ≠ 0`. -/
 theorem finite_int_prime_iff {a : ℤ} : Finite (p : ℤ) a ↔ a ≠ 0 := by
   simp [finite_int_iff, Ne.symm (ne_of_lt hp.1.one_lt)]
 #align padic_val_rat.finite_int_prime_iff padicValRat.finite_int_prime_iff
 
+/- warning: padic_val_rat.defn -> padicValRat.defn is a dubious translation:
+lean 3 declaration is
+  forall (p : Nat) [hp : Fact (Nat.Prime p)] {q : Rat} {n : Int} {d : Int} (hqz : Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) (qdf : Eq.{1} Rat q (Rat.mk n d)), Eq.{1} Int (padicValRat p q) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Part.get.{0} Nat (multiplicity.{0} Int Int.monoid (fun (a : Int) (b : Int) => Int.decidableDvd a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) n) (Iff.mpr (multiplicity.Finite.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) n) (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (multiplicity.finite_int_iff ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) n) (And.intro (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Ne.symm.{1} Nat (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (ne_of_lt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (Nat.Prime.one_lt p (Fact.out (Nat.Prime p) hp)))) (fun (hn : Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) => False.ndrec.{0} False (Eq.mp.{0} (Eq.{1} Rat q (Rat.mk n d)) False (Eq.trans.{1} Prop (Eq.{1} Rat q (Rat.mk n d)) (Eq.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) False ((fun (a : Rat) (a_1 : Rat) (e_1 : Eq.{1} Rat a a_1) (ᾰ : Rat) (ᾰ_1 : Rat) (e_2 : Eq.{1} Rat ᾰ ᾰ_1) => congr.{1, 1} Rat Prop (Eq.{1} Rat a) (Eq.{1} Rat a_1) ᾰ ᾰ_1 (congr_arg.{1, 1} Rat (Rat -> Prop) a a_1 (Eq.{1} Rat) e_1) e_2) q q (rfl.{1} Rat q) (Rat.mk n d) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (Eq.trans.{1} Rat (Rat.mk n d) (Rat.mk (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) d) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) ((fun (ᾰ : Int) (ᾰ_1 : Int) (e_1 : Eq.{1} Int ᾰ ᾰ_1) (ᾰ_2 : Int) (ᾰ_3 : Int) (e_2 : Eq.{1} Int ᾰ_2 ᾰ_3) => congr.{1, 1} Int Rat (Rat.mk ᾰ) (Rat.mk ᾰ_1) ᾰ_2 ᾰ_3 (congr_arg.{1, 1} Int (Int -> Rat) ᾰ ᾰ_1 Rat.mk e_1) e_2) n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) hn d d (rfl.{1} Int d)) (Rat.zero_divInt d))) (propext (Eq.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) False (iff_false_intro (Eq.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) hqz))) qdf)))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Part.get.{0} Nat (multiplicity.{0} Int Int.monoid (fun (a : Int) (b : Int) => Int.decidableDvd a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) d) (Iff.mpr (multiplicity.Finite.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) d) (And (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) (multiplicity.finite_int_iff ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) d) (And.intro (Ne.{1} Nat (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Ne.symm.{1} Nat (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (ne_of_lt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p)) (Nat.Prime.one_lt p (Fact.out (Nat.Prime p) hp)))) (fun (hd : Eq.{1} Int d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) => False.ndrec.{0} False (Eq.mp.{0} (Eq.{1} Rat q (Rat.mk n d)) False (Eq.trans.{1} Prop (Eq.{1} Rat q (Rat.mk n d)) (Eq.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) False ((fun (a : Rat) (a_1 : Rat) (e_1 : Eq.{1} Rat a a_1) (ᾰ : Rat) (ᾰ_1 : Rat) (e_2 : Eq.{1} Rat ᾰ ᾰ_1) => congr.{1, 1} Rat Prop (Eq.{1} Rat a) (Eq.{1} Rat a_1) ᾰ ᾰ_1 (congr_arg.{1, 1} Rat (Rat -> Prop) a a_1 (Eq.{1} Rat) e_1) e_2) q q (rfl.{1} Rat q) (Rat.mk n d) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (Eq.trans.{1} Rat (Rat.mk n d) (Rat.mk n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) ((fun (ᾰ : Int) (ᾰ_1 : Int) (e_1 : Eq.{1} Int ᾰ ᾰ_1) (ᾰ_2 : Int) (ᾰ_3 : Int) (e_2 : Eq.{1} Int ᾰ_2 ᾰ_3) => congr.{1, 1} Int Rat (Rat.mk ᾰ) (Rat.mk ᾰ_1) ᾰ_2 ᾰ_3 (congr_arg.{1, 1} Int (Int -> Rat) ᾰ ᾰ_1 Rat.mk e_1) e_2) n n (rfl.{1} Int n) d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) hd) (Rat.divInt_zero n))) (propext (Eq.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) False (iff_false_intro (Eq.{1} Rat q (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) hqz))) qdf)))))))
+but is expected to have type
+  forall (p : Nat) [hp : Fact (Nat.Prime p)] {q : Rat} {n : Int} {d : Int} (hqz : Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (qdf : Eq.{1} Rat q (Rat.divInt n d)), Eq.{1} Int (padicValRat p q) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int instNatCastInt (Part.get.{0} Nat (multiplicity.{0} Int Int.instMonoidInt (fun (a : Int) (b : Int) => Int.decidableDvd a b) (Nat.cast.{0} Int instNatCastInt p) n) (Iff.mpr (multiplicity.Finite.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt p) n) (And (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) (multiplicity.finite_int_iff (Nat.cast.{0} Int instNatCastInt p) n) (And.intro (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Nat.Prime.ne_one p (Fact.out (Nat.Prime p) hp)) (fun (hn : Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) => False.elim.{0} False (Eq.mp.{0} (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) False (Eq.trans.{1} Prop (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (Ne.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) False (congrFun.{1, 1} Rat (fun (b : Rat) => Prop) (Ne.{1} Rat q) (Ne.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (congrArg.{1, 1} Rat (Rat -> Prop) q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Ne.{1} Rat) (Eq.trans.{1} Rat q (Rat.divInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Eq.trans.{1} Rat q (Rat.divInt n d) (Rat.divInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) qdf (congrFun.{1, 1} Int (fun (a._@.Std.Data.Rat.Basic._hyg.923 : Int) => Rat) (Rat.divInt n) (Rat.divInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (congrArg.{1, 1} Int (Int -> Rat) n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) Rat.divInt hn) d)) (Rat.zero_divInt d))) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (eq_false_of_decide (Not (Eq.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))) (instDecidableNot (Eq.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (instDecidableEqRat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))) (Eq.refl.{1} Bool Bool.false))) hqz)))))) (Nat.cast.{0} Int instNatCastInt (Part.get.{0} Nat (multiplicity.{0} Int Int.instMonoidInt (fun (a : Int) (b : Int) => Int.decidableDvd a b) (Nat.cast.{0} Int instNatCastInt p) d) (Iff.mpr (multiplicity.Finite.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt p) d) (And (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) (multiplicity.finite_int_iff (Nat.cast.{0} Int instNatCastInt p) d) (And.intro (Ne.{1} Nat (Int.natAbs (Nat.cast.{0} Int instNatCastInt p)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Nat.Prime.ne_one p (Fact.out (Nat.Prime p) hp)) (fun (hd : Eq.{1} Int d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) => False.elim.{0} False (Eq.mp.{0} (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) False (Eq.trans.{1} Prop (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (Ne.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) False (congrFun.{1, 1} Rat (fun (b : Rat) => Prop) (Ne.{1} Rat q) (Ne.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (congrArg.{1, 1} Rat (Rat -> Prop) q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Ne.{1} Rat) (Eq.trans.{1} Rat q (Rat.divInt n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Eq.trans.{1} Rat q (Rat.divInt n d) (Rat.divInt n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) qdf (congrArg.{1, 1} Int Rat d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Rat.divInt n) hd)) (Rat.divInt_zero n))) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (eq_false_of_decide (Not (Eq.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))) (instDecidableNot (Eq.{1} Rat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (instDecidableEqRat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))) (Eq.refl.{1} Bool Bool.false))) hqz)))))))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.defn padicValRat.defnₓ'. -/
 /-- A rewrite lemma for `padic_val_rat p q` when `q` is expressed in terms of `rat.mk`. -/
 protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz : q ≠ 0)
     (qdf : q = n /. d) :
@@ -285,6 +395,7 @@ protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz 
       Ne.symm (ne_of_lt hp.1.one_lt), hqz, pos_iff_ne_zero, int.coe_nat_multiplicity p q.denom]
 #align padic_val_rat.defn padicValRat.defn
 
+#print padicValRat.mul /-
 /-- A rewrite lemma for `padic_val_rat p (q * r)` with conditions `q ≠ 0`, `r ≠ 0`. -/
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
     padicValRat p (q * r) = padicValRat p q + padicValRat p r :=
@@ -299,12 +410,16 @@ protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
   rw [multiplicity.mul' hp', multiplicity.mul' hp'] <;>
     simp [add_comm, add_left_comm, sub_eq_add_neg]
 #align padic_val_rat.mul padicValRat.mul
+-/
 
+#print padicValRat.pow /-
 /-- A rewrite lemma for `padic_val_rat p (q^k)` with condition `q ≠ 0`. -/
 protected theorem pow {q : ℚ} (hq : q ≠ 0) {k : ℕ} : padicValRat p (q ^ k) = k * padicValRat p q :=
   by induction k <;> simp [*, padicValRat.mul hq (pow_ne_zero _ hq), pow_succ, add_mul, add_comm]
 #align padic_val_rat.pow padicValRat.pow
+-/
 
+#print padicValRat.inv /-
 /-- A rewrite lemma for `padic_val_rat p (q⁻¹)` with condition `q ≠ 0`. -/
 protected theorem inv (q : ℚ) : padicValRat p q⁻¹ = -padicValRat p q :=
   by
@@ -314,7 +429,9 @@ protected theorem inv (q : ℚ) : padicValRat p q⁻¹ = -padicValRat p q :=
       padicValRat.one]
     exact hp
 #align padic_val_rat.inv padicValRat.inv
+-/
 
+#print padicValRat.div /-
 /-- A rewrite lemma for `padic_val_rat p (q / r)` with conditions `q ≠ 0`, `r ≠ 0`. -/
 protected theorem div {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
     padicValRat p (q / r) = padicValRat p q - padicValRat p r :=
@@ -322,7 +439,14 @@ protected theorem div {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
   rw [div_eq_mul_inv, padicValRat.mul hq (inv_ne_zero hr), padicValRat.inv r, sub_eq_add_neg]
   all_goals exact hp
 #align padic_val_rat.div padicValRat.div
+-/
 
+/- warning: padic_val_rat.padic_val_rat_le_padic_val_rat_iff -> padicValRat.padicValRat_le_padicValRat_iff is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {n₁ : Int} {n₂ : Int} {d₁ : Int} {d₂ : Int}, (Ne.{1} Int n₁ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int n₂ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int d₁ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int d₂ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Iff (LE.le.{0} Int Int.hasLe (padicValRat p (Rat.mk n₁ d₁)) (padicValRat p (Rat.mk n₂ d₂))) (forall (n : Nat), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) n) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n₁ d₂)) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) n) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n₂ d₁))))
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {n₁ : Int} {n₂ : Int} {d₁ : Int} {d₂ : Int}, (Ne.{1} Int n₁ (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int n₂ (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int d₁ (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int d₂ (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Iff (LE.le.{0} Int Int.instLEInt (padicValRat p (Rat.divInt n₁ d₁)) (padicValRat p (Rat.divInt n₂ d₂))) (forall (n : Nat), (Dvd.dvd.{0} Int Int.instDvdInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat (Nat.cast.{0} Int instNatCastInt p) n) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n₁ d₂)) -> (Dvd.dvd.{0} Int Int.instDvdInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat (Nat.cast.{0} Int instNatCastInt p) n) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n₂ d₁))))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.padic_val_rat_le_padic_val_rat_iff padicValRat.padicValRat_le_padicValRat_iffₓ'. -/
 /-- A condition for `padic_val_rat p (n₁ / d₁) ≤ padic_val_rat p (n₂ / d₂)`, in terms of
 divisibility by `p^n`. -/
 theorem padicValRat_le_padicValRat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : n₁ ≠ 0) (hn₂ : n₂ ≠ 0)
@@ -343,6 +467,7 @@ theorem padicValRat_le_padicValRat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : n₁
       multiplicity_le_multiplicity_iff]
 #align padic_val_rat.padic_val_rat_le_padic_val_rat_iff padicValRat.padicValRat_le_padicValRat_iff
 
+#print padicValRat.le_padicValRat_add_of_le /-
 /-- Sufficient conditions to show that the `p`-adic valuation of `q` is less than or equal to the
 `p`-adic valuation of `q + r`. -/
 theorem le_padicValRat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
@@ -378,7 +503,14 @@ theorem le_padicValRat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
         
       all_goals exact hp
 #align padic_val_rat.le_padic_val_rat_add_of_le padicValRat.le_padicValRat_add_of_le
+-/
 
+/- warning: padic_val_rat.min_le_padic_val_rat_add -> padicValRat.min_le_padicValRat_add is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Rat} {r : Rat}, (Ne.{1} Rat (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) q r) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))) -> (LE.le.{0} Int Int.hasLe (LinearOrder.min.{0} Int Int.linearOrder (padicValRat p q) (padicValRat p r)) (padicValRat p (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) q r)))
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {q : Rat} {r : Rat}, (Ne.{1} Rat (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) q r) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) -> (LE.le.{0} Int Int.instLEInt (Min.min.{0} Int Int.instMinInt (padicValRat p q) (padicValRat p r)) (padicValRat p (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) q r)))
+Case conversion may be inaccurate. Consider using '#align padic_val_rat.min_le_padic_val_rat_add padicValRat.min_le_padicValRat_addₓ'. -/
 /-- The minimum of the valuations of `q` and `r` is at most the valuation of `q + r`. -/
 theorem min_le_padicValRat_add {q r : ℚ} (hqr : q + r ≠ 0) :
     min (padicValRat p q) (padicValRat p r) ≤ padicValRat p (q + r) :=
@@ -389,6 +521,7 @@ theorem min_le_padicValRat_add {q r : ℚ} (hqr : q + r ≠ 0) :
 
 open BigOperators
 
+#print padicValRat.sum_pos_of_pos /-
 /-- A finite sum of rationals with positive `p`-adic valuation has positive `p`-adic valuation
 (if the sum is non-zero). -/
 theorem sum_pos_of_pos {n : ℕ} {F : ℕ → ℚ} (hF : ∀ i, i < n → 0 < padicValRat p (F i))
@@ -404,6 +537,7 @@ theorem sum_pos_of_pos {n : ℕ} {F : ℕ → ℚ} (hF : ∀ i, i < n → 0 < pa
       · refine' lt_min (hd (fun i hi => _) h) (hF d (lt_add_one _))
         exact hF _ (lt_trans hi (lt_add_one _))
 #align padic_val_rat.sum_pos_of_pos padicValRat.sum_pos_of_pos
+-/
 
 end padicValRat
 
@@ -413,11 +547,14 @@ variable {p a b : ℕ} [hp : Fact p.Prime]
 
 include hp
 
+#print padicValNat.mul /-
 /-- A rewrite lemma for `padic_val_nat p (a * b)` with conditions `a ≠ 0`, `b ≠ 0`. -/
 protected theorem mul : a ≠ 0 → b ≠ 0 → padicValNat p (a * b) = padicValNat p a + padicValNat p b :=
   by exact_mod_cast @padicValRat.mul p _ a b
 #align padic_val_nat.mul padicValNat.mul
+-/
 
+#print padicValNat.div_of_dvd /-
 protected theorem div_of_dvd (h : b ∣ a) :
     padicValNat p (a / b) = padicValNat p a - padicValNat p b :=
   by
@@ -428,7 +565,9 @@ protected theorem div_of_dvd (h : b ∣ a) :
   rw [mul_comm, k.mul_div_cancel hb.bot_lt, padicValNat.mul hk hb, Nat.add_sub_cancel]
   exact hp
 #align padic_val_nat.div_of_dvd padicValNat.div_of_dvd
+-/
 
+#print padicValNat.div /-
 /-- Dividing out by a prime factor reduces the `padic_val_nat` by `1`. -/
 protected theorem div (dvd : p ∣ b) : padicValNat p (b / p) = padicValNat p b - 1 :=
   by
@@ -436,29 +575,38 @@ protected theorem div (dvd : p ∣ b) : padicValNat p (b / p) = padicValNat p b 
   rw [padicValNat_self]
   exact hp
 #align padic_val_nat.div padicValNat.div
+-/
 
+#print padicValNat.pow /-
 /-- A version of `padic_val_rat.pow` for `padic_val_nat`. -/
 protected theorem pow (n : ℕ) (ha : a ≠ 0) : padicValNat p (a ^ n) = n * padicValNat p a := by
   simpa only [← @Nat.cast_inj ℤ, push_cast] using padicValRat.pow (cast_ne_zero.mpr ha)
 #align padic_val_nat.pow padicValNat.pow
+-/
 
+#print padicValNat.prime_pow /-
 @[simp]
 protected theorem prime_pow (n : ℕ) : padicValNat p (p ^ n) = n := by
   rwa [padicValNat.pow _ (Fact.out p.prime).NeZero, padicValNat_self, mul_one]
 #align padic_val_nat.prime_pow padicValNat.prime_pow
+-/
 
+#print padicValNat.div_pow /-
 protected theorem div_pow (dvd : p ^ a ∣ b) : padicValNat p (b / p ^ a) = padicValNat p b - a :=
   by
   rw [padicValNat.div_of_dvd dvd, padicValNat.prime_pow]
   exact hp
 #align padic_val_nat.div_pow padicValNat.div_pow
+-/
 
+#print padicValNat.div' /-
 protected theorem div' {m : ℕ} (cpm : coprime p m) {b : ℕ} (dvd : m ∣ b) :
     padicValNat p (b / m) = padicValNat p b := by
   rw [padicValNat.div_of_dvd dvd, eq_zero_of_not_dvd (hp.out.coprime_iff_not_dvd.mp cpm),
       Nat.sub_zero] <;>
     assumption
 #align padic_val_nat.div' padicValNat.div'
+-/
 
 end padicValNat
 
@@ -466,25 +614,32 @@ section padicValNat
 
 variable {p : ℕ}
 
+#print dvd_of_one_le_padicValNat /-
 theorem dvd_of_one_le_padicValNat {n : ℕ} (hp : 1 ≤ padicValNat p n) : p ∣ n :=
   by
   by_contra h
   rw [padicValNat.eq_zero_of_not_dvd h] at hp
   exact lt_irrefl 0 (lt_of_lt_of_le zero_lt_one hp)
 #align dvd_of_one_le_padic_val_nat dvd_of_one_le_padicValNat
+-/
 
+#print pow_padicValNat_dvd /-
 theorem pow_padicValNat_dvd {n : ℕ} : p ^ padicValNat p n ∣ n :=
   by
   rcases n.eq_zero_or_pos with (rfl | hn); · simp
   rcases eq_or_ne p 1 with (rfl | hp); · simp
   rw [multiplicity.pow_dvd_iff_le_multiplicity, padicValNat_def'] <;> assumption
 #align pow_padic_val_nat_dvd pow_padicValNat_dvd
+-/
 
+#print padicValNat_dvd_iff_le /-
 theorem padicValNat_dvd_iff_le [hp : Fact p.Prime] {a n : ℕ} (ha : a ≠ 0) :
     p ^ n ∣ a ↔ n ≤ padicValNat p a := by
   rw [pow_dvd_iff_le_multiplicity, ← padicValNat_def' hp.out.ne_one ha.bot_lt, PartENat.coe_le_coe]
 #align padic_val_nat_dvd_iff_le padicValNat_dvd_iff_le
+-/
 
+#print padicValNat_dvd_iff /-
 theorem padicValNat_dvd_iff (n : ℕ) [hp : Fact p.Prime] (a : ℕ) :
     p ^ n ∣ a ↔ a = 0 ∨ n ≤ padicValNat p a :=
   by
@@ -492,22 +647,33 @@ theorem padicValNat_dvd_iff (n : ℕ) [hp : Fact p.Prime] (a : ℕ) :
   · exact iff_of_true (dvd_zero _) (Or.inl rfl)
   · simp only [ha, false_or_iff, padicValNat_dvd_iff_le ha]
 #align padic_val_nat_dvd_iff padicValNat_dvd_iff
+-/
 
+#print pow_succ_padicValNat_not_dvd /-
 theorem pow_succ_padicValNat_not_dvd {n : ℕ} [hp : Fact p.Prime] (hn : n ≠ 0) :
     ¬p ^ (padicValNat p n + 1) ∣ n :=
   by
   rw [padicValNat_dvd_iff_le hn, not_le]
   exacts[Nat.lt_succ_self _, hp]
 #align pow_succ_padic_val_nat_not_dvd pow_succ_padicValNat_not_dvd
+-/
 
+#print padicValNat_primes /-
 theorem padicValNat_primes {q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime] (neq : p ≠ q) :
     padicValNat p q = 0 :=
   @padicValNat.eq_zero_of_not_dvd p q <|
     (not_congr (Iff.symm (prime_dvd_prime_iff_eq hp.1 hq.1))).mp neq
 #align padic_val_nat_primes padicValNat_primes
+-/
 
 open BigOperators
 
+/- warning: range_pow_padic_val_nat_subset_divisors -> range_pow_padicValNat_subset_divisors is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (HasSubset.Subset.{0} (Finset.{0} Nat) (Finset.hasSubset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (padicValNat p n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Nat.divisors n))
+but is expected to have type
+  forall {p : Nat} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (HasSubset.Subset.{0} (Finset.{0} Nat) (Finset.instHasSubsetFinset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (x._@.Mathlib.NumberTheory.Padics.PadicVal._hyg.4443 : Nat) => HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p x._@.Mathlib.NumberTheory.Padics.PadicVal._hyg.4443) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (padicValNat p n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Nat.divisors n))
+Case conversion may be inaccurate. Consider using '#align range_pow_padic_val_nat_subset_divisors range_pow_padicValNat_subset_divisorsₓ'. -/
 theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
     (Finset.range (padicValNat p n + 1)).image (pow p) ⊆ n.divisors :=
   by
@@ -518,6 +684,12 @@ theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
   exact ⟨(pow_dvd_pow p <| by linarith).trans pow_padicValNat_dvd, hn⟩
 #align range_pow_padic_val_nat_subset_divisors range_pow_padicValNat_subset_divisors
 
+/- warning: range_pow_padic_val_nat_subset_divisors' -> range_pow_padicValNat_subset_divisors' is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {n : Nat} [hp : Fact (Nat.Prime p)], HasSubset.Subset.{0} (Finset.{0} Nat) (Finset.hasSubset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (t : Nat) => HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) t (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.range (padicValNat p n))) (Finset.erase.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.divisors n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall {p : Nat} {n : Nat} [hp : Fact (Nat.Prime p)], HasSubset.Subset.{0} (Finset.{0} Nat) (Finset.instHasSubsetFinset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (t : Nat) => HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) t (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.range (padicValNat p n))) (Finset.erase.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.divisors n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align range_pow_padic_val_nat_subset_divisors' range_pow_padicValNat_subset_divisors'ₓ'. -/
 theorem range_pow_padicValNat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
     ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors.eraseₓ 1 :=
   by
@@ -539,28 +711,45 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 include hp
 
+/- warning: padic_val_int_dvd_iff -> padicValInt_dvd_iff is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] (n : Nat) (a : Int), Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) n) a) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (LE.le.{0} Nat Nat.hasLe n (padicValInt p a)))
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] (n : Nat) (a : Int), Iff (Dvd.dvd.{0} Int Int.instDvdInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat (Nat.cast.{0} Int instNatCastInt p) n) a) (Or (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (LE.le.{0} Nat instLENat n (padicValInt p a)))
+Case conversion may be inaccurate. Consider using '#align padic_val_int_dvd_iff padicValInt_dvd_iffₓ'. -/
 theorem padicValInt_dvd_iff (n : ℕ) (a : ℤ) : (p : ℤ) ^ n ∣ a ↔ a = 0 ∨ n ≤ padicValInt p a := by
   rw [padicValInt, ← Int.natAbs_eq_zero, ← padicValNat_dvd_iff, ← Int.coe_nat_dvd_left,
     Int.coe_nat_pow]
 #align padic_val_int_dvd_iff padicValInt_dvd_iff
 
+/- warning: padic_val_int_dvd -> padicValInt_dvd is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] (a : Int), Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) (padicValInt p a)) a
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] (a : Int), Dvd.dvd.{0} Int Int.instDvdInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat (Nat.cast.{0} Int instNatCastInt p) (padicValInt p a)) a
+Case conversion may be inaccurate. Consider using '#align padic_val_int_dvd padicValInt_dvdₓ'. -/
 theorem padicValInt_dvd (a : ℤ) : (p : ℤ) ^ padicValInt p a ∣ a :=
   by
   rw [padicValInt_dvd_iff]
   exact Or.inr le_rfl
 #align padic_val_int_dvd padicValInt_dvd
 
+#print padicValInt_self /-
 theorem padicValInt_self : padicValInt p p = 1 :=
   padicValInt.self hp.out.one_lt
 #align padic_val_int_self padicValInt_self
+-/
 
+#print padicValInt.mul /-
 theorem padicValInt.mul {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
     padicValInt p (a * b) = padicValInt p a + padicValInt p b :=
   by
   simp_rw [padicValInt]
   rw [Int.natAbs_mul, padicValNat.mul] <;> rwa [Int.natAbs_ne_zero]
 #align padic_val_int.mul padicValInt.mul
+-/
 
+#print padicValInt_mul_eq_succ /-
 theorem padicValInt_mul_eq_succ (a : ℤ) (ha : a ≠ 0) :
     padicValInt p (a * p) = padicValInt p a + 1 :=
   by
@@ -568,6 +757,7 @@ theorem padicValInt_mul_eq_succ (a : ℤ) (ha : a ≠ 0) :
   simp only [eq_self_iff_true, padicValInt.of_nat, padicValNat_self]
   exact hp
 #align padic_val_int_mul_eq_succ padicValInt_mul_eq_succ
+-/
 
 end padicValInt
 
