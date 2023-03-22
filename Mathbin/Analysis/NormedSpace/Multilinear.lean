@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 4601791ea62fea875b488dafc4e6dede19e8363f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1013,7 +1013,49 @@ def compContinuousMultilinearMapL :
     exact f.norm_comp_continuous_multilinear_map_le g
 #align continuous_linear_map.comp_continuous_multilinear_mapL ContinuousLinearMap.compContinuousMultilinearMapL
 
-variable {𝕜 E G G'}
+variable {𝕜 G G'}
+
+/-- `continuous_linear_map.comp_continuous_multilinear_map` as a bundled
+continuous linear equiv. -/
+def ContinuousLinearEquiv.compContinuousMultilinearMapL (g : G ≃L[𝕜] G') :
+    ContinuousMultilinearMap 𝕜 E G ≃L[𝕜] ContinuousMultilinearMap 𝕜 E G' :=
+  {
+    compContinuousMultilinearMapL 𝕜 _ _ _
+      g.toContinuousLinearMap with
+    invFun := compContinuousMultilinearMapL 𝕜 _ _ _ g.symm.toContinuousLinearMap
+    left_inv := by
+      intro f
+      ext1 m
+      simp only [comp_continuous_multilinear_mapL, ContinuousLinearEquiv.coe_def_rev,
+        to_linear_map_eq_coe, LinearMap.toFun_eq_coe, coe_coe, LinearMap.mkContinuous₂_apply,
+        LinearMap.mk₂_apply, comp_continuous_multilinear_map_coe, ContinuousLinearEquiv.coe_coe,
+        Function.comp_apply, ContinuousLinearEquiv.symm_apply_apply]
+    right_inv := by
+      intro f
+      ext1 m
+      simp only [comp_continuous_multilinear_mapL, ContinuousLinearEquiv.coe_def_rev,
+        to_linear_map_eq_coe, LinearMap.mkContinuous₂_apply, LinearMap.mk₂_apply,
+        LinearMap.toFun_eq_coe, coe_coe, comp_continuous_multilinear_map_coe,
+        ContinuousLinearEquiv.coe_coe, Function.comp_apply, ContinuousLinearEquiv.apply_symm_apply]
+    continuous_toFun := (compContinuousMultilinearMapL 𝕜 _ _ _ g.toContinuousLinearMap).Continuous
+    continuous_invFun :=
+      (compContinuousMultilinearMapL 𝕜 _ _ _ g.symm.toContinuousLinearMap).Continuous }
+#align continuous_linear_equiv.comp_continuous_multilinear_mapL ContinuousLinearEquiv.compContinuousMultilinearMapL
+
+@[simp]
+theorem ContinuousLinearEquiv.compContinuousMultilinearMapL_symm (g : G ≃L[𝕜] G') :
+    (g.compContinuousMultilinearMapL E).symm = g.symm.compContinuousMultilinearMapL E :=
+  rfl
+#align continuous_linear_equiv.comp_continuous_multilinear_mapL_symm ContinuousLinearEquiv.compContinuousMultilinearMapL_symm
+
+variable {E}
+
+@[simp]
+theorem ContinuousLinearEquiv.compContinuousMultilinearMapL_apply (g : G ≃L[𝕜] G')
+    (f : ContinuousMultilinearMap 𝕜 E G) :
+    g.compContinuousMultilinearMapL E f = (g : G →L[𝕜] G').compContinuousMultilinearMap f :=
+  rfl
+#align continuous_linear_equiv.comp_continuous_multilinear_mapL_apply ContinuousLinearEquiv.compContinuousMultilinearMapL_apply
 
 /-- Flip arguments in `f : G →L[𝕜] continuous_multilinear_map 𝕜 E G'` to get
 `continuous_multilinear_map 𝕜 E (G →L[𝕜] G')` -/
@@ -1043,6 +1085,14 @@ def flipMultilinear (f : G →L[𝕜] ContinuousMultilinearMap 𝕜 E G') :
 #align continuous_linear_map.flip_multilinear ContinuousLinearMap.flipMultilinear
 
 end ContinuousLinearMap
+
+theorem LinearIsometry.norm_compContinuousMultilinearMap (g : G →ₗᵢ[𝕜] G')
+    (f : ContinuousMultilinearMap 𝕜 E G) :
+    ‖g.toContinuousLinearMap.compContinuousMultilinearMap f‖ = ‖f‖ := by
+  simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe,
+    LinearIsometry.coe_toContinuousLinearMap, LinearIsometry.norm_map,
+    ContinuousMultilinearMap.norm_def]
+#align linear_isometry.norm_comp_continuous_multilinear_map LinearIsometry.norm_compContinuousMultilinearMap
 
 open ContinuousMultilinearMap
 
@@ -1144,6 +1194,36 @@ theorem norm_comp_continuous_linear_le (g : ContinuousMultilinearMap 𝕜 E₁ G
       
 #align continuous_multilinear_map.norm_comp_continuous_linear_le ContinuousMultilinearMap.norm_comp_continuous_linear_le
 
+theorem norm_comp_continuous_linearIsometry_le (g : ContinuousMultilinearMap 𝕜 E₁ G)
+    (f : ∀ i, E i →ₗᵢ[𝕜] E₁ i) :
+    ‖g.compContinuousLinearMap fun i => (f i).toContinuousLinearMap‖ ≤ ‖g‖ :=
+  by
+  apply op_norm_le_bound _ (norm_nonneg _) fun m => _
+  apply (g.le_op_norm _).trans _
+  simp only [ContinuousLinearMap.toLinearMap_eq_coe, ContinuousLinearMap.coe_coe,
+    LinearIsometry.coe_toContinuousLinearMap, LinearIsometry.norm_map]
+#align continuous_multilinear_map.norm_comp_continuous_linear_isometry_le ContinuousMultilinearMap.norm_comp_continuous_linearIsometry_le
+
+theorem norm_comp_continuous_linearIsometryEquiv (g : ContinuousMultilinearMap 𝕜 E₁ G)
+    (f : ∀ i, E i ≃ₗᵢ[𝕜] E₁ i) :
+    ‖g.compContinuousLinearMap fun i => (f i : E i →L[𝕜] E₁ i)‖ = ‖g‖ :=
+  by
+  apply le_antisymm (g.norm_comp_continuous_linear_isometry_le fun i => (f i).toLinearIsometry)
+  have :
+    g =
+      (g.comp_continuous_linear_map fun i => (f i : E i →L[𝕜] E₁ i)).compContinuousLinearMap
+        fun i => ((f i).symm : E₁ i →L[𝕜] E i) :=
+    by
+    ext1 m
+    simp only [comp_continuous_linear_map_apply, LinearIsometryEquiv.coe_coe'',
+      LinearIsometryEquiv.apply_symm_apply]
+  conv_lhs => rw [this]
+  apply
+    (g.comp_continuous_linear_map fun i =>
+          (f i : E i →L[𝕜] E₁ i)).norm_comp_continuous_linearIsometry_le
+      fun i => (f i).symm.toLinearIsometry
+#align continuous_multilinear_map.norm_comp_continuous_linear_isometry_equiv ContinuousMultilinearMap.norm_comp_continuous_linearIsometryEquiv
+
 /-- `continuous_multilinear_map.comp_continuous_linear_map` as a bundled continuous linear map.
 This implementation fixes `f : Π i, E i →L[𝕜] E₁ i`.
 
@@ -1168,6 +1248,54 @@ theorem norm_compContinuousLinearMapL_le (f : ∀ i, E i →L[𝕜] E₁ i) :
     ‖@compContinuousLinearMapL 𝕜 ι E E₁ G _ _ _ _ _ _ _ _ _ f‖ ≤ ∏ i, ‖f i‖ :=
   LinearMap.mkContinuous_norm_le _ (prod_nonneg fun i _ => norm_nonneg _) _
 #align continuous_multilinear_map.norm_comp_continuous_linear_mapL_le ContinuousMultilinearMap.norm_compContinuousLinearMapL_le
+
+variable (G)
+
+/-- `continuous_multilinear_map.comp_continuous_linear_map` as a bundled continuous linear equiv,
+given `f : Π i, E i ≃L[𝕜] E₁ i`. -/
+def compContinuousLinearMapEquivL (f : ∀ i, E i ≃L[𝕜] E₁ i) :
+    ContinuousMultilinearMap 𝕜 E₁ G ≃L[𝕜] ContinuousMultilinearMap 𝕜 E G :=
+  {
+    compContinuousLinearMapL fun i =>
+      (f i :
+        E i →L[𝕜]
+          E₁
+            i) with
+    invFun := compContinuousLinearMapL fun i => ((f i).symm : E₁ i →L[𝕜] E i)
+    continuous_toFun := (compContinuousLinearMapL fun i => (f i : E i →L[𝕜] E₁ i)).Continuous
+    continuous_invFun :=
+      (compContinuousLinearMapL fun i => ((f i).symm : E₁ i →L[𝕜] E i)).Continuous
+    left_inv := by
+      intro g
+      ext1 m
+      simp only [ContinuousLinearMap.toLinearMap_eq_coe, LinearMap.toFun_eq_coe,
+        ContinuousLinearMap.coe_coe, comp_continuous_linear_mapL_apply,
+        comp_continuous_linear_map_apply, ContinuousLinearEquiv.coe_coe,
+        ContinuousLinearEquiv.apply_symm_apply]
+    right_inv := by
+      intro g
+      ext1 m
+      simp only [ContinuousLinearMap.toLinearMap_eq_coe, comp_continuous_linear_mapL_apply,
+        LinearMap.toFun_eq_coe, ContinuousLinearMap.coe_coe, comp_continuous_linear_map_apply,
+        ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.symm_apply_apply] }
+#align continuous_multilinear_map.comp_continuous_linear_map_equivL ContinuousMultilinearMap.compContinuousLinearMapEquivL
+
+@[simp]
+theorem compContinuousLinearMapEquivL_symm (f : ∀ i, E i ≃L[𝕜] E₁ i) :
+    (compContinuousLinearMapEquivL G f).symm =
+      compContinuousLinearMapEquivL G fun i : ι => (f i).symm :=
+  rfl
+#align continuous_multilinear_map.comp_continuous_linear_map_equivL_symm ContinuousMultilinearMap.compContinuousLinearMapEquivL_symm
+
+variable {G}
+
+@[simp]
+theorem compContinuousLinearMapEquivL_apply (g : ContinuousMultilinearMap 𝕜 E₁ G)
+    (f : ∀ i, E i ≃L[𝕜] E₁ i) :
+    compContinuousLinearMapEquivL G f g =
+      g.compContinuousLinearMap fun i => (f i : E i →L[𝕜] E₁ i) :=
+  rfl
+#align continuous_multilinear_map.comp_continuous_linear_map_equivL_apply ContinuousMultilinearMap.compContinuousLinearMapEquivL_apply
 
 end ContinuousMultilinearMap
 

@@ -543,7 +543,7 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) :
     rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
     simp only [Cardinal.lift_natCast, Cardinal.natCast_inj]
     -- Now we can use invariant basis number to show they have the same cardinality.
-    apply card_eq_of_lequiv R
+    apply card_eq_of_linearEquiv R
     exact
       (Finsupp.linearEquivFunOnFinite R R ι).symm.trans v.repr.symm ≪≫ₗ v'.repr ≪≫ₗ
         Finsupp.linearEquivFunOnFinite R R ι'

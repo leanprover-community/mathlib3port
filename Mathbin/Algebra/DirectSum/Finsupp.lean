@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.finsupp
-! leanprover-community/mathlib commit aca0874a9ce95510752f4075f80f273172e9b177
+! leanprover-community/mathlib commit aa3a420527e0fbfd0f6615b95b761254a9166e12
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Finsupp.ToDfinsupp
 
 /-!
 # Results on direct sums and finitely supported functions.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 1. The linear equivalence between finitely supported functions `ι →₀ M` and
 the direct sum of copies of `M` indexed by `ι`.

@@ -178,7 +178,7 @@ end CutMap
 -/
 
 
-section InducedMap
+section [anonymous]
 
 variable (α β γ) [LinearOrderedField α] [ConditionallyCompleteLinearOrderedField β]
   [ConditionallyCompleteLinearOrderedField γ]
@@ -257,7 +257,7 @@ theorem inducedMap_inv_self (b : β) : inducedMap γ β (inducedMap β γ b) = b
 
 theorem inducedMap_add (x y : α) : inducedMap α β (x + y) = inducedMap α β x + inducedMap α β y :=
   by
-  rw [induced_map, cut_map_add]
+  rw [[anonymous], cut_map_add]
   exact
     csupₛ_add (cut_map_nonempty β x) (cut_map_bdd_above β x) (cut_map_nonempty β y)
       (cut_map_bdd_above β y)
@@ -372,7 +372,7 @@ fields. -/
 instance : Unique (β ≃+*o γ) :=
   uniqueOfSubsingleton <| inducedOrderRingIso β γ
 
-end InducedMap
+end [anonymous]
 
 end LinearOrderedField
 

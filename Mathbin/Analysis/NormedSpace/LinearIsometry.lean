@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.linear_isometry
-! leanprover-community/mathlib commit 4b99fe0a1096dc52abe68e65107220e604ea49b2
+! leanprover-community/mathlib commit 4601791ea62fea875b488dafc4e6dede19e8363f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -738,6 +738,11 @@ variable (R E)
 def refl : E ≃ₗᵢ[R] E :=
   ⟨LinearEquiv.refl R E, fun x => rfl⟩
 #align linear_isometry_equiv.refl LinearIsometryEquiv.refl
+
+/-- Linear isometry equiv between a space and its lift to another universe. -/
+def ulift : ULift E ≃ₗᵢ[R] E :=
+  { ContinuousLinearEquiv.ulift with norm_map' := fun x => rfl }
+#align linear_isometry_equiv.ulift LinearIsometryEquiv.ulift
 
 variable {R E}
 

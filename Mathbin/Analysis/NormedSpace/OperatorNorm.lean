@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
+! leanprover-community/mathlib commit 4601791ea62fea875b488dafc4e6dede19e8363f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -929,9 +929,13 @@ def compSL : (F →SL[σ₂₃] G) →L[𝕜₃] (E →SL[σ₁₂] F) →SL[σ�
     1 fun f g => by simpa only [one_mul] using op_norm_comp_le f g
 #align continuous_linear_map.compSL ContinuousLinearMap.compSL
 
-variable {𝕜 σ₁₂ σ₂₃ E F G}
-
 include σ₁₃
+
+theorem norm_compSL_le : ‖compSL E F G σ₁₂ σ₂₃‖ ≤ 1 :=
+  LinearMap.mkContinuous₂_norm_le _ zero_le_one _
+#align continuous_linear_map.norm_compSL_le ContinuousLinearMap.norm_compSL_le
+
+variable {𝕜 σ₁₂ σ₂₃ E F G}
 
 @[simp]
 theorem compSL_apply (f : F →SL[σ₂₃] G) (g : E →SL[σ₁₂] F) : compSL E F G σ₁₂ σ₂₃ f g = f.comp g :=
@@ -962,6 +966,10 @@ def compL : (Fₗ →L[𝕜] Gₗ) →L[𝕜] (E →L[𝕜] Fₗ) →L[𝕜] E �
   compSL E Fₗ Gₗ (RingHom.id 𝕜) (RingHom.id 𝕜)
 #align continuous_linear_map.compL ContinuousLinearMap.compL
 
+theorem norm_compL_le : ‖compL 𝕜 E Fₗ Gₗ‖ ≤ 1 :=
+  norm_compSL_le _ _ _ _ _
+#align continuous_linear_map.norm_compL_le ContinuousLinearMap.norm_compL_le
+
 @[simp]
 theorem compL_apply (f : Fₗ →L[𝕜] Gₗ) (g : E →L[𝕜] Fₗ) : compL 𝕜 E Fₗ Gₗ f g = f.comp g :=
   rfl
@@ -979,6 +987,20 @@ def precompR (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : E →L[𝕜] (Eₗ →L[�
 def precompL (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : (Eₗ →L[𝕜] E) →L[𝕜] Fₗ →L[𝕜] Eₗ →L[𝕜] Gₗ :=
   (precompR Eₗ (flip L)).flip
 #align continuous_linear_map.precompL ContinuousLinearMap.precompL
+
+theorem norm_precompR_le (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : ‖precompR Eₗ L‖ ≤ ‖L‖ :=
+  calc
+    ‖precompR Eₗ L‖ ≤ ‖compL 𝕜 Eₗ Fₗ Gₗ‖ * ‖L‖ := op_norm_comp_le _ _
+    _ ≤ 1 * ‖L‖ := (mul_le_mul_of_nonneg_right (norm_compL_le _ _ _ _) (norm_nonneg _))
+    _ = ‖L‖ := by rw [one_mul]
+    
+#align continuous_linear_map.norm_precompR_le ContinuousLinearMap.norm_precompR_le
+
+theorem norm_precompL_le (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : ‖precompL Eₗ L‖ ≤ ‖L‖ :=
+  by
+  rw [precompL, op_norm_flip, ← op_norm_flip L]
+  exact norm_precompR_le _ L.flip
+#align continuous_linear_map.norm_precompL_le ContinuousLinearMap.norm_precompL_le
 
 section Prod
 

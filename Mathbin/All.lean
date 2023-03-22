@@ -508,6 +508,7 @@ import Mathbin.Analysis.Calculus.BumpFunctionInner
 import Mathbin.Analysis.Calculus.Conformal.InnerProduct
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 import Mathbin.Analysis.Calculus.ContDiff
+import Mathbin.Analysis.Calculus.ContDiffDef
 import Mathbin.Analysis.Calculus.Darboux
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Analysis.Calculus.DiffContOnCl
