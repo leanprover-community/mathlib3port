@@ -110,11 +110,11 @@ theorem dualPairing_apply {v : Dual 𝕜 E} {x : E} : dualPairing 𝕜 E v x = v
   rfl
 #align normed_space.dual_pairing_apply NormedSpace.dualPairing_apply
 
-theorem dualPairingSeparatingLeft : (dualPairing 𝕜 E).SeparatingLeft :=
+theorem dualPairing_separatingLeft : (dualPairing 𝕜 E).SeparatingLeft :=
   by
   rw [LinearMap.separatingLeft_iff_ker_eq_bot, LinearMap.ker_eq_bot]
   exact ContinuousLinearMap.coe_injective
-#align normed_space.dual_pairing_separating_left NormedSpace.dualPairingSeparatingLeft
+#align normed_space.dual_pairing_separating_left NormedSpace.dualPairing_separatingLeft
 
 end General
 
@@ -191,7 +191,7 @@ theorem mem_polar_iff {x' : Dual 𝕜 E} (s : Set E) : x' ∈ polar 𝕜 s ↔ �
 @[simp]
 theorem polar_univ : polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} :=
   (dualPairing 𝕜 E).flip.polar_univ
-    (LinearMap.flip_separatingRight.mpr (dualPairingSeparatingLeft 𝕜 E))
+    (LinearMap.flip_separatingRight.mpr (dualPairing_separatingLeft 𝕜 E))
 #align normed_space.polar_univ NormedSpace.polar_univ
 
 theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=

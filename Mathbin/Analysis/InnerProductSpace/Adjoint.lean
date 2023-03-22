@@ -264,12 +264,12 @@ variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpa
 variable [CompleteSpace E'] [CompleteSpace F']
 
 -- Todo: Generalize this to `is_R_or_C`.
-theorem isAdjointPairInner (A : E' →L[ℝ] F') :
+theorem isAdjointPair_inner (A : E' →L[ℝ] F') :
     LinearMap.IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ)
       (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A (A†) :=
   fun x y => by
   simp only [sesqFormOfInner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
-#align continuous_linear_map.is_adjoint_pair_inner ContinuousLinearMap.isAdjointPairInner
+#align continuous_linear_map.is_adjoint_pair_inner ContinuousLinearMap.isAdjointPair_inner
 
 end Real
 
@@ -491,11 +491,11 @@ variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpa
 variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 
 -- Todo: Generalize this to `is_R_or_C`.
-theorem isAdjointPairInner (A : E' →ₗ[ℝ] F') :
+theorem isAdjointPair_inner (A : E' →ₗ[ℝ] F') :
     IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A
       A.adjoint :=
   fun x y => by simp only [sesqFormOfInner_apply_apply, adjoint_inner_left]
-#align linear_map.is_adjoint_pair_inner LinearMap.isAdjointPairInner
+#align linear_map.is_adjoint_pair_inner LinearMap.isAdjointPair_inner
 
 end Real
 

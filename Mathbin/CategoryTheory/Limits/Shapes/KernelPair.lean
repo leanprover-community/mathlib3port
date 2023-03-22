@@ -46,6 +46,7 @@ variable {C : Type u} [Category.{v} C]
 
 variable {R X Y Z : C} (f : X ⟶ Y) (a b : R ⟶ X)
 
+#print CategoryTheory.IsKernelPair /-
 /-- `is_kernel_pair f a b` expresses that `(a, b)` is a kernel pair for `f`, i.e. `a ≫ f = b ≫ f`
 and the square
   R → X
@@ -57,6 +58,7 @@ This is just an abbreviation for `is_pullback a b f f`.
 abbrev IsKernelPair :=
   IsPullback a b f f
 #align category_theory.is_kernel_pair CategoryTheory.IsKernelPair
+-/
 
 namespace IsKernelPair
 
@@ -67,16 +69,19 @@ instance : Subsingleton (IsKernelPair f a b) :=
     cases Q
     congr ⟩
 
+#print CategoryTheory.IsKernelPair.id_of_mono /-
 /-- If `f` is a monomorphism, then `(𝟙 _, 𝟙 _)`  is a kernel pair for `f`. -/
 theorem id_of_mono [Mono f] : IsKernelPair f (𝟙 _) (𝟙 _) :=
   ⟨⟨rfl⟩, ⟨PullbackCone.isLimitMkIdId _⟩⟩
 #align category_theory.is_kernel_pair.id_of_mono CategoryTheory.IsKernelPair.id_of_mono
+-/
 
 instance [Mono f] : Inhabited (IsKernelPair f (𝟙 _) (𝟙 _)) :=
   ⟨id_of_mono f⟩
 
 variable {f a b}
 
+#print CategoryTheory.IsKernelPair.lift' /-
 /--
 Given a pair of morphisms `p`, `q` to `X` which factor through `f`, they factor through any kernel
 pair of `f`.
@@ -85,7 +90,9 @@ noncomputable def lift' {S : C} (k : IsKernelPair f a b) (p q : S ⟶ X) (w : p 
     { t : S ⟶ R // t ≫ a = p ∧ t ≫ b = q } :=
   PullbackCone.IsLimit.lift' k.IsLimit _ _ w
 #align category_theory.is_kernel_pair.lift' CategoryTheory.IsKernelPair.lift'
+-/
 
+#print CategoryTheory.IsKernelPair.cancel_right /-
 /--
 If `(a,b)` is a kernel pair for `f₁ ≫ f₂` and `a ≫ f₁ = b ≫ f₁`, then `(a,b)` is a kernel pair for
 just `f₁`.
@@ -108,7 +115,9 @@ theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b �
           apply m₁.trans (big_k.is_limit.fac s' walking_cospan.left).symm
           apply m₂.trans (big_k.is_limit.fac s' walking_cospan.right).symm⟩ }
 #align category_theory.is_kernel_pair.cancel_right CategoryTheory.IsKernelPair.cancel_right
+-/
 
+#print CategoryTheory.IsKernelPair.cancel_right_of_mono /-
 /-- If `(a,b)` is a kernel pair for `f₁ ≫ f₂` and `f₂` is mono, then `(a,b)` is a kernel pair for
 just `f₁`.
 The converse of `comp_of_mono`.
@@ -117,7 +126,9 @@ theorem cancel_right_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂]
     (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
   cancel_right (by rw [← cancel_mono f₂, assoc, assoc, big_k.w]) big_k
 #align category_theory.is_kernel_pair.cancel_right_of_mono CategoryTheory.IsKernelPair.cancel_right_of_mono
+-/
 
+#print CategoryTheory.IsKernelPair.comp_of_mono /-
 /--
 If `(a,b)` is a kernel pair for `f₁` and `f₂` is mono, then `(a,b)` is a kernel pair for `f₁ ≫ f₂`.
 The converse of `cancel_right_of_mono`.
@@ -138,7 +149,9 @@ theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : Is
           · exact m₁.trans (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.1.symm
           · exact m₂.trans (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.2.symm⟩ }
 #align category_theory.is_kernel_pair.comp_of_mono CategoryTheory.IsKernelPair.comp_of_mono
+-/
 
+#print CategoryTheory.IsKernelPair.toCoequalizer /-
 /--
 If `(a,b)` is the kernel pair of `f`, and `f` is a coequalizer morphism for some parallel pair, then
 `f` is a coequalizer morphism of `a` and `b`.
@@ -165,7 +178,9 @@ def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofor
     erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
     apply w
 #align category_theory.is_kernel_pair.to_coequalizer CategoryTheory.IsKernelPair.toCoequalizer
+-/
 
+#print CategoryTheory.IsKernelPair.pullback /-
 /-- If `a₁ a₂ : A ⟶ Y` is a kernel pair for `g : Y ⟶ Z`, then `a₁ ×[Z] X` and `a₂ ×[Z] X`
 (`A ×[Z] X ⟶ Y ×[Z] X`) is a kernel pair for `Y ×[Z] X ⟶ X`. -/
 protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h : IsKernelPair g a₁ a₂)
@@ -206,7 +221,9 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
         · conv_rhs => rw [← h₁, category.assoc, pullback_cone.mk_fst, pullback.lift_snd]
         · conv_rhs => rw [← h₂, category.assoc, pullback_cone.mk_snd, pullback.lift_snd]
 #align category_theory.is_kernel_pair.pullback CategoryTheory.IsKernelPair.pullback
+-/
 
+#print CategoryTheory.IsKernelPair.mono_of_isIso_fst /-
 theorem mono_of_isIso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f :=
   by
   obtain ⟨l, h₁, h₂⟩ := limits.pullback_cone.is_limit.lift' h.is_limit (𝟙 _) (𝟙 _) (by simp [h.w])
@@ -217,7 +234,9 @@ theorem mono_of_isIso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f :=
   obtain ⟨l', rfl, rfl⟩ := limits.pullback_cone.is_limit.lift' h.is_limit _ _ e
   rw [is_pullback.cone_fst, h₂]
 #align category_theory.is_kernel_pair.mono_of_is_iso_fst CategoryTheory.IsKernelPair.mono_of_isIso_fst
+-/
 
+#print CategoryTheory.IsKernelPair.isIso_of_mono /-
 theorem isIso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a :=
   by
   rw [←
@@ -227,7 +246,9 @@ theorem isIso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a :=
           walking_cospan.left)]
   infer_instance
 #align category_theory.is_kernel_pair.is_iso_of_mono CategoryTheory.IsKernelPair.isIso_of_mono
+-/
 
+#print CategoryTheory.IsKernelPair.of_isIso_of_mono /-
 theorem of_isIso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a :=
   by
   delta is_kernel_pair
@@ -235,6 +256,7 @@ theorem of_isIso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a :=
   · rw [category.comp_id]; · rw [category.id_comp]
   exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).paste_vert (is_kernel_pair.id_of_mono f)
 #align category_theory.is_kernel_pair.of_is_iso_of_mono CategoryTheory.IsKernelPair.of_isIso_of_mono
+-/
 
 end IsKernelPair
 

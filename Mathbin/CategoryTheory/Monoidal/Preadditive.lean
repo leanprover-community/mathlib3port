@@ -31,6 +31,7 @@ open CategoryTheory.MonoidalCategory
 
 variable (C : Type _) [Category C] [Preadditive C] [MonoidalCategory C]
 
+#print CategoryTheory.MonoidalPreadditive /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -52,6 +53,7 @@ class MonoidalPreadditive : Prop where
   add_tensor' : ∀ {W X Y Z : C} (f g : W ⟶ X) (h : Y ⟶ Z), (f + g) ⊗ h = f ⊗ h + g ⊗ h := by
     obviously
 #align category_theory.monoidal_preadditive CategoryTheory.MonoidalPreadditive
+-/
 
 restate_axiom monoidal_preadditive.tensor_zero'
 
@@ -67,18 +69,40 @@ variable {C} [MonoidalPreadditive C]
 
 attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
 
+#print CategoryTheory.tensorLeft_additive /-
 instance tensorLeft_additive (X : C) : (tensorLeft X).Additive where
 #align category_theory.tensor_left_additive CategoryTheory.tensorLeft_additive
+-/
 
+#print CategoryTheory.tensorRight_additive /-
 instance tensorRight_additive (X : C) : (tensorRight X).Additive where
 #align category_theory.tensor_right_additive CategoryTheory.tensorRight_additive
+-/
 
+/- warning: category_theory.tensoring_left_additive -> CategoryTheory.tensoringLeft_additive is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.MonoidalCategory.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.MonoidalPreadditive.{u1, u2} C _inst_1 _inst_2 _inst_3] (X : C), CategoryTheory.Functor.Additive.{u1, u1, u2, u2} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.Functor.obj.{u2, max u1 u2, u1, max u2 u1} C _inst_1 (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.MonoidalCategory.tensoringLeft.{u2, u1} C _inst_1 _inst_3) X)
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.MonoidalCategory.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.MonoidalPreadditive.{u1, u2} C _inst_1 _inst_2 _inst_3] (X : C), CategoryTheory.Functor.Additive.{u1, u1, u2, u2} C C _inst_1 _inst_1 _inst_2 _inst_2 (Prefunctor.obj.{succ u2, max (succ u1) (succ u2), u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, max u1 u2} (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u1 u2, max u1 u2} (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u1, u1} C _inst_1 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, max u1 u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.MonoidalCategory.tensoringLeft.{u2, u1} C _inst_1 _inst_3)) X)
+Case conversion may be inaccurate. Consider using '#align category_theory.tensoring_left_additive CategoryTheory.tensoringLeft_additiveₓ'. -/
 instance tensoringLeft_additive (X : C) : ((tensoringLeft C).obj X).Additive where
 #align category_theory.tensoring_left_additive CategoryTheory.tensoringLeft_additive
 
+/- warning: category_theory.tensoring_right_additive -> CategoryTheory.tensoringRight_additive is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.MonoidalCategory.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.MonoidalPreadditive.{u1, u2} C _inst_1 _inst_2 _inst_3] (X : C), CategoryTheory.Functor.Additive.{u1, u1, u2, u2} C C _inst_1 _inst_1 _inst_2 _inst_2 (CategoryTheory.Functor.obj.{u2, max u1 u2, u1, max u2 u1} C _inst_1 (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.MonoidalCategory.tensoringRight.{u2, u1} C _inst_1 _inst_3) X)
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.MonoidalCategory.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.MonoidalPreadditive.{u1, u2} C _inst_1 _inst_2 _inst_3] (X : C), CategoryTheory.Functor.Additive.{u1, u1, u2, u2} C C _inst_1 _inst_1 _inst_2 _inst_2 (Prefunctor.obj.{succ u2, max (succ u1) (succ u2), u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, max u1 u2} (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u1 u2, max u1 u2} (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u1, u1} C _inst_1 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, max u1 u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Functor.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u1, u1} C _inst_1 C _inst_1) (CategoryTheory.MonoidalCategory.tensoringRight.{u2, u1} C _inst_1 _inst_3)) X)
+Case conversion may be inaccurate. Consider using '#align category_theory.tensoring_right_additive CategoryTheory.tensoringRight_additiveₓ'. -/
 instance tensoringRight_additive (X : C) : ((tensoringRight C).obj X).Additive where
 #align category_theory.tensoring_right_additive CategoryTheory.tensoringRight_additive
 
+/- warning: category_theory.monoidal_preadditive_of_faithful -> CategoryTheory.monoidalPreadditive_of_faithful is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.MonoidalCategory.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.MonoidalPreadditive.{u1, u2} C _inst_1 _inst_2 _inst_3] {D : Type.{u3}} [_inst_5 : CategoryTheory.Category.{u4, u3} D] [_inst_6 : CategoryTheory.Preadditive.{u4, u3} D _inst_5] [_inst_7 : CategoryTheory.MonoidalCategory.{u4, u3} D _inst_5] (F : CategoryTheory.MonoidalFunctor.{u4, u2, u3, u1} D _inst_5 _inst_7 C _inst_1 _inst_3) [_inst_8 : CategoryTheory.Faithful.{u4, u2, u3, u1} D _inst_5 C _inst_1 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u4, u2, u3, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 (CategoryTheory.MonoidalFunctor.toLaxMonoidalFunctor.{u4, u2, u3, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 F))] [_inst_9 : CategoryTheory.Functor.Additive.{u3, u1, u4, u2} D C _inst_5 _inst_1 _inst_6 _inst_2 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u4, u2, u3, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 (CategoryTheory.MonoidalFunctor.toLaxMonoidalFunctor.{u4, u2, u3, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 F))], CategoryTheory.MonoidalPreadditive.{u3, u4} D _inst_5 _inst_6 _inst_7
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.MonoidalCategory.{u2, u1} C _inst_1] [_inst_4 : CategoryTheory.MonoidalPreadditive.{u1, u2} C _inst_1 _inst_2 _inst_3] {D : Type.{u4}} [_inst_5 : CategoryTheory.Category.{u3, u4} D] [_inst_6 : CategoryTheory.Preadditive.{u3, u4} D _inst_5] [_inst_7 : CategoryTheory.MonoidalCategory.{u3, u4} D _inst_5] (F : CategoryTheory.MonoidalFunctor.{u3, u2, u4, u1} D _inst_5 _inst_7 C _inst_1 _inst_3) [_inst_8 : CategoryTheory.Faithful.{u3, u2, u4, u1} D _inst_5 C _inst_1 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u3, u2, u4, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 (CategoryTheory.MonoidalFunctor.toLaxMonoidalFunctor.{u3, u2, u4, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 F))] [_inst_9 : CategoryTheory.Functor.Additive.{u4, u1, u3, u2} D C _inst_5 _inst_1 _inst_6 _inst_2 (CategoryTheory.LaxMonoidalFunctor.toFunctor.{u3, u2, u4, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 (CategoryTheory.MonoidalFunctor.toLaxMonoidalFunctor.{u3, u2, u4, u1} D _inst_5 _inst_7 C _inst_1 _inst_3 F))], CategoryTheory.MonoidalPreadditive.{u4, u3} D _inst_5 _inst_6 _inst_7
+Case conversion may be inaccurate. Consider using '#align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidalPreadditive_of_faithfulₓ'. -/
 /-- A faithful additive monoidal functor to a monoidal preadditive category
 ensures that the domain is monoidal preadditive. -/
 theorem monoidalPreadditive_of_faithful {D} [Category D] [Preadditive D] [MonoidalCategory D]
@@ -108,6 +132,7 @@ open BigOperators
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.tensor_sum /-
 theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
     (f ⊗ ∑ j in s, g j) = ∑ j in s, f ⊗ g j :=
   by
@@ -118,9 +143,11 @@ theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
   dsimp [tQ]
   simp only [tensor_id_comp_id_tensor]
 #align category_theory.tensor_sum CategoryTheory.tensor_sum
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.sum_tensor /-
 theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
     (∑ j in s, g j) ⊗ f = ∑ j in s, g j ⊗ f :=
   by
@@ -131,6 +158,7 @@ theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
   dsimp [tQ]
   simp only [tensor_id_comp_id_tensor]
 #align category_theory.sum_tensor CategoryTheory.sum_tensor
+-/
 
 variable {C}
 
@@ -165,12 +193,15 @@ variable [HasFiniteBiproducts C]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.leftDistributor /-
 /-- The isomorphism showing how tensor product on the left distributes over direct sums. -/
 def leftDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f ≅ ⨁ fun j => X ⊗ f j :=
   (tensorLeft X).mapBiproduct f
 #align category_theory.left_distributor CategoryTheory.leftDistributor
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.leftDistributor_hom /-
 @[simp]
 theorem leftDistributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j :=
@@ -178,8 +209,10 @@ theorem leftDistributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext; dsimp [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 #align category_theory.left_distributor_hom CategoryTheory.leftDistributor_hom
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.leftDistributor_inv /-
 @[simp]
 theorem leftDistributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) :=
@@ -187,9 +220,11 @@ theorem leftDistributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext; dsimp [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 #align category_theory.left_distributor_inv CategoryTheory.leftDistributor_inv
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.leftDistributor_assoc /-
 theorem leftDistributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (asIso (𝟙 X) ⊗ leftDistributor Y f) ≪≫ leftDistributor X _ =
       (α_ X Y (⨁ f)).symm ≪≫ leftDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => α_ X Y _ :=
@@ -205,15 +240,19 @@ theorem leftDistributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     tensor_id, if_true, dif_ctx_congr, Finset.sum_congr, Finset.mem_univ, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
 #align category_theory.left_distributor_assoc CategoryTheory.leftDistributor_assoc
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.rightDistributor /-
 /-- The isomorphism showing how tensor product on the right distributes over direct sums. -/
 def rightDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ X ≅ ⨁ fun j => f j ⊗ X :=
   (tensorRight X).mapBiproduct f
 #align category_theory.right_distributor CategoryTheory.rightDistributor
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.rightDistributor_hom /-
 @[simp]
 theorem rightDistributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j :=
@@ -221,8 +260,10 @@ theorem rightDistributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext; dsimp [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 #align category_theory.right_distributor_hom CategoryTheory.rightDistributor_hom
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.rightDistributor_inv /-
 @[simp]
 theorem rightDistributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) :=
@@ -230,9 +271,11 @@ theorem rightDistributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext; dsimp [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 #align category_theory.right_distributor_inv CategoryTheory.rightDistributor_inv
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.rightDistributor_assoc /-
 theorem rightDistributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (rightDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ (⨁ f) X Y ≪≫ rightDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => (α_ _ X Y).symm :=
@@ -249,9 +292,11 @@ theorem rightDistributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     Finset.sum_dite_eq']
   simp only [← tensor_id, associator_inv_naturality, iso.hom_inv_id_assoc]
 #align category_theory.right_distributor_assoc CategoryTheory.rightDistributor_assoc
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.leftDistributor_rightDistributor_assoc /-
 theorem leftDistributor_rightDistributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
     (leftDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ X (⨁ f) Y ≪≫
@@ -272,6 +317,7 @@ theorem leftDistributor_rightDistributor_assoc {J : Type _} [Fintype J] (X Y : C
     Finset.sum_dite_eq']
   simp only [associator_inv_naturality, iso.hom_inv_id_assoc]
 #align category_theory.left_distributor_right_distributor_assoc CategoryTheory.leftDistributor_rightDistributor_assoc
+-/
 
 end CategoryTheory
 

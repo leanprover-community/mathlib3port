@@ -790,7 +790,7 @@ def IsOrthoCat {n : Type w} (B : BilinForm R M) (v : n → M) : Prop :=
 #align bilin_form.is_Ortho BilinForm.IsOrthoCat
 
 theorem isOrthoCat_def {n : Type w} {B : BilinForm R M} {v : n → M} :
-    B.IsOrthoCat v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
+    B.IsOrthoᵢ v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
   Iff.rfl
 #align bilin_form.is_Ortho_def BilinForm.isOrthoCat_def
 
@@ -827,7 +827,7 @@ theorem isOrtho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x 
 /-- A set of orthogonal vectors `v` with respect to some bilinear form `B` is linearly independent
   if for all `i`, `B (v i) (v i) ≠ 0`. -/
 theorem linearIndependent_of_isOrthoCat {n : Type w} {B : BilinForm K V} {v : n → V}
-    (hv₁ : B.IsOrthoCat v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K v := by
+    (hv₁ : B.IsOrthoᵢ v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K v := by
   classical
     rw [linearIndependent_iff']
     intro s w hs i hi
@@ -1373,7 +1373,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal (B : BilinForm R₁ M₁) (b :
 /-- An orthogonal basis with respect to a nondegenerate bilinear form has no self-orthogonal
 elements. -/
 theorem IsOrthoCat.not_isOrtho_basis_self_of_nondegenerate {n : Type w} [Nontrivial R]
-    {B : BilinForm R M} {v : Basis n R M} (h : B.IsOrthoCat v) (hB : B.Nondegenerate) (i : n) :
+    {B : BilinForm R M} {v : Basis n R M} (h : B.IsOrthoᵢ v) (hB : B.Nondegenerate) (i : n) :
     ¬B.IsOrtho (v i) (v i) := by
   intro ho
   refine' v.ne_zero i (hB (v i) fun m => _)
@@ -1391,7 +1391,7 @@ theorem IsOrthoCat.not_isOrtho_basis_self_of_nondegenerate {n : Type w} [Nontriv
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
 iff the basis has no elements which are self-orthogonal. -/
 theorem IsOrthoCat.nondegenerate_iff_not_isOrtho_basis_self {n : Type w} [Nontrivial R]
-    [NoZeroDivisors R] (B : BilinForm R M) (v : Basis n R M) (hO : B.IsOrthoCat v) :
+    [NoZeroDivisors R] (B : BilinForm R M) (v : Basis n R M) (hO : B.IsOrthoᵢ v) :
     B.Nondegenerate ↔ ∀ i, ¬B.IsOrtho (v i) (v i) :=
   by
   refine' ⟨hO.not_is_ortho_basis_self_of_nondegenerate, fun ho m hB => _⟩

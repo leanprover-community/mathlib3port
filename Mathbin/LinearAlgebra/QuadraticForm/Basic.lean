@@ -1117,7 +1117,7 @@ variable [FiniteDimensional K V]
 /-- Given a symmetric bilinear form `B` on some vector space `V` over a field `K`
 in which `2` is invertible, there exists an orthogonal basis with respect to `B`. -/
 theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (hB₂ : B.IsSymm) :
-    ∃ v : Basis (Fin (finrank K V)) K V, B.IsOrthoCat v :=
+    ∃ v : Basis (Fin (finrank K V)) K V, B.IsOrthoᵢ v :=
   by
   induction' hd : finrank K V with d ih generalizing V
   · exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
@@ -1210,7 +1210,7 @@ theorem weightedSumSquares_apply [Monoid S] [DistribMulAction S R₁] [SMulCommC
 /-- On an orthogonal basis, the basis representation of `Q` is just a sum of squares. -/
 theorem basisRepr_eq_of_isOrthoCat {R₁ M} [CommRing R₁] [AddCommGroup M] [Module R₁ M]
     [Invertible (2 : R₁)] (Q : QuadraticForm R₁ M) (v : Basis ι R₁ M)
-    (hv₂ : (associated Q).IsOrthoCat v) : Q.basis_repr v = weightedSumSquares _ fun i => Q (v i) :=
+    (hv₂ : (associated Q).IsOrthoᵢ v) : Q.basis_repr v = weightedSumSquares _ fun i => Q (v i) :=
   by
   ext w
   rw [basis_repr_apply, ← @associated_eq_self_apply R₁, sum_left, weighted_sum_squares_apply]

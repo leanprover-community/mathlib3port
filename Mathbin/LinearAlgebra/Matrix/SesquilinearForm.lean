@@ -776,20 +776,20 @@ theorem separatingLeft_toLinearMap₂'_iff_det_ne_zero {M : Matrix ι ι R₁} :
   rw [Matrix.separatingLeft_toLinearMap₂'_iff, Matrix.nondegenerate_iff_det_ne_zero]
 #align linear_map.separating_left_to_linear_map₂'_iff_det_ne_zero LinearMap.separatingLeft_toLinearMap₂'_iff_det_ne_zero
 
-theorem separatingLeftToLinearMap₂'OfDetNeZero' (M : Matrix ι ι R₁) (h : M.det ≠ 0) :
+theorem separatingLeft_toLinearMap₂'_of_det_ne_zero' (M : Matrix ι ι R₁) (h : M.det ≠ 0) :
     M.toLinearMap₂'.SeparatingLeft :=
   separatingLeft_toLinearMap₂'_iff_det_ne_zero.mpr h
-#align linear_map.separating_left_to_linear_map₂'_of_det_ne_zero' LinearMap.separatingLeftToLinearMap₂'OfDetNeZero'
+#align linear_map.separating_left_to_linear_map₂'_of_det_ne_zero' LinearMap.separatingLeft_toLinearMap₂'_of_det_ne_zero'
 
 theorem separatingLeft_iff_det_ne_zero {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁) :
     B.SeparatingLeft ↔ (toMatrix₂ b b B).det ≠ 0 := by
   rw [← Matrix.nondegenerate_iff_det_ne_zero, nondegenerate_to_matrix_iff]
 #align linear_map.separating_left_iff_det_ne_zero LinearMap.separatingLeft_iff_det_ne_zero
 
-theorem separatingLeftOfDetNeZero {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁)
+theorem separatingLeft_of_det_ne_zero {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁)
     (h : (toMatrix₂ b b B).det ≠ 0) : B.SeparatingLeft :=
   (separatingLeft_iff_det_ne_zero b).mpr h
-#align linear_map.separating_left_of_det_ne_zero LinearMap.separatingLeftOfDetNeZero
+#align linear_map.separating_left_of_det_ne_zero LinearMap.separatingLeft_of_det_ne_zero
 
 end Det
 

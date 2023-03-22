@@ -1335,9 +1335,9 @@ variable [AddCommGroup V₁] [Module K V₁] [AddCommGroup V₂] [Module K V₂]
 
 namespace LinearMap
 
-theorem dualPairingNondegenerate : (dualPairing K V₁).Nondegenerate :=
+theorem dualPairing_nondegenerate : (dualPairing K V₁).Nondegenerate :=
   ⟨separatingLeft_iff_ker_eq_bot.mpr ker_id, fun x => (forall_dual_apply_eq_zero_iff K x).mp⟩
-#align linear_map.dual_pairing_nondegenerate LinearMap.dualPairingNondegenerate
+#align linear_map.dual_pairing_nondegenerate LinearMap.dualPairing_nondegenerate
 
 theorem dualMap_surjective_of_injective {f : V₁ →ₗ[K] V₂} (hf : Function.Injective f) :
     Function.Surjective f.dualMap := by
@@ -1377,7 +1377,7 @@ theorem dualPairing_eq (W : Subspace K V₁) : W.dualPairing = W.quotAnnihilator
   rfl
 #align subspace.dual_pairing_eq Subspace.dualPairing_eq
 
-theorem dualPairingNondegenerate (W : Subspace K V₁) : W.dualPairing.Nondegenerate :=
+theorem dualPairing_nondegenerate (W : Subspace K V₁) : W.dualPairing.Nondegenerate :=
   by
   constructor
   · rw [LinearMap.separatingLeft_iff_ker_eq_bot, dual_pairing_eq]
@@ -1387,9 +1387,9 @@ theorem dualPairingNondegenerate (W : Subspace K V₁) : W.dualPairing.Nondegene
     intro φ
     simpa only [Submodule.dualPairing_apply, dual_lift_of_subtype] using
       h (Submodule.Quotient.mk (W.dual_lift φ))
-#align subspace.dual_pairing_nondegenerate Subspace.dualPairingNondegenerate
+#align subspace.dual_pairing_nondegenerate Subspace.dualPairing_nondegenerate
 
-theorem dualCopairingNondegenerate (W : Subspace K V₁) : W.dualCopairing.Nondegenerate :=
+theorem dualCopairing_nondegenerate (W : Subspace K V₁) : W.dualCopairing.Nondegenerate :=
   by
   constructor
   · rw [LinearMap.separatingLeft_iff_ker_eq_bot, dual_copairing_eq]
@@ -1398,7 +1398,7 @@ theorem dualCopairingNondegenerate (W : Subspace K V₁) : W.dualCopairing.Nonde
     simp only [quotient.quot_mk_eq_mk, dual_copairing_apply, quotient.mk_eq_zero]
     rw [← forall_mem_dual_annihilator_apply_eq_zero_iff, SetLike.forall]
     exact id
-#align subspace.dual_copairing_nondegenerate Subspace.dualCopairingNondegenerate
+#align subspace.dual_copairing_nondegenerate Subspace.dualCopairing_nondegenerate
 
 -- Argument from https://math.stackexchange.com/a/2423263/172988
 theorem dualAnnihilator_inf_eq (W W' : Subspace K V₁) :
