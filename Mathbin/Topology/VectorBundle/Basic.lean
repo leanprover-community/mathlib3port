@@ -913,7 +913,7 @@ variable (a : VectorPrebundle R F E)
 
 theorem mem_trivialization_at_source (b : B) (x : E b) :
     totalSpaceMk b x ∈ (a.pretrivializationAt b).source :=
-  a.toFiberPrebundle.mem_trivialization_at_source b x
+  a.toFiberPrebundle.mem_pretrivializationAt_source b x
 #align vector_prebundle.mem_trivialization_at_source VectorPrebundle.mem_trivialization_at_source
 
 @[simp]
