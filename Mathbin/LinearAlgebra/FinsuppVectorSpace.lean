@@ -77,7 +77,7 @@ open LinearMap Submodule
 
 /-- The basis on `ι →₀ M` with basis vectors `λ ⟨i, x⟩, single i (b i x)`. -/
 protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σi, φ i) R (ι →₀ M) :=
-  Basis.of_repr
+  Basis.ofRepr
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2
           support := g.support.Sigma fun i => ((b i).repr (g i)).support
@@ -135,7 +135,7 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
 protected def basisSingleOne : Basis ι R (ι →₀ R) :=
-  Basis.of_repr (LinearEquiv.refl _ _)
+  Basis.ofRepr (LinearEquiv.refl _ _)
 #align finsupp.basis_single_one Finsupp.basisSingleOne
 
 @[simp]

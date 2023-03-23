@@ -48,8 +48,8 @@ def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D
     where
   obj S := multiequalizer (S.unop.index P)
   map S T f :=
-    multiequalizer.lift _ _ (fun I => multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
-      multiequalizer.condition (S.unop.index P) (I.map f.unop)
+    Multiequalizer.lift _ _ (fun I => Multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
+      Multiequalizer.condition (S.unop.index P) (I.map f.unop)
   map_id' S := by
     ext I
     cases I
@@ -64,8 +64,8 @@ def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D
 def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X
     where
   app S :=
-    multiequalizer.lift _ _ (fun I => multiequalizer.ι (S.unop.index P) I.base) fun I =>
-      multiequalizer.condition (S.unop.index P) I.base
+    Multiequalizer.lift _ _ (fun I => Multiequalizer.ι (S.unop.index P) I.base) fun I =>
+      Multiequalizer.condition (S.unop.index P) I.base
   naturality' S T f := by
     ext
     dsimp
@@ -78,7 +78,7 @@ between diagrams whose colimits define the values of `plus`. -/
 def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X ⟶ J.diagram Q X
     where
   app W :=
-    multiequalizer.lift _ _ (fun i => multiequalizer.ι _ i ≫ η.app _)
+    Multiequalizer.lift _ _ (fun i => Multiequalizer.ι _ i ≫ η.app _)
       (by
         intro i
         erw [category.assoc, category.assoc, ← η.naturality, ← η.naturality, ← category.assoc, ←

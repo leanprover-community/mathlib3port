@@ -1845,7 +1845,7 @@ include V
 /-- Two affine subspaces are parallel if one is related to the other by adding the same vector
 to all points. -/
 def Parallel (s₁ s₂ : AffineSubspace k P) : Prop :=
-  ∃ v : V, s₂ = s₁.map (constVadd k P v)
+  ∃ v : V, s₂ = s₁.map (constVAdd k P v)
 #align affine_subspace.parallel AffineSubspace.Parallel
 
 -- mathport name: affine_subspace.parallel

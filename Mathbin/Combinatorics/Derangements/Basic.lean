@@ -32,25 +32,32 @@ on derangements: `remove_none.fiber_none` and `remove_none.fiber_some`.
 
 open Equiv Function
 
+#print derangements /-
 /-- A permutation is a derangement if it has no fixed points. -/
 def derangements (α : Type _) : Set (Perm α) :=
   { f : Perm α | ∀ x : α, f x ≠ x }
 #align derangements derangements
+-/
 
 variable {α β : Type _}
 
+#print mem_derangements_iff_fixedPoints_eq_empty /-
 theorem mem_derangements_iff_fixedPoints_eq_empty {f : Perm α} :
     f ∈ derangements α ↔ fixedPoints f = ∅ :=
   Set.eq_empty_iff_forall_not_mem.symm
 #align mem_derangements_iff_fixed_points_eq_empty mem_derangements_iff_fixedPoints_eq_empty
+-/
 
+#print Equiv.derangementsCongr /-
 /-- If `α` is equivalent to `β`, then `derangements α` is equivalent to `derangements β`. -/
 def Equiv.derangementsCongr (e : α ≃ β) : derangements α ≃ derangements β :=
   e.permCongr.subtypeEquiv fun f => e.forall_congr' <| by simp
 #align equiv.derangements_congr Equiv.derangementsCongr
+-/
 
 namespace derangements
 
+#print derangements.subtypeEquiv /-
 /-- Derangements on a subtype are equivalent to permutations on the original type where points are
 fixed iff they are not in the subtype. -/
 protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
@@ -74,11 +81,13 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
         simp_rw [exists_prop, ← forall_and, ← iff_iff_implies_and_implies]
     
 #align derangements.subtype_equiv derangements.subtypeEquiv
+-/
 
+#print derangements.atMostOneFixedPointEquivSum_derangements /-
 /-- The set of permutations that fix either `a` or nothing is equivalent to the sum of:
     - derangements on `α`
     - derangements on `α` minus `a`. -/
-def atMostOneFixedPointEquivSumDerangements [DecidableEq α] (a : α) :
+def atMostOneFixedPointEquivSum_derangements [DecidableEq α] (a : α) :
     { f : Perm α // fixedPoints f ⊆ {a} } ≃ Sum (derangements ({a}ᶜ : Set α)) (derangements α) :=
   calc
     { f : Perm α // fixedPoints f ⊆ {a} } ≃
@@ -108,24 +117,30 @@ def atMostOneFixedPointEquivSumDerangements [DecidableEq α] (a : α) :
       rw [eq_comm, Set.ext_iff]
       simp_rw [Set.mem_compl_iff, Classical.not_not]
     
-#align derangements.at_most_one_fixed_point_equiv_sum_derangements derangements.atMostOneFixedPointEquivSumDerangements
+#align derangements.at_most_one_fixed_point_equiv_sum_derangements derangements.atMostOneFixedPointEquivSum_derangements
+-/
 
 namespace Equiv
 
 variable [DecidableEq α]
 
+#print derangements.Equiv.RemoveNone.fiber /-
 /-- The set of permutations `f` such that the preimage of `(a, f)` under
     `equiv.perm.decompose_option` is a derangement. -/
 def RemoveNone.fiber (a : Option α) : Set (Perm α) :=
   { f : Perm α | (a, f) ∈ Equiv.Perm.decomposeOption '' derangements (Option α) }
 #align derangements.equiv.remove_none.fiber derangements.Equiv.RemoveNone.fiber
+-/
 
+#print derangements.Equiv.RemoveNone.mem_fiber /-
 theorem RemoveNone.mem_fiber (a : Option α) (f : Perm α) :
     f ∈ RemoveNone.fiber a ↔
       ∃ F : Perm (Option α), F ∈ derangements (Option α) ∧ F none = a ∧ removeNone F = f :=
   by simp [remove_none.fiber, derangements]
 #align derangements.equiv.remove_none.mem_fiber derangements.Equiv.RemoveNone.mem_fiber
+-/
 
+#print derangements.Equiv.RemoveNone.fiber_none /-
 theorem RemoveNone.fiber_none : RemoveNone.fiber (@none α) = ∅ :=
   by
   rw [Set.eq_empty_iff_forall_not_mem]
@@ -134,7 +149,9 @@ theorem RemoveNone.fiber_none : RemoveNone.fiber (@none α) = ∅ :=
   rcases hyp with ⟨F, F_derangement, F_none, _⟩
   exact F_derangement none F_none
 #align derangements.equiv.remove_none.fiber_none derangements.Equiv.RemoveNone.fiber_none
+-/
 
+#print derangements.Equiv.RemoveNone.fiber_some /-
 /-- For any `a : α`, the fiber over `some a` is the set of permutations
     where `a` is the only possible fixed point. -/
 theorem RemoveNone.fiber_some (a : α) :
@@ -170,6 +187,7 @@ theorem RemoveNone.fiber_some (a : α) :
       exact x_vs_a (h_opfp contra)
     · rw [apply_symm_apply]
 #align derangements.equiv.remove_none.fiber_some derangements.Equiv.RemoveNone.fiber_some
+-/
 
 end Equiv
 
@@ -177,6 +195,7 @@ section Option
 
 variable [DecidableEq α]
 
+#print derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint /-
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`
     of "permutations with `a` the only possible fixed point". -/
 def derangementsOptionEquivSigmaAtMostOneFixedPoint :
@@ -195,14 +214,21 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
     _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } := by simp_rw [equiv.remove_none.fiber_some]
     
 #align derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint
+-/
 
+/- warning: derangements.derangements_recursion_equiv -> derangements.derangementsRecursionEquiv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Equiv.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} (Option.{u1} α))) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} (Option.{u1} α))) (derangements.{u1} (Option.{u1} α))) (Sigma.{u1, u1} α (fun (a : α) => Sum.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))))) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))))) (derangements.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Equiv.Perm.{succ u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Equiv.Perm.{succ u1} α)) (derangements.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Equiv.{succ u1, succ u1} (Set.Elem.{u1} (Equiv.Perm.{succ u1} (Option.{u1} α)) (derangements.{u1} (Option.{u1} α))) (Sigma.{u1, u1} α (fun (a : α) => Sum.{u1, u1} (Set.Elem.{u1} (Equiv.Perm.{succ u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))) (derangements.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))))) (Set.Elem.{u1} (Equiv.Perm.{succ u1} α) (derangements.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align derangements.derangements_recursion_equiv derangements.derangementsRecursionEquivₓ'. -/
 /-- The set of derangements on `option α` is equivalent to the union over all `a : α` of
     "derangements on `α` ⊕ derangements on `{a}ᶜ`". -/
 def derangementsRecursionEquiv :
     derangements (Option α) ≃
       Σa : α, Sum (derangements (({a}ᶜ : Set α) : Type _)) (derangements α) :=
   derangementsOptionEquivSigmaAtMostOneFixedPoint.trans
-    (sigmaCongrRight atMostOneFixedPointEquivSumDerangements)
+    (sigmaCongrRight atMostOneFixedPointEquivSum_derangements)
 #align derangements.derangements_recursion_equiv derangements.derangementsRecursionEquiv
 
 end Option

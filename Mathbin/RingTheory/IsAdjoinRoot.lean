@@ -415,7 +415,7 @@ theorem modByMonicHom_root (h : IsAdjoinRootMonic S f) (hdeg : 1 < natDegree f) 
 
 Auxiliary definition for `is_adjoin_root_monic.power_basis`. -/
 def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
-  Basis.of_repr
+  Basis.ofRepr
     { toFun := fun x => (h.modByMonicHom x).toFinsupp.comapDomain coe (Fin.val_injective.InjOn _)
       invFun := fun g => h.map (ofFinsupp (g.mapDomain coe))
       left_inv := fun x => by

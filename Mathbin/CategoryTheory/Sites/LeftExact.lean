@@ -47,7 +47,7 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
     where
   pt := E.pt
   π :=
-    { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i
+    { app := fun k => E.π.app k ≫ Multiequalizer.ι (W.index (F.obj k)) i
       naturality' := by
         intro a b f
         dsimp
@@ -62,7 +62,7 @@ abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLi
     {W : (J.cover X)ᵒᵖ} (F : K ⥤ Cᵒᵖ ⥤ D)
     (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj W)) :
     E.pt ⟶ (J.diagram (limit F) X).obj W :=
-  multiequalizer.lift _ _
+  Multiequalizer.lift _ _
     (fun i =>
       (isLimitOfPreserves ((evaluation _ _).obj (op i.y)) (limit.isLimit _)).lift
         (coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation i E))

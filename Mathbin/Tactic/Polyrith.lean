@@ -481,7 +481,7 @@ It assumes that `python3` is available on the path.
 -/
 unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let path ← get_mathlib_dir
-  let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
+  let args := [Path ++ "../scripts/polyrith_sage.py"] ++ arg_list
   let s ←
     unsafe_run_io <|
         Io.cmd

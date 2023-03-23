@@ -93,7 +93,7 @@ section Multiequalizer
 
 theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequalizer I]
     [PreservesLimit I.multicospan (forget C)] (x y : multiequalizer I)
-    (h : ∀ t : I.L, multiequalizer.ι I t x = multiequalizer.ι I t y) : x = y :=
+    (h : ∀ t : I.L, Multiequalizer.ι I t x = Multiequalizer.ι I t y) : x = y :=
   by
   apply concrete.limit_ext
   rintro (a | b)
@@ -155,7 +155,7 @@ noncomputable def Concrete.multiequalizerEquiv (I : MulticospanIndex.{w} C) [Has
 @[simp]
 theorem Concrete.multiequalizerEquiv_apply (I : MulticospanIndex.{w} C) [HasMultiequalizer I]
     [PreservesLimit I.multicospan (forget C)] (x : multiequalizer I) (i : I.L) :
-    ((Concrete.multiequalizerEquiv I) x : ∀ i : I.L, I.left i) i = multiequalizer.ι I i x :=
+    ((Concrete.multiequalizerEquiv I) x : ∀ i : I.L, I.left i) i = Multiequalizer.ι I i x :=
   rfl
 #align category_theory.limits.concrete.multiequalizer_equiv_apply CategoryTheory.Limits.Concrete.multiequalizerEquiv_apply
 

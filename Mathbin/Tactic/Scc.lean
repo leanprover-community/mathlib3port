@@ -268,14 +268,14 @@ consecutive vertices. The proofs are compiled into proofs of equivalences and ad
 structure. `e` and the first vertex of `path` do not have to be the same but they have to be
 in the same equivalence class. -/
 unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := do
-  let p₁ ← cl.prove_impl e path.headI.fst
+  let p₁ ← cl.prove_impl e Path.headI.fst
   let p₂ ← mk_mapp `` id [e]
-  let path := (e, p₁) :: path
+  let path := (e, p₁) :: Path
   let (_, ls) ←
-    path.mapAccumLM
+    Path.mapAccumLM
         (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, p'.1, none, p, p'.2] <*> pure p) p₂
   let (_, rs) ←
-    path.mapAccumRM
+    Path.mapAccumRM
         (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p')
         p₂
   let ps ← zipWithM (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.dropLast

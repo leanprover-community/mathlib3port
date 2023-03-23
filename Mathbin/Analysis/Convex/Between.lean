@@ -91,7 +91,7 @@ variable (R)
 @[simp]
 theorem affineSegment_const_vadd_image (x y : P) (v : V) :
     (· +ᵥ ·) v '' affineSegment R x y = affineSegment R (v +ᵥ x) (v +ᵥ y) :=
-  affineSegment_image (AffineEquiv.constVadd R P v : P →ᵃ[R] P) x y
+  affineSegment_image (AffineEquiv.constVAdd R P v : P →ᵃ[R] P) x y
 #align affine_segment_const_vadd_image affineSegment_const_vadd_image
 
 @[simp]
@@ -103,7 +103,7 @@ theorem affineSegment_vadd_const_image (x y : V) (p : P) :
 @[simp]
 theorem affineSegment_const_vsub_image (x y p : P) :
     (· -ᵥ ·) p '' affineSegment R x y = affineSegment R (p -ᵥ x) (p -ᵥ y) :=
-  affineSegment_image (AffineEquiv.constVsub R p : P →ᵃ[R] V) x y
+  affineSegment_image (AffineEquiv.constVSub R p : P →ᵃ[R] V) x y
 #align affine_segment_const_vsub_image affineSegment_const_vsub_image
 
 @[simp]

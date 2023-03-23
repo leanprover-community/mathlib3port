@@ -770,7 +770,7 @@ variable (𝕜)
 
 /-- `p' ↦ p -ᵥ p'` as an affine isometric equivalence. -/
 def constVsub (p : P) : P ≃ᵃⁱ[𝕜] V :=
-  { AffineEquiv.constVsub 𝕜 p with norm_map := norm_neg }
+  { AffineEquiv.constVSub 𝕜 p with norm_map := norm_neg }
 #align affine_isometry_equiv.const_vsub AffineIsometryEquiv.constVsub
 
 variable {𝕜}
@@ -798,7 +798,7 @@ variable (𝕜 P)
 /-- Translation by `v` (that is, the map `p ↦ v +ᵥ p`) as an affine isometric automorphism of `P`.
 -/
 def constVadd (v : V) : P ≃ᵃⁱ[𝕜] P :=
-  { AffineEquiv.constVadd 𝕜 P v with norm_map := fun x => rfl }
+  { AffineEquiv.constVAdd 𝕜 P v with norm_map := fun x => rfl }
 #align affine_isometry_equiv.const_vadd AffineIsometryEquiv.constVadd
 
 variable {𝕜 P}

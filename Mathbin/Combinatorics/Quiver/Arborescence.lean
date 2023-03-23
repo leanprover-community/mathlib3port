@@ -84,13 +84,13 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
           · rcases ih a (lt_of_lt_of_le (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
             exact ⟨p.cons e⟩),
       by
-      have height_le : ∀ {a b}, path a b → height a ≤ height b :=
+      have height_le : ∀ {a b}, Path a b → height a ≤ height b :=
         by
         intro a b p
         induction' p with b c p e ih
         rfl
         exact le_of_lt (lt_of_le_of_lt ih (height_lt e))
-      suffices ∀ p q : path r b, p = q by
+      suffices ∀ p q : Path r b, p = q by
         intro p
         apply this
       intro p q

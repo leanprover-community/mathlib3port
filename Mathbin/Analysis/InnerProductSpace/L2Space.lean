@@ -417,7 +417,7 @@ variable (ι) (𝕜) (E)
 
 /-- A Hilbert basis on `ι` for an inner product space `E` is an identification of `E` with the `lp`
 space `ℓ²(ι, 𝕜)`. -/
-structure HilbertBasis where of_repr ::
+structure HilbertBasis where ofRepr ::
   repr : E ≃ₗᵢ[𝕜] ℓ²(ι, 𝕜)
 #align hilbert_basis HilbertBasis
 

@@ -139,7 +139,7 @@ namespace Polynomial
 
 /-- The monomials form a basis on `R[X]`. -/
 noncomputable def basisMonomials : Basis ℕ R R[X] :=
-  Basis.of_repr (toFinsuppIsoAlg R).toLinearEquiv
+  Basis.ofRepr (toFinsuppIsoAlg R).toLinearEquiv
 #align polynomial.basis_monomials Polynomial.basisMonomials
 
 @[simp]

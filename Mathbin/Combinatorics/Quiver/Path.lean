@@ -31,8 +31,8 @@ namespace Quiver
 #print Quiver.Path /-
 /-- `G.path a b` is the type of paths from `a` to `b` through the arrows of `G`. -/
 inductive Path {V : Type u} [Quiver.{v} V] (a : V) : V → Sort max (u + 1) v
-  | nil : path a
-  | cons : ∀ {b c : V}, path b → (b ⟶ c) → path c
+  | nil : Path a
+  | cons : ∀ {b c : V}, Path b → (b ⟶ c) → Path c
 #align quiver.path Quiver.Path
 -/
 

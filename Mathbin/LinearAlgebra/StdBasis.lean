@@ -235,7 +235,7 @@ protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) :
   by
   -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
   -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
-  refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLEquivPiFinsupp R).symm)
+  refine' Basis.ofRepr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLEquivPiFinsupp R).symm)
   exact LinearEquiv.piCongrRight fun j => (s j).repr
 #align pi.basis Pi.basis
 

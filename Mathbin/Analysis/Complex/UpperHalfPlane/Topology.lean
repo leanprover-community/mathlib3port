@@ -67,7 +67,7 @@ instance : ContractibleSpace ℍ :=
   (convex_halfspace_im_gt 0).ContractibleSpace ⟨I, one_pos.trans_eq I_im.symm⟩
 
 instance : LocPathConnectedSpace ℍ :=
-  loc_path_connected_of_isOpen <| isOpen_lt continuous_const Complex.continuous_im
+  locPathConnected_of_isOpen <| isOpen_lt continuous_const Complex.continuous_im
 
 instance : NoncompactSpace ℍ := by
   refine' ⟨fun h => _⟩

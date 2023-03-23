@@ -422,7 +422,7 @@ def pullbackFstιToV (i j : 𝒰.J) :
     pullback (pullback.fst : pullback (p1 𝒰 f g) (𝒰.map i) ⟶ _) ((gluing 𝒰 f g).ι j) ⟶
       v 𝒰 f g j i :=
   (pullbackSymmetry _ _ ≪≫ pullbackRightPullbackFstIso (p1 𝒰 f g) (𝒰.map i) _).Hom ≫
-    (pullback.congrHom (multicoequalizer.π_desc _ _ _ _ _) rfl).Hom
+    (pullback.congrHom (Multicoequalizer.π_desc _ _ _ _ _) rfl).Hom
 #align algebraic_geometry.Scheme.pullback.pullback_fst_ι_to_V AlgebraicGeometry.Scheme.Pullback.pullbackFstιToV
 
 @[simp, reassoc.1]

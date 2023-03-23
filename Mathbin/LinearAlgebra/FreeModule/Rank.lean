@@ -46,7 +46,7 @@ theorem rank_eq_card_chooseBasisIndex : Module.rank R M = (#ChooseBasisIndex R M
 /-- The rank of `(ι →₀ R)` is `(# ι).lift`. -/
 @[simp]
 theorem rank_finsupp {ι : Type v} : Module.rank R (ι →₀ R) = (#ι).lift := by
-  simpa [lift_id', lift_umax] using (Basis.of_repr (LinearEquiv.refl _ (ι →₀ R))).mk_eq_dim.symm
+  simpa [lift_id', lift_umax] using (Basis.ofRepr (LinearEquiv.refl _ (ι →₀ R))).mk_eq_dim.symm
 #align module.free.rank_finsupp Module.Free.rank_finsupp
 
 /-- If `R` and `ι` lie in the same universe, the rank of `(ι →₀ R)` is `# ι`. -/

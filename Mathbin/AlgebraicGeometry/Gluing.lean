@@ -364,7 +364,7 @@ def fromGlued : 𝒰.gluedCover.glued ⟶ X :=
 
 @[simp, reassoc.1]
 theorem ι_fromGlued (x : 𝒰.J) : 𝒰.gluedCover.ι x ≫ 𝒰.fromGlued = 𝒰.map x :=
-  multicoequalizer.π_desc _ _ _ _ _
+  Multicoequalizer.π_desc _ _ _ _ _
 #align algebraic_geometry.Scheme.open_cover.ι_from_glued AlgebraicGeometry.Scheme.OpenCover.ι_fromGlued
 
 theorem fromGlued_injective : Function.Injective 𝒰.fromGlued.1.base :=

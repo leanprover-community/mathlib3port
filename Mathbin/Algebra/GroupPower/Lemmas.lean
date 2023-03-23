@@ -1112,7 +1112,7 @@ namespace Int
 lean 3 declaration is
   forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+  forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) (Nat.cast.{0} Int instNatCastInt (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_sq Int.natAbs_sqₓ'. -/
 theorem natAbs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.natAbs_mul_self', sq]
 #align int.nat_abs_sq Int.natAbs_sq
@@ -1121,7 +1121,7 @@ theorem natAbs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.nat
 lean 3 declaration is
   forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+  forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) (Nat.cast.{0} Int instNatCastInt (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_pow_two Int.natAbs_pow_twoₓ'. -/
 alias nat_abs_sq ← nat_abs_pow_two
 #align int.nat_abs_pow_two Int.natAbs_pow_two
@@ -1165,7 +1165,7 @@ alias le_self_sq ← le_self_pow_two
 lean 3 declaration is
   forall {x : Int}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x))
 but is expected to have type
-  forall {x : Int}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int ((fun (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7682 : Int) (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7684 : Nat) => HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7682 x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7684) x))
+  forall {x : Int}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int ((fun (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7680 : Int) (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7682 : Nat) => HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7680 x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7682) x))
 Case conversion may be inaccurate. Consider using '#align int.pow_right_injective Int.pow_right_injectiveₓ'. -/
 theorem pow_right_injective {x : ℤ} (h : 1 < x.natAbs) : Function.Injective ((· ^ ·) x : ℕ → ℤ) :=
   by

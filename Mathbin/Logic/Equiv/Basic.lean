@@ -1718,21 +1718,20 @@ def subtypeSubtypeEquivSubtypeExists {α : Sort u} (p : α → Prop) (q : Subtyp
 #align equiv.subtype_subtype_equiv_subtype_exists Equiv.subtypeSubtypeEquivSubtypeExists
 -/
 
-#print Equiv.subtypeSubtypeEquivSubtypeInter /-
+/- warning: equiv.subtype_subtype_equiv_subtype_inter -> Equiv.subtypeSubtypeEquivSubtypeInter is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} (p : α -> Prop) (q : α -> Prop), Equiv.{max 1 u1, max 1 u1} (Subtype.{max 1 u1} (Subtype.{u1} α p) (fun (x : Subtype.{u1} α p) => q (Subtype.val.{u1} α p x))) (Subtype.{u1} α (fun (x : α) => And (p x) (q x)))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop), Equiv.{succ u1, succ u1} (Subtype.{succ u1} (Subtype.{succ u1} α p) (fun (x : Subtype.{succ u1} α p) => q (Subtype.val.{succ u1} α p x))) (Subtype.{succ u1} α (fun (x : α) => And (p x) (q x)))
+Case conversion may be inaccurate. Consider using '#align equiv.subtype_subtype_equiv_subtype_inter Equiv.subtypeSubtypeEquivSubtypeInterₓ'. -/
 /-- A subtype of a subtype is equivalent to the subtype of elements satisfying both predicates. -/
 @[simps]
 def subtypeSubtypeEquivSubtypeInter {α : Sort u} (p q : α → Prop) :
     { x : Subtype p // q x.1 } ≃ Subtype fun x => p x ∧ q x :=
   (subtypeSubtypeEquivSubtypeExists p _).trans <| subtypeEquivRight fun x => exists_prop
 #align equiv.subtype_subtype_equiv_subtype_inter Equiv.subtypeSubtypeEquivSubtypeInter
--/
 
-/- warning: equiv.subtype_subtype_equiv_subtype -> Equiv.subtypeSubtypeEquivSubtype is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} {q : α -> Prop}, (forall {x : α}, (q x) -> (p x)) -> (Equiv.{succ u1, succ u1} (Subtype.{succ u1} (Subtype.{succ u1} α p) (fun (x : Subtype.{succ u1} α p) => q (Subtype.val.{succ u1} α p x))) (Subtype.{succ u1} α q))
-but is expected to have type
-  forall {α : Sort.{u1}} {p : α -> Prop} {q : α -> Prop}, (forall {x : α}, (q x) -> (p x)) -> (Equiv.{max 1 u1, max 1 u1} (Subtype.{max 1 u1} (Subtype.{u1} α p) (fun (x : Subtype.{u1} α p) => q (Subtype.val.{u1} α p x))) (Subtype.{u1} α q))
-Case conversion may be inaccurate. Consider using '#align equiv.subtype_subtype_equiv_subtype Equiv.subtypeSubtypeEquivSubtypeₓ'. -/
+#print Equiv.subtypeSubtypeEquivSubtype /-
 /-- If the outer subtype has more restrictive predicate than the inner one,
 then we can drop the latter. -/
 @[simps]
@@ -1740,6 +1739,7 @@ def subtypeSubtypeEquivSubtype {α : Type u} {p q : α → Prop} (h : ∀ {x}, q
     { x : Subtype p // q x.1 } ≃ Subtype q :=
   (subtypeSubtypeEquivSubtypeInter p _).trans <| subtypeEquivRight fun x => and_iff_right_of_imp h
 #align equiv.subtype_subtype_equiv_subtype Equiv.subtypeSubtypeEquivSubtype
+-/
 
 #print Equiv.subtypeUnivEquiv /-
 /-- If a proposition holds for all elements, then the subtype is

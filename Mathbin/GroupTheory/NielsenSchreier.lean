@@ -235,7 +235,7 @@ def endIsFree : IsFreeGroup (End (root' T)) :=
           rw [functor.map_End_apply, this, hF']
           exact dif_neg h
         intros
-        suffices ∀ {a} (p : path (root' T) a), F'.map (hom_of_path T p) = 1 by
+        suffices ∀ {a} (p : Path (root' T) a), F'.map (hom_of_path T p) = 1 by
           simp only [this, tree_hom, comp_as_mul, inv_as_inv, loop_of_hom, inv_one, mul_one,
             one_mul, functor.map_inv, functor.map_comp]
         intro a p

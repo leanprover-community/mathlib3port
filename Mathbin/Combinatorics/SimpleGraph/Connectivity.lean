@@ -2173,7 +2173,7 @@ theorem map_injective {f : G →g G'} (hinj : Function.Injective f) (u v : V) :
     Function.Injective (Path.map f hinj : G.Path u v → G'.Path (f u) (f v)) :=
   by
   rintro ⟨p, hp⟩ ⟨p', hp'⟩ h
-  simp only [path.map, Subtype.coe_mk] at h
+  simp only [Path.map, Subtype.coe_mk] at h
   simp [walk.map_injective_of_injective hinj u v h]
 #align simple_graph.path.map_injective SimpleGraph.Path.map_injective
 -/

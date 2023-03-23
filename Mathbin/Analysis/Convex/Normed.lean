@@ -135,7 +135,7 @@ instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
 #align normed_space.path_connected NormedSpace.path_connected
 
 instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
-  loc_path_connected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
+  locPathConnected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
     (convex_ball x r).IsPathConnected <| by simp [r_pos]
 #align normed_space.loc_path_connected NormedSpace.loc_path_connected
 

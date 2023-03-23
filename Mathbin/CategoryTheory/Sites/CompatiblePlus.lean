@@ -72,7 +72,7 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
 
 @[simp, reassoc.1]
 theorem diagramCompIso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arrow) :
-    (J.diagramCompIso F P X).Hom.app W ≫ multiequalizer.ι _ i = F.map (multiequalizer.ι _ _) :=
+    (J.diagramCompIso F P X).Hom.app W ≫ Multiequalizer.ι _ i = F.map (Multiequalizer.ι _ _) :=
   by
   delta diagram_comp_iso
   dsimp

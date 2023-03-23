@@ -324,7 +324,7 @@ protected theorem Convex.isPathConnected {s : Set E} (hconv : Convex ℝ s) (hne
   have H := hconv.segment_subset x_in y_in
   rw [segment_eq_image_lineMap] at H
   exact
-    JoinedIn.of_line affine_map.line_map_continuous.continuous_on (line_map_apply_zero _ _)
+    JoinedIn.ofLine affine_map.line_map_continuous.continuous_on (line_map_apply_zero _ _)
       (line_map_apply_one _ _) H
 #align convex.is_path_connected Convex.isPathConnected
 

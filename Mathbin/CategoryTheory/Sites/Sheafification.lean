@@ -128,13 +128,13 @@ noncomputable def equiv {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) [HasMultiequ
 @[simp]
 theorem equiv_apply {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} [HasMultiequalizer (S.index P)]
     (x : multiequalizer (S.index P)) (I : S.arrow) :
-    equiv P S x I = multiequalizer.ι (S.index P) I x :=
+    equiv P S x I = Multiequalizer.ι (S.index P) I x :=
   rfl
 #align category_theory.meq.equiv_apply CategoryTheory.Meq.equiv_apply
 
 @[simp]
 theorem equiv_symm_eq_apply {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} [HasMultiequalizer (S.index P)]
-    (x : Meq P S) (I : S.arrow) : multiequalizer.ι (S.index P) I ((Meq.equiv P S).symm x) = x I :=
+    (x : Meq P S) (I : S.arrow) : Multiequalizer.ι (S.index P) I ((Meq.equiv P S).symm x) = x I :=
   by
   let z := (meq.equiv P S).symm x
   rw [← equiv_apply]

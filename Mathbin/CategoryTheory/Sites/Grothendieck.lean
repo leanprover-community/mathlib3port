@@ -649,7 +649,7 @@ sheaf condition in terms of multiequalizers. -/
 noncomputable abbrev toMultiequalizer {D : Type w} [Category.{max v u} D] (S : J.cover X)
     (P : Cᵒᵖ ⥤ D) [Limits.HasMultiequalizer (S.index P)] :
     P.obj (Opposite.op X) ⟶ Limits.multiequalizer (S.index P) :=
-  Limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
+  Limits.Multiequalizer.lift _ _ (fun I => P.map I.f.op)
     (by
       intro I
       dsimp only [index, relation.fst, relation.snd]

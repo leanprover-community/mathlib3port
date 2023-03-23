@@ -498,7 +498,7 @@ better yet, if Lean exposed its path information.
 -/
 unsafe def get_decls_from (fs : List (Option String)) : tactic (name_map declaration) := do
   let root ← unsafe_run_io <| Io.Env.getCwd
-  let fs := fs.map (Option.map fun path => root ++ "/" ++ path)
+  let fs := fs.map (Option.map fun path => root ++ "/" ++ Path)
   let err ← unsafe_run_io <| (fs.filterMap id).filterM <| (· <$> ·) not ∘ Io.Fs.fileExists
   guard (err = []) <|> fail f! "File not found: {err}"
   let e ← tactic.get_env

@@ -279,7 +279,7 @@ variable (ι 𝕜 E)
 
 /-- An orthonormal basis on E is an identification of `E` with its dimensional-matching
 `euclidean_space 𝕜 ι`. -/
-structure OrthonormalBasis where of_repr ::
+structure OrthonormalBasis where ofRepr ::
   repr : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 ι
 #align orthonormal_basis OrthonormalBasis
 

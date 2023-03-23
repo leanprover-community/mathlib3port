@@ -204,12 +204,12 @@ def glued : C :=
 
 /-- The map `D.U i ⟶ D.glued` for each `i`. -/
 def ι (i : D.J) : D.U i ⟶ D.glued :=
-  multicoequalizer.π D.diagram i
+  Multicoequalizer.π D.diagram i
 #align category_theory.glue_data.ι CategoryTheory.GlueData.ι
 
 @[simp, elementwise]
 theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j ≫ D.ι i :=
-  (Category.assoc _ _ _).symm.trans (multicoequalizer.condition D.diagram ⟨i, j⟩).symm
+  (Category.assoc _ _ _).symm.trans (Multicoequalizer.condition D.diagram ⟨i, j⟩).symm
 #align category_theory.glue_data.glue_condition CategoryTheory.GlueData.glue_condition
 
 /-- The pullback cone spanned by `V i j ⟶ U i` and `V i j ⟶ U j`.
@@ -222,7 +222,7 @@ variable [HasColimits C]
 
 /-- The projection `∐ D.U ⟶ D.glued` given by the colimit. -/
 def π : D.sigmaOpens ⟶ D.glued :=
-  multicoequalizer.sigmaπ D.diagram
+  Multicoequalizer.sigmaπ D.diagram
 #align category_theory.glue_data.π CategoryTheory.GlueData.π
 
 instance π_epi : Epi D.π := by

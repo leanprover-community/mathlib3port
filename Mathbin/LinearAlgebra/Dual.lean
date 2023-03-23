@@ -734,7 +734,7 @@ theorem lc_coeffs (m : M) : DualBases.lc e (h.coeffs m) = m :=
 /-- `(h : dual_bases e ε).basis` shows the family of vectors `e` forms a basis. -/
 @[simps]
 def basis : Basis ι R M :=
-  Basis.of_repr
+  Basis.ofRepr
     { toFun := coeffs h
       invFun := lc e
       left_inv := lc_coeffs h

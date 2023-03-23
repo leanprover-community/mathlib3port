@@ -619,7 +619,7 @@ noncomputable def basisSingleton (ι : Type _) [Unique ι] (h : finrank K V = 1)
     (hv : v ≠ 0) : Basis ι K V :=
   let b := basisUnique ι h
   let h : b.repr v default ≠ 0 := mt basisUnique.repr_eq_zero_iff.mp hv
-  Basis.of_repr
+  Basis.ofRepr
     { toFun := fun w => Finsupp.single default (b.repr w default / b.repr v default)
       invFun := fun f => f default • v
       map_add' := by simp [add_div]

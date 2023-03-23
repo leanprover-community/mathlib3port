@@ -74,9 +74,9 @@ hypothesis or target `h` which is an application of a relation. -/
 unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List ExprLens.Dir)
     (h : Option expr) : tactic tracked_rewrite := do
   let e ← target_or_hyp_type h
-  let (ln, new_e) ← expr_lens.entire.zoom path e
+  let (ln, new_e) ← expr_lens.entire.zoom Path e
   let rw ← get_nth_rewrite n q new_e
-  return ⟨ln rw, rw >>= ln, rw fun l => path ++ l⟩
+  return ⟨ln rw, rw >>= ln, rw fun l => Path ++ l⟩
 #align tactic.get_nth_rewrite_with_zoom tactic.get_nth_rewrite_with_zoom
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)
@@ -84,7 +84,7 @@ at all the locations `loc`. -/
 unsafe def nth_rewrite_core (path : List ExprLens.Dir) (n : parse small_nat) (q : parse rw_rules)
     (l : parse location) : tactic Unit := do
   let fn h :=
-    get_nth_rewrite_with_zoom n q path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
+    get_nth_rewrite_with_zoom n q Path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
   match l with
     | loc.wildcard => l (fn ∘ some) (fn none)
     | _ => l (fn ∘ some) (fn none)

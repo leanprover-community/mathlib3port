@@ -426,7 +426,7 @@ This map is an open embedding (`from_open_subsets_glue_open_embedding`),
 and its range is `⋃ i, (U i : set α)` (`range_from_open_subsets_glue`).
 -/
 def fromOpenSubsetsGlue : (ofOpenSubsets U).toGlueData.glued ⟶ TopCat.of α :=
-  multicoequalizer.desc _ _ (fun x => Opens.inclusion _)
+  Multicoequalizer.desc _ _ (fun x => Opens.inclusion _)
     (by
       rintro ⟨i, j⟩
       ext x
@@ -436,7 +436,7 @@ def fromOpenSubsetsGlue : (ofOpenSubsets U).toGlueData.glued ⟶ TopCat.of α :=
 @[simp, elementwise]
 theorem ι_fromOpenSubsetsGlue (i : J) :
     (ofOpenSubsets U).toGlueData.ι i ≫ fromOpenSubsetsGlue U = Opens.inclusion _ :=
-  multicoequalizer.π_desc _ _ _ _ _
+  Multicoequalizer.π_desc _ _ _ _ _
 #align Top.glue_data.ι_from_open_subsets_glue TopCat.GlueData.ι_fromOpenSubsetsGlue
 
 theorem fromOpenSubsetsGlue_injective : Function.Injective (fromOpenSubsetsGlue U) :=
