@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.single_obj
-! leanprover-community/mathlib commit 56adee5b5eef9e734d82272918300fca4f3e7cef
+! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Combinatorics.Quiver.SingleObj
 
 /-!
 # Single-object category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Single object category with a given monoid of endomorphisms.
 It is defined to facilitate transfering some definitions and lemmas (e.g., conjugacy etc.)

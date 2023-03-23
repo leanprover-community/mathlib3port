@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Damiano Testa, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.inductions
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 57e09a1296bfb4330ddf6624f1028ba186117d82
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.MonoidAlgebra.Division
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Polynomial.Degree.Definitions
 import Mathbin.Data.Polynomial.Induction
@@ -42,7 +43,7 @@ variable [Semiring R] {p q : R[X]}
 /-- `div_X p` returns a polynomial `q` such that `q * X + C (p.coeff 0) = p`.
   It can be used in a semiring where the usual division algorithm is not possible -/
 def divX (p : R[X]) : R[X] :=
-  ∑ n in Ico 0 p.natDegree, monomial n (p.coeff (n + 1))
+  ⟨AddMonoidAlgebra.divOf p.toFinsupp 1⟩
 #align polynomial.div_X Polynomial.divX
 -/
 
@@ -50,10 +51,9 @@ def divX (p : R[X]) : R[X] :=
 @[simp]
 theorem coeff_divX : (divX p).coeff n = p.coeff (n + 1) :=
   by
-  simp only [div_X, coeff_monomial, true_and_iff, finset_sum_coeff, not_lt, mem_Ico, zero_le,
-    Finset.sum_ite_eq', ite_eq_left_iff]
-  intro h
-  rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_le h)]
+  rw [add_comm]
+  cases p
+  rfl
 #align polynomial.coeff_div_X Polynomial.coeff_divX
 -/
 
@@ -75,7 +75,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.div_X_C Polynomial.divX_Cₓ'. -/
 @[simp]
 theorem divX_C (a : R) : divX (C a) = 0 :=
-  ext fun n => by simp [div_X, coeff_C] <;> simp [coeff]
+  ext fun n => by simp [coeff_div_X, coeff_C, Finsupp.single_eq_of_ne _]
 #align polynomial.div_X_C Polynomial.divX_C
 
 /- warning: polynomial.div_X_eq_zero_iff -> Polynomial.divX_eq_zero_iff is a dubious translation:

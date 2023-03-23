@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.monoidal
-! leanprover-community/mathlib commit c0e00a871b9f6d3aca7c10fb3abdc8720a2c5313
+! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Functor.InvIsos
 
 /-!
 # Closed monoidal categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Define (right) closed objects and (right) closed monoidal categories.
 

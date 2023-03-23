@@ -272,6 +272,7 @@ import Mathbin.Algebra.Module.Torsion
 import Mathbin.Algebra.Module.Ulift
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Degree
+import Mathbin.Algebra.MonoidAlgebra.Division
 import Mathbin.Algebra.MonoidAlgebra.Grading
 import Mathbin.Algebra.MonoidAlgebra.NoZeroDivisors
 import Mathbin.Algebra.MonoidAlgebra.Support
@@ -1446,6 +1447,7 @@ import Mathbin.Data.MvPolynomial.Comap
 import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Data.MvPolynomial.Counit
 import Mathbin.Data.MvPolynomial.Derivation
+import Mathbin.Data.MvPolynomial.Division
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.Data.MvPolynomial.Expand
 import Mathbin.Data.MvPolynomial.Funext

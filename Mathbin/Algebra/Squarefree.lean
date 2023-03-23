@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.squarefree
-! leanprover-community/mathlib commit 79de90f7beca025f469dcda978ae655c4d985946
+! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.UniqueFactorizationDomain
 
 /-!
 # Squarefree elements of monoids
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 An element of a monoid is squarefree when it is not divisible by any squares
 except the squares of units.
 

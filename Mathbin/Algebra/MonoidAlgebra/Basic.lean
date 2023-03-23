@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 57e09a1296bfb4330ddf6624f1028ba186117d82
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -606,6 +606,19 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
   f.mul_single_apply_aux fun a => by rw [mul_one]
 #align monoid_algebra.mul_single_one_apply MonoidAlgebra.mul_single_one_apply
 
+theorem mul_single_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : MonoidAlgebra k G)
+    (h : ¬∃ d, g' = d * g) : (x * Finsupp.single g r : MonoidAlgebra k G) g' = 0 := by
+  classical
+    rw [mul_apply, Finsupp.sum_comm, Finsupp.sum_single_index]
+    swap
+    · simp_rw [Finsupp.sum, MulZeroClass.mul_zero, if_t_t, Finset.sum_const_zero]
+    · apply Finset.sum_eq_zero
+      simp_rw [ite_eq_right_iff]
+      rintro g'' hg'' rfl
+      exfalso
+      exact h ⟨_, rfl⟩
+#align monoid_algebra.mul_single_apply_of_not_exists_mul MonoidAlgebra.mul_single_apply_of_not_exists_mul
+
 /- warning: monoid_algebra.single_mul_apply_aux -> MonoidAlgebra.single_mul_apply_aux is a dubious translation:
 lean 3 declaration is
   forall {k : Type.{u1}} {G : Type.{u2}} [_inst_1 : Semiring.{u1} k] [_inst_2 : Mul.{u2} G] (f : MonoidAlgebra.{u1, u2} k G _inst_1) {r : k} {x : G} {y : G} {z : G}, (forall (a : G), Iff (Eq.{succ u2} G (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G _inst_2) x a) y) (Eq.{succ u2} G a z)) -> (Eq.{succ u1} k (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Finsupp.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) (fun (_x : MonoidAlgebra.{u1, u2} k G _inst_1) => G -> k) (MonoidAlgebra.coeFun.{u1, u2} k G _inst_1) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Finsupp.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) (Finsupp.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) (Finsupp.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) (instHMul.{max u2 u1} (Finsupp.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) (MonoidAlgebra.mul.{u1, u2} k G _inst_1 _inst_2)) (Finsupp.single.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1)))) x r) f) y) (HMul.hMul.{u1, u1, u1} k k k (instHMul.{u1} k (Distrib.toHasMul.{u1} k (NonUnitalNonAssocSemiring.toDistrib.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) r (coeFn.{succ (max u1 u2), max (succ u2) (succ u1)} (MonoidAlgebra.{u1, u2} k G _inst_1) (fun (_x : MonoidAlgebra.{u1, u2} k G _inst_1) => G -> k) (MonoidAlgebra.coeFun.{u1, u2} k G _inst_1) f z)))
@@ -635,6 +648,19 @@ theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
     (single 1 r * f) x = r * f x :=
   f.single_mul_apply_aux fun a => by rw [one_mul]
 #align monoid_algebra.single_one_mul_apply MonoidAlgebra.single_one_mul_apply
+
+theorem single_mul_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : MonoidAlgebra k G)
+    (h : ¬∃ d, g' = g * d) : (Finsupp.single g r * x : MonoidAlgebra k G) g' = 0 := by
+  classical
+    rw [mul_apply, Finsupp.sum_single_index]
+    swap
+    · simp_rw [Finsupp.sum, MulZeroClass.zero_mul, if_t_t, Finset.sum_const_zero]
+    · apply Finset.sum_eq_zero
+      simp_rw [ite_eq_right_iff]
+      rintro g'' hg'' rfl
+      exfalso
+      exact h ⟨_, rfl⟩
+#align monoid_algebra.single_mul_apply_of_not_exists_mul MonoidAlgebra.single_mul_apply_of_not_exists_mul
 
 /- warning: monoid_algebra.lift_nc_smul -> MonoidAlgebra.liftNC_smul is a dubious translation:
 lean 3 declaration is
@@ -1901,6 +1927,11 @@ theorem mul_single_zero_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k
   f.mul_single_apply_aux r _ _ _ fun a => by rw [add_zero]
 #align add_monoid_algebra.mul_single_zero_apply AddMonoidAlgebra.mul_single_zero_apply
 
+theorem mul_single_apply_of_not_exists_add [Add G] (r : k) {g g' : G} (x : AddMonoidAlgebra k G)
+    (h : ¬∃ d, g' = d + g) : (x * Finsupp.single g r : AddMonoidAlgebra k G) g' = 0 :=
+  @MonoidAlgebra.mul_single_apply_of_not_exists_mul k (Multiplicative G) _ _ _ _ _ _ h
+#align add_monoid_algebra.mul_single_apply_of_not_exists_add AddMonoidAlgebra.mul_single_apply_of_not_exists_add
+
 /- warning: add_monoid_algebra.single_mul_apply_aux -> AddMonoidAlgebra.single_mul_apply_aux is a dubious translation:
 lean 3 declaration is
   forall {k : Type.{u1}} {G : Type.{u2}} [_inst_1 : Semiring.{u1} k] [_inst_2 : Add.{u2} G] (f : AddMonoidAlgebra.{u1, u2} k G _inst_1) (r : k) (x : G) (y : G) (z : G), (forall (a : G), Iff (Eq.{succ u2} G (HAdd.hAdd.{u2, u2, u2} G G G (instHAdd.{u2} G _inst_2) x a) y) (Eq.{succ u2} G a z)) -> (Eq.{succ u1} k (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (AddMonoidAlgebra.{u1, u2} k G _inst_1) (fun (_x : AddMonoidAlgebra.{u1, u2} k G _inst_1) => G -> k) (AddMonoidAlgebra.coeFun.{u1, u2} k G _inst_1) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (AddMonoidAlgebra.{u1, u2} k G _inst_1) (AddMonoidAlgebra.{u1, u2} k G _inst_1) (AddMonoidAlgebra.{u1, u2} k G _inst_1) (instHMul.{max u2 u1} (AddMonoidAlgebra.{u1, u2} k G _inst_1) (AddMonoidAlgebra.hasMul.{u1, u2} k G _inst_1 _inst_2)) (Finsupp.single.{u2, u1} G k (MulZeroClass.toHasZero.{u1} k (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1)))) x r) f) y) (HMul.hMul.{u1, u1, u1} k k k (instHMul.{u1} k (Distrib.toHasMul.{u1} k (NonUnitalNonAssocSemiring.toDistrib.{u1} k (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} k (Semiring.toNonAssocSemiring.{u1} k _inst_1))))) r (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (AddMonoidAlgebra.{u1, u2} k G _inst_1) (fun (_x : AddMonoidAlgebra.{u1, u2} k G _inst_1) => G -> k) (AddMonoidAlgebra.coeFun.{u1, u2} k G _inst_1) f z)))
@@ -1922,6 +1953,11 @@ theorem single_zero_mul_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k
     (single 0 r * f : AddMonoidAlgebra k G) x = r * f x :=
   f.single_mul_apply_aux r _ _ _ fun a => by rw [zero_add]
 #align add_monoid_algebra.single_zero_mul_apply AddMonoidAlgebra.single_zero_mul_apply
+
+theorem single_mul_apply_of_not_exists_add [Add G] (r : k) {g g' : G} (x : AddMonoidAlgebra k G)
+    (h : ¬∃ d, g' = g + d) : (Finsupp.single g r * x : AddMonoidAlgebra k G) g' = 0 :=
+  @MonoidAlgebra.single_mul_apply_of_not_exists_mul k (Multiplicative G) _ _ _ _ _ _ h
+#align add_monoid_algebra.single_mul_apply_of_not_exists_add AddMonoidAlgebra.single_mul_apply_of_not_exists_add
 
 /- warning: add_monoid_algebra.mul_single_apply -> AddMonoidAlgebra.mul_single_apply is a dubious translation:
 lean 3 declaration is
