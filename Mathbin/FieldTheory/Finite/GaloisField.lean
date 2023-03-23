@@ -174,7 +174,7 @@ instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Alg
   cases nonempty_fintype K'
   obtain ⟨p, hp⟩ := CharP.exists K
   haveI : CharP K p := hp
-  haveI : CharP K' p := charP_of_injective_algebra_map' K K' p
+  haveI : CharP K' p := charP_of_injective_algebraMap' K K' p
   exact
     IsGalois.of_separable_splitting_field
       (galois_poly_separable p (Fintype.card K')
