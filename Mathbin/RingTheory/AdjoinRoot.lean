@@ -874,8 +874,8 @@ theorem quotientEquivQuotientMinpolyMap_apply_mk (pb : PowerBasis R S) (I : Idea
       Ideal.Quotient.mk _ (g.map I.Quotient.mk) :=
   by
   rw [PowerBasis.quotientEquivQuotientMinpolyMap, AlgEquiv.trans_apply, AlgEquiv.ofRingEquiv_apply,
-    quotient_equiv_mk, AlgEquiv.coe_ring_equiv', AdjoinRoot.equiv'_symm_apply,
-    PowerBasis.lift_aeval, AdjoinRoot.aeval_eq, AdjoinRoot.quotEquivQuotMap_apply_mk]
+    quotient_equiv_mk, AlgEquiv.coe_ringEquiv', AdjoinRoot.equiv'_symm_apply, PowerBasis.lift_aeval,
+    AdjoinRoot.aeval_eq, AdjoinRoot.quotEquivQuotMap_apply_mk]
 #align power_basis.quotient_equiv_quotient_minpoly_map_apply_mk PowerBasis.quotientEquivQuotientMinpolyMap_apply_mk
 
 @[simp]

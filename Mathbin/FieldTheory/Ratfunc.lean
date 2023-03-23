@@ -1033,7 +1033,7 @@ theorem toFractionRingRingEquiv_symm_eq :
     (toFractionRingRingEquiv K).symm = (IsLocalization.algEquiv K[X]⁰ _ _).toRingEquiv :=
   by
   ext x
-  simp [to_fraction_ring_ring_equiv, of_fraction_ring_eq, AlgEquiv.coe_ring_equiv']
+  simp [to_fraction_ring_ring_equiv, of_fraction_ring_eq, AlgEquiv.coe_ringEquiv']
 #align ratfunc.to_fraction_ring_ring_equiv_symm_eq Ratfunc.toFractionRingRingEquiv_symm_eq
 
 end IsFractionRing
