@@ -50,7 +50,7 @@ theorem scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M}
 variable [IsDomain A]
 
 theorem num_isRoot_scaleRoots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : A[X]} {x : K}
-    (hr : aeval x p = 0) : IsRoot (scaleRoots p (denom A x)) (Num A x) :=
+    (hr : aeval x p = 0) : IsRoot (scaleRoots p (den A x)) (Num A x) :=
   by
   apply is_root_of_eval₂_map_eq_zero (IsFractionRing.injective A K)
   refine' scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero _
@@ -96,8 +96,8 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
 /-- Rational root theorem part 2:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the denominator of `r` divides the leading coefficient -/
-theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
-    (denom A r : A) ∣ p.leadingCoeff :=
+theorem den_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
+    (den A r : A) ∣ p.leadingCoeff :=
   by
   suffices (denom A r : A) ∣ p.leading_coeff * Num A r ^ p.nat_degree
     by
@@ -120,14 +120,14 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
   rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm),
     MulZeroClass.zero_mul]
   exact dvd_zero _
-#align denom_dvd_of_is_root denom_dvd_of_is_root
+#align denom_dvd_of_is_root den_dvd_of_is_root
 
 /-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
 theorem isInteger_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) :
     IsInteger A r :=
-  isInteger_of_isUnit_denom (isUnit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
+  isInteger_of_isUnit_den (isUnit_of_dvd_one _ (hp ▸ den_dvd_of_is_root hr))
 #align is_integer_of_is_root_of_monic isInteger_of_is_root_of_monic
 
 namespace UniqueFactorizationMonoid

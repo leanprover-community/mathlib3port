@@ -160,12 +160,12 @@ theorem eq_of_algebraMap_eq {K S T : Type _} [Field K] [CommRing S] [CommRing T]
 theorem add_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)
     (a : A) : minpoly A (x + algebraMap A B a) = (minpoly A x).comp (X - C a) :=
   by
-  refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_x_sub_c _) _ fun q qmo hq => _).symm
+  refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_X_sub_C _) _ fun q qmo hq => _).symm
   · simp [aeval_comp]
   · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by simpa [aeval_comp] using hq
     have H := minpoly.min A x (qmo.comp_X_add_C _) this
     rw [degree_eq_nat_degree qmo.ne_zero,
-      degree_eq_nat_degree ((minpoly.monic hx).comp_x_sub_c _).NeZero, WithBot.coe_le_coe,
+      degree_eq_nat_degree ((minpoly.monic hx).comp_X_sub_C _).NeZero, WithBot.coe_le_coe,
       nat_degree_comp, nat_degree_X_sub_C, mul_one]
     rwa [degree_eq_nat_degree (minpoly.ne_zero hx),
       degree_eq_nat_degree (qmo.comp_X_add_C _).NeZero, WithBot.coe_le_coe, nat_degree_comp,
@@ -273,7 +273,7 @@ theorem root {x : B} (hx : IsIntegral A x) {y : A} (h : IsRoot (minpoly A x) y) 
   have key : minpoly A x = X - C y :=
     eq_of_monic_of_associated (monic hx) (monic_X_sub_C y)
       (associated_of_dvd_dvd
-        ((irreducible_x_sub_c y).dvd_symm (irreducible hx) (dvd_iff_isRoot.2 h))
+        ((irreducible_X_sub_C y).dvd_symm (irreducible hx) (dvd_iff_isRoot.2 h))
         (dvd_iff_isRoot.2 h))
   have := aeval A x
   rwa [key, AlgHom.map_sub, aeval_X, aeval_C, sub_eq_zero, eq_comm] at this
