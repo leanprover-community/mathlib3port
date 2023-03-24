@@ -415,7 +415,7 @@ open MulOpposite
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {s : Set.{u1} α}, Eq.{succ u1} (Set.{u1} (MulOpposite.{u1} α)) (Set.image.{u1, u1} α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1)) s)) (Inv.inv.{u1} (Set.{u1} (MulOpposite.{u1} α)) (Set.inv.{u1} (MulOpposite.{u1} α) (MulOpposite.hasInv.{u1} α (InvolutiveInv.toHasInv.{u1} α _inst_1))) (Set.image.{u1, u1} α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {s : Set.{u1} α}, Eq.{succ u1} (Set.{u1} (MulOpposite.{u1} α)) (Set.image.{u1, u1} α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) s)) (Inv.inv.{u1} (Set.{u1} (MulOpposite.{u1} α)) (Set.inv.{u1} (MulOpposite.{u1} α) (MulOpposite.instInvMulOpposite.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1))) (Set.image.{u1, u1} α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) s))
+  forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {s : Set.{u1} α}, Eq.{succ u1} (Set.{u1} (MulOpposite.{u1} α)) (Set.image.{u1, u1} α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) s)) (Inv.inv.{u1} (Set.{u1} (MulOpposite.{u1} α)) (Set.inv.{u1} (MulOpposite.{u1} α) (MulOpposite.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1))) (Set.image.{u1, u1} α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) s))
 Case conversion may be inaccurate. Consider using '#align set.image_op_inv Set.image_op_invₓ'. -/
 @[to_additive]
 theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by

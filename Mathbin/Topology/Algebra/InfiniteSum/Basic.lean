@@ -2273,7 +2273,7 @@ variable [AddCommMonoid α] [TopologicalSpace α] {f : β → α} {a : α}
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> α} {a : α}, (HasSum.{u1, u2} α β _inst_1 _inst_2 f a) -> (HasSum.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) (fun (a : β) => MulOpposite.op.{u1} α (f a)) (MulOpposite.op.{u1} α a))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α} {a : α}, (HasSum.{u2, u1} α β _inst_1 _inst_2 f a) -> (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (fun (a : β) => MulOpposite.op.{u2} α (f a)) (MulOpposite.op.{u2} α a))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α} {a : α}, (HasSum.{u2, u1} α β _inst_1 _inst_2 f a) -> (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (fun (a : β) => MulOpposite.op.{u2} α (f a)) (MulOpposite.op.{u2} α a))
 Case conversion may be inaccurate. Consider using '#align has_sum.op HasSum.opₓ'. -/
 theorem HasSum.op (hf : HasSum f a) : HasSum (fun a => op (f a)) (op a) :=
   (hf.map (@opAddEquiv α _) continuous_op : _)
@@ -2283,7 +2283,7 @@ theorem HasSum.op (hf : HasSum f a) : HasSum (fun a => op (f a)) (op a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> α}, (Summable.{u1, u2} α β _inst_1 _inst_2 f) -> (Summable.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) (Function.comp.{succ u2, succ u1, succ u1} β α (MulOpposite.{u1} α) (MulOpposite.op.{u1} α) f))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α}, (Summable.{u2, u1} α β _inst_1 _inst_2 f) -> (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (Function.comp.{succ u1, succ u2, succ u2} β α (MulOpposite.{u2} α) (MulOpposite.op.{u2} α) f))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α}, (Summable.{u2, u1} α β _inst_1 _inst_2 f) -> (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (Function.comp.{succ u1, succ u2, succ u2} β α (MulOpposite.{u2} α) (MulOpposite.op.{u2} α) f))
 Case conversion may be inaccurate. Consider using '#align summable.op Summable.opₓ'. -/
 theorem Summable.op (hf : Summable f) : Summable (op ∘ f) :=
   hf.HasSum.op.Summable
@@ -2293,7 +2293,7 @@ theorem Summable.op (hf : Summable f) : Summable (op ∘ f) :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> (MulOpposite.{u1} α)} {a : MulOpposite.{u1} α}, (HasSum.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) f a) -> (HasSum.{u1, u2} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u1} α (f a)) (MulOpposite.unop.{u1} α a))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)} {a : MulOpposite.{u2} α}, (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f a) -> (HasSum.{u2, u1} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u2} α (f a)) (MulOpposite.unop.{u2} α a))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)} {a : MulOpposite.{u2} α}, (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f a) -> (HasSum.{u2, u1} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u2} α (f a)) (MulOpposite.unop.{u2} α a))
 Case conversion may be inaccurate. Consider using '#align has_sum.unop HasSum.unopₓ'. -/
 theorem HasSum.unop {f : β → αᵐᵒᵖ} {a : αᵐᵒᵖ} (hf : HasSum f a) :
     HasSum (fun a => unop (f a)) (unop a) :=
@@ -2304,7 +2304,7 @@ theorem HasSum.unop {f : β → αᵐᵒᵖ} {a : αᵐᵒᵖ} (hf : HasSum f a)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> (MulOpposite.{u1} α)}, (Summable.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) f) -> (Summable.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u2, succ u1, succ u1} β (MulOpposite.{u1} α) α (MulOpposite.unop.{u1} α) f))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)}, (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f) -> (Summable.{u2, u1} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u2, succ u2} β (MulOpposite.{u2} α) α (MulOpposite.unop.{u2} α) f))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)}, (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f) -> (Summable.{u2, u1} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u2, succ u2} β (MulOpposite.{u2} α) α (MulOpposite.unop.{u2} α) f))
 Case conversion may be inaccurate. Consider using '#align summable.unop Summable.unopₓ'. -/
 theorem Summable.unop {f : β → αᵐᵒᵖ} (hf : Summable f) : Summable (unop ∘ f) :=
   hf.HasSum.unop.Summable
@@ -2314,7 +2314,7 @@ theorem Summable.unop {f : β → αᵐᵒᵖ} (hf : Summable f) : Summable (uno
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> α} {a : α}, Iff (HasSum.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) (fun (a : β) => MulOpposite.op.{u1} α (f a)) (MulOpposite.op.{u1} α a)) (HasSum.{u1, u2} α β _inst_1 _inst_2 f a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α} {a : α}, Iff (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (fun (a : β) => MulOpposite.op.{u2} α (f a)) (MulOpposite.op.{u2} α a)) (HasSum.{u2, u1} α β _inst_1 _inst_2 f a)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α} {a : α}, Iff (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (fun (a : β) => MulOpposite.op.{u2} α (f a)) (MulOpposite.op.{u2} α a)) (HasSum.{u2, u1} α β _inst_1 _inst_2 f a)
 Case conversion may be inaccurate. Consider using '#align has_sum_op hasSum_opₓ'. -/
 @[simp]
 theorem hasSum_op : HasSum (fun a => op (f a)) (op a) ↔ HasSum f a :=
@@ -2325,7 +2325,7 @@ theorem hasSum_op : HasSum (fun a => op (f a)) (op a) ↔ HasSum f a :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> (MulOpposite.{u1} α)} {a : MulOpposite.{u1} α}, Iff (HasSum.{u1, u2} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u1} α (f a)) (MulOpposite.unop.{u1} α a)) (HasSum.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) f a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)} {a : MulOpposite.{u2} α}, Iff (HasSum.{u2, u1} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u2} α (f a)) (MulOpposite.unop.{u2} α a)) (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f a)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)} {a : MulOpposite.{u2} α}, Iff (HasSum.{u2, u1} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u2} α (f a)) (MulOpposite.unop.{u2} α a)) (HasSum.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f a)
 Case conversion may be inaccurate. Consider using '#align has_sum_unop hasSum_unopₓ'. -/
 @[simp]
 theorem hasSum_unop {f : β → αᵐᵒᵖ} {a : αᵐᵒᵖ} :
@@ -2337,7 +2337,7 @@ theorem hasSum_unop {f : β → αᵐᵒᵖ} {a : αᵐᵒᵖ} :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> α}, Iff (Summable.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) (fun (a : β) => MulOpposite.op.{u1} α (f a))) (Summable.{u1, u2} α β _inst_1 _inst_2 f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α}, Iff (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (fun (a : β) => MulOpposite.op.{u2} α (f a))) (Summable.{u2, u1} α β _inst_1 _inst_2 f)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α}, Iff (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) (fun (a : β) => MulOpposite.op.{u2} α (f a))) (Summable.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align summable_op summable_opₓ'. -/
 @[simp]
 theorem summable_op : (Summable fun a => op (f a)) ↔ Summable f :=
@@ -2348,7 +2348,7 @@ theorem summable_op : (Summable fun a => op (f a)) ↔ Summable f :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> (MulOpposite.{u1} α)}, Iff (Summable.{u1, u2} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u1} α (f a))) (Summable.{u1, u2} (MulOpposite.{u1} α) β (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)}, Iff (Summable.{u2, u1} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u2} α (f a))) (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> (MulOpposite.{u2} α)}, Iff (Summable.{u2, u1} α β _inst_1 _inst_2 (fun (a : β) => MulOpposite.unop.{u2} α (f a))) (Summable.{u2, u1} (MulOpposite.{u2} α) β (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) f)
 Case conversion may be inaccurate. Consider using '#align summable_unop summable_unopₓ'. -/
 @[simp]
 theorem summable_unop {f : β → αᵐᵒᵖ} : (Summable fun a => unop (f a)) ↔ Summable f :=
@@ -2361,7 +2361,7 @@ variable [T2Space α]
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] {f : β -> α} [_inst_3 : T2Space.{u1} α _inst_2], Eq.{succ u1} (MulOpposite.{u1} α) (tsum.{u1, u2} (MulOpposite.{u1} α) (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) β (fun (x : β) => MulOpposite.op.{u1} α (f x))) (MulOpposite.op.{u1} α (tsum.{u1, u2} α _inst_1 _inst_2 β (fun (x : β) => f x)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α} [_inst_3 : T2Space.{u2} α _inst_2], Eq.{succ u2} (MulOpposite.{u2} α) (tsum.{u2, u1} (MulOpposite.{u2} α) (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) β (fun (x : β) => MulOpposite.op.{u2} α (f x))) (MulOpposite.op.{u2} α (tsum.{u2, u1} α _inst_1 _inst_2 β (fun (x : β) => f x)))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] {f : β -> α} [_inst_3 : T2Space.{u2} α _inst_2], Eq.{succ u2} (MulOpposite.{u2} α) (tsum.{u2, u1} (MulOpposite.{u2} α) (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) β (fun (x : β) => MulOpposite.op.{u2} α (f x))) (MulOpposite.op.{u2} α (tsum.{u2, u1} α _inst_1 _inst_2 β (fun (x : β) => f x)))
 Case conversion may be inaccurate. Consider using '#align tsum_op tsum_opₓ'. -/
 theorem tsum_op : (∑' x, MulOpposite.op (f x)) = MulOpposite.op (∑' x, f x) :=
   by
@@ -2375,7 +2375,7 @@ theorem tsum_op : (∑' x, MulOpposite.op (f x)) = MulOpposite.op (∑' x, f x) 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_2] {f : β -> (MulOpposite.{u1} α)}, Eq.{succ u1} α (tsum.{u1, u2} α _inst_1 _inst_2 β (fun (x : β) => MulOpposite.unop.{u1} α (f x))) (MulOpposite.unop.{u1} α (tsum.{u1, u2} (MulOpposite.{u1} α) (MulOpposite.addCommMonoid.{u1} α _inst_1) (MulOpposite.topologicalSpace.{u1} α _inst_2) β (fun (x : β) => f x)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] [_inst_3 : T2Space.{u2} α _inst_2] {f : β -> (MulOpposite.{u2} α)}, Eq.{succ u2} α (tsum.{u2, u1} α _inst_1 _inst_2 β (fun (x : β) => MulOpposite.unop.{u2} α (f x))) (MulOpposite.unop.{u2} α (tsum.{u2, u1} (MulOpposite.{u2} α) (MulOpposite.instAddCommMonoidMulOpposite.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) β (fun (x : β) => f x)))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] [_inst_3 : T2Space.{u2} α _inst_2] {f : β -> (MulOpposite.{u2} α)}, Eq.{succ u2} α (tsum.{u2, u1} α _inst_1 _inst_2 β (fun (x : β) => MulOpposite.unop.{u2} α (f x))) (MulOpposite.unop.{u2} α (tsum.{u2, u1} (MulOpposite.{u2} α) (MulOpposite.addCommMonoid.{u2} α _inst_1) (MulOpposite.instTopologicalSpaceMulOpposite.{u2} α _inst_2) β (fun (x : β) => f x)))
 Case conversion may be inaccurate. Consider using '#align tsum_unop tsum_unopₓ'. -/
 theorem tsum_unop {f : β → αᵐᵒᵖ} : (∑' x, MulOpposite.unop (f x)) = MulOpposite.unop (∑' x, f x) :=
   MulOpposite.op_injective tsum_op.symm

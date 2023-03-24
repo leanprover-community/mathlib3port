@@ -505,12 +505,7 @@ instance (priority := 910) Semiring.toModule [Semiring R] : Module R R
 #align semiring.to_module Semiring.toModule
 -/
 
-/- warning: semiring.to_opposite_module -> Semiring.toOppositeModule is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Module.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.semiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))
-but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Module.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.instSemiringMulOpposite.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))
-Case conversion may be inaccurate. Consider using '#align semiring.to_opposite_module Semiring.toOppositeModuleₓ'. -/
+#print Semiring.toOppositeModule /-
 -- see Note [lower instance priority]
 /-- Like `semiring.to_module`, but multiplies on the right. -/
 instance (priority := 910) Semiring.toOppositeModule [Semiring R] : Module Rᵐᵒᵖ R :=
@@ -520,6 +515,7 @@ instance (priority := 910) Semiring.toOppositeModule [Semiring R] : Module Rᵐ�
     smul_add := fun r x y => add_mul _ _ _
     add_smul := fun r x y => mul_add _ _ _ }
 #align semiring.to_opposite_module Semiring.toOppositeModule
+-/
 
 #print RingHom.toModule /-
 /-- A ring homomorphism `f : R →+* M` defines a module structure by `r • x = f r * x`. -/

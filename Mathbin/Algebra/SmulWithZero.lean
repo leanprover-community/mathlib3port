@@ -75,7 +75,7 @@ instance MulZeroClass.toSMulWithZero [MulZeroClass R] : SMulWithZero R R
 lean 3 declaration is
   forall (R : Type.{u1}) [_inst_1 : MulZeroClass.{u1} R], SMulWithZero.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.hasZero.{u1} R (MulZeroClass.toHasZero.{u1} R _inst_1)) (MulZeroClass.toHasZero.{u1} R _inst_1)
 but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : MulZeroClass.{u1} R], SMulWithZero.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.instZeroMulOpposite.{u1} R (MulZeroClass.toZero.{u1} R _inst_1)) (MulZeroClass.toZero.{u1} R _inst_1)
+  forall (R : Type.{u1}) [_inst_1 : MulZeroClass.{u1} R], SMulWithZero.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.zero.{u1} R (MulZeroClass.toZero.{u1} R _inst_1)) (MulZeroClass.toZero.{u1} R _inst_1)
 Case conversion may be inaccurate. Consider using '#align mul_zero_class.to_opposite_smul_with_zero MulZeroClass.toOppositeSMulWithZeroₓ'. -/
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
 instance MulZeroClass.toOppositeSMulWithZero [MulZeroClass R] : SMulWithZero Rᵐᵒᵖ R
@@ -236,7 +236,7 @@ instance MonoidWithZero.toMulActionWithZero : MulActionWithZero R R :=
 lean 3 declaration is
   forall (R : Type.{u1}) [_inst_1 : MonoidWithZero.{u1} R], MulActionWithZero.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.monoidWithZero.{u1} R _inst_1) (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1)))
 but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : MonoidWithZero.{u1} R], MulActionWithZero.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.instMonoidWithZeroMulOpposite.{u1} R _inst_1) (MonoidWithZero.toZero.{u1} R _inst_1)
+  forall (R : Type.{u1}) [_inst_1 : MonoidWithZero.{u1} R], MulActionWithZero.{u1, u1} (MulOpposite.{u1} R) R (MulOpposite.monoidWithZero.{u1} R _inst_1) (MonoidWithZero.toZero.{u1} R _inst_1)
 Case conversion may be inaccurate. Consider using '#align monoid_with_zero.to_opposite_mul_action_with_zero MonoidWithZero.toOppositeMulActionWithZeroₓ'. -/
 /-- Like `monoid_with_zero.to_mul_action_with_zero`, but multiplies on the right. See also
 `semiring.to_opposite_module` -/

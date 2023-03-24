@@ -1062,15 +1062,11 @@ instance ULift.charP [AddMonoidWithOne R] (p : ℕ) [CharP R p] : CharP (ULift.{
     where cast_eq_zero_iff n := Iff.trans (ULift.ext_iff _ _) <| CharP.cast_eq_zero_iff R p n
 #align ulift.char_p ULift.charP
 
-/- warning: mul_opposite.char_p -> MulOpposite.charP is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : AddMonoidWithOne.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R _inst_1 p], CharP.{u1} (MulOpposite.{u1} R) (MulOpposite.addMonoidWithOne.{u1} R _inst_1) p
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : AddMonoidWithOne.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R _inst_1 p], CharP.{u1} (MulOpposite.{u1} R) (MulOpposite.instAddMonoidWithOneMulOpposite.{u1} R _inst_1) p
-Case conversion may be inaccurate. Consider using '#align mul_opposite.char_p MulOpposite.charPₓ'. -/
+#print MulOpposite.charP /-
 instance MulOpposite.charP [AddMonoidWithOne R] (p : ℕ) [CharP R p] : CharP Rᵐᵒᵖ p
     where cast_eq_zero_iff n := MulOpposite.unop_inj.symm.trans <| CharP.cast_eq_zero_iff R p n
 #align mul_opposite.char_p MulOpposite.charP
+-/
 
 section
 

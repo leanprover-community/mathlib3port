@@ -1912,51 +1912,35 @@ end Units
 
 namespace MulOpposite
 
-/- warning: mul_opposite.op_pow -> MulOpposite.op_pow is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M) (n : Nat), Eq.{succ u1} (MulOpposite.{u1} M) (MulOpposite.op.{u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n)) (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Nat (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Nat (Monoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.op.{u1} M x) n)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M) (n : Nat), Eq.{succ u1} (MulOpposite.{u1} M) (MulOpposite.op.{u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n)) (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Nat (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Nat (Monoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.op.{u1} M x) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_pow MulOpposite.op_powₓ'. -/
+#print MulOpposite.op_pow /-
 /-- Moving to the opposite monoid commutes with taking powers. -/
 @[simp]
 theorem op_pow [Monoid M] (x : M) (n : ℕ) : op (x ^ n) = op x ^ n :=
   rfl
 #align mul_opposite.op_pow MulOpposite.op_pow
+-/
 
-/- warning: mul_opposite.unop_pow -> MulOpposite.unop_pow is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : MulOpposite.{u1} M) (n : Nat), Eq.{succ u1} M (MulOpposite.unop.{u1} M (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Nat (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Nat (Monoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) x n)) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) (MulOpposite.unop.{u1} M x) n)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : MulOpposite.{u1} M) (n : Nat), Eq.{succ u1} M (MulOpposite.unop.{u1} M (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Nat (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Nat (Monoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) x n)) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) (MulOpposite.unop.{u1} M x) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_pow MulOpposite.unop_powₓ'. -/
+#print MulOpposite.unop_pow /-
 @[simp]
 theorem unop_pow [Monoid M] (x : Mᵐᵒᵖ) (n : ℕ) : unop (x ^ n) = unop x ^ n :=
   rfl
 #align mul_opposite.unop_pow MulOpposite.unop_pow
+-/
 
-/- warning: mul_opposite.op_zpow -> MulOpposite.op_zpow is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} M] (x : M) (z : Int), Eq.{succ u1} (MulOpposite.{u1} M) (MulOpposite.op.{u1} M (HPow.hPow.{u1, 0, u1} M Int M (instHPow.{u1, 0} M Int (DivInvMonoid.Pow.{u1} M _inst_1)) x z)) (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Int (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Int (DivInvMonoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.divInvMonoid.{u1} M _inst_1))) (MulOpposite.op.{u1} M x) z)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} M] (x : M) (z : Int), Eq.{succ u1} (MulOpposite.{u1} M) (MulOpposite.op.{u1} M (HPow.hPow.{u1, 0, u1} M Int M (instHPow.{u1, 0} M Int (DivInvMonoid.Pow.{u1} M _inst_1)) x z)) (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Int (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Int (DivInvMonoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.instDivInvMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.op.{u1} M x) z)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_zpow MulOpposite.op_zpowₓ'. -/
+#print MulOpposite.op_zpow /-
 /-- Moving to the opposite group or group_with_zero commutes with taking powers. -/
 @[simp]
 theorem op_zpow [DivInvMonoid M] (x : M) (z : ℤ) : op (x ^ z) = op x ^ z :=
   rfl
 #align mul_opposite.op_zpow MulOpposite.op_zpow
+-/
 
-/- warning: mul_opposite.unop_zpow -> MulOpposite.unop_zpow is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} M] (x : MulOpposite.{u1} M) (z : Int), Eq.{succ u1} M (MulOpposite.unop.{u1} M (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Int (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Int (DivInvMonoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.divInvMonoid.{u1} M _inst_1))) x z)) (HPow.hPow.{u1, 0, u1} M Int M (instHPow.{u1, 0} M Int (DivInvMonoid.Pow.{u1} M _inst_1)) (MulOpposite.unop.{u1} M x) z)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} M] (x : MulOpposite.{u1} M) (z : Int), Eq.{succ u1} M (MulOpposite.unop.{u1} M (HPow.hPow.{u1, 0, u1} (MulOpposite.{u1} M) Int (MulOpposite.{u1} M) (instHPow.{u1, 0} (MulOpposite.{u1} M) Int (DivInvMonoid.Pow.{u1} (MulOpposite.{u1} M) (MulOpposite.instDivInvMonoidMulOpposite.{u1} M _inst_1))) x z)) (HPow.hPow.{u1, 0, u1} M Int M (instHPow.{u1, 0} M Int (DivInvMonoid.Pow.{u1} M _inst_1)) (MulOpposite.unop.{u1} M x) z)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_zpow MulOpposite.unop_zpowₓ'. -/
+#print MulOpposite.unop_zpow /-
 @[simp]
 theorem unop_zpow [DivInvMonoid M] (x : Mᵐᵒᵖ) (z : ℤ) : unop (x ^ z) = unop x ^ z :=
   rfl
 #align mul_opposite.unop_zpow MulOpposite.unop_zpow
+-/
 
 end MulOpposite
 

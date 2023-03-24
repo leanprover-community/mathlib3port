@@ -178,7 +178,7 @@ theorem star_mul' [CommSemigroup R] [StarSemigroup R] (x y : R) : star (x * y) =
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1], MulEquiv.{u1, u1} R (MulOpposite.{u1} R) (Semigroup.toHasMul.{u1} R _inst_1) (MulOpposite.hasMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1], MulEquiv.{u1, u1} R (MulOpposite.{u1} R) (Semigroup.toMul.{u1} R _inst_1) (MulOpposite.instMulMulOpposite.{u1} R (Semigroup.toMul.{u1} R _inst_1))
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1], MulEquiv.{u1, u1} R (MulOpposite.{u1} R) (Semigroup.toMul.{u1} R _inst_1) (MulOpposite.mul.{u1} R (Semigroup.toMul.{u1} R _inst_1))
 Case conversion may be inaccurate. Consider using '#align star_mul_equiv starMulEquivₓ'. -/
 /-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
@@ -408,7 +408,7 @@ instance (priority := 100) StarRing.toStarAddMonoid [NonUnitalSemiring R] [StarR
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1], RingEquiv.{u1, u1} R (MulOpposite.{u1} R) (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (Distrib.toHasAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (MulOpposite.hasMul.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)))) (MulOpposite.hasAdd.{u1} R (Distrib.toHasAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1], RingEquiv.{u1, u1} R (MulOpposite.{u1} R) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (MulOpposite.instMulMulOpposite.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (MulOpposite.instAddMulOpposite.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))
+  forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : StarRing.{u1} R _inst_1], RingEquiv.{u1, u1} R (MulOpposite.{u1} R) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (MulOpposite.mul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (MulOpposite.add.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align star_ring_equiv starRingEquivₓ'. -/
 /-- `star` as an `ring_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]

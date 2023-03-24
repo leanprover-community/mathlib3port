@@ -128,12 +128,7 @@ instance Submonoid.lipschitzMul (s : Submonoid β) : LipschitzMul s
 #align submonoid.has_lipschitz_mul Submonoid.lipschitzMul
 #align add_submonoid.has_lipschitz_add AddSubmonoid.lipschitzAdd
 
-/- warning: mul_opposite.has_lipschitz_mul -> MulOpposite.lipschitzMul is a dubious translation:
-lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3], LipschitzMul.{u1} (MulOpposite.{u1} β) (MulOpposite.pseudoMetricSpace.{u1} β _inst_2) (MulOpposite.monoid.{u1} β _inst_3)
-but is expected to have type
-  forall {β : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} β] [_inst_3 : Monoid.{u1} β] [_inst_4 : LipschitzMul.{u1} β _inst_2 _inst_3], LipschitzMul.{u1} (MulOpposite.{u1} β) (MulOpposite.instPseudoMetricSpaceMulOpposite.{u1} β _inst_2) (MulOpposite.instMonoidMulOpposite.{u1} β _inst_3)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.has_lipschitz_mul MulOpposite.lipschitzMulₓ'. -/
+#print MulOpposite.lipschitzMul /-
 @[to_additive]
 instance MulOpposite.lipschitzMul : LipschitzMul βᵐᵒᵖ
     where lipschitz_mul :=
@@ -142,6 +137,7 @@ instance MulOpposite.lipschitzMul : LipschitzMul βᵐᵒᵖ
         (congr_arg _ <| max_comm _ _)⟩
 #align mul_opposite.has_lipschitz_mul MulOpposite.lipschitzMul
 #align add_opposite.has_lipschitz_add AddOpposite.lipschitzAdd
+-/
 
 #print Real.hasLipschitzAdd /-
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it

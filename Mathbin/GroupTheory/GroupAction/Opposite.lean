@@ -174,12 +174,7 @@ instance CommSemigroup.isCentralScalar [CommSemigroup α] : IsCentralScalar α �
 #align comm_semigroup.is_central_scalar CommSemigroup.isCentralScalar
 #align add_comm_semigroup.is_central_scalar AddCommSemigroup.isCentralVAdd
 
-/- warning: monoid.to_opposite_mul_action -> Monoid.toOppositeMulAction is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Monoid.{u1} α], MulAction.{u1, u1} (MulOpposite.{u1} α) α (MulOpposite.monoid.{u1} α _inst_1)
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Monoid.{u1} α], MulAction.{u1, u1} (MulOpposite.{u1} α) α (MulOpposite.instMonoidMulOpposite.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align monoid.to_opposite_mul_action Monoid.toOppositeMulActionₓ'. -/
+#print Monoid.toOppositeMulAction /-
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
 @[to_additive "Like `add_monoid.to_add_action`, but adds on the right."]
 instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α
@@ -189,6 +184,7 @@ instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α
   mul_smul x y r := (mul_assoc _ _ _).symm
 #align monoid.to_opposite_mul_action Monoid.toOppositeMulAction
 #align add_monoid.to_opposite_add_action AddMonoid.toOppositeAddAction
+-/
 
 #print IsScalarTower.opposite_mid /-
 @[to_additive]
