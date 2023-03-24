@@ -22,22 +22,32 @@ noncomputable section
 
 open Classical
 
+#print Fermat42 /-
 /-- Shorthand for three non-zero integers `a`, `b`, and `c` satisfying `a ^ 4 + b ^ 4 = c ^ 2`.
 We will show that no integers satisfy this equation. Clearly Fermat's Last theorem for n = 4
 follows. -/
 def Fermat42 (a b c : ℤ) : Prop :=
   a ≠ 0 ∧ b ≠ 0 ∧ a ^ 4 + b ^ 4 = c ^ 2
 #align fermat_42 Fermat42
+-/
 
 namespace Fermat42
 
+#print Fermat42.comm /-
 theorem comm {a b c : ℤ} : Fermat42 a b c ↔ Fermat42 b a c :=
   by
   delta Fermat42
   rw [add_comm]
   tauto
 #align fermat_42.comm Fermat42.comm
+-/
 
+/- warning: fermat_42.mul -> Fermat42.mul is a dubious translation:
+lean 3 declaration is
+  forall {a : Int} {b : Int} {c : Int} {k : Int}, (Ne.{1} Int k (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Iff (Fermat42 a b c) (Fermat42 (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) k a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) k b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) k (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) c)))
+but is expected to have type
+  forall {a : Int} {b : Int} {c : Int} {k : Int}, (Ne.{1} Int k (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Iff (Fermat42 a b c) (Fermat42 (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) k a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) k b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) k (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) c)))
+Case conversion may be inaccurate. Consider using '#align fermat_42.mul Fermat42.mulₓ'. -/
 theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a) (k * b) (k ^ 2 * c) :=
   by
   delta Fermat42
@@ -58,6 +68,7 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
     linear_combination f42.2.2
 #align fermat_42.mul Fermat42.mul
 
+#print Fermat42.ne_zero /-
 theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 :=
   by
   apply ne_zero_pow two_ne_zero _; apply ne_of_gt
@@ -65,13 +76,17 @@ theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 :=
   exact
     add_pos (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.1)) (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.2.1))
 #align fermat_42.ne_zero Fermat42.ne_zero
+-/
 
+#print Fermat42.Minimal /-
 /-- We say a solution to `a ^ 4 + b ^ 4 = c ^ 2` is minimal if there is no other solution with
 a smaller `c` (in absolute value). -/
 def Minimal (a b c : ℤ) : Prop :=
   Fermat42 a b c ∧ ∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
 #align fermat_42.minimal Fermat42.Minimal
+-/
 
+#print Fermat42.exists_minimal /-
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/
 theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 :=
   by
@@ -91,7 +106,14 @@ theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minima
   use ⟨a1, ⟨b1, c1⟩⟩
   tauto
 #align fermat_42.exists_minimal Fermat42.exists_minimal
+-/
 
+/- warning: fermat_42.coprime_of_minimal -> Fermat42.coprime_of_minimal is a dubious translation:
+lean 3 declaration is
+  forall {a : Int} {b : Int} {c : Int}, (Fermat42.Minimal a b c) -> (IsCoprime.{0} Int Int.commSemiring a b)
+but is expected to have type
+  forall {a : Int} {b : Int} {c : Int}, (Fermat42.Minimal a b c) -> (IsCoprime.{0} Int Int.instCommSemiringInt a b)
+Case conversion may be inaccurate. Consider using '#align fermat_42.coprime_of_minimal Fermat42.coprime_of_minimalₓ'. -/
 /-- a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` must have `a` and `b` coprime. -/
 theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b :=
   by
@@ -114,11 +136,14 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b :=
   · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero_of_ne_zero (NeZero hf))
 #align fermat_42.coprime_of_minimal Fermat42.coprime_of_minimal
 
+#print Fermat42.minimal_comm /-
 /-- We can swap `a` and `b` in a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2`. -/
 theorem minimal_comm {a b c : ℤ} : Minimal a b c → Minimal b a c := fun ⟨h1, h2⟩ =>
   ⟨Fermat42.comm.mp h1, h2⟩
 #align fermat_42.minimal_comm Fermat42.minimal_comm
+-/
 
+#print Fermat42.neg_of_minimal /-
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has positive `c`. -/
 theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) :=
   by
@@ -129,7 +154,9 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) :=
     exact (neg_sq c).symm
   rwa [Int.natAbs_neg c]
 #align fermat_42.neg_of_minimal Fermat42.neg_of_minimal
+-/
 
+#print Fermat42.exists_odd_minimal /-
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd. -/
 theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 :=
@@ -146,7 +173,9 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     · exact ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩
   exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
 #align fermat_42.exists_odd_minimal Fermat42.exists_odd_minimal
+-/
 
+#print Fermat42.exists_pos_odd_minimal /-
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has
 `a` odd and `c` positive. -/
 theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
@@ -161,15 +190,28 @@ theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
   · use a0, b0, -c0, neg_of_minimal hf, hc
     exact neg_pos.mpr h1
 #align fermat_42.exists_pos_odd_minimal Fermat42.exists_pos_odd_minimal
+-/
 
 end Fermat42
 
+/- warning: int.coprime_of_sq_sum -> Int.coprime_of_sq_sum is a dubious translation:
+lean 3 declaration is
+  forall {r : Int} {s : Int}, (IsCoprime.{0} Int Int.commSemiring s r) -> (IsCoprime.{0} Int Int.commSemiring (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) r (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) s (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) r)
+but is expected to have type
+  forall {r : Int} {s : Int}, (IsCoprime.{0} Int Int.instCommSemiringInt s r) -> (IsCoprime.{0} Int Int.instCommSemiringInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) r (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) s (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) r)
+Case conversion may be inaccurate. Consider using '#align int.coprime_of_sq_sum Int.coprime_of_sq_sumₓ'. -/
 theorem Int.coprime_of_sq_sum {r s : ℤ} (h2 : IsCoprime s r) : IsCoprime (r ^ 2 + s ^ 2) r :=
   by
   rw [sq, sq]
   exact (IsCoprime.mul_left h2 h2).mul_add_left_left r
 #align int.coprime_of_sq_sum Int.coprime_of_sq_sum
 
+/- warning: int.coprime_of_sq_sum' -> Int.coprime_of_sq_sum' is a dubious translation:
+lean 3 declaration is
+  forall {r : Int} {s : Int}, (IsCoprime.{0} Int Int.commSemiring r s) -> (IsCoprime.{0} Int Int.commSemiring (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) r (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) s (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) r s))
+but is expected to have type
+  forall {r : Int} {s : Int}, (IsCoprime.{0} Int Int.instCommSemiringInt r s) -> (IsCoprime.{0} Int Int.instCommSemiringInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) r (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) s (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) r s))
+Case conversion may be inaccurate. Consider using '#align int.coprime_of_sq_sum' Int.coprime_of_sq_sum'ₓ'. -/
 theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 2 + s ^ 2) (r * s) :=
   by
   apply IsCoprime.mul_right (Int.coprime_of_sq_sum (is_coprime_comm.mp h))
@@ -178,6 +220,7 @@ theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 
 
 namespace Fermat42
 
+#print Fermat42.not_minimal /-
 -- If we have a solution to a ^ 4 + b ^ 4 = c ^ 2, we can construct a smaller one. This
 -- implies there can't be a smallest solution.
 theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 < c) : False :=
@@ -316,9 +359,16 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     exact ⟨hj0, hk0, hh.symm⟩
   apply absurd (not_le_of_lt hic) (not_not.mpr hic')
 #align fermat_42.not_minimal Fermat42.not_minimal
+-/
 
 end Fermat42
 
+/- warning: not_fermat_42 -> not_fermat_42 is a dubious translation:
+lean 3 declaration is
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) b (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) c (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) b (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) c (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
+Case conversion may be inaccurate. Consider using '#align not_fermat_42 not_fermat_42ₓ'. -/
 theorem not_fermat_42 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 2 :=
   by
   intro h
@@ -327,6 +377,12 @@ theorem not_fermat_42 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 
   apply Fermat42.not_minimal hf h2 hp
 #align not_fermat_42 not_fermat_42
 
+/- warning: not_fermat_4 -> not_fermat_4 is a dubious translation:
+lean 3 declaration is
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) a (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) b (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) c (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))))
+but is expected to have type
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) b (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) c (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))))
+Case conversion may be inaccurate. Consider using '#align not_fermat_4 not_fermat_4ₓ'. -/
 theorem not_fermat_4 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 4 :=
   by
   intro heq
