@@ -313,12 +313,16 @@ theorem coe_zero : ↑(0 : { P : M // IsLprojection X P }) = (0 : M) :=
 instance : One { P : M // IsLprojection X P } :=
   ⟨⟨1, sub_zero (1 : M) ▸ (0 : { P : M // IsLprojection X P }).Prop.Lcomplement⟩⟩
 
-#print IsLprojection.coe_one /-
+/- warning: is_Lprojection.coe_one -> IsLprojection.coe_one is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} X] {M : Type} [_inst_2 : Ring.{0} M] [_inst_3 : Module.{0, u1} M X (Ring.toSemiring.{0} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} X (NormedAddCommGroup.toAddCommGroup.{u1} X _inst_1))], Eq.{1} M ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) M (HasLiftT.mk.{1, 1} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) M (CoeTCₓ.coe.{1, 1} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) M (coeBase.{1, 1} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) M (coeSubtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P))))) (OfNat.ofNat.{0} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) 1 (OfNat.mk.{0} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) 1 (One.one.{0} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) (IsLprojection.Subtype.hasOne.{u1} X _inst_1 M _inst_2 _inst_3))))) (OfNat.ofNat.{0} M 1 (OfNat.mk.{0} M 1 (One.one.{0} M (AddMonoidWithOne.toOne.{0} M (AddGroupWithOne.toAddMonoidWithOne.{0} M (NonAssocRing.toAddGroupWithOne.{0} M (Ring.toNonAssocRing.{0} M _inst_2)))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} X] {M : Type} [_inst_2 : Ring.{0} M] [_inst_3 : Module.{0, u1} M X (Ring.toSemiring.{0} M _inst_2) (AddCommGroup.toAddCommMonoid.{u1} X (NormedAddCommGroup.toAddCommGroup.{u1} X _inst_1))], Eq.{1} M (Subtype.val.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P) (OfNat.ofNat.{0} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) 1 (One.toOfNat1.{0} (Subtype.{1} M (fun (P : M) => IsLprojection.{u1} X _inst_1 M _inst_2 _inst_3 P)) (IsLprojection.IsLprojection.Subtype.One.{u1} X _inst_1 M _inst_2 _inst_3)))) (OfNat.ofNat.{0} M 1 (One.toOfNat1.{0} M (NonAssocRing.toOne.{0} M (Ring.toNonAssocRing.{0} M _inst_2))))
+Case conversion may be inaccurate. Consider using '#align is_Lprojection.coe_one IsLprojection.coe_oneₓ'. -/
 @[simp]
 theorem coe_one : ↑(1 : { P : M // IsLprojection X P }) = (1 : M) :=
   rfl
 #align is_Lprojection.coe_one IsLprojection.coe_one
--/
 
 instance [FaithfulSMul M X] : BoundedOrder { P : M // IsLprojection X P }
     where

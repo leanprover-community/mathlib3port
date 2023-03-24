@@ -37,13 +37,17 @@ instance pi (ι : Type u) [hi : Nonempty ι] (R : Type v) [Semiring R] (p : ℕ)
 #align char_p.pi CharP.pi
 -/
 
-#print CharP.pi' /-
+/- warning: char_p.pi' -> CharP.pi' is a dubious translation:
+lean 3 declaration is
+  forall (ι : Type.{u1}) [hi : Nonempty.{succ u1} ι] (R : Type.{u2}) [_inst_1 : CommRing.{u2} R] (p : Nat) [_inst_2 : CharP.{u2} R (AddGroupWithOne.toAddMonoidWithOne.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1)))) p], CharP.{max u1 u2} (ι -> R) (Pi.addMonoidWithOne.{u1, u2} ι (fun (ᾰ : ι) => R) (fun (a : ι) => AddGroupWithOne.toAddMonoidWithOne.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))) p
+but is expected to have type
+  forall (ι : Type.{u1}) [hi : Nonempty.{succ u1} ι] (R : Type.{u2}) [_inst_1 : CommRing.{u2} R] (p : Nat) [_inst_2 : CharP.{u2} R (AddGroupWithOne.toAddMonoidWithOne.{u2} R (Ring.toAddGroupWithOne.{u2} R (CommRing.toRing.{u2} R _inst_1))) p], CharP.{max u1 u2} (ι -> R) (Pi.addMonoidWithOne.{u1, u2} ι (fun (ᾰ : ι) => R) (fun (a : ι) => AddGroupWithOne.toAddMonoidWithOne.{u2} R (Ring.toAddGroupWithOne.{u2} R (CommRing.toRing.{u2} R _inst_1)))) p
+Case conversion may be inaccurate. Consider using '#align char_p.pi' CharP.pi'ₓ'. -/
 -- diamonds
 instance pi' (ι : Type u) [hi : Nonempty ι] (R : Type v) [CommRing R] (p : ℕ) [CharP R p] :
     CharP (ι → R) p :=
   CharP.pi ι R p
 #align char_p.pi' CharP.pi'
--/
 
 end CharP
 

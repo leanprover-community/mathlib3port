@@ -229,7 +229,12 @@ noncomputable def divisibleByIntOfSmulTopEqTop
 
 end AddCommGroup
 
-#print divisibleByIntOfCharZero /-
+/- warning: divisible_by_int_of_char_zero -> divisibleByIntOfCharZero is a dubious translation:
+lean 3 declaration is
+  forall {𝕜 : Type.{u1}} [_inst_1 : DivisionRing.{u1} 𝕜] [_inst_2 : CharZero.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (NonAssocRing.toAddGroupWithOne.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1))))], DivisibleBy.{u1, 0} 𝕜 Int (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (NonAssocRing.toAddGroupWithOne.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1))))) (SubNegMonoid.SMulInt.{u1} 𝕜 (AddGroup.toSubNegMonoid.{u1} 𝕜 (AddGroupWithOne.toAddGroup.{u1} 𝕜 (NonAssocRing.toAddGroupWithOne.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1)))))) Int.hasZero
+but is expected to have type
+  forall {𝕜 : Type.{u1}} [_inst_1 : DivisionRing.{u1} 𝕜] [_inst_2 : CharZero.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (Ring.toAddGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1)))], DivisibleBy.{u1, 0} 𝕜 Int (AddMonoidWithOne.toAddMonoid.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (Ring.toAddGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1)))) (SubNegMonoid.SMulInt.{u1} 𝕜 (AddGroup.toSubNegMonoid.{u1} 𝕜 (AddGroupWithOne.toAddGroup.{u1} 𝕜 (Ring.toAddGroupWithOne.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 _inst_1))))) (CommMonoidWithZero.toZero.{0} Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))))
+Case conversion may be inaccurate. Consider using '#align divisible_by_int_of_char_zero divisibleByIntOfCharZeroₓ'. -/
 instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [CharZero 𝕜] :
     DivisibleBy 𝕜 ℤ where
   div q n := q / n
@@ -237,7 +242,6 @@ instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [
   div_cancel n q hn := by
     rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
 #align divisible_by_int_of_char_zero divisibleByIntOfCharZero
--/
 
 namespace Group
 

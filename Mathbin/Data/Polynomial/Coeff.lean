@@ -644,7 +644,12 @@ theorem int_cast_coeff_zero {i : ℤ} {R : Type _} [Ring R] : (i : R[X]).coeff 0
   cases i <;> simp
 #align polynomial.int_cast_coeff_zero Polynomial.int_cast_coeff_zero
 
-#print Polynomial.int_cast_inj /-
+/- warning: polynomial.int_cast_inj -> Polynomial.int_cast_inj is a dubious translation:
+lean 3 declaration is
+  forall {m : Int} {n : Int} {R : Type.{u1}} [_inst_2 : Ring.{u1} R] [_inst_3 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_2)))], Iff (Eq.{succ u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (HasLiftT.mk.{1, succ u1} Int (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (CoeTCₓ.coe.{1, succ u1} Int (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Int.castCoe.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.intCast.{u1} R _inst_2)))) m) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (HasLiftT.mk.{1, succ u1} Int (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (CoeTCₓ.coe.{1, succ u1} Int (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Int.castCoe.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.intCast.{u1} R _inst_2)))) n)) (Eq.{1} Int m n)
+but is expected to have type
+  forall {m : Int} {n : Int} {R : Type.{u1}} [_inst_2 : Ring.{u1} R] [_inst_3 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_2))], Iff (Eq.{succ u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Int.cast.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.intCast.{u1} R _inst_2) m) (Int.cast.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.intCast.{u1} R _inst_2) n)) (Eq.{1} Int m n)
+Case conversion may be inaccurate. Consider using '#align polynomial.int_cast_inj Polynomial.int_cast_injₓ'. -/
 @[simp, norm_cast]
 theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n :=
   by
@@ -655,7 +660,6 @@ theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[
   · rintro rfl
     rfl
 #align polynomial.int_cast_inj Polynomial.int_cast_inj
--/
 
 end cast
 

@@ -36,26 +36,33 @@ namespace Finset
 
 variable {α : Type _} [DecidableEq α] {s t : Finset α} {a b : α}
 
+#print Finset.isDiag_mk'_of_mem_diag /-
 theorem isDiag_mk'_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
   (Sym2.isDiag_iff_proj_eq _).2 (mem_diag.1 h).2
 #align finset.is_diag_mk_of_mem_diag Finset.isDiag_mk'_of_mem_diag
+-/
 
+#print Finset.not_isDiag_mk'_of_mem_offDiag /-
 theorem not_isDiag_mk'_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ :=
   by
   rw [Sym2.isDiag_iff_proj_eq]
   exact (mem_off_diag.1 h).2.2
 #align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk'_of_mem_offDiag
+-/
 
 section Sym2
 
 variable {m : Sym2 α}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.sym2 /-
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
 protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
   (s ×ˢ s).image Quotient.mk'
 #align finset.sym2 Finset.sym2
+-/
 
+#print Finset.mem_sym2_iff /-
 @[simp]
 theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s :=
   by
@@ -66,56 +73,75 @@ theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s :=
   rw [Sym2.ball]
   rwa [mem_product] at h
 #align finset.mem_sym2_iff Finset.mem_sym2_iff
+-/
 
+#print Finset.mk'_mem_sym2_iff /-
 theorem mk'_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
 #align finset.mk_mem_sym2_iff Finset.mk'_mem_sym2_iff
+-/
 
+#print Finset.sym2_empty /-
 @[simp]
 theorem sym2_empty : (∅ : Finset α).Sym2 = ∅ :=
   rfl
 #align finset.sym2_empty Finset.sym2_empty
+-/
 
+#print Finset.sym2_eq_empty /-
 @[simp]
 theorem sym2_eq_empty : s.Sym2 = ∅ ↔ s = ∅ := by
   rw [Finset.sym2, image_eq_empty, product_eq_empty, or_self_iff]
 #align finset.sym2_eq_empty Finset.sym2_eq_empty
+-/
 
+#print Finset.sym2_nonempty /-
 @[simp]
 theorem sym2_nonempty : s.Sym2.Nonempty ↔ s.Nonempty := by
   rw [Finset.sym2, nonempty.image_iff, nonempty_product, and_self_iff]
 #align finset.sym2_nonempty Finset.sym2_nonempty
+-/
 
 alias sym2_nonempty ↔ _ nonempty.sym2
-#align finset.nonempty.sym2 Finset.Nonempty.sym2
+#align finset.nonempty.sym2 Finset.nonempty.sym2
 
 attribute [protected] nonempty.sym2
 
+#print Finset.sym2_univ /-
 @[simp]
 theorem sym2_univ [Fintype α] : (univ : Finset α).Sym2 = univ :=
   rfl
 #align finset.sym2_univ Finset.sym2_univ
+-/
 
+#print Finset.sym2_singleton /-
 @[simp]
 theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
   rw [Finset.sym2, singleton_product_singleton, image_singleton, Sym2.diag]
 #align finset.sym2_singleton Finset.sym2_singleton
+-/
 
+#print Finset.diag_mem_sym2_iff /-
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
   mk'_mem_sym2_iff.trans <| and_self_iff _
 #align finset.diag_mem_sym2_iff Finset.diag_mem_sym2_iff
+-/
 
+#print Finset.sym2_mono /-
 @[simp]
 theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he =>
   mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 #align finset.sym2_mono Finset.sym2_mono
+-/
 
+#print Finset.image_diag_union_image_offDiag /-
 theorem image_diag_union_image_offDiag :
     s.diag.image Quotient.mk' ∪ s.offDiag.image Quotient.mk' = s.Sym2 :=
   by
   rw [← image_union, diag_union_off_diag]
   rfl
 #align finset.image_diag_union_image_off_diag Finset.image_diag_union_image_offDiag
+-/
 
 end Sym2
 
@@ -123,23 +149,39 @@ section Sym
 
 variable {n : ℕ} {m : Sym α n}
 
+#print Finset.sym /-
 /-- Lifts a finset to `sym α n`. `s.sym n` is the finset of all unordered tuples of cardinality `n`
 with elements in `s`. -/
 protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
   | 0 => {∅}
   | n + 1 => s.sup fun a => (Sym n).image <| Sym.cons a
 #align finset.sym Finset.sym
+-/
 
+/- warning: finset.sym_zero -> Finset.sym_zero is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Singleton.singleton.{u1, u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (Finset.hasSingleton.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (EmptyCollection.emptyCollection.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Sym.hasEmptyc.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Singleton.singleton.{u1, u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Finset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (Finset.instSingletonFinset.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (EmptyCollection.emptyCollection.{u1} (Sym.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Sym.instEmptyCollectionSymOfNatNatInstOfNatNat.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align finset.sym_zero Finset.sym_zeroₓ'. -/
 @[simp]
 theorem sym_zero : s.Sym 0 = {∅} :=
   rfl
 #align finset.sym_zero Finset.sym_zero
 
+#print Finset.sym_succ /-
 @[simp]
 theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).image <| Sym.cons a :=
   rfl
 #align finset.sym_succ Finset.sym_succ
+-/
 
+/- warning: finset.mem_sym_iff -> Finset.mem_sym_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Membership.Mem.{u1, u1} (Sym.{u1} α n) (Finset.{u1} (Sym.{u1} α n)) (Finset.hasMem.{u1} (Sym.{u1} α n)) m (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (forall (a : α), (Membership.Mem.{u1, u1} α (Sym.{u1} α n) (Sym.hasMem.{u1} α n) a m) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Membership.mem.{u1, u1} (Sym.{u1} α n) (Finset.{u1} (Sym.{u1} α n)) (Finset.instMembershipFinset.{u1} (Sym.{u1} α n)) m (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (forall (a : α), (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) a m) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s))
+Case conversion may be inaccurate. Consider using '#align finset.mem_sym_iff Finset.mem_sym_iffₓ'. -/
 @[simp]
 theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s :=
   by
@@ -161,33 +203,49 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s :=
         mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
 #align finset.mem_sym_iff Finset.mem_sym_iff
 
+#print Finset.sym_empty /-
 @[simp]
 theorem sym_empty (n : ℕ) : (∅ : Finset α).Sym (n + 1) = ∅ :=
   rfl
 #align finset.sym_empty Finset.sym_empty
+-/
 
+#print Finset.replicate_mem_sym /-
 theorem replicate_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.replicate n a ∈ s.Sym n :=
   mem_sym_iff.2 fun b hb => by rwa [(Sym.mem_replicate.1 hb).2]
 #align finset.replicate_mem_sym Finset.replicate_mem_sym
+-/
 
+#print Finset.Nonempty.sym /-
 protected theorem Nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :=
   let ⟨a, ha⟩ := h
   ⟨_, replicate_mem_sym ha n⟩
 #align finset.nonempty.sym Finset.Nonempty.sym
+-/
 
+#print Finset.sym_singleton /-
 @[simp]
 theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finset α).Sym n = {Sym.replicate n a} :=
   eq_singleton_iff_unique_mem.2
     ⟨replicate_mem_sym (mem_singleton.2 rfl) _, fun s hs =>
       Sym.eq_replicate_iff.2 fun b hb => eq_of_mem_singleton <| mem_sym_iff.1 hs _ hb⟩
 #align finset.sym_singleton Finset.sym_singleton
+-/
 
+#print Finset.eq_empty_of_sym_eq_empty /-
 theorem eq_empty_of_sym_eq_empty (h : s.Sym n = ∅) : s = ∅ :=
   by
   rw [← not_nonempty_iff_eq_empty] at h⊢
   exact fun hs => h (hs.Sym _)
 #align finset.eq_empty_of_sym_eq_empty Finset.eq_empty_of_sym_eq_empty
+-/
 
+/- warning: finset.sym_eq_empty -> Finset.sym_eq_empty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat}, Iff (Eq.{succ u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.hasEmptyc.{u1} (Sym.{u1} α n)))) (And (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{succ u1} (Finset.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Eq.{succ u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.instEmptyCollectionFinset.{u1} (Sym.{u1} α n)))) (And (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{succ u1} (Finset.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align finset.sym_eq_empty Finset.sym_eq_emptyₓ'. -/
 @[simp]
 theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
   by
@@ -198,21 +256,37 @@ theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
     exact sym_empty _
 #align finset.sym_eq_empty Finset.sym_eq_empty
 
+/- warning: finset.sym_nonempty -> Finset.sym_nonempty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat}, Iff (Finset.Nonempty.{u1} (Sym.{u1} α n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (Or (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Finset.Nonempty.{u1} α s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {n : Nat} {m : Sym.{u1} α n}, Iff (Finset.Nonempty.{u1} (Sym.{u1} α n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n)) (Or (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Finset.Nonempty.{u1} α s))
+Case conversion may be inaccurate. Consider using '#align finset.sym_nonempty Finset.sym_nonemptyₓ'. -/
 @[simp]
 theorem sym_nonempty : (s.Sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by
   simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_or, not_ne_iff]
 #align finset.sym_nonempty Finset.sym_nonempty
 
+#print Finset.sym_univ /-
 @[simp]
 theorem sym_univ [Fintype α] (n : ℕ) : (univ : Finset α).Sym n = univ :=
   eq_univ_iff_forall.2 fun s => mem_sym_iff.2 fun a _ => mem_univ _
 #align finset.sym_univ Finset.sym_univ
+-/
 
+#print Finset.sym_mono /-
 @[simp]
 theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
   mem_sym_iff.2 fun a ha => h <| mem_sym_iff.1 hm _ ha
 #align finset.sym_mono Finset.sym_mono
+-/
 
+/- warning: finset.sym_inter -> Finset.sym_inter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α) (n : Nat), Eq.{succ u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) n) (Inter.inter.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.hasInter.{u1} (Sym.{u1} α n) (fun (a : Sym.{u1} α n) (b : Sym.{u1} α n) => Subtype.decidableEq.{u1} (Multiset.{u1} α) (fun (x : Multiset.{u1} α) => Eq.{1} Nat (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u1} α) -> Nat) (AddMonoidHom.hasCoeToFun.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u1} α) x) n) (fun (a : Multiset.{u1} α) (b : Multiset.{u1} α) => Multiset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) a b)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t n))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α) (n : Nat), Eq.{succ u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) n) (Inter.inter.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.instInterFinset.{u1} (Sym.{u1} α n) (fun (a : Sym.{u1} α n) (b : Sym.{u1} α n) => Finset.instDecidableEqSym.{u1} α (fun (x : α) (b : α) => _inst_1 x b) n a b)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t n))
+Case conversion may be inaccurate. Consider using '#align finset.sym_inter Finset.sym_interₓ'. -/
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n :=
   by
@@ -220,23 +294,34 @@ theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.
   simp only [mem_inter, mem_sym_iff, imp_and, forall_and]
 #align finset.sym_inter Finset.sym_inter
 
+/- warning: finset.sym_union -> Finset.sym_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α) (n : Nat), HasSubset.Subset.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.hasSubset.{u1} (Sym.{u1} α n)) (Union.union.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.hasUnion.{u1} (Sym.{u1} α n) (fun (a : Sym.{u1} α n) (b : Sym.{u1} α n) => Subtype.decidableEq.{u1} (Multiset.{u1} α) (fun (x : Multiset.{u1} α) => Eq.{1} Nat (coeFn.{succ u1, succ u1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u1} α) -> Nat) (AddMonoidHom.hasCoeToFun.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.orderedCancelAddCommMonoid.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u1} α) x) n) (fun (a : Multiset.{u1} α) (b : Multiset.{u1} α) => Multiset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) a b)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) n)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α) (n : Nat), HasSubset.Subset.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.instHasSubsetFinset.{u1} (Sym.{u1} α n)) (Union.union.{u1} (Finset.{u1} (Sym.{u1} α n)) (Finset.instUnionFinset.{u1} (Sym.{u1} α n) (fun (a : Sym.{u1} α n) (b : Sym.{u1} α n) => Finset.instDecidableEqSym.{u1} α (fun (x : α) (b : α) => _inst_1 x b) n a b)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s n) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t n)) (Finset.sym.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) n)
+Case conversion may be inaccurate. Consider using '#align finset.sym_union Finset.sym_unionₓ'. -/
 @[simp]
 theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=
   union_subset (sym_mono (subset_union_left s t) n) (sym_mono (subset_union_right s t) n)
 #align finset.sym_union Finset.sym_union
 
+#print Finset.sym_fill_mem /-
 theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ s.Sym (n - i)) :
     m.fill a i ∈ (insert a s).Sym n :=
   mem_sym_iff.2 fun b hb =>
     mem_insert.2 <| (Sym.mem_fill_iff.1 hb).imp And.right <| mem_sym_iff.1 h b
 #align finset.sym_fill_mem Finset.sym_fill_mem
+-/
 
+#print Finset.sym_filterNe_mem /-
 theorem sym_filterNe_mem (a : α) (h : m ∈ s.Sym n) :
     (m.filter_ne a).2 ∈ (s.eraseₓ a).Sym (n - (m.filter_ne a).1) :=
   mem_sym_iff.2 fun b H =>
     mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
 #align finset.sym_filter_ne_mem Finset.sym_filterNe_mem
+-/
 
+#print Finset.symInsertEquiv /-
 /-- If `a` does not belong to the finset `s`, then the `n`th symmetric power of `{a} ∪ s` is
   in 1-1 correspondence with the disjoint union of the `n - i`th symmetric powers of `s`,
   for `0 ≤ i ≤ n`. -/
@@ -255,6 +340,7 @@ def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.S
     refine' Eq.trans _ (Sym.filter_ne_fill a _ _)
     exacts[rfl, h ∘ mem_sym_iff.1 hm a]
 #align finset.sym_insert_equiv Finset.symInsertEquiv
+-/
 
 end Sym
 

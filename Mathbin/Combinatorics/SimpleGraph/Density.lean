@@ -477,20 +477,28 @@ theorem interedges_def (s t : Finset α) :
 #align simple_graph.interedges_def SimpleGraph.interedges_def
 -/
 
-#print SimpleGraph.edgeDensity_def /-
+/- warning: simple_graph.edge_density_def -> SimpleGraph.edgeDensity_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{1} Rat (SimpleGraph.edgeDensity.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Finset.card.{u1} (Prod.{u1, u1} α α) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t))) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Finset.card.{u1} α s)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Finset.card.{u1} α t))))
+but is expected to have type
+  forall {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{1} Rat (SimpleGraph.edgeDensity.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Finset.card.{u1} (Prod.{u1, u1} α α) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t))) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Finset.card.{u1} α s)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Finset.card.{u1} α t))))
+Case conversion may be inaccurate. Consider using '#align simple_graph.edge_density_def SimpleGraph.edgeDensity_defₓ'. -/
 theorem edgeDensity_def (s t : Finset α) :
     G.edgeDensity s t = (G.interedges s t).card / (s.card * t.card) :=
   rfl
 #align simple_graph.edge_density_def SimpleGraph.edgeDensity_def
--/
 
-#print SimpleGraph.card_interedges_div_card /-
+/- warning: simple_graph.card_interedges_div_card -> SimpleGraph.card_interedges_div_card is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Finset.card.{u1} (Prod.{u1, u1} α α) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t))) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Finset.card.{u1} α s)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Finset.card.{u1} α t)))) (SimpleGraph.edgeDensity.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t)
+but is expected to have type
+  forall {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Finset.card.{u1} (Prod.{u1, u1} α α) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t))) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Finset.card.{u1} α s)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Finset.card.{u1} α t)))) (SimpleGraph.edgeDensity.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) s t)
+Case conversion may be inaccurate. Consider using '#align simple_graph.card_interedges_div_card SimpleGraph.card_interedges_div_cardₓ'. -/
 @[simp]
 theorem card_interedges_div_card (s t : Finset α) :
     ((G.interedges s t).card : ℚ) / (s.card * t.card) = G.edgeDensity s t :=
   rfl
 #align simple_graph.card_interedges_div_card SimpleGraph.card_interedges_div_card
--/
 
 #print SimpleGraph.mem_interedges_iff /-
 theorem mem_interedges_iff {x : α × α} : x ∈ G.interedges s t ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ G.Adj x.1 x.2 :=

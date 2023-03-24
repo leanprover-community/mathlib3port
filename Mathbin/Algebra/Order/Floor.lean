@@ -1108,12 +1108,16 @@ theorem floor_intCast (z : ℤ) : ⌊(z : α)⌋ = z :=
   eq_of_forall_le_iff fun a => by rw [le_floor, Int.cast_le]
 #align int.floor_int_cast Int.floor_intCast
 
-#print Int.floor_natCast /-
+/- warning: int.floor_nat_cast -> Int.floor_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (n : Nat), Eq.{1} Int (Int.floor.{u1} α _inst_1 _inst_2 ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (n : Nat), Eq.{1} Int (Int.floor.{u1} α _inst_1 _inst_2 (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) n)) (Nat.cast.{0} Int instNatCastInt n)
+Case conversion may be inaccurate. Consider using '#align int.floor_nat_cast Int.floor_natCastₓ'. -/
 @[simp]
 theorem floor_natCast (n : ℕ) : ⌊(n : α)⌋ = n :=
   eq_of_forall_le_iff fun a => by rw [le_floor, ← cast_coe_nat, cast_le]
 #align int.floor_nat_cast Int.floor_natCast
--/
 
 /- warning: int.floor_zero -> Int.floor_zero is a dubious translation:
 lean 3 declaration is
@@ -1125,11 +1129,15 @@ Case conversion may be inaccurate. Consider using '#align int.floor_zero Int.flo
 theorem floor_zero : ⌊(0 : α)⌋ = 0 := by rw [← cast_zero, floor_int_cast]
 #align int.floor_zero Int.floor_zero
 
-#print Int.floor_one /-
+/- warning: int.floor_one -> Int.floor_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (Int.floor.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (Int.floor.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))
+Case conversion may be inaccurate. Consider using '#align int.floor_one Int.floor_oneₓ'. -/
 @[simp]
 theorem floor_one : ⌊(1 : α)⌋ = 1 := by rw [← cast_one, floor_int_cast]
 #align int.floor_one Int.floor_one
--/
 
 #print Int.floor_mono /-
 @[mono]
@@ -1138,12 +1146,16 @@ theorem floor_mono : Monotone (floor : α → ℤ) :=
 #align int.floor_mono Int.floor_mono
 -/
 
-#print Int.floor_pos /-
+/- warning: int.floor_pos -> Int.floor_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Iff (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (Int.floor.{u1} α _inst_1 _inst_2 a)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (StrictOrderedRing.toOrderedAddCommGroup.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))))) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Iff (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Int.floor.{u1} α _inst_1 _inst_2 a)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))) a)
+Case conversion may be inaccurate. Consider using '#align int.floor_pos Int.floor_posₓ'. -/
 theorem floor_pos : 0 < ⌊a⌋ ↔ 1 ≤ a := by
   convert le_floor
   exact cast_one.symm
 #align int.floor_pos Int.floor_pos
--/
 
 /- warning: int.floor_add_int -> Int.floor_add_int is a dubious translation:
 lean 3 declaration is
@@ -1493,11 +1505,15 @@ theorem fract_pos : 0 < fract a ↔ a ≠ ⌊a⌋ :=
   (fract_nonneg a).lt_iff_ne.trans <| ne_comm.trans sub_ne_zero
 #align int.fract_pos Int.fract_pos
 
-#print Int.fract_lt_one /-
+/- warning: int.fract_lt_one -> Int.fract_lt_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (StrictOrderedRing.toOrderedAddCommGroup.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))) (Int.fract.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Int.fract.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align int.fract_lt_one Int.fract_lt_oneₓ'. -/
 theorem fract_lt_one (a : α) : fract a < 1 :=
   sub_lt_comm.1 <| sub_one_lt_floor _
 #align int.fract_lt_one Int.fract_lt_one
--/
 
 /- warning: int.fract_zero -> Int.fract_zero is a dubious translation:
 lean 3 declaration is
@@ -1944,12 +1960,16 @@ theorem ceil_intCast (z : ℤ) : ⌈(z : α)⌉ = z :=
   eq_of_forall_ge_iff fun a => by rw [ceil_le, Int.cast_le]
 #align int.ceil_int_cast Int.ceil_intCast
 
-#print Int.ceil_natCast /-
+/- warning: int.ceil_nat_cast -> Int.ceil_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (n : Nat), Eq.{1} Int (Int.ceil.{u1} α _inst_1 _inst_2 ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (n : Nat), Eq.{1} Int (Int.ceil.{u1} α _inst_1 _inst_2 (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) n)) (Nat.cast.{0} Int instNatCastInt n)
+Case conversion may be inaccurate. Consider using '#align int.ceil_nat_cast Int.ceil_natCastₓ'. -/
 @[simp]
 theorem ceil_natCast (n : ℕ) : ⌈(n : α)⌉ = n :=
   eq_of_forall_ge_iff fun a => by rw [ceil_le, ← cast_coe_nat, cast_le]
 #align int.ceil_nat_cast Int.ceil_natCast
--/
 
 #print Int.ceil_mono /-
 theorem ceil_mono : Monotone (ceil : α → ℤ) :=
@@ -2082,11 +2102,15 @@ Case conversion may be inaccurate. Consider using '#align int.ceil_zero Int.ceil
 theorem ceil_zero : ⌈(0 : α)⌉ = 0 := by rw [← cast_zero, ceil_int_cast]
 #align int.ceil_zero Int.ceil_zero
 
-#print Int.ceil_one /-
+/- warning: int.ceil_one -> Int.ceil_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (Int.ceil.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (Int.ceil.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))
+Case conversion may be inaccurate. Consider using '#align int.ceil_one Int.ceil_oneₓ'. -/
 @[simp]
 theorem ceil_one : ⌈(1 : α)⌉ = 1 := by rw [← cast_one, ceil_int_cast]
 #align int.ceil_one Int.ceil_one
--/
 
 /- warning: int.ceil_nonneg -> Int.ceil_nonneg is a dubious translation:
 lean 3 declaration is
@@ -2343,17 +2367,25 @@ Case conversion may be inaccurate. Consider using '#align round_zero round_zero�
 theorem round_zero : round (0 : α) = 0 := by simp [round]
 #align round_zero round_zero
 
-#print round_one /-
+/- warning: round_one -> round_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))
+Case conversion may be inaccurate. Consider using '#align round_one round_oneₓ'. -/
 @[simp]
 theorem round_one : round (1 : α) = 1 := by simp [round]
 #align round_one round_one
--/
 
-#print round_natCast /-
+/- warning: round_nat_cast -> round_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (n : Nat), Eq.{1} Int (round.{u1} α _inst_1 _inst_2 ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (n : Nat), Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) n)) (Nat.cast.{0} Int instNatCastInt n)
+Case conversion may be inaccurate. Consider using '#align round_nat_cast round_natCastₓ'. -/
 @[simp]
 theorem round_natCast (n : ℕ) : round (n : α) = n := by simp [round]
 #align round_nat_cast round_natCast
--/
 
 /- warning: round_int_cast -> round_intCast is a dubious translation:
 lean 3 declaration is

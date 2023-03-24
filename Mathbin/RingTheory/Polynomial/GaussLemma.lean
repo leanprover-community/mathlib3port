@@ -176,7 +176,7 @@ theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ p
   rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hc
   apply isUnit_of_mul_isUnit_right
-  rw [← hc, (integer_normalization R⁰ p).eq_c_content_mul_primPart, ← hu, ← RingHom.map_mul,
+  rw [← hc, (integer_normalization R⁰ p).eq_C_content_mul_primPart, ← hu, ← RingHom.map_mul,
     is_unit_iff]
   refine'
     ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), isUnit_iff_ne_zero.2 fun con => _,
@@ -215,8 +215,8 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
       normalize.map_mul, normalize_content, normalize_content, ←
       mul_one (normalize c * normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
       content_mul, ← content_mul, ← content_mul, h1]
-  rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_c_content_mul_primPart,
-    (integer_normalization R⁰ b).eq_c_content_mul_primPart, mul_assoc, mul_comm _ (C _ * _), ←
+  rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_primPart,
+    (integer_normalization R⁰ b).eq_C_content_mul_primPart, mul_assoc, mul_comm _ (C _ * _), ←
     mul_assoc, ← mul_assoc, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ←
     mul_assoc (C ↑u)] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0 := by

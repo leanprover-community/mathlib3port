@@ -103,7 +103,12 @@ theorem algebraRat.charP_zero [Semiring R] [Algebra ℚ R] : CharP R 0 :=
 #align algebra_rat.char_p_zero algebraRat.charP_zero
 -/
 
-#print algebraRat.charZero /-
+/- warning: algebra_rat.char_zero -> algebraRat.charZero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Nontrivial.{u1} R] [_inst_2 : Ring.{u1} R] [_inst_3 : Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R _inst_2)], CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_2)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Nontrivial.{u1} R] [_inst_2 : Ring.{u1} R] [_inst_3 : Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R _inst_2)], CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_2))
+Case conversion may be inaccurate. Consider using '#align algebra_rat.char_zero algebraRat.charZeroₓ'. -/
 /-- A nontrivial `ℚ`-algebra has characteristic zero.
 
 This cannot be a (local) instance because it would immediately form a loop with the
@@ -113,7 +118,6 @@ automatically receive an `algebra ℚ R` instance.
 theorem algebraRat.charZero [Ring R] [Algebra ℚ R] : CharZero R :=
   @CharP.charP_to_charZero R _ (algebraRat.charP_zero R)
 #align algebra_rat.char_zero algebraRat.charZero
--/
 
 end QAlgebra
 

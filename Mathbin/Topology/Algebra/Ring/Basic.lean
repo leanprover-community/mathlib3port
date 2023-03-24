@@ -76,7 +76,7 @@ variable {α}
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : NonAssocRing.{u1} α] [_inst_3 : ContinuousMul.{u1} α _inst_1 (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_2))))], ContinuousNeg.{u1} α _inst_1 (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_2))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : NonAssocRing.{u1} α] [_inst_3 : ContinuousMul.{u1} α _inst_1 (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_2))], ContinuousNeg.{u1} α _inst_1 (AddGroupWithOne.toNeg.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_2))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : NonAssocRing.{u1} α] [_inst_3 : ContinuousMul.{u1} α _inst_1 (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_2))], ContinuousNeg.{u1} α _inst_1 (AddGroupWithOne.toNeg.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (NonAssocRing.toAddCommGroupWithOne.{u1} α _inst_2)))
 Case conversion may be inaccurate. Consider using '#align topological_semiring.has_continuous_neg_of_mul TopologicalSemiring.continuousNeg_of_mulₓ'. -/
 /-- If `R` is a ring with a continuous multiplication, then negation is continuous as well since it
 is just multiplication with `-1`. -/
@@ -535,7 +535,12 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β
   exact ht'
 #align ring_topology.coinduced_continuous RingTopology.coinduced_continuous
 
-#print RingTopology.toAddGroupTopology /-
+/- warning: ring_topology.to_add_group_topology -> RingTopology.toAddGroupTopology is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], (RingTopology.{u1} α _inst_1) -> (AddGroupTopology.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], (RingTopology.{u1} α _inst_1) -> (AddGroupTopology.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align ring_topology.to_add_group_topology RingTopology.toAddGroupTopologyₓ'. -/
 /-- The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
 def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
     where
@@ -543,7 +548,6 @@ def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
   to_topologicalAddGroup :=
     @TopologicalRing.to_topologicalAddGroup _ _ t.toTopologicalSpace t.toTopologicalRing
 #align ring_topology.to_add_group_topology RingTopology.toAddGroupTopology
--/
 
 /- warning: ring_topology.to_add_group_topology.order_embedding -> RingTopology.toAddGroupTopology.orderEmbedding is a dubious translation:
 lean 3 declaration is

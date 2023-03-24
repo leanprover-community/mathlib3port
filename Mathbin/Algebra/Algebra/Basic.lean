@@ -1182,7 +1182,12 @@ end RingHom
 
 section Rat
 
-#print algebraRat /-
+/- warning: algebra_rat -> algebraRat is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))))], Algebra.{0, u1} Rat α Rat.commSemiring (Ring.toSemiring.{u1} α (DivisionRing.toRing.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))], Algebra.{0, u1} Rat α Rat.commSemiring (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align algebra_rat algebraRatₓ'. -/
 instance algebraRat {α} [DivisionRing α] [CharZero α] : Algebra ℚ α
     where
   smul := (· • ·)
@@ -1190,7 +1195,6 @@ instance algebraRat {α} [DivisionRing α] [CharZero α] : Algebra ℚ α
   toRingHom := Rat.castHom α
   commutes' := Rat.cast_commute
 #align algebra_rat algebraRat
--/
 
 /-- The two `algebra ℚ ℚ` instances should coincide. -/
 example : algebraRat = Algebra.id ℚ :=

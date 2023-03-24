@@ -275,13 +275,17 @@ theorem substr_num_den' (q r : ℚ) :
 
 end Casts
 
-#print Rat.inv_def'' /-
+/- warning: rat.inv_def' -> Rat.inv_def'' is a dubious translation:
+lean 3 declaration is
+  forall {q : Rat}, Eq.{1} Rat (Inv.inv.{0} Rat Rat.hasInv q) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) (Rat.den q)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) (Rat.num q)))
+but is expected to have type
+  forall {q : Rat}, Eq.{1} Rat (Inv.inv.{0} Rat Rat.instInvRat q) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) (Rat.den q)) (Int.cast.{0} Rat Rat.instIntCastRat (Rat.num q)))
+Case conversion may be inaccurate. Consider using '#align rat.inv_def' Rat.inv_def''ₓ'. -/
 theorem inv_def'' {q : ℚ} : q⁻¹ = (q.den : ℚ) / q.num :=
   by
   conv_lhs => rw [← @num_denom q]
   rw [inv_def, mk_eq_div, Int.cast_ofNat]
 #align rat.inv_def' Rat.inv_def''
--/
 
 #print Rat.inv_neg /-
 protected theorem inv_neg (q : ℚ) : (-q)⁻¹ = -q⁻¹ :=
@@ -291,7 +295,12 @@ protected theorem inv_neg (q : ℚ) : (-q)⁻¹ = -q⁻¹ :=
 #align rat.inv_neg Rat.inv_neg
 -/
 
-#print Rat.mul_den_eq_num /-
+/- warning: rat.mul_denom_eq_num -> Rat.mul_den_eq_num is a dubious translation:
+lean 3 declaration is
+  forall {q : Rat}, Eq.{1} Rat (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) q ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) (Rat.den q))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) (Rat.num q))
+but is expected to have type
+  forall {q : Rat}, Eq.{1} Rat (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) q (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) (Rat.den q))) (Int.cast.{0} Rat Rat.instIntCastRat (Rat.num q))
+Case conversion may be inaccurate. Consider using '#align rat.mul_denom_eq_num Rat.mul_den_eq_numₓ'. -/
 @[simp]
 theorem mul_den_eq_num {q : ℚ} : q * q.den = q.num :=
   by
@@ -302,7 +311,6 @@ theorem mul_den_eq_num {q : ℚ} : q * q.den = q.num :=
   have : (q.denom : ℤ) ≠ 0 := ne_of_gt (by exact_mod_cast q.pos)
   rw [Rat.mul_def' this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
 #align rat.mul_denom_eq_num Rat.mul_den_eq_num
--/
 
 /- warning: rat.denom_div_cast_eq_one_iff -> Rat.den_div_cast_eq_one_iff is a dubious translation:
 lean 3 declaration is
@@ -364,12 +372,16 @@ theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n :=
 #align rat.coe_int_div_self Rat.coe_int_div_self
 -/
 
-#print Rat.coe_nat_div_self /-
+/- warning: rat.coe_nat_div_self -> Rat.coe_nat_div_self is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n n)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n n)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) n) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) n))
+Case conversion may be inaccurate. Consider using '#align rat.coe_nat_div_self Rat.coe_nat_div_selfₓ'. -/
 @[norm_cast]
 theorem coe_nat_div_self (n : ℕ) : ((n / n : ℕ) : ℚ) = n / n :=
   coe_int_div_self n
 #align rat.coe_nat_div_self Rat.coe_nat_div_self
--/
 
 /- warning: rat.coe_int_div -> Rat.coe_int_div is a dubious translation:
 lean 3 declaration is
@@ -384,14 +396,18 @@ theorem coe_int_div (a b : ℤ) (h : b ∣ a) : ((a / b : ℤ) : ℚ) = a / b :=
     coe_int_div_self]
 #align rat.coe_int_div Rat.coe_int_div
 
-#print Rat.coe_nat_div /-
+/- warning: rat.coe_nat_div -> Rat.coe_nat_div is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), (Dvd.Dvd.{0} Nat Nat.hasDvd b a) -> (Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) a b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) b)))
+but is expected to have type
+  forall (a : Nat) (b : Nat), (Dvd.dvd.{0} Nat Nat.instDvdNat b a) -> (Eq.{1} Rat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) a b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) a) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) b)))
+Case conversion may be inaccurate. Consider using '#align rat.coe_nat_div Rat.coe_nat_divₓ'. -/
 theorem coe_nat_div (a b : ℕ) (h : b ∣ a) : ((a / b : ℕ) : ℚ) = a / b :=
   by
   rcases h with ⟨c, rfl⟩
   simp only [mul_comm b, Nat.mul_div_assoc c (dvd_refl b), Nat.cast_mul, mul_div_assoc,
     coe_nat_div_self]
 #align rat.coe_nat_div Rat.coe_nat_div
--/
 
 #print Rat.inv_coe_int_num_of_pos /-
 theorem inv_coe_int_num_of_pos {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 :=
@@ -403,11 +419,15 @@ theorem inv_coe_int_num_of_pos {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 
 #align rat.inv_coe_int_num_of_pos Rat.inv_coe_int_num_of_pos
 -/
 
-#print Rat.inv_coe_nat_num_of_pos /-
+/- warning: rat.inv_coe_nat_num_of_pos -> Rat.inv_coe_nat_num_of_pos is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a) -> (Eq.{1} Int (Rat.num (Inv.inv.{0} Rat Rat.hasInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) a))) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+but is expected to have type
+  forall {a : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} Int (Rat.num (Inv.inv.{0} Rat Rat.instInvRat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) a))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+Case conversion may be inaccurate. Consider using '#align rat.inv_coe_nat_num_of_pos Rat.inv_coe_nat_num_of_posₓ'. -/
 theorem inv_coe_nat_num_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 :=
   inv_coe_int_num_of_pos (by exact_mod_cast ha0 : 0 < (a : ℤ))
 #align rat.inv_coe_nat_num_of_pos Rat.inv_coe_nat_num_of_pos
--/
 
 #print Rat.inv_coe_int_den_of_pos /-
 theorem inv_coe_int_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : ℤ) = a :=
@@ -419,13 +439,17 @@ theorem inv_coe_int_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : �
 #align rat.inv_coe_int_denom_of_pos Rat.inv_coe_int_den_of_pos
 -/
 
-#print Rat.inv_coe_nat_den_of_pos /-
+/- warning: rat.inv_coe_nat_denom_of_pos -> Rat.inv_coe_nat_den_of_pos is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a) -> (Eq.{1} Nat (Rat.den (Inv.inv.{0} Rat Rat.hasInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) a))) a)
+but is expected to have type
+  forall {a : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} Nat (Rat.den (Inv.inv.{0} Rat Rat.instInvRat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) a))) a)
+Case conversion may be inaccurate. Consider using '#align rat.inv_coe_nat_denom_of_pos Rat.inv_coe_nat_den_of_posₓ'. -/
 theorem inv_coe_nat_den_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.den = a :=
   by
   rw [← Int.ofNat_inj, ← Int.cast_ofNat a, inv_coe_int_denom_of_pos]
   rwa [← Nat.cast_zero, Nat.cast_lt]
 #align rat.inv_coe_nat_denom_of_pos Rat.inv_coe_nat_den_of_pos
--/
 
 #print Rat.inv_coe_int_num /-
 @[simp]
@@ -437,12 +461,16 @@ theorem inv_coe_int_num (a : ℤ) : (a : ℚ)⁻¹.num = Int.sign a := by
 #align rat.inv_coe_int_num Rat.inv_coe_int_num
 -/
 
-#print Rat.inv_coe_nat_num /-
+/- warning: rat.inv_coe_nat_num -> Rat.inv_coe_nat_num is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat), Eq.{1} Int (Rat.num (Inv.inv.{0} Rat Rat.hasInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) a))) (Int.sign ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))
+but is expected to have type
+  forall (a : Nat), Eq.{1} Int (Rat.num (Inv.inv.{0} Rat Rat.instInvRat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) a))) (Int.sign (Nat.cast.{0} Int instNatCastInt a))
+Case conversion may be inaccurate. Consider using '#align rat.inv_coe_nat_num Rat.inv_coe_nat_numₓ'. -/
 @[simp]
 theorem inv_coe_nat_num (a : ℕ) : (a : ℚ)⁻¹.num = Int.sign a :=
   inv_coe_int_num a
 #align rat.inv_coe_nat_num Rat.inv_coe_nat_num
--/
 
 /- warning: rat.inv_coe_int_denom -> Rat.inv_coe_int_den is a dubious translation:
 lean 3 declaration is

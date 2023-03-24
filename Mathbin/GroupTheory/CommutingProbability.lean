@@ -46,12 +46,16 @@ def commProb : ℚ :=
 #align comm_prob commProb
 -/
 
-#print commProb_def /-
+/- warning: comm_prob_def -> commProb_def is a dubious translation:
+lean 3 declaration is
+  forall (M : Type.{u1}) [_inst_1 : Mul.{u1} M], Eq.{1} Rat (commProb.{u1} M _inst_1) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.card.{u1} (Subtype.{succ u1} (Prod.{u1, u1} M M) (fun (p : Prod.{u1, u1} M M) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_1) (Prod.fst.{u1, u1} M M p) (Prod.snd.{u1, u1} M M p)) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_1) (Prod.snd.{u1, u1} M M p) (Prod.fst.{u1, u1} M M p)))))) (HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.card.{u1} M)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall (M : Type.{u1}) [_inst_1 : Mul.{u1} M], Eq.{1} Rat (commProb.{u1} M _inst_1) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Nat.card.{u1} (Subtype.{succ u1} (Prod.{u1, u1} M M) (fun (p : Prod.{u1, u1} M M) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_1) (Prod.fst.{u1, u1} M M p) (Prod.snd.{u1, u1} M M p)) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_1) (Prod.snd.{u1, u1} M M p) (Prod.fst.{u1, u1} M M p)))))) (HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) (Nat.card.{u1} M)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
+Case conversion may be inaccurate. Consider using '#align comm_prob_def commProb_defₓ'. -/
 theorem commProb_def :
     commProb M = Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2 :=
   rfl
 #align comm_prob_def commProb_def
--/
 
 variable [Finite M]
 

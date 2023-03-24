@@ -86,13 +86,17 @@ class SubringClass (S : Type _) (R : Type u) [Ring R] [SetLike S R] extends Subs
 #align subring_class SubringClass
 -/
 
-#print SubringClass.addSubgroupClass /-
+/- warning: subring_class.add_subgroup_class -> SubringClass.addSubgroupClass is a dubious translation:
+lean 3 declaration is
+  forall (S : Type.{u2}) (R : Type.{u1}) [_inst_2 : SetLike.{u2, u1} S R] [_inst_3 : Ring.{u1} R] [h : SubringClass.{u1, u2} S R _inst_3 _inst_2], AddSubgroupClass.{u2, u1} S R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3)))) _inst_2
+but is expected to have type
+  forall (S : Type.{u2}) (R : Type.{u1}) [_inst_2 : SetLike.{u2, u1} S R] [_inst_3 : Ring.{u1} R] [h : SubringClass.{u1, u2} S R _inst_3 _inst_2], AddSubgroupClass.{u2, u1} S R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_3))) _inst_2
+Case conversion may be inaccurate. Consider using '#align subring_class.add_subgroup_class SubringClass.addSubgroupClassₓ'. -/
 -- See note [lower instance priority]
 instance (priority := 100) SubringClass.addSubgroupClass (S : Type _) (R : Type u) [SetLike S R]
     [Ring R] [h : SubringClass S R] : AddSubgroupClass S R :=
   { h with }
 #align subring_class.add_subgroup_class SubringClass.addSubgroupClass
--/
 
 variable [SetLike S R] [hSR : SubringClass S R] (s : S)
 
@@ -203,12 +207,16 @@ theorem coeSubtype : (subtype s : s → R) = coe :=
   rfl
 #align subring_class.coe_subtype SubringClass.coeSubtype
 
-#print SubringClass.coe_natCast /-
+/- warning: subring_class.coe_nat_cast -> SubringClass.coe_natCast is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Ring.{u1} R] [_inst_2 : SetLike.{u2, u1} S R] [hSR : SubringClass.{u1, u2} S R _inst_1 _inst_2] (s : S) (n : Nat), Eq.{succ u1} R ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) R (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) R (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) R (coeBase.{succ u1, succ u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) R (coeSubtype.{succ u1} R (fun (x : R) => Membership.Mem.{u1, u2} R S (SetLike.hasMem.{u2, u1} S R _inst_2) x s))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (HasLiftT.mk.{1, succ u1} Nat (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (CoeTCₓ.coe.{1, succ u1} Nat (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (Nat.castCoe.{u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (AddMonoidWithOne.toNatCast.{u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (AddGroupWithOne.toAddMonoidWithOne.{u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (NonAssocRing.toAddGroupWithOne.{u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (Ring.toNonAssocRing.{u1} (coeSort.{succ u2, succ (succ u1)} S Type.{u1} (SetLike.hasCoeToSort.{u2, u1} S R _inst_2) s) (SubringClass.toRing.{u1, u2} R S _inst_1 _inst_2 hSR s)))))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))) n)
+but is expected to have type
+  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Ring.{u1} R] [_inst_2 : SetLike.{u2, u1} S R] [hSR : SubringClass.{u1, u2} S R _inst_1 _inst_2] (s : S) (n : Nat), Eq.{succ u1} R (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u2, u1} S R _inst_2 s)) (Nat.cast.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u2} R S (SetLike.instMembership.{u2, u1} S R _inst_2) x s)) (NonAssocRing.toNatCast.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u2} R S (SetLike.instMembership.{u2, u1} S R _inst_2) x s)) (Ring.toNonAssocRing.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u2} R S (SetLike.instMembership.{u2, u1} S R _inst_2) x s)) (SubringClass.toRing.{u1, u2} R S _inst_1 _inst_2 hSR s))) n)) (Nat.cast.{u1} R (NonAssocRing.toNatCast.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) n)
+Case conversion may be inaccurate. Consider using '#align subring_class.coe_nat_cast SubringClass.coe_natCastₓ'. -/
 @[simp, norm_cast]
 theorem coe_natCast (n : ℕ) : ((n : s) : R) = n :=
   map_natCast (subtype s) n
 #align subring_class.coe_nat_cast SubringClass.coe_natCast
--/
 
 /- warning: subring_class.coe_int_cast -> SubringClass.coe_intCast is a dubious translation:
 lean 3 declaration is
@@ -371,11 +379,15 @@ theorem toSubsemiring_mono : Monotone (toSubsemiring : Subring R → Subsemiring
   toSubsemiring_strictMono.Monotone
 #align subring.to_subsemiring_mono Subring.toSubsemiring_mono
 
-#print Subring.toAddSubgroup_injective /-
+/- warning: subring.to_add_subgroup_injective -> Subring.toAddSubgroup_injective is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], Function.Injective.{succ u1, succ u1} (Subring.{u1} R _inst_1) (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Subring.toAddSubgroup.{u1} R _inst_1)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], Function.Injective.{succ u1, succ u1} (Subring.{u1} R _inst_1) (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (Subring.toAddSubgroup.{u1} R _inst_1)
+Case conversion may be inaccurate. Consider using '#align subring.to_add_subgroup_injective Subring.toAddSubgroup_injectiveₓ'. -/
 theorem toAddSubgroup_injective : Function.Injective (toAddSubgroup : Subring R → AddSubgroup R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
 #align subring.to_add_subgroup_injective Subring.toAddSubgroup_injective
--/
 
 /- warning: subring.to_add_subgroup_strict_mono -> Subring.toAddSubgroup_strictMono is a dubious translation:
 lean 3 declaration is
@@ -721,12 +733,16 @@ theorem coe_zero : ((0 : s) : R) = 0 :=
   rfl
 #align subring.coe_zero Subring.coe_zero
 
-#print Subring.coe_one /-
+/- warning: subring.coe_one -> Subring.coe_one is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (s : Subring.{u1} R _inst_1), Eq.{succ u1} R ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (coeSubtype.{succ u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.hasMem.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) x s))))) (OfNat.ofNat.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) 1 (OfNat.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) 1 (One.one.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (OneMemClass.one.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1) (AddMonoidWithOne.toOne.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) (AddSubmonoidWithOneClass.to_oneMemClass.{u1, u1} (Subring.{u1} R _inst_1) R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Subring.setLike.{u1} R _inst_1) (SubsemiringClass.addSubmonoidWithOneClass.{u1, u1} (Subring.{u1} R _inst_1) R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (Subring.setLike.{u1} R _inst_1) (SubringClass.to_subsemiringClass.{u1, u1} (Subring.{u1} R _inst_1) R _inst_1 (Subring.setLike.{u1} R _inst_1) (Subring.subringClass.{u1} R _inst_1)))) s))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (s : Subring.{u1} R _inst_1), Eq.{succ u1} R (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1) s)) (OfNat.ofNat.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x s)) 1 (One.toOfNat1.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x s)) (Submonoid.one.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Subsemiring.toSubmonoid.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) (Subring.toSubsemiring.{u1} R _inst_1 s)))))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))
+Case conversion may be inaccurate. Consider using '#align subring.coe_one Subring.coe_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_one : ((1 : s) : R) = 1 :=
   rfl
 #align subring.coe_one Subring.coe_one
--/
 
 /- warning: subring.coe_pow -> Subring.coe_pow is a dubious translation:
 lean 3 declaration is
@@ -848,12 +864,16 @@ theorem coeSubtype : ⇑s.Subtype = coe :=
   rfl
 #align subring.coe_subtype Subring.coeSubtype
 
-#print Subring.coe_natCast /-
+/- warning: subring.coe_nat_cast -> Subring.coe_natCast is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (s : Subring.{u1} R _inst_1) (n : Nat), Eq.{succ u1} R ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) R (coeSubtype.{succ u1} R (fun (x : R) => Membership.Mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.hasMem.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) x s))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (HasLiftT.mk.{1, succ u1} Nat (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (CoeTCₓ.coe.{1, succ u1} Nat (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (Nat.castCoe.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (AddMonoidWithOne.toNatCast.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (AddGroupWithOne.toAddMonoidWithOne.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (NonAssocRing.toAddGroupWithOne.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (Ring.toNonAssocRing.{u1} (coeSort.{succ u1, succ (succ u1)} (Subring.{u1} R _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.setLike.{u1} R _inst_1)) s) (Subring.toRing.{u1} R _inst_1 s)))))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))) n)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (s : Subring.{u1} R _inst_1) (n : Nat), Eq.{succ u1} R (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1) s)) (Nat.cast.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x s)) (NonAssocRing.toNatCast.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x s)) (Ring.toNonAssocRing.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subring.{u1} R _inst_1) R (Subring.instSetLikeSubring.{u1} R _inst_1)) x s)) (Subring.toRing.{u1} R _inst_1 s))) n)) (Nat.cast.{u1} R (NonAssocRing.toNatCast.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)) n)
+Case conversion may be inaccurate. Consider using '#align subring.coe_nat_cast Subring.coe_natCastₓ'. -/
 @[simp, norm_cast]
 theorem coe_natCast : ∀ n : ℕ, ((n : s) : R) = n :=
   map_natCast s.Subtype
 #align subring.coe_nat_cast Subring.coe_natCast
--/
 
 /- warning: subring.coe_int_cast -> Subring.coe_intCast is a dubious translation:
 lean 3 declaration is
@@ -1284,13 +1304,17 @@ theorem infₛ_toSubmonoid (s : Set (Subring R)) : (infₛ s).toSubmonoid = ⨅ 
 #align subring.Inf_to_submonoid Subring.infₛ_toSubmonoid
 -/
 
-#print Subring.infₛ_toAddSubgroup /-
+/- warning: subring.Inf_to_add_subgroup -> Subring.infₛ_toAddSubgroup is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (s : Set.{u1} (Subring.{u1} R _inst_1)), Eq.{succ u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Subring.toAddSubgroup.{u1} R _inst_1 (InfSet.infₛ.{u1} (Subring.{u1} R _inst_1) (Subring.hasInf.{u1} R _inst_1) s)) (infᵢ.{u1, succ u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (AddSubgroup.hasInf.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Subring.{u1} R _inst_1) (fun (t : Subring.{u1} R _inst_1) => infᵢ.{u1, 0} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (AddSubgroup.hasInf.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Membership.Mem.{u1, u1} (Subring.{u1} R _inst_1) (Set.{u1} (Subring.{u1} R _inst_1)) (Set.hasMem.{u1} (Subring.{u1} R _inst_1)) t s) (fun (H : Membership.Mem.{u1, u1} (Subring.{u1} R _inst_1) (Set.{u1} (Subring.{u1} R _inst_1)) (Set.hasMem.{u1} (Subring.{u1} R _inst_1)) t s) => Subring.toAddSubgroup.{u1} R _inst_1 t)))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (s : Set.{u1} (Subring.{u1} R _inst_1)), Eq.{succ u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (Subring.toAddSubgroup.{u1} R _inst_1 (InfSet.infₛ.{u1} (Subring.{u1} R _inst_1) (Subring.instInfSetSubring.{u1} R _inst_1) s)) (infᵢ.{u1, succ u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (AddSubgroup.instInfSetAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (Subring.{u1} R _inst_1) (fun (t : Subring.{u1} R _inst_1) => infᵢ.{u1, 0} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (AddSubgroup.instInfSetAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (Membership.mem.{u1, u1} (Subring.{u1} R _inst_1) (Set.{u1} (Subring.{u1} R _inst_1)) (Set.instMembershipSet.{u1} (Subring.{u1} R _inst_1)) t s) (fun (H : Membership.mem.{u1, u1} (Subring.{u1} R _inst_1) (Set.{u1} (Subring.{u1} R _inst_1)) (Set.instMembershipSet.{u1} (Subring.{u1} R _inst_1)) t s) => Subring.toAddSubgroup.{u1} R _inst_1 t)))
+Case conversion may be inaccurate. Consider using '#align subring.Inf_to_add_subgroup Subring.infₛ_toAddSubgroupₓ'. -/
 @[simp]
 theorem infₛ_toAddSubgroup (s : Set (Subring R)) :
     (infₛ s).toAddSubgroup = ⨅ t ∈ s, Subring.toAddSubgroup t :=
   mk'_toAddSubgroup _ _
 #align subring.Inf_to_add_subgroup Subring.infₛ_toAddSubgroup
--/
 
 /-- Subrings of a ring form a complete lattice. -/
 instance : CompleteLattice (Subring R) :=

@@ -103,14 +103,18 @@ theorem coe_mul_unitClosedBall [NonUnitalSeminormedRing 𝕜] (x y : closedBall 
   rfl
 #align coe_mul_unit_closed_ball coe_mul_unitClosedBall
 
-#print Submonoid.unitClosedBall /-
+/- warning: submonoid.unit_closed_ball -> Submonoid.unitClosedBall is a dubious translation:
+lean 3 declaration is
+  forall (𝕜 : Type.{u1}) [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : NormOneClass.{u1} 𝕜 (SeminormedRing.toHasNorm.{u1} 𝕜 _inst_1) (AddMonoidWithOne.toOne.{u1} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u1} 𝕜 (NonAssocRing.toAddGroupWithOne.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))], Submonoid.{u1} 𝕜 (MulZeroOneClass.toMulOneClass.{u1} 𝕜 (NonAssocSemiring.toMulZeroOneClass.{u1} 𝕜 (NonAssocRing.toNonAssocSemiring.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))
+but is expected to have type
+  forall (𝕜 : Type.{u1}) [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : NormOneClass.{u1} 𝕜 (SeminormedRing.toNorm.{u1} 𝕜 _inst_1) (NonAssocRing.toOne.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))], Submonoid.{u1} 𝕜 (MulZeroOneClass.toMulOneClass.{u1} 𝕜 (NonAssocSemiring.toMulZeroOneClass.{u1} 𝕜 (NonAssocRing.toNonAssocSemiring.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (SeminormedRing.toRing.{u1} 𝕜 _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align submonoid.unit_closed_ball Submonoid.unitClosedBallₓ'. -/
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
 def Submonoid.unitClosedBall (𝕜 : Type _) [SeminormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
   { Subsemigroup.unitClosedBall 𝕜 with
     carrier := closedBall 0 1
     one_mem' := mem_closedBall_zero_iff.2 norm_one.le }
 #align submonoid.unit_closed_ball Submonoid.unitClosedBall
--/
 
 instance [SeminormedRing 𝕜] [NormOneClass 𝕜] : Monoid (closedBall (0 : 𝕜) 1) :=
   SubmonoidClass.toMonoid (Submonoid.unitClosedBall 𝕜)

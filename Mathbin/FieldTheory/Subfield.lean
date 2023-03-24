@@ -190,12 +190,16 @@ add_decl_doc Subfield.toSubring
 
 namespace Subfield
 
-#print Subfield.toAddSubgroup /-
+/- warning: subfield.to_add_subgroup -> Subfield.toAddSubgroup is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K], (Subfield.{u1} K _inst_1) -> (AddSubgroup.{u1} K (AddGroupWithOne.toAddGroup.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))))))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K], (Subfield.{u1} K _inst_1) -> (AddSubgroup.{u1} K (AddGroupWithOne.toAddGroup.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align subfield.to_add_subgroup Subfield.toAddSubgroupₓ'. -/
 /-- The underlying `add_subgroup` of a subfield. -/
 def toAddSubgroup (s : Subfield K) : AddSubgroup K :=
   { s.toSubring.toAddSubgroup with }
 #align subfield.to_add_subgroup Subfield.toAddSubgroup
--/
 
 /-- The underlying submonoid of a subfield. -/
 def toSubmonoid (s : Subfield K) : Submonoid K :=
@@ -665,12 +669,16 @@ theorem coe_zero : ((0 : s) : K) = 0 :=
   rfl
 #align subfield.coe_zero Subfield.coe_zero
 
-#print Subfield.coe_one /-
+/- warning: subfield.coe_one -> Subfield.coe_one is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] (s : Subfield.{u1} K _inst_1), Eq.{succ u1} K ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) K (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) K (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) K (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) K (coeSubtype.{succ u1} K (fun (x : K) => Membership.Mem.{u1, u1} K (Subfield.{u1} K _inst_1) (SetLike.hasMem.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) x s))))) (OfNat.ofNat.{u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) 1 (OfNat.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) 1 (One.one.{u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} K _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1)) s) (OneMemClass.one.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.setLike.{u1} K _inst_1) (AddMonoidWithOne.toOne.{u1} K (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} K (NonAssocSemiring.toAddCommMonoidWithOne.{u1} K (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))))))) (AddSubmonoidWithOneClass.to_oneMemClass.{u1, u1} (Subfield.{u1} K _inst_1) K (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} K (NonAssocSemiring.toAddCommMonoidWithOne.{u1} K (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))) (Subfield.setLike.{u1} K _inst_1) (SubsemiringClass.addSubmonoidWithOneClass.{u1, u1} (Subfield.{u1} K _inst_1) K (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))) (Subfield.setLike.{u1} K _inst_1) (SubringClass.to_subsemiringClass.{u1, u1} (Subfield.{u1} K _inst_1) K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)) (Subfield.setLike.{u1} K _inst_1) (SubfieldClass.to_subringClass.{u1, u1} (Subfield.{u1} K _inst_1) K _inst_1 (Subfield.setLike.{u1} K _inst_1) (Subfield.subfieldClass.{u1} K _inst_1))))) s))))) (OfNat.ofNat.{u1} K 1 (OfNat.mk.{u1} K 1 (One.one.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))))))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] (s : Subfield.{u1} K _inst_1), Eq.{succ u1} K (Subtype.val.{succ u1} K (fun (x : K) => Membership.mem.{u1, u1} K (Set.{u1} K) (Set.instMembershipSet.{u1} K) x (SetLike.coe.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.instSetLikeSubfield.{u1} K _inst_1) s)) (OfNat.ofNat.{u1} (Subtype.{succ u1} K (fun (x : K) => Membership.mem.{u1, u1} K (Subfield.{u1} K _inst_1) (SetLike.instMembership.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.instSetLikeSubfield.{u1} K _inst_1)) x s)) 1 (One.toOfNat1.{u1} (Subtype.{succ u1} K (fun (x : K) => Membership.mem.{u1, u1} K (Subfield.{u1} K _inst_1) (SetLike.instMembership.{u1, u1} (Subfield.{u1} K _inst_1) K (Subfield.instSetLikeSubfield.{u1} K _inst_1)) x s)) (Submonoid.one.{u1} K (MulZeroOneClass.toMulOneClass.{u1} K (NonAssocSemiring.toMulZeroOneClass.{u1} K (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))) (Subsemiring.toSubmonoid.{u1} K (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))) (Subring.toSubsemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)) (Subfield.toSubring.{u1} K _inst_1 s))))))) (OfNat.ofNat.{u1} K 1 (One.toOfNat1.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align subfield.coe_one Subfield.coe_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_one : ((1 : s) : K) = 1 :=
   rfl
 #align subfield.coe_one Subfield.coe_one
--/
 
 end DerivedFromSubfieldClass
 

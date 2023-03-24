@@ -560,11 +560,15 @@ variable {R : Type _} [Semiring R] (abv : R → S) [IsAbsoluteValue abv]
 
 variable [IsDomain S]
 
-#print IsAbsoluteValue.abv_one /-
+/- warning: is_absolute_value.abv_one -> IsAbsoluteValue.abv_one is a dubious translation:
+lean 3 declaration is
+  forall {S : Type.{u1}} [_inst_1 : OrderedRing.{u1} S] {R : Type.{u2}} [_inst_2 : Semiring.{u2} R] (abv : R -> S) [_inst_3 : IsAbsoluteValue.{u1, u2} S (OrderedRing.toOrderedSemiring.{u1} S _inst_1) R _inst_2 abv] [_inst_4 : IsDomain.{u1} S (Ring.toSemiring.{u1} S (OrderedRing.toRing.{u1} S _inst_1))] [_inst_5 : Nontrivial.{u2} R], Eq.{succ u1} S (abv (OfNat.ofNat.{u2} R 1 (OfNat.mk.{u2} R 1 (One.one.{u2} R (AddMonoidWithOne.toOne.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_2)))))))) (OfNat.ofNat.{u1} S 1 (OfNat.mk.{u1} S 1 (One.one.{u1} S (AddMonoidWithOne.toOne.{u1} S (AddGroupWithOne.toAddMonoidWithOne.{u1} S (NonAssocRing.toAddGroupWithOne.{u1} S (Ring.toNonAssocRing.{u1} S (OrderedRing.toRing.{u1} S _inst_1))))))))
+but is expected to have type
+  forall {S : Type.{u1}} [_inst_1 : OrderedRing.{u1} S] {R : Type.{u2}} [_inst_2 : Semiring.{u2} R] (abv : R -> S) [_inst_3 : IsAbsoluteValue.{u1, u2} S (OrderedRing.toOrderedSemiring.{u1} S _inst_1) R _inst_2 abv] [_inst_4 : IsDomain.{u1} S (OrderedSemiring.toSemiring.{u1} S (OrderedRing.toOrderedSemiring.{u1} S _inst_1))] [_inst_5 : Nontrivial.{u2} R], Eq.{succ u1} S (abv (OfNat.ofNat.{u2} R 1 (One.toOfNat1.{u2} R (Semiring.toOne.{u2} R _inst_2)))) (OfNat.ofNat.{u1} S 1 (One.toOfNat1.{u1} S (NonAssocRing.toOne.{u1} S (Ring.toNonAssocRing.{u1} S (OrderedRing.toRing.{u1} S _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align is_absolute_value.abv_one IsAbsoluteValue.abv_oneₓ'. -/
 theorem abv_one [Nontrivial R] : abv 1 = 1 :=
   (toAbsoluteValue abv).map_one
 #align is_absolute_value.abv_one IsAbsoluteValue.abv_one
--/
 
 #print IsAbsoluteValue.abvHom /-
 /-- `abv` as a `monoid_with_zero_hom`. -/

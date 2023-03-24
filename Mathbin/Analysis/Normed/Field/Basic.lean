@@ -260,11 +260,15 @@ theorem one_le_norm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ‖(1 : β)
     (by simpa only [mul_one] using norm_mul_le (1 : β) 1)
 #align one_le_norm_one one_le_norm_one
 
-#print one_le_nnnorm_one /-
+/- warning: one_le_nnnorm_one -> one_le_nnnorm_one is a dubious translation:
+lean 3 declaration is
+  forall (β : Type.{u1}) [_inst_2 : NormedRing.{u1} β] [_inst_3 : Nontrivial.{u1} β], LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (NNNorm.nnnorm.{u1} β (SeminormedAddGroup.toNNNorm.{u1} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} β (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{u1} β (NonUnitalNormedRing.toNonUnitalSeminormedRing.{u1} β (NormedRing.toNonUnitalNormedRing.{u1} β _inst_2))))) (OfNat.ofNat.{u1} β 1 (OfNat.mk.{u1} β 1 (One.one.{u1} β (AddMonoidWithOne.toOne.{u1} β (AddGroupWithOne.toAddMonoidWithOne.{u1} β (NonAssocRing.toAddGroupWithOne.{u1} β (Ring.toNonAssocRing.{u1} β (NormedRing.toRing.{u1} β _inst_2)))))))))
+but is expected to have type
+  forall (β : Type.{u1}) [_inst_2 : NormedRing.{u1} β] [_inst_3 : Nontrivial.{u1} β], LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)) (NNNorm.nnnorm.{u1} β (SeminormedAddGroup.toNNNorm.{u1} β (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} β (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{u1} β (NonUnitalNormedRing.toNonUnitalSeminormedRing.{u1} β (NormedRing.toNonUnitalNormedRing.{u1} β _inst_2))))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (NonAssocRing.toOne.{u1} β (Ring.toNonAssocRing.{u1} β (NormedRing.toRing.{u1} β _inst_2))))))
+Case conversion may be inaccurate. Consider using '#align one_le_nnnorm_one one_le_nnnorm_oneₓ'. -/
 theorem one_le_nnnorm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ‖(1 : β)‖₊ :=
   one_le_norm_one β
 #align one_le_nnnorm_one one_le_nnnorm_one
--/
 
 /- warning: filter.tendsto.zero_mul_is_bounded_under_le -> Filter.Tendsto.zero_mul_isBoundedUnder_le is a dubious translation:
 lean 3 declaration is
@@ -733,11 +737,15 @@ theorem norm_mul (a b : α) : ‖a * b‖ = ‖a‖ * ‖b‖ :=
   NormedDivisionRing.norm_mul' a b
 #align norm_mul norm_mul
 
-#print NormedDivisionRing.to_normOneClass /-
+/- warning: normed_division_ring.to_norm_one_class -> NormedDivisionRing.to_normOneClass is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedDivisionRing.{u1} α], NormOneClass.{u1} α (NormedDivisionRing.toHasNorm.{u1} α _inst_1) (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (NormedRing.toRing.{u1} α (NormedDivisionRing.toNormedRing.{u1} α _inst_1))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedDivisionRing.{u1} α], NormOneClass.{u1} α (NormedDivisionRing.toNorm.{u1} α _inst_1) (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (NormedRing.toRing.{u1} α (NormedDivisionRing.toNormedRing.{u1} α _inst_1))))
+Case conversion may be inaccurate. Consider using '#align normed_division_ring.to_norm_one_class NormedDivisionRing.to_normOneClassₓ'. -/
 instance (priority := 900) NormedDivisionRing.to_normOneClass : NormOneClass α :=
   ⟨mul_left_cancel₀ (mt norm_eq_zero.1 (one_ne_zero' α)) <| by rw [← norm_mul, mul_one, mul_one]⟩
 #align normed_division_ring.to_norm_one_class NormedDivisionRing.to_normOneClass
--/
 
 #print isAbsoluteValue_norm /-
 instance isAbsoluteValue_norm : IsAbsoluteValue (norm : α → ℝ)

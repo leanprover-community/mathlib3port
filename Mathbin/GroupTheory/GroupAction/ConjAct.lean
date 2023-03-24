@@ -395,14 +395,18 @@ section DivisionRing
 
 variable [DivisionRing K]
 
-#print ConjAct.distribMulAction₀ /-
+/- warning: conj_act.distrib_mul_action₀ -> ConjAct.distribMulAction₀ is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], DistribMulAction.{u1, u1} (ConjAct.{u1} K) K (MonoidWithZero.toMonoid.{u1} (ConjAct.{u1} K) (GroupWithZero.toMonoidWithZero.{u1} (ConjAct.{u1} K) (ConjAct.groupWithZero.{u1} K (DivisionSemiring.toGroupWithZero.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1))))) (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], DistribMulAction.{u1, u1} (ConjAct.{u1} K) K (MonoidWithZero.toMonoid.{u1} (ConjAct.{u1} K) (GroupWithZero.toMonoidWithZero.{u1} (ConjAct.{u1} K) (ConjAct.instGroupWithZeroConjAct.{u1} K (DivisionSemiring.toGroupWithZero.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1))))) (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))
+Case conversion may be inaccurate. Consider using '#align conj_act.distrib_mul_action₀ ConjAct.distribMulAction₀ₓ'. -/
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
   { ConjAct.mulAction₀ with
     smul := (· • ·)
     smul_zero := by simp [smul_def]
     smul_add := by simp [smul_def, mul_add, add_mul] }
 #align conj_act.distrib_mul_action₀ ConjAct.distribMulAction₀
--/
 
 end DivisionRing
 

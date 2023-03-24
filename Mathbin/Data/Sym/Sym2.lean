@@ -982,13 +982,8 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
 #align sym2.other_invol Sym2.other_invol
 -/
 
-/- warning: sym2.filter_image_quotient_mk_is_diag -> Sym2.filter_image_quotient_mk''_isDiag is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α))) (Finset.filter.{u1} (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Sym2.IsDiag.{u1} α) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Sym2.IsDiag.decidablePred.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Quotient.decidableEq.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => Sym2.Rel.decidableRel.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) a b) (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.product.{u1, u1} α α s s))) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Quotient.decidableEq.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => Sym2.Rel.decidableRel.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) a b) (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.diag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Sym2.{u1} α)) (Finset.filter.{u1} (Sym2.{u1} α) (Sym2.IsDiag.{u1} α) (fun (a : Sym2.{u1} α) => Sym2.IsDiag.decidablePred.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Sym2.instDecidableEqSym2.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (Quotient.mk''.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.product.{u1, u1} α α s s))) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Sym2.instDecidableEqSym2.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (Quotient.mk''.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.diag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-Case conversion may be inaccurate. Consider using '#align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_quotient_mk''_isDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Sym2.filter_image_quotient_mk''_isDiag /-
 theorem filter_image_quotient_mk''_isDiag [DecidableEq α] (s : Finset α) :
     ((s ×ˢ s).image Quotient.mk').filterₓ IsDiag = s.diag.image Quotient.mk' :=
   by
@@ -1004,14 +999,10 @@ theorem filter_image_quotient_mk''_isDiag [DecidableEq α] (s : Finset α) :
     rw [← h]
     exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
 #align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_quotient_mk''_isDiag
+-/
 
-/- warning: sym2.filter_image_quotient_mk_not_is_diag -> Sym2.filter_image_quotient_mk''_not_isDiag is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α))) (Finset.filter.{u1} (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Sym2.{u1} α) => Not (Sym2.IsDiag.{u1} α a)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Not.decidable (Sym2.IsDiag.{u1} α a) (Sym2.IsDiag.decidablePred.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a)) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Quotient.decidableEq.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => Sym2.Rel.decidableRel.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) a b) (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.product.{u1, u1} α α s s))) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Quotient.decidableEq.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => Sym2.Rel.decidableRel.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) a b) (Quotient.mk'.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Sym2.{u1} α)) (Finset.filter.{u1} (Sym2.{u1} α) (fun (a : Sym2.{u1} α) => Not (Sym2.IsDiag.{u1} α a)) (fun (a : Sym2.{u1} α) => instDecidableNot (Sym2.IsDiag.{u1} α a) (Sym2.IsDiag.decidablePred.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a)) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Sym2.instDecidableEqSym2.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (Quotient.mk''.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.product.{u1, u1} α α s s))) (Finset.image.{u1, u1} (Prod.{u1, u1} α α) (Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (fun (a : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (b : Quotient.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) => Sym2.instDecidableEqSym2.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (Quotient.mk''.{succ u1} (Prod.{u1, u1} α α) (Sym2.Rel.setoid.{u1} α)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s))
-Case conversion may be inaccurate. Consider using '#align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_quotient_mk''_not_isDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Sym2.filter_image_quotient_mk''_not_isDiag /-
 theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
     (((s ×ˢ s).image Quotient.mk').filterₓ fun a : Sym2 α => ¬a.IsDiag) =
       s.offDiag.image Quotient.mk' :=
@@ -1028,6 +1019,7 @@ theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
     rw [Ne.def, ← Sym2.mk''_isDiag_iff, h] at hab
     exact ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
 #align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_quotient_mk''_not_isDiag
+-/
 
 end Decidable
 

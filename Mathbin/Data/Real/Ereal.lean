@@ -500,12 +500,16 @@ theorem coe_mul (x y : ℝ) : (↑(x * y) : EReal) = x * y :=
   rfl
 #align ereal.coe_mul EReal.coe_mul
 
-#print EReal.coe_nsmul /-
+/- warning: ereal.coe_nsmul -> EReal.coe_nsmul is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (x : Real), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) (SMul.smul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.addMonoid) n x)) (SMul.smul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal EReal.addMonoid) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) x))
+but is expected to have type
+  forall (n : Nat) (x : Real), Eq.{1} EReal (Real.toEReal (HSMul.hSMul.{0, 0, 0} Nat Real Real (instHSMul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.instAddMonoidReal)) n x)) (HSMul.hSMul.{0, 0, 0} Nat EReal EReal (instHSMul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal instERealAddMonoid)) n (Real.toEReal x))
+Case conversion may be inaccurate. Consider using '#align ereal.coe_nsmul EReal.coe_nsmulₓ'. -/
 @[norm_cast]
 theorem coe_nsmul (n : ℕ) (x : ℝ) : (↑(n • x) : EReal) = n • x :=
   map_nsmul (⟨coe, coe_zero, coe_add⟩ : ℝ →+ EReal) _ _
 #align ereal.coe_nsmul EReal.coe_nsmul
--/
 
 /- warning: ereal.coe_bit0 clashes with [anonymous] -> [anonymous]
 warning: ereal.coe_bit0 -> [anonymous] is a dubious translation:
@@ -969,12 +973,16 @@ theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : EReal) =
     simp only [← ENNReal.coe_mul, coe_nnreal_eq_coe_real, NNReal.coe_mul, EReal.coe_mul]
 #align ereal.coe_ennreal_mul EReal.coe_ennreal_mul
 
-#print EReal.coe_ennreal_nsmul /-
+/- warning: ereal.coe_ennreal_nsmul -> EReal.coe_ennreal_nsmul is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (x : ENNReal), Eq.{1} EReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) (SMul.smul.{0, 0} Nat ENNReal (AddMonoid.SMul.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))) n x)) (SMul.smul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal EReal.addMonoid) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENNReal EReal (HasLiftT.mk.{1, 1} ENNReal EReal (CoeTCₓ.coe.{1, 1} ENNReal EReal (coeBase.{1, 1} ENNReal EReal EReal.hasCoeENNReal))) x))
+but is expected to have type
+  forall (n : Nat) (x : ENNReal), Eq.{1} EReal (ENNReal.toEReal (HSMul.hSMul.{0, 0, 0} Nat ENNReal ENNReal (instHSMul.{0, 0} Nat ENNReal (AddMonoid.SMul.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne)))) n x)) (HSMul.hSMul.{0, 0, 0} Nat EReal EReal (instHSMul.{0, 0} Nat EReal (AddMonoid.SMul.{0} EReal instERealAddMonoid)) n (ENNReal.toEReal x))
+Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_nsmul EReal.coe_ennreal_nsmulₓ'. -/
 @[norm_cast]
 theorem coe_ennreal_nsmul (n : ℕ) (x : ℝ≥0∞) : (↑(n • x) : EReal) = n • x :=
   map_nsmul (⟨coe, coe_ennreal_zero, coe_ennreal_add⟩ : ℝ≥0∞ →+ EReal) _ _
 #align ereal.coe_ennreal_nsmul EReal.coe_ennreal_nsmul
--/
 
 /- warning: ereal.coe_ennreal_bit0 clashes with [anonymous] -> [anonymous]
 warning: ereal.coe_ennreal_bit0 -> [anonymous] is a dubious translation:

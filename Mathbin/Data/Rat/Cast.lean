@@ -873,14 +873,18 @@ namespace Rat
 
 variable {K : Type _} [DivisionRing K]
 
-#print Rat.distribSMul /-
+/- warning: rat.distrib_smul -> Rat.distribSMul is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], DistribSMul.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], DistribSMul.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align rat.distrib_smul Rat.distribSMulₓ'. -/
 instance (priority := 100) distribSMul : DistribSMul ℚ K
     where
   smul := (· • ·)
   smul_zero a := by rw [smul_def, MulZeroClass.mul_zero]
   smul_add a x y := by simp only [smul_def, mul_add, cast_add]
 #align rat.distrib_smul Rat.distribSMul
--/
 
 /- warning: rat.is_scalar_tower_right -> Rat.isScalarTower_right is a dubious translation:
 lean 3 declaration is

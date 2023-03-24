@@ -139,7 +139,12 @@ instance MulOpposite.lipschitzMul : LipschitzMul βᵐᵒᵖ
 #align add_opposite.has_lipschitz_add AddOpposite.lipschitzAdd
 -/
 
-#print Real.hasLipschitzAdd /-
+/- warning: real.has_lipschitz_add -> Real.hasLipschitzAdd is a dubious translation:
+lean 3 declaration is
+  LipschitzAdd.{0} Real Real.pseudoMetricSpace Real.addMonoid
+but is expected to have type
+  LipschitzAdd.{0} Real Real.pseudoMetricSpace Real.instAddMonoidReal
+Case conversion may be inaccurate. Consider using '#align real.has_lipschitz_add Real.hasLipschitzAddₓ'. -/
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy
 instance Real.hasLipschitzAdd : LipschitzAdd ℝ
@@ -155,7 +160,6 @@ instance Real.hasLipschitzAdd : LipschitzAdd ℝ
       have := le_max_right (|p.1 - q.1|) (|p.2 - q.2|)
       linarith⟩
 #align real.has_lipschitz_add Real.hasLipschitzAdd
--/
 
 /- warning: nnreal.has_lipschitz_add -> NNReal.hasLipschitzAdd is a dubious translation:
 lean 3 declaration is

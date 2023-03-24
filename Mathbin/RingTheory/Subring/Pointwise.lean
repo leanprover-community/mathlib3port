@@ -76,13 +76,17 @@ theorem coe_pointwise_smul (m : M) (S : Subring R) : ↑(m • S) = m • (S : S
   rfl
 #align subring.coe_pointwise_smul Subring.coe_pointwise_smul
 
-#print Subring.pointwise_smul_toAddSubgroup /-
+/- warning: subring.pointwise_smul_to_add_subgroup -> Subring.pointwise_smul_toAddSubgroup is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {R : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Ring.{u2} R] [_inst_3 : MulSemiringAction.{u1, u2} M R _inst_1 (Ring.toSemiring.{u2} R _inst_2)] (m : M) (S : Subring.{u2} R _inst_2), Eq.{succ u2} (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R _inst_2)))) (Subring.toAddSubgroup.{u2} R _inst_2 (SMul.smul.{u1, u2} M (Subring.{u2} R _inst_2) (MulAction.toHasSmul.{u1, u2} M (Subring.{u2} R _inst_2) _inst_1 (Subring.pointwiseMulAction.{u1, u2} M R _inst_1 _inst_2 _inst_3)) m S)) (SMul.smul.{u1, u2} M (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R _inst_2)))) (MulAction.toHasSmul.{u1, u2} M (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R _inst_2)))) _inst_1 (AddSubgroup.pointwiseMulAction.{u1, u2} M R (AddGroupWithOne.toAddGroup.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R _inst_2))) _inst_1 (MulSemiringAction.toDistribMulAction.{u1, u2} M R _inst_1 (Ring.toSemiring.{u2} R _inst_2) _inst_3))) m (Subring.toAddSubgroup.{u2} R _inst_2 S))
+but is expected to have type
+  forall {M : Type.{u1}} {R : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Ring.{u2} R] [_inst_3 : MulSemiringAction.{u1, u2} M R _inst_1 (Ring.toSemiring.{u2} R _inst_2)] (m : M) (S : Subring.{u2} R _inst_2), Eq.{succ u2} (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (Ring.toAddGroupWithOne.{u2} R _inst_2))) (Subring.toAddSubgroup.{u2} R _inst_2 (HSMul.hSMul.{u1, u2, u2} M (Subring.{u2} R _inst_2) (Subring.{u2} R _inst_2) (instHSMul.{u1, u2} M (Subring.{u2} R _inst_2) (MulAction.toSMul.{u1, u2} M (Subring.{u2} R _inst_2) _inst_1 (Subring.pointwiseMulAction.{u1, u2} M R _inst_1 _inst_2 _inst_3))) m S)) (HSMul.hSMul.{u1, u2, u2} M (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (Ring.toAddGroupWithOne.{u2} R _inst_2))) (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (Ring.toAddGroupWithOne.{u2} R _inst_2))) (instHSMul.{u1, u2} M (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (Ring.toAddGroupWithOne.{u2} R _inst_2))) (MulAction.toSMul.{u1, u2} M (AddSubgroup.{u2} R (AddGroupWithOne.toAddGroup.{u2} R (Ring.toAddGroupWithOne.{u2} R _inst_2))) _inst_1 (AddSubgroup.pointwiseMulAction.{u1, u2} M R (AddGroupWithOne.toAddGroup.{u2} R (Ring.toAddGroupWithOne.{u2} R _inst_2)) _inst_1 (MulSemiringAction.toDistribMulAction.{u1, u2} M R _inst_1 (Ring.toSemiring.{u2} R _inst_2) _inst_3)))) m (Subring.toAddSubgroup.{u2} R _inst_2 S))
+Case conversion may be inaccurate. Consider using '#align subring.pointwise_smul_to_add_subgroup Subring.pointwise_smul_toAddSubgroupₓ'. -/
 @[simp]
 theorem pointwise_smul_toAddSubgroup (m : M) (S : Subring R) :
     (m • S).toAddSubgroup = m • S.toAddSubgroup :=
   rfl
 #align subring.pointwise_smul_to_add_subgroup Subring.pointwise_smul_toAddSubgroup
--/
 
 #print Subring.pointwise_smul_toSubsemiring /-
 @[simp]

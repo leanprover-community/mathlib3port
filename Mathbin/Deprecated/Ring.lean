@@ -187,11 +187,15 @@ theorem to_isSemiringHom (hf : IsRingHom f) : IsSemiringHom f :=
 #align is_ring_hom.to_is_semiring_hom IsRingHom.to_isSemiringHom
 -/
 
-#print IsRingHom.to_isAddGroupHom /-
+/- warning: is_ring_hom.to_is_add_group_hom -> IsRingHom.to_isAddGroupHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (IsAddGroupHom.{u1, u2} α β (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (AddGroupWithOne.toAddGroup.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))) f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (IsAddGroupHom.{u1, u2} α β (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α _inst_1)) (AddGroupWithOne.toAddGroup.{u2} β (Ring.toAddGroupWithOne.{u2} β _inst_2)) f)
+Case conversion may be inaccurate. Consider using '#align is_ring_hom.to_is_add_group_hom IsRingHom.to_isAddGroupHomₓ'. -/
 theorem to_isAddGroupHom (hf : IsRingHom f) : IsAddGroupHom f :=
   { map_add := fun _ _ => hf.map_add }
 #align is_ring_hom.to_is_add_group_hom IsRingHom.to_isAddGroupHom
--/
 
 end IsRingHom
 

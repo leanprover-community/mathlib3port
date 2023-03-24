@@ -386,12 +386,16 @@ theorem coe_zero : ⇑(0 : CauSeq β abv) = 0 :=
   rfl
 #align cau_seq.coe_zero CauSeq.coe_zero
 
-#print CauSeq.coe_one /-
+/- warning: cau_seq.coe_one -> CauSeq.coe_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv], Eq.{succ u2} (Nat -> β) (coeFn.{succ u2, succ u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (fun (_x : CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) => Nat -> β) (CauSeq.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2 abv) (OfNat.ofNat.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (OfNat.mk.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (One.one.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.hasOne.{u1, u2} α β _inst_1 _inst_2 abv _inst_3))))) (OfNat.ofNat.{u2} (Nat -> β) 1 (OfNat.mk.{u2} (Nat -> β) 1 (One.one.{u2} (Nat -> β) (Pi.instOne.{0, u2} Nat (fun (ᾰ : Nat) => β) (fun (i : Nat) => AddMonoidWithOne.toOne.{u2} β (AddGroupWithOne.toAddMonoidWithOne.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv], Eq.{succ u2} (Nat -> β) (Subtype.val.{succ u2} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{u1, u2} α _inst_1 β _inst_2 abv f) (OfNat.ofNat.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (One.toOfNat1.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.instOneCauSeq.{u1, u2} α β _inst_1 _inst_2 abv _inst_3)))) (OfNat.ofNat.{u2} (Nat -> β) 1 (One.toOfNat1.{u2} (Nat -> β) (Pi.instOne.{0, u2} Nat (fun (a._@.Mathlib.Data.Real.CauSeq._hyg.1649 : Nat) => β) (fun (i : Nat) => NonAssocRing.toOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)))))
+Case conversion may be inaccurate. Consider using '#align cau_seq.coe_one CauSeq.coe_oneₓ'. -/
 @[simp, norm_cast]
 theorem coe_one : ⇑(1 : CauSeq β abv) = 1 :=
   rfl
 #align cau_seq.coe_one CauSeq.coe_one
--/
 
 /- warning: cau_seq.zero_apply -> CauSeq.zero_apply is a dubious translation:
 lean 3 declaration is
@@ -404,12 +408,16 @@ theorem zero_apply (i) : (0 : CauSeq β abv) i = 0 :=
   rfl
 #align cau_seq.zero_apply CauSeq.zero_apply
 
-#print CauSeq.one_apply /-
+/- warning: cau_seq.one_apply -> CauSeq.one_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv] (i : Nat), Eq.{succ u2} β (coeFn.{succ u2, succ u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (fun (_x : CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) => Nat -> β) (CauSeq.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2 abv) (OfNat.ofNat.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (OfNat.mk.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (One.one.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.hasOne.{u1, u2} α β _inst_1 _inst_2 abv _inst_3)))) i) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β (AddMonoidWithOne.toOne.{u2} β (AddGroupWithOne.toAddMonoidWithOne.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv] (i : Nat), Eq.{succ u2} β (Subtype.val.{succ u2} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{u1, u2} α _inst_1 β _inst_2 abv f) (OfNat.ofNat.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (One.toOfNat1.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.instOneCauSeq.{u1, u2} α β _inst_1 _inst_2 abv _inst_3))) i) (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β (NonAssocRing.toOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))))
+Case conversion may be inaccurate. Consider using '#align cau_seq.one_apply CauSeq.one_applyₓ'. -/
 @[simp, norm_cast]
 theorem one_apply (i) : (1 : CauSeq β abv) i = 1 :=
   rfl
 #align cau_seq.one_apply CauSeq.one_apply
--/
 
 /- warning: cau_seq.const_zero -> CauSeq.const_zero is a dubious translation:
 lean 3 declaration is
@@ -422,12 +430,16 @@ theorem const_zero : const 0 = 0 :=
   rfl
 #align cau_seq.const_zero CauSeq.const_zero
 
-#print CauSeq.const_one /-
+/- warning: cau_seq.const_one -> CauSeq.const_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv], Eq.{succ u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.const.{u1, u2} α β _inst_1 _inst_2 abv _inst_3 (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β (AddMonoidWithOne.toOne.{u2} β (AddGroupWithOne.toAddMonoidWithOne.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)))))))) (OfNat.ofNat.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (OfNat.mk.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (One.one.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.hasOne.{u1, u2} α β _inst_1 _inst_2 abv _inst_3))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv], Eq.{succ u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.const.{u1, u2} α β _inst_1 _inst_2 abv _inst_3 (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β (NonAssocRing.toOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))))) (OfNat.ofNat.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) 1 (One.toOfNat1.{u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.instOneCauSeq.{u1, u2} α β _inst_1 _inst_2 abv _inst_3)))
+Case conversion may be inaccurate. Consider using '#align cau_seq.const_one CauSeq.const_oneₓ'. -/
 @[simp]
 theorem const_one : const 1 = 1 :=
   rfl
 #align cau_seq.const_one CauSeq.const_one
--/
 
 /- warning: cau_seq.const_add -> CauSeq.const_add is a dubious translation:
 lean 3 declaration is

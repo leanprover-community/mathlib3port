@@ -30,7 +30,12 @@ section
 
 variable {n : ℕ} (m : ℕ) [CharP R m]
 
-#print ZMod.algebra' /-
+/- warning: zmod.algebra' -> ZMod.algebra' is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] {n : Nat} (m : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (Algebra.{0, u1} (ZMod n) R (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)) (Ring.toSemiring.{u1} R _inst_1))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] {n : Nat} (m : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (Algebra.{0, u1} (ZMod n) R (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)) (Ring.toSemiring.{u1} R _inst_1))
+Case conversion may be inaccurate. Consider using '#align zmod.algebra' ZMod.algebra'ₓ'. -/
 /-- The `zmod n`-algebra structure on rings whose characteristic `m` divides `n` -/
 def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
   { ZMod.castHom h R with
@@ -44,7 +49,6 @@ def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
         exact Commute.cast_int_left r k
     smul_def' := fun a r => rfl }
 #align zmod.algebra' ZMod.algebra'
--/
 
 end
 

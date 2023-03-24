@@ -229,20 +229,28 @@ section
 
 variable (K : Type u) [CommRing K] (p : ℕ) [Fact p.Prime] [CharP K p]
 
-#print PerfectClosure.R /-
+/- warning: perfect_closure.r -> PerfectClosure.R is a dubious translation:
+lean 3 declaration is
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1)))) p], (Prod.{0, u1} Nat K) -> (Prod.{0, u1} Nat K) -> Prop
+but is expected to have type
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p], (Prod.{0, u1} Nat K) -> (Prod.{0, u1} Nat K) -> Prop
+Case conversion may be inaccurate. Consider using '#align perfect_closure.r PerfectClosure.Rₓ'. -/
 /-- `perfect_closure K p` is the quotient by this relation. -/
 @[mk_iff]
 inductive PerfectClosure.R : ℕ × K → ℕ × K → Prop
   | intro : ∀ n x, PerfectClosure.R (n, x) (n + 1, frobenius K p x)
 #align perfect_closure.r PerfectClosure.R
--/
 
-#print PerfectClosure /-
+/- warning: perfect_closure -> PerfectClosure is a dubious translation:
+lean 3 declaration is
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1)))) p], Type.{u1}
+but is expected to have type
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p], Type.{u1}
+Case conversion may be inaccurate. Consider using '#align perfect_closure PerfectClosureₓ'. -/
 /-- The perfect closure is the smallest extension that makes frobenius surjective. -/
 def PerfectClosure : Type u :=
   Quot (PerfectClosure.R K p)
 #align perfect_closure PerfectClosure
--/
 
 end
 
@@ -254,30 +262,42 @@ section Ring
 
 variable [CommRing K] (p : ℕ) [Fact p.Prime] [CharP K p]
 
-#print PerfectClosure.mk /-
+/- warning: perfect_closure.mk -> PerfectClosure.mk is a dubious translation:
+lean 3 declaration is
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1)))) p], (Prod.{0, u1} Nat K) -> (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3)
+but is expected to have type
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p], (Prod.{0, u1} Nat K) -> (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3)
+Case conversion may be inaccurate. Consider using '#align perfect_closure.mk PerfectClosure.mkₓ'. -/
 /-- Constructor for `perfect_closure`. -/
 def mk (x : ℕ × K) : PerfectClosure K p :=
   Quot.mk (R K p) x
 #align perfect_closure.mk PerfectClosure.mk
--/
 
-#print PerfectClosure.quot_mk_eq_mk /-
+/- warning: perfect_closure.quot_mk_eq_mk -> PerfectClosure.quot_mk_eq_mk is a dubious translation:
+lean 3 declaration is
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1)))) p] (x : Prod.{0, u1} Nat K), Eq.{succ u1} (Quot.{succ u1} (Prod.{0, u1} Nat K) (PerfectClosure.R.{u1} K _inst_1 p _inst_2 _inst_3)) (Quot.mk.{succ u1} (Prod.{0, u1} Nat K) (PerfectClosure.R.{u1} K _inst_1 p _inst_2 _inst_3) x) (PerfectClosure.mk.{u1} K _inst_1 p _inst_2 _inst_3 x)
+but is expected to have type
+  forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p] (x : Prod.{0, u1} Nat K), Eq.{succ u1} (Quot.{succ u1} (Prod.{0, u1} Nat K) (PerfectClosure.R.{u1} K _inst_1 p _inst_2 _inst_3)) (Quot.mk.{succ u1} (Prod.{0, u1} Nat K) (PerfectClosure.R.{u1} K _inst_1 p _inst_2 _inst_3) x) (PerfectClosure.mk.{u1} K _inst_1 p _inst_2 _inst_3 x)
+Case conversion may be inaccurate. Consider using '#align perfect_closure.quot_mk_eq_mk PerfectClosure.quot_mk_eq_mkₓ'. -/
 @[simp]
 theorem quot_mk_eq_mk (x : ℕ × K) : (Quot.mk (R K p) x : PerfectClosure K p) = mk K p x :=
   rfl
 #align perfect_closure.quot_mk_eq_mk PerfectClosure.quot_mk_eq_mk
--/
 
 variable {K p}
 
-#print PerfectClosure.liftOn /-
+/- warning: perfect_closure.lift_on -> PerfectClosure.liftOn is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : CommRing.{u1} K] {p : Nat} [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1)))) p] {L : Type.{u2}}, (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) -> (forall (f : (Prod.{0, u1} Nat K) -> L), (forall (x : Prod.{0, u1} Nat K) (y : Prod.{0, u1} Nat K), (PerfectClosure.R.{u1} K _inst_1 p _inst_2 _inst_3 x y) -> (Eq.{succ u2} L (f x) (f y))) -> L)
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : CommRing.{u1} K] {p : Nat} [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p] {L : Type.{u2}}, (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) -> (forall (f : (Prod.{0, u1} Nat K) -> L), (forall (x : Prod.{0, u1} Nat K) (y : Prod.{0, u1} Nat K), (PerfectClosure.R.{u1} K _inst_1 p _inst_2 _inst_3 x y) -> (Eq.{succ u2} L (f x) (f y))) -> L)
+Case conversion may be inaccurate. Consider using '#align perfect_closure.lift_on PerfectClosure.liftOnₓ'. -/
 /-- Lift a function `ℕ × K → L` to a function on `perfect_closure K p`. -/
 @[elab_as_elim]
 def liftOn {L : Type _} (x : PerfectClosure K p) (f : ℕ × K → L)
     (hf : ∀ x y, R K p x y → f x = f y) : L :=
   Quot.liftOn x f hf
 #align perfect_closure.lift_on PerfectClosure.liftOn
--/
 
 /- warning: perfect_closure.lift_on_mk -> PerfectClosure.liftOn_mk is a dubious translation:
 lean 3 declaration is
@@ -291,13 +311,17 @@ theorem liftOn_mk {L : Sort _} (f : ℕ × K → L) (hf : ∀ x y, R K p x y →
   rfl
 #align perfect_closure.lift_on_mk PerfectClosure.liftOn_mk
 
-#print PerfectClosure.induction_on /-
+/- warning: perfect_closure.induction_on -> PerfectClosure.induction_on is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : CommRing.{u1} K] {p : Nat} [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1)))) p] (x : PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) {q : (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) -> Prop}, (forall (x : Prod.{0, u1} Nat K), q (PerfectClosure.mk.{u1} K _inst_1 p _inst_2 _inst_3 x)) -> (q x)
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : CommRing.{u1} K] {p : Nat} [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p] (x : PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) {q : (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) -> Prop}, (forall (x : Prod.{0, u1} Nat K), q (PerfectClosure.mk.{u1} K _inst_1 p _inst_2 _inst_3 x)) -> (q x)
+Case conversion may be inaccurate. Consider using '#align perfect_closure.induction_on PerfectClosure.induction_onₓ'. -/
 @[elab_as_elim]
 theorem induction_on (x : PerfectClosure K p) {q : PerfectClosure K p → Prop}
     (h : ∀ x, q (mk K p x)) : q x :=
   Quot.inductionOn x h
 #align perfect_closure.induction_on PerfectClosure.induction_on
--/
 
 variable (K p)
 

@@ -94,11 +94,15 @@ theorem ofRat_zero : (ofRat 0 : Cauchy abv) = 0 :=
   rfl
 #align cau_seq.completion.of_rat_zero CauSeq.Completion.ofRat_zero
 
-#print CauSeq.Completion.ofRat_one /-
+/- warning: cau_seq.completion.of_rat_one -> CauSeq.Completion.ofRat_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv], Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β _inst_2 abv _inst_3 (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β (AddMonoidWithOne.toOne.{u2} β (AddGroupWithOne.toAddMonoidWithOne.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)))))))) (OfNat.ofNat.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) 1 (OfNat.mk.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) 1 (One.one.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.Cauchy.hasOne.{u1, u2} α _inst_1 β _inst_2 abv _inst_3))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv], Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β _inst_2 abv _inst_3 (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β (NonAssocRing.toOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))))) (OfNat.ofNat.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) 1 (One.toOfNat1.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.instOneCauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3)))
+Case conversion may be inaccurate. Consider using '#align cau_seq.completion.of_rat_one CauSeq.Completion.ofRat_oneₓ'. -/
 theorem ofRat_one : (ofRat 1 : Cauchy abv) = 1 :=
   rfl
 #align cau_seq.completion.of_rat_one CauSeq.Completion.ofRat_one
--/
 
 /- warning: cau_seq.completion.mk_eq_zero -> CauSeq.Completion.mk_eq_zero is a dubious translation:
 lean 3 declaration is
@@ -202,12 +206,16 @@ instance : NatCast (Cauchy abv) :=
 instance : IntCast (Cauchy abv) :=
   ⟨fun n => mk n⟩
 
-#print CauSeq.Completion.ofRat_natCast /-
+/- warning: cau_seq.completion.of_rat_nat_cast -> CauSeq.Completion.ofRat_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv] (n : Nat), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β _inst_2 abv _inst_3 ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat β (HasLiftT.mk.{1, succ u2} Nat β (CoeTCₓ.coe.{1, succ u2} Nat β (Nat.castCoe.{u2} β (AddMonoidWithOne.toNatCast.{u2} β (AddGroupWithOne.toAddMonoidWithOne.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))))))) n)) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (HasLiftT.mk.{1, succ u2} Nat (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CoeTCₓ.coe.{1, succ u2} Nat (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (Nat.castCoe.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.Cauchy.hasNatCast.{u1, u2} α _inst_1 β _inst_2 abv _inst_3)))) n)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv] (n : Nat), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β _inst_2 abv _inst_3 (Nat.cast.{u2} β (NonAssocRing.toNatCast.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)) n)) (Nat.cast.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.instNatCastCauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) n)
+Case conversion may be inaccurate. Consider using '#align cau_seq.completion.of_rat_nat_cast CauSeq.Completion.ofRat_natCastₓ'. -/
 @[simp]
 theorem ofRat_natCast (n : ℕ) : (ofRat n : Cauchy abv) = n :=
   rfl
 #align cau_seq.completion.of_rat_nat_cast CauSeq.Completion.ofRat_natCast
--/
 
 /- warning: cau_seq.completion.of_rat_int_cast -> CauSeq.Completion.ofRat_intCast is a dubious translation:
 lean 3 declaration is

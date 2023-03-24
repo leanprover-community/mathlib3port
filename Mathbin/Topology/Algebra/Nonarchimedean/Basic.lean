@@ -64,14 +64,18 @@ class NonarchimedeanRing (R : Type _) [Ring R] [TopologicalSpace R] extends Topo
 #align nonarchimedean_ring NonarchimedeanRing
 -/
 
-#print NonarchimedeanRing.to_nonarchimedeanAddGroup /-
+/- warning: nonarchimedean_ring.to_nonarchimedean_add_group -> NonarchimedeanRing.to_nonarchimedeanAddGroup is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [t : NonarchimedeanRing.{u1} R _inst_1 _inst_2], NonarchimedeanAddGroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) _inst_2
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] [_inst_2 : TopologicalSpace.{u1} R] [t : NonarchimedeanRing.{u1} R _inst_1 _inst_2], NonarchimedeanAddGroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) _inst_2
+Case conversion may be inaccurate. Consider using '#align nonarchimedean_ring.to_nonarchimedean_add_group NonarchimedeanRing.to_nonarchimedeanAddGroupₓ'. -/
 -- see Note [lower instance priority]
 /-- Every nonarchimedean ring is naturally a nonarchimedean additive group. -/
 instance (priority := 100) NonarchimedeanRing.to_nonarchimedeanAddGroup (R : Type _) [Ring R]
     [TopologicalSpace R] [t : NonarchimedeanRing R] : NonarchimedeanAddGroup R :=
   { t with }
 #align nonarchimedean_ring.to_nonarchimedean_add_group NonarchimedeanRing.to_nonarchimedeanAddGroup
--/
 
 namespace NonarchimedeanGroup
 

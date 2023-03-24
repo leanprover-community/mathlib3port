@@ -2575,7 +2575,12 @@ theorem nnnorm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖₊ ≤ n * ‖a�
 #align nnnorm_pow_le_mul_norm nnnorm_pow_le_mul_norm
 #align nnnorm_nsmul_le nnnorm_nsmul_le
 
-#print pow_mem_closedBall /-
+/- warning: pow_mem_closed_ball -> pow_mem_closedBall is a dubious translation:
+lean 3 declaration is
+  forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] {a : E} {b : E} {r : Real} {n : Nat}, (Membership.Mem.{u1, u1} E (Set.{u1} E) (Set.hasMem.{u1} E) a (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) b r)) -> (Membership.Mem.{u1, u1} E (Set.{u1} E) (Set.hasMem.{u1} E) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) a n) (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) b n) (SMul.smul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.addMonoid) n r)))
+but is expected to have type
+  forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] {a : E} {b : E} {r : Real} {n : Nat}, (Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) a (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) b r)) -> (Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) a n) (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) b n) (HSMul.hSMul.{0, 0, 0} Nat Real Real (instHSMul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.instAddMonoidReal)) n r)))
+Case conversion may be inaccurate. Consider using '#align pow_mem_closed_ball pow_mem_closedBallₓ'. -/
 @[to_additive]
 theorem pow_mem_closedBall {n : ℕ} (h : a ∈ closedBall b r) : a ^ n ∈ closedBall (b ^ n) (n • r) :=
   by
@@ -2584,9 +2589,13 @@ theorem pow_mem_closedBall {n : ℕ} (h : a ∈ closedBall b r) : a ^ n ∈ clos
   simpa only [nsmul_eq_mul] using mul_le_mul_of_nonneg_left h n.cast_nonneg
 #align pow_mem_closed_ball pow_mem_closedBall
 #align nsmul_mem_closed_ball nsmul_mem_closedBall
--/
 
-#print pow_mem_ball /-
+/- warning: pow_mem_ball -> pow_mem_ball is a dubious translation:
+lean 3 declaration is
+  forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] {a : E} {b : E} {r : Real} {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Membership.Mem.{u1, u1} E (Set.{u1} E) (Set.hasMem.{u1} E) a (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) b r)) -> (Membership.Mem.{u1, u1} E (Set.{u1} E) (Set.hasMem.{u1} E) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) a n) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) b n) (SMul.smul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.addMonoid) n r)))
+but is expected to have type
+  forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] {a : E} {b : E} {r : Real} {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) a (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) b r)) -> (Membership.mem.{u1, u1} E (Set.{u1} E) (Set.instMembershipSet.{u1} E) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) a n) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HPow.hPow.{u1, 0, u1} E Nat E (instHPow.{u1, 0} E Nat (Monoid.Pow.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))) b n) (HSMul.hSMul.{0, 0, 0} Nat Real Real (instHSMul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.instAddMonoidReal)) n r)))
+Case conversion may be inaccurate. Consider using '#align pow_mem_ball pow_mem_ballₓ'. -/
 @[to_additive]
 theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ ball (b ^ n) (n • r) :=
   by
@@ -2599,7 +2608,6 @@ theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ bal
   nlinarith
 #align pow_mem_ball pow_mem_ball
 #align nsmul_mem_ball nsmul_mem_ball
--/
 
 /- warning: mul_mem_closed_ball_mul_iff -> mul_mem_closedBall_mul_iff is a dubious translation:
 lean 3 declaration is

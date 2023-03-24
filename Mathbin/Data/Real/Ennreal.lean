@@ -4655,11 +4655,15 @@ theorem ofReal_pow {p : ℝ} (hp : 0 ≤ p) (n : ℕ) : ENNReal.ofReal (p ^ n) =
   by rw [of_real_eq_coe_nnreal hp, ← coe_pow, ← of_real_coe_nnreal, NNReal.coe_pow, NNReal.coe_mk]
 #align ennreal.of_real_pow ENNReal.ofReal_pow
 
-#print ENNReal.ofReal_nsmul /-
+/- warning: ennreal.of_real_nsmul -> ENNReal.ofReal_nsmul is a dubious translation:
+lean 3 declaration is
+  forall {x : Real} {n : Nat}, Eq.{1} ENNReal (ENNReal.ofReal (SMul.smul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.addMonoid) n x)) (SMul.smul.{0, 0} Nat ENNReal (AddMonoid.SMul.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal ENNReal.addCommMonoidWithOne))) n (ENNReal.ofReal x))
+but is expected to have type
+  forall {x : Real} {n : Nat}, Eq.{1} ENNReal (ENNReal.ofReal (HSMul.hSMul.{0, 0, 0} Nat Real Real (instHSMul.{0, 0} Nat Real (AddMonoid.SMul.{0} Real Real.instAddMonoidReal)) n x)) (HSMul.hSMul.{0, 0, 0} Nat ENNReal ENNReal (instHSMul.{0, 0} Nat ENNReal (AddMonoid.SMul.{0} ENNReal (AddMonoidWithOne.toAddMonoid.{0} ENNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} ENNReal instENNRealAddCommMonoidWithOne)))) n (ENNReal.ofReal x))
+Case conversion may be inaccurate. Consider using '#align ennreal.of_real_nsmul ENNReal.ofReal_nsmulₓ'. -/
 theorem ofReal_nsmul {x : ℝ} {n : ℕ} : ENNReal.ofReal (n • x) = n • ENNReal.ofReal x := by
   simp only [nsmul_eq_mul, ← of_real_coe_nat n, ← of_real_mul n.cast_nonneg]
 #align ennreal.of_real_nsmul ENNReal.ofReal_nsmul
--/
 
 /- warning: ennreal.of_real_inv_of_pos -> ENNReal.ofReal_inv_of_pos is a dubious translation:
 lean 3 declaration is

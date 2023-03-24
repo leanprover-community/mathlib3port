@@ -155,12 +155,16 @@ instance : Ring (Completion α) :=
               (continuous_snd.comp continuous_snd))))
         fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mul] }
 
-#print UniformSpace.Completion.coeRingHom /-
+/- warning: uniform_space.completion.coe_ring_hom -> UniformSpace.Completion.coeRingHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))] [_inst_4 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))], RingHom.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_2) (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} (UniformSpace.Completion.{u1} α _inst_2) (Ring.toNonAssocRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.Completion.ring.{u1} α _inst_1 _inst_2 _inst_3 _inst_4)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))] [_inst_4 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α _inst_1))], RingHom.{u1, u1} α (UniformSpace.Completion.{u1} α _inst_2) (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} (UniformSpace.Completion.{u1} α _inst_2) (Ring.toNonAssocRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.Completion.ring.{u1} α _inst_1 _inst_2 _inst_3 _inst_4)))
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.coe_ring_hom UniformSpace.Completion.coeRingHomₓ'. -/
 /-- The map from a uniform ring to its completion, as a ring homomorphism. -/
 def coeRingHom : α →+* Completion α :=
   ⟨coe, coe_one α, fun a b => coe_mul a b, coe_zero, fun a b => coe_add a b⟩
 #align uniform_space.completion.coe_ring_hom UniformSpace.Completion.coeRingHom
--/
 
 /- warning: uniform_space.completion.continuous_coe_ring_hom -> UniformSpace.Completion.continuous_coeRingHom is a dubious translation:
 lean 3 declaration is
@@ -205,13 +209,17 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
         rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 #align uniform_space.completion.extension_hom UniformSpace.Completion.extensionHom
 
-#print UniformSpace.Completion.topologicalRing /-
+/- warning: uniform_space.completion.top_ring_compl -> UniformSpace.Completion.topologicalRing is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))] [_inst_4 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))], TopologicalRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.Completion.uniformSpace.{u1} α _inst_2)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (Ring.toNonAssocRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.Completion.ring.{u1} α _inst_1 _inst_2 _inst_3 _inst_4)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))] [_inst_4 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α _inst_1))], TopologicalRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.Completion.uniformSpace.{u1} α _inst_2)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (Ring.toNonAssocRing.{u1} (UniformSpace.Completion.{u1} α _inst_2) (UniformSpace.Completion.ring.{u1} α _inst_1 _inst_2 _inst_3 _inst_4)))
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.top_ring_compl UniformSpace.Completion.topologicalRingₓ'. -/
 instance topologicalRing : TopologicalRing (Completion α)
     where
   continuous_add := continuous_add
   continuous_mul := continuous_mul
 #align uniform_space.completion.top_ring_compl UniformSpace.Completion.topologicalRing
--/
 
 /- warning: uniform_space.completion.map_ring_hom -> UniformSpace.Completion.mapRingHom is a dubious translation:
 lean 3 declaration is
@@ -280,11 +288,15 @@ instance : CommRing (Completion R) :=
         (isClosed_eq (continuous_fst.mul continuous_snd) (continuous_snd.mul continuous_fst))
         fun a b => by rw [← coe_mul, ← coe_mul, mul_comm] }
 
-#print UniformSpace.Completion.algebra' /-
+/- warning: uniform_space.completion.algebra' -> UniformSpace.Completion.algebra' is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_9 : CommRing.{u1} R] [_inst_10 : UniformSpace.{u1} R] [_inst_11 : UniformAddGroup.{u1} R _inst_10 (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_9))))] [_inst_12 : TopologicalRing.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_10) (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_9)))], Algebra.{u1, u1} R (UniformSpace.Completion.{u1} R _inst_10) (CommRing.toCommSemiring.{u1} R _inst_9) (Ring.toSemiring.{u1} (UniformSpace.Completion.{u1} R _inst_10) (UniformSpace.Completion.ring.{u1} R (CommRing.toRing.{u1} R _inst_9) _inst_10 _inst_12 _inst_11))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_9 : CommRing.{u1} R] [_inst_10 : UniformSpace.{u1} R] [_inst_11 : UniformAddGroup.{u1} R _inst_10 (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_9)))] [_inst_12 : TopologicalRing.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_10) (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_9)))], Algebra.{u1, u1} R (UniformSpace.Completion.{u1} R _inst_10) (CommRing.toCommSemiring.{u1} R _inst_9) (Ring.toSemiring.{u1} (UniformSpace.Completion.{u1} R _inst_10) (UniformSpace.Completion.ring.{u1} R (CommRing.toRing.{u1} R _inst_9) _inst_10 _inst_12 _inst_11))
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.algebra' UniformSpace.Completion.algebra'ₓ'. -/
 /-- A shortcut instance for the common case -/
 instance algebra' : Algebra R (Completion R) := by infer_instance
 #align uniform_space.completion.algebra' UniformSpace.Completion.algebra'
--/
 
 end CommRing
 
@@ -332,21 +344,29 @@ def sepQuotEquivRingQuot (α) [r : CommRing α] [UniformSpace α] [UniformAddGro
     (addGroup_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
 #align uniform_space.sep_quot_equiv_ring_quot UniformSpace.sepQuotEquivRingQuot
 
-#print UniformSpace.commRing /-
+/- warning: uniform_space.comm_ring -> UniformSpace.commRing is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1))))] [_inst_4 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1)))], CommRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α (CommRing.toRing.{u1} α _inst_1)))] [_inst_4 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1)))], CommRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2))
+Case conversion may be inaccurate. Consider using '#align uniform_space.comm_ring UniformSpace.commRingₓ'. -/
 -- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer
 instance commRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     CommRing (Quotient (separationSetoid α)) := by rw [ring_sep_quot α] <;> infer_instance
 #align uniform_space.comm_ring UniformSpace.commRing
--/
 
-#print UniformSpace.topologicalRing /-
+/- warning: uniform_space.topological_ring -> UniformSpace.topologicalRing is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1))))] [_inst_4 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1)))], TopologicalRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (Quotient.topologicalSpace.{u1} α (UniformSpace.separationSetoid.{u1} α _inst_2) (UniformSpace.toTopologicalSpace.{u1} α _inst_2)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (Ring.toNonAssocRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (CommRing.toRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (UniformSpace.commRing.{u1} α _inst_1 _inst_2 _inst_3 _inst_4))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α (CommRing.toRing.{u1} α _inst_1)))] [_inst_4 : TopologicalRing.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (CommRing.toRing.{u1} α _inst_1)))], TopologicalRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (instTopologicalSpaceQuotient.{u1} α (UniformSpace.separationSetoid.{u1} α _inst_2) (UniformSpace.toTopologicalSpace.{u1} α _inst_2)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (Ring.toNonAssocRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (CommRing.toRing.{u1} (Quotient.{succ u1} α (UniformSpace.separationSetoid.{u1} α _inst_2)) (UniformSpace.commRing.{u1} α _inst_1 _inst_2 _inst_3 _inst_4))))
+Case conversion may be inaccurate. Consider using '#align uniform_space.topological_ring UniformSpace.topologicalRingₓ'. -/
 instance topologicalRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     TopologicalRing (Quotient (separationSetoid α)) :=
   by
   convert topologicalRing_quotient (⊥ : Ideal α).closure <;> try apply ring_sep_rel
   simp [UniformSpace.commRing]
 #align uniform_space.topological_ring UniformSpace.topologicalRing
--/
 
 end UniformSpace
 

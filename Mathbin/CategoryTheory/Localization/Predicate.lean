@@ -55,9 +55,9 @@ class IsLocalization : Prop where
   nonempty_isEquivalence : Nonempty (IsEquivalence (Localization.Construction.lift L inverts))
 #align category_theory.functor.is_localization CategoryTheory.Functor.IsLocalization
 
-instance q_isLocalization : W.q.IsLocalization W
+instance q_isLocalization : W.Q.IsLocalization W
     where
-  inverts := W.q_inverts
+  inverts := W.Q_inverts
   nonempty_isEquivalence :=
     by
     suffices localization.construction.lift W.Q W.Q_inverts = 𝟭 _
@@ -86,15 +86,15 @@ structure StrictUniversalPropertyFixedTarget where
 /-- The localized category `W.localization` that was constructed satisfies
 the universal property of the localization. -/
 @[simps]
-def strictUniversalPropertyFixedTargetQ : StrictUniversalPropertyFixedTarget W.q W E
+def strictUniversalPropertyFixedTargetQ : StrictUniversalPropertyFixedTarget W.Q W E
     where
-  inverts := W.q_inverts
+  inverts := W.Q_inverts
   lift := Construction.lift
   fac := Construction.fac
   uniq := Construction.uniq
 #align category_theory.localization.strict_universal_property_fixed_target_Q CategoryTheory.Localization.strictUniversalPropertyFixedTargetQ
 
-instance : Inhabited (StrictUniversalPropertyFixedTarget W.q W E) :=
+instance : Inhabited (StrictUniversalPropertyFixedTarget W.Q W E) :=
   ⟨strictUniversalPropertyFixedTargetQ _ _⟩
 
 /-- When `W` consists of isomorphisms, the identity satisfies the universal property
@@ -124,7 +124,7 @@ theorem IsLocalization.mk' (h₁ : Localization.StrictUniversalPropertyFixedTarg
   { inverts := h₁.inverts
     nonempty_isEquivalence :=
       Nonempty.intro
-        { inverse := h₂.lift W.q W.q_inverts
+        { inverse := h₂.lift W.Q W.Q_inverts
           unitIso :=
             eqToIso
               (Localization.Construction.uniq _ _
@@ -177,20 +177,20 @@ def equivalenceFromModel : W.Localization ≌ D :=
 
 /-- Via the equivalence of categories `equivalence_from_model L W : W.localization ≌ D`,
 one may identify the functors `W.Q` and `L`. -/
-def qCompEquivalenceFromModelFunctorIso : W.q ⋙ (equivalenceFromModel L W).Functor ≅ L :=
+def qCompEquivalenceFromModelFunctorIso : W.Q ⋙ (equivalenceFromModel L W).Functor ≅ L :=
   eqToIso (Construction.fac _ _)
 #align category_theory.localization.Q_comp_equivalence_from_model_functor_iso CategoryTheory.Localization.qCompEquivalenceFromModelFunctorIso
 
 /-- Via the equivalence of categories `equivalence_from_model L W : W.localization ≌ D`,
 one may identify the functors `L` and `W.Q`. -/
-def compEquivalenceFromModelInverseIso : L ⋙ (equivalenceFromModel L W).inverse ≅ W.q :=
+def compEquivalenceFromModelInverseIso : L ⋙ (equivalenceFromModel L W).inverse ≅ W.Q :=
   calc
     L ⋙ (equivalenceFromModel L W).inverse ≅ _ :=
       isoWhiskerRight (qCompEquivalenceFromModelFunctorIso L W).symm _
-    _ ≅ W.q ⋙ (equivalenceFromModel L W).Functor ⋙ (equivalenceFromModel L W).inverse :=
+    _ ≅ W.Q ⋙ (equivalenceFromModel L W).Functor ⋙ (equivalenceFromModel L W).inverse :=
       (Functor.associator _ _ _)
-    _ ≅ W.q ⋙ 𝟭 _ := (isoWhiskerLeft _ (equivalenceFromModel L W).unitIso.symm)
-    _ ≅ W.q := Functor.rightUnitor _
+    _ ≅ W.Q ⋙ 𝟭 _ := (isoWhiskerLeft _ (equivalenceFromModel L W).unitIso.symm)
+    _ ≅ W.Q := Functor.rightUnitor _
     
 #align category_theory.localization.comp_equivalence_from_model_inverse_iso CategoryTheory.Localization.compEquivalenceFromModelInverseIso
 
@@ -312,7 +312,7 @@ def fac (F : C ⥤ E) (hF : W.IsInvertedBy F) (L : C ⥤ D) [hL : L.IsLocalizati
 #align category_theory.localization.fac CategoryTheory.Localization.fac
 
 instance liftingConstructionLift (F : C ⥤ D) (hF : W.IsInvertedBy F) :
-    Lifting W.q W F (Construction.lift F hF) :=
+    Lifting W.Q W F (Construction.lift F hF) :=
   ⟨eqToIso (Construction.fac F hF)⟩
 #align category_theory.localization.lifting_construction_lift CategoryTheory.Localization.liftingConstructionLift
 

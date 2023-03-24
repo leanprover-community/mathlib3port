@@ -191,53 +191,37 @@ instance [CommGroup α] : CommGroup αᵐᵒᵖ :=
 
 variable {α}
 
-/- warning: mul_opposite.op_nat_cast -> MulOpposite.op_natCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NatCast.{u1} α] (n : Nat), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α _inst_1))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Nat (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Nat (MulOpposite.{u1} α) (Nat.castCoe.{u1} (MulOpposite.{u1} α) (MulOpposite.hasNatCast.{u1} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1) n)) (Nat.cast.{u1} (MulOpposite.{u1} α) (AddMonoidWithOne.toNatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addMonoidWithOne.{u1} α _inst_1)) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_nat_cast MulOpposite.op_natCastₓ'. -/
+#print MulOpposite.op_natCast /-
 @[simp, norm_cast, to_additive]
 theorem op_natCast [NatCast α] (n : ℕ) : op (n : α) = n :=
   rfl
 #align mul_opposite.op_nat_cast MulOpposite.op_natCast
-#align add_opposite.op_nat_cast AddOpposite.op_nat_cast
+#align add_opposite.op_nat_cast AddOpposite.op_natCast
+-/
 
-/- warning: mul_opposite.op_int_cast -> MulOpposite.op_intCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : IntCast.{u1} α] (n : Int), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α _inst_1))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Int (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Int (MulOpposite.{u1} α) (Int.castCoe.{u1} (MulOpposite.{u1} α) (MulOpposite.hasIntCast.{u1} α _inst_1)))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) n)) (Int.cast.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addGroupWithOne.{u1} α _inst_1)) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_int_cast MulOpposite.op_intCastₓ'. -/
+#print MulOpposite.op_intCast /-
 @[simp, norm_cast, to_additive]
 theorem op_intCast [IntCast α] (n : ℤ) : op (n : α) = n :=
   rfl
 #align mul_opposite.op_int_cast MulOpposite.op_intCast
-#align add_opposite.op_int_cast AddOpposite.op_int_cast
+#align add_opposite.op_int_cast AddOpposite.op_intCast
+-/
 
-/- warning: mul_opposite.unop_nat_cast -> MulOpposite.unop_natCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NatCast.{u1} α] (n : Nat), Eq.{succ u1} α (MulOpposite.unop.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Nat (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Nat (MulOpposite.{u1} α) (Nat.castCoe.{u1} (MulOpposite.{u1} α) (MulOpposite.hasNatCast.{u1} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α _inst_1))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} α] (n : Nat), Eq.{succ u1} α (MulOpposite.unop.{u1} α (Nat.cast.{u1} (MulOpposite.{u1} α) (AddMonoidWithOne.toNatCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addMonoidWithOne.{u1} α _inst_1)) n)) (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_nat_cast MulOpposite.unop_natCastₓ'. -/
+#print MulOpposite.unop_natCast /-
 @[simp, norm_cast, to_additive]
 theorem unop_natCast [NatCast α] (n : ℕ) : unop (n : αᵐᵒᵖ) = n :=
   rfl
 #align mul_opposite.unop_nat_cast MulOpposite.unop_natCast
-#align add_opposite.unop_nat_cast AddOpposite.unop_nat_cast
+#align add_opposite.unop_nat_cast AddOpposite.unop_natCast
+-/
 
-/- warning: mul_opposite.unop_int_cast -> MulOpposite.unop_intCast is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : IntCast.{u1} α] (n : Int), Eq.{succ u1} α (MulOpposite.unop.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Int (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Int (MulOpposite.{u1} α) (Int.castCoe.{u1} (MulOpposite.{u1} α) (MulOpposite.hasIntCast.{u1} α _inst_1)))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α _inst_1))) n)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (MulOpposite.unop.{u1} α (Int.cast.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addGroupWithOne.{u1} α _inst_1)) n)) (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_int_cast MulOpposite.unop_intCastₓ'. -/
+#print MulOpposite.unop_intCast /-
 @[simp, norm_cast, to_additive]
 theorem unop_intCast [IntCast α] (n : ℤ) : unop (n : αᵐᵒᵖ) = n :=
   rfl
 #align mul_opposite.unop_int_cast MulOpposite.unop_intCast
-#align add_opposite.unop_int_cast AddOpposite.unop_int_cast
+#align add_opposite.unop_int_cast AddOpposite.unop_intCast
+-/
 
 /- warning: mul_opposite.unop_div -> MulOpposite.unop_div is a dubious translation:
 lean 3 declaration is

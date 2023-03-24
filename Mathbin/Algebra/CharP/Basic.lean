@@ -733,16 +733,25 @@ theorem charP_to_charZero (R : Type _) [AddGroupWithOne R] [CharP R 0] : CharZer
 #align char_p.char_p_to_char_zero CharP.charP_to_charZero
 -/
 
-#print CharP.cast_eq_mod /-
+/- warning: char_p.cast_eq_mod -> CharP.cast_eq_mod is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)) p] (k : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)))))) k) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)))))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) k p))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1))) p] (k : Nat), Eq.{succ u1} R (Nat.cast.{u1} R (NonAssocRing.toNatCast.{u1} R _inst_1) k) (Nat.cast.{u1} R (NonAssocRing.toNatCast.{u1} R _inst_1) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) k p))
+Case conversion may be inaccurate. Consider using '#align char_p.cast_eq_mod CharP.cast_eq_modₓ'. -/
 theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
   calc
     (k : R) = ↑(k % p + p * (k / p)) := by rw [Nat.mod_add_div]
     _ = ↑(k % p) := by simp [cast_eq_zero]
     
 #align char_p.cast_eq_mod CharP.cast_eq_mod
--/
 
-#print CharP.char_ne_zero_of_finite /-
+/- warning: char_p.char_ne_zero_of_finite -> CharP.char_ne_zero_of_finite is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)) p] [_inst_3 : Finite.{succ u1} R], Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1))) p] [_inst_3 : Finite.{succ u1} R], Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
+Case conversion may be inaccurate. Consider using '#align char_p.char_ne_zero_of_finite CharP.char_ne_zero_of_finiteₓ'. -/
 /-- The characteristic of a finite ring cannot be zero. -/
 theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 :=
   by
@@ -751,7 +760,6 @@ theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 :=
   cases nonempty_fintype R
   exact absurd Nat.cast_injective (not_injective_infinite_finite (coe : ℕ → R))
 #align char_p.char_ne_zero_of_finite CharP.char_ne_zero_of_finite
--/
 
 #print CharP.ringChar_ne_zero_of_finite /-
 theorem ringChar_ne_zero_of_finite [Finite R] : ringChar R ≠ 0 :=
@@ -952,7 +960,7 @@ theorem Ring.two_ne_zero {R : Type _} [NonAssocSemiring R] [Nontrivial R] (hR : 
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Nontrivial.{u1} R], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) -> (Ne.{succ u1} R (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1))))))) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)))))))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Nontrivial.{u1} R], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Ne.{succ u1} R (Neg.neg.{u1} R (AddGroupWithOne.toNeg.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1))))
+  forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Nontrivial.{u1} R], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Ne.{succ u1} R (Neg.neg.{u1} R (AddGroupWithOne.toNeg.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align ring.neg_one_ne_one_of_char_ne_two Ring.neg_one_ne_one_of_char_ne_twoₓ'. -/
 -- We have `char_p.neg_one_ne_one`, which assumes `[ring R] (p : ℕ) [char_p R p] [fact (2 < p)]`.
 -- This is a version using `ring_char` instead.
@@ -966,7 +974,7 @@ theorem Ring.neg_one_ne_one_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontri
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))))], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) -> (forall {a : R}, Iff (Eq.{succ u1} R (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)))) a) a) (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)))))))))
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (forall {a : R}, Iff (Eq.{succ u1} R (Neg.neg.{u1} R (AddGroupWithOne.toNeg.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)) a) a) (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))))))
+  forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : NoZeroDivisors.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))], (Ne.{1} Nat (ringChar.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (forall {a : R}, Iff (Eq.{succ u1} R (Neg.neg.{u1} R (AddGroupWithOne.toNeg.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1))) a) a) (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align ring.eq_self_iff_eq_zero_of_char_ne_two Ring.eq_self_iff_eq_zero_of_char_ne_twoₓ'. -/
 /-- Characteristic `≠ 2` in a domain implies that `-a = a` iff `a = 0`. -/
 theorem Ring.eq_self_iff_eq_zero_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R]
@@ -987,7 +995,7 @@ variable (R) [NonAssocRing R] [Fintype R] (n : ℕ)
 lean 3 declaration is
   forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Fintype.{u1} R] (n : Nat), (Eq.{1} Nat (Fintype.card.{u1} R _inst_2) n) -> (forall (i : Nat), (LT.lt.{0} Nat Nat.hasLt i n) -> (Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)))))) i) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)))))))) -> (Eq.{1} Nat i (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)) n)
 but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Fintype.{u1} R] (n : Nat), (Eq.{1} Nat (Fintype.card.{u1} R _inst_2) n) -> (forall (i : Nat), (LT.lt.{0} Nat instLTNat i n) -> (Eq.{succ u1} R (Nat.cast.{u1} R (NonAssocRing.toNatCast.{u1} R _inst_1) i) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))))) -> (Eq.{1} Nat i (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R _inst_1)) n)
+  forall (R : Type.{u1}) [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : Fintype.{u1} R] (n : Nat), (Eq.{1} Nat (Fintype.card.{u1} R _inst_2) n) -> (forall (i : Nat), (LT.lt.{0} Nat instLTNat i n) -> (Eq.{succ u1} R (Nat.cast.{u1} R (NonAssocRing.toNatCast.{u1} R _inst_1) i) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))))) -> (Eq.{1} Nat i (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1))) n)
 Case conversion may be inaccurate. Consider using '#align char_p_of_ne_zero charP_of_ne_zeroₓ'. -/
 theorem charP_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 → i = 0) :
     CharP R n :=

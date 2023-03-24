@@ -181,13 +181,17 @@ theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) 
     rw [mul_div_cancel_left _ hz, mul_left_comm, mul_div_cancel_left _ hz]
 #align euclidean_domain.mul_div_assoc EuclideanDomain.mul_div_assoc
 
-#print EuclideanDomain.div_one /-
+/- warning: euclidean_domain.div_one -> EuclideanDomain.div_one is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (p : R), Eq.{succ u1} R (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.hasDiv.{u1} R _inst_1)) p (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))) p
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] (p : R), Eq.{succ u1} R (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (EuclideanDomain.instDiv.{u1} R _inst_1)) p (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) p
+Case conversion may be inaccurate. Consider using '#align euclidean_domain.div_one EuclideanDomain.div_oneₓ'. -/
 -- This generalizes `int.div_one`, see note [simp-normal form]
 @[simp]
 theorem div_one (p : R) : p / 1 = p :=
   (EuclideanDomain.eq_div_of_mul_eq_left (one_ne_zero' R) (mul_one p)).symm
 #align euclidean_domain.div_one EuclideanDomain.div_one
--/
 
 #print EuclideanDomain.div_dvd_of_dvd /-
 theorem div_dvd_of_dvd {p q : R} (hpq : q ∣ p) : p / q ∣ p :=
@@ -296,12 +300,16 @@ theorem gcd_eq_left {a b : R} : gcd a b = a ↔ a ∣ b :=
 #align euclidean_domain.gcd_eq_left EuclideanDomain.gcd_eq_left
 -/
 
-#print EuclideanDomain.gcd_one_left /-
+/- warning: euclidean_domain.gcd_one_left -> EuclideanDomain.gcd_one_left is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (a : R), Eq.{succ u1} R (EuclideanDomain.gcd.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))))) a) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (a : R), Eq.{succ u1} R (EuclideanDomain.gcd.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) a) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align euclidean_domain.gcd_one_left EuclideanDomain.gcd_one_leftₓ'. -/
 @[simp]
 theorem gcd_one_left (a : R) : gcd 1 a = 1 :=
   gcd_eq_left.2 (one_dvd _)
 #align euclidean_domain.gcd_one_left EuclideanDomain.gcd_one_left
--/
 
 #print EuclideanDomain.gcd_self /-
 @[simp]

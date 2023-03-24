@@ -566,7 +566,12 @@ theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x �
   simpa using (inv_lt_inv₀ (v.ne_zero_iff.2 h) one_ne_zero).symm
 #align valuation.one_lt_val_iff Valuation.one_lt_val_iff
 
-#print Valuation.ltAddSubgroup /-
+/- warning: valuation.lt_add_subgroup -> Valuation.ltAddSubgroup is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {Γ₀ : Type.{u2}} [_inst_3 : Ring.{u1} R] [_inst_4 : LinearOrderedCommGroupWithZero.{u2} Γ₀], (Valuation.{u1, u2} R Γ₀ (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u2} Γ₀ _inst_4) _inst_3) -> (Units.{u2} Γ₀ (MonoidWithZero.toMonoid.{u2} Γ₀ (GroupWithZero.toMonoidWithZero.{u2} Γ₀ (CommGroupWithZero.toGroupWithZero.{u2} Γ₀ (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u2} Γ₀ _inst_4))))) -> (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3))))
+but is expected to have type
+  forall {R : Type.{u1}} {Γ₀ : Type.{u2}} [_inst_3 : Ring.{u1} R] [_inst_4 : LinearOrderedCommGroupWithZero.{u2} Γ₀], (Valuation.{u1, u2} R Γ₀ (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u2} Γ₀ _inst_4) _inst_3) -> (Units.{u2} Γ₀ (MonoidWithZero.toMonoid.{u2} Γ₀ (GroupWithZero.toMonoidWithZero.{u2} Γ₀ (CommGroupWithZero.toGroupWithZero.{u2} Γ₀ (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u2} Γ₀ _inst_4))))) -> (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_3)))
+Case conversion may be inaccurate. Consider using '#align valuation.lt_add_subgroup Valuation.ltAddSubgroupₓ'. -/
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R
     where
@@ -578,7 +583,6 @@ def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R
   add_mem' x y x_in y_in := lt_of_le_of_lt (v.map_add x y) (max_lt x_in y_in)
   neg_mem' x x_in := by rwa [Set.mem_setOf_eq, map_neg]
 #align valuation.lt_add_subgroup Valuation.ltAddSubgroup
--/
 
 end Group
 
