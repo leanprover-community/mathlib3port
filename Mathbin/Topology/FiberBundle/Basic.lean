@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.basic
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit 8ef6f08ff8c781c5c07a8b12843710e1a0d8a688
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.FiberBundle.Trivialization
 
 /-!
 # Fiber bundles
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Mathematically, a (topological) fiber bundle with fiber `F` over a base `B` is a space projecting on
 `B` for which the fibers are all homeomorphic to `F`, such that the local situation around each

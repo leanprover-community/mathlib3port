@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.rel_iso.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 3353f661228bd27f632c600cd1a58b874d847c90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -665,10 +665,16 @@ protected theorem isWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrd
   | f, H => { f.is_strict_total_order with wf := f.well_founded H.wf }
 #align rel_embedding.is_well_order RelEmbedding.isWellOrder
 
+/-- `quotient.mk` as a relation homomorphism between the relation and the lift of a relation. -/
+@[simps]
+def Quotient.mkRelHom [Setoid α] {r : α → α → Prop} (H) : r →r Quotient.lift₂ r H :=
+  ⟨@Quotient.mk' α _, fun _ _ => id⟩
+#align quotient.mk_rel_hom Quotient.mkRelHom
+
 #print Quotient.outRelEmbedding /-
 /-- `quotient.out` as a relation embedding between the lift of a relation and the relation. -/
 @[simps]
-noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Prop} (H) :
+noncomputable def Quotient.outRelEmbedding [Setoid α] {r : α → α → Prop} (H) :
     Quotient.lift₂ r H ↪r r :=
   ⟨Embedding.quotientOut α,
     by
@@ -677,17 +683,43 @@ noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Pr
 #align quotient.out_rel_embedding Quotient.outRelEmbedding
 -/
 
+/-- `quotient.out'` as a relation embedding between the lift of a relation and the relation. -/
+@[simps]
+noncomputable def Quotient.out'RelEmbedding {s : Setoid α} {r : α → α → Prop} (H) :
+    (fun a b => Quotient.liftOn₂' a b r H) ↪r r :=
+  { Quotient.outRelEmbedding _ with toFun := Quotient.out' }
+#align quotient.out'_rel_embedding Quotient.out'RelEmbedding
+
+@[simp]
+theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop} {H} {a} :
+    Acc (Quotient.lift₂ r H) ⟦a⟧ ↔ Acc r a :=
+  by
+  constructor
+  · exact RelHomClass.acc (Quotient.mkRelHom H) a
+  · intro ac
+    induction' ac with _ H IH
+    dsimp at IH
+    refine' ⟨_, fun q h => _⟩
+    obtain ⟨a', rfl⟩ := q.exists_rep
+    exact IH a' h
+#align acc_lift₂_iff acc_lift₂_iff
+
+@[simp]
+theorem acc_liftOn₂'_iff {s : Setoid α} {r : α → α → Prop} {H} {a} :
+    Acc (fun x y => Quotient.liftOn₂' x y r H) (Quotient.mk'' a : Quotient s) ↔ Acc r a :=
+  acc_lift₂_iff
+#align acc_lift_on₂'_iff acc_liftOn₂'_iff
+
 #print wellFounded_lift₂_iff /-
 /-- A relation is well founded iff its lift to a quotient is. -/
-@[simp]
-theorem wellFounded_lift₂_iff [s : Setoid α] {r : α → α → Prop} {H} :
+theorem wellFounded_lift₂_iff [Setoid α] {r : α → α → Prop} {H} :
     WellFounded (Quotient.lift₂ r H) ↔ WellFounded r :=
-  ⟨fun hr =>
-    by
-    suffices ∀ {x : Quotient s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
-    · refine' fun x => hr.induction x _
-      rintro x IH a rfl
-      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩, (Quotient.outRelEmbedding H).WellFounded⟩
+  by
+  constructor
+  · exact RelHomClass.wellFounded (Quotient.mkRelHom H)
+  · refine' fun wf => ⟨fun q => _⟩
+    obtain ⟨a, rfl⟩ := q.exists_rep
+    exact acc_lift₂_iff.2 (wf.apply a)
 #align well_founded_lift₂_iff wellFounded_lift₂_iff
 -/
 
@@ -695,6 +727,17 @@ alias _root_.well_founded_lift₂_iff ↔
   _root_.well_founded.of_quotient_lift₂ _root_.well_founded.quotient_lift₂
 #align well_founded.of_quotient_lift₂ WellFounded.of_quotient_lift₂
 #align well_founded.quotient_lift₂ WellFounded.quotient_lift₂
+
+@[simp]
+theorem wellFounded_liftOn₂'_iff {s : Setoid α} {r : α → α → Prop} {H} :
+    (WellFounded fun x y : Quotient s => Quotient.liftOn₂' x y r H) ↔ WellFounded r :=
+  wellFounded_lift₂_iff
+#align well_founded_lift_on₂'_iff wellFounded_liftOn₂'_iff
+
+alias _root_.well_founded_lift_on₂'_iff ↔
+  _root_.well_founded.of_quotient_lift_on₂' _root_.well_founded.quotient_lift_on₂'
+#align well_founded.of_quotient_lift_on₂' WellFounded.of_quotient_liftOn₂'
+#align well_founded.quotient_lift_on₂' WellFounded.quotient_liftOn₂'
 
 #print RelEmbedding.ofMapRelIff /-
 /--

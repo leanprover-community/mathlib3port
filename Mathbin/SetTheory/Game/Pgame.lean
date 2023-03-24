@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit dc9e5ba64653e017743ba5d2c28e42f9f486bf99
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.List.Basic
 import Mathbin.Logic.Relation
+import Mathbin.Order.GameAdd
 
 /-!
 # Combinatorial (pre-)games.
@@ -346,95 +347,32 @@ instance isEmpty_one_rightMoves : IsEmpty (RightMoves 1) :=
 /-! ### Pre-game order relations -/
 
 
-/-- Define simultaneously by mutual induction the `≤` relation and its swapped converse `⧏` on
-  pre-games.
-
-  The ZFC definition says that `x = {xL | xR}` is less or equal to `y = {yL | yR}` if
-  `∀ x₁ ∈ xL, x₁ ⧏ y` and `∀ y₂ ∈ yR, x ⧏ y₂`, where `x ⧏ y` means `¬ y ≤ x`. This is a tricky
-  induction because it only decreases one side at a time, and it also swaps the arguments in the
-  definition of `≤`. The solution is to define `x ≤ y` and `x ⧏ y` simultaneously. -/
-def leLf : ∀ x y : Pgame.{u}, Prop × Prop
-  | mk xl xr xL xR,
-    mk yl yr yL yR =>-- the orderings of the clauses here are carefully chosen so that
-    --   and.left/or.inl refer to moves by Left, and
-    --   and.right/or.inr refer to moves by Right.
-    ((∀ i, (le_lf (xL i) ⟨yl, yr, yL, yR⟩).2) ∧ ∀ j, (le_lf ⟨xl, xr, xL, xR⟩ (yR j)).2,
-      (∃ i, (le_lf ⟨xl, xr, xL, xR⟩ (yL i)).1) ∨
-        ∃ j, (le_lf (xR j) ⟨yl, yr, yL, yR⟩).1)decreasing_by
-  pgame_wf_tac
-#align pgame.le_lf Pgame.leLf
-
 /-- The less or equal relation on pre-games.
 
 If `0 ≤ x`, then Left can win `x` as the second player. -/
 instance : LE Pgame :=
-  ⟨fun x y => (leLf x y).1⟩
+  ⟨Sym2.GameAdd.fix wf_isOption fun x y le =>
+      (∀ i, ¬le y (x.moveLeft i) (Sym2.GameAdd.snd_fst <| IsOption.move_left i)) ∧
+        ∀ j, ¬le (y.moveRight j) x (Sym2.GameAdd.fst_snd <| IsOption.move_right j)⟩
 
 /-- The less or fuzzy relation on pre-games.
 
 If `0 ⧏ x`, then Left can win `x` as the first player. -/
 def Lf (x y : Pgame) : Prop :=
-  (leLf x y).2
+  ¬y ≤ x
 #align pgame.lf Pgame.Lf
 
 -- mathport name: pgame.lf
 scoped infixl:50 " ⧏ " => Pgame.Lf
 
-/-- Definition of `x ≤ y` on pre-games built using the constructor. -/
-@[simp]
-theorem mk_le_mk {xl xr xL xR yl yr yL yR} :
-    mk xl xr xL xR ≤ mk yl yr yL yR ↔ (∀ i, xL i ⧏ mk yl yr yL yR) ∧ ∀ j, mk xl xr xL xR ⧏ yR j :=
-  show (leLf _ _).1 ↔ _ by
-    rw [le_lf]
-    rfl
-#align pgame.mk_le_mk Pgame.mk_le_mk
-
-/-- Definition of `x ≤ y` on pre-games, in terms of `⧏` -/
-theorem le_iff_forall_lf {x y : Pgame} : x ≤ y ↔ (∀ i, x.moveLeft i ⧏ y) ∧ ∀ j, x ⧏ y.moveRight j :=
-  by
-  cases x
-  cases y
-  exact mk_le_mk
-#align pgame.le_iff_forall_lf Pgame.le_iff_forall_lf
-
-theorem le_of_forall_lf {x y : Pgame} (h₁ : ∀ i, x.moveLeft i ⧏ y) (h₂ : ∀ j, x ⧏ y.moveRight j) :
-    x ≤ y :=
-  le_iff_forall_lf.2 ⟨h₁, h₂⟩
-#align pgame.le_of_forall_lf Pgame.le_of_forall_lf
-
-/-- Definition of `x ⧏ y` on pre-games built using the constructor. -/
-@[simp]
-theorem mk_lf_mk {xl xr xL xR yl yr yL yR} :
-    mk xl xr xL xR ⧏ mk yl yr yL yR ↔ (∃ i, mk xl xr xL xR ≤ yL i) ∨ ∃ j, xR j ≤ mk yl yr yL yR :=
-  show (leLf _ _).2 ↔ _ by
-    rw [le_lf]
-    rfl
-#align pgame.mk_lf_mk Pgame.mk_lf_mk
-
-/-- Definition of `x ⧏ y` on pre-games, in terms of `≤` -/
-theorem lf_iff_exists_le {x y : Pgame} : x ⧏ y ↔ (∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y :=
-  by
-  cases x
-  cases y
-  exact mk_lf_mk
-#align pgame.lf_iff_exists_le Pgame.lf_iff_exists_le
-
-private theorem not_le_lf {x y : Pgame} : (¬x ≤ y ↔ y ⧏ x) ∧ (¬x ⧏ y ↔ y ≤ x) :=
-  by
-  induction' x with xl xr xL xR IHxl IHxr generalizing y
-  induction' y with yl yr yL yR IHyl IHyr
-  simp only [mk_le_mk, mk_lf_mk, IHxl, IHxr, IHyl, IHyr, not_and_or, not_or, not_forall, not_exists,
-    and_comm', or_comm', iff_self_iff, and_self_iff]
-#align pgame.not_le_lf pgame.not_le_lf
-
 @[simp]
 protected theorem not_le {x y : Pgame} : ¬x ≤ y ↔ y ⧏ x :=
-  not_le_lf.1
+  Iff.rfl
 #align pgame.not_le Pgame.not_le
 
 @[simp]
 theorem not_lf {x y : Pgame} : ¬x ⧏ y ↔ y ≤ x :=
-  not_le_lf.2
+  Classical.not_not
 #align pgame.not_lf Pgame.not_lf
 
 theorem LE.le.not_gf {x y : Pgame} : x ≤ y → ¬y ⧏ x :=
@@ -442,8 +380,48 @@ theorem LE.le.not_gf {x y : Pgame} : x ≤ y → ¬y ⧏ x :=
 #align has_le.le.not_gf LE.le.not_gf
 
 theorem Lf.not_ge {x y : Pgame} : x ⧏ y → ¬y ≤ x :=
-  Pgame.not_le.2
+  id
 #align pgame.lf.not_ge Pgame.Lf.not_ge
+
+/-- Definition of `x ≤ y` on pre-games, in terms of `⧏`.
+
+The ordering here is chosen so that `and.left` refer to moves by Left, and `and.right` refer to
+moves by Right. -/
+theorem le_iff_forall_lf {x y : Pgame} : x ≤ y ↔ (∀ i, x.moveLeft i ⧏ y) ∧ ∀ j, x ⧏ y.moveRight j :=
+  by
+  unfold LE.le
+  rw [Sym2.GameAdd.fix_eq]
+  rfl
+#align pgame.le_iff_forall_lf Pgame.le_iff_forall_lf
+
+/-- Definition of `x ≤ y` on pre-games built using the constructor. -/
+@[simp]
+theorem mk_le_mk {xl xr xL xR yl yr yL yR} :
+    mk xl xr xL xR ≤ mk yl yr yL yR ↔ (∀ i, xL i ⧏ mk yl yr yL yR) ∧ ∀ j, mk xl xr xL xR ⧏ yR j :=
+  le_iff_forall_lf
+#align pgame.mk_le_mk Pgame.mk_le_mk
+
+theorem le_of_forall_lf {x y : Pgame} (h₁ : ∀ i, x.moveLeft i ⧏ y) (h₂ : ∀ j, x ⧏ y.moveRight j) :
+    x ≤ y :=
+  le_iff_forall_lf.2 ⟨h₁, h₂⟩
+#align pgame.le_of_forall_lf Pgame.le_of_forall_lf
+
+/-- Definition of `x ⧏ y` on pre-games, in terms of `≤`.
+
+The ordering here is chosen so that `or.inl` refer to moves by Left, and `or.inr` refer to
+moves by Right. -/
+theorem lf_iff_exists_le {x y : Pgame} : x ⧏ y ↔ (∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y :=
+  by
+  rw [lf, le_iff_forall_lf, not_and_or]
+  simp
+#align pgame.lf_iff_exists_le Pgame.lf_iff_exists_le
+
+/-- Definition of `x ⧏ y` on pre-games built using the constructor. -/
+@[simp]
+theorem mk_lf_mk {xl xr xL xR yl yr yL yR} :
+    mk xl xr xL xR ⧏ mk yl yr yL yR ↔ (∃ i, mk xl xr xL xR ≤ yL i) ∨ ∃ j, xR j ≤ mk yl yr yL yR :=
+  lf_iff_exists_le
+#align pgame.mk_lf_mk Pgame.mk_lf_mk
 
 theorem le_or_gf (x y : Pgame) : x ≤ y ∨ y ⧏ x :=
   by
@@ -499,12 +477,9 @@ private theorem le_trans_aux {x y z : Pgame}
     Pgame.not_le.1 fun h => (h₂ h hxy).not_gf <| hyz.lf_moveRight j
 #align pgame.le_trans_aux pgame.le_trans_aux
 
-instance : LT Pgame :=
-  ⟨fun x y => x ≤ y ∧ x ⧏ y⟩
-
 instance : Preorder Pgame :=
-  { Pgame.hasLe,
-    Pgame.hasLt with
+  {
+    Pgame.hasLe with
     le_refl := fun x => by
       induction' x with _ _ _ _ IHl IHr
       exact
@@ -523,9 +498,7 @@ instance : Preorder Pgame :=
         ⟨le_trans_aux (fun i => (IHxl i).2.1) fun j => (IHzr j).2.2,
           le_trans_aux (fun i => (IHyl i).2.2) fun j => (IHxr j).1,
           le_trans_aux (fun i => (IHzl i).1) fun j => (IHyr j).2.1⟩
-    lt_iff_le_not_le := fun x y => by
-      rw [Pgame.not_le]
-      rfl }
+    lt := fun x y => x ≤ y ∧ x ⧏ y }
 
 theorem lt_iff_le_and_lf {x y : Pgame} : x < y ↔ x ≤ y ∧ x ⧏ y :=
   Iff.rfl

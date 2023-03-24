@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 8f66c29c3911ef7d3ea2e254597a2d58204a7844
+! leanprover-community/mathlib commit 3353f661228bd27f632c600cd1a58b874d847c90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1168,22 +1168,15 @@ theorem mem_diff {x y z : SetCat.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
   @mem_sep fun z : SetCat.{u} => z ∉ y
 #align Set.mem_diff SetCat.mem_diff
 
+theorem mem_wf : @WellFounded SetCat (· ∈ ·) :=
+  wellFounded_lift₂_iff.mpr PSet.mem_wf
+#align Set.mem_wf SetCat.mem_wf
+
 /-- Induction on the `∈` relation. -/
 @[elab_as_elim]
 theorem induction_on {p : SetCat → Prop} (x) (h : ∀ x, (∀ y ∈ x, p y) → p x) : p x :=
-  Quotient.inductionOn x fun u =>
-    PSet.recOn u fun α A IH =>
-      h _ fun y =>
-        show @Membership.Mem _ _ SetCat.hasMem y ⟦⟨α, A⟩⟧ → p y from
-          Quotient.inductionOn y fun v ⟨a, ha⟩ =>
-            by
-            rw [@Quotient.sound PSet _ _ _ ha]
-            exact IH a
+  mem_wf.induction x h
 #align Set.induction_on SetCat.induction_on
-
-theorem mem_wf : @WellFounded SetCat (· ∈ ·) :=
-  ⟨fun x => induction_on x Acc.intro⟩
-#align Set.mem_wf SetCat.mem_wf
 
 instance : WellFoundedRelation SetCat :=
   ⟨_, mem_wf⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.kernel_pair
-! leanprover-community/mathlib commit f6bab67886fb92c3e2f539cc90a83815f69a189d
+! leanprover-community/mathlib commit 8ef6f08ff8c781c5c07a8b12843710e1a0d8a688
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
 
 /-!
 # Kernel pairs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines what it means for a parallel pair of morphisms `a b : R ⟶ X` to be the kernel pair
 for a morphism `f`.
