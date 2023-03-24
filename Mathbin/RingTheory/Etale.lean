@@ -272,7 +272,7 @@ instance FormallySmooth.mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynom
 
 instance FormallySmooth.polynomial : FormallySmooth R R[X] :=
   @FormallySmooth.of_equiv _ _ _ _ _ (FormallySmooth.mvPolynomial R PUnit)
-    (MvPolynomial.punitAlgEquiv R)
+    (MvPolynomial.pUnitAlgEquiv R)
 #align algebra.formally_smooth.polynomial Algebra.FormallySmooth.polynomial
 
 end Polynomial

@@ -119,7 +119,7 @@ theorem self : FinitePresentation R R :=
 
 /-- `R[X]` is finitely presented as `R`-algebra. -/
 theorem polynomial : FinitePresentation R R[X] :=
-  equiv (FinitePresentation.mvPolynomial R PUnit) (MvPolynomial.punitAlgEquiv R)
+  equiv (FinitePresentation.mvPolynomial R PUnit) (MvPolynomial.pUnitAlgEquiv R)
 #align algebra.finite_presentation.polynomial Algebra.FinitePresentation.polynomial
 
 variable {R}
