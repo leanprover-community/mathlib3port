@@ -324,7 +324,7 @@ theorem head {n : ℕ} : @Partrec' n.succ (@head ℕ n) :=
 #align nat.partrec'.head Nat.Partrec'.head
 
 theorem tail {n f} (hf : @Partrec' n f) : @Partrec' n.succ fun v => f v.tail :=
-  (hf.comp _ fun i => @prim _ _ <| Nat.Primrec'.nth i.succ).of_eq fun v => by
+  (hf.comp _ fun i => @prim _ _ <| Nat.Primrec'.get i.succ).of_eq fun v => by
     simp <;> rw [← of_fn_nth v.tail] <;> congr <;> funext i <;> simp
 #align nat.partrec'.tail Nat.Partrec'.tail
 
@@ -333,7 +333,7 @@ protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
   (@comp n (n + 1) g (fun i => Fin.cases f (fun i v => some (v.get? i)) i) hg fun i =>
         by
         refine' Fin.cases _ (fun i => _) i <;> simp [*]
-        exact prim (Nat.Primrec'.nth _)).of_eq
+        exact prim (Nat.Primrec'.get _)).of_eq
     fun v => by simp [m_of_fn, Part.bind_assoc, pure]
 #align nat.partrec'.bind Nat.Partrec'.bind
 

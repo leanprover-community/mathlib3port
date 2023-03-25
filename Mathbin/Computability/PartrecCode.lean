@@ -239,8 +239,8 @@ theorem pair_prim : Primrec₂ pair :=
   Primrec₂.ofNat_iff.2 <|
     Primrec₂.encode_iff.1 <|
       nat_add.comp
-        (nat_bit0.comp <|
-          nat_bit0.comp <|
+        (nat_double.comp <|
+          nat_double.comp <|
             Primrec₂.mkpair.comp (encode_iff.2 <| (Primrec.ofNat Code).comp fst)
               (encode_iff.2 <| (Primrec.ofNat Code).comp snd))
         (Primrec₂.const 4)
@@ -250,8 +250,8 @@ theorem comp_prim : Primrec₂ comp :=
   Primrec₂.ofNat_iff.2 <|
     Primrec₂.encode_iff.1 <|
       nat_add.comp
-        (nat_bit0.comp <|
-          nat_bit1.comp <|
+        (nat_double.comp <|
+          nat_double_succ.comp <|
             Primrec₂.mkpair.comp (encode_iff.2 <| (Primrec.ofNat Code).comp fst)
               (encode_iff.2 <| (Primrec.ofNat Code).comp snd))
         (Primrec₂.const 4)
@@ -261,8 +261,8 @@ theorem prec_prim : Primrec₂ prec :=
   Primrec₂.ofNat_iff.2 <|
     Primrec₂.encode_iff.1 <|
       nat_add.comp
-        (nat_bit1.comp <|
-          nat_bit0.comp <|
+        (nat_double_succ.comp <|
+          nat_double.comp <|
             Primrec₂.mkpair.comp (encode_iff.2 <| (Primrec.ofNat Code).comp fst)
               (encode_iff.2 <| (Primrec.ofNat Code).comp snd))
         (Primrec₂.const 4)
@@ -271,7 +271,9 @@ theorem prec_prim : Primrec₂ prec :=
 theorem rfind_prim : Primrec rfind' :=
   ofNat_iff.2 <|
     encode_iff.1 <|
-      nat_add.comp (nat_bit1.comp <| nat_bit1.comp <| encode_iff.2 <| Primrec.ofNat Code) (const 4)
+      nat_add.comp
+        (nat_double_succ.comp <| nat_double_succ.comp <| encode_iff.2 <| Primrec.ofNat Code)
+        (const 4)
 #align nat.partrec.code.rfind_prim Nat.Partrec.Code.rfind_prim
 
 theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
@@ -617,7 +619,7 @@ def eval : Code → ℕ →. ℕ
 /-- Helper lemma for the evaluation of `prec` in the base case. -/
 @[simp]
 theorem eval_prec_zero (cf cg : Code) (a : ℕ) : eval (prec cf cg) (mkpair a 0) = eval cf a := by
-  rw [eval, Nat.unpaired, Nat.unpair_mkpair, Nat.elim_zero]
+  rw [eval, Nat.unpaired, Nat.unpair_mkpair, Nat.rec_zero]
 #align nat.partrec.code.eval_prec_zero Nat.Partrec.Code.eval_prec_zero
 
 /-- Helper lemma for the evaluation of `prec` in the recursive case. -/
@@ -626,7 +628,7 @@ theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
       let ih ← eval (prec cf cg) (mkpair a k)
       eval cg (mkpair a (mkpair k ih)) :=
   by
-  rw [eval, Nat.unpaired, Part.bind_eq_bind, Nat.unpair_mkpair, Nat.elim_succ]
+  rw [eval, Nat.unpaired, Part.bind_eq_bind, Nat.unpair_mkpair, Nat.rec_add_one]
   simp
 #align nat.partrec.code.eval_prec_succ Nat.Partrec.Code.eval_prec_succ
 

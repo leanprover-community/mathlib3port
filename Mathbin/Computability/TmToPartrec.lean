@@ -309,7 +309,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         a + b = n →
           (n.succ::0::g
                       (n ::ᵥ
-                        Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) n ::ᵥ
+                        Nat.rec (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) n ::ᵥ
                           v.tail)::v.val.tail :
               List ℕ) ∈
             PFun.fix
@@ -318,7 +318,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
                 pure <|
                     if v = 0 then Sum.inl (v::v::x.headI::v : List ℕ)
                     else Sum.inr (v::v::x.headI::v))
-              (a::b::Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) a::v.val.tail)
+              (a::b::Nat.rec (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) a::v.val.tail)
       by
       rw [(_ : PFun.fix _ _ = pure _)]
       swap
@@ -330,7 +330,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
       simp only [hg, ← e, pure_bind, List.tail_cons]
       rfl
     · refine' PFun.mem_fix_iff.2 (Or.inr ⟨_, _, IH (a + 1) (by rwa [add_right_comm])⟩)
-      simp only [hg, eval, pure_bind, Nat.elim_succ, List.tail]
+      simp only [hg, eval, pure_bind, Nat.rec_add_one, List.tail]
       exact Part.mem_some_iff.2 rfl
   case comp m n f g hf hg IHf IHg => exact exists_code.comp IHf IHg
   case rfind n f hf IHf =>
@@ -576,7 +576,7 @@ theorem stepNormal_then (c) (k k' : Cont) (v) :
   induction c generalizing k v <;> simp only [cont.then, step_normal, cfg.then, *]
   case cons c c' ih ih' => rw [← ih, cont.then]
   case comp c c' ih ih' => rw [← ih', cont.then]
-  · cases v.head <;> simp only [Nat.elim]
+  · cases v.head <;> simp only [Nat.rec]
   case fix c ih => rw [← ih, cont.then]
 #align turing.to_partrec.step_normal_then Turing.ToPartrec.stepNormal_then
 
@@ -620,7 +620,7 @@ theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' 
   case cons f fs IHf IHfs => apply IHf
   case comp f g IHf IHg => apply IHg
   case case f g IHf IHg => rw [step_normal];
-    cases v.head <;> simp only [Nat.elim] <;> [apply IHf, apply IHg]
+    cases v.head <;> simp only [Nat.rec] <;> [apply IHf, apply IHg]
   case fix f IHf => apply IHf
 #align turing.to_partrec.step_normal.is_ret Turing.ToPartrec.stepNormal.is_ret
 
@@ -722,7 +722,7 @@ theorem code_is_ok (c) : Code.Ok c :=
     rw [reaches_eval]; swap; exact refl_trans_gen.single rfl
     rw [step_ret, IHf]
   case case f g IHf IHg => simp only [code.eval];
-    cases v.head <;> simp only [Nat.elim, code.eval] <;> [apply IHf, apply IHg]
+    cases v.head <;> simp only [Nat.rec, code.eval] <;> [apply IHf, apply IHg]
   case fix f IHf => rw [cont_eval_fix IHf]
 #align turing.to_partrec.code_is_ok Turing.ToPartrec.code_is_ok
 
