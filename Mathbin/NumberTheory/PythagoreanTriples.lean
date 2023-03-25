@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 
 ! This file was ported from Lean 3 source module number_theory.pythagorean_triples
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Data.Zmod.Basic
 
 /-!
 # Pythagorean Triples
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The main result is the classification of Pythagorean triples. The final result is for general
 Pythagorean triples. It follows from the more interesting relatively prime case. We use the

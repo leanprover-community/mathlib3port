@@ -274,6 +274,7 @@ import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Degree
 import Mathbin.Algebra.MonoidAlgebra.Division
 import Mathbin.Algebra.MonoidAlgebra.Grading
+import Mathbin.Algebra.MonoidAlgebra.Ideal
 import Mathbin.Algebra.MonoidAlgebra.NoZeroDivisors
 import Mathbin.Algebra.MonoidAlgebra.Support
 import Mathbin.Algebra.MonoidAlgebra.ToDirectSum
@@ -2536,6 +2537,7 @@ import Mathbin.RingTheory.MatrixAlgebra
 import Mathbin.RingTheory.Multiplicity
 import Mathbin.RingTheory.MvPolynomial.Basic
 import Mathbin.RingTheory.MvPolynomial.Homogeneous
+import Mathbin.RingTheory.MvPolynomial.Ideal
 import Mathbin.RingTheory.MvPolynomial.Symmetric
 import Mathbin.RingTheory.MvPolynomial.Tower
 import Mathbin.RingTheory.Nakayama

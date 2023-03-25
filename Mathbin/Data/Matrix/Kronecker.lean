@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit 40cc79df33fb2b67e0dabd815d8e4340592e5bff
+! leanprover-community/mathlib commit 945bc74ecd6c7435f33e080af142c1cfe8d2e289
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,8 +270,6 @@ end KroneckerMap
 
 
 section Kronecker
-
-variable (R)
 
 open Matrix
 

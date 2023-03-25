@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abby J. Goldberg
 
 ! This file was ported from Lean 3 source module tactic.linear_combination
-! leanprover-community/mathlib commit 7178643368cee58b4adee2276ffeb9bd251210c4
+! leanprover-community/mathlib commit 540b766a64a8cc1e4b013f43a31e3b0b09787937
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,6 +81,7 @@ checking if the weighted sum is equivalent to the goal (when `normalize` is `tt`
 unsafe structure linear_combination_config : Type where
   normalize : Bool := true
   normalization_tactic : tactic Unit := sorry
+  exponent : ℕ := 1
 #align linear_combo.linear_combination_config linear_combo.linear_combination_config
 
 /-! ### Part 1: Multiplying Equations by Constants and Adding Them Together -/
@@ -280,6 +281,17 @@ unsafe def set_goal_to_hleft_sub_tleft (hsum_on_left : expr) : tactic Unit := do
   skip
 #align linear_combo.set_goal_to_hleft_sub_tleft linear_combo.set_goal_to_hleft_sub_tleft
 
+/-- If an exponent `n` is provided, changes the goal from `t = 0` to `t^n = 0`.
+* Input:
+  * `exponent : ℕ`, the power to raise the goal by. If `1`, this tactic is a no-op.
+
+* Output: N/A
+-/
+unsafe def raise_goal_to_power : ℕ → tactic Unit
+  | 1 => skip
+  | n => refine ``(@pow_eq_zero _ _ _ _ $(q(n)) _)
+#align linear_combo.raise_goal_to_power linear_combo.raise_goal_to_power
+
 /-- This tactic attempts to prove the goal by normalizing the target if the
 `normalize` field of the given configuration is true.
 
@@ -326,6 +338,7 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
   let hsum ← make_sum_of_hyps ext h_eqs coeffs
   let hsum_on_left ← move_to_left_side hsum
   move_target_to_left_side
+  raise_goal_to_power config
   set_goal_to_hleft_sub_tleft hsum_on_left
   normalize_if_desired config
 #align linear_combo.linear_combination linear_combo.linear_combination
@@ -380,6 +393,9 @@ section InteractiveMode
   configuration is set to false, then the tactic will simply set the user up to
   prove their target using the linear combination instead of normalizing the subtraction.
 
+Users may provide an optional `with { exponent := n }`. This will raise the goal to the power `n`
+  before subtracting the linear combination.
+
 Note: The left and right sides of all the equalities should have the same
   type, and the coefficients should also have this type.  There must be
   instances of `has_mul` and `add_group` for this type.
@@ -431,6 +447,9 @@ begin
   simp,
   norm_cast
 end
+
+example (x y z : ℚ) (h : x = y) (h2 : x * y = 0) : x + y*z = 0 :=
+by linear_combination (-y * z ^ 2 + x) * h + (z ^ 2 + 2 * z + 1) * h2 with { exponent := 2 }
 
 constants (qc : ℚ) (hqc : qc = 2*qc)
 

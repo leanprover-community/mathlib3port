@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.to_real
-! leanprover-community/mathlib commit e59154361202a34b26176e0de9267ef8e2dcd446
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.NumberTheory.Zsqrtd.Basic
 
 /-!
 # Image of `zsqrtd` in `ℝ`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `zsqrtd.to_real` and related lemmas.
 It is in a separate file to avoid pulling in all of `data.real` into `data.zsqrtd`.

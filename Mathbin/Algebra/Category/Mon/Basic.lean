@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.basic
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
+! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,6 +128,9 @@ theorem coe_of (R : Type u) [Monoid R] : (MonCat.of R : Type u) = R :=
 #align Mon.coe_of MonCat.coe_of
 #align AddMon.coe_of AddMonCat.coe_of
 -/
+
+@[to_additive]
+instance {G : Type _} [Group G] : Group (MonCat.of G) := by assumption
 
 end MonCat
 

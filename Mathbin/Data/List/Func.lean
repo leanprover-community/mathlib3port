@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module data.list.func
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -493,12 +493,12 @@ theorem length_sub [Zero α] [Sub α] {xs ys : List α} :
 
 /- warning: list.func.nil_sub -> List.Func.nil_sub is a dubious translation:
 lean 3 declaration is
-  forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (AddZeroClass.toHasZero.{0} α (AddMonoid.toAddZeroClass.{0} α (SubNegMonoid.toAddMonoid.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)))) (SubNegMonoid.toHasSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) (List.nil.{0} α) as) (List.Func.neg.{0} α (SubNegMonoid.toHasNeg.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) as)
+  forall {α : Type.{u_1}} [_inst_1 : AddGroup.{u_1} α] (as : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.Func.sub.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)))) (SubNegMonoid.toHasSub.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)) (List.nil.{u_1} α) as) (List.Func.neg.{u_1} α (SubNegMonoid.toHasNeg.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)) as)
 but is expected to have type
   forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (NegZeroClass.toZero.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) (SubNegMonoid.toSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) (List.nil.{0} α) as) (List.Func.neg.{0} α (NegZeroClass.toNeg.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) as)
 Case conversion may be inaccurate. Consider using '#align list.func.nil_sub List.Func.nil_subₓ'. -/
 @[simp]
-theorem nil_sub {α : Type} [AddGroup α] (as : List α) : sub [] as = neg as :=
+theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as :=
   by
   rw [sub, nil_pointwise]
   congr with x
@@ -507,12 +507,12 @@ theorem nil_sub {α : Type} [AddGroup α] (as : List α) : sub [] as = neg as :=
 
 /- warning: list.func.sub_nil -> List.Func.sub_nil is a dubious translation:
 lean 3 declaration is
-  forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (AddZeroClass.toHasZero.{0} α (AddMonoid.toAddZeroClass.{0} α (SubNegMonoid.toAddMonoid.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)))) (SubNegMonoid.toHasSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) as (List.nil.{0} α)) as
+  forall {α : Type.{u_1}} [_inst_1 : AddGroup.{u_1} α] (as : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.Func.sub.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)))) (SubNegMonoid.toHasSub.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)) as (List.nil.{u_1} α)) as
 but is expected to have type
   forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (NegZeroClass.toZero.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) (SubNegMonoid.toSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) as (List.nil.{0} α)) as
 Case conversion may be inaccurate. Consider using '#align list.func.sub_nil List.Func.sub_nilₓ'. -/
 @[simp]
-theorem sub_nil {α : Type} [AddGroup α] (as : List α) : sub as [] = as :=
+theorem sub_nil {α : Type _} [AddGroup α] (as : List α) : sub as [] = as :=
   by
   rw [sub, pointwise_nil]
   apply Eq.trans _ (map_id as)

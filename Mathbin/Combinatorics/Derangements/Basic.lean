@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.basic
-! leanprover-community/mathlib commit 9407b03373c8cd201df99d6bc5514fc2db44054f
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Logic.Equiv.Option
 
 /-!
 # Derangements on types
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define `derangements α`, the set of derangements on a type `α`.
 

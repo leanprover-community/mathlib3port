@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.set.sups
-! leanprover-community/mathlib commit 20715f4ac6819ef2453d9e5106ecd086a5dc2a5e
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.UpperLower.Basic
 
 /-!
 # Set family operations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines a few binary operations on `set α` for use in set family combinatorics.
 

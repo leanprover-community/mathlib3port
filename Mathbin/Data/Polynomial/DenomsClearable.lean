@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.denoms_clearable
-! leanprover-community/mathlib commit 85d9f2189d9489f9983c0d01536575b0233bd305
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Polynomial.Eval
 
 /-!
 # Denominators of evaluation of polynomials at ratios
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `i : R → K` be a homomorphism of semirings.  Assume that `K` is commutative.  If `a` and
 `b` are elements of `R` such that `i b ∈ K` is invertible, then for any polynomial

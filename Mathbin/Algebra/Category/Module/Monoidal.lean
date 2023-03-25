@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module algebra.category.Module.monoidal
-! leanprover-community/mathlib commit 556f35346ebc651dbc65ae6deb3a031f3d399e9d
+! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,6 +371,11 @@ instance : MonoidalClosed (ModuleCat.{u} R)
         { right := (linearCoyoneda R (ModuleCat.{u} R)).obj (op M)
           adj := Adjunction.mkOfHomEquiv { homEquiv := fun N P => monoidalClosedHomEquiv M N P } } }
 
+theorem ihom_map_apply {M N P : ModuleCat.{u} R} (f : N ⟶ P) (g : ModuleCat.of R (M ⟶ N)) :
+    (ihom M).map f g = g ≫ f :=
+  rfl
+#align Module.ihom_map_apply ModuleCat.ihom_map_apply
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- I can't seem to express the function coercion here without writing `@coe_fn`.
 @[simp]
@@ -383,10 +388,31 @@ theorem monoidalClosed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x : 
 @[simp]
 theorem monoidalClosed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M)
     (y : N) : MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x :=
-  by
-  simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
-  simp
+  rfl
 #align Module.monoidal_closed_uncurry ModuleCat.monoidalClosed_uncurry
+
+/-- Describes the counit of the adjunction `M ⊗ - ⊣ Hom(M, -)`. Given an `R`-module `N` this
+should give a map `M ⊗ Hom(M, N) ⟶ N`, so we flip the order of the arguments in the identity map
+`Hom(M, N) ⟶ (M ⟶ N)` and uncurry the resulting map `M ⟶ Hom(M, N) ⟶ N.` -/
+theorem ihom_ev_app (M N : ModuleCat.{u} R) :
+    (ihom.ev M).app N = TensorProduct.uncurry _ _ _ _ LinearMap.id.flip :=
+  by
+  ext
+  exact ModuleCat.monoidalClosed_uncurry _ _ _
+#align Module.ihom_ev_app ModuleCat.ihom_ev_app
+
+/-- Describes the unit of the adjunction `M ⊗ - ⊣ Hom(M, -)`. Given an `R`-module `N` this should
+define a map `N ⟶ Hom(M, M ⊗ N)`, which is given by flipping the arguments in the natural
+`R`-bilinear map `M ⟶ N ⟶ M ⊗ N`. -/
+theorem ihom_coev_app (M N : ModuleCat.{u} R) :
+    (ihom.coev M).app N = (TensorProduct.mk _ _ _).flip :=
+  rfl
+#align Module.ihom_coev_app ModuleCat.ihom_coev_app
+
+theorem monoidalClosed_pre_app {M N : ModuleCat.{u} R} (P : ModuleCat.{u} R) (f : N ⟶ M) :
+    (MonoidalClosed.pre f).app P = LinearMap.lcomp R _ f :=
+  rfl
+#align Module.monoidal_closed_pre_app ModuleCat.monoidalClosed_pre_app
 
 end ModuleCat
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit 11b92770e4d49ff3982504c4dab918ac0887fe33
+! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -528,7 +528,7 @@ end EquivLin
 
 namespace LinearMap
 
-variable {R' : Type} [CommSemiring R'] [Algebra R' R] [Module R' M] [IsScalarTower R' R M]
+variable {R' : Type _} [CommSemiring R'] [Algebra R' R] [Module R' M] [IsScalarTower R' R M]
 
 /-- Apply a linear map on the output of a bilinear form. -/
 @[simps]

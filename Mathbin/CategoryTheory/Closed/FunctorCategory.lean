@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module category_theory.closed.functor_category
-! leanprover-community/mathlib commit c0e00a871b9f6d3aca7c10fb3abdc8720a2c5313
+! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,6 +83,18 @@ with the pointwise monoidal structure, is monoidal closed. -/
 @[simps]
 instance monoidalClosed : MonoidalClosed (D ⥤ C) where closed' := by infer_instance
 #align category_theory.functor.monoidal_closed CategoryTheory.Functor.monoidalClosed
+
+theorem ihom_map (F : D ⥤ C) {G H : D ⥤ C} (f : G ⟶ H) : (ihom F).map f = (closedIhom F).map f :=
+  rfl
+#align category_theory.functor.ihom_map CategoryTheory.Functor.ihom_map
+
+theorem ihom_ev_app (F G : D ⥤ C) : (ihom.ev F).app G = (closedCounit F).app G :=
+  rfl
+#align category_theory.functor.ihom_ev_app CategoryTheory.Functor.ihom_ev_app
+
+theorem ihom_coev_app (F G : D ⥤ C) : (ihom.coev F).app G = (closedUnit F).app G :=
+  rfl
+#align category_theory.functor.ihom_coev_app CategoryTheory.Functor.ihom_coev_app
 
 end CategoryTheory.Functor
 

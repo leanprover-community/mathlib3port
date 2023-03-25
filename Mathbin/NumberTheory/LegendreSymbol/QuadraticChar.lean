@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_char
-! leanprover-community/mathlib commit c3019c79074b0619edb4b27553a91b2e82242395
+! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ section SpecialValues
 
 open ZMod MulChar
 
-variable {F : Type} [Field F] [Fintype F]
+variable {F : Type _} [Field F] [Fintype F]
 
 /-- The value of the quadratic character at `-1` -/
 theorem quadraticChar_neg_one [DecidableEq F] (hF : ringChar F ≠ 2) :
@@ -412,7 +412,7 @@ theorem FiniteField.isSquare_neg_two_iff :
 /-- The relation between the values of the quadratic character of one field `F` at the
 cardinality of another field `F'` and of the quadratic character of `F'` at the cardinality
 of `F`. -/
-theorem quadraticChar_card_card [DecidableEq F] (hF : ringChar F ≠ 2) {F' : Type} [Field F']
+theorem quadraticChar_card_card [DecidableEq F] (hF : ringChar F ≠ 2) {F' : Type _} [Field F']
     [Fintype F'] [DecidableEq F'] (hF' : ringChar F' ≠ 2) (h : ringChar F' ≠ ringChar F) :
     quadraticChar F (Fintype.card F') = quadraticChar F' (quadraticChar F (-1) * Fintype.card F) :=
   by

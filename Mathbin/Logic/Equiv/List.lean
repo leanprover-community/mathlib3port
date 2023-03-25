@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.list
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
+! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -536,16 +536,20 @@ def listNatEquivNat : List ℕ ≃ ℕ :=
 #align equiv.list_nat_equiv_nat Equiv.listNatEquivNat
 -/
 
-#print Equiv.listEquivSelfOfEquivNat /-
+/- warning: equiv.list_equiv_self_of_equiv_nat -> Equiv.listEquivSelfOfEquivNat is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}}, (Equiv.{succ u_1, 1} α Nat) -> (Equiv.{succ u_1, succ u_1} (List.{u_1} α) α)
+but is expected to have type
+  forall {α : Type}, (Equiv.{1, 1} α Nat) -> (Equiv.{1, 1} (List.{0} α) α)
+Case conversion may be inaccurate. Consider using '#align equiv.list_equiv_self_of_equiv_nat Equiv.listEquivSelfOfEquivNatₓ'. -/
 /-- If `α` is equivalent to `ℕ`, then `list α` is equivalent to `α`. -/
-def listEquivSelfOfEquivNat {α : Type} (e : α ≃ ℕ) : List α ≃ α :=
+def listEquivSelfOfEquivNat {α : Type _} (e : α ≃ ℕ) : List α ≃ α :=
   calc
     List α ≃ List ℕ := listEquivOfEquiv e
     _ ≃ ℕ := listNatEquivNat
     _ ≃ α := e.symm
     
 #align equiv.list_equiv_self_of_equiv_nat Equiv.listEquivSelfOfEquivNat
--/
 
 end Equiv
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.division
-! leanprover-community/mathlib commit 57e09a1296bfb4330ddf6624f1028ba186117d82
+! leanprover-community/mathlib commit 72c366d0475675f1309d3027d3d7d47ee4423951
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,6 +149,11 @@ theorem modMonomial_add_divMonomial (x : MvPolynomial σ R) (s : σ →₀ ℕ) 
   AddMonoidAlgebra.modOf_add_divOf x s
 #align mv_polynomial.mod_monomial_add_div_monomial MvPolynomial.modMonomial_add_divMonomial
 
+theorem monomial_one_dvd_iff_modMonomial_eq_zero {i : σ →₀ ℕ} {x : MvPolynomial σ R} :
+    monomial i (1 : R) ∣ x ↔ x %ᵐᵒⁿᵒᵐⁱᵃˡ i = 0 :=
+  AddMonoidAlgebra.of'_dvd_iff_modOf_eq_zero
+#align mv_polynomial.monomial_one_dvd_iff_mod_monomial_eq_zero MvPolynomial.monomial_one_dvd_iff_modMonomial_eq_zero
+
 end CopiedDeclarations
 
 section XLemmas
@@ -203,7 +208,60 @@ theorem modMonomial_add_divMonomial_single (x : MvPolynomial σ R) (i : σ) :
   modMonomial_add_divMonomial _ _
 #align mv_polynomial.mod_monomial_add_div_monomial_single MvPolynomial.modMonomial_add_divMonomial_single
 
+theorem x_dvd_iff_modMonomial_eq_zero {i : σ} {x : MvPolynomial σ R} :
+    X i ∣ x ↔ x %ᵐᵒⁿᵒᵐⁱᵃˡ Finsupp.single i 1 = 0 :=
+  monomial_one_dvd_iff_modMonomial_eq_zero
+#align mv_polynomial.X_dvd_iff_mod_monomial_eq_zero MvPolynomial.x_dvd_iff_modMonomial_eq_zero
+
 end XLemmas
+
+/-! ### Some results about dvd (`∣`) on `monomial` and `X` -/
+
+
+theorem monomial_dvd_monomial {r s : R} {i j : σ →₀ ℕ} :
+    monomial i r ∣ monomial j s ↔ (s = 0 ∨ i ≤ j) ∧ r ∣ s :=
+  by
+  constructor
+  · rintro ⟨x, hx⟩
+    rw [MvPolynomial.ext_iff] at hx
+    have hj := hx j
+    have hi := hx i
+    classical
+      simp_rw [coeff_monomial, if_pos] at hj hi
+      simp_rw [coeff_monomial_mul', if_pos] at hi hj
+      split_ifs  at hi hj with hi hi
+      · exact ⟨Or.inr hi, _, hj⟩
+      · exact ⟨Or.inl hj, hj.symm ▸ dvd_zero _⟩
+  · rintro ⟨h | hij, d, rfl⟩
+    · simp_rw [h, monomial_zero, dvd_zero]
+    · refine' ⟨monomial (j - i) d, _⟩
+      rw [monomial_mul, add_tsub_cancel_of_le hij]
+#align mv_polynomial.monomial_dvd_monomial MvPolynomial.monomial_dvd_monomial
+
+@[simp]
+theorem monomial_one_dvd_monomial_one [Nontrivial R] {i j : σ →₀ ℕ} :
+    monomial i (1 : R) ∣ monomial j 1 ↔ i ≤ j :=
+  by
+  rw [monomial_dvd_monomial]
+  simp_rw [one_ne_zero, false_or_iff, dvd_rfl, and_true_iff]
+#align mv_polynomial.monomial_one_dvd_monomial_one MvPolynomial.monomial_one_dvd_monomial_one
+
+@[simp]
+theorem x_dvd_x [Nontrivial R] {i j : σ} :
+    (X i : MvPolynomial σ R) ∣ (X j : MvPolynomial σ R) ↔ i = j :=
+  by
+  refine' monomial_one_dvd_monomial_one.trans _
+  simp_rw [Finsupp.single_le_iff, Nat.one_le_iff_ne_zero, Finsupp.single_apply_ne_zero, Ne.def,
+    one_ne_zero, not_false_iff, and_true_iff]
+#align mv_polynomial.X_dvd_X MvPolynomial.x_dvd_x
+
+@[simp]
+theorem x_dvd_monomial {i : σ} {j : σ →₀ ℕ} {r : R} :
+    (X i : MvPolynomial σ R) ∣ monomial j r ↔ r = 0 ∨ j i ≠ 0 :=
+  by
+  refine' monomial_dvd_monomial.trans _
+  simp_rw [one_dvd, and_true_iff, Finsupp.single_le_iff, Nat.one_le_iff_ne_zero]
+#align mv_polynomial.X_dvd_monomial MvPolynomial.x_dvd_monomial
 
 end MvPolynomial
 

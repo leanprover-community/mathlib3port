@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit 348289cc3e8ea3f1dcddad5fd52c10156435b17f
+! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,7 @@ import Mathbin.Algebra.Category.Module.Abelian
 import Mathbin.Algebra.Category.Module.Colimits
 import Mathbin.Algebra.Category.Module.Monoidal
 import Mathbin.Algebra.Category.Module.Adjunctions
+import Mathbin.CategoryTheory.Closed.FunctorCategory
 
 /-!
 # `Rep k G` is the category of `k`-linear representations of `G`.
@@ -46,7 +47,11 @@ instance (k G : Type u) [CommRing k] [Monoid G] : Linear k (Rep k G) := by infer
 
 namespace Rep
 
-variable {k G : Type u} [CommRing k] [Monoid G]
+variable {k G : Type u} [CommRing k]
+
+section
+
+variable [Monoid G]
 
 instance : CoeSort (Rep k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
@@ -143,6 +148,112 @@ noncomputable def linearizationOfMulActionIso (n : ℕ) :
 #align Rep.linearization_of_mul_action_iso Rep.linearizationOfMulActionIso
 
 end Linearization
+
+end
+
+section
+
+open Action
+
+variable [Group G] (A B C : Rep k G)
+
+noncomputable instance : MonoidalClosed (Rep k G) :=
+  MonoidalClosed.ofEquiv (functorCategoryMonoidalEquivalence _ _)
+
+/-- Explicit description of the 'internal Hom' `iHom(A, B)` of two representations `A, B`:
+this is `F⁻¹(iHom(F(A), F(B)))`, where `F` is an equivalence
+`Rep k G ≌ (single_obj G ⥤ Module k)`. Just used to prove `Rep.ihom_obj_ρ`. -/
+theorem ihom_obj_ρ_def :
+    ((ihom A).obj B).ρ =
+      (FunctorCategoryEquivalence.inverse.obj
+          ((FunctorCategoryEquivalence.functor.obj A).closedIhom.obj
+            (FunctorCategoryEquivalence.functor.obj B))).ρ :=
+  rfl
+#align Rep.ihom_obj_ρ_def Rep.ihom_obj_ρ_def
+
+/-- Given `k`-linear `G`-representations `(A, ρ₁), (B, ρ₂)`, the 'internal Hom' is the
+representation on `Homₖ(A, B)` sending `g : G` and `f : A →ₗ[k] B` to `(ρ₂ g) ∘ₗ f ∘ₗ (ρ₁ g⁻¹)`. -/
+@[simp]
+theorem ihom_obj_ρ : ((ihom A).obj B).ρ = A.ρ.linHom B.ρ :=
+  by
+  refine' MonoidHom.ext fun g => _
+  simpa only [ihom_obj_ρ_def, functor_category_equivalence.inverse_obj_ρ_apply,
+    functor.closed_ihom_obj_map, ← functor.map_inv, single_obj.inv_as_inv]
+#align Rep.ihom_obj_ρ Rep.ihom_obj_ρ
+
+@[simp]
+theorem ihom_map_hom {B C : Rep k G} (f : B ⟶ C) :
+    ((ihom A).map f).hom = LinearMap.llcomp k A B C f.hom :=
+  rfl
+#align Rep.ihom_map_hom Rep.ihom_map_hom
+
+/-- Unfolds the unit in the adjunction `A ⊗ - ⊣ iHom(A, -)`; just used to prove
+`Rep.ihom_coev_app_hom`. -/
+theorem ihom_coev_app_def :
+    (ihom.coev A).app B =
+      FunctorCategoryEquivalence.unitIso.hom.app B ≫
+        FunctorCategoryEquivalence.inverse.map
+          ((FunctorCategoryEquivalence.functor.obj A).closedUnit.app _ ≫
+            (FunctorCategoryEquivalence.functor.obj A).closedIhom.map
+              ((functorCategoryMonoidalEquivalence (ModuleCat.{u} k) (MonCat.of G)).μ A B)) :=
+  rfl
+#align Rep.ihom_coev_app_def Rep.ihom_coev_app_def
+
+/-- Describes the unit in the adjunction `A ⊗ - ⊣ iHom(A, -)`; given another `k`-linear
+`G`-representation `B,` the `k`-linear map underlying the resulting map `B ⟶ iHom(A, A ⊗ B)` is
+given by flipping the arguments in the natural `k`-bilinear map `A →ₗ[k] B →ₗ[k] A ⊗ B`. -/
+@[simp]
+theorem ihom_coev_app_hom : Action.Hom.hom ((ihom.coev A).app B) = (TensorProduct.mk _ _ _).flip :=
+  by
+  refine' LinearMap.ext fun x => LinearMap.ext fun y => _
+  simpa only [ihom_coev_app_def, functor.map_comp, comp_hom,
+    functor_category_equivalence.inverse_map_hom, functor.closed_ihom_map_app,
+    functor_category_monoidal_equivalence.μ_app]
+#align Rep.ihom_coev_app_hom Rep.ihom_coev_app_hom
+
+variable {A B C}
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- Given a `k`-linear `G`-representation `A`, the adjunction `A ⊗ - ⊣ iHom(A, -)` defines a
+bijection `Hom(A ⊗ B, C) ≃ Hom(B, iHom(A, C))` for all `B, C`. Given `f : A ⊗ B ⟶ C`, this lemma
+describes the `k`-linear map underlying `f`'s image under the bijection. It is given by currying the
+`k`-linear map underlying `f`, giving a map `A →ₗ[k] B →ₗ[k] C`, then flipping the arguments. -/
+@[simp]
+theorem monoidalClosed_curry_hom (f : A ⊗ B ⟶ C) :
+    (MonoidalClosed.curry f).hom = (TensorProduct.curry f.hom).flip :=
+  by
+  rw [monoidal_closed.curry_eq, comp_hom, ihom_coev_app_hom]
+  rfl
+#align Rep.monoidal_closed_curry_hom Rep.monoidalClosed_curry_hom
+
+/-- Given a `k`-linear `G`-representation `A`, the adjunction `A ⊗ - ⊣ iHom(A, -)` defines a
+bijection `Hom(A ⊗ B, C) ≃ Hom(B, iHom(A, C))` for all `B, C`. Given `f : B ⟶ iHom(A, C)`, this
+lemma describes the `k`-linear map underlying `f`'s image under the bijection. It is given by
+flipping the arguments of the `k`-linear map underlying `f`, giving a map `A →ₗ[k] B →ₗ[k] C`, then
+uncurrying. -/
+@[simp]
+theorem monoidalClosed_uncurry_hom (f : B ⟶ (ihom A).obj C) :
+    (MonoidalClosed.uncurry f).hom = TensorProduct.uncurry _ _ _ _ f.hom.flip :=
+  by
+  simp only [monoidal_closed.of_equiv_uncurry_def, comp_inv_iso_inv_app,
+    monoidal_functor.comm_tensor_left_inv_app, comp_hom,
+    functor_category_monoidal_equivalence.inverse_map, functor_category_equivalence.inverse_map_hom,
+    functor_category_monoidal_equivalence.μ_iso_inv_app]
+  ext
+  rfl
+#align Rep.monoidal_closed_uncurry_hom Rep.monoidalClosed_uncurry_hom
+
+/-- Describes the counit in the adjunction `A ⊗ - ⊣ iHom(A, -)`; given another `k`-linear
+`G`-representation `B,` the `k`-linear map underlying the resulting morphism `A ⊗ iHom(A, B) ⟶ B`
+is given by uncurrying the map `A →ₗ[k] (A →ₗ[k] B) →ₗ[k] B` defined by flipping the arguments in
+the identity map on `Homₖ(A, B).` -/
+@[simp]
+theorem ihom_ev_app_hom :
+    Action.Hom.hom ((ihom.ev A).app B) = TensorProduct.uncurry _ _ _ _ LinearMap.id.flip :=
+  monoidalClosed_uncurry_hom _
+#align Rep.ihom_ev_app_hom Rep.ihom_ev_app_hom
+
+end
 
 end Rep
 

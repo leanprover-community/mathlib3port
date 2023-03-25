@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.elementary_maps
-! leanprover-community/mathlib commit 11c53f174270aa43140c0b26dabce5fc4a253e80
+! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,8 +75,8 @@ instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n) (v : α → M)
-    (xs : Fin n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
+theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type _} {n : ℕ} (φ : L.BoundedFormula α n)
+    (v : α → M) (xs : Fin n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
   classical
     rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
     swap
@@ -96,7 +96,7 @@ theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.Bou
 #align first_order.language.elementary_embedding.map_bounded_formula FirstOrder.Language.ElementaryEmbedding.map_boundedFormula
 
 @[simp]
-theorem map_formula (f : M ↪ₑ[L] N) {α : Type} (φ : L.Formula α) (x : α → M) :
+theorem map_formula (f : M ↪ₑ[L] N) {α : Type _} (φ : L.Formula α) (x : α → M) :
     φ.realize (f ∘ x) ↔ φ.realize x := by
   rw [formula.realize, formula.realize, ← f.map_bounded_formula, Unique.eq_default (f ∘ default)]
 #align first_order.language.elementary_embedding.map_formula FirstOrder.Language.ElementaryEmbedding.map_formula

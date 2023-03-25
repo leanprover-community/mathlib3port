@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.degree_sum
-! leanprover-community/mathlib commit 90659cbe25e59ec302e2fb92b00e9732160cc620
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Zmod.Parity
 
 /-!
 # Degree-sum formula and handshaking lemma
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The degree-sum formula is that the sum of the degrees of the vertices in
 a finite graph is equal to twice the number of edges.  The handshaking lemma,

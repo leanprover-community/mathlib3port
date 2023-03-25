@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Action
-! leanprover-community/mathlib commit ac3ae212f394f508df43e37aa093722fa9b65d31
+! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,6 +248,16 @@ def functorCategoryEquivalence : Action V G ≌ SingleObj G ⥤ V
 #align Action.functor_category_equivalence Action.functorCategoryEquivalence
 
 attribute [simps] functor_category_equivalence
+
+theorem functorCategoryEquivalence.functor_def :
+    (functorCategoryEquivalence V G).Functor = FunctorCategoryEquivalence.functor :=
+  rfl
+#align Action.functor_category_equivalence.functor_def Action.functorCategoryEquivalence.functor_def
+
+theorem functorCategoryEquivalence.inverse_def :
+    (functorCategoryEquivalence V G).inverse = FunctorCategoryEquivalence.inverse :=
+  rfl
+#align Action.functor_category_equivalence.inverse_def Action.functorCategoryEquivalence.inverse_def
 
 instance [HasFiniteProducts V] : HasFiniteProducts (Action V G)
     where out n :=
@@ -630,6 +640,78 @@ instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor :=
   by
   change is_equivalence (Action.functorCategoryEquivalence _ _).Functor
   infer_instance
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem functorCategoryMonoidalEquivalence.μ_app (A B : Action V G) :
+    ((functorCategoryMonoidalEquivalence V G).μ A B).app PUnit.unit = 𝟙 _ :=
+  by
+  dsimp only [functor_category_monoidal_equivalence]
+  simp only [monoidal.from_transported_to_lax_monoidal_functor_μ]
+  show (𝟙 A.V ⊗ 𝟙 B.V) ≫ 𝟙 (A.V ⊗ B.V) ≫ (𝟙 A.V ⊗ 𝟙 B.V) = 𝟙 (A.V ⊗ B.V)
+  simp only [monoidal_category.tensor_id, category.comp_id]
+#align Action.functor_category_monoidal_equivalence.μ_app Action.functorCategoryMonoidalEquivalence.μ_app
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.μIso_inv_app (A B : Action V G) :
+    ((functorCategoryMonoidalEquivalence V G).μIso A B).inv.app PUnit.unit = 𝟙 _ :=
+  by
+  rw [← nat_iso.app_inv, ← is_iso.iso.inv_hom]
+  refine' is_iso.inv_eq_of_hom_inv_id _
+  rw [category.comp_id, nat_iso.app_hom, monoidal_functor.μ_iso_hom,
+    functor_category_monoidal_equivalence.μ_app]
+#align Action.functor_category_monoidal_equivalence.μ_iso_inv_app Action.functorCategoryMonoidalEquivalence.μIso_inv_app
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.ε_app :
+    (functorCategoryMonoidalEquivalence V G).ε.app PUnit.unit = 𝟙 _ :=
+  by
+  dsimp only [functor_category_monoidal_equivalence]
+  simp only [monoidal.from_transported_to_lax_monoidal_functor_ε]
+  show 𝟙 (monoidal_category.tensor_unit V) ≫ _ = 𝟙 (monoidal_category.tensor_unit V)
+  rw [nat_iso.is_iso_inv_app, category.id_comp]
+  exact is_iso.inv_id
+#align Action.functor_category_monoidal_equivalence.ε_app Action.functorCategoryMonoidalEquivalence.ε_app
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.inv_counit_app_hom (A : Action V G) :
+    ((functorCategoryMonoidalEquivalence _ _).inv.Adjunction.counit.app A).Hom = 𝟙 _ :=
+  rfl
+#align Action.functor_category_monoidal_equivalence.inv_counit_app_hom Action.functorCategoryMonoidalEquivalence.inv_counit_app_hom
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.counit_app (A : SingleObj G ⥤ V) :
+    ((functorCategoryMonoidalEquivalence _ _).Adjunction.counit.app A).app PUnit.unit = 𝟙 _ :=
+  rfl
+#align Action.functor_category_monoidal_equivalence.counit_app Action.functorCategoryMonoidalEquivalence.counit_app
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.inv_unit_app_app (A : SingleObj G ⥤ V) :
+    ((functorCategoryMonoidalEquivalence _ _).inv.Adjunction.Unit.app A).app PUnit.unit = 𝟙 _ :=
+  rfl
+#align Action.functor_category_monoidal_equivalence.inv_unit_app_app Action.functorCategoryMonoidalEquivalence.inv_unit_app_app
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.unit_app_hom (A : Action V G) :
+    ((functorCategoryMonoidalEquivalence _ _).Adjunction.Unit.app A).Hom = 𝟙 _ :=
+  rfl
+#align Action.functor_category_monoidal_equivalence.unit_app_hom Action.functorCategoryMonoidalEquivalence.unit_app_hom
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.functor_map {A B : Action V G} (f : A ⟶ B) :
+    (functorCategoryMonoidalEquivalence _ _).1.1.map f = FunctorCategoryEquivalence.functor.map f :=
+  rfl
+#align Action.functor_category_monoidal_equivalence.functor_map Action.functorCategoryMonoidalEquivalence.functor_map
+
+@[simp]
+theorem functorCategoryMonoidalEquivalence.inverse_map {A B : SingleObj G ⥤ V} (f : A ⟶ B) :
+    (functorCategoryMonoidalEquivalence _ _).1.inv.map f =
+      FunctorCategoryEquivalence.inverse.map f :=
+  rfl
+#align Action.functor_category_monoidal_equivalence.inverse_map Action.functorCategoryMonoidalEquivalence.inverse_map
 
 variable (H : GroupCat.{u})
 

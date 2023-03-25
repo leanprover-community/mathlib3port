@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.vertex_group
-! leanprover-community/mathlib commit 47b51515e69f59bca5cf34ef456e6000fe205a69
+! leanprover-community/mathlib commit 97eab48559068f3d6313da387714ef25768fb730
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Combinatorics.Quiver.Path
 
 /-!
 # Vertex group
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the vertex group (*aka* isotropy group) of a groupoid at a vertex.
 

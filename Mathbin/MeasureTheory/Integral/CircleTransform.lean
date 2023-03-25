@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_transform
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ open Interval Real
 
 noncomputable section
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] (R : ℝ) (z w : ℂ)
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] (R : ℝ) (z w : ℂ)
 
 namespace Complex
 
