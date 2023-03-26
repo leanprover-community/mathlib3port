@@ -33,6 +33,12 @@ section TwoUniverses
 
 variable {σ : Type u} {R : Type v} [CommSemiring R]
 
+/- warning: mv_polynomial.cardinal_mk_eq_max_lift -> MvPolynomial.cardinal_mk_eq_max_lift is a dubious translation:
+lean 3 declaration is
+  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : Nonempty.{succ u1} σ] [_inst_3 : Nontrivial.{u2} R], Eq.{succ (succ (max u1 u2))} Cardinal.{max u1 u2} (Cardinal.mk.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1)) (LinearOrder.max.{succ (max u1 u2)} Cardinal.{max u1 u2} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.canonicallyLinearOrderedAddMonoid.{max u1 u2}) (LinearOrder.max.{succ (max u1 u2)} Cardinal.{max u1 u2} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.canonicallyLinearOrderedAddMonoid.{max u1 u2}) (Cardinal.lift.{u1, u2} (Cardinal.mk.{u2} R)) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} σ))) Cardinal.aleph0.{max u1 u2})
+but is expected to have type
+  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : Nonempty.{succ u1} σ] [_inst_3 : Nontrivial.{u2} R], Eq.{max (succ (succ u1)) (succ (succ u2))} Cardinal.{max u2 u1} (Cardinal.mk.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1)) (Max.max.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u2}) (Max.max.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u2}) (Cardinal.lift.{u1, u2} (Cardinal.mk.{u2} R)) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} σ))) Cardinal.aleph0.{max u1 u2})
+Case conversion may be inaccurate. Consider using '#align mv_polynomial.cardinal_mk_eq_max_lift MvPolynomial.cardinal_mk_eq_max_liftₓ'. -/
 @[simp]
 theorem cardinal_mk_eq_max_lift [Nonempty σ] [Nontrivial R] :
     (#MvPolynomial σ R) = max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ :=
@@ -40,11 +46,19 @@ theorem cardinal_mk_eq_max_lift [Nonempty σ] [Nontrivial R] :
     rw [mk_finsupp_nat, max_assoc, lift_max, lift_aleph_0, max_comm]
 #align mv_polynomial.cardinal_mk_eq_max_lift MvPolynomial.cardinal_mk_eq_max_lift
 
+#print MvPolynomial.cardinal_mk_eq_lift /-
 @[simp]
 theorem cardinal_mk_eq_lift [IsEmpty σ] : (#MvPolynomial σ R) = Cardinal.lift.{u} (#R) :=
   ((isEmptyRingEquiv R σ).toEquiv.trans Equiv.ulift.{u}.symm).cardinal_eq
 #align mv_polynomial.cardinal_mk_eq_lift MvPolynomial.cardinal_mk_eq_lift
+-/
 
+/- warning: mv_polynomial.cardinal_lift_mk_le_max -> MvPolynomial.cardinal_lift_mk_le_max is a dubious translation:
+lean 3 declaration is
+  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_2 : CommSemiring.{u2} R], LE.le.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.hasLe.{max u1 u2} (Cardinal.mk.{max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_2)) (LinearOrder.max.{succ (max u1 u2)} Cardinal.{max u1 u2} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.canonicallyLinearOrderedAddMonoid.{max u1 u2}) (LinearOrder.max.{succ (max u1 u2)} Cardinal.{max u1 u2} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.canonicallyLinearOrderedAddMonoid.{max u1 u2}) (Cardinal.lift.{u1, u2} (Cardinal.mk.{u2} R)) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} σ))) Cardinal.aleph0.{max u1 u2})
+but is expected to have type
+  forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_2 : CommSemiring.{u2} R], LE.le.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} Cardinal.instLECardinal.{max u1 u2} (Cardinal.mk.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_2)) (Max.max.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u2}) (Max.max.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u2)} Cardinal.{max u2 u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u2}) (Cardinal.lift.{u1, u2} (Cardinal.mk.{u2} R)) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} σ))) Cardinal.aleph0.{max u1 u2})
+Case conversion may be inaccurate. Consider using '#align mv_polynomial.cardinal_lift_mk_le_max MvPolynomial.cardinal_lift_mk_le_maxₓ'. -/
 theorem cardinal_lift_mk_le_max {σ : Type u} {R : Type v} [CommSemiring R] :
     (#MvPolynomial σ R) ≤ max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ :=
   by
@@ -59,10 +73,22 @@ end TwoUniverses
 
 variable {σ R : Type u} [CommSemiring R]
 
+/- warning: mv_polynomial.cardinal_mk_eq_max -> MvPolynomial.cardinal_mk_eq_max is a dubious translation:
+lean 3 declaration is
+  forall {σ : Type.{u1}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Nonempty.{succ u1} σ] [_inst_3 : Nontrivial.{u1} R], Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (MvPolynomial.{u1, u1} σ R _inst_1)) (LinearOrder.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ u1} Cardinal.{u1} Cardinal.canonicallyLinearOrderedAddMonoid.{u1}) (LinearOrder.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ u1} Cardinal.{u1} Cardinal.canonicallyLinearOrderedAddMonoid.{u1}) (Cardinal.mk.{u1} R) (Cardinal.mk.{u1} σ)) Cardinal.aleph0.{u1})
+but is expected to have type
+  forall {σ : Type.{u1}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Nonempty.{succ u1} σ] [_inst_3 : Nontrivial.{u1} R], Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (MvPolynomial.{u1, u1} σ R _inst_1)) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Cardinal.mk.{u1} R) (Cardinal.mk.{u1} σ)) Cardinal.aleph0.{u1})
+Case conversion may be inaccurate. Consider using '#align mv_polynomial.cardinal_mk_eq_max MvPolynomial.cardinal_mk_eq_maxₓ'. -/
 theorem cardinal_mk_eq_max [Nonempty σ] [Nontrivial R] :
     (#MvPolynomial σ R) = max (max (#R) (#σ)) ℵ₀ := by simp
 #align mv_polynomial.cardinal_mk_eq_max MvPolynomial.cardinal_mk_eq_max
 
+/- warning: mv_polynomial.cardinal_mk_le_max -> MvPolynomial.cardinal_mk_le_max is a dubious translation:
+lean 3 declaration is
+  forall {σ : Type.{u1}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.mk.{u1} (MvPolynomial.{u1, u1} σ R _inst_1)) (LinearOrder.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ u1} Cardinal.{u1} Cardinal.canonicallyLinearOrderedAddMonoid.{u1}) (LinearOrder.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toLinearOrder.{succ u1} Cardinal.{u1} Cardinal.canonicallyLinearOrderedAddMonoid.{u1}) (Cardinal.mk.{u1} R) (Cardinal.mk.{u1} σ)) Cardinal.aleph0.{u1})
+but is expected to have type
+  forall {σ : Type.{u1}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (MvPolynomial.{u1, u1} σ R _inst_1)) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Cardinal.mk.{u1} R) (Cardinal.mk.{u1} σ)) Cardinal.aleph0.{u1})
+Case conversion may be inaccurate. Consider using '#align mv_polynomial.cardinal_mk_le_max MvPolynomial.cardinal_mk_le_maxₓ'. -/
 /-- The cardinality of the multivariate polynomial ring, `mv_polynomial σ R` is at most the maximum
 of `#R`, `#σ` and `ℵ₀` -/
 theorem cardinal_mk_le_max : (#MvPolynomial σ R) ≤ max (max (#R) (#σ)) ℵ₀ :=
