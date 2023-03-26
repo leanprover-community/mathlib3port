@@ -46,6 +46,7 @@ variable {C : Type u} [Category.{v} C] [HasPullbacks C]
 
 variable (C)
 
+#print CategoryTheory.Pretopology /-
 /--
 A (Grothendieck) pretopology on `C` consists of a collection of families of morphisms with a fixed
 target `X` for every object `X` in `C`, called "coverings" of `X`, which satisfies the following
@@ -72,6 +73,7 @@ structure Pretopology where
     ∀ ⦃X : C⦄ (S : Presieve X) (Ti : ∀ ⦃Y⦄ (f : Y ⟶ X), S f → Presieve Y),
       S ∈ coverings X → (∀ ⦃Y⦄ (f) (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
 #align category_theory.pretopology CategoryTheory.Pretopology
+-/
 
 namespace Pretopology
 
@@ -82,9 +84,11 @@ variable {C}
 
 instance : LE (Pretopology C) where le K₁ K₂ := (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂
 
+#print CategoryTheory.Pretopology.le_def /-
 theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂ :=
   Iff.rfl
 #align category_theory.pretopology.le_def CategoryTheory.Pretopology.le_def
+-/
 
 variable (C)
 
@@ -106,6 +110,7 @@ instance : OrderTop (Pretopology C)
 instance : Inhabited (Pretopology C) :=
   ⟨⊤⟩
 
+#print CategoryTheory.Pretopology.toGrothendieck /-
 /-- A pretopology `K` can be completed to a Grothendieck topology `J` by declaring a sieve to be
 `J`-covering if it contains a family in `K`.
 
@@ -128,12 +133,20 @@ def toGrothendieck (K : Pretopology C) : GrothendieckTopology C
     rintro Y _ ⟨Z, g, f, hg, hf, rfl⟩
     apply t₃ (RS _ hg) _ hf
 #align category_theory.pretopology.to_grothendieck CategoryTheory.Pretopology.toGrothendieck
+-/
 
+/- warning: category_theory.pretopology.mem_to_grothendieck -> CategoryTheory.Pretopology.mem_toGrothendieck is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1] (K : CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (X : C) (S : CategoryTheory.Sieve.{u1, u2} C _inst_1 X), Iff (Membership.Mem.{max u2 u1, max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X) (Set.{max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X)) (Set.hasMem.{max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X)) S (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ (max u2 u1))} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (fun (_x : CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) => forall (X : C), Set.{max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X)) (CategoryTheory.GrothendieckTopology.hasCoeToFun.{u1, u2} C _inst_1) (CategoryTheory.Pretopology.toGrothendieck.{u1, u2} C _inst_1 _inst_2 K) X)) (Exists.{succ (max u2 u1)} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (fun (R : CategoryTheory.Presieve.{u1, u2} C _inst_1 X) => Exists.{0} (Membership.Mem.{max u2 u1, max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (Set.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) (Set.hasMem.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) R (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ (max u2 u1))} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (fun (_x : CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) => forall (X : C), Set.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) (CategoryTheory.Pretopology.hasCoeToFun.{u1, u2} C _inst_1 _inst_2) K X)) (fun (H : Membership.Mem.{max u2 u1, max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (Set.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) (Set.hasMem.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) R (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ (max u2 u1))} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (fun (_x : CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) => forall (X : C), Set.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) (CategoryTheory.Pretopology.hasCoeToFun.{u1, u2} C _inst_1 _inst_2) K X)) => LE.le.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (Preorder.toLE.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CategoryTheory.Presieve.completeLattice.{u2, u1} C _inst_1 X))))) R (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X) (fun (_x : CategoryTheory.Sieve.{u1, u2} C _inst_1 X) => CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CategoryTheory.Sieve.hasCoeToFun.{u1, u2} C _inst_1 X) S))))
+but is expected to have type
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1] (K : CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (X : C) (S : CategoryTheory.Sieve.{u1, u2} C _inst_1 X), Iff (Membership.mem.{max u2 u1, max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X) (Set.{max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X)) (Set.instMembershipSet.{max u2 u1} (CategoryTheory.Sieve.{u1, u2} C _inst_1 X)) S (CategoryTheory.GrothendieckTopology.sieves.{u1, u2} C _inst_1 (CategoryTheory.Pretopology.toGrothendieck.{u1, u2} C _inst_1 _inst_2 K) X)) (Exists.{succ (max u2 u1)} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (fun (R : CategoryTheory.Presieve.{u1, u2} C _inst_1 X) => And (Membership.mem.{max u2 u1, max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (Set.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) (Set.instMembershipSet.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X)) R (CategoryTheory.Pretopology.coverings.{u1, u2} C _inst_1 _inst_2 K X)) (LE.le.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (Preorder.toLE.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (CategoryTheory.Presieve.{u1, u2} C _inst_1 X) (CategoryTheory.instCompleteLatticePresieve.{u1, u2} C _inst_1 X))))) R (CategoryTheory.Sieve.arrows.{u1, u2} C _inst_1 X S))))
+Case conversion may be inaccurate. Consider using '#align category_theory.pretopology.mem_to_grothendieck CategoryTheory.Pretopology.mem_toGrothendieckₓ'. -/
 theorem mem_toGrothendieck (K : Pretopology C) (X S) :
     S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
   Iff.rfl
 #align category_theory.pretopology.mem_to_grothendieck CategoryTheory.Pretopology.mem_toGrothendieck
 
+#print CategoryTheory.Pretopology.ofGrothendieck /-
 /-- The largest pretopology generating the given Grothendieck topology.
 
 See [MM92] Chapter III, Section 2, Equations (3,4).
@@ -155,7 +168,14 @@ def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C
     rintro Y g ⟨W, h, g, hg, rfl⟩
     exact ⟨_, h, _, ⟨_, _, _, hf, hg, rfl⟩, by simp⟩
 #align category_theory.pretopology.of_grothendieck CategoryTheory.Pretopology.ofGrothendieck
+-/
 
+/- warning: category_theory.pretopology.gi -> CategoryTheory.Pretopology.gi is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1], GaloisInsertion.{max u2 u1, max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.partialOrder.{u1, u2} C _inst_1 _inst_2)) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.partialOrder.{u1, u2} C _inst_1)) (CategoryTheory.Pretopology.toGrothendieck.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.ofGrothendieck.{u1, u2} C _inst_1 _inst_2)
+but is expected to have type
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1], GaloisInsertion.{max u2 u1, max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.instPartialOrderPretopology.{u1, u2} C _inst_1 _inst_2)) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.instPartialOrderGrothendieckTopology.{u1, u2} C _inst_1)) (CategoryTheory.Pretopology.toGrothendieck.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.ofGrothendieck.{u1, u2} C _inst_1 _inst_2)
+Case conversion may be inaccurate. Consider using '#align category_theory.pretopology.gi CategoryTheory.Pretopology.giₓ'. -/
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
 def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C)
     where
@@ -171,6 +191,7 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C)
   choice_eq _ _ := rfl
 #align category_theory.pretopology.gi CategoryTheory.Pretopology.gi
 
+#print CategoryTheory.Pretopology.trivial /-
 /--
 The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
 also known as the indiscrete, coarse, or chaotic topology.
@@ -208,6 +229,7 @@ def trivial : Pretopology C
       rw [hTi]
       apply presieve.singleton.mk
 #align category_theory.pretopology.trivial CategoryTheory.Pretopology.trivial
+-/
 
 instance : OrderBot (Pretopology C) where
   bot := trivial C
@@ -215,6 +237,12 @@ instance : OrderBot (Pretopology C) where
     rintro ⟨Y, f, hf, rfl⟩
     exact K.has_isos f
 
+/- warning: category_theory.pretopology.to_grothendieck_bot -> CategoryTheory.Pretopology.toGrothendieck_bot is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1], Eq.{max (succ u2) (succ u1)} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.Pretopology.toGrothendieck.{u1, u2} C _inst_1 _inst_2 (Bot.bot.{max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (OrderBot.toHasBot.{max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.hasLe.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.orderBot.{u1, u2} C _inst_1 _inst_2)))) (Bot.bot.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CompleteLattice.toHasBot.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.completeLattice.{u1, u2} C _inst_1)))
+but is expected to have type
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1], Eq.{max (succ u2) (succ u1)} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.Pretopology.toGrothendieck.{u1, u2} C _inst_1 _inst_2 (Bot.bot.{max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (OrderBot.toBot.{max u2 u1} (CategoryTheory.Pretopology.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.LE.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Pretopology.instOrderBotPretopologyLE.{u1, u2} C _inst_1 _inst_2)))) (Bot.bot.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CompleteLattice.toBot.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.instCompleteLatticeGrothendieckTopology.{u1, u2} C _inst_1)))
+Case conversion may be inaccurate. Consider using '#align category_theory.pretopology.to_grothendieck_bot CategoryTheory.Pretopology.toGrothendieck_botₓ'. -/
 /-- The trivial pretopology induces the trivial grothendieck topology. -/
 theorem toGrothendieck_bot : toGrothendieck C ⊥ = ⊥ :=
   (gi C).gc.l_bot
