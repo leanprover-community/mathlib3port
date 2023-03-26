@@ -1253,6 +1253,12 @@ protected def OneHom.copy {hM : One M} {hN : One N} (f : OneHom M N) (f' : M →
 #align zero_hom.copy ZeroHom.copy
 -/
 
+/- warning: one_hom.coe_copy -> OneHom.coe_copy is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : One.{u1} M} {hN : One.{u2} N} (f : OneHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (OneHom.{u1, u2} M N hM hN) (fun (_x : OneHom.{u1, u2} M N hM hN) => M -> N) (OneHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u1) (succ u2)} (M -> N) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (OneHom.{u1, u2} M N hM hN) (fun (_x : OneHom.{u1, u2} M N hM hN) => M -> N) (OneHom.hasCoeToFun.{u1, u2} M N hM hN) (OneHom.copy.{u1, u2} M N hM hN f f' h)) f'
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : One.{u2} M} {hN : One.{u1} N} (f : OneHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OneHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.1262 : M) => N) _x) (OneHomClass.toFunLike.{max u2 u1, u2, u1} (OneHom.{u2, u1} M N hM hN) M N hM hN (OneHom.oneHomClass.{u2, u1} M N hM hN)) f)), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.1262 : M) => N) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OneHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.1262 : M) => N) _x) (OneHomClass.toFunLike.{max u2 u1, u2, u1} (OneHom.{u2, u1} M N hM hN) M N hM hN (OneHom.oneHomClass.{u2, u1} M N hM hN)) (OneHom.copy.{u2, u1} M N hM hN f f' h)) f'
+Case conversion may be inaccurate. Consider using '#align one_hom.coe_copy OneHom.coe_copyₓ'. -/
 @[simp, to_additive]
 theorem OneHom.coe_copy {hM : One M} {hN : One N} (f : OneHom M N) (f' : M → N) (h : f' = f) :
     ⇑(f.copy f' h) = f' :=
@@ -1260,6 +1266,12 @@ theorem OneHom.coe_copy {hM : One M} {hN : One N} (f : OneHom M N) (f' : M → N
 #align one_hom.coe_copy OneHom.coe_copy
 #align zero_hom.coe_copy ZeroHom.coe_copy
 
+/- warning: one_hom.coe_copy_eq -> OneHom.coe_copy_eq is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : One.{u1} M} {hN : One.{u2} N} (f : OneHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (OneHom.{u1, u2} M N hM hN) (fun (_x : OneHom.{u1, u2} M N hM hN) => M -> N) (OneHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u2) (succ u1)} (OneHom.{u1, u2} M N hM hN) (OneHom.copy.{u1, u2} M N hM hN f f' h) f
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : One.{u2} M} {hN : One.{u1} N} (f : OneHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OneHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.1262 : M) => N) _x) (OneHomClass.toFunLike.{max u2 u1, u2, u1} (OneHom.{u2, u1} M N hM hN) M N hM hN (OneHom.oneHomClass.{u2, u1} M N hM hN)) f)), Eq.{max (succ u2) (succ u1)} (OneHom.{u2, u1} M N hM hN) (OneHom.copy.{u2, u1} M N hM hN f f' h) f
+Case conversion may be inaccurate. Consider using '#align one_hom.coe_copy_eq OneHom.coe_copy_eqₓ'. -/
 @[to_additive]
 theorem OneHom.coe_copy_eq {hM : One M} {hN : One N} (f : OneHom M N) (f' : M → N) (h : f' = f) :
     f.copy f' h = f :=
@@ -1280,6 +1292,12 @@ protected def MulHom.copy {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M �
 #align add_hom.copy AddHom.copy
 -/
 
+/- warning: mul_hom.coe_copy -> MulHom.coe_copy is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : Mul.{u1} M} {hN : Mul.{u2} N} (f : MulHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N hM hN) (fun (_x : MulHom.{u1, u2} M N hM hN) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u1) (succ u2)} (M -> N) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N hM hN) (fun (_x : MulHom.{u1, u2} M N hM hN) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N hM hN) (MulHom.copy.{u1, u2} M N hM hN f f' h)) f'
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : Mul.{u2} M} {hN : Mul.{u1} N} (f : MulHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N hM hN) M N hM hN (MulHom.mulHomClass.{u2, u1} M N hM hN)) f)), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N hM hN) M N hM hN (MulHom.mulHomClass.{u2, u1} M N hM hN)) (MulHom.copy.{u2, u1} M N hM hN f f' h)) f'
+Case conversion may be inaccurate. Consider using '#align mul_hom.coe_copy MulHom.coe_copyₓ'. -/
 @[simp, to_additive]
 theorem MulHom.coe_copy {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M → N) (h : f' = f) :
     ⇑(f.copy f' h) = f' :=
@@ -1287,6 +1305,12 @@ theorem MulHom.coe_copy {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M → 
 #align mul_hom.coe_copy MulHom.coe_copy
 #align add_hom.coe_copy AddHom.coe_copy
 
+/- warning: mul_hom.coe_copy_eq -> MulHom.coe_copy_eq is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : Mul.{u1} M} {hN : Mul.{u2} N} (f : MulHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N hM hN) (fun (_x : MulHom.{u1, u2} M N hM hN) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u2) (succ u1)} (MulHom.{u1, u2} M N hM hN) (MulHom.copy.{u1, u2} M N hM hN f f' h) f
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : Mul.{u2} M} {hN : Mul.{u1} N} (f : MulHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N hM hN) M N hM hN (MulHom.mulHomClass.{u2, u1} M N hM hN)) f)), Eq.{max (succ u2) (succ u1)} (MulHom.{u2, u1} M N hM hN) (MulHom.copy.{u2, u1} M N hM hN f f' h) f
+Case conversion may be inaccurate. Consider using '#align mul_hom.coe_copy_eq MulHom.coe_copy_eqₓ'. -/
 @[to_additive]
 theorem MulHom.coe_copy_eq {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M → N) (h : f' = f) :
     f.copy f' h = f :=
@@ -1310,6 +1334,12 @@ protected def MonoidHom.copy {hM : MulOneClass M} {hN : MulOneClass N} (f : M �
 #align monoid_hom.copy MonoidHom.copy
 #align add_monoid_hom.copy AddMonoidHom.copy
 
+/- warning: monoid_hom.coe_copy -> MonoidHom.coe_copy is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : MulOneClass.{u1} M} {hN : MulOneClass.{u2} N} (f : MonoidHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N hM hN) (fun (_x : MonoidHom.{u1, u2} M N hM hN) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u1) (succ u2)} (M -> N) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N hM hN) (fun (_x : MonoidHom.{u1, u2} M N hM hN) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N hM hN) (MonoidHom.copy.{u1, u2} M N hM hN f f' h)) f'
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : MulOneClass.{u2} M} {hN : MulOneClass.{u1} N} (f : MonoidHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N hM hN) M N (MulOneClass.toMul.{u2} M hM) (MulOneClass.toMul.{u1} N hN) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N hM hN) M N hM hN (MonoidHom.monoidHomClass.{u2, u1} M N hM hN))) f)), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N hM hN) M N (MulOneClass.toMul.{u2} M hM) (MulOneClass.toMul.{u1} N hN) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N hM hN) M N hM hN (MonoidHom.monoidHomClass.{u2, u1} M N hM hN))) (MonoidHom.copy.{u2, u1} M N hM hN f f' h)) f'
+Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_copy MonoidHom.coe_copyₓ'. -/
 @[simp, to_additive]
 theorem MonoidHom.coe_copy {hM : MulOneClass M} {hN : MulOneClass N} (f : M →* N) (f' : M → N)
     (h : f' = f) : ⇑(f.copy f' h) = f' :=
@@ -1317,6 +1347,12 @@ theorem MonoidHom.coe_copy {hM : MulOneClass M} {hN : MulOneClass N} (f : M →*
 #align monoid_hom.coe_copy MonoidHom.coe_copy
 #align add_monoid_hom.coe_copy AddMonoidHom.coe_copy
 
+/- warning: monoid_hom.copy_eq -> MonoidHom.copy_eq is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : MulOneClass.{u1} M} {hN : MulOneClass.{u2} N} (f : MonoidHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N hM hN) (fun (_x : MonoidHom.{u1, u2} M N hM hN) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u2) (succ u1)} (MonoidHom.{u1, u2} M N hM hN) (MonoidHom.copy.{u1, u2} M N hM hN f f' h) f
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : MulOneClass.{u2} M} {hN : MulOneClass.{u1} N} (f : MonoidHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N hM hN) M N (MulOneClass.toMul.{u2} M hM) (MulOneClass.toMul.{u1} N hN) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N hM hN) M N hM hN (MonoidHom.monoidHomClass.{u2, u1} M N hM hN))) f)), Eq.{max (succ u2) (succ u1)} (MonoidHom.{u2, u1} M N hM hN) (MonoidHom.copy.{u2, u1} M N hM hN f f' h) f
+Case conversion may be inaccurate. Consider using '#align monoid_hom.copy_eq MonoidHom.copy_eqₓ'. -/
 @[to_additive]
 theorem MonoidHom.copy_eq {hM : MulOneClass M} {hN : MulOneClass N} (f : M →* N) (f' : M → N)
     (h : f' = f) : f.copy f' h = f :=
@@ -1337,12 +1373,24 @@ protected def MonoidWithZeroHom.copy {hM : MulZeroOneClass M} {hN : MulZeroOneCl
   { f.toZeroHom.copy f' h, f.toMonoidHom.copy f' h with }
 #align monoid_with_zero_hom.copy MonoidWithZeroHom.copy
 
+/- warning: monoid_with_zero_hom.coe_copy -> MonoidWithZeroHom.coe_copy is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : MulZeroOneClass.{u1} M} {hN : MulZeroOneClass.{u2} N} (f : MonoidWithZeroHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidWithZeroHom.{u1, u2} M N hM hN) (fun (_x : MonoidWithZeroHom.{u1, u2} M N hM hN) => M -> N) (MonoidWithZeroHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u1) (succ u2)} (M -> N) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) (fun (_x : MonoidHom.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) (MonoidWithZeroHom.copy.{u1, u2} M N hM hN f f' h)) f'
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : MulZeroOneClass.{u2} M} {hN : MulZeroOneClass.{u1} N} (f : MonoidWithZeroHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N (MulOneClass.toMul.{u2} M (MulZeroOneClass.toMulOneClass.{u2} M hM)) (MulOneClass.toMul.{u1} N (MulZeroOneClass.toMulOneClass.{u1} N hN)) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN) (MonoidWithZeroHomClass.toMonoidHomClass.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N hM hN (MonoidWithZeroHom.monoidWithZeroHomClass.{u2, u1} M N hM hN)))) f)), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) ᾰ) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN)) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN)) M N (MulOneClass.toMul.{u2} M (MulZeroOneClass.toMulOneClass.{u2} M hM)) (MulOneClass.toMul.{u1} N (MulZeroOneClass.toMulOneClass.{u1} N hN)) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN)) M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN) (MonoidHom.monoidHomClass.{u2, u1} M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN)))) (MonoidWithZeroHom.copy.{u2, u1} M N hM hN f f' h)) f'
+Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.coe_copy MonoidWithZeroHom.coe_copyₓ'. -/
 @[simp]
 theorem MonoidWithZeroHom.coe_copy {hM : MulZeroOneClass M} {hN : MulZeroOneClass N} (f : M →*₀ N)
     (f' : M → N) (h : f' = f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align monoid_with_zero_hom.coe_copy MonoidWithZeroHom.coe_copy
 
+/- warning: monoid_with_zero_hom.copy_eq -> MonoidWithZeroHom.copy_eq is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {hM : MulZeroOneClass.{u1} M} {hN : MulZeroOneClass.{u2} N} (f : MonoidWithZeroHom.{u1, u2} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u1) (succ u2)} (M -> N) f' (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidWithZeroHom.{u1, u2} M N hM hN) (fun (_x : MonoidWithZeroHom.{u1, u2} M N hM hN) => M -> N) (MonoidWithZeroHom.hasCoeToFun.{u1, u2} M N hM hN) f)), Eq.{max (succ u2) (succ u1)} (MonoidHom.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) (MonoidWithZeroHom.copy.{u1, u2} M N hM hN f f' h) ((fun (a : Sort.{max (succ u2) (succ u1)}) (b : Sort.{max (succ u2) (succ u1)}) [self : HasLiftT.{max (succ u2) (succ u1), max (succ u2) (succ u1)} a b] => self.0) (MonoidWithZeroHom.{u1, u2} M N hM hN) (MonoidHom.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) (HasLiftT.mk.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MonoidWithZeroHom.{u1, u2} M N hM hN) (MonoidHom.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) (CoeTCₓ.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MonoidWithZeroHom.{u1, u2} M N hM hN) (MonoidHom.{u1, u2} M N (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN)) (MonoidHom.hasCoeT.{u1, u2, max u2 u1} M N (MonoidWithZeroHom.{u1, u2} M N hM hN) (MulZeroOneClass.toMulOneClass.{u1} M hM) (MulZeroOneClass.toMulOneClass.{u2} N hN) (MonoidWithZeroHomClass.toMonoidHomClass.{max u2 u1, u1, u2} (MonoidWithZeroHom.{u1, u2} M N hM hN) M N hM hN (MonoidWithZeroHom.monoidWithZeroHomClass.{u1, u2} M N hM hN))))) f)
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {hM : MulZeroOneClass.{u2} M} {hN : MulZeroOneClass.{u1} N} (f : MonoidWithZeroHom.{u2, u1} M N hM hN) (f' : M -> N) (h : Eq.{max (succ u2) (succ u1)} (M -> N) f' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N (MulOneClass.toMul.{u2} M (MulZeroOneClass.toMulOneClass.{u2} M hM)) (MulOneClass.toMul.{u1} N (MulZeroOneClass.toMulOneClass.{u1} N hN)) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN) (MonoidWithZeroHomClass.toMonoidHomClass.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N hM hN (MonoidWithZeroHom.monoidWithZeroHomClass.{u2, u1} M N hM hN)))) f)), Eq.{max (succ u2) (succ u1)} (MonoidHom.{u2, u1} M N (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN)) (MonoidWithZeroHom.copy.{u2, u1} M N hM hN f f' h) (MonoidHomClass.toMonoidHom.{u2, u1, max u2 u1} M N (MonoidWithZeroHom.{u2, u1} M N hM hN) (MulZeroOneClass.toMulOneClass.{u2} M hM) (MulZeroOneClass.toMulOneClass.{u1} N hN) (MonoidWithZeroHomClass.toMonoidHomClass.{max u2 u1, u2, u1} (MonoidWithZeroHom.{u2, u1} M N hM hN) M N hM hN (MonoidWithZeroHom.monoidWithZeroHomClass.{u2, u1} M N hM hN)) f)
+Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.copy_eq MonoidWithZeroHom.copy_eqₓ'. -/
 theorem MonoidWithZeroHom.copy_eq {hM : MulZeroOneClass M} {hN : MulZeroOneClass N} (f : M →*₀ N)
     (f' : M → N) (h : f' = f) : f.copy f' h = f :=
   FunLike.ext' h
