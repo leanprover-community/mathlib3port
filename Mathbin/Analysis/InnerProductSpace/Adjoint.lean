@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.adjoint
-! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,6 +51,8 @@ open IsROrC
 open ComplexConjugate
 
 variable {𝕜 E F G : Type _} [IsROrC 𝕜]
+
+variable [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedAddCommGroup G]
 
 variable [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F] [InnerProductSpace 𝕜 G]
 
@@ -259,7 +261,11 @@ instance : CstarRing (E →L[𝕜] E) :=
 
 section Real
 
-variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpace ℝ F']
+variable {E' : Type _} {F' : Type _}
+
+variable [NormedAddCommGroup E'] [NormedAddCommGroup F']
+
+variable [InnerProductSpace ℝ E'] [InnerProductSpace ℝ F']
 
 variable [CompleteSpace E'] [CompleteSpace F']
 
@@ -486,7 +492,11 @@ theorem isSymmetric_iff_isSelfAdjoint (A : E →ₗ[𝕜] E) : IsSymmetric A ↔
 
 section Real
 
-variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpace ℝ F']
+variable {E' : Type _} {F' : Type _}
+
+variable [NormedAddCommGroup E'] [NormedAddCommGroup F']
+
+variable [InnerProductSpace ℝ E'] [InnerProductSpace ℝ F']
 
 variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 

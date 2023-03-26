@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
+! leanprover-community/mathlib commit 55d771df074d0dd020139ee1cd4b95521422df9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Maps
-import Mathbin.Topology.LocallyFinite
 import Mathbin.Order.Filter.Pi
 
 /-!
@@ -1944,55 +1943,6 @@ theorem tendsto_subtype_rng {β : Type _} {p : α → Prop} {b : Filter β} {f :
     ∀ {a : Subtype p}, Tendsto f b (𝓝 a) ↔ Tendsto (fun x => (f x : α)) b (𝓝 (a : α))
   | ⟨a, ha⟩ => by rw [nhds_subtype_eq_comap, tendsto_comap_iff, Subtype.coe_mk]
 #align tendsto_subtype_rng tendsto_subtype_rng
-
-/- warning: continuous_subtype_nhds_cover -> continuous_subtype_nhds_cover is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {ι : Sort.{u3}} {f : α -> β} {c : ι -> α -> Prop}, (forall (x : α), Exists.{u3} ι (fun (i : ι) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (setOf.{u1} α (fun (x : α) => c i x)) (nhds.{u1} α _inst_1 x))) -> (forall (i : ι), Continuous.{u1, u2} (Subtype.{succ u1} α (c i)) β (Subtype.topologicalSpace.{u1} α (c i) _inst_1) _inst_2 (fun (x : Subtype.{succ u1} α (c i)) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (c i)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (c i)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (c i)) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α (c i)) α (coeSubtype.{succ u1} α (fun (x : α) => c i x))))) x))) -> (Continuous.{u1, u2} α β _inst_1 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u3} β] {ι : Sort.{u1}} {f : α -> β} {c : ι -> α -> Prop}, (forall (x : α), Exists.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (setOf.{u2} α (fun (x : α) => c i x)) (nhds.{u2} α _inst_1 x))) -> (forall (i : ι), Continuous.{u2, u3} (Subtype.{succ u2} α (c i)) β (instTopologicalSpaceSubtype.{u2} α (c i) _inst_1) _inst_2 (fun (x : Subtype.{succ u2} α (c i)) => f (Subtype.val.{succ u2} α (c i) x))) -> (Continuous.{u2, u3} α β _inst_1 _inst_2 f)
-Case conversion may be inaccurate. Consider using '#align continuous_subtype_nhds_cover continuous_subtype_nhds_coverₓ'. -/
-theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → α → Prop}
-    (c_cover : ∀ x : α, ∃ i, { x | c i x } ∈ 𝓝 x)
-    (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) : Continuous f :=
-  continuous_iff_continuousAt.mpr fun x =>
-    let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x
-    let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
-    calc
-      map f (𝓝 x) = map f (map coe (𝓝 x')) :=
-        congr_arg (map f) (map_nhds_subtype_coe_eq_nhds _ <| c_sets).symm
-      _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
-      _ ≤ 𝓝 (f x) := continuous_iff_continuousAt.mp (f_cont i) x'
-      
-#align continuous_subtype_nhds_cover continuous_subtype_nhds_cover
-
-/- warning: continuous_subtype_is_closed_cover clashes with [anonymous] -> [anonymous]
-warning: continuous_subtype_is_closed_cover -> [anonymous] is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : TopologicalSpace.{u} α] [_inst_2 : TopologicalSpace.{v} β] {ι : Type.{u_1}} {f : α -> β} (c : ι -> α -> Prop), (LocallyFinite.{u_1, u} ι α _inst_1 (fun (i : ι) => setOf.{u} α (fun (x : α) => c i x))) -> (forall (i : ι), IsClosed.{u} α _inst_1 (setOf.{u} α (fun (x : α) => c i x))) -> (forall (x : α), Exists.{succ u_1} ι (fun (i : ι) => c i x)) -> (forall (i : ι), Continuous.{u, v} (Subtype.{succ u} α (c i)) β (Subtype.topologicalSpace.{u} α (c i) _inst_1) _inst_2 (fun (x : Subtype.{succ u} α (c i)) => f ((fun (a : Sort.{max 1 (succ u)}) (b : Type.{u}) [self : HasLiftT.{max 1 (succ u), succ u} a b] => self.0) (Subtype.{succ u} α (c i)) α (HasLiftT.mk.{max 1 (succ u), succ u} (Subtype.{succ u} α (c i)) α (CoeTCₓ.coe.{max 1 (succ u), succ u} (Subtype.{succ u} α (c i)) α (coeBase.{max 1 (succ u), succ u} (Subtype.{succ u} α (c i)) α (coeSubtype.{succ u} α (fun (x : α) => c i x))))) x))) -> (Continuous.{u, v} α β _inst_1 _inst_2 f)
-but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}}, (Nat -> α -> β) -> Nat -> (List.{u} α) -> (List.{v} β)
-Case conversion may be inaccurate. Consider using '#align continuous_subtype_is_closed_cover [anonymous]ₓ'. -/
-theorem [anonymous] {ι : Sort _} {f : α → β} (c : ι → α → Prop)
-    (h_lf : LocallyFinite fun i => { x | c i x }) (h_is_closed : ∀ i, IsClosed { x | c i x })
-    (h_cover : ∀ x, ∃ i, c i x) (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) :
-    Continuous f :=
-  continuous_iff_isClosed.mpr fun s hs =>
-    by
-    have : ∀ i, IsClosed ((coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) := fun i =>
-      (closedEmbedding_subtype_val (h_is_closed _)).IsClosedMap _ (hs.Preimage (f_cont i))
-    have : IsClosed (⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) :=
-      LocallyFinite.isClosed_unionᵢ (h_lf.Subset fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
-    have : f ⁻¹' s = ⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s) :=
-      by
-      apply Set.ext
-      have : ∀ x : α, f x ∈ s ↔ ∃ i : ι, c i x ∧ f x ∈ s := fun x =>
-        ⟨fun hx =>
-          let ⟨i, hi⟩ := h_cover x
-          ⟨i, hi, hx⟩,
-          fun ⟨i, hi, hx⟩ => hx⟩
-      simpa [and_comm, @and_left_comm (c _ _), ← exists_and_right]
-    rwa [this]
-#align continuous_subtype_is_closed_cover [anonymous]
 
 #print closure_subtype /-
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :

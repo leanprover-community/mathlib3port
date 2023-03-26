@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.add_circle
-! leanprover-community/mathlib commit 8cce17e5783303db93df6810de9d85dd0f9e402a
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -483,7 +483,7 @@ theorem tsum_sq_fourierCoeff (f : lp ℂ 2 <| @haarAddCircle T hT) :
     exact_mod_cast lp.norm_rpow_eq_tsum _ (fourier_basis.repr f)
     norm_num
   have H₂ : ‖fourier_basis.repr f‖ ^ 2 = ‖f‖ ^ 2 := by simp
-  have H₃ := congr_arg IsROrC.re (@L2.inner_def (AddCircle T) ℂ ℂ _ _ _ _ f f)
+  have H₃ := congr_arg IsROrC.re (@L2.inner_def (AddCircle T) ℂ ℂ _ _ _ _ _ f f)
   rw [← integral_re] at H₃
   · simp only [← norm_sq_eq_inner] at H₃
     rw [← H₁, H₂, H₃]

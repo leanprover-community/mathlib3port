@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit 4681620dafca6a7d710f437bd10fb69428ec2209
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ self-adjoint operator, spectral theorem, diagonalization theorem
 
 variable {𝕜 : Type _} [IsROrC 𝕜] [dec_𝕜 : DecidableEq 𝕜]
 
-variable {E : Type _} [InnerProductSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y

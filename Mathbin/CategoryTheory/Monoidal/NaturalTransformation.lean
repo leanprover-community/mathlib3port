@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.natural_transformation
-! leanprover-community/mathlib commit d047eb4671130d5998b185e49a0443a0d2e9b191
+! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.FullSubcategory
 
 /-!
 # Monoidal natural transformations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Natural transformations between (lax) monoidal functors must satisfy
 an additional compatibility relation with the tensorators:

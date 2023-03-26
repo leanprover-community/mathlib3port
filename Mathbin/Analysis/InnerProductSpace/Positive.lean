@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.positive
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,8 +45,13 @@ open InnerProduct ComplexConjugate
 
 namespace ContinuousLinearMap
 
-variable {𝕜 E F : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F]
-  [CompleteSpace E] [CompleteSpace F]
+variable {𝕜 E F : Type _} [IsROrC 𝕜]
+
+variable [NormedAddCommGroup E] [NormedAddCommGroup F]
+
+variable [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F]
+
+variable [CompleteSpace E] [CompleteSpace F]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
@@ -121,7 +126,7 @@ theorem IsPositive.orthogonalProjection_comp {T : E →L[𝕜] E} (hT : T.IsPosi
 
 section Complex
 
-variable {E' : Type _} [InnerProductSpace ℂ E'] [CompleteSpace E']
+variable {E' : Type _} [NormedAddCommGroup E'] [InnerProductSpace ℂ E'] [CompleteSpace E']
 
 theorem isPositive_iff_complex (T : E' →L[ℂ] E') :
     IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ :=

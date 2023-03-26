@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,9 +93,11 @@ noncomputable section
 
 variable {ι : Type _}
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E] [cplt : CompleteSpace E]
+variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _}
 
-variable {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)]
+variable [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [cplt : CompleteSpace E]
+
+variable {G : ι → Type _} [∀ i, NormedAddCommGroup (G i)] [∀ i, InnerProductSpace 𝕜 (G i)]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
@@ -127,7 +129,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         ‖f‖ ^ 2 = ‖f‖ ^ (2 : ℝ≥0∞).toReal := by norm_cast
         _ = ∑' i, ‖f i‖ ^ (2 : ℝ≥0∞).toReal := (lp.norm_rpow_eq_tsum _ f)
         _ = ∑' i, ‖f i‖ ^ 2 := by norm_cast
-        _ = ∑' i, re ⟪f i, f i⟫ := by simp only [norm_sq_eq_inner]
+        _ = ∑' i, re ⟪f i, f i⟫ := by simp only [@norm_sq_eq_inner 𝕜]
         _ = re (∑' i, ⟪f i, f i⟫) := (is_R_or_C.re_clm.map_tsum _).symm
         _ = _ := by congr
         
@@ -183,7 +185,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
 #align lp.inner_single_left lp.inner_single_left
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
-  simpa [inner_conj_symm] using congr_arg conj (inner_single_left i a f)
+  simpa [inner_conj_symm] using congr_arg conj (@inner_single_left _ 𝕜 _ _ _ _ i a f)
 #align lp.inner_single_right lp.inner_single_right
 
 end lp
@@ -472,6 +474,7 @@ protected theorem hasSum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, �
     exact (↑b.repr.symm.to_continuous_linear_equiv : ℓ²(ι, 𝕜) →L[𝕜] E).HasSum this
   ext i
   apply b.repr.injective
+  letI : NormedSpace 𝕜 ↥(lp (fun i : ι => 𝕜) 2) := by infer_instance
   have : lp.single 2 i (f i * 1) = f i • lp.single 2 i 1 := lp.single_smul 2 i (1 : 𝕜) (f i)
   rw [mul_one] at this
   rw [LinearIsometryEquiv.map_smul, b.repr_self, ← this,

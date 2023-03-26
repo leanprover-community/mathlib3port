@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
+! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,14 +54,17 @@ theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
   rfl
 #align quaternion.inner_def Quaternion.inner_def
 
-noncomputable instance : InnerProductSpace ℝ ℍ :=
-  InnerProductSpace.ofCore
+noncomputable instance : NormedAddCommGroup ℍ :=
+  @InnerProductSpace.OfCore.toNormedAddCommGroup ℝ ℍ _ _ _
     { inner := HasInner.inner
       conj_symm := fun x y => by simp [inner_def, mul_comm]
       nonneg_re := fun x => normSq_nonneg
       definite := fun x => normSq_eq_zero.1
       add_left := fun x y z => by simp only [inner_def, add_mul, add_re]
       smul_left := fun x y r => by simp [inner_def] }
+
+noncomputable instance : InnerProductSpace ℝ ℍ :=
+  InnerProductSpace.ofCore _
 
 theorem normSq_eq_normSq (a : ℍ) : normSq a = ‖a‖ * ‖a‖ := by
   rw [← inner_self, real_inner_self_eq_norm_mul_norm]
@@ -98,9 +101,8 @@ noncomputable instance : NormedDivisionRing ℍ
     simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
     exact Real.sqrt_mul norm_sq_nonneg _
 
-instance : NormedAlgebra ℝ ℍ
-    where
-  norm_smul_le a x := (norm_smul a x).le
+instance : NormedAlgebra ℝ ℍ where
+  norm_smul_le := norm_smul_le
   toAlgebra := (Quaternion.algebra : Algebra ℝ ℍ)
 
 instance : CstarRing ℍ

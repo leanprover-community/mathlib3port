@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_inner
-! leanprover-community/mathlib commit 8c8c544bf24ced19b1e76c34bb3262bdae620f82
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -341,7 +341,7 @@ def someContDiffBumpBase (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
 #align some_cont_diff_bump_base someContDiffBumpBase
 
 /-- Any inner product space has smooth bump functions. -/
-instance (priority := 100) hasContDiffBump_of_innerProductSpace (E : Type _)
+instance (priority := 100) hasContDiffBump_of_innerProductSpace (E : Type _) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] : HasContDiffBump E :=
   let e : ContDiffBumpBase E :=
     { toFun := fun R x => Real.smoothTransition ((R - ‖x‖) / (R - 1))
@@ -372,7 +372,7 @@ instance (priority := 100) hasContDiffBump_of_innerProductSpace (E : Type _)
           exact cont_diff_at_const.congr_of_eventually_eq this
         · refine' real.smooth_transition.cont_diff_at.comp _ _
           refine' ContDiffAt.div _ _ (sub_pos.2 hR).ne'
-          · exact cont_diff_at_fst.sub (cont_diff_at_snd.norm hx)
+          · exact cont_diff_at_fst.sub (cont_diff_at_snd.norm ℝ hx)
           · exact cont_diff_at_fst.sub contDiffAt_const
       eq_one := fun R hR x hx =>
         Real.smoothTransition.one_of_one_le <| (one_le_div (sub_pos.2 hR)).2 (sub_le_sub_left hx _)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Weiser
 
 ! This file was ported from Lean 3 source module algebra.star.free
-! leanprover-community/mathlib commit 07c3cf2d851866ff7198219ed3fedf42e901f25c
+! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.FreeAlgebra
 
 /-!
 # A *-algebra structure on the free algebra.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Reversing words gives a *-structure on the free monoid or on the free algebra on a type.
 

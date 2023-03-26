@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.basic
-! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
+! leanprover-community/mathlib commit 55d771df074d0dd020139ee1cd4b95521422df9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -621,11 +621,9 @@ noncomputable def liftCover : C(α, β) :=
     rw [Set.mem_unionᵢ]
     obtain ⟨i, hi⟩ := hS x
     exact ⟨i, mem_of_mem_nhds hi⟩
-  refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_subtype_nhds_cover hS _⟩
-  intro i
-  convert(φ i).Continuous
-  ext x
-  exact Set.liftCover_coe x
+  refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_of_cover_nhds hS fun i => _⟩
+  rw [continuousOn_iff_continuous_restrict]
+  simpa only [Set.restrict, Set.liftCover_coe] using (φ i).Continuous
 #align continuous_map.lift_cover ContinuousMap.liftCover
 
 variable {S φ hφ hS}

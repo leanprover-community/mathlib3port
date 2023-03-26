@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.ldl
-! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,13 +50,14 @@ variable {S : Matrix n n 𝕜} [Fintype n] (hS : S.PosDef)
 applying Gram-Schmidt-Orthogonalization w.r.t. the inner product induced by `Sᵀ` on the standard
 basis vectors `pi.basis_fun`. -/
 noncomputable def LDL.lowerInv : Matrix n n 𝕜 :=
-  @gramSchmidt 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _ (Pi.basisFun 𝕜 n)
+  @gramSchmidt 𝕜 (n → 𝕜) _ (_ : _) (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
+    (Pi.basisFun 𝕜 n)
 #align LDL.lower_inv LDL.lowerInv
 
 theorem LDL.lowerInv_eq_gramSchmidtBasis :
     LDL.lowerInv hS =
       ((Pi.basisFun 𝕜 n).toMatrix
-          (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
+          (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (_ : _) (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
             (Pi.basisFun 𝕜 n)))ᵀ :=
   by
   ext (i j)
@@ -69,18 +70,14 @@ noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
   rw [LDL.lowerInv_eq_gramSchmidtBasis]
   haveI :=
     Basis.invertibleToMatrix (Pi.basisFun 𝕜 n)
-      (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _
+      (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (_ : _) (inner_product_space.of_matrix hS.transpose) n _ _ _
         (Pi.basisFun 𝕜 n))
   infer_instance
 #align LDL.invertible_lower_inv LDL.invertibleLowerInv
 
 theorem LDL.lowerInv_orthogonal {i j : n} (h₀ : i ≠ j) :
     ⟪LDL.lowerInv hS i, Sᵀ.mulVec (LDL.lowerInv hS j)⟫ₑ = 0 :=
-  show
-    @inner 𝕜 (n → 𝕜) (InnerProductSpace.ofMatrix hS.transpose).toHasInner (LDL.lowerInv hS i)
-        (LDL.lowerInv hS j) =
-      0
-    by apply gramSchmidt_orthogonal _ _ h₀
+  @gramSchmidt_orthogonal 𝕜 _ _ (_ : _) (InnerProductSpace.ofMatrix hS.transpose) _ _ _ _ _ _ _ h₀
 #align LDL.lower_inv_orthogonal LDL.lowerInv_orthogonal
 
 /-- The entries of the diagonal matrix `D` of the LDL decomposition. -/
@@ -95,8 +92,8 @@ noncomputable def LDL.diag : Matrix n n 𝕜 :=
 
 theorem LDL.lowerInv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j = 0 := by
   rw [←
-    @gramSchmidt_triangular 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _ i j hij
-      (Pi.basisFun 𝕜 n),
+    @gramSchmidt_triangular 𝕜 (n → 𝕜) _ (_ : _) (inner_product_space.of_matrix hS.transpose) n _ _ _
+      i j hij (Pi.basisFun 𝕜 n),
     Pi.basisFun_repr, LDL.lowerInv]
 #align LDL.lower_inv_triangular LDL.lowerInv_triangular
 

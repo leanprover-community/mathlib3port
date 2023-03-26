@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.monad.basic
-! leanprover-community/mathlib commit 1995c7bbdbb0adb1b6d5acdc654f6cf46ed96cfa
+! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 /-!
 # Monads
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We construct the categories of monads and comonads, and their forgetful functors to endofunctors.
 

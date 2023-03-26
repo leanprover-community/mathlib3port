@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.localization.construction
-! leanprover-community/mathlib commit 1a5e56f2166e4e9d0964c71f4273b1d39227678d
+! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Category.Quiv
 /-!
 
 # Construction of the localized category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file constructs the localized category, obtained by formally inverting
 a class of maps `W : morphism_property C` in a category `C`.

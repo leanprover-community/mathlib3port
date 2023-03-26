@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Roca González
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.lax_milgram
-! leanprover-community/mathlib commit af8f9bc2aab1dd99a26f3dc982b7957f7762e7ba
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,12 +51,12 @@ universe u
 
 namespace IsCoercive
 
-variable {V : Type u} [InnerProductSpace ℝ V] [CompleteSpace V]
+variable {V : Type u} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
 variable {B : V →L[ℝ] V →L[ℝ] ℝ}
 
 -- mathport name: «expr ♯»
-local postfix:1024 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _
+local postfix:1024 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _ _
 
 theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ‖v‖ ≤ ‖B♯ v‖ :=
   by

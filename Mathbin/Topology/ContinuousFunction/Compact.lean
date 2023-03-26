@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
+! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,7 +266,7 @@ section
 
 variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 E]
 
-instance : NormedSpace 𝕜 C(α, E) where norm_smul_le c f := le_of_eq (norm_smul c (mkOfCompact f))
+instance : NormedSpace 𝕜 C(α, E) where norm_smul_le c f := (norm_smul_le c (mkOfCompact f) : _)
 
 section
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.sphere
-! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ open EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
 
 namespace Orientation
 
-variable {V : Type _} [InnerProductSpace ℝ V]
+variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 variable [Fact (finrank ℝ V = 2)] (o : Orientation ℝ V (Fin 2))
 
@@ -77,9 +77,8 @@ end Orientation
 
 namespace EuclideanGeometry
 
-variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P]
-
-variable [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
+variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
+  [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
 include hd2
 
@@ -271,9 +270,8 @@ namespace Triangle
 
 open EuclideanGeometry
 
-variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P]
-
-variable [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
+variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
+  [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
 include hd2
 
@@ -398,9 +396,8 @@ end Affine
 
 namespace EuclideanGeometry
 
-variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P]
-
-variable [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
+variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
+  [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
 include hd2
 

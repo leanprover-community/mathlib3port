@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.von_neumann_algebra.basic
-! leanprover-community/mathlib commit 160ef3e338a2a4f21a280e4c152d4016156e516d
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,8 @@ Thus we can't say that the bounded operators `H →L[ℂ] H` form a `von_neumann
 and instead will use `⊤ : von_neumann_algebra H`.
 -/
 @[nolint has_nonempty_instance]
-structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H] extends
-  StarSubalgebra ℂ (H →L[ℂ] H) where
+structure VonNeumannAlgebra (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+  [CompleteSpace H] extends StarSubalgebra ℂ (H →L[ℂ] H) where
   centralizer_centralizer' : Set.centralizer (Set.centralizer carrier) = carrier
 #align von_neumann_algebra VonNeumannAlgebra
 
@@ -82,7 +82,7 @@ add_decl_doc VonNeumannAlgebra.toStarSubalgebra
 
 namespace VonNeumannAlgebra
 
-variable {H : Type u} [InnerProductSpace ℂ H] [CompleteSpace H]
+variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 instance : SetLike (VonNeumannAlgebra H) (H →L[ℂ] H) :=
   ⟨VonNeumannAlgebra.carrier, fun S T h => by cases S <;> cases T <;> congr ⟩

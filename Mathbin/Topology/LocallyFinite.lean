@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.locally_finite
-! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
+! leanprover-community/mathlib commit 55d771df074d0dd020139ee1cd4b95521422df9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Topology.Basic
+import Mathbin.Topology.ContinuousOn
 import Mathbin.Order.Filter.SmallSets
 
 /-!
@@ -136,6 +136,50 @@ theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
 
+protected theorem nhdsWithin_unionᵢ (hf : LocallyFinite f) (a : X) :
+    𝓝[⋃ i, f i] a = ⨆ i, 𝓝[f i] a :=
+  by
+  rcases hf a with ⟨U, haU, hfin⟩
+  refine' le_antisymm _ (supᵢ_le fun i => nhdsWithin_mono _ (subset_Union _ _))
+  calc
+    𝓝[⋃ i, f i] a = 𝓝[⋃ i, f i ∩ U] a := by
+      rw [← Union_inter, ← nhdsWithin_inter_of_mem' (nhdsWithin_le_nhds haU)]
+    _ = 𝓝[⋃ i ∈ { j | (f j ∩ U).Nonempty }, f i ∩ U] a := by
+      simp only [mem_set_of_eq, Union_nonempty_self]
+    _ = ⨆ i ∈ { j | (f j ∩ U).Nonempty }, 𝓝[f i ∩ U] a := (nhdsWithin_bUnion hfin _ _)
+    _ ≤ ⨆ i, 𝓝[f i ∩ U] a := (supᵢ₂_le_supᵢ _ _)
+    _ ≤ ⨆ i, 𝓝[f i] a := supᵢ_mono fun i => nhdsWithin_mono _ <| inter_subset_left _ _
+    
+#align locally_finite.nhds_within_Union LocallyFinite.nhdsWithin_unionᵢ
+
+theorem continuousOn_Union' {g : X → Y} (hf : LocallyFinite f)
+    (hc : ∀ i x, x ∈ closure (f i) → ContinuousWithinAt g (f i) x) : ContinuousOn g (⋃ i, f i) :=
+  by
+  rintro x -
+  rw [ContinuousWithinAt, hf.nhds_within_Union, tendsto_supr]
+  intro i
+  by_cases hx : x ∈ closure (f i)
+  · exact hc i _ hx
+  · rw [mem_closure_iff_nhdsWithin_neBot, not_ne_bot] at hx
+    rw [hx]
+    exact tendsto_bot
+#align locally_finite.continuous_on_Union' LocallyFinite.continuousOn_Union'
+
+theorem continuousOn_unionᵢ {g : X → Y} (hf : LocallyFinite f) (h_cl : ∀ i, IsClosed (f i))
+    (h_cont : ∀ i, ContinuousOn g (f i)) : ContinuousOn g (⋃ i, f i) :=
+  hf.continuousOn_Union' fun i x hx => h_cont i x <| (h_cl i).closure_subset hx
+#align locally_finite.continuous_on_Union LocallyFinite.continuousOn_unionᵢ
+
+protected theorem continuous' {g : X → Y} (hf : LocallyFinite f) (h_cov : (⋃ i, f i) = univ)
+    (hc : ∀ i x, x ∈ closure (f i) → ContinuousWithinAt g (f i) x) : Continuous g :=
+  continuous_iff_continuousOn_univ.2 <| h_cov ▸ hf.continuousOn_Union' hc
+#align locally_finite.continuous' LocallyFinite.continuous'
+
+protected theorem continuous {g : X → Y} (hf : LocallyFinite f) (h_cov : (⋃ i, f i) = univ)
+    (h_cl : ∀ i, IsClosed (f i)) (h_cont : ∀ i, ContinuousOn g (f i)) : Continuous g :=
+  continuous_iff_continuousOn_univ.2 <| h_cov ▸ hf.continuousOn_unionᵢ h_cl h_cont
+#align locally_finite.continuous LocallyFinite.continuous
+
 /- warning: locally_finite.closure -> LocallyFinite.closure is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (LocallyFinite.{u1, u2} ι X _inst_1 (fun (i : ι) => closure.{u2} X _inst_1 (f i)))
@@ -152,26 +196,6 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closur
       (inter_subset_inter_right _ interior_subset)
 #align locally_finite.closure LocallyFinite.closure
 
-/- warning: locally_finite.is_closed_Union -> LocallyFinite.isClosed_unionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (IsClosed.{u2} X _inst_1 (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)))
-but is expected to have type
-  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u1} X _inst_1 (f i)) -> (IsClosed.{u1} X _inst_1 (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align locally_finite.is_closed_Union LocallyFinite.isClosed_unionᵢₓ'. -/
-theorem isClosed_unionᵢ (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) :=
-  by
-  simp only [← isOpen_compl_iff, compl_Union, isOpen_iff_mem_nhds, mem_Inter]
-  intro a ha
-  replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).isOpen_compl.mem_nhds (ha i)
-  rcases hf a with ⟨t, h_nhds, h_fin⟩
-  have : (t ∩ ⋂ i ∈ { i | (f i ∩ t).Nonempty }, f iᶜ) ∈ 𝓝 a :=
-    inter_mem h_nhds ((bInter_mem h_fin).2 fun i _ => ha i)
-  filter_upwards [this]
-  simp only [mem_inter_iff, mem_Inter]
-  rintro b ⟨hbt, hn⟩ i hfb
-  exact hn i ⟨b, hfb, hbt⟩ hfb
-#align locally_finite.is_closed_Union LocallyFinite.isClosed_unionᵢ
-
 /- warning: locally_finite.closure_Union -> LocallyFinite.closure_unionᵢ is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (closure.{u2} X _inst_1 (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i))) (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => closure.{u2} X _inst_1 (f i))))
@@ -179,11 +203,20 @@ but is expected to have type
   forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (Eq.{succ u1} (Set.{u1} X) (closure.{u1} X _inst_1 (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => f i))) (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => closure.{u1} X _inst_1 (f i))))
 Case conversion may be inaccurate. Consider using '#align locally_finite.closure_Union LocallyFinite.closure_unionᵢₓ'. -/
 theorem closure_unionᵢ (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, closure (f i) :=
-  Subset.antisymm
-    (closure_minimal (unionᵢ_mono fun _ => subset_closure) <|
-      h.closure.isClosed_unionᵢ fun _ => isClosed_closure)
-    (unionᵢ_subset fun i => closure_mono <| subset_unionᵢ _ _)
+  by
+  ext x
+  simp only [mem_closure_iff_nhdsWithin_neBot, h.nhds_within_Union, supr_ne_bot, mem_Union]
 #align locally_finite.closure_Union LocallyFinite.closure_unionᵢ
+
+/- warning: locally_finite.is_closed_Union -> LocallyFinite.isClosed_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (IsClosed.{u2} X _inst_1 (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)))
+but is expected to have type
+  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u1} X _inst_1 (f i)) -> (IsClosed.{u1} X _inst_1 (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align locally_finite.is_closed_Union LocallyFinite.isClosed_unionᵢₓ'. -/
+theorem isClosed_unionᵢ (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) :=
+  by simp only [← closure_eq_iff_isClosed, hf.closure_Union, (hc _).closure_eq]
+#align locally_finite.is_closed_Union LocallyFinite.isClosed_unionᵢ
 
 /- warning: locally_finite.Inter_compl_mem_nhds -> LocallyFinite.interᵢ_compl_mem_nhds is a dubious translation:
 lean 3 declaration is

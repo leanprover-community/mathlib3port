@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.basic
-! leanprover-community/mathlib commit a37865088599172dc923253bb7b31998297d9c8a
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ open RealInnerProductSpace
 
 namespace InnerProductGeometry
 
-variable {V : Type _} [InnerProductSpace ℝ V] {x y : V}
+variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] {x y : V}
 
 /-- The undirected angle between two vectors. If either vector is 0,
 this is π/2. See `orientation.oangle` for the corresponding oriented angle
@@ -64,9 +64,9 @@ theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c 
 #align inner_product_geometry.angle_smul_smul InnerProductGeometry.angle_smul_smul
 
 @[simp]
-theorem LinearIsometry.angle_map {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
-    (f : E →ₗᵢ[ℝ] F) (u v : E) : angle (f u) (f v) = angle u v := by
-  rw [angle, angle, f.inner_map_map, f.norm_map, f.norm_map]
+theorem LinearIsometry.angle_map {E F : Type _} [NormedAddCommGroup E] [NormedAddCommGroup F]
+    [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] (f : E →ₗᵢ[ℝ] F) (u v : E) :
+    angle (f u) (f v) = angle u v := by rw [angle, angle, f.inner_map_map, f.norm_map, f.norm_map]
 #align linear_isometry.angle_map LinearIsometry.angle_map
 
 @[simp, norm_cast]
@@ -138,7 +138,8 @@ theorem angle_zero_right (x : V) : angle x 0 = π / 2 :=
 theorem angle_self {x : V} (hx : x ≠ 0) : angle x x = 0 :=
   by
   unfold angle
-  rw [← real_inner_self_eq_norm_mul_norm, div_self (inner_self_ne_zero.2 hx), Real.arccos_one]
+  rw [← real_inner_self_eq_norm_mul_norm, div_self (inner_self_ne_zero.2 hx : ⟪x, x⟫ ≠ 0),
+    Real.arccos_one]
 #align inner_product_geometry.angle_self InnerProductGeometry.angle_self
 
 /-- The angle between a nonzero vector and its negation. -/

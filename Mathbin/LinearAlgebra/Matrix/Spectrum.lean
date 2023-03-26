@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.spectrum
-! leanprover-community/mathlib commit 9f0d61b4475e3c3cba6636ab51cdb1f3949d2e1d
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,8 +114,8 @@ theorem spectral_theorem :
     simp_rw [mul_vec_single, mul_one, OrthonormalBasis.coe_toBasis_repr_apply,
       OrthonormalBasis.repr_reindex]
     rfl
-  · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]
-    rw [Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
+  · simp only [diagonal_mul, (· ∘ ·), eigenvalues]
+    rw [eigenvector_basis, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
       OrthonormalBasis.repr_reindex, eigenvalues₀, PiLp.basisFun_apply, PiLp.equiv_symm_single]
 #align matrix.is_hermitian.spectral_theorem Matrix.IsHermitian.spectral_theorem
 

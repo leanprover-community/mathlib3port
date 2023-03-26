@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1229,7 +1229,11 @@ theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (
 
 section Inner
 
-variable {E' : Type _} [InnerProductSpace 𝕜 E'] [CompleteSpace E'] [NormedSpace ℝ E']
+variable {E' : Type _}
+
+variable [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
+
+variable [CompleteSpace E'] [NormedSpace ℝ E']
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
@@ -1238,6 +1242,12 @@ theorem integral_inner {f : α → E'} (hf : Integrable f μ) (c : E') :
     (∫ x, ⟪c, f x⟫ ∂μ) = ⟪c, ∫ x, f x ∂μ⟫ :=
   ((innerSL 𝕜 c).restrictScalars ℝ).integral_comp_comm hf
 #align integral_inner integral_inner
+
+variable (𝕜)
+
+-- mathport name: inner_with_explicit
+-- variable binder update doesn't work for lemmas which refer to `𝕜` only via the notation
+local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 
 theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : Integrable f μ)
     (hf_int : ∀ c : E', (∫ x, ⟪c, f x⟫ ∂μ) = 0) : (∫ x, f x ∂μ) = 0 :=

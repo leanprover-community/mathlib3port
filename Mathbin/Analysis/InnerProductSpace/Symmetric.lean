@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,13 @@ open ComplexConjugate
 
 variable {𝕜 E E' F G : Type _} [IsROrC 𝕜]
 
-variable [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F] [InnerProductSpace 𝕜 G]
+variable [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
-variable [InnerProductSpace ℝ E']
+variable [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
+
+variable [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+
+variable [NormedAddCommGroup E'] [InnerProductSpace ℝ E']
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
@@ -105,7 +109,7 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
   by
   -- We prove it by using the closed graph theorem
   refine' T.continuous_of_seq_closed_graph fun u x y hu hTu => _
-  rw [← sub_eq_zero, ← inner_self_eq_zero]
+  rw [← sub_eq_zero, ← @inner_self_eq_zero 𝕜]
   have hlhs : ∀ k : ℕ, ⟪T (u k) - T x, y - T x⟫ = ⟪u k - x, T (y - T x)⟫ :=
     by
     intro k
@@ -136,7 +140,7 @@ theorem IsSymmetric.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric 
 #align linear_map.is_symmetric.restrict_invariant LinearMap.IsSymmetric.restrict_invariant
 
 theorem IsSymmetric.restrictScalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
-    @LinearMap.IsSymmetric ℝ E _ (InnerProductSpace.isROrCToReal 𝕜 E)
+    @LinearMap.IsSymmetric ℝ E _ _ (InnerProductSpace.isROrCToReal 𝕜 E)
       (@LinearMap.restrictScalars ℝ 𝕜 _ _ _ _ _ _ (InnerProductSpace.isROrCToReal 𝕜 E).toModule
         (InnerProductSpace.isROrCToReal 𝕜 E).toModule _ _ _ T) :=
   fun x y => by simp [hT x y, real_inner_eq_re_inner, LinearMap.coe_restrictScalars]
@@ -144,7 +148,7 @@ theorem IsSymmetric.restrictScalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) 
 
 section Complex
 
-variable {V : Type _} [InnerProductSpace ℂ V]
+variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
 
 /-- A linear operator on a complex inner product space is symmetric precisely when
 `⟪T v, v⟫_ℂ` is real for all v.-/

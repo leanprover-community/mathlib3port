@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,11 @@ attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 
 attribute [local instance] Complex.finrank_real_complex_fact
 
-variable {V V' : Type _} [InnerProductSpace ℝ V] [InnerProductSpace ℝ V']
+variable {V V' : Type _}
+
+variable [NormedAddCommGroup V] [NormedAddCommGroup V']
+
+variable [InnerProductSpace ℝ V] [InnerProductSpace ℝ V']
 
 variable [Fact (finrank ℝ V = 2)] [Fact (finrank ℝ V' = 2)] (o : Orientation ℝ V (Fin 2))
 

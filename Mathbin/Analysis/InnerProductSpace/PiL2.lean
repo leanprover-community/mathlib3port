@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,13 +65,15 @@ noncomputable section
 
 variable {ι : Type _} {ι' : Type _}
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E]
+variable {𝕜 : Type _} [IsROrC 𝕜]
 
-variable {E' : Type _} [InnerProductSpace 𝕜 E']
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
-variable {F : Type _} [InnerProductSpace ℝ F]
+variable {E' : Type _} [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
 
-variable {F' : Type _} [InnerProductSpace ℝ F']
+variable {F : Type _} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+
+variable {F' : Type _} [NormedAddCommGroup F'] [InnerProductSpace ℝ F']
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
@@ -82,9 +84,9 @@ then `Π i, f i` is an inner product space as well. Since `Π i, f i` is endowed
 we use instead `pi_Lp 2 f` for the product space, which is endowed with the `L^2` norm.
 -/
 instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _)
-    [∀ i, InnerProductSpace 𝕜 (f i)] : InnerProductSpace 𝕜 (PiLp 2 f)
+    [∀ i, NormedAddCommGroup (f i)] [∀ i, InnerProductSpace 𝕜 (f i)] :
+    InnerProductSpace 𝕜 (PiLp 2 f)
     where
-  toNormedAddCommGroup := inferInstance
   inner x y := ∑ i, inner (x i) (y i)
   norm_sq_eq_inner x := by
     simp only [PiLp.norm_sq_eq_of_L2, AddMonoidHom.map_sum, ← norm_sq_eq_inner, one_div]
@@ -104,8 +106,8 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _)
 #align pi_Lp.inner_product_space PiLp.innerProductSpace
 
 @[simp]
-theorem PiLp.inner_apply {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i, InnerProductSpace 𝕜 (f i)]
-    (x y : PiLp 2 f) : ⟪x, y⟫ = ∑ i, ⟪x i, y i⟫ :=
+theorem PiLp.inner_apply {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i, NormedAddCommGroup (f i)]
+    [∀ i, InnerProductSpace 𝕜 (f i)] (x y : PiLp 2 f) : ⟪x, y⟫ = ∑ i, ⟪x i, y i⟫ :=
   rfl
 #align pi_Lp.inner_apply PiLp.inner_apply
 
@@ -179,7 +181,7 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
   by
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
   let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV
-  refine' (e₂.symm.trans e₁).isometryOfInner _
+  refine' LinearEquiv.isometryOfInner (e₂.symm.trans e₁) _
   suffices ∀ v w, ⟪v, w⟫ = ⟪e₂ (e₁.symm v), e₂ (e₁.symm w)⟫
     by
     intro v₀ w₀
@@ -396,19 +398,21 @@ protected theorem orthogonalProjection_eq_sum {U : Submodule 𝕜 E} [CompleteSp
 #align orthonormal_basis.orthogonal_projection_eq_sum OrthonormalBasis.orthogonalProjection_eq_sum
 
 /-- Mapping an orthonormal basis along a `linear_isometry_equiv`. -/
-protected def map {G : Type _} [InnerProductSpace 𝕜 G] (b : OrthonormalBasis ι 𝕜 E)
-    (L : E ≃ₗᵢ[𝕜] G) : OrthonormalBasis ι 𝕜 G where repr := L.symm.trans b.repr
+protected def map {G : Type _} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+    (b : OrthonormalBasis ι 𝕜 E) (L : E ≃ₗᵢ[𝕜] G) : OrthonormalBasis ι 𝕜 G
+    where repr := L.symm.trans b.repr
 #align orthonormal_basis.map OrthonormalBasis.map
 
 @[simp]
-protected theorem map_apply {G : Type _} [InnerProductSpace 𝕜 G] (b : OrthonormalBasis ι 𝕜 E)
-    (L : E ≃ₗᵢ[𝕜] G) (i : ι) : b.map L i = L (b i) :=
+protected theorem map_apply {G : Type _} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+    (b : OrthonormalBasis ι 𝕜 E) (L : E ≃ₗᵢ[𝕜] G) (i : ι) : b.map L i = L (b i) :=
   rfl
 #align orthonormal_basis.map_apply OrthonormalBasis.map_apply
 
 @[simp]
-protected theorem toBasis_map {G : Type _} [InnerProductSpace 𝕜 G] (b : OrthonormalBasis ι 𝕜 E)
-    (L : E ≃ₗᵢ[𝕜] G) : (b.map L).toBasis = b.toBasis.map L.toLinearEquiv :=
+protected theorem toBasis_map {G : Type _} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
+    (b : OrthonormalBasis ι 𝕜 E) (L : E ≃ₗᵢ[𝕜] G) :
+    (b.map L).toBasis = b.toBasis.map L.toLinearEquiv :=
   rfl
 #align orthonormal_basis.to_basis_map OrthonormalBasis.toBasis_map
 
@@ -826,7 +830,7 @@ def OrthonormalBasis.fromOrthogonalSpanSingleton (n : ℕ) [Fact (finrank 𝕜 E
 
 section LinearIsometry
 
-variable {V : Type _} [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V]
+variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V]
 
 variable {S : Submodule 𝕜 V} {L : S →ₗᵢ[𝕜] V}
 

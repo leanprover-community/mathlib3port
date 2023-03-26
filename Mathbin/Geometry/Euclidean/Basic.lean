@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.basic
-! leanprover-community/mathlib commit eea141bc9cf205beebfd46e2068c7c01ee8db4f6
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,8 +32,9 @@ proofs or more geometrical content generally go in separate files.
 ## Implementation notes
 
 To declare `P` as the type of points in a Euclidean affine space with
-`V` as the type of vectors, use `[inner_product_space ℝ V] [metric_space P]
-[normed_add_torsor V P]`.  This works better with `out_param` to make
+`V` as the type of vectors, use
+`[normed_add_comm_group V] [inner_product_space ℝ V] [metric_space P] [normed_add_torsor V P]`.
+This works better with `out_param` to make
 `V` implicit in most cases than having a separate type alias for
 Euclidean affine spaces.
 
@@ -66,7 +67,11 @@ Euclidean affine spaces.
 -/
 
 
-variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+variable {V : Type _} {P : Type _}
+
+variable [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
+
+variable [NormedAddTorsor V P]
 
 include V
 
@@ -105,7 +110,7 @@ theorem dist_affineCombination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι →
             2 :=
   by
   rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ←
-    inner_self_eq_norm_mul_norm, Finset.affineCombination_vsub]
+    @inner_self_eq_norm_mul_norm ℝ, Finset.affineCombination_vsub]
   have h : (∑ i in s, (w₁ - w₂) i) = 0 := by
     simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]
   exact inner_weighted_vsub p h p h

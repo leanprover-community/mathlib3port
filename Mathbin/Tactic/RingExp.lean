@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
 
 ! This file was ported from Lean 3 source module tactic.ring_exp
-! leanprover-community/mathlib commit ec322deb9ba5aad978f862669053069b7957c31d
+! leanprover-community/mathlib commit 72e87ce0bf26144ceb122d280a43aa10f1d20abb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1088,7 +1088,8 @@ unsafe def pow_coeff (p_p q_p : expr) (p q : Coeff) : ring_exp_m (ex Prod) := do
   let ctx ← get_context
   let pq' ← mk_pow [p_p, q_p]
   let (pq_p, pq_pf) ← lift <| norm_num.eval_pow pq'
-  pure <| ex.coeff ⟨pq_p, pq_p, pq_pf⟩ ⟨p.1 * q.1⟩
+  if q ≠ 1 then lift <| throwError "Only integer powers are supported, not {← q}."
+    else pure <| ex.coeff ⟨pq_p, pq_p, pq_pf⟩ ⟨p.1 ^ q⟩
 #align tactic.ring_exp.pow_coeff tactic.ring_exp.pow_coeff
 
 /-- Exponentiate two expressions.

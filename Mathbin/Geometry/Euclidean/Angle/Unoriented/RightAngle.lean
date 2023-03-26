@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.right_angle
-! leanprover-community/mathlib commit 0efabe73557d6f5070d7ec68cab671a8a786ae7b
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ open RealInnerProductSpace
 
 namespace InnerProductGeometry
 
-variable {V : Type _} [InnerProductSpace ℝ V]
+variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 /-- Pythagorean theorem, if-and-only-if vector angle form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_iff_angle_eq_pi_div_two (x y : V) :
@@ -398,7 +398,8 @@ namespace EuclideanGeometry
 
 open InnerProductGeometry
 
-variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
+  [NormedAddTorsor V P]
 
 include V
 

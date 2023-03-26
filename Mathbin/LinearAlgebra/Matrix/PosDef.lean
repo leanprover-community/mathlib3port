@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.pos_def
-! leanprover-community/mathlib commit 3fc0b254310908f70a1a75f01147d52e53e9f8a2
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,10 +149,11 @@ namespace Matrix
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
 
-/-- A positive definite matrix `M` induces an inner product `⟪x, y⟫ = xᴴMy`. -/
-noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
-    InnerProductSpace 𝕜 (n → 𝕜) :=
-  InnerProductSpace.ofCore
+/-- A positive definite matrix `M` induces a norm `‖x‖ = sqrt (re xᴴMx)`. -/
+@[reducible]
+noncomputable def NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
+    NormedAddCommGroup (n → 𝕜) :=
+  @InnerProductSpace.OfCore.toNormedAddCommGroup _ _ _ _ _
     { inner := fun x y => dotProduct (star x) (M.mulVec y)
       conj_symm := fun x y => by
         rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
@@ -167,6 +168,12 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
       add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const]
       smul_left := fun x y r => by
         rw [← smul_eq_mul, ← smul_dot_product, starRingEnd_apply, ← star_smul] }
+#align matrix.normed_add_comm_group.of_matrix Matrix.NormedAddCommGroup.ofMatrix
+
+/-- A positive definite matrix `M` induces an inner product `⟪x, y⟫ = xᴴMy`. -/
+def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
+    @InnerProductSpace 𝕜 (n → 𝕜) _ (NormedAddCommGroup.ofMatrix hM) :=
+  InnerProductSpace.ofCore _
 #align matrix.inner_product_space.of_matrix Matrix.InnerProductSpace.ofMatrix
 
 end Matrix

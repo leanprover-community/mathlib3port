@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.orientation
-! leanprover-community/mathlib commit 6623e6af705e97002a9054c1c05a980180276fc1
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ This file provides definitions and proves lemmas about orientations of real inne
 
 noncomputable section
 
-variable {E : Type _} [InnerProductSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 open FiniteDimensional
 
@@ -334,8 +334,8 @@ theorem abs_volumeForm_apply_of_orthonormal (v : OrthonormalBasis (Fin n) ℝ E)
   simpa [o.volume_form_robust' v v] using congr_arg abs v.to_basis.det_self
 #align orientation.abs_volume_form_apply_of_orthonormal Orientation.abs_volumeForm_apply_of_orthonormal
 
-theorem volumeForm_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = n)]
-    (φ : E ≃ₗᵢ[ℝ] F) (x : Fin n → F) :
+theorem volumeForm_map {F : Type _} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+    [Fact (finrank ℝ F = n)] (φ : E ≃ₗᵢ[ℝ] F) (x : Fin n → F) :
     (Orientation.map (Fin n) φ.toLinearEquiv o).volumeForm x = o.volumeForm (φ.symm ∘ x) :=
   by
   cases n

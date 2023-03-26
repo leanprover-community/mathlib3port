@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit f16e7a22e11fc09c71f25446ac1db23a24e8a0bd
+! leanprover-community/mathlib commit 55d771df074d0dd020139ee1cd4b95521422df9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,7 @@ import Mathbin.Data.Finset.Order
 import Mathbin.Data.Set.Accumulate
 import Mathbin.Data.Set.BoolIndicator
 import Mathbin.Topology.Bornology.Basic
+import Mathbin.Topology.LocallyFinite
 import Mathbin.Order.Minimal
 
 /-!

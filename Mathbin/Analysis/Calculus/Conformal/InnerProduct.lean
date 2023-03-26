@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.inner_product
-! leanprover-community/mathlib commit 51ad06e5a86554fc42398b6f90b021685ce36665
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,11 @@ is conformal at `x` iff the derivative preserves inner products up to a scalar m
 
 noncomputable section
 
-variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
+variable {E F : Type _}
+
+variable [NormedAddCommGroup E] [NormedAddCommGroup F]
+
+variable [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
 open RealInnerProductSpace
 

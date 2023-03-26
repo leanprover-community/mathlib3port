@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ A slightly more elaborate corollary is that if `E` is complete and `T` is a comp
 
 variable {𝕜 : Type _} [IsROrC 𝕜]
 
-variable {E : Type _} [InnerProductSpace 𝕜 E]
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
@@ -106,13 +106,13 @@ namespace IsSelfAdjoint
 
 section Real
 
-variable {F : Type _} [InnerProductSpace ℝ F]
+variable {F : Type _} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
 
 theorem LinearMap.IsSymmetric.hasStrictFderivAt_reApplyInnerSelf {T : F →L[ℝ] F}
     (hT : (T : F →ₗ[ℝ] F).IsSymmetric) (x₀ : F) :
     HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL ℝ (T x₀))) x₀ :=
   by
-  convert T.has_strict_fderiv_at.inner (hasStrictFderivAt_id x₀)
+  convert T.has_strict_fderiv_at.inner _ (hasStrictFderivAt_id x₀)
   ext y
   simp_rw [_root_.bit0, ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply,
     innerSL_apply, fderivInnerClm_apply, id.def, ContinuousLinearMap.prod_apply,

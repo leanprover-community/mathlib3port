@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
+! leanprover-community/mathlib commit 55d771df074d0dd020139ee1cd4b95521422df9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -402,9 +402,16 @@ theorem nhdsWithin_eq_nhdsWithin {a : α} {s t u : Set α} (h₀ : a ∈ s) (h�
   rw [nhdsWithin_restrict t h₀ h₁, nhdsWithin_restrict u h₀ h₁, h₂]
 #align nhds_within_eq_nhds_within nhdsWithin_eq_nhdsWithin
 
+#print nhdsWithin_eq_nhds /-
+@[simp]
+theorem nhdsWithin_eq_nhds {a : α} {s : Set α} : 𝓝[s] a = 𝓝 a ↔ s ∈ 𝓝 a := by
+  rw [nhdsWithin, inf_eq_left, le_principal_iff]
+#align nhds_within_eq_nhds nhdsWithin_eq_nhds
+-/
+
 #print IsOpen.nhdsWithin_eq /-
 theorem IsOpen.nhdsWithin_eq {a : α} {s : Set α} (h : IsOpen s) (ha : a ∈ s) : 𝓝[s] a = 𝓝 a :=
-  inf_eq_left.2 <| le_principal_iff.2 <| IsOpen.mem_nhds h ha
+  nhdsWithin_eq_nhds.2 <| IsOpen.mem_nhds h ha
 #align is_open.nhds_within_eq IsOpen.nhdsWithin_eq
 -/
 
@@ -441,6 +448,20 @@ theorem nhdsWithin_union (a : α) (s t : Set α) : 𝓝[s ∪ t] a = 𝓝[s] a �
   rw [← inf_sup_left, sup_principal]
 #align nhds_within_union nhdsWithin_union
 
+theorem nhdsWithin_bUnion {ι} {I : Set ι} (hI : I.Finite) (s : ι → Set α) (a : α) :
+    𝓝[⋃ i ∈ I, s i] a = ⨆ i ∈ I, 𝓝[s i] a :=
+  Set.Finite.induction_on hI (by simp) fun t T _ _ hT => by
+    simp only [hT, nhdsWithin_union, supᵢ_insert, bUnion_insert]
+#align nhds_within_bUnion nhdsWithin_bUnion
+
+theorem nhdsWithin_unionₛ {S : Set (Set α)} (hS : S.Finite) (a : α) : 𝓝[⋃₀ S] a = ⨆ s ∈ S, 𝓝[s] a :=
+  by rw [sUnion_eq_bUnion, nhdsWithin_bUnion hS]
+#align nhds_within_sUnion nhdsWithin_unionₛ
+
+theorem nhdsWithin_unionᵢ {ι} [Finite ι] (s : ι → Set α) (a : α) : 𝓝[⋃ i, s i] a = ⨆ i, 𝓝[s i] a :=
+  by rw [← sUnion_range, nhdsWithin_unionₛ (finite_range s), supᵢ_range]
+#align nhds_within_Union nhdsWithin_unionᵢ
+
 /- warning: nhds_within_inter -> nhdsWithin_inter is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (a : α) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) (nhdsWithin.{u1} α _inst_1 a s) (nhdsWithin.{u1} α _inst_1 a t))
@@ -476,6 +497,16 @@ theorem nhdsWithin_inter_of_mem {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 
   rw [nhdsWithin_inter, inf_eq_right]
   exact nhdsWithin_le_of_mem h
 #align nhds_within_inter_of_mem nhdsWithin_inter_of_mem
+
+/- warning: nhds_within_inter_of_mem' -> nhdsWithin_inter_of_mem' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s (nhdsWithin.{u1} α _inst_1 a t)) -> (Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t s)) (nhdsWithin.{u1} α _inst_1 a t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhdsWithin.{u1} α _inst_1 a s)) -> (Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) (nhdsWithin.{u1} α _inst_1 a s))
+Case conversion may be inaccurate. Consider using '#align nhds_within_inter_of_mem' nhdsWithin_inter_of_mem'ₓ'. -/
+theorem nhdsWithin_inter_of_mem' {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 𝓝[t ∩ s] a = 𝓝[t] a := by
+  rw [inter_comm, nhdsWithin_inter_of_mem h]
+#align nhds_within_inter_of_mem' nhdsWithin_inter_of_mem'
 
 #print nhdsWithin_singleton /-
 @[simp]
@@ -1180,6 +1211,15 @@ theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : 
     (hf : ContinuousOn f s) (hg : ContinuousOn g t) : ContinuousOn (Prod.map f g) (s ×ˢ t) :=
   fun ⟨x, y⟩ ⟨hx, hy⟩ => ContinuousWithinAt.prod_map (hf x hx) (hg y hy)
 #align continuous_on.prod_map ContinuousOn.prod_map
+
+theorem continuous_of_cover_nhds {ι : Sort _} {f : α → β} {s : ι → Set α}
+    (hs : ∀ x : α, ∃ i, s i ∈ 𝓝 x) (hf : ∀ i, ContinuousOn f (s i)) : Continuous f :=
+  continuous_iff_continuousAt.mpr fun x =>
+    by
+    let ⟨i, hi⟩ := hs x
+    rw [ContinuousAt, ← nhdsWithin_eq_nhds.2 hi]
+    exact hf _ _ (mem_of_mem_nhds hi)
+#align continuous_of_cover_nhds continuous_of_cover_nhds
 
 /- warning: continuous_on_empty -> continuousOn_empty is a dubious translation:
 lean 3 declaration is

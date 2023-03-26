@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 22f577237f96d87d9084104feba75f3deccd4dd5
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,6 +52,8 @@ open LinearMap (ker range)
 open BigOperators Topology
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
+
+variable [NormedAddCommGroup E] [NormedAddCommGroup F]
 
 variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
@@ -145,7 +147,7 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
           show u + u - (wq + wp) = u - wq + (u - wp)
           abel
           rw [eq₁, eq₂]
-        _ = 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) := parallelogram_law_with_norm _ _
+        _ = 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) := parallelogram_law_with_norm ℝ _ _
         
     have eq : δ ≤ ‖u - half • (wq + wp)‖ := by
       rw [smul_add]
@@ -255,7 +257,7 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
             rw [this]
           _ = ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 :=
             by
-            rw [norm_sub_sq, inner_smul_right, norm_smul]
+            rw [@norm_sub_sq ℝ, inner_smul_right, norm_smul]
             simp only [sq]
             show
               ‖u - v‖ * ‖u - v‖ - 2 * (θ * inner (u - v) (w - v)) +
@@ -316,7 +318,7 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
             rw [sq]
             refine' le_add_of_nonneg_right _
             exact sq_nonneg _
-          _ = ‖u - v - (w - v)‖ ^ 2 := (norm_sub_sq _ _).symm
+          _ = ‖u - v - (w - v)‖ ^ 2 := (@norm_sub_sq ℝ _ _ _ _ _ _).symm
           _ = ‖u - w‖ * ‖u - w‖ := by
             have : u - v - (w - v) = u - w
             abel
@@ -464,7 +466,7 @@ defined. -/
 theorem eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈ K)
     (hvo : ∀ w ∈ K, ⟪u - v, w⟫ = 0) : orthogonalProjectionFn K u = v :=
   by
-  rw [← sub_eq_zero, ← inner_self_eq_zero]
+  rw [← sub_eq_zero, ← @inner_self_eq_zero 𝕜]
   have hvs : orthogonalProjectionFn K u - v ∈ K :=
     Submodule.sub_mem K (orthogonalProjectionFn_mem u) hvm
   have huo : ⟪u - orthogonalProjectionFn K u, orthogonalProjectionFn K u - v⟫ = 0 :=
@@ -587,8 +589,9 @@ theorem orthogonalProjection_eq_self_iff {v : E} : (orthogonalProjection K v : E
   · simp
 #align orthogonal_projection_eq_self_iff orthogonalProjection_eq_self_iff
 
-theorem LinearIsometry.map_orthogonalProjection {E E' : Type _} [InnerProductSpace 𝕜 E]
-    [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
+theorem LinearIsometry.map_orthogonalProjection {E E' : Type _} [NormedAddCommGroup E]
+    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E')
+    (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
     f (orthogonalProjection p x) = orthogonalProjection (p.map f.toLinearMap) (f x) :=
   by
   refine' (eq_orthogonalProjection_of_mem_of_inner_eq_zero _ fun y hy => _).symm
@@ -597,8 +600,9 @@ theorem LinearIsometry.map_orthogonalProjection {E E' : Type _} [InnerProductSpa
   rw [← f.map_sub, f.inner_map_map, orthogonalProjection_inner_eq_zero x x' hx']
 #align linear_isometry.map_orthogonal_projection LinearIsometry.map_orthogonalProjection
 
-theorem LinearIsometry.map_orthogonal_projection' {E E' : Type _} [InnerProductSpace 𝕜 E]
-    [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
+theorem LinearIsometry.map_orthogonal_projection' {E E' : Type _} [NormedAddCommGroup E]
+    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E')
+    (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
     f (orthogonalProjection p x) = orthogonalProjection (p.map f) (f x) :=
   by
   refine' (eq_orthogonalProjection_of_mem_of_inner_eq_zero _ fun y hy => _).symm
@@ -608,8 +612,9 @@ theorem LinearIsometry.map_orthogonal_projection' {E E' : Type _} [InnerProductS
 #align linear_isometry.map_orthogonal_projection' LinearIsometry.map_orthogonal_projection'
 
 /-- Orthogonal projection onto the `submodule.map` of a subspace. -/
-theorem orthogonalProjection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E]
-    [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E') :
+theorem orthogonalProjection_map_apply {E E' : Type _} [NormedAddCommGroup E]
+    [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E')
+    (p : Submodule 𝕜 E) [CompleteSpace p] (x : E') :
     (orthogonalProjection (p.map (f.toLinearEquiv : E →ₗ[𝕜] E')) x : E') =
       f (orthogonalProjection p (f.symm x)) :=
   by
@@ -642,7 +647,7 @@ theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
     obtain ⟨c, rfl⟩ := submodule.mem_span_singleton.mp hx
     have hv : ↑‖v‖ ^ 2 = ⟪v, v⟫ := by
       norm_cast
-      simp [norm_sq_eq_inner]
+      simp [@norm_sq_eq_inner 𝕜]
     simp [inner_sub_left, inner_smul_left, inner_smul_right, map_div₀, mul_comm, hv,
       InnerProductSpace.conj_symm, hv]
 #align smul_orthogonal_projection_singleton smul_orthogonalProjection_singleton
@@ -767,15 +772,17 @@ theorem reflection_mem_subspace_eq_self {x : E} (hx : x ∈ K) : reflection K x 
 #align reflection_mem_subspace_eq_self reflection_mem_subspace_eq_self
 
 /-- Reflection in the `submodule.map` of a subspace. -/
-theorem reflection_map_apply {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
-    (f : E ≃ₗᵢ[𝕜] E') (K : Submodule 𝕜 E) [CompleteSpace K] (x : E') :
+theorem reflection_map_apply {E E' : Type _} [NormedAddCommGroup E] [NormedAddCommGroup E']
+    [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E') (K : Submodule 𝕜 E)
+    [CompleteSpace K] (x : E') :
     reflection (K.map (f.toLinearEquiv : E →ₗ[𝕜] E')) x = f (reflection K (f.symm x)) := by
   simp [bit0, reflection_apply, orthogonalProjection_map_apply f K x]
 #align reflection_map_apply reflection_map_apply
 
 /-- Reflection in the `submodule.map` of a subspace. -/
-theorem reflection_map {E E' : Type _} [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E']
-    (f : E ≃ₗᵢ[𝕜] E') (K : Submodule 𝕜 E) [CompleteSpace K] :
+theorem reflection_map {E E' : Type _} [NormedAddCommGroup E] [NormedAddCommGroup E']
+    [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 E'] (f : E ≃ₗᵢ[𝕜] E') (K : Submodule 𝕜 E)
+    [CompleteSpace K] :
     reflection (K.map (f.toLinearEquiv : E →ₗ[𝕜] E')) = f.symm.trans ((reflection K).trans f) :=
   LinearIsometryEquiv.ext <| reflection_map_apply f K
 #align reflection_map reflection_map

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.conformal
-! leanprover-community/mathlib commit df78eae582aad2f545024bf6c7249191d2723074
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,10 +21,13 @@ This file proves that conformal maps preserve angles.
 
 namespace InnerProductGeometry
 
-variable {V : Type _} [InnerProductSpace ℝ V]
+variable {E F : Type _}
 
-theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E]
-    [InnerProductSpace ℝ F] {f' : E →L[ℝ] F} (h : IsConformalMap f') (u v : E) :
+variable [NormedAddCommGroup E] [NormedAddCommGroup F]
+
+variable [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
+
+theorem IsConformalMap.preserves_angle {f' : E →L[ℝ] F} (h : IsConformalMap f') (u v : E) :
     angle (f' u) (f' v) = angle u v :=
   by
   obtain ⟨c, hc, li, rfl⟩ := h
@@ -33,9 +36,8 @@ theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E]
 
 /-- If a real differentiable map `f` is conformal at a point `x`,
     then it preserves the angles at that point. -/
-theorem ConformalAt.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
-    {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) :
-    angle (f' u) (f' v) = angle u v :=
+theorem ConformalAt.preserves_angle {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x)
+    (H : ConformalAt f x) (u v : E) : angle (f' u) (f' v) = angle u v :=
   let ⟨f₁, h₁, c⟩ := H
   h₁.unique h ▸ IsConformalMap.preserves_angle c u v
 #align inner_product_geometry.conformal_at.preserves_angle InnerProductGeometry.ConformalAt.preserves_angle

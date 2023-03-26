@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.conformal_linear_map
-! leanprover-community/mathlib commit a148d797a1094ab554ad4183a4ad6f130358ef64
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,7 +18,11 @@ In an inner product space, a map is conformal iff it preserves inner products up
 -/
 
 
-variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
+variable {E F : Type _}
+
+variable [NormedAddCommGroup E] [NormedAddCommGroup F]
+
+variable [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
 open LinearIsometry ContinuousLinearMap
 

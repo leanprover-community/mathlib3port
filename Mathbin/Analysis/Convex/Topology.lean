@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit a63928c34ec358b5edcda2bf7513c50052a5230f
+! leanprover-community/mathlib commit 0e3aacdc98d25e0afe035c452d876d28cbffaa7e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,11 +28,11 @@ We prove the following facts:
 
 assert_not_exists Norm
 
-variable {ι : Type _} {E : Type _}
-
 open Metric Set
 
 open Pointwise Convex
+
+variable {ι 𝕜 E : Type _}
 
 theorem Real.convex_iff_isPreconnected {s : Set ℝ} : Convex ℝ s ↔ IsPreconnected s :=
   convex_iff_ordConnected.trans isPreconnected_iff_ordConnected.symm
@@ -82,9 +82,40 @@ end stdSimplex
 /-! ### Topological vector space -/
 
 
+section TopologicalSpace
+
+variable [LinearOrderedRing 𝕜] [DenselyOrdered 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜]
+  [AddCommGroup E] [TopologicalSpace E] [ContinuousAdd E] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
+  {x y : E}
+
+theorem segment_subset_closure_openSegment : [x -[𝕜] y] ⊆ closure (openSegment 𝕜 x y) :=
+  by
+  rw [segment_eq_image, openSegment_eq_image, ← closure_Ioo (zero_ne_one' 𝕜)]
+  exact image_closure_subset_closure_image (by continuity)
+#align segment_subset_closure_open_segment segment_subset_closure_openSegment
+
+end TopologicalSpace
+
+section PseudoMetricSpace
+
+variable [LinearOrderedRing 𝕜] [DenselyOrdered 𝕜] [PseudoMetricSpace 𝕜] [OrderTopology 𝕜]
+  [ProperSpace 𝕜] [CompactIccSpace 𝕜] [AddCommGroup E] [TopologicalSpace E] [T2Space E]
+  [ContinuousAdd E] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
+
+@[simp]
+theorem closure_openSegment (x y : E) : closure (openSegment 𝕜 x y) = [x -[𝕜] y] :=
+  by
+  rw [segment_eq_image, openSegment_eq_image, ← closure_Ioo (zero_ne_one' 𝕜)]
+  exact
+    (image_closure_of_isCompact (bounded_Ioo _ _).isCompact_closure <|
+        Continuous.continuousOn <| by continuity).symm
+#align closure_open_segment closure_openSegment
+
+end PseudoMetricSpace
+
 section ContinuousConstSMul
 
-variable {𝕜 : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
+variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
   [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
 /-- If `s` is a convex set, then `a • interior s + b • closure s ⊆ interior s` for all `0 < a`,

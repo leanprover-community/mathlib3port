@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit c78cad350eb321c81e1eacf68d14e3d3ba1e17f7
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ naive expression `euclidean_space ℝ (fin (finrank ℝ E - 1))` for the model s
 -/
 
 
-variable {E : Type _} [InnerProductSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 noncomputable section
 
@@ -106,7 +106,7 @@ theorem contDiffOn_stereoToFun [CompleteSpace E] :
 
 theorem continuousOn_stereoToFun [CompleteSpace E] :
     ContinuousOn (stereoToFun v) { x : E | innerSL _ v x ≠ (1 : ℝ) } :=
-  (@contDiffOn_stereoToFun E _ v _).ContinuousOn
+  (@contDiffOn_stereoToFun E _ _ v _).ContinuousOn
 #align continuous_on_stereo_to_fun continuousOn_stereoToFun
 
 variable (v)
@@ -180,7 +180,7 @@ theorem hasFderivAt_stereoInvFunAux_comp_coe (v : E) :
 
 theorem contDiff_stereoInvFunAux : ContDiff ℝ ⊤ (stereoInvFunAux v) :=
   by
-  have h₀ : ContDiff ℝ ⊤ fun w : E => ‖w‖ ^ 2 := contDiff_norm_sq
+  have h₀ : ContDiff ℝ ⊤ fun w : E => ‖w‖ ^ 2 := contDiff_norm_sq ℝ
   have h₁ : ContDiff ℝ ⊤ fun w : E => (‖w‖ ^ 2 + 4)⁻¹ :=
     by
     refine' (h₀.add contDiff_const).inv _
@@ -469,8 +469,8 @@ theorem contMdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
   constructor
   · exact continuous_subtype_val
   · intro v _
-    let U :=
-      (-- Again, removing type ascription...
+    let U : _ ≃ₗᵢ[ℝ] _ :=
+      (-- Again, partially removing type ascription...
           OrthonormalBasis.fromOrthogonalSpanSingleton
           n (ne_zero_of_mem_unit_sphere (-v))).repr
     exact
@@ -493,8 +493,8 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
   rw [contMdiff_iff_target]
   refine' ⟨continuous_induced_rng.2 hf.continuous, _⟩
   intro v
-  let U :=
-    (-- Again, removing type ascription... Weird that this helps!
+  let U : _ ≃ₗᵢ[ℝ] _ :=
+    (-- Again, partially removing type ascription... Weird that this helps!
         OrthonormalBasis.fromOrthogonalSpanSingleton
         n (ne_zero_of_mem_unit_sphere (-v))).repr
   have h : ContDiffOn ℝ ⊤ _ Set.univ := U.cont_diff.cont_diff_on

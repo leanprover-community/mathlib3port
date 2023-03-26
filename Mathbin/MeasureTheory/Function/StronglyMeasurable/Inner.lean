@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.inner
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,9 +26,9 @@ namespace MeasureTheory
 
 namespace StronglyMeasurable
 
-protected theorem inner {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
-    {m : MeasurableSpace α} {f g : α → E} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
-    StronglyMeasurable fun t => @inner 𝕜 _ _ (f t) (g t) :=
+protected theorem inner {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {m : MeasurableSpace α} {f g : α → E} (hf : StronglyMeasurable f)
+    (hg : StronglyMeasurable g) : StronglyMeasurable fun t => @inner 𝕜 _ _ (f t) (g t) :=
   Continuous.comp_stronglyMeasurable continuous_inner (hf.prod_mk hg)
 #align measure_theory.strongly_measurable.inner MeasureTheory.StronglyMeasurable.inner
 
@@ -37,7 +37,7 @@ end StronglyMeasurable
 namespace AeStronglyMeasurable
 
 variable {m : MeasurableSpace α} {μ : Measure α} {𝕜 : Type _} {E : Type _} [IsROrC 𝕜]
-  [InnerProductSpace 𝕜 E]
+  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y

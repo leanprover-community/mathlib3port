@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
+! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,32 +54,51 @@ end Prio
 
 variable [NormedField α] [SeminormedAddCommGroup β]
 
+-- note: while these are currently strictly weaker than the versions without `le`, they will cease
+-- to be if we eventually generalize `normed_space` from `normed_field α` to `normed_ring α`.
+section Le
+
+theorem norm_smul_le [NormedSpace α β] (r : α) (x : β) : ‖r • x‖ ≤ ‖r‖ * ‖x‖ :=
+  NormedSpace.norm_smul_le _ _
+#align norm_smul_le norm_smul_le
+
+theorem nnnorm_smul_le [NormedSpace α β] (s : α) (x : β) : ‖s • x‖₊ ≤ ‖s‖₊ * ‖x‖₊ :=
+  norm_smul_le s x
+#align nnnorm_smul_le nnnorm_smul_le
+
+theorem dist_smul_le [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s • y) ≤ ‖s‖ * dist x y :=
+  by simpa only [dist_eq_norm, ← smul_sub] using norm_smul_le _ _
+#align dist_smul_le dist_smul_le
+
+theorem nndist_smul_le [NormedSpace α β] (s : α) (x y : β) :
+    nndist (s • x) (s • y) ≤ ‖s‖₊ * nndist x y :=
+  dist_smul_le s x y
+#align nndist_smul_le nndist_smul_le
+
+end Le
+
 -- see Note [lower instance priority]
 instance (priority := 100) NormedSpace.boundedSMul [NormedSpace α β] : BoundedSMul α β
     where
-  dist_smul_pair' x y₁ y₂ := by
-    simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
-  dist_pair_smul' x₁ x₂ y := by
-    simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
+  dist_smul_pair' x y₁ y₂ := by simpa [dist_eq_norm, smul_sub] using norm_smul_le x (y₁ - y₂)
+  dist_pair_smul' x₁ x₂ y := by simpa [dist_eq_norm, sub_smul] using norm_smul_le (x₁ - x₂) y
 #align normed_space.has_bounded_smul NormedSpace.boundedSMul
 
 -- Shortcut instance, as otherwise this will be found by `normed_space.to_module` and be
 -- noncomputable.
 instance : Module ℝ ℝ := by infer_instance
 
-instance NormedField.toNormedSpace : NormedSpace α α
-    where norm_smul_le a b := le_of_eq (norm_mul a b)
+instance NormedField.toNormedSpace : NormedSpace α α where norm_smul_le a b := norm_mul_le a b
 #align normed_field.to_normed_space NormedField.toNormedSpace
 
 theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖ = ‖s‖ * ‖x‖ :=
   by
   by_cases h : s = 0
   · simp [h]
-  · refine' le_antisymm (NormedSpace.norm_smul_le s x) _
+  · refine' le_antisymm (norm_smul_le s x) _
     calc
       ‖s‖ * ‖x‖ = ‖s‖ * ‖s⁻¹ • s • x‖ := by rw [inv_smul_smul₀ h]
-      _ ≤ ‖s‖ * (‖s⁻¹‖ * ‖s • x‖) :=
-        (mul_le_mul_of_nonneg_left (NormedSpace.norm_smul_le _ _) (norm_nonneg _))
+      _ ≤ ‖s‖ * (‖s⁻¹‖ * ‖s • x‖) := (mul_le_mul_of_nonneg_left (norm_smul_le _ _) (norm_nonneg _))
       _ = ‖s • x‖ := by rw [norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mul]
       
 #align norm_smul norm_smul
@@ -134,14 +153,14 @@ theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε
 theorem Filter.Tendsto.zero_smul_isBoundedUnder_le {f : ι → α} {g : ι → E} {l : Filter ι}
     (hf : Tendsto f l (𝓝 0)) (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) :
     Tendsto (fun x => f x • g x) l (𝓝 0) :=
-  hf.op_zero_isBoundedUnder_le hg (· • ·) fun x y => (norm_smul x y).le
+  hf.op_zero_isBoundedUnder_le hg (· • ·) norm_smul_le
 #align filter.tendsto.zero_smul_is_bounded_under_le Filter.Tendsto.zero_smul_isBoundedUnder_le
 
 theorem Filter.IsBoundedUnder.smul_tendsto_zero {f : ι → α} {g : ι → E} {l : Filter ι}
     (hf : IsBoundedUnder (· ≤ ·) l (norm ∘ f)) (hg : Tendsto g l (𝓝 0)) :
     Tendsto (fun x => f x • g x) l (𝓝 0) :=
   hg.op_zero_isBoundedUnder_le hf (flip (· • ·)) fun x y =>
-    ((norm_smul y x).trans (mul_comm _ _)).le
+    (norm_smul_le y x).trans_eq (mul_comm _ _)
 #align filter.is_bounded_under.smul_tendsto_zero Filter.IsBoundedUnder.smul_tendsto_zero
 
 theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
@@ -261,34 +280,33 @@ open NormedField
 
 instance : NormedSpace α (ULift E) :=
   { ULift.normedAddCommGroup, ULift.module' with
-    norm_smul_le := fun s x => (NormedSpace.norm_smul_le s x.down : _) }
+    norm_smul_le := fun s x => (norm_smul_le s x.down : _) }
 
 /-- The product of two normed spaces is a normed space, with the sup norm. -/
 instance Prod.normedSpace : NormedSpace α (E × F) :=
   { Prod.normedAddCommGroup, Prod.module with
-    norm_smul_le := fun s x => le_of_eq <| by simp [Prod.norm_def, norm_smul, mul_max_of_nonneg] }
+    norm_smul_le := fun s x => by simp [Prod.norm_def, norm_smul_le, mul_max_of_nonneg] }
 #align prod.normed_space Prod.normedSpace
 
 /-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
 instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCommGroup (E i)]
     [∀ i, NormedSpace α (E i)] : NormedSpace α (∀ i, E i)
     where norm_smul_le a f :=
-    le_of_eq <|
-      show
-        (↑(Finset.sup Finset.univ fun b : ι => ‖a • f b‖₊) : ℝ) =
-          ‖a‖₊ * ↑(Finset.sup Finset.univ fun b : ι => ‖f b‖₊)
-        by simp only [(NNReal.coe_mul _ _).symm, NNReal.mul_finset_sup, nnnorm_smul]
+    by
+    simp_rw [← coe_nnnorm, ← NNReal.coe_mul, NNReal.coe_le_coe, Pi.nnnorm_def,
+      NNReal.mul_finset_sup]
+    exact Finset.sup_mono_fun fun _ _ => norm_smul_le _ _
 #align pi.normed_space Pi.normedSpace
 
 instance MulOpposite.normedSpace : NormedSpace α Eᵐᵒᵖ :=
   { MulOpposite.normedAddCommGroup, MulOpposite.module _ with
-    norm_smul_le := fun s x => (norm_smul s x.unop).le }
+    norm_smul_le := fun s x => norm_smul_le s x.unop }
 #align mul_opposite.normed_space MulOpposite.normedSpace
 
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
 instance Submodule.normedSpace {𝕜 R : Type _} [SMul 𝕜 R] [NormedField 𝕜] [Ring R] {E : Type _}
     [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E]
-    (s : Submodule R E) : NormedSpace 𝕜 s where norm_smul_le c x := le_of_eq <| norm_smul c (x : E)
+    (s : Submodule R E) : NormedSpace 𝕜 s where norm_smul_le c x := norm_smul_le c (x : E)
 #align submodule.normed_space Submodule.normedSpace
 
 /-- If there is a scalar `c` with `‖c‖>1`, then any element with nonzero norm can be
@@ -341,7 +359,7 @@ def NormedSpace.induced {F : Type _} (α β γ : Type _) [NormedField α] [AddCo
     @NormedSpace α β _ (SeminormedAddCommGroup.induced β γ f)
     where norm_smul_le a b := by
     unfold norm
-    exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
+    exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
 #align normed_space.induced NormedSpace.induced
 
 section NormedAddCommGroup
@@ -614,7 +632,7 @@ def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Rin
     @NormedAlgebra α β _ (SeminormedRing.induced β γ f)
     where norm_smul_le a b := by
     unfold norm
-    exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
+    exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
 #align normed_algebra.induced NormedAlgebra.induced
 
 instance Subalgebra.toNormedAlgebra {𝕜 A : Type _} [SeminormedRing A] [NormedField 𝕜]
@@ -640,7 +658,7 @@ instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : NormedAddCommGroup E
 instance : NormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' E) :=
   { RestrictScalars.module 𝕜 𝕜' E with
     norm_smul_le := fun c x =>
-      (NormedSpace.norm_smul_le (algebraMap 𝕜 𝕜' c) (_ : E)).trans_eq <| by rw [norm_algebra_map'] }
+      (norm_smul_le (algebraMap 𝕜 𝕜' c) (_ : E)).trans_eq <| by rw [norm_algebra_map'] }
 
 -- If you think you need this, consider instead reproducing `restrict_scalars.lsmul`
 -- appropriately modified here.

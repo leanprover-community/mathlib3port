@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit f721cdca3b50bbe616dfc291620d51fcc06bfea4
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,9 +175,9 @@ end NormedSpace
 volume `1` to the parallelepiped spanned by any orthonormal basis. We define the measure using
 some arbitrary choice of orthonormal basis. The fact that it works with any orthonormal basis
 is proved in `orthonormal_basis.volume_parallelepiped`. -/
-instance (priority := 100) measureSpaceOfInnerProductSpace [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] : MeasureSpace E
-    where volume := (stdOrthonormalBasis ℝ E).toBasis.add_haar
+instance (priority := 100) measureSpaceOfInnerProductSpace [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] :
+    MeasureSpace E where volume := (stdOrthonormalBasis ℝ E).toBasis.add_haar
 #align measure_space_of_inner_product_space measureSpaceOfInnerProductSpace
 
 /- This instance should not be necessary, but Lean has difficulties to find it in product

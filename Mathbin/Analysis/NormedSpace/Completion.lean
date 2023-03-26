@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ instance [SeminormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSM
             (Continuous.comp (continuous_mul_left _) continuous_norm)
       · intro x
         simp only [← coe_smul, norm_coe]
-        exact NormedSpace.norm_smul_le r x }
+        exact norm_smul_le r x }
 
 end Algebra
 

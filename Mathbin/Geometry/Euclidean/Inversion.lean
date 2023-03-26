@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.euclidean.inversion
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,8 +32,8 @@ open Metric Real Function
 
 namespace EuclideanGeometry
 
-variable {V P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
-  {a b c d x y z : P} {R : ℝ}
+variable {V P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
+  [NormedAddTorsor V P] {a b c d x y z : P} {R : ℝ}
 
 include V
 

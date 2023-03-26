@@ -937,7 +937,6 @@ import Mathbin.CategoryTheory.Limits.Presheaf
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
-import Mathbin.CategoryTheory.Limits.Shapes.ConcreteCategory
 import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 import Mathbin.CategoryTheory.Limits.Shapes.DisjointCoproduct
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers

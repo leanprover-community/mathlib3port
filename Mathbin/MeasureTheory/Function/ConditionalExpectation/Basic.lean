@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,7 @@ theorem constSmul [SMul 𝕜 β] [ContinuousConstSMul 𝕜 β] (c : 𝕜) (hf : 
   exact eventually_eq.fun_comp hff' fun x => c • x
 #align measure_theory.ae_strongly_measurable'.const_smul MeasureTheory.AeStronglyMeasurable'.constSmul
 
-theorem constInner {𝕜 β} [IsROrC 𝕜] [InnerProductSpace 𝕜 β] {f : α → β}
+theorem constInner {𝕜 β} [IsROrC 𝕜] [NormedAddCommGroup β] [InnerProductSpace 𝕜 β] {f : α → β}
     (hfm : AeStronglyMeasurable' m f μ) (c : β) :
     AeStronglyMeasurable' m (fun x => (inner c (f x) : 𝕜)) μ :=
   by
@@ -233,10 +233,11 @@ variable {α β γ E E' F F' G G' H 𝕜 : Type _} {p : ℝ≥0∞} [IsROrC 𝕜
   [TopologicalSpace β]
   -- β for a generic topological space
   -- E for an inner product space
+  [NormedAddCommGroup E]
   [InnerProductSpace 𝕜 E]
   -- E' for an inner product space on which we compute integrals
-  [InnerProductSpace 𝕜 E']
-  [CompleteSpace E'] [NormedSpace ℝ E']
+  [NormedAddCommGroup E']
+  [InnerProductSpace 𝕜 E'] [CompleteSpace E'] [NormedSpace ℝ E']
   -- F for a Lp submodule
   [NormedAddCommGroup F]
   [NormedSpace 𝕜 F]
@@ -823,6 +824,8 @@ theorem lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero (hm : m ≤ m0) (f : lp
 
 include 𝕜
 
+variable (𝕜)
+
 theorem lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : lp E' p μ)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
@@ -867,9 +870,11 @@ theorem lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : lp E' p μ) (
   have hfg_meas : ae_strongly_measurable' m (⇑(f - g)) μ :=
     ae_strongly_measurable'.congr (hf_meas.sub hg_meas) (Lp.coe_fn_sub f g).symm
   exact
-    Lp.ae_eq_zero_of_forall_set_integral_eq_zero' hm (f - g) hp_ne_zero hp_ne_top hfg_int hfg'
+    Lp.ae_eq_zero_of_forall_set_integral_eq_zero' 𝕜 hm (f - g) hp_ne_zero hp_ne_top hfg_int hfg'
       hfg_meas
 #align measure_theory.Lp.ae_eq_of_forall_set_integral_eq' MeasureTheory.lp.ae_eq_of_forall_set_integral_eq'
+
+variable {𝕜}
 
 omit 𝕜
 
@@ -988,7 +993,7 @@ variable (𝕜)
 
 /-- Conditional expectation of a function in L2 with respect to a sigma-algebra -/
 def condexpL2 (hm : m ≤ m0) : (α →₂[μ] E) →L[𝕜] lpMeas E 𝕜 m 2 μ :=
-  @orthogonalProjection 𝕜 (α →₂[μ] E) _ _ (lpMeas E 𝕜 m 2 μ)
+  @orthogonalProjection 𝕜 (α →₂[μ] E) _ _ _ (lpMeas E 𝕜 m 2 μ)
     haveI : Fact (m ≤ m0) := ⟨hm⟩
     inferInstance
 #align measure_theory.condexp_L2 MeasureTheory.condexpL2
@@ -1010,13 +1015,13 @@ theorem integrableCondexpL2OfIsFiniteMeasure (hm : m ≤ m0) [IsFiniteMeasure μ
   integrableOn_univ.mp <| integrableOnCondexpL2OfMeasureNeTop hm (measure_ne_top _ _) f
 #align measure_theory.integrable_condexp_L2_of_is_finite_measure MeasureTheory.integrableCondexpL2OfIsFiniteMeasure
 
-theorem norm_condexpL2_le_one (hm : m ≤ m0) : ‖@condexpL2 α E 𝕜 _ _ _ _ _ μ hm‖ ≤ 1 :=
+theorem norm_condexpL2_le_one (hm : m ≤ m0) : ‖@condexpL2 α E 𝕜 _ _ _ _ _ _ μ hm‖ ≤ 1 :=
   haveI : Fact (m ≤ m0) := ⟨hm⟩
   orthogonalProjection_norm_le _
 #align measure_theory.norm_condexp_L2_le_one MeasureTheory.norm_condexpL2_le_one
 
 theorem norm_condexpL2_le (hm : m ≤ m0) (f : α →₂[μ] E) : ‖condexpL2 𝕜 hm f‖ ≤ ‖f‖ :=
-  ((@condexpL2 _ E 𝕜 _ _ _ _ _ μ hm).le_opNorm f).trans
+  ((@condexpL2 _ E 𝕜 _ _ _ _ _ _ μ hm).le_opNorm f).trans
     (mul_le_of_le_one_left (norm_nonneg _) (norm_condexpL2_le_one hm))
 #align measure_theory.norm_condexp_L2_le MeasureTheory.norm_condexpL2_le
 
@@ -1167,7 +1172,7 @@ theorem condexpL2_constInner (hm : m ≤ m0) (f : lp E 2 μ) (c : E) :
   have h_eq : h_mem_Lp.to_Lp _ =ᵐ[μ] fun a => ⟪c, condexp_L2 𝕜 hm f a⟫ := h_mem_Lp.coe_fn_to_Lp
   refine' eventually_eq.trans _ h_eq
   refine'
-    Lp.ae_eq_of_forall_set_integral_eq' hm _ _ two_ne_zero ENNReal.coe_ne_top
+    Lp.ae_eq_of_forall_set_integral_eq' 𝕜 hm _ _ two_ne_zero ENNReal.coe_ne_top
       (fun s hs hμs => integrable_on_condexp_L2_of_measure_ne_top hm hμs.Ne _) _ _ _ _
   · intro s hs hμs
     rw [integrable_on, integrable_congr (ae_restrict_of_ae h_eq)]
@@ -1193,7 +1198,7 @@ theorem integral_condexpL2_eq (hm : m ≤ m0) (f : lp E' 2 μ) (hs : measurable_
   rw [← sub_eq_zero, Lp_meas_coe, ←
     integral_sub' (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)
       (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)]
-  refine' integral_eq_zero_of_forall_integral_inner_eq_zero _ _ _
+  refine' integral_eq_zero_of_forall_integral_inner_eq_zero 𝕜 _ _ _
   · rw [integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub (↑(condexp_L2 𝕜 hm f)) f).symm)]
     exact integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs
   intro c
@@ -1208,8 +1213,8 @@ theorem integral_condexpL2_eq (hm : m ≤ m0) (f : lp E' 2 μ) (hs : measurable_
   exact integral_condexp_L2_eq_of_fin_meas_real _ hs hμs
 #align measure_theory.integral_condexp_L2_eq MeasureTheory.integral_condexpL2_eq
 
-variable {E'' 𝕜' : Type _} [IsROrC 𝕜'] [InnerProductSpace 𝕜' E''] [CompleteSpace E'']
-  [NormedSpace ℝ E'']
+variable {E'' 𝕜' : Type _} [IsROrC 𝕜'] [NormedAddCommGroup E''] [InnerProductSpace 𝕜' E'']
+  [CompleteSpace E''] [NormedSpace ℝ E'']
 
 variable (𝕜 𝕜')
 
@@ -1217,7 +1222,7 @@ theorem condexpL2_comp_continuousLinearMap (hm : m ≤ m0) (T : E' →L[ℝ] E''
     (condexpL2 𝕜' hm (T.compLp f) : α →₂[μ] E'') =ᵐ[μ] T.compLp (condexpL2 𝕜 hm f : α →₂[μ] E') :=
   by
   refine'
-    Lp.ae_eq_of_forall_set_integral_eq' hm _ _ two_ne_zero ENNReal.coe_ne_top
+    Lp.ae_eq_of_forall_set_integral_eq' 𝕜' hm _ _ two_ne_zero ENNReal.coe_ne_top
       (fun s hs hμs => integrable_on_condexp_L2_of_measure_ne_top hm hμs.Ne _)
       (fun s hs hμs => integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs.Ne) _ _
       _
@@ -1430,7 +1435,7 @@ theorem set_integral_condexpL2_indicator (hs : measurable_set[m] s) (ht : Measur
   calc
     (∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ) =
         ∫ x in s, indicatorConstLp 2 ht hμt (1 : ℝ) x ∂μ :=
-      @integral_condexpL2_eq α _ ℝ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
+      @integral_condexpL2_eq α _ ℝ _ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
     _ = (μ (t ∩ s)).toReal • 1 := (set_integral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ))
     _ = (μ (t ∩ s)).toReal := by rw [smul_eq_mul, mul_one]
     
