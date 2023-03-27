@@ -30,6 +30,7 @@ variable {C D : Type _} [Category C] [Category D] {L : C ⥤ D} {W : MorphismPro
 
 namespace Localization
 
+#print CategoryTheory.Localization.StrictUniversalPropertyFixedTarget.op /-
 /-- If `L : C ⥤ D` satisfies the universal property of the localisation
 for `W : morphism_property C`, then `L.op` also does. -/
 def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
@@ -48,20 +49,25 @@ def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
     have eq' := congr_arg functor.right_op Eq
     exact h.uniq _ _ eq'
 #align category_theory.localization.strict_universal_property_fixed_target.op CategoryTheory.Localization.StrictUniversalPropertyFixedTarget.op
+-/
 
+#print CategoryTheory.Localization.isLocalization_op /-
 instance isLocalization_op : W.Q.op.IsLocalization W.op :=
   Functor.IsLocalization.mk' W.Q.op W.op (strictUniversalPropertyFixedTargetQ W _).op
     (strictUniversalPropertyFixedTargetQ W _).op
 #align category_theory.localization.is_localization_op CategoryTheory.Localization.isLocalization_op
+-/
 
 end Localization
 
 namespace Functor
 
+#print CategoryTheory.Functor.IsLocalization.op /-
 instance IsLocalization.op [h : L.IsLocalization W] : L.op.IsLocalization W.op :=
   IsLocalization.of_equivalence_target W.Q.op W.op L.op (Localization.equivalenceFromModel L W).op
     (NatIso.op (Localization.qCompEquivalenceFromModelFunctorIso L W).symm)
 #align category_theory.functor.is_localization.op CategoryTheory.Functor.IsLocalization.op
+-/
 
 end Functor
 

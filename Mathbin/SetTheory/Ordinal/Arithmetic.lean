@@ -1644,6 +1644,12 @@ theorem mod_def (a b : Ordinal) : a % b = a - b * (a / b) :=
   rfl
 #align ordinal.mod_def Ordinal.mod_def
 
+/- warning: ordinal.mod_le -> Ordinal.mod_le is a dubious translation:
+lean 3 declaration is
+  forall (a : Ordinal.{u1}) (b : Ordinal.{u1}), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) a b) a
+but is expected to have type
+  forall (a : Ordinal.{u1}) (b : Ordinal.{u1}), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a b) a
+Case conversion may be inaccurate. Consider using '#align ordinal.mod_le Ordinal.mod_leₓ'. -/
 theorem mod_le (a b : Ordinal) : a % b ≤ a :=
   sub_le_self a _
 #align ordinal.mod_le Ordinal.mod_le
@@ -1756,6 +1762,12 @@ theorem dvd_iff_mod_eq_zero {a b : Ordinal} : b ∣ a ↔ a % b = 0 :=
   ⟨mod_eq_zero_of_dvd, dvd_of_mod_eq_zero⟩
 #align ordinal.dvd_iff_mod_eq_zero Ordinal.dvd_iff_mod_eq_zero
 
+/- warning: ordinal.mul_add_mod_self -> Ordinal.mul_add_mod_self is a dubious translation:
+lean 3 declaration is
+  forall (x : Ordinal.{u1}) (y : Ordinal.{u1}) (z : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x y) z) x) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) z x)
+but is expected to have type
+  forall (x : Ordinal.{u1}) (y : Ordinal.{u1}) (z : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x y) z) x) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) z x)
+Case conversion may be inaccurate. Consider using '#align ordinal.mul_add_mod_self Ordinal.mul_add_mod_selfₓ'. -/
 @[simp]
 theorem mul_add_mod_self (x y z : Ordinal) : (x * y + z) % x = z % x :=
   by
@@ -1764,10 +1776,22 @@ theorem mul_add_mod_self (x y z : Ordinal) : (x * y + z) % x = z % x :=
   · rwa [mod_def, mul_add_div, mul_add, ← sub_sub, add_sub_cancel, mod_def]
 #align ordinal.mul_add_mod_self Ordinal.mul_add_mod_self
 
+/- warning: ordinal.mul_mod -> Ordinal.mul_mod is a dubious translation:
+lean 3 declaration is
+  forall (x : Ordinal.{u1}) (y : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x y) x) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))
+but is expected to have type
+  forall (x : Ordinal.{u1}) (y : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x y) x) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))
+Case conversion may be inaccurate. Consider using '#align ordinal.mul_mod Ordinal.mul_modₓ'. -/
 @[simp]
 theorem mul_mod (x y : Ordinal) : x * y % x = 0 := by simpa using mul_add_mod_self x y 0
 #align ordinal.mul_mod Ordinal.mul_mod
 
+/- warning: ordinal.mod_mod_of_dvd -> Ordinal.mod_mod_of_dvd is a dubious translation:
+lean 3 declaration is
+  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (Dvd.Dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) c b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) a b) c) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) a c))
+but is expected to have type
+  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (Dvd.dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) c b) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a b) c) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a c))
+Case conversion may be inaccurate. Consider using '#align ordinal.mod_mod_of_dvd Ordinal.mod_mod_of_dvdₓ'. -/
 theorem mod_mod_of_dvd (a : Ordinal) {b c : Ordinal} (h : c ∣ b) : a % b % c = a % c :=
   by
   nth_rw_rhs 1 [← div_add_mod a b]
@@ -1775,6 +1799,12 @@ theorem mod_mod_of_dvd (a : Ordinal) {b c : Ordinal} (h : c ∣ b) : a % b % c =
   rw [mul_assoc, mul_add_mod_self]
 #align ordinal.mod_mod_of_dvd Ordinal.mod_mod_of_dvd
 
+/- warning: ordinal.mod_mod -> Ordinal.mod_mod is a dubious translation:
+lean 3 declaration is
+  forall (a : Ordinal.{u1}) (b : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) a b) b) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) a b)
+but is expected to have type
+  forall (a : Ordinal.{u1}) (b : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a b) b) (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.mod.{u1}) a b)
+Case conversion may be inaccurate. Consider using '#align ordinal.mod_mod Ordinal.mod_modₓ'. -/
 @[simp]
 theorem mod_mod (a b : Ordinal) : a % b % b = a % b :=
   mod_mod_of_dvd a dvd_rfl
@@ -3332,7 +3362,7 @@ theorem enumOrd_def' (o) :
 lean 3 declaration is
   forall {S : Set.{succ u1} Ordinal.{u1}}, (Set.Unbounded.{succ u1} Ordinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) S) -> (forall (a : Ordinal.{u1}), Set.Nonempty.{succ u1} Ordinal.{u1} (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasInter.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) a)))
 but is expected to have type
-  forall {S : Set.{succ u1} Ordinal.{u1}}, (Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28545 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28547 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28545 x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28547) S) -> (forall (a : Ordinal.{u1}), Set.Nonempty.{succ u1} Ordinal.{u1} (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instInterSet.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) a)))
+  forall {S : Set.{succ u1} Ordinal.{u1}}, (Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28844 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28846 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28844 x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.28846) S) -> (forall (a : Ordinal.{u1}), Set.Nonempty.{succ u1} Ordinal.{u1} (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instInterSet.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) a)))
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_ord_def'_nonempty Ordinal.enumOrd_def'_nonemptyₓ'. -/
 /-- The set in `enum_ord_def'` is nonempty. -/
 theorem enumOrd_def'_nonempty (hS : Unbounded (· < ·) S) (a) : (S ∩ Set.Ici a).Nonempty :=
