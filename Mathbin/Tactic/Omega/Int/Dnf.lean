@@ -212,7 +212,7 @@ theorem exists_clause_holds {v : Nat → Int} :
   · rcases ihp h1.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h2.right with ⟨cq, hq1, hq2⟩
     refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
-    simp only [dnf_core, List.mem_map']
+    simp only [dnf_core, List.mem_map]
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption

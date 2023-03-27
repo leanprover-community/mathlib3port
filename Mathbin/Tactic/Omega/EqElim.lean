@@ -426,13 +426,13 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
       constructor
       · apply coeffs_reduce_correct h2 h4
       · intro x h6
-        rw [List.mem_map'] at h6
+        rw [List.mem_map] at h6
         cases' h6 with t h6
         cases' h6 with h6 h7
         rw [← h7, ← subst_correct h2 h4]
         apply h5 _ h6
     · intro x h6
-      rw [List.mem_map'] at h6
+      rw [List.mem_map] at h6
       cases' h6 with t h6
       cases' h6 with h6 h7
       rw [← h7, ← subst_correct h2 h4]
@@ -445,7 +445,7 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
     exists v
     cases' h1 with h1 h2
     rw [List.forall_mem_cons] at h1; cases' h1 with h1 h3
-    constructor <;> intro t h4 <;> rw [List.mem_map'] at h4 <;> rcases h4 with ⟨s, h4, h5⟩ <;>
+    constructor <;> intro t h4 <;> rw [List.mem_map] at h4 <;> rcases h4 with ⟨s, h4, h5⟩ <;>
           rw [← h5] <;>
         simp only [term.val_add, term.val_mul, cancel] <;>
       rw [← h1, MulZeroClass.mul_zero, zero_add]

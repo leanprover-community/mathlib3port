@@ -1080,7 +1080,7 @@ theorem Sentence.realize_cardGe (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#M
   rw [← lift_mk_fin, ← lift_le, lift_lift, lift_mk_le, sentence.card_ge, sentence.realize,
     bounded_formula.realize_exs]
   simp_rw [bounded_formula.realize_foldr_inf]
-  simp only [Function.comp_apply, List.mem_map', Prod.exists, Ne.def, List.mem_product,
+  simp only [Function.comp_apply, List.mem_map, Prod.exists, Ne.def, List.mem_product,
     List.mem_finRange, forall_exists_index, and_imp, List.mem_filter, true_and_iff]
   refine' ⟨_, fun xs => ⟨xs.some, _⟩⟩
   · rintro ⟨xs, h⟩

@@ -176,7 +176,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
   mem_support_toFun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [apply, zero_default_supp, List.mem_map', List.mem_filter, exists_and_right,
+    simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_right,
       List.mem_toFinset, exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩

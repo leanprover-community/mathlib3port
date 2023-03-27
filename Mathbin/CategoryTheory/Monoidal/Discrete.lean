@@ -30,6 +30,7 @@ variable (M : Type u) [Monoid M]
 
 namespace CategoryTheory
 
+#print CategoryTheory.Discrete.monoidal /-
 @[to_additive Discrete.addMonoidal, simps tensor_obj_as tensor_unit_as]
 instance Discrete.monoidal : MonoidalCategory (Discrete M)
     where
@@ -40,10 +41,12 @@ instance Discrete.monoidal : MonoidalCategory (Discrete M)
   rightUnitor X := Discrete.eqToIso (mul_one X.as)
   associator X Y Z := Discrete.eqToIso (mul_assoc _ _ _)
 #align category_theory.discrete.monoidal CategoryTheory.Discrete.monoidal
-#align discrete.add_monoidal Discrete.addMonoidal
+#align category_theory.discrete.add_monoidal CategoryTheory.Discrete.addMonoidal
+-/
 
 variable {M} {N : Type u} [Monoid N]
 
+#print CategoryTheory.Discrete.monoidalFunctor /-
 /-- A multiplicative morphism between monoids gives a monoidal functor between the corresponding
 discrete monoidal categories.
 -/
@@ -57,11 +60,13 @@ def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Disc
   ε := Discrete.eqToHom F.map_one.symm
   μ X Y := Discrete.eqToHom (F.map_mul X.as Y.as).symm
 #align category_theory.discrete.monoidal_functor CategoryTheory.Discrete.monoidalFunctor
-#align discrete.add_monoidal_functor Discrete.addMonoidalFunctor
+#align category_theory.discrete.add_monoidal_functor CategoryTheory.Discrete.addMonoidalFunctor
+-/
 
 variable {K : Type u} [Monoid K]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Discrete.monoidalFunctorComp /-
 /-- The monoidal natural isomorphism corresponding to composing two multiplicative morphisms.
 -/
 @[to_additive Discrete.addMonoidalFunctorComp
@@ -72,7 +77,8 @@ def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.discrete.monoidal_functor_comp CategoryTheory.Discrete.monoidalFunctorComp
-#align discrete.add_monoidal_functor_comp Discrete.addMonoidalFunctorComp
+#align category_theory.discrete.add_monoidal_functor_comp CategoryTheory.Discrete.addMonoidalFunctorComp
+-/
 
 end CategoryTheory
 

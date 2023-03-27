@@ -370,7 +370,7 @@ Case conversion may be inaccurate. Consider using '#align list.pairwise_bind Lis
 theorem pairwise_bind {R : β → β → Prop} {l : List α} {f : α → List β} :
     List.Pairwise R (l.bind f) ↔
       (∀ a ∈ l, Pairwise R (f a)) ∧ Pairwise (fun a₁ a₂ => ∀ x ∈ f a₁, ∀ y ∈ f a₂, R x y) l :=
-  by simp [List.bind, List.pairwise_join, List.mem_map', List.pairwise_map']
+  by simp [List.bind, List.pairwise_join, List.mem_map, List.pairwise_map']
 #align list.pairwise_bind List.pairwise_bind
 
 #print List.pairwise_reverse /-

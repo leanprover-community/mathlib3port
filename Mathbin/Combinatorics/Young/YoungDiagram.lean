@@ -593,7 +593,7 @@ theorem rowLens_sorted (μ : YoungDiagram) : μ.rowLens.Sorted (· ≥ ·) :=
 #print YoungDiagram.pos_of_mem_rowLens /-
 theorem pos_of_mem_rowLens (μ : YoungDiagram) (x : ℕ) (hx : x ∈ μ.rowLens) : 0 < x :=
   by
-  rw [row_lens, List.mem_map'] at hx
+  rw [row_lens, List.mem_map] at hx
   obtain ⟨i, hi, rfl : μ.row_len i = x⟩ := hx
   rwa [List.mem_range, ← mem_iff_lt_col_len, mem_iff_lt_row_len] at hi
 #align young_diagram.pos_of_mem_row_lens YoungDiagram.pos_of_mem_rowLens

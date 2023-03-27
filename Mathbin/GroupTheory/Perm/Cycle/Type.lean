@@ -330,7 +330,7 @@ theorem mem_cycleType_iff {n : ℕ} {σ : Perm α} :
   · intro h
     obtain ⟨l, rfl, hlc, hld⟩ := trunc_cycle_factors σ
     rw [cycle_type_eq _ rfl hlc hld] at h
-    obtain ⟨c, cl, rfl⟩ := List.exists_of_mem_map' h
+    obtain ⟨c, cl, rfl⟩ := List.exists_of_mem_map h
     rw [(List.perm_cons_erase cl).pairwise_iff fun _ _ hd => _] at hld
     swap
     · exact hd.symm

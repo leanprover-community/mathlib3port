@@ -1980,7 +1980,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.mem_map Multiset.mem_mapₓ'. -/
 @[simp]
 theorem mem_map {f : α → β} {b : β} {s : Multiset α} : b ∈ map f s ↔ ∃ a, a ∈ s ∧ f a = b :=
-  Quot.inductionOn s fun l => mem_map'
+  Quot.inductionOn s fun l => mem_map
 #align multiset.mem_map Multiset.mem_map
 
 /- warning: multiset.card_map -> Multiset.card_map is a dubious translation:

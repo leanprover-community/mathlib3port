@@ -167,7 +167,7 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
       · refine' trans (sum_map_eq_nsmul_single a _ fun _ h _ => by simp [h]) _
         simp [hp, count_dedup]
       · refine' trans (List.sum_eq_zero fun n hn => _) (by simp [hp])
-        obtain ⟨a', ha'⟩ := List.mem_map'.1 hn
+        obtain ⟨a', ha'⟩ := List.mem_map.1 hn
         simp only [(fun h => hp (h ▸ (List.mem_filter.1 ha'.1).2) : a' ≠ a), if_false] at ha'
         exact ha'.2.symm
 #align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countp

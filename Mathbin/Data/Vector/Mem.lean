@@ -108,7 +108,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.mem_map_iff Vector.mem_map_iffₓ'. -/
 theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) :
     b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by
-  rw [Vector.toList_map, List.mem_map']
+  rw [Vector.toList_map, List.mem_map]
 #align vector.mem_map_iff Vector.mem_map_iff
 
 /- warning: vector.not_mem_map_zero -> Vector.not_mem_map_zero is a dubious translation:
