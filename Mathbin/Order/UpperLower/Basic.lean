@@ -2527,25 +2527,33 @@ theorem ordConnected_iff_upperClosure_inter_lowerClosure :
   exact (UpperSet.upper _).OrdConnected.inter (LowerSet.lower _).OrdConnected
 #align ord_connected_iff_upper_closure_inter_lower_closure ordConnected_iff_upperClosure_inter_lowerClosure
 
+#print upperBounds_lowerClosure /-
 @[simp]
 theorem upperBounds_lowerClosure : upperBounds (lowerClosure s : Set α) = upperBounds s :=
   (upperBounds_mono_set subset_lowerClosure).antisymm fun a ha b ⟨c, hc, hcb⟩ => hcb.trans <| ha hc
 #align upper_bounds_lower_closure upperBounds_lowerClosure
+-/
 
+#print lowerBounds_upperClosure /-
 @[simp]
 theorem lowerBounds_upperClosure : lowerBounds (upperClosure s : Set α) = lowerBounds s :=
   (lowerBounds_mono_set subset_upperClosure).antisymm fun a ha b ⟨c, hc, hcb⟩ => (ha hc).trans hcb
 #align lower_bounds_upper_closure lowerBounds_upperClosure
+-/
 
+#print bddAbove_lowerClosure /-
 @[simp]
 theorem bddAbove_lowerClosure : BddAbove (lowerClosure s : Set α) ↔ BddAbove s := by
   simp_rw [BddAbove, upperBounds_lowerClosure]
 #align bdd_above_lower_closure bddAbove_lowerClosure
+-/
 
+#print bddBelow_upperClosure /-
 @[simp]
 theorem bddBelow_upperClosure : BddBelow (upperClosure s : Set α) ↔ BddBelow s := by
   simp_rw [BddBelow, lowerBounds_upperClosure]
 #align bdd_below_upper_closure bddBelow_upperClosure
+-/
 
 alias bddAbove_lowerClosure ↔ BddAbove.of_lowerClosure BddAbove.lowerClosure
 #align bdd_above.of_lower_closure BddAbove.of_lowerClosure

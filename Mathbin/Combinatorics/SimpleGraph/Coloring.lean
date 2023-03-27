@@ -480,7 +480,7 @@ theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
 lean 3 declaration is
   forall {V : Type.{u1}} [_inst_1 : Nonempty.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
 but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Nonempty.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
+  forall {V : Type.{u1}} [_inst_1 : Nonempty.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
 Case conversion may be inaccurate. Consider using '#align simple_graph.chromatic_number_bot SimpleGraph.chromaticNumber_botₓ'. -/
 theorem chromaticNumber_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumber = 1 :=
   by
@@ -494,7 +494,7 @@ theorem chromaticNumber_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumber
 lean 3 declaration is
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (Fintype.card.{u1} V _inst_1)
 but is expected to have type
-  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))) (Fintype.card.{u1} V _inst_1)
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (Fintype.card.{u1} V _inst_1)
 Case conversion may be inaccurate. Consider using '#align simple_graph.chromatic_number_top SimpleGraph.chromaticNumber_topₓ'. -/
 @[simp]
 theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber = Fintype.card V :=
@@ -512,7 +512,7 @@ theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber 
 lean 3 declaration is
   forall (V : Type.{u1}) [_inst_1 : Infinite.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toHasTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
 but is expected to have type
-  forall (V : Type.{u1}) [_inst_1 : Infinite.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toTop.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V)))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
+  forall (V : Type.{u1}) [_inst_1 : Infinite.{succ u1} V], Eq.{1} Nat (SimpleGraph.chromaticNumber.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
 Case conversion may be inaccurate. Consider using '#align simple_graph.chromatic_number_top_eq_zero_of_infinite SimpleGraph.chromaticNumber_top_eq_zero_of_infiniteₓ'. -/
 theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
     (⊤ : SimpleGraph V).chromaticNumber = 0 :=
