@@ -27,11 +27,13 @@ section One
 
 variable [One α]
 
+#print Set.finite_one /-
 @[simp, to_additive]
 theorem finite_one : (1 : Set α).Finite :=
   finite_singleton _
 #align set.finite_one Set.finite_one
 #align set.finite_zero Set.finite_zero
+-/
 
 end One
 

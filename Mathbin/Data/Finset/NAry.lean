@@ -912,6 +912,12 @@ theorem image₂_right_identity {f : γ → β → γ} {b : β} (h : ∀ a, f a 
 
 variable [DecidableEq α] [DecidableEq β]
 
+/- warning: finset.image₂_inter_union_subset -> Finset.image₂_inter_union_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_9 : DecidableEq.{succ u1} α] [_inst_10 : DecidableEq.{succ u2} β] {f : α -> α -> β} {s : Finset.{u1} α} {t : Finset.{u1} α}, (forall (a : α) (b : α), Eq.{succ u2} β (f a b) (f b a)) -> (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) (Finset.image₂.{u1, u1, u2} α α β (fun (a : β) (b : β) => _inst_10 a b) f (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) s t) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) s t)) (Finset.image₂.{u1, u1, u2} α α β (fun (a : β) (b : β) => _inst_10 a b) f s t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_9 : DecidableEq.{succ u2} α] [_inst_10 : DecidableEq.{succ u1} β] {f : α -> α -> β} {s : Finset.{u2} α} {t : Finset.{u2} α}, (forall (a : α) (b : α), Eq.{succ u1} β (f a b) (f b a)) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (Finset.image₂.{u2, u2, u1} α α β (fun (a : β) (b : β) => _inst_10 a b) f (Inter.inter.{u2} (Finset.{u2} α) (Finset.instInterFinset.{u2} α (fun (a : α) (b : α) => _inst_9 a b)) s t) (Union.union.{u2} (Finset.{u2} α) (Finset.instUnionFinset.{u2} α (fun (a : α) (b : α) => _inst_9 a b)) s t)) (Finset.image₂.{u2, u2, u1} α α β (fun (a : β) (b : β) => _inst_10 a b) f s t))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_union_subset Finset.image₂_inter_union_subsetₓ'. -/
 theorem image₂_inter_union_subset {f : α → α → β} {s t : Finset α} (hf : ∀ a b, f a b = f b a) :
     image₂ f (s ∩ t) (s ∪ t) ⊆ image₂ f s t :=
   coe_subset.1 <| by
@@ -919,6 +925,12 @@ theorem image₂_inter_union_subset {f : α → α → β} {s t : Finset α} (hf
     exact image2_inter_union_subset hf
 #align finset.image₂_inter_union_subset Finset.image₂_inter_union_subset
 
+/- warning: finset.image₂_union_inter_subset -> Finset.image₂_union_inter_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_9 : DecidableEq.{succ u1} α] [_inst_10 : DecidableEq.{succ u2} β] {f : α -> α -> β} {s : Finset.{u1} α} {t : Finset.{u1} α}, (forall (a : α) (b : α), Eq.{succ u2} β (f a b) (f b a)) -> (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) (Finset.image₂.{u1, u1, u2} α α β (fun (a : β) (b : β) => _inst_10 a b) f (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) s t) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) s t)) (Finset.image₂.{u1, u1, u2} α α β (fun (a : β) (b : β) => _inst_10 a b) f s t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_9 : DecidableEq.{succ u2} α] [_inst_10 : DecidableEq.{succ u1} β] {f : α -> α -> β} {s : Finset.{u2} α} {t : Finset.{u2} α}, (forall (a : α) (b : α), Eq.{succ u1} β (f a b) (f b a)) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (Finset.image₂.{u2, u2, u1} α α β (fun (a : β) (b : β) => _inst_10 a b) f (Union.union.{u2} (Finset.{u2} α) (Finset.instUnionFinset.{u2} α (fun (a : α) (b : α) => _inst_9 a b)) s t) (Inter.inter.{u2} (Finset.{u2} α) (Finset.instInterFinset.{u2} α (fun (a : α) (b : α) => _inst_9 a b)) s t)) (Finset.image₂.{u2, u2, u1} α α β (fun (a : β) (b : β) => _inst_10 a b) f s t))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_union_inter_subset Finset.image₂_union_inter_subsetₓ'. -/
 theorem image₂_union_inter_subset {f : α → α → β} {s t : Finset α} (hf : ∀ a b, f a b = f b a) :
     image₂ f (s ∪ t) (s ∩ t) ⊆ image₂ f s t :=
   coe_subset.1 <| by
@@ -932,12 +944,24 @@ namespace Set
 
 variable [DecidableEq γ] {s : Set α} {t : Set β}
 
+/- warning: set.to_finset_image2 -> Set.toFinset_image2 is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} γ] (f : α -> β -> γ) (s : Set.{u1} α) (t : Set.{u2} β) [_inst_2 : Fintype.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)] [_inst_3 : Fintype.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)] [_inst_4 : Fintype.{u3} (coeSort.{succ u3, succ (succ u3)} (Set.{u3} γ) Type.{u3} (Set.hasCoeToSort.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t))], Eq.{succ u3} (Finset.{u3} γ) (Set.toFinset.{u3} γ (Set.image2.{u1, u2, u3} α β γ f s t) _inst_4) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_1 a b) f (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u2} β t _inst_3))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} γ] (f : α -> β -> γ) (s : Set.{u3} α) (t : Set.{u2} β) [_inst_2 : Fintype.{u3} (Set.Elem.{u3} α s)] [_inst_3 : Fintype.{u2} (Set.Elem.{u2} β t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} γ (Set.image2.{u3, u2, u1} α β γ f s t))], Eq.{succ u1} (Finset.{u1} γ) (Set.toFinset.{u1} γ (Set.image2.{u3, u2, u1} α β γ f s t) _inst_4) (Finset.image₂.{u3, u2, u1} α β γ (fun (a : γ) (b : γ) => _inst_1 a b) f (Set.toFinset.{u3} α s _inst_2) (Set.toFinset.{u2} β t _inst_3))
+Case conversion may be inaccurate. Consider using '#align set.to_finset_image2 Set.toFinset_image2ₓ'. -/
 @[simp]
 theorem toFinset_image2 (f : α → β → γ) (s : Set α) (t : Set β) [Fintype s] [Fintype t]
     [Fintype (image2 f s t)] : (image2 f s t).toFinset = Finset.image₂ f s.toFinset t.toFinset :=
   Finset.coe_injective <| by simp
 #align set.to_finset_image2 Set.toFinset_image2
 
+/- warning: set.finite.to_finset_image2 -> Set.Finite.toFinset_image2 is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} γ] {s : Set.{u1} α} {t : Set.{u2} β} (f : α -> β -> γ) (hs : Set.Finite.{u1} α s) (ht : Set.Finite.{u2} β t) (hf : optParam.{0} (Set.Finite.{u3} γ (Set.image2.{u1, u2, u3} α β γ f s t)) (Set.Finite.image2.{u1, u2, u3} α β γ f s t hs ht)), Eq.{succ u3} (Finset.{u3} γ) (Set.Finite.toFinset.{u3} γ (Set.image2.{u1, u2, u3} α β γ f s t) hf) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_1 a b) f (Set.Finite.toFinset.{u1} α s hs) (Set.Finite.toFinset.{u2} β t ht))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} γ] {s : Set.{u3} α} {t : Set.{u2} β} (f : α -> β -> γ) (hs : Set.Finite.{u3} α s) (ht : Set.Finite.{u2} β t) (hf : optParam.{0} (Set.Finite.{u1} γ (Set.image2.{u3, u2, u1} α β γ f s t)) (Set.Finite.image2.{u3, u2, u1} α β γ f s t hs ht)), Eq.{succ u1} (Finset.{u1} γ) (Set.Finite.toFinset.{u1} γ (Set.image2.{u3, u2, u1} α β γ f s t) hf) (Finset.image₂.{u3, u2, u1} α β γ (fun (a : γ) (b : γ) => _inst_1 a b) f (Set.Finite.toFinset.{u3} α s hs) (Set.Finite.toFinset.{u2} β t ht))
+Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_image2 Set.Finite.toFinset_image2ₓ'. -/
 theorem Finite.toFinset_image2 (f : α → β → γ) (hs : s.Finite) (ht : t.Finite)
     (hf := hs.image2 f ht) : hf.toFinset = Finset.image₂ f hs.toFinset ht.toFinset :=
   Finset.coe_injective <| by simp
