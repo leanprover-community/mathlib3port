@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ce86f4e05e9a9b8da5e316b22c76ce76440c56a1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -390,6 +390,42 @@ theorem WithSeminorms.separating_iff_t1 (hp : WithSeminorms p) :
 #align with_seminorms.separating_iff_t1 WithSeminorms.separating_iff_t1
 
 end Topology
+
+section Tendsto
+
+variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [Nonempty ι] [TopologicalSpace E]
+
+variable {p : SeminormFamily 𝕜 E ι}
+
+/-- Convergence along filters for `with_seminorms`.
+
+Variant with `finset.sup`. -/
+theorem WithSeminorms.tendsto_nhds' (hp : WithSeminorms p) (u : F → E) {f : Filter F} (y₀ : E) :
+    Filter.Tendsto u f (𝓝 y₀) ↔ ∀ (s : Finset ι) (ε), 0 < ε → ∀ᶠ x in f, s.sup p (u x - y₀) < ε :=
+  by simp [hp.has_basis_ball.tendsto_right_iff]
+#align with_seminorms.tendsto_nhds' WithSeminorms.tendsto_nhds'
+
+/-- Convergence along filters for `with_seminorms`. -/
+theorem WithSeminorms.tendsto_nhds (hp : WithSeminorms p) (u : F → E) {f : Filter F} (y₀ : E) :
+    Filter.Tendsto u f (𝓝 y₀) ↔ ∀ i ε, 0 < ε → ∀ᶠ x in f, p i (u x - y₀) < ε :=
+  by
+  rw [hp.tendsto_nhds' u y₀]
+  exact
+    ⟨fun h i => by simpa only [Finset.sup_singleton] using h {i}, fun h s ε hε =>
+      (s.eventually_all.2 fun i _ => h i ε hε).mono fun _ => finset_sup_apply_lt hε⟩
+#align with_seminorms.tendsto_nhds WithSeminorms.tendsto_nhds
+
+variable [SemilatticeSup F] [Nonempty F]
+
+/-- Limit `→ ∞` for `with_seminorms`. -/
+theorem WithSeminorms.tendsto_nhds_atTop (hp : WithSeminorms p) (u : F → E) (y₀ : E) :
+    Filter.Tendsto u Filter.atTop (𝓝 y₀) ↔ ∀ i ε, 0 < ε → ∃ x₀, ∀ x, x₀ ≤ x → p i (u x - y₀) < ε :=
+  by
+  rw [hp.tendsto_nhds u y₀]
+  exact forall₃_congr fun _ _ _ => Filter.eventually_atTop
+#align with_seminorms.tendsto_nhds_at_top WithSeminorms.tendsto_nhds_atTop
+
+end Tendsto
 
 section TopologicalAddGroup
 

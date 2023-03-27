@@ -137,7 +137,7 @@ theorem map_zero (hf : IsRingHom f) : f 0 = 0 :=
 
 /- warning: is_ring_hom.map_neg -> IsRingHom.map_neg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β} {x : α}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{succ u2} β (f (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) x)) (Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))))) (f x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β} {x : α}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{succ u2} β (f (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1))))) x)) (Neg.neg.{u2} β (SubNegMonoid.toHasNeg.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (AddCommGroupWithOne.toAddGroupWithOne.{u2} β (Ring.toAddCommGroupWithOne.{u2} β _inst_2))))) (f x)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β} {x : α}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{succ u2} β (f (Neg.neg.{u1} α (Ring.toNeg.{u1} α _inst_1) x)) (Neg.neg.{u2} β (Ring.toNeg.{u2} β _inst_2) (f x)))
 Case conversion may be inaccurate. Consider using '#align is_ring_hom.map_neg IsRingHom.map_negₓ'. -/
@@ -151,7 +151,7 @@ theorem map_neg (hf : IsRingHom f) : f (-x) = -f x :=
 
 /- warning: is_ring_hom.map_sub -> IsRingHom.map_sub is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β} {x : α} {y : α}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{succ u2} β (f (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))) x y)) (HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2)))))) (f x) (f y)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β} {x : α} {y : α}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{succ u2} β (f (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1)))))) x y)) (HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (AddGroupWithOne.toAddGroup.{u2} β (AddCommGroupWithOne.toAddGroupWithOne.{u2} β (Ring.toAddCommGroupWithOne.{u2} β _inst_2)))))) (f x) (f y)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β} {x : α} {y : α}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (Eq.{succ u2} β (f (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α _inst_1)) x y)) (HSub.hSub.{u2, u2, u2} β β β (instHSub.{u2} β (Ring.toSub.{u2} β _inst_2)) (f x) (f y)))
 Case conversion may be inaccurate. Consider using '#align is_ring_hom.map_sub IsRingHom.map_subₓ'. -/
@@ -189,7 +189,7 @@ theorem to_isSemiringHom (hf : IsRingHom f) : IsSemiringHom f :=
 
 /- warning: is_ring_hom.to_is_add_group_hom -> IsRingHom.to_isAddGroupHom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (IsAddGroupHom.{u1, u2} α β (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (AddGroupWithOne.toAddGroup.{u2} β (NonAssocRing.toAddGroupWithOne.{u2} β (Ring.toNonAssocRing.{u2} β _inst_2))) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (IsAddGroupHom.{u1, u2} α β (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1))) (AddGroupWithOne.toAddGroup.{u2} β (AddCommGroupWithOne.toAddGroupWithOne.{u2} β (Ring.toAddCommGroupWithOne.{u2} β _inst_2))) f)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : Ring.{u2} β] {f : α -> β}, (IsRingHom.{u1, u2} α β _inst_1 _inst_2 f) -> (IsAddGroupHom.{u1, u2} α β (AddGroupWithOne.toAddGroup.{u1} α (Ring.toAddGroupWithOne.{u1} α _inst_1)) (AddGroupWithOne.toAddGroup.{u2} β (Ring.toAddGroupWithOne.{u2} β _inst_2)) f)
 Case conversion may be inaccurate. Consider using '#align is_ring_hom.to_is_add_group_hom IsRingHom.to_isAddGroupHomₓ'. -/

@@ -55,7 +55,7 @@ add_decl_doc total_positive_cone.to_total_positive_cone
 
 /- warning: ring.positive_cone.one_pos -> Ring.PositiveCone.one_pos is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : Nontrivial.{u1} α] (C : Ring.PositiveCone.{u1} α _inst_1), Ring.PositiveCone.Pos.{u1} α _inst_1 C (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))))
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : Nontrivial.{u1} α] (C : Ring.PositiveCone.{u1} α _inst_1), Ring.PositiveCone.Pos.{u1} α _inst_1 C (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1)))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : Nontrivial.{u1} α] (C : Ring.PositiveCone.{u1} α _inst_1), AddCommGroup.PositiveCone.pos.{u1} α (Ring.toAddCommGroup.{u1} α _inst_1) (Ring.PositiveCone.toPositiveCone.{u1} α _inst_1 C) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align ring.positive_cone.one_pos Ring.PositiveCone.one_posₓ'. -/

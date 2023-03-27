@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 88b8a77d63a702923d9bee05e9e454ebc22aa766
+! leanprover-community/mathlib commit e8da5f215e815d9ed3455f0216ef52b53e05438a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,12 +239,6 @@ theorem isOpen_interᵢ [Finite ι] {s : ι → Set α} (h : ∀ i, IsOpen (s i)
 #align is_open_Inter isOpen_interᵢ
 -/
 
-#print isOpen_interᵢ_prop /-
-theorem isOpen_interᵢ_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsOpen (s h)) :
-    IsOpen (interᵢ s) := by by_cases p <;> simp [*]
-#align is_open_Inter_prop isOpen_interᵢ_prop
--/
-
 #print isOpen_binterᵢ_finset /-
 theorem isOpen_binterᵢ_finset {s : Finset β} {f : β → Set α} (h : ∀ i ∈ s, IsOpen (f i)) :
     IsOpen (⋂ i ∈ s, f i) :=
@@ -400,22 +394,13 @@ theorem isClosed_bunionᵢ {s : Set β} {f : β → Set α} (hs : s.Finite) :
 #align is_closed_bUnion isClosed_bunionᵢ
 -/
 
-/- warning: is_closed_Union -> isClosed_unionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Finite.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (i : β), IsClosed.{u1} α _inst_1 (s i)) -> (IsClosed.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (i : β) => s i)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Sort.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Finite.{u2} β] {s : β -> (Set.{u1} α)}, (forall (i : β), IsClosed.{u1} α _inst_1 (s i)) -> (IsClosed.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α β (fun (i : β) => s i)))
-Case conversion may be inaccurate. Consider using '#align is_closed_Union isClosed_unionᵢₓ'. -/
-theorem isClosed_unionᵢ [Finite β] {s : β → Set α} (h : ∀ i, IsClosed (s i)) :
+#print isClosed_unionᵢ /-
+theorem isClosed_unionᵢ [Finite ι] {s : ι → Set α} (h : ∀ i, IsClosed (s i)) :
     IsClosed (⋃ i, s i) :=
-  suffices IsClosed (⋃ (i : β) (hi : i ∈ @univ β), s i) by convert this <;> simp [Set.ext_iff]
-  isClosed_bunionᵢ finite_univ fun i _ => h i
+  by
+  simp only [← isOpen_compl_iff, compl_Union] at *
+  exact isOpen_interᵢ h
 #align is_closed_Union isClosed_unionᵢ
-
-#print isClosed_unionᵢ_prop /-
-theorem isClosed_unionᵢ_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsClosed (s h)) :
-    IsClosed (unionᵢ s) := by by_cases p <;> simp [*]
-#align is_closed_Union_prop isClosed_unionᵢ_prop
 -/
 
 #print isClosed_imp /-

@@ -3,14 +3,14 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
-! This file was ported from Lean 3 source module data.set.pairwise
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! This file was ported from Lean 3 source module data.set.pairwise.basic
+! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Set.Function
 import Mathbin.Logic.Relation
 import Mathbin.Logic.Pairwise
-import Mathbin.Data.Set.Lattice
 
 /-!
 # Relations holding pairwise
@@ -21,7 +21,7 @@ import Mathbin.Data.Set.Lattice
 This file develops pairwise relations and defines pairwise disjoint indexed sets.
 
 We also prove many basic facts about `pairwise`. It is possible that an intermediate file,
-with more imports than `logic.pairwise` but not importing `data.set.lattice` would be appropriate
+with more imports than `logic.pairwise` but not importing `data.set.function` would be appropriate
 to hold many of these basic facts.
 
 ## Main declarations
@@ -86,9 +86,6 @@ theorem pairwise_disjoint_mono [SemilatticeInf α] [OrderBot α] (hs : Pairwise 
   hs.mono fun i j hij => Disjoint.mono (h i) (h j) hij
 #align pairwise_disjoint.mono pairwise_disjoint_mono
 
-alias Function.injective_iff_pairwise_ne ↔ Function.Injective.pairwise_ne _
-#align function.injective.pairwise_ne Function.Injective.pairwise_ne
-
 namespace Set
 
 #print Set.Pairwise.mono /-
@@ -105,7 +102,7 @@ theorem Pairwise.mono' (H : r ≤ p) (hr : s.Pairwise r) : s.Pairwise p :=
 
 /- warning: set.pairwise_top -> Set.pairwise_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α), Set.Pairwise.{u1} α s (Top.top.{u1} (α -> α -> Prop) (Pi.hasTop.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasTop.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasTop.{0} Prop Prop.completeLattice))))
+  forall {α : Type.{u1}} (s : Set.{u1} α), Set.Pairwise.{u1} α s (Top.top.{u1} (α -> α -> Prop) (Pi.hasTop.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasTop.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => BooleanAlgebra.toHasTop.{0} Prop Prop.booleanAlgebra))))
 but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α), Set.Pairwise.{u1} α s (Top.top.{u1} (α -> α -> Prop) (Pi.instTopForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instTopForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toTop.{0} Prop Prop.completeLattice))))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_top Set.pairwise_topₓ'. -/
@@ -300,7 +297,7 @@ theorem pairwise_univ : (univ : Set α).Pairwise r ↔ Pairwise r := by
 
 /- warning: set.pairwise_bot_iff -> Set.pairwise_bot_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasBot.{0} Prop Prop.completeLattice))))) (Set.Subsingleton.{u1} α s)
+  forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => BooleanAlgebra.toHasBot.{0} Prop Prop.booleanAlgebra))))) (Set.Subsingleton.{u1} α s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.instBotForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instBotForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toBot.{0} Prop Prop.completeLattice))))) (Set.Subsingleton.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align set.pairwise_bot_iff Set.pairwise_bot_iffₓ'. -/
@@ -311,7 +308,7 @@ theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α
 
 /- warning: set.pairwise.subsingleton -> Set.Pairwise.subsingleton is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasBot.{0} Prop Prop.completeLattice))))) -> (Set.Subsingleton.{u1} α s)
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => BooleanAlgebra.toHasBot.{0} Prop Prop.booleanAlgebra))))) -> (Set.Subsingleton.{u1} α s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.instBotForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instBotForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toBot.{0} Prop Prop.completeLattice))))) -> (Set.Subsingleton.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align set.pairwise.subsingleton Set.Pairwise.subsingletonₓ'. -/
@@ -323,34 +320,6 @@ theorem InjOn.pairwise_image {s : Set ι} (h : s.InjOn f) :
     (f '' s).Pairwise r ↔ s.Pairwise (r on f) := by
   simp (config := { contextual := true }) [h.eq_iff, Set.Pairwise]
 #align set.inj_on.pairwise_image Set.InjOn.pairwise_image
--/
-
-/- warning: set.pairwise_Union -> Set.pairwise_unionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {r : α -> α -> Prop} {f : ι -> (Set.{u1} α)}, (Directed.{u1, succ u2} (Set.{u1} α) ι (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) f) -> (Iff (Set.Pairwise.{u1} α (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => f n)) r) (forall (n : ι), Set.Pairwise.{u1} α (f n) r))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {r : α -> α -> Prop} {f : ι -> (Set.{u2} α)}, (Directed.{u2, succ u1} (Set.{u2} α) ι (fun (x._@.Mathlib.Data.Set.Pairwise._hyg.2714 : Set.{u2} α) (x._@.Mathlib.Data.Set.Pairwise._hyg.2716 : Set.{u2} α) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Data.Set.Pairwise._hyg.2714 x._@.Mathlib.Data.Set.Pairwise._hyg.2716) f) -> (Iff (Set.Pairwise.{u2} α (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => f n)) r) (forall (n : ι), Set.Pairwise.{u2} α (f n) r))
-Case conversion may be inaccurate. Consider using '#align set.pairwise_Union Set.pairwise_unionᵢₓ'. -/
-theorem pairwise_unionᵢ {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
-    (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r :=
-  by
-  constructor
-  · intro H n
-    exact Pairwise.mono (subset_Union _ _) H
-  · intro H i hi j hj hij
-    rcases mem_Union.1 hi with ⟨m, hm⟩
-    rcases mem_Union.1 hj with ⟨n, hn⟩
-    rcases h m n with ⟨p, mp, np⟩
-    exact H p (mp hm) (np hn) hij
-#align set.pairwise_Union Set.pairwise_unionᵢ
-
-#print Set.pairwise_unionₛ /-
-theorem pairwise_unionₛ {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
-    (⋃₀ s).Pairwise r ↔ ∀ a ∈ s, Set.Pairwise a r :=
-  by
-  rw [sUnion_eq_Union, pairwise_Union h.directed_coe, SetCoe.forall]
-  rfl
-#align set.pairwise_sUnion Set.pairwise_unionₛ
 -/
 
 end Set
@@ -532,24 +501,6 @@ theorem PairwiseDisjoint.union (hs : s.PairwiseDisjoint f) (ht : t.PairwiseDisjo
   pairwiseDisjoint_union.2 ⟨hs, ht, h⟩
 #align set.pairwise_disjoint.union Set.PairwiseDisjoint.union
 
-/- warning: set.pairwise_disjoint_Union -> Set.pairwiseDisjoint_unionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> (Set.{u2} ι)}, (Directed.{u2, succ u3} (Set.{u2} ι) ι' (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι)) g) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.unionᵢ.{u2, succ u3} ι ι' (fun (n : ι') => g n)) f) (forall {{n : ι'}}, Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (g n) f))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u3}} {ι' : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> (Set.{u3} ι)}, (Directed.{u3, succ u2} (Set.{u3} ι) ι' (fun (x._@.Mathlib.Data.Set.Pairwise._hyg.4274 : Set.{u3} ι) (x._@.Mathlib.Data.Set.Pairwise._hyg.4276 : Set.{u3} ι) => HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet.{u3} ι) x._@.Mathlib.Data.Set.Pairwise._hyg.4274 x._@.Mathlib.Data.Set.Pairwise._hyg.4276) g) -> (Iff (Set.PairwiseDisjoint.{u1, u3} α ι _inst_1 _inst_2 (Set.unionᵢ.{u3, succ u2} ι ι' (fun (n : ι') => g n)) f) (forall {{n : ι'}}, Set.PairwiseDisjoint.{u1, u3} α ι _inst_1 _inst_2 (g n) f))
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_Union Set.pairwiseDisjoint_unionᵢₓ'. -/
-theorem pairwiseDisjoint_unionᵢ {g : ι' → Set ι} (h : Directed (· ⊆ ·) g) :
-    (⋃ n, g n).PairwiseDisjoint f ↔ ∀ ⦃n⦄, (g n).PairwiseDisjoint f :=
-  pairwise_unionᵢ h
-#align set.pairwise_disjoint_Union Set.pairwiseDisjoint_unionᵢ
-
-#print Set.pairwiseDisjoint_unionₛ /-
-theorem pairwiseDisjoint_unionₛ {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) s) :
-    (⋃₀ s).PairwiseDisjoint f ↔ ∀ ⦃a⦄, a ∈ s → Set.PairwiseDisjoint a f :=
-  pairwise_unionₛ h
-#align set.pairwise_disjoint_sUnion Set.pairwiseDisjoint_unionₛ
--/
-
 /- warning: set.pairwise_disjoint.elim -> Set.PairwiseDisjoint.elim is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Not (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Eq.{succ u2} ι i j))
@@ -593,39 +544,12 @@ theorem PairwiseDisjoint.eq_of_le (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i
 
 end SemilatticeInfBot
 
-section CompleteLattice
-
-variable [CompleteLattice α]
-
-/- warning: set.pairwise_disjoint.bUnion -> Set.PairwiseDisjoint.bunionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u3} ι'} {g : ι' -> (Set.{u2} ι)} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u3} α ι' (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) s (fun (i' : ι') => supᵢ.{u1, succ u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => supᵢ.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i (g i')) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i (g i')) => f i)))) -> (forall (i : ι'), (Membership.Mem.{u3, u3} ι' (Set.{u3} ι') (Set.hasMem.{u3} ι') i s) -> (Set.PairwiseDisjoint.{u1, u2} α ι (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (g i) f)) -> (Set.PairwiseDisjoint.{u1, u2} α ι (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (Set.unionᵢ.{u2, succ u3} ι ι' (fun (i : ι') => Set.unionᵢ.{u2, 0} ι (Membership.Mem.{u3, u3} ι' (Set.{u3} ι') (Set.hasMem.{u3} ι') i s) (fun (H : Membership.Mem.{u3, u3} ι' (Set.{u3} ι') (Set.hasMem.{u3} ι') i s) => g i))) f)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u3} ι'} {g : ι' -> (Set.{u2} ι)} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u3} α ι' (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) s (fun (i' : ι') => supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i (g i')) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i (g i')) => f i)))) -> (forall (i : ι'), (Membership.mem.{u3, u3} ι' (Set.{u3} ι') (Set.instMembershipSet.{u3} ι') i s) -> (Set.PairwiseDisjoint.{u1, u2} α ι (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (g i) f)) -> (Set.PairwiseDisjoint.{u1, u2} α ι (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (Set.unionᵢ.{u2, succ u3} ι ι' (fun (i : ι') => Set.unionᵢ.{u2, 0} ι (Membership.mem.{u3, u3} ι' (Set.{u3} ι') (Set.instMembershipSet.{u3} ι') i s) (fun (H : Membership.mem.{u3, u3} ι' (Set.{u3} ι') (Set.instMembershipSet.{u3} ι') i s) => g i))) f)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.bunionᵢₓ'. -/
-/-- Bind operation for `set.pairwise_disjoint`. If you want to only consider finsets of indices, you
-can use `set.pairwise_disjoint.bUnion_finset`. -/
-theorem PairwiseDisjoint.bunionᵢ {s : Set ι'} {g : ι' → Set ι} {f : ι → α}
-    (hs : s.PairwiseDisjoint fun i' : ι' => ⨆ i ∈ g i', f i)
-    (hg : ∀ i ∈ s, (g i).PairwiseDisjoint f) : (⋃ i ∈ s, g i).PairwiseDisjoint f :=
-  by
-  rintro a ha b hb hab
-  simp_rw [Set.mem_unionᵢ] at ha hb
-  obtain ⟨c, hc, ha⟩ := ha
-  obtain ⟨d, hd, hb⟩ := hb
-  obtain hcd | hcd := eq_or_ne (g c) (g d)
-  · exact hg d hd (hcd.subst ha) hb hab
-  · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_supᵢ₂ a ha) (le_supᵢ₂ b hb)
-#align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.bunionᵢ
-
-end CompleteLattice
-
 /-! ### Pairwise disjoint set of sets -/
 
 
 /- warning: set.pairwise_disjoint_range_singleton -> Set.pairwiseDisjoint_range_singleton is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}}, Set.PairwiseDisjoint.{u1, u1} (Set.{u1} ι) (Set.{u1} ι) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.completeBooleanAlgebra.{u1} ι)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι))) (Set.range.{u1, succ u1} (Set.{u1} ι) ι (Singleton.singleton.{u1, u1} ι (Set.{u1} ι) (Set.hasSingleton.{u1} ι))) (id.{succ u1} (Set.{u1} ι))
+  forall {ι : Type.{u1}}, Set.PairwiseDisjoint.{u1, u1} (Set.{u1} ι) (Set.{u1} ι) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (Lattice.toSemilatticeInf.{u1} (Set.{u1} ι) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} ι) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι))) (Set.range.{u1, succ u1} (Set.{u1} ι) ι (Singleton.singleton.{u1, u1} ι (Set.{u1} ι) (Set.hasSingleton.{u1} ι))) (id.{succ u1} (Set.{u1} ι))
 but is expected to have type
   forall {ι : Type.{u1}}, Set.PairwiseDisjoint.{u1, u1} (Set.{u1} ι) (Set.{u1} ι) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} ι) (Preorder.toLE.{u1} (Set.{u1} ι) (PartialOrder.toPreorder.{u1} (Set.{u1} ι) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))) (Set.range.{u1, succ u1} (Set.{u1} ι) ι (Singleton.singleton.{u1, u1} ι (Set.{u1} ι) (Set.instSingletonSet.{u1} ι))) (id.{succ u1} (Set.{u1} ι))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_range_singleton Set.pairwiseDisjoint_range_singletonₓ'. -/
@@ -638,7 +562,7 @@ theorem pairwiseDisjoint_range_singleton :
 
 /- warning: set.pairwise_disjoint_fiber -> Set.pairwiseDisjoint_fiber is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} (f : ι -> α) (s : Set.{u1} α), Set.PairwiseDisjoint.{u2, u1} (Set.{u2} ι) α (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} ι) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} ι) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} ι) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} ι) (Set.completeBooleanAlgebra.{u2} ι)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι))) s (fun (a : α) => Set.preimage.{u2, u1} ι α f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
+  forall {α : Type.{u1}} {ι : Type.{u2}} (f : ι -> α) (s : Set.{u1} α), Set.PairwiseDisjoint.{u2, u1} (Set.{u2} ι) α (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} ι) (Lattice.toSemilatticeInf.{u2} (Set.{u2} ι) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} ι) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι))) s (fun (a : α) => Set.preimage.{u2, u1} ι α f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} (f : ι -> α) (s : Set.{u2} α), Set.PairwiseDisjoint.{u1, u2} (Set.{u1} ι) α (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} ι) (Preorder.toLE.{u1} (Set.{u1} ι) (PartialOrder.toPreorder.{u1} (Set.{u1} ι) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))) s (fun (a : α) => Set.preimage.{u1, u2} ι α f (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_fiber Set.pairwiseDisjoint_fiberₓ'. -/
@@ -648,7 +572,7 @@ theorem pairwiseDisjoint_fiber (f : ι → α) (s : Set α) : s.PairwiseDisjoint
 
 /- warning: set.pairwise_disjoint.elim_set -> Set.PairwiseDisjoint.elim_set is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (f i)) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (f j)) -> (Eq.{succ u2} ι i j)))
+  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (f i)) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (f j)) -> (Eq.{succ u2} ι i j)))
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s f) -> (forall {i : ι} {j : ι}, (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) j s) -> (forall (a : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (f i)) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (f j)) -> (Eq.{succ u2} ι i j)))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.elim_set Set.PairwiseDisjoint.elim_setₓ'. -/
@@ -658,38 +582,9 @@ theorem PairwiseDisjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.Pairw
   hs.elim hi hj <| not_disjoint_iff.2 ⟨a, hai, haj⟩
 #align set.pairwise_disjoint.elim_set Set.PairwiseDisjoint.elim_set
 
-/- warning: set.bUnion_diff_bUnion_eq -> Set.bunionᵢ_diff_bunionᵢ_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Union.union.{u2} (Set.{u2} ι) (Set.hasUnion.{u2} ι) s t) f) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) => f i)))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i (SDiff.sdiff.{u2} (Set.{u2} ι) (BooleanAlgebra.toHasSdiff.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι)) s t)) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i (SDiff.sdiff.{u2} (Set.{u2} ι) (BooleanAlgebra.toHasSdiff.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι)) s t)) => f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Union.union.{u2} (Set.{u2} ι) (Set.instUnionSet.{u2} ι) s t) f) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) => f i)))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i (SDiff.sdiff.{u2} (Set.{u2} ι) (Set.instSDiffSet.{u2} ι) s t)) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i (SDiff.sdiff.{u2} (Set.{u2} ι) (Set.instSDiffSet.{u2} ι) s t)) => f i))))
-Case conversion may be inaccurate. Consider using '#align set.bUnion_diff_bUnion_eq Set.bunionᵢ_diff_bunionᵢ_eqₓ'. -/
-theorem bunionᵢ_diff_bunionᵢ_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :
-    ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i :=
-  by
-  refine'
-    (bUnion_diff_bUnion_subset f s t).antisymm
-      (Union₂_subset fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
-  rw [mem_Union₂]; rintro ⟨j, hj, haj⟩
-  exact (h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm).le_bot ⟨ha, haj⟩
-#align set.bUnion_diff_bUnion_eq Set.bunionᵢ_diff_bunionᵢ_eq
-
-/- warning: set.bUnion_eq_sigma_of_disjoint -> Set.bunionᵢEqSigmaOfDisjoint is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s f) -> (Equiv.{succ u1, max (succ u2) (succ u1)} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i)))) (Sigma.{u2, u1} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) (fun (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) => coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) x s))))) i)))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s f) -> (Equiv.{succ u1, max (succ u1) (succ u2)} (Set.Elem.{u1} α (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i)))) (Sigma.{u2, u1} (Set.Elem.{u2} ι s) (fun (i : Set.Elem.{u2} ι s) => Set.Elem.{u1} α (f (Subtype.val.{succ u2} ι (fun (x : ι) => Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) x s) i)))))
-Case conversion may be inaccurate. Consider using '#align set.bUnion_eq_sigma_of_disjoint Set.bunionᵢEqSigmaOfDisjointₓ'. -/
-/-- Equivalence between a disjoint bounded union and a dependent sum. -/
-noncomputable def bunionᵢEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
-    (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
-  (Equiv.setCongr (bunionᵢ_eq_unionᵢ _ _)).trans <|
-    unionEqSigmaOfDisjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => Ne <| Subtype.eq Eq
-#align set.bUnion_eq_sigma_of_disjoint Set.bunionᵢEqSigmaOfDisjoint
-
 /- warning: set.pairwise_disjoint_image_right_iff -> Set.pairwiseDisjoint_image_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β}, (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Function.Injective.{succ u2, succ u3} β γ (f a))) -> (Iff (Set.PairwiseDisjoint.{u3, u1} (Set.{u3} γ) α (CompleteSemilatticeInf.toPartialOrder.{u3} (Set.{u3} γ) (CompleteLattice.toCompleteSemilatticeInf.{u3} (Set.{u3} γ) (Order.Coframe.toCompleteLattice.{u3} (Set.{u3} γ) (CompleteDistribLattice.toCoframe.{u3} (Set.{u3} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u3} (Set.{u3} γ) (Set.completeBooleanAlgebra.{u3} γ)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u3} (Set.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ))) s (fun (a : α) => Set.image.{u2, u3} β γ (f a) t)) (Set.InjOn.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)) (Set.prod.{u1, u2} α β s t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β}, (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Function.Injective.{succ u2, succ u3} β γ (f a))) -> (Iff (Set.PairwiseDisjoint.{u3, u1} (Set.{u3} γ) α (SemilatticeInf.toPartialOrder.{u3} (Set.{u3} γ) (Lattice.toSemilatticeInf.{u3} (Set.{u3} γ) (GeneralizedCoheytingAlgebra.toLattice.{u3} (Set.{u3} γ) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u3} (Set.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u3} (Set.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ))) s (fun (a : α) => Set.image.{u2, u3} β γ (f a) t)) (Set.InjOn.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)) (Set.prod.{u1, u2} α β s t)))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {s : Set.{u3} α} {t : Set.{u2} β}, (forall (a : α), (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) a s) -> (Function.Injective.{succ u2, succ u1} β γ (f a))) -> (Iff (Set.PairwiseDisjoint.{u1, u3} (Set.{u1} γ) α (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} γ) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} γ) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} γ) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} γ) (Set.instCompleteBooleanAlgebraSet.{u1} γ)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} γ) (Preorder.toLE.{u1} (Set.{u1} γ) (PartialOrder.toPreorder.{u1} (Set.{u1} γ) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} γ) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} γ) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} γ) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} γ) (Set.instCompleteBooleanAlgebraSet.{u1} γ)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} γ) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} γ) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} γ) (Set.instCompleteBooleanAlgebraSet.{u1} γ)))))) s (fun (a : α) => Set.image.{u2, u1} β γ (f a) t)) (Set.InjOn.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)) (Set.prod.{u3, u2} α β s t)))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_image_right_iff Set.pairwiseDisjoint_image_right_iffₓ'. -/
@@ -712,7 +607,7 @@ theorem pairwiseDisjoint_image_right_iff {f : α → β → γ} {s : Set α} {t 
 
 /- warning: set.pairwise_disjoint_image_left_iff -> Set.pairwiseDisjoint_image_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β}, (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b t) -> (Function.Injective.{succ u1, succ u3} α γ (fun (a : α) => f a b))) -> (Iff (Set.PairwiseDisjoint.{u3, u2} (Set.{u3} γ) β (CompleteSemilatticeInf.toPartialOrder.{u3} (Set.{u3} γ) (CompleteLattice.toCompleteSemilatticeInf.{u3} (Set.{u3} γ) (Order.Coframe.toCompleteLattice.{u3} (Set.{u3} γ) (CompleteDistribLattice.toCoframe.{u3} (Set.{u3} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u3} (Set.{u3} γ) (Set.completeBooleanAlgebra.{u3} γ)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u3} (Set.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ))) t (fun (b : β) => Set.image.{u1, u3} α γ (fun (a : α) => f a b) s)) (Set.InjOn.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)) (Set.prod.{u1, u2} α β s t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β}, (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b t) -> (Function.Injective.{succ u1, succ u3} α γ (fun (a : α) => f a b))) -> (Iff (Set.PairwiseDisjoint.{u3, u2} (Set.{u3} γ) β (SemilatticeInf.toPartialOrder.{u3} (Set.{u3} γ) (Lattice.toSemilatticeInf.{u3} (Set.{u3} γ) (GeneralizedCoheytingAlgebra.toLattice.{u3} (Set.{u3} γ) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u3} (Set.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u3} (Set.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (Set.{u3} γ) (Set.booleanAlgebra.{u3} γ))) t (fun (b : β) => Set.image.{u1, u3} α γ (fun (a : α) => f a b) s)) (Set.InjOn.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)) (Set.prod.{u1, u2} α β s t)))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {s : Set.{u3} α} {t : Set.{u2} β}, (forall (b : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b t) -> (Function.Injective.{succ u3, succ u1} α γ (fun (a : α) => f a b))) -> (Iff (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} γ) β (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} γ) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} γ) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} γ) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} γ) (Set.instCompleteBooleanAlgebraSet.{u1} γ)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} γ) (Preorder.toLE.{u1} (Set.{u1} γ) (PartialOrder.toPreorder.{u1} (Set.{u1} γ) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} γ) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} γ) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} γ) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} γ) (Set.instCompleteBooleanAlgebraSet.{u1} γ)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} γ) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} γ) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} γ) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} γ) (Set.instCompleteBooleanAlgebraSet.{u1} γ)))))) t (fun (b : β) => Set.image.{u3, u1} α γ (fun (a : α) => f a b) s)) (Set.InjOn.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)) (Set.prod.{u3, u2} α β s t)))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_image_left_iff Set.pairwiseDisjoint_image_left_iffₓ'. -/
@@ -737,56 +632,11 @@ end Set
 
 /- warning: pairwise_disjoint_fiber -> pairwise_disjoint_fiber is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} (f : ι -> α), Pairwise.{u1} α (Function.onFun.{succ u1, succ u2, 1} α (Set.{u2} ι) Prop (Disjoint.{u2} (Set.{u2} ι) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} ι) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} ι) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} ι) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} ι) (Set.completeBooleanAlgebra.{u2} ι)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι)))) (fun (a : α) => Set.preimage.{u2, u1} ι α f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
+  forall {α : Type.{u1}} {ι : Type.{u2}} (f : ι -> α), Pairwise.{u1} α (Function.onFun.{succ u1, succ u2, 1} α (Set.{u2} ι) Prop (Disjoint.{u2} (Set.{u2} ι) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} ι) (Lattice.toSemilatticeInf.{u2} (Set.{u2} ι) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} ι) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} ι) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} ι) (Set.booleanAlgebra.{u2} ι)))) (fun (a : α) => Set.preimage.{u2, u1} ι α f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} (f : ι -> α), Pairwise.{u2} α (Function.onFun.{succ u2, succ u1, 1} α (Set.{u1} ι) Prop (Disjoint.{u1} (Set.{u1} ι) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} ι) (Preorder.toLE.{u1} (Set.{u1} ι) (PartialOrder.toPreorder.{u1} (Set.{u1} ι) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} ι) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} ι) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} ι) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} ι) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} ι) (Set.instCompleteBooleanAlgebraSet.{u1} ι))))))) (fun (a : α) => Set.preimage.{u1, u2} ι α f (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a)))
 Case conversion may be inaccurate. Consider using '#align pairwise_disjoint_fiber pairwise_disjoint_fiberₓ'. -/
 theorem pairwise_disjoint_fiber (f : ι → α) : Pairwise (Disjoint on fun a : α => f ⁻¹' {a}) :=
   Set.pairwise_univ.1 <| Set.pairwiseDisjoint_fiber f univ
 #align pairwise_disjoint_fiber pairwise_disjoint_fiber
-
-section
-
-variable {f : ι → Set α} {s t : Set ι}
-
-/- warning: set.pairwise_disjoint.subset_of_bUnion_subset_bUnion -> Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Set.{u1} α)} {s : Set.{u2} ι} {t : Set.{u2} ι}, (Set.PairwiseDisjoint.{u1, u2} (Set.{u1} α) ι (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Union.union.{u2} (Set.{u2} ι) (Set.hasUnion.{u2} ι) s t) f) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Set.Nonempty.{u1} α (f i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) => f i)))) -> (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) s t)
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {f : ι -> (Set.{u2} α)} {s : Set.{u1} ι} {t : Set.{u1} ι}, (Set.PairwiseDisjoint.{u2, u1} (Set.{u2} α) ι (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (Union.union.{u1} (Set.{u1} ι) (Set.instUnionSet.{u1} ι) s t) f) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (Set.Nonempty.{u2} α (f i))) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) => f i))) (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) => f i)))) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) s t)
-Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢₓ'. -/
-theorem Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ (h₀ : (s ∪ t).PairwiseDisjoint f)
-    (h₁ : ∀ i ∈ s, (f i).Nonempty) (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t :=
-  by
-  rintro i hi
-  obtain ⟨a, hai⟩ := h₁ i hi
-  obtain ⟨j, hj, haj⟩ := mem_Union₂.1 (h <| mem_Union₂_of_mem hi hai)
-  rwa [h₀.eq (subset_union_left _ _ hi) (subset_union_right _ _ hj)
-      (not_disjoint_iff.2 ⟨a, hai, haj⟩)]
-#align set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ
-
-/- warning: pairwise.subset_of_bUnion_subset_bUnion -> Pairwise.subset_of_bunionᵢ_subset_bunionᵢ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Set.{u1} α)} {s : Set.{u2} ι} {t : Set.{u2} ι}, (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))) f)) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Set.Nonempty.{u1} α (f i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) => f i)))) -> (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Set.{u1} α)} {s : Set.{u2} ι} {t : Set.{u2} ι}, (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) f)) -> (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Set.Nonempty.{u1} α (f i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i))) (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) => f i)))) -> (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.instHasSubsetSet.{u2} ι) s t)
-Case conversion may be inaccurate. Consider using '#align pairwise.subset_of_bUnion_subset_bUnion Pairwise.subset_of_bunionᵢ_subset_bunionᵢₓ'. -/
-theorem Pairwise.subset_of_bunionᵢ_subset_bunionᵢ (h₀ : Pairwise (Disjoint on f))
-    (h₁ : ∀ i ∈ s, (f i).Nonempty) (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t :=
-  Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ (h₀.set_pairwise _) h₁ h
-#align pairwise.subset_of_bUnion_subset_bUnion Pairwise.subset_of_bunionᵢ_subset_bunionᵢ
-
-/- warning: pairwise.bUnion_injective -> Pairwise.bunionᵢ_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Set.{u1} α)}, (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))) f)) -> (forall (i : ι), Set.Nonempty.{u1} α (f i)) -> (Function.Injective.{succ u2, succ u1} (Set.{u2} ι) (Set.{u1} α) (fun (s : Set.{u2} ι) => Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) => f i))))
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> (Set.{u1} α)}, (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) f)) -> (forall (i : ι), Set.Nonempty.{u1} α (f i)) -> (Function.Injective.{succ u2, succ u1} (Set.{u2} ι) (Set.{u1} α) (fun (s : Set.{u2} ι) => Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align pairwise.bUnion_injective Pairwise.bunionᵢ_injectiveₓ'. -/
-theorem Pairwise.bunionᵢ_injective (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i, (f i).Nonempty) :
-    Injective fun s : Set ι => ⋃ i ∈ s, f i := fun s t h =>
-  ((h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.Subset).antisymm <|
-    (h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.Superset
-#align pairwise.bUnion_injective Pairwise.bunionᵢ_injective
-
-end
 

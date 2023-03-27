@@ -695,7 +695,7 @@ theorem mul_add_right_right_iff {x y z : R} : IsCoprime x (z * x + y) ↔ IsCopr
 
 /- warning: is_coprime.neg_left -> IsCoprime.neg_left is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) y)
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) y)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) x) y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.neg_left IsCoprime.neg_leftₓ'. -/
@@ -708,7 +708,7 @@ theorem neg_left {x y : R} (h : IsCoprime x y) : IsCoprime (-x) y :=
 
 /- warning: is_coprime.neg_left_iff -> IsCoprime.neg_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) y) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) y) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) x) y) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.neg_left_iff IsCoprime.neg_left_iffₓ'. -/
@@ -718,7 +718,7 @@ theorem neg_left_iff (x y : R) : IsCoprime (-x) y ↔ IsCoprime x y :=
 
 /- warning: is_coprime.neg_right -> IsCoprime.neg_right is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y))
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) y))
 Case conversion may be inaccurate. Consider using '#align is_coprime.neg_right IsCoprime.neg_rightₓ'. -/
@@ -728,7 +728,7 @@ theorem neg_right {x y : R} (h : IsCoprime x y) : IsCoprime x (-y) :=
 
 /- warning: is_coprime.neg_right_iff -> IsCoprime.neg_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y)) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y)) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) y)) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.neg_right_iff IsCoprime.neg_right_iffₓ'. -/
@@ -738,7 +738,7 @@ theorem neg_right_iff (x y : R) : IsCoprime x (-y) ↔ IsCoprime x y :=
 
 /- warning: is_coprime.neg_neg -> IsCoprime.neg_neg is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y))
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) x) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) y))
 Case conversion may be inaccurate. Consider using '#align is_coprime.neg_neg IsCoprime.neg_negₓ'. -/
@@ -748,7 +748,7 @@ theorem neg_neg {x y : R} (h : IsCoprime x y) : IsCoprime (-x) (-y) :=
 
 /- warning: is_coprime.neg_neg_iff -> IsCoprime.neg_neg_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y)) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) x) (Neg.neg.{u1} R (SubNegMonoid.toHasNeg.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) y)) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (x : R) (y : R), Iff (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) x) (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) y)) (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.neg_neg_iff IsCoprime.neg_neg_iffₓ'. -/

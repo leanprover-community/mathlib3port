@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit 6c5f73fd6f6cc83122788a80a27cdd54663609f4
+! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,7 +17,7 @@ import Mathbin.Data.Finset.Sum
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Finset.Sigma
 import Mathbin.Data.Multiset.Powerset
-import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.Set.Pairwise.Basic
 
 /-!
 # Big operators
@@ -3253,7 +3253,7 @@ theorem cast_list_sum [AddGroupWithOne β] (s : List ℤ) : (↑s.Sum : β) = (s
 
 /- warning: int.cast_list_prod -> Int.cast_list_prod is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : Ring.{u1} β] (s : List.{0} Int), Eq.{succ u1} β ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int β (HasLiftT.mk.{1, succ u1} Int β (CoeTCₓ.coe.{1, succ u1} Int β (Int.castCoe.{u1} β (AddGroupWithOne.toHasIntCast.{u1} β (NonAssocRing.toAddGroupWithOne.{u1} β (Ring.toNonAssocRing.{u1} β _inst_1)))))) (List.prod.{0} Int Int.hasMul Int.hasOne s)) (List.prod.{u1} β (Distrib.toHasMul.{u1} β (Ring.toDistrib.{u1} β _inst_1)) (AddMonoidWithOne.toOne.{u1} β (AddGroupWithOne.toAddMonoidWithOne.{u1} β (NonAssocRing.toAddGroupWithOne.{u1} β (Ring.toNonAssocRing.{u1} β _inst_1)))) (List.map.{0, u1} Int β ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int β (HasLiftT.mk.{1, succ u1} Int β (CoeTCₓ.coe.{1, succ u1} Int β (Int.castCoe.{u1} β (AddGroupWithOne.toHasIntCast.{u1} β (NonAssocRing.toAddGroupWithOne.{u1} β (Ring.toNonAssocRing.{u1} β _inst_1))))))) s))
+  forall {β : Type.{u1}} [_inst_1 : Ring.{u1} β] (s : List.{0} Int), Eq.{succ u1} β ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int β (HasLiftT.mk.{1, succ u1} Int β (CoeTCₓ.coe.{1, succ u1} Int β (Int.castCoe.{u1} β (AddGroupWithOne.toHasIntCast.{u1} β (AddCommGroupWithOne.toAddGroupWithOne.{u1} β (Ring.toAddCommGroupWithOne.{u1} β _inst_1)))))) (List.prod.{0} Int Int.hasMul Int.hasOne s)) (List.prod.{u1} β (Distrib.toHasMul.{u1} β (Ring.toDistrib.{u1} β _inst_1)) (AddMonoidWithOne.toOne.{u1} β (AddGroupWithOne.toAddMonoidWithOne.{u1} β (AddCommGroupWithOne.toAddGroupWithOne.{u1} β (Ring.toAddCommGroupWithOne.{u1} β _inst_1)))) (List.map.{0, u1} Int β ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int β (HasLiftT.mk.{1, succ u1} Int β (CoeTCₓ.coe.{1, succ u1} Int β (Int.castCoe.{u1} β (AddGroupWithOne.toHasIntCast.{u1} β (AddCommGroupWithOne.toAddGroupWithOne.{u1} β (Ring.toAddCommGroupWithOne.{u1} β _inst_1))))))) s))
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : Ring.{u1} β] (s : List.{0} Int), Eq.{succ u1} β (Int.cast.{u1} β (Ring.toIntCast.{u1} β _inst_1) (List.prod.{0} Int Int.instMulInt (NonAssocRing.toOne.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) s)) (List.prod.{u1} β (NonUnitalNonAssocRing.toMul.{u1} β (NonAssocRing.toNonUnitalNonAssocRing.{u1} β (Ring.toNonAssocRing.{u1} β _inst_1))) (NonAssocRing.toOne.{u1} β (Ring.toNonAssocRing.{u1} β _inst_1)) (List.map.{0, u1} Int β (Int.cast.{u1} β (Ring.toIntCast.{u1} β _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align int.cast_list_prod Int.cast_list_prodₓ'. -/
@@ -3276,7 +3276,7 @@ theorem cast_multiset_sum [AddCommGroupWithOne β] (s : Multiset ℤ) :
 
 /- warning: int.cast_multiset_prod -> Int.cast_multiset_prod is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (s : Multiset.{0} Int), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (Multiset.prod.{0} Int Int.commMonoid s)) (Multiset.prod.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) (Multiset.map.{0, u1} Int R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))) s))
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (s : Multiset.{0} Int), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (Multiset.prod.{0} Int Int.commMonoid s)) (Multiset.prod.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) (Multiset.map.{0, u1} Int R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))) s))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (s : Multiset.{0} Int), Eq.{succ u1} R (Int.cast.{u1} R (Ring.toIntCast.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Multiset.prod.{0} Int Int.instCommMonoidInt s)) (Multiset.prod.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) (Multiset.map.{0, u1} Int R (Int.cast.{u1} R (Ring.toIntCast.{u1} R (CommRing.toRing.{u1} R _inst_1))) s))
 Case conversion may be inaccurate. Consider using '#align int.cast_multiset_prod Int.cast_multiset_prodₓ'. -/
@@ -3300,7 +3300,7 @@ theorem cast_sum [AddCommGroupWithOne β] (s : Finset α) (f : α → ℤ) :
 
 /- warning: int.cast_prod -> Int.cast_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] (f : α -> Int) (s : Finset.{u1} α), Eq.{succ u2} R ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int R (HasLiftT.mk.{1, succ u2} Int R (CoeTCₓ.coe.{1, succ u2} Int R (Int.castCoe.{u2} R (AddGroupWithOne.toHasIntCast.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))))) (Finset.prod.{0, u1} Int α Int.commMonoid s (fun (i : α) => f i))) (Finset.prod.{u2, u1} R α (CommRing.toCommMonoid.{u2} R _inst_1) s (fun (i : α) => (fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int R (HasLiftT.mk.{1, succ u2} Int R (CoeTCₓ.coe.{1, succ u2} Int R (Int.castCoe.{u2} R (AddGroupWithOne.toHasIntCast.{u2} R (NonAssocRing.toAddGroupWithOne.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_1))))))) (f i)))
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] (f : α -> Int) (s : Finset.{u1} α), Eq.{succ u2} R ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int R (HasLiftT.mk.{1, succ u2} Int R (CoeTCₓ.coe.{1, succ u2} Int R (Int.castCoe.{u2} R (AddGroupWithOne.toHasIntCast.{u2} R (AddCommGroupWithOne.toAddGroupWithOne.{u2} R (Ring.toAddCommGroupWithOne.{u2} R (CommRing.toRing.{u2} R _inst_1))))))) (Finset.prod.{0, u1} Int α Int.commMonoid s (fun (i : α) => f i))) (Finset.prod.{u2, u1} R α (CommRing.toCommMonoid.{u2} R _inst_1) s (fun (i : α) => (fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int R (HasLiftT.mk.{1, succ u2} Int R (CoeTCₓ.coe.{1, succ u2} Int R (Int.castCoe.{u2} R (AddGroupWithOne.toHasIntCast.{u2} R (AddCommGroupWithOne.toAddGroupWithOne.{u2} R (Ring.toAddCommGroupWithOne.{u2} R (CommRing.toRing.{u2} R _inst_1))))))) (f i)))
 but is expected to have type
   forall {α : Type.{u2}} {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (f : α -> Int) (s : Finset.{u2} α), Eq.{succ u1} R (Int.cast.{u1} R (Ring.toIntCast.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Finset.prod.{0, u2} Int α Int.instCommMonoidInt s (fun (i : α) => f i))) (Finset.prod.{u1, u2} R α (CommRing.toCommMonoid.{u1} R _inst_1) s (fun (i : α) => Int.cast.{u1} R (Ring.toIntCast.{u1} R (CommRing.toRing.{u1} R _inst_1)) (f i)))
 Case conversion may be inaccurate. Consider using '#align int.cast_prod Int.cast_prodₓ'. -/

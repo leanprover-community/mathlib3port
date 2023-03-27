@@ -32,7 +32,7 @@ variable {n : ℕ} (m : ℕ) [CharP R m]
 
 /- warning: zmod.algebra' -> ZMod.algebra' is a dubious translation:
 lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] {n : Nat} (m : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (Algebra.{0, u1} (ZMod n) R (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)) (Ring.toSemiring.{u1} R _inst_1))
+  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] {n : Nat} (m : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) m], (Dvd.Dvd.{0} Nat Nat.hasDvd m n) -> (Algebra.{0, u1} (ZMod n) R (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)) (Ring.toSemiring.{u1} R _inst_1))
 but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] {n : Nat} (m : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) m], (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (Algebra.{0, u1} (ZMod n) R (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n)) (Ring.toSemiring.{u1} R _inst_1))
 Case conversion may be inaccurate. Consider using '#align zmod.algebra' ZMod.algebra'ₓ'. -/

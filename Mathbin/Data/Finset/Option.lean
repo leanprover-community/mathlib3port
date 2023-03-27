@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Mario Carneiro, Sean Leather
 
 ! This file was ported from Lean 3 source module data.finset.option
-! leanprover-community/mathlib commit e04043d6bf7264a3c84bc69711dc354958ca4516
+! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Card
-import Mathbin.Order.Hom.Basic
 
 /-!
 # Finite sets in `option α`

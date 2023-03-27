@@ -171,10 +171,12 @@ theorem length_rotate (l : List α) (n : ℕ) : (l.rotate n).length = l.length :
 #align list.length_rotate List.length_rotate
 -/
 
+#print List.rotate_replicate /-
 theorem rotate_replicate (a : α) (n : ℕ) (k : ℕ) : (replicate n a).rotate k = replicate n a :=
   eq_replicate.2
     ⟨by rw [length_rotate, length_replicate], fun b hb => eq_of_mem_replicate <| mem_rotate.1 hb⟩
 #align list.rotate_replicate List.rotate_replicate
+-/
 
 #print List.rotate_eq_drop_append_take /-
 theorem rotate_eq_drop_append_take {l : List α} {n : ℕ} :
@@ -364,17 +366,22 @@ theorem nthLe_rotate' (l : List α) (n k : ℕ) (hk : k < l.length) :
 #align list.nth_le_rotate' List.nthLe_rotate'
 -/
 
+#print List.get?_rotate /-
 theorem get?_rotate {l : List α} {n m : ℕ} (hml : m < l.length) :
     (l.rotate n).get? m = l.get? ((m + n) % l.length) :=
   by
   rw [nth_le_nth, nth_le_nth (Nat.mod_lt _ _), nth_le_rotate]
   rwa [length_rotate]
 #align list.nth_rotate List.get?_rotate
+-/
 
+#print List.head?_rotate /-
 theorem head?_rotate {l : List α} {n : ℕ} (h : n < l.length) : head? (l.rotate n) = l.get? n := by
   rw [← nth_zero, nth_rotate (n.zero_le.trans_lt h), zero_add, Nat.mod_eq_of_lt h]
 #align list.head'_rotate List.head?_rotate
+-/
 
+#print List.rotate_eq_self_iff_eq_replicate /-
 theorem rotate_eq_self_iff_eq_replicate [hα : Nonempty α] :
     ∀ {l : List α}, (∀ n, l.rotate n = l) ↔ ∃ a, l = replicate l.length a
   | [] => by simp
@@ -387,7 +394,9 @@ theorem rotate_eq_self_iff_eq_replicate [hα : Nonempty α] :
           rw [nth_le_replicate, ← Option.some_inj, ← nth_le_nth, ← head'_rotate h₁, h, head']⟩,
       fun ⟨b, hb⟩ n => by rw [hb, rotate_replicate]⟩
 #align list.rotate_eq_self_iff_eq_replicate List.rotate_eq_self_iff_eq_replicate
+-/
 
+#print List.rotate_one_eq_self_iff_eq_replicate /-
 theorem rotate_one_eq_self_iff_eq_replicate [Nonempty α] {l : List α} :
     l.rotate 1 = l ↔ ∃ a : α, l = List.replicate l.length a :=
   ⟨fun h =>
@@ -395,6 +404,7 @@ theorem rotate_one_eq_self_iff_eq_replicate [Nonempty α] {l : List α} :
       Nat.rec l.rotate_zero (fun n hn => by rwa [Nat.succ_eq_add_one, ← l.rotate_rotate, hn]) n,
     fun h => rotate_eq_self_iff_eq_replicate.mpr h 1⟩
 #align list.rotate_one_eq_self_iff_eq_replicate List.rotate_one_eq_self_iff_eq_replicate
+-/
 
 #print List.rotate_injective /-
 theorem rotate_injective (n : ℕ) : Function.Injective fun l : List α => l.rotate n :=

@@ -203,7 +203,7 @@ end NonUnitalCommRing
 
 /- warning: succ_ne_self -> succ_ne_self is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_1))))) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))))))) a
+  forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_1))))) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (NonAssocRing.toAddCommGroupWithOne.{u1} α _inst_1)))))))) a
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_1))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α _inst_1)))) a
 Case conversion may be inaccurate. Consider using '#align succ_ne_self succ_ne_selfₓ'. -/
@@ -213,7 +213,7 @@ theorem succ_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a + 1 ≠ a :=
 
 /- warning: pred_ne_self -> pred_ne_self is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))))) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))))))) a
+  forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (NonAssocRing.toAddCommGroupWithOne.{u1} α _inst_1)))))) a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (NonAssocRing.toAddCommGroupWithOne.{u1} α _inst_1)))))))) a
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (AddGroupWithOne.toSub.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (NonAssocRing.toAddCommGroupWithOne.{u1} α _inst_1)))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α _inst_1)))) a
 Case conversion may be inaccurate. Consider using '#align pred_ne_self pred_ne_selfₓ'. -/

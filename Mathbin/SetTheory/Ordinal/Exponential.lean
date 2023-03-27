@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.exponential
-! leanprover-community/mathlib commit 8ee653c07a9ddb27ae466d045a3f0c2151b076cf
+! leanprover-community/mathlib commit b67044ba53af18680e1dd246861d9584e968495d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -375,9 +375,7 @@ but is expected to have type
   forall (a : Ordinal.{u1}) {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b c) -> (Dvd.dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a c))
 Case conversion may be inaccurate. Consider using '#align ordinal.opow_dvd_opow Ordinal.opow_dvd_opowₓ'. -/
 theorem opow_dvd_opow (a) {b c : Ordinal} (h : b ≤ c) : (a^b) ∣ (a^c) :=
-  by
-  rw [← Ordinal.add_sub_cancel_of_le h, opow_add]
-  apply dvd_mul_right
+  ⟨a^c - b, by rw [← opow_add, Ordinal.add_sub_cancel_of_le h]⟩
 #align ordinal.opow_dvd_opow Ordinal.opow_dvd_opow
 
 /- warning: ordinal.opow_dvd_opow_iff -> Ordinal.opow_dvd_opow_iff is a dubious translation:
@@ -737,6 +735,14 @@ theorem log_opow {b : Ordinal} (hb : 1 < b) (x : Ordinal) : log b (b^x) = x :=
   convert log_opow_mul_add hb zero_ne_one.symm hb (opow_pos x (zero_lt_one.trans hb))
   rw [add_zero, mul_one]
 #align ordinal.log_opow Ordinal.log_opow
+
+theorem div_opow_log_pos (b : Ordinal) {o : Ordinal} (ho : o ≠ 0) : 0 < o / (b^log b o) :=
+  by
+  rcases eq_zero_or_pos b with (rfl | hb)
+  · simpa using Ordinal.pos_iff_ne_zero.2 ho
+  · rw [div_pos (opow_ne_zero _ hb.ne')]
+    exact opow_log_le_self b ho
+#align ordinal.div_opow_log_pos Ordinal.div_opow_log_pos
 
 /- warning: ordinal.div_opow_log_lt -> Ordinal.div_opow_log_lt is a dubious translation:
 lean 3 declaration is

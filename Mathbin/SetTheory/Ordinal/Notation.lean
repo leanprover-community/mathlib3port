@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.notation
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
+! leanprover-community/mathlib commit b67044ba53af18680e1dd246861d9584e968495d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -511,8 +511,7 @@ theorem repr_sub : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ - o₂) = rep
       unfold sub._match_1
       cases mn : (n₁ : ℕ) - n₂ <;> dsimp only [sub._match_2]
       · by_cases en : n₁ = n₂
-        · simp [en]
-          rwa [add_sub_add_cancel]
+        · simpa [en]
         · simp [en, -repr]
           exact
             (Ordinal.sub_eq_zero_iff_le.2 <|

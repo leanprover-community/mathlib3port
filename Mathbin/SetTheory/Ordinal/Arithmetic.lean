@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit 8da9e30545433fdd8fe55a0d3da208e5d9263f03
+! leanprover-community/mathlib commit b67044ba53af18680e1dd246861d9584e968495d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -932,6 +932,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Ordinal.{u1}) (b : Ordinal.{u1}) (c : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HSub.hSub.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHSub.{succ u1} Ordinal.{u1} Ordinal.sub.{u1}) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a c)) (HSub.hSub.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHSub.{succ u1} Ordinal.{u1} Ordinal.sub.{u1}) b c)
 Case conversion may be inaccurate. Consider using '#align ordinal.add_sub_add_cancel Ordinal.add_sub_add_cancelₓ'. -/
+@[simp]
 theorem add_sub_add_cancel (a b c : Ordinal) : a + b - (a + c) = b - c := by
   rw [← sub_sub, add_sub_cancel]
 #align ordinal.add_sub_add_cancel Ordinal.add_sub_add_cancel
@@ -1643,6 +1644,10 @@ theorem mod_def (a b : Ordinal) : a % b = a - b * (a / b) :=
   rfl
 #align ordinal.mod_def Ordinal.mod_def
 
+theorem mod_le (a b : Ordinal) : a % b ≤ a :=
+  sub_le_self a _
+#align ordinal.mod_le Ordinal.mod_le
+
 /- warning: ordinal.mod_zero -> Ordinal.mod_zero is a dubious translation:
 lean 3 declaration is
   forall (a : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (HMod.hMod.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMod.{succ u1} Ordinal.{u1} Ordinal.hasMod.{u1}) a (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) a
@@ -1750,6 +1755,30 @@ Case conversion may be inaccurate. Consider using '#align ordinal.dvd_iff_mod_eq
 theorem dvd_iff_mod_eq_zero {a b : Ordinal} : b ∣ a ↔ a % b = 0 :=
   ⟨mod_eq_zero_of_dvd, dvd_of_mod_eq_zero⟩
 #align ordinal.dvd_iff_mod_eq_zero Ordinal.dvd_iff_mod_eq_zero
+
+@[simp]
+theorem mul_add_mod_self (x y z : Ordinal) : (x * y + z) % x = z % x :=
+  by
+  rcases eq_or_ne x 0 with (rfl | hx)
+  · simp
+  · rwa [mod_def, mul_add_div, mul_add, ← sub_sub, add_sub_cancel, mod_def]
+#align ordinal.mul_add_mod_self Ordinal.mul_add_mod_self
+
+@[simp]
+theorem mul_mod (x y : Ordinal) : x * y % x = 0 := by simpa using mul_add_mod_self x y 0
+#align ordinal.mul_mod Ordinal.mul_mod
+
+theorem mod_mod_of_dvd (a : Ordinal) {b c : Ordinal} (h : c ∣ b) : a % b % c = a % c :=
+  by
+  nth_rw_rhs 1 [← div_add_mod a b]
+  rcases h with ⟨d, rfl⟩
+  rw [mul_assoc, mul_add_mod_self]
+#align ordinal.mod_mod_of_dvd Ordinal.mod_mod_of_dvd
+
+@[simp]
+theorem mod_mod (a b : Ordinal) : a % b % b = a % b :=
+  mod_mod_of_dvd a dvd_rfl
+#align ordinal.mod_mod Ordinal.mod_mod
 
 /-! ### Families of ordinals
 

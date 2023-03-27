@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.group.opposite
-! leanprover-community/mathlib commit acebd8d49928f6ed8920e502a6c90674e75bd441
+! leanprover-community/mathlib commit 76de8ae01554c3b37d66544866659ff174e66e1f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,7 +405,11 @@ instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne αᵃᵒᵖ :=
     natCast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp [add_comm] }
 
 instance [AddCommGroupWithOne α] : AddCommGroupWithOne αᵃᵒᵖ :=
-  { AddOpposite.addCommMonoidWithOne _, AddOpposite.addCommGroup α with }
+  { AddOpposite.addCommMonoidWithOne _, AddOpposite.addCommGroup α,
+    AddOpposite.hasIntCast
+      α with
+    intCast_ofNat := fun n => congr_arg op <| Int.cast_ofNat n
+    intCast_negSucc := fun _ => congr_arg op <| Int.cast_negSucc _ }
 
 variable {α}
 

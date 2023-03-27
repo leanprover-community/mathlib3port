@@ -1669,7 +1669,8 @@ import Mathbin.Data.Set.Lattice
 import Mathbin.Data.Set.MulAntidiagonal
 import Mathbin.Data.Set.NAry
 import Mathbin.Data.Set.Opposite
-import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.Set.Pairwise.Basic
+import Mathbin.Data.Set.Pairwise.Lattice
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Set.Pointwise.BigOperators
 import Mathbin.Data.Set.Pointwise.Finite
