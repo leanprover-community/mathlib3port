@@ -122,16 +122,16 @@ protected theorem wellFoundedLT [Zero N] [Preorder N] [WellFoundedLT N] (hbot : 
 #align finsupp.well_founded_lt Finsupp.wellFoundedLT
 -/
 
-/- warning: finsupp.well_founded_lt' -> Finsupp.well_founded_lt' is a dubious translation:
+/- warning: finsupp.well_founded_lt' -> Finsupp.wellFoundedLT' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {N : Type.{u2}} [_inst_1 : CanonicallyOrderedAddMonoid.{u2} N] [_inst_2 : WellFoundedLT.{u2} N (Preorder.toLT.{u2} N (PartialOrder.toPreorder.{u2} N (OrderedAddCommMonoid.toPartialOrder.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1))))], WellFoundedLT.{max u1 u2} (Finsupp.{u1, u2} α N (AddZeroClass.toHasZero.{u2} N (AddMonoid.toAddZeroClass.{u2} N (AddCommMonoid.toAddMonoid.{u2} N (OrderedAddCommMonoid.toAddCommMonoid.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1)))))) (Preorder.toLT.{max u1 u2} (Finsupp.{u1, u2} α N (AddZeroClass.toHasZero.{u2} N (AddMonoid.toAddZeroClass.{u2} N (AddCommMonoid.toAddMonoid.{u2} N (OrderedAddCommMonoid.toAddCommMonoid.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1)))))) (Finsupp.preorder.{u1, u2} α N (AddZeroClass.toHasZero.{u2} N (AddMonoid.toAddZeroClass.{u2} N (AddCommMonoid.toAddMonoid.{u2} N (OrderedAddCommMonoid.toAddCommMonoid.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1))))) (PartialOrder.toPreorder.{u2} N (OrderedAddCommMonoid.toPartialOrder.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1)))))
 but is expected to have type
   forall {α : Type.{u1}} {N : Type.{u2}} [_inst_1 : CanonicallyOrderedAddMonoid.{u2} N] [_inst_2 : WellFoundedLT.{u2} N (Preorder.toLT.{u2} N (PartialOrder.toPreorder.{u2} N (OrderedAddCommMonoid.toPartialOrder.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1))))], WellFoundedLT.{max u2 u1} (Finsupp.{u1, u2} α N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N (OrderedAddCommMonoid.toAddCommMonoid.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1))))) (Preorder.toLT.{max u1 u2} (Finsupp.{u1, u2} α N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N (OrderedAddCommMonoid.toAddCommMonoid.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1))))) (Finsupp.preorder.{u1, u2} α N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N (OrderedAddCommMonoid.toAddCommMonoid.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1)))) (PartialOrder.toPreorder.{u2} N (OrderedAddCommMonoid.toPartialOrder.{u2} N (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} N _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align finsupp.well_founded_lt' Finsupp.well_founded_lt'ₓ'. -/
-instance well_founded_lt' [CanonicallyOrderedAddMonoid N] [WellFoundedLT N] :
+Case conversion may be inaccurate. Consider using '#align finsupp.well_founded_lt' Finsupp.wellFoundedLT'ₓ'. -/
+instance wellFoundedLT' [CanonicallyOrderedAddMonoid N] [WellFoundedLT N] :
     WellFoundedLT (α →₀ N) :=
   Finsupp.wellFoundedLT fun a => (zero_le a).not_lt
-#align finsupp.well_founded_lt' Finsupp.well_founded_lt'
+#align finsupp.well_founded_lt' Finsupp.wellFoundedLT'
 
 #print Finsupp.wellFoundedLT_of_finite /-
 instance wellFoundedLT_of_finite [Finite α] [Zero N] [Preorder N] [WellFoundedLT N] :

@@ -57,18 +57,18 @@ export UniformContinuousConstVAdd (uniformContinuous_const_vadd)
 
 export UniformContinuousConstSMul (uniformContinuous_const_smul)
 
-#print AddMonoid.hasUniformContinuousConstSMul_nat /-
-instance AddMonoid.hasUniformContinuousConstSMul_nat [AddGroup X] [UniformAddGroup X] :
+#print AddMonoid.uniformContinuousConstSMul_nat /-
+instance AddMonoid.uniformContinuousConstSMul_nat [AddGroup X] [UniformAddGroup X] :
     UniformContinuousConstSMul ℕ X :=
   ⟨uniformContinuous_const_nsmul⟩
-#align add_monoid.has_uniform_continuous_const_smul_nat AddMonoid.hasUniformContinuousConstSMul_nat
+#align add_monoid.has_uniform_continuous_const_smul_nat AddMonoid.uniformContinuousConstSMul_nat
 -/
 
-#print AddGroup.hasUniformContinuousConstSMul_int /-
-instance AddGroup.hasUniformContinuousConstSMul_int [AddGroup X] [UniformAddGroup X] :
+#print AddGroup.uniformContinuousConstSMul_int /-
+instance AddGroup.uniformContinuousConstSMul_int [AddGroup X] [UniformAddGroup X] :
     UniformContinuousConstSMul ℤ X :=
   ⟨uniformContinuous_const_zsmul⟩
-#align add_group.has_uniform_continuous_const_smul_int AddGroup.hasUniformContinuousConstSMul_int
+#align add_group.has_uniform_continuous_const_smul_int AddGroup.uniformContinuousConstSMul_int
 -/
 
 /- warning: has_uniform_continuous_const_smul_of_continuous_const_smul -> uniformContinuousConstSMul_of_continuousConstSMul is a dubious translation:
@@ -100,17 +100,17 @@ instance Ring.uniformContinuousConstSMul [Ring R] [UniformSpace R] [UniformAddGr
   uniformContinuousConstSMul_of_continuousConstSMul _ _
 #align ring.has_uniform_continuous_const_smul Ring.uniformContinuousConstSMul
 
-/- warning: ring.has_uniform_continuous_const_op_smul -> Ring.has_uniform_continuous_const_op_smul is a dubious translation:
+/- warning: ring.has_uniform_continuous_const_op_smul -> Ring.uniformContinuousConstSMul_op is a dubious translation:
 lean 3 declaration is
   forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : UniformSpace.{u1} R] [_inst_5 : UniformAddGroup.{u1} R _inst_4 (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_3)))] [_inst_6 : ContinuousMul.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_4) (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_3))], UniformContinuousConstSMul.{u1, u1} (MulOpposite.{u1} R) R _inst_4 (Mul.toHasOppositeSMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_3)))
 but is expected to have type
   forall (R : Type.{u1}) [_inst_3 : Ring.{u1} R] [_inst_4 : UniformSpace.{u1} R] [_inst_5 : UniformAddGroup.{u1} R _inst_4 (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_3))] [_inst_6 : ContinuousMul.{u1} R (UniformSpace.toTopologicalSpace.{u1} R _inst_4) (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3)))], UniformContinuousConstSMul.{u1, u1} (MulOpposite.{u1} R) R _inst_4 (Mul.toHasOppositeSMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_3))))
-Case conversion may be inaccurate. Consider using '#align ring.has_uniform_continuous_const_op_smul Ring.has_uniform_continuous_const_op_smulₓ'. -/
+Case conversion may be inaccurate. Consider using '#align ring.has_uniform_continuous_const_op_smul Ring.uniformContinuousConstSMul_opₓ'. -/
 /-- The action of `semiring.to_opposite_module` is uniformly continuous. -/
-instance Ring.has_uniform_continuous_const_op_smul [Ring R] [UniformSpace R] [UniformAddGroup R]
+instance Ring.uniformContinuousConstSMul_op [Ring R] [UniformSpace R] [UniformAddGroup R]
     [ContinuousMul R] : UniformContinuousConstSMul Rᵐᵒᵖ R :=
   uniformContinuousConstSMul_of_continuousConstSMul _ _
-#align ring.has_uniform_continuous_const_op_smul Ring.has_uniform_continuous_const_op_smul
+#align ring.has_uniform_continuous_const_op_smul Ring.uniformContinuousConstSMul_op
 
 section SMul
 
