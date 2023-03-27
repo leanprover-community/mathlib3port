@@ -445,7 +445,7 @@ theorem eq_x_sub_c_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separab
   have h_ne_zero : h ≠ 0 := by
     rintro rfl
     exact not_separable_zero h_sep
-  apply Polynomial.eq_x_sub_c_of_splits_of_single_root i h_splits
+  apply Polynomial.eq_X_sub_C_of_splits_of_single_root i h_splits
   apply Finset.mk.inj
   · change _ = {i x}
     rw [Finset.eq_singleton_iff_unique_mem]

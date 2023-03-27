@@ -301,7 +301,7 @@ instance normal : Normal (FixedPoints.subfield G F) F :=
       cases nonempty_fintype G
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring_subtype_eq_subtype,
         Polynomial.map_toSubring _ (Subfield G F).toSubring, prodXSubSmul]
-      exact Polynomial.splits_prod _ fun _ _ => Polynomial.splits_x_sub_c _⟩
+      exact Polynomial.splits_prod _ fun _ _ => Polynomial.splits_X_sub_C _⟩
 #align fixed_points.normal FixedPoints.normal
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=

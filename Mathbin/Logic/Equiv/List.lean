@@ -536,12 +536,7 @@ def listNatEquivNat : List ℕ ≃ ℕ :=
 #align equiv.list_nat_equiv_nat Equiv.listNatEquivNat
 -/
 
-/- warning: equiv.list_equiv_self_of_equiv_nat -> Equiv.listEquivSelfOfEquivNat is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}}, (Equiv.{succ u_1, 1} α Nat) -> (Equiv.{succ u_1, succ u_1} (List.{u_1} α) α)
-but is expected to have type
-  forall {α : Type}, (Equiv.{1, 1} α Nat) -> (Equiv.{1, 1} (List.{0} α) α)
-Case conversion may be inaccurate. Consider using '#align equiv.list_equiv_self_of_equiv_nat Equiv.listEquivSelfOfEquivNatₓ'. -/
+#print Equiv.listEquivSelfOfEquivNat /-
 /-- If `α` is equivalent to `ℕ`, then `list α` is equivalent to `α`. -/
 def listEquivSelfOfEquivNat {α : Type _} (e : α ≃ ℕ) : List α ≃ α :=
   calc
@@ -550,6 +545,7 @@ def listEquivSelfOfEquivNat {α : Type _} (e : α ≃ ℕ) : List α ≃ α :=
     _ ≃ α := e.symm
     
 #align equiv.list_equiv_self_of_equiv_nat Equiv.listEquivSelfOfEquivNat
+-/
 
 end Equiv
 

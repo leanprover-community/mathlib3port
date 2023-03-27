@@ -103,19 +103,19 @@ instance uniqueGalOne : Unique (1 : F[X]).Gal :=
 #align polynomial.gal.unique_gal_one Polynomial.Gal.uniqueGalOne
 
 instance uniqueGalC (x : F) : Unique (C x).Gal :=
-  uniqueGalOfSplits _ (splits_c _ _)
+  uniqueGalOfSplits _ (splits_C _ _)
 #align polynomial.gal.unique_gal_C Polynomial.Gal.uniqueGalC
 
 instance uniqueGalX : Unique (X : F[X]).Gal :=
-  uniqueGalOfSplits _ (splits_x _)
+  uniqueGalOfSplits _ (splits_X _)
 #align polynomial.gal.unique_gal_X Polynomial.Gal.uniqueGalX
 
 instance uniqueGalXSubC (x : F) : Unique (X - C x).Gal :=
-  uniqueGalOfSplits _ (splits_x_sub_c _)
+  uniqueGalOfSplits _ (splits_X_sub_C _)
 #align polynomial.gal.unique_gal_X_sub_C Polynomial.Gal.uniqueGalXSubC
 
 instance uniqueGalXPow (n : ℕ) : Unique (X ^ n : F[X]).Gal :=
-  uniqueGalOfSplits _ (splits_x_pow _ _)
+  uniqueGalOfSplits _ (splits_X_pow _ _)
 #align polynomial.gal.unique_gal_X_pow Polynomial.Gal.uniqueGalXPow
 
 instance [h : Fact (p.Splits (algebraMap F E))] : Algebra p.SplittingField E :=

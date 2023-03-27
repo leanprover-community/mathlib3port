@@ -493,9 +493,9 @@ theorem length_sub [Zero α] [Sub α] {xs ys : List α} :
 
 /- warning: list.func.nil_sub -> List.Func.nil_sub is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : AddGroup.{u_1} α] (as : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.Func.sub.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)))) (SubNegMonoid.toHasSub.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)) (List.nil.{u_1} α) as) (List.Func.neg.{u_1} α (SubNegMonoid.toHasNeg.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)) as)
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))) (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) (List.nil.{u1} α) as) (List.Func.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as)
 but is expected to have type
-  forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (NegZeroClass.toZero.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) (SubNegMonoid.toSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) (List.nil.{0} α) as) (List.Func.neg.{0} α (NegZeroClass.toNeg.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) as)
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) (List.nil.{u1} α) as) (List.Func.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) as)
 Case conversion may be inaccurate. Consider using '#align list.func.nil_sub List.Func.nil_subₓ'. -/
 @[simp]
 theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as :=
@@ -507,9 +507,9 @@ theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as 
 
 /- warning: list.func.sub_nil -> List.Func.sub_nil is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : AddGroup.{u_1} α] (as : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.Func.sub.{u_1} α (AddZeroClass.toHasZero.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α (SubNegMonoid.toAddMonoid.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)))) (SubNegMonoid.toHasSub.{u_1} α (AddGroup.toSubNegMonoid.{u_1} α _inst_1)) as (List.nil.{u_1} α)) as
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))) (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as (List.nil.{u1} α)) as
 but is expected to have type
-  forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (NegZeroClass.toZero.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) (SubNegMonoid.toSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) as (List.nil.{0} α)) as
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.sub.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) as (List.nil.{u1} α)) as
 Case conversion may be inaccurate. Consider using '#align list.func.sub_nil List.Func.sub_nilₓ'. -/
 @[simp]
 theorem sub_nil {α : Type _} [AddGroup α] (as : List α) : sub as [] = as :=
