@@ -1072,7 +1072,7 @@ theorem convex_ball : Convex ℝ (ball p x r) :=
 theorem convex_closedBall : Convex ℝ (closedBall p x r) :=
   by
   rw [closed_ball_eq_bInter_ball]
-  exact convex_Inter₂ fun _ _ => convex_ball _ _ _
+  exact convex_interᵢ₂ fun _ _ => convex_ball _ _ _
 #align seminorm.convex_closed_ball Seminorm.convex_closedBall
 
 end Module

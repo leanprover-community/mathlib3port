@@ -511,7 +511,7 @@ theorem addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     W.addPolynomial x₁ y₁ (W.slope x₁ x₂ y₁ y₂) =
       -((X - C x₁) * (X - C x₂) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) :=
   by
-  rw [add_polynomial_eq, neg_inj, Cubic.prod_x_sub_c_eq, Cubic.toPoly_injective]
+  rw [add_polynomial_eq, neg_inj, Cubic.prod_X_sub_C_eq, Cubic.toPoly_injective]
   by_cases hx : x₁ = x₂
   · rcases hx, Y_eq_of_Y_ne h₁' h₂' hx (hxy hx) with ⟨rfl, rfl⟩
     rw [equation_iff] at h₁' h₂'
