@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Action
-! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
+! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -702,14 +702,13 @@ theorem functorCategoryMonoidalEquivalence.unit_app_hom (A : Action V G) :
 
 @[simp]
 theorem functorCategoryMonoidalEquivalence.functor_map {A B : Action V G} (f : A ⟶ B) :
-    (functorCategoryMonoidalEquivalence _ _).1.1.map f = FunctorCategoryEquivalence.functor.map f :=
+    (functorCategoryMonoidalEquivalence _ _).map f = FunctorCategoryEquivalence.functor.map f :=
   rfl
 #align Action.functor_category_monoidal_equivalence.functor_map Action.functorCategoryMonoidalEquivalence.functor_map
 
 @[simp]
 theorem functorCategoryMonoidalEquivalence.inverse_map {A B : SingleObj G ⥤ V} (f : A ⟶ B) :
-    (functorCategoryMonoidalEquivalence _ _).1.inv.map f =
-      FunctorCategoryEquivalence.inverse.map f :=
+    (functorCategoryMonoidalEquivalence _ _).inv.map f = FunctorCategoryEquivalence.inverse.map f :=
   rfl
 #align Action.functor_category_monoidal_equivalence.inverse_map Action.functorCategoryMonoidalEquivalence.inverse_map
 

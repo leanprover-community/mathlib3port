@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit 0caf3701139ef2e69c215717665361cda205a90b
+! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,10 +88,34 @@ theorem of_ρ {V : Type u} [AddCommGroup V] [Module k V] (ρ : G →* V →ₗ[k
   rfl
 #align Rep.of_ρ Rep.of_ρ
 
+@[simp]
+theorem Action_ρ_eq_ρ {A : Rep k G} : Action.ρ A = A.ρ :=
+  rfl
+#align Rep.Action_ρ_eq_ρ Rep.Action_ρ_eq_ρ
+
+/-- Allows us to apply lemmas about the underlying `ρ`, which would take an element `g : G` rather
+than `g : Mon.of G` as an argument. -/
+theorem of_ρ_apply {V : Type u} [AddCommGroup V] [Module k V] (ρ : Representation k G V)
+    (g : MonCat.of G) : (Rep.of ρ).ρ g = ρ (g : G) :=
+  rfl
+#align Rep.of_ρ_apply Rep.of_ρ_apply
+
 -- Verify that limits are calculated correctly.
 noncomputable example : PreservesLimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by infer_instance
 
 noncomputable example : PreservesColimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by infer_instance
+
+@[simp]
+theorem MonoidalCategory.braiding_hom_apply {A B : Rep k G} (x : A) (y : B) :
+    Action.Hom.hom (β_ A B).hom (TensorProduct.tmul k x y) = TensorProduct.tmul k y x :=
+  rfl
+#align Rep.monoidal_category.braiding_hom_apply Rep.MonoidalCategory.braiding_hom_apply
+
+@[simp]
+theorem MonoidalCategory.braiding_inv_apply {A B : Rep k G} (x : A) (y : B) :
+    Action.Hom.hom (β_ A B).inv (TensorProduct.tmul k y x) = TensorProduct.tmul k x y :=
+  rfl
+#align Rep.monoidal_category.braiding_inv_apply Rep.MonoidalCategory.braiding_inv_apply
 
 section Linearization
 
@@ -146,6 +170,55 @@ noncomputable def linearizationOfMulActionIso (n : ℕ) :
     (linearization k G).1.1.obj (Action.ofMulAction G (Fin n → G)) ≅ ofMulAction k G (Fin n → G) :=
   Iso.refl _
 #align Rep.linearization_of_mul_action_iso Rep.linearizationOfMulActionIso
+
+variable {k G}
+
+/-- Given an element `x : A`, there is a natural morphism of representations `k[G] ⟶ A` sending
+`g ↦ A.ρ(g)(x).` -/
+@[simps]
+noncomputable def leftRegularHom (A : Rep k G) (x : A) : Rep.ofMulAction k G G ⟶ A
+    where
+  hom := Finsupp.lift _ _ _ fun g => A.ρ g x
+  comm' g := by
+    refine' Finsupp.lhom_ext' fun y => LinearMap.ext_ring _
+    simpa only [LinearMap.comp_apply, ModuleCat.comp_def, Finsupp.lsingle_apply, Finsupp.lift_apply,
+      Action_ρ_eq_ρ, of_ρ_apply, Representation.ofMulAction_single, Finsupp.sum_single_index,
+      zero_smul, one_smul, smul_eq_mul, A.ρ.map_mul]
+#align Rep.left_regular_hom Rep.leftRegularHom
+
+theorem leftRegularHom_apply {A : Rep k G} (x : A) :
+    (leftRegularHom A x).hom (Finsupp.single 1 1) = x := by
+  simpa only [left_regular_hom_hom, Finsupp.lift_apply, Finsupp.sum_single_index, one_smul,
+    A.ρ.map_one, zero_smul]
+#align Rep.left_regular_hom_apply Rep.leftRegularHom_apply
+
+/-- Given a `k`-linear `G`-representation `A`, there is a `k`-linear isomorphism between
+representation morphisms `Hom(k[G], A)` and `A`. -/
+@[simps]
+noncomputable def leftRegularHomEquiv (A : Rep k G) : (Rep.ofMulAction k G G ⟶ A) ≃ₗ[k] A
+    where
+  toFun f := f.hom (Finsupp.single 1 1)
+  map_add' x y := rfl
+  map_smul' r x := rfl
+  invFun x := leftRegularHom A x
+  left_inv f :=
+    by
+    refine' Action.Hom.ext _ _ (Finsupp.lhom_ext' fun x : G => LinearMap.ext_ring _)
+    have :
+      f.hom ((of_mul_action k G G).ρ x (Finsupp.single (1 : G) (1 : k))) =
+        A.ρ x (f.hom (Finsupp.single (1 : G) (1 : k))) :=
+      LinearMap.ext_iff.1 (f.comm x) (Finsupp.single 1 1)
+    simp only [LinearMap.comp_apply, Finsupp.lsingle_apply, left_regular_hom_hom,
+      Finsupp.lift_apply, Finsupp.sum_single_index, one_smul, ← this, zero_smul, of_ρ_apply,
+      Representation.ofMulAction_single x (1 : G) (1 : k), smul_eq_mul, mul_one]
+  right_inv x := leftRegularHom_apply x
+#align Rep.left_regular_hom_equiv Rep.leftRegularHomEquiv
+
+theorem leftRegularHomEquiv_symm_single {A : Rep k G} (x : A) (g : G) :
+    ((leftRegularHomEquiv A).symm x).hom (Finsupp.single g 1) = A.ρ g x := by
+  simp only [left_regular_hom_equiv_symm_apply, left_regular_hom_hom, Finsupp.lift_apply,
+    Finsupp.sum_single_index, zero_smul, one_smul]
+#align Rep.left_regular_hom_equiv_symm_single Rep.leftRegularHomEquiv_symm_single
 
 end Linearization
 
@@ -253,9 +326,91 @@ theorem ihom_ev_app_hom :
   monoidalClosed_uncurry_hom _
 #align Rep.ihom_ev_app_hom Rep.ihom_ev_app_hom
 
+variable (A B C)
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- There is a `k`-linear isomorphism between the sets of representation morphisms`Hom(A ⊗ B, C)`
+and `Hom(B, Homₖ(A, C))`. -/
+noncomputable def MonoidalClosed.linearHomEquiv : (A ⊗ B ⟶ C) ≃ₗ[k] B ⟶ A ⟶[Rep k G] C :=
+  {
+    (ihom.adjunction A).homEquiv _
+      _ with
+    map_add' := fun f g => rfl
+    map_smul' := fun r f => rfl }
+#align Rep.monoidal_closed.linear_hom_equiv Rep.MonoidalClosed.linearHomEquiv
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- There is a `k`-linear isomorphism between the sets of representation morphisms`Hom(A ⊗ B, C)`
+and `Hom(A, Homₖ(B, C))`. -/
+noncomputable def MonoidalClosed.linearHomEquivComm : (A ⊗ B ⟶ C) ≃ₗ[k] A ⟶ B ⟶[Rep k G] C :=
+  Linear.homCongr k (β_ A B) (Iso.refl _) ≪≫ₗ MonoidalClosed.linearHomEquiv _ _ _
+#align Rep.monoidal_closed.linear_hom_equiv_comm Rep.MonoidalClosed.linearHomEquivComm
+
+variable {A B C}
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem MonoidalClosed.linearHomEquiv_hom (f : A ⊗ B ⟶ C) :
+    (MonoidalClosed.linearHomEquiv A B C f).hom = (TensorProduct.curry f.hom).flip :=
+  monoidalClosed_curry_hom _
+#align Rep.monoidal_closed.linear_hom_equiv_hom Rep.MonoidalClosed.linearHomEquiv_hom
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem MonoidalClosed.linearHomEquivComm_hom (f : A ⊗ B ⟶ C) :
+    (MonoidalClosed.linearHomEquivComm A B C f).hom = TensorProduct.curry f.hom :=
+  by
+  dsimp only [monoidal_closed.linear_hom_equiv_comm]
+  refine' LinearMap.ext fun x => LinearMap.ext fun y => _
+  simp only [LinearEquiv.trans_apply, monoidal_closed.linear_hom_equiv_hom, linear.hom_congr_apply,
+    iso.refl_hom, iso.symm_hom, LinearMap.toFun_eq_coe, LinearMap.coe_comp, Function.comp_apply,
+    linear.left_comp_apply, linear.right_comp_apply, category.comp_id, Action.comp_hom,
+    LinearMap.flip_apply, TensorProduct.curry_apply, ModuleCat.coe_comp, Function.comp_apply,
+    monoidal_category.braiding_inv_apply]
+#align Rep.monoidal_closed.linear_hom_equiv_comm_hom Rep.MonoidalClosed.linearHomEquivComm_hom
+
+theorem MonoidalClosed.linearHomEquiv_symm_hom (f : B ⟶ A ⟶[Rep k G] C) :
+    ((MonoidalClosed.linearHomEquiv A B C).symm f).hom = TensorProduct.uncurry k A B C f.hom.flip :=
+  monoidalClosed_uncurry_hom _
+#align Rep.monoidal_closed.linear_hom_equiv_symm_hom Rep.MonoidalClosed.linearHomEquiv_symm_hom
+
+theorem MonoidalClosed.linearHomEquivComm_symm_hom (f : A ⟶ B ⟶[Rep k G] C) :
+    ((MonoidalClosed.linearHomEquivComm A B C).symm f).hom = TensorProduct.uncurry k A B C f.hom :=
+  by
+  dsimp only [monoidal_closed.linear_hom_equiv_comm]
+  refine'
+    TensorProduct.AlgebraTensorModule.curry_injective
+      (LinearMap.ext fun x => LinearMap.ext fun y => _)
+  simp only [LinearEquiv.trans_symm, LinearEquiv.trans_apply, linear.hom_congr_symm_apply,
+    iso.refl_inv, LinearMap.coe_comp, Function.comp_apply, category.comp_id, Action.comp_hom,
+    monoidal_closed.linear_hom_equiv_symm_hom, TensorProduct.AlgebraTensorModule.curry_apply,
+    LinearMap.coe_restrictScalars, LinearMap.toFun_eq_coe, LinearMap.flip_apply,
+    TensorProduct.curry_apply, ModuleCat.coe_comp, Function.comp_apply,
+    monoidal_category.braiding_hom_apply, TensorProduct.uncurry_apply]
+#align Rep.monoidal_closed.linear_hom_equiv_comm_symm_hom Rep.MonoidalClosed.linearHomEquivComm_symm_hom
+
 end
 
 end Rep
+
+namespace Representation
+
+variable {k G : Type u} [CommRing k] [Monoid G] {V W : Type u} [AddCommGroup V] [AddCommGroup W]
+  [Module k V] [Module k W] (ρ : Representation k G V) (τ : Representation k G W)
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- Tautological isomorphism to help Lean in typechecking. -/
+def repOfTprodIso : Rep.of (ρ.tprod τ) ≅ Rep.of ρ ⊗ Rep.of τ :=
+  Iso.refl _
+#align representation.Rep_of_tprod_iso Representation.repOfTprodIso
+
+theorem repOfTprodIso_apply (x : TensorProduct k V W) : (repOfTprodIso ρ τ).hom.hom x = x :=
+  rfl
+#align representation.Rep_of_tprod_iso_apply Representation.repOfTprodIso_apply
+
+theorem repOfTprodIso_inv_apply (x : TensorProduct k V W) : (repOfTprodIso ρ τ).inv.hom x = x :=
+  rfl
+#align representation.Rep_of_tprod_iso_inv_apply Representation.repOfTprodIso_inv_apply
+
+end Representation
 
 /-!
 # The categorical equivalence `Rep k G ≌ Module.{u} (monoid_algebra k G)`.

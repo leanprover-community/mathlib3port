@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.eval
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 728baa2f54e6062c5879a3e397ac6bac323e506f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1645,6 +1645,15 @@ theorem eval₂_comp {x : S} : eval₂ f x (p.comp q) = eval₂ f (eval₂ f x q
 #align polynomial.eval₂_comp Polynomial.eval₂_comp
 -/
 
+@[simp]
+theorem iterate_comp_eval₂ (k : ℕ) (t : S) :
+    eval₂ f t ((p.comp^[k]) q) = ((fun x => eval₂ f x p)^[k]) (eval₂ f t q) :=
+  by
+  induction' k with k IH
+  · simp
+  · rw [Function.iterate_succ_apply', Function.iterate_succ_apply', eval₂_comp, IH]
+#align polynomial.iterate_comp_eval₂ Polynomial.iterate_comp_eval₂
+
 end
 
 section
@@ -1704,6 +1713,12 @@ theorem eval_comp : (p.comp q).eval x = p.eval (q.eval x) :=
     simp
 #align polynomial.eval_comp Polynomial.eval_comp
 -/
+
+@[simp]
+theorem iterate_comp_eval :
+    ∀ (k : ℕ) (t : R), ((p.comp^[k]) q).eval t = ((fun x => p.eval x)^[k]) (q.eval t) :=
+  iterate_comp_eval₂ _
+#align polynomial.iterate_comp_eval Polynomial.iterate_comp_eval
 
 #print Polynomial.compRingHom /-
 /-- `comp p`, regarded as a ring homomorphism from `R[X]` to itself. -/

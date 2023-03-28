@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -650,7 +650,7 @@ end Lsum
 
 section
 
-variable (M) (R) (X : Type _)
+variable (M) (R) (X : Type _) (S) [Module S M] [SMulCommClass R S M]
 
 /- warning: finsupp.lift -> Finsupp.lift is a dubious translation:
 lean 3 declaration is
@@ -687,6 +687,30 @@ Case conversion may be inaccurate. Consider using '#align finsupp.lift_apply Fin
 theorem lift_apply (f) (g) : ((lift M R X) f) g = g.Sum fun x r => r • f x :=
   rfl
 #align finsupp.lift_apply Finsupp.lift_apply
+
+/-- Given compatible `S` and `R`-module structures on `M` and a type `X`, the set of functions
+`X → M` is `S`-linearly equivalent to the `R`-linear maps from the free `R`-module
+on `X` to `M`. -/
+noncomputable def llift : (X → M) ≃ₗ[S] (X →₀ R) →ₗ[R] M :=
+  { lift M R X with
+    map_smul' := by
+      intros
+      dsimp
+      ext
+      simp only [coe_comp, Function.comp_apply, lsingle_apply, lift_apply, Pi.smul_apply,
+        sum_single_index, zero_smul, one_smul, LinearMap.smul_apply] }
+#align finsupp.llift Finsupp.llift
+
+@[simp]
+theorem llift_apply (f : X → M) (x : X →₀ R) : llift M R S X f x = lift M R X f x :=
+  rfl
+#align finsupp.llift_apply Finsupp.llift_apply
+
+@[simp]
+theorem llift_symm_apply (f : (X →₀ R) →ₗ[R] M) (x : X) :
+    (llift M R S X).symm f x = f (single x 1) :=
+  rfl
+#align finsupp.llift_symm_apply Finsupp.llift_symm_apply
 
 end
 

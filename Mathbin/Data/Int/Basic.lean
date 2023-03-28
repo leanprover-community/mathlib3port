@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 728baa2f54e6062c5879a3e397ac6bac323e506f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,6 +110,16 @@ theorem add_neg_one (i : ℤ) : i + -1 = i - 1 :=
   rfl
 #align int.add_neg_one Int.add_neg_one
 -/
+
+@[simp]
+theorem sign_coe_add_one (n : ℕ) : Int.sign (n + 1) = 1 :=
+  rfl
+#align int.sign_coe_add_one Int.sign_coe_add_one
+
+@[simp]
+theorem sign_negSucc (n : ℕ) : Int.sign -[n+1] = -1 :=
+  rfl
+#align int.sign_neg_succ_of_nat Int.sign_negSucc
 
 #print Int.default_eq_zero /-
 @[simp]

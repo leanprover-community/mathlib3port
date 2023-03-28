@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology_resolution
-! leanprover-community/mathlib commit 956af7c76589f444f2e1313911bad16366ea476d
+! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,14 +198,14 @@ variable {k G n}
 @[simp]
 theorem toTensor_single (f : Gⁿ⁺¹) (m : k) :
     (toTensor k G n).hom (single f m) = single (f 0) m ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) 1 :=
-  toTensorAux_single _ _
+  by apply to_tensor_aux_single f m
 #align group_cohomology.resolution.to_tensor_single GroupCohomology.Resolution.toTensor_single
 
 @[simp]
 theorem ofTensor_single (g : G) (m : k) (x : Gⁿ →₀ k) :
     (ofTensor k G n).hom (single g m ⊗ₜ x) =
       Finsupp.lift (Rep.ofMulAction k G Gⁿ⁺¹) k Gⁿ (fun f => single (g • partialProd f) m) x :=
-  ofTensorAux_single _ _ _
+  by apply of_tensor_aux_single g m x
 #align group_cohomology.resolution.of_tensor_single GroupCohomology.Resolution.ofTensor_single
 
 theorem ofTensor_single' (g : G →₀ k) (x : Gⁿ) (m : k) :
@@ -280,6 +280,62 @@ theorem ofMulAction_free :
 end Basis
 
 end GroupCohomology.resolution
+
+namespace Rep
+
+variable (n) [Group G]
+
+open GroupCohomology.resolution
+
+/-- Given a `k`-linear `G`-representation `A`, the set of representation morphisms
+`Hom(k[Gⁿ⁺¹], A)` is `k`-linearly isomorphic to the set of functions `Gⁿ → A`. -/
+noncomputable def diagonalHomEquiv (A : Rep k G) :
+    (Rep.ofMulAction k G (Fin (n + 1) → G) ⟶ A) ≃ₗ[k] (Fin n → G) → A :=
+  Linear.homCongr k ((equivTensor k G n).trans ((Representation.ofMulAction k G G).repOfTprodIso 1))
+        (Iso.refl _) ≪≫ₗ
+      (Rep.MonoidalClosed.linearHomEquivComm _ _ _ ≪≫ₗ Rep.leftRegularHomEquiv _) ≪≫ₗ
+    (Finsupp.llift A k k (Fin n → G)).symm
+#align Rep.diagonal_hom_equiv Rep.diagonalHomEquiv
+
+variable {n}
+
+/-- Given a `k`-linear `G`-representation `A`, `diagonal_hom_equiv` is a `k`-linear isomorphism of
+the set of representation morphisms `Hom(k[Gⁿ⁺¹], A)` with `Fun(Gⁿ, A)`. This lemma says that this
+sends a morphism of representations `f : k[Gⁿ⁺¹] ⟶ A` to the function
+`(g₁, ..., gₙ) ↦ f(1, g₁, g₁g₂, ..., g₁g₂...gₙ).` -/
+theorem diagonalHomEquiv_apply {A : Rep k G} (f : Rep.ofMulAction k G (Fin (n + 1) → G) ⟶ A)
+    (x : Fin n → G) : diagonalHomEquiv n A f x = f.hom (Finsupp.single (Fin.partialProd x) 1) :=
+  by
+  unfold diagonal_hom_equiv
+  simpa only [LinearEquiv.trans_apply, Rep.leftRegularHomEquiv_apply,
+    monoidal_closed.linear_hom_equiv_comm_hom, Finsupp.llift_symm_apply, TensorProduct.curry_apply,
+    linear.hom_congr_apply, iso.refl_hom, iso.trans_inv, Action.comp_hom, ModuleCat.comp_def,
+    LinearMap.comp_apply, equiv_tensor_inv_def, Representation.repOfTprodIso_inv_apply,
+    of_tensor_single (1 : G) (1 : k) (Finsupp.single x (1 : k)), Finsupp.lift_apply,
+    Finsupp.sum_single_index, one_smul, zero_smul]
+#align Rep.diagonal_hom_equiv_apply Rep.diagonalHomEquiv_apply
+
+/-- Given a `k`-linear `G`-representation `A`, `diagonal_hom_equiv` is a `k`-linear isomorphism of
+the set of representation morphisms `Hom(k[Gⁿ⁺¹], A)` with `Fun(Gⁿ, A)`. This lemma says that the
+inverse map sends a function `f : Gⁿ → A` to the representation morphism sending
+`(g₀, ... gₙ) ↦ ρ(g₀)(f(g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ))`, where `ρ` is the representation attached
+to `A`. -/
+theorem diagonalHomEquiv_symm_apply {A : Rep k G} (f : (Fin n → G) → A) (x : Fin (n + 1) → G) :
+    ((diagonalHomEquiv n A).symm f).hom (Finsupp.single x 1) =
+      A.ρ (x 0) (f fun i : Fin n => (x ↑i)⁻¹ * x i.succ) :=
+  by
+  unfold diagonal_hom_equiv
+  simp only [LinearEquiv.trans_symm, LinearEquiv.symm_symm, LinearEquiv.trans_apply,
+    Rep.leftRegularHomEquiv_symm_apply, linear.hom_congr_symm_apply, Action.comp_hom, iso.refl_inv,
+    category.comp_id, Rep.MonoidalClosed.linearHomEquivComm_symm_hom, iso.trans_hom,
+    ModuleCat.comp_def, LinearMap.comp_apply, Representation.repOfTprodIso_apply, equiv_tensor_def,
+    to_tensor_single x (1 : k), TensorProduct.uncurry_apply, Rep.leftRegularHom_hom,
+    Finsupp.lift_apply, Rep.ihom_obj_ρ, Representation.linHom_apply, Finsupp.sum_single_index,
+    zero_smul, one_smul, Rep.of_ρ, MonoidHom.one_apply, LinearMap.one_apply,
+    Finsupp.llift_apply A k k]
+#align Rep.diagonal_hom_equiv_symm_apply Rep.diagonalHomEquiv_symm_apply
+
+end Rep
 
 variable (G)
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.basic
-! leanprover-community/mathlib commit a148d797a1094ab554ad4183a4ad6f130358ef64
+! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -276,6 +276,11 @@ variable {k G H}
 theorem ofMulAction_def (g : G) : ofMulAction k G H g = Finsupp.lmapDomain k k ((· • ·) g) :=
   rfl
 #align representation.of_mul_action_def Representation.ofMulAction_def
+
+theorem ofMulAction_single (g : G) (x : H) (r : k) :
+    ofMulAction k G H g (Finsupp.single x r) = Finsupp.single (g • x) r :=
+  Finsupp.mapDomain_single
+#align representation.of_mul_action_single Representation.ofMulAction_single
 
 end MulAction
 

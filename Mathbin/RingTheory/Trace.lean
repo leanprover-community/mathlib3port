@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.trace
-! leanprover-community/mathlib commit 825edd3cd735e87495b0c2a2114fc3929eefce41
+! leanprover-community/mathlib commit b68f3403d74afcfd65ab3fe65220572b410a3ed4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,6 +184,23 @@ theorem trace_comp_trace [Algebra K T] [Algebra L T] [IsScalarTower K L T] [Fini
   ext
   rw [LinearMap.comp_apply, LinearMap.restrictScalars_apply, trace_trace]
 #align algebra.trace_comp_trace Algebra.trace_comp_trace
+
+@[simp]
+theorem trace_prod_apply [Module.Free R S] [Module.Free R T] [Module.Finite R S] [Module.Finite R T]
+    (x : S × T) : trace R (S × T) x = trace R S x.fst + trace R T x.snd :=
+  by
+  nontriviality R
+  let f := (lmul R S).toLinearMap.Prod_map (lmul R T).toLinearMap
+  have : (lmul R (S × T)).toLinearMap = (prod_map_linear R S T S T R).comp f :=
+    LinearMap.ext₂ Prod.mul_def
+  simp_rw [trace, this]
+  exact trace_prod_map' _ _
+#align algebra.trace_prod_apply Algebra.trace_prod_apply
+
+theorem trace_prod [Module.Free R S] [Module.Free R T] [Module.Finite R S] [Module.Finite R T] :
+    trace R (S × T) = (trace R S).coprod (trace R T) :=
+  LinearMap.ext fun p => by rw [coprod_apply, trace_prod_apply]
+#align algebra.trace_prod Algebra.trace_prod
 
 section TraceForm
 

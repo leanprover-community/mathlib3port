@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 3353f661228bd27f632c600cd1a58b874d847c90
+! leanprover-community/mathlib commit c5dd93108bec0f9023919bc97bc1f68f88edb7bd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1588,72 +1588,86 @@ theorem toSet_of_setCat (A : Class.{u}) (x : SetCat.{u}) : ToSet A x ↔ A x :=
   ⟨fun ⟨y, yx, py⟩ => by rwa [of_Set.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
 #align Class.to_Set_of_Set Class.toSet_of_setCat
 
-@[simp]
-theorem mem_hom_left (x : SetCat.{u}) (A : Class.{u}) : (x : Class.{u}) ∈ A ↔ A x :=
+@[simp, norm_cast]
+theorem coe_mem {x : SetCat.{u}} {A : Class.{u}} : (x : Class.{u}) ∈ A ↔ A x :=
   toSet_of_setCat _ _
-#align Class.mem_hom_left Class.mem_hom_left
+#align Class.coe_mem Class.coe_mem
 
 @[simp]
-theorem mem_hom_right (x y : SetCat.{u}) : (y : Class.{u}) x ↔ x ∈ y :=
+theorem coe_apply {x y : SetCat.{u}} : (y : Class.{u}) x ↔ x ∈ y :=
   Iff.rfl
-#align Class.mem_hom_right Class.mem_hom_right
+#align Class.coe_apply Class.coe_apply
 
-@[simp]
-theorem subset_hom (x y : SetCat.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
+@[simp, norm_cast]
+theorem coe_subset (x y : SetCat.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
   Iff.rfl
-#align Class.subset_hom Class.subset_hom
+#align Class.coe_subset Class.coe_subset
 
-@[simp]
-theorem sep_hom (p : Class.{u}) (x : SetCat.{u}) :
+@[simp, norm_cast]
+theorem coe_sep (p : Class.{u}) (x : SetCat.{u}) :
     (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
   Set.ext fun y => SetCat.mem_sep
-#align Class.sep_hom Class.sep_hom
+#align Class.coe_sep Class.coe_sep
+
+@[simp, norm_cast]
+theorem coe_empty : ↑(∅ : SetCat.{u}) = (∅ : Class.{u}) :=
+  Set.ext fun y => (iff_false_iff _).2 <| SetCat.not_mem_empty y
+#align Class.coe_empty Class.coe_empty
+
+@[simp, norm_cast]
+theorem coe_insert (x y : SetCat.{u}) : ↑(insert x y) = @insert SetCat.{u} Class.{u} _ x y :=
+  Set.ext fun z => SetCat.mem_insert_iff
+#align Class.coe_insert Class.coe_insert
+
+@[simp, norm_cast]
+theorem coe_union (x y : SetCat.{u}) : ↑(x ∪ y) = (x : Class.{u}) ∪ y :=
+  Set.ext fun z => SetCat.mem_union
+#align Class.coe_union Class.coe_union
+
+@[simp, norm_cast]
+theorem coe_inter (x y : SetCat.{u}) : ↑(x ∩ y) = (x : Class.{u}) ∩ y :=
+  Set.ext fun z => SetCat.mem_inter
+#align Class.coe_inter Class.coe_inter
+
+@[simp, norm_cast]
+theorem coe_diff (x y : SetCat.{u}) : ↑(x \ y) = (x : Class.{u}) \ y :=
+  Set.ext fun z => SetCat.mem_diff
+#align Class.coe_diff Class.coe_diff
+
+@[simp, norm_cast]
+theorem coe_powerset (x : SetCat.{u}) : ↑x.powerset = powerset.{u} x :=
+  Set.ext fun z => SetCat.mem_powerset
+#align Class.coe_powerset Class.coe_powerset
 
 @[simp]
-theorem empty_hom : ↑(∅ : SetCat.{u}) = (∅ : Class.{u}) :=
-  Set.ext fun y => (iff_false_iff _).2 (SetCat.not_mem_empty y)
-#align Class.empty_hom Class.empty_hom
+theorem powerset_apply {A : Class.{u}} {x : SetCat.{u}} : powerset A x ↔ ↑x ⊆ A :=
+  Iff.rfl
+#align Class.powerset_apply Class.powerset_apply
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem insert_hom (x y : SetCat.{u}) : @insert SetCat.{u} Class.{u} _ x y = ↑(insert x y) :=
-  Set.ext fun z => Iff.symm SetCat.mem_insert_iff
-#align Class.insert_hom Class.insert_hom
-
-@[simp]
-theorem union_hom (x y : SetCat.{u}) : (x : Class.{u}) ∪ y = (x ∪ y : SetCat.{u}) :=
-  Set.ext fun z => Iff.symm SetCat.mem_union
-#align Class.union_hom Class.union_hom
-
-@[simp]
-theorem inter_hom (x y : SetCat.{u}) : (x : Class.{u}) ∩ y = (x ∩ y : SetCat.{u}) :=
-  Set.ext fun z => Iff.symm SetCat.mem_inter
-#align Class.inter_hom Class.inter_hom
-
-@[simp]
-theorem diff_hom (x y : SetCat.{u}) : (x : Class.{u}) \ y = (x \ y : SetCat.{u}) :=
-  Set.ext fun z => Iff.symm SetCat.mem_diff
-#align Class.diff_hom Class.diff_hom
-
-@[simp]
-theorem powerset_hom (x : SetCat.{u}) : powerset.{u} x = SetCat.powerset x :=
-  Set.ext fun z => Iff.symm SetCat.mem_powerset
-#align Class.powerset_hom Class.powerset_hom
+theorem sUnion_apply {x : Class} {y : SetCat} : (⋃₀ x) y ↔ ∃ z : SetCat, x z ∧ y ∈ z :=
+  by
+  constructor
+  · rintro ⟨-, ⟨z, rfl, hxz⟩, hyz⟩
+    exact ⟨z, hxz, hyz⟩
+  · exact fun ⟨z, hxz, hyz⟩ => ⟨_, coe_mem.2 hxz, hyz⟩
+#align Class.sUnion_apply Class.sUnion_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem sUnion_hom (x : SetCat.{u}) : ⋃₀ (x : Class.{u}) = ⋃₀ x :=
-  Set.ext fun z => by
-    refine' Iff.trans _ Set.mem_sUnion.symm
-    exact ⟨fun ⟨_, ⟨a, rfl, ax⟩, za⟩ => ⟨a, ax, za⟩, fun ⟨a, ax, za⟩ => ⟨_, ⟨a, rfl, ax⟩, za⟩⟩
-#align Class.sUnion_hom Class.sUnion_hom
+@[simp, norm_cast]
+theorem coe_sUnion (x : SetCat.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
+  Set.ext fun y =>
+    SetCat.mem_sUnion.trans (sUnion_apply.trans <| by simp_rw [coe_apply, exists_prop]).symm
+#align Class.coe_sUnion Class.coe_sUnion
 
 @[ext]
 theorem ext {x y : Class.{u}} : (∀ z : Class.{u}, z ∈ x ↔ z ∈ y) → x = y :=
   by
   refine' fun h => Set.ext fun z => _
   change x z ↔ y z
-  rw [← mem_hom_left z x, ← mem_hom_left z y]
+  rw [← @coe_mem z x, ← @coe_mem z y]
   exact h z
 #align Class.ext Class.ext
 
@@ -1661,19 +1675,15 @@ theorem ext_iff {x y : Class.{u}} : x = y ↔ ∀ z : Class.{u}, z ∈ x ↔ z �
   ⟨fun h => by simp [h], ext⟩
 #align Class.ext_iff Class.ext_iff
 
-theorem coe_mem_powerset {x : Class.{u}} {y : SetCat.{u}} : powerset x y ↔ ↑y ⊆ x :=
-  Iff.rfl
-#align Class.coe_mem_powerset Class.coe_mem_powerset
-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
   by
   constructor
-  · rintro ⟨w, rfl, ⟨z, hzx, hwz⟩⟩
-    exact ⟨z, hzx, (mem_hom_left _ _).2 hwz⟩
-  · rintro ⟨w, hwx, ⟨z, rfl, hwz⟩⟩
-    exact ⟨z, rfl, ⟨w, hwx, hwz⟩⟩
+  · rintro ⟨w, rfl, z, hzx, hwz⟩
+    exact ⟨z, hzx, coe_mem.2 hwz⟩
+  · rintro ⟨w, hwx, z, rfl, hwz⟩
+    exact ⟨z, rfl, w, hwx, hwz⟩
 #align Class.mem_sUnion Class.mem_sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1694,7 +1704,7 @@ theorem eq_univ_of_powerset_subset {A : Class} (hA : powerset A ⊆ A) : A = uni
         WellFounded.min_mem SetCat.mem_wf _ hnA
           (hA fun x hx =>
             Classical.not_not.1 fun hB =>
-              WellFounded.not_lt_min SetCat.mem_wf _ hnA hB <| (mem_hom_right _ _).1 hx))
+              WellFounded.not_lt_min SetCat.mem_wf _ hnA hB <| coe_apply.1 hx))
 #align Class.eq_univ_of_powerset_subset Class.eq_univ_of_powerset_subset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1716,7 +1726,7 @@ theorem iota_ex (A) : iota.{u} A ∈ univ.{u} :=
   mem_univ.2 <|
     Or.elim (Classical.em <| ∃ x, ∀ y, A y ↔ y = x) (fun ⟨x, h⟩ => ⟨x, Eq.symm <| iota_val A x h⟩)
       fun hn =>
-      ⟨∅, Set.ext fun z => empty_hom.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
+      ⟨∅, Set.ext fun z => coe_empty.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
 #align Class.iota_ex Class.iota_ex
 
 /-- Function value -/
@@ -1740,7 +1750,7 @@ theorem map_fval {f : SetCat.{u} → SetCat.{u}} [H : PSet.Definable 1 f] {x y :
     (h : y ∈ x) : (SetCat.map f x ′ y : Class.{u}) = f y :=
   Class.iota_val _ _ fun z =>
     by
-    rw [Class.toSet_of_setCat, Class.mem_hom_right, mem_map]
+    rw [Class.toSet_of_setCat, Class.coe_apply, mem_map]
     exact
       ⟨fun ⟨w, wz, pr⟩ => by
         let ⟨wy, fw⟩ := SetCat.pair_injective pr
@@ -1773,7 +1783,7 @@ theorem choice_isFunc : IsFunc x (⋃₀ x) (choice x) :=
 theorem choice_mem (y : SetCat.{u}) (yx : y ∈ x) : (choice x ′ y : Class.{u}) ∈ (y : Class.{u}) :=
   by
   delta choice
-  rw [map_fval yx, Class.mem_hom_left, Class.mem_hom_right]
+  rw [map_fval yx, Class.coe_mem, Class.coe_apply]
   exact choice_mem_aux x h y yx
 #align Set.choice_mem SetCat.choice_mem
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.linear.basic
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,6 +181,37 @@ instance {X Y : C} (f : X ⟶ Y) [Mono f] (r : R) [Invertible r] : Mono (r • f
     by
     rw [comp_smul, comp_smul, ← smul_comp, ← smul_comp, cancel_mono] at H
     simpa [smul_smul] using congr_arg (fun f => ⅟ r • f) H⟩
+
+/-- Given isomorphic objects `X ≅ Y, W ≅ Z` in a `k`-linear category, we have a `k`-linear
+isomorphism between `Hom(X, W)` and `Hom(Y, Z).` -/
+def homCongr (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C] [Linear k C]
+    {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) : (X ⟶ W) ≃ₗ[k] Y ⟶ Z :=
+  {
+    (rightComp k Y f₂.hom).comp
+      (leftComp k W
+        f₁.symm.hom) with
+    invFun := (leftComp k W f₁.hom).comp (rightComp k Y f₂.symm.hom)
+    left_inv := fun x => by
+      simp only [iso.symm_hom, LinearMap.toFun_eq_coe, LinearMap.coe_comp, Function.comp_apply,
+        left_comp_apply, right_comp_apply, category.assoc, iso.hom_inv_id, category.comp_id,
+        iso.hom_inv_id_assoc]
+    right_inv := fun x => by
+      simp only [iso.symm_hom, LinearMap.coe_comp, Function.comp_apply, right_comp_apply,
+        left_comp_apply, LinearMap.toFun_eq_coe, iso.inv_hom_id_assoc, category.assoc,
+        iso.inv_hom_id, category.comp_id] }
+#align category_theory.linear.hom_congr CategoryTheory.Linear.homCongr
+
+theorem homCongr_apply (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
+    [Linear k C] {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) (f : X ⟶ W) :
+    homCongr k f₁ f₂ f = (f₁.inv ≫ f) ≫ f₂.hom :=
+  rfl
+#align category_theory.linear.hom_congr_apply CategoryTheory.Linear.homCongr_apply
+
+theorem homCongr_symm_apply (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
+    [Linear k C] {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) (f : Y ⟶ Z) :
+    (homCongr k f₁ f₂).symm f = f₁.hom ≫ f ≫ f₂.inv :=
+  rfl
+#align category_theory.linear.hom_congr_symm_apply CategoryTheory.Linear.homCongr_symm_apply
 
 end
 

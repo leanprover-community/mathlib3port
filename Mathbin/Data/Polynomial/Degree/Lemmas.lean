@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.lemmas
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 728baa2f54e6062c5879a3e397ac6bac323e506f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -496,6 +496,15 @@ theorem natDegree_comp : natDegree (p.comp q) = natDegree p * natDegree q :=
     simp only [coeff_comp_degree_mul_degree q0, p0, mul_eq_zero, leading_coeff_eq_zero, or_self_iff,
       ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zero q0), pow_ne_zero, Ne.def, not_false_iff]
 #align polynomial.nat_degree_comp Polynomial.natDegree_comp
+
+@[simp]
+theorem natDegree_iterate_comp (k : ℕ) :
+    ((p.comp^[k]) q).natDegree = p.natDegree ^ k * q.natDegree :=
+  by
+  induction' k with k IH
+  · simp
+  · rw [Function.iterate_succ_apply', nat_degree_comp, IH, pow_succ, mul_assoc]
+#align polynomial.nat_degree_iterate_comp Polynomial.natDegree_iterate_comp
 
 /- warning: polynomial.leading_coeff_comp -> Polynomial.leadingCoeff_comp is a dubious translation:
 lean 3 declaration is
