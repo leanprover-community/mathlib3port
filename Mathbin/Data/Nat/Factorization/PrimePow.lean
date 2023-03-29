@@ -20,6 +20,7 @@ This file deals with factorizations of prime powers.
 
 variable {R : Type _} [CommMonoidWithZero R] (n p : R) (k : ℕ)
 
+#print IsPrimePow.minFac_pow_factorization_eq /-
 theorem IsPrimePow.minFac_pow_factorization_eq {n : ℕ} (hn : IsPrimePow n) :
     n.minFac ^ n.factorization n.minFac = n :=
   by
@@ -27,7 +28,9 @@ theorem IsPrimePow.minFac_pow_factorization_eq {n : ℕ} (hn : IsPrimePow n) :
   rw [← Nat.prime_iff] at hp
   rw [hp.pow_min_fac hk.ne', hp.factorization_pow, Finsupp.single_eq_same]
 #align is_prime_pow.min_fac_pow_factorization_eq IsPrimePow.minFac_pow_factorization_eq
+-/
 
+#print isPrimePow_of_minFac_pow_factorization_eq /-
 theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
     (h : n.minFac ^ n.factorization n.minFac = n) (hn : n ≠ 1) : IsPrimePow n :=
   by
@@ -38,12 +41,16 @@ theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
     Nat.mem_factors_iff_dvd hn' (Nat.minFac_prime hn)]
   apply Nat.minFac_dvd
 #align is_prime_pow_of_min_fac_pow_factorization_eq isPrimePow_of_minFac_pow_factorization_eq
+-/
 
+#print isPrimePow_iff_minFac_pow_factorization_eq /-
 theorem isPrimePow_iff_minFac_pow_factorization_eq {n : ℕ} (hn : n ≠ 1) :
     IsPrimePow n ↔ n.minFac ^ n.factorization n.minFac = n :=
   ⟨fun h => h.minFac_pow_factorization_eq, fun h => isPrimePow_of_minFac_pow_factorization_eq h hn⟩
 #align is_prime_pow_iff_min_fac_pow_factorization_eq isPrimePow_iff_minFac_pow_factorization_eq
+-/
 
+#print isPrimePow_iff_factorization_eq_single /-
 theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
     IsPrimePow n ↔ ∃ p k : ℕ, 0 < k ∧ n.factorization = Finsupp.single p k :=
   by
@@ -60,13 +67,17 @@ theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
     exact
       ⟨Nat.prime_of_mem_factorization (by simp [hn, hk.ne'] : p ∈ n.factorization.support), hk, rfl⟩
 #align is_prime_pow_iff_factorization_eq_single isPrimePow_iff_factorization_eq_single
+-/
 
+#print isPrimePow_iff_card_support_factorization_eq_one /-
 theorem isPrimePow_iff_card_support_factorization_eq_one {n : ℕ} :
     IsPrimePow n ↔ n.factorization.support.card = 1 := by
   simp_rw [isPrimePow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop,
     pos_iff_ne_zero]
 #align is_prime_pow_iff_card_support_factorization_eq_one isPrimePow_iff_card_support_factorization_eq_one
+-/
 
+#print IsPrimePow.exists_ord_compl_eq_one /-
 theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) :
     ∃ p : ℕ, p.Prime ∧ ord_compl[p] n = 1 :=
   by
@@ -80,7 +91,9 @@ theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) :
   rw [Nat.factorization_ord_compl n p, h1]
   simp
 #align is_prime_pow.exists_ord_compl_eq_one IsPrimePow.exists_ord_compl_eq_one
+-/
 
+#print exists_ord_compl_eq_one_iff_isPrimePow /-
 theorem exists_ord_compl_eq_one_iff_isPrimePow {n : ℕ} (hn : n ≠ 1) :
     IsPrimePow n ↔ ∃ p : ℕ, p.Prime ∧ ord_compl[p] n = 1 :=
   by
@@ -92,7 +105,9 @@ theorem exists_ord_compl_eq_one_iff_isPrimePow {n : ℕ} (hn : n ≠ 1) :
   contrapose! hn
   simp [le_zero_iff.1 hn]
 #align exists_ord_compl_eq_one_iff_is_prime_pow exists_ord_compl_eq_one_iff_isPrimePow
+-/
 
+#print isPrimePow_iff_unique_prime_dvd /-
 /-- An equivalent definition for prime powers: `n` is a prime power iff there is a unique prime
 dividing it. -/
 theorem isPrimePow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : ℕ, p.Prime ∧ p ∣ n :=
@@ -117,7 +132,9 @@ theorem isPrimePow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : �
   cases hq _ hq'.1 hq'.2
   simp
 #align is_prime_pow_iff_unique_prime_dvd isPrimePow_iff_unique_prime_dvd
+-/
 
+#print isPrimePow_pow_iff /-
 theorem isPrimePow_pow_iff {n k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) ↔ IsPrimePow n :=
   by
   simp only [isPrimePow_iff_unique_prime_dvd]
@@ -126,7 +143,9 @@ theorem isPrimePow_pow_iff {n k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) ↔ I
   intro p hp
   exact ⟨hp.dvd_of_dvd_pow, fun t => t.trans (dvd_pow_self _ hk)⟩
 #align is_prime_pow_pow_iff isPrimePow_pow_iff
+-/
 
+#print Nat.coprime.isPrimePow_dvd_mul /-
 theorem Nat.coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.coprime a b) (hn : IsPrimePow n) :
     n ∣ a * b ↔ n ∣ a ∨ n ∣ b :=
   by
@@ -150,7 +169,14 @@ theorem Nat.coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.coprime a b) (hn
     exact fun t => (Nat.factorization_disjoint_of_coprime hab).le_bot t
   cases this <;> simp [this, imp_or]
 #align nat.coprime.is_prime_pow_dvd_mul Nat.coprime.isPrimePow_dvd_mul
+-/
 
+/- warning: nat.mul_divisors_filter_prime_pow -> Nat.mul_divisors_filter_prime_pow is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => IsPrimePow.decidable a) (Nat.divisors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => IsPrimePow.decidable a) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Nat.divisors a) (Nat.divisors b))))
+but is expected to have type
+  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Nat.divisors a) (Nat.divisors b))))
+Case conversion may be inaccurate. Consider using '#align nat.mul_divisors_filter_prime_pow Nat.mul_divisors_filter_prime_powₓ'. -/
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.coprime b) :
     (a * b).divisors.filterₓ IsPrimePow = (a.divisors ∪ b.divisors).filterₓ IsPrimePow :=
   by

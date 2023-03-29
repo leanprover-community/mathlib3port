@@ -111,15 +111,19 @@ theorem add_neg_one (i : ℤ) : i + -1 = i - 1 :=
 #align int.add_neg_one Int.add_neg_one
 -/
 
+#print Int.sign_coe_add_one /-
 @[simp]
 theorem sign_coe_add_one (n : ℕ) : Int.sign (n + 1) = 1 :=
   rfl
 #align int.sign_coe_add_one Int.sign_coe_add_one
+-/
 
+#print Int.sign_negSucc /-
 @[simp]
 theorem sign_negSucc (n : ℕ) : Int.sign -[n+1] = -1 :=
   rfl
 #align int.sign_neg_succ_of_nat Int.sign_negSucc
+-/
 
 #print Int.default_eq_zero /-
 @[simp]

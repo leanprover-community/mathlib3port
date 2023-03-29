@@ -1645,6 +1645,7 @@ theorem eval₂_comp {x : S} : eval₂ f x (p.comp q) = eval₂ f (eval₂ f x q
 #align polynomial.eval₂_comp Polynomial.eval₂_comp
 -/
 
+#print Polynomial.iterate_comp_eval₂ /-
 @[simp]
 theorem iterate_comp_eval₂ (k : ℕ) (t : S) :
     eval₂ f t ((p.comp^[k]) q) = ((fun x => eval₂ f x p)^[k]) (eval₂ f t q) :=
@@ -1653,6 +1654,7 @@ theorem iterate_comp_eval₂ (k : ℕ) (t : S) :
   · simp
   · rw [Function.iterate_succ_apply', Function.iterate_succ_apply', eval₂_comp, IH]
 #align polynomial.iterate_comp_eval₂ Polynomial.iterate_comp_eval₂
+-/
 
 end
 

@@ -141,6 +141,7 @@ theorem abs_coe_nat (n : ℕ) : |(n : ℤ)| = n :=
   abs_of_nonneg (coe_nat_nonneg n)
 #align int.abs_coe_nat Int.abs_coe_nat
 
+#print Int.sign_add_eq_of_sign_eq /-
 theorem sign_add_eq_of_sign_eq : ∀ {m n : ℤ}, m.sign = n.sign → (m + n).sign = n.sign :=
   by
   have : (1 : ℤ) ≠ -1 := by decide
@@ -148,6 +149,7 @@ theorem sign_add_eq_of_sign_eq : ∀ {m n : ℤ}, m.sign = n.sign → (m + n).si
   rw [Int.sign_eq_one_iff_pos]
   apply Int.add_pos <;> · exact zero_lt_one.trans_le (le_add_of_nonneg_left <| coe_zero_le _)
 #align int.sign_add_eq_of_sign_eq Int.sign_add_eq_of_sign_eq
+-/
 
 /-! ### succ and pred -/
 

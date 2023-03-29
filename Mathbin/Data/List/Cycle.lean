@@ -896,11 +896,13 @@ theorem map_eq_nil {β : Type _} (f : α → β) (s : Cycle α) : map f s = nil 
 #align cycle.map_eq_nil Cycle.map_eq_nil
 -/
 
+#print Cycle.mem_map /-
 @[simp]
 theorem mem_map {β : Type _} {f : α → β} {b : β} {s : Cycle α} :
     b ∈ s.map f ↔ ∃ a, a ∈ s ∧ f a = b :=
   Quotient.inductionOn' s (by simp)
 #align cycle.mem_map Cycle.mem_map
+-/
 
 #print Cycle.lists /-
 /-- The `multiset` of lists that can make the cycle. -/

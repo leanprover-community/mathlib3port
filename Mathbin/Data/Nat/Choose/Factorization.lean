@@ -37,6 +37,7 @@ namespace Nat
 
 variable {p n k : ℕ}
 
+#print Nat.factorization_choose_le_log /-
 /-- A logarithmic upper bound on the multiplicity of a prime in a binomial coefficient.
 -/
 theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :=
@@ -51,13 +52,17 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast]
   refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_Ico _ _))
 #align nat.factorization_choose_le_log Nat.factorization_choose_le_log
+-/
 
+#print Nat.pow_factorization_choose_le /-
 /-- A `pow` form of `nat.factorization_choose_le`
 -/
 theorem pow_factorization_choose_le (hn : 0 < n) : p ^ (choose n k).factorization p ≤ n :=
   pow_le_of_le_log hn.ne' factorization_choose_le_log
 #align nat.pow_factorization_choose_le Nat.pow_factorization_choose_le
+-/
 
+#print Nat.factorization_choose_le_one /-
 /--
 Primes greater than about `sqrt n` appear only to multiplicity 0 or 1 in the binomial coefficient.
 -/
@@ -67,7 +72,9 @@ theorem factorization_choose_le_one (p_large : n < p ^ 2) : (choose n k).factori
   rcases eq_or_ne n 0 with (rfl | hn0); · simp
   exact lt_succ_iff.1 (log_lt_of_lt_pow hn0 p_large)
 #align nat.factorization_choose_le_one Nat.factorization_choose_le_one
+-/
 
+#print Nat.factorization_choose_of_lt_three_mul /-
 theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk' : p ≤ n - k)
     (hn : n < 3 * p) : (choose n k).factorization p = 0 :=
   by
@@ -99,7 +106,9 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
     rwa [mod_eq_of_lt (lt_of_le_of_lt hkn hn), mod_eq_of_lt (lt_of_le_of_lt tsub_le_self hn),
       add_tsub_cancel_of_le hkn]
 #align nat.factorization_choose_of_lt_three_mul Nat.factorization_choose_of_lt_three_mul
+-/
 
+#print Nat.factorization_centralBinom_of_two_mul_self_lt_three_mul /-
 /-- Primes greater than about `2 * n / 3` and less than `n` do not appear in the factorization of
 `central_binom n`.
 -/
@@ -111,14 +120,18 @@ theorem factorization_centralBinom_of_two_mul_self_lt_three_mul (n_big : 2 < n) 
     linarith
   · rw [two_mul, add_tsub_cancel_left]
 #align nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_centralBinom_of_two_mul_self_lt_three_mul
+-/
 
+#print Nat.factorization_factorial_eq_zero_of_lt /-
 theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factorization p = 0 :=
   by
   induction' n with n hn; · simp
   rw [factorial_succ, factorization_mul n.succ_ne_zero n.factorial_ne_zero, Finsupp.coe_add,
     Pi.add_apply, hn (lt_of_succ_lt h), add_zero, factorization_eq_zero_of_lt h]
 #align nat.factorization_factorial_eq_zero_of_lt Nat.factorization_factorial_eq_zero_of_lt
+-/
 
+#print Nat.factorization_choose_eq_zero_of_lt /-
 theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorization p = 0 :=
   by
   by_cases hnk : n < k; · simp [choose_eq_zero_of_lt hnk]
@@ -126,7 +139,9 @@ theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorizat
     factorization_div (factorial_mul_factorial_dvd_factorial (le_of_not_lt hnk)), Finsupp.coe_tsub,
     Pi.sub_apply, factorization_factorial_eq_zero_of_lt h, zero_tsub]
 #align nat.factorization_choose_eq_zero_of_lt Nat.factorization_choose_eq_zero_of_lt
+-/
 
+#print Nat.factorization_centralBinom_eq_zero_of_two_mul_lt /-
 /-- If a prime `p` has positive multiplicity in the `n`th central binomial coefficient,
 `p` is no more than `2 * n`
 -/
@@ -134,14 +149,18 @@ theorem factorization_centralBinom_eq_zero_of_two_mul_lt (h : 2 * n < p) :
     (centralBinom n).factorization p = 0 :=
   factorization_choose_eq_zero_of_lt h
 #align nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_centralBinom_eq_zero_of_two_mul_lt
+-/
 
+#print Nat.le_two_mul_of_factorization_centralBinom_pos /-
 /-- Contrapositive form of `nat.factorization_central_binom_eq_zero_of_two_mul_lt`
 -/
 theorem le_two_mul_of_factorization_centralBinom_pos
     (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
   le_of_not_lt (pos_iff_ne_zero.mp h_pos ∘ factorization_centralBinom_eq_zero_of_two_mul_lt)
 #align nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_centralBinom_pos
+-/
 
+#print Nat.prod_pow_factorization_choose /-
 /-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/
 theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
     (∏ p in Finset.range (n + 1), p ^ (Nat.choose n k).factorization p) = choose n k :=
@@ -156,7 +175,9 @@ theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
   · intro p _ h2
     simp [Classical.not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
 #align nat.prod_pow_factorization_choose Nat.prod_pow_factorization_choose
+-/
 
+#print Nat.prod_pow_factorization_centralBinom /-
 /-- The `n`th central binomial coefficient is the product of its prime factors, which are
 at most `2n`. -/
 theorem prod_pow_factorization_centralBinom (n : ℕ) :
@@ -165,6 +186,7 @@ theorem prod_pow_factorization_centralBinom (n : ℕ) :
   apply prod_pow_factorization_choose
   linarith
 #align nat.prod_pow_factorization_central_binom Nat.prod_pow_factorization_centralBinom
+-/
 
 end Nat
 

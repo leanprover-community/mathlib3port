@@ -497,6 +497,12 @@ theorem natDegree_comp : natDegree (p.comp q) = natDegree p * natDegree q :=
       ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zero q0), pow_ne_zero, Ne.def, not_false_iff]
 #align polynomial.nat_degree_comp Polynomial.natDegree_comp
 
+/- warning: polynomial.nat_degree_iterate_comp -> Polynomial.natDegree_iterate_comp is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (Distrib.toHasMul.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))] {p : Polynomial.{u1} R _inst_1} {q : Polynomial.{u1} R _inst_1} (k : Nat), Eq.{1} Nat (Polynomial.natDegree.{u1} R _inst_1 (Nat.iterate.{succ u1} (Polynomial.{u1} R _inst_1) (Polynomial.comp.{u1} R _inst_1 p) k q)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (Polynomial.natDegree.{u1} R _inst_1 p) k) (Polynomial.natDegree.{u1} R _inst_1 q))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))] {p : Polynomial.{u1} R _inst_1} {q : Polynomial.{u1} R _inst_1} (k : Nat), Eq.{1} Nat (Polynomial.natDegree.{u1} R _inst_1 (Nat.iterate.{succ u1} (Polynomial.{u1} R _inst_1) (Polynomial.comp.{u1} R _inst_1 p) k q)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Polynomial.natDegree.{u1} R _inst_1 p) k) (Polynomial.natDegree.{u1} R _inst_1 q))
+Case conversion may be inaccurate. Consider using '#align polynomial.nat_degree_iterate_comp Polynomial.natDegree_iterate_compₓ'. -/
 @[simp]
 theorem natDegree_iterate_comp (k : ℕ) :
     ((p.comp^[k]) q).natDegree = p.natDegree ^ k * q.natDegree :=
