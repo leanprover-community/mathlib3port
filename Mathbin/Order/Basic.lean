@@ -522,9 +522,11 @@ theorem eq_or_gt_of_le [PartialOrder α] {a b : α} (h : a ≤ b) : b = a ∨ a 
 #align eq_or_gt_of_le eq_or_gt_of_le
 -/
 
+#print gt_or_eq_of_le /-
 theorem gt_or_eq_of_le [PartialOrder α] {a b : α} (hab : a ≤ b) : a < b ∨ b = a :=
   (eq_or_gt_of_le hab).symm
 #align gt_or_eq_of_le gt_or_eq_of_le
+-/
 
 alias Decidable.eq_or_lt_of_le ← LE.le.eq_or_lt_dec
 #align has_le.le.eq_or_lt_dec LE.le.eq_or_lt_dec
