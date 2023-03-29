@@ -37,12 +37,12 @@ open Prod Decidable Function
 
 namespace Nat
 
-#print Nat.mkpair /-
+#print Nat.pair /-
 /-- Pairing function for the natural numbers. -/
 @[pp_nodot]
-def mkpair (a b : ℕ) : ℕ :=
+def pair (a b : ℕ) : ℕ :=
   if a < b then b * b + a else a * a + a + b
-#align nat.mkpair Nat.mkpair
+#align nat.mkpair Nat.pair
 -/
 
 #print Nat.unpair /-
@@ -54,9 +54,9 @@ def unpair (n : ℕ) : ℕ × ℕ :=
 #align nat.unpair Nat.unpair
 -/
 
-#print Nat.mkpair_unpair /-
+#print Nat.pair_unpair /-
 @[simp]
-theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n :=
+theorem pair_unpair (n : ℕ) : pair (unpair n).1 (unpair n).2 = n :=
   by
   dsimp only [unpair]; set s := sqrt n
   have sm : s * s + (n - s * s) = n := add_tsub_cancel_of_le (sqrt_le _)
@@ -65,18 +65,18 @@ theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n :=
   · have hl : n - s * s - s ≤ s :=
       tsub_le_iff_left.mpr (tsub_le_iff_left.mpr <| by rw [← add_assoc] <;> apply sqrt_le_add)
     simp [mkpair, hl.not_lt, add_assoc, add_tsub_cancel_of_le (le_of_not_gt h), sm]
-#align nat.mkpair_unpair Nat.mkpair_unpair
+#align nat.mkpair_unpair Nat.pair_unpair
 -/
 
-#print Nat.mkpair_unpair' /-
-theorem mkpair_unpair' {n a b} (H : unpair n = (a, b)) : mkpair a b = n := by
+#print Nat.pair_unpair' /-
+theorem pair_unpair' {n a b} (H : unpair n = (a, b)) : pair a b = n := by
   simpa [H] using mkpair_unpair n
-#align nat.mkpair_unpair' Nat.mkpair_unpair'
+#align nat.mkpair_unpair' Nat.pair_unpair'
 -/
 
-#print Nat.unpair_mkpair /-
+#print Nat.unpair_pair /-
 @[simp]
-theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) :=
+theorem unpair_pair (a b : ℕ) : unpair (pair a b) = (a, b) :=
   by
   dsimp only [mkpair]; split_ifs
   · show unpair (b * b + a) = (a, b)
@@ -88,28 +88,28 @@ theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) :=
       rw [sqrt_add_eq]
       exact add_le_add_left (le_of_not_gt h) _
     simp [unpair, ae, Nat.not_lt_zero, add_assoc]
-#align nat.unpair_mkpair Nat.unpair_mkpair
+#align nat.unpair_mkpair Nat.unpair_pair
 -/
 
-#print Nat.mkpairEquiv /-
+#print Nat.pairEquiv /-
 /-- An equivalence between `ℕ × ℕ` and `ℕ`. -/
 @[simps (config := { fullyApplied := false })]
-def mkpairEquiv : ℕ × ℕ ≃ ℕ :=
-  ⟨uncurry mkpair, unpair, fun ⟨a, b⟩ => unpair_mkpair a b, mkpair_unpair⟩
-#align nat.mkpair_equiv Nat.mkpairEquiv
+def pairEquiv : ℕ × ℕ ≃ ℕ :=
+  ⟨uncurry pair, unpair, fun ⟨a, b⟩ => unpair_pair a b, pair_unpair⟩
+#align nat.mkpair_equiv Nat.pairEquiv
 -/
 
 #print Nat.surjective_unpair /-
 theorem surjective_unpair : Surjective unpair :=
-  mkpairEquiv.symm.Surjective
+  pairEquiv.symm.Surjective
 #align nat.surjective_unpair Nat.surjective_unpair
 -/
 
-#print Nat.mkpair_eq_mkpair /-
+#print Nat.pair_eq_pair /-
 @[simp]
-theorem mkpair_eq_mkpair {a b c d : ℕ} : mkpair a b = mkpair c d ↔ a = c ∧ b = d :=
-  mkpairEquiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
-#align nat.mkpair_eq_mkpair Nat.mkpair_eq_mkpair
+theorem pair_eq_pair {a b c d : ℕ} : pair a b = pair c d ↔ a = c ∧ b = d :=
+  pairEquiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
+#align nat.mkpair_eq_mkpair Nat.pair_eq_pair
 -/
 
 #print Nat.unpair_lt /-
@@ -140,17 +140,17 @@ theorem unpair_left_le : ∀ n : ℕ, (unpair n).1 ≤ n
 #align nat.unpair_left_le Nat.unpair_left_le
 -/
 
-#print Nat.left_le_mkpair /-
-theorem left_le_mkpair (a b : ℕ) : a ≤ mkpair a b := by simpa using unpair_left_le (mkpair a b)
-#align nat.left_le_mkpair Nat.left_le_mkpair
+#print Nat.left_le_pair /-
+theorem left_le_pair (a b : ℕ) : a ≤ pair a b := by simpa using unpair_left_le (mkpair a b)
+#align nat.left_le_mkpair Nat.left_le_pair
 -/
 
-#print Nat.right_le_mkpair /-
-theorem right_le_mkpair (a b : ℕ) : b ≤ mkpair a b :=
+#print Nat.right_le_pair /-
+theorem right_le_pair (a b : ℕ) : b ≤ pair a b :=
   by
   by_cases h : a < b <;> simp [mkpair, h]
   exact le_trans (le_mul_self _) (Nat.le_add_right _ _)
-#align nat.right_le_mkpair Nat.right_le_mkpair
+#align nat.right_le_mkpair Nat.right_le_pair
 -/
 
 #print Nat.unpair_right_le /-
@@ -159,8 +159,8 @@ theorem unpair_right_le (n : ℕ) : (unpair n).2 ≤ n := by
 #align nat.unpair_right_le Nat.unpair_right_le
 -/
 
-#print Nat.mkpair_lt_mkpair_left /-
-theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b < mkpair a₂ b :=
+#print Nat.pair_lt_pair_left /-
+theorem pair_lt_pair_left {a₁ a₂} (b) (h : a₁ < a₂) : pair a₁ b < pair a₂ b :=
   by
   by_cases h₁ : a₁ < b <;> simp [mkpair, h₁, add_assoc]
   · by_cases h₂ : a₂ < b <;> simp [mkpair, h₂, h]
@@ -173,11 +173,11 @@ theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b 
     apply add_lt_add
     exact mul_self_lt_mul_self h
     apply add_lt_add_right <;> assumption
-#align nat.mkpair_lt_mkpair_left Nat.mkpair_lt_mkpair_left
+#align nat.mkpair_lt_mkpair_left Nat.pair_lt_pair_left
 -/
 
-#print Nat.mkpair_lt_mkpair_right /-
-theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁ < mkpair a b₂ :=
+#print Nat.pair_lt_pair_right /-
+theorem pair_lt_pair_right (a) {b₁ b₂} (h : b₁ < b₂) : pair a b₁ < pair a b₂ :=
   by
   by_cases h₁ : a < b₁ <;> simp [mkpair, h₁, add_assoc]
   · simp [mkpair, lt_trans h₁ h, h]
@@ -187,16 +187,16 @@ theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁
     rw [add_comm, add_comm _ a, add_assoc, add_lt_add_iff_left]
     rwa [add_comm, ← sqrt_lt, sqrt_add_eq]
     exact le_trans h₁ (Nat.le_add_left _ _)
-#align nat.mkpair_lt_mkpair_right Nat.mkpair_lt_mkpair_right
+#align nat.mkpair_lt_mkpair_right Nat.pair_lt_pair_right
 -/
 
-/- warning: nat.mkpair_lt_max_add_one_sq -> Nat.mkpair_lt_max_add_one_sq is a dubious translation:
+/- warning: nat.mkpair_lt_max_add_one_sq -> Nat.pair_lt_max_add_one_sq is a dubious translation:
 lean 3 declaration is
-  forall (m : Nat) (n : Nat), LT.lt.{0} Nat Nat.hasLt (Nat.mkpair m n) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
+  forall (m : Nat) (n : Nat), LT.lt.{0} Nat Nat.hasLt (Nat.pair m n) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall (m : Nat) (n : Nat), LT.lt.{0} Nat instLTNat (Nat.mkpair m n) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
-Case conversion may be inaccurate. Consider using '#align nat.mkpair_lt_max_add_one_sq Nat.mkpair_lt_max_add_one_sqₓ'. -/
-theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 :=
+  forall (m : Nat) (n : Nat), LT.lt.{0} Nat instLTNat (Nat.pair m n) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+Case conversion may be inaccurate. Consider using '#align nat.mkpair_lt_max_add_one_sq Nat.pair_lt_max_add_one_sqₓ'. -/
+theorem pair_lt_max_add_one_sq (m n : ℕ) : pair m n < (max m n + 1) ^ 2 :=
   by
   rw [mkpair, add_sq, mul_one, two_mul, sq, add_assoc, add_assoc]
   cases lt_or_le m n
@@ -204,35 +204,35 @@ theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 :=
     exact h.trans_le (self_le_add_right n _)
   · rw [if_neg h.not_lt, max_eq_left h, add_lt_add_iff_left, add_assoc, add_lt_add_iff_left]
     exact lt_succ_of_le h
-#align nat.mkpair_lt_max_add_one_sq Nat.mkpair_lt_max_add_one_sq
+#align nat.mkpair_lt_max_add_one_sq Nat.pair_lt_max_add_one_sq
 
-/- warning: nat.max_sq_add_min_le_mkpair -> Nat.max_sq_add_min_le_mkpair is a dubious translation:
+/- warning: nat.max_sq_add_min_le_mkpair -> Nat.max_sq_add_min_le_pair is a dubious translation:
 lean 3 declaration is
-  forall (m : Nat) (n : Nat), LE.le.{0} Nat Nat.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (LinearOrder.min.{0} Nat Nat.linearOrder m n)) (Nat.mkpair m n)
+  forall (m : Nat) (n : Nat), LE.le.{0} Nat Nat.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (LinearOrder.min.{0} Nat Nat.linearOrder m n)) (Nat.pair m n)
 but is expected to have type
-  forall (m : Nat) (n : Nat), LE.le.{0} Nat instLENat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Min.min.{0} Nat instMinNat m n)) (Nat.mkpair m n)
-Case conversion may be inaccurate. Consider using '#align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_mkpairₓ'. -/
-theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair m n :=
+  forall (m : Nat) (n : Nat), LE.le.{0} Nat instLENat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Min.min.{0} Nat instMinNat m n)) (Nat.pair m n)
+Case conversion may be inaccurate. Consider using '#align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_pairₓ'. -/
+theorem max_sq_add_min_le_pair (m n : ℕ) : max m n ^ 2 + min m n ≤ pair m n :=
   by
   rw [mkpair]
   cases lt_or_le m n
   · rw [if_pos h, max_eq_right h.le, min_eq_left h.le, sq]
   · rw [if_neg h.not_lt, max_eq_left h, min_eq_right h, sq, add_assoc, add_le_add_iff_left]
     exact le_add_self
-#align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_mkpair
+#align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_pair
 
-#print Nat.add_le_mkpair /-
-theorem add_le_mkpair (m n : ℕ) : m + n ≤ mkpair m n :=
-  (max_sq_add_min_le_mkpair _ _).trans' <|
+#print Nat.add_le_pair /-
+theorem add_le_pair (m n : ℕ) : m + n ≤ pair m n :=
+  (max_sq_add_min_le_pair _ _).trans' <|
     by
     rw [sq, ← min_add_max, add_comm, add_le_add_iff_right]
     exact le_mul_self _
-#align nat.add_le_mkpair Nat.add_le_mkpair
+#align nat.add_le_mkpair Nat.add_le_pair
 -/
 
 #print Nat.unpair_add_le /-
 theorem unpair_add_le (n : ℕ) : (unpair n).1 + (unpair n).2 ≤ n :=
-  (add_le_mkpair _ _).trans_eq (mkpair_unpair _)
+  (add_le_pair _ _).trans_eq (pair_unpair _)
 #align nat.unpair_add_le Nat.unpair_add_le
 -/
 

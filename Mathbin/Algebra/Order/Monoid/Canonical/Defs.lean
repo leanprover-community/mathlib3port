@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.canonical.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit de87d5053a9fe5cbde723172c0fb7e27e7436473
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,6 +270,18 @@ theorem le_of_mul_le_right : a * b ≤ c → b ≤ c :=
   le_mul_self.trans
 #align le_of_mul_le_right le_of_mul_le_right
 #align le_of_add_le_right le_of_add_le_right
+
+@[to_additive]
+theorem le_mul_of_le_left : a ≤ b → a ≤ b * c :=
+  le_self_mul.trans'
+#align le_mul_of_le_left le_mul_of_le_left
+#align le_add_of_le_left le_add_of_le_left
+
+@[to_additive]
+theorem le_mul_of_le_right : a ≤ c → a ≤ b * c :=
+  le_mul_self.trans'
+#align le_mul_of_le_right le_mul_of_le_right
+#align le_add_of_le_right le_add_of_le_right
 
 /- warning: le_iff_exists_mul -> le_iff_exists_mul is a dubious translation:
 lean 3 declaration is

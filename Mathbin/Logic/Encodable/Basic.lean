@@ -449,7 +449,7 @@ variable {γ : α → Type _} [Encodable α] [∀ a, Encodable (γ a)]
 #print Encodable.encodeSigma /-
 /-- Explicit encoding function for `sigma γ` -/
 def encodeSigma : Sigma γ → ℕ
-  | ⟨a, b⟩ => mkpair (encode a) (encode b)
+  | ⟨a, b⟩ => pair (encode a) (encode b)
 #align encodable.encode_sigma Encodable.encodeSigma
 -/
 
@@ -483,7 +483,7 @@ theorem decode_sigma_val (n : ℕ) :
 
 #print Encodable.encode_sigma_val /-
 @[simp]
-theorem encode_sigma_val (a b) : @encode (Sigma γ) _ ⟨a, b⟩ = mkpair (encode a) (encode b) :=
+theorem encode_sigma_val (a b) : @encode (Sigma γ) _ ⟨a, b⟩ = pair (encode a) (encode b) :=
   rfl
 #align encodable.encode_sigma_val Encodable.encode_sigma_val
 -/
@@ -514,7 +514,7 @@ theorem decode_prod_val (n : ℕ) :
 
 #print Encodable.encode_prod_val /-
 @[simp]
-theorem encode_prod_val (a b) : @encode (α × β) _ (a, b) = mkpair (encode a) (encode b) :=
+theorem encode_prod_val (a b) : @encode (α × β) _ (a, b) = pair (encode a) (encode b) :=
   rfl
 #align encodable.encode_prod_val Encodable.encode_prod_val
 -/

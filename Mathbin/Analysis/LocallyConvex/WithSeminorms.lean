@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit ce86f4e05e9a9b8da5e316b22c76ce76440c56a1
+! leanprover-community/mathlib commit b31173ee05c911d61ad6a05bd2196835c932e0ec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,46 +234,41 @@ variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 -- Todo: This should be phrased entirely in terms of the von Neumann bornology.
 /-- The proposition that a linear map is bounded between spaces with families of seminorms. -/
 def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜₂ F) (f : E →ₛₗ[σ₁₂] F) : Prop :=
-  ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
+  ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0, (q i).comp f ≤ C • s.sup p
 #align seminorm.is_bounded Seminorm.IsBounded
 
 theorem isBounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜₂ F}
     (f : E →ₛₗ[σ₁₂] F) :
-    IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ q.comp f ≤ C • s.sup p :=
-  by simp only [is_bounded, forall_const]
+    IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0), q.comp f ≤ C • s.sup p := by
+  simp only [is_bounded, forall_const]
 #align seminorm.is_bounded_const Seminorm.isBounded_const
 
 theorem const_isBounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F}
-    (f : E →ₛₗ[σ₁₂] F) :
-    IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • p :=
+    (f : E →ₛₗ[σ₁₂] F) : IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0, (q i).comp f ≤ C • p :=
   by
   constructor <;> intro h i
-  · rcases h i with ⟨s, C, hC, h⟩
-    exact ⟨C, hC, le_trans h (smul_le_smul (Finset.sup_le fun _ _ => le_rfl) le_rfl)⟩
+  · rcases h i with ⟨s, C, h⟩
+    exact ⟨C, le_trans h (smul_le_smul (Finset.sup_le fun _ _ => le_rfl) le_rfl)⟩
   use {Classical.arbitrary ι}
   simp only [h, Finset.sup_singleton]
 #align seminorm.const_is_bounded Seminorm.const_isBounded
 
 theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F} {f : E →ₛₗ[σ₁₂] F}
     (hf : IsBounded p q f) (s' : Finset ι') :
-    ∃ (C : ℝ≥0)(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
+    ∃ (C : ℝ≥0)(s : Finset ι), (s'.sup q).comp f ≤ C • s.sup p := by
   classical
     obtain rfl | hs' := s'.eq_empty_or_nonempty
-    · exact ⟨1, ∅, zero_lt_one, by simp [Seminorm.bot_eq_zero]⟩
+    · exact ⟨1, ∅, by simp [Seminorm.bot_eq_zero]⟩
     choose fₛ fC hf using hf
     use s'.card • s'.sup fC, Finset.bunionᵢ s' fₛ
-    constructor
-    · refine' nsmul_pos _ (ne_of_gt (Finset.Nonempty.card_pos hs'))
-      cases' Finset.Nonempty.bex hs' with j hj
-      exact lt_of_lt_of_le (zero_lt_iff.mpr (And.left (hf j))) (Finset.le_sup hj)
     have hs : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.bunionᵢ s' fₛ).sup p :=
       by
       intro i hi
-      refine' le_trans (And.right (hf i)) (smul_le_smul _ (Finset.le_sup hi))
+      refine' (hf i).trans (smul_le_smul _ (Finset.le_sup hi))
       exact Finset.sup_mono (Finset.subset_bunionᵢ_of_mem fₛ hi)
-    refine' le_trans (comp_mono f (finset_sup_le_sum q s')) _
+    refine' (comp_mono f (finset_sup_le_sum q s')).trans _
     simp_rw [← pullback_apply, AddMonoidHom.map_sum, pullback_apply]
-    refine' le_trans (Finset.sum_le_sum hs) _
+    refine' (Finset.sum_le_sum hs).trans _
     rw [Finset.sum_const, smul_assoc]
     exact le_rfl
 #align seminorm.is_bounded_sup Seminorm.isBounded_sup
@@ -649,20 +644,21 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕝 E ι} {q : SeminormFami
   refine' continuous_of_continuous_comp hq _ fun i => Seminorm.continuous_of_continuousAt_zero _
   rw [Metric.continuousAt_iff', map_zero]
   intro r hr
-  rcases hf i with ⟨s₁, C, hC, hf⟩
-  have hC' : 0 < C := hC.bot_lt
+  rcases hf i with ⟨s₁, C, hf⟩
+  have hC' : 0 < C + 1 := by positivity
   rw [hp.has_basis.eventually_iff]
-  refine' ⟨(s₁.sup p).ball 0 (r / C), p.basis_sets_mem _ (by positivity), _⟩
+  refine' ⟨(s₁.sup p).ball 0 (r / (C + 1)), p.basis_sets_mem _ (by positivity), _⟩
   simp_rw [← Metric.mem_ball, ← mem_preimage, ← ball_zero_eq_preimage_ball]
   refine' subset.trans _ (ball_antitone hf)
-  rw [ball_smul (s₁.sup p) hC']
-  rfl
+  norm_cast
+  rw [← ball_smul (s₁.sup p) hC']
+  refine' ball_antitone (smul_le_smul le_rfl _)
+  simp only [le_add_iff_nonneg_right, zero_le']
 #align seminorm.continuous_from_bounded Seminorm.continuous_from_bounded
 
 theorem cont_withSeminorms_normedSpace (F) [SeminormedAddCommGroup F] [NormedSpace 𝕝₂ F]
     [UniformSpace E] [UniformAddGroup E] {p : ι → Seminorm 𝕝 E} (hp : WithSeminorms p)
-    (f : E →ₛₗ[τ₁₂] F)
-    (hf : ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ (normSeminorm 𝕝₂ F).comp f ≤ C • s.sup p) :
+    (f : E →ₛₗ[τ₁₂] F) (hf : ∃ (s : Finset ι)(C : ℝ≥0), (normSeminorm 𝕝₂ F).comp f ≤ C • s.sup p) :
     Continuous f := by
   rw [← Seminorm.isBounded_const (Fin 1)] at hf
   exact continuous_from_bounded hp (normWithSeminorms 𝕝₂ F) f hf
@@ -670,7 +666,7 @@ theorem cont_withSeminorms_normedSpace (F) [SeminormedAddCommGroup F] [NormedSpa
 
 theorem cont_normedSpace_to_withSeminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕝 E]
     [UniformSpace F] [UniformAddGroup F] {q : ι → Seminorm 𝕝₂ F} (hq : WithSeminorms q)
-    (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕝 E) :
+    (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, (q i).comp f ≤ C • normSeminorm 𝕝 E) :
     Continuous f := by
   rw [← Seminorm.const_isBounded (Fin 1)] at hf
   exact continuous_from_bounded (normWithSeminorms 𝕝 E) hq f hf

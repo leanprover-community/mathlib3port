@@ -682,7 +682,7 @@ protected def ofFunction : OuterMeasure α :=
           Union_subset fun i =>
             subset.trans (hf i).1 <|
               Union_subset fun j =>
-                subset.trans (by simp) <| subset_Union _ <| Nat.mkpairEquiv (i, j) }
+                subset.trans (by simp) <| subset_Union _ <| Nat.pairEquiv (i, j) }
 #align measure_theory.outer_measure.of_function MeasureTheory.OuterMeasure.ofFunction
 
 theorem ofFunction_apply (s : Set α) :

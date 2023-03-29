@@ -320,10 +320,9 @@ theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (
     
 #align ack_add_one_sq_lt_ack_add_four ack_add_one_sq_lt_ack_add_four
 
-theorem ack_mkpair_lt (m n k : ℕ) : ack m (mkpair n k) < ack (m + 4) (max n k) :=
-  (ack_strictMono_right m <| mkpair_lt_max_add_one_sq n k).trans <|
-    ack_add_one_sq_lt_ack_add_four _ _
-#align ack_mkpair_lt ack_mkpair_lt
+theorem ack_pair_lt (m n k : ℕ) : ack m (pair n k) < ack (m + 4) (max n k) :=
+  (ack_strictMono_right m <| pair_lt_max_add_one_sq n k).trans <| ack_add_one_sq_lt_ack_add_four _ _
+#align ack_mkpair_lt ack_pair_lt
 
 /-- If `f` is primitive recursive, there exists `m` such that `f n < ack m n` for all `n`. -/
 theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : ∃ m, ∀ n, f n < ack m n :=
@@ -371,14 +370,14 @@ theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : �
         linarith
       · -- We get rid of the first `mkpair`.
         rw [elim_succ]
-        apply (hb _).trans ((ack_mkpair_lt _ _ _).trans_le _)
+        apply (hb _).trans ((ack_pair_lt _ _ _).trans_le _)
         -- If m is the maximum, we get a very weak inequality.
         cases' lt_or_le _ m with h₁ h₁
         · rw [max_eq_left h₁.le]
           exact ack_le_ack (add_le_add (le_max_right a b) <| by norm_num) (self_le_add_right m _)
         rw [max_eq_right h₁]
         -- We get rid of the second `mkpair`.
-        apply (ack_mkpair_lt _ _ _).le.trans
+        apply (ack_pair_lt _ _ _).le.trans
         -- If n is the maximum, we get a very weak inequality.
         cases' lt_or_le _ n with h₂ h₂
         · rw [max_eq_left h₂.le, add_assoc]

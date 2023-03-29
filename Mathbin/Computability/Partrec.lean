@@ -165,7 +165,7 @@ inductive Partrec : (ℕ →. ℕ) → Prop
   | succ : Partrec succ
   | left : Partrec ↑fun n : ℕ => n.unpair.1
   | right : Partrec ↑fun n : ℕ => n.unpair.2
-  | pair {f g} : Partrec f → Partrec g → Partrec fun n => mkpair <$> f n <*> g n
+  | pair {f g} : Partrec f → Partrec g → Partrec fun n => pair <$> f n <*> g n
   | comp {f g} : Partrec f → Partrec g → Partrec fun n => g n >>= f
   |
   prec {f g} :
@@ -176,7 +176,7 @@ inductive Partrec : (ℕ →. ℕ) → Prop
             n.elim (f a) fun y IH => do
               let i ← IH
               g (mkpair a (mkpair y i)))
-  | rfind {f} : Partrec f → Partrec fun a => rfind fun n => (fun m => m = 0) <$> f (mkpair a n)
+  | rfind {f} : Partrec f → Partrec fun a => rfind fun n => (fun m => m = 0) <$> f (pair a n)
 #align nat.partrec Nat.Partrec
 
 namespace Partrec

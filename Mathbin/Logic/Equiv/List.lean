@@ -37,7 +37,7 @@ variable [Encodable α]
 /-- Explicit encoding function for `list α` -/
 def encodeList : List α → ℕ
   | [] => 0
-  | a :: l => succ (mkpair (encode a) (encode_list l))
+  | a :: l => succ (pair (encode a) (encode_list l))
 #align encodable.encode_list Encodable.encodeList
 -/
 
@@ -80,7 +80,7 @@ theorem encode_list_nil : encode (@nil α) = 0 :=
 #print Encodable.encode_list_cons /-
 @[simp]
 theorem encode_list_cons (a : α) (l : List α) :
-    encode (a :: l) = succ (mkpair (encode a) (encode l)) :=
+    encode (a :: l) = succ (pair (encode a) (encode l)) :=
   rfl
 #align encodable.encode_list_cons Encodable.encode_list_cons
 -/
@@ -109,7 +109,7 @@ theorem decode_list_succ (v : ℕ) :
 #print Encodable.length_le_encode /-
 theorem length_le_encode : ∀ l : List α, length l ≤ encode l
   | [] => zero_le _
-  | a :: l => succ_le_succ <| (length_le_encode l).trans (right_le_mkpair _ _)
+  | a :: l => succ_le_succ <| (length_le_encode l).trans (right_le_pair _ _)
 #align encodable.length_le_encode Encodable.length_le_encode
 -/
 

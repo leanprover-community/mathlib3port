@@ -122,13 +122,12 @@ inductive Primrec : (ℕ → ℕ) → Prop
   | succ : Primrec succ
   | left : Primrec fun n => n.unpair.1
   | right : Primrec fun n => n.unpair.2
-  | pair {f g} : Primrec f → Primrec g → Primrec fun n => mkpair (f n) (g n)
+  | pair {f g} : Primrec f → Primrec g → Primrec fun n => pair (f n) (g n)
   | comp {f g} : Primrec f → Primrec g → Primrec fun n => f (g n)
   |
   prec {f g} :
     Primrec f →
-      Primrec g →
-        Primrec (unpaired fun z n => n.elim (f z) fun y IH => g <| mkpair z <| mkpair y IH)
+      Primrec g → Primrec (unpaired fun z n => n.elim (f z) fun y IH => g <| pair z <| pair y IH)
 #align nat.primrec Nat.Primrec
 -/
 
@@ -154,8 +153,7 @@ protected theorem id : Primrec id :=
 -/
 
 #print Nat.Primrec.prec1 /-
-theorem prec1 {f} (m : ℕ) (hf : Primrec f) :
-    Primrec fun n => n.elim m fun y IH => f <| mkpair y IH :=
+theorem prec1 {f} (m : ℕ) (hf : Primrec f) : Primrec fun n => n.elim m fun y IH => f <| pair y IH :=
   ((prec (const m) (hf.comp right)).comp (zero.pair Primrec.id)).of_eq fun n => by simp
 #align nat.primrec.prec1 Nat.Primrec.prec1
 -/
@@ -168,13 +166,13 @@ theorem cases1 {f} (m : ℕ) (hf : Primrec f) : Primrec (Nat.casesOn m f) :=
 
 #print Nat.Primrec.cases /-
 theorem cases {f g} (hf : Primrec f) (hg : Primrec g) :
-    Primrec (unpaired fun z n => n.cases (f z) fun y => g <| mkpair z y) :=
+    Primrec (unpaired fun z n => n.cases (f z) fun y => g <| pair z y) :=
   (prec hf (hg.comp (pair left (left.comp right)))).of_eq <| by simp [cases]
 #align nat.primrec.cases Nat.Primrec.cases
 -/
 
 #print Nat.Primrec.swap /-
-protected theorem swap : Primrec (unpaired (swap mkpair)) :=
+protected theorem swap : Primrec (unpaired (swap pair)) :=
   (pair right left).of_eq fun n => by simp
 #align nat.primrec.swap Nat.Primrec.swap
 -/
@@ -654,9 +652,9 @@ theorem right : Primrec₂ fun (a : α) (b : β) => b :=
   Primrec.snd
 #align primrec₂.right Primrec₂.right
 
-#print Primrec₂.mkpair /-
-theorem mkpair : Primrec₂ Nat.mkpair := by simp [Primrec₂, Primrec] <;> constructor
-#align primrec₂.mkpair Primrec₂.mkpair
+#print Primrec₂.natPair /-
+theorem natPair : Primrec₂ Nat.pair := by simp [Primrec₂, Primrec] <;> constructor
+#align primrec₂.mkpair Primrec₂.natPair
 -/
 
 #print Primrec₂.unpaired /-
@@ -1515,7 +1513,7 @@ instance list : Primcodable (List α) :=
         exact this _ _ (IH _ (Nat.unpair_right_le n))
         intro o p IH
         cases o <;> cases p <;> injection IH with h
-        exact congr_arg (fun k => (Nat.mkpair (encode a) k).succ.succ) h⟩
+        exact congr_arg (fun k => (Nat.pair (encode a) k).succ.succ) h⟩
 #align primcodable.list Primcodable.list
 -/
 
@@ -2212,17 +2210,17 @@ theorem if_lt {n a b f g} (ha : @Primrec' n a) (hb : @Primrec' n b) (hf : @Primr
     · simp [Nat.lt_of_sub_eq_succ e]
 #align nat.primrec'.if_lt Nat.Primrec'.if_lt
 
-#print Nat.Primrec'.mkpair /-
-theorem mkpair : @Primrec' 2 fun v => v.headI.mkpair v.tail.headI :=
+#print Nat.Primrec'.natPair /-
+theorem natPair : @Primrec' 2 fun v => v.headI.pair v.tail.headI :=
   if_lt head (tail head) (add.comp₂ _ (tail <| mul.comp₂ _ head head) head)
     (add.comp₂ _ (add.comp₂ _ (mul.comp₂ _ head head) head) (tail head))
-#align nat.primrec'.mkpair Nat.Primrec'.mkpair
+#align nat.primrec'.mkpair Nat.Primrec'.natPair
 -/
 
 #print Nat.Primrec'.encode /-
 protected theorem encode : ∀ {n}, @Primrec' n encode
   | 0 => (const 0).of_eq fun v => by rw [v.eq_nil] <;> rfl
-  | n + 1 => (succ.comp₁ _ (mkpair.comp₂ _ head (tail encode))).of_eq fun ⟨a :: l, e⟩ => rfl
+  | n + 1 => (succ.comp₁ _ (natPair.comp₂ _ head (tail encode))).of_eq fun ⟨a :: l, e⟩ => rfl
 #align nat.primrec'.encode Nat.Primrec'.encode
 -/
 

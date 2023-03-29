@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 38f16f960f5006c6c0c2bac7b0aba5273188f4e5
+! leanprover-community/mathlib commit b31173ee05c911d61ad6a05bd2196835c932e0ec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -596,7 +596,7 @@ def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)
       Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
         (schwartzWithSeminorms 𝕜 E (E →L[ℝ] F)) _ _
     rintro ⟨k, n⟩
-    use {⟨k, n + 1⟩}, 1, one_ne_zero
+    use {⟨k, n + 1⟩}, 1
     intro f
     simp only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton, one_smul]
     refine' (fderiv_lm 𝕜 f).seminorm_le_bound 𝕜 k n (by positivity) _
@@ -667,7 +667,7 @@ def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
       change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
       refine'
         Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
-          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, one_ne_zero, fun f => _⟩
+          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, fun f => _⟩
       rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_normSeminorm,
         schwartz_seminorm_family_apply_zero, BoundedContinuousFunction.norm_le (map_nonneg _ _)]
       intro x

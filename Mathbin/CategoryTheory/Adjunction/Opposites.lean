@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Thomas Read, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.opposites
-! leanprover-community/mathlib commit f3ee4628e2dc737653af924c41fa681abc2a4f4a
+! leanprover-community/mathlib commit 0148d455199ed64bf8eb2f493a1e7eb9211ce170
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ namespace CategoryTheory.Adjunction
 
 #print CategoryTheory.Adjunction.adjointOfOpAdjointOp /-
 /-- If `G.op` is adjoint to `F.op` then `F` is adjoint to `G`. -/
-@[simps]
+@[simps unit_app counit_app]
 def adjointOfOpAdjointOp (F : C ⥤ D) (G : D ⥤ C) (h : G.op ⊣ F.op) : F ⊣ G :=
   Adjunction.mkOfHomEquiv
     {
@@ -68,7 +68,7 @@ def unopAdjointUnopOfAdjoint (F : Cᵒᵖ ⥤ Dᵒᵖ) (G : Dᵒᵖ ⥤ Cᵒᵖ)
 
 #print CategoryTheory.Adjunction.opAdjointOpOfAdjoint /-
 /-- If `G` is adjoint to `F` then `F.op` is adjoint to `G.op`. -/
-@[simps]
+@[simps unit_app counit_app]
 def opAdjointOpOfAdjoint (F : C ⥤ D) (G : D ⥤ C) (h : G ⊣ F) : F.op ⊣ G.op :=
   Adjunction.mkOfHomEquiv
     {

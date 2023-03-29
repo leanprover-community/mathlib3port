@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit c5dd93108bec0f9023919bc97bc1f68f88edb7bd
+! leanprover-community/mathlib commit ef5f2ce93dd79b7fb184018b6f48132a10c764e7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1448,6 +1448,15 @@ def Class :=
 
 namespace Class
 
+@[ext]
+theorem ext {x y : Class.{u}} : (∀ z : SetCat.{u}, x z ↔ y z) → x = y :=
+  Set.ext
+#align Class.ext Class.ext
+
+theorem ext_iff {x y : Class.{u}} : x = y ↔ ∀ z, x z ↔ y z :=
+  Set.ext_iff
+#align Class.ext_iff Class.ext_iff
+
 /-- Coerce a ZFC set into a class -/
 def ofSet (x : SetCat.{u}) : Class.{u} :=
   { y | y ∈ x }
@@ -1606,37 +1615,37 @@ theorem coe_subset (x y : SetCat.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
 @[simp, norm_cast]
 theorem coe_sep (p : Class.{u}) (x : SetCat.{u}) :
     (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
-  Set.ext fun y => SetCat.mem_sep
+  ext fun y => SetCat.mem_sep
 #align Class.coe_sep Class.coe_sep
 
 @[simp, norm_cast]
 theorem coe_empty : ↑(∅ : SetCat.{u}) = (∅ : Class.{u}) :=
-  Set.ext fun y => (iff_false_iff _).2 <| SetCat.not_mem_empty y
+  ext fun y => (iff_false_iff _).2 <| SetCat.not_mem_empty y
 #align Class.coe_empty Class.coe_empty
 
 @[simp, norm_cast]
 theorem coe_insert (x y : SetCat.{u}) : ↑(insert x y) = @insert SetCat.{u} Class.{u} _ x y :=
-  Set.ext fun z => SetCat.mem_insert_iff
+  ext fun z => SetCat.mem_insert_iff
 #align Class.coe_insert Class.coe_insert
 
 @[simp, norm_cast]
 theorem coe_union (x y : SetCat.{u}) : ↑(x ∪ y) = (x : Class.{u}) ∪ y :=
-  Set.ext fun z => SetCat.mem_union
+  ext fun z => SetCat.mem_union
 #align Class.coe_union Class.coe_union
 
 @[simp, norm_cast]
 theorem coe_inter (x y : SetCat.{u}) : ↑(x ∩ y) = (x : Class.{u}) ∩ y :=
-  Set.ext fun z => SetCat.mem_inter
+  ext fun z => SetCat.mem_inter
 #align Class.coe_inter Class.coe_inter
 
 @[simp, norm_cast]
 theorem coe_diff (x y : SetCat.{u}) : ↑(x \ y) = (x : Class.{u}) \ y :=
-  Set.ext fun z => SetCat.mem_diff
+  ext fun z => SetCat.mem_diff
 #align Class.coe_diff Class.coe_diff
 
 @[simp, norm_cast]
 theorem coe_powerset (x : SetCat.{u}) : ↑x.powerset = powerset.{u} x :=
-  Set.ext fun z => SetCat.mem_powerset
+  ext fun z => SetCat.mem_powerset
 #align Class.coe_powerset Class.coe_powerset
 
 @[simp]
@@ -1658,22 +1667,9 @@ theorem sUnion_apply {x : Class} {y : SetCat} : (⋃₀ x) y ↔ ∃ z : SetCat,
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, norm_cast]
 theorem coe_sUnion (x : SetCat.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
-  Set.ext fun y =>
+  ext fun y =>
     SetCat.mem_sUnion.trans (sUnion_apply.trans <| by simp_rw [coe_apply, exists_prop]).symm
 #align Class.coe_sUnion Class.coe_sUnion
-
-@[ext]
-theorem ext {x y : Class.{u}} : (∀ z : Class.{u}, z ∈ x ↔ z ∈ y) → x = y :=
-  by
-  refine' fun h => Set.ext fun z => _
-  change x z ↔ y z
-  rw [← @coe_mem z x, ← @coe_mem z y]
-  exact h z
-#align Class.ext Class.ext
-
-theorem ext_iff {x y : Class.{u}} : x = y ↔ ∀ z : Class.{u}, z ∈ x ↔ z ∈ y :=
-  ⟨fun h => by simp [h], ext⟩
-#align Class.ext_iff Class.ext_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -1714,7 +1710,7 @@ def iota (A : Class) : Class :=
 #align Class.iota Class.iota
 
 theorem iota_val (A : Class) (x : SetCat) (H : ∀ y, A y ↔ y = x) : iota A = ↑x :=
-  Set.ext fun y =>
+  ext fun y =>
     ⟨fun ⟨_, ⟨x', rfl, h⟩, yx'⟩ => by rwa [← (H x').1 <| (h x').2 rfl], fun yx =>
       ⟨_, ⟨x, rfl, H⟩, yx⟩⟩
 #align Class.iota_val Class.iota_val
@@ -1726,7 +1722,7 @@ theorem iota_ex (A) : iota.{u} A ∈ univ.{u} :=
   mem_univ.2 <|
     Or.elim (Classical.em <| ∃ x, ∀ y, A y ↔ y = x) (fun ⟨x, h⟩ => ⟨x, Eq.symm <| iota_val A x h⟩)
       fun hn =>
-      ⟨∅, Set.ext fun z => coe_empty.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
+      ⟨∅, ext fun z => coe_empty.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
 #align Class.iota_ex Class.iota_ex
 
 /-- Function value -/
