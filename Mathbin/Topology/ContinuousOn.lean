@@ -448,16 +448,34 @@ theorem nhdsWithin_union (a : α) (s t : Set α) : 𝓝[s ∪ t] a = 𝓝[s] a �
   rw [← inf_sup_left, sup_principal]
 #align nhds_within_union nhdsWithin_union
 
-theorem nhdsWithin_bUnion {ι} {I : Set ι} (hI : I.Finite) (s : ι → Set α) (a : α) :
+/- warning: nhds_within_bUnion -> nhdsWithin_bunionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall (s : ι -> (Set.{u1} α)) (a : α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) => s i)))) (supᵢ.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => supᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I) => nhdsWithin.{u1} α _inst_1 a (s i)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall (s : ι -> (Set.{u1} α)) (a : α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i I) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i I) => s i)))) (supᵢ.{u1, succ u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) ι (fun (i : ι) => supᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i I) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i I) => nhdsWithin.{u1} α _inst_1 a (s i)))))
+Case conversion may be inaccurate. Consider using '#align nhds_within_bUnion nhdsWithin_bunionᵢₓ'. -/
+theorem nhdsWithin_bunionᵢ {ι} {I : Set ι} (hI : I.Finite) (s : ι → Set α) (a : α) :
     𝓝[⋃ i ∈ I, s i] a = ⨆ i ∈ I, 𝓝[s i] a :=
   Set.Finite.induction_on hI (by simp) fun t T _ _ hT => by
     simp only [hT, nhdsWithin_union, supᵢ_insert, bUnion_insert]
-#align nhds_within_bUnion nhdsWithin_bUnion
+#align nhds_within_bUnion nhdsWithin_bunionᵢ
 
+/- warning: nhds_within_sUnion -> nhdsWithin_unionₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {S : Set.{u1} (Set.{u1} α)}, (Set.Finite.{u1} (Set.{u1} α) S) -> (forall (a : α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Set.unionₛ.{u1} α S)) (supᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => supᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) => nhdsWithin.{u1} α _inst_1 a s))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {S : Set.{u1} (Set.{u1} α)}, (Set.Finite.{u1} (Set.{u1} α) S) -> (forall (a : α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Set.unionₛ.{u1} α S)) (supᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => supᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) => nhdsWithin.{u1} α _inst_1 a s))))
+Case conversion may be inaccurate. Consider using '#align nhds_within_sUnion nhdsWithin_unionₛₓ'. -/
 theorem nhdsWithin_unionₛ {S : Set (Set α)} (hS : S.Finite) (a : α) : 𝓝[⋃₀ S] a = ⨆ s ∈ S, 𝓝[s] a :=
-  by rw [sUnion_eq_bUnion, nhdsWithin_bUnion hS]
+  by rw [sUnion_eq_bUnion, nhdsWithin_bunionᵢ hS]
 #align nhds_within_sUnion nhdsWithin_unionₛ
 
+/- warning: nhds_within_Union -> nhdsWithin_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} [_inst_2 : Finite.{u2} ι] (s : ι -> (Set.{u1} α)) (a : α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => nhdsWithin.{u1} α _inst_1 a (s i)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} [_inst_2 : Finite.{u2} ι] (s : ι -> (Set.{u1} α)) (a : α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) ι (fun (i : ι) => nhdsWithin.{u1} α _inst_1 a (s i)))
+Case conversion may be inaccurate. Consider using '#align nhds_within_Union nhdsWithin_unionᵢₓ'. -/
 theorem nhdsWithin_unionᵢ {ι} [Finite ι] (s : ι → Set α) (a : α) : 𝓝[⋃ i, s i] a = ⨆ i, 𝓝[s i] a :=
   by rw [← sUnion_range, nhdsWithin_unionₛ (finite_range s), supᵢ_range]
 #align nhds_within_Union nhdsWithin_unionᵢ
@@ -1212,6 +1230,12 @@ theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : 
   fun ⟨x, y⟩ ⟨hx, hy⟩ => ContinuousWithinAt.prod_map (hf x hx) (hg y hy)
 #align continuous_on.prod_map ContinuousOn.prod_map
 
+/- warning: continuous_of_cover_nhds -> continuous_of_cover_nhds is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {ι : Sort.{u3}} {f : α -> β} {s : ι -> (Set.{u1} α)}, (forall (x : α), Exists.{u3} ι (fun (i : ι) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) (s i) (nhds.{u1} α _inst_1 x))) -> (forall (i : ι), ContinuousOn.{u1, u2} α β _inst_1 _inst_2 f (s i)) -> (Continuous.{u1, u2} α β _inst_1 _inst_2 f)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {ι : Sort.{u3}} {f : α -> β} {s : ι -> (Set.{u2} α)}, (forall (x : α), Exists.{u3} ι (fun (i : ι) => Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (s i) (nhds.{u2} α _inst_1 x))) -> (forall (i : ι), ContinuousOn.{u2, u1} α β _inst_1 _inst_2 f (s i)) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align continuous_of_cover_nhds continuous_of_cover_nhdsₓ'. -/
 theorem continuous_of_cover_nhds {ι : Sort _} {f : α → β} {s : ι → Set α}
     (hs : ∀ x : α, ∃ i, s i ∈ 𝓝 x) (hf : ∀ i, ContinuousOn f (s i)) : Continuous f :=
   continuous_iff_continuousAt.mpr fun x =>
