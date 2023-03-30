@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplex_category
-! leanprover-community/mathlib commit dd1f8496baa505636a82748e6b652165ea888733
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -932,9 +932,8 @@ to the category attached to the ordered set `{0, 1, ..., n}` -/
 @[simps obj map]
 def toCat : SimplexCategory ⥤ Cat.{0} :=
   SimplexCategory.skeletalFunctor ⋙
-    forget₂ NonemptyFinLinOrdCat LinearOrderCat ⋙
-      forget₂ LinearOrderCat LatticeCat ⋙
-        forget₂ LatticeCat PartialOrderCat ⋙ forget₂ PartialOrderCat PreorderCat ⋙ preorderToCat
+    forget₂ NonemptyFinLinOrdCat LinOrd ⋙
+      forget₂ LinOrd Lat ⋙ forget₂ Lat PartOrd ⋙ forget₂ PartOrd Preord ⋙ preordToCat
 #align simplex_category.to_Cat SimplexCategory.toCat
 
 end SimplexCategory

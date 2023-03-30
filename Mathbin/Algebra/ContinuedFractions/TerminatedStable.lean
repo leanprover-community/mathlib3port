@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.terminated_stable
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,6 +21,7 @@ We show that the continuants and convergents of a gcf stabilise once the gcf ter
 
 namespace GeneralizedContinuedFraction
 
+/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n m : ℕ}
 
 /-- If a gcf terminated at position `n`, it also terminated at `m ≥ n`.-/
@@ -47,23 +48,22 @@ theorem continuantsAux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : 
   exact terminated_stable (Nat.le_add_right _ _) terminated_at_n
 #align generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_of_terminated
 
-theorem convergents'Aux_stable_step_of_terminated {s : SeqCat <| Pair K}
+theorem convergents'Aux_stable_step_of_terminated {s : Seq <| Pair K}
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n :=
   by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
-  case zero => simp only [convergents'_aux, terminated_at_n, SeqCat.head]
+  case zero => simp only [convergents'_aux, terminated_at_n, seq.head]
   case succ =>
     cases' s_head_eq : s.head with gp_head
     case none => simp only [convergents'_aux, s_head_eq]
     case
       some =>
-      have : s.tail.terminated_at n := by
-        simp only [SeqCat.TerminatedAt, s.nth_tail, terminated_at_n]
+      have : s.tail.terminated_at n := by simp only [seq.terminated_at, s.nth_tail, terminated_at_n]
       simp only [convergents'_aux, s_head_eq, IH this]
 #align generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'Aux_stable_step_of_terminated
 
-theorem convergents'Aux_stable_of_terminated {s : SeqCat <| Pair K} (n_le_m : n ≤ m)
+theorem convergents'Aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n :=
   by
   induction' n_le_m with m n_le_m IH

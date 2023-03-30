@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1534,6 +1534,12 @@ theorem contMdiffWithinAt_fst {s : Set (M × N)} {p : M × N} :
   · simp only [mfld_simps]
 #align cont_mdiff_within_at_fst contMdiffWithinAt_fst
 
+theorem ContMdiffWithinAt.fst {f : N → M × M'} {s : Set N} {x : N}
+    (hf : ContMdiffWithinAt J (I.Prod I') n f s x) :
+    ContMdiffWithinAt J I n (fun x => (f x).1) s x :=
+  contMdiffWithinAt_fst.comp x hf (mapsTo_image f s)
+#align cont_mdiff_within_at.fst ContMdiffWithinAt.fst
+
 theorem contMdiffAt_fst {p : M × N} : ContMdiffAt (I.Prod J) I n Prod.fst p :=
   contMdiffWithinAt_fst
 #align cont_mdiff_at_fst contMdiffAt_fst
@@ -1591,6 +1597,12 @@ theorem contMdiffWithinAt_snd {s : Set (M × N)} {p : M × N} :
     simp only [hy, mfld_simps]
   · simp only [mfld_simps]
 #align cont_mdiff_within_at_snd contMdiffWithinAt_snd
+
+theorem ContMdiffWithinAt.snd {f : N → M × M'} {s : Set N} {x : N}
+    (hf : ContMdiffWithinAt J (I.Prod I') n f s x) :
+    ContMdiffWithinAt J I' n (fun x => (f x).2) s x :=
+  contMdiffWithinAt_snd.comp x hf (mapsTo_image f s)
+#align cont_mdiff_within_at.snd ContMdiffWithinAt.snd
 
 theorem contMdiffAt_snd {p : M × N} : ContMdiffAt (I.Prod J) J n Prod.snd p :=
   contMdiffWithinAt_snd
@@ -1655,6 +1667,22 @@ theorem smooth_prod_assoc :
 #align smooth_prod_assoc smooth_prod_assoc
 
 end Projections
+
+theorem contMdiffWithinAt_prod_iff (f : M → M' × N') {s : Set M} {x : M} :
+    ContMdiffWithinAt I (I'.Prod J') n f s x ↔
+      ContMdiffWithinAt I I' n (Prod.fst ∘ f) s x ∧ ContMdiffWithinAt I J' n (Prod.snd ∘ f) s x :=
+  by
+  refine' ⟨fun h => ⟨h.fst, h.snd⟩, fun h => _⟩
+  simpa only [Prod.mk.eta] using h.1.prod_mk h.2
+#align cont_mdiff_within_at_prod_iff contMdiffWithinAt_prod_iff
+
+theorem contMdiffAt_prod_iff (f : M → M' × N') {x : M} :
+    ContMdiffAt I (I'.Prod J') n f x ↔
+      ContMdiffAt I I' n (Prod.fst ∘ f) x ∧ ContMdiffAt I J' n (Prod.snd ∘ f) x :=
+  by
+  simp_rw [← contMdiffWithinAt_univ]
+  exact contMdiffWithinAt_prod_iff f
+#align cont_mdiff_at_prod_iff contMdiffAt_prod_iff
 
 section Prod_map
 

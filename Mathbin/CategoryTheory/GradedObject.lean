@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.graded_object
-! leanprover-community/mathlib commit 11613e2875d27371f380af8692498a22b66140a5
+! leanprover-community/mathlib commit 6876fa15e3158ff3e4a4e2af1fb6e1945c6e8803
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.CategoryTheory.Pi.Basic
-import Mathbin.CategoryTheory.Shift
+import Mathbin.CategoryTheory.Shift.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
@@ -140,33 +140,30 @@ end
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => comap (fun _ => C) fun b : β => b + n • s
-      ε :=
-        (comapId β fun _ => C).symm ≪≫
-          comapEq C
+      zero :=
+        comapEq C
             (by
               ext
-              simp)
-      μ := fun m n =>
-        comapComp _ _ _ ≪≫
-          comapEq C
+              simp) ≪≫
+          comapId β fun _ => C
+      add := fun m n =>
+        comapEq C
             (by
               ext
-              simp [add_zsmul, add_comm])
-      left_unitality := by
-        introv
+              simp [add_zsmul, add_comm]) ≪≫
+          (comapComp _ _ _).symm
+      assoc_hom_app := fun m₁ m₂ m₃ X => by
+        ext
+        dsimp
+        simp
+      zero_add_hom_app := fun n X => by
         ext
         dsimp
         simpa
-      right_unitality := by
-        introv
+      add_zero_hom_app := fun n X => by
         ext
         dsimp
-        simpa
-      associativity := by
-        introv
-        ext
-        dsimp
-        simp }
+        simpa }
 #align category_theory.graded_object.has_shift CategoryTheory.GradedObject.hasShift
 
 @[simp]

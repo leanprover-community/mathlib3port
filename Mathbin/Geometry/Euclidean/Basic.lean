@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.basic
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ in terms of the pairwise distances between the points in that
 combination. -/
 theorem dist_affineCombination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P)
     (h₁ : (∑ i in s, w₁ i) = 1) (h₂ : (∑ i in s, w₂ i) = 1) : by
-    have a₁ := s.affine_combination p w₁ <;> have a₂ := s.affine_combination p w₂ <;>
+    have a₁ := s.affine_combination ℝ p w₁ <;> have a₂ := s.affine_combination ℝ p w₂ <;>
       exact
         dist a₁ a₂ * dist a₁ a₂ =
           (-∑ i₁ in s,
@@ -109,7 +109,7 @@ theorem dist_affineCombination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι →
                   (w₁ - w₂) i₁ * (w₁ - w₂) i₂ * (dist (p i₁) (p i₂) * dist (p i₁) (p i₂))) /
             2 :=
   by
-  rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ←
+  rw [dist_eq_norm_vsub V (s.affine_combination ℝ p w₁) (s.affine_combination ℝ p w₂), ←
     @inner_self_eq_norm_mul_norm ℝ, Finset.affineCombination_vsub]
   have h : (∑ i in s, (w₁ - w₂) i) = 0 := by
     simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]

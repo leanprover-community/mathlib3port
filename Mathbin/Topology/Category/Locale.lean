@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.category.Locale
-! leanprover-community/mathlib commit 5a9fb92b86469f4111a69819ac2ee21d0de3dfd0
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Order.Category.Frame
+import Mathbin.Order.Category.Frm
 
 /-!
 # The category of locales
@@ -23,7 +23,7 @@ open CategoryTheory Opposite Order TopologicalSpace
 
 /-- The category of locales. -/
 def Locale :=
-  Frameᵒᵖderiving LargeCategory
+  Frmᵒᵖderiving LargeCategory
 #align Locale Locale
 
 namespace Locale
@@ -36,7 +36,7 @@ instance (X : Locale) : Frame X :=
 
 /-- Construct a bundled `Locale` from a `frame`. -/
 def of (α : Type _) [Frame α] : Locale :=
-  op <| Frame.of α
+  op <| Frm.of α
 #align Locale.of Locale.of
 
 @[simp]

@@ -3,12 +3,12 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
-! This file was ported from Lean 3 source module order.category.Frame
-! leanprover-community/mathlib commit 829895f162a1f29d0133f4b3538f4cd1fb5bffd3
+! This file was ported from Lean 3 source module order.category.Frm
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Order.Category.Lattice
+import Mathbin.Order.Category.Lat
 import Mathbin.Order.Hom.CompleteLattice
 import Mathbin.Topology.Category.CompHaus.Basic
 import Mathbin.Topology.Sets.Opens
@@ -16,7 +16,7 @@ import Mathbin.Topology.Sets.Opens
 /-!
 # The category of frames
 
-This file defines `Frame`, the category of frames.
+This file defines `Frm`, the category of frames.
 
 ## References
 
@@ -29,54 +29,54 @@ universe u
 open CategoryTheory Opposite Order TopologicalSpace
 
 /-- The category of frames. -/
-def Frame :=
+def Frm :=
   Bundled Frame
-#align Frame Frame
+#align Frm Frm
 
-namespace Frame
+namespace Frm
 
-instance : CoeSort Frame (Type _) :=
+instance : CoeSort Frm (Type _) :=
   Bundled.hasCoeToSort
 
-instance (X : Frame) : Frame X :=
+instance (X : Frm) : Frame X :=
   X.str
 
-/-- Construct a bundled `Frame` from a `frame`. -/
-def of (α : Type _) [Frame α] : Frame :=
+/-- Construct a bundled `Frm` from a `frame`. -/
+def of (α : Type _) [Frame α] : Frm :=
   Bundled.of α
-#align Frame.of Frame.of
+#align Frm.of Frm.of
 
 @[simp]
 theorem coe_of (α : Type _) [Frame α] : ↥(of α) = α :=
   rfl
-#align Frame.coe_of Frame.coe_of
+#align Frm.coe_of Frm.coe_of
 
-instance : Inhabited Frame :=
+instance : Inhabited Frm :=
   ⟨of PUnit⟩
 
 /-- An abbreviation of `frame_hom` that assumes `frame` instead of the weaker `complete_lattice`.
 Necessary for the category theory machinery. -/
 abbrev Hom (α β : Type _) [Frame α] [Frame β] : Type _ :=
   FrameHom α β
-#align Frame.hom Frame.Hom
+#align Frm.hom Frm.Hom
 
 instance bundledHom : BundledHom Hom :=
   ⟨fun α β [Frame α] [Frame β] => (coeFn : FrameHom α β → α → β), fun α [Frame α] => FrameHom.id α,
     fun α β γ [Frame α] [Frame β] [Frame γ] => FrameHom.comp, fun α β [Frame α] [Frame β] =>
     FunLike.coe_injective⟩
-#align Frame.bundled_hom Frame.bundledHom
+#align Frm.bundled_hom Frm.bundledHom
 
-deriving instance LargeCategory, ConcreteCategory for Frame
+deriving instance LargeCategory, ConcreteCategory for Frm
 
-instance hasForgetToLattice : HasForget₂ Frame LatticeCat
+instance hasForgetToLat : HasForget₂ Frm Lat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => FrameHom.toLatticeHom }
-#align Frame.has_forget_to_Lattice Frame.hasForgetToLattice
+#align Frm.has_forget_to_Lat Frm.hasForgetToLat
 
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : Frame.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : Frm.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
@@ -86,15 +86,15 @@ def Iso.mk {α β : Frame.{u}} (e : α ≃o β) : α ≅ β
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
-#align Frame.iso.mk Frame.Iso.mk
+#align Frm.iso.mk Frm.Iso.mk
 
-end Frame
+end Frm
 
-/-- The forgetful functor from `Topᵒᵖ` to `Frame`. -/
+/-- The forgetful functor from `Topᵒᵖ` to `Frm`. -/
 @[simps]
-def topOpToFrame : TopCatᵒᵖ ⥤ Frame
+def topOpToFrame : TopCatᵒᵖ ⥤ Frm
     where
-  obj X := Frame.of (Opens (unop X : TopCat))
+  obj X := Frm.of (Opens (unop X : TopCat))
   map X Y f := Opens.comap <| Quiver.Hom.unop f
   map_id' X := Opens.comap_id
 #align Top_op_to_Frame topOpToFrame

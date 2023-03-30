@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.complete_boolean_algebra
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,7 +23,7 @@ distributive Boolean algebras.
 
 ## Typeclasses
 
-* `order.frame`: Frame: A complete lattice whose `⊓` distributes over `⨆`.
+* `order.frame`: Frm: A complete lattice whose `⊓` distributes over `⨆`.
 * `order.coframe`: Coframe: A complete lattice whose `⊔` distributes over `⨅`.
 * `complete_distrib_lattice`: Completely distributive lattices: A complete lattice whose `⊓` and `⊔`
   distribute over `⨆` and `⨅` respectively.

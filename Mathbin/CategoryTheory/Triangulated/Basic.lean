@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.basic
-! leanprover-community/mathlib commit f7707875544ef1f81b32cb68c79e0e24e45a0e76
+! leanprover-community/mathlib commit 6876fa15e3158ff3e4a4e2af1fb6e1945c6e8803
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Int.Basic
-import Mathbin.CategoryTheory.Shift
+import Mathbin.CategoryTheory.Shift.Basic
 
 /-!
 # Triangles
@@ -152,6 +152,40 @@ instance triangleCategory : Category (Triangle C)
   id A := triangleMorphismId A
   comp A B C f g := f.comp g
 #align category_theory.pretriangulated.triangle_category CategoryTheory.Pretriangulated.triangleCategory
+
+/-- a constructor for morphisms of triangles -/
+@[simps]
+def Triangle.homMk (A B : Triangle C) (hom₁ : A.obj₁ ⟶ B.obj₁) (hom₂ : A.obj₂ ⟶ B.obj₂)
+    (hom₃ : A.obj₃ ⟶ B.obj₃) (comm₁ : A.mor₁ ≫ hom₂ = hom₁ ≫ B.mor₁)
+    (comm₂ : A.mor₂ ≫ hom₃ = hom₂ ≫ B.mor₂) (comm₃ : A.mor₃ ≫ hom₁⟦1⟧' = hom₃ ≫ B.mor₃) : A ⟶ B :=
+  { hom₁
+    hom₂
+    hom₃
+    comm₁' := comm₁
+    comm₂' := comm₂
+    comm₃' := comm₃ }
+#align category_theory.pretriangulated.triangle.hom_mk CategoryTheory.Pretriangulated.Triangle.homMk
+
+/-- a constructor for isomorphisms of triangles -/
+@[simps]
+def Triangle.isoMk (A B : Triangle C) (iso₁ : A.obj₁ ≅ B.obj₁) (iso₂ : A.obj₂ ≅ B.obj₂)
+    (iso₃ : A.obj₃ ≅ B.obj₃) (comm₁ : A.mor₁ ≫ iso₂.Hom = iso₁.Hom ≫ B.mor₁)
+    (comm₂ : A.mor₂ ≫ iso₃.Hom = iso₂.Hom ≫ B.mor₂)
+    (comm₃ : A.mor₃ ≫ iso₁.Hom⟦1⟧' = iso₃.Hom ≫ B.mor₃) : A ≅ B
+    where
+  Hom := Triangle.homMk _ _ iso₁.Hom iso₂.Hom iso₃.Hom comm₁ comm₂ comm₃
+  inv :=
+    Triangle.homMk _ _ iso₁.inv iso₂.inv iso₃.inv
+      (by
+        simp only [← cancel_mono iso₂.hom, assoc, iso.inv_hom_id, comp_id, comm₁,
+          iso.inv_hom_id_assoc])
+      (by
+        simp only [← cancel_mono iso₃.hom, assoc, iso.inv_hom_id, comp_id, comm₂,
+          iso.inv_hom_id_assoc])
+      (by
+        simp only [← cancel_mono (iso₁.hom⟦(1 : ℤ)⟧'), assoc, ← functor.map_comp, iso.inv_hom_id,
+          CategoryTheory.Functor.map_id, comp_id, comm₃, iso.inv_hom_id_assoc])
+#align category_theory.pretriangulated.triangle.iso_mk CategoryTheory.Pretriangulated.Triangle.isoMk
 
 end CategoryTheory.Pretriangulated
 

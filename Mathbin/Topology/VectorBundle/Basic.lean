@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Patrick Massot, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.basic
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -361,6 +361,26 @@ end TopologicalVectorSpace
 
 section
 
+namespace Bundle
+
+/-- The zero section of a vector bundle -/
+def zeroSection [∀ x, Zero (E x)] : B → TotalSpace E := fun x => totalSpaceMk x 0
+#align bundle.zero_section Bundle.zeroSection
+
+@[simp, mfld_simps]
+theorem zeroSection_proj [∀ x, Zero (E x)] (x : B) : (zeroSection E x).proj = x :=
+  rfl
+#align bundle.zero_section_proj Bundle.zeroSection_proj
+
+@[simp, mfld_simps]
+theorem zeroSection_snd [∀ x, Zero (E x)] (x : B) : (zeroSection E x).2 = 0 :=
+  rfl
+#align bundle.zero_section_snd Bundle.zeroSection_snd
+
+end Bundle
+
+open Bundle
+
 variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module R (E x)]
   [NormedAddCommGroup F] [NormedSpace R F] [TopologicalSpace B] [TopologicalSpace (TotalSpace E)]
   [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
@@ -408,8 +428,8 @@ def continuousLinearMapAt (e : Trivialization F (π E)) [e.isLinear R] (b : B) :
       refine' continuous_if_const _ (fun hb => _) fun _ => continuous_zero
       exact
         continuous_snd.comp
-          (e.to_local_homeomorph.continuous_on.comp_continuous
-            (FiberBundle.totalSpaceMk_inducing F E b).Continuous fun x => e.mem_source.mpr hb) }
+          (e.continuous_on.comp_continuous (FiberBundle.totalSpaceMk_inducing F E b).Continuous
+            fun x => e.mem_source.mpr hb) }
 #align trivialization.continuous_linear_map_at Trivialization.continuousLinearMapAt
 
 /-- Backwards map of `continuous_linear_equiv_at`, defined everywhere. -/
@@ -455,8 +475,8 @@ def continuousLinearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B)
     invFun := e.symm b
     continuous_toFun :=
       continuous_snd.comp
-        (e.toLocalHomeomorph.ContinuousOn.comp_continuous
-          (FiberBundle.totalSpaceMk_inducing F E b).Continuous fun x => e.mem_source.mpr hb)
+        (e.ContinuousOn.comp_continuous (FiberBundle.totalSpaceMk_inducing F E b).Continuous
+          fun x => e.mem_source.mpr hb)
     continuous_invFun := (e.symmL R b).Continuous }
 #align trivialization.continuous_linear_equiv_at Trivialization.continuousLinearEquivAt
 
@@ -485,8 +505,7 @@ theorem continuousLinearEquivAt_apply' (e : Trivialization F (π E)) [e.isLinear
 variable (R)
 
 theorem apply_eq_prod_continuousLinearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B)
-    (hb : b ∈ e.baseSet) (z : E b) :
-    e.toLocalHomeomorph ⟨b, z⟩ = (b, e.continuousLinearEquivAt R b hb z) :=
+    (hb : b ∈ e.baseSet) (z : E b) : e ⟨b, z⟩ = (b, e.continuousLinearEquivAt R b hb z) :=
   by
   ext
   · refine' e.coe_fst _
@@ -495,19 +514,24 @@ theorem apply_eq_prod_continuousLinearEquivAt (e : Trivialization F (π E)) [e.i
   · simp only [coe_coe, continuous_linear_equiv_at_apply]
 #align trivialization.apply_eq_prod_continuous_linear_equiv_at Trivialization.apply_eq_prod_continuousLinearEquivAt
 
+protected theorem zeroSection (e : Trivialization F (π E)) [e.isLinear R] {x : B}
+    (hx : x ∈ e.baseSet) : e (zeroSection E x) = (x, 0) := by
+  simp_rw [zero_section, total_space_mk, e.apply_eq_prod_continuous_linear_equiv_at R x hx 0,
+    map_zero]
+#align trivialization.zero_section Trivialization.zeroSection
+
 variable {R}
 
 theorem symm_apply_eq_mk_continuousLinearEquivAt_symm (e : Trivialization F (π E)) [e.isLinear R]
     (b : B) (hb : b ∈ e.baseSet) (z : F) :
     e.toLocalHomeomorph.symm ⟨b, z⟩ = totalSpaceMk b ((e.continuousLinearEquivAt R b hb).symm z) :=
   by
-  have h : (b, z) ∈ e.to_local_homeomorph.target :=
-    by
+  have h : (b, z) ∈ e.target := by
     rw [e.target_eq]
     exact ⟨hb, mem_univ _⟩
-  apply e.to_local_homeomorph.inj_on (e.to_local_homeomorph.map_target h)
+  apply e.inj_on (e.map_target h)
   · simp only [e.source_eq, hb, mem_preimage]
-  simp_rw [e.apply_eq_prod_continuous_linear_equiv_at R b hb, e.to_local_homeomorph.right_inv h,
+  simp_rw [e.right_inv h, coe_coe, e.apply_eq_prod_continuous_linear_equiv_at R b hb,
     ContinuousLinearEquiv.apply_symm_apply]
 #align trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm Trivialization.symm_apply_eq_mk_continuousLinearEquivAt_symm
 

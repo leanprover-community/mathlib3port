@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.monge_point
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ include V
 theorem mongePoint_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ}
     (s : Simplex ℝ P (n + 2)) :
     s.mongePoint =
-      (univ : Finset (PointsWithCircumcenterIndex (n + 2))).affineCombination
+      (univ : Finset (PointsWithCircumcenterIndex (n + 2))).affineCombination ℝ
         s.pointsWithCircumcenter (mongePointWeightsWithCircumcenter n) :=
   by
   rw [monge_point_eq_smul_vsub_vadd_circumcenter,

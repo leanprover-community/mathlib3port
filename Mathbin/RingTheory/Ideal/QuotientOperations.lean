@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient_operations
-! leanprover-community/mathlib commit e7f0ddbf65bd7181a85edb74b64bdc35ba4bdc74
+! leanprover-community/mathlib commit d3acee0d776b15ffb8318f327325ff343cc8bdcc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,6 +149,13 @@ theorem mem_quotient_iff_mem {I J : Ideal R} (hIJ : I ≤ J) {x : R} :
     Quotient.mk I x ∈ J.map (Quotient.mk I) ↔ x ∈ J := by
   rw [mem_quotient_iff_mem_sup, sup_eq_left.mpr hIJ]
 #align ideal.mem_quotient_iff_mem Ideal.mem_quotient_iff_mem
+
+theorem comap_map_mk {I J : Ideal R} (h : I ≤ J) :
+    Ideal.comap (Ideal.Quotient.mk I) (Ideal.map (Ideal.Quotient.mk I) J) = J :=
+  by
+  ext
+  rw [← Ideal.mem_quotient_iff_mem h, Ideal.mem_comap]
+#align ideal.comap_map_mk Ideal.comap_map_mk
 
 section QuotientAlgebra
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.translations
-! leanprover-community/mathlib commit 10d887272d1a72b99da88bcb301d1da9d9d33696
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,6 +47,7 @@ namespace GeneralizedContinuedFraction
 
 open GeneralizedContinuedFraction (of)
 
+/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
 -- Fix a discrete linear ordered floor field and a value `v`.
 variable {K : Type _} [LinearOrderedField K] [FloorRing K] {v : K}
 
@@ -217,7 +218,7 @@ theorem of_terminatedAt_iff_intFractPair_seq1_terminatedAt :
 
 theorem of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none :
     (of v).TerminatedAt n ↔ IntFractPair.stream v (n + 1) = none := by
-  rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, SeqCat.TerminatedAt,
+  rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, Stream'.Seq.TerminatedAt,
     int_fract_pair.nth_seq1_eq_succ_nth_stream]
 #align generalized_continued_fraction.of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none GeneralizedContinuedFraction.of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none
 
@@ -240,7 +241,7 @@ theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K
     ∃ ifp, int_fract_pair.stream v (n + 1) = some ifp ∧ pair.mk 1 (ifp.b : K) = gp_n :=
     by
     unfold of int_fract_pair.seq1 at s_nth_eq
-    rwa [SeqCat.map_tail, SeqCat.nth_tail, SeqCat.map_nth, Option.map_eq_some'] at s_nth_eq
+    rwa [seq.map_tail, seq.nth_tail, seq.map_nth, Option.map_eq_some'] at s_nth_eq
   cases gp_n_eq
   injection gp_n_eq with _ ifp_b_eq_gp_n_b
   exists ifp
@@ -255,8 +256,8 @@ theorem nth_of_eq_some_of_succ_nth_intFractPair_stream {ifp_succ_n : IntFractPai
     (of v).s.get? n = some ⟨1, ifp_succ_n.b⟩ :=
   by
   unfold of int_fract_pair.seq1
-  rw [SeqCat.map_tail, SeqCat.nth_tail, SeqCat.map_nth]
-  simp [SeqCat.nth, stream_succ_nth_eq]
+  rw [seq.map_tail, seq.nth_tail, seq.map_nth]
+  simp [seq.nth, stream_succ_nth_eq]
 #align generalized_continued_fraction.nth_of_eq_some_of_succ_nth_int_fract_pair_stream GeneralizedContinuedFraction.nth_of_eq_some_of_succ_nth_intFractPair_stream
 
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
@@ -282,7 +283,7 @@ theorem of_s_head_aux (v : K) :
             b := p.b }) :=
   by
   rw [of, int_fract_pair.seq1, of._match_1]
-  simp only [SeqCat.map_tail, SeqCat.map, SeqCat.tail, SeqCat.head, SeqCat.nth, Stream'.map]
+  simp only [seq.map_tail, seq.map, seq.tail, seq.head, seq.nth, Stream'.map]
   rw [← Stream'.nth_succ, Stream'.nth, Option.map]
 #align generalized_continued_fraction.of_s_head_aux GeneralizedContinuedFraction.of_s_head_aux
 
@@ -299,14 +300,14 @@ variable (K)
 
 /-- If `a` is an integer, then the coefficient sequence of its continued fraction is empty.
 -/
-theorem of_s_of_int (a : ℤ) : (of (a : K)).s = SeqCat.nil :=
+theorem of_s_of_int (a : ℤ) : (of (a : K)).s = Seq.nil :=
   haveI h : ∀ n, (of (a : K)).s.get? n = none :=
     by
     intro n
     induction' n with n ih
     · rw [of_s_head_aux, stream_succ_of_int, Option.bind]
     · exact (of (a : K)).s.Prop ih
-  SeqCat.ext fun n => (h n).trans (SeqCat.nth_nil n).symm
+  seq.ext fun n => (h n).trans (seq.nth_nil n).symm
 #align generalized_continued_fraction.of_s_of_int GeneralizedContinuedFraction.of_s_of_int
 
 variable {K} (v)
@@ -318,8 +319,7 @@ theorem of_s_succ (n : ℕ) : (of v).s.get? (n + 1) = (of (fract v)⁻¹).s.get?
   by
   cases' eq_or_ne (fract v) 0 with h h
   · obtain ⟨a, rfl⟩ : ∃ a : ℤ, v = a := ⟨⌊v⌋, eq_of_sub_eq_zero h⟩
-    rw [fract_int_cast, inv_zero, of_s_of_int, ← cast_zero, of_s_of_int, SeqCat.nth_nil,
-      SeqCat.nth_nil]
+    rw [fract_int_cast, inv_zero, of_s_of_int, ← cast_zero, of_s_of_int, seq.nth_nil, seq.nth_nil]
   cases' eq_or_ne ((of (fract v)⁻¹).s.get? n) none with h₁ h₁
   ·
     rwa [h₁, ← terminated_at_iff_s_none,
@@ -337,7 +337,7 @@ an element `v` of `K` as the coefficient sequence of that of the inverse of the
 fractional part of `v`.
 -/
 theorem of_s_tail : (of v).s.tail = (of (fract v)⁻¹).s :=
-  SeqCat.ext fun n => SeqCat.nth_tail (of v).s n ▸ of_s_succ v n
+  Seq.ext fun n => Seq.nth_tail (of v).s n ▸ of_s_succ v n
 #align generalized_continued_fraction.of_s_tail GeneralizedContinuedFraction.of_s_tail
 
 variable (K) (n)
@@ -350,7 +350,7 @@ theorem convergents'_of_int (a : ℤ) : (of (a : K)).convergents' n = a :=
   induction' n with n ih
   · simp only [zeroth_convergent'_eq_h, of_h_eq_floor, floor_int_cast]
   · rw [convergents', of_h_eq_floor, floor_int_cast, add_right_eq_self]
-    exact convergents'_aux_succ_none ((of_s_of_int K a).symm ▸ SeqCat.nth_nil 0) _
+    exact convergents'_aux_succ_none ((of_s_of_int K a).symm ▸ seq.nth_nil 0) _
 #align generalized_continued_fraction.convergents'_of_int GeneralizedContinuedFraction.convergents'_of_int
 
 variable {K} (v)

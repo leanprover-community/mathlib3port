@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 517cc149e0b515d2893baa376226ed10feb319c7
+! leanprover-community/mathlib commit b685f506164f8d17a6404048bc4d696739c5d976
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2519,10 +2519,12 @@ instance isScalarTower'' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower �
 -/
 
 #print Finset.isCentralScalar /-
+@[to_additive]
 instance isCentralScalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α β] :
     IsCentralScalar α (Finset β) :=
   ⟨fun a s => coe_injective <| by simp only [coe_smul_finset, coe_smul, op_smul_eq_smul]⟩
 #align finset.is_central_scalar Finset.isCentralScalar
+#align finset.is_central_vadd Finset.is_central_vadd
 -/
 
 #print Finset.mulAction /-
@@ -2797,6 +2799,38 @@ theorem subset_smul_finset_iff : s ⊆ a • t ↔ a⁻¹ • s ⊆ t :=
 #align finset.subset_smul_finset_iff Finset.subset_smul_finset_iff
 #align finset.subset_vadd_finset_iff Finset.subset_vadd_finset_iff
 
+@[to_additive]
+theorem smul_finset_inter : a • (s ∩ t) = a • s ∩ a • t :=
+  image_inter _ _ <| MulAction.injective a
+#align finset.smul_finset_inter Finset.smul_finset_inter
+#align finset.vadd_finset_inter Finset.vadd_finset_inter
+
+@[to_additive]
+theorem smul_finset_sdiff : a • (s \ t) = a • s \ a • t :=
+  image_sdiff _ _ <| MulAction.injective a
+#align finset.smul_finset_sdiff Finset.smul_finset_sdiff
+#align finset.vadd_finset_sdiff Finset.vadd_finset_sdiff
+
+@[to_additive]
+theorem smul_finset_symmDiff : a • s ∆ t = (a • s) ∆ (a • t) :=
+  image_symmDiff _ _ <| MulAction.injective a
+#align finset.smul_finset_symm_diff Finset.smul_finset_symmDiff
+#align finset.vadd_finset_symm_diff Finset.vadd_finset_symmDiff
+
+@[simp, to_additive]
+theorem smul_finset_univ [Fintype β] : a • (univ : Finset β) = univ :=
+  image_univ_of_surjective <| MulAction.surjective a
+#align finset.smul_finset_univ Finset.smul_finset_univ
+#align finset.vadd_finset_univ Finset.vadd_finset_univ
+
+@[simp, to_additive]
+theorem smul_univ [Fintype β] {s : Finset α} (hs : s.Nonempty) : s • (univ : Finset β) = univ :=
+  coe_injective <| by
+    push_cast
+    exact Set.smul_univ hs
+#align finset.smul_univ Finset.smul_univ
+#align finset.vadd_univ Finset.vadd_univ
+
 #print Finset.card_smul_finset /-
 @[simp, to_additive]
 theorem card_smul_finset (a : α) (s : Finset β) : (a • s).card = s.card :=
@@ -2872,6 +2906,18 @@ Case conversion may be inaccurate. Consider using '#align finset.subset_smul_fin
 theorem subset_smul_finset_iff₀ (ha : a ≠ 0) : s ⊆ a • t ↔ a⁻¹ • s ⊆ t :=
   show _ ⊆ Units.mk0 a ha • _ ↔ _ from subset_smul_finset_iff
 #align finset.subset_smul_finset_iff₀ Finset.subset_smul_finset_iff₀
+
+theorem smul_finset_inter₀ (ha : a ≠ 0) : a • (s ∩ t) = a • s ∩ a • t :=
+  image_inter _ _ <| MulAction.injective₀ ha
+#align finset.smul_finset_inter₀ Finset.smul_finset_inter₀
+
+theorem smul_finset_sdiff₀ (ha : a ≠ 0) : a • (s \ t) = a • s \ a • t :=
+  image_sdiff _ _ <| MulAction.injective₀ ha
+#align finset.smul_finset_sdiff₀ Finset.smul_finset_sdiff₀
+
+theorem smul_finset_symm_diff₀ (ha : a ≠ 0) : a • s ∆ t = (a • s) ∆ (a • t) :=
+  image_symmDiff _ _ <| MulAction.injective₀ ha
+#align finset.smul_finset_symm_diff₀ Finset.smul_finset_symm_diff₀
 
 /- warning: finset.smul_univ₀ -> Finset.smul_univ₀ is a dubious translation:
 lean 3 declaration is

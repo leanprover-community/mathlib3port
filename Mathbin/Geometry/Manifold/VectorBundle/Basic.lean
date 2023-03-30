@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.basic
-! leanprover-community/mathlib commit ddec54a71a0dd025c05445d467f1a2b7d586a3ba
+! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,11 @@ assert_not_exists mfderiv
 
 open Bundle Set LocalHomeomorph
 
-open Manifold Bundle
+open Function (id_def)
+
+open Filter
+
+open Manifold Bundle Topology
 
 variable {𝕜 B B' F M : Type _} {E : B → Type _}
 
@@ -107,6 +111,148 @@ theorem FiberBundle.chartedSpace_chartAt (x : TotalSpace E) :
   rw [Trivialization.coe_coe, Trivialization.coe_fst' _ (mem_base_set_trivialization_at F E x.proj)]
 #align fiber_bundle.charted_space_chart_at FiberBundle.chartedSpace_chartAt
 
+theorem FiberBundle.chartedSpace_chartAt_symm_fst (x : TotalSpace E) (y : ModelProd HB F)
+    (hy : y ∈ (chartAt (ModelProd HB F) x).target) :
+    ((chartAt (ModelProd HB F) x).symm y).proj = (chartAt HB x.proj).symm y.1 :=
+  by
+  simp only [FiberBundle.chartedSpace_chartAt, mfld_simps] at hy⊢
+  exact (trivialization_at F E x.proj).proj_symm_apply hy.2
+#align fiber_bundle.charted_space_chart_at_symm_fst FiberBundle.chartedSpace_chartAt_symm_fst
+
+end
+
+section
+
+variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)] {EB : Type _}
+  [NormedAddCommGroup EB] [NormedSpace 𝕜 EB] {HB : Type _} [TopologicalSpace HB]
+  (IB : ModelWithCorners 𝕜 EB HB) (E' : B → Type _) [∀ x, Zero (E' x)] {EM : Type _}
+  [NormedAddCommGroup EM] [NormedSpace 𝕜 EM] {HM : Type _} [TopologicalSpace HM]
+  {IM : ModelWithCorners 𝕜 EM HM} [TopologicalSpace M] [ChartedSpace HM M]
+  [Is : SmoothManifoldWithCorners IM M] {n : ℕ∞}
+
+variable [TopologicalSpace B] [ChartedSpace HB B] [FiberBundle F E]
+
+protected theorem FiberBundle.extChartAt (x : TotalSpace E) :
+    extChartAt (IB.Prod 𝓘(𝕜, F)) x =
+      (trivializationAt F E x.proj).toLocalEquiv ≫
+        (extChartAt IB x.proj).Prod (LocalEquiv.refl F) :=
+  by
+  simp_rw [extChartAt, FiberBundle.chartedSpace_chartAt, extend]
+  simp only [LocalEquiv.trans_assoc, mfld_simps]
+#align fiber_bundle.ext_chart_at FiberBundle.extChartAt
+
+/-! ### Smoothness of maps in/out fiber bundles
+
+Note: For these results we don't need that the bundle is a smooth vector bundle, or even a vector
+bundle at all, just that it is a fiber bundle over a charted base space.
+-/
+
+
+namespace Bundle
+
+variable {F E IB}
+
+/-- Characterization of C^n functions into a smooth vector bundle. -/
+theorem contMdiffWithinAt_totalSpace (f : M → TotalSpace E) {s : Set M} {x₀ : M} :
+    ContMdiffWithinAt IM (IB.Prod 𝓘(𝕜, F)) n f s x₀ ↔
+      ContMdiffWithinAt IM IB n (fun x => (f x).proj) s x₀ ∧
+        ContMdiffWithinAt IM 𝓘(𝕜, F) n (fun x => (trivializationAt F E (f x₀).proj (f x)).2) s x₀ :=
+  by
+  simp (config := { singlePass := true }) only [contMdiffWithinAt_iff_target]
+  rw [and_and_and_comm, ← continuous_within_at_total_space, and_congr_right_iff]
+  intro hf
+  simp_rw [modelWithCornersSelf_prod, FiberBundle.extChartAt, Function.comp, LocalEquiv.trans_apply,
+    LocalEquiv.prod_coe, LocalEquiv.refl_coe, extChartAt_self_apply, modelWithCornersSelf_coe,
+    id_def]
+  refine' (contMdiffWithinAt_prod_iff _).trans _
+  -- rw doesn't do this?
+  have h1 : (fun x => (f x).proj) ⁻¹' (trivialization_at F E (f x₀).proj).baseSet ∈ 𝓝[s] x₀ :=
+    ((continuous_proj F E).ContinuousWithinAt.comp hf (maps_to_image f s)).preimage_mem_nhdsWithin
+      ((Trivialization.open_baseSet _).mem_nhds (mem_base_set_trivialization_at F E _))
+  refine'
+    and_congr (eventually_eq.cont_mdiff_within_at_iff (eventually_of_mem h1 fun x hx => _) _)
+      Iff.rfl
+  · simp_rw [Function.comp, LocalHomeomorph.coe_coe, Trivialization.coe_coe]
+    rw [Trivialization.coe_fst']
+    exact hx
+  · simp only [mfld_simps]
+#align bundle.cont_mdiff_within_at_total_space Bundle.contMdiffWithinAt_totalSpace
+
+/-- Characterization of C^n functions into a smooth vector bundle. -/
+theorem contMdiffAt_totalSpace (f : M → TotalSpace E) (x₀ : M) :
+    ContMdiffAt IM (IB.Prod 𝓘(𝕜, F)) n f x₀ ↔
+      ContMdiffAt IM IB n (fun x => (f x).proj) x₀ ∧
+        ContMdiffAt IM 𝓘(𝕜, F) n (fun x => (trivializationAt F E (f x₀).proj (f x)).2) x₀ :=
+  by
+  simp_rw [← contMdiffWithinAt_univ]
+  exact cont_mdiff_within_at_total_space f
+#align bundle.cont_mdiff_at_total_space Bundle.contMdiffAt_totalSpace
+
+variable (E)
+
+theorem contMdiff_proj : ContMdiff (IB.Prod 𝓘(𝕜, F)) IB n (π E) :=
+  by
+  intro x
+  rw [ContMdiffAt, contMdiffWithinAt_iff']
+  refine' ⟨(continuous_proj F E).ContinuousWithinAt, _⟩
+  simp_rw [(· ∘ ·), FiberBundle.extChartAt]
+  apply cont_diff_within_at_fst.congr
+  · rintro ⟨a, b⟩ hab
+    simp only [mfld_simps] at hab
+    have : ((chart_at HB x.1).symm (IB.symm a), b) ∈ (trivialization_at F E x.fst).target := by
+      simp only [hab, mfld_simps]
+    simp only [Trivialization.proj_symm_apply _ this, hab, mfld_simps]
+  · simp only [mfld_simps]
+#align bundle.cont_mdiff_proj Bundle.contMdiff_proj
+
+theorem smooth_proj : Smooth (IB.Prod 𝓘(𝕜, F)) IB (π E) :=
+  contMdiff_proj E
+#align bundle.smooth_proj Bundle.smooth_proj
+
+theorem contMdiffOn_proj {s : Set (TotalSpace E)} : ContMdiffOn (IB.Prod 𝓘(𝕜, F)) IB n (π E) s :=
+  (Bundle.contMdiff_proj E).ContMdiffOn
+#align bundle.cont_mdiff_on_proj Bundle.contMdiffOn_proj
+
+theorem smoothOn_proj {s : Set (TotalSpace E)} : SmoothOn (IB.Prod 𝓘(𝕜, F)) IB (π E) s :=
+  contMdiffOn_proj E
+#align bundle.smooth_on_proj Bundle.smoothOn_proj
+
+theorem contMdiffAt_proj {p : TotalSpace E} : ContMdiffAt (IB.Prod 𝓘(𝕜, F)) IB n (π E) p :=
+  (Bundle.contMdiff_proj E).ContMdiffAt
+#align bundle.cont_mdiff_at_proj Bundle.contMdiffAt_proj
+
+theorem smoothAt_proj {p : TotalSpace E} : SmoothAt (IB.Prod 𝓘(𝕜, F)) IB (π E) p :=
+  Bundle.contMdiffAt_proj E
+#align bundle.smooth_at_proj Bundle.smoothAt_proj
+
+theorem contMdiffWithinAt_proj {s : Set (TotalSpace E)} {p : TotalSpace E} :
+    ContMdiffWithinAt (IB.Prod 𝓘(𝕜, F)) IB n (π E) s p :=
+  (Bundle.contMdiffAt_proj E).ContMdiffWithinAt
+#align bundle.cont_mdiff_within_at_proj Bundle.contMdiffWithinAt_proj
+
+theorem smoothWithinAt_proj {s : Set (TotalSpace E)} {p : TotalSpace E} :
+    SmoothWithinAt (IB.Prod 𝓘(𝕜, F)) IB (π E) s p :=
+  Bundle.contMdiffWithinAt_proj E
+#align bundle.smooth_within_at_proj Bundle.smoothWithinAt_proj
+
+variable (𝕜 E) [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)] [VectorBundle 𝕜 F E]
+
+theorem smooth_zeroSection : Smooth IB (IB.Prod 𝓘(𝕜, F)) (zeroSection E) :=
+  by
+  intro x
+  rw [Bundle.contMdiffAt_totalSpace]
+  refine' ⟨contMdiffAt_id, cont_mdiff_at_const.congr_of_eventually_eq _⟩
+  · exact 0
+  refine'
+    eventually_of_mem
+      ((trivialization_at F E x).open_baseSet.mem_nhds (mem_base_set_trivialization_at F E x))
+      fun x' hx' => _
+  simp_rw [zero_section_proj, (trivialization_at F E x).zeroSection 𝕜 hx']
+#align bundle.smooth_zero_section Bundle.smooth_zeroSection
+
+end Bundle
+
 end
 
 /-! ### Smooth vector bundles -/
@@ -116,7 +262,9 @@ variable [NontriviallyNormedField 𝕜] [∀ x, AddCommMonoid (E x)] [∀ x, Mod
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace (TotalSpace E)]
   [∀ x, TopologicalSpace (E x)] {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB]
   {HB : Type _} [TopologicalSpace HB] (IB : ModelWithCorners 𝕜 EB HB) [TopologicalSpace B]
-  [ChartedSpace HB B] [SmoothManifoldWithCorners IB B]
+  [ChartedSpace HB B] [SmoothManifoldWithCorners IB B] {EM : Type _} [NormedAddCommGroup EM]
+  [NormedSpace 𝕜 EM] {HM : Type _} [TopologicalSpace HM] {IM : ModelWithCorners 𝕜 EM HM}
+  [TopologicalSpace M] [ChartedSpace HM M] [Is : SmoothManifoldWithCorners IM M] {n : ℕ∞}
 
 variable (F E) [FiberBundle F E] [VectorBundle 𝕜 F E]
 

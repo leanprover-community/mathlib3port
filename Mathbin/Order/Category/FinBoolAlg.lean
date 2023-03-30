@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.FinBoolAlg
-! leanprover-community/mathlib commit c3019c79074b0619edb4b27553a91b2e82242395
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Powerset
 import Mathbin.Order.Category.BoolAlg
-import Mathbin.Order.Category.FinPartialOrder
+import Mathbin.Order.Category.FinPartOrd
 import Mathbin.Order.Hom.CompleteLattice
 
 /-!
@@ -87,17 +87,17 @@ instance forget_to_boolAlg_faithful : Faithful (forget₂ FinBoolAlg BoolAlg) :=
 #align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlg.forget_to_boolAlg_faithful
 
 @[simps]
-instance hasForgetToFinPartialOrder : HasForget₂ FinBoolAlg FinPartialOrder
+instance hasForgetToFinPartOrd : HasForget₂ FinBoolAlg FinPartOrd
     where forget₂ :=
-    { obj := fun X => FinPartialOrder.of X
+    { obj := fun X => FinPartOrd.of X
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
-#align FinBoolAlg.has_forget_to_FinPartialOrder FinBoolAlg.hasForgetToFinPartialOrder
+#align FinBoolAlg.has_forget_to_FinPartOrd FinBoolAlg.hasForgetToFinPartOrd
 
-instance forget_to_finPartialOrder_faithful : Faithful (forget₂ FinBoolAlg FinPartialOrder) :=
+instance forget_to_finPartOrd_faithful : Faithful (forget₂ FinBoolAlg FinPartOrd) :=
   ⟨fun X Y f g h =>
     haveI := congr_arg (coeFn : _ → X → Y) h
     FunLike.coe_injective this⟩
-#align FinBoolAlg.forget_to_FinPartialOrder_faithful FinBoolAlg.forget_to_finPartialOrder_faithful
+#align FinBoolAlg.forget_to_FinPartOrd_faithful FinBoolAlg.forget_to_finPartOrd_faithful
 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/

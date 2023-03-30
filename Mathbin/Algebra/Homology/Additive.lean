@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.additive
-! leanprover-community/mathlib commit 88bca0ce5d22ebfd9e73e682e51d60ea13b48347
+! leanprover-community/mathlib commit 200eda15d8ff5669854ff6bcc10aaf37cb70498f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,6 +157,17 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
         rw [← F.map_comp, ← F.map_comp, f.comm] }
 #align category_theory.functor.map_homological_complex CategoryTheory.Functor.mapHomologicalComplex
 
+variable (V)
+
+/-- The functor on homological complexes induced by the identity functor is
+isomorphic to the identity functor. -/
+@[simps]
+def Functor.mapHomologicalComplexIdIso (c : ComplexShape ι) : (𝟭 V).mapHomologicalComplex c ≅ 𝟭 _ :=
+  NatIso.ofComponents (fun K => Hom.isoOfComponents (fun i => Iso.refl _) (by tidy)) (by tidy)
+#align category_theory.functor.map_homological_complex_id_iso CategoryTheory.Functor.mapHomologicalComplexIdIso
+
+variable {V}
+
 instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     (F.mapHomologicalComplex c).Additive where
 #align category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
@@ -202,6 +213,33 @@ theorem NatTrans.mapHomologicalComplex_naturality {c : ComplexShape ι} {F G : V
       (NatTrans.mapHomologicalComplex α c).app C ≫ (G.mapHomologicalComplex c).map f :=
   by tidy
 #align category_theory.nat_trans.map_homological_complex_naturality CategoryTheory.NatTrans.mapHomologicalComplex_naturality
+
+/-- A natural isomorphism between functors induces a natural isomorphism
+between those functors applied to homological complexes.
+-/
+@[simps]
+def NatIso.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ≅ G)
+    (c : ComplexShape ι) : F.mapHomologicalComplex c ≅ G.mapHomologicalComplex c
+    where
+  Hom := α.Hom.mapHomologicalComplex c
+  inv := α.inv.mapHomologicalComplex c
+  hom_inv_id' := by simpa only [← nat_trans.map_homological_complex_comp, α.hom_inv_id]
+  inv_hom_id' := by simpa only [← nat_trans.map_homological_complex_comp, α.inv_hom_id]
+#align category_theory.nat_iso.map_homological_complex CategoryTheory.NatIso.mapHomologicalComplex
+
+/-- An equivalence of categories induces an equivalences between the respective categories
+of homological complex.
+-/
+@[simps]
+def Equivalence.mapHomologicalComplex (e : V ≌ W) [e.Functor.Additive] (c : ComplexShape ι) :
+    HomologicalComplex V c ≌ HomologicalComplex W c
+    where
+  Functor := e.Functor.mapHomologicalComplex c
+  inverse := e.inverse.mapHomologicalComplex c
+  unitIso :=
+    (Functor.mapHomologicalComplexIdIso V c).symm ≪≫ NatIso.mapHomologicalComplex e.unitIso c
+  counitIso := NatIso.mapHomologicalComplex e.counitIso c ≪≫ Functor.mapHomologicalComplexIdIso W c
+#align category_theory.equivalence.map_homological_complex CategoryTheory.Equivalence.mapHomologicalComplex
 
 end CategoryTheory
 

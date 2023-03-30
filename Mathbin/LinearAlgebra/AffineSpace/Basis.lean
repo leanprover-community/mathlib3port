@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.basis
-! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,7 @@ theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b j) = if i = j the
 
 @[simp]
 theorem coord_apply_combination_of_mem (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
-    b.Coord i (s.affineCombination b w) = w i := by
+    b.Coord i (s.affineCombination k b w) = w i := by
   classical simp only [coord_apply, hi, Finset.affineCombination_eq_linear_combination, if_true,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b w hw]
@@ -204,7 +204,7 @@ theorem coord_apply_combination_of_mem (hi : i ∈ s) {w : ι → k} (hw : s.Sum
 
 @[simp]
 theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
-    b.Coord i (s.affineCombination b w) = 0 := by
+    b.Coord i (s.affineCombination k b w) = 0 := by
   classical simp only [coord_apply, hi, Finset.affineCombination_eq_linear_combination, if_false,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b w hw]
@@ -224,7 +224,7 @@ theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :
 
 @[simp]
 theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
-    (Finset.univ.affineCombination b fun i => b.Coord i q) = q :=
+    (Finset.univ.affineCombination k b fun i => b.Coord i q) = q :=
   by
   have hq : q ∈ affineSpan k (range b) := by
     rw [b.tot]
@@ -264,7 +264,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
   let s : Finset ι := {i}
   have hi : i ∈ s := by simp
   have hw : s.sum (Function.const ι (1 : k)) = 1 := by simp
-  have hq : q = s.affine_combination b (Function.const ι (1 : k)) := by simp
+  have hq : q = s.affine_combination k b (Function.const ι (1 : k)) := by simp
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_one
 
@@ -277,7 +277,7 @@ theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coo
     have hj : j ∈ s := by simp
     let w : ι → k := fun j' => if j' = i then x else 1 - x
     have hw : s.sum w = 1 := by simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
-    use s.affine_combination b w
+    use s.affine_combination k b w
     simp [b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.surjective_coord AffineBasis.surjective_coord
 

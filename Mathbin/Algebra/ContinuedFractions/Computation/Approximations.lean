@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.approximations
-! leanprover-community/mathlib commit c85b4d15cfdac3abffce2f449e228a0cf0326912
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -324,9 +324,9 @@ theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) :=
   by
   let g := of v
   cases' Decidable.em <| g.partial_denominators.terminated_at n with terminated not_terminated
-  · have : g.partial_denominators.nth n = none := by rwa [SeqCat.TerminatedAt] at terminated
+  · have : g.partial_denominators.nth n = none := by rwa [Stream'.Seq.TerminatedAt] at terminated
     have : g.terminated_at n :=
-      terminated_at_iff_part_denom_none.elim_right (by rwa [SeqCat.TerminatedAt] at terminated)
+      terminated_at_iff_part_denom_none.elim_right (by rwa [Stream'.Seq.TerminatedAt] at terminated)
     have : g.denominators (n + 1) = g.denominators n :=
       denominators_stable_of_terminated n.le_succ this
     rw [this]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
+! leanprover-community/mathlib commit b99e2d58a5e6861833fa8de11e51a81144258db4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2582,6 +2582,16 @@ protected theorem Reachable.map {G : SimpleGraph V} {G' : SimpleGraph V'} (f : G
   h.elim fun p => ⟨p.map f⟩
 #align simple_graph.reachable.map SimpleGraph.Reachable.map
 
+theorem Iso.reachable_iff {G : SimpleGraph V} {G' : SimpleGraph V'} {φ : G ≃g G'} {u v : V} :
+    G'.Reachable (φ u) (φ v) ↔ G.Reachable u v :=
+  ⟨fun r => φ.left_inv u ▸ φ.left_inv v ▸ r.map φ.symm.toHom, Reachable.map φ.toHom⟩
+#align simple_graph.iso.reachable_iff SimpleGraph.Iso.reachable_iff
+
+theorem Iso.symm_apply_reachable {G : SimpleGraph V} {G' : SimpleGraph V'} {φ : G ≃g G'} {u : V}
+    {v : V'} : G.Reachable (φ.symm v) u ↔ G'.Reachable v (φ u) := by
+  rw [← iso.reachable_iff, RelIso.apply_symm_apply]
+#align simple_graph.iso.symm_apply_reachable SimpleGraph.Iso.symm_apply_reachable
+
 variable (G)
 
 #print SimpleGraph.reachable_is_equivalence /-
@@ -2716,6 +2726,11 @@ protected theorem eq {v w : V} :
 #align simple_graph.connected_component.eq SimpleGraph.ConnectedComponent.eq
 -/
 
+theorem connectedComponentMk_eq_of_adj {v w : V} (a : G.Adj v w) :
+    G.connectedComponentMk v = G.connectedComponentMk w :=
+  ConnectedComponent.sound a.Reachable
+#align simple_graph.connected_component.connected_component_mk_eq_of_adj SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj
+
 #print SimpleGraph.ConnectedComponent.lift /-
 /-- The `connected_component` specialization of `quot.lift`. Provides the stronger
 assumption that the vertices are connected by a path. -/
@@ -2808,6 +2823,120 @@ theorem map_comp (C : G.ConnectedComponent) (φ : G →g G') (ψ : G' →g G'') 
   refine' C.ind _
   exact fun _ => rfl
 #align simple_graph.connected_component.map_comp SimpleGraph.ConnectedComponent.map_comp
+
+variable {φ : G ≃g G'} {v : V} {v' : V'}
+
+@[simp]
+theorem iso_image_comp_eq_map_iff_eq_comp {C : G.ConnectedComponent} :
+    G'.connectedComponentMk (φ v) = C.map ↑(↑φ : G ↪g G') ↔ G.connectedComponentMk v = C :=
+  by
+  refine' C.ind fun u => _
+  simp only [iso.reachable_iff, connected_component.map_mk, RelEmbedding.coe_coeFn,
+    RelIso.coe_coeFn, connected_component.eq]
+#align simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp
+
+@[simp]
+theorem iso_inv_image_comp_eq_iff_eq_map {C : G.ConnectedComponent} :
+    G.connectedComponentMk (φ.symm v') = C ↔ G'.connectedComponentMk v' = C.map φ :=
+  by
+  refine' C.ind fun u => _
+  simp only [iso.symm_apply_reachable, connected_component.eq, coe_coe, connected_component.map_mk,
+    RelEmbedding.coe_coeFn, RelIso.coe_coeFn]
+#align simple_graph.connected_component.iso_inv_image_comp_eq_iff_eq_map SimpleGraph.ConnectedComponent.iso_inv_image_comp_eq_iff_eq_map
+
+end connectedComponent
+
+namespace Iso
+
+/-- An isomorphism of graphs induces a bijection of connected components. -/
+@[simps]
+def connectedComponentEquiv (φ : G ≃g G') : G.ConnectedComponent ≃ G'.ConnectedComponent
+    where
+  toFun := ConnectedComponent.map φ
+  invFun := ConnectedComponent.map φ.symm
+  left_inv C :=
+    ConnectedComponent.ind (fun v => congr_arg G.connectedComponentMk (Equiv.left_inv φ.toEquiv v))
+      C
+  right_inv C :=
+    ConnectedComponent.ind
+      (fun v => congr_arg G'.connectedComponentMk (Equiv.right_inv φ.toEquiv v)) C
+#align simple_graph.iso.connected_component_equiv SimpleGraph.Iso.connectedComponentEquiv
+
+@[simp]
+theorem connectedComponentEquiv_refl : (Iso.refl : G ≃g G).connectedComponentEquiv = Equiv.refl _ :=
+  by
+  ext ⟨v⟩
+  rfl
+#align simple_graph.iso.connected_component_equiv_refl SimpleGraph.Iso.connectedComponentEquiv_refl
+
+@[simp]
+theorem connectedComponentEquiv_symm (φ : G ≃g G') :
+    φ.symm.connectedComponentEquiv = φ.connectedComponentEquiv.symm :=
+  by
+  ext ⟨_⟩
+  rfl
+#align simple_graph.iso.connected_component_equiv_symm SimpleGraph.Iso.connectedComponentEquiv_symm
+
+@[simp]
+theorem connectedComponentEquiv_trans (φ : G ≃g G') (φ' : G' ≃g G'') :
+    connectedComponentEquiv (φ.trans φ') =
+      φ.connectedComponentEquiv.trans φ'.connectedComponentEquiv :=
+  by
+  ext ⟨_⟩
+  rfl
+#align simple_graph.iso.connected_component_equiv_trans SimpleGraph.Iso.connectedComponentEquiv_trans
+
+end Iso
+
+namespace connectedComponent
+
+/-- The set of vertices in a connected component of a graph. -/
+def supp (C : G.ConnectedComponent) :=
+  { v | G.connectedComponentMk v = C }
+#align simple_graph.connected_component.supp SimpleGraph.ConnectedComponent.supp
+
+@[ext]
+theorem supp_injective :
+    Function.Injective (ConnectedComponent.supp : G.ConnectedComponent → Set V) :=
+  by
+  refine' connected_component.ind₂ _
+  intro v w
+  simp only [connected_component.supp, Set.ext_iff, connected_component.eq, Set.mem_setOf_eq]
+  intro h
+  rw [reachable_comm, h]
+#align simple_graph.connected_component.supp_injective SimpleGraph.ConnectedComponent.supp_injective
+
+@[simp]
+theorem supp_inj {C D : G.ConnectedComponent} : C.supp = D.supp ↔ C = D :=
+  ConnectedComponent.supp_injective.eq_iff
+#align simple_graph.connected_component.supp_inj SimpleGraph.ConnectedComponent.supp_inj
+
+instance : SetLike G.ConnectedComponent V
+    where
+  coe := ConnectedComponent.supp
+  coe_injective' := ConnectedComponent.supp_injective
+
+@[simp]
+theorem mem_supp_iff (C : G.ConnectedComponent) (v : V) :
+    v ∈ C.supp ↔ G.connectedComponentMk v = C :=
+  Iff.rfl
+#align simple_graph.connected_component.mem_supp_iff SimpleGraph.ConnectedComponent.mem_supp_iff
+
+theorem connectedComponentMk_mem {v : V} : v ∈ G.connectedComponentMk v :=
+  rfl
+#align simple_graph.connected_component.connected_component_mk_mem SimpleGraph.ConnectedComponent.connectedComponentMk_mem
+
+/-- The equivalence between connected components, induced by an isomorphism of graphs,
+itself defines an equivalence on the supports of each connected component.
+-/
+def isoEquivSupp (φ : G ≃g G') (C : G.ConnectedComponent) :
+    C.supp ≃ (φ.connectedComponentEquiv C).supp
+    where
+  toFun v := ⟨φ v, ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp.mpr v.Prop⟩
+  invFun v' := ⟨φ.symm v', ConnectedComponent.iso_inv_image_comp_eq_iff_eq_map.mpr v'.Prop⟩
+  left_inv v := Subtype.ext_val (φ.toEquiv.left_inv ↑v)
+  right_inv v := Subtype.ext_val (φ.toEquiv.right_inv ↑v)
+#align simple_graph.connected_component.iso_equiv_supp SimpleGraph.ConnectedComponent.isoEquivSupp
 
 end connectedComponent
 

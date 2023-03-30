@@ -11,7 +11,7 @@ terminates_parallel and exists_of_mem_parallel.
 honor sequence equivalence (irrelevance of computation time).)
 
 ! This file was ported from Lean 3 source module data.seq.parallel
-! leanprover-community/mathlib commit 77615d00fbf05cd7e55ba84176070a18bc097772
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,8 +21,8 @@ universe u v
 
 namespace Computation
 
-open Wseq
-
+/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
 variable {α : Type u} {β : Type v}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -42,8 +42,8 @@ def Parallel.aux1 :
   | (l, S) =>
     rmap
       (fun l' =>
-        match SeqCat.destruct S with
-        | none => (l', nil)
+        match Seq.destruct S with
+        | none => (l', Seq.nil)
         | some (none, S') => (l', S')
         | some (some c, S') => (c::l', S'))
       (Parallel.aux2 l)
@@ -119,7 +119,7 @@ theorem TerminatesParallel.aux :
       rw [H2]
       apply @Computation.think_terminates _ _ _
       have := H1 _ h
-      rcases SeqCat.destruct S with (_ | ⟨_ | c, S'⟩) <;> simp [parallel.aux1] <;> apply IH <;>
+      rcases seq.destruct S with (_ | ⟨_ | c, S'⟩) <;> simp [parallel.aux1] <;> apply IH <;>
         simp [this]
 #align computation.terminates_parallel.aux Computation.TerminatesParallel.aux
 
@@ -128,17 +128,16 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
   by
   suffices
     ∀ (n) (l : List (Computation α)) (S c),
-      c ∈ l ∨ some (some c) = SeqCat.nth S n →
-        Terminates c → Terminates (corec Parallel.aux1 (l, S))
+      c ∈ l ∨ some (some c) = Seq.nth S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
     from
     let ⟨n, h⟩ := h
     this n [] S c (Or.inr h) T
   intro n; induction' n with n IH <;> intro l S c o T
   · cases' o with a a
     · exact terminates_parallel.aux a T
-    have H : SeqCat.destruct S = some (some c, _) :=
+    have H : seq.destruct S = some (some c, _) :=
       by
-      unfold SeqCat.destruct Functor.map
+      unfold seq.destruct Functor.map
       rw [← a]
       simp
     induction' h : parallel.aux2 l with a l' <;> have C : corec parallel.aux1 (l, S) = _
@@ -180,19 +179,18 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
         rw [a]
         cases' S with f al
         rfl
-      induction' e : SeqCat.nth S 0 with o
-      · have D : SeqCat.destruct S = none :=
-          by
-          dsimp [SeqCat.destruct]
+      induction' e : seq.nth S 0 with o
+      · have D : seq.destruct S = none := by
+          dsimp [seq.destruct]
           rw [e]
           rfl
         rw [D]
         simp [parallel.aux1]
         have TT := TT l'
-        rwa [SeqCat.destruct_eq_nil D, SeqCat.tail_nil] at TT
-      · have D : SeqCat.destruct S = some (o, S.tail) :=
+        rwa [seq.destruct_eq_nil D, seq.tail_nil] at TT
+      · have D : seq.destruct S = some (o, S.tail) :=
           by
-          dsimp [SeqCat.destruct]
+          dsimp [seq.destruct]
           rw [e]
           rfl
         rw [D]
@@ -252,11 +250,11 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
   · rw [h'] at this
     rcases this with ⟨c, cl, ac⟩
     exact ⟨c, Or.inl cl, ac⟩
-  · induction' e : SeqCat.destruct S with a <;> rw [e] at h'
+  · induction' e : seq.destruct S with a <;> rw [e] at h'
     ·
       exact
         let ⟨d, o, ad⟩ := IH _ _ h'
-        let ⟨c, cl, ac⟩ := this a ⟨d, o.resolve_right (not_mem_nil _), ad⟩
+        let ⟨c, cl, ac⟩ := this a ⟨d, o.resolve_right (wseq.not_mem_nil _), ad⟩
         ⟨c, Or.inl cl, ac⟩
     · cases' a with o S'
       cases' o with c <;> simp [parallel.aux1] at h' <;> rcases IH _ _ h' with ⟨d, dl | dS', ad⟩
@@ -265,21 +263,21 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
           let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩
           ⟨c, Or.inl cl, ac⟩
       · refine' ⟨d, Or.inr _, ad⟩
-        rw [SeqCat.destruct_eq_cons e]
-        exact SeqCat.mem_cons_of_mem _ dS'
+        rw [seq.destruct_eq_cons e]
+        exact seq.mem_cons_of_mem _ dS'
       · simp at dl
         cases' dl with dc dl
         · rw [dc] at ad
           refine' ⟨c, Or.inr _, ad⟩
-          rw [SeqCat.destruct_eq_cons e]
-          apply SeqCat.mem_cons
+          rw [seq.destruct_eq_cons e]
+          apply seq.mem_cons
         ·
           exact
             let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩
             ⟨c, Or.inl cl, ac⟩
       · refine' ⟨d, Or.inr _, ad⟩
-        rw [SeqCat.destruct_eq_cons e]
-        exact SeqCat.mem_cons_of_mem _ dS'
+        rw [seq.destruct_eq_cons e]
+        exact seq.mem_cons_of_mem _ dS'
 #align computation.exists_of_mem_parallel Computation.exists_of_mem_parallel
 
 theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map (map f)) :=
@@ -314,8 +312,8 @@ theorem parallel_empty (S : Wseq (Computation α)) (h : S.headI ~> none) : paral
   eq_empty_of_not_terminates fun ⟨⟨a, m⟩⟩ =>
     by
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel m
-    let ⟨n, nm⟩ := exists_nth_of_mem cs
-    let ⟨c', h'⟩ := head_some_of_nth_some nm
+    let ⟨n, nm⟩ := Wseq.exists_nth_of_mem cs
+    let ⟨c', h'⟩ := Wseq.head_some_of_nth_some nm
     injection h h'
 #align computation.parallel_empty Computation.parallel_empty
 
@@ -323,11 +321,11 @@ theorem parallel_empty (S : Wseq (Computation α)) (h : S.headI ~> none) : paral
 def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀ s ∈ S, ∀ a ∈ s, C a) {a}
     (h : a ∈ parallel S) : C a :=
   by
-  let T : Wseq (Computation (α × Computation α)) := S.map fun c => c.map fun a => (a, c)
+  let T : wseq (Computation (α × Computation α)) := S.map fun c => c.map fun a => (a, c)
   have : S = T.map (map fun c => c.1) :=
     by
-    rw [← Wseq.map_comp]
-    refine' (Wseq.map_id _).symm.trans (congr_arg (fun f => Wseq.map f S) _)
+    rw [← wseq.map_comp]
+    refine' (wseq.map_id _).symm.trans (congr_arg (fun f => wseq.map f S) _)
     funext c
     dsimp [id, Function.comp]
     rw [← map_comp]
@@ -345,7 +343,7 @@ def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀ s ∈ S
     dsimp at cd
     cases cd
     rcases exists_of_mem_parallel dT with ⟨d', dT', ad'⟩
-    rcases Wseq.exists_of_mem_map dT' with ⟨c', cs', e'⟩
+    rcases wseq.exists_of_mem_map dT' with ⟨c', cs', e'⟩
     rw [← e'] at ad'
     rcases exists_of_mem_map ad' with ⟨a', ac', e'⟩
     injection e' with i1 i2
@@ -388,14 +386,14 @@ theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S,
     have aa := parallel_promises h1 h <;> rw [← aa] <;> rw [← aa] at h <;>
       exact
         let ⟨s, sS, as⟩ := exists_of_mem_parallel h
-        let ⟨t, tT, st⟩ := Wseq.exists_of_liftRel_left H sS
+        let ⟨t, tT, st⟩ := wseq.exists_of_lift_rel_left H sS
         let aT := (st _).1 as
         mem_parallel h2 tT aT,
     fun h => by
     have aa := parallel_promises h2 h <;> rw [← aa] <;> rw [← aa] at h <;>
       exact
         let ⟨s, sS, as⟩ := exists_of_mem_parallel h
-        let ⟨t, tT, st⟩ := Wseq.exists_of_liftRel_right H sS
+        let ⟨t, tT, st⟩ := wseq.exists_of_lift_rel_right H sS
         let aT := (st _).2 as
         mem_parallel h1 tT aT⟩
 #align computation.parallel_congr_left Computation.parallel_congr_left

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.basic
-! leanprover-community/mathlib commit 10d887272d1a72b99da88bcb301d1da9d9d33696
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,10 +168,11 @@ This is just an intermediate representation and users should not (need to) direc
 it. The setup of rewriting/simplification lemmas that make the definitions easy to use is done in
 `algebra.continued_fractions.computation.translations`.
 -/
-protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
+protected def seq1 (v : K) : Stream'.Seq1 <| IntFractPair K :=
   ⟨IntFractPair.of v,--the head
-      SeqCat.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
-      -- head create a sequence from `int_fract_pair.stream`
+      Stream'.Seq.tail-- take the tail of `int_fract_pair.stream` since the first element is already in
+      -- the head
+      -- create a sequence from `int_fract_pair.stream`
       ⟨IntFractPair.stream v,-- the underlying stream
           @stream_isSeq
           _ _ _ v⟩⟩

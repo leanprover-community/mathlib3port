@@ -1,15 +1,14 @@
 /-
 Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Sébastien Gouëzel
+Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Geometry.Manifold.LocalInvariantProperties
-import Mathbin.Geometry.Manifold.TangentBundle
+import Mathbin.Geometry.Manifold.VectorBundle.Tangent
 
 /-!
 # The derivative of functions between smooth manifolds
@@ -66,9 +65,9 @@ of `f` in these charts.
 Due to the fact that we are working in a model with corners, with an additional embedding `I` of the
 model space `H` in the model vector space `E`, the charts taking values in `E` are not the original
 charts of the manifold, but those ones composed with `I`, called extended charts. We define
-`written_in_ext_chart I I' x f` for the function `f` written in the preferred extended charts.  Then
-the manifold derivative of `f`, at `x`, is just the usual derivative of `written_in_ext_chart I I' x
-f`, at the point `(ext_chart_at I x) x`.
+`written_in_ext_chart I I' x f` for the function `f` written in the preferred extended charts. Then
+the manifold derivative of `f`, at `x`, is just the usual derivative of
+`written_in_ext_chart I I' x f`, at the point `(ext_chart_at I x) x`.
 
 There is a subtelty with respect to continuity: if the function is not continuous, then the image
 of a small open set around `x` will not be contained in the source of the preferred chart around
@@ -100,7 +99,7 @@ Derivative, manifold
 
 noncomputable section
 
-open Classical Topology Manifold
+open Classical Topology Manifold Bundle
 
 open Set
 
@@ -721,26 +720,25 @@ theorem tangentMapWithin_eq_tangentMap {p : TangentBundle I M} (hs : UniqueMdiff
 #align tangent_map_within_eq_tangent_map tangentMapWithin_eq_tangentMap
 
 @[simp, mfld_simps]
-theorem tangentMapWithin_tangentBundle_proj {p : TangentBundle I M} :
-    TangentBundle.proj I' M' (tangentMapWithin I I' f s p) = f (TangentBundle.proj I M p) :=
-  rfl
-#align tangent_map_within_tangent_bundle_proj tangentMapWithin_tangentBundle_proj
-
-@[simp, mfld_simps]
-theorem tangentMapWithin_proj {p : TangentBundle I M} : (tangentMapWithin I I' f s p).1 = f p.1 :=
+theorem tangentMapWithin_proj {p : TangentBundle I M} :
+    (tangentMapWithin I I' f s p).proj = f p.proj :=
   rfl
 #align tangent_map_within_proj tangentMapWithin_proj
 
 @[simp, mfld_simps]
-theorem tangentMap_tangentBundle_proj {p : TangentBundle I M} :
-    TangentBundle.proj I' M' (tangentMap I I' f p) = f (TangentBundle.proj I M p) :=
+theorem tangentMapWithin_fst {p : TangentBundle I M} : (tangentMapWithin I I' f s p).1 = f p.1 :=
   rfl
-#align tangent_map_tangent_bundle_proj tangentMap_tangentBundle_proj
+#align tangent_map_within_fst tangentMapWithin_fst
 
 @[simp, mfld_simps]
-theorem tangentMap_proj {p : TangentBundle I M} : (tangentMap I I' f p).1 = f p.1 :=
+theorem tangentMap_proj {p : TangentBundle I M} : (tangentMap I I' f p).proj = f p.proj :=
   rfl
 #align tangent_map_proj tangentMap_proj
+
+@[simp, mfld_simps]
+theorem tangentMap_fst {p : TangentBundle I M} : (tangentMap I I' f p).1 = f p.1 :=
+  rfl
+#align tangent_map_fst tangentMap_fst
 
 omit Is I's
 
@@ -1273,8 +1271,7 @@ theorem tangentMap_id : tangentMap I I (id : M → M) = id :=
   simp [tangentMap]
 #align tangent_map_id tangentMap_id
 
-theorem tangentMapWithin_id {p : TangentBundle I M}
-    (hs : UniqueMdiffWithinAt I s (TangentBundle.proj I M p)) :
+theorem tangentMapWithin_id {p : TangentBundle I M} (hs : UniqueMdiffWithinAt I s p.proj) :
     tangentMapWithin I I (id : M → M) s p = p :=
   by
   simp only [tangentMapWithin, id.def]
@@ -1640,8 +1637,8 @@ theorem tangentMap_chart_symm {p : TangentBundle I M} {q : TangentBundle I H}
   -- a trivial instance is needed after the rewrite, handle it right now.
   rotate_left;
   · infer_instance
-  simp only [ContinuousLinearMap.coe_coe, BasicSmoothVectorBundleCore.chart, h, tangentBundleCore,
-    BasicSmoothVectorBundleCore.toVectorBundleCore, chart_at, Sigma.mk.inj_iff, mfld_simps]
+  simp only [ContinuousLinearMap.coe_coe, TangentBundle.chartAt, h, tangentBundleCore, chart_at,
+    Sigma.mk.inj_iff, mfld_simps]
 #align tangent_map_chart_symm tangentMap_chart_symm
 
 end Charts
@@ -1919,15 +1916,18 @@ theorem UniqueMdiffOn.uniqueDiffOn_inter_preimage (hs : UniqueMdiffOn I s) (x : 
   this.unique_diff_on_target_inter _
 #align unique_mdiff_on.unique_diff_on_inter_preimage UniqueMdiffOn.uniqueDiffOn_inter_preimage
 
-variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
-  (Z : BasicSmoothVectorBundleCore I M F)
+open Bundle
+
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (Z : M → Type _)
+  [TopologicalSpace (TotalSpace Z)] [∀ b, TopologicalSpace (Z b)] [∀ b, AddCommMonoid (Z b)]
+  [∀ b, Module 𝕜 (Z b)] [FiberBundle F Z] [VectorBundle 𝕜 F Z] [SmoothVectorBundle F Z I]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with
+/-- In a smooth fiber bundle, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
 theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
-    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (Z.toVectorBundleCore.proj ⁻¹' s) :=
+    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (π Z ⁻¹' s) :=
   by
   /- Using a chart (and the fact that unique differentiability is invariant under charts), we
     reduce the situation to the model space, where we can use the fact that products respect
@@ -1937,37 +1937,54 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
   · simpa only [mfld_simps] using hp
   let e₀ := chart_at H p.1
   let e := chart_at (ModelProd H F) p
+  have h2s :
+    ∀ x,
+      x ∈ e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s) ↔
+        (x.1 ∈ e₀.target ∧ e₀.symm x.1 ∈ (trivialization_at F Z p.1).baseSet) ∧ e₀.symm x.1 ∈ s :=
+    by
+    intro x
+    have A : x ∈ e.target ↔ x.1 ∈ e₀.target ∧ e₀.symm x.1 ∈ (trivialization_at F Z p.1).baseSet :=
+      by
+      simp only [e, FiberBundle.chartedSpace_chartAt, Trivialization.mem_target,
+        Bundle.TotalSpace.proj, mfld_simps]
+    rw [← A, mem_inter_iff, and_congr_right_iff]
+    intro hx
+    simp only [FiberBundle.chartedSpace_chartAt_symm_fst p x hx, mfld_simps]
   -- It suffices to prove unique differentiability in a chart
-  suffices h :
-    UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s))
+  suffices h : UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s))
   · have A :
       UniqueMdiffOn (I.prod 𝓘(𝕜, F))
-        (e.symm.target ∩
-          e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s))) :=
+        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s))) :=
       by
       apply h.unique_mdiff_on_preimage
       exact (mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)).symm
       infer_instance
-    have :
-      p ∈
-        e.symm.target ∩
-          e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s)) :=
-      by simp only [e, hp, mfld_simps]
+    have : p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s)) := by
+      simp only [e, hp, mfld_simps]
     apply (A _ this).mono
     intro q hq
     simp only [e, LocalHomeomorph.left_inv _ hq.1, mfld_simps] at hq
     simp only [hq, mfld_simps]
-  -- rewrite the relevant set in the chart as a direct product
-  have :
-    (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' e.target ∩
-          (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.symm ⁻¹' (Sigma.fst ⁻¹' s)) ∩
-        range I ×ˢ univ =
-      (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ univ :=
-    by mfld_set_tac
   intro q hq
-  replace hq : q.1 ∈ (chart_at H p.1).target ∧ ((chart_at H p.1).symm : H → M) q.1 ∈ s
-  · simpa only [mfld_simps] using hq
-  simp only [UniqueMdiffWithinAt, ModelWithCorners.prod, preimage_inter, this, mfld_simps]
+  simp only [UniqueMdiffWithinAt, ModelWithCorners.prod, -preimage_inter, mfld_simps]
+  have :
+    𝓝[(I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ univ] (I q.1, q.2) ≤
+      𝓝[(fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s)) ∩
+          range I ×ˢ univ]
+        (I q.1, q.2) :=
+    by
+    rw [nhdsWithin_le_iff, mem_nhdsWithin]
+    refine' ⟨(fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' e.target, _, _, _⟩
+    · exact e.open_target.preimage (I.continuous_symm.prod_map continuous_id)
+    · simp only [Prod.mk.eta, mfld_simps] at hq
+      simp only [Prod.mk.eta, hq, mfld_simps]
+    rintro x hx
+    simp only [mfld_simps] at hx
+    have h2x := hx
+    simp only [e, FiberBundle.chartedSpace_chartAt, Trivialization.mem_target, mfld_simps] at h2x
+    simp only [h2s, hx, h2x, -preimage_inter, mfld_simps]
+  refine' UniqueDiffWithinAt.mono_nhds _ this
+  rw [h2s] at hq
   -- apply unique differentiability of products to conclude
   apply UniqueDiffOn.prod _ uniqueDiffOn_univ
   · simp only [hq, mfld_simps]
@@ -1982,10 +1999,10 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
     rwa [← preimage_inter, ModelWithCorners.right_inv _ hx.2] at B
 #align unique_mdiff_on.smooth_bundle_preimage UniqueMdiffOn.smooth_bundle_preimage
 
-theorem UniqueMdiffOn.tangentBundle_proj_preimage (hs : UniqueMdiffOn I s) :
-    UniqueMdiffOn I.tangent (TangentBundle.proj I M ⁻¹' s) :=
+theorem UniqueMdiffOn.tangent_bundle_proj_preimage (hs : UniqueMdiffOn I s) :
+    UniqueMdiffOn I.tangent (π (TangentSpace I) ⁻¹' s) :=
   hs.smooth_bundle_preimage _
-#align unique_mdiff_on.tangent_bundle_proj_preimage UniqueMdiffOn.tangentBundle_proj_preimage
+#align unique_mdiff_on.tangent_bundle_proj_preimage UniqueMdiffOn.tangent_bundle_proj_preimage
 
 end UniqueMdiff
 

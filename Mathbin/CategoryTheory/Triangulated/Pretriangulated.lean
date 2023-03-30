@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.pretriangulated
-! leanprover-community/mathlib commit 19786714ebe478f40b503acb4705fb058ba47303
+! leanprover-community/mathlib commit 6876fa15e3158ff3e4a4e2af1fb6e1945c6e8803
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
-import Mathbin.CategoryTheory.Shift
+import Mathbin.CategoryTheory.Shift.Basic
 import Mathbin.CategoryTheory.Triangulated.Rotate
 
 /-!
@@ -163,98 +163,6 @@ theorem comp_dist_triangle_mor_zero₃₁ (T) (_ : T ∈ (dist_triang C)) :
 TODO: If `C` is pretriangulated with respect to a shift,
 then `Cᵒᵖ` is pretriangulated with respect to the inverse shift.
 -/
-omit hC
-
-/--
-The underlying structure of a triangulated functor between pretriangulated categories `C` and `D`
-is a functor `F : C ⥤ D` together with given functorial isomorphisms `ξ X : F(X⟦1⟧) ⟶ F(X)⟦1⟧`.
--/
-structure TriangulatedFunctorStruct extends C ⥤ D where
-  commShift : shiftFunctor C (1 : ℤ) ⋙ to_functor ≅ to_functor ⋙ shiftFunctor D (1 : ℤ)
-#align category_theory.pretriangulated.triangulated_functor_struct CategoryTheory.Pretriangulated.TriangulatedFunctorStruct
-
-namespace TriangulatedFunctorStruct
-
-/-- The identity `triangulated_functor_struct`. -/
-def id : TriangulatedFunctorStruct C C where
-  obj X := X
-  map _ _ f := f
-  commShift := by rfl
-#align category_theory.pretriangulated.triangulated_functor_struct.id CategoryTheory.Pretriangulated.TriangulatedFunctorStruct.id
-
-instance : Inhabited (TriangulatedFunctorStruct C C) :=
-  ⟨id C⟩
-
-variable {C D}
-
-/-- Given a `triangulated_functor_struct` we can define a functor from triangles of `C` to
-triangles of `D`.
--/
-@[simps]
-def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D
-    where
-  obj T := Triangle.mk (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
-  map S T f :=
-    { hom₁ := F.map f.hom₁
-      hom₂ := F.map f.hom₂
-      hom₃ := F.map f.hom₃
-      comm₁' := by
-        dsimp
-        simp only [← F.to_functor.map_comp, f.comm₁]
-      comm₂' := by
-        dsimp
-        simp only [← F.to_functor.map_comp, f.comm₂]
-      comm₃' := by
-        dsimp
-        erw [category.assoc, ← F.comm_shift.hom.naturality]
-        simp only [functor.comp_map, ← F.to_functor.map_comp_assoc, f.comm₃] }
-#align category_theory.pretriangulated.triangulated_functor_struct.map_triangle CategoryTheory.Pretriangulated.TriangulatedFunctorStruct.mapTriangle
-
-end TriangulatedFunctorStruct
-
-include hC
-
-variable (C D) [Pretriangulated D]
-
-/-- A triangulated functor between pretriangulated categories `C` and `D` is a functor `F : C ⥤ D`
-together with given functorial isomorphisms `ξ X : F(X⟦1⟧) ⟶ F(X)⟦1⟧` such that for every
-distinguished triangle `(X,Y,Z,f,g,h)` of `C`, the triangle
-`(F(X), F(Y), F(Z), F(f), F(g), F(h) ≫ (ξ X))` is a distinguished triangle of `D`.
-See <https://stacks.math.columbia.edu/tag/014V>
--/
-structure TriangulatedFunctor extends TriangulatedFunctorStruct C D where
-  map_distinguished' :
-    ∀ T : Triangle C,
-      T ∈ (dist_triang C) → to_triangulated_functor_struct.mapTriangle.obj T ∈ (dist_triang D)
-#align category_theory.pretriangulated.triangulated_functor CategoryTheory.Pretriangulated.TriangulatedFunctor
-
-instance : Inhabited (TriangulatedFunctor C C) :=
-  ⟨{  obj := fun X => X
-      map := fun _ _ f => f
-      commShift := by rfl
-      map_distinguished' := by
-        rintro ⟨_, _, _, _⟩ Tdt
-        dsimp at *
-        rwa [category.comp_id] }⟩
-
-variable {C D}
-
-/--
-Given a `triangulated_functor` we can define a functor from triangles of `C` to triangles of `D`.
--/
-@[simps]
-def TriangulatedFunctor.mapTriangle (F : TriangulatedFunctor C D) : Triangle C ⥤ Triangle D :=
-  F.toTriangulatedFunctorStruct.mapTriangle
-#align category_theory.pretriangulated.triangulated_functor.map_triangle CategoryTheory.Pretriangulated.TriangulatedFunctor.mapTriangle
-
-/-- Given a `triangulated_functor` and a distinguished triangle `T` of `C`, then the triangle it
-maps onto in `D` is also distinguished.
--/
-theorem TriangulatedFunctor.map_distinguished (F : TriangulatedFunctor C D) (T : Triangle C)
-    (h : T ∈ (dist_triang C)) : F.mapTriangle.obj T ∈ (dist_triang D) :=
-  F.map_distinguished' T h
-#align category_theory.pretriangulated.triangulated_functor.map_distinguished CategoryTheory.Pretriangulated.TriangulatedFunctor.map_distinguished
-
 end Pretriangulated
 
 end CategoryTheory

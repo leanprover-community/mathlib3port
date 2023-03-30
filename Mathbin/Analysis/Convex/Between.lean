@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.between
-! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -541,18 +541,13 @@ theorem Sbtw.trans_wbtw_right_ne [NoZeroSMulDivisors R V] {w x y z : P} (h₁ : 
   h₁.Wbtw.trans_right_ne h₂ h₁.left_ne
 #align sbtw.trans_wbtw_right_ne Sbtw.trans_wbtw_right_ne
 
-/- Calls to `affine_combination` are slow to elaborate (generally, not just for this lemma), and
-without the use of `@finset.affine_combination R V _ _ _ _ _ _` for at least three of the six
-calls in this lemma statement, elaboration of the statement times out (even if the proof is
-replaced by `sorry`). -/
 theorem Sbtw.affineCombination_of_mem_affineSpan_pair [NoZeroDivisors R] [NoZeroSMulDivisors R V]
     {ι : Type _} {p : ι → P} (ha : AffineIndependent R p) {w w₁ w₂ : ι → R} {s : Finset ι}
     (hw : (∑ i in s, w i) = 1) (hw₁ : (∑ i in s, w₁ i) = 1) (hw₂ : (∑ i in s, w₂ i) = 1)
-    (h : s.affineCombination p w ∈ line[R, s.affineCombination p w₁, s.affineCombination p w₂])
+    (h :
+      s.affineCombination R p w ∈ line[R, s.affineCombination R p w₁, s.affineCombination R p w₂])
     {i : ι} (his : i ∈ s) (hs : Sbtw R (w₁ i) (w i) (w₂ i)) :
-    Sbtw R (@Finset.affineCombination R V _ _ _ _ _ _ s p w₁)
-      (@Finset.affineCombination R V _ _ _ _ _ _ s p w)
-      (@Finset.affineCombination R V _ _ _ _ _ _ s p w₂) :=
+    Sbtw R (s.affineCombination R p w₁) (s.affineCombination R p w) (s.affineCombination R p w₂) :=
   by
   rw [affineCombination_mem_affineSpan_pair ha hw hw₁ hw₂] at h
   rcases h with ⟨r, hr⟩

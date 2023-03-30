@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.independent
-! leanprover-community/mathlib commit 09258fb7f75d741b7eda9fa18d5c869e2135d9f1
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ theorem affineIndependent_iff_indicator_eq_of_affineCombination_eq (p : ι → P
       ∀ (s1 s2 : Finset ι) (w1 w2 : ι → k),
         (∑ i in s1, w1 i) = 1 →
           (∑ i in s2, w2 i) = 1 →
-            s1.affineCombination p w1 = s2.affineCombination p w2 →
+            s1.affineCombination k p w1 = s2.affineCombination k p w2 →
               Set.indicator (↑s1) w1 = Set.indicator (↑s2) w2 :=
   by
   classical
@@ -220,12 +220,12 @@ theorem affineIndependent_iff_indicator_eq_of_affineCombination_eq (p : ι → P
       let w1 : ι → k := Function.update (Function.const ι 0) i0 1
       have hw1 : (∑ i in s, w1 i) = 1 := by
         rw [Finset.sum_update_of_mem hi0, Finset.sum_const_zero, add_zero]
-      have hw1s : s.affine_combination p w1 = p i0 :=
+      have hw1s : s.affine_combination k p w1 = p i0 :=
         s.affine_combination_of_eq_one_of_eq_zero w1 p hi0 (Function.update_same _ _ _)
           fun _ _ hne => Function.update_noteq hne _ _
       let w2 := w + w1
       have hw2 : (∑ i in s, w2 i) = 1 := by simp [w2, Finset.sum_add_distrib, hw, hw1]
-      have hw2s : s.affine_combination p w2 = p i0 := by
+      have hw2s : s.affine_combination k p w2 = p i0 := by
         simp [w2, ← Finset.weightedVsub_vadd_affineCombination, hs, hw1s]
       replace ha := ha s s w2 w1 hw2 hw1 (hw1s.symm ▸ hw2s)
       have hws : w2 i0 - w1 i0 = 0 := by
@@ -241,7 +241,7 @@ theorem affineIndependent_iff_eq_of_fintype_affineCombination_eq [Fintype ι] (p
       ∀ w1 w2 : ι → k,
         (∑ i, w1 i) = 1 →
           (∑ i, w2 i) = 1 →
-            Finset.univ.affineCombination p w1 = Finset.univ.affineCombination p w2 → w1 = w2 :=
+            Finset.univ.affineCombination k p w1 = Finset.univ.affineCombination k p w2 → w1 = w2 :=
   by
   rw [affineIndependent_iff_indicator_eq_of_affineCombination_eq]
   constructor
@@ -274,7 +274,7 @@ theorem AffineIndependent.units_lineMap {p : ι → P} (hp : AffineIndependent k
 
 theorem AffineIndependent.indicator_eq_of_affineCombination_eq {p : ι → P}
     (ha : AffineIndependent k p) (s₁ s₂ : Finset ι) (w₁ w₂ : ι → k) (hw₁ : (∑ i in s₁, w₁ i) = 1)
-    (hw₂ : (∑ i in s₂, w₂ i) = 1) (h : s₁.affineCombination p w₁ = s₂.affineCombination p w₂) :
+    (hw₂ : (∑ i in s₂, w₂ i) = 1) (h : s₁.affineCombination k p w₁ = s₂.affineCombination k p w₂) :
     Set.indicator (↑s₁) w₁ = Set.indicator (↑s₂) w₂ :=
   (affineIndependent_iff_indicator_eq_of_affineCombination_eq k p).1 ha s₁ s₂ w₁ w₂ hw₁ hw₂ h
 #align affine_independent.indicator_eq_of_affine_combination_eq AffineIndependent.indicator_eq_of_affineCombination_eq
@@ -521,7 +521,7 @@ theorem weightedVsub_mem_vectorSpan_pair {p : ι → P} (h : AffineIndependent k
     {s : Finset ι} (hw : (∑ i in s, w i) = 0) (hw₁ : (∑ i in s, w₁ i) = 1)
     (hw₂ : (∑ i in s, w₂ i) = 1) :
     s.weightedVsub p w ∈
-        vectorSpan k ({s.affineCombination p w₁, s.affineCombination p w₂} : Set P) ↔
+        vectorSpan k ({s.affineCombination k p w₁, s.affineCombination k p w₂} : Set P) ↔
       ∃ r : k, ∀ i ∈ s, w i = r * (w₁ i - w₂ i) :=
   by
   rw [mem_vectorSpan_pair]
@@ -551,10 +551,10 @@ two points. -/
 theorem affineCombination_mem_affineSpan_pair {p : ι → P} (h : AffineIndependent k p)
     {w w₁ w₂ : ι → k} {s : Finset ι} (hw : (∑ i in s, w i) = 1) (hw₁ : (∑ i in s, w₁ i) = 1)
     (hw₂ : (∑ i in s, w₂ i) = 1) :
-    s.affineCombination p w ∈ line[k, s.affineCombination p w₁, s.affineCombination p w₂] ↔
+    s.affineCombination k p w ∈ line[k, s.affineCombination k p w₁, s.affineCombination k p w₂] ↔
       ∃ r : k, ∀ i ∈ s, w i = r * (w₂ i - w₁ i) + w₁ i :=
   by
-  rw [← vsub_vadd (s.affine_combination p w) (s.affine_combination p w₁),
+  rw [← vsub_vadd (s.affine_combination k p w) (s.affine_combination k p w₁),
     AffineSubspace.vadd_mem_iff_mem_direction _ (left_mem_affineSpan_pair _ _ _),
     direction_affineSpan, s.affine_combination_vsub, Set.pair_comm,
     weightedVsub_mem_vectorSpan_pair h _ hw₂ hw₁]
@@ -771,7 +771,8 @@ sign. -/
 theorem sign_eq_of_affineCombination_mem_affineSpan_pair {p : ι → P} (h : AffineIndependent k p)
     {w w₁ w₂ : ι → k} {s : Finset ι} (hw : (∑ i in s, w i) = 1) (hw₁ : (∑ i in s, w₁ i) = 1)
     (hw₂ : (∑ i in s, w₂ i) = 1)
-    (hs : s.affineCombination p w ∈ line[k, s.affineCombination p w₁, s.affineCombination p w₂])
+    (hs :
+      s.affineCombination k p w ∈ line[k, s.affineCombination k p w₁, s.affineCombination k p w₂])
     {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (hi0 : w₁ i = 0) (hj0 : w₁ j = 0)
     (hij : SignType.sign (w₂ i) = SignType.sign (w₂ j)) :
     SignType.sign (w i) = SignType.sign (w j) :=
@@ -790,7 +791,7 @@ theorem sign_eq_of_affineCombination_mem_affineSpan_single_lineMap {p : ι → P
     (h : AffineIndependent k p) {w : ι → k} {s : Finset ι} (hw : (∑ i in s, w i) = 1) {i₁ i₂ i₃ : ι}
     (h₁ : i₁ ∈ s) (h₂ : i₂ ∈ s) (h₃ : i₃ ∈ s) (h₁₂ : i₁ ≠ i₂) (h₁₃ : i₁ ≠ i₃) (h₂₃ : i₂ ≠ i₃)
     {c : k} (hc0 : 0 < c) (hc1 : c < 1)
-    (hs : s.affineCombination p w ∈ line[k, p i₁, AffineMap.lineMap (p i₂) (p i₃) c]) :
+    (hs : s.affineCombination k p w ∈ line[k, p i₁, AffineMap.lineMap (p i₂) (p i₃) c]) :
     SignType.sign (w i₂) = SignType.sign (w i₃) := by
   classical
     rw [← s.affine_combination_affine_combination_single_weights k p h₁, ←

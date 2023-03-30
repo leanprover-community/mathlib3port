@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.differential_object
-! leanprover-community/mathlib commit f7707875544ef1f81b32cb68c79e0e24e45a0e76
+! leanprover-community/mathlib commit 6876fa15e3158ff3e4a4e2af1fb6e1945c6e8803
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Int.Basic
-import Mathbin.CategoryTheory.Shift
+import Mathbin.CategoryTheory.Shift.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
@@ -280,8 +280,9 @@ def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C
     { f := f.f⟦n⟧'
       comm' := by
         dsimp
-        rw [category.assoc, shift_comm_hom_comp, ← functor.map_comp_assoc, f.comm,
-          functor.map_comp_assoc] }
+        erw [category.assoc, shift_comm_hom_comp, ← functor.map_comp_assoc, f.comm,
+          functor.map_comp_assoc]
+        rfl }
   map_id' := by
     intro X
     ext1
@@ -294,57 +295,58 @@ def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C
     rw [functor.map_comp]
 #align category_theory.differential_object.shift_functor CategoryTheory.DifferentialObject.shiftFunctor
 
-attribute [local simp] eq_to_hom_map
-
-attribute [local reducible] Discrete.addMonoidal shift_comm
-
 /-- The shift functor on `differential_object C` is additive. -/
 @[simps]
 def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m ⋙ shiftFunctor C n :=
   by
   refine' nat_iso.of_components (fun X => mk_iso (shift_add X.pt _ _) _) _
   · dsimp
-    -- This is just `simp, simp [eq_to_hom_map]`.
-    simp_rw [category.assoc, obj_μ_inv_app, μ_inv_hom_app_assoc, functor.map_comp, obj_μ_app,
-      category.assoc, μ_naturality_assoc, μ_inv_hom_app_assoc, obj_μ_inv_app, category.assoc,
-      μ_naturalityₗ_assoc, μ_inv_hom_app_assoc, μ_inv_naturalityᵣ_assoc]
-    simp only [eq_to_hom_map, eq_to_hom_app, eq_to_iso.hom, eq_to_hom_trans_assoc, eq_to_iso.inv]
+    rw [← cancel_epi ((shift_functor_add C m n).inv.app X.X)]
+    simp only [category.assoc, iso.inv_hom_id_app_assoc]
+    erw [← nat_trans.naturality_assoc]
+    dsimp
+    simp only [functor.map_comp, category.assoc,
+      shift_functor_comm_hom_app_comp_shift_shift_functor_add_hom_app 1 m n X.X,
+      iso.inv_hom_id_app_assoc]
   · intro X Y f
     ext
     dsimp
     exact nat_trans.naturality _ _
 #align category_theory.differential_object.shift_functor_add CategoryTheory.DifferentialObject.shiftFunctorAdd
 
-attribute [local reducible] endofunctor_monoidal_category
-
 section
-
-attribute [local instance] endofunctor_monoidal_category
 
 /-- The shift by zero is naturally isomorphic to the identity. -/
 @[simps]
-def shiftε : 𝟭 (DifferentialObject C) ≅ shiftFunctor C 0 :=
+def shiftZero : shiftFunctor C 0 ≅ 𝟭 (DifferentialObject C) :=
   by
-  refine' nat_iso.of_components (fun X => mk_iso ((shift_monoidal_functor C ℤ).εIso.app X.pt) _) _
-  · dsimp
-    simp
+  refine' nat_iso.of_components (fun X => mk_iso ((shift_functor_zero C ℤ).app X.pt) _) _
+  · erw [← nat_trans.naturality]
     dsimp
-    simp
-  · introv
-    ext
-    dsimp
-    simp
-#align category_theory.differential_object.shift_ε CategoryTheory.DifferentialObject.shiftε
+    simp only [shift_functor_zero_hom_app_shift, category.assoc]
+  · tidy
+#align category_theory.differential_object.shift_zero CategoryTheory.DifferentialObject.shiftZero
 
 end
-
-attribute [local simp] eq_to_hom_map
 
 instance : HasShift (DifferentialObject C) ℤ :=
   hasShiftMk _ _
     { f := shiftFunctor C
-      ε := shiftε C
-      μ := fun m n => (shiftFunctorAdd C m n).symm }
+      zero := shiftZero C
+      add := shiftFunctorAdd C
+      assoc_hom_app := fun m₁ m₂ m₃ X => by
+        ext1
+        convert shift_functor_add_assoc_hom_app m₁ m₂ m₃ X.X
+        dsimp [shift_functor_add']
+        simpa
+      zero_add_hom_app := fun n X => by
+        ext1
+        convert shift_functor_add_zero_add_hom_app n X.X
+        simpa
+      add_zero_hom_app := fun n X => by
+        ext1
+        convert shift_functor_add_add_zero_hom_app n X.X
+        simpa }
 
 end DifferentialObject
 

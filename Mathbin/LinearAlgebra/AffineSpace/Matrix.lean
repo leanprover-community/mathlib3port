@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.matrix
-! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem affineSpan_eq_top_of_toMatrix_left_inv [DecidableEq ι] [Nontrivial k] (
       _ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl
       _ = 1 := by simp [hA, Matrix.one_apply, Finset.filter_eq]
       
-  have hbi : b i = finset.univ.affine_combination p (A i) :=
+  have hbi : b i = finset.univ.affine_combination k p (A i) :=
     by
     apply b.ext_elem
     intro j

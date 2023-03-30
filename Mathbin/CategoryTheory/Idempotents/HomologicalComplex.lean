@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.homological_complex
-! leanprover-community/mathlib commit 31019c2504b17f85af7e0577585fad996935a317
+! leanprover-community/mathlib commit 200eda15d8ff5669854ff6bcc10aaf37cb70498f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Homology.HomologicalComplex
+import Mathbin.Algebra.Homology.Additive
 import Mathbin.CategoryTheory.Idempotents.Karoubi
 
 /-!
@@ -17,6 +17,9 @@ import Mathbin.CategoryTheory.Idempotents.Karoubi
 This file contains simplifications lemmas for categories
 `karoubi (homological_complex C c)` and the construction of an equivalence
 of categories `karoubi (homological_complex C c) ≌ homological_complex (karoubi C) c`.
+
+When the category `C` is idempotent complete, it is shown that
+`homological_complex (karoubi C) c` is also idempotent complete.
 
 -/
 
@@ -225,6 +228,13 @@ def karoubiCochainComplexEquivalence :
     Karoubi (CochainComplex C α) ≌ CochainComplex (Karoubi C) α :=
   karoubiHomologicalComplexEquivalence C (ComplexShape.up α)
 #align category_theory.idempotents.karoubi_cochain_complex_equivalence CategoryTheory.Idempotents.karoubiCochainComplexEquivalence
+
+instance [IsIdempotentComplete C] : IsIdempotentComplete (HomologicalComplex C c) :=
+  by
+  rw [is_idempotent_complete_iff_of_equivalence
+      ((to_karoubi_equivalence C).mapHomologicalComplex c),
+    ← is_idempotent_complete_iff_of_equivalence (karoubi_homological_complex_equivalence C c)]
+  infer_instance
 
 end Idempotents
 

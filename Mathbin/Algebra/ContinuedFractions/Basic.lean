@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.basic
-! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,6 +60,7 @@ protected structure GeneralizedContinuedFraction.Pair where
 
 open GeneralizedContinuedFraction
 
+/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
 /-! Interlude: define some expected coercions and instances. -/
 
 
@@ -114,7 +115,7 @@ For convenience, one often writes `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),
 -/
 structure GeneralizedContinuedFraction where
   h : α
-  s : SeqCat <| Pair α
+  s : Seq <| Pair α
 #align generalized_continued_fraction GeneralizedContinuedFraction
 
 variable {α}
@@ -123,19 +124,19 @@ namespace GeneralizedContinuedFraction
 
 /-- Constructs a generalized continued fraction without fractional part. -/
 def ofInteger (a : α) : GeneralizedContinuedFraction α :=
-  ⟨a, SeqCat.nil⟩
+  ⟨a, Seq.nil⟩
 #align generalized_continued_fraction.of_integer GeneralizedContinuedFraction.ofInteger
 
 instance [Inhabited α] : Inhabited (GeneralizedContinuedFraction α) :=
   ⟨ofInteger default⟩
 
 /-- Returns the sequence of partial numerators `aᵢ` of `g`. -/
-def partialNumerators (g : GeneralizedContinuedFraction α) : SeqCat α :=
+def partialNumerators (g : GeneralizedContinuedFraction α) : Seq α :=
   g.s.map Pair.a
 #align generalized_continued_fraction.partial_numerators GeneralizedContinuedFraction.partialNumerators
 
 /-- Returns the sequence of partial denominators `bᵢ` of `g`. -/
-def partialDenominators (g : GeneralizedContinuedFraction α) : SeqCat α :=
+def partialDenominators (g : GeneralizedContinuedFraction α) : Seq α :=
   g.s.map Pair.b
 #align generalized_continued_fraction.partial_denominators GeneralizedContinuedFraction.partialDenominators
 
@@ -167,13 +168,13 @@ variable {β : Type _} [Coe α β]
 /-- Coerce a gcf by elementwise coercion. -/
 instance hasCoeToGeneralizedContinuedFraction :
     Coe (GeneralizedContinuedFraction α) (GeneralizedContinuedFraction β) :=
-  ⟨fun g => ⟨(g.h : β), (g.s.map coe : SeqCat <| Pair β)⟩⟩
+  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩⟩
 #align generalized_continued_fraction.has_coe_to_generalized_continued_fraction GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 @[simp, norm_cast]
 theorem coe_to_generalizedContinuedFraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
-      ⟨(g.h : β), (g.s.map coe : SeqCat <| Pair β)⟩ :=
+      ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩ :=
   rfl
 #align generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_to_generalizedContinuedFraction
 
@@ -389,7 +390,7 @@ Returns the approximation of the fraction described by the given sequence up to 
 For example, `convergents'_aux [(1, 2), (3, 4), (5, 6)] 2 = 1 / (2 + 3 / 4)` and
 `convergents'_aux [(1, 2), (3, 4), (5, 6)] 0 = 0`.
 -/
-def convergents'Aux : SeqCat (Pair K) → ℕ → K
+def convergents'Aux : Seq (Pair K) → ℕ → K
   | s, 0 => 0
   | s, n + 1 =>
     match s.headI with

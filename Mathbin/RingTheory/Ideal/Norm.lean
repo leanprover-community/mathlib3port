@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.norm
-! leanprover-community/mathlib commit 85e3c05a94b27c84dc6f234cf88326d5e0096ec3
+! leanprover-community/mathlib commit d3acee0d776b15ffb8318f327325ff343cc8bdcc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,6 +293,11 @@ theorem absNorm_eq_one_iff {I : Ideal S} : absNorm I = 1 ↔ I = ⊤ := by
   rw [abs_norm_apply, card_quot_eq_one_iff]
 #align ideal.abs_norm_eq_one_iff Ideal.absNorm_eq_one_iff
 
+theorem absNorm_ne_zero_iff (I : Ideal S) : Ideal.absNorm I ≠ 0 ↔ Finite (S ⧸ I) :=
+  ⟨fun h => Nat.finite_of_card_ne_zero h, fun h =>
+    (@AddSubgroup.finiteIndex_of_finite_quotient _ _ _ h).FiniteIndex⟩
+#align ideal.abs_norm_ne_zero_iff Ideal.absNorm_ne_zero_iff
+
 /-- Let `e : S ≃ I` be an additive isomorphism (therefore a `ℤ`-linear equiv).
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `e`.
 See `nat_abs_det_basis_change` for a more familiar formulation of this result. -/
@@ -459,6 +464,29 @@ theorem absNorm_mem (I : Ideal S) : ↑I.absNorm ∈ I := by
   rw [abs_norm_apply, card_quot, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast,
     quotient.index_eq_zero]
 #align ideal.abs_norm_mem Ideal.absNorm_mem
+
+theorem span_singleton_absNorm_le (I : Ideal S) : Ideal.span {(Ideal.absNorm I : S)} ≤ I := by
+  simp only [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.absNorm_mem I]
+#align ideal.span_singleton_abs_norm_le Ideal.span_singleton_absNorm_le
+
+theorem finite_setOf_absNorm_eq [CharZero S] {n : ℕ} (hn : 0 < n) :
+    { I : Ideal S | Ideal.absNorm I = n }.Finite :=
+  by
+  let f := fun I : Ideal S => Ideal.map (Ideal.Quotient.mk (@Ideal.span S _ {n})) I
+  refine' @Set.Finite.of_finite_image _ _ _ f _ _
+  · suffices Finite (S ⧸ @Ideal.span S _ {n})
+      by
+      let g := (coe : Ideal (S ⧸ @Ideal.span S _ {n}) → Set (S ⧸ @Ideal.span S _ {n}))
+      refine' @Set.Finite.of_finite_image _ _ _ g _ (set_like.coe_injective.inj_on _)
+      exact Set.Finite.subset (@Set.finite_univ _ (@Set.finite' _ this)) (Set.subset_univ _)
+    rw [← abs_norm_ne_zero_iff, abs_norm_span_singleton]
+    simpa only [Ne.def, Int.natAbs_eq_zero, Algebra.norm_eq_zero_iff, Nat.cast_eq_zero] using
+      ne_of_gt hn
+  · intro I hI J hJ h
+    rw [← comap_map_mk (span_singleton_abs_norm_le I), ← hI.symm, ←
+      comap_map_mk (span_singleton_abs_norm_le J), ← hJ.symm]
+    exact congr_arg (Ideal.comap (Ideal.Quotient.mk (@Ideal.span S _ {n}))) h
+#align ideal.finite_set_of_abs_norm_eq Ideal.finite_setOf_absNorm_eq
 
 end Ideal
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.smul
-! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
+! leanprover-community/mathlib commit b685f506164f8d17a6404048bc4d696739c5d976
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -703,10 +703,12 @@ instance isScalarTower'' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower �
 -/
 
 #print Set.isCentralScalar /-
+@[to_additive]
 instance isCentralScalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α β] :
     IsCentralScalar α (Set β) :=
   ⟨fun a S => (congr_arg fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 #align set.is_central_scalar Set.isCentralScalar
+#align set.is_central_vadd Set.is_central_vadd
 -/
 
 #print Set.mulAction /-

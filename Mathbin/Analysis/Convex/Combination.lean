@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.combination
-! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ theorem Finset.centerMass_id_mem_convexHull (t : Finset E) {w : E → R} (hw₀ 
 #align finset.center_mass_id_mem_convex_hull Finset.centerMass_id_mem_convexHull
 
 theorem affineCombination_eq_centerMass {ι : Type _} {t : Finset ι} {p : ι → E} {w : ι → R}
-    (hw₂ : (∑ i in t, w i) = 1) : affineCombination t p w = centerMass t w p :=
+    (hw₂ : (∑ i in t, w i) = 1) : t.affineCombination R p w = centerMass t w p :=
   by
   rw [affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one _ w _ hw₂ (0 : E),
     Finset.weightedVsubOfPoint_apply, vadd_eq_add, add_zero, t.center_mass_eq_of_sum_1 _ hw₂]
@@ -262,7 +262,7 @@ theorem affineCombination_eq_centerMass {ι : Type _} {t : Finset ι} {p : ι �
 
 theorem affineCombination_mem_convexHull {s : Finset ι} {v : ι → E} {w : ι → R}
     (hw₀ : ∀ i ∈ s, 0 ≤ w i) (hw₁ : s.Sum w = 1) :
-    s.affineCombination v w ∈ convexHull R (range v) :=
+    s.affineCombination R v w ∈ convexHull R (range v) :=
   by
   rw [affineCombination_eq_centerMass hw₁]
   apply s.center_mass_mem_convex_hull hw₀
@@ -292,7 +292,7 @@ theorem convexHull_range_eq_exists_affineCombination (v : ι → E) :
     convexHull R (range v) =
       { x |
         ∃ (s : Finset ι)(w : ι → R)(hw₀ : ∀ i ∈ s, 0 ≤ w i)(hw₁ : s.Sum w = 1),
-          s.affineCombination v w = x } :=
+          s.affineCombination R v w = x } :=
   by
   refine' subset.antisymm (convexHull_min _ _) _
   · intro x hx

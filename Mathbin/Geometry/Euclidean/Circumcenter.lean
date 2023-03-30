@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.circumcenter
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -620,7 +620,7 @@ include V
 theorem point_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n)
     (i : Fin (n + 1)) :
     s.points i =
-      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination ℝ s.pointsWithCircumcenter
         (pointWeightsWithCircumcenter i) :=
   by
   rw [← points_with_circumcenter_point]
@@ -663,7 +663,7 @@ include V
 theorem centroid_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n)
     (fs : Finset (Fin (n + 1))) :
     fs.centroid ℝ s.points =
-      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination ℝ s.pointsWithCircumcenter
         (centroidWeightsWithCircumcenter fs) :=
   by
   simp_rw [centroid_def, affine_combination_apply, weighted_vsub_of_point_apply,
@@ -701,7 +701,7 @@ include V
 `points_with_circumcenter`. -/
 theorem circumcenter_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n) :
     s.circumcenter =
-      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination ℝ s.pointsWithCircumcenter
         (circumcenterWeightsWithCircumcenter n) :=
   by
   rw [← points_with_circumcenter_eq_circumcenter]
@@ -739,7 +739,7 @@ terms of `points_with_circumcenter`. -/
 theorem reflection_circumcenter_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ}
     (s : Simplex ℝ P n) {i₁ i₂ : Fin (n + 1)} (h : i₁ ≠ i₂) :
     reflection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter =
-      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex n)).affineCombination ℝ s.pointsWithCircumcenter
         (reflectionCircumcenterWeightsWithCircumcenter i₁ i₂) :=
   by
   have hc : card ({i₁, i₂} : Finset (Fin (n + 1))) = 2 := by simp [h]

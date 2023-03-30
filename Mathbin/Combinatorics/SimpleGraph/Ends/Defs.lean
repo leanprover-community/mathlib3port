@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anand Rao, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.ends.defs
-! leanprover-community/mathlib commit 8195826f5c428fc283510bc67303dd4472d78498
+! leanprover-community/mathlib commit b99e2d58a5e6861833fa8de11e51a81144258db4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,10 +59,11 @@ theorem ComponentCompl.supp_inj {C D : G.ComponentCompl K} : C.supp = D.supp ↔
   ComponentCompl.supp_injective.eq_iff
 #align simple_graph.component_compl.supp_inj SimpleGraph.ComponentCompl.supp_inj
 
-instance : SetLike (G.ComponentCompl K) V
+instance ComponentCompl.setLike : SetLike (G.ComponentCompl K) V
     where
   coe := ComponentCompl.supp
   coe_injective' C D := ComponentCompl.supp_inj.mp
+#align simple_graph.component_compl.set_like SimpleGraph.ComponentCompl.setLike
 
 @[simp]
 theorem ComponentCompl.mem_supp_iff {v : V} {C : ComponentCompl G K} :

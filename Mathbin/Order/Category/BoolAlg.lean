@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.BoolAlg
-! leanprover-community/mathlib commit 51cbe88849c5bcf9eaf8e38f2bbdf1a44bbabe0c
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,25 +49,25 @@ theorem coe_of (α : Type _) [BooleanAlgebra α] : ↥(of α) = α :=
 instance : Inhabited BoolAlg :=
   ⟨of PUnit⟩
 
-/-- Turn a `BoolAlg` into a `BoundedDistribLattice` by forgetting its complement operation. -/
-def toBoundedDistribLattice (X : BoolAlg) : BoundedDistribLattice :=
-  BoundedDistribLattice.of X
-#align BoolAlg.to_BoundedDistribLattice BoolAlg.toBoundedDistribLattice
+/-- Turn a `BoolAlg` into a `BddDistLat` by forgetting its complement operation. -/
+def toBddDistLat (X : BoolAlg) : BddDistLat :=
+  BddDistLat.of X
+#align BoolAlg.to_BddDistLat BoolAlg.toBddDistLat
 
 @[simp]
-theorem coe_toBoundedDistribLattice (X : BoolAlg) : ↥X.toBoundedDistribLattice = ↥X :=
+theorem coe_toBddDistLat (X : BoolAlg) : ↥X.toBddDistLat = ↥X :=
   rfl
-#align BoolAlg.coe_to_BoundedDistribLattice BoolAlg.coe_toBoundedDistribLattice
+#align BoolAlg.coe_to_BddDistLat BoolAlg.coe_toBddDistLat
 
 instance : LargeCategory.{u} BoolAlg :=
-  InducedCategory.category toBoundedDistribLattice
+  InducedCategory.category toBddDistLat
 
 instance : ConcreteCategory BoolAlg :=
-  InducedCategory.concreteCategory toBoundedDistribLattice
+  InducedCategory.concreteCategory toBddDistLat
 
-instance hasForgetToBoundedDistribLattice : HasForget₂ BoolAlg BoundedDistribLattice :=
-  InducedCategory.hasForget₂ toBoundedDistribLattice
-#align BoolAlg.has_forget_to_BoundedDistribLattice BoolAlg.hasForgetToBoundedDistribLattice
+instance hasForgetToBddDistLat : HasForget₂ BoolAlg BddDistLat :=
+  InducedCategory.hasForget₂ toBddDistLat
+#align BoolAlg.has_forget_to_BddDistLat BoolAlg.hasForgetToBddDistLat
 
 section
 
@@ -113,9 +113,8 @@ def dualEquiv : BoolAlg ≌ BoolAlg :=
 
 end BoolAlg
 
-theorem boolAlg_dual_comp_forget_to_boundedDistribLattice :
-    BoolAlg.dual ⋙ forget₂ BoolAlg BoundedDistribLattice =
-      forget₂ BoolAlg BoundedDistribLattice ⋙ BoundedDistribLattice.dual :=
+theorem boolAlg_dual_comp_forget_to_bddDistLat :
+    BoolAlg.dual ⋙ forget₂ BoolAlg BddDistLat = forget₂ BoolAlg BddDistLat ⋙ BddDistLat.dual :=
   rfl
-#align BoolAlg_dual_comp_forget_to_BoundedDistribLattice boolAlg_dual_comp_forget_to_boundedDistribLattice
+#align BoolAlg_dual_comp_forget_to_BddDistLat boolAlg_dual_comp_forget_to_bddDistLat
 

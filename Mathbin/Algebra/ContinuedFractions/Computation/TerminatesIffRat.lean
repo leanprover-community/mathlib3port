@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.terminates_iff_rat
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit a7e36e48519ab281320c4d192da6a7b348ce40ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,6 +36,7 @@ rational, continued fraction, termination
 
 namespace GeneralizedContinuedFraction
 
+/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
 open GeneralizedContinuedFraction (of)
 
 variable {K : Type _} [LinearOrderedField K] [FloorRing K]
@@ -227,14 +228,14 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h :=
 theorem coe_of_s_nth_rat_eq :
     (((of q).s.get? n).map (Pair.map coe) : Option <| Pair K) = (of v).s.get? n :=
   by
-  simp only [of, int_fract_pair.seq1, SeqCat.map_nth, SeqCat.nth_tail]
-  simp only [SeqCat.nth]
+  simp only [of, int_fract_pair.seq1, seq.map_nth, seq.nth_tail]
+  simp only [seq.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
     simp [Stream'.map, Stream'.nth, succ_nth_stream_eq]
 #align generalized_continued_fraction.coe_of_s_nth_rat_eq GeneralizedContinuedFraction.coe_of_s_nth_rat_eq
 
-theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : SeqCat <| Pair K) = (of v).s :=
+theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seq <| Pair K) = (of v).s :=
   by
   ext n
   rw [← coe_of_s_nth_rat_eq v_eq_q]
@@ -254,7 +255,7 @@ theorem coe_of_rat_eq :
 theorem of_terminates_iff_of_rat_terminates {v : K} {q : ℚ} (v_eq_q : v = (q : K)) :
     (of v).Terminates ↔ (of q).Terminates := by
   constructor <;> intro h <;> cases' h with n h <;> use n <;>
-        simp only [SeqCat.TerminatedAt, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;>
+        simp only [seq.terminated_at, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;>
       cases (of q).s.get? n <;>
     trivial
 #align generalized_continued_fraction.of_terminates_iff_of_rat_terminates GeneralizedContinuedFraction.of_terminates_iff_of_rat_terminates

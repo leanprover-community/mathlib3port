@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.NonemptyFinLinOrd
-! leanprover-community/mathlib commit 0bd2ea37bcba5769e14866170f251c9bc64e35d7
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Data.Set.Finite
-import Mathbin.Order.Category.LinearOrder
+import Mathbin.Order.Category.LinOrd
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
 
@@ -83,9 +83,9 @@ instance : Inhabited NonemptyFinLinOrdCat :=
 instance (α : NonemptyFinLinOrdCat) : NonemptyFinLinOrd α :=
   α.str
 
-instance hasForgetToLinearOrder : HasForget₂ NonemptyFinLinOrdCat LinearOrderCat :=
+instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrd :=
   BundledHom.forget₂ _ _
-#align NonemptyFinLinOrd.has_forget_to_LinearOrder NonemptyFinLinOrdCat.hasForgetToLinearOrder
+#align NonemptyFinLinOrd.has_forget_to_LinOrd NonemptyFinLinOrdCat.hasForgetToLinOrd
 
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
 between them. -/
@@ -110,7 +110,7 @@ def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat
   map X Y := OrderHom.dual
 #align NonemptyFinLinOrd.dual NonemptyFinLinOrdCat.dual
 
-/-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
+/-- The equivalence between `FinPartOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
   Equivalence.mk dual dual
@@ -220,9 +220,9 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
 
 end NonemptyFinLinOrdCat
 
-theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linearOrderCat :
-    NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinearOrderCat =
-      forget₂ NonemptyFinLinOrdCat LinearOrderCat ⋙ LinearOrderCat.dual :=
+theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linOrd :
+    NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinOrd =
+      forget₂ NonemptyFinLinOrdCat LinOrd ⋙ LinOrd.dual :=
   rfl
-#align NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder nonemptyFinLinOrdCat_dual_comp_forget_to_linearOrderCat
+#align NonemptyFinLinOrd_dual_comp_forget_to_LinOrd nonemptyFinLinOrdCat_dual_comp_forget_to_linOrd
 

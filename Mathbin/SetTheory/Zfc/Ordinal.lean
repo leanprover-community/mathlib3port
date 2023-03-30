@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.zfc.ordinal
-! leanprover-community/mathlib commit 7a1cc03e365059994e64dc313bb023427bcfb50d
+! leanprover-community/mathlib commit 98bbc3526516bca903bff09ea10c4206bf079e6b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,6 +77,21 @@ theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTr
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem ((H w hw).mem_trans hz hw') hw
 #align Set.is_transitive.sUnion' SetCat.IsTransitive.sUnion'
+
+protected theorem IsTransitive.union (hx : x.IsTransitive) (hy : y.IsTransitive) :
+    (x ∪ y).IsTransitive := by
+  rw [← sUnion_pair]
+  apply is_transitive.sUnion' fun z => _
+  rw [mem_pair]
+  rintro (rfl | rfl)
+  assumption'
+#align Set.is_transitive.union SetCat.IsTransitive.union
+
+protected theorem IsTransitive.powerset (h : x.IsTransitive) : (powerset x).IsTransitive :=
+  fun y hy z hz => by
+  rw [mem_powerset] at hy⊢
+  exact h.subset_of_mem (hy hz)
+#align Set.is_transitive.powerset SetCat.IsTransitive.powerset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isTransitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=

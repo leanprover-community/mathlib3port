@@ -3,8 +3,8 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
-! This file was ported from Lean 3 source module order.category.Preorder
-! leanprover-community/mathlib commit 5306f2df04c869c95c48367d75ad3051c359e9b5
+! This file was ported from Lean 3 source module order.category.Preord
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,7 +16,7 @@ import Mathbin.Order.Hom.Basic
 /-!
 # Category of preorders
 
-This defines `Preorder`, the category of preorders with monotone maps.
+This defines `Preord`, the category of preorders with monotone maps.
 -/
 
 
@@ -25,11 +25,11 @@ universe u
 open CategoryTheory
 
 /-- The category of preorders. -/
-def PreorderCat :=
+def Preord :=
   Bundled Preorder
-#align Preorder PreorderCat
+#align Preord Preord
 
-namespace PreorderCat
+namespace Preord
 
 instance : BundledHom @OrderHom where
   toFun := @OrderHom.toFun
@@ -37,30 +37,30 @@ instance : BundledHom @OrderHom where
   comp := @OrderHom.comp
   hom_ext := @OrderHom.ext
 
-deriving instance LargeCategory, ConcreteCategory for PreorderCat
+deriving instance LargeCategory, ConcreteCategory for Preord
 
-instance : CoeSort PreorderCat (Type _) :=
+instance : CoeSort Preord (Type _) :=
   Bundled.hasCoeToSort
 
-/-- Construct a bundled Preorder from the underlying type and typeclass. -/
-def of (α : Type _) [Preorder α] : PreorderCat :=
+/-- Construct a bundled Preord from the underlying type and typeclass. -/
+def of (α : Type _) [Preorder α] : Preord :=
   Bundled.of α
-#align Preorder.of PreorderCat.of
+#align Preord.of Preord.of
 
 @[simp]
 theorem coe_of (α : Type _) [Preorder α] : ↥(of α) = α :=
   rfl
-#align Preorder.coe_of PreorderCat.coe_of
+#align Preord.coe_of Preord.coe_of
 
-instance : Inhabited PreorderCat :=
+instance : Inhabited Preord :=
   ⟨of PUnit⟩
 
-instance (α : PreorderCat) : Preorder α :=
+instance (α : Preord) : Preorder α :=
   α.str
 
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : PreorderCat.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : Preord.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
@@ -70,40 +70,39 @@ def Iso.mk {α β : PreorderCat.{u}} (e : α ≃o β) : α ≅ β
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply x
-#align Preorder.iso.mk PreorderCat.Iso.mk
+#align Preord.iso.mk Preord.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : PreorderCat ⥤ PreorderCat where
+def dual : Preord ⥤ Preord where
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
-#align Preorder.dual PreorderCat.dual
+#align Preord.dual Preord.dual
 
-/-- The equivalence between `Preorder` and itself induced by `order_dual` both ways. -/
+/-- The equivalence between `Preord` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : PreorderCat ≌ PreorderCat :=
+def dualEquiv : Preord ≌ Preord :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align Preorder.dual_equiv PreorderCat.dualEquiv
+#align Preord.dual_equiv Preord.dualEquiv
 
-end PreorderCat
+end Preord
 
-/-- The embedding of `Preorder` into `Cat`.
+/-- The embedding of `Preord` into `Cat`.
 -/
 @[simps]
-def preorderToCat : PreorderCat.{u} ⥤ Cat
-    where
+def preordToCat : Preord.{u} ⥤ Cat where
   obj X := Cat.of X.1
   map X Y f := f.Monotone.Functor
   map_id' X := by apply CategoryTheory.Functor.ext; tidy
   map_comp' X Y Z f g := by apply CategoryTheory.Functor.ext; tidy
-#align Preorder_to_Cat preorderToCat
+#align Preord_to_Cat preordToCat
 
-instance : Faithful preorderToCat.{u}
+instance : Faithful preordToCat.{u}
     where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
 
-instance : Full preorderToCat.{u}
+instance : Full preordToCat.{u}
     where
   preimage X Y f := ⟨f.obj, f.Monotone⟩
   witness' X Y f := by apply CategoryTheory.Functor.ext; tidy

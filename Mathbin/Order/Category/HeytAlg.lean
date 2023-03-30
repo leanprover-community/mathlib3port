@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.HeytAlg
-! leanprover-community/mathlib commit 51cbe88849c5bcf9eaf8e38f2bbdf1a44bbabe0c
+! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Order.Category.BoundedDistribLattice
+import Mathbin.Order.Category.BddDistLat
 import Mathbin.Order.Heyting.Hom
 
 /-!
@@ -59,11 +59,11 @@ instance bundledHom : BundledHom HeytingHom
 deriving instance LargeCategory, ConcreteCategory for HeytAlg
 
 @[simps]
-instance hasForgetToLattice : HasForget₂ HeytAlg BoundedDistribLattice
+instance hasForgetToLat : HasForget₂ HeytAlg BddDistLat
     where forget₂ :=
-    { obj := fun X => BoundedDistribLattice.of X
+    { obj := fun X => BddDistLat.of X
       map := fun X Y f => (f : BoundedLatticeHom X Y) }
-#align HeytAlg.has_forget_to_Lattice HeytAlg.hasForgetToLattice
+#align HeytAlg.has_forget_to_Lat HeytAlg.hasForgetToLat
 
 /-- Constructs an isomorphism of Heyting algebras from an order isomorphism between them. -/
 @[simps]

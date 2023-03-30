@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit ef5f2ce93dd79b7fb184018b6f48132a10c764e7
+! leanprover-community/mathlib commit 98bbc3526516bca903bff09ea10c4206bf079e6b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1167,6 +1167,21 @@ theorem mem_inter {x y z : SetCat.{u}} : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y :
 theorem mem_diff {x y z : SetCat.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
   @mem_sep fun z : SetCat.{u} => z ∉ y
 #align Set.mem_diff SetCat.mem_diff
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sUnion_pair {x y : SetCat.{u}} : ⋃₀ ({x, y} : SetCat.{u}) = x ∪ y :=
+  by
+  ext
+  simp_rw [mem_union, mem_sUnion, mem_pair]
+  constructor
+  · rintro ⟨w, rfl | rfl, hw⟩
+    · exact Or.inl hw
+    · exact Or.inr hw
+  · rintro (hz | hz)
+    · exact ⟨x, Or.inl rfl, hz⟩
+    · exact ⟨y, Or.inr rfl, hz⟩
+#align Set.sUnion_pair SetCat.sUnion_pair
 
 theorem mem_wf : @WellFounded SetCat (· ∈ ·) :=
   wellFounded_lift₂_iff.mpr PSet.mem_wf

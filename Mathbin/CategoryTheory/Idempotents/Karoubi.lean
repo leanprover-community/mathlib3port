@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.karoubi
-! leanprover-community/mathlib commit 88bca0ce5d22ebfd9e73e682e51d60ea13b48347
+! leanprover-community/mathlib commit 200eda15d8ff5669854ff6bcc10aaf37cb70498f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,6 +245,17 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
 def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
   Equivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
 #align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
+
+/-- The equivalence `C ≅ karoubi C` when `C` is idempotent complete. -/
+def toKaroubiEquivalence [IsIdempotentComplete C] : C ≌ Karoubi C :=
+  haveI := to_karoubi_is_equivalence C
+  functor.as_equivalence (to_karoubi C)
+#align category_theory.idempotents.to_karoubi_equivalence CategoryTheory.Idempotents.toKaroubiEquivalence
+
+instance toKaroubiEquivalence_functor_additive [Preadditive C] [IsIdempotentComplete C] :
+    (toKaroubiEquivalence C).Functor.Additive :=
+  (inferInstance : (toKaroubi C).Additive)
+#align category_theory.idempotents.to_karoubi_equivalence_functor_additive CategoryTheory.Idempotents.toKaroubiEquivalence_functor_additive
 
 namespace Karoubi
 

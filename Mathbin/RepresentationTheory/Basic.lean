@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.basic
-! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
+! leanprover-community/mathlib commit 9cb7206107eb5cbc8dd3b9fc0864c548fae962bd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -436,6 +436,12 @@ theorem dual_apply (g : G) : (dual ρV) g = Module.Dual.transpose (ρV g⁻¹) :
   rfl
 #align representation.dual_apply Representation.dual_apply
 
+/-- Given $k$-modules $V, W$, there is a homomorphism $φ : V^* ⊗ W → Hom_k(V, W)$
+(implemented by `linear_algebra.contraction.dual_tensor_hom`).
+Given representations of $G$ on $V$ and $W$,there are representations of $G$ on  $V^* ⊗ W$ and on
+$Hom_k(V, W)$.
+This lemma says that $φ$ is $G$-linear.
+-/
 theorem dualTensorHom_comm (g : G) :
     dualTensorHom k V W ∘ₗ TensorProduct.map (ρV.dual g) (ρW g) =
       (linHom ρV ρW) g ∘ₗ dualTensorHom k V W :=
