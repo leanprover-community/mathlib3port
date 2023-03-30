@@ -315,7 +315,7 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt :
 -- implementation note: we produce a `tactic (mllist tactic application)` first,
 -- because it's easier to work in the tactic monad, but in a moment we squash this
 -- down to an `mllist tactic application`.
-private unsafe def suggest_core' (opt : suggest_opt := { }) : tactic (mllist tactic application) :=
+private unsafe def suggest_core' (opt : suggest_opt := { }) : tactic (ListM tactic application) :=
   do
   let g :: _ ← get_goals
   let hyps ← local_context
@@ -370,8 +370,8 @@ It returns a list of `application`s consisting of fields:
 * `num_goals`, the number of remaining goals, and
 * `hyps_used`, the number of local hypotheses used in the solution.
 -/
-unsafe def suggest_core (opt : suggest_opt := { }) : mllist tactic application :=
-  (mllist.monad_lift (suggest_core' opt)).join
+unsafe def suggest_core (opt : suggest_opt := { }) : ListM tactic application :=
+  (ListM.monad_lift (suggest_core' opt)).join
 #align tactic.suggest_core tactic.suggest_core
 
 /-- See `suggest_core`.
