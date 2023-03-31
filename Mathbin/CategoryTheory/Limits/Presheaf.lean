@@ -92,7 +92,7 @@ def restrictedYonedaYoneda : restrictedYoneda (yoneda : C ⥤ Cᵒᵖ ⥤ Type u
 It is shown in `restrict_yoneda_hom_equiv_natural` that this is a natural bijection.
 -/
 def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ)
-    {c : Cocone ((categoryOfElements.π P).leftOp ⋙ A)} (t : IsColimit c) :
+    {c : Cocone ((CategoryOfElements.π P).leftOp ⋙ A)} (t : IsColimit c) :
     (c.pt ⟶ E) ≃ (P ⟶ (restrictedYoneda A).obj E) :=
   ((uliftTrivial _).symm ≪≫ t.homIso' E).toEquiv.trans
     { toFun := fun k =>
@@ -144,13 +144,13 @@ def extendAlongYoneda : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ :=
 
 @[simp]
 theorem extendAlongYoneda_obj (P : Cᵒᵖ ⥤ Type u₁) :
-    (extendAlongYoneda A).obj P = colimit ((categoryOfElements.π P).leftOp ⋙ A) :=
+    (extendAlongYoneda A).obj P = colimit ((CategoryOfElements.π P).leftOp ⋙ A) :=
   rfl
 #align category_theory.colimit_adj.extend_along_yoneda_obj CategoryTheory.ColimitAdj.extendAlongYoneda_obj
 
 theorem extendAlongYoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
     (extendAlongYoneda A).map f =
-      colimit.pre ((categoryOfElements.π Y).leftOp ⋙ A) (categoryOfElements.map f).op :=
+      colimit.pre ((CategoryOfElements.π Y).leftOp ⋙ A) (CategoryOfElements.map f).op :=
   by
   ext J
   erw [colimit.ι_pre ((category_of_elements.π Y).leftOp ⋙ A) (category_of_elements.map f).op]
@@ -223,9 +223,9 @@ This follows from `category_theory.category_of_elements.costructured_arrow_yoned
 @[simps]
 def extendAlongYonedaIsoKanApp (X) :
     (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
-  let eq := categoryOfElements.costructuredArrowYonedaEquivalence X
+  let eq := CategoryOfElements.costructuredArrowYonedaEquivalence X
   { Hom := colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor
-    inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse
+    inv := colimit.pre ((CategoryOfElements.π X).leftOp ⋙ A) Eq.inverse
     hom_inv_id' :=
       by
       erw [colimit.pre_pre ((category_of_elements.π X).leftOp ⋙ A) eq.inverse]
@@ -296,7 +296,7 @@ by the fact that it factors through the yoneda embedding).
 `cocone_of_representable` gives a cocone for this functor which is a colimit and has point `P`.
 -/
 def functorToRepresentables (P : Cᵒᵖ ⥤ Type u₁) : P.Elementsᵒᵖ ⥤ Cᵒᵖ ⥤ Type u₁ :=
-  (categoryOfElements.π P).leftOp ⋙ yoneda
+  (CategoryOfElements.π P).leftOp ⋙ yoneda
 #align category_theory.functor_to_representables CategoryTheory.functorToRepresentables
 
 /-- This is a cocone with point `P` for the functor `functor_to_representables P`. It is shown in
@@ -324,7 +324,7 @@ theorem coconeOfRepresentable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.Elements
 /-- The legs of the cocone `cocone_of_representable` are natural in the choice of presheaf. -/
 theorem coconeOfRepresentable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α : P₁ ⟶ P₂) (j : P₁.Elementsᵒᵖ) :
     (coconeOfRepresentable P₁).ι.app j ≫ α =
-      (coconeOfRepresentable P₂).ι.app ((categoryOfElements.map α).op.obj j) :=
+      (coconeOfRepresentable P₂).ι.app ((CategoryOfElements.map α).op.obj j) :=
   by
   ext (T f)
   simpa [cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _

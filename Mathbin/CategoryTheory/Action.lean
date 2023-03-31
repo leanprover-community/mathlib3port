@@ -57,7 +57,7 @@ namespace ActionCategory
 /-- The projection from the action category to the monoid, mapping a morphism to its
   label. -/
 def π : ActionCategory M X ⥤ SingleObj M :=
-  categoryOfElements.π _
+  CategoryOfElements.π _
 #align category_theory.action_category.π CategoryTheory.ActionCategory.π
 
 @[simp]
