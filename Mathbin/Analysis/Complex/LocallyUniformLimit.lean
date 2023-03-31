@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.locally_uniform_limit
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit fe44cd36149e675eb5dec87acc7e8f1d6568e081
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.RemovableSingularity
-import Mathbin.Analysis.Calculus.UniformLimitsDeriv
+import Mathbin.Analysis.Calculus.Series
 
 /-!
 # Locally uniform limits of holomorphic functions
@@ -185,6 +185,40 @@ theorem TendstoLocallyUniformlyOn.deriv (hf : TendstoLocallyUniformlyOn F f φ U
 #align tendsto_locally_uniformly_on.deriv TendstoLocallyUniformlyOn.deriv
 
 end Weierstrass
+
+section Tsums
+
+/-- If the terms in the sum `∑' (i : ι), F i` are uniformly bounded on `U` by a
+summable function, and each term in the sum is differentiable on `U`, then so is the sum. -/
+theorem differentiableOn_tsum_of_summable_norm {u : ι → ℝ} (hu : Summable u)
+    (hf : ∀ i : ι, DifferentiableOn ℂ (F i) U) (hU : IsOpen U)
+    (hF_le : ∀ (i : ι) (w : ℂ), w ∈ U → ‖F i w‖ ≤ u i) :
+    DifferentiableOn ℂ (fun w : ℂ => ∑' i : ι, F i w) U := by
+  classical
+    have hc := (tendstoUniformlyOn_tsum hu hF_le).TendstoLocallyUniformlyOn
+    refine' hc.differentiable_on (eventually_of_forall fun s => _) hU
+    exact DifferentiableOn.sum fun i hi => hf i
+#align complex.differentiable_on_tsum_of_summable_norm Complex.differentiableOn_tsum_of_summable_norm
+
+/-- If the terms in the sum `∑' (i : ι), F i` are uniformly bounded on `U` by a
+summable function, then the sum of `deriv F i` at a point in `U` is the derivative of the
+sum. -/
+theorem hasSum_deriv_of_summable_norm {u : ι → ℝ} (hu : Summable u)
+    (hf : ∀ i : ι, DifferentiableOn ℂ (F i) U) (hU : IsOpen U)
+    (hF_le : ∀ (i : ι) (w : ℂ), w ∈ U → ‖F i w‖ ≤ u i) (hz : z ∈ U) :
+    HasSum (fun i : ι => deriv (F i) z) (deriv (fun w : ℂ => ∑' i : ι, F i w) z) :=
+  by
+  rw [HasSum]
+  have hc := (tendstoUniformlyOn_tsum hu hF_le).TendstoLocallyUniformlyOn
+  convert(hc.deriv (eventually_of_forall fun s => DifferentiableOn.sum fun i hi => hf i)
+          hU).tendsto_at
+      hz using
+    1
+  ext1 s
+  exact (deriv_sum fun i hi => (hf i).DifferentiableAt (hU.mem_nhds hz)).symm
+#align complex.has_sum_deriv_of_summable_norm Complex.hasSum_deriv_of_summable_norm
+
+end Tsums
 
 end Complex
 

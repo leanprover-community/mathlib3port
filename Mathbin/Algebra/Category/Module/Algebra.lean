@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.algebra
-! leanprover-community/mathlib commit 4ed0bcaef698011b0692b93a042a2282f490f6b6
+! leanprover-community/mathlib commit 1c775cc661988d96c477aa4ca6f7b5641a2a924b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ these instances will not necessarily agree with the original ones.
 
 It seems without making a parallel version `Module' k A`, for modules over a `k`-algebra `A`,
 that carries these typeclasses, this seems hard to achieve.
-(An alternative would be to always require these typeclasses,
+(An alternative would be to always require these typeclasses, and remove the original `Module`,
 requiring users to write `Module' ℤ A` when `A` is merely a ring.)
 -/
 

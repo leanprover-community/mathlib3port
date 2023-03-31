@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.injective
-! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
+! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Abelian.Exact
 import Mathbin.CategoryTheory.Preadditive.Injective
 import Mathbin.CategoryTheory.Preadditive.Yoneda.Limits
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Injective
 
 /-!
 # Injective objects in abelian categories

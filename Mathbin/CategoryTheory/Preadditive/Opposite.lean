@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz, Johan Commelin, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.opposite
-! leanprover-community/mathlib commit 829895f162a1f29d0133f4b3538f4cd1fb5bffd3
+! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.CategoryTheory.Preadditive.Basic
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.Logic.Equiv.TransferInstance
 

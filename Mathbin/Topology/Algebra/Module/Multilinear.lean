@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit 4601791ea62fea875b488dafc4e6dede19e8363f
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,16 +44,15 @@ open BigOperators
 universe u v w w₁ w₁' w₂ w₃ w₄
 
 variable {R : Type u} {ι : Type v} {n : ℕ} {M : Fin n.succ → Type w} {M₁ : ι → Type w₁}
-  {M₁' : ι → Type w₁'} {M₂ : Type w₂} {M₃ : Type w₃} {M₄ : Type w₄} [DecidableEq ι]
+  {M₁' : ι → Type w₁'} {M₂ : Type w₂} {M₃ : Type w₃} {M₄ : Type w₄}
 
 /-- Continuous multilinear maps over the ring `R`, from `Πi, M₁ i` to `M₂` where `M₁ i` and `M₂`
 are modules over `R` with a topological structure. In applications, there will be compatibility
 conditions between the algebraic and the topological structures, but this is not needed for the
 definition. -/
 structure ContinuousMultilinearMap (R : Type u) {ι : Type v} (M₁ : ι → Type w₁) (M₂ : Type w₂)
-  [DecidableEq ι] [Semiring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M₂] [∀ i, Module R (M₁ i)]
-  [Module R M₂] [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] extends
-  MultilinearMap R M₁ M₂ where
+  [Semiring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M₂] [∀ i, Module R (M₁ i)] [Module R M₂]
+  [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] extends MultilinearMap R M₁ M₂ where
   cont : Continuous to_fun
 #align continuous_multilinear_map ContinuousMultilinearMap
 
@@ -110,13 +109,13 @@ theorem ext_iff {f f' : ContinuousMultilinearMap R M₁ M₂} : f = f' ↔ ∀ x
 #align continuous_multilinear_map.ext_iff ContinuousMultilinearMap.ext_iff
 
 @[simp]
-theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
+theorem map_add [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
     f (update m i (x + y)) = f (update m i x) + f (update m i y) :=
   f.map_add' m i x y
 #align continuous_multilinear_map.map_add ContinuousMultilinearMap.map_add
 
 @[simp]
-theorem map_smul (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i) :
+theorem map_smul [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i) :
     f (update m i (c • x)) = c • f (update m i x) :=
   f.map_smul' m i c x
 #align continuous_multilinear_map.map_smul ContinuousMultilinearMap.map_smul
@@ -221,7 +220,7 @@ end ContinuousAdd
 /-- If `f` is a continuous multilinear map, then `f.to_continuous_linear_map m i` is the continuous
 linear map obtained by fixing all coordinates but `i` equal to those of `m`, and varying the
 `i`-th coordinate. -/
-def toContinuousLinearMap (m : ∀ i, M₁ i) (i : ι) : M₁ i →L[R] M₂ :=
+def toContinuousLinearMap [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) : M₁ i →L[R] M₂ :=
   { f.toMultilinearMap.toLinearMap m i with
     cont := f.cont.comp (continuous_const.update i continuous_id) }
 #align continuous_multilinear_map.to_continuous_linear_map ContinuousMultilinearMap.toContinuousLinearMap
@@ -351,14 +350,14 @@ theorem cons_smul (f : ContinuousMultilinearMap R M M₂) (m : ∀ i : Fin n, M 
   f.toMultilinearMap.cons_smul m c x
 #align continuous_multilinear_map.cons_smul ContinuousMultilinearMap.cons_smul
 
-theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
+theorem map_piecewise_add [DecidableEq ι] (m m' : ∀ i, M₁ i) (t : Finset ι) :
     f (t.piecewise (m + m') m') = ∑ s in t.powerset, f (s.piecewise m m') :=
   f.toMultilinearMap.map_piecewise_add _ _ _
 #align continuous_multilinear_map.map_piecewise_add ContinuousMultilinearMap.map_piecewise_add
 
 /-- Additivity of a continuous multilinear map along all coordinates at the same time,
 writing `f (m + m')` as the sum  of `f (s.piecewise m m')` over all sets `s`. -/
-theorem map_add_univ [Fintype ι] (m m' : ∀ i, M₁ i) :
+theorem map_add_univ [DecidableEq ι] [Fintype ι] (m m' : ∀ i, M₁ i) :
     f (m + m') = ∑ s : Finset ι, f (s.piecewise m m') :=
   f.toMultilinearMap.map_add_univ _ _
 #align continuous_multilinear_map.map_add_univ ContinuousMultilinearMap.map_add_univ
@@ -373,14 +372,15 @@ variable {α : ι → Type _} [Fintype ι] (g : ∀ i, α i → M₁ i) (A : ∀
 sum of `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions with `r 1 ∈ A₁`, ...,
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
 coordinate. -/
-theorem map_sum_finset : (f fun i => ∑ j in A i, g i j) = ∑ r in piFinset A, f fun i => g i (r i) :=
+theorem map_sum_finset [DecidableEq ι] :
+    (f fun i => ∑ j in A i, g i j) = ∑ r in piFinset A, f fun i => g i (r i) :=
   f.toMultilinearMap.map_sum_finset _ _
 #align continuous_multilinear_map.map_sum_finset ContinuousMultilinearMap.map_sum_finset
 
 /-- If `f` is continuous multilinear, then `f (Σ_{j₁} g₁ j₁, ..., Σ_{jₙ} gₙ jₙ)` is the sum of
 `f (g₁ (r 1), ..., gₙ (r n))` where `r` ranges over all functions `r`. This follows from
 multilinearity by expanding successively with respect to each coordinate. -/
-theorem map_sum [∀ i, Fintype (α i)] :
+theorem map_sum [DecidableEq ι] [∀ i, Fintype (α i)] :
     (f fun i => ∑ j, g i j) = ∑ r : ∀ i, α i, f fun i => g i (r i) :=
   f.toMultilinearMap.map_sum _
 #align continuous_multilinear_map.map_sum ContinuousMultilinearMap.map_sum
@@ -415,7 +415,7 @@ variable [Ring R] [∀ i, AddCommGroup (M₁ i)] [AddCommGroup M₂] [∀ i, Mod
   [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] (f f' : ContinuousMultilinearMap R M₁ M₂)
 
 @[simp]
-theorem map_sub (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
+theorem map_sub [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
     f (update m i (x - y)) = f (update m i x) - f (update m i y) :=
   f.toMultilinearMap.map_sub _ _ _ _
 #align continuous_multilinear_map.map_sub ContinuousMultilinearMap.map_sub
@@ -454,7 +454,7 @@ variable [CommSemiring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M₂] [
   [Module R M₂] [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂]
   (f : ContinuousMultilinearMap R M₁ M₂)
 
-theorem map_piecewise_smul (c : ι → R) (m : ∀ i, M₁ i) (s : Finset ι) :
+theorem map_piecewise_smul [DecidableEq ι] (c : ι → R) (m : ∀ i, M₁ i) (s : Finset ι) :
     f (s.piecewise (fun i => c i • m i) m) = (∏ i in s, c i) • f m :=
   f.toMultilinearMap.map_piecewise_smul _ _ _
 #align continuous_multilinear_map.map_piecewise_smul ContinuousMultilinearMap.map_piecewise_smul

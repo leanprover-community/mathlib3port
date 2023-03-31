@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
+! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,6 +100,20 @@ theorem of_ρ_apply {V : Type u} [AddCommGroup V] [Module k V] (ρ : Representat
   rfl
 #align Rep.of_ρ_apply Rep.of_ρ_apply
 
+variable (k G)
+
+/-- The trivial `k`-linear `G`-representation on a `k`-module `V.` -/
+def trivial (V : Type u) [AddCommGroup V] [Module k V] : Rep k G :=
+  Rep.of (@Representation.trivial k G V _ _ _ _)
+#align Rep.trivial Rep.trivial
+
+variable {k G}
+
+theorem trivial_def {V : Type u} [AddCommGroup V] [Module k V] (g : G) (v : V) :
+    (trivial k G V).ρ g v = v :=
+  rfl
+#align Rep.trivial_def Rep.trivial_def
+
 -- Verify that limits are calculated correctly.
 noncomputable example : PreservesLimits (forget₂ (Rep k G) (ModuleCat.{u} k)) := by infer_instance
 
@@ -131,30 +145,69 @@ variable {k G}
 
 @[simp]
 theorem linearization_obj_ρ (X : Action (Type u) (MonCat.of G)) (g : G) (x : X.V →₀ k) :
-    ((linearization k G).1.1.obj X).ρ g x = Finsupp.lmapDomain k k (X.ρ g) x :=
+    ((linearization k G).obj X).ρ g x = Finsupp.lmapDomain k k (X.ρ g) x :=
   rfl
 #align Rep.linearization_obj_ρ Rep.linearization_obj_ρ
 
 @[simp]
 theorem linearization_of (X : Action (Type u) (MonCat.of G)) (g : G) (x : X.V) :
-    ((linearization k G).1.1.obj X).ρ g (Finsupp.single x (1 : k)) =
-      Finsupp.single (X.ρ g x) (1 : k) :=
+    ((linearization k G).obj X).ρ g (Finsupp.single x (1 : k)) = Finsupp.single (X.ρ g x) (1 : k) :=
   by rw [linearization_obj_ρ, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
 #align Rep.linearization_of Rep.linearization_of
 
-variable (X Y : Action (Type u) (MonCat.of G)) (f : X ⟶ Y)
+variable {X Y : Action (Type u) (MonCat.of G)} (f : X ⟶ Y)
 
 @[simp]
-theorem linearization_map_hom :
-    ((linearization k G).1.1.map f).hom = Finsupp.lmapDomain k k f.hom :=
+theorem linearization_map_hom : ((linearization k G).map f).hom = Finsupp.lmapDomain k k f.hom :=
   rfl
 #align Rep.linearization_map_hom Rep.linearization_map_hom
 
-theorem linearization_map_hom_of (x : X.V) :
-    ((linearization k G).1.1.map f).hom (Finsupp.single x (1 : k)) =
-      Finsupp.single (f.hom x) (1 : k) :=
-  by rw [linearization_map_hom, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
-#align Rep.linearization_map_hom_of Rep.linearization_map_hom_of
+theorem linearization_map_hom_single (x : X.V) (r : k) :
+    ((linearization k G).map f).hom (Finsupp.single x r) = Finsupp.single (f.hom x) r := by
+  rw [linearization_map_hom, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
+#align Rep.linearization_map_hom_single Rep.linearization_map_hom_single
+
+@[simp]
+theorem linearization_μ_hom (X Y : Action (Type u) (MonCat.of G)) :
+    ((linearization k G).μ X Y).hom = (finsuppTensorFinsupp' k X.V Y.V).toLinearMap :=
+  rfl
+#align Rep.linearization_μ_hom Rep.linearization_μ_hom
+
+@[simp]
+theorem linearization_μ_inv_hom (X Y : Action (Type u) (MonCat.of G)) :
+    (inv ((linearization k G).μ X Y)).hom = (finsuppTensorFinsupp' k X.V Y.V).symm.toLinearMap :=
+  by
+  simp_rw [← Action.forget_map, functor.map_inv, Action.forget_map, linearization_μ_hom]
+  apply is_iso.inv_eq_of_hom_inv_id _
+  exact LinearMap.ext fun x => LinearEquiv.symm_apply_apply _ _
+#align Rep.linearization_μ_inv_hom Rep.linearization_μ_inv_hom
+
+@[simp]
+theorem linearization_ε_hom : (linearization k G).ε.hom = Finsupp.lsingle PUnit.unit :=
+  rfl
+#align Rep.linearization_ε_hom Rep.linearization_ε_hom
+
+@[simp]
+theorem linearization_ε_inv_hom_apply (r : k) :
+    (inv (linearization k G).ε).hom (Finsupp.single PUnit.unit r) = r :=
+  by
+  simp_rw [← Action.forget_map, functor.map_inv, Action.forget_map]
+  rw [← Finsupp.lsingle_apply PUnit.unit r]
+  apply is_iso.hom_inv_id_apply _ _
+#align Rep.linearization_ε_inv_hom_apply Rep.linearization_ε_inv_hom_apply
+
+variable (k G)
+
+/-- The linearization of a type `X` on which `G` acts trivially is the trivial `G`-representation
+on `k[X]`. -/
+@[simps]
+noncomputable def linearizationTrivialIso (X : Type u) :
+    (linearization k G).obj (Action.mk X 1) ≅ trivial k G (X →₀ k) :=
+  Action.mkIso (Iso.refl _) fun g => by
+    ext1
+    ext1
+    exact linearization_of _ _ _
+#align Rep.linearization_trivial_iso Rep.linearizationTrivialIso
 
 variable (k G)
 
@@ -164,10 +217,20 @@ noncomputable abbrev ofMulAction (H : Type u) [MulAction G H] : Rep k G :=
   of <| Representation.ofMulAction k G H
 #align Rep.of_mul_action Rep.ofMulAction
 
+/-- The `k`-linear `G`-representation on `k[G]`, induced by left multiplication. -/
+noncomputable def leftRegular : Rep k G :=
+  ofMulAction k G G
+#align Rep.left_regular Rep.leftRegular
+
+/-- The `k`-linear `G`-representation on `k[Gⁿ]`, induced by left multiplication. -/
+noncomputable def diagonal (n : ℕ) : Rep k G :=
+  ofMulAction k G (Fin n → G)
+#align Rep.diagonal Rep.diagonal
+
 /-- The linearization of a type `H` with a `G`-action is definitionally isomorphic to the
 `k`-linear `G`-representation on `k[H]` induced by the `G`-action on `H`. -/
-noncomputable def linearizationOfMulActionIso (n : ℕ) :
-    (linearization k G).1.1.obj (Action.ofMulAction G (Fin n → G)) ≅ ofMulAction k G (Fin n → G) :=
+noncomputable def linearizationOfMulActionIso (H : Type u) [MulAction G H] :
+    (linearization k G).obj (Action.ofMulAction G H) ≅ ofMulAction k G H :=
   Iso.refl _
 #align Rep.linearization_of_mul_action_iso Rep.linearizationOfMulActionIso
 

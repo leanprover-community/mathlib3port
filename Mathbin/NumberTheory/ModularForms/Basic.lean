@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit fe44cd36149e675eb5dec87acc7e8f1d6568e081
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
 import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
@@ -29,14 +28,6 @@ open Complex UpperHalfPlane
 open Topology Manifold UpperHalfPlane
 
 noncomputable section
-
-instance UpperHalfPlane.chartedSpace : ChartedSpace ℂ ℍ :=
-  UpperHalfPlane.openEmbedding_coe.singletonChartedSpace
-#align upper_half_plane.charted_space UpperHalfPlane.chartedSpace
-
-instance UpperHalfPlane.smoothManifoldWithCorners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
-  UpperHalfPlane.openEmbedding_coe.singleton_smoothManifoldWithCorners 𝓘(ℂ)
-#align upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.smoothManifoldWithCorners
 
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _

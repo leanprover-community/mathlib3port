@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.basic
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
+! leanprover-community/mathlib commit 2ec920d35348cb2d13ac0e1a2ad9df0fdf1a76b4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.List.Lemmas
+import Mathbin.Data.Set.List
 import Mathbin.Data.List.Perm
 
 /-!

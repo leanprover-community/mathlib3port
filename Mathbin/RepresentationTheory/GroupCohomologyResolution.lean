@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology_resolution
-! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
+! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,10 +41,8 @@ standard projective resolution of `k` as a trivial `k`-linear `G`-representation
 
 ## Main definitions
 
- * `group_cohomology.resolution.to_tensor`
- * `group_cohomology.resolution.of_tensor`
- * `Rep.of_mul_action`
- * `group_cohomology.resolution.equiv_tensor`
+ * `group_cohomology.resolution.Action_diagonal_succ`
+ * `group_cohomology.resolution.diagonal_succ`
  * `group_cohomology.resolution.of_mul_action_basis`
  * `classifying_space_universal_cover`
  * `group_cohomology.resolution.forget₂_to_Module_homotopy_equiv`
@@ -70,8 +68,6 @@ universe u v w
 
 variable {k G : Type u} [CommRing k] {n : ℕ}
 
-open TensorProduct
-
 open CategoryTheory
 
 -- mathport name: «exprGⁿ»
@@ -86,161 +82,145 @@ open Finsupp hiding lift
 
 open Fin (partialProd)
 
-open Representation
-
 section Basis
 
 variable (k G n) [Group G]
 
-/-- The `k`-linear map from `k[Gⁿ⁺¹]` to `k[G] ⊗ₖ k[Gⁿ]` sending `(g₀, ..., gₙ)`
-to `g₀ ⊗ (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ)`. -/
-def toTensorAux : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (G →₀ k) ⊗[k] ((Fin n → G) →₀ k) :=
-  Finsupp.lift ((G →₀ k) ⊗[k] ((Fin n → G) →₀ k)) k (Fin (n + 1) → G) fun x =>
-    single (x 0) 1 ⊗ₜ[k] single (fun i => (x i)⁻¹ * x i.succ) 1
-#align group_cohomology.resolution.to_tensor_aux GroupCohomology.Resolution.toTensorAux
+section Action
 
-/-- The `k`-linear map from `k[G] ⊗ₖ k[Gⁿ]` to `k[Gⁿ⁺¹]` sending `g ⊗ (g₁, ..., gₙ)` to
-`(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
-def ofTensorAux : (G →₀ k) ⊗[k] ((Fin n → G) →₀ k) →ₗ[k] (Fin (n + 1) → G) →₀ k :=
-  TensorProduct.lift
-    (Finsupp.lift _ _ _ fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
-#align group_cohomology.resolution.of_tensor_aux GroupCohomology.Resolution.ofTensorAux
+open Action
 
-variable {k G n}
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- An isomorphism of `G`-sets `Gⁿ⁺¹ ≅ G × Gⁿ`, where `G` acts by left multiplication on `Gⁿ⁺¹` and
+`G` but trivially on `Gⁿ`. The map sends `(g₀, ..., gₙ) ↦ (g₀, (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ))`,
+and the inverse is `(g₀, (g₁, ..., gₙ)) ↦ (g₀, g₀g₁, g₀g₁g₂, ..., g₀g₁...gₙ).` -/
+def actionDiagonalSucc (G : Type u) [Group G] :
+    ∀ n : ℕ, diagonal G (n + 1) ≅ leftRegular G ⊗ Action.mk (Fin n → G) 1
+  | 0 =>
+    diagonalOneIsoLeftRegular G ≪≫
+      (ρ_ _).symm ≪≫ tensorIso (Iso.refl _) (tensorUnitIso (Equiv.equivOfUnique PUnit _).toIso)
+  | n + 1 =>
+    diagonalSucc _ _ ≪≫
+      tensorIso (Iso.refl _) (Action_diagonal_succ n) ≪≫
+        leftRegularTensorIso _ _ ≪≫
+          tensorIso (Iso.refl _)
+            (mkIso (Equiv.piFinSuccAboveEquiv (fun j => G) 0).symm.toIso fun g => rfl)
+#align group_cohomology.resolution.Action_diagonal_succ GroupCohomology.Resolution.actionDiagonalSucc
 
-theorem toTensorAux_single (f : Gⁿ⁺¹) (m : k) :
-    toTensorAux k G n (single f m) = single (f 0) m ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) 1 :=
+theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (n + 1) → G) :
+    (actionDiagonalSucc G n).hom.hom f = (f 0, fun i => (f i)⁻¹ * f i.succ) :=
   by
-  simp only [to_tensor_aux, lift_apply, sum_single_index, TensorProduct.smul_tmul']
-  · simp
-#align group_cohomology.resolution.to_tensor_aux_single GroupCohomology.Resolution.toTensorAux_single
+  induction' n with n hn
+  · exact Prod.ext rfl (funext fun x => Fin.elim0 x)
+  · ext
+    · rfl
+    · dsimp only [Action_diagonal_succ]
+      simp only [iso.trans_hom, comp_hom, types_comp_apply, diagonal_succ_hom_hom,
+        left_regular_tensor_iso_hom_hom, tensor_iso_hom, mk_iso_hom_hom, Equiv.toIso_hom,
+        tensor_hom, Equiv.piFinSuccAboveEquiv_symm_apply, tensor_apply, types_id_apply, tensor_rho,
+        MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ, Fin.coe_eq_castSucc,
+        Fin.insertNth_zero']
+      refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
+      · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ]
+#align group_cohomology.resolution.Action_diagonal_succ_hom_apply GroupCohomology.Resolution.actionDiagonalSucc_hom_apply
 
-theorem toTensorAux_ofMulAction (g : G) (x : Gⁿ⁺¹) :
-    toTensorAux k G n (ofMulAction k G Gⁿ⁺¹ g (single x 1)) =
-      TensorProduct.map (ofMulAction k G G g) 1 (toTensorAux k G n (single x 1)) :=
-  by simp [of_mul_action_def, to_tensor_aux_single, mul_assoc, inv_mul_cancel_left]
-#align group_cohomology.resolution.to_tensor_aux_of_mul_action GroupCohomology.Resolution.toTensorAux_ofMulAction
-
-theorem ofTensorAux_single (g : G) (m : k) (x : Gⁿ →₀ k) :
-    ofTensorAux k G n (single g m ⊗ₜ x) =
-      Finsupp.lift (Gⁿ⁺¹ →₀ k) k Gⁿ (fun f => single (g • partialProd f) m) x :=
-  by simp [of_tensor_aux, sum_single_index, smul_sum, mul_comm m]
-#align group_cohomology.resolution.of_tensor_aux_single GroupCohomology.Resolution.ofTensorAux_single
-
-theorem ofTensorAux_comm_ofMulAction (g h : G) (x : Gⁿ) :
-    ofTensorAux k G n
-        (TensorProduct.map (ofMulAction k G G g) (1 : Module.End k (Gⁿ →₀ k))
-          (single h (1 : k) ⊗ₜ single x (1 : k))) =
-      ofMulAction k G Gⁿ⁺¹ g (ofTensorAux k G n (single h 1 ⊗ₜ single x 1)) :=
-  by simp [of_mul_action_def, of_tensor_aux_single, mul_smul]
-#align group_cohomology.resolution.of_tensor_aux_comm_of_mul_action GroupCohomology.Resolution.ofTensorAux_comm_ofMulAction
-
-theorem toTensorAux_left_inv (x : Gⁿ⁺¹ →₀ k) : ofTensorAux _ _ _ (toTensorAux _ _ _ x) = x :=
+theorem actionDiagonalSucc_inv_apply {G : Type u} [Group G] {n : ℕ} (g : G) (f : Fin n → G) :
+    (actionDiagonalSucc G n).inv.hom (g, f) = (g • Fin.partialProd f : Fin (n + 1) → G) :=
   by
-  refine'
-    LinearMap.ext_iff.1
-      (@Finsupp.lhom_ext _ _ _ k _ _ _ _ _
-        (LinearMap.comp (of_tensor_aux _ _ _) (to_tensor_aux _ _ _)) LinearMap.id fun x y => _)
-      x
-  dsimp
-  rw [to_tensor_aux_single x y, of_tensor_aux_single, Finsupp.lift_apply, Finsupp.sum_single_index,
-    one_smul, Fin.partialProd_left_inv]
-  · rw [zero_smul]
-#align group_cohomology.resolution.to_tensor_aux_left_inv GroupCohomology.Resolution.toTensorAux_left_inv
-
-theorem toTensorAux_right_inv (x : (G →₀ k) ⊗[k] (Gⁿ →₀ k)) :
-    toTensorAux _ _ _ (ofTensorAux _ _ _ x) = x :=
-  by
-  refine' TensorProduct.induction_on x (by simp) (fun y z => _) fun z w hz hw => by simp [hz, hw]
-  rw [← Finsupp.sum_single y, Finsupp.sum, TensorProduct.sum_tmul]
-  simp only [Finset.smul_sum, LinearMap.map_sum]
-  refine' Finset.sum_congr rfl fun f hf => _
-  simp only [of_tensor_aux_single, Finsupp.lift_apply, Finsupp.smul_single',
-    LinearMap.map_finsupp_sum, to_tensor_aux_single, Fin.partialProd_right_inv]
-  dsimp
-  simp only [Fin.partialProd_zero, mul_one]
-  conv_rhs => rw [← Finsupp.sum_single z, Finsupp.sum, TensorProduct.tmul_sum]
-  exact
-    Finset.sum_congr rfl fun g hg =>
-      show _ ⊗ₜ _ = _ by
-        rw [← Finsupp.smul_single', TensorProduct.smul_tmul, Finsupp.smul_single_one]
-#align group_cohomology.resolution.to_tensor_aux_right_inv GroupCohomology.Resolution.toTensorAux_right_inv
-
-variable (k G n)
-
-/-- A hom of `k`-linear representations of `G` from `k[Gⁿ⁺¹]` to `k[G] ⊗ₖ k[Gⁿ]` (on which `G` acts
-by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) sending `(g₀, ..., gₙ)` to
-`g₀ ⊗ (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ)`. -/
-def toTensor :
-    Rep.ofMulAction k G (Fin (n + 1) → G) ⟶
-      Rep.of ((Representation.ofMulAction k G G).tprod (1 : G →* Module.End k ((Fin n → G) →₀ k)))
-    where
-  hom := toTensorAux k G n
-  comm' g := by ext <;> exact to_tensor_aux_of_mul_action _ _
-#align group_cohomology.resolution.to_tensor GroupCohomology.Resolution.toTensor
-
-/-- A hom of `k`-linear representations of `G` from `k[G] ⊗ₖ k[Gⁿ]` (on which `G` acts
-by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) to `k[Gⁿ⁺¹]` sending `g ⊗ (g₁, ..., gₙ)` to
-`(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
-def ofTensor :
-    Rep.of ((Representation.ofMulAction k G G).tprod (1 : G →* Module.End k ((Fin n → G) →₀ k))) ⟶
-      Rep.ofMulAction k G (Fin (n + 1) → G)
-    where
-  hom := ofTensorAux k G n
-  comm' g := by
+  revert g
+  induction' n with n hn
+  · intro g
     ext
-    congr 1
-    exact of_tensor_aux_comm_of_mul_action _ _ _
-#align group_cohomology.resolution.of_tensor GroupCohomology.Resolution.ofTensor
+    simpa only [Subsingleton.elim x 0, Pi.smul_apply, Fin.partialProd_zero, smul_eq_mul, mul_one]
+  · intro g
+    ext
+    dsimp only [Action_diagonal_succ]
+    simp only [iso.trans_inv, comp_hom, hn, diagonal_succ_inv_hom, types_comp_apply, tensor_iso_inv,
+      iso.refl_inv, tensor_hom, id_hom, tensor_apply, types_id_apply,
+      left_regular_tensor_iso_inv_hom, tensor_rho, left_regular_ρ_apply, Pi.smul_apply, smul_eq_mul]
+    refine' Fin.cases _ _ x
+    · simp only [Fin.cons_zero, Fin.partialProd_zero, mul_one]
+    · intro i
+      simpa only [Fin.cons_succ, Pi.smul_apply, smul_eq_mul, Fin.partialProd_succ', mul_assoc]
+#align group_cohomology.resolution.Action_diagonal_succ_inv_apply GroupCohomology.Resolution.actionDiagonalSucc_inv_apply
 
-variable {k G n}
+end Action
 
-@[simp]
-theorem toTensor_single (f : Gⁿ⁺¹) (m : k) :
-    (toTensor k G n).hom (single f m) = single (f 0) m ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) 1 :=
-  by apply to_tensor_aux_single f m
-#align group_cohomology.resolution.to_tensor_single GroupCohomology.Resolution.toTensor_single
+section Rep
 
-@[simp]
-theorem ofTensor_single (g : G) (m : k) (x : Gⁿ →₀ k) :
-    (ofTensor k G n).hom (single g m ⊗ₜ x) =
-      Finsupp.lift (Rep.ofMulAction k G Gⁿ⁺¹) k Gⁿ (fun f => single (g • partialProd f) m) x :=
-  by apply of_tensor_aux_single g m x
-#align group_cohomology.resolution.of_tensor_single GroupCohomology.Resolution.ofTensor_single
+open Rep
 
-theorem ofTensor_single' (g : G →₀ k) (x : Gⁿ) (m : k) :
-    (ofTensor k G n).hom (g ⊗ₜ single x m) =
-      Finsupp.lift _ k G (fun a => single (a • partialProd x) m) g :=
-  by simp [of_tensor, of_tensor_aux]
-#align group_cohomology.resolution.of_tensor_single' GroupCohomology.Resolution.ofTensor_single'
-
-variable (k G n)
-
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An isomorphism of `k`-linear representations of `G` from `k[Gⁿ⁺¹]` to `k[G] ⊗ₖ k[Gⁿ]` (on
 which `G` acts by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) sending `(g₀, ..., gₙ)` to
-`g₀ ⊗ (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ)`. -/
-def equivTensor :
-    Rep.ofMulAction k G (Fin (n + 1) → G) ≅
-      Rep.of
-        ((Representation.ofMulAction k G G).tprod (1 : Representation k G ((Fin n → G) →₀ k))) :=
-  Action.mkIso
-    (LinearEquiv.toModuleIso
-      { toTensorAux k G n with
-        invFun := ofTensorAux k G n
-        left_inv := toTensorAux_left_inv
-        right_inv := fun x => by convert to_tensor_aux_right_inv x })
-    (toTensor k G n).comm
-#align group_cohomology.resolution.equiv_tensor GroupCohomology.Resolution.equivTensor
+`g₀ ⊗ (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ)`. The inverse sends `g₀ ⊗ (g₁, ..., gₙ)` to
+`(g₀, g₀g₁, ..., g₀g₁...gₙ)`. -/
+def diagonalSucc (n : ℕ) :
+    diagonal k G (n + 1) ≅ leftRegular k G ⊗ trivial k G ((Fin n → G) →₀ k) :=
+  (linearization k G).mapIso (actionDiagonalSucc G n) ≪≫
+    (asIso ((linearization k G).μ (Action.leftRegular G) _)).symm ≪≫
+      tensorIso (Iso.refl _) (linearizationTrivialIso k G (Fin n → G))
+#align group_cohomology.resolution.diagonal_succ GroupCohomology.Resolution.diagonalSucc
 
-@[simp]
-theorem equivTensor_def : (equivTensor k G n).hom = toTensor k G n :=
-  rfl
-#align group_cohomology.resolution.equiv_tensor_def GroupCohomology.Resolution.equivTensor_def
+variable {k G n}
 
-@[simp]
-theorem equivTensor_inv_def : (equivTensor k G n).inv = ofTensor k G n :=
-  rfl
-#align group_cohomology.resolution.equiv_tensor_inv_def GroupCohomology.Resolution.equivTensor_inv_def
+theorem diagonalSucc_hom_single (f : Gⁿ⁺¹) (a : k) :
+    (diagonalSucc k G n).hom.hom (single f a) =
+      single (f 0) 1 ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) a :=
+  by
+  dsimp only [diagonal_succ]
+  simpa only [iso.trans_hom, iso.symm_hom, Action.comp_hom, ModuleCat.comp_def,
+    LinearMap.comp_apply, functor.map_iso_hom,
+    linearization_map_hom_single (Action_diagonal_succ G n).hom f a, as_iso_inv,
+    linearization_μ_inv_hom, Action_diagonal_succ_hom_apply, finsuppTensorFinsupp',
+    LinearEquiv.trans_symm, lcongr_symm, LinearEquiv.trans_apply, lcongr_single,
+    TensorProduct.lid_symm_apply, finsuppTensorFinsupp_symm_single, LinearEquiv.coe_toLinearMap]
+#align group_cohomology.resolution.diagonal_succ_hom_single GroupCohomology.Resolution.diagonalSucc_hom_single
+
+theorem diagonalSucc_inv_single_single (g : G) (f : Gⁿ) (a b : k) :
+    (diagonalSucc k G n).inv.hom (Finsupp.single g a ⊗ₜ Finsupp.single f b) =
+      single (g • partialProd f) (a * b) :=
+  by
+  dsimp only [diagonal_succ]
+  simp only [iso.trans_inv, iso.symm_inv, iso.refl_inv, tensor_iso_inv, Action.tensorHom,
+    Action.comp_hom, ModuleCat.comp_def, LinearMap.comp_apply, as_iso_hom, functor.map_iso_inv,
+    ModuleCat.monoidalCategory.hom_apply, linearization_trivial_iso_inv_hom_apply,
+    linearization_μ_hom, Action.id_hom ((linearization k G).obj _), Action_diagonal_succ_inv_apply,
+    ModuleCat.id_apply, LinearEquiv.coe_toLinearMap,
+    finsuppTensorFinsupp'_single_tmul_single k (Action.leftRegular G).V,
+    linearization_map_hom_single (Action_diagonal_succ G n).inv (g, f) (a * b)]
+#align group_cohomology.resolution.diagonal_succ_inv_single_single GroupCohomology.Resolution.diagonalSucc_inv_single_single
+
+theorem diagonalSucc_inv_single_left (g : G) (f : Gⁿ →₀ k) (r : k) :
+    (diagonalSucc k G n).inv.hom (Finsupp.single g r ⊗ₜ f) =
+      Finsupp.lift (Gⁿ⁺¹ →₀ k) k Gⁿ (fun f => single (g • partialProd f) r) f :=
+  by
+  refine' f.induction _ _
+  · simp only [TensorProduct.tmul_zero, map_zero]
+  · intro a b x ha hb hx
+    simp only [lift_apply, smul_single', mul_one, TensorProduct.tmul_add, map_add,
+      diagonal_succ_inv_single_single, hx, Finsupp.sum_single_index, mul_comm b,
+      MulZeroClass.zero_mul, single_zero]
+#align group_cohomology.resolution.diagonal_succ_inv_single_left GroupCohomology.Resolution.diagonalSucc_inv_single_left
+
+theorem diagonalSucc_inv_single_right (g : G →₀ k) (f : Gⁿ) (r : k) :
+    (diagonalSucc k G n).inv.hom (g ⊗ₜ Finsupp.single f r) =
+      Finsupp.lift _ k G (fun a => single (a • partialProd f) r) g :=
+  by
+  refine' g.induction _ _
+  · simp only [TensorProduct.zero_tmul, map_zero]
+  · intro a b x ha hb hx
+    simp only [lift_apply, smul_single', map_add, hx, diagonal_succ_inv_single_single,
+      TensorProduct.add_tmul, Finsupp.sum_single_index, MulZeroClass.zero_mul, single_zero]
+#align group_cohomology.resolution.diagonal_succ_inv_single_right GroupCohomology.Resolution.diagonalSucc_inv_single_right
+
+end Rep
+
+variable (k G n)
+
+open TensorProduct
+
+open Representation
 
 /-- The `k[G]`-linear isomorphism `k[G] ⊗ₖ k[Gⁿ] ≃ k[Gⁿ⁺¹]`, where the `k[G]`-module structure on
 the lefthand side is `tensor_product.left_module`, whilst that of the righthand side comes from
@@ -249,7 +229,7 @@ of the righthand side. -/
 def ofMulActionBasisAux :
     MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k) ≃ₗ[MonoidAlgebra k G]
       (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
-  { (Rep.equivalenceModuleMonoidAlgebra.1.mapIso (equivTensor k G n).symm).toLinearEquiv with
+  { (Rep.equivalenceModuleMonoidAlgebra.1.mapIso (diagonalSucc k G n).symm).toLinearEquiv with
     map_smul' := fun r x =>
       by
       rw [RingHom.id_apply, LinearEquiv.toFun_eq_coe, ← LinearEquiv.map_smul]
@@ -291,7 +271,8 @@ open GroupCohomology.resolution
 `Hom(k[Gⁿ⁺¹], A)` is `k`-linearly isomorphic to the set of functions `Gⁿ → A`. -/
 noncomputable def diagonalHomEquiv (A : Rep k G) :
     (Rep.ofMulAction k G (Fin (n + 1) → G) ⟶ A) ≃ₗ[k] (Fin n → G) → A :=
-  Linear.homCongr k ((equivTensor k G n).trans ((Representation.ofMulAction k G G).repOfTprodIso 1))
+  Linear.homCongr k
+        ((diagonalSucc k G n).trans ((Representation.ofMulAction k G G).repOfTprodIso 1))
         (Iso.refl _) ≪≫ₗ
       (Rep.MonoidalClosed.linearHomEquivComm _ _ _ ≪≫ₗ Rep.leftRegularHomEquiv _) ≪≫ₗ
     (Finsupp.llift A k k (Fin n → G)).symm
@@ -310,9 +291,8 @@ theorem diagonalHomEquiv_apply {A : Rep k G} (f : Rep.ofMulAction k G (Fin (n + 
   simpa only [LinearEquiv.trans_apply, Rep.leftRegularHomEquiv_apply,
     monoidal_closed.linear_hom_equiv_comm_hom, Finsupp.llift_symm_apply, TensorProduct.curry_apply,
     linear.hom_congr_apply, iso.refl_hom, iso.trans_inv, Action.comp_hom, ModuleCat.comp_def,
-    LinearMap.comp_apply, equiv_tensor_inv_def, Representation.repOfTprodIso_inv_apply,
-    of_tensor_single (1 : G) (1 : k) (Finsupp.single x (1 : k)), Finsupp.lift_apply,
-    Finsupp.sum_single_index, one_smul, zero_smul]
+    LinearMap.comp_apply, Representation.repOfTprodIso_inv_apply,
+    diagonal_succ_inv_single_single (1 : G) x, one_smul, one_mul]
 #align Rep.diagonal_hom_equiv_apply Rep.diagonalHomEquiv_apply
 
 /-- Given a `k`-linear `G`-representation `A`, `diagonal_hom_equiv` is a `k`-linear isomorphism of
@@ -328,10 +308,10 @@ theorem diagonalHomEquiv_symm_apply {A : Rep k G} (f : (Fin n → G) → A) (x :
   simp only [LinearEquiv.trans_symm, LinearEquiv.symm_symm, LinearEquiv.trans_apply,
     Rep.leftRegularHomEquiv_symm_apply, linear.hom_congr_symm_apply, Action.comp_hom, iso.refl_inv,
     category.comp_id, Rep.MonoidalClosed.linearHomEquivComm_symm_hom, iso.trans_hom,
-    ModuleCat.comp_def, LinearMap.comp_apply, Representation.repOfTprodIso_apply, equiv_tensor_def,
-    to_tensor_single x (1 : k), TensorProduct.uncurry_apply, Rep.leftRegularHom_hom,
+    ModuleCat.comp_def, LinearMap.comp_apply, Representation.repOfTprodIso_apply,
+    diagonal_succ_hom_single x (1 : k), TensorProduct.uncurry_apply, Rep.leftRegularHom_hom,
     Finsupp.lift_apply, Rep.ihom_obj_ρ, Representation.linHom_apply, Finsupp.sum_single_index,
-    zero_smul, one_smul, Rep.of_ρ, MonoidHom.one_apply, LinearMap.one_apply,
+    zero_smul, one_smul, Rep.of_ρ, Rep.Action_ρ_eq_ρ, Rep.trivial_def (x 0)⁻¹,
     Finsupp.llift_apply A k k]
 #align Rep.diagonal_hom_equiv_symm_apply Rep.diagonalHomEquiv_symm_apply
 
@@ -509,8 +489,7 @@ def compForgetAugmentedIso :
 homotopy equivalent to the complex which is `k` at 0 and 0 elsewhere. -/
 def forget₂ToModuleHomotopyEquiv :
     HomotopyEquiv (GroupCohomology.resolution.forget₂ToModule k G)
-      ((ChainComplex.single₀ (ModuleCat k)).obj
-        ((forget₂ (Rep k G) _).obj <| Rep.of Representation.trivial)) :=
+      ((ChainComplex.single₀ (ModuleCat k)).obj ((forget₂ (Rep k G) _).obj <| Rep.trivial k G k)) :=
   (HomotopyEquiv.ofIso (compForgetAugmentedIso k G).symm).trans <|
     (SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv
           (extraDegeneracyCompForgetAugmentedToModule k G)).trans
@@ -521,7 +500,7 @@ def forget₂ToModuleHomotopyEquiv :
 #align group_cohomology.resolution.forget₂_to_Module_homotopy_equiv GroupCohomology.resolution.forget₂ToModuleHomotopyEquiv
 
 /-- The hom of `k`-linear `G`-representations `k[G¹] → k` sending `∑ nᵢgᵢ ↦ ∑ nᵢ`. -/
-def ε : Rep.ofMulAction k G (Fin 1 → G) ⟶ Rep.of Representation.trivial
+def ε : Rep.ofMulAction k G (Fin 1 → G) ⟶ Rep.trivial k G k
     where
   hom := Finsupp.total _ _ _ fun f => (1 : k)
   comm' g := by
@@ -574,7 +553,7 @@ theorem d_comp_ε : (GroupCohomology.resolution k G).d 1 0 ≫ ε k G = 0 :=
 /-- The chain map from the standard resolution of `k` to `k[0]` given by `∑ nᵢgᵢ ↦ ∑ nᵢ` in
 degree zero. -/
 def εToSingle₀ :
-    GroupCohomology.resolution k G ⟶ (ChainComplex.single₀ _).obj (Rep.of Representation.trivial) :=
+    GroupCohomology.resolution k G ⟶ (ChainComplex.single₀ _).obj (Rep.trivial k G k) :=
   ((GroupCohomology.resolution k G).toSingle₀Equiv _).symm ⟨ε k G, d_comp_ε k G⟩
 #align group_cohomology.resolution.ε_to_single₀ GroupCohomology.resolution.εToSingle₀
 
@@ -610,8 +589,7 @@ open GroupCohomology.resolution
 variable [Group G]
 
 /-- The standard projective resolution of `k` as a trivial `k`-linear `G`-representation. -/
-def GroupCohomology.projectiveResolution :
-    ProjectiveResolution (Rep.of (@Representation.trivial k G _ _)) :=
+def GroupCohomology.projectiveResolution : ProjectiveResolution (Rep.trivial k G k) :=
   (εToSingle₀ k G).toSingle₀ProjectiveResolution (x_projective k G)
 #align group_cohomology.ProjectiveResolution GroupCohomology.projectiveResolution
 
@@ -623,7 +601,7 @@ instance : EnoughProjectives (Rep k G) :=
 `G`-representation) is isomorphic to the `n`th cohomology group of `Hom(P, V)`, where `P` is the
 standard resolution of `k` called `group_cohomology.resolution k G`. -/
 def GroupCohomology.extIso (V : Rep k G) (n : ℕ) :
-    ((ext k (Rep k G) n).obj (Opposite.op <| Rep.of Representation.trivial)).obj V ≅
+    ((ext k (Rep k G) n).obj (Opposite.op <| Rep.trivial k G k)).obj V ≅
       (((((linearYoneda k (Rep k G)).obj V).rightOp.mapHomologicalComplex _).obj
               (GroupCohomology.resolution k G)).homology
           n).unop :=

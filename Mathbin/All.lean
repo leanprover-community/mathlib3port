@@ -612,6 +612,7 @@ import Mathbin.Analysis.InnerProductSpace.GramSchmidtOrtho
 import Mathbin.Analysis.InnerProductSpace.L2Space
 import Mathbin.Analysis.InnerProductSpace.LaxMilgram
 import Mathbin.Analysis.InnerProductSpace.Orientation
+import Mathbin.Analysis.InnerProductSpace.Orthogonal
 import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Analysis.InnerProductSpace.Positive
 import Mathbin.Analysis.InnerProductSpace.Projection
@@ -1049,7 +1050,9 @@ import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 import Mathbin.CategoryTheory.Preadditive.Schur
 import Mathbin.CategoryTheory.Preadditive.SingleObj
 import Mathbin.CategoryTheory.Preadditive.Yoneda.Basic
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Injective
 import Mathbin.CategoryTheory.Preadditive.Yoneda.Limits
+import Mathbin.CategoryTheory.Preadditive.Yoneda.Projective
 import Mathbin.CategoryTheory.Products.Associator
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Products.Bifunctor
@@ -1668,6 +1671,7 @@ import Mathbin.Data.Set.Intervals.SurjOn
 import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.Data.Set.Intervals.WithBotTop
 import Mathbin.Data.Set.Lattice
+import Mathbin.Data.Set.List
 import Mathbin.Data.Set.MulAntidiagonal
 import Mathbin.Data.Set.NAry
 import Mathbin.Data.Set.Opposite
@@ -2034,6 +2038,7 @@ import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.LinearAlgebra.SymplecticGroup
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
 import Mathbin.LinearAlgebra.TensorAlgebra.Grading
+import Mathbin.LinearAlgebra.TensorAlgebra.ToTensorPower
 import Mathbin.LinearAlgebra.TensorPower
 import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.LinearAlgebra.TensorProductBasis

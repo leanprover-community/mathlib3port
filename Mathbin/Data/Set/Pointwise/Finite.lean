@@ -4,17 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.finite
-! leanprover-community/mathlib commit 517cc149e0b515d2893baa376226ed10feb319c7
+! leanprover-community/mathlib commit c941bb9426d62e266612b6d99e6c9fc93e7a1d07
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Set.Pointwise.Smul
 
-/-! # Finiteness lemmas for pointwise operations on sets 
+/-!
+# Finiteness lemmas for pointwise operations on sets
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.-/
+> Any changes to this file require a corresponding PR to mathlib4.
+-/
 
 
 open Pointwise
@@ -144,6 +146,12 @@ theorem Finite.smul_set : s.Finite → (a • s).Finite :=
 #align set.finite.vadd_set Set.Finite.vadd_set
 -/
 
+@[to_additive]
+theorem Infinite.of_smul_set : (a • s).Infinite → s.Infinite :=
+  Infinite.of_image _
+#align set.infinite.of_smul_set Set.Infinite.of_smul_set
+#align set.infinite.of_vadd_set Set.Infinite.of_vadd_set
+
 end HasSmulSet
 
 section Vsub
@@ -159,6 +167,45 @@ theorem Finite.vsub (hs : s.Finite) (ht : t.Finite) : Set.Finite (s -ᵥ t) :=
 -/
 
 end Vsub
+
+section Cancel
+
+variable [Mul α] [IsLeftCancelMul α] [IsRightCancelMul α] {s t : Set α}
+
+@[to_additive]
+theorem infinite_mul : (s * t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
+  infinite_image2 (fun _ _ => (mul_left_injective _).InjOn _) fun _ _ =>
+    (mul_right_injective _).InjOn _
+#align set.infinite_mul Set.infinite_mul
+#align set.infinite_add Set.infinite_add
+
+end Cancel
+
+section Group
+
+variable [Group α] [MulAction α β] {a : α} {s : Set β}
+
+@[simp, to_additive]
+theorem finite_smul_set : (a • s).Finite ↔ s.Finite :=
+  finite_image_iff <| (MulAction.injective _).InjOn _
+#align set.finite_smul_set Set.finite_smul_set
+#align set.finite_vadd_set Set.finite_vadd_set
+
+@[simp, to_additive]
+theorem infinite_smul_set : (a • s).Infinite ↔ s.Infinite :=
+  infinite_image_iff <| (MulAction.injective _).InjOn _
+#align set.infinite_smul_set Set.infinite_smul_set
+#align set.infinite_vadd_set Set.infinite_vadd_set
+
+alias finite_smul_set ↔ finite.of_smul_set _
+#align set.finite.of_smul_set Set.Finite.of_smul_set
+
+alias infinite_smul_set ↔ _ infinite.smul_set
+#align set.infinite.smul_set Set.Infinite.smul_set
+
+attribute [to_additive] finite.of_smul_set infinite.smul_set
+
+end Group
 
 end Set
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 98bbc3526516bca903bff09ea10c4206bf079e6b
+! leanprover-community/mathlib commit 229f6f14a8b345d28ad17aaa1e9e79beb9e231da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1054,6 +1054,15 @@ def sUnion : SetCat → SetCat :=
 -- mathport name: Set.sUnion
 prefix:110 "⋃₀ " => SetCat.sUnion
 
+/-- The intersection operator, the collection of elements in all of the elements of a ZFC set. We
+special-case `⋂₀ ∅ = ∅`. -/
+noncomputable def sInter (x : SetCat) : SetCat := by
+  classical exact dite x.nonempty (fun h => { y ∈ h.some | ∀ z ∈ x, y ∈ z }) fun _ => ∅
+#align Set.sInter SetCat.sInter
+
+-- mathport name: Set.sInter
+prefix:110 "⋂₀ " => SetCat.sInter
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem mem_sUnion {x y : SetCat.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
@@ -1063,23 +1072,55 @@ theorem mem_sUnion {x y : SetCat.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z 
 #align Set.mem_sUnion SetCat.mem_sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_sUnion_of_mem {x y z : SetCat} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
-  mem_sUnion.2 ⟨z, hz, hy⟩
-#align Set.mem_sUnion_of_mem SetCat.mem_sUnion_of_mem
+theorem mem_sInter {x y : SetCat} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
+  by
+  rw [sInter, dif_pos h]
+  simp only [mem_to_set, mem_sep, and_iff_right_iff_imp]
+  exact fun H => H _ h.some_mem
+#align Set.mem_sInter SetCat.mem_sInter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem sUnion_empty : ⋃₀ (∅ : SetCat.{u}) = ∅ :=
-  by
+theorem sUnion_empty : ⋃₀ (∅ : SetCat) = ∅ := by
   ext
   simp
 #align Set.sUnion_empty SetCat.sUnion_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
+theorem sInter_empty : ⋂₀ (∅ : SetCat) = ∅ :=
+  dif_neg <| by simp
+#align Set.sInter_empty SetCat.sInter_empty
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem mem_of_mem_sInter {x y z : SetCat} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+  by
+  rcases eq_empty_or_nonempty x with (rfl | hx)
+  · exact (not_mem_empty z hz).elim
+  · exact (mem_sInter hx).1 hy z hz
+#align Set.mem_of_mem_sInter SetCat.mem_of_mem_sInter
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem mem_sUnion_of_mem {x y z : SetCat} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
+  mem_sUnion.2 ⟨z, hz, hy⟩
+#align Set.mem_sUnion_of_mem SetCat.mem_sUnion_of_mem
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem not_mem_sInter_of_not_mem {x y z : SetCat} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
+  fun hx => hy <| mem_of_mem_sInter hx hz
+#align Set.not_mem_sInter_of_not_mem SetCat.not_mem_sInter_of_not_mem
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
 theorem sUnion_singleton {x : SetCat.{u}} : ⋃₀ ({x} : SetCat) = x :=
   ext fun y => by simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
 #align Set.sUnion_singleton SetCat.sUnion_singleton
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sInter_singleton {x : SetCat.{u}} : ⋂₀ ({x} : SetCat) = x :=
+  ext fun y => by simp_rw [mem_sInter (singleton_nonempty x), mem_singleton, forall_eq]
+#align Set.sInter_singleton SetCat.sInter_singleton
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1089,6 +1130,14 @@ theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.to
   ext
   simp
 #align Set.to_set_sUnion SetCat.toSet_sUnion
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem toSet_sInter {x : SetCat.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
+  by
+  ext
+  simp [mem_sInter h]
+#align Set.to_set_sInter SetCat.toSet_sInter
 
 theorem singleton_injective : Function.Injective (@singleton SetCat SetCat _) := fun x y H =>
   by
@@ -1601,6 +1650,15 @@ def sUnion (x : Class) : Class :=
 -- mathport name: Class.sUnion
 prefix:110 "⋃₀ " => Class.sUnion
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- The intersection of a class is the class of all members of ZFC sets in the class -/
+def sInter (x : Class) : Class :=
+  ⋂₀ classToCong x
+#align Class.sInter Class.sInter
+
+-- mathport name: Class.sInter
+prefix:110 "⋂₀ " => Class.sInter
+
 theorem ofSet.inj {x y : SetCat.{u}} (h : (x : Class.{u}) = y) : x = y :=
   SetCat.ext fun z => by
     change (x : Class.{u}) z ↔ (y : Class.{u}) z
@@ -1699,11 +1757,53 @@ theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = (∅ : Class.{u}) :=
+theorem sInter_apply {x : Class.{u}} {y : SetCat.{u}} : (⋂₀ x) y ↔ ∀ z : SetCat.{u}, x z → y ∈ z :=
+  by
+  refine' ⟨fun hxy z hxz => hxy _ ⟨z, rfl, hxz⟩, _⟩
+  rintro H - ⟨z, rfl, hxz⟩
+  exact H _ hxz
+#align Class.sInter_apply Class.sInter_apply
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp, norm_cast]
+theorem sInter_coe {x : SetCat.{u}} (h : x.Nonempty) : ⋂₀ (x : Class.{u}) = ⋂₀ x :=
+  Set.ext fun y => sInter_apply.trans (SetCat.mem_sInter h).symm
+#align Class.sInter_coe Class.sInter_coe
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem mem_of_mem_sInter {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+  by
+  obtain ⟨w, rfl, hw⟩ := hy
+  exact coe_mem.2 (hw z hz)
+#align Class.mem_of_mem_sInter Class.mem_of_mem_sInter
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z, z ∈ x → y ∈ z :=
+  by
+  refine' ⟨fun hy z => mem_of_mem_sInter hy, fun H => _⟩
+  simp_rw [mem_def, sInter_apply]
+  obtain ⟨z, hz⟩ := h
+  obtain ⟨y, rfl, hzy⟩ := H z (coe_mem.2 hz)
+  refine' ⟨y, rfl, fun w hxw => _⟩
+  simpa only [coe_mem, coe_apply] using H w (coe_mem.2 hxw)
+#align Class.mem_sInter Class.mem_sInter
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
   by
   ext
   simp
 #align Class.sUnion_empty Class.sUnion_empty
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ :=
+  by
+  ext
+  simp [sInter, ← univ]
+#align Class.sInter_empty Class.sInter_empty
 
 /-- An induction principle for sets. If every subset of a class is a member, then the class is
   universal. -/

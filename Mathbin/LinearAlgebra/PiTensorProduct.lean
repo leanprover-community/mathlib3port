@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi_tensor_product
-! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,6 +46,10 @@ binary tensor product in `linear_algebra/tensor_product.lean`.
 * We have not restricted the index type `ι` to be a `fintype`, as nothing we do here strictly
   requires it. However, problems may arise in the case where `ι` is infinite; use at your own
   caution.
+* Instead of requiring `decidable_eq ι` as an argument to `pi_tensor_product` itself, we include it
+  as an argument in the constructors of the relation. A decidability isntance still has to come
+  from somewhere due to the use of `function.update`, but this hides it from the downstream user.
+  See the implementation notes for `multilinear_map` for an extended discussion of this choice.
 
 ## TODO
 
@@ -65,7 +69,7 @@ open Function
 
 section Semiring
 
-variable {ι ι₂ ι₃ : Type _} [DecidableEq ι] [DecidableEq ι₂] [DecidableEq ι₃]
+variable {ι ι₂ ι₃ : Type _}
 
 variable {R : Type _} [CommSemiring R]
 
@@ -92,7 +96,7 @@ inductive Eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s
   | of_zero_scalar : ∀ f : ∀ i, s i, eqv (FreeAddMonoid.of (0, f)) 0
   |
   of_add :
-    ∀ (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
+    ∀ (inst : DecidableEq ι) (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
       eqv (FreeAddMonoid.of (r, update f i m₁) + FreeAddMonoid.of (r, update f i m₂))
         (FreeAddMonoid.of (r, update f i (m₁ + m₂)))
   |
@@ -101,7 +105,7 @@ inductive Eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s
       eqv (FreeAddMonoid.of (r, f) + FreeAddMonoid.of (r', f)) (FreeAddMonoid.of (r + r', f))
   |
   of_smul :
-    ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R),
+    ∀ (inst : DecidableEq ι) (r : R) (f : ∀ i, s i) (i : ι) (r' : R),
       eqv (FreeAddMonoid.of (r, update f i (r' • f i))) (FreeAddMonoid.of (r' * r, f))
   | add_comm : ∀ x y, eqv (x + y) (y + x)
 #align pi_tensor_product.eqv PiTensorProduct.Eqv
@@ -156,10 +160,10 @@ theorem zero_tprod_coeff' (z : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0) : tpr
   Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero _ _ i hf
 #align pi_tensor_product.zero_tprod_coeff' PiTensorProduct.zero_tprod_coeff'
 
-theorem add_tprodCoeff (z : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i) :
+theorem add_tprodCoeff [DecidableEq ι] (z : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i) :
     tprodCoeff R z (update f i m₁) + tprodCoeff R z (update f i m₂) =
       tprodCoeff R z (update f i (m₁ + m₂)) :=
-  Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add z f i m₁ m₂)
+  Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add _ z f i m₁ m₂)
 #align pi_tensor_product.add_tprod_coeff PiTensorProduct.add_tprodCoeff
 
 theorem add_tprod_coeff' (z₁ z₂ : R) (f : ∀ i, s i) :
@@ -167,13 +171,13 @@ theorem add_tprod_coeff' (z₁ z₂ : R) (f : ∀ i, s i) :
   Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add_scalar z₁ z₂ f)
 #align pi_tensor_product.add_tprod_coeff' PiTensorProduct.add_tprod_coeff'
 
-theorem smul_tprodCoeff_aux (z : R) (f : ∀ i, s i) (i : ι) (r : R) :
+theorem smul_tprodCoeff_aux [DecidableEq ι] (z : R) (f : ∀ i, s i) (i : ι) (r : R) :
     tprodCoeff R z (update f i (r • f i)) = tprodCoeff R (r * z) f :=
-  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_smul _ _ _ _
+  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_smul _ _ _ _ _
 #align pi_tensor_product.smul_tprod_coeff_aux PiTensorProduct.smul_tprodCoeff_aux
 
-theorem smul_tprodCoeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [SMul R₁ R] [IsScalarTower R₁ R R]
-    [SMul R₁ (s i)] [IsScalarTower R₁ R (s i)] :
+theorem smul_tprodCoeff [DecidableEq ι] (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [SMul R₁ R]
+    [IsScalarTower R₁ R R] [SMul R₁ (s i)] [IsScalarTower R₁ R (s i)] :
     tprodCoeff R z (update f i (r • f i)) = tprodCoeff R (r • z) f :=
   by
   have h₁ : r • z = r • (1 : R) * z := by rw [smul_mul_assoc, one_mul]
@@ -188,11 +192,12 @@ def liftAddHom (φ : (R × ∀ i, s i) → F)
     (C0 : ∀ (r : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0), φ (r, f) = 0)
     (C0' : ∀ f : ∀ i, s i, φ (0, f) = 0)
     (C_add :
-      ∀ (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
+      ∀ [DecidableEq ι] (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
         φ (r, update f i m₁) + φ (r, update f i m₂) = φ (r, update f i (m₁ + m₂)))
     (C_add_scalar : ∀ (r r' : R) (f : ∀ i, s i), φ (r, f) + φ (r', f) = φ (r + r', f))
     (C_smul :
-      ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R), φ (r, update f i (r' • f i)) = φ (r' * r, f)) :
+      ∀ [DecidableEq ι] (r : R) (f : ∀ i, s i) (i : ι) (r' : R),
+        φ (r, update f i (r' • f i)) = φ (r' * r, f)) :
     (⨂[R] i, s i) →+ F :=
   (addConGen (PiTensorProduct.Eqv R s)).lift (FreeAddMonoid.lift φ) <|
     AddCon.addConGen_le fun x y hxy =>
@@ -201,12 +206,12 @@ def liftAddHom (φ : (R × ∀ i, s i) → F)
         (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C0 r' f i hf]
       | _, _, eqv.of_zero_scalar f =>
         (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C0']
-      | _, _, eqv.of_add z f i m₁ m₂ =>
-        (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C_add]
+      | _, _, eqv.of_add inst z f i m₁ m₂ =>
+        (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, @C_add inst]
       | _, _, eqv.of_add_scalar z₁ z₂ f =>
         (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C_add_scalar]
-      | _, _, eqv.of_smul z f i r' =>
-        (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C_smul]
+      | _, _, eqv.of_smul inst z f i r' =>
+        (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, @C_smul inst]
       | _, _, eqv.add_comm x y =>
         (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 #align pi_tensor_product.lift_add_hom PiTensorProduct.liftAddHom
@@ -318,9 +323,9 @@ variable (R)
 def tprod : MultilinearMap R s (⨂[R] i, s i)
     where
   toFun := tprodCoeff R 1
-  map_add' f i x y := (add_tprodCoeff (1 : R) f i x y).symm
-  map_smul' f i r x := by
-    simp_rw [smul_tprod_coeff', ← smul_tprod_coeff (1 : R) _ i, update_idem, update_same]
+  map_add' _ f i x y := (add_tprod_coeff (1 : R) f i x y).symm
+  map_smul' _ f i r x := by
+    skip <;> simp_rw [smul_tprod_coeff', ← smul_tprod_coeff (1 : R) _ i, update_idem, update_same]
 #align pi_tensor_product.tprod PiTensorProduct.tprod
 
 variable {R}
@@ -372,8 +377,13 @@ variable {s}
 def liftAux (φ : MultilinearMap R s E) : (⨂[R] i, s i) →+ E :=
   liftAddHom (fun p : R × ∀ i, s i => p.1 • φ p.2)
     (fun z f i hf => by rw [map_coord_zero φ i hf, smul_zero]) (fun f => by rw [zero_smul])
-    (fun z f i m₁ m₂ => by rw [← smul_add, φ.map_add]) (fun z₁ z₂ f => by rw [← add_smul])
-    fun z f i r => by simp [φ.map_smul, smul_smul, mul_comm]
+    (fun _ z f i m₁ m₂ => by
+      skip
+      rw [← smul_add, φ.map_add])
+    (fun z₁ z₂ f => by rw [← add_smul]) fun _ z f i r =>
+    by
+    skip
+    simp [φ.map_smul, smul_smul, mul_comm]
 #align pi_tensor_product.lift_aux PiTensorProduct.liftAux
 
 theorem liftAux_tprod (φ : MultilinearMap R s E) (f : ∀ i, s i) : liftAux φ (tprod R f) = φ f := by
@@ -670,7 +680,7 @@ open PiTensorProduct
 
 open TensorProduct
 
-variable {ι : Type _} [DecidableEq ι] {R : Type _} [CommRing R]
+variable {ι : Type _} {R : Type _} [CommRing R]
 
 variable {s : ι → Type _} [∀ i, AddCommGroup (s i)] [∀ i, Module R (s i)]
 

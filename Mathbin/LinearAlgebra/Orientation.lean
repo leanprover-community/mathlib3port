@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.orientation
-! leanprover-community/mathlib commit bdcb5fb7877d5f341028f489c3337526832c95a8
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ variable (M : Type _) [AddCommMonoid M] [Module R M]
 
 variable {N : Type _} [AddCommMonoid N] [Module R N]
 
-variable (ι : Type _) [DecidableEq ι]
+variable (ι : Type _)
 
 /-- An orientation of a module, intended to be used when `ι` is a `fintype` with the same
 cardinality as a basis. -/
@@ -123,14 +123,14 @@ variable {R : Type _} [StrictOrderedCommRing R]
 variable {M N : Type _} [AddCommGroup M] [AddCommGroup N] [Module R M] [Module R N]
 
 @[simp]
-protected theorem Orientation.map_neg {ι : Type _} [DecidableEq ι] (f : M ≃ₗ[R] N)
-    (x : Orientation R M ι) : Orientation.map ι f (-x) = -Orientation.map ι f x :=
+protected theorem Orientation.map_neg {ι : Type _} (f : M ≃ₗ[R] N) (x : Orientation R M ι) :
+    Orientation.map ι f (-x) = -Orientation.map ι f x :=
   Module.Ray.map_neg _ x
 #align orientation.map_neg Orientation.map_neg
 
 namespace Basis
 
-variable {ι : Type _} [DecidableEq ι]
+variable {ι : Type _}
 
 /-- The value of `orientation.map` when the index type has the cardinality of a basis, in terms
 of `f.det`. -/
@@ -138,6 +138,7 @@ theorem map_orientation_eq_det_inv_smul [Finite ι] (e : Basis ι R M) (x : Orie
     (f : M ≃ₗ[R] M) : Orientation.map ι f x = f.det⁻¹ • x :=
   by
   cases nonempty_fintype ι
+  letI := Classical.decEq ι
   induction' x using Module.Ray.ind with g hg
   rw [Orientation.map_apply, smul_rayOfNeZero, ray_eq_iff, Units.smul_def,
     (g.comp_linear_map ↑f.symm).eq_smul_basis_det e, g.eq_smul_basis_det e,
@@ -145,7 +146,7 @@ theorem map_orientation_eq_det_inv_smul [Finite ι] (e : Basis ι R M) (x : Orie
     mul_one, smul_eq_mul, mul_comm, mul_smul, LinearEquiv.coe_inv_det]
 #align basis.map_orientation_eq_det_inv_smul Basis.map_orientation_eq_det_inv_smul
 
-variable [Fintype ι]
+variable [Fintype ι] [DecidableEq ι]
 
 /-- The orientation given by a basis. -/
 protected def orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι :=
@@ -188,7 +189,7 @@ variable {R : Type _} [LinearOrderedCommRing R]
 
 variable {M : Type _} [AddCommGroup M] [Module R M]
 
-variable {ι : Type _} [DecidableEq ι]
+variable {ι : Type _}
 
 namespace Orientation
 
@@ -217,7 +218,7 @@ end Orientation
 
 namespace Basis
 
-variable [Fintype ι]
+variable [Fintype ι] [DecidableEq ι]
 
 /-- The orientations given by two bases are equal if and only if the determinant of one basis
 with respect to the other is positive. -/
@@ -335,7 +336,7 @@ variable {R : Type _} [LinearOrderedField R]
 
 variable {M : Type _} [AddCommGroup M] [Module R M]
 
-variable {ι : Type _} [DecidableEq ι]
+variable {ι : Type _}
 
 namespace Orientation
 
@@ -351,6 +352,7 @@ theorem eq_or_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = fin
     x₁ = x₂ ∨ x₁ = -x₂ :=
   by
   have e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
+  letI := Classical.decEq ι
   rcases e.orientation_eq_or_eq_neg x₁ with (h₁ | h₁) <;>
       rcases e.orientation_eq_or_eq_neg x₂ with (h₂ | h₂) <;>
     simp [h₁, h₂]
@@ -416,14 +418,14 @@ include _i
 
 /-- If the index type has cardinality equal to the finite dimension, a basis with the given
 orientation. -/
-def someBasis [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) :
-    Basis ι R M :=
+def someBasis [Nonempty ι] [DecidableEq ι] (x : Orientation R M ι)
+    (h : Fintype.card ι = finrank R M) : Basis ι R M :=
   ((finBasis R M).reindex (Fintype.equivFinOfCardEq h).symm).adjustToOrientation x
 #align orientation.some_basis Orientation.someBasis
 
 /-- `some_basis` gives a basis with the required orientation. -/
 @[simp]
-theorem someBasis_orientation [Nonempty ι] (x : Orientation R M ι)
+theorem someBasis_orientation [Nonempty ι] [DecidableEq ι] (x : Orientation R M ι)
     (h : Fintype.card ι = finrank R M) : (x.someBasis h).Orientation = x :=
   Basis.orientation_adjustToOrientation _ _
 #align orientation.some_basis_orientation Orientation.someBasis_orientation

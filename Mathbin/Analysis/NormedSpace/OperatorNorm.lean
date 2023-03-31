@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
+! leanprover-community/mathlib commit 91862a6001a8b6ae3f261cdd8eea42f6ac596886
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1098,6 +1098,10 @@ theorem mul_apply' (x y : 𝕜') : mul 𝕜 𝕜' x y = x * y :=
 theorem op_norm_mul_apply_le (x : 𝕜') : ‖mul 𝕜 𝕜' x‖ ≤ ‖x‖ :=
   op_norm_le_bound _ (norm_nonneg x) (norm_mul_le x)
 #align continuous_linear_map.op_norm_mul_apply_le ContinuousLinearMap.op_norm_mul_apply_le
+
+theorem op_norm_mul_le : ‖mul 𝕜 𝕜'‖ ≤ 1 :=
+  LinearMap.mkContinuous₂_norm_le _ zero_le_one _
+#align continuous_linear_map.op_norm_mul_le ContinuousLinearMap.op_norm_mul_le
 
 /-- Simultaneous left- and right-multiplication in a non-unital normed algebra, considered as a
 continuous trilinear map. This is akin to its non-continuous version `linear_map.mul_left_right`,

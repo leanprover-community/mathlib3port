@@ -4,14 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.equiv.transfer_instance
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit ec1c7d810034d4202b0dd239112d1792be9f6fdc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Algebra.Equiv
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Logic.Equiv.Defs
-import Mathbin.RingTheory.Ideal.LocalRing
 
 /-!
 # Transfer algebraic structures across `equiv`s
@@ -618,15 +617,4 @@ end R
 end Instances
 
 end Equiv
-
-namespace RingEquiv
-
-@[reducible]
-protected theorem localRing {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B]
-    (e : A ≃+* B) : LocalRing B :=
-  haveI := e.symm.to_equiv.nontrivial
-  LocalRing.of_surjective (e : A →+* B) e.surjective
-#align ring_equiv.local_ring RingEquiv.localRing
-
-end RingEquiv
 

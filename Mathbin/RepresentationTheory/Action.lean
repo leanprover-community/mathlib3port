@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Action
-! leanprover-community/mathlib commit 3dec44d0b621a174c56e994da4aae15ba60110a2
+! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,7 @@ import Mathbin.CategoryTheory.Monoidal.Rigid.OfEquivalence
 import Mathbin.CategoryTheory.Monoidal.Rigid.FunctorCategory
 import Mathbin.CategoryTheory.Monoidal.Linear
 import Mathbin.CategoryTheory.Monoidal.Braided
+import Mathbin.CategoryTheory.Monoidal.Types
 import Mathbin.CategoryTheory.Abelian.FunctorCategory
 import Mathbin.CategoryTheory.Abelian.Transfer
 import Mathbin.CategoryTheory.Conj
@@ -573,6 +574,14 @@ theorem rightUnitor_inv_hom {X : Action V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).i
   simp
 #align Action.right_unitor_inv_hom Action.rightUnitor_inv_hom
 
+/-- Given an object `X` isomorphic to the tensor unit of `V`, `X` equipped with the trivial action
+is isomorphic to the tensor unit of `Action V G`. -/
+def tensorUnitIso {X : V} (f : 𝟙_ V ≅ X) : 𝟙_ (Action V G) ≅ Action.mk X 1 :=
+  Action.mkIso f fun g => by
+    simp only [MonoidHom.one_apply, End.one_def, category.id_comp f.hom, tensor_unit_rho,
+      category.comp_id]
+#align Action.tensor_unit_iso Action.tensorUnitIso
+
 variable (V G)
 
 /-- When `V` is monoidal the forgetful functor `Action V G` to `V` is monoidal. -/
@@ -886,6 +895,69 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
         congr }
 #align Action.of_mul_action_limit_cone Action.ofMulActionLimitCone
 
+/-- The `G`-set `G`, acting on itself by left multiplication. -/
+@[simps]
+def leftRegular (G : Type u) [Monoid G] : Action (Type u) (MonCat.of G) :=
+  Action.ofMulAction G G
+#align Action.left_regular Action.leftRegular
+
+/-- The `G`-set `Gⁿ`, acting on itself by left multiplication. -/
+@[simps]
+def diagonal (G : Type u) [Monoid G] (n : ℕ) : Action (Type u) (MonCat.of G) :=
+  Action.ofMulAction G (Fin n → G)
+#align Action.diagonal Action.diagonal
+
+/-- We have `fin 1 → G ≅ G` as `G`-sets, with `G` acting by left multiplication. -/
+def diagonalOneIsoLeftRegular (G : Type u) [Monoid G] : diagonal G 1 ≅ leftRegular G :=
+  Action.mkIso (Equiv.funUnique _ _).toIso fun g => rfl
+#align Action.diagonal_one_iso_left_regular Action.diagonalOneIsoLeftRegular
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- Given `X : Action (Type u) (Mon.of G)` for `G` a group, then `G × X` (with `G` acting as left
+multiplication on the first factor and by `X.ρ` on the second) is isomorphic as a `G`-set to
+`G × X` (with `G` acting as left multiplication on the first factor and trivially on the second).
+The isomorphism is given by `(g, x) ↦ (g, g⁻¹ • x)`. -/
+@[simps]
+def leftRegularTensorIso (G : Type u) [Group G] (X : Action (Type u) (MonCat.of G)) :
+    leftRegular G ⊗ X ≅ leftRegular G ⊗ Action.mk X.V 1
+    where
+  Hom :=
+    { Hom := fun g => ⟨g.1, (X.ρ (g.1⁻¹ : G) g.2 : X.V)⟩
+      comm' := fun g =>
+        funext fun x =>
+          Prod.ext rfl <|
+            show (X.ρ ((g * x.1)⁻¹ : G) * X.ρ g) x.2 = _ by
+              simpa only [mul_inv_rev, ← X.ρ.map_mul, inv_mul_cancel_right] }
+  inv :=
+    { Hom := fun g => ⟨g.1, X.ρ g.1 g.2⟩
+      comm' := fun g =>
+        funext fun x =>
+          Prod.ext rfl <| by
+            simpa only [tensor_rho, types_comp_apply, tensor_apply, left_regular_ρ_apply, map_mul] }
+  hom_inv_id' :=
+    Hom.ext _ _
+      (funext fun x =>
+        Prod.ext rfl <|
+          show (X.ρ x.1 * X.ρ (x.1⁻¹ : G)) x.2 = _ by
+            simpa only [← X.ρ.map_mul, mul_inv_self, X.ρ.map_one] )
+  inv_hom_id' :=
+    Hom.ext _ _
+      (funext fun x =>
+        Prod.ext rfl <|
+          show (X.ρ (x.1⁻¹ : G) * X.ρ x.1) _ = _ by
+            simpa only [← X.ρ.map_mul, inv_mul_self, X.ρ.map_one] )
+#align Action.left_regular_tensor_iso Action.leftRegularTensorIso
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- The natural isomorphism of `G`-sets `Gⁿ⁺¹ ≅ G × Gⁿ`, where `G` acts by left multiplication on
+each factor. -/
+@[simps]
+def diagonalSucc (G : Type u) [Monoid G] (n : ℕ) :
+    diagonal G (n + 1) ≅ leftRegular G ⊗ diagonal G n :=
+  mkIso (Equiv.piFinSuccAboveEquiv _ 0).toIso fun g => rfl
+#align Action.diagonal_succ Action.diagonalSucc
+
 end Action
 
 namespace CategoryTheory.Functor
@@ -933,12 +1005,12 @@ namespace CategoryTheory.MonoidalFunctor
 open Action
 
 variable {V} {W : Type (u + 1)} [LargeCategory W] [MonoidalCategory V] [MonoidalCategory W]
+  (F : MonoidalFunctor V W) (G : MonCat.{u})
 
 /-- A monoidal functor induces a monoidal functor between
 the categories of `G`-actions within those categories. -/
 @[simps]
-def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
-    MonoidalFunctor (Action V G) (Action W G) :=
+def mapAction : MonoidalFunctor (Action V G) (Action W G) :=
   {-- See note [dsimp, simp].
           F.toFunctor.mapAction
       G with
@@ -979,6 +1051,23 @@ def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
       dsimp
       simp }
 #align category_theory.monoidal_functor.map_Action CategoryTheory.MonoidalFunctor.mapAction
+
+@[simp]
+theorem mapAction_ε_inv_hom : (inv (F.mapAction G).ε).Hom = inv F.ε :=
+  by
+  ext
+  simp only [← F.map_Action_to_lax_monoidal_functor_ε_hom G, ← Action.comp_hom, is_iso.hom_inv_id,
+    id_hom]
+#align category_theory.monoidal_functor.map_Action_ε_inv_hom CategoryTheory.MonoidalFunctor.mapAction_ε_inv_hom
+
+@[simp]
+theorem mapAction_μ_inv_hom (X Y : Action V G) :
+    (inv ((F.mapAction G).μ X Y)).Hom = inv (F.μ X.V Y.V) :=
+  by
+  ext
+  simpa only [← F.map_Action_to_lax_monoidal_functor_μ_hom G, ← Action.comp_hom, is_iso.hom_inv_id,
+    id_hom]
+#align category_theory.monoidal_functor.map_Action_μ_inv_hom CategoryTheory.MonoidalFunctor.mapAction_μ_inv_hom
 
 end CategoryTheory.MonoidalFunctor
 

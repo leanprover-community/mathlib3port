@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.rotate
-! leanprover-community/mathlib commit 6876fa15e3158ff3e4a4e2af1fb6e1945c6e8803
+! leanprover-community/mathlib commit 94d4e70e97c36c896cb70fb42821acfed040de60
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,9 +96,6 @@ def rotate : Triangle C ⥤ Triangle C
         dsimp
         simp only [comp_neg, neg_comp, ← functor.map_comp, f.comm₁] }
 #align category_theory.pretriangulated.rotate CategoryTheory.Pretriangulated.rotate
-
-example : ℕ :=
-  42
 
 /-- The inverse rotation of triangles gives an endofunctor on the category of triangles in `C`.
 -/

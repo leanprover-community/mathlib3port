@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basis
-! leanprover-community/mathlib commit 1cfdf5f34e1044ecb65d10be753008baaf118edf
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,9 +59,8 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
 are basis vectors. Unlike `basis.ext_multilinear_fin`, this only uses a single basis; a
 dependently-typed version would still be true, but the proof would need a dependently-typed
 version of `dom_dom_congr`. -/
-theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι]
-    {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _} (e : Basis ι₁ R M₂)
-    (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
+theorem Basis.ext_multilinear [Finite ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
+    (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
   by
   cases nonempty_fintype ι
   exact

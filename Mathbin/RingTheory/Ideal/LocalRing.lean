@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit b86c528d08a52a1fdb50d999232408e1c7e85d7d
+! leanprover-community/mathlib commit ec1c7d810034d4202b0dd239112d1792be9f6fdc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.RingTheory.JacobsonIdeal
+import Mathbin.Logic.Equiv.TransferInstance
 
 /-!
 
@@ -526,4 +527,15 @@ end Field
 theorem LocalRing.maximalIdeal_eq_bot {R : Type _} [Field R] : LocalRing.maximalIdeal R = ⊥ :=
   LocalRing.isField_iff_maximalIdeal_eq.mp (Field.toIsField R)
 #align local_ring.maximal_ideal_eq_bot LocalRing.maximalIdeal_eq_bot
+
+namespace RingEquiv
+
+@[reducible]
+protected theorem localRing {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B]
+    (e : A ≃+* B) : LocalRing B :=
+  haveI := e.symm.to_equiv.nontrivial
+  LocalRing.of_surjective (e : A →+* B) e.surjective
+#align ring_equiv.local_ring RingEquiv.localRing
+
+end RingEquiv
 

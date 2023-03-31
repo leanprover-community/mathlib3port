@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.determinant
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -529,11 +529,13 @@ def Basis.det : AlternatingMap R M R ι
     where
   toFun v := det (e.toMatrix v)
   map_add' := by
-    intro v i x y
-    simp only [e.to_matrix_update, LinearEquiv.map_add]
-    apply det_update_column_add
+    intro inst v i x y
+    cases Subsingleton.elim inst ‹_›
+    simp only [e.to_matrix_update, LinearEquiv.map_add, Finsupp.coe_add]
+    exact det_update_column_add _ _ _ _
   map_smul' := by
-    intro u i c x
+    intro inst u i c x
+    cases Subsingleton.elim inst ‹_›
     simp only [e.to_matrix_update, Algebra.id.smul_eq_mul, LinearEquiv.map_smul]
     apply det_update_column_smul
   map_eq_zero_of_eq' := by
@@ -597,15 +599,16 @@ theorem AlternatingMap.eq_smul_basis_det (f : AlternatingMap R M R ι) : f = f e
 #align alternating_map.eq_smul_basis_det AlternatingMap.eq_smul_basis_det
 
 @[simp]
-theorem AlternatingMap.map_basis_eq_zero_iff {ι : Type _} [DecidableEq ι] [Finite ι]
-    (e : Basis ι R M) (f : AlternatingMap R M R ι) : f e = 0 ↔ f = 0 :=
+theorem AlternatingMap.map_basis_eq_zero_iff {ι : Type _} [Finite ι] (e : Basis ι R M)
+    (f : AlternatingMap R M R ι) : f e = 0 ↔ f = 0 :=
   ⟨fun h => by
     cases nonempty_fintype ι
+    letI := Classical.decEq ι
     simpa [h] using f.eq_smul_basis_det e, fun h => h.symm ▸ AlternatingMap.zero_apply _⟩
 #align alternating_map.map_basis_eq_zero_iff AlternatingMap.map_basis_eq_zero_iff
 
-theorem AlternatingMap.map_basis_ne_zero_iff {ι : Type _} [DecidableEq ι] [Finite ι]
-    (e : Basis ι R M) (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
+theorem AlternatingMap.map_basis_ne_zero_iff {ι : Type _} [Finite ι] (e : Basis ι R M)
+    (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
   not_congr <| f.map_basis_eq_zero_iff e
 #align alternating_map.map_basis_ne_zero_iff AlternatingMap.map_basis_ne_zero_iff
 

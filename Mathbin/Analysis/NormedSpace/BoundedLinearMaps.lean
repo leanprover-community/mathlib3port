@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.bounded_linear_maps
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ artifact, really.
 
 noncomputable section
 
-open Classical BigOperators Topology
+open BigOperators Topology
 
 open Filter (Tendsto)
 
@@ -210,7 +210,7 @@ end IsBoundedLinearMap
 
 section
 
-variable {ι : Type _} [DecidableEq ι] [Fintype ι]
+variable {ι : Type _} [Fintype ι]
 
 /-- Taking the cartesian product of two continuous multilinear maps
 is a bounded linear operation. -/
@@ -524,8 +524,8 @@ theorem isBoundedBilinearMapSmulRight :
 
 /-- The composition of a continuous linear map with a continuous multilinear map is a bounded
 bilinear operation. -/
-theorem isBoundedBilinearMapCompMultilinear {ι : Type _} {E : ι → Type _} [DecidableEq ι]
-    [Fintype ι] [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
+theorem isBoundedBilinearMapCompMultilinear {ι : Type _} {E : ι → Type _} [Fintype ι]
+    [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedBilinearMap 𝕜 fun p : (F →L[𝕜] G) × ContinuousMultilinearMap 𝕜 E F =>
       p.1.compContinuousMultilinearMap p.2 :=
   (compContinuousMultilinearMapL 𝕜 E F G).IsBoundedBilinearMap

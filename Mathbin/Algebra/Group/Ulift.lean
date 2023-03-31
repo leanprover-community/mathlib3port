@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.group.ulift
-! leanprover-community/mathlib commit 13e18cfa070ea337ea960176414f5ae3a1534aae
+! leanprover-community/mathlib commit 564bcc44d2b394a50c0cd6340c14a6b02a50a99a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -374,7 +374,7 @@ instance cancelMonoid [CancelMonoid α] : CancelMonoid (ULift α) :=
 -/
 
 #print ULift.cancelCommMonoid /-
-@[to_additive AddCancelMonoid]
+@[to_additive AddCancelCommMonoid]
 instance cancelCommMonoid [CancelCommMonoid α] : CancelCommMonoid (ULift α) :=
   Equiv.ulift.Injective.CancelCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.cancel_comm_monoid ULift.cancelCommMonoid

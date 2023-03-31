@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit 4601791ea62fea875b488dafc4e6dede19e8363f
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ approach, it turns out that direct proofs are easier and more efficient.
 
 noncomputable section
 
-open Classical BigOperators NNReal
+open BigOperators NNReal
 
 open Finset Metric
 
@@ -85,12 +85,12 @@ We use the following type variables in this file:
 universe u v v' wE wE₁ wE' wEi wG wG'
 
 variable {𝕜 : Type u} {ι : Type v} {ι' : Type v'} {n : ℕ} {E : ι → Type wE} {E₁ : ι → Type wE₁}
-  {E' : ι' → Type wE'} {Ei : Fin n.succ → Type wEi} {G : Type wG} {G' : Type wG'} [DecidableEq ι]
-  [Fintype ι] [DecidableEq ι'] [Fintype ι'] [NontriviallyNormedField 𝕜]
-  [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] [∀ i, NormedAddCommGroup (E₁ i)]
-  [∀ i, NormedSpace 𝕜 (E₁ i)] [∀ i, NormedAddCommGroup (E' i)] [∀ i, NormedSpace 𝕜 (E' i)]
-  [∀ i, NormedAddCommGroup (Ei i)] [∀ i, NormedSpace 𝕜 (Ei i)] [NormedAddCommGroup G]
-  [NormedSpace 𝕜 G] [NormedAddCommGroup G'] [NormedSpace 𝕜 G']
+  {E' : ι' → Type wE'} {Ei : Fin n.succ → Type wEi} {G : Type wG} {G' : Type wG'} [Fintype ι]
+  [Fintype ι'] [NontriviallyNormedField 𝕜] [∀ i, NormedAddCommGroup (E i)]
+  [∀ i, NormedSpace 𝕜 (E i)] [∀ i, NormedAddCommGroup (E₁ i)] [∀ i, NormedSpace 𝕜 (E₁ i)]
+  [∀ i, NormedAddCommGroup (E' i)] [∀ i, NormedSpace 𝕜 (E' i)] [∀ i, NormedAddCommGroup (Ei i)]
+  [∀ i, NormedSpace 𝕜 (Ei i)] [NormedAddCommGroup G] [NormedSpace 𝕜 G] [NormedAddCommGroup G']
+  [NormedSpace 𝕜 G']
 
 /-!
 ### Continuity properties of multilinear maps
@@ -148,8 +148,8 @@ using the multilinearity. Here, we give a precise but hard to use version. See
 `‖f m - f m'‖ ≤
   C * ‖m 1 - m' 1‖ * max ‖m 2‖ ‖m' 2‖ * max ‖m 3‖ ‖m' 3‖ * ... * max ‖m n‖ ‖m' n‖ + ...`,
 where the other terms in the sum are the same products where `1` is replaced by any `i`. -/
-theorem norm_image_sub_le_of_bound' {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m i‖)
-    (m₁ m₂ : ∀ i, E i) :
+theorem norm_image_sub_le_of_bound' [DecidableEq ι] {C : ℝ} (hC : 0 ≤ C)
+    (H : ∀ m, ‖f m‖ ≤ C * ∏ i, ‖m i‖) (m₁ m₂ : ∀ i, E i) :
     ‖f m₁ - f m₂‖ ≤ C * ∑ i, ∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖ :=
   by
   have A :
@@ -205,6 +205,7 @@ theorem norm_image_sub_le_of_bound {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ‖f m�
     (m₁ m₂ : ∀ i, E i) :
     ‖f m₁ - f m₂‖ ≤ C * Fintype.card ι * max ‖m₁‖ ‖m₂‖ ^ (Fintype.card ι - 1) * ‖m₁ - m₂‖ :=
   by
+  letI := Classical.decEq ι
   have A :
     ∀ i : ι,
       (∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖) ≤
@@ -642,7 +643,7 @@ For a less precise but more usable version, see `norm_image_sub_le`. The bound r
 `‖f m - f m'‖ ≤
   ‖f‖ * ‖m 1 - m' 1‖ * max ‖m 2‖ ‖m' 2‖ * max ‖m 3‖ ‖m' 3‖ * ... * max ‖m n‖ ‖m' n‖ + ...`,
 where the other terms in the sum are the same products where `1` is replaced by any `i`.-/
-theorem norm_image_sub_le' (m₁ m₂ : ∀ i, E i) :
+theorem norm_image_sub_le' [DecidableEq ι] (m₁ m₂ : ∀ i, E i) :
     ‖f m₁ - f m₂‖ ≤ ‖f‖ * ∑ i, ∏ j, if j = i then ‖m₁ i - m₂ i‖ else max ‖m₁ j‖ ‖m₂ j‖ :=
   f.toMultilinearMap.norm_image_sub_le_of_bound' (norm_nonneg _) f.le_op_norm _ _
 #align continuous_multilinear_map.norm_image_sub_le' ContinuousMultilinearMap.norm_image_sub_le'
@@ -743,14 +744,14 @@ instance [CompleteSpace G] : CompleteSpace (ContinuousMultilinearMap 𝕜 E G) :
   -- Next, we show that this `F` is multilinear,
   let Fmult : MultilinearMap 𝕜 E G :=
     { toFun := F
-      map_add' := fun v i x y =>
-        by
+      map_add' := fun _ v i x y => by
+        skip
         have A := hF (Function.update v i (x + y))
         have B := (hF (Function.update v i x)).add (hF (Function.update v i y))
         simp at A B
         exact tendsto_nhds_unique A B
-      map_smul' := fun v i c x =>
-        by
+      map_smul' := fun _ v i c x => by
+        skip
         have A := hF (Function.update v i (c • x))
         have B := Filter.Tendsto.smul (@tendsto_const_nhds _ ℕ _ c _) (hF (Function.update v i x))
         simp at A B
@@ -839,7 +840,7 @@ variable {𝕜 ι} {A : Type _} [NormedCommRing A] [NormedAlgebra 𝕜 A]
 @[simp]
 theorem norm_mkPiAlgebra_le [Nonempty ι] : ‖ContinuousMultilinearMap.mkPiAlgebra 𝕜 ι A‖ ≤ 1 :=
   by
-  have := fun f => @op_norm_le_bound 𝕜 ι (fun i => A) A _ _ _ _ _ _ _ f _ zero_le_one
+  have := fun f => @op_norm_le_bound 𝕜 ι (fun i => A) A _ _ _ _ _ _ f _ zero_le_one
   refine' this _ _
   intro m
   simp only [ContinuousMultilinearMap.mkPiAlgebra_apply, one_mul]
@@ -850,7 +851,7 @@ theorem norm_mkPiAlgebra_of_empty [IsEmpty ι] :
     ‖ContinuousMultilinearMap.mkPiAlgebra 𝕜 ι A‖ = ‖(1 : A)‖ :=
   by
   apply le_antisymm
-  · have := fun f => @op_norm_le_bound 𝕜 ι (fun i => A) A _ _ _ _ _ _ _ f _ (norm_nonneg (1 : A))
+  · have := fun f => @op_norm_le_bound 𝕜 ι (fun i => A) A _ _ _ _ _ _ f _ (norm_nonneg (1 : A))
     refine' this _ _
     simp
   · convert ratio_le_op_norm _ fun _ => (1 : A)
@@ -875,7 +876,7 @@ variable {𝕜 n} {A : Type _} [NormedRing A] [NormedAlgebra 𝕜 A]
 
 theorem norm_mkPiAlgebraFin_succ_le : ‖ContinuousMultilinearMap.mkPiAlgebraFin 𝕜 n.succ A‖ ≤ 1 :=
   by
-  have := fun f => @op_norm_le_bound 𝕜 (Fin n.succ) (fun i => A) A _ _ _ _ _ _ _ f _ zero_le_one
+  have := fun f => @op_norm_le_bound 𝕜 (Fin n.succ) (fun i => A) A _ _ _ _ _ _ f _ zero_le_one
   refine' this _ _
   intro m
   simp only [ContinuousMultilinearMap.mkPiAlgebraFin_apply, one_mul, List.ofFn_eq_map,
@@ -897,7 +898,7 @@ theorem norm_mkPiAlgebraFin_zero : ‖ContinuousMultilinearMap.mkPiAlgebraFin �
   by
   refine' le_antisymm _ _
   · have := fun f =>
-      @op_norm_le_bound 𝕜 (Fin 0) (fun i => A) A _ _ _ _ _ _ _ f _ (norm_nonneg (1 : A))
+      @op_norm_le_bound 𝕜 (Fin 0) (fun i => A) A _ _ _ _ _ _ f _ (norm_nonneg (1 : A))
     refine' this _ _
     simp
   · convert ratio_le_op_norm _ fun _ => (1 : A)
@@ -1071,11 +1072,11 @@ def flipMultilinear (f : G →L[𝕜] ContinuousMultilinearMap 𝕜 E G') :
           (‖f‖ * ∏ i, ‖m i‖) fun x => by
           rw [mul_right_comm]
           exact (f x).le_of_op_norm_le _ (f.le_op_norm x)
-      map_add' := fun m i x y => by
+      map_add' := fun _ m i x y => by
         ext1
         simp only [add_apply, ContinuousMultilinearMap.map_add, LinearMap.coe_mk,
           LinearMap.mkContinuous_apply]
-      map_smul' := fun m i c x => by
+      map_smul' := fun _ m i c x => by
         ext1
         simp only [coe_smul', ContinuousMultilinearMap.map_smul, LinearMap.coe_mk,
           LinearMap.mkContinuous_apply, Pi.smul_apply] }
@@ -1143,10 +1144,10 @@ def mkContinuousMultilinear (f : MultilinearMap 𝕜 E (MultilinearMap 𝕜 E' G
     ContinuousMultilinearMap 𝕜 E (ContinuousMultilinearMap 𝕜 E' G) :=
   mkContinuous
     { toFun := fun m => mkContinuous (f m) (C * ∏ i, ‖m i‖) <| H m
-      map_add' := fun m i x y => by
+      map_add' := fun _ m i x y => by
         ext1
         simp
-      map_smul' := fun m i c x => by
+      map_smul' := fun _ m i c x => by
         ext1
         simp }
     (max C 0) fun m =>
@@ -1245,7 +1246,7 @@ theorem compContinuousLinearMapL_apply (g : ContinuousMultilinearMap 𝕜 E₁ G
 #align continuous_multilinear_map.comp_continuous_linear_mapL_apply ContinuousMultilinearMap.compContinuousLinearMapL_apply
 
 theorem norm_compContinuousLinearMapL_le (f : ∀ i, E i →L[𝕜] E₁ i) :
-    ‖@compContinuousLinearMapL 𝕜 ι E E₁ G _ _ _ _ _ _ _ _ _ f‖ ≤ ∏ i, ‖f i‖ :=
+    ‖@compContinuousLinearMapL 𝕜 ι E E₁ G _ _ _ _ _ _ _ _ f‖ ≤ ∏ i, ‖f i‖ :=
   LinearMap.mkContinuous_norm_le _ (prod_nonneg fun i _ => norm_nonneg _) _
 #align continuous_multilinear_map.norm_comp_continuous_linear_mapL_le ContinuousMultilinearMap.norm_compContinuousLinearMapL_le
 
@@ -1508,8 +1509,8 @@ def ContinuousMultilinearMap.uncurryRight
     ContinuousMultilinearMap 𝕜 Ei G :=
   let f' : MultilinearMap 𝕜 (fun i : Fin n => Ei i.cast_succ) (Ei (last n) →ₗ[𝕜] G) :=
     { toFun := fun m => (f m).toLinearMap
-      map_add' := fun m i x y => by simp
-      map_smul' := fun m i c x => by simp }
+      map_add' := fun _ m i x y => by simp
+      map_smul' := fun _ m i c x => by simp }
   (@MultilinearMap.uncurryRight 𝕜 n Ei G _ _ _ _ _ f').mkContinuous ‖f‖ fun m =>
     f.norm_map_init_le m
 #align continuous_multilinear_map.uncurry_right ContinuousMultilinearMap.uncurryRight
@@ -1530,10 +1531,10 @@ def ContinuousMultilinearMap.curryRight (f : ContinuousMultilinearMap 𝕜 Ei G)
     { toFun := fun m =>
         (f.toMultilinearMap.curryRight m).mkContinuous (‖f‖ * ∏ i, ‖m i‖) fun x =>
           f.norm_map_snoc_le m x
-      map_add' := fun m i x y => by
+      map_add' := fun _ m i x y => by
         simp
         rfl
-      map_smul' := fun m i c x => by
+      map_smul' := fun _ m i c x => by
         simp
         rfl }
   f'.mkContinuous ‖f‖ fun m =>
@@ -1824,8 +1825,6 @@ def domDomCongr (σ : ι ≃ ι') :
 variable {𝕜 G G'}
 
 section
-
-variable [DecidableEq (Sum ι ι')]
 
 /-- A continuous multilinear map with variables indexed by `ι ⊕ ι'` defines a continuous multilinear
 map with variables indexed by `ι` taking values in the space of continuous multilinear maps with

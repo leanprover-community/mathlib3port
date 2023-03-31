@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.tensor_product
-! leanprover-community/mathlib commit 48883dcd064d0e1800aec4b21633c3a361d516c0
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,8 +25,6 @@ open TensorProduct
 variable {R ι₁ ι₂ ι₃ ι₄ : Type _}
 
 variable [CommSemiring R]
-
-variable [DecidableEq ι₁] [DecidableEq ι₂] [DecidableEq ι₃] [DecidableEq ι₄]
 
 variable {N₁ : Type _} [AddCommMonoid N₁] [Module R N₁]
 
@@ -53,8 +51,16 @@ def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂)
     where
   toFun v := (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
-  map_add' v i p q := by cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
-  map_smul' v i c p := by cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
+  map_add' _ v i p q := by
+    skip
+    letI := (@Sum.inl_injective ι₁ ι₂).DecidableEq
+    letI := (@Sum.inr_injective ι₁ ι₂).DecidableEq
+    cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
+  map_smul' _ v i c p := by
+    skip
+    letI := (@Sum.inl_injective ι₁ ι₂).DecidableEq
+    letI := (@Sum.inr_injective ι₁ ι₂).DecidableEq
+    cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
 #align multilinear_map.dom_coprod MultilinearMap.domCoprod
 
 /-- A more bundled version of `multilinear_map.dom_coprod` that maps

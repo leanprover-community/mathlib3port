@@ -4,17 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.projective
-! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
+! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Homology.Exact
-import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Preadditive.Yoneda.Basic
-import Mathbin.Algebra.Category.Group.EpiMono
-import Mathbin.Algebra.Category.Module.EpiMono
+import Mathbin.CategoryTheory.Limits.Preserves.Finite
 
 /-!
 # Projective objects and categories with enough projectives
@@ -60,7 +57,7 @@ from some projective object `P`.
 -/
 @[nolint has_nonempty_instance]
 structure ProjectivePresentation (X : C) where
-  P : C
+  p : C
   Projective : Projective P := by infer_instance
   f : P ⟶ X
   Epi : Epi f := by infer_instance
@@ -127,7 +124,7 @@ instance (X : Type u) : Projective X
 
 instance Type.enoughProjectives : EnoughProjectives (Type u)
     where presentation X :=
-    ⟨{  P := X
+    ⟨{  p := X
         f := 𝟙 X }⟩
 #align category_theory.projective.Type.enough_projectives CategoryTheory.Projective.Type.enoughProjectives
 
@@ -166,38 +163,6 @@ theorem projective_iff_preservesEpimorphisms_coyoneda_obj (P : C) :
       (epi_iff_surjective _).1 (inferInstance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
 #align category_theory.projective.projective_iff_preserves_epimorphisms_coyoneda_obj CategoryTheory.Projective.projective_iff_preservesEpimorphisms_coyoneda_obj
 
-section Preadditive
-
-variable [Preadditive C]
-
-theorem projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj (P : C) :
-    Projective P ↔ (preadditiveCoyoneda.obj (op P)).PreservesEpimorphisms :=
-  by
-  rw [projective_iff_preserves_epimorphisms_coyoneda_obj]
-  refine' ⟨fun h : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms => _, _⟩
-  ·
-    exact
-      functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_coyoneda.obj (op P))
-        (forget _)
-  · intro
-    exact (inferInstance : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms)
-#align category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj CategoryTheory.Projective.projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj
-
-theorem projective_iff_preservesEpimorphisms_preadditive_coyoneda_obj' (P : C) :
-    Projective P ↔ (preadditiveCoyonedaObj (op P)).PreservesEpimorphisms :=
-  by
-  rw [projective_iff_preserves_epimorphisms_coyoneda_obj]
-  refine' ⟨fun h : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms => _, _⟩
-  ·
-    exact
-      functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_coyoneda_obj (op P))
-        (forget _)
-  · intro
-    exact (inferInstance : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms)
-#align category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' CategoryTheory.Projective.projective_iff_preservesEpimorphisms_preadditive_coyoneda_obj'
-
-end Preadditive
-
 section EnoughProjectives
 
 variable [EnoughProjectives C]
@@ -206,7 +171,7 @@ variable [EnoughProjectives C]
 an epimorphism `projective.π : projective.over X ⟶ X`.
 -/
 def over (X : C) : C :=
-  (EnoughProjectives.presentation X).some.P
+  (EnoughProjectives.presentation X).some.p
 #align category_theory.projective.over CategoryTheory.Projective.over
 
 instance projective_over (X : C) : Projective (over X) :=
@@ -281,7 +246,7 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
 def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
     (Y : ProjectivePresentation X) : ProjectivePresentation (F.obj X)
     where
-  P := F.obj Y.P
+  p := F.obj Y.p
   Projective := adj.map_projective _ Y.Projective
   f := F.map Y.f
   Epi := by haveI := adj.left_adjoint_preserves_colimits <;> infer_instance
@@ -298,8 +263,8 @@ projective presentation of `X.` -/
 def projectivePresentationOfMapProjectivePresentation (X : C)
     (Y : ProjectivePresentation (F.Functor.obj X)) : ProjectivePresentation X
     where
-  P := F.inverse.obj Y.P
-  Projective := Adjunction.map_projective F.symm.toAdjunction Y.P Y.Projective
+  p := F.inverse.obj Y.p
+  Projective := Adjunction.map_projective F.symm.toAdjunction Y.p Y.Projective
   f := F.inverse.map Y.f ≫ F.unitInv.app _
   Epi := epi_comp _ _
 #align category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation

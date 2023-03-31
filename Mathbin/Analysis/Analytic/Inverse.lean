@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.inverse
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -449,7 +449,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
           (fun k : ℕ => (Fintype.piFinset fun i : Fin k => Ico 1 n : Finset (Fin k → ℕ))) fun n e =>
           ∏ j : Fin n, r * (a ^ e j * p (e j))]
       apply sum_congr rfl fun j hj => _
-      simp only [← @MultilinearMap.mkPiAlgebra_apply ℝ (Fin j) _ _ ℝ]
+      simp only [← @MultilinearMap.mkPiAlgebra_apply ℝ (Fin j) _ ℝ]
       simp only [←
         MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Fin j) ℝ) fun k (m : ℕ) =>
           r * (a ^ m * p m)]

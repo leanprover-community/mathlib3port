@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 517cc149e0b515d2893baa376226ed10feb319c7
+! leanprover-community/mathlib commit c941bb9426d62e266612b6d99e6c9fc93e7a1d07
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,12 +168,21 @@ theorem not_infinite {s : Set α} : ¬s.Infinite ↔ s.Finite :=
 #align set.not_infinite Set.not_infinite
 -/
 
+alias not_infinite ↔ _ Finite.not_infinite
+#align set.finite.not_infinite Set.Finite.not_infinite
+
+attribute [simp] Finite.not_infinite
+
 #print Set.finite_or_infinite /-
 /-- See also `finite_or_infinite`, `fintype_or_infinite`. -/
 protected theorem finite_or_infinite (s : Set α) : s.Finite ∨ s.Infinite :=
   em _
 #align set.finite_or_infinite Set.finite_or_infinite
 -/
+
+protected theorem infinite_or_finite (s : Set α) : s.Infinite ∨ s.Finite :=
+  em' _
+#align set.infinite_or_finite Set.infinite_or_finite
 
 /-! ### Basic properties of `set.finite.to_finset` -/
 
@@ -1211,6 +1220,14 @@ theorem finite_empty : (∅ : Set α).Finite :=
 #align set.finite_empty Set.finite_empty
 -/
 
+#print Set.Infinite.nonempty /-
+protected theorem Infinite.nonempty {s : Set α} (h : s.Infinite) : s.Nonempty :=
+  nonempty_iff_ne_empty.2 <| by
+    rintro rfl
+    exact h finite_empty
+#align set.infinite.nonempty Set.Infinite.nonempty
+-/
+
 #print Set.finite_singleton /-
 @[simp]
 theorem finite_singleton (a : α) : ({a} : Set α).Finite :=
@@ -1313,32 +1330,80 @@ theorem finite_le_nat (n : ℕ) : Set.Finite { i | i ≤ n } :=
 #align set.finite_le_nat Set.finite_le_nat
 -/
 
+section Prod
+
+variable {s : Set α} {t : Set β}
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Finite.prod /-
-theorem Finite.prod {s : Set α} {t : Set β} (hs : s.Finite) (ht : t.Finite) :
-    (s ×ˢ t : Set (α × β)).Finite := by
+protected theorem Finite.prod (hs : s.Finite) (ht : t.Finite) : (s ×ˢ t : Set (α × β)).Finite :=
+  by
   cases hs
   cases ht
   apply to_finite
 #align set.finite.prod Set.Finite.prod
 -/
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Finite.of_prod_left (h : (s ×ˢ t : Set (α × β)).Finite) : t.Nonempty → s.Finite :=
+  fun ⟨b, hb⟩ => (h.image Prod.fst).Subset fun a ha => ⟨(a, b), ⟨ha, hb⟩, rfl⟩
+#align set.finite.of_prod_left Set.Finite.of_prod_left
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Finite.of_prod_right (h : (s ×ˢ t : Set (α × β)).Finite) : s.Nonempty → t.Finite :=
+  fun ⟨a, ha⟩ => (h.image Prod.snd).Subset fun b hb => ⟨(a, b), ⟨ha, hb⟩, rfl⟩
+#align set.finite.of_prod_right Set.Finite.of_prod_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+protected theorem Infinite.prod_left (hs : s.Infinite) (ht : t.Nonempty) : (s ×ˢ t).Infinite :=
+  fun h => hs <| h.of_prod_left ht
+#align set.infinite.prod_left Set.Infinite.prod_left
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+protected theorem Infinite.prod_right (ht : t.Infinite) (hs : s.Nonempty) : (s ×ˢ t).Infinite :=
+  fun h => ht <| h.of_prod_right hs
+#align set.infinite.prod_right Set.Infinite.prod_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+protected theorem infinite_prod :
+    (s ×ˢ t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
+  by
+  refine' ⟨fun h => _, _⟩
+  · simp_rw [Set.Infinite, and_comm' ¬_, ← not_imp]
+    by_contra'
+    exact h ((this.1 h.nonempty.snd).Prod <| this.2 h.nonempty.fst)
+  · rintro (h | h)
+    · exact h.1.prodLeft h.2
+    · exact h.1.prodRight h.2
+#align set.infinite_prod Set.infinite_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem finite_prod : (s ×ˢ t).Finite ↔ (s.Finite ∨ t = ∅) ∧ (t.Finite ∨ s = ∅) := by
+  simp only [← not_infinite, Set.infinite_prod, not_or, not_and_or, not_nonempty_iff_eq_empty]
+#align set.finite_prod Set.finite_prod
+
 #print Set.Finite.offDiag /-
-theorem Finite.offDiag {s : Set α} (hs : s.Finite) : s.offDiag.Finite := by
+protected theorem Finite.offDiag (hs : s.Finite) : s.offDiag.Finite := by
   classical
     cases hs
     apply Set.toFinite
 #align set.finite.off_diag Set.Finite.offDiag
 -/
 
-#print Set.Finite.image2 /-
-theorem Finite.image2 (f : α → β → γ) {s : Set α} {t : Set β} (hs : s.Finite) (ht : t.Finite) :
+/- warning: set.finite.image2 -> Set.Finite.image2 is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} (f : α -> β -> γ), (Set.Finite.{u1} α s) -> (Set.Finite.{u2} β t) -> (Set.Finite.{u3} γ (Set.image2.{u1, u2, u3} α β γ f s t))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (s : α -> β -> γ) {t : Set.{u1} α} {f : Set.{u2} β}, (Set.Finite.{u1} α t) -> (Set.Finite.{u2} β f) -> (Set.Finite.{u3} γ (Set.image2.{u1, u2, u3} α β γ s t f))
+Case conversion may be inaccurate. Consider using '#align set.finite.image2 Set.Finite.image2ₓ'. -/
+protected theorem Finite.image2 (f : α → β → γ) (hs : s.Finite) (ht : t.Finite) :
     (image2 f s t).Finite := by
   cases hs
   cases ht
   apply to_finite
 #align set.finite.image2 Set.Finite.image2
--/
+
+end Prod
 
 #print Set.Finite.seq /-
 theorem Finite.seq {f : Set (α → β)} {s : Set α} (hf : f.Finite) (hs : s.Finite) :
@@ -1811,13 +1876,6 @@ theorem Infinite.exists_subset_card_eq {s : Set α} (hs : s.Infinite) (n : ℕ) 
 #align set.infinite.exists_subset_card_eq Set.Infinite.exists_subset_card_eq
 -/
 
-#print Set.Infinite.nonempty /-
-theorem Infinite.nonempty {s : Set α} (h : s.Infinite) : s.Nonempty :=
-  let a := Infinite.natEmbedding s h 37
-  ⟨a.1, a.2⟩
-#align set.infinite.nonempty Set.Infinite.nonempty
--/
-
 /- warning: set.infinite_of_finite_compl -> Set.infinite_of_finite_compl is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] {s : Set.{u1} α}, (Set.Finite.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) -> (Set.Infinite.{u1} α s)
@@ -1865,11 +1923,9 @@ theorem infinite_union {s t : Set α} : (s ∪ t).Infinite ↔ s.Infinite ∨ t.
   simp only [Set.Infinite, finite_union, not_and_or]
 #align set.infinite_union Set.infinite_union
 
-#print Set.infinite_of_infinite_image /-
-theorem infinite_of_infinite_image (f : α → β) {s : Set α} (hs : (f '' s).Infinite) : s.Infinite :=
+theorem Infinite.of_image (f : α → β) {s : Set α} (hs : (f '' s).Infinite) : s.Infinite :=
   mt (Finite.image f) hs
-#align set.infinite_of_infinite_image Set.infinite_of_infinite_image
--/
+#align set.infinite.of_image Set.Infinite.of_image
 
 #print Set.infinite_image_iff /-
 theorem infinite_image_iff {s : Set α} {f : α → β} (hi : InjOn f s) :
@@ -1877,6 +1933,38 @@ theorem infinite_image_iff {s : Set α} {f : α → β} (hi : InjOn f s) :
   not_congr <| finite_image_iff hi
 #align set.infinite_image_iff Set.infinite_image_iff
 -/
+
+alias infinite_image_iff ↔ _ infinite.image
+#align set.infinite.image Set.Infinite.image
+
+attribute [protected] infinite.image
+
+section Image2
+
+variable {f : α → β → γ} {s : Set α} {t : Set β} {a : α} {b : β}
+
+protected theorem Infinite.image2_left (hs : s.Infinite) (hb : b ∈ t)
+    (hf : InjOn (fun a => f a b) s) : (image2 f s t).Infinite :=
+  (hs.image hf).mono <| image_subset_image2_left hb
+#align set.infinite.image2_left Set.Infinite.image2_left
+
+protected theorem Infinite.image2_right (ht : t.Infinite) (ha : a ∈ s) (hf : InjOn (f a) t) :
+    (image2 f s t).Infinite :=
+  (ht.image hf).mono <| image_subset_image2_right ha
+#align set.infinite.image2_right Set.Infinite.image2_right
+
+theorem infinite_image2 (hfs : ∀ b ∈ t, InjOn (fun a => f a b) s) (hft : ∀ a ∈ s, InjOn (f a) t) :
+    (image2 f s t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
+  by
+  refine' ⟨fun h => Set.infinite_prod.1 _, _⟩
+  · rw [← image_uncurry_prod] at h
+    exact h.of_image _
+  · rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
+    · exact hs.image2_left hb (hfs _ hb)
+    · exact ht.image2_right ha (hft _ ha)
+#align set.infinite_image2 Set.infinite_image2
+
+end Image2
 
 #print Set.infinite_of_injOn_mapsTo /-
 theorem infinite_of_injOn_mapsTo {s : Set α} {t : Set β} {f : α → β} (hi : InjOn f s)

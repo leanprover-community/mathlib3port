@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 6e272cd89fa32c72a25dbefd319394c48dce1576
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.InnerProductSpace.Orthogonal
 import Mathbin.Analysis.InnerProductSpace.Symmetric
 import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Data.IsROrC.Lemmas

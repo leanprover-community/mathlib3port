@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.basic
-! leanprover-community/mathlib commit 9cb7206107eb5cbc8dd3b9fc0864c548fae962bd
+! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,16 +56,16 @@ namespace Representation
 
 section trivial
 
-variable {k G V : Type _} [CommSemiring k] [Monoid G] [AddCommMonoid V] [Module k V]
+variable (k : Type _) {G V : Type _} [CommSemiring k] [Monoid G] [AddCommMonoid V] [Module k V]
 
-/-- The trivial representation of `G` on the one-dimensional module `k`.
+/-- The trivial representation of `G` on a `k`-module V.
 -/
-def trivial : Representation k G k :=
+def trivial : Representation k G V :=
   1
 #align representation.trivial Representation.trivial
 
 @[simp]
-theorem trivial_def (g : G) (v : k) : trivial g v = v :=
+theorem trivial_def (g : G) (v : V) : trivial k g v = v :=
   rfl
 #align representation.trivial_def Representation.trivial_def
 

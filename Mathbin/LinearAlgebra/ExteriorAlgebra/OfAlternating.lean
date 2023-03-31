@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.of_alternating
-! leanprover-community/mathlib commit 9264b15ee696b7ca83f13c8ad67c83d6eb70b730
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,8 +35,8 @@ variable [CommRing R] [AddCommGroup M] [AddCommGroup N] [AddCommGroup N']
 variable [Module R M] [Module R N] [Module R N']
 
 -- This instance can't be found where it's needed if we don't remind lean that it exists.
-instance AlternatingMap.moduleAddCommGroup {ι : Type _} [DecidableEq ι] :
-    Module R (AlternatingMap R M N ι) := by infer_instance
+instance AlternatingMap.moduleAddCommGroup {ι : Type _} : Module R (AlternatingMap R M N ι) := by
+  infer_instance
 #align alternating_map.module_add_comm_group AlternatingMap.moduleAddCommGroup
 
 namespace ExteriorAlgebra

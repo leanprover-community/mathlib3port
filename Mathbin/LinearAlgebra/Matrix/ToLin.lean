@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
+! leanprover-community/mathlib commit 1c775cc661988d96c477aa4ca6f7b5641a2a924b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -902,7 +902,7 @@ variable {A : Type _} [Ring A] [Algebra K A] [Module A V] [IsScalarTower K A V] 
   [IsScalarTower K A W]
 
 /-- Linear maps over a `k`-algebra are finite dimensional (over `k`) if both the source and
-target are, since they form a subspace of all `k`-linear maps. -/
+target are, as they form a subspace of all `k`-linear maps. -/
 instance finite_dimensional' : FiniteDimensional K (V →ₗ[A] W) :=
   FiniteDimensional.of_injective (restrictScalarsLinearMap K A V W) (restrictScalars_injective _)
 #align linear_map.finite_dimensional' LinearMap.finite_dimensional'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.analytic.composition
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,8 +202,12 @@ def compAlongComposition {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : C
     ContinuousMultilinearMap 𝕜 (fun i : Fin n => E) G
     where
   toFun v := f (p.applyComposition c v)
-  map_add' v i x y := by simp only [apply_composition_update, ContinuousMultilinearMap.map_add]
-  map_smul' v i c x := by simp only [apply_composition_update, ContinuousMultilinearMap.map_smul]
+  map_add' _ v i x y := by
+    cases Subsingleton.elim ‹_› (Fin.decidableEq _)
+    simp only [apply_composition_update, ContinuousMultilinearMap.map_add]
+  map_smul' _ v i c x := by
+    cases Subsingleton.elim ‹_› (Fin.decidableEq _)
+    simp only [apply_composition_update, ContinuousMultilinearMap.map_smul]
   cont :=
     f.cont.comp <|
       continuous_pi fun i => (coe_continuous _).comp <| continuous_pi fun j => continuous_apply _
