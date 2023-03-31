@@ -332,6 +332,12 @@ theorem leAdd_apply (r : α → α → Prop) (s : β → β → Prop) (a) : leAd
   rfl
 #align initial_seg.le_add_apply InitialSeg.leAdd_apply
 
+/- warning: initial_seg.acc -> InitialSeg.acc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u1, u2} α β r s) (a : α), Iff (Acc.{succ u1} α r a) (Acc.{succ u2} β s (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (InitialSeg.{u1, u2} α β r s) α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (InitialSeg.{u1, u2} α β r s) α β (InitialSeg.embeddingLike.{u1, u2} α β r s))) f a))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u2, u1} α β r s) (a : α), Iff (Acc.{succ u2} α r a) (Acc.{succ u1} β s (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a))
+Case conversion may be inaccurate. Consider using '#align initial_seg.acc InitialSeg.accₓ'. -/
 protected theorem acc (f : r ≼i s) (a : α) : Acc r a ↔ Acc s (f a) :=
   ⟨by
     refine' fun h => Acc.recOn h fun a _ ha => Acc.intro _ fun b hb => _
@@ -697,12 +703,19 @@ def pemptyToPunit : @EmptyRelation PEmpty ≺i @EmptyRelation PUnit :=
 #align principal_seg.pempty_to_punit PrincipalSeg.pemptyToPunit
 -/
 
+/- warning: principal_seg.acc -> PrincipalSeg.acc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u2} β s] (f : PrincipalSeg.{u1, u2} α β r s) (a : α), Iff (Acc.{succ u1} α r a) (Acc.{succ u2} β s (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (fun (_x : PrincipalSeg.{u1, u2} α β r s) => α -> β) (PrincipalSeg.hasCoeToFun.{u1, u2} α β r s) f a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u2} β s] (f : PrincipalSeg.{u1, u2} α β r s) (a : α), Iff (Acc.{succ u1} α r a) (Acc.{succ u2} β s (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (PrincipalSeg.toRelEmbedding.{u1, u2} α β r s f)) a))
+Case conversion may be inaccurate. Consider using '#align principal_seg.acc PrincipalSeg.accₓ'. -/
 protected theorem acc [IsTrans β s] (f : r ≺i s) (a : α) : Acc r a ↔ Acc s (f a) :=
   (f : r ≼i s).Acc a
 #align principal_seg.acc PrincipalSeg.acc
 
 end PrincipalSeg
 
+#print wellFounded_iff_wellFounded_subrel /-
 /-- A relation is well-founded iff every principal segment of it is well-founded.
 
 In this lemma we use `subrel` to indicate its principal segments because it's usually more
@@ -718,12 +731,15 @@ theorem wellFounded_iff_wellFounded_subrel {β : Type _} {s : β → β → Prop
   obtain ⟨b', rfl⟩ := f.down.mp ((PrincipalSeg.ofElement_top s b).symm ▸ hb' : s b' f.top)
   exact (f.acc b').mp ((wf b).apply b')
 #align well_founded_iff_well_founded_subrel wellFounded_iff_wellFounded_subrel
+-/
 
+#print wellFounded_iff_principalSeg /-
 theorem wellFounded_iff_principalSeg.{u} {β : Type u} {s : β → β → Prop} [IsTrans β s] :
     WellFounded s ↔ ∀ (α : Type u) (r : α → α → Prop) (f : r ≺i s), WellFounded r :=
   ⟨fun wf α r f => RelHomClass.wellFounded f.toRelEmbedding wf, fun h =>
     wellFounded_iff_wellFounded_subrel.mpr fun b => h _ _ (PrincipalSeg.ofElement s b)⟩
 #align well_founded_iff_principal_seg wellFounded_iff_principalSeg
+-/
 
 /-! ### Properties of initial and principal segments -/
 
