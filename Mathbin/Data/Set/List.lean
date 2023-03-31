@@ -25,6 +25,7 @@ variable {α β : Type _} (l : List α)
 
 namespace Set
 
+#print Set.range_list_map /-
 theorem range_list_map (f : α → β) : range (map f) = { l | ∀ x ∈ l, x ∈ range f } :=
   by
   refine'
@@ -35,11 +36,15 @@ theorem range_list_map (f : α → β) : range (map f) = { l | ∀ x ∈ l, x �
   rcases hl a (mem_cons_self _ _) with ⟨a, rfl⟩
   exact ⟨a :: l, map_cons _ _ _⟩
 #align set.range_list_map Set.range_list_map
+-/
 
+#print Set.range_list_map_coe /-
 theorem range_list_map_coe (s : Set α) : range (map (coe : s → α)) = { l | ∀ x ∈ l, x ∈ s } := by
   rw [range_list_map, Subtype.range_coe]
 #align set.range_list_map_coe Set.range_list_map_coe
+-/
 
+#print Set.range_list_nthLe /-
 @[simp]
 theorem range_list_nthLe : (range fun k : Fin l.length => l.nthLe k k.2) = { x | x ∈ l } :=
   by
@@ -47,7 +52,9 @@ theorem range_list_nthLe : (range fun k : Fin l.length => l.nthLe k k.2) = { x |
   rw [mem_set_of_eq, mem_iff_nth_le]
   exact ⟨fun ⟨⟨n, h₁⟩, h₂⟩ => ⟨n, h₁, h₂⟩, fun ⟨n, h₁, h₂⟩ => ⟨⟨n, h₁⟩, h₂⟩⟩
 #align set.range_list_nth_le Set.range_list_nthLe
+-/
 
+#print Set.range_list_get? /-
 theorem range_list_get? : range l.get? = insert none (some '' { x | x ∈ l }) :=
   by
   rw [← range_list_nth_le, ← range_comp]
@@ -55,7 +62,9 @@ theorem range_list_get? : range l.get? = insert none (some '' { x | x ∈ l }) :
   exacts[(le_or_lt l.length n).imp nth_eq_none_iff.2 fun hlt => ⟨⟨_, _⟩, (nth_le_nth hlt).symm⟩,
     ⟨_, nth_eq_none_iff.2 le_rfl⟩, range_subset_iff.2 fun k => ⟨_, nth_le_nth _⟩]
 #align set.range_list_nth Set.range_list_get?
+-/
 
+#print Set.range_list_getD /-
 @[simp]
 theorem range_list_getD (d : α) : (range fun n => l.getD n d) = insert d { x | x ∈ l } :=
   calc
@@ -65,11 +74,14 @@ theorem range_list_getD (d : α) : (range fun n => l.getD n d) = insert d { x | 
       simp only [range_list_nth, image_insert_eq, Option.getD, image_image, image_id']
     
 #align set.range_list_nthd Set.range_list_getD
+-/
 
+#print Set.range_list_getI /-
 @[simp]
 theorem range_list_getI [Inhabited α] (l : List α) : range l.getI = insert default { x | x ∈ l } :=
   range_list_getD l default
 #align set.range_list_inth Set.range_list_getI
+-/
 
 end Set
 
