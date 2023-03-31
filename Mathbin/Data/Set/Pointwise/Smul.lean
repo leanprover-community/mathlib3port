@@ -708,7 +708,7 @@ instance isCentralScalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α 
     IsCentralScalar α (Set β) :=
   ⟨fun a S => (congr_arg fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 #align set.is_central_scalar Set.isCentralScalar
-#align set.is_central_vadd Set.is_central_vadd
+#align set.is_central_vadd Set.isCentralVAdd
 -/
 
 #print Set.mulAction /-
@@ -1009,7 +1009,7 @@ theorem vsub_inter_subset : s -ᵥ t₁ ∩ t₂ ⊆ (s -ᵥ t₁) ∩ (s -ᵥ t
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {s : Set.{u2} β} {t : Set.{u2} β}, Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u2} α β (fun (a : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) => Set.image.{u2, u1} β α (VSub.vsub.{u1, u2} α β _inst_1 a) t))) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α β (fun (a : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) => Set.image.{u1, u2} β α ((fun (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6394 : β) (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6396 : β) => VSub.vsub.{u2, u1} α β _inst_1 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6394 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6396) a) t))) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α β (fun (a : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) => Set.image.{u1, u2} β α ((fun (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6395 : β) (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6397 : β) => VSub.vsub.{u2, u1} α β _inst_1 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6395 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6397) a) t))) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)
 Case conversion may be inaccurate. Consider using '#align set.Union_vsub_left_image Set.unionᵢ_vsub_left_imageₓ'. -/
 theorem unionᵢ_vsub_left_image : (⋃ a ∈ s, (· -ᵥ ·) a '' t) = s -ᵥ t :=
   unionᵢ_image_left _

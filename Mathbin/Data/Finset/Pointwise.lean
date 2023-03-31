@@ -2524,7 +2524,7 @@ instance isCentralScalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α 
     IsCentralScalar α (Finset β) :=
   ⟨fun a s => coe_injective <| by simp only [coe_smul_finset, coe_smul, op_smul_eq_smul]⟩
 #align finset.is_central_scalar Finset.isCentralScalar
-#align finset.is_central_vadd Finset.is_central_vadd
+#align finset.is_central_vadd Finset.isCentralVAdd
 -/
 
 #print Finset.mulAction /-
@@ -2799,30 +2799,43 @@ theorem subset_smul_finset_iff : s ⊆ a • t ↔ a⁻¹ • s ⊆ t :=
 #align finset.subset_smul_finset_iff Finset.subset_smul_finset_iff
 #align finset.subset_vadd_finset_iff Finset.subset_vadd_finset_iff
 
+#print Finset.smul_finset_inter /-
 @[to_additive]
 theorem smul_finset_inter : a • (s ∩ t) = a • s ∩ a • t :=
   image_inter _ _ <| MulAction.injective a
 #align finset.smul_finset_inter Finset.smul_finset_inter
 #align finset.vadd_finset_inter Finset.vadd_finset_inter
+-/
 
+#print Finset.smul_finset_sdiff /-
 @[to_additive]
 theorem smul_finset_sdiff : a • (s \ t) = a • s \ a • t :=
   image_sdiff _ _ <| MulAction.injective a
 #align finset.smul_finset_sdiff Finset.smul_finset_sdiff
 #align finset.vadd_finset_sdiff Finset.vadd_finset_sdiff
+-/
 
+/- warning: finset.smul_finset_symm_diff -> Finset.smul_finset_symmDiff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : Group.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, Eq.{succ u2} (Finset.{u2} β) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3)) a (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toHasSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.lattice.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toHasSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.lattice.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3)) a s) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3)) a t))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : Group.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, Eq.{succ u2} (Finset.{u2} β) (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) a (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.instLatticeFinset.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.instSDiffFinset.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.instLatticeFinset.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.instSDiffFinset.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) a s) (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) a t))
+Case conversion may be inaccurate. Consider using '#align finset.smul_finset_symm_diff Finset.smul_finset_symmDiffₓ'. -/
 @[to_additive]
 theorem smul_finset_symmDiff : a • s ∆ t = (a • s) ∆ (a • t) :=
   image_symmDiff _ _ <| MulAction.injective a
 #align finset.smul_finset_symm_diff Finset.smul_finset_symmDiff
 #align finset.vadd_finset_symm_diff Finset.vadd_finset_symmDiff
 
+#print Finset.smul_finset_univ /-
 @[simp, to_additive]
 theorem smul_finset_univ [Fintype β] : a • (univ : Finset β) = univ :=
   image_univ_of_surjective <| MulAction.surjective a
 #align finset.smul_finset_univ Finset.smul_finset_univ
 #align finset.vadd_finset_univ Finset.vadd_finset_univ
+-/
 
+#print Finset.smul_univ /-
 @[simp, to_additive]
 theorem smul_univ [Fintype β] {s : Finset α} (hs : s.Nonempty) : s • (univ : Finset β) = univ :=
   coe_injective <| by
@@ -2830,6 +2843,7 @@ theorem smul_univ [Fintype β] {s : Finset α} (hs : s.Nonempty) : s • (univ :
     exact Set.smul_univ hs
 #align finset.smul_univ Finset.smul_univ
 #align finset.vadd_univ Finset.vadd_univ
+-/
 
 #print Finset.card_smul_finset /-
 @[simp, to_additive]
@@ -2907,14 +2921,32 @@ theorem subset_smul_finset_iff₀ (ha : a ≠ 0) : s ⊆ a • t ↔ a⁻¹ • 
   show _ ⊆ Units.mk0 a ha • _ ↔ _ from subset_smul_finset_iff
 #align finset.subset_smul_finset_iff₀ Finset.subset_smul_finset_iff₀
 
+/- warning: finset.smul_finset_inter₀ -> Finset.smul_finset_inter₀ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : GroupWithZero.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)))))))) -> (Eq.{succ u2} (Finset.{u2} β) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a (Inter.inter.{u2} (Finset.{u2} β) (Finset.hasInter.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (Inter.inter.{u2} (Finset.{u2} β) (Finset.hasInter.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a s) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : GroupWithZero.{u2} α] [_inst_3 : MulAction.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2))] {s : Finset.{u1} β} {t : Finset.{u1} β} {a : α}, (Ne.{succ u2} α a (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2))))) -> (Eq.{succ u1} (Finset.{u1} β) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a (Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a s) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a t)))
+Case conversion may be inaccurate. Consider using '#align finset.smul_finset_inter₀ Finset.smul_finset_inter₀ₓ'. -/
 theorem smul_finset_inter₀ (ha : a ≠ 0) : a • (s ∩ t) = a • s ∩ a • t :=
   image_inter _ _ <| MulAction.injective₀ ha
 #align finset.smul_finset_inter₀ Finset.smul_finset_inter₀
 
+/- warning: finset.smul_finset_sdiff₀ -> Finset.smul_finset_sdiff₀ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : GroupWithZero.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)))))))) -> (Eq.{succ u2} (Finset.{u2} β) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a (SDiff.sdiff.{u2} (Finset.{u2} β) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (SDiff.sdiff.{u2} (Finset.{u2} β) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a s) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : GroupWithZero.{u2} α] [_inst_3 : MulAction.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2))] {s : Finset.{u1} β} {t : Finset.{u1} β} {a : α}, (Ne.{succ u2} α a (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2))))) -> (Eq.{succ u1} (Finset.{u1} β) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a (SDiff.sdiff.{u1} (Finset.{u1} β) (Finset.instSDiffFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (SDiff.sdiff.{u1} (Finset.{u1} β) (Finset.instSDiffFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a s) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a t)))
+Case conversion may be inaccurate. Consider using '#align finset.smul_finset_sdiff₀ Finset.smul_finset_sdiff₀ₓ'. -/
 theorem smul_finset_sdiff₀ (ha : a ≠ 0) : a • (s \ t) = a • s \ a • t :=
   image_sdiff _ _ <| MulAction.injective₀ ha
 #align finset.smul_finset_sdiff₀ Finset.smul_finset_sdiff₀
 
+/- warning: finset.smul_finset_symm_diff₀ -> Finset.smul_finset_symm_diff₀ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : GroupWithZero.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)))))))) -> (Eq.{succ u2} (Finset.{u2} β) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toHasSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.lattice.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toHasSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.lattice.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a s) (SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3)) a t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : GroupWithZero.{u2} α] [_inst_3 : MulAction.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2))] {s : Finset.{u1} β} {t : Finset.{u1} β} {a : α}, (Ne.{succ u2} α a (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2))))) -> (Eq.{succ u1} (Finset.{u1} β) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a (symmDiff.{u1} (Finset.{u1} β) (SemilatticeSup.toSup.{u1} (Finset.{u1} β) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} β) (Finset.instLatticeFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) s t)) (symmDiff.{u1} (Finset.{u1} β) (SemilatticeSup.toSup.{u1} (Finset.{u1} β) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} β) (Finset.instLatticeFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a s) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_2)) _inst_3))) a t)))
+Case conversion may be inaccurate. Consider using '#align finset.smul_finset_symm_diff₀ Finset.smul_finset_symm_diff₀ₓ'. -/
 theorem smul_finset_symm_diff₀ (ha : a ≠ 0) : a • s ∆ t = (a • s) ∆ (a • t) :=
   image_symmDiff _ _ <| MulAction.injective₀ ha
 #align finset.smul_finset_symm_diff₀ Finset.smul_finset_symm_diff₀

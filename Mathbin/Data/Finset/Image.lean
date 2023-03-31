@@ -913,6 +913,12 @@ theorem image_eq_empty : s.image f = ∅ ↔ s = ∅ :=
 #align finset.image_eq_empty Finset.image_eq_empty
 -/
 
+/- warning: finset.image_sdiff -> Finset.image_sdiff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : DecidableEq.{succ u1} α] {f : α -> β} (s : Finset.{u1} α) (t : Finset.{u1} α), (Function.Injective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} (Finset.{u2} β) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) f (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) s t)) (SDiff.sdiff.{u2} (Finset.{u2} β) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) f s) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) f t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u2} α] {f : α -> β} (s : Finset.{u2} α) (t : Finset.{u2} α), (Function.Injective.{succ u2, succ u1} α β f) -> (Eq.{succ u1} (Finset.{u1} β) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f (SDiff.sdiff.{u2} (Finset.{u2} α) (Finset.instSDiffFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) s t)) (SDiff.sdiff.{u1} (Finset.{u1} β) (Finset.instSDiffFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f t)))
+Case conversion may be inaccurate. Consider using '#align finset.image_sdiff Finset.image_sdiffₓ'. -/
 theorem image_sdiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s \ t).image f = s.image f \ t.image f :=
   coe_injective <| by
@@ -920,6 +926,12 @@ theorem image_sdiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Inj
     exact Set.image_diff hf _ _
 #align finset.image_sdiff Finset.image_sdiff
 
+/- warning: finset.image_symm_diff -> Finset.image_symmDiff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : DecidableEq.{succ u1} α] {f : α -> β} (s : Finset.{u1} α) (t : Finset.{u1} α), (Function.Injective.{succ u1, succ u2} α β f) -> (Eq.{succ u2} (Finset.{u2} β) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) f (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_2 a b)))) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) s t)) (symmDiff.{u2} (Finset.{u2} β) (SemilatticeSup.toHasSup.{u2} (Finset.{u2} β) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} β) (Finset.lattice.{u2} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.hasSdiff.{u2} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) f s) (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) f t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u2} α] {f : α -> β} (s : Finset.{u2} α) (t : Finset.{u2} α), (Function.Injective.{succ u2, succ u1} α β f) -> (Eq.{succ u1} (Finset.{u1} β) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f (symmDiff.{u2} (Finset.{u2} α) (SemilatticeSup.toSup.{u2} (Finset.{u2} α) (Lattice.toSemilatticeSup.{u2} (Finset.{u2} α) (Finset.instLatticeFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)))) (Finset.instSDiffFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) s t)) (symmDiff.{u1} (Finset.{u1} β) (SemilatticeSup.toSup.{u1} (Finset.{u1} β) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} β) (Finset.instLatticeFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f t)))
+Case conversion may be inaccurate. Consider using '#align finset.image_symm_diff Finset.image_symmDiffₓ'. -/
 theorem image_symmDiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s ∆ t).image f = s.image f ∆ t.image f :=
   coe_injective <| by
