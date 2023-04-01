@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.block
-! leanprover-community/mathlib commit 6ca1a09bc9aa75824bf97388c9e3b441fc4ccf3f
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -312,21 +312,21 @@ section Zero
 
 variable [Zero α] [Zero β]
 
-/- warning: matrix.block_diagonal -> Matrix.blockDiagonal is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {o : Type.{u3}} {α : Type.{u4}} [_inst_1 : DecidableEq.{succ u3} o] [_inst_2 : Zero.{u4} α], (o -> (Matrix.{u1, u2, u4} m n α)) -> (Matrix.{max u1 u3, max u2 u3, u4} (Prod.{u1, u3} m o) (Prod.{u2, u3} n o) α)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u4} o] [_inst_2 : Zero.{u1} α], (o -> (Matrix.{u2, u3, u1} m n α)) -> (Matrix.{max u2 u4, max u3 u4, u1} (Prod.{u2, u4} m o) (Prod.{u3, u4} n o) α)
-Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal Matrix.blockDiagonalₓ'. -/
 /-- `matrix.block_diagonal M` turns a homogenously-indexed collection of matrices
 `M : o → matrix m n α'` into a `m × o`-by-`n × o` block matrix which has the entries of `M` along
 the diagonal and zero elsewhere.
 
 See also `matrix.block_diagonal'` if the matrices may not have the same size everywhere.
 -/
-def blockDiagonal (M : o → Matrix m n α) : Matrix (m × o) (n × o) α
-  | ⟨i, k⟩, ⟨j, k'⟩ => if k = k' then M k i j else 0
+def blockDiagonal (M : o → Matrix m n α) : Matrix (m × o) (n × o) α :=
+  of <| (fun ⟨i, k⟩ ⟨j, k'⟩ => if k = k' then M k i j else 0 : m × o → n × o → α)
 #align matrix.block_diagonal Matrix.blockDiagonal
+
+-- TODO: set as an equation lemma for `block_diagonal`, see mathlib4#3024
+theorem blockDiagonal_apply' (M : o → Matrix m n α) (i k j k') :
+    blockDiagonal M ⟨i, k⟩ ⟨j, k'⟩ = if k = k' then M k i j else 0 :=
+  rfl
+#align matrix.block_diagonal_apply' Matrix.blockDiagonal_apply'
 
 theorem blockDiagonal_apply (M : o → Matrix m n α) (ik jk) :
     blockDiagonal M ik jk = if ik.2 = jk.2 then M ik.2 ik.1 jk.1 else 0 :=
@@ -386,7 +386,7 @@ theorem blockDiagonal_diagonal [DecidableEq m] (d : o → m → α) :
     (blockDiagonal fun k => diagonal (d k)) = diagonal fun ik => d ik.2 ik.1 :=
   by
   ext (⟨i, k⟩⟨j, k'⟩)
-  simp only [block_diagonal_apply, diagonal, Prod.mk.inj_iff, ← ite_and]
+  simp only [block_diagonal_apply, diagonal_apply, Prod.mk.inj_iff, ← ite_and]
   congr 1
   rw [and_comm']
 #align matrix.block_diagonal_diagonal Matrix.blockDiagonal_diagonal
@@ -481,18 +481,18 @@ end BlockDiagonal
 
 section BlockDiag
 
-/- warning: matrix.block_diag -> Matrix.blockDiag is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u1}} {n : Type.{u2}} {o : Type.{u3}} {α : Type.{u4}}, (Matrix.{max u1 u3, max u2 u3, u4} (Prod.{u1, u3} m o) (Prod.{u2, u3} n o) α) -> o -> (Matrix.{u1, u2, u4} m n α)
-but is expected to have type
-  forall {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u1}}, (Matrix.{max u2 u4, max u3 u4, u1} (Prod.{u2, u4} m o) (Prod.{u3, u4} n o) α) -> o -> (Matrix.{u2, u3, u1} m n α)
-Case conversion may be inaccurate. Consider using '#align matrix.block_diag Matrix.blockDiagₓ'. -/
 /-- Extract a block from the diagonal of a block diagonal matrix.
 
 This is the block form of `matrix.diag`, and the left-inverse of `matrix.block_diagonal`. -/
-def blockDiag (M : Matrix (m × o) (n × o) α) (k : o) : Matrix m n α
-  | i, j => M (i, k) (j, k)
+def blockDiag (M : Matrix (m × o) (n × o) α) (k : o) : Matrix m n α :=
+  of fun i j => M (i, k) (j, k)
 #align matrix.block_diag Matrix.blockDiag
+
+-- TODO: set as an equation lemma for `block_diag`, see mathlib4#3024
+theorem blockDiag_apply (M : Matrix (m × o) (n × o) α) (k : o) (i j) :
+    blockDiag M k i j = M (i, k) (j, k) :=
+  rfl
+#align matrix.block_diag_apply Matrix.blockDiag_apply
 
 theorem blockDiag_map (M : Matrix (m × o) (n × o) α) (f : α → β) :
     blockDiag (M.map f) = fun k => (blockDiag M k).map f :=
@@ -525,15 +525,15 @@ theorem blockDiag_diagonal [DecidableEq o] [DecidableEq m] (d : m × o → α) (
     blockDiag (diagonal d) k = diagonal fun i => d (i, k) :=
   ext fun i j => by
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [block_diag, diagonal_apply_eq, diagonal_apply_eq]
-    · rw [block_diag, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt _ hij)]
+    · rw [block_diag_apply, diagonal_apply_eq, diagonal_apply_eq]
+    · rw [block_diag_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt _ hij)]
       exact prod.fst_eq_iff.mpr
 #align matrix.block_diag_diagonal Matrix.blockDiag_diagonal
 
 @[simp]
 theorem blockDiag_blockDiagonal [DecidableEq o] (M : o → Matrix m n α) :
     blockDiag (blockDiagonal M) = M :=
-  funext fun k => ext fun i j => blockDiagonal_apply_eq _ _ _ _
+  funext fun k => ext fun i j => blockDiagonal_apply_eq M i j _
 #align matrix.block_diag_block_diagonal Matrix.blockDiag_blockDiagonal
 
 @[simp]
@@ -592,20 +592,23 @@ section Zero
 
 variable [Zero α] [Zero β]
 
-/- warning: matrix.block_diagonal' -> Matrix.blockDiagonal' is a dubious translation:
-lean 3 declaration is
-  forall {o : Type.{u1}} {m' : o -> Type.{u2}} {n' : o -> Type.{u3}} {α : Type.{u4}} [_inst_1 : DecidableEq.{succ u1} o] [_inst_2 : Zero.{u4} α], (forall (i : o), Matrix.{u2, u3, u4} (m' i) (n' i) α) -> (Matrix.{max u1 u2, max u1 u3, u4} (Sigma.{u1, u2} o (fun (i : o) => m' i)) (Sigma.{u1, u3} o (fun (i : o) => n' i)) α)
-but is expected to have type
-  forall {o : Type.{u2}} {m' : o -> Type.{u3}} {n' : o -> Type.{u4}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} o] [_inst_2 : Zero.{u1} α], (forall (i : o), Matrix.{u3, u4, u1} (m' i) (n' i) α) -> (Matrix.{max u2 u3, max u2 u4, u1} (Sigma.{u2, u3} o (fun (i : o) => m' i)) (Sigma.{u2, u4} o (fun (i : o) => n' i)) α)
-Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal' Matrix.blockDiagonal'ₓ'. -/
 /-- `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a
 `Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal
 and zero elsewhere.
 
 This is the dependently-typed version of `matrix.block_diagonal`. -/
-def blockDiagonal' (M : ∀ i, Matrix (m' i) (n' i) α) : Matrix (Σi, m' i) (Σi, n' i) α
-  | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_arg n' h.symm) j) else 0
+def blockDiagonal' (M : ∀ i, Matrix (m' i) (n' i) α) : Matrix (Σi, m' i) (Σi, n' i) α :=
+  of <|
+    (fun ⟨k, i⟩ ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_arg n' h.symm) j) else 0 :
+      (Σi, m' i) → (Σi, n' i) → α)
 #align matrix.block_diagonal' Matrix.blockDiagonal'
+
+-- TODO: set as an equation lemma for `block_diagonal'`, see mathlib4#3024
+theorem blockDiagonal'_apply' (M : ∀ i, Matrix (m' i) (n' i) α) (k i k' j) :
+    blockDiagonal' M ⟨k, i⟩ ⟨k', j⟩ =
+      if h : k = k' then M k i (cast (congr_arg n' h.symm) j) else 0 :=
+  rfl
+#align matrix.block_diagonal'_apply' Matrix.blockDiagonal'_apply'
 
 theorem blockDiagonal'_eq_blockDiagonal (M : o → Matrix m n α) {k k'} (i j) :
     blockDiagonal M (i, k) (j, k') = blockDiagonal' M ⟨k, i⟩ ⟨k', j⟩ :=
@@ -777,18 +780,18 @@ end BlockDiagonal'
 
 section BlockDiag'
 
-/- warning: matrix.block_diag' -> Matrix.blockDiag' is a dubious translation:
-lean 3 declaration is
-  forall {o : Type.{u1}} {m' : o -> Type.{u2}} {n' : o -> Type.{u3}} {α : Type.{u4}}, (Matrix.{max u1 u2, max u1 u3, u4} (Sigma.{u1, u2} o (fun (i : o) => m' i)) (Sigma.{u1, u3} o (fun (i : o) => n' i)) α) -> (forall (k : o), Matrix.{u2, u3, u4} (m' k) (n' k) α)
-but is expected to have type
-  forall {o : Type.{u2}} {m' : o -> Type.{u3}} {n' : o -> Type.{u4}} {α : Type.{u1}}, (Matrix.{max u2 u3, max u2 u4, u1} (Sigma.{u2, u3} o (fun (i : o) => m' i)) (Sigma.{u2, u4} o (fun (i : o) => n' i)) α) -> (forall (k : o), Matrix.{u3, u4, u1} (m' k) (n' k) α)
-Case conversion may be inaccurate. Consider using '#align matrix.block_diag' Matrix.blockDiag'ₓ'. -/
 /-- Extract a block from the diagonal of a block diagonal matrix.
 
 This is the block form of `matrix.diag`, and the left-inverse of `matrix.block_diagonal'`. -/
-def blockDiag' (M : Matrix (Σi, m' i) (Σi, n' i) α) (k : o) : Matrix (m' k) (n' k) α
-  | i, j => M ⟨k, i⟩ ⟨k, j⟩
+def blockDiag' (M : Matrix (Σi, m' i) (Σi, n' i) α) (k : o) : Matrix (m' k) (n' k) α :=
+  of fun i j => M ⟨k, i⟩ ⟨k, j⟩
 #align matrix.block_diag' Matrix.blockDiag'
+
+-- TODO: set as an equation lemma for `block_diag'`, see mathlib4#3024
+theorem blockDiag'_apply (M : Matrix (Σi, m' i) (Σi, n' i) α) (k : o) (i j) :
+    blockDiag' M k i j = M ⟨k, i⟩ ⟨k, j⟩ :=
+  rfl
+#align matrix.block_diag'_apply Matrix.blockDiag'_apply
 
 theorem blockDiag'_map (M : Matrix (Σi, m' i) (Σi, n' i) α) (f : α → β) :
     blockDiag' (M.map f) = fun k => (blockDiag' M k).map f :=
@@ -821,8 +824,8 @@ theorem blockDiag'_diagonal [DecidableEq o] [∀ i, DecidableEq (m' i)] (d : (Σ
     blockDiag' (diagonal d) k = diagonal fun i => d ⟨k, i⟩ :=
   ext fun i j => by
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [block_diag', diagonal_apply_eq, diagonal_apply_eq]
-    · rw [block_diag', diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => _) hij)]
+    · rw [block_diag'_apply, diagonal_apply_eq, diagonal_apply_eq]
+    · rw [block_diag'_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => _) hij)]
       cases h
       rfl
 #align matrix.block_diag'_diagonal Matrix.blockDiag'_diagonal
@@ -830,7 +833,7 @@ theorem blockDiag'_diagonal [DecidableEq o] [∀ i, DecidableEq (m' i)] (d : (Σ
 @[simp]
 theorem blockDiag'_blockDiagonal' [DecidableEq o] (M : ∀ i, Matrix (m' i) (n' i) α) :
     blockDiag' (blockDiagonal' M) = M :=
-  funext fun k => ext fun i j => blockDiagonal'_apply_eq _ _ _ _
+  funext fun k => ext fun i j => blockDiagonal'_apply_eq M _ _ _
 #align matrix.block_diag'_block_diagonal' Matrix.blockDiag'_blockDiagonal'
 
 @[simp]

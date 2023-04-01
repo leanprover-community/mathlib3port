@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 1c775cc661988d96c477aa4ca6f7b5641a2a924b
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -763,7 +763,7 @@ theorem toMatrix_distrib_mul_action_toLinearMap (x : R) :
   by
   ext
   rw [LinearMap.toMatrix_apply, DistribMulAction.toLinearMap_apply, LinearEquiv.map_smul,
-    Basis.repr_self, Finsupp.smul_single_one, Finsupp.single_eq_pi_single, Matrix.diagonal,
+    Basis.repr_self, Finsupp.smul_single_one, Finsupp.single_eq_pi_single, Matrix.diagonal_apply,
     Pi.single_apply]
 #align to_matrix_distrib_mul_action_to_linear_map toMatrix_distrib_mul_action_toLinearMap
 

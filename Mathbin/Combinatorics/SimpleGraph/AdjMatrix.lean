@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.adj_matrix
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,12 +159,13 @@ variable (α)
 
 /-- `adj_matrix G α` is the matrix `A` such that `A i j = (1 : α)` if `i` and `j` are
   adjacent in the simple graph `G`, and otherwise `A i j = 0`. -/
-def adjMatrix [Zero α] [One α] : Matrix V V α
-  | i, j => if G.Adj i j then 1 else 0
+def adjMatrix [Zero α] [One α] : Matrix V V α :=
+  of fun i j => if G.Adj i j then (1 : α) else 0
 #align simple_graph.adj_matrix SimpleGraph.adjMatrix
 
 variable {α}
 
+-- TODO: set as an equation lemma for `adj_matrix`, see mathlib4#3024
 @[simp]
 theorem adjMatrix_apply (v w : V) [Zero α] [One α] :
     G.adjMatrix α v w = if G.Adj v w then 1 else 0 :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 29cb56a7b35f72758b05a30490e1f10bd62c35c1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -550,6 +550,20 @@ Case conversion may be inaccurate. Consider using '#align ennreal.top_ne_of_real
 @[simp]
 theorem top_ne_ofReal {r : ℝ} : ∞ ≠ ENNReal.ofReal r := by simp [ENNReal.ofReal]
 #align ennreal.top_ne_of_real ENNReal.top_ne_ofReal
+
+@[simp]
+theorem ofReal_toReal_eq_iff : ENNReal.ofReal a.toReal = a ↔ a ≠ ⊤ :=
+  ⟨fun h => by
+    rw [← h]
+    exact of_real_ne_top, ofReal_toReal⟩
+#align ennreal.of_real_to_real_eq_iff ENNReal.ofReal_toReal_eq_iff
+
+@[simp]
+theorem toReal_ofReal_eq_iff {a : ℝ} : (ENNReal.ofReal a).toReal = a ↔ 0 ≤ a :=
+  ⟨fun h => by
+    rw [← h]
+    exact to_real_nonneg, toReal_ofReal⟩
+#align ennreal.to_real_of_real_eq_iff ENNReal.toReal_ofReal_eq_iff
 
 /- warning: ennreal.zero_ne_top -> ENNReal.zero_ne_top is a dubious translation:
 lean 3 declaration is

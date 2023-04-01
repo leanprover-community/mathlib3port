@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 30413fc89f202a090a54d78e540963ed3de0056e
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,10 +88,14 @@ The two sides of the equivalence are definitionally equal types. We want to use 
 to distinguish the types because `matrix` has different instances to pi types (such as `pi.has_mul`,
 which performs elementwise multiplication, vs `matrix.has_mul`).
 
-If you are defining a matrix, in terms of its entries, either use `of (λ i j, _)`, or use pattern
-matching in a definition as `| i j := _` (which can only be unfolded when fully-applied). The
-purpose of this approach is to ensure that terms of the form `(λ i j, _) * (λ i j, _)` do not
+If you are defining a matrix, in terms of its entries, use `of (λ i j, _)`. The
+purpose of this approach is to ensure that terms of th
+e form `(λ i j, _) * (λ i j, _)` do not
 appear, as the type of `*` can be misleading.
+
+Porting note: In Lean 3, it is also safe to use pattern matching in a definition as `| i j := _`,
+which can only be unfolded when fully-applied. leanprover/lean4#2042 means this does not
+(currently) work in Lean 4.
 -/
 def of : (m → n → α) ≃ Matrix m n α :=
   Equiv.refl _
@@ -148,16 +152,16 @@ theorem map_injective {f : α → β} (hf : Function.Injective f) :
   ext fun i j => hf <| ext_iff.mpr h i j
 #align matrix.map_injective Matrix.map_injective
 
-/- warning: matrix.transpose -> Matrix.transpose is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}}, (Matrix.{u2, u3, u1} m n α) -> (Matrix.{u3, u2, u1} n m α)
-but is expected to have type
-  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}}, (Matrix.{u1, u2, u3} m n α) -> (Matrix.{u2, u1, u3} n m α)
-Case conversion may be inaccurate. Consider using '#align matrix.transpose Matrix.transposeₓ'. -/
 /-- The transpose of a matrix. -/
-def transpose (M : Matrix m n α) : Matrix n m α
-  | x, y => M y x
+def transpose (M : Matrix m n α) : Matrix n m α :=
+  of fun x y => M y x
 #align matrix.transpose Matrix.transpose
+
+-- TODO: set as an equation lemma for `transpose`, see mathlib4#3024
+@[simp]
+theorem transpose_apply (M : Matrix m n α) (i j) : transpose M i j = M j i :=
+  rfl
+#align matrix.transpose_apply Matrix.transpose_apply
 
 -- mathport name: matrix.transpose
 scoped postfix:1024 "ᵀ" => Matrix.transpose
@@ -170,27 +174,27 @@ def conjTranspose [Star α] (M : Matrix m n α) : Matrix n m α :=
 -- mathport name: matrix.conj_transpose
 scoped postfix:1024 "ᴴ" => Matrix.conjTranspose
 
-/- warning: matrix.col -> Matrix.col is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {α : Type.{u1}}, (m -> α) -> (Matrix.{u2, 0, u1} m Unit α)
-but is expected to have type
-  forall {m : Type.{u1}} {α : Type.{u2}}, (m -> α) -> (Matrix.{u1, 0, u2} m Unit α)
-Case conversion may be inaccurate. Consider using '#align matrix.col Matrix.colₓ'. -/
 /-- `matrix.col u` is the column matrix whose entries are given by `u`. -/
-def col (w : m → α) : Matrix m Unit α
-  | x, y => w x
+def col (w : m → α) : Matrix m Unit α :=
+  of fun x y => w x
 #align matrix.col Matrix.col
 
-/- warning: matrix.row -> Matrix.row is a dubious translation:
-lean 3 declaration is
-  forall {n : Type.{u2}} {α : Type.{u1}}, (n -> α) -> (Matrix.{0, u2, u1} Unit n α)
-but is expected to have type
-  forall {n : Type.{u1}} {α : Type.{u2}}, (n -> α) -> (Matrix.{0, u1, u2} Unit n α)
-Case conversion may be inaccurate. Consider using '#align matrix.row Matrix.rowₓ'. -/
+-- TODO: set as an equation lemma for `col`, see mathlib4#3024
+@[simp]
+theorem col_apply (w : m → α) (i j) : col w i j = w i :=
+  rfl
+#align matrix.col_apply Matrix.col_apply
+
 /-- `matrix.row u` is the row matrix whose entries are given by `u`. -/
-def row (v : n → α) : Matrix Unit n α
-  | x, y => v y
+def row (v : n → α) : Matrix Unit n α :=
+  of fun x y => v y
 #align matrix.row Matrix.row
+
+-- TODO: set as an equation lemma for `row`, see mathlib4#3024
+@[simp]
+theorem row_apply (v : n → α) (i j) : row v i j = v j :=
+  rfl
+#align matrix.row_apply Matrix.row_apply
 
 instance [Inhabited α] : Inhabited (Matrix m n α) :=
   Pi.inhabited _
@@ -356,12 +360,6 @@ section Diagonal
 
 variable [DecidableEq n]
 
-/- warning: matrix.diagonal -> Matrix.diagonal is a dubious translation:
-lean 3 declaration is
-  forall {n : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} n] [_inst_2 : Zero.{u1} α], (n -> α) -> (Matrix.{u2, u2, u1} n n α)
-but is expected to have type
-  forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Zero.{u2} α], (n -> α) -> (Matrix.{u1, u1, u2} n n α)
-Case conversion may be inaccurate. Consider using '#align matrix.diagonal Matrix.diagonalₓ'. -/
 /-- `diagonal d` is the square matrix such that `(diagonal d) i i = d i` and `(diagonal d) i j = 0`
 if `i ≠ j`.
 
@@ -371,9 +369,14 @@ Note that bundled versions exist as:
 * `matrix.diagonal_ring_hom`
 * `matrix.diagonal_alg_hom`
 -/
-def diagonal [Zero α] (d : n → α) : Matrix n n α
-  | i, j => if i = j then d i else 0
+def diagonal [Zero α] (d : n → α) : Matrix n n α :=
+  of fun i j => if i = j then d i else 0
 #align matrix.diagonal Matrix.diagonal
+
+-- TODO: set as an equation lemma for `diagonal`, see mathlib4#3024
+theorem diagonal_apply [Zero α] (d : n → α) (i j) : diagonal d i j = if i = j then d i else 0 :=
+  rfl
+#align matrix.diagonal_apply Matrix.diagonal_apply
 
 @[simp]
 theorem diagonal_apply_eq [Zero α] (d : n → α) (i : n) : (diagonal d) i i = d i := by
@@ -453,7 +456,7 @@ theorem diagonal_map [Zero α] [Zero β] {f : α → β} (h : f 0 = 0) {d : n �
     (diagonal d).map f = diagonal fun m => f (d m) :=
   by
   ext
-  simp only [diagonal, map_apply]
+  simp only [diagonal_apply, map_apply]
   split_ifs <;> simp [h]
 #align matrix.diagonal_map Matrix.diagonal_map
 
@@ -1552,17 +1555,16 @@ open Matrix
 
 namespace Matrix
 
-/- warning: matrix.vec_mul_vec -> Matrix.vecMulVec is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}} [_inst_1 : Mul.{u1} α], (m -> α) -> (n -> α) -> (Matrix.{u2, u3, u1} m n α)
-but is expected to have type
-  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : Mul.{u3} α], (m -> α) -> (n -> α) -> (Matrix.{u1, u2, u3} m n α)
-Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_vec Matrix.vecMulVecₓ'. -/
 /-- For two vectors `w` and `v`, `vec_mul_vec w v i j` is defined to be `w i * v j`.
     Put another way, `vec_mul_vec w v` is exactly `col w ⬝ row v`. -/
-def vecMulVec [Mul α] (w : m → α) (v : n → α) : Matrix m n α
-  | x, y => w x * v y
+def vecMulVec [Mul α] (w : m → α) (v : n → α) : Matrix m n α :=
+  of fun x y => w x * v y
 #align matrix.vec_mul_vec Matrix.vecMulVec
+
+-- TODO: set as an equation lemma for `vec_mul_vec`, see mathlib4#3024
+theorem vecMulVec_apply [Mul α] (w : m → α) (v : n → α) (i j) : vecMulVec w v i j = w i * v j :=
+  rfl
+#align matrix.vec_mul_vec_apply Matrix.vecMulVec_apply
 
 theorem vecMulVec_eq [Mul α] [AddCommMonoid α] (w : m → α) (v : n → α) :
     vecMulVec w v = col w ⬝ row v := by
@@ -1886,15 +1888,6 @@ section Transpose
 
 open Matrix
 
-/-- Tell `simp` what the entries are in a transposed matrix.
-
-  Compare with `mul_apply`, `diagonal_apply_eq`, etc.
--/
-@[simp]
-theorem transpose_apply (M : Matrix m n α) (i j) : M.transpose j i = M i j :=
-  rfl
-#align matrix.transpose_apply Matrix.transpose_apply
-
 @[simp]
 theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by ext <;> rfl
 #align matrix.transpose_transpose Matrix.transpose_transpose
@@ -1907,7 +1900,7 @@ theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext (i j) <;
 theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)ᵀ = 1 :=
   by
   ext (i j)
-  unfold One.one transpose
+  rw [transpose_apply, ← diagonal_one]
   by_cases i = j
   · simp only [h, diagonal_apply_eq]
   · simp only [diagonal_apply_ne _ h, diagonal_apply_ne' _ h]
@@ -2016,7 +2009,9 @@ def transposeRingEquiv [AddCommMonoid α] [CommSemigroup α] [Fintype m] :
     toFun := fun M => MulOpposite.op Mᵀ
     invFun := fun M => M.unopᵀ
     map_mul' := fun M N =>
-      (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
+      (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _)
+    left_inv := fun M => transpose_transpose M
+    right_inv := fun M => MulOpposite.unop_injective <| transpose_transpose M.unop }
 #align matrix.transpose_ring_equiv Matrix.transposeRingEquiv
 
 variable {m α}
@@ -2603,16 +2598,6 @@ theorem row_smul [SMul R α] (x : R) (v : m → α) : row (x • v) = x • row 
   ext
   rfl
 #align matrix.row_smul Matrix.row_smul
-
-@[simp]
-theorem col_apply (v : m → α) (i j) : Matrix.col v i j = v i :=
-  rfl
-#align matrix.col_apply Matrix.col_apply
-
-@[simp]
-theorem row_apply (v : m → α) (i j) : Matrix.row v i j = v j :=
-  rfl
-#align matrix.row_apply Matrix.row_apply
 
 @[simp]
 theorem transpose_col (v : m → α) : (Matrix.col v)ᵀ = Matrix.row v :=

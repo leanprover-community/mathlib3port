@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.trace
-! leanprover-community/mathlib commit b68f3403d74afcfd65ab3fe65220572b410a3ed4
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -448,14 +448,15 @@ open Finset
 
 /-- Given an `A`-algebra `B` and `b`, an `κ`-indexed family of elements of `B`, we define
 `trace_matrix A b` as the matrix whose `(i j)`-th element is the trace of `b i * b j`. -/
-@[simp]
-noncomputable def traceMatrix (b : κ → B) : Matrix κ κ A
-  | i, j => traceForm A B (b i) (b j)
+noncomputable def traceMatrix (b : κ → B) : Matrix κ κ A :=
+  of fun i j => traceForm A B (b i) (b j)
 #align algebra.trace_matrix Algebra.traceMatrix
 
-theorem traceMatrix_def (b : κ → B) : traceMatrix A b = of fun i j => traceForm A B (b i) (b j) :=
+-- TODO: set as an equation lemma for `trace_matrix`, see mathlib4#3024
+@[simp]
+theorem traceMatrix_apply (b : κ → B) (i j) : traceMatrix A b i j = traceForm A B (b i) (b j) :=
   rfl
-#align algebra.trace_matrix_def Algebra.traceMatrix_def
+#align algebra.trace_matrix_apply Algebra.traceMatrix_apply
 
 theorem traceMatrix_reindex {κ' : Type _} (b : Basis κ A B) (f : κ ≃ κ') :
     traceMatrix A (b.reindex f) = reindex f f (traceMatrix A b) :=
@@ -470,7 +471,7 @@ theorem traceMatrix_of_matrix_vecMul [Fintype κ] (b : κ → B) (P : Matrix κ 
     traceMatrix A ((P.map (algebraMap A B)).vecMul b) = Pᵀ ⬝ traceMatrix A b ⬝ P :=
   by
   ext (α β)
-  rw [trace_matrix, vec_mul, dot_product, vec_mul, dot_product, Matrix.mul_apply,
+  rw [trace_matrix_apply, vec_mul, dot_product, vec_mul, dot_product, Matrix.mul_apply,
     BilinForm.sum_left,
     Fintype.sum_congr _ _ fun i : κ =>
       @BilinForm.sum_right _ _ _ _ _ _ _ _ (b i * P.map (algebraMap A B) i α) fun y : κ =>
@@ -500,7 +501,7 @@ theorem traceMatrix_of_basis [Fintype κ] [DecidableEq κ] (b : Basis κ A B) :
     traceMatrix A b = BilinForm.toMatrix b (traceForm A B) :=
   by
   ext (i j)
-  rw [trace_matrix, trace_form_apply, trace_form_to_matrix]
+  rw [trace_matrix_apply, trace_form_apply, trace_form_to_matrix]
 #align algebra.trace_matrix_of_basis Algebra.traceMatrix_of_basis
 
 theorem traceMatrix_of_basis_mulVec (b : Basis ι A B) (z : B) :
@@ -508,7 +509,7 @@ theorem traceMatrix_of_basis_mulVec (b : Basis ι A B) (z : B) :
   by
   ext i
   rw [← col_apply ((trace_matrix A b).mulVec (b.equiv_fun z)) i Unit.unit, col_mul_vec,
-    Matrix.mul_apply, trace_matrix_def]
+    Matrix.mul_apply, trace_matrix]
   simp only [col_apply, trace_form_apply]
   conv_lhs =>
     congr
@@ -532,10 +533,16 @@ variable (A)
 /-- `embeddings_matrix A C b : matrix κ (B →ₐ[A] C) C` is the matrix whose `(i, σ)` coefficient is
   `σ (b i)`. It is mostly useful for fields when `fintype.card κ = finrank A B` and `C` is
   algebraically closed. -/
-@[simp]
-def embeddingsMatrix (b : κ → B) : Matrix κ (B →ₐ[A] C) C
-  | i, σ => σ (b i)
+def embeddingsMatrix (b : κ → B) : Matrix κ (B →ₐ[A] C) C :=
+  of fun i (σ : B →ₐ[A] C) => σ (b i)
 #align algebra.embeddings_matrix Algebra.embeddingsMatrix
+
+-- TODO: set as an equation lemma for `embeddings_matrix`, see mathlib4#3024
+@[simp]
+theorem embeddingsMatrix_apply (b : κ → B) (i) (σ : B →ₐ[A] C) :
+    embeddingsMatrix A C b i σ = σ (b i) :=
+  rfl
+#align algebra.embeddings_matrix_apply Algebra.embeddingsMatrix_apply
 
 /-- `embeddings_matrix_reindex A C b e : matrix κ κ C` is the matrix whose `(i, j)` coefficient
   is `σⱼ (b i)`, where `σⱼ : B →ₐ[A] C` is the embedding corresponding to `j : κ` given by a

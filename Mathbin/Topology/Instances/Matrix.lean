@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.matrix
-! leanprover-community/mathlib commit 9a59dcb7a2d06bf55da57b9030169219980660cd
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -271,7 +271,7 @@ theorem Continuous.matrix_blockDiagonal' [Zero R] [DecidableEq l]
     Continuous fun x => blockDiagonal' (A x) :=
   continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ =>
     by
-    dsimp only [block_diagonal']
+    dsimp only [block_diagonal'_apply']
     split_ifs
     · subst h
       exact ((continuous_apply i₁).comp hA).matrix_elem i₂ j₂

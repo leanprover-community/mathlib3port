@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.rel_iso.basic
-! leanprover-community/mathlib commit 3353f661228bd27f632c600cd1a58b874d847c90
+! leanprover-community/mathlib commit 5923c4c7df633a157c9b752570a41ba5e8399289
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -655,6 +655,10 @@ protected theorem wellFounded : ∀ (f : r ↪r s) (h : WellFounded s), WellFoun
   | f, ⟨H⟩ => ⟨fun a => f.Acc _ (H _)⟩
 #align rel_embedding.well_founded RelEmbedding.wellFounded
 
+protected theorem isWellFounded (f : r ↪r s) [IsWellFounded β s] : IsWellFounded α r :=
+  ⟨f.WellFounded IsWellFounded.wf⟩
+#align rel_embedding.is_well_founded RelEmbedding.isWellFounded
+
 /- warning: rel_embedding.is_well_order -> RelEmbedding.isWellOrder is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop}, (RelEmbedding.{u1, u2} α β r s) -> (forall [_inst_1 : IsWellOrder.{u2} β s], IsWellOrder.{u1} α r)
@@ -664,6 +668,16 @@ Case conversion may be inaccurate. Consider using '#align rel_embedding.is_well_
 protected theorem isWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrder α r
   | f, H => { f.is_strict_total_order with wf := f.well_founded H.wf }
 #align rel_embedding.is_well_order RelEmbedding.isWellOrder
+
+instance Subtype.wellFoundedLT [LT α] [WellFoundedLT α] (p : α → Prop) :
+    WellFoundedLT (Subtype p) :=
+  (Subtype.relEmbedding (· < ·) p).IsWellFounded
+#align subtype.well_founded_lt Subtype.wellFoundedLT
+
+instance Subtype.wellFoundedGT [LT α] [WellFoundedGT α] (p : α → Prop) :
+    WellFoundedGT (Subtype p) :=
+  (Subtype.relEmbedding (· > ·) p).IsWellFounded
+#align subtype.well_founded_gt Subtype.wellFoundedGT
 
 /-- `quotient.mk` as a relation homomorphism between the relation and the lift of a relation. -/
 @[simps]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.matrix.pequiv
-! leanprover-community/mathlib commit 3793e32979850b523ad18ac3bd09137f657cbefa
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,17 +50,18 @@ variable {α : Type v}
 
 open Matrix
 
-/- warning: pequiv.to_matrix -> PEquiv.toMatrix is a dubious translation:
-lean 3 declaration is
-  forall {m : Type.{u2}} {n : Type.{u3}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} n] [_inst_2 : Zero.{u1} α] [_inst_3 : One.{u1} α], (PEquiv.{u2, u3} m n) -> (Matrix.{u2, u3, u1} m n α)
-but is expected to have type
-  forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} n] [_inst_2 : Zero.{u3} α] [_inst_3 : One.{u3} α], (PEquiv.{u1, u2} m n) -> (Matrix.{u1, u2, u3} m n α)
-Case conversion may be inaccurate. Consider using '#align pequiv.to_matrix PEquiv.toMatrixₓ'. -/
 /-- `to_matrix` returns a matrix containing ones and zeros. `f.to_matrix i j` is `1` if
   `f i = some j` and `0` otherwise -/
-def toMatrix [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α
-  | i, j => if j ∈ f i then 1 else 0
+def toMatrix [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α :=
+  of fun i j => if j ∈ f i then (1 : α) else 0
 #align pequiv.to_matrix PEquiv.toMatrix
+
+-- TODO: set as an equation lemma for `to_matrix`, see mathlib4#3024
+@[simp]
+theorem toMatrix_apply [DecidableEq n] [Zero α] [One α] (f : m ≃. n) (i j) :
+    toMatrix f i j = if j ∈ f i then (1 : α) else 0 :=
+  rfl
+#align pequiv.to_matrix_apply PEquiv.toMatrix_apply
 
 theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiring α] (f : l ≃. m) (M : Matrix m n α)
     (i j) : (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j :=
@@ -73,13 +74,13 @@ theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiring α] (f : l ≃. m
 
 theorem toMatrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
     (f.symm.toMatrix : Matrix n m α) = f.toMatrixᵀ := by
-  ext <;> simp only [transpose, mem_iff_mem f, to_matrix] <;> congr
+  ext <;> simp only [transpose, mem_iff_mem f, to_matrix_apply] <;> congr
 #align pequiv.to_matrix_symm PEquiv.toMatrix_symm
 
 @[simp]
 theorem toMatrix_refl [DecidableEq n] [Zero α] [One α] :
     ((PEquiv.refl n).toMatrix : Matrix n n α) = 1 := by
-  ext <;> simp [to_matrix, one_apply] <;> congr
+  ext <;> simp [to_matrix_apply, one_apply] <;> congr
 #align pequiv.to_matrix_refl PEquiv.toMatrix_refl
 
 theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n)
@@ -129,7 +130,7 @@ theorem toMatrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
   classical
     intro f g
     refine' not_imp_not.1 _
-    simp only [matrix.ext_iff.symm, to_matrix, PEquiv.ext_iff, not_forall, exists_imp]
+    simp only [matrix.ext_iff.symm, to_matrix_apply, PEquiv.ext_iff, not_forall, exists_imp]
     intro i hi
     use i
     cases' hf : f i with fi

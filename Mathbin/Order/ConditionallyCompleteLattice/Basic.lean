@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.basic
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 29cb56a7b35f72758b05a30490e1f10bd62c35c1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,6 +62,26 @@ noncomputable instance {α : Type _} [SupSet α] : SupSet (WithBot α) :=
 
 noncomputable instance {α : Type _} [Preorder α] [InfSet α] : InfSet (WithBot α) :=
   ⟨(@WithTop.hasSup αᵒᵈ _ _).supₛ⟩
+
+theorem WithTop.supₛ_eq [Preorder α] [SupSet α] {s : Set (WithTop α)} (hs : ⊤ ∉ s)
+    (hs' : BddAbove (coe ⁻¹' s : Set α)) : supₛ s = ↑(supₛ (coe ⁻¹' s) : α) :=
+  (if_neg hs).trans <| if_pos hs'
+#align with_top.Sup_eq WithTop.supₛ_eq
+
+theorem WithTop.infₛ_eq [InfSet α] {s : Set (WithTop α)} (hs : ¬s ⊆ {⊤}) :
+    infₛ s = ↑(infₛ (coe ⁻¹' s) : α) :=
+  if_neg hs
+#align with_top.Inf_eq WithTop.infₛ_eq
+
+theorem WithBot.infₛ_eq [Preorder α] [InfSet α] {s : Set (WithBot α)} (hs : ⊥ ∉ s)
+    (hs' : BddBelow (coe ⁻¹' s : Set α)) : infₛ s = ↑(infₛ (coe ⁻¹' s) : α) :=
+  (if_neg hs).trans <| if_pos hs'
+#align with_bot.Inf_eq WithBot.infₛ_eq
+
+theorem WithBot.supₛ_eq [SupSet α] {s : Set (WithBot α)} (hs : ¬s ⊆ {⊥}) :
+    supₛ s = ↑(supₛ (coe ⁻¹' s) : α) :=
+  if_neg hs
+#align with_bot.Sup_eq WithBot.supₛ_eq
 
 #print WithTop.infₛ_empty /-
 @[simp]

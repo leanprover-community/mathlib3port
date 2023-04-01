@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.classical
-! leanprover-community/mathlib commit a5b382d82275e20e2915ef73f679a47224e93409
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -378,7 +378,7 @@ theorem indefiniteDiagonal_assoc :
   by
   ext (i j)
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;> rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
-      simp only [indefinite_diagonal, Matrix.diagonal, Equiv.sumAssoc_apply_inl_inl,
+      simp only [indefinite_diagonal, Matrix.diagonal_apply, Equiv.sumAssoc_apply_inl_inl,
         Matrix.reindexLieEquiv_apply, Matrix.submatrix_apply, Equiv.symm_symm, Matrix.reindex_apply,
         Sum.elim_inl, if_true, eq_self_iff_true, Matrix.one_apply_eq, Matrix.fromBlocks_apply₁₁,
         DMatrix.zero_apply, Equiv.sumAssoc_apply_inl_inr, if_false, Matrix.fromBlocks_apply₁₂,

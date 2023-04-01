@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit 945bc74ecd6c7435f33e080af142c1cfe8d2e289
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,17 +57,17 @@ variable {l m n p : Type _} {q r : Type _} {l' m' n' p' : Type _}
 
 section KroneckerMap
 
-/- warning: matrix.kronecker_map -> Matrix.kroneckerMap is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {l : Type.{u4}} {m : Type.{u5}} {n : Type.{u6}} {p : Type.{u7}}, (α -> β -> γ) -> (Matrix.{u4, u5, u1} l m α) -> (Matrix.{u6, u7, u2} n p β) -> (Matrix.{max u4 u6, max u5 u7, u3} (Prod.{u4, u6} l n) (Prod.{u5, u7} m p) γ)
-but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u5}} {l : Type.{u6}} {m : Type.{u7}} {n : Type.{u1}} {p : Type.{u2}}, (α -> β -> γ) -> (Matrix.{u6, u7, u3} l m α) -> (Matrix.{u1, u2, u4} n p β) -> (Matrix.{max u6 u1, max u7 u2, u5} (Prod.{u6, u1} l n) (Prod.{u7, u2} m p) γ)
-Case conversion may be inaccurate. Consider using '#align matrix.kronecker_map Matrix.kroneckerMapₓ'. -/
 /-- Produce a matrix with `f` applied to every pair of elements from `A` and `B`. -/
-@[simp]
-def kroneckerMap (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) : Matrix (l × n) (m × p) γ
-  | i, j => f (A i.1 j.1) (B i.2 j.2)
+def kroneckerMap (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) : Matrix (l × n) (m × p) γ :=
+  of fun (i : l × n) (j : m × p) => f (A i.1 j.1) (B i.2 j.2)
 #align matrix.kronecker_map Matrix.kroneckerMap
+
+-- TODO: set as an equation lemma for `kronecker_map`, see mathlib4#3024
+@[simp]
+theorem kroneckerMap_apply (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) (i j) :
+    kroneckerMap f A B i j = f (A i.1 j.1) (B i.2 j.2) :=
+  rfl
+#align matrix.kronecker_map_apply Matrix.kroneckerMap_apply
 
 theorem kroneckerMap_transpose (f : α → β → γ) (A : Matrix l m α) (B : Matrix n p β) :
     kroneckerMap f Aᵀ Bᵀ = (kroneckerMap f A B)ᵀ :=
@@ -223,7 +223,7 @@ theorem kroneckerMapBilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m']
   by
   ext (⟨i, i'⟩⟨j, j'⟩)
   simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ,
-    Finset.sum_product, kronecker_map]
+    Finset.sum_product, kronecker_map_apply]
   simp_rw [f.map_sum, LinearMap.sum_apply, LinearMap.map_sum, h_comm]
 #align matrix.kronecker_map_bilinear_mul_mul Matrix.kroneckerMapBilinear_mul_mul
 
@@ -235,7 +235,7 @@ theorem trace_kroneckerMapBilinear [CommSemiring R] [Fintype m] [Fintype n] [Add
     (f : α →ₗ[R] β →ₗ[R] γ) (A : Matrix m m α) (B : Matrix n n β) :
     trace (kroneckerMapBilinear f A B) = f (trace A) (trace B) := by
   simp_rw [Matrix.trace, Matrix.diag, kronecker_map_bilinear_apply_apply, LinearMap.map_sum₂,
-    map_sum, ← Finset.univ_product_univ, Finset.sum_product, kronecker_map]
+    map_sum, ← Finset.univ_product_univ, Finset.sum_product, kronecker_map_apply]
 #align matrix.trace_kronecker_map_bilinear Matrix.trace_kroneckerMapBilinear
 
 /-- `determinant` of `matrix.kronecker_map_bilinear`.

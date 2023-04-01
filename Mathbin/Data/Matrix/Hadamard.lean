@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.hadamard
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,10 +45,16 @@ open Matrix BigOperators
 
 /-- `matrix.hadamard` defines the Hadamard product,
     which is the pointwise product of two matrices of the same size.-/
-@[simp]
-def hadamard [Mul α] (A : Matrix m n α) (B : Matrix m n α) : Matrix m n α
-  | i, j => A i j * B i j
+def hadamard [Mul α] (A : Matrix m n α) (B : Matrix m n α) : Matrix m n α :=
+  of fun i j => A i j * B i j
 #align matrix.hadamard Matrix.hadamard
+
+-- TODO: set as an equation lemma for `hadamard`, see mathlib4#3024
+@[simp]
+theorem hadamard_apply [Mul α] (A : Matrix m n α) (B : Matrix m n α) (i j) :
+    hadamard A B i j = A i j * B i j :=
+  rfl
+#align matrix.hadamard_apply Matrix.hadamard_apply
 
 -- mathport name: matrix.hadamard
 scoped infixl:100 " ⊙ " => Matrix.hadamard

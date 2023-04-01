@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.discriminant
-! leanprover-community/mathlib commit 825edd3cd735e87495b0c2a2114fc3929eefce41
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
         by
         intro j
         simp [mul_comm]
-      simp only [mul_vec, dot_product, trace_matrix, Pi.zero_apply, trace_form_apply, fun j =>
+      simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
         this j, ← LinearMap.map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
     by_contra h
     rw [discr_def] at h
@@ -139,9 +139,9 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
       span_eq_top_of_linearIndependent_of_card_eq_finrank b.linear_independent
         (finrank_eq_card_basis b).symm
     classical
-      rw [discr_def, trace_matrix_def]
+      rw [discr_def, trace_matrix]
       simp_rw [← Basis.mk_apply b.linear_independent this.ge]
-      rw [← trace_matrix_def, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
+      rw [← trace_matrix, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
       exact traceFormNondegenerate _ _
 #align algebra.discr_not_zero_of_basis Algebra.discr_not_zero_of_basis
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.strong_topology
-! leanprover-community/mathlib commit b8627dbac120a9ad6267a75575ae1e070d5bff5b
+! leanprover-community/mathlib commit 47b12e7f2502f14001f891ca87fbae2b4acaed3f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,25 +33,33 @@ locally convex, bounded convergence
 
 open Topology UniformConvergence
 
-variable {E F : Type _}
+variable {R 𝕜₁ 𝕜₂ E F : Type _}
 
 namespace ContinuousLinearMap
 
+variable [AddCommGroup E] [TopologicalSpace E] [AddCommGroup F] [TopologicalSpace F]
+  [TopologicalAddGroup F]
+
 section General
 
-variable [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [AddCommGroup F] [Module ℝ F]
-  [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousConstSMul ℝ F] [LocallyConvexSpace ℝ F]
+variable (R)
+
+variable [OrderedSemiring R]
+
+variable [NormedField 𝕜₁] [NormedField 𝕜₂] [Module 𝕜₁ E] [Module 𝕜₂ F] {σ : 𝕜₁ →+* 𝕜₂}
+
+variable [Module R F] [ContinuousConstSMul R F] [LocallyConvexSpace R F] [SMulCommClass 𝕜₂ R F]
 
 theorem strongTopology.locallyConvexSpace (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
-    @LocallyConvexSpace ℝ (E →L[ℝ] F) _ _ _ (strongTopology (RingHom.id ℝ) F 𝔖) :=
+    @LocallyConvexSpace R (E →SL[σ] F) _ _ _ (strongTopology σ F 𝔖) :=
   by
-  letI : TopologicalSpace (E →L[ℝ] F) := strong_topology (RingHom.id ℝ) F 𝔖
-  haveI : TopologicalAddGroup (E →L[ℝ] F) := strong_topology.topological_add_group _ _ _
+  letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
+  haveI : TopologicalAddGroup (E →SL[σ] F) := strong_topology.topological_add_group _ _ _
   refine'
     LocallyConvexSpace.ofBasisZero _ _ _ _
       (strong_topology.has_basis_nhds_zero_of_basis _ _ _ h𝔖₁ h𝔖₂
-        (LocallyConvexSpace.convex_basis_zero ℝ F))
+        (LocallyConvexSpace.convex_basis_zero R F))
       _
   rintro ⟨S, V⟩ ⟨hS, hVmem, hVconvex⟩ f hf g hg a b ha hb hab x hx
   exact hVconvex (hf x hx) (hg x hx) ha hb hab
@@ -61,11 +69,14 @@ end General
 
 section BoundedSets
 
-variable [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [AddCommGroup F] [Module ℝ F]
-  [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousConstSMul ℝ F] [LocallyConvexSpace ℝ F]
+variable [OrderedSemiring R]
 
-instance : LocallyConvexSpace ℝ (E →L[ℝ] F) :=
-  strongTopology.locallyConvexSpace _ ⟨∅, Bornology.isVonNBounded_empty ℝ E⟩
+variable [NormedField 𝕜₁] [NormedField 𝕜₂] [Module 𝕜₁ E] [Module 𝕜₂ F] {σ : 𝕜₁ →+* 𝕜₂}
+
+variable [Module R F] [ContinuousConstSMul R F] [LocallyConvexSpace R F] [SMulCommClass 𝕜₂ R F]
+
+instance : LocallyConvexSpace R (E →SL[σ] F) :=
+  strongTopology.locallyConvexSpace R _ ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 
 end BoundedSets

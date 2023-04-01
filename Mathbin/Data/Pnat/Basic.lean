@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.basic
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 172bf2812857f5e56938cc148b7a539f52f84ca9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,6 +31,8 @@ deriving instance AddLeftCancelSemigroup, AddRightCancelSemigroup, AddCommSemigr
   LinearOrderedCancelCommMonoid, Add, Mul, Distrib for PNat
 
 namespace PNat
+
+instance : IsWellOrder ℕ+ (· < ·) where
 
 #print PNat.one_add_natPred /-
 @[simp]

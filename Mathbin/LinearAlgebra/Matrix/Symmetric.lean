@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.symmetric
-! leanprover-community/mathlib commit 55e2dfde0cff928ce5c70926a3f2c7dee3e2dd99
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,8 +147,8 @@ theorem IsSymm.fromBlocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n 
 theorem isSymm_fromBlocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
     {D : Matrix n n α} : (A.fromBlocks B C D).IsSymm ↔ A.IsSymm ∧ Bᵀ = C ∧ Cᵀ = B ∧ D.IsSymm :=
   ⟨fun h =>
-    ⟨congr_arg toBlocks₁₁ h, congr_arg toBlocks₂₁ h, congr_arg toBlocks₁₂ h,
-      congr_arg toBlocks₂₂ h⟩,
+    ⟨(congr_arg toBlocks₁₁ h : _), (congr_arg toBlocks₂₁ h : _), (congr_arg toBlocks₁₂ h : _),
+      (congr_arg toBlocks₂₂ h : _)⟩,
     fun ⟨hA, hBC, hCB, hD⟩ => IsSymm.fromBlocks hA hBC hD⟩
 #align matrix.is_symm_from_blocks_iff Matrix.isSymm_fromBlocks_iff
 

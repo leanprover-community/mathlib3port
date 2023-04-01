@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.mv_polynomial
-! leanprover-community/mathlib commit bdcb7310db0fbc0e55dc1897bea76448733b7810
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,10 +32,16 @@ namespace Matrix
 variable (m n R)
 
 /-- The matrix with variable `X (i,j)` at location `(i,j)`. -/
-@[simp]
-noncomputable def mvPolynomialX [CommSemiring R] : Matrix m n (MvPolynomial (m × n) R)
-  | i, j => MvPolynomial.X (i, j)
+noncomputable def mvPolynomialX [CommSemiring R] : Matrix m n (MvPolynomial (m × n) R) :=
+  of fun i j => MvPolynomial.X (i, j)
 #align matrix.mv_polynomial_X Matrix.mvPolynomialX
+
+-- TODO: set as an equation lemma for `mv_polynomial_X`, see mathlib4#3024
+@[simp]
+theorem mvPolynomialX_apply [CommSemiring R] (i j) :
+    mvPolynomialX m n R i j = MvPolynomial.X (i, j) :=
+  rfl
+#align matrix.mv_polynomial_X_apply Matrix.mvPolynomialX_apply
 
 variable {m n R S}
 

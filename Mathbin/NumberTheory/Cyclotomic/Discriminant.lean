@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.discriminant
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,7 +175,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
         PNat.one_coe, totient_two, pow_zero, mul_one, MulZeroClass.mul_zero]
       rw [power_basis_dim, hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
         minpoly.eq_x_sub_c_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
-      simp only [discr, trace_matrix, Matrix.det_unique, Fin.default_eq_zero, Fin.val_zero,
+      simp only [discr, trace_matrix_apply, Matrix.det_unique, Fin.default_eq_zero, Fin.val_zero,
         pow_zero, trace_form_apply, mul_one]
       rw [← (algebraMap K L).map_one, trace_algebra_map, finrank _ hirr, hp, hk]
       · simp
