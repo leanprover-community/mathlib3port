@@ -484,7 +484,7 @@ theorem inverse_continuousOn (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) 
     (hc : Subsingleton E ∨ c < N⁻¹) : ContinuousOn (hf.toLocalEquiv hc).symm (f '' s) :=
   by
   apply continuousOn_iff_continuous_restrict.2
-  refine' ((hf.antilipschitz hc).to_right_inv_on' _ (hf.to_local_equiv hc).right_inv').Continuous
+  refine' ((hf.antilipschitz hc).to_rightInvOn' _ (hf.to_local_equiv hc).right_inv').Continuous
   exact fun x hx => (hf.to_local_equiv hc).map_target hx
 #align approximates_linear_on.inverse_continuous_on ApproximatesLinearOn.inverse_continuousOn
 

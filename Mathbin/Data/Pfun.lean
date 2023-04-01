@@ -816,13 +816,13 @@ theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.Preimage s ∪ f.Do
     Set.inter_univ, Set.union_eq_self_of_subset_right (f.compl_dom_subset_core s)]
 #align pfun.core_eq PFun.core_eq
 
-/- warning: pfun.preimage_as_subtype -> PFun.preimage_as_subtype is a dubious translation:
+/- warning: pfun.preimage_as_subtype -> PFun.preimage_asSubtype is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : PFun.{u1, u2} α β) (s : Set.{u2} β), Eq.{succ u1} (Set.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (PFun.Dom.{u1, u2} α β f))) (Set.preimage.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (PFun.Dom.{u1, u2} α β f)) β (PFun.asSubtype.{u1, u2} α β f) s) (Set.preimage.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (PFun.Dom.{u1, u2} α β f)) α (Subtype.val.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (PFun.Dom.{u1, u2} α β f))) (PFun.preimage.{u1, u2} α β f s))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} (Set.Elem.{u2} α (PFun.Dom.{u2, u1} α β f))) (Set.preimage.{u2, u1} (Set.Elem.{u2} α (PFun.Dom.{u2, u1} α β f)) β (PFun.asSubtype.{u2, u1} α β f) s) (Set.preimage.{u2, u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (PFun.Dom.{u2, u1} α β f))) α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (PFun.Dom.{u2, u1} α β f))) (PFun.preimage.{u2, u1} α β f s))
-Case conversion may be inaccurate. Consider using '#align pfun.preimage_as_subtype PFun.preimage_as_subtypeₓ'. -/
-theorem preimage_as_subtype (f : α →. β) (s : Set β) :
+Case conversion may be inaccurate. Consider using '#align pfun.preimage_as_subtype PFun.preimage_asSubtypeₓ'. -/
+theorem preimage_asSubtype (f : α →. β) (s : Set β) :
     f.asSubtype ⁻¹' s = Subtype.val ⁻¹' f.Preimage s :=
   by
   ext x
@@ -832,7 +832,7 @@ theorem preimage_as_subtype (f : α →. β) (s : Set β) :
     Iff.intro (fun h => ⟨_, h, Part.get_mem _⟩) fun ⟨y, ys, fxy⟩ =>
       have : f.fn x.val x.property ∈ f x.val := Part.get_mem _
       Part.mem_unique fxy this ▸ ys
-#align pfun.preimage_as_subtype PFun.preimage_as_subtype
+#align pfun.preimage_as_subtype PFun.preimage_asSubtype
 
 #print PFun.toSubtype /-
 /-- Turns a function into a partial function to a subtype. -/
@@ -840,37 +840,37 @@ def toSubtype (p : β → Prop) (f : α → β) : α →. Subtype p := fun a => 
 #align pfun.to_subtype PFun.toSubtype
 -/
 
-/- warning: pfun.dom_to_subtype -> PFun.dom_to_subtype is a dubious translation:
+/- warning: pfun.dom_to_subtype -> PFun.dom_toSubtype is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (p : β -> Prop) (f : α -> β), Eq.{succ u1} (Set.{u1} α) (PFun.Dom.{u1, u2} α (Subtype.{succ u2} β p) (PFun.toSubtype.{u1, u2} α β p f)) (setOf.{u1} α (fun (a : α) => p (f a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (p : β -> Prop) (f : α -> β), Eq.{succ u2} (Set.{u2} α) (PFun.Dom.{u2, u1} α (Subtype.{succ u1} β p) (PFun.toSubtype.{u2, u1} α β p f)) (setOf.{u2} α (fun (a : α) => p (f a)))
-Case conversion may be inaccurate. Consider using '#align pfun.dom_to_subtype PFun.dom_to_subtypeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align pfun.dom_to_subtype PFun.dom_toSubtypeₓ'. -/
 @[simp]
-theorem dom_to_subtype (p : β → Prop) (f : α → β) : (toSubtype p f).Dom = { a | p (f a) } :=
+theorem dom_toSubtype (p : β → Prop) (f : α → β) : (toSubtype p f).Dom = { a | p (f a) } :=
   rfl
-#align pfun.dom_to_subtype PFun.dom_to_subtype
+#align pfun.dom_to_subtype PFun.dom_toSubtype
 
-#print PFun.to_subtype_apply /-
+#print PFun.toSubtype_apply /-
 @[simp]
-theorem to_subtype_apply (p : β → Prop) (f : α → β) (a : α) :
+theorem toSubtype_apply (p : β → Prop) (f : α → β) (a : α) :
     toSubtype p f a = ⟨p (f a), Subtype.mk _⟩ :=
   rfl
-#align pfun.to_subtype_apply PFun.to_subtype_apply
+#align pfun.to_subtype_apply PFun.toSubtype_apply
 -/
 
-#print PFun.dom_to_subtype_apply_iff /-
-theorem dom_to_subtype_apply_iff {p : β → Prop} {f : α → β} {a : α} :
+#print PFun.dom_toSubtype_apply_iff /-
+theorem dom_toSubtype_apply_iff {p : β → Prop} {f : α → β} {a : α} :
     (toSubtype p f a).Dom ↔ p (f a) :=
   Iff.rfl
-#align pfun.dom_to_subtype_apply_iff PFun.dom_to_subtype_apply_iff
+#align pfun.dom_to_subtype_apply_iff PFun.dom_toSubtype_apply_iff
 -/
 
-#print PFun.mem_to_subtype_iff /-
-theorem mem_to_subtype_iff {p : β → Prop} {f : α → β} {a : α} {b : Subtype p} :
+#print PFun.mem_toSubtype_iff /-
+theorem mem_toSubtype_iff {p : β → Prop} {f : α → β} {a : α} {b : Subtype p} :
     b ∈ toSubtype p f a ↔ ↑b = f a := by
   rw [to_subtype_apply, Part.mem_mk_iff, exists_subtype_mk_eq_iff, eq_comm]
-#align pfun.mem_to_subtype_iff PFun.mem_to_subtype_iff
+#align pfun.mem_to_subtype_iff PFun.mem_toSubtype_iff
 -/
 
 #print PFun.id /-

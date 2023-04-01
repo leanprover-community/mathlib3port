@@ -159,8 +159,8 @@ theorem pochhammer_succ_eval {S : Type _} [Semiring S] (n : ℕ) (k : S) :
     eval_C_mul, Nat.cast_comm, ← mul_add]
 #align pochhammer_succ_eval pochhammer_succ_eval
 
-#print pochhammer_succ_comp_x_add_one /-
-theorem pochhammer_succ_comp_x_add_one (n : ℕ) :
+#print pochhammer_succ_comp_X_add_one /-
+theorem pochhammer_succ_comp_X_add_one (n : ℕ) :
     (pochhammer S (n + 1)).comp (X + 1) =
       pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (X + 1) :=
   by
@@ -171,14 +171,14 @@ theorem pochhammer_succ_comp_x_add_one (n : ℕ) :
   nth_rw 2 [pochhammer_succ_left]
   rw [← add_mul, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp,
     add_comm ↑n, ← add_assoc]
-#align pochhammer_succ_comp_X_add_one pochhammer_succ_comp_x_add_one
+#align pochhammer_succ_comp_X_add_one pochhammer_succ_comp_X_add_one
 -/
 
-#print Polynomial.mul_x_add_nat_cast_comp /-
-theorem Polynomial.mul_x_add_nat_cast_comp {p q : S[X]} {n : ℕ} :
+#print Polynomial.mul_X_add_nat_cast_comp /-
+theorem Polynomial.mul_X_add_nat_cast_comp {p q : S[X]} {n : ℕ} :
     (p * (X + n)).comp q = p.comp q * (q + n) := by
   rw [mul_add, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_add]
-#align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_x_add_nat_cast_comp
+#align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_X_add_nat_cast_comp
 -/
 
 #print pochhammer_mul /-
@@ -188,7 +188,7 @@ theorem pochhammer_mul (n m : ℕ) :
   induction' m with m ih
   · simp
   ·
-    rw [pochhammer_succ_right, Polynomial.mul_x_add_nat_cast_comp, ← mul_assoc, ih,
+    rw [pochhammer_succ_right, Polynomial.mul_X_add_nat_cast_comp, ← mul_assoc, ih,
       Nat.succ_eq_add_one, ← add_assoc, pochhammer_succ_right, Nat.cast_add, add_assoc]
 #align pochhammer_mul pochhammer_mul
 -/

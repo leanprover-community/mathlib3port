@@ -103,12 +103,12 @@ def pointedToPartialFun : Pointed.{u} ⥤ PartialFun
   obj X := { x : X // x ≠ X.point }
   map X Y f := PFun.toSubtype _ f.toFun ∘ Subtype.val
   map_id' X :=
-    PFun.ext fun a b => PFun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
+    PFun.ext fun a b => PFun.mem_toSubtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
   map_comp' X Y Z f g :=
     PFun.ext fun a c =>
       by
       refine' (pfun.mem_to_subtype_iff.trans _).trans part.mem_bind_iff.symm
-      simp_rw [PFun.mem_to_subtype_iff, Subtype.exists]
+      simp_rw [PFun.mem_toSubtype_iff, Subtype.exists]
       refine'
         ⟨fun h =>
           ⟨f.to_fun a, fun ha =>

@@ -259,18 +259,18 @@ theorem codRestrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x �
     AntilipschitzWith K (s.codRestrict f hs) := fun x y => hf x y
 #align antilipschitz_with.cod_restrict AntilipschitzWith.codRestrict
 
-/- warning: antilipschitz_with.to_right_inv_on' -> AntilipschitzWith.to_right_inv_on' is a dubious translation:
+/- warning: antilipschitz_with.to_right_inv_on' -> AntilipschitzWith.to_rightInvOn' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u1} α] [_inst_2 : PseudoEMetricSpace.{u2} β] {K : NNReal} {f : α -> β} {s : Set.{u1} α}, (AntilipschitzWith.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.pseudoEmetricSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1) _inst_2 K (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f)) -> (forall {g : β -> α} {t : Set.{u2} β}, (Set.MapsTo.{u2, u1} β α g t s) -> (Set.RightInvOn.{u1, u2} α β g f t) -> (LipschitzWith.{u2, u1} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) α (Subtype.pseudoEmetricSpace.{u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t) _inst_2) _inst_1 K (Set.restrict.{u2, u1} β (fun (ᾰ : β) => α) t g)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u2} α] [_inst_2 : PseudoEMetricSpace.{u1} β] {K : NNReal} {f : α -> β} {s : Set.{u2} α}, (AntilipschitzWith.{u2, u1} (Set.Elem.{u2} α s) β (instPseudoEMetricSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) _inst_1) _inst_2 K (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f)) -> (forall {g : β -> α} {t : Set.{u1} β}, (Set.MapsTo.{u1, u2} β α g t s) -> (Set.RightInvOn.{u2, u1} α β g f t) -> (LipschitzWith.{u1, u2} (Set.Elem.{u1} β t) α (instPseudoEMetricSpaceSubtype.{u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t) _inst_2) _inst_1 K (Set.restrict.{u1, u2} β (fun (ᾰ : β) => α) t g)))
-Case conversion may be inaccurate. Consider using '#align antilipschitz_with.to_right_inv_on' AntilipschitzWith.to_right_inv_on'ₓ'. -/
-theorem to_right_inv_on' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α}
-    {t : Set β} (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) :
-    LipschitzWith K (t.restrict g) := fun x y => by
+Case conversion may be inaccurate. Consider using '#align antilipschitz_with.to_right_inv_on' AntilipschitzWith.to_rightInvOn'ₓ'. -/
+theorem to_rightInvOn' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α} {t : Set β}
+    (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) : LipschitzWith K (t.restrict g) :=
+  fun x y => by
   simpa only [restrict_apply, g_inv x.mem, g_inv y.mem, Subtype.edist_eq, Subtype.coe_mk] using
     hf ⟨g x, g_maps x.mem⟩ ⟨g y, g_maps y.mem⟩
-#align antilipschitz_with.to_right_inv_on' AntilipschitzWith.to_right_inv_on'
+#align antilipschitz_with.to_right_inv_on' AntilipschitzWith.to_rightInvOn'
 
 /- warning: antilipschitz_with.to_right_inv_on -> AntilipschitzWith.to_rightInvOn is a dubious translation:
 lean 3 declaration is
@@ -280,7 +280,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antilipschitz_with.to_right_inv_on AntilipschitzWith.to_rightInvOnₓ'. -/
 theorem to_rightInvOn (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : RightInvOn g f t) :
     LipschitzWith K (t.restrict g) :=
-  (hf.restrict univ).to_right_inv_on' (mapsTo_univ g t) h
+  (hf.restrict univ).to_rightInvOn' (mapsTo_univ g t) h
 #align antilipschitz_with.to_right_inv_on AntilipschitzWith.to_rightInvOn
 
 /- warning: antilipschitz_with.to_right_inverse -> AntilipschitzWith.to_rightInverse is a dubious translation:

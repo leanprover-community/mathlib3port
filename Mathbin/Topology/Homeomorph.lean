@@ -1018,19 +1018,19 @@ def prodAssoc : (α × β) × γ ≃ₜ α × β × γ
   toEquiv := Equiv.prodAssoc α β γ
 #align homeomorph.prod_assoc Homeomorph.prodAssoc
 
-/- warning: homeomorph.prod_punit -> Homeomorph.prodPunit is a dubious translation:
+/- warning: homeomorph.prod_punit -> Homeomorph.prodPUnit is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α], Homeomorph.{max u1 u2, u1} (Prod.{u1, u2} α PUnit.{succ u2}) α (Prod.topologicalSpace.{u1, u2} α PUnit.{succ u2} _inst_1 PUnit.topologicalSpace.{u2}) _inst_1
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α], Homeomorph.{max u2 u1, u1} (Prod.{u1, u2} α PUnit.{succ u2}) α (instTopologicalSpaceProd.{u1, u2} α PUnit.{succ u2} _inst_1 instTopologicalSpacePUnit.{u2}) _inst_1
-Case conversion may be inaccurate. Consider using '#align homeomorph.prod_punit Homeomorph.prodPunitₓ'. -/
+Case conversion may be inaccurate. Consider using '#align homeomorph.prod_punit Homeomorph.prodPUnitₓ'. -/
 /-- `α × {*}` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := false }) apply]
-def prodPunit : α × PUnit ≃ₜ α where
+def prodPUnit : α × PUnit ≃ₜ α where
   toEquiv := Equiv.prodPUnit α
   continuous_toFun := continuous_fst
   continuous_invFun := continuous_id.prod_mk continuous_const
-#align homeomorph.prod_punit Homeomorph.prodPunit
+#align homeomorph.prod_punit Homeomorph.prodPUnit
 
 /- warning: homeomorph.punit_prod -> Homeomorph.punitProd is a dubious translation:
 lean 3 declaration is
@@ -1040,7 +1040,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.punit_prod Homeomorph.punitProdₓ'. -/
 /-- `{*} × α` is homeomorphic to `α`. -/
 def punitProd : PUnit × α ≃ₜ α :=
-  (prodComm _ _).trans (prodPunit _)
+  (prodComm _ _).trans (prodPUnit _)
 #align homeomorph.punit_prod Homeomorph.punitProd
 
 /- warning: homeomorph.coe_punit_prod -> Homeomorph.coe_punitProd is a dubious translation:
