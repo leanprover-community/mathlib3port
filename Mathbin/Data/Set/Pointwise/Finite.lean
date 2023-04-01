@@ -146,11 +146,13 @@ theorem Finite.smul_set : s.Finite → (a • s).Finite :=
 #align set.finite.vadd_set Set.Finite.vadd_set
 -/
 
+#print Set.Infinite.of_smul_set /-
 @[to_additive]
 theorem Infinite.of_smul_set : (a • s).Infinite → s.Infinite :=
   Infinite.of_image _
 #align set.infinite.of_smul_set Set.Infinite.of_smul_set
 #align set.infinite.of_vadd_set Set.Infinite.of_vadd_set
+-/
 
 end HasSmulSet
 
@@ -172,12 +174,14 @@ section Cancel
 
 variable [Mul α] [IsLeftCancelMul α] [IsRightCancelMul α] {s t : Set α}
 
+#print Set.infinite_mul /-
 @[to_additive]
 theorem infinite_mul : (s * t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
   infinite_image2 (fun _ _ => (mul_left_injective _).InjOn _) fun _ _ =>
     (mul_right_injective _).InjOn _
 #align set.infinite_mul Set.infinite_mul
 #align set.infinite_add Set.infinite_add
+-/
 
 end Cancel
 
@@ -185,17 +189,21 @@ section Group
 
 variable [Group α] [MulAction α β] {a : α} {s : Set β}
 
+#print Set.finite_smul_set /-
 @[simp, to_additive]
 theorem finite_smul_set : (a • s).Finite ↔ s.Finite :=
   finite_image_iff <| (MulAction.injective _).InjOn _
 #align set.finite_smul_set Set.finite_smul_set
 #align set.finite_vadd_set Set.finite_vadd_set
+-/
 
+#print Set.infinite_smul_set /-
 @[simp, to_additive]
 theorem infinite_smul_set : (a • s).Infinite ↔ s.Infinite :=
   infinite_image_iff <| (MulAction.injective _).InjOn _
 #align set.infinite_smul_set Set.infinite_smul_set
 #align set.infinite_vadd_set Set.infinite_vadd_set
+-/
 
 alias finite_smul_set ↔ finite.of_smul_set _
 #align set.finite.of_smul_set Set.Finite.of_smul_set
