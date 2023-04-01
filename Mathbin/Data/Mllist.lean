@@ -87,11 +87,11 @@ unsafe def ListM.uncons {α : Type u} : ListM m α → m (Option (α × ListM m 
 #align tactic.mllist.uncons ListM.uncons
 -/
 
-#print ListM.empty /-
+#print ListM.isEmpty /-
 /-- Compute, inside the monad, whether an `mllist` is empty. -/
-unsafe def ListM.empty {α : Type u} (xs : ListM m α) : m (ULift Bool) :=
+unsafe def ListM.isEmpty {α : Type u} (xs : ListM m α) : m (ULift Bool) :=
   (ULift.up ∘ Option.isSome) <$> ListM.uncons xs
-#align tactic.mllist.empty ListM.empty
+#align tactic.mllist.empty ListM.isEmpty
 -/
 
 #print ListM.ofList /-
@@ -122,9 +122,9 @@ unsafe def ListM.force {α} : ListM m α → m (List α)
 #align tactic.mllist.force ListM.force
 -/
 
-#print ListM.take /-
+#print ListM.takeAsList /-
 /-- Take the first `n` elements, as a list inside the monad. -/
-unsafe def ListM.take {α} : ListM m α → ℕ → m (List α)
+unsafe def ListM.takeAsList {α} : ListM m α → ℕ → m (List α)
   | nil, _ => pure []
   | _, 0 => pure []
   | cons l, n + 1 => do
@@ -132,7 +132,7 @@ unsafe def ListM.take {α} : ListM m α → ℕ → m (List α)
     let some x ← pure x |
       take xs (n + 1)
     (· :: ·) x <$> take xs n
-#align tactic.mllist.take ListM.take
+#align tactic.mllist.take ListM.takeAsList
 -/
 
 #print ListM.map /-
@@ -297,11 +297,11 @@ unsafe def ListM.bind {α β : Type u} : ListM m α → (α → ListM m β) → 
 #align tactic.mllist.bind_ ListM.bind
 -/
 
-#print ListM.monad_lift /-
+#print ListM.monadLift /-
 /-- Convert any value in the monad to the singleton monadic lazy list. -/
-unsafe def ListM.monad_lift {α} (x : m α) : ListM m α :=
+unsafe def ListM.monadLift {α} (x : m α) : ListM m α :=
   cons <| (flip Prod.mk nil ∘ some) <$> x
-#align tactic.mllist.monad_lift ListM.monad_lift
+#align tactic.mllist.monad_lift ListM.monadLift
 -/
 
 #print ListM.head /-

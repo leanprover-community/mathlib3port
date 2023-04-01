@@ -371,7 +371,7 @@ It returns a list of `application`s consisting of fields:
 * `hyps_used`, the number of local hypotheses used in the solution.
 -/
 unsafe def suggest_core (opt : suggest_opt := { }) : ListM tactic application :=
-  (ListM.monad_lift (suggest_core' opt)).join
+  (ListM.monadLift (suggest_core' opt)).join
 #align tactic.suggest_core tactic.suggest_core
 
 /-- See `suggest_core`.

@@ -72,11 +72,23 @@ theorem cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) ≠
   not_congr cast_eq_zero
 #align int.cast_ne_zero Int.cast_ne_zero
 
+/- warning: int.cast_eq_one -> Int.cast_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)] {n : Int}, Iff (Eq.{succ u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)))))) (Eq.{1} Int n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)] {n : Int}, Iff (Eq.{succ u1} α (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1))))) (Eq.{1} Int n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+Case conversion may be inaccurate. Consider using '#align int.cast_eq_one Int.cast_eq_oneₓ'. -/
 @[simp]
 theorem cast_eq_one [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 1 ↔ n = 1 := by
   rw [← cast_one, cast_inj]
 #align int.cast_eq_one Int.cast_eq_one
 
+/- warning: int.cast_ne_one -> Int.cast_ne_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)] {n : Int}, Iff (Ne.{succ u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) n) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)))))) (Ne.{1} Int n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)] {n : Int}, Iff (Ne.{succ u1} α (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) n) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1))))) (Ne.{1} Int n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+Case conversion may be inaccurate. Consider using '#align int.cast_ne_one Int.cast_ne_oneₓ'. -/
 theorem cast_ne_one [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) ≠ 1 ↔ n ≠ 1 :=
   cast_eq_one.Not
 #align int.cast_ne_one Int.cast_ne_one

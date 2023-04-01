@@ -1786,10 +1786,22 @@ theorem union_inter_cancel_right {s t : Set α} : (s ∪ t) ∩ t = t :=
   inter_eq_self_of_subset_right <| subset_union_right _ _
 #align set.union_inter_cancel_right Set.union_inter_cancel_right
 
+/- warning: set.inter_set_of_eq_sep -> Set.inter_setOf_eq_sep is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α) (p : α -> Prop), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (a : α) => p a))) (Sep.sep.{u1, u1} α (Set.{u1} α) (Set.hasSep.{u1} α) (fun (a : α) => p a) s)
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α) (p : α -> Prop), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (a : α) => p a))) (setOf.{u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (p a)))
+Case conversion may be inaccurate. Consider using '#align set.inter_set_of_eq_sep Set.inter_setOf_eq_sepₓ'. -/
 theorem inter_setOf_eq_sep (s : Set α) (p : α → Prop) : s ∩ { a | p a } = { a ∈ s | p a } :=
   rfl
 #align set.inter_set_of_eq_sep Set.inter_setOf_eq_sep
 
+/- warning: set.set_of_inter_eq_sep -> Set.setOf_inter_eq_sep is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (setOf.{u1} α (fun (a : α) => p a)) s) (Sep.sep.{u1, u1} α (Set.{u1} α) (Set.hasSep.{u1} α) (fun (a : α) => p a) s)
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Prop) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (setOf.{u1} α (fun (a : α) => p a)) s) (setOf.{u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (p a)))
+Case conversion may be inaccurate. Consider using '#align set.set_of_inter_eq_sep Set.setOf_inter_eq_sepₓ'. -/
 theorem setOf_inter_eq_sep (p : α → Prop) (s : Set α) : { a | p a } ∩ s = { a ∈ s | p a } :=
   inter_comm _ _
 #align set.set_of_inter_eq_sep Set.setOf_inter_eq_sep
@@ -2276,8 +2288,10 @@ theorem singleton_subset_iff {a : α} {s : Set α} : {a} ⊆ s ↔ a ∈ s :=
 #align set.singleton_subset_iff Set.singleton_subset_iff
 -/
 
+#print Set.singleton_subset_singleton /-
 theorem singleton_subset_singleton : ({a} : Set α) ⊆ {b} ↔ a = b := by simp
 #align set.singleton_subset_singleton Set.singleton_subset_singleton
+-/
 
 #print Set.set_compr_eq_eq_singleton /-
 theorem set_compr_eq_eq_singleton {a : α} : { b | b = a } = {a} :=
@@ -2871,10 +2885,22 @@ theorem subset_diff : s ⊆ t \ u ↔ s ⊆ t ∧ Disjoint s u :=
   le_iff_subset.symm.trans le_sdiff
 #align set.subset_diff Set.subset_diff
 
+/- warning: set.inter_diff_distrib_left -> Set.inter_diff_distrib_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t u)) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s u))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t u)) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s u))
+Case conversion may be inaccurate. Consider using '#align set.inter_diff_distrib_left Set.inter_diff_distrib_leftₓ'. -/
 theorem inter_diff_distrib_left (s t u : Set α) : s ∩ (t \ u) = (s ∩ t) \ (s ∩ u) :=
   inf_sdiff_distrib_left _ _ _
 #align set.inter_diff_distrib_left Set.inter_diff_distrib_left
 
+/- warning: set.inter_diff_distrib_right -> Set.inter_diff_distrib_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) u) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s u) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t u))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) u) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s u) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t u))
+Case conversion may be inaccurate. Consider using '#align set.inter_diff_distrib_right Set.inter_diff_distrib_rightₓ'. -/
 theorem inter_diff_distrib_right (s t u : Set α) : s \ t ∩ u = (s ∩ u) \ (t ∩ u) :=
   inf_sdiff_distrib_right _ _ _
 #align set.inter_diff_distrib_right Set.inter_diff_distrib_right
@@ -3882,6 +3908,12 @@ theorem diff_singleton_eq_self {a : α} {s : Set α} (h : a ∉ s) : s \ {a} = s
   sdiff_eq_self_iff_disjoint.2 <| by simp [h]
 #align set.diff_singleton_eq_self Set.diff_singleton_eq_self
 
+/- warning: set.diff_singleton_ssubset -> Set.diff_singleton_sSubset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)) s) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {a : α}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)) s) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)
+Case conversion may be inaccurate. Consider using '#align set.diff_singleton_ssubset Set.diff_singleton_sSubsetₓ'. -/
 @[simp]
 theorem diff_singleton_sSubset {s : Set α} {a : α} : s \ {a} ⊂ s ↔ a ∈ s :=
   sdiff_le.lt_iff_ne.trans <| sdiff_eq_left.Not.trans <| by simp
@@ -3898,6 +3930,12 @@ theorem insert_diff_singleton {a : α} {s : Set α} : insert a (s \ {a}) = inser
   simp [insert_eq, union_diff_self, -union_singleton, -singleton_union]
 #align set.insert_diff_singleton Set.insert_diff_singleton
 
+/- warning: set.insert_diff_singleton_comm -> Set.insert_diff_singleton_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {a : α} {b : α}, (Ne.{succ u1} α a b) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) b))) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) b)))
+but is expected to have type
+  forall {α : Type.{u1}} {a : α} {b : α}, (Ne.{succ u1} α a b) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b))) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b)))
+Case conversion may be inaccurate. Consider using '#align set.insert_diff_singleton_comm Set.insert_diff_singleton_commₓ'. -/
 theorem insert_diff_singleton_comm (hab : a ≠ b) (s : Set α) :
     insert a (s \ {b}) = insert a s \ {b} := by
   simp_rw [← union_singleton, union_diff_distrib,
