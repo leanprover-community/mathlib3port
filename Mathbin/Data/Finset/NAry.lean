@@ -174,7 +174,7 @@ theorem image_subset_image₂_left (hb : b ∈ t) : (s.image fun a => f a b) ⊆
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {a : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (b : β) => f a b) t) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u3} α} {t : Finset.{u1} β} {a : α}, (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) -> (HasSubset.Subset.{u2} (Finset.{u2} γ) (Finset.instHasSubsetFinset.{u2} γ) (Finset.image.{u1, u2} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (f a) t) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
+  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u3} α} {t : Finset.{u1} β} {a : α}, (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) -> (HasSubset.Subset.{u2} (Finset.{u2} γ) (Finset.instHasSubsetFinset.{u2} γ) (Finset.image.{u1, u2} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (b : β) => f a b) t) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
 Case conversion may be inaccurate. Consider using '#align finset.image_subset_image₂_right Finset.image_subset_image₂_rightₓ'. -/
 theorem image_subset_image₂_right (ha : a ∈ s) : (t.image fun b => f a b) ⊆ image₂ f s t :=
   image_subset_iff.2 fun b => mem_image₂_of_mem ha
@@ -202,10 +202,22 @@ theorem image₂_subset_iff : image₂ f s t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t,
   forall_image₂_iff
 #align finset.image₂_subset_iff Finset.image₂_subset_iff
 
+/- warning: finset.image₂_subset_iff_left -> Finset.image₂_subset_iff_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {u : Finset.{u3} γ}, Iff (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) u) (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (b : β) => f a b) t) u))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {t : Finset.{u1} β} {u : Finset.{u3} γ}, Iff (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.instHasSubsetFinset.{u3} γ) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) u) (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.instHasSubsetFinset.{u3} γ) (Finset.image.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (b : β) => f a b) t) u))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_subset_iff_left Finset.image₂_subset_iff_leftₓ'. -/
 theorem image₂_subset_iff_left : image₂ f s t ⊆ u ↔ ∀ a ∈ s, (t.image fun b => f a b) ⊆ u := by
   simp_rw [image₂_subset_iff, image_subset_iff]
 #align finset.image₂_subset_iff_left Finset.image₂_subset_iff_left
 
+/- warning: finset.image₂_subset_iff_right -> Finset.image₂_subset_iff_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {u : Finset.{u3} γ}, Iff (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) u) (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b t) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image.{u1, u3} α γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (a : α) => f a b) s) u))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {t : Finset.{u1} β} {u : Finset.{u3} γ}, Iff (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.instHasSubsetFinset.{u3} γ) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) u) (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b t) -> (HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.instHasSubsetFinset.{u3} γ) (Finset.image.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (a : α) => f a b) s) u))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_subset_iff_right Finset.image₂_subset_iff_rightₓ'. -/
 theorem image₂_subset_iff_right : image₂ f s t ⊆ u ↔ ∀ b ∈ t, (s.image fun a => f a b) ⊆ u := by
   simp_rw [image₂_subset_iff, image_subset_iff, @forall₂_swap α]
 #align finset.image₂_subset_iff_right Finset.image₂_subset_iff_right
@@ -351,6 +363,12 @@ theorem image₂_union_right [DecidableEq β] : image₂ f s (t ∪ t') = image�
     exact image2_union_right
 #align finset.image₂_union_right Finset.image₂_union_right
 
+/- warning: finset.image₂_insert_left -> Finset.image₂_insert_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {a : α} [_inst_9 : DecidableEq.{succ u1} α], Eq.{succ u3} (Finset.{u3} γ) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) a s) t) (Union.union.{u3} (Finset.{u3} γ) (Finset.hasUnion.{u3} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (b : β) => f a b) t) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u3} α} {t : Finset.{u1} β} {a : α} [_inst_9 : DecidableEq.{succ u3} α], Eq.{succ u2} (Finset.{u2} γ) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Insert.insert.{u3, u3} α (Finset.{u3} α) (Finset.instInsertFinset.{u3} α (fun (a : α) (b : α) => _inst_9 a b)) a s) t) (Union.union.{u2} (Finset.{u2} γ) (Finset.instUnionFinset.{u2} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image.{u1, u2} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (b : β) => f a b) t) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_insert_left Finset.image₂_insert_leftₓ'. -/
 @[simp]
 theorem image₂_insert_left [DecidableEq α] :
     image₂ f (insert a s) t = (t.image fun b => f a b) ∪ image₂ f s t :=
@@ -359,6 +377,12 @@ theorem image₂_insert_left [DecidableEq α] :
     exact image2_insert_left
 #align finset.image₂_insert_left Finset.image₂_insert_left
 
+/- warning: finset.image₂_insert_right -> Finset.image₂_insert_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u2} β} {b : β} [_inst_9 : DecidableEq.{succ u2} β], Eq.{succ u3} (Finset.{u3} γ) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s (Insert.insert.{u2, u2} β (Finset.{u2} β) (Finset.hasInsert.{u2} β (fun (a : β) (b : β) => _inst_9 a b)) b t)) (Union.union.{u3} (Finset.{u3} γ) (Finset.hasUnion.{u3} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image.{u1, u3} α γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (a : α) => f a b) s) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u3} β} {b : β} [_inst_9 : DecidableEq.{succ u3} β], Eq.{succ u2} (Finset.{u2} γ) (Finset.image₂.{u1, u3, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s (Insert.insert.{u3, u3} β (Finset.{u3} β) (Finset.instInsertFinset.{u3} β (fun (a : β) (b : β) => _inst_9 a b)) b t)) (Union.union.{u2} (Finset.{u2} γ) (Finset.instUnionFinset.{u2} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image.{u1, u2} α γ (fun (a : γ) (b : γ) => _inst_3 a b) (fun (a : α) => f a b) s) (Finset.image₂.{u1, u3, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_insert_right Finset.image₂_insert_rightₓ'. -/
 @[simp]
 theorem image₂_insert_right [DecidableEq β] :
     image₂ f s (insert b t) = (s.image fun a => f a b) ∪ image₂ f s t :=
@@ -936,6 +960,12 @@ theorem image₂_right_identity {f : γ → β → γ} {b : β} (h : ∀ a, f a 
 
 variable [DecidableEq α] [DecidableEq β]
 
+/- warning: finset.image₂_inter_union_subset_union -> Finset.image₂_inter_union_subset_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {s' : Finset.{u1} α} {t : Finset.{u2} β} {t' : Finset.{u2} β} [_inst_9 : DecidableEq.{succ u1} α] [_inst_10 : DecidableEq.{succ u2} β], HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) s s') (Union.union.{u2} (Finset.{u2} β) (Finset.hasUnion.{u2} β (fun (a : β) (b : β) => _inst_10 a b)) t t')) (Union.union.{u3} (Finset.{u3} γ) (Finset.hasUnion.{u3} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s' t'))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {s' : Finset.{u2} α} {t : Finset.{u1} β} {t' : Finset.{u1} β} [_inst_9 : DecidableEq.{succ u2} α] [_inst_10 : DecidableEq.{succ u1} β], HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.instHasSubsetFinset.{u3} γ) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Inter.inter.{u2} (Finset.{u2} α) (Finset.instInterFinset.{u2} α (fun (a : α) (b : α) => _inst_9 a b)) s s') (Union.union.{u1} (Finset.{u1} β) (Finset.instUnionFinset.{u1} β (fun (a : β) (b : β) => _inst_10 a b)) t t')) (Union.union.{u3} (Finset.{u3} γ) (Finset.instUnionFinset.{u3} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s' t'))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_union_subset_union Finset.image₂_inter_union_subset_unionₓ'. -/
 theorem image₂_inter_union_subset_union :
     image₂ f (s ∩ s') (t ∪ t') ⊆ image₂ f s t ∪ image₂ f s' t' :=
   coe_subset.1 <| by
@@ -943,6 +973,12 @@ theorem image₂_inter_union_subset_union :
     exact Set.image2_inter_union_subset_union
 #align finset.image₂_inter_union_subset_union Finset.image₂_inter_union_subset_union
 
+/- warning: finset.image₂_union_inter_subset_union -> Finset.image₂_union_inter_subset_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {s' : Finset.{u1} α} {t : Finset.{u2} β} {t' : Finset.{u2} β} [_inst_9 : DecidableEq.{succ u1} α] [_inst_10 : DecidableEq.{succ u2} β], HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.hasSubset.{u3} γ) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_9 a b)) s s') (Inter.inter.{u2} (Finset.{u2} β) (Finset.hasInter.{u2} β (fun (a : β) (b : β) => _inst_10 a b)) t t')) (Union.union.{u3} (Finset.{u3} γ) (Finset.hasUnion.{u3} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u1, u2, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s' t'))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {s' : Finset.{u2} α} {t : Finset.{u1} β} {t' : Finset.{u1} β} [_inst_9 : DecidableEq.{succ u2} α] [_inst_10 : DecidableEq.{succ u1} β], HasSubset.Subset.{u3} (Finset.{u3} γ) (Finset.instHasSubsetFinset.{u3} γ) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Union.union.{u2} (Finset.{u2} α) (Finset.instUnionFinset.{u2} α (fun (a : α) (b : α) => _inst_9 a b)) s s') (Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_10 a b)) t t')) (Union.union.{u3} (Finset.{u3} γ) (Finset.instUnionFinset.{u3} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s' t'))
+Case conversion may be inaccurate. Consider using '#align finset.image₂_union_inter_subset_union Finset.image₂_union_inter_subset_unionₓ'. -/
 theorem image₂_union_inter_subset_union :
     image₂ f (s ∪ s') (t ∩ t') ⊆ image₂ f s t ∪ image₂ f s' t' :=
   coe_subset.1 <| by

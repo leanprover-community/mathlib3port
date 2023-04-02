@@ -155,10 +155,22 @@ theorem image2_subset_iff {u : Set γ} : image2 f s t ⊆ u ↔ ∀ x ∈ s, ∀
   forall_image2_iff
 #align set.image2_subset_iff Set.image2_subset_iff
 
+/- warning: set.image2_subset_iff_left -> Set.image2_subset_iff_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β} {u : Set.{u3} γ}, Iff (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t) u) (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image.{u2, u3} β γ (fun (b : β) => f a b) t) u))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {t : Set.{u1} β} {u : Set.{u3} γ}, Iff (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) u) (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.image.{u1, u3} β γ (fun (b : β) => f a b) t) u))
+Case conversion may be inaccurate. Consider using '#align set.image2_subset_iff_left Set.image2_subset_iff_leftₓ'. -/
 theorem image2_subset_iff_left : image2 f s t ⊆ u ↔ ∀ a ∈ s, (fun b => f a b) '' t ⊆ u := by
   simp_rw [image2_subset_iff, image_subset_iff, subset_def, mem_preimage]
 #align set.image2_subset_iff_left Set.image2_subset_iff_left
 
+/- warning: set.image2_subset_iff_right -> Set.image2_subset_iff_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β} {u : Set.{u3} γ}, Iff (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t) u) (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b t) -> (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image.{u1, u3} α γ (fun (a : α) => f a b) s) u))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {t : Set.{u1} β} {u : Set.{u3} γ}, Iff (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) u) (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b t) -> (HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.image.{u2, u3} α γ (fun (a : α) => f a b) s) u))
+Case conversion may be inaccurate. Consider using '#align set.image2_subset_iff_right Set.image2_subset_iff_rightₓ'. -/
 theorem image2_subset_iff_right : image2 f s t ⊆ u ↔ ∀ b ∈ t, (fun a => f a b) '' s ⊆ u := by
   simp_rw [image2_subset_iff, image_subset_iff, subset_def, mem_preimage, @forall₂_swap α]
 #align set.image2_subset_iff_right Set.image2_subset_iff_right
@@ -410,11 +422,23 @@ Case conversion may be inaccurate. Consider using '#align set.image2_singleton S
 theorem image2_singleton : image2 f {a} {b} = {f a b} := by simp
 #align set.image2_singleton Set.image2_singleton
 
+/- warning: set.image2_insert_left -> Set.image2_insert_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β} {a : α}, Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s) t) (Union.union.{u3} (Set.{u3} γ) (Set.hasUnion.{u3} γ) (Set.image.{u2, u3} β γ (fun (b : β) => f a b) t) (Set.image2.{u1, u2, u3} α β γ f s t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {t : Set.{u1} β} {a : α}, Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) a s) t) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet.{u3} γ) (Set.image.{u1, u3} β γ (fun (b : β) => f a b) t) (Set.image2.{u2, u1, u3} α β γ f s t))
+Case conversion may be inaccurate. Consider using '#align set.image2_insert_left Set.image2_insert_leftₓ'. -/
 @[simp]
 theorem image2_insert_left : image2 f (insert a s) t = (fun b => f a b) '' t ∪ image2 f s t := by
   rw [insert_eq, image2_union_left, image2_singleton_left]
 #align set.image2_insert_left Set.image2_insert_left
 
+/- warning: set.image2_insert_right -> Set.image2_insert_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {t : Set.{u2} β} {b : β}, Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s (Insert.insert.{u2, u2} β (Set.{u2} β) (Set.hasInsert.{u2} β) b t)) (Union.union.{u3} (Set.{u3} γ) (Set.hasUnion.{u3} γ) (Set.image.{u1, u3} α γ (fun (a : α) => f a b) s) (Set.image2.{u1, u2, u3} α β γ f s t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {t : Set.{u1} β} {b : β}, Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s (Insert.insert.{u1, u1} β (Set.{u1} β) (Set.instInsertSet.{u1} β) b t)) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet.{u3} γ) (Set.image.{u2, u3} α γ (fun (a : α) => f a b) s) (Set.image2.{u2, u1, u3} α β γ f s t))
+Case conversion may be inaccurate. Consider using '#align set.image2_insert_right Set.image2_insert_rightₓ'. -/
 @[simp]
 theorem image2_insert_right : image2 f s (insert b t) = (fun a => f a b) '' s ∪ image2 f s t := by
   rw [insert_eq, image2_union_right, image2_singleton_right]
@@ -846,6 +870,12 @@ theorem image2_right_identity {f : α → β → α} {b : β} (h : ∀ a, f a b 
     image2 f s {b} = s := by rw [image2_singleton_right, funext h, image_id']
 #align set.image2_right_identity Set.image2_right_identity
 
+/- warning: set.image2_inter_union_subset_union -> Set.image2_inter_union_subset_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {s' : Set.{u1} α} {t : Set.{u2} β} {t' : Set.{u2} β}, HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s s') (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) t t')) (Union.union.{u3} (Set.{u3} γ) (Set.hasUnion.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t) (Set.image2.{u1, u2, u3} α β γ f s' t'))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {s' : Set.{u2} α} {t : Set.{u1} β} {t' : Set.{u1} β}, HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s s') (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) t t')) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) (Set.image2.{u2, u1, u3} α β γ f s' t'))
+Case conversion may be inaccurate. Consider using '#align set.image2_inter_union_subset_union Set.image2_inter_union_subset_unionₓ'. -/
 theorem image2_inter_union_subset_union :
     image2 f (s ∩ s') (t ∪ t') ⊆ image2 f s t ∪ image2 f s' t' :=
   by
@@ -855,6 +885,12 @@ theorem image2_inter_union_subset_union :
       (image2_subset_right <| inter_subset_right _ _)
 #align set.image2_inter_union_subset_union Set.image2_inter_union_subset_union
 
+/- warning: set.image2_union_inter_subset_union -> Set.image2_union_inter_subset_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u1} α} {s' : Set.{u1} α} {t : Set.{u2} β} {t' : Set.{u2} β}, HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s s') (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t t')) (Union.union.{u3} (Set.{u3} γ) (Set.hasUnion.{u3} γ) (Set.image2.{u1, u2, u3} α β γ f s t) (Set.image2.{u1, u2, u3} α β γ f s' t'))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {s' : Set.{u2} α} {t : Set.{u1} β} {t' : Set.{u1} β}, HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s s') (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t t')) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) (Set.image2.{u2, u1, u3} α β γ f s' t'))
+Case conversion may be inaccurate. Consider using '#align set.image2_union_inter_subset_union Set.image2_union_inter_subset_unionₓ'. -/
 theorem image2_union_inter_subset_union :
     image2 f (s ∪ s') (t ∩ t') ⊆ image2 f s t ∪ image2 f s' t' :=
   by
