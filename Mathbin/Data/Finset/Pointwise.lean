@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit b685f506164f8d17a6404048bc4d696739c5d976
+! leanprover-community/mathlib commit 5e526d18cea33550268dcbbddcb822d5cde40654
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ pointwise subtraction
 -/
 
 
-open Function
+open Function MulOpposite
 
 open BigOperators Pointwise
 
@@ -295,9 +295,23 @@ theorem inv_nonempty_iff : s⁻¹.Nonempty ↔ s.Nonempty :=
 #align finset.neg_nonempty_iff Finset.neg_nonempty_iff
 -/
 
-alias inv_nonempty_iff ↔ nonempty.inv nonempty.of_inv
-#align finset.nonempty.inv Finset.nonempty.inv
+/- warning: finset.nonempty.of_inv -> Finset.nonempty.of_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Inv.{u1} α] {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Inv.inv.{u1} (Finset.{u1} α) (Finset.inv.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s)) -> (Finset.Nonempty.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Inv.{u1} α] {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α s) -> (Finset.Nonempty.{u1} α (Inv.inv.{u1} (Finset.{u1} α) (Finset.inv.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s))
+Case conversion may be inaccurate. Consider using '#align finset.nonempty.of_inv Finset.nonempty.of_invₓ'. -/
+/- warning: finset.nonempty.inv -> Finset.nonempty.inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Inv.{u1} α] {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α s) -> (Finset.Nonempty.{u1} α (Inv.inv.{u1} (Finset.{u1} α) (Finset.inv.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Inv.{u1} α] {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Inv.inv.{u1} (Finset.{u1} α) (Finset.inv.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s)) -> (Finset.Nonempty.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align finset.nonempty.inv Finset.nonempty.invₓ'. -/
+alias inv_nonempty_iff ↔ nonempty.of_inv nonempty.inv
 #align finset.nonempty.of_inv Finset.nonempty.of_inv
+#align finset.nonempty.inv Finset.nonempty.inv
+
+attribute [to_additive] nonempty.inv nonempty.of_inv
 
 #print Finset.inv_subset_inv /-
 @[to_additive, mono]
@@ -598,6 +612,18 @@ theorem mul_inter_subset : s * (t₁ ∩ t₂) ⊆ s * t₁ ∩ (s * t₂) :=
 #align finset.add_inter_subset Finset.add_inter_subset
 -/
 
+@[to_additive]
+theorem inter_mul_union_subset_union : s₁ ∩ s₂ * (t₁ ∪ t₂) ⊆ s₁ * t₁ ∪ s₂ * t₂ :=
+  image₂_inter_union_subset_union
+#align finset.inter_mul_union_subset_union Finset.inter_mul_union_subset_union
+#align finset.inter_add_union_subset_union Finset.inter_add_union_subset_union
+
+@[to_additive]
+theorem union_mul_inter_subset_union : (s₁ ∪ s₂) * (t₁ ∩ t₂) ⊆ s₁ * t₁ ∪ s₂ * t₂ :=
+  image₂_union_inter_subset_union
+#align finset.union_mul_inter_subset_union Finset.union_mul_inter_subset_union
+#align finset.union_add_inter_subset_union Finset.union_add_inter_subset_union
+
 #print Finset.subset_mul /-
 /-- If a finset `u` is contained in the product of two sets `s * t`, we can find two finsets `s'`,
 `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' * t'`. -/
@@ -871,6 +897,18 @@ theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
 #align finset.div_inter_subset Finset.div_inter_subset
 #align finset.sub_inter_subset Finset.sub_inter_subset
 -/
+
+@[to_additive]
+theorem inter_div_union_subset_union : s₁ ∩ s₂ / (t₁ ∪ t₂) ⊆ s₁ / t₁ ∪ s₂ / t₂ :=
+  image₂_inter_union_subset_union
+#align finset.inter_div_union_subset_union Finset.inter_div_union_subset_union
+#align finset.inter_sub_union_subset_union Finset.inter_sub_union_subset_union
+
+@[to_additive]
+theorem union_div_inter_subset_union : (s₁ ∪ s₂) / (t₁ ∩ t₂) ⊆ s₁ / t₁ ∪ s₂ / t₂ :=
+  image₂_union_inter_subset_union
+#align finset.union_div_inter_subset_union Finset.union_div_inter_subset_union
+#align finset.union_sub_inter_subset_union Finset.union_sub_inter_subset_union
 
 #print Finset.subset_div /-
 /-- If a finset `u` is contained in the product of two sets `s / t`, we can find two finsets `s'`,
@@ -1981,6 +2019,18 @@ theorem smul_inter_subset : s • (t₁ ∩ t₂) ⊆ s • t₁ ∩ s • t₂ 
 #align finset.vadd_inter_subset Finset.vadd_inter_subset
 -/
 
+@[to_additive]
+theorem inter_smul_union_subset_union [DecidableEq α] : (s₁ ∩ s₂) • (t₁ ∪ t₂) ⊆ s₁ • t₁ ∪ s₂ • t₂ :=
+  image₂_inter_union_subset_union
+#align finset.inter_smul_union_subset_union Finset.inter_smul_union_subset_union
+#align finset.inter_vadd_union_subset_union Finset.inter_vadd_union_subset_union
+
+@[to_additive]
+theorem union_smul_inter_subset_union [DecidableEq α] : (s₁ ∪ s₂) • (t₁ ∩ t₂) ⊆ s₁ • t₁ ∪ s₂ • t₂ :=
+  image₂_union_inter_subset_union
+#align finset.union_smul_inter_subset_union Finset.union_smul_inter_subset_union
+#align finset.union_vadd_inter_subset_union Finset.union_vadd_inter_subset_union
+
 /- warning: finset.subset_smul -> Finset.subset_smul is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : SMul.{u1, u2} α β] {u : Finset.{u2} β} {s : Set.{u1} α} {t : Set.{u2} β}, (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) u) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_2) s t)) -> (Exists.{succ u1} (Finset.{u1} α) (fun (s' : Finset.{u1} α) => Exists.{succ u2} (Finset.{u2} β) (fun (t' : Finset.{u2} β) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s') s) (And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) t') t) (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.hasSubset.{u2} β) u (SMul.smul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) s' t'))))))
@@ -2343,13 +2393,11 @@ theorem coe_smul_finset (a : α) (s : Finset β) : (↑(a • s) : Set β) = a �
 #align finset.coe_vadd_finset Finset.coe_vadd_finset
 -/
 
-#print Finset.smul_finset_mem_smul_finset /-
 @[to_additive]
-theorem smul_finset_mem_smul_finset : b ∈ s → a • b ∈ a • s :=
+theorem smul_mem_smul_finset : b ∈ s → a • b ∈ a • s :=
   mem_image_of_mem _
-#align finset.smul_finset_mem_smul_finset Finset.smul_finset_mem_smul_finset
-#align finset.vadd_finset_mem_vadd_finset Finset.vadd_finset_mem_vadd_finset
--/
+#align finset.smul_mem_smul_finset Finset.smul_mem_smul_finset
+#align finset.vadd_mem_vadd_finset Finset.vadd_mem_vadd_finset
 
 #print Finset.smul_finset_card_le /-
 @[to_additive]
@@ -2433,16 +2481,23 @@ theorem smul_finset_inter_subset : a • (s₁ ∩ s₂) ⊆ a • s₁ ∩ a �
 #align finset.vadd_finset_inter_subset Finset.vadd_finset_inter_subset
 -/
 
+@[to_additive]
+theorem smul_finset_subset_smul {s : Finset α} : a ∈ s → a • t ⊆ s • t :=
+  image_subset_image₂_right
+#align finset.smul_finset_subset_smul Finset.smul_finset_subset_smul
+#align finset.vadd_finset_subset_vadd Finset.vadd_finset_subset_vadd
+
 /- warning: finset.bUnion_smul_finset -> Finset.bunionᵢ_smul_finset is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : SMul.{u1, u2} α β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ u2} (Finset.{u2} β) (Finset.bunionᵢ.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (_x : α) => SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) _x t)) (SMul.smul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) s t)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : SMul.{u2, u1} α β] (s : Finset.{u2} α) (t : Finset.{u1} β), Eq.{succ u1} (Finset.{u1} β) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (_x : α) => HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2)) _x t)) (HSMul.hSMul.{u2, u1, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.smul.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2)) s t)
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_smul_finset Finset.bunionᵢ_smul_finsetₓ'. -/
-@[simp]
+@[simp, to_additive]
 theorem bunionᵢ_smul_finset (s : Finset α) (t : Finset β) : s.bunionᵢ (· • t) = s • t :=
   bunionᵢ_image_left
 #align finset.bUnion_smul_finset Finset.bunionᵢ_smul_finset
+#align finset.bUnion_vadd_finset Finset.bunionᵢ_vadd_finset
 
 end SMul
 
@@ -2598,6 +2653,65 @@ instance noZeroSMulDivisors_finset [Zero α] [Zero β] [SMul α β] [NoZeroSMulD
 -/
 
 end Instances
+
+section SMul
+
+variable [DecidableEq β] [DecidableEq γ] [SMul αᵐᵒᵖ β] [SMul β γ] [SMul α γ]
+
+-- TODO: replace hypothesis and conclusion with a typeclass
+@[to_additive]
+theorem op_smul_finset_smul_eq_smul_smul_finset (a : α) (s : Finset β) (t : Finset γ)
+    (h : ∀ (a : α) (b : β) (c : γ), (op a • b) • c = b • a • c) : (op a • s) • t = s • a • t :=
+  by
+  ext
+  simp [mem_smul, mem_smul_finset, h]
+#align finset.op_smul_finset_smul_eq_smul_smul_finset Finset.op_smul_finset_smul_eq_smul_smul_finset
+#align finset.op_vadd_finset_vadd_eq_vadd_vadd_finset Finset.op_vadd_finset_vadd_eq_vadd_vadd_finset
+
+end SMul
+
+section Mul
+
+variable [Mul α] [DecidableEq α] {s t u : Finset α} {a : α}
+
+@[to_additive]
+theorem op_smul_finset_subset_mul : a ∈ t → op a • s ⊆ s * t :=
+  image_subset_image₂_left
+#align finset.op_smul_finset_subset_mul Finset.op_smul_finset_subset_mul
+#align finset.op_vadd_finset_subset_add Finset.op_vadd_finset_subset_add
+
+@[simp, to_additive]
+theorem bunionᵢ_op_smul_finset (s t : Finset α) : (t.bunionᵢ fun a => op a • s) = s * t :=
+  bunionᵢ_image_right
+#align finset.bUnion_op_smul_finset Finset.bunionᵢ_op_smul_finset
+#align finset.bUnion_op_vadd_finset Finset.bunionᵢ_op_vadd_finset
+
+@[to_additive]
+theorem mul_subset_iff_left : s * t ⊆ u ↔ ∀ a ∈ s, a • t ⊆ u :=
+  image₂_subset_iff_left
+#align finset.mul_subset_iff_left Finset.mul_subset_iff_left
+#align finset.add_subset_iff_left Finset.add_subset_iff_left
+
+@[to_additive]
+theorem mul_subset_iff_right : s * t ⊆ u ↔ ∀ b ∈ t, op b • s ⊆ u :=
+  image₂_subset_iff_right
+#align finset.mul_subset_iff_right Finset.mul_subset_iff_right
+#align finset.add_subset_iff_right Finset.add_subset_iff_right
+
+end Mul
+
+section Semigroup
+
+variable [Semigroup α] [DecidableEq α]
+
+@[to_additive]
+theorem op_smul_finset_mul_eq_mul_smul_finset (a : α) (s : Finset α) (t : Finset α) :
+    op a • s * t = s * a • t :=
+  op_smul_finset_smul_eq_smul_smul_finset _ _ _ fun _ _ _ => mul_assoc _ _ _
+#align finset.op_smul_finset_mul_eq_mul_smul_finset Finset.op_smul_finset_mul_eq_mul_smul_finset
+#align finset.op_vadd_finset_add_eq_add_vadd_finset Finset.op_vadd_finset_add_eq_add_vadd_finset
+
+end Semigroup
 
 section LeftCancelSemigroup
 

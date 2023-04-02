@@ -1,4 +1,4 @@
-Tracking mathlib commit: [`172bf2812857f5e56938cc148b7a539f52f84ca9`](https://github.com/leanprover-community/mathlib/commit/172bf2812857f5e56938cc148b7a539f52f84ca9)
+Tracking mathlib commit: [`88fcb83fe7996142dfcfe7368d31304a9adc874a`](https://github.com/leanprover-community/mathlib/commit/88fcb83fe7996142dfcfe7368d31304a9adc874a)
 
 You should use this repository to inspect the Lean 4 files that `mathport` has generated from mathlib3.
 Please run `lake build` first, to download a copy of the generated `.olean` files.

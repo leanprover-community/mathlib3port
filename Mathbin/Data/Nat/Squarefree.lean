@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.nat.squarefree
-! leanprover-community/mathlib commit 10b4e499f43088dd3bb7b5796184ad5216648ab1
+! leanprover-community/mathlib commit 3c1368cac4abd5a5cbe44317ba7e87379d51ed88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -576,7 +576,8 @@ unsafe def prove_squarefree (en : expr) (n : ℕ) : tactic expr :=
 /-- Evaluates the `squarefree` predicate on naturals. -/
 @[norm_num]
 unsafe def eval_squarefree : expr → tactic (expr × expr)
-  | q(Squarefree ($(e) : ℕ)) => do
+  | q(@Squarefree ℕ $(inst) $(e)) => do
+    is_def_eq inst q(Nat.monoid)
     let n ← e.toNat
     match n with
       | 0 => false_intro q(@not_squarefree_zero ℕ _ _)

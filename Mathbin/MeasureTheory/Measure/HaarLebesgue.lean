@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 02e095b22be8a3731542041cdc1266b7f588377c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -389,6 +389,30 @@ theorem add_haar_smul (r : ℝ) (s : Set E) :
     simp only [h, MulZeroClass.zero_mul, ENNReal.ofReal_zero, abs_zero, Ne.def, not_false_iff,
       zero_pow', measure_singleton]
 #align measure_theory.measure.add_haar_smul MeasureTheory.Measure.add_haar_smul
+
+theorem add_haar_smul_of_nonneg {r : ℝ} (hr : 0 ≤ r) (s : Set E) :
+    μ (r • s) = ENNReal.ofReal (r ^ finrank ℝ E) * μ s := by
+  rw [add_haar_smul, abs_pow, abs_of_nonneg hr]
+#align measure_theory.measure.add_haar_smul_of_nonneg MeasureTheory.Measure.add_haar_smul_of_nonneg
+
+variable {μ} {s : Set E}
+
+-- Note: We might want to rename this once we acquire the lemma corresponding to
+-- `measurable_set.const_smul`
+theorem NullMeasurableSet.constSmul (hs : NullMeasurableSet s μ) (r : ℝ) :
+    NullMeasurableSet (r • s) μ :=
+  by
+  obtain rfl | hs' := s.eq_empty_or_nonempty
+  · simp
+  obtain rfl | hr := eq_or_ne r 0
+  · simpa [zero_smul_set hs'] using null_measurable_set_singleton _
+  obtain ⟨t, ht, hst⟩ := hs
+  refine' ⟨_, ht.const_smul_of_ne_zero hr, _⟩
+  rw [← measure_symm_diff_eq_zero_iff] at hst⊢
+  rw [← smul_set_symm_diff₀ hr, add_haar_smul μ, hst, MulZeroClass.mul_zero]
+#align measure_theory.measure.null_measurable_set.const_smul MeasureTheory.Measure.NullMeasurableSet.constSmul
+
+variable (μ)
 
 @[simp]
 theorem add_haar_image_homothety (x : E) (r : ℝ) (s : Set E) :

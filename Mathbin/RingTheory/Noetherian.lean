@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.noetherian
-! leanprover-community/mathlib commit aa3a420527e0fbfd0f6615b95b761254a9166e12
+! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -427,21 +427,20 @@ theorem isNoetherian_iff_fg_wellFounded :
     constructor
     intro N
     obtain ⟨⟨N₀, h₁⟩, e : N₀ ≤ N, h₂⟩ :=
-      well_founded.well_founded_iff_has_max'.mp H { N' : α | N'.1 ≤ N }
-        ⟨⟨⊥, Submodule.fg_bot⟩, bot_le⟩
+      WellFounded.has_min H { N' : α | N'.1 ≤ N } ⟨⟨⊥, Submodule.fg_bot⟩, bot_le⟩
     convert h₁
     refine' (e.antisymm _).symm
     by_contra h₃
     obtain ⟨x, hx₁ : x ∈ N, hx₂ : x ∉ N₀⟩ := set.not_subset.mp h₃
     apply hx₂
-    have := h₂ ⟨(R ∙ x) ⊔ N₀, _⟩ _ _
+    have := eq_of_le_of_not_lt _ (h₂ ⟨(R ∙ x) ⊔ N₀, _⟩ _)
     · injection this with eq
-      rw [← Eq]
+      rw [Eq]
       exact (le_sup_left : (R ∙ x) ≤ (R ∙ x) ⊔ N₀) (Submodule.mem_span_singleton_self _)
     · exact Submodule.Fg.sup ⟨{x}, by rw [Finset.coe_singleton]⟩ h₁
-    · exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e
     · show N₀ ≤ (R ∙ x) ⊔ N₀
       exact le_sup_right
+    · exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e
 #align is_noetherian_iff_fg_well_founded isNoetherian_iff_fg_wellFounded
 
 variable (R M)
@@ -461,16 +460,15 @@ variable {R M}
 
 /- warning: set_has_maximal_iff_noetherian -> set_has_maximal_iff_noetherian is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2], Iff (forall (a : Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)), (Set.Nonempty.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) a) -> (Exists.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (fun (M' : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) => Exists.{0} (Membership.Mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) M' a) (fun (H : Membership.Mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) M' a) => forall (I : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3), (Membership.Mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) I a) -> (LE.le.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.completeLattice.{u1, u2} R M _inst_1 _inst_2 _inst_3))))) M' I) -> (Eq.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) I M'))))) (IsNoetherian.{u1, u2} R M _inst_1 _inst_2 _inst_3)
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2], Iff (forall (a : Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)), (Set.Nonempty.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) a) -> (Exists.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (fun (M' : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) => Exists.{0} (Membership.Mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) M' a) (fun (H : Membership.Mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) M' a) => forall (I : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3), (Membership.Mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.hasMem.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) I a) -> (Not (LT.lt.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Preorder.toLT.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.completeLattice.{u1, u2} R M _inst_1 _inst_2 _inst_3))))) M' I)))))) (IsNoetherian.{u1, u2} R M _inst_1 _inst_2 _inst_3)
 but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2], Iff (forall (a : Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)), (Set.Nonempty.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) a) -> (Exists.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (fun (M' : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) => And (Membership.mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.instMembershipSet.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) M' a) (forall (I : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3), (Membership.mem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Set.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (Set.instMembershipSet.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3)) I a) -> (LE.le.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Preorder.toLE.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (PartialOrder.toPreorder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.completeLattice.{u1, u2} R M _inst_1 _inst_2 _inst_3))))) M' I) -> (Eq.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) I M'))))) (IsNoetherian.{u1, u2} R M _inst_1 _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align set_has_maximal_iff_noetherian set_has_maximal_iff_noetherianₓ'. -/
 /-- A module is Noetherian iff every nonempty set of submodules has a maximal submodule among them.
 -/
 theorem set_has_maximal_iff_noetherian :
-    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, M' ≤ I → I = M') ↔
-      IsNoetherian R M :=
-  by rw [isNoetherian_iff_wellFounded, WellFounded.wellFounded_iff_has_max']
+    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, ¬M' < I) ↔ IsNoetherian R M := by
+  rw [isNoetherian_iff_wellFounded, WellFounded.wellFounded_iff_has_min]
 #align set_has_maximal_iff_noetherian set_has_maximal_iff_noetherian
 
 #print monotone_stabilizes_iff_noetherian /-

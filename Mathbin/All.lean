@@ -1109,6 +1109,7 @@ import Mathbin.CategoryTheory.Whiskering
 import Mathbin.CategoryTheory.WithTerminal
 import Mathbin.CategoryTheory.Yoneda
 import Mathbin.Combinatorics.Additive.Behrend
+import Mathbin.Combinatorics.Additive.ETransform
 import Mathbin.Combinatorics.Additive.Energy
 import Mathbin.Combinatorics.Additive.PluenneckeRuzsa
 import Mathbin.Combinatorics.Additive.RuzsaCovering
@@ -2128,6 +2129,7 @@ import Mathbin.MeasureTheory.Group.Action
 import Mathbin.MeasureTheory.Group.AddCircle
 import Mathbin.MeasureTheory.Group.Arithmetic
 import Mathbin.MeasureTheory.Group.FundamentalDomain
+import Mathbin.MeasureTheory.Group.GeometryOfNumbers
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Group.Measure

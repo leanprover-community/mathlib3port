@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.basic
-! leanprover-community/mathlib commit 517cc149e0b515d2893baa376226ed10feb319c7
+! leanprover-community/mathlib commit 5e526d18cea33550268dcbbddcb822d5cde40654
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -644,6 +644,18 @@ theorem mul_inter_subset : s * (t₁ ∩ t₂) ⊆ s * t₁ ∩ (s * t₂) :=
 #align set.mul_inter_subset Set.mul_inter_subset
 #align set.add_inter_subset Set.add_inter_subset
 
+@[to_additive]
+theorem inter_mul_union_subset_union : s₁ ∩ s₂ * (t₁ ∪ t₂) ⊆ s₁ * t₁ ∪ s₂ * t₂ :=
+  image2_inter_union_subset_union
+#align set.inter_mul_union_subset_union Set.inter_mul_union_subset_union
+#align set.inter_add_union_subset_union Set.inter_add_union_subset_union
+
+@[to_additive]
+theorem union_mul_inter_subset_union : (s₁ ∪ s₂) * (t₁ ∩ t₂) ⊆ s₁ * t₁ ∪ s₂ * t₂ :=
+  image2_union_inter_subset_union
+#align set.union_mul_inter_subset_union Set.union_mul_inter_subset_union
+#align set.union_add_inter_subset_union Set.union_add_inter_subset_union
+
 #print Set.unionᵢ_mul_left_image /-
 @[to_additive]
 theorem unionᵢ_mul_left_image : (⋃ a ∈ s, (· * ·) a '' t) = s * t :=
@@ -1020,6 +1032,18 @@ theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
 #align set.div_inter_subset Set.div_inter_subset
 #align set.sub_inter_subset Set.sub_inter_subset
 
+@[to_additive]
+theorem inter_div_union_subset_union : s₁ ∩ s₂ / (t₁ ∪ t₂) ⊆ s₁ / t₁ ∪ s₂ / t₂ :=
+  image2_inter_union_subset_union
+#align set.inter_div_union_subset_union Set.inter_div_union_subset_union
+#align set.inter_sub_union_subset_union Set.inter_sub_union_subset_union
+
+@[to_additive]
+theorem union_div_inter_subset_union : (s₁ ∪ s₂) / (t₁ ∩ t₂) ⊆ s₁ / t₁ ∪ s₂ / t₂ :=
+  image2_union_inter_subset_union
+#align set.union_div_inter_subset_union Set.union_div_inter_subset_union
+#align set.union_sub_inter_subset_union Set.union_sub_inter_subset_union
+
 #print Set.unionᵢ_div_left_image /-
 @[to_additive]
 theorem unionᵢ_div_left_image : (⋃ a ∈ s, (· / ·) a '' t) = s / t :=
@@ -1242,10 +1266,9 @@ variable [MulOneClass α]
 /-- `set α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
 protected def mulOneClass : MulOneClass (Set α) :=
-  { Set.one,
-    Set.mul with
-    mul_one := fun s => by simp only [← singleton_one, mul_singleton, mul_one, image_id']
-    one_mul := fun s => by simp only [← singleton_one, singleton_mul, one_mul, image_id'] }
+  { Set.one, Set.mul with
+    mul_one := image2_right_identity mul_one
+    one_mul := image2_left_identity one_mul }
 #align set.mul_one_class Set.mulOneClass
 #align set.add_zero_class Set.addZeroClass
 -/

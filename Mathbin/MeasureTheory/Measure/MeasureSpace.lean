@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
+! leanprover-community/mathlib commit 88fcb83fe7996142dfcfe7368d31304a9adc874a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1098,6 +1098,15 @@ theorem measure_univ_eq_zero : μ univ = 0 ↔ μ = 0 :=
   ⟨fun h => bot_unique fun s hs => trans_rel_left (· ≤ ·) (measure_mono (subset_univ s)) h, fun h =>
     h.symm ▸ rfl⟩
 #align measure_theory.measure.measure_univ_eq_zero MeasureTheory.Measure.measure_univ_eq_zero
+
+theorem measure_univ_ne_zero : μ univ ≠ 0 ↔ μ ≠ 0 :=
+  measure_univ_eq_zero.Not
+#align measure_theory.measure.measure_univ_ne_zero MeasureTheory.Measure.measure_univ_ne_zero
+
+@[simp]
+theorem measure_univ_pos : 0 < μ univ ↔ μ ≠ 0 :=
+  pos_iff_ne_zero.trans measure_univ_ne_zero
+#align measure_theory.measure.measure_univ_pos MeasureTheory.Measure.measure_univ_pos
 
 /-! ### Pushforward and pullback -/
 

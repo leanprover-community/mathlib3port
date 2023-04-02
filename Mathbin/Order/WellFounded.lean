@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.well_founded
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,44 +108,6 @@ theorem wellFounded_iff_has_min {r : α → α → Prop} :
   by_contra hy'
   exact hm' y hy' hy
 #align well_founded.well_founded_iff_has_min WellFounded.wellFounded_iff_has_min
-
-#print WellFounded.eq_iff_not_lt_of_le /-
-theorem eq_iff_not_lt_of_le {α} [PartialOrder α] {x y : α} : x ≤ y → y = x ↔ ¬x < y :=
-  by
-  constructor
-  · intro xle nge
-    cases le_not_le_of_lt nge
-    rw [xle left] at nge
-    exact lt_irrefl x nge
-  · intro ngt xle
-    contrapose! ngt
-    exact lt_of_le_of_ne xle (Ne.symm ngt)
-#align well_founded.eq_iff_not_lt_of_le WellFounded.eq_iff_not_lt_of_le
--/
-
-/- warning: well_founded.well_founded_iff_has_max' -> WellFounded.wellFounded_iff_has_max' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m p) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m p) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m x) -> (Eq.{succ u1} α x m)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WellFounded._hyg.641 : α) (x._@.Mathlib.Order.WellFounded._hyg.643 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.WellFounded._hyg.641 x._@.Mathlib.Order.WellFounded._hyg.643)) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m p) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m x) -> (Eq.{succ u1} α x m)))))
-Case conversion may be inaccurate. Consider using '#align well_founded.well_founded_iff_has_max' WellFounded.wellFounded_iff_has_max'ₓ'. -/
-theorem wellFounded_iff_has_max' [PartialOrder α] :
-    WellFounded ((· > ·) : α → α → Prop) ↔
-      ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀ x ∈ p, m ≤ x → x = m :=
-  by simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
-#align well_founded.well_founded_iff_has_max' WellFounded.wellFounded_iff_has_max'
-
-/- warning: well_founded.well_founded_iff_has_min' -> WellFounded.wellFounded_iff_has_min' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m p) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m p) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x m) -> (Eq.{succ u1} α x m)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m p) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x m) -> (Eq.{succ u1} α x m)))))
-Case conversion may be inaccurate. Consider using '#align well_founded.well_founded_iff_has_min' WellFounded.wellFounded_iff_has_min'ₓ'. -/
-theorem wellFounded_iff_has_min' [PartialOrder α] :
-    WellFounded (LT.lt : α → α → Prop) ↔
-      ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀ x ∈ p, x ≤ m → x = m :=
-  @wellFounded_iff_has_max' αᵒᵈ _
-#align well_founded.well_founded_iff_has_min' WellFounded.wellFounded_iff_has_min'
 
 open Set
 

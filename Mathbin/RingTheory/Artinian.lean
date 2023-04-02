@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.artinian
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -186,13 +186,12 @@ theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {
 /-- A module is Artinian iff every nonempty set of submodules has a minimal submodule among them.
 -/
 theorem set_has_minimal_iff_artinian :
-    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M') ↔
-      IsArtinian R M :=
-  by rw [isArtinian_iff_wellFounded, WellFounded.wellFounded_iff_has_min']
+    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, ¬I < M') ↔ IsArtinian R M := by
+  rw [isArtinian_iff_wellFounded, WellFounded.wellFounded_iff_has_min]
 #align set_has_minimal_iff_artinian set_has_minimal_iff_artinian
 
 theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (ha : a.Nonempty) :
-    ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M' :=
+    ∃ M' ∈ a, ∀ I ∈ a, ¬I < M' :=
   set_has_minimal_iff_artinian.mpr ‹_› a ha
 #align is_artinian.set_has_minimal IsArtinian.set_has_minimal
 
@@ -442,14 +441,14 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
   by_contra hJ
   change J ≠ ⊤ at hJ
   rcases IsArtinian.set_has_minimal { J' : Ideal R | J < J' } ⟨⊤, hJ.lt_top⟩ with
-    ⟨J', hJJ' : J < J', hJ' : ∀ I, J < I → I ≤ J' → I = J'⟩
+    ⟨J', hJJ' : J < J', hJ' : ∀ I, J < I → ¬I < J'⟩
   rcases SetLike.exists_of_lt hJJ' with ⟨x, hxJ', hxJ⟩
   obtain rfl : J ⊔ Ideal.span {x} = J' :=
     by
-    refine' hJ' (J ⊔ Ideal.span {x}) _ _
+    apply eq_of_le_of_not_lt _ (hJ' (J ⊔ Ideal.span {x}) _)
+    · exact sup_le hJJ'.le (span_le.2 (singleton_subset_iff.2 hxJ'))
     · rw [SetLike.lt_iff_le_and_exists]
       exact ⟨le_sup_left, ⟨x, mem_sup_right (mem_span_singleton_self x), hxJ⟩⟩
-    · exact sup_le hJJ'.le (span_le.2 (singleton_subset_iff.2 hxJ'))
   have : J ⊔ Jac • Ideal.span {x} ≤ J ⊔ Ideal.span {x} :=
     sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
   have : Jac * Ideal.span {x} ≤ J := by
@@ -457,7 +456,9 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
       --Need version 4 of Nakayamas lemma on Stacks
       by_contra H
       refine'
-        H (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl (hJ' _ _ this).ge)
+        H
+          (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl
+            (this.eq_of_not_lt (hJ' _ _)).ge)
       exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc

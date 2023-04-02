@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit 4d392a6c9c4539cbeca399b3ee0afea398fbd2eb
+! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -365,19 +365,10 @@ Case conversion may be inaccurate. Consider using '#align well_founded.supr_eq_m
 theorem WellFounded.supᵢ_eq_monotonicSequenceLimit [CompleteLattice α]
     (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supᵢ a = monotonicSequenceLimit a :=
   by
-  suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supᵢ a _)
-  apply supᵢ_le
-  intro m
-  by_cases hm : m ≤ monotonicSequenceLimitIndex a
+  apply (supᵢ_le fun m => _).antisymm (le_supᵢ a _)
+  cases' le_or_lt m (monotonicSequenceLimitIndex a) with hm hm
   · exact a.monotone hm
-  · replace hm := le_of_not_le hm
-    let S := { n | ∀ m, n ≤ m → a n = a m }
-    have hInf : Inf S ∈ S := by
-      refine' Nat.infₛ_mem _
-      rw [WellFounded.monotone_chain_condition] at h
-      exact h a
-    change Inf S ≤ m at hm
-    change a m ≤ a (Inf S)
-    rw [hInf m hm]
+  · cases' WellFounded.monotone_chain_condition'.1 h a with n hn
+    exact (Nat.infₛ_mem ⟨n, fun k hk => (a.mono hk).eq_of_not_lt (hn k hk)⟩ m hm.le).ge
 #align well_founded.supr_eq_monotonic_sequence_limit WellFounded.supᵢ_eq_monotonicSequenceLimit
 

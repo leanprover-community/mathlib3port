@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
+! leanprover-community/mathlib commit 88fcb83fe7996142dfcfe7368d31304a9adc874a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -466,6 +466,16 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
   · convert measurable_const
     exact funext fun x => hf x h.some
 #align measurable_const' measurable_const'
+
+@[measurability]
+theorem measurable_nat_cast [NatCast α] (n : ℕ) : Measurable (n : β → α) :=
+  @measurable_const α _ _ _ n
+#align measurable_nat_cast measurable_nat_cast
+
+@[measurability]
+theorem measurable_int_cast [IntCast α] (n : ℤ) : Measurable (n : β → α) :=
+  @measurable_const α _ _ _ n
+#align measurable_int_cast measurable_int_cast
 
 /- warning: measurable_of_finite -> measurable_of_finite is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.engel
-! leanprover-community/mathlib commit 938fead7abdc0cbbca8eba7a1052865a169dc102
+! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,14 +278,11 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
   haveI _i5 : IsNoetherian R L' :=
     isNoetherian_of_surjective L _ (LinearMap.range_rangeRestrict (to_endomorphism R L M))
-  obtain ⟨K, hK₁, hK₂⟩ :=
-    well_founded.well_founded_iff_has_max'.mp (LieSubalgebra.wellFounded_of_noetherian R L') s hs
+  obtain ⟨K, hK₁, hK₂⟩ := (LieSubalgebra.wellFounded_of_noetherian R L').has_min s hs
   have hK₃ : K = ⊤ := by
     by_contra contra
     obtain ⟨K', hK'₁, hK'₂⟩ := this K hK₁ contra
-    specialize hK₂ K' hK'₁ (le_of_lt hK'₂)
-    replace hK'₂ := (ne_of_lt hK'₂).symm
-    contradiction
+    exact hK₂ K' hK'₁ hK'₂
   exact hK₃ ▸ hK₁
 #align lie_algebra.is_engelian_of_is_noetherian LieAlgebra.isEngelian_of_isNoetherian
 

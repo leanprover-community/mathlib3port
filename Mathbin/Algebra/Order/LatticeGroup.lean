@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.order.lattice_group
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
+! leanprover-community/mathlib commit 474656fdf40ae1741dfffcdd7c685a0f198da61a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,12 +97,15 @@ Case conversion may be inaccurate. Consider using '#align mul_sup mul_supₓ'. -
 -- c + (a ⊔ b) = (c + a) ⊔ (c + b)
 @[to_additive]
 theorem mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a ⊔ b) = c * a ⊔ c * b :=
-  by
-  refine' le_antisymm _ (by simp)
-  rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_self, one_mul]
-  exact sup_le (by simp) (by simp)
+  (OrderIso.mulLeft _).map_sup _ _
 #align mul_sup mul_sup
 #align add_sup add_sup
+
+@[to_additive]
+theorem sup_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : (a ⊔ b) * c = a * c ⊔ b * c :=
+  (OrderIso.mulRight _).map_sup _ _
+#align sup_mul sup_mul
+#align sup_add sup_add
 
 /- warning: mul_inf -> mul_inf is a dubious translation:
 lean 3 declaration is
@@ -112,12 +115,15 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_inf mul_infₓ'. -/
 @[to_additive]
 theorem mul_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * (a ⊓ b) = c * a ⊓ c * b :=
-  by
-  refine' le_antisymm (by simp) _
-  rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_self, one_mul]
-  exact le_inf (by simp) (by simp)
+  (OrderIso.mulLeft _).map_inf _ _
 #align mul_inf mul_inf
 #align add_inf add_inf
+
+@[to_additive]
+theorem inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : (a ⊓ b) * c = a * c ⊓ b * c :=
+  (OrderIso.mulRight _).map_inf _ _
+#align inf_mul inf_mul
+#align inf_add inf_add
 
 /- warning: inv_sup_eq_inv_inf_inv -> inv_sup_eq_inv_inf_inv is a dubious translation:
 lean 3 declaration is
@@ -129,19 +135,8 @@ Case conversion may be inaccurate. Consider using '#align inv_sup_eq_inv_inf_inv
 -- -(a ⊔ b)=(-a) ⊓ (-b)
 @[to_additive]
 theorem inv_sup_eq_inv_inf_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) :
-    (a ⊔ b)⁻¹ = a⁻¹ ⊓ b⁻¹ := by
-  apply le_antisymm
-  · refine' le_inf _ _
-    · rw [inv_le_inv_iff]
-      exact le_sup_left
-    · rw [inv_le_inv_iff]
-      exact le_sup_right
-  · rw [← inv_le_inv_iff, inv_inv]
-    refine' sup_le _ _
-    · rw [← inv_le_inv_iff]
-      simp
-    · rw [← inv_le_inv_iff]
-      simp
+    (a ⊔ b)⁻¹ = a⁻¹ ⊓ b⁻¹ :=
+  (OrderIso.inv α).map_sup _ _
 #align inv_sup_eq_inv_inf_inv inv_sup_eq_inv_inf_inv
 #align neg_sup_eq_neg_inf_neg neg_sup_eq_neg_inf_neg
 
@@ -154,7 +149,7 @@ Case conversion may be inaccurate. Consider using '#align inv_inf_eq_sup_inv inv
 -- -(a ⊓ b) = -a ⊔ -b
 @[to_additive]
 theorem inv_inf_eq_sup_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊓ b)⁻¹ = a⁻¹ ⊔ b⁻¹ :=
-  by rw [← inv_inv (a⁻¹ ⊔ b⁻¹), inv_sup_eq_inv_inf_inv a⁻¹ b⁻¹, inv_inv, inv_inv]
+  (OrderIso.inv α).map_inf _ _
 #align inv_inf_eq_sup_inv inv_inf_eq_sup_inv
 #align neg_inf_eq_sup_neg neg_inf_eq_sup_neg
 
@@ -169,10 +164,8 @@ Case conversion may be inaccurate. Consider using '#align inf_mul_sup inf_mul_su
 @[to_additive]
 theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊓ b) * (a ⊔ b) = a * b :=
   calc
-    (a ⊓ b) * (a ⊔ b) = (a ⊓ b) * (a * b * (b⁻¹ ⊔ a⁻¹)) :=
-      by
-      rw [mul_sup b⁻¹ a⁻¹ (a * b)]
-      simp
+    (a ⊓ b) * (a ⊔ b) = (a ⊓ b) * (a * b * (b⁻¹ ⊔ a⁻¹)) := by
+      rw [mul_sup b⁻¹ a⁻¹ (a * b), mul_inv_cancel_right, mul_inv_cancel_comm]
     _ = (a ⊓ b) * (a * b * (a ⊓ b)⁻¹) := by rw [inv_inf_eq_sup_inv, sup_comm]
     _ = a * b := by rw [mul_comm, inv_mul_cancel_right]
     
@@ -328,10 +321,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.pos_le_one_iff LatticeOrderedCommGroup.pos_le_one_iffₓ'. -/
 -- pos_nonpos_iff
 @[to_additive]
-theorem pos_le_one_iff {a : α} : a⁺ ≤ 1 ↔ a ≤ 1 :=
-  by
-  rw [m_pos_part_def, sup_le_iff]
-  simp
+theorem pos_le_one_iff {a : α} : a⁺ ≤ 1 ↔ a ≤ 1 := by
+  rw [m_pos_part_def, sup_le_iff, and_iff_left le_rfl]
 #align lattice_ordered_comm_group.pos_le_one_iff LatticeOrderedCommGroup.pos_le_one_iff
 #align lattice_ordered_comm_group.pos_nonpos_iff LatticeOrderedCommGroup.pos_nonpos_iff
 
@@ -343,10 +334,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.neg_le_one_iff LatticeOrderedCommGroup.neg_le_one_iffₓ'. -/
 -- neg_nonpos_iff
 @[to_additive]
-theorem neg_le_one_iff {a : α} : a⁻ ≤ 1 ↔ a⁻¹ ≤ 1 :=
-  by
-  rw [m_neg_part_def, sup_le_iff]
-  simp
+theorem neg_le_one_iff {a : α} : a⁻ ≤ 1 ↔ a⁻¹ ≤ 1 := by
+  rw [m_neg_part_def, sup_le_iff, and_iff_left le_rfl]
 #align lattice_ordered_comm_group.neg_le_one_iff LatticeOrderedCommGroup.neg_le_one_iff
 #align lattice_ordered_comm_group.neg_nonpos_iff LatticeOrderedCommGroup.neg_nonpos_iff
 
@@ -358,10 +347,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.pos_eq_one_iff LatticeOrderedCommGroup.pos_eq_one_iffₓ'. -/
 @[to_additive]
 theorem pos_eq_one_iff {a : α} : a⁺ = 1 ↔ a ≤ 1 :=
-  by
-  rw [le_antisymm_iff]
-  simp only [one_le_pos, and_true_iff]
-  exact pos_le_one_iff
+  sup_eq_right
 #align lattice_ordered_comm_group.pos_eq_one_iff LatticeOrderedCommGroup.pos_eq_one_iff
 #align lattice_ordered_comm_group.pos_eq_zero_iff LatticeOrderedCommGroup.pos_eq_zero_iff
 
@@ -373,10 +359,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.neg_eq_one_iff' LatticeOrderedCommGroup.neg_eq_one_iff'ₓ'. -/
 @[to_additive]
 theorem neg_eq_one_iff' {a : α} : a⁻ = 1 ↔ a⁻¹ ≤ 1 :=
-  by
-  rw [le_antisymm_iff]
-  simp only [one_le_neg, and_true_iff]
-  rw [neg_le_one_iff]
+  sup_eq_right
 #align lattice_ordered_comm_group.neg_eq_one_iff' LatticeOrderedCommGroup.neg_eq_one_iff'
 #align lattice_ordered_comm_group.neg_eq_zero_iff' LatticeOrderedCommGroup.neg_eq_zero_iff'
 
@@ -387,11 +370,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (Mul.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))))] {a : α}, Iff (Eq.{succ u1} α (NegPart.neg.{u1} α (LatticeOrderedCommGroup.hasOneLatticeHasNegPart.{u1} α _inst_1 _inst_2) a) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2)))))))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))))) a)
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.neg_eq_one_iff LatticeOrderedCommGroup.neg_eq_one_iffₓ'. -/
 @[to_additive]
-theorem neg_eq_one_iff [CovariantClass α α Mul.mul LE.le] {a : α} : a⁻ = 1 ↔ 1 ≤ a :=
-  by
-  rw [le_antisymm_iff]
-  simp only [one_le_neg, and_true_iff]
-  rw [neg_le_one_iff, inv_le_one']
+theorem neg_eq_one_iff [CovariantClass α α Mul.mul LE.le] {a : α} : a⁻ = 1 ↔ 1 ≤ a := by
+  rw [le_antisymm_iff, neg_le_one_iff, inv_le_one', and_iff_left (one_le_neg _)]
 #align lattice_ordered_comm_group.neg_eq_one_iff LatticeOrderedCommGroup.neg_eq_one_iff
 #align lattice_ordered_comm_group.neg_eq_zero_iff LatticeOrderedCommGroup.neg_eq_zero_iff
 
@@ -438,27 +418,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.pos_eq_neg_inv LatticeOrderedCommGroup.pos_eq_neg_invₓ'. -/
 -- a⁺ = (-a)⁻
 @[to_additive]
-theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by simp [neg_eq_pos_inv]
+theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by rw [neg_eq_pos_inv, inv_inv]
 #align lattice_ordered_comm_group.pos_eq_neg_inv LatticeOrderedCommGroup.pos_eq_neg_inv
 #align lattice_ordered_comm_group.pos_eq_neg_neg LatticeOrderedCommGroup.pos_eq_neg_neg
-
-/- warning: lattice_ordered_comm_group.mul_inf_eq_mul_inf_mul -> LatticeOrderedCommGroup.mul_inf_eq_mul_inf_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2))))))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))))] (a : α) (b : α) (c : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) c (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) a b)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) c a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) c b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1941 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1943 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1941 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1943) (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1956 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1958 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1956 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.1958)] (a : α) (b : α) (c : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) c (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a b)) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) c a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) c b))
-Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.mul_inf_eq_mul_inf_mul LatticeOrderedCommGroup.mul_inf_eq_mul_inf_mulₓ'. -/
--- We use this in Bourbaki A.VI.12  Prop 9 a)
--- c + (a ⊓ b) = (c + a) ⊓ (c + b)
-@[to_additive]
-theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) :
-    c * (a ⊓ b) = c * a ⊓ c * b :=
-  by
-  refine' le_antisymm (by simp) _
-  rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_self, one_mul, le_inf_iff]
-  simp
-#align lattice_ordered_comm_group.mul_inf_eq_mul_inf_mul LatticeOrderedCommGroup.mul_inf_eq_mul_inf_mul
-#align lattice_ordered_comm_group.add_inf_eq_add_inf_add LatticeOrderedCommGroup.add_inf_eq_add_inf_add
 
 /- warning: lattice_ordered_comm_group.pos_div_neg -> LatticeOrderedCommGroup.pos_div_neg is a dubious translation:
 lean 3 declaration is
@@ -488,8 +450,8 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 -- a⁺ ⊓ a⁻ = 0 (`a⁺` and `a⁻` are co-prime, and, since they are positive, disjoint)
 @[to_additive]
 theorem pos_inf_neg_eq_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺ ⊓ a⁻ = 1 := by
-  rw [← mul_right_inj (a⁻)⁻¹, mul_inf_eq_mul_inf_mul, mul_one, mul_left_inv, mul_comm, ←
-    div_eq_mul_inv, pos_div_neg, neg_eq_inv_inf_one, inv_inv]
+  rw [← mul_right_inj (a⁻)⁻¹, mul_inf, mul_one, mul_left_inv, mul_comm, ← div_eq_mul_inv,
+    pos_div_neg, neg_eq_inv_inf_one, inv_inv]
 #align lattice_ordered_comm_group.pos_inf_neg_eq_one LatticeOrderedCommGroup.pos_inf_neg_eq_one
 #align lattice_ordered_comm_group.pos_inf_neg_eq_zero LatticeOrderedCommGroup.pos_inf_neg_eq_zero
 
@@ -524,7 +486,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
   calc
     a ⊓ b = a * 1 ⊓ a * (b / a) := by
       rw [mul_one a, div_eq_mul_inv, mul_comm b, mul_inv_cancel_left]
-    _ = a * (1 ⊓ b / a) := by rw [← mul_inf_eq_mul_inf_mul 1 (b / a) a]
+    _ = a * (1 ⊓ b / a) := by rw [← mul_inf 1 (b / a) a]
     _ = a * (b / a ⊓ 1) := by rw [inf_comm]
     _ = a * ((a / b)⁻¹ ⊓ 1) := by
       rw [div_eq_mul_inv]
@@ -612,22 +574,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3563 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3565 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3563 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3565) (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3578 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3580 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3578 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.3580)] (a : α), Eq.{succ u1} α (Abs.abs.{u1} α (Inv.toHasAbs.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1))) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) (PosPart.pos.{u1} α (LatticeOrderedCommGroup.hasOneLatticeHasPosPart.{u1} α _inst_1 _inst_2) a) (NegPart.neg.{u1} α (LatticeOrderedCommGroup.hasOneLatticeHasNegPart.{u1} α _inst_1 _inst_2) a))
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.pos_mul_neg LatticeOrderedCommGroup.pos_mul_negₓ'. -/
--- The proof from Bourbaki A.VI.12 Prop 9 d)
 -- |a| = a⁺ - a⁻
 @[to_additive]
 theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a| = a⁺ * a⁻ :=
   by
-  refine' le_antisymm _ _
-  · refine' sup_le _ _
-    · nth_rw 1 [← mul_one a]
-      exact mul_le_mul' (m_le_pos a) (one_le_neg a)
-    · nth_rw 1 [← one_mul a⁻¹]
-      exact mul_le_mul' (one_le_pos a) (inv_le_neg a)
-  · rw [← inf_mul_sup, pos_inf_neg_eq_one, one_mul, ← m_pos_abs a]
-    apply sup_le
-    · exact ((m_le_iff_pos_le_neg_ge _ _).mp (le_mabs a)).left
-    · rw [neg_eq_pos_inv]
-      exact ((m_le_iff_pos_le_neg_ge _ _).mp (inv_le_abs a)).left
+  rw [m_pos_part_def, sup_mul, one_mul, m_neg_part_def, mul_sup, mul_one, mul_inv_self, sup_assoc, ←
+    @sup_assoc _ _ a, sup_eq_right.2 le_sup_right]
+  exact (sup_eq_left.2 <| one_le_abs a).symm
 #align lattice_ordered_comm_group.pos_mul_neg LatticeOrderedCommGroup.pos_mul_neg
 #align lattice_ordered_comm_group.pos_add_neg LatticeOrderedCommGroup.pos_add_neg
 
@@ -640,13 +593,10 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 -- a ⊔ b - (a ⊓ b) = |b - a|
 @[to_additive]
 theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) :
-    (a ⊔ b) / (a ⊓ b) = |b / a| :=
-  by
-  rw [sup_eq_mul_pos_div, inf_comm, inf_eq_div_pos_div, div_eq_mul_inv]
-  nth_rw 2 [div_eq_mul_inv]
-  rw [mul_inv_rev, inv_inv, mul_comm, ← mul_assoc, inv_mul_cancel_right, pos_eq_neg_inv (a / b)]
-  nth_rw 2 [div_eq_mul_inv]
-  rw [mul_inv_rev, ← div_eq_mul_inv, inv_inv, ← pos_mul_neg]
+    (a ⊔ b) / (a ⊓ b) = |b / a| := by
+  rw [sup_eq_mul_pos_div, inf_comm, inf_eq_div_pos_div, div_eq_mul_inv, div_eq_mul_inv b ((b / a)⁺),
+    mul_inv_rev, inv_inv, mul_comm, ← mul_assoc, inv_mul_cancel_right, pos_eq_neg_inv (a / b),
+    div_eq_mul_inv a b, mul_inv_rev, ← div_eq_mul_inv, inv_inv, ← pos_mul_neg]
 #align lattice_ordered_comm_group.sup_div_inf_eq_abs_div LatticeOrderedCommGroup.sup_div_inf_eq_abs_div
 #align lattice_ordered_comm_group.sup_sub_inf_eq_abs_sub LatticeOrderedCommGroup.sup_sub_inf_eq_abs_sub
 
@@ -730,13 +680,9 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
       by rw [sup_div_inf_eq_abs_div]
     _ = (b ⊔ c ⊔ (a ⊔ c)) / ((b ⊔ c) ⊓ (a ⊔ c)) * ((b ⊓ c ⊔ a ⊓ c) / (b ⊓ c ⊓ (a ⊓ c))) := by
       rw [sup_div_inf_eq_abs_div (b ⊓ c) (a ⊓ c)]
-    _ = (b ⊔ a ⊔ c) / (b ⊓ a ⊔ c) * (((b ⊔ a) ⊓ c) / (b ⊓ a ⊓ c)) :=
-      by
-      rw [← sup_inf_right, ← inf_sup_right, sup_assoc]
-      nth_rw 2 [sup_comm]
-      rw [sup_right_idem, sup_assoc, inf_assoc]
-      nth_rw 4 [inf_comm]
-      rw [inf_right_idem, inf_assoc]
+    _ = (b ⊔ a ⊔ c) / (b ⊓ a ⊔ c) * (((b ⊔ a) ⊓ c) / (b ⊓ a ⊓ c)) := by
+      rw [← sup_inf_right, ← inf_sup_right, sup_assoc, @sup_comm _ _ c (a ⊔ c), sup_right_idem,
+        sup_assoc, inf_assoc, @inf_comm _ _ c (a ⊓ c), inf_right_idem, inf_assoc]
     _ = (b ⊔ a ⊔ c) * ((b ⊔ a) ⊓ c) / ((b ⊓ a ⊔ c) * (b ⊓ a ⊓ c)) := by rw [div_mul_div_comm]
     _ = (b ⊔ a) * c / ((b ⊓ a) * c) := by
       rw [mul_comm, inf_mul_sup, mul_comm (b ⊓ a ⊔ c), inf_mul_sup]
@@ -829,10 +775,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 -- neg_of_nonpos
 @[to_additive]
 theorem neg_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : a ≤ 1) : a⁻ = a⁻¹ :=
-  by
-  refine' neg_of_one_le_inv _ _
-  rw [one_le_inv']
-  exact h
+  sup_eq_left.2 <| one_le_inv'.2 h
 #align lattice_ordered_comm_group.neg_of_le_one LatticeOrderedCommGroup.neg_of_le_one
 #align lattice_ordered_comm_group.neg_of_nonpos LatticeOrderedCommGroup.neg_of_nonpos
 
@@ -858,12 +801,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 -- 0 ≤ a implies |a| = a
 @[to_additive abs_of_nonneg]
 theorem mabs_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : 1 ≤ a) : |a| = a :=
-  by
-  unfold Abs.abs
-  rw [sup_eq_mul_pos_div, div_eq_mul_inv, inv_inv, ← pow_two, inv_mul_eq_iff_eq_mul, ← pow_two,
-    pos_of_one_le]
-  rw [pow_two]
-  apply one_le_mul h h
+  sup_eq_left.2 <| Left.inv_le_self h
 #align lattice_ordered_comm_group.mabs_of_one_le LatticeOrderedCommGroup.mabs_of_one_le
 #align lattice_ordered_comm_group.abs_of_nonneg LatticeOrderedCommGroup.abs_of_nonneg
 
@@ -972,18 +910,14 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 @[to_additive]
 theorem abs_abs_div_abs_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : ||a| / |b|| ≤ |a / b| :=
   by
-  unfold Abs.abs
-  rw [sup_le_iff]
+  rw [abs_eq_sup_inv, sup_le_iff]
   constructor
   · apply div_le_iff_le_mul.2
     convert mabs_mul_le (a / b) b
-    · rw [div_mul_cancel']
-    · rw [div_mul_cancel']
-    · exact covariant_swap_mul_le_of_covariant_mul_le α
-  · rw [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_le_iff_le_mul, ← abs_eq_sup_inv (a / b),
-      abs_inv_comm]
+    rw [div_mul_cancel']
+    exact covariant_swap_mul_le_of_covariant_mul_le α
+  · rw [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_le_iff_le_mul, abs_inv_comm]
     convert mabs_mul_le (b / a) a
-    · rw [div_mul_cancel']
     · rw [div_mul_cancel']
 #align lattice_ordered_comm_group.abs_abs_div_abs_le LatticeOrderedCommGroup.abs_abs_div_abs_le
 #align lattice_ordered_comm_group.abs_abs_sub_abs_le LatticeOrderedCommGroup.abs_abs_sub_abs_le
