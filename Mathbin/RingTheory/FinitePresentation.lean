@@ -74,7 +74,7 @@ presented. -/
 theorem of_finiteType [IsNoetherianRing R] : FiniteType R A ↔ FinitePresentation R A :=
   by
   refine' ⟨fun h => _, Algebra.FiniteType.of_finitePresentation⟩
-  obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mv_polynomial''.1 h
+  obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 h
   refine' ⟨n, f, hf, _⟩
   have hnoet : IsNoetherianRing (MvPolynomial (Fin n) R) := by infer_instance
   replace hnoet := (isNoetherianRing_iff.1 hnoet).noetherian
