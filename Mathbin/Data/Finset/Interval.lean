@@ -49,32 +49,61 @@ instance : LocallyFiniteOrder (Finset α)
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
 
+#print Finset.Icc_eq_filter_powerset /-
 theorem Icc_eq_filter_powerset : Icc s t = t.powerset.filterₓ ((· ⊆ ·) s) :=
   rfl
 #align finset.Icc_eq_filter_powerset Finset.Icc_eq_filter_powerset
+-/
 
+#print Finset.Ico_eq_filter_ssubsets /-
 theorem Ico_eq_filter_ssubsets : Ico s t = t.ssubsets.filterₓ ((· ⊆ ·) s) :=
   rfl
 #align finset.Ico_eq_filter_ssubsets Finset.Ico_eq_filter_ssubsets
+-/
 
+/- warning: finset.Ioc_eq_filter_powerset -> Finset.Ioc_eq_filter_powerset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ioc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s) (fun (a : Finset.{u1} α) => And.decidable (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s a) (Not (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) a s)) (Finset.decidableDforallFinset.{u1} α s (fun (a_1 : α) (ᾰ : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) (fun (a_1 : α) (h : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a_1 a)) (Not.decidable (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) a s) (Finset.decidableDforallFinset.{u1} α a (fun (a_1 : α) (ᾰ : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) (fun (a_1 : α) (h : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a_1 s)))) (Finset.powerset.{u1} α t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ioc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) ((fun (x._@.Mathlib.Data.Finset.Interval._hyg.457 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Interval._hyg.459 : Finset.{u1} α) => HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Interval._hyg.457 x._@.Mathlib.Data.Finset.Interval._hyg.459) s) (fun (a : Finset.{u1} α) => Finset.decidableSSubsetFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) (Finset.powerset.{u1} α t))
+Case conversion may be inaccurate. Consider using '#align finset.Ioc_eq_filter_powerset Finset.Ioc_eq_filter_powersetₓ'. -/
 theorem Ioc_eq_filter_powerset : Ioc s t = t.powerset.filterₓ ((· ⊂ ·) s) :=
   rfl
 #align finset.Ioc_eq_filter_powerset Finset.Ioc_eq_filter_powerset
 
+/- warning: finset.Ioo_eq_filter_ssubsets -> Finset.Ioo_eq_filter_ssubsets is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ioo.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s) (fun (a : Finset.{u1} α) => And.decidable (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s a) (Not (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) a s)) (Finset.decidableDforallFinset.{u1} α s (fun (a_1 : α) (ᾰ : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) (fun (a_1 : α) (h : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a_1 a)) (Not.decidable (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) a s) (Finset.decidableDforallFinset.{u1} α a (fun (a_1 : α) (ᾰ : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) (fun (a_1 : α) (h : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a_1 s)))) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ioo.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) ((fun (x._@.Mathlib.Data.Finset.Interval._hyg.494 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Interval._hyg.496 : Finset.{u1} α) => HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Interval._hyg.494 x._@.Mathlib.Data.Finset.Interval._hyg.496) s) (fun (a : Finset.{u1} α) => Finset.decidableSSubsetFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t))
+Case conversion may be inaccurate. Consider using '#align finset.Ioo_eq_filter_ssubsets Finset.Ioo_eq_filter_ssubsetsₓ'. -/
 theorem Ioo_eq_filter_ssubsets : Ioo s t = t.ssubsets.filterₓ ((· ⊂ ·) s) :=
   rfl
 #align finset.Ioo_eq_filter_ssubsets Finset.Ioo_eq_filter_ssubsets
 
+/- warning: finset.Iic_eq_powerset -> Finset.Iic_eq_powerset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Iic.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.orderBot.{u1} α) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s) (Finset.powerset.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Iic.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s) (Finset.powerset.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align finset.Iic_eq_powerset Finset.Iic_eq_powersetₓ'. -/
 theorem Iic_eq_powerset : Iic s = s.powerset :=
   filter_true_of_mem fun t _ => empty_subset t
 #align finset.Iic_eq_powerset Finset.Iic_eq_powerset
 
+/- warning: finset.Iio_eq_ssubsets -> Finset.Iio_eq_ssubsets is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Iio.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.orderBot.{u1} α) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Iio.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s)
+Case conversion may be inaccurate. Consider using '#align finset.Iio_eq_ssubsets Finset.Iio_eq_ssubsetsₓ'. -/
 theorem Iio_eq_ssubsets : Iio s = s.ssubsets :=
   filter_true_of_mem fun t _ => empty_subset t
 #align finset.Iio_eq_ssubsets Finset.Iio_eq_ssubsets
 
 variable {s t}
 
+#print Finset.Icc_eq_image_powerset /-
 theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).powerset.image ((· ∪ ·) s) :=
   by
   ext u
@@ -85,7 +114,9 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).powerset.image (
   · rintro ⟨v, hv, rfl⟩
     exact ⟨le_sup_left, union_subset h <| hv.trans <| sdiff_subset _ _⟩
 #align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powerset
+-/
 
+#print Finset.Ico_eq_image_ssubsets /-
 theorem Ico_eq_image_ssubsets (h : s ⊆ t) : Ico s t = (t \ s).ssubsets.image ((· ∪ ·) s) :=
   by
   ext u
@@ -96,7 +127,9 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : Ico s t = (t \ s).ssubsets.image (
   · rintro ⟨v, hv, rfl⟩
     exact ⟨le_sup_left, sup_lt_of_lt_sdiff_left hv h⟩
 #align finset.Ico_eq_image_ssubsets Finset.Ico_eq_image_ssubsets
+-/
 
+#print Finset.card_Icc_finset /-
 /-- Cardinality of a non-empty `Icc` of finsets. -/
 theorem card_Icc_finset (h : s ⊆ t) : (Icc s t).card = 2 ^ (t.card - s.card) :=
   by
@@ -106,26 +139,53 @@ theorem card_Icc_finset (h : s ⊆ t) : (Icc s t).card = 2 ^ (t.card - s.card) :
   rw [← (disjoint_sdiff.mono_right hu : Disjoint s u).sup_sdiff_cancel_left, ←
     (disjoint_sdiff.mono_right hv : Disjoint s v).sup_sdiff_cancel_left, huv]
 #align finset.card_Icc_finset Finset.card_Icc_finset
+-/
 
+#print Finset.card_Ico_finset /-
 /-- Cardinality of an `Ico` of finsets. -/
 theorem card_Ico_finset (h : s ⊆ t) : (Ico s t).card = 2 ^ (t.card - s.card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc_finset h]
 #align finset.card_Ico_finset Finset.card_Ico_finset
+-/
 
+/- warning: finset.card_Ioc_finset -> Finset.card_Ioc_finset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Ioc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Finset.card.{u1} α t) (Finset.card.{u1} α s))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Ioc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Finset.card.{u1} α t) (Finset.card.{u1} α s))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align finset.card_Ioc_finset Finset.card_Ioc_finsetₓ'. -/
 /-- Cardinality of an `Ioc` of finsets. -/
 theorem card_Ioc_finset (h : s ⊆ t) : (Ioc s t).card = 2 ^ (t.card - s.card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc_finset h]
 #align finset.card_Ioc_finset Finset.card_Ioc_finset
 
+/- warning: finset.card_Ioo_finset -> Finset.card_Ioo_finset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Ioo.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Finset.card.{u1} α t) (Finset.card.{u1} α s))) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Ioo.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Finset.card.{u1} α t) (Finset.card.{u1} α s))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
+Case conversion may be inaccurate. Consider using '#align finset.card_Ioo_finset Finset.card_Ioo_finsetₓ'. -/
 /-- Cardinality of an `Ioo` of finsets. -/
 theorem card_Ioo_finset (h : s ⊆ t) : (Ioo s t).card = 2 ^ (t.card - s.card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc_finset h]
 #align finset.card_Ioo_finset Finset.card_Ioo_finset
 
+/- warning: finset.card_Iic_finset -> Finset.card_Iic_finset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Iic.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.orderBot.{u1} α) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Finset.card.{u1} α s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Iic.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Finset.card.{u1} α s))
+Case conversion may be inaccurate. Consider using '#align finset.card_Iic_finset Finset.card_Iic_finsetₓ'. -/
 /-- Cardinality of an `Iic` of finsets. -/
 theorem card_Iic_finset : (Iic s).card = 2 ^ s.card := by rw [Iic_eq_powerset, card_powerset]
 #align finset.card_Iic_finset Finset.card_Iic_finset
 
+/- warning: finset.card_Iio_finset -> Finset.card_Iio_finset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Iio.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.orderBot.{u1} α) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Finset.card.{u1} α s)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Iio.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) s)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Finset.card.{u1} α s)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align finset.card_Iio_finset Finset.card_Iio_finsetₓ'. -/
 /-- Cardinality of an `Iio` of finsets. -/
 theorem card_Iio_finset : (Iio s).card = 2 ^ s.card - 1 := by
   rw [Iio_eq_ssubsets, ssubsets, card_erase_of_mem (mem_powerset_self _), card_powerset]
