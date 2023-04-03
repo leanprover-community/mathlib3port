@@ -1257,6 +1257,7 @@ import Mathbin.Data.Fin.Tuple.Basic
 import Mathbin.Data.Fin.Tuple.BubbleSortInduction
 import Mathbin.Data.Fin.Tuple.Monotone
 import Mathbin.Data.Fin.Tuple.NatAntidiagonal
+import Mathbin.Data.Fin.Tuple.Reflection
 import Mathbin.Data.Fin.Tuple.Sort
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Data.FinEnum
@@ -1427,6 +1428,7 @@ import Mathbin.Data.Matrix.Kronecker
 import Mathbin.Data.Matrix.Notation
 import Mathbin.Data.Matrix.Pequiv
 import Mathbin.Data.Matrix.Rank
+import Mathbin.Data.Matrix.Reflection
 import Mathbin.Data.Mllist
 import Mathbin.Data.Multiset.Antidiagonal
 import Mathbin.Data.Multiset.Basic

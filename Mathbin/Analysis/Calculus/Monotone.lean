@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.monotone
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ behavior of `μ [x, y]`.
 -/
 
 
-open Set Filter Function Metric MeasureTheory MeasureTheory.Measure IsDoublingMeasure
+open Set Filter Function Metric MeasureTheory MeasureTheory.Measure IsUnifLocDoublingMeasure
 
 open Topology
 

@@ -467,15 +467,27 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
     exact funext fun x => hf x h.some
 #align measurable_const' measurable_const'
 
+/- warning: measurable_nat_cast -> measurable_natCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] [_inst_4 : NatCast.{u1} α] (n : Nat), Measurable.{u2, u1} β α _inst_2 _inst_1 ((fun (a : Type) (b : Sort.{max (succ u2) (succ u1)}) [self : HasLiftT.{1, max (succ u2) (succ u1)} a b] => self.0) Nat (β -> α) (HasLiftT.mk.{1, max (succ u2) (succ u1)} Nat (β -> α) (CoeTCₓ.coe.{1, max (succ u2) (succ u1)} Nat (β -> α) (Nat.castCoe.{max u2 u1} (β -> α) (Pi.hasNatCast.{u2, u1} β (fun (ᾰ : β) => α) (fun (a : β) => _inst_4))))) n)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] [_inst_4 : NatCast.{u2} α] (n : Nat), Measurable.{u1, u2} β α _inst_2 _inst_1 (Nat.cast.{max u2 u1} (β -> α) (Pi.natCast.{u1, u2} β (fun (a._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.2315 : β) => α) (fun (a : β) => _inst_4)) n)
+Case conversion may be inaccurate. Consider using '#align measurable_nat_cast measurable_natCastₓ'. -/
 @[measurability]
-theorem measurable_nat_cast [NatCast α] (n : ℕ) : Measurable (n : β → α) :=
+theorem measurable_natCast [NatCast α] (n : ℕ) : Measurable (n : β → α) :=
   @measurable_const α _ _ _ n
-#align measurable_nat_cast measurable_nat_cast
+#align measurable_nat_cast measurable_natCast
 
+/- warning: measurable_int_cast -> measurable_intCast is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u2} β] [_inst_4 : IntCast.{u1} α] (n : Int), Measurable.{u2, u1} β α _inst_2 _inst_1 ((fun (a : Type) (b : Sort.{max (succ u2) (succ u1)}) [self : HasLiftT.{1, max (succ u2) (succ u1)} a b] => self.0) Int (β -> α) (HasLiftT.mk.{1, max (succ u2) (succ u1)} Int (β -> α) (CoeTCₓ.coe.{1, max (succ u2) (succ u1)} Int (β -> α) (Int.castCoe.{max u2 u1} (β -> α) (Pi.hasIntCast.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_4))))) n)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] [_inst_4 : IntCast.{u2} α] (n : Int), Measurable.{u1, u2} β α _inst_2 _inst_1 (Int.cast.{max u2 u1} (β -> α) (Pi.intCast.{u1, u2} β (fun (a._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.2364 : β) => α) (fun (i : β) => _inst_4)) n)
+Case conversion may be inaccurate. Consider using '#align measurable_int_cast measurable_intCastₓ'. -/
 @[measurability]
-theorem measurable_int_cast [IntCast α] (n : ℤ) : Measurable (n : β → α) :=
+theorem measurable_intCast [IntCast α] (n : ℤ) : Measurable (n : β → α) :=
   @measurable_const α _ _ _ n
-#align measurable_int_cast measurable_int_cast
+#align measurable_int_cast measurable_intCast
 
 /- warning: measurable_of_finite -> measurable_of_finite is a dubious translation:
 lean 3 declaration is
@@ -2467,7 +2479,7 @@ def piEquivPiSubtypeProd (p : δ' → Prop) [DecidablePred p] :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {s : Set.{u1} α} [_inst_7 : DecidablePred.{succ u1} α s], (MeasurableSet.{u1} α _inst_1 s) -> (MeasurableEquiv.{u1, u1} (Sum.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) α (Sum.measurableSpace.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (Subtype.measurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1) (Subtype.measurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) _inst_1)) _inst_1)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {s : Set.{u1} α} [_inst_7 : DecidablePred.{succ u1} α (fun (x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.16989 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.16989 s)], (MeasurableSet.{u1} α _inst_1 s) -> (MeasurableEquiv.{u1, u1} (Sum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) α (instMeasurableSpaceSum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) _inst_1)) _inst_1)
+  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {s : Set.{u1} α} [_inst_7 : DecidablePred.{succ u1} α (fun (x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.17087 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.17087 s)], (MeasurableSet.{u1} α _inst_1 s) -> (MeasurableEquiv.{u1, u1} (Sum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) α (instMeasurableSpaceSum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) _inst_1)) _inst_1)
 Case conversion may be inaccurate. Consider using '#align measurable_equiv.sum_compl MeasurableEquiv.sumComplₓ'. -/
 /-- If `s` is a measurable set in a measurable space, that space is equivalent
 to the sum of `s` and `sᶜ`.-/

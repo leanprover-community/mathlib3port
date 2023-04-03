@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.add_circle
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
             (∀ᶠ j in l, d ∈ closed_ball (w j) (1 * δ j)) →
               tendsto (fun j => μ (s ∩ closed_ball (w j) (δ j)) / μ (closed_ball (w j) (δ j))) l
                 (𝓝 1) :=
-    exists_mem_of_measure_ne_zero_of_ae h (IsDoublingMeasure.ae_tendsto_measure_inter_div μ s 1)
+    exists_mem_of_measure_ne_zero_of_ae h
+      (IsUnifLocDoublingMeasure.ae_tendsto_measure_inter_div μ s 1)
   let I : ι → Set (AddCircle T) := fun j => closed_ball d (T / (2 * ↑(n j)))
   replace hd : tendsto (fun j => μ (s ∩ I j) / μ (I j)) l (𝓝 1)
   · let δ : ι → ℝ := fun j => T / (2 * ↑(n j))

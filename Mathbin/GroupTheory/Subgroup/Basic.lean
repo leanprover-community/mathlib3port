@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit c10e724be91096453ee3db13862b9fb9a992fef2
+! leanprover-community/mathlib commit 6b60020790e39e77bfd633ba3d5562ff82e52c79
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ include hSG
 #print SubgroupClass.subtype /-
 /-- The natural group hom from a subgroup of group `G` to `G`. -/
 @[to_additive "The natural group hom from an additive subgroup of `add_group` `G` to `G`."]
-def subtype : H →* G :=
+protected def subtype : H →* G :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 #align subgroup_class.subtype SubgroupClass.subtype
 #align add_subgroup_class.subtype AddSubgroupClass.subtype
@@ -381,7 +381,7 @@ but is expected to have type
   forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {S : Type.{u1}} (H : S) [_inst_6 : SetLike.{u1, u2} S G] [hSG : SubgroupClass.{u1, u2} S G (Group.toDivInvMonoid.{u2} G _inst_1) _inst_6], Eq.{succ u2} (forall (a : Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) => G) a) (FunLike.coe.{succ u2, succ u2, succ u2} (MonoidHom.{u2, u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) G (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (DivInvMonoid.toMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Group.toDivInvMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (SubgroupClass.toGroup.{u2, u1} G _inst_1 S H _inst_6 hSG)))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (fun (_x : Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) => G) _x) (MulHomClass.toFunLike.{u2, u2, u2} (MonoidHom.{u2, u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) G (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (DivInvMonoid.toMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Group.toDivInvMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (SubgroupClass.toGroup.{u2, u1} G _inst_1 S H _inst_6 hSG)))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) G (MulOneClass.toMul.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (DivInvMonoid.toMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Group.toDivInvMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (SubgroupClass.toGroup.{u2, u1} G _inst_1 S H _inst_6 hSG))))) (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (MonoidHomClass.toMulHomClass.{u2, u2, u2} (MonoidHom.{u2, u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) G (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (DivInvMonoid.toMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Group.toDivInvMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (SubgroupClass.toGroup.{u2, u1} G _inst_1 S H _inst_6 hSG)))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) G (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (DivInvMonoid.toMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Group.toDivInvMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (SubgroupClass.toGroup.{u2, u1} G _inst_1 S H _inst_6 hSG)))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (MonoidHom.monoidHomClass.{u2, u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) G (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (DivInvMonoid.toMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (Group.toDivInvMonoid.{u2} (Subtype.{succ u2} G (fun (x : G) => Membership.mem.{u2, u1} G S (SetLike.instMembership.{u1, u2} S G _inst_6) x H)) (SubgroupClass.toGroup.{u2, u1} G _inst_1 S H _inst_6 hSG)))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))))) (SubgroupClass.subtype.{u2, u1} G _inst_1 S H _inst_6 hSG)) (Subtype.val.{succ u2} G (fun (x : G) => Membership.mem.{u2, u2} G (Set.{u2} G) (Set.instMembershipSet.{u2} G) x (SetLike.coe.{u1, u2} S G _inst_6 H)))
 Case conversion may be inaccurate. Consider using '#align subgroup_class.coe_subtype SubgroupClass.coeSubtypeₓ'. -/
 @[simp, to_additive]
-theorem coeSubtype : (subtype H : H → G) = coe :=
+theorem coeSubtype : (SubgroupClass.subtype H : H → G) = coe :=
   rfl
 #align subgroup_class.coe_subtype SubgroupClass.coeSubtype
 #align add_subgroup_class.coe_subtype AddSubgroupClass.coeSubtype
@@ -396,7 +396,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup_class.coe_pow SubgroupClass.coe_powₓ'. -/
 @[simp, norm_cast, to_additive coe_smul]
 theorem coe_pow (x : H) (n : ℕ) : ((x ^ n : H) : G) = x ^ n :=
-  (subtype H : H →* G).map_pow _ _
+  (SubgroupClass.subtype H : H →* G).map_pow _ _
 #align subgroup_class.coe_pow SubgroupClass.coe_pow
 #align add_subgroup_class.coe_smul AddSubgroupClass.coe_nsmul
 
@@ -408,7 +408,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup_class.coe_zpow SubgroupClass.coe_zpowₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_zpow (x : H) (n : ℤ) : ((x ^ n : H) : G) = x ^ n :=
-  (subtype H : H →* G).map_zpow _ _
+  (SubgroupClass.subtype H : H →* G).map_zpow _ _
 #align subgroup_class.coe_zpow SubgroupClass.coe_zpow
 #align add_subgroup_class.coe_zsmul AddSubgroupClass.coe_zsmul
 
@@ -501,7 +501,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup_class.subtype_comp_inclusion SubgroupClass.subtype_comp_inclusionₓ'. -/
 @[simp, to_additive]
 theorem subtype_comp_inclusion {H K : S} (hH : H ≤ K) :
-    (subtype K).comp (inclusion hH) = subtype H :=
+    (SubgroupClass.subtype K).comp (inclusion hH) = SubgroupClass.subtype H :=
   by
   ext
   simp only [MonoidHom.comp_apply, coeSubtype, coe_inclusion]
@@ -1243,7 +1243,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.subtype Subgroup.subtypeₓ'. -/
 /-- The natural group hom from a subgroup of group `G` to `G`. -/
 @[to_additive "The natural group hom from an `add_subgroup` of `add_group` `G` to `G`."]
-def subtype : H →* G :=
+protected def subtype : H →* G :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 #align subgroup.subtype Subgroup.subtype
 #align add_subgroup.subtype AddSubgroup.subtype
@@ -1267,7 +1267,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Function.Injective.{succ u1, succ u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 H)) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (fun (_x : Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) => G) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 H)) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (MulOneClass.toMul.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 H))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 H)) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 H)) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (MonoidHom.monoidHomClass.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (Submonoid.toMulOneClass.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Subgroup.toSubmonoid.{u1} G _inst_1 H)) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))))) (Subgroup.subtype.{u1} G _inst_1 H))
 Case conversion may be inaccurate. Consider using '#align subgroup.subtype_injective Subgroup.subtype_injectiveₓ'. -/
 @[to_additive]
-theorem subtype_injective : Function.Injective (subtype H) :=
+theorem subtype_injective : Injective (Subgroup.subtype H) :=
   Subtype.coe_injective
 #align subgroup.subtype_injective Subgroup.subtype_injective
 #align add_subgroup.subtype_injective AddSubgroup.subtype_injective

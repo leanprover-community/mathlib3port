@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 02e095b22be8a3731542041cdc1266b7f588377c
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -625,14 +625,15 @@ theorem add_haar_singleton_add_smul_div_singleton_add_smul {r : ℝ} (hr : r ≠
     
 #align measure_theory.measure.add_haar_singleton_add_smul_div_singleton_add_smul MeasureTheory.Measure.add_haar_singleton_add_smul_div_singleton_add_smul
 
-instance (priority := 100) isDoublingMeasureOfIsAddHaarMeasure : IsDoublingMeasure μ :=
+instance (priority := 100) isUnifLocDoublingMeasureOfIsAddHaarMeasure :
+    IsUnifLocDoublingMeasure μ :=
   by
   refine' ⟨⟨(2 : ℝ≥0) ^ finrank ℝ E, _⟩⟩
   filter_upwards [self_mem_nhdsWithin]with r hr x
   rw [add_haar_closed_ball_mul μ x zero_le_two (le_of_lt hr), add_haar_closed_ball_center μ x,
     ENNReal.ofReal, Real.toNNReal_pow zero_le_two]
   simp only [[anonymous], Real.toNNReal_one, le_refl]
-#align measure_theory.measure.is_doubling_measure_of_is_add_haar_measure MeasureTheory.Measure.isDoublingMeasureOfIsAddHaarMeasure
+#align measure_theory.measure.is_unif_loc_doubling_measure_of_is_add_haar_measure MeasureTheory.Measure.isUnifLocDoublingMeasureOfIsAddHaarMeasure
 
 section
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1294,7 +1294,7 @@ to `1` when `r` tends to `0`, for almost every `x` in `s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
 A stronger version holds for measurable sets, see `ae_tendsto_measure_inter_div_of_measurable_set`.
 
-See also `is_doubling_measure.ae_tendsto_measure_inter_div`. -/
+See also `is_unif_loc_doubling_measure.ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div (μ : Measure β) [IsLocallyFiniteMeasure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s,
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 1) :=

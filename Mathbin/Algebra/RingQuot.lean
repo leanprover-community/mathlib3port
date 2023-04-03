@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.ring_quot
-! leanprover-community/mathlib commit 565eb991e264d0db702722b4bde52ee5173c9950
+! leanprover-community/mathlib commit e5820f6c8fcf1b75bcd7738ae4da1c5896191f72
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,6 +34,23 @@ variable {R : Type u₁} [Semiring R]
 variable {S : Type u₂} [CommSemiring S]
 
 variable {A : Type u₃} [Semiring A] [Algebra S A]
+
+namespace RingCon
+
+instance (c : RingCon A) : Algebra S c.Quotient
+    where
+  smul := (· • ·)
+  toRingHom := c.mk'.comp (algebraMap S A)
+  commutes' r := Quotient.ind' fun a => congr_arg Quotient.mk'' <| Algebra.commutes _ _
+  smul_def' r := Quotient.ind' fun a => congr_arg Quotient.mk'' <| Algebra.smul_def _ _
+
+@[simp, norm_cast]
+theorem coe_algebraMap (c : RingCon A) (s : S) :
+    (↑(algebraMap S A s) : c.Quotient) = algebraMap S _ s :=
+  rfl
+#align ring_con.coe_algebra_map RingCon.coe_algebraMap
+
+end RingCon
 
 namespace RingQuot
 
@@ -69,6 +86,69 @@ theorem Rel.sub_right {R : Type u₁} [Ring R] {r : R → R → Prop} ⦃a b c :
 theorem Rel.smul {r : A → A → Prop} (k : S) ⦃a b : A⦄ (h : Rel r a b) : Rel r (k • a) (k • b) := by
   simp only [Algebra.smul_def, rel.mul_right h]
 #align ring_quot.rel.smul RingQuot.Rel.smul
+
+/-- `eqv_gen (ring_quot.rel r)` is a ring congruence. -/
+def ringCon (r : R → R → Prop) : RingCon R
+    where
+  R := EqvGen (Rel r)
+  iseqv := EqvGen.is_equivalence _
+  add' a b c d hab hcd :=
+    by
+    induction' hab with a' b' hab e a' b' hab' _ c' d' e hcd' hde' ihcd' ihde' generalizing c d
+    · refine' (EqvGen.rel _ _ hab.add_left).trans _ _ _ _
+      induction' hcd with c' d' hcd f c' d' hcd' habcd' c' d' f' hcd' hdf' hbcd' hbcf'
+      · exact EqvGen.rel _ _ hcd.add_right
+      · exact EqvGen.refl _
+      · exact habcd'.symm _ _
+      · exact hbcd'.trans _ _ _ hbcf'
+    · induction' hcd with c' d' hcd f c' d' hcd' habcd' c' d' f' hcd' hdf' hbcd' hbcf'
+      · exact EqvGen.rel _ _ hcd.add_right
+      · exact EqvGen.refl _
+      · exact EqvGen.symm _ _ habcd'
+      · exact hbcd'.trans _ _ _ hbcf'
+    · exact (hab_ih _ _ <| hcd.symm _ _).symm _ _
+    · exact (ihcd' _ _ hcd).trans _ _ _ (ihde' _ _ <| EqvGen.refl _)
+  mul' a b c d hab hcd :=
+    by
+    induction' hab with a' b' hab e a' b' hab' _ c' d' e hcd' hde' ihcd' ihde' generalizing c d
+    · refine' (EqvGen.rel _ _ hab.mul_left).trans _ _ _ _
+      induction' hcd with c' d' hcd f c' d' hcd' habcd' c' d' f' hcd' hdf' hbcd' hbcf'
+      · exact EqvGen.rel _ _ hcd.mul_right
+      · exact EqvGen.refl _
+      · exact habcd'.symm _ _
+      · exact hbcd'.trans _ _ _ hbcf'
+    · induction' hcd with c' d' hcd f c' d' hcd' habcd' c' d' f' hcd' hdf' hbcd' hbcf'
+      · exact EqvGen.rel _ _ hcd.mul_right
+      · exact EqvGen.refl _
+      · exact EqvGen.symm _ _ habcd'
+      · exact hbcd'.trans _ _ _ hbcf'
+    · exact (hab_ih _ _ <| hcd.symm _ _).symm _ _
+    · exact (ihcd' _ _ hcd).trans _ _ _ (ihde' _ _ <| EqvGen.refl _)
+#align ring_quot.ring_con RingQuot.ringCon
+
+theorem eqvGen_rel_eq (r : R → R → Prop) : EqvGen (Rel r) = RingConGen.Rel r :=
+  by
+  ext (x₁ x₂)
+  constructor
+  · intro h
+    induction' h with x₃ x₄ h₃₄
+    · induction' h₃₄ with _ dfg h₃₄ x₃ x₄ x₅ h₃₄'
+      · exact RingConGen.Rel.of _ _ ‹_›
+      · exact h₃₄_ih.add (RingConGen.Rel.refl _)
+      · exact h₃₄_ih.mul (RingConGen.Rel.refl _)
+      · exact (RingConGen.Rel.refl _).mul h₃₄_ih
+    · exact RingConGen.Rel.refl _
+    · exact RingConGen.Rel.symm ‹_›
+    · exact RingConGen.Rel.trans ‹_› ‹_›
+  · intro h
+    induction h
+    · exact EqvGen.rel _ _ (rel.of ‹_›)
+    · exact (RingQuot.ringCon r).refl _
+    · exact (RingQuot.ringCon r).symm ‹_›
+    · exact (RingQuot.ringCon r).trans ‹_› ‹_›
+    · exact (RingQuot.ringCon r).add ‹_› ‹_›
+    · exact (RingQuot.ringCon r).mul ‹_› ‹_›
+#align ring_quot.eqv_gen_rel_eq RingQuot.eqvGen_rel_eq
 
 end RingQuot
 

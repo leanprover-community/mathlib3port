@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 500ccb102e657148301f2ec059e8ee766b8660f3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -484,25 +484,54 @@ section rank_zero
 
 variable {R : Type u} {M : Type v}
 
-variable [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M] [NoZeroSMulDivisors R M]
+variable [Ring R] [AddCommGroup M] [Module R M]
+
+@[simp]
+theorem dim_subsingleton [Subsingleton R] : Module.rank R M = 1 :=
+  by
+  haveI := Module.subsingleton R M
+  have : Nonempty { s : Set M // LinearIndependent R (coe : s → M) } :=
+    ⟨⟨∅, linearIndependent_empty _ _⟩⟩
+  rw [Module.rank, csupᵢ_eq_of_forall_le_of_forall_lt_exists_gt]
+  · rintro ⟨s, hs⟩
+    rw [Cardinal.mk_le_one_iff_set_subsingleton]
+    apply subsingleton_of_subsingleton
+  intro w hw
+  refine' ⟨⟨{0}, _⟩, _⟩
+  · rw [linearIndependent_iff']
+    intros
+    exact Subsingleton.elim _ _
+  · exact hw.trans_eq (Cardinal.mk_singleton _).symm
+#align dim_subsingleton dim_subsingleton
+
+variable [NoZeroSMulDivisors R M]
+
+theorem dim_pos [Nontrivial M] : 0 < Module.rank R M :=
+  by
+  obtain ⟨x, hx⟩ := exists_ne (0 : M)
+  suffices 1 ≤ Module.rank R M by exact zero_lt_one.trans_le this
+  letI := Module.nontrivial R M
+  suffices LinearIndependent R fun y : ({x} : Set M) => ↑y by
+    simpa using cardinal_le_dim_of_linearIndependent this
+  exact linearIndependent_singleton hx
+#align dim_pos dim_pos
+
+variable [Nontrivial R]
 
 theorem dim_zero_iff_forall_zero : Module.rank R M = 0 ↔ ∀ x : M, x = 0 :=
   by
   refine' ⟨fun h => _, fun h => _⟩
   · contrapose! h
     obtain ⟨x, hx⟩ := h
-    suffices 1 ≤ Module.rank R M by
-      intro h
-      exact this.not_lt (h.symm ▸ zero_lt_one)
-    suffices LinearIndependent R fun y : ({x} : Set M) => ↑y by
-      simpa using cardinal_le_dim_of_linearIndependent this
-    exact linearIndependent_singleton hx
+    letI : Nontrivial M := nontrivial_of_ne _ _ hx
+    exact dim_pos.ne'
   · have : (⊤ : Submodule R M) = ⊥ := by
       ext x
       simp [h x]
     rw [← dim_top, this, dim_bot]
 #align dim_zero_iff_forall_zero dim_zero_iff_forall_zero
 
+/-- See `dim_subsingleton` for the reason that `nontrivial R` is needed. -/
 theorem dim_zero_iff : Module.rank R M = 0 ↔ Subsingleton M :=
   dim_zero_iff_forall_zero.trans (subsingleton_iff_forall_eq 0).symm
 #align dim_zero_iff dim_zero_iff
@@ -516,10 +545,6 @@ theorem dim_pos_iff_exists_ne_zero : 0 < Module.rank R M ↔ ∃ x : M, x ≠ 0 
 theorem dim_pos_iff_nontrivial : 0 < Module.rank R M ↔ Nontrivial M :=
   dim_pos_iff_exists_ne_zero.trans (nontrivial_iff_exists_ne 0).symm
 #align dim_pos_iff_nontrivial dim_pos_iff_nontrivial
-
-theorem dim_pos [h : Nontrivial M] : 0 < Module.rank R M :=
-  dim_pos_iff_nontrivial.2 h
-#align dim_pos dim_pos
 
 end rank_zero
 

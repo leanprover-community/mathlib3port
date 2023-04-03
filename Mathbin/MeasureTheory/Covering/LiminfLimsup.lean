@@ -4,24 +4,24 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.liminf_limsup
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Covering.DensityTheorem
 
 /-!
-# Liminf, limsup, and doubling measures.
+# Liminf, limsup, and uniformly locally doubling measures.
 
 This file is a place to collect lemmas about liminf and limsup for subsets of a metric space
-carrying a doubling measure.
+carrying a uniformly locally doubling measure.
 
 ## Main results:
 
  * `blimsup_cthickening_mul_ae_eq`: the limsup of the closed thickening of a sequence of subsets
-   of a metric space is unchanged almost everywhere for a doubling measure if the sequence of
-   distances is multiplied by a positive scale factor. This is a generalisation of a result of
-   Cassels, appearing as Lemma 9 on page 217 of
+   of a metric space is unchanged almost everywhere for a uniformly locally doubling measure if the
+   sequence of distances is multiplied by a positive scale factor. This is a generalisation of a
+   result of Cassels, appearing as Lemma 9 on page 217 of
    [J.W.S. Cassels, *Some metrical theorems in Diophantine approximation. I*](cassels1950).
  * `blimsup_thickening_mul_ae_eq`: a variant of `blimsup_cthickening_mul_ae_eq` for thickenings
    rather than closed thickenings.
@@ -35,7 +35,7 @@ open NNReal ENNReal Topology
 
 variable {α : Type _} [MetricSpace α] [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α]
 
-variable (μ : Measure α) [IsLocallyFiniteMeasure μ] [IsDoublingMeasure μ]
+variable (μ : Measure α) [IsLocallyFiniteMeasure μ] [IsUnifLocDoublingMeasure μ]
 
 /-- This is really an auxiliary result en route to `blimsup_cthickening_ae_le_of_eventually_mul_le`
 (which is itself an auxiliary result en route to `blimsup_cthickening_mul_ae_eq`).
@@ -62,7 +62,8 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   
     We obtain our contradiction by showing that there exists `η < 1` such that
     `μ (W ∩ (B j)) / μ (B j) ≤ η` for sufficiently large `j`. In fact we claim that `η = 1 - C⁻¹`
-    is such a value where `C` is the scaling constant of `M⁻¹` for the doubling measure `μ`.
+    is such a value where `C` is the scaling constant of `M⁻¹` for the uniformly locally doubling
+    measure `μ`.
   
     To prove the claim, let `b j = closed_ball (w j) (M * r₁ (f j))` and for given `j` consider the
     sets `b j` and `W ∩ (B j)`. These are both subsets of `B j` and are disjoint for large enough `j`
@@ -87,7 +88,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
               tendsto (fun j => μ (W ∩ closed_ball (w j) (δ j)) / μ (closed_ball (w j) (δ j))) l
                 (𝓝 1) :=
     measure.exists_mem_of_measure_ne_zero_of_ae contra
-      (IsDoublingMeasure.ae_tendsto_measure_inter_div μ W 2)
+      (IsUnifLocDoublingMeasure.ae_tendsto_measure_inter_div μ W 2)
   replace hd : d ∈ blimsup Y₁ at_top p := ((mem_diff _).mp hd).1
   obtain ⟨f : ℕ → ℕ, hf⟩ := exists_forall_mem_of_has_basis_mem_blimsup' at_top_basis hd
   simp only [forall_and] at hf
@@ -110,8 +111,9 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
           (cthickening_subset_Union_closed_ball_of_lt (s (f j)) (by positivity)
             (lt_two_mul_self hrp') (hf₀ j))
   choose w hw hw' using hf₀
-  let C := IsDoublingMeasure.scalingConstantOf μ M⁻¹
-  have hC : 0 < C := lt_of_lt_of_le zero_lt_one (IsDoublingMeasure.one_le_scalingConstantOf μ M⁻¹)
+  let C := IsUnifLocDoublingMeasure.scalingConstantOf μ M⁻¹
+  have hC : 0 < C :=
+    lt_of_lt_of_le zero_lt_one (IsUnifLocDoublingMeasure.one_le_scalingConstantOf μ M⁻¹)
   suffices
     ∃ η < (1 : ℝ≥0),
       ∀ᶠ j in at_top, μ (W ∩ closed_ball (w j) (r₁ (f j))) / μ (closed_ball (w j) (r₁ (f j))) ≤ η
@@ -142,7 +144,8 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
     simp only [mem_Union, exists_prop]
     exact ⟨f j, ⟨hf₁ j, hj.le.trans (hf₂ j)⟩, ha⟩
   have h₄ : ∀ᶠ j in at_top, μ (B j) ≤ C * μ (b j) :=
-    (hr.eventually (IsDoublingMeasure.eventually_measure_le_scaling_constant_mul' μ M hM)).mono
+    (hr.eventually
+          (IsUnifLocDoublingMeasure.eventually_measure_le_scaling_constant_mul' μ M hM)).mono
       fun j hj => hj (w j)
   refine' (h₃.and h₄).mono fun j hj₀ => _
   change μ (W ∩ B j) / μ (B j) ≤ ↑(1 - C⁻¹)
@@ -197,8 +200,8 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : �
 
 /-- Given a sequence of subsets `sᵢ` of a metric space, together with a sequence of radii `rᵢ`
 such that `rᵢ → 0`, the set of points which belong to infinitely many of the closed
-`rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a doubling measure if the `rᵢ` are all
-scaled by a positive constant.
+`rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a uniformly locally doubling measure if
+the `rᵢ` are all scaled by a positive constant.
 
 This lemma is a generalisation of Lemma 9 appearing on page 217 of
 [J.W.S. Cassels, *Some metrical theorems in Diophantine approximation. I*](cassels1950).
@@ -297,8 +300,8 @@ theorem blimsup_thickening_mul_ae_eq_aux (p : ℕ → Prop) (s : ℕ → Set α)
 
 /-- Given a sequence of subsets `sᵢ` of a metric space, together with a sequence of radii `rᵢ`
 such that `rᵢ → 0`, the set of points which belong to infinitely many of the
-`rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a doubling measure if the `rᵢ` are all
-scaled by a positive constant.
+`rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a uniformly locally doubling measure if
+the `rᵢ` are all scaled by a positive constant.
 
 This lemma is a generalisation of Lemma 9 appearing on page 217 of
 [J.W.S. Cassels, *Some metrical theorems in Diophantine approximation. I*](cassels1950).

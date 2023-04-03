@@ -410,14 +410,14 @@ theorem eq_interpolate_iff {f : F[X]} (hvs : Set.InjOn v s) :
 
 /-- Lagrange interpolation induces isomorphism between functions from `s`
 and polynomials of degree less than `fintype.card ι`.-/
-def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F
+def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLT F s.card ≃ₗ[F] s → F
     where
   toFun f i := f.1.eval (v i)
   map_add' f g := funext fun v => eval_add
   map_smul' c f := funext <| by simp
   invFun r :=
     ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0,
-      mem_degreeLt.2 <| degree_interpolate_lt _ hvs⟩
+      mem_degreeLT.2 <| degree_interpolate_lt _ hvs⟩
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.density_theorem
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,19 +13,21 @@ import Mathbin.MeasureTheory.Covering.Vitali
 import Mathbin.MeasureTheory.Covering.Differentiation
 
 /-!
-# Doubling measures and Lebesgue's density theorem
+# Uniformly locally doubling measures and Lebesgue's density theorem
 
 Lebesgue's density theorem states that given a set `S` in a sigma compact metric space with
-locally-finite doubling measure `μ` then for almost all points `x` in `S`, for any sequence of
-closed balls `B₀, B₁, B₂, ...` containing `x`, the limit `μ (S ∩ Bⱼ) / μ (Bⱼ) → 1` as `j → ∞`.
+locally-finite uniformly locally doubling measure `μ` then for almost all points `x` in `S`, for any
+sequence of closed balls `B₀, B₁, B₂, ...` containing `x`, the limit `μ (S ∩ Bⱼ) / μ (Bⱼ) → 1` as
+`j → ∞`.
 
-In this file we combine general results about existence of Vitali families for doubling measures
-with results about differentiation along a Vitali family to obtain an explicit form of Lebesgue's
-density theorem.
+In this file we combine general results about existence of Vitali families for uniformly locally
+doubling measures with results about differentiation along a Vitali family to obtain an explicit
+form of Lebesgue's density theorem.
 
 ## Main results
-  * `is_doubling_measure.ae_tendsto_measure_inter_div`: a version of Lebesgue's density theorem for
-  sequences of balls converging on a point but whose centres are not required to be fixed.
+  * `is_unif_loc_doubling_measure.ae_tendsto_measure_inter_div`: a version of Lebesgue's density
+  theorem for sequences of balls converging on a point but whose centres are not required to be
+  fixed.
 
 -/
 
@@ -36,9 +38,10 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 
 open NNReal Topology
 
-namespace IsDoublingMeasure
+namespace IsUnifLocDoublingMeasure
 
-variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) [IsDoublingMeasure μ]
+variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α)
+  [IsUnifLocDoublingMeasure μ]
 
 section
 
@@ -46,8 +49,8 @@ variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ
 
 open Topology
 
-/-- A Vitali family in a space with a doubling measure, designed so that the sets at `x` contain
-all `closed_ball y r` when `dist x y ≤ K * r`. -/
+/-- A Vitali family in a space with a uniformly locally doubling measure, designed so that the sets
+at `x` contain all `closed_ball y r` when `dist x y ≤ K * r`. -/
 irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
   by
   /- the Vitali covering theorem gives a family that works well at small scales, thanks to the
@@ -70,10 +73,10 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
   exact
     (Vitali.vitaliFamily μ (scaling_constant_of μ (max (4 * K + 3) 3)) A).enlarge (R / 4)
       (by linarith)
-#align is_doubling_measure.vitali_family IsDoublingMeasure.vitaliFamily
+#align is_unif_loc_doubling_measure.vitali_family IsUnifLocDoublingMeasure.vitaliFamily
 
-/-- In the Vitali family `is_doubling_measure.vitali_family K`, the sets based at `x` contain all
-balls `closed_ball y r` when `dist x y ≤ K * r`. -/
+/-- In the Vitali family `is_unif_loc_doubling_measure.vitali_family K`, the sets based at `x`
+contain all balls `closed_ball y r` when `dist x y ≤ K * r`. -/
 theorem closedBall_mem_vitaliFamily_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ} (h : dist x y ≤ K * r)
     (rpos : 0 < r) : closedBall y r ∈ (vitaliFamily μ K).setsAt x :=
   by
@@ -118,7 +121,7 @@ theorem closedBall_mem_vitaliFamily_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ
     apply (measure_mono this).trans _
     refine' le_mul_of_one_le_left (zero_le _) _
     exact ENNReal.one_le_coe_iff.2 (le_max_right _ _)
-#align is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closedBall_mem_vitaliFamily_of_dist_le_mul
+#align is_unif_loc_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsUnifLocDoublingMeasure.closedBall_mem_vitaliFamily_of_dist_le_mul
 
 theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)
     (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
@@ -145,7 +148,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
       simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
     simp only [mem_closed_ball] at hx hy⊢
     linarith [dist_triangle_right y x (w j)]
-#align is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closedBall_filterAt
+#align is_unif_loc_doubling_measure.tendsto_closed_ball_filter_at IsUnifLocDoublingMeasure.tendsto_closedBall_filterAt
 
 end
 
@@ -166,7 +169,7 @@ theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
       S]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
-#align is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
+#align is_unif_loc_doubling_measure.ae_tendsto_measure_inter_div IsUnifLocDoublingMeasure.ae_tendsto_measure_inter_div
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/
@@ -178,7 +181,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : �
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub
       hf]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
-#align is_doubling_measure.ae_tendsto_average_norm_sub IsDoublingMeasure.ae_tendsto_average_norm_sub
+#align is_unif_loc_doubling_measure.ae_tendsto_average_norm_sub IsUnifLocDoublingMeasure.ae_tendsto_average_norm_sub
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/
@@ -191,9 +194,9 @@ theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} 
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average
       hf]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
-#align is_doubling_measure.ae_tendsto_average IsDoublingMeasure.ae_tendsto_average
+#align is_unif_loc_doubling_measure.ae_tendsto_average IsUnifLocDoublingMeasure.ae_tendsto_average
 
 end Applications
 
-end IsDoublingMeasure
+end IsUnifLocDoublingMeasure
 

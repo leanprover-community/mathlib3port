@@ -323,19 +323,19 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
 #align nat.totient_eq_iff_prime Nat.totient_eq_iff_prime
 -/
 
-/- warning: nat.card_units_zmod_lt_sub_one -> Nat.card_units_zMod_lt_sub_one is a dubious translation:
+/- warning: nat.card_units_zmod_lt_sub_one -> Nat.card_units_zmod_lt_sub_one is a dubious translation:
 lean 3 declaration is
   forall {p : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) p) -> (forall [_inst_1 : Fintype.{0} (Units.{0} (ZMod p) (Ring.toMonoid.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))], LE.le.{0} Nat Nat.hasLe (Fintype.card.{0} (Units.{0} (ZMod p) (Ring.toMonoid.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))) _inst_1) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
   forall {p : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) p) -> (forall [_inst_1 : Fintype.{0} (Units.{0} (ZMod p) (MonoidWithZero.toMonoid.{0} (ZMod p) (Semiring.toMonoidWithZero.{0} (ZMod p) (Ring.toSemiring.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p))))))], LE.le.{0} Nat instLENat (Fintype.card.{0} (Units.{0} (ZMod p) (MonoidWithZero.toMonoid.{0} (ZMod p) (Semiring.toMonoidWithZero.{0} (ZMod p) (Ring.toSemiring.{0} (ZMod p) (CommRing.toRing.{0} (ZMod p) (ZMod.commRing p)))))) _inst_1) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align nat.card_units_zmod_lt_sub_one Nat.card_units_zMod_lt_sub_oneₓ'. -/
-theorem card_units_zMod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (ZMod p)ˣ] :
+Case conversion may be inaccurate. Consider using '#align nat.card_units_zmod_lt_sub_one Nat.card_units_zmod_lt_sub_oneₓ'. -/
+theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (ZMod p)ˣ] :
     Fintype.card (ZMod p)ˣ ≤ p - 1 :=
   by
   haveI : NeZero p := ⟨(pos_of_gt hp).ne'⟩
   rw [ZMod.card_units_eq_totient p]
   exact Nat.le_pred_of_lt (Nat.totient_lt p hp)
-#align nat.card_units_zmod_lt_sub_one Nat.card_units_zMod_lt_sub_one
+#align nat.card_units_zmod_lt_sub_one Nat.card_units_zmod_lt_sub_one
 
 /- warning: nat.prime_iff_card_units -> Nat.prime_iff_card_units is a dubious translation:
 lean 3 declaration is

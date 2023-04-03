@@ -64,7 +64,7 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
 
 /- warning: W_type.cardinal_mk_le_max_aleph_0_of_finite -> WType.cardinal_mk_le_max_aleph0_of_finite is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Finite.{succ u1} (β a)], LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.mk.{u1} (WType.{u1, u1} α β)) (LinearOrder.max.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toLinearOrder.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1})) (Cardinal.mk.{u1} α) Cardinal.aleph0.{u1})
+  forall {α : Type.{u1}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Finite.{succ u1} (β a)], LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.mk.{u1} (WType.{u1, u1} α β)) (LinearOrder.max.{succ u1} Cardinal.{u1} Cardinal.linearOrder.{u1} (Cardinal.mk.{u1} α) Cardinal.aleph0.{u1})
 but is expected to have type
   forall {α : Type.{u1}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Finite.{succ u1} (β a)], LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (WType.{u1, u1} α β)) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Cardinal.mk.{u1} α) Cardinal.aleph0.{u1})
 Case conversion may be inaccurate. Consider using '#align W_type.cardinal_mk_le_max_aleph_0_of_finite WType.cardinal_mk_le_max_aleph0_of_finiteₓ'. -/

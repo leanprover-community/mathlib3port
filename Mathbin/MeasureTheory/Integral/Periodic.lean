@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.integral.periodic
-! leanprover-community/mathlib commit 6a033cb3d188a12ca5c509b33e2eaac1c61916cd
+! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
   · simp [hε, min_eq_left (by linarith : T ≤ 2 * ε)]
 #align add_circle.volume_closed_ball AddCircle.volume_closedBall
 
-instance : IsDoublingMeasure (volume : Measure (AddCircle T)) :=
+instance : IsUnifLocDoublingMeasure (volume : Measure (AddCircle T)) :=
   by
   refine' ⟨⟨Real.toNNReal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
   simp only [volume_closed_ball]

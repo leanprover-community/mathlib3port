@@ -32,7 +32,7 @@ namespace Polynomial
 
 /- warning: polynomial.cardinal_mk_eq_max -> Polynomial.cardinal_mk_eq_max is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R], Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (Polynomial.{u1} R _inst_1)) (LinearOrder.max.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toLinearOrder.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1})) (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R], Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (Polynomial.{u1} R _inst_1)) (LinearOrder.max.{succ u1} Cardinal.{u1} Cardinal.linearOrder.{u1} (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : Nontrivial.{u1} R], Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (Polynomial.{u1} R _inst_1)) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
 Case conversion may be inaccurate. Consider using '#align polynomial.cardinal_mk_eq_max Polynomial.cardinal_mk_eq_maxₓ'. -/
@@ -46,7 +46,7 @@ theorem cardinal_mk_eq_max {R : Type u} [Semiring R] [Nontrivial R] : (#R[X]) = 
 
 /- warning: polynomial.cardinal_mk_le_max -> Polynomial.cardinal_mk_le_max is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.mk.{u1} (Polynomial.{u1} R _inst_1)) (LinearOrder.max.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toLinearOrder.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1})) (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.mk.{u1} (Polynomial.{u1} R _inst_1)) (LinearOrder.max.{succ u1} Cardinal.{u1} Cardinal.linearOrder.{u1} (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (Polynomial.{u1} R _inst_1)) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
 Case conversion may be inaccurate. Consider using '#align polynomial.cardinal_mk_le_max Polynomial.cardinal_mk_le_maxₓ'. -/
