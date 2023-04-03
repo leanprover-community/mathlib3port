@@ -33,6 +33,7 @@ universe u
 
 variable {α β γ : Type _} [dec : DecidableEq α]
 
+#print RegularExpression /-
 /-- This is the definition of regular expressions. The names used here is to mirror the definition
 of a Kleene algebra (https://en.wikipedia.org/wiki/Kleene_algebra).
 * `0` (`zero`) matches nothing
@@ -50,6 +51,7 @@ inductive RegularExpression (α : Type u) : Type u
   | comp : RegularExpression → RegularExpression → RegularExpression
   | star : RegularExpression → RegularExpression
 #align regular_expression RegularExpression
+-/
 
 namespace RegularExpression
 
@@ -75,73 +77,106 @@ instance : Pow (RegularExpression α) ℕ :=
 
 attribute [match_pattern] Mul.mul
 
+#print RegularExpression.zero_def /-
 @[simp]
 theorem zero_def : (zero : RegularExpression α) = 0 :=
   rfl
 #align regular_expression.zero_def RegularExpression.zero_def
+-/
 
+#print RegularExpression.one_def /-
 @[simp]
 theorem one_def : (epsilon : RegularExpression α) = 1 :=
   rfl
 #align regular_expression.one_def RegularExpression.one_def
+-/
 
+#print RegularExpression.plus_def /-
 @[simp]
 theorem plus_def (P Q : RegularExpression α) : plus P Q = P + Q :=
   rfl
 #align regular_expression.plus_def RegularExpression.plus_def
+-/
 
+#print RegularExpression.comp_def /-
 @[simp]
 theorem comp_def (P Q : RegularExpression α) : comp P Q = P * Q :=
   rfl
 #align regular_expression.comp_def RegularExpression.comp_def
+-/
 
+#print RegularExpression.matches' /-
 /-- `matches P` provides a language which contains all strings that `P` matches -/
 @[simp]
-def matches : RegularExpression α → Language α
+def matches' : RegularExpression α → Language α
   | 0 => 0
   | 1 => 1
   | Char a => {[a]}
-  | P + Q => P.matches + Q.matches
-  | P * Q => P.matches * Q.matches
-  | star P => P.matches∗
-#align regular_expression.matches RegularExpression.matches
+  | P + Q => P.matches' + Q.matches'
+  | P * Q => P.matches' * Q.matches'
+  | star P => P.matches'∗
+#align regular_expression.matches RegularExpression.matches'
+-/
 
+#print RegularExpression.matches'_zero /-
 @[simp]
-theorem matches_zero : (0 : RegularExpression α).matches = 0 :=
+theorem matches'_zero : (0 : RegularExpression α).matches' = 0 :=
   rfl
-#align regular_expression.matches_zero RegularExpression.matches_zero
+#align regular_expression.matches_zero RegularExpression.matches'_zero
+-/
 
+#print RegularExpression.matches'_epsilon /-
 @[simp]
-theorem matches_epsilon : (1 : RegularExpression α).matches = 1 :=
+theorem matches'_epsilon : (1 : RegularExpression α).matches' = 1 :=
   rfl
-#align regular_expression.matches_epsilon RegularExpression.matches_epsilon
+#align regular_expression.matches_epsilon RegularExpression.matches'_epsilon
+-/
 
+#print RegularExpression.matches'_char /-
 @[simp]
-theorem matches_char (a : α) : (char a).matches = {[a]} :=
+theorem matches'_char (a : α) : (char a).matches' = {[a]} :=
   rfl
-#align regular_expression.matches_char RegularExpression.matches_char
+#align regular_expression.matches_char RegularExpression.matches'_char
+-/
 
+/- warning: regular_expression.matches_add -> RegularExpression.matches'_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (Q : RegularExpression.{u1} α), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HAdd.hAdd.{u1, u1, u1} (RegularExpression.{u1} α) (RegularExpression.{u1} α) (RegularExpression.{u1} α) (instHAdd.{u1} (RegularExpression.{u1} α) (RegularExpression.hasAdd.{u1} α)) P Q)) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) (RegularExpression.matches'.{u1} α P) (RegularExpression.matches'.{u1} α Q))
+but is expected to have type
+  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (Q : RegularExpression.{u1} α), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HAdd.hAdd.{u1, u1, u1} (RegularExpression.{u1} α) (RegularExpression.{u1} α) (RegularExpression.{u1} α) (instHAdd.{u1} (RegularExpression.{u1} α) (RegularExpression.instAddRegularExpression.{u1} α)) P Q)) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (RegularExpression.matches'.{u1} α P) (RegularExpression.matches'.{u1} α Q))
+Case conversion may be inaccurate. Consider using '#align regular_expression.matches_add RegularExpression.matches'_addₓ'. -/
 @[simp]
-theorem matches_add (P Q : RegularExpression α) : (P + Q).matches = P.matches + Q.matches :=
+theorem matches'_add (P Q : RegularExpression α) : (P + Q).matches' = P.matches' + Q.matches' :=
   rfl
-#align regular_expression.matches_add RegularExpression.matches_add
+#align regular_expression.matches_add RegularExpression.matches'_add
 
+#print RegularExpression.matches'_mul /-
 @[simp]
-theorem matches_mul (P Q : RegularExpression α) : (P * Q).matches = P.matches * Q.matches :=
+theorem matches'_mul (P Q : RegularExpression α) : (P * Q).matches' = P.matches' * Q.matches' :=
   rfl
-#align regular_expression.matches_mul RegularExpression.matches_mul
+#align regular_expression.matches_mul RegularExpression.matches'_mul
+-/
 
+/- warning: regular_expression.matches_pow -> RegularExpression.matches'_pow is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (n : Nat), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} α) Nat (RegularExpression.{u1} α) (instHPow.{u1, 0} (RegularExpression.{u1} α) Nat (RegularExpression.Nat.hasPow.{u1} α)) P n)) (HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.semiring.{u1} α))))) (RegularExpression.matches'.{u1} α P) n)
+but is expected to have type
+  forall {α : Type.{u1}} (P : RegularExpression.{u1} α) (n : Nat), Eq.{succ u1} (Language.{u1} α) (RegularExpression.matches'.{u1} α (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} α) Nat (RegularExpression.{u1} α) (instHPow.{u1, 0} (RegularExpression.{u1} α) Nat (RegularExpression.instPowRegularExpressionNat.{u1} α)) P n)) (HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))))) (RegularExpression.matches'.{u1} α P) n)
+Case conversion may be inaccurate. Consider using '#align regular_expression.matches_pow RegularExpression.matches'_powₓ'. -/
 @[simp]
-theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches = P.matches ^ n
-  | 0 => matches_epsilon
-  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
-#align regular_expression.matches_pow RegularExpression.matches_pow
+theorem matches'_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches' = P.matches' ^ n
+  | 0 => matches'_epsilon
+  | n + 1 => (matches'_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
+#align regular_expression.matches_pow RegularExpression.matches'_pow
 
+#print RegularExpression.matches'_star /-
 @[simp]
-theorem matches_star (P : RegularExpression α) : P.unit.matches = P.matches∗ :=
+theorem matches'_star (P : RegularExpression α) : P.unit.matches' = P.matches'∗ :=
   rfl
-#align regular_expression.matches_star RegularExpression.matches_star
+#align regular_expression.matches_star RegularExpression.matches'_star
+-/
 
+#print RegularExpression.matchEpsilon /-
 /-- `match_epsilon P` is true if and only if `P` matches the empty string -/
 def matchEpsilon : RegularExpression α → Bool
   | 0 => false
@@ -151,9 +186,11 @@ def matchEpsilon : RegularExpression α → Bool
   | P * Q => P.matchEpsilon && Q.matchEpsilon
   | star P => true
 #align regular_expression.match_epsilon RegularExpression.matchEpsilon
+-/
 
 include dec
 
+#print RegularExpression.deriv /-
 /-- `P.deriv a` matches `x` if `P` matches `a :: x`, the Brzozowski derivative of `P` with respect
   to `a` -/
 def deriv : RegularExpression α → α → RegularExpression α
@@ -164,53 +201,73 @@ def deriv : RegularExpression α → α → RegularExpression α
   | P * Q, a => if P.matchEpsilon then deriv P a * Q + deriv Q a else deriv P a * Q
   | star P, a => deriv P a * star P
 #align regular_expression.deriv RegularExpression.deriv
+-/
 
+#print RegularExpression.deriv_zero /-
 @[simp]
 theorem deriv_zero (a : α) : deriv 0 a = 0 :=
   rfl
 #align regular_expression.deriv_zero RegularExpression.deriv_zero
+-/
 
+#print RegularExpression.deriv_one /-
 @[simp]
 theorem deriv_one (a : α) : deriv 1 a = 0 :=
   rfl
 #align regular_expression.deriv_one RegularExpression.deriv_one
+-/
 
+#print RegularExpression.deriv_char_self /-
 @[simp]
 theorem deriv_char_self (a : α) : deriv (char a) a = 1 :=
   if_pos rfl
 #align regular_expression.deriv_char_self RegularExpression.deriv_char_self
+-/
 
+#print RegularExpression.deriv_char_of_ne /-
 @[simp]
 theorem deriv_char_of_ne (h : a ≠ b) : deriv (char a) b = 0 :=
   if_neg h
 #align regular_expression.deriv_char_of_ne RegularExpression.deriv_char_of_ne
+-/
 
+#print RegularExpression.deriv_add /-
 @[simp]
 theorem deriv_add (P Q : RegularExpression α) (a : α) : deriv (P + Q) a = deriv P a + deriv Q a :=
   rfl
 #align regular_expression.deriv_add RegularExpression.deriv_add
+-/
 
+#print RegularExpression.deriv_star /-
 @[simp]
 theorem deriv_star (P : RegularExpression α) (a : α) : deriv P.unit a = deriv P a * star P :=
   rfl
 #align regular_expression.deriv_star RegularExpression.deriv_star
+-/
 
+#print RegularExpression.rmatch /-
 /-- `P.rmatch x` is true if and only if `P` matches `x`. This is a computable definition equivalent
   to `matches`. -/
 def rmatch : RegularExpression α → List α → Bool
   | P, [] => matchEpsilon P
   | P, a :: as => rmatch (P.deriv a) as
 #align regular_expression.rmatch RegularExpression.rmatch
+-/
 
+#print RegularExpression.zero_rmatch /-
 @[simp]
 theorem zero_rmatch (x : List α) : rmatch 0 x = false := by
   induction x <;> simp [rmatch, match_epsilon, *]
 #align regular_expression.zero_rmatch RegularExpression.zero_rmatch
+-/
 
+#print RegularExpression.one_rmatch_iff /-
 theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
   induction x <;> simp [rmatch, match_epsilon, *]
 #align regular_expression.one_rmatch_iff RegularExpression.one_rmatch_iff
+-/
 
+#print RegularExpression.char_rmatch_iff /-
 theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] :=
   by
   cases' x with _ x
@@ -225,7 +282,9 @@ theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] :
   rw [zero_rmatch]
   tauto
 #align regular_expression.char_rmatch_iff RegularExpression.char_rmatch_iff
+-/
 
+#print RegularExpression.add_rmatch_iff /-
 theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) :
     (P + Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x :=
   by
@@ -235,7 +294,9 @@ theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) :
     rw [deriv]
     exact ih _ _
 #align regular_expression.add_rmatch_iff RegularExpression.add_rmatch_iff
+-/
 
+#print RegularExpression.mul_rmatch_iff /-
 theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
     (P * Q).rmatch x ↔ ∃ t u : List α, x = t ++ u ∧ P.rmatch t ∧ Q.rmatch u :=
   by
@@ -282,7 +343,9 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
           convert hP
           exact h.1
 #align regular_expression.mul_rmatch_iff RegularExpression.mul_rmatch_iff
+-/
 
+#print RegularExpression.star_rmatch_iff /-
 theorem star_rmatch_iff (P : RegularExpression α) :
     ∀ x : List α, (star P).rmatch x ↔ ∃ S : List (List α), x = S.join ∧ ∀ t ∈ S, t ≠ [] ∧ P.rmatch t
   | x =>
@@ -342,9 +405,11 @@ theorem star_rmatch_iff (P : RegularExpression α) :
             assumption termination_by'
   ⟨fun L₁ L₂ : List _ => L₁.length < L₂.length, InvImage.wf _ Nat.lt_wfRel⟩
 #align regular_expression.star_rmatch_iff RegularExpression.star_rmatch_iff
+-/
 
+#print RegularExpression.rmatch_iff_matches' /-
 @[simp]
-theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches :=
+theorem rmatch_iff_matches' (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches' :=
   by
   intro x
   induction P generalizing x
@@ -391,9 +456,10 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
       tauto
     · rw [ih y]
       tauto
-#align regular_expression.rmatch_iff_matches RegularExpression.rmatch_iff_matches
+#align regular_expression.rmatch_iff_matches RegularExpression.rmatch_iff_matches'
+-/
 
-instance (P : RegularExpression α) : DecidablePred P.matches :=
+instance (P : RegularExpression α) : DecidablePred P.matches' :=
   by
   intro x
   change Decidable (x ∈ P.matches)
@@ -402,6 +468,7 @@ instance (P : RegularExpression α) : DecidablePred P.matches :=
 
 omit dec
 
+#print RegularExpression.map /-
 /-- Map the alphabet of a regular expression. -/
 @[simp]
 def map (f : α → β) : RegularExpression α → RegularExpression β
@@ -412,7 +479,14 @@ def map (f : α → β) : RegularExpression α → RegularExpression β
   | R * S => map R * map S
   | star R => star (map R)
 #align regular_expression.map RegularExpression.map
+-/
 
+/- warning: regular_expression.map_pow -> RegularExpression.map_pow is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (P : RegularExpression.{u1} α) (n : Nat), Eq.{succ u2} (RegularExpression.{u2} β) (RegularExpression.map.{u1, u2} α β f (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} α) Nat (RegularExpression.{u1} α) (instHPow.{u1, 0} (RegularExpression.{u1} α) Nat (RegularExpression.Nat.hasPow.{u1} α)) P n)) (HPow.hPow.{u2, 0, u2} (RegularExpression.{u2} β) Nat (RegularExpression.{u2} β) (instHPow.{u2, 0} (RegularExpression.{u2} β) Nat (RegularExpression.Nat.hasPow.{u2} β)) (RegularExpression.map.{u1, u2} α β f P) n)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (P : RegularExpression.{u2} α) (n : Nat), Eq.{succ u1} (RegularExpression.{u1} β) (RegularExpression.map.{u2, u1} α β f (HPow.hPow.{u2, 0, u2} (RegularExpression.{u2} α) Nat (RegularExpression.{u2} α) (instHPow.{u2, 0} (RegularExpression.{u2} α) Nat (RegularExpression.instPowRegularExpressionNat.{u2} α)) P n)) (HPow.hPow.{u1, 0, u1} (RegularExpression.{u1} β) Nat (RegularExpression.{u1} β) (instHPow.{u1, 0} (RegularExpression.{u1} β) Nat (RegularExpression.instPowRegularExpressionNat.{u1} β)) (RegularExpression.map.{u2, u1} α β f P) n)
+Case conversion may be inaccurate. Consider using '#align regular_expression.map_pow RegularExpression.map_powₓ'. -/
 @[simp]
 protected theorem map_pow (f : α → β) (P : RegularExpression α) :
     ∀ n : ℕ, map f (P ^ n) = map f P ^ n
@@ -420,6 +494,7 @@ protected theorem map_pow (f : α → β) (P : RegularExpression α) :
   | n + 1 => (congr_arg ((· * ·) (map f P)) (map_pow n) : _)
 #align regular_expression.map_pow RegularExpression.map_pow
 
+#print RegularExpression.map_id /-
 @[simp]
 theorem map_id : ∀ P : RegularExpression α, P.map id = P
   | 0 => rfl
@@ -429,7 +504,14 @@ theorem map_id : ∀ P : RegularExpression α, P.map id = P
   | R * S => by simp_rw [map, map_id]
   | star R => by simp_rw [map, map_id]
 #align regular_expression.map_id RegularExpression.map_id
+-/
 
+/- warning: regular_expression.map_map -> RegularExpression.map_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (g : β -> γ) (f : α -> β) (P : RegularExpression.{u1} α), Eq.{succ u3} (RegularExpression.{u3} γ) (RegularExpression.map.{u2, u3} β γ g (RegularExpression.map.{u1, u2} α β f P)) (RegularExpression.map.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) P)
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} (g : β -> γ) (f : α -> β) (P : RegularExpression.{u3} α), Eq.{succ u2} (RegularExpression.{u2} γ) (RegularExpression.map.{u1, u2} β γ g (RegularExpression.map.{u3, u1} α β f P)) (RegularExpression.map.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f) P)
+Case conversion may be inaccurate. Consider using '#align regular_expression.map_map RegularExpression.map_mapₓ'. -/
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, (P.map f).map g = P.map (g ∘ f)
   | 0 => rfl
@@ -440,10 +522,16 @@ theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, 
   | star R => by simp_rw [map, map_map]
 #align regular_expression.map_map RegularExpression.map_map
 
+/- warning: regular_expression.matches_map -> RegularExpression.matches'_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (P : RegularExpression.{u1} α), Eq.{succ u2} (Language.{u2} β) (RegularExpression.matches'.{u2} β (RegularExpression.map.{u1, u2} α β f P)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (fun (_x : RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) => (Language.{u1} α) -> (Language.{u2} β)) (RingHom.hasCoeToFun.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (Language.map.{u1, u2} α β f) (RegularExpression.matches'.{u1} α P))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (P : RegularExpression.{u2} α), Eq.{succ u1} (Language.{u1} β) (RegularExpression.matches'.{u1} β (RegularExpression.map.{u2, u1} α β f P)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (fun (_x : Language.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : Language.{u2} α) => Language.{u1} β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonUnitalNonAssocSemiring.toMul.{u2} (Language.{u2} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (RingHom.instRingHomClassRingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))))) (Language.map.{u2, u1} α β f) (RegularExpression.matches'.{u2} α P))
+Case conversion may be inaccurate. Consider using '#align regular_expression.matches_map RegularExpression.matches'_mapₓ'. -/
 /-- The language of the map is the map of the language. -/
 @[simp]
-theorem matches_map (f : α → β) :
-    ∀ P : RegularExpression α, (P.map f).matches = Language.map f P.matches
+theorem matches'_map (f : α → β) :
+    ∀ P : RegularExpression α, (P.map f).matches' = Language.map f P.matches'
   | 0 => (map_zero _).symm
   | 1 => (map_one _).symm
   | Char a => by
@@ -456,7 +544,7 @@ theorem matches_map (f : α → β) :
     rw [Language.kstar_eq_supᵢ_pow, Language.kstar_eq_supᵢ_pow]
     simp_rw [← map_pow]
     exact image_Union.symm
-#align regular_expression.matches_map RegularExpression.matches_map
+#align regular_expression.matches_map RegularExpression.matches'_map
 
 end RegularExpression
 
