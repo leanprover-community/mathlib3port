@@ -23,6 +23,7 @@ variable {R n : Type} [CommSemiring R] [Fintype n] [DecidableEq n]
 
 open Matrix TrivSqZeroExt
 
+#print Matrix.dualNumberEquiv /-
 /-- Matrices over dual numbers and dual numbers over matrices are isomorphic. -/
 @[simps]
 def Matrix.dualNumberEquiv : Matrix n n (DualNumber R) ≃ₐ[R] DualNumber (Matrix n n R)
@@ -43,4 +44,5 @@ def Matrix.dualNumberEquiv : Matrix n n (DualNumber R) ≃ₐ[R] DualNumber (Mat
       snd_inl]
     rfl
 #align matrix.dual_number_equiv Matrix.dualNumberEquiv
+-/
 

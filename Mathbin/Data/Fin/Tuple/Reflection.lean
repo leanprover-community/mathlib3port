@@ -37,12 +37,15 @@ namespace FinVec
 
 variable {m n : ℕ} {α β γ : Type _}
 
+#print FinVec.seq /-
 /-- Evaluate `fin_vec.seq f v = ![(f 0) (v 0), (f 1) (v 1), ...]` -/
 def seq : ∀ {m}, (Fin m → α → β) → (Fin m → α) → Fin m → β
   | 0, f, v => ![]
   | n + 1, f, v => Matrix.vecCons (f 0 (v 0)) (seq (Matrix.vecTail f) (Matrix.vecTail v))
 #align fin_vec.seq FinVec.seq
+-/
 
+#print FinVec.seq_eq /-
 @[simp]
 theorem seq_eq : ∀ {m} (f : Fin m → α → β) (v : Fin m → α), seq f v = fun i => f i (v i)
   | 0, f, v => Subsingleton.elim _ _
@@ -54,15 +57,19 @@ theorem seq_eq : ∀ {m} (f : Fin m → α → β) (v : Fin m → α), seq f v =
       · simp only [Matrix.cons_val_succ]
         rfl
 #align fin_vec.seq_eq FinVec.seq_eq
+-/
 
 example {f₁ f₂ : α → β} (a₁ a₂ : α) : seq ![f₁, f₂] ![a₁, a₂] = ![f₁ a₁, f₂ a₂] :=
   rfl
 
+#print FinVec.map /-
 /-- `fin_vec.map f v = ![f (v 0), f (v 1), ...]` -/
 def map (f : α → β) {m} : (Fin m → α) → Fin m → β :=
   seq fun i => f
 #align fin_vec.map FinVec.map
+-/
 
+#print FinVec.map_eq /-
 /-- This can be use to prove
 ```lean
 example {f : α → β} (a₁ a₂ : α) : f ∘ ![a₁, a₂] = ![f a₁, f a₂] :=
@@ -73,15 +80,19 @@ example {f : α → β} (a₁ a₂ : α) : f ∘ ![a₁, a₂] = ![f a₁, f a�
 theorem map_eq (f : α → β) {m} (v : Fin m → α) : map f v = f ∘ v :=
   seq_eq _ _
 #align fin_vec.map_eq FinVec.map_eq
+-/
 
 example {f : α → β} (a₁ a₂ : α) : f ∘ ![a₁, a₂] = ![f a₁, f a₂] :=
   (map_eq _ _).symm
 
+#print FinVec.etaExpand /-
 /-- Expand `v` to `![v 0, v 1, ...]` -/
 def etaExpand {m} (v : Fin m → α) : Fin m → α :=
   map id v
 #align fin_vec.eta_expand FinVec.etaExpand
+-/
 
+#print FinVec.etaExpand_eq /-
 /-- This can be use to prove
 ```lean
 example {f : α → β} (a : fin 2 → α) : a = ![a 0, a 1] := (eta_expand_eq _).symm
@@ -91,16 +102,20 @@ example {f : α → β} (a : fin 2 → α) : a = ![a 0, a 1] := (eta_expand_eq _
 theorem etaExpand_eq {m} (v : Fin m → α) : etaExpand v = v :=
   map_eq id v
 #align fin_vec.eta_expand_eq FinVec.etaExpand_eq
+-/
 
 example {f : α → β} (a : Fin 2 → α) : a = ![a 0, a 1] :=
   (etaExpand_eq _).symm
 
+#print FinVec.Forall /-
 /-- `∀` with better defeq for `∀ x : fin m → α, P x`. -/
 def Forall : ∀ {m} (P : (Fin m → α) → Prop), Prop
   | 0, P => P ![]
   | n + 1, P => ∀ x : α, forall fun v => P (Matrix.vecCons x v)
 #align fin_vec.forall FinVec.Forall
+-/
 
+#print FinVec.forall_iff /-
 /-- This can be use to prove
 ```lean
 example (P : (fin 2 → α) → Prop) : (∀ f, P f) ↔ (∀ a₀ a₁, P ![a₀, a₁]) := (forall_iff _).symm
@@ -113,16 +128,20 @@ theorem forall_iff : ∀ {m} (P : (Fin m → α) → Prop), Forall P ↔ ∀ x, 
     rfl
   | n + 1, P => by simp only [forall, forall_iff, Fin.forall_fin_succ_pi, Matrix.vecCons]
 #align fin_vec.forall_iff FinVec.forall_iff
+-/
 
 example (P : (Fin 2 → α) → Prop) : (∀ f, P f) ↔ ∀ a₀ a₁, P ![a₀, a₁] :=
   (forall_iff _).symm
 
+#print FinVec.Exists /-
 /-- `∃` with better defeq for `∃ x : fin m → α, P x`. -/
 def Exists : ∀ {m} (P : (Fin m → α) → Prop), Prop
   | 0, P => P ![]
   | n + 1, P => ∃ x : α, exists fun v => P (Matrix.vecCons x v)
 #align fin_vec.exists FinVec.Exists
+-/
 
+#print FinVec.exists_iff /-
 /-- This can be use to prove
 ```lean
 example (P : (fin 2 → α) → Prop) : (∃ f, P f) ↔ (∃ a₀ a₁, P ![a₀, a₁]) := (exists_iff _).symm
@@ -134,19 +153,28 @@ theorem exists_iff : ∀ {m} (P : (Fin m → α) → Prop), Exists P ↔ ∃ x, 
     rfl
   | n + 1, P => by simp only [exists, exists_iff, Fin.exists_fin_succ_pi, Matrix.vecCons]
 #align fin_vec.exists_iff FinVec.exists_iff
+-/
 
 example (P : (Fin 2 → α) → Prop) : (∃ f, P f) ↔ ∃ a₀ a₁, P ![a₀, a₁] :=
   (exists_iff _).symm
 
+#print FinVec.sum /-
 /-- `finset.univ.sum` with better defeq for `fin` -/
 def sum [Add α] [Zero α] : ∀ {m} (v : Fin m → α), α
   | 0, v => 0
   | 1, v => v 0
   | n + 2, v => Sum (v ∘ Fin.castSucc) + v (Fin.last _)
 #align fin_vec.sum FinVec.sum
+-/
 
 open BigOperators
 
+/- warning: fin_vec.sum_eq -> FinVec.sum_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] {m : Nat} (a : (Fin m) -> α), Eq.{succ u1} α (FinVec.sum.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) m a) (Finset.sum.{u1, 0} α (Fin m) _inst_1 (Finset.univ.{0} (Fin m) (Fin.fintype m)) (fun (i : Fin m) => a i))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] {m : Nat} (a : (Fin m) -> α), Eq.{succ u1} α (FinVec.sum.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)) m a) (Finset.sum.{u1, 0} α (Fin m) _inst_1 (Finset.univ.{0} (Fin m) (Fin.fintype m)) (fun (i : Fin m) => a i))
+Case conversion may be inaccurate. Consider using '#align fin_vec.sum_eq FinVec.sum_eqₓ'. -/
 /-- This can be used to prove
 ```lean
 example [add_comm_monoid α] (a : fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :=
