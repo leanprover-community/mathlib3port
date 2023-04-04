@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit ea050b44c0f9aba9d16a948c7cc7d2e7c8493567
+! leanprover-community/mathlib commit 7c2ce0c2da15516b4e65d0c9e254bb6dc93abd1f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,7 @@ import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Small.Basic
 import Mathbin.Order.ConditionallyCompleteLattice.Basic
-import Mathbin.Order.SuccPred.Basic
+import Mathbin.Order.SuccPred.Limit
 import Mathbin.SetTheory.Cardinal.SchroederBernstein
 import Mathbin.Tactic.Positivity
 
@@ -35,6 +35,7 @@ We define cardinal numbers as a quotient of types under the equivalence relation
 * Multiplication `c₁ * c₂` is defined by `cardinal.mul_def : #α * #β = #(α × β)`.
 * The order `c₁ ≤ c₂` is defined by `cardinal.le_def α β : #α ≤ #β ↔ nonempty (α ↪ β)`.
 * Exponentiation `c₁ ^ c₂` is defined by `cardinal.power_def α β : #α ^ #β = #(β → α)`.
+* `cardinal.is_limit c` means that `c` is a (weak) limit cardinal: `c ≠ 0 ∧ ∀ x < c, succ x < c`.
 * `cardinal.aleph_0` or `ℵ₀` is the cardinality of `ℕ`. This definition is universe polymorphic:
   `cardinal.aleph_0.{u} : cardinal.{u}` (contrast with `ℕ : Type`, which lives in a specific
   universe). In some cases the universe level has to be given explicitly.
@@ -1105,6 +1106,40 @@ instance : SuccOrder Cardinal :=
   SuccOrder.ofSuccLeIff (fun c => infₛ { c' | c < c' }) fun a b =>
     ⟨lt_of_lt_of_le <| cinfₛ_mem <| exists_gt a, cinfₛ_le'⟩
 
+#print Cardinal.IsLimit /-
+/-- A cardinal is a limit if it is not zero or a successor cardinal. Note that `ℵ₀` is a limit
+  cardinal by this definition, but `0` isn't.
+
+  Use `is_succ_limit` if you want to include the `c = 0` case. -/
+def IsLimit (c : Cardinal) : Prop :=
+  c ≠ 0 ∧ IsSuccLimit c
+#align cardinal.is_limit Cardinal.IsLimit
+-/
+
+#print Cardinal.IsLimit.ne_zero /-
+protected theorem IsLimit.ne_zero {c} (h : IsLimit c) : c ≠ 0 :=
+  h.1
+#align cardinal.is_limit.ne_zero Cardinal.IsLimit.ne_zero
+-/
+
+protected theorem IsLimit.isSuccLimit {c} (h : IsLimit c) : IsSuccLimit c :=
+  h.2
+#align cardinal.is_limit.is_succ_limit Cardinal.IsLimit.isSuccLimit
+
+/- warning: cardinal.is_limit.succ_lt -> Cardinal.IsLimit.succ_lt is a dubious translation:
+lean 3 declaration is
+  forall {x : Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsLimit.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) x c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} x) c)
+but is expected to have type
+  forall {x : Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsLimit.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} x) c)
+Case conversion may be inaccurate. Consider using '#align cardinal.is_limit.succ_lt Cardinal.IsLimit.succ_ltₓ'. -/
+theorem IsLimit.succ_lt {x c} (h : IsLimit c) : x < c → succ x < c :=
+  h.IsSuccLimit.succ_lt
+#align cardinal.is_limit.succ_lt Cardinal.IsLimit.succ_lt
+
+theorem isSuccLimit_zero : IsSuccLimit (0 : Cardinal) :=
+  isSuccLimit_bot
+#align cardinal.is_succ_limit_zero Cardinal.isSuccLimit_zero
+
 /- warning: cardinal.succ_def -> Cardinal.succ_def is a dubious translation:
 lean 3 declaration is
   forall (c : Cardinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) c c')))
@@ -2157,6 +2192,31 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.finite.lt_aleph_0 Set.Finite.lt_aleph0ₓ'. -/
 alias lt_aleph_0_iff_set_finite ↔ _ _root_.set.finite.lt_aleph_0
 #align set.finite.lt_aleph_0 Set.Finite.lt_aleph0
+
+theorem isSuccLimit_aleph0 : IsSuccLimit ℵ₀ :=
+  isSuccLimit_of_succ_lt fun a ha =>
+    by
+    rcases lt_aleph_0.1 ha with ⟨n, rfl⟩
+    rw [← nat_succ]
+    apply nat_lt_aleph_0
+#align cardinal.is_succ_limit_aleph_0 Cardinal.isSuccLimit_aleph0
+
+#print Cardinal.isLimit_aleph0 /-
+theorem isLimit_aleph0 : IsLimit ℵ₀ :=
+  ⟨aleph0_ne_zero, isSuccLimit_aleph0⟩
+#align cardinal.is_limit_aleph_0 Cardinal.isLimit_aleph0
+-/
+
+#print Cardinal.IsLimit.aleph0_le /-
+theorem IsLimit.aleph0_le {c : Cardinal} (h : IsLimit c) : ℵ₀ ≤ c :=
+  by
+  by_contra' h'
+  rcases lt_aleph_0.1 h' with ⟨_ | n, rfl⟩
+  · exact h.ne_zero.irrefl
+  · rw [nat_succ] at h
+    exact not_is_succ_limit_succ _ h.is_succ_limit
+#align cardinal.is_limit.aleph_0_le Cardinal.IsLimit.aleph0_le
+-/
 
 /- warning: cardinal.lt_aleph_0_iff_subtype_finite -> Cardinal.lt_aleph0_iff_subtype_finite is a dubious translation:
 lean 3 declaration is

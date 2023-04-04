@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp_vector_space
-! leanprover-community/mathlib commit 019ead10c09bb91f49b1b7005d442960b1e0485f
+! leanprover-community/mathlib commit 59628387770d82eb6f6dd7b7107308aa2509ec95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.StdBasis
 
 /-!
@@ -17,11 +16,6 @@ import Mathbin.LinearAlgebra.StdBasis
 This file contains results on the `R`-module structure on functions of finite support from a type
 `ι` to an `R`-module `M`, in particular in the case that `R` is a field.
 
-Furthermore, it contains some facts about isomorphisms of vector spaces from equality of dimension.
-
-## TODO
-
-Move the second half of this file to more appropriate other files.
 -/
 
 
@@ -145,68 +139,10 @@ theorem coe_basisSingleOne : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun
 
 end Semiring
 
-section Dim
-
-variable {K : Type u} {V : Type v} {ι : Type v}
-
-variable [Field K] [AddCommGroup V] [Module K V]
-
-theorem dim_eq : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V :=
-  by
-  let bs := Basis.ofVectorSpace K V
-  rw [← bs.mk_eq_dim'', ← (Finsupp.basis fun a : ι => bs).mk_eq_dim'', Cardinal.mk_sigma,
-    Cardinal.sum_const']
-#align finsupp.dim_eq Finsupp.dim_eq
-
-end Dim
-
 end Finsupp
 
-section Module
+/-! TODO: move this section to an earlier file. -/
 
-variable {K : Type u} {V V₁ V₂ : Type v} {V' : Type w}
-
-variable [Field K]
-
-variable [AddCommGroup V] [Module K V]
-
-variable [AddCommGroup V₁] [Module K V₁]
-
-variable [AddCommGroup V₂] [Module K V₂]
-
-variable [AddCommGroup V'] [Module K V']
-
-open Module
-
-theorem equiv_of_dim_eq_lift_dim
-    (h : Cardinal.lift.{w} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
-    Nonempty (V ≃ₗ[K] V') := by
-  haveI := Classical.decEq V
-  haveI := Classical.decEq V'
-  let m := Basis.ofVectorSpace K V
-  let m' := Basis.ofVectorSpace K V'
-  rw [← Cardinal.lift_inj.1 m.mk_eq_dim, ← Cardinal.lift_inj.1 m'.mk_eq_dim] at h
-  rcases Quotient.exact h with ⟨e⟩
-  let e := (equiv.ulift.symm.trans e).trans Equiv.ulift
-  exact ⟨m.repr ≪≫ₗ Finsupp.domLCongr e ≪≫ₗ m'.repr.symm⟩
-#align equiv_of_dim_eq_lift_dim equiv_of_dim_eq_lift_dim
-
-/-- Two `K`-vector spaces are equivalent if their dimension is the same. -/
-def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[K] V₂ := by
-  classical exact Classical.choice (equiv_of_dim_eq_lift_dim (Cardinal.lift_inj.2 h))
-#align equiv_of_dim_eq_dim equivOfDimEqDim
-
-/-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
-def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fin n → K :=
-  by
-  have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by simp
-  have hn := Cardinal.lift_inj.{v, u}.2 hn
-  rw [this] at hn
-  rw [← @dim_fin_fun K _ n] at hn
-  exact Classical.choice (equiv_of_dim_eq_lift_dim hn)
-#align fin_dim_vectorspace_equiv finDimVectorspaceEquiv
-
-end Module
 
 namespace Basis
 

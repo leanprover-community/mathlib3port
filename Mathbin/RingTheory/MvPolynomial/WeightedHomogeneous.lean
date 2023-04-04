@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir, María Inés de Frutos-Fernández
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.weighted_homogeneous
-! leanprover-community/mathlib commit bcbee715ab85a4f516c814effdf232618c0322af
+! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.MvPolynomial.Variables
 
 /-!
 # Weighted homogeneous polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 It is possible to assign weights (in a commutative additive monoid `M`) to the variables of a
 multivariate polynomial ring, so that monomials of the ring then have a weighted degree with

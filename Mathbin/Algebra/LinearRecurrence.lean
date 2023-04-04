@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module algebra.linear_recurrence
-! leanprover-community/mathlib commit 85d9f2189d9489f9983c0d01536575b0233bd305
+! leanprover-community/mathlib commit 3cacc945118c8c637d89950af01da78307f59325
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,16 +194,19 @@ def tupleSucc : (Fin E.order → α) →ₗ[α] Fin E.order → α
 
 end CommSemiring
 
-section Field
+section StrongRankCondition
 
-variable {α : Type _} [Field α] (E : LinearRecurrence α)
+-- note: `strong_rank_condition` is the same as `nontrivial` on `comm_ring`s, but that result,
+-- `comm_ring_strong_rank_condition`, is in a much later file.
+variable {α : Type _} [CommRing α] [StrongRankCondition α] (E : LinearRecurrence α)
 
 /-- The dimension of `E.sol_space` is `E.order`. -/
 theorem solSpace_dim : Module.rank α E.solSpace = E.order :=
-  @dim_fin_fun α _ E.order ▸ E.toInit.dim_eq
+  letI := nontrivial_of_invariantBasisNumber α
+  @dim_fin_fun α _ _ _ E.order ▸ E.to_init.dim_eq
 #align linear_recurrence.sol_space_dim LinearRecurrence.solSpace_dim
 
-end Field
+end StrongRankCondition
 
 section CommRing
 

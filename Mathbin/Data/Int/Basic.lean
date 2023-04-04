@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 728baa2f54e6062c5879a3e397ac6bac323e506f
+! leanprover-community/mathlib commit 00d163e35035c3577c1c79fa53b68de17781ffc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,6 +373,9 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
 variable {a b : ℤ} {n : ℕ}
 
 attribute [simp] nat_abs_of_nat nat_abs_zero nat_abs_one
+
+theorem natAbs_surjective : natAbs.Surjective := fun n => ⟨n, natAbs_ofNat n⟩
+#align int.nat_abs_surjective Int.natAbs_surjective
 
 #print Int.natAbs_add_le /-
 theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b :=

@@ -2632,6 +2632,7 @@ import Mathbin.RingTheory.WittVector.Teichmuller
 import Mathbin.RingTheory.WittVector.Truncated
 import Mathbin.RingTheory.WittVector.Verschiebung
 import Mathbin.RingTheory.WittVector.WittPolynomial
+import Mathbin.RingTheory.Zmod
 import Mathbin.SetTheory.Cardinal.Basic
 import Mathbin.SetTheory.Cardinal.Cofinality
 import Mathbin.SetTheory.Cardinal.Continuum

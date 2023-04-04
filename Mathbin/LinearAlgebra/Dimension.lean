@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 500ccb102e657148301f2ec059e8ee766b8660f3
+! leanprover-community/mathlib commit 3cacc945118c8c637d89950af01da78307f59325
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Module.BigOperators
 import Mathbin.LinearAlgebra.Dfinsupp
+import Mathbin.LinearAlgebra.FreeModule.Basic
 import Mathbin.LinearAlgebra.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Isomorphisms
 import Mathbin.LinearAlgebra.StdBasis
@@ -304,6 +305,11 @@ theorem dim_bot : Module.rank R (⊥ : Submodule R M) = 0 :=
 #align dim_bot dim_bot
 
 variable {R M}
+
+theorem exists_mem_ne_zero_of_dim_pos {s : Submodule R M} (h : 0 < Module.rank R s) :
+    ∃ b : M, b ∈ s ∧ b ≠ 0 :=
+  exists_mem_ne_zero_of_ne_bot fun eq => by rw [Eq, dim_bot] at h <;> exact lt_irrefl _ h
+#align exists_mem_ne_zero_of_dim_pos exists_mem_ne_zero_of_dim_pos
 
 /-- A linearly-independent family of vectors in a module over a non-trivial ring must be finite if
 the module is Noetherian. -/
@@ -952,26 +958,25 @@ theorem dim_self : Module.rank R R = 1 := by
 
 end StrongRankCondition
 
-section DivisionRing
+section Free
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
+variable [Ring K] [StrongRankCondition K]
+
+variable [AddCommGroup V] [Module K V] [Module.Free K V]
+
+variable [AddCommGroup V'] [Module K V'] [Module.Free K V']
+
+variable [AddCommGroup V₁] [Module K V₁] [Module.Free K V₁]
 
 variable {K V}
-
-/-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
-theorem Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0 (h : Module.rank K V < ℵ₀) :
-    (Basis.ofVectorSpaceIndex K V).Finite :=
-  finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph0 h
-#align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0
-
-variable [AddCommGroup V'] [Module K V']
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
 theorem nonempty_linearEquiv_of_lift_dim_eq
     (cond : Cardinal.lift.{v'} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
-    Nonempty (V ≃ₗ[K] V') := by
-  let B := Basis.ofVectorSpace K V
-  let B' := Basis.ofVectorSpace K V'
+    Nonempty (V ≃ₗ[K] V') :=
+  by
+  obtain ⟨⟨_, B⟩⟩ := Module.Free.exists_basis K V
+  obtain ⟨⟨_, B'⟩⟩ := Module.Free.exists_basis K V'
   have : Cardinal.lift.{v', v} (#_) = Cardinal.lift.{v, v'} (#_) := by
     rw [B.mk_eq_dim'', cond, B'.mk_eq_dim'']
   exact (Cardinal.lift_mk_eq.{v, v', 0}.1 this).map (B.equiv B')
@@ -1014,6 +1019,97 @@ theorem LinearEquiv.nonempty_equiv_iff_dim_eq :
   ⟨fun ⟨h⟩ => LinearEquiv.dim_eq h, fun h => nonempty_linearEquiv_of_dim_eq h⟩
 #align linear_equiv.nonempty_equiv_iff_dim_eq LinearEquiv.nonempty_equiv_iff_dim_eq
 
+theorem dim_prod : Module.rank K (V × V₁) = Module.rank K V + Module.rank K V₁ :=
+  by
+  obtain ⟨⟨_, b⟩⟩ := Module.Free.exists_basis K V
+  obtain ⟨⟨_, c⟩⟩ := Module.Free.exists_basis K V₁
+  rw [← Cardinal.lift_inj, ← (Basis.prod b c).mk_eq_dim, Cardinal.lift_add, ← Cardinal.mk_uLift, ←
+    b.mk_eq_dim, ← c.mk_eq_dim, ← Cardinal.mk_uLift, ← Cardinal.mk_uLift,
+    Cardinal.add_def (ULift _)]
+  exact
+    Cardinal.lift_inj.1
+      (Cardinal.lift_mk_eq.2 ⟨equiv.ulift.trans (Equiv.sumCongr Equiv.ulift Equiv.ulift).symm⟩)
+#align dim_prod dim_prod
+
+section Fintype
+
+variable [∀ i, AddCommGroup (φ i)] [∀ i, Module K (φ i)] [∀ i, Module.Free K (φ i)]
+
+open LinearMap
+
+theorem dim_pi [Nontrivial K] [Finite η] :
+    Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) :=
+  by
+  cases nonempty_fintype η
+  let b i := (Module.Free.exists_basis K (φ i)).some.2
+  let this : Basis (Σj, _) K (∀ j, φ j) := Pi.basis b
+  rw [← Cardinal.lift_inj, ← this.mk_eq_dim]
+  simp_rw [Cardinal.mk_sigma, Cardinal.lift_sum, ← (b _).mk_range_eq_dim,
+    Cardinal.mk_range_eq _ (b _).Injective]
+#align dim_pi dim_pi
+
+variable [Fintype η]
+
+theorem dim_fun {V η : Type u} [Nontrivial K] [Fintype η] [AddCommGroup V] [Module K V]
+    [Module.Free K V] : Module.rank K (η → V) = Fintype.card η * Module.rank K V := by
+  rw [dim_pi, Cardinal.sum_const', Cardinal.mk_fintype]
+#align dim_fun dim_fun
+
+theorem dim_fun_eq_lift_mul [Nontrivial K] :
+    Module.rank K (η → V) =
+      (Fintype.card η : Cardinal.{max u₁' v}) * Cardinal.lift.{u₁'} (Module.rank K V) :=
+  by rw [dim_pi, Cardinal.sum_const, Cardinal.mk_fintype, Cardinal.lift_natCast]
+#align dim_fun_eq_lift_mul dim_fun_eq_lift_mul
+
+theorem dim_fun' [Nontrivial K] : Module.rank K (η → K) = Fintype.card η := by
+  rw [dim_fun_eq_lift_mul, dim_self, Cardinal.lift_one, mul_one, Cardinal.natCast_inj]
+#align dim_fun' dim_fun'
+
+theorem dim_fin_fun [Nontrivial K] (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_fun']
+#align dim_fin_fun dim_fin_fun
+
+end Fintype
+
+theorem Finsupp.dim_eq {ι : Type v} : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V :=
+  by
+  obtain ⟨⟨_, bs⟩⟩ := Module.Free.exists_basis K V
+  rw [← bs.mk_eq_dim'', ← (Finsupp.basis fun a : ι => bs).mk_eq_dim'', Cardinal.mk_sigma,
+    Cardinal.sum_const']
+#align finsupp.dim_eq Finsupp.dim_eq
+
+-- TODO: merge with the `finrank` content
+/-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
+def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fin n → K :=
+  by
+  haveI := nontrivial_of_invariantBasisNumber K
+  have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by simp
+  have hn := Cardinal.lift_inj.{v, u}.2 hn
+  rw [this] at hn
+  rw [← @dim_fin_fun K _ _ _ n] at hn
+  haveI : Module.Free K (Fin n → K) := Module.Free.pi _ _
+  exact Classical.choice (nonempty_linearEquiv_of_lift_dim_eq hn)
+#align fin_dim_vectorspace_equiv finDimVectorspaceEquiv
+
+end Free
+
+section DivisionRing
+
+variable [DivisionRing K]
+
+variable [AddCommGroup V] [Module K V]
+
+variable [AddCommGroup V'] [Module K V']
+
+variable [AddCommGroup V₁] [Module K V₁]
+
+variable {K V}
+
+/-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
+theorem Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0 (h : Module.rank K V < ℵ₀) :
+    (Basis.ofVectorSpaceIndex K V).Finite :=
+  finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph0 h
+#align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0
+
 -- TODO how far can we generalise this?
 -- When `s` is finite, we could prove this for any ring satisfying the strong rank condition
 -- using `linear_independent_le_span'`
@@ -1031,55 +1127,6 @@ theorem dim_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V)
     _ < ℵ₀ := Cardinal.nat_lt_aleph0 _
     
 #align dim_span_of_finset dim_span_of_finset
-
-theorem dim_prod : Module.rank K (V × V₁) = Module.rank K V + Module.rank K V₁ :=
-  by
-  let b := Basis.ofVectorSpace K V
-  let c := Basis.ofVectorSpace K V₁
-  rw [← Cardinal.lift_inj, ← (Basis.prod b c).mk_eq_dim, Cardinal.lift_add, ← Cardinal.mk_uLift, ←
-    b.mk_eq_dim, ← c.mk_eq_dim, ← Cardinal.mk_uLift, ← Cardinal.mk_uLift,
-    Cardinal.add_def (ULift _)]
-  exact
-    Cardinal.lift_inj.1
-      (Cardinal.lift_mk_eq.2 ⟨equiv.ulift.trans (Equiv.sumCongr Equiv.ulift Equiv.ulift).symm⟩)
-#align dim_prod dim_prod
-
-section Fintype
-
-variable [∀ i, AddCommGroup (φ i)] [∀ i, Module K (φ i)]
-
-open LinearMap
-
-theorem dim_pi [Finite η] : Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) :=
-  by
-  cases nonempty_fintype η
-  let b i := Basis.ofVectorSpace K (φ i)
-  let this : Basis (Σj, _) K (∀ j, φ j) := Pi.basis b
-  rw [← Cardinal.lift_inj, ← this.mk_eq_dim]
-  simp [← (b _).mk_range_eq_dim]
-#align dim_pi dim_pi
-
-variable [Fintype η]
-
-theorem dim_fun {V η : Type u} [Fintype η] [AddCommGroup V] [Module K V] :
-    Module.rank K (η → V) = Fintype.card η * Module.rank K V := by
-  rw [dim_pi, Cardinal.sum_const', Cardinal.mk_fintype]
-#align dim_fun dim_fun
-
-theorem dim_fun_eq_lift_mul :
-    Module.rank K (η → V) =
-      (Fintype.card η : Cardinal.{max u₁' v}) * Cardinal.lift.{u₁'} (Module.rank K V) :=
-  by rw [dim_pi, Cardinal.sum_const, Cardinal.mk_fintype, Cardinal.lift_natCast]
-#align dim_fun_eq_lift_mul dim_fun_eq_lift_mul
-
-theorem dim_fun' : Module.rank K (η → K) = Fintype.card η := by
-  rw [dim_fun_eq_lift_mul, dim_self, Cardinal.lift_one, mul_one, Cardinal.natCast_inj]
-#align dim_fun' dim_fun'
-
-theorem dim_fin_fun (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_fun']
-#align dim_fin_fun dim_fin_fun
-
-end Fintype
 
 theorem dim_quotient_add_dim (p : Submodule K V) :
     Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
@@ -1164,11 +1211,6 @@ theorem dim_add_le_dim_add_dim (s t : Submodule K V) :
 #align dim_add_le_dim_add_dim dim_add_le_dim_add_dim
 
 end
-
-theorem exists_mem_ne_zero_of_dim_pos {s : Submodule K V} (h : 0 < Module.rank K s) :
-    ∃ b : V, b ∈ s ∧ b ≠ 0 :=
-  exists_mem_ne_zero_of_ne_bot fun eq => by rw [Eq, dim_bot] at h <;> exact lt_irrefl _ h
-#align exists_mem_ne_zero_of_dim_pos exists_mem_ne_zero_of_dim_pos
 
 end DivisionRing
 
@@ -1308,7 +1350,7 @@ theorem dim_le_one_iff : Module.rank K V ≤ 1 ↔ ∃ v₀ : V, ∀ v, ∃ r : 
       ext
       simp [mem_span_singleton, hv₀]
     rw [← dim_top, ← h]
-    convert dim_span_le _
+    refine' (dim_span_le _).trans_eq _
     simp
 #align dim_le_one_iff dim_le_one_iff
 

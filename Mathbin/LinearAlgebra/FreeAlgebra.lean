@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.free_algebra
-! leanprover-community/mathlib commit cd3434749bf1f6a8155cb53b2705f08b74371f2a
+! leanprover-community/mathlib commit 59628387770d82eb6f6dd7b7107308aa2509ec95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Basis
 import Mathbin.Algebra.FreeAlgebra
+import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
 /-!

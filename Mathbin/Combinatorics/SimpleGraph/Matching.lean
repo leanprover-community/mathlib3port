@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.matching
-! leanprover-community/mathlib commit 138448ae98f529ef34eeb61114191975ee2ca508
+! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Combinatorics.SimpleGraph.Subgraph
 
 /-!
 # Matchings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A *matching* for a simple graph is a set of disjoint pairs of adjacent vertices, and the set of all
 the vertices in a matching is called its *support* (and sometimes the vertices in the support are

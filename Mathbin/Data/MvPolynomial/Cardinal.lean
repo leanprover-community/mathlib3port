@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.cardinal
-! leanprover-community/mathlib commit 3cd7b577c6acf365f59a6376c5867533124eff6b
+! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.SetTheory.Cardinal.Ordinal
 
 /-!
 # Cardinality of Multivariate Polynomial Ring
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The main result in this file is `mv_polynomial.cardinal_mk_le_max`, which says that
 the cardinality of `mv_polynomial σ R` is bounded above by the maximum of `#R`, `#σ`

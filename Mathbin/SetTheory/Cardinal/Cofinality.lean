@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.cofinality
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 7c2ce0c2da15516b4e65d0c9e254bb6dc93abd1f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,6 @@ This file contains the definition of cofinality of an ordinal number and regular
 * `ordinal.cof o` is the cofinality of the ordinal `o`.
   If `o` is the order type of the relation `<` on `α`, then `o.cof` is the smallest cardinality of a
   subset `s` of α that is *cofinal* in `α`, i.e. `∀ x : α, ∃ y ∈ s, ¬ y < x`.
-* `cardinal.is_limit c` means that `c` is a (weak) limit cardinal: `c ≠ 0 ∧ ∀ x < c, succ x < c`.
 * `cardinal.is_strong_limit c` means that `c` is a strong limit cardinal:
   `c ≠ 0 ∧ ∀ x < c, 2 ^ x < c`.
 * `cardinal.is_regular c` means that `c` is a regular cardinal: `ℵ₀ ≤ c ∧ c.ord.cof = c`.
@@ -1160,40 +1159,6 @@ open Ordinal
 -- mathport name: cardinal.pow
 local infixr:0 "^" => @pow Cardinal.{u} Cardinal Cardinal.hasPow
 
-#print Cardinal.IsLimit /-
-/-- A cardinal is a limit if it is not zero or a successor
-  cardinal. Note that `ℵ₀` is a limit cardinal by this definition. -/
-def IsLimit (c : Cardinal) : Prop :=
-  c ≠ 0 ∧ ∀ x < c, succ x < c
-#align cardinal.is_limit Cardinal.IsLimit
--/
-
-#print Cardinal.IsLimit.ne_zero /-
-theorem IsLimit.ne_zero {c} (h : IsLimit c) : c ≠ 0 :=
-  h.1
-#align cardinal.is_limit.ne_zero Cardinal.IsLimit.ne_zero
--/
-
-/- warning: cardinal.is_limit.succ_lt -> Cardinal.IsLimit.succ_lt is a dubious translation:
-lean 3 declaration is
-  forall {x : Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsLimit.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) x c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} x) c)
-but is expected to have type
-  forall {x : Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsLimit.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} x) c)
-Case conversion may be inaccurate. Consider using '#align cardinal.is_limit.succ_lt Cardinal.IsLimit.succ_ltₓ'. -/
-theorem IsLimit.succ_lt {x c} (h : IsLimit c) : x < c → succ x < c :=
-  h.2 x
-#align cardinal.is_limit.succ_lt Cardinal.IsLimit.succ_lt
-
-#print Cardinal.IsLimit.aleph0_le /-
-theorem IsLimit.aleph0_le {c} (h : IsLimit c) : ℵ₀ ≤ c :=
-  by
-  by_contra' h'
-  rcases lt_aleph_0.1 h' with ⟨_ | n, rfl⟩
-  · exact h.1.irrefl
-  · simpa using h.2 n
-#align cardinal.is_limit.aleph_0_le Cardinal.IsLimit.aleph0_le
--/
-
 #print Cardinal.IsStrongLimit /-
 /-- A cardinal is a strong limit if it is not zero and it is
   closed under powersets. Note that `ℵ₀` is a strong limit by this definition. -/
@@ -1226,32 +1191,34 @@ theorem isStrongLimit_aleph0 : IsStrongLimit ℵ₀ :=
 #align cardinal.is_strong_limit_aleph_0 Cardinal.isStrongLimit_aleph0
 -/
 
+protected theorem IsStrongLimit.isSuccLimit {c} (H : IsStrongLimit c) : IsSuccLimit c :=
+  isSuccLimit_of_succ_lt fun x h => (succ_le_of_lt <| cantor x).trans_lt (H.two_power_lt h)
+#align cardinal.is_strong_limit.is_succ_limit Cardinal.IsStrongLimit.isSuccLimit
+
 #print Cardinal.IsStrongLimit.isLimit /-
 theorem IsStrongLimit.isLimit {c} (H : IsStrongLimit c) : IsLimit c :=
-  ⟨H.1, fun x h => (succ_le_of_lt <| cantor x).trans_lt (H.2 _ h)⟩
+  ⟨H.NeZero, H.IsSuccLimit⟩
 #align cardinal.is_strong_limit.is_limit Cardinal.IsStrongLimit.isLimit
 -/
 
-#print Cardinal.isLimit_aleph0 /-
-theorem isLimit_aleph0 : IsLimit ℵ₀ :=
-  isStrongLimit_aleph0.IsLimit
-#align cardinal.is_limit_aleph_0 Cardinal.isLimit_aleph0
--/
-
-#print Cardinal.isStrongLimit_beth /-
-theorem isStrongLimit_beth {o : Ordinal} (H : ∀ a < o, succ a < o) : IsStrongLimit (beth o) :=
+/- warning: cardinal.is_strong_limit_beth -> Cardinal.isStrongLimit_beth is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}}, (Order.IsSuccLimit.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o) -> (Cardinal.IsStrongLimit.{u1} (Cardinal.beth.{u1} o))
+but is expected to have type
+  forall {o : Ordinal.{u1}}, (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} a) o)) -> (Cardinal.IsStrongLimit.{u1} (Cardinal.beth.{u1} o))
+Case conversion may be inaccurate. Consider using '#align cardinal.is_strong_limit_beth Cardinal.isStrongLimit_bethₓ'. -/
+theorem isStrongLimit_beth {o : Ordinal} (H : IsSuccLimit o) : IsStrongLimit (beth o) :=
   by
   rcases eq_or_ne o 0 with (rfl | h)
   · rw [beth_zero]
     exact is_strong_limit_aleph_0
   · refine' ⟨beth_ne_zero o, fun a ha => _⟩
-    rw [beth_limit ⟨h, H⟩] at ha
+    rw [beth_limit ⟨h, is_succ_limit_iff_succ_lt.1 H⟩] at ha
     rcases exists_lt_of_lt_csupᵢ' ha with ⟨⟨i, hi⟩, ha⟩
     have := power_le_power_left two_ne_zero ha.le
     rw [← beth_succ] at this
-    exact this.trans_lt (beth_lt.2 (H i hi))
+    exact this.trans_lt (beth_lt.2 (H.succ_lt hi))
 #align cardinal.is_strong_limit_beth Cardinal.isStrongLimit_beth
--/
 
 /- warning: cardinal.mk_bounded_subset -> Cardinal.mk_bounded_subset is a dubious translation:
 lean 3 declaration is

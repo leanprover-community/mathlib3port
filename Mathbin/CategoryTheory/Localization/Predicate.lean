@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.localization.predicate
-! leanprover-community/mathlib commit 8efef279998820353694feb6ff5631ed0d309ecc
+! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Localization.Construction
 /-!
 
 # Predicate for localized categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, a predicate `L.is_localization W` is introduced for a functor `L : C ⥤ D`
 and `W : morphism_property C`: it expresses that `L` identifies `D` with the localized

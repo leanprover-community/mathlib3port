@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit 8da9e30545433fdd8fe55a0d3da208e5d9263f03
+! leanprover-community/mathlib commit 7c2ce0c2da15516b4e65d0c9e254bb6dc93abd1f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -323,7 +323,7 @@ lean 3 declaration is
 but is expected to have type
   forall {o : Ordinal.{u1}}, (Ordinal.IsLimit.{u1} o) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.aleph'.{u1} o) (supᵢ.{succ u1, succ (succ u1)} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (Set.Elem.{succ u1} Ordinal.{u1} (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) (fun (a : Set.Elem.{succ u1} Ordinal.{u1} (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) => Cardinal.aleph'.{u1} (Subtype.val.{succ (succ u1)} Ordinal.{u1} (fun (x : Ordinal.{u1}) => Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) x (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) a))))
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph'_limit Cardinal.aleph'_limitₓ'. -/
-theorem aleph'_limit {o : Ordinal} (ho : IsLimit o) : aleph' o = ⨆ a : Iio o, aleph' a :=
+theorem aleph'_limit {o : Ordinal} (ho : o.IsLimit) : aleph' o = ⨆ a : Iio o, aleph' a :=
   by
   refine' le_antisymm _ (csupᵢ_le' fun i => aleph'_le.2 (le_of_lt i.2))
   rw [aleph'_le_of_limit ho]
@@ -412,7 +412,7 @@ lean 3 declaration is
 but is expected to have type
   forall {o : Ordinal.{u1}}, (Ordinal.IsLimit.{u1} o) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.aleph.{u1} o) (supᵢ.{succ u1, succ (succ u1)} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (Set.Elem.{succ u1} Ordinal.{u1} (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) (fun (a : Set.Elem.{succ u1} Ordinal.{u1} (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) => Cardinal.aleph.{u1} (Subtype.val.{succ (succ u1)} Ordinal.{u1} (fun (x : Ordinal.{u1}) => Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) x (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) a))))
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph_limit Cardinal.aleph_limitₓ'. -/
-theorem aleph_limit {o : Ordinal} (ho : IsLimit o) : aleph o = ⨆ a : Iio o, aleph a :=
+theorem aleph_limit {o : Ordinal} (ho : o.IsLimit) : aleph o = ⨆ a : Iio o, aleph a :=
   by
   apply le_antisymm _ (csupᵢ_le' _)
   · rw [aleph, aleph'_limit (ho.add _)]
@@ -485,7 +485,7 @@ instance nonempty_out_aleph (o : Ordinal) : Nonempty (aleph o).ord.out.α :=
 -/
 
 #print Cardinal.ord_aleph_isLimit /-
-theorem ord_aleph_isLimit (o : Ordinal) : IsLimit (aleph o).ord :=
+theorem ord_aleph_isLimit (o : Ordinal) : (aleph o).ord.IsLimit :=
   ord_isLimit <| aleph0_le_aleph _
 #align cardinal.ord_aleph_is_limit Cardinal.ord_aleph_isLimit
 -/
@@ -648,7 +648,7 @@ lean 3 declaration is
 but is expected to have type
   forall {o : Ordinal.{u1}}, (Ordinal.IsLimit.{u1} o) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.beth.{u1} o) (supᵢ.{succ u1, succ (succ u1)} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (Set.Elem.{succ u1} Ordinal.{u1} (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) (fun (a : Set.Elem.{succ u1} Ordinal.{u1} (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) => Cardinal.beth.{u1} (Subtype.val.{succ (succ u1)} Ordinal.{u1} (fun (x : Ordinal.{u1}) => Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) x (Set.Iio.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) o)) a))))
 Case conversion may be inaccurate. Consider using '#align cardinal.beth_limit Cardinal.beth_limitₓ'. -/
-theorem beth_limit {o : Ordinal} : IsLimit o → beth o = ⨆ a : Iio o, beth a :=
+theorem beth_limit {o : Ordinal} : o.IsLimit → beth o = ⨆ a : Iio o, beth a :=
   limitRecOn_limit _ _ _ _
 #align cardinal.beth_limit Cardinal.beth_limit
 

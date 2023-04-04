@@ -59,7 +59,7 @@ theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
     module. -/
 instance moduleCat_enoughProjectives : EnoughProjectives (ModuleCat.{max u v} R)
     where presentation M :=
-    ⟨{  P := ModuleCat.of R (M →₀ R)
+    ⟨{  p := ModuleCat.of R (M →₀ R)
         Projective := projective_of_free Finsupp.basisSingleOne
         f := Finsupp.basisSingleOne.constr ℕ id
         Epi :=

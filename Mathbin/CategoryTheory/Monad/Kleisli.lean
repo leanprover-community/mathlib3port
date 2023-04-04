@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wojciech Nawrocki, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.kleisli
-! leanprover-community/mathlib commit 545f0fb9837ce297da8eae0fec799d70191e97d4
+! leanprover-community/mathlib commit 94eaaaa6064d32e98cf838789144cf5318c37cf0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Monad.Basic
 
 /-! # Kleisli category on a (co)monad
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the Kleisli category on a monad `(T, η_ T, μ_ T)` as well as the co-Kleisli
 category on a comonad `(U, ε_ U, δ_ U)`. It also defines the Kleisli adjunction which gives rise to

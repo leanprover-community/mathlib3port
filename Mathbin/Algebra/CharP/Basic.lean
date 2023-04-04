@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
+! leanprover-community/mathlib commit 47a1a73351de8dd6c8d3d32b569c8e434b03ca47
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,16 +211,17 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a 
     rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
 #align char_p.int_cast_eq_zero_iff CharP.int_cast_eq_zero_iff
 
-/- warning: char_p.int_coe_eq_int_coe_iff -> CharP.int_cast_eq_int_cast_iff is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : AddGroupWithOne.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1) p] (a : Int) (b : Int), Iff (Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R _inst_1)))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R _inst_1)))) b)) (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) a b)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : AddGroupWithOne.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1) p] (a : Int) (b : Int), Iff (Eq.{succ u1} R (Int.cast.{u1} R (AddGroupWithOne.toIntCast.{u1} R _inst_1) a) (Int.cast.{u1} R (AddGroupWithOne.toIntCast.{u1} R _inst_1) b)) (Int.ModEq (Nat.cast.{0} Int instNatCastInt p) a b)
-Case conversion may be inaccurate. Consider using '#align char_p.int_coe_eq_int_coe_iff CharP.int_cast_eq_int_cast_iffₓ'. -/
-theorem CharP.int_cast_eq_int_cast_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a b : ℤ) :
-    (a : R) = (b : R) ↔ a ≡ b [ZMOD p] := by
+theorem CharP.int_cast_eq_int_cast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℤ} :
+    (a : R) = b ↔ a ≡ b [ZMOD p] := by
   rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modEq_iff_dvd]
-#align char_p.int_coe_eq_int_coe_iff CharP.int_cast_eq_int_cast_iff
+#align char_p.int_cast_eq_int_cast CharP.int_cast_eq_int_cast
+
+theorem CharP.nat_cast_eq_nat_cast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℕ} :
+    (a : R) = b ↔ a ≡ b [MOD p] :=
+  by
+  rw [← Int.cast_ofNat, ← Int.cast_ofNat b]
+  exact (CharP.int_cast_eq_int_cast _ _).trans Int.coe_nat_modEq_iff
+#align char_p.nat_cast_eq_nat_cast CharP.nat_cast_eq_nat_cast
 
 #print CharP.eq /-
 theorem CharP.eq [AddMonoidWithOne R] {p q : ℕ} (c1 : CharP R p) (c2 : CharP R q) : p = q :=
@@ -451,16 +452,6 @@ theorem sub_pow_char_pow [CommRing R] {p : ℕ} [Fact p.Prime] [CharP R p] {n : 
     (x - y) ^ p ^ n = x ^ p ^ n - y ^ p ^ n :=
   sub_pow_char_pow_of_commute _ _ _ (Commute.all _ _)
 #align sub_pow_char_pow sub_pow_char_pow
-
-/- warning: eq_iff_modeq_int -> eq_iff_modEq_int is a dubious translation:
-lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1))) p] (a : Int) (b : Int), Iff (Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R _inst_1)))))) b)) (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) a b)
-but is expected to have type
-  forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)) p] (a : Int) (b : Int), Iff (Eq.{succ u1} R (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) a) (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) b)) (Int.ModEq (Nat.cast.{0} Int instNatCastInt p) a b)
-Case conversion may be inaccurate. Consider using '#align eq_iff_modeq_int eq_iff_modEq_intₓ'. -/
-theorem eq_iff_modEq_int [Ring R] (p : ℕ) [CharP R p] (a b : ℤ) : (a : R) = b ↔ a ≡ b [ZMOD p] := by
-  rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modEq_iff_dvd]
-#align eq_iff_modeq_int eq_iff_modEq_int
 
 /- warning: char_p.neg_one_ne_one -> CharP.neg_one_ne_one is a dubious translation:
 lean 3 declaration is

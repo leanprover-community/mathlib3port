@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.rank
-! leanprover-community/mathlib commit 1cfdf5f34e1044ecb65d10be753008baaf118edf
+! leanprover-community/mathlib commit 59628387770d82eb6f6dd7b7107308aa2509ec95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.FreeModule.Basic
-import Mathbin.LinearAlgebra.FinsuppVectorSpace
+import Mathbin.LinearAlgebra.InvariantBasisNumber
 
 /-!
 

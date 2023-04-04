@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.basic
-! leanprover-community/mathlib commit bf2a9e0156cc11bf44893ea1b4b2da8ae655c901
+! leanprover-community/mathlib commit 59628387770d82eb6f6dd7b7107308aa2509ec95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.FreeModule.Basic
 import Mathbin.RingTheory.Finiteness
 

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Keeley Hoek, Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.mllist
-! leanprover-community/mathlib commit 8f6fd1b69096c6a587f745d354306c0d46396915
+! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Option.Defs
 
 /-! # Monadic lazy lists.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An alternative construction of lazy lists (see also `data.lazy_list`),
 with "lazyness" controlled by an arbitrary monad.

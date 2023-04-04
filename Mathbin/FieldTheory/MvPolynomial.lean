@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module field_theory.mv_polynomial
-! leanprover-community/mathlib commit 019ead10c09bb91f49b1b7005d442960b1e0485f
+! leanprover-community/mathlib commit 59628387770d82eb6f6dd7b7107308aa2509ec95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.MvPolynomial.CommRing
+import Mathbin.LinearAlgebra.Dimension
+import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.MvPolynomial.Basic
 
 /-!

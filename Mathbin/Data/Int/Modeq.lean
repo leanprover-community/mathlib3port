@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.int.modeq
-! leanprover-community/mathlib commit c0dbeca1a7a7f4959cdf6b2817629bafbf1547a0
+! leanprover-community/mathlib commit 47a1a73351de8dd6c8d3d32b569c8e434b03ca47
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,15 @@ protected theorem trans : a ≡ b [ZMOD n] → b ≡ c [ZMOD n] → a ≡ c [ZMO
 #align int.modeq.trans Int.ModEq.trans
 -/
 
+protected theorem eq : a ≡ b [ZMOD n] → a % n = b % n :=
+  id
+#align int.modeq.eq Int.ModEq.eq
+
 end Modeq
+
+theorem modEq_comm : a ≡ b [ZMOD n] ↔ b ≡ a [ZMOD n] :=
+  ⟨ModEq.symm, ModEq.symm⟩
+#align int.modeq_comm Int.modEq_comm
 
 #print Int.coe_nat_modEq_iff /-
 theorem coe_nat_modEq_iff {a b n : ℕ} : a ≡ b [ZMOD n] ↔ a ≡ b [MOD n] := by
@@ -152,6 +160,14 @@ theorem mod_modEq (a n) : a % n ≡ a [ZMOD n] :=
 #align int.mod_modeq Int.mod_modEq
 -/
 
+@[simp]
+theorem neg_modEq_neg : -a ≡ -b [ZMOD n] ↔ a ≡ b [ZMOD n] := by simp [modeq_iff_dvd, dvd_sub_comm]
+#align int.neg_modeq_neg Int.neg_modEq_neg
+
+@[simp]
+theorem modEq_neg : a ≡ b [ZMOD -n] ↔ a ≡ b [ZMOD n] := by simp [modeq_iff_dvd]
+#align int.modeq_neg Int.modEq_neg
+
 namespace Modeq
 
 /- warning: int.modeq.of_dvd -> Int.ModEq.of_dvd is a dubious translation:
@@ -164,19 +180,30 @@ protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m]
   modEq_of_dvd <| d.trans h.Dvd
 #align int.modeq.of_dvd Int.ModEq.of_dvd
 
-#print Int.ModEq.mul_left' /-
-protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
-  Or.cases_on hc.lt_or_eq
-    (fun hc => by unfold modeq <;> simp [mul_mod_mul_of_pos hc, show _ = _ from h]) fun hc => by
-    simp [hc.symm]
+/- warning: int.modeq.mul_left' -> Int.ModEq.mul_left' is a dubious translation:
+lean 3 declaration is
+  forall {n : Int} {a : Int} {b : Int} {c : Int}, (Int.ModEq n a b) -> (Int.ModEq (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c n) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b))
+but is expected to have type
+  forall {n : Int} {a : Int} {b : Int} {c : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) c) -> (Int.ModEq n a b) -> (Int.ModEq (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c n) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b))
+Case conversion may be inaccurate. Consider using '#align int.modeq.mul_left' Int.ModEq.mul_left'ₓ'. -/
+protected theorem mul_left' (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
+  by
+  obtain hc | rfl | hc := lt_trichotomy c 0
+  · rw [← neg_modeq_neg, ← modeq_neg, ← neg_mul, ← neg_mul, ← neg_mul]
+    simp only [modeq, mul_mod_mul_of_pos (neg_pos.2 hc), h.eq]
+  · simp
+  · simp only [modeq, mul_mod_mul_of_pos hc, h.eq]
 #align int.modeq.mul_left' Int.ModEq.mul_left'
--/
 
-#print Int.ModEq.mul_right' /-
-protected theorem mul_right' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * c] := by
-  rw [mul_comm a, mul_comm b, mul_comm n] <;> exact h.mul_left' hc
+/- warning: int.modeq.mul_right' -> Int.ModEq.mul_right' is a dubious translation:
+lean 3 declaration is
+  forall {n : Int} {a : Int} {b : Int} {c : Int}, (Int.ModEq n a b) -> (Int.ModEq (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c))
+but is expected to have type
+  forall {n : Int} {a : Int} {b : Int} {c : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) c) -> (Int.ModEq n a b) -> (Int.ModEq (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c))
+Case conversion may be inaccurate. Consider using '#align int.modeq.mul_right' Int.ModEq.mul_right'ₓ'. -/
+protected theorem mul_right' (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * c] := by
+  rw [mul_comm a, mul_comm b, mul_comm n] <;> exact h.mul_left'
 #align int.modeq.mul_right' Int.ModEq.mul_right'
--/
 
 #print Int.ModEq.add /-
 protected theorem add (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a + c ≡ b + d [ZMOD n] :=
@@ -256,17 +283,13 @@ protected theorem sub_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a - c ≡ b - c [
 
 #print Int.ModEq.mul_left /-
 protected theorem mul_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD n] :=
-  Or.cases_on (le_total 0 c) (fun hc => (h.mul_left' hc).of_dvd (dvd_mul_left _ _)) fun hc => by
-    rw [← neg_neg c, neg_mul, neg_mul _ b] <;>
-      exact ((h.mul_left' <| neg_nonneg.2 hc).of_dvd (dvd_mul_left _ _)).neg
+  h.mul_left'.of_dvd <| dvd_mul_left _ _
 #align int.modeq.mul_left Int.ModEq.mul_left
 -/
 
 #print Int.ModEq.mul_right /-
 protected theorem mul_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n] :=
-  by
-  rw [mul_comm a, mul_comm b]
-  exact h.mul_left c
+  h.mul_right'.of_dvd <| dvd_mul_right _ _
 #align int.modeq.mul_right Int.ModEq.mul_right
 -/
 
@@ -301,6 +324,29 @@ theorem of_mul_right (m : ℤ) : a ≡ b [ZMOD n * m] → a ≡ b [ZMOD n] :=
 #align int.modeq.of_mul_right Int.ModEq.of_mul_right
 -/
 
+/-- To cancel a common factor `c` from a `modeq` we must divide the modulus `m` by `gcd m c`. -/
+theorem cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [ZMOD m]) : a ≡ b [ZMOD m / gcd m c] :=
+  by
+  let d := gcd m c
+  have hmd := gcd_dvd_left m c
+  have hcd := gcd_dvd_right m c
+  rw [modeq_iff_dvd] at h⊢
+  refine' Int.dvd_of_dvd_mul_right_of_gcd_one _ _
+  show m / d ∣ c / d * (b - a)
+  · rw [mul_comm, ← Int.mul_ediv_assoc (b - a) hcd, sub_mul]
+    exact Int.ediv_dvd_ediv hmd h
+  · rw [gcd_div hmd hcd, nat_abs_of_nat, Nat.div_self (gcd_pos_of_ne_zero_left c hm.ne')]
+#align int.modeq.cancel_right_div_gcd Int.ModEq.cancel_right_div_gcd
+
+/-- To cancel a common factor `c` from a `modeq` we must divide the modulus `m` by `gcd m c`. -/
+theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [ZMOD m]) : a ≡ b [ZMOD m / gcd m c] :=
+  cancel_right_div_gcd hm <| by simpa [mul_comm] using h
+#align int.modeq.cancel_left_div_gcd Int.ModEq.cancel_left_div_gcd
+
+theorem of_div (h : a / c ≡ b / c [ZMOD m / c]) (ha : c ∣ a) (ha : c ∣ b) (ha : c ∣ m) :
+    a ≡ b [ZMOD m] := by convert h.mul_left' <;> rwa [Int.mul_ediv_cancel']
+#align int.modeq.of_div Int.ModEq.of_div
+
 end Modeq
 
 #print Int.modEq_one /-
@@ -314,6 +360,20 @@ theorem modEq_sub (a b : ℤ) : a ≡ b [ZMOD a - b] :=
   (modEq_of_dvd dvd_rfl).symm
 #align int.modeq_sub Int.modEq_sub
 -/
+
+@[simp]
+theorem modEq_zero_iff : a ≡ b [ZMOD 0] ↔ a = b := by rw [modeq, mod_zero, mod_zero]
+#align int.modeq_zero_iff Int.modEq_zero_iff
+
+@[simp]
+theorem add_modEq_left : n + a ≡ a [ZMOD n] :=
+  ModEq.symm <| modEq_iff_dvd.2 <| by simp
+#align int.add_modeq_left Int.add_modEq_left
+
+@[simp]
+theorem add_modEq_right : a + n ≡ a [ZMOD n] :=
+  ModEq.symm <| modEq_iff_dvd.2 <| by simp
+#align int.add_modeq_right Int.add_modEq_right
 
 #print Int.modEq_and_modEq_iff_modEq_mul /-
 theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℤ} (hmn : m.natAbs.coprime n.natAbs) :

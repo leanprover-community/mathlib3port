@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit f209a5a913a8aded802138f3aa82a192fa8e3697
+! leanprover-community/mathlib commit 47a1a73351de8dd6c8d3d32b569c8e434b03ca47
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -763,7 +763,7 @@ but is expected to have type
   forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) a) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) b)) (Int.ModEq (Nat.cast.{0} Int instNatCastInt c) a b)
 Case conversion may be inaccurate. Consider using '#align zmod.int_coe_eq_int_coe_iff ZMod.int_cast_eq_int_cast_iffₓ'. -/
 theorem int_cast_eq_int_cast_iff (a b : ℤ) (c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a ≡ b [ZMOD c] :=
-  CharP.int_cast_eq_int_cast_iff (ZMod c) c a b
+  CharP.int_cast_eq_int_cast (ZMod c) c
 #align zmod.int_coe_eq_int_coe_iff ZMod.int_cast_eq_int_cast_iff
 
 /- warning: zmod.int_coe_eq_int_coe_iff' -> ZMod.int_cast_eq_int_cast_iff' is a dubious translation:

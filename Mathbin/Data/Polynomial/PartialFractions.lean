@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Sidharth Hariharan
 
 ! This file was ported from Lean 3 source module data.polynomial.partial_fractions
-! leanprover-community/mathlib commit 6e70e0d419bf686784937d64ed4bfde866ff229e
+! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Tactic.LinearCombination
 /-!
 
 # Partial fractions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 These results were formalised by the Xena Project, at the suggestion
 of Patrick Massot.
