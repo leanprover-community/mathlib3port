@@ -178,7 +178,7 @@ theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E =
     refine' Continuous.matrix_det _
     exact
       ((LinearMap.toMatrix b b).toLinearMap.comp
-          (ContinuousLinearMap.coeLm 𝕜)).continuous_of_finiteDimensional
+          (ContinuousLinearMap.coeLM 𝕜)).continuous_of_finiteDimensional
   · unfold LinearMap.det
     simpa only [h, MonoidHom.one_apply, dif_neg, not_false_iff] using continuous_const
 #align continuous_linear_map.continuous_det ContinuousLinearMap.continuous_det

@@ -102,7 +102,7 @@ theorem double_dual_bound (x : E) : ‖(inclusionInDoubleDual 𝕜 E) x‖ ≤ �
 
 /-- The dual pairing as a bilinear form. -/
 def dualPairing : Dual 𝕜 E →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
-  ContinuousLinearMap.coeLm 𝕜
+  ContinuousLinearMap.coeLM 𝕜
 #align normed_space.dual_pairing NormedSpace.dualPairing
 
 @[simp]

@@ -104,7 +104,7 @@ theorem coordChangeL_prod [e₁.isLinear 𝕜] [e₁'.isLinear 𝕜] [e₂.isLin
     ((e₁.Prod e₂).coordChangeL 𝕜 (e₁'.Prod e₂') b : F₁ × F₂ →L[𝕜] F₁ × F₂) =
       (e₁.coordChangeL 𝕜 e₁' b : F₁ →L[𝕜] F₁).Prod_map (e₂.coordChangeL 𝕜 e₂' b) :=
   by
-  rw [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_prod_map']
+  rw [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_prod_map]
   rintro ⟨v₁, v₂⟩
   show
     (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =

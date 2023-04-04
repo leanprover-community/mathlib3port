@@ -1027,17 +1027,17 @@ def ContinuousLinearEquiv.compContinuousMultilinearMapL (g : G ≃L[𝕜] G') :
     left_inv := by
       intro f
       ext1 m
-      simp only [comp_continuous_multilinear_mapL, ContinuousLinearEquiv.coe_def_rev,
-        to_linear_map_eq_coe, LinearMap.toFun_eq_coe, coe_coe, LinearMap.mkContinuous₂_apply,
-        LinearMap.mk₂_apply, comp_continuous_multilinear_map_coe, ContinuousLinearEquiv.coe_coe,
-        Function.comp_apply, ContinuousLinearEquiv.symm_apply_apply]
+      simp only [comp_continuous_multilinear_mapL, [anonymous], to_linear_map_eq_coe,
+        LinearMap.toFun_eq_coe, coe_coe, LinearMap.mkContinuous₂_apply, LinearMap.mk₂_apply,
+        comp_continuous_multilinear_map_coe, ContinuousLinearEquiv.coe_coe, Function.comp_apply,
+        ContinuousLinearEquiv.symm_apply_apply]
     right_inv := by
       intro f
       ext1 m
-      simp only [comp_continuous_multilinear_mapL, ContinuousLinearEquiv.coe_def_rev,
-        to_linear_map_eq_coe, LinearMap.mkContinuous₂_apply, LinearMap.mk₂_apply,
-        LinearMap.toFun_eq_coe, coe_coe, comp_continuous_multilinear_map_coe,
-        ContinuousLinearEquiv.coe_coe, Function.comp_apply, ContinuousLinearEquiv.apply_symm_apply]
+      simp only [comp_continuous_multilinear_mapL, [anonymous], to_linear_map_eq_coe,
+        LinearMap.mkContinuous₂_apply, LinearMap.mk₂_apply, LinearMap.toFun_eq_coe, coe_coe,
+        comp_continuous_multilinear_map_coe, ContinuousLinearEquiv.coe_coe, Function.comp_apply,
+        ContinuousLinearEquiv.apply_symm_apply]
     continuous_toFun := (compContinuousMultilinearMapL 𝕜 _ _ _ g.toContinuousLinearMap).Continuous
     continuous_invFun :=
       (compContinuousMultilinearMapL 𝕜 _ _ _ g.symm.toContinuousLinearMap).Continuous }
@@ -1201,8 +1201,8 @@ theorem norm_comp_continuous_linearIsometry_le (g : ContinuousMultilinearMap �
   by
   apply op_norm_le_bound _ (norm_nonneg _) fun m => _
   apply (g.le_op_norm _).trans _
-  simp only [ContinuousLinearMap.toLinearMap_eq_coe, ContinuousLinearMap.coe_coe,
-    LinearIsometry.coe_toContinuousLinearMap, LinearIsometry.norm_map]
+  simp only [[anonymous], ContinuousLinearMap.coe_coe, LinearIsometry.coe_toContinuousLinearMap,
+    LinearIsometry.norm_map]
 #align continuous_multilinear_map.norm_comp_continuous_linear_isometry_le ContinuousMultilinearMap.norm_comp_continuous_linearIsometry_le
 
 theorem norm_comp_continuous_linearIsometryEquiv (g : ContinuousMultilinearMap 𝕜 E₁ G)
@@ -1269,15 +1269,14 @@ def compContinuousLinearMapEquivL (f : ∀ i, E i ≃L[𝕜] E₁ i) :
     left_inv := by
       intro g
       ext1 m
-      simp only [ContinuousLinearMap.toLinearMap_eq_coe, LinearMap.toFun_eq_coe,
-        ContinuousLinearMap.coe_coe, comp_continuous_linear_mapL_apply,
-        comp_continuous_linear_map_apply, ContinuousLinearEquiv.coe_coe,
-        ContinuousLinearEquiv.apply_symm_apply]
+      simp only [[anonymous], LinearMap.toFun_eq_coe, ContinuousLinearMap.coe_coe,
+        comp_continuous_linear_mapL_apply, comp_continuous_linear_map_apply,
+        ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.apply_symm_apply]
     right_inv := by
       intro g
       ext1 m
-      simp only [ContinuousLinearMap.toLinearMap_eq_coe, comp_continuous_linear_mapL_apply,
-        LinearMap.toFun_eq_coe, ContinuousLinearMap.coe_coe, comp_continuous_linear_map_apply,
+      simp only [[anonymous], comp_continuous_linear_mapL_apply, LinearMap.toFun_eq_coe,
+        ContinuousLinearMap.coe_coe, comp_continuous_linear_map_apply,
         ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.symm_apply_apply] }
 #align continuous_multilinear_map.comp_continuous_linear_map_equivL ContinuousMultilinearMap.compContinuousLinearMapEquivL
 
