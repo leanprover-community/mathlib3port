@@ -376,12 +376,24 @@ end UniqueFactorizationMonoid
 
 namespace Int
 
+/- warning: int.squarefree_nat_abs -> Int.squarefree_natAbs is a dubious translation:
+lean 3 declaration is
+  forall {n : Int}, Iff (Squarefree.{0} Nat Nat.monoid (Int.natAbs n)) (Squarefree.{0} Int Int.monoid n)
+but is expected to have type
+  forall {n : Int}, Iff (Squarefree.{0} Nat Nat.monoid (Int.natAbs n)) (Squarefree.{0} Int Int.instMonoidInt n)
+Case conversion may be inaccurate. Consider using '#align int.squarefree_nat_abs Int.squarefree_natAbsₓ'. -/
 @[simp]
 theorem squarefree_natAbs {n : ℤ} : Squarefree n.natAbs ↔ Squarefree n := by
   simp_rw [Squarefree, nat_abs_surjective.forall, ← nat_abs_mul, nat_abs_dvd_iff_dvd,
     is_unit_iff_nat_abs_eq, Nat.isUnit_iff]
 #align int.squarefree_nat_abs Int.squarefree_natAbs
 
+/- warning: int.squarefree_coe_nat -> Int.squarefree_coe_nat is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat}, Iff (Squarefree.{0} Int Int.monoid ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Squarefree.{0} Nat Nat.monoid n)
+but is expected to have type
+  forall {n : Nat}, Iff (Squarefree.{0} Int Int.instMonoidInt (Nat.cast.{0} Int instNatCastInt n)) (Squarefree.{0} Nat Nat.monoid n)
+Case conversion may be inaccurate. Consider using '#align int.squarefree_coe_nat Int.squarefree_coe_natₓ'. -/
 @[simp]
 theorem squarefree_coe_nat {n : ℕ} : Squarefree (n : ℤ) ↔ Squarefree n := by
   rw [← squarefree_nat_abs, nat_abs_of_nat]

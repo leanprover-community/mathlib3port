@@ -115,7 +115,7 @@ basis of sl n R. -/
 def eb (h : j ≠ i) : sl n R :=
   ⟨Matrix.stdBasisMatrix i j (1 : R),
     show Matrix.stdBasisMatrix i j (1 : R) ∈ LinearMap.ker (Matrix.traceLinearMap n R R) from
-      Matrix.stdBasisMatrix.trace_zero i j (1 : R) h⟩
+      Matrix.StdBasisMatrix.trace_zero i j (1 : R) h⟩
 #align lie_algebra.special_linear.Eb LieAlgebra.SpecialLinear.eb
 
 @[simp]

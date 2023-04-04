@@ -374,8 +374,10 @@ variable {a b : ℤ} {n : ℕ}
 
 attribute [simp] nat_abs_of_nat nat_abs_zero nat_abs_one
 
+#print Int.natAbs_surjective /-
 theorem natAbs_surjective : natAbs.Surjective := fun n => ⟨n, natAbs_ofNat n⟩
 #align int.nat_abs_surjective Int.natAbs_surjective
+-/
 
 #print Int.natAbs_add_le /-
 theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b :=
