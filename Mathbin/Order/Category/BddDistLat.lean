@@ -80,11 +80,11 @@ instance hasForgetToBddLat : HasForget₂ BddDistLat BddLat :=
   InducedCategory.hasForget₂ toBddLat
 #align BddDistLat.has_forget_to_BddLat BddDistLat.hasForgetToBddLat
 
-theorem forget_bddLat_lat_eq_forget_distLat_lat :
-    forget₂ BddDistLat BddLat ⋙ forget₂ BddLat Lat =
-      forget₂ BddDistLat DistLat ⋙ forget₂ DistLat Lat :=
+theorem forget_bddLat_latCat_eq_forget_distLat_latCat :
+    forget₂ BddDistLat BddLat ⋙ forget₂ BddLat LatCat =
+      forget₂ BddDistLat DistLat ⋙ forget₂ DistLat LatCat :=
   rfl
-#align BddDistLat.forget_BddLat_Lat_eq_forget_DistLat_Lat BddDistLat.forget_bddLat_lat_eq_forget_distLat_lat
+#align BddDistLat.forget_BddLat_Lat_eq_forget_DistLat_Lat BddDistLat.forget_bddLat_latCat_eq_forget_distLat_latCat
 
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/

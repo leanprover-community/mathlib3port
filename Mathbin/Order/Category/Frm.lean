@@ -68,7 +68,7 @@ instance bundledHom : BundledHom Hom :=
 
 deriving instance LargeCategory, ConcreteCategory for Frm
 
-instance hasForgetToLat : HasForget₂ Frm Lat
+instance hasForgetToLat : HasForget₂ Frm LatCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => FrameHom.toLatticeHom }

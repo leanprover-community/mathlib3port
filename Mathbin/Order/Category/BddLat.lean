@@ -28,7 +28,7 @@ open CategoryTheory
 
 /-- The category of bounded lattices with bounded lattice morphisms. -/
 structure BddLat where
-  toLat : Lat
+  toLat : LatCat
   [isBoundedOrder : BoundedOrder to_Lat]
 #align BddLat BddLat
 
@@ -75,7 +75,7 @@ instance hasForgetToBddOrd : HasForget₂ BddLat BddOrd
       map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
 #align BddLat.has_forget_to_BddOrd BddLat.hasForgetToBddOrd
 
-instance hasForgetToLat : HasForget₂ BddLat Lat
+instance hasForgetToLat : HasForget₂ BddLat LatCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toLatticeHom }
@@ -99,9 +99,9 @@ theorem coe_forget_to_bddOrd (X : BddLat) : ↥((forget₂ BddLat BddOrd).obj X)
 #align BddLat.coe_forget_to_BddOrd BddLat.coe_forget_to_bddOrd
 
 @[simp]
-theorem coe_forget_to_lat (X : BddLat) : ↥((forget₂ BddLat Lat).obj X) = ↥X :=
+theorem coe_forget_to_latCat (X : BddLat) : ↥((forget₂ BddLat LatCat).obj X) = ↥X :=
   rfl
-#align BddLat.coe_forget_to_Lat BddLat.coe_forget_to_lat
+#align BddLat.coe_forget_to_Lat BddLat.coe_forget_to_latCat
 
 @[simp]
 theorem coe_forget_to_semilatSup (X : BddLat) : ↥((forget₂ BddLat SemilatSup).obj X) = ↥X :=
@@ -113,11 +113,11 @@ theorem coe_forget_to_semilatInf (X : BddLat) : ↥((forget₂ BddLat SemilatInf
   rfl
 #align BddLat.coe_forget_to_SemilatInf BddLat.coe_forget_to_semilatInf
 
-theorem forget_lat_partOrdCat_eq_forget_bddOrd_partOrdCat :
-    forget₂ BddLat Lat ⋙ forget₂ Lat PartOrdCat =
+theorem forget_latCat_partOrdCat_eq_forget_bddOrd_partOrdCat :
+    forget₂ BddLat LatCat ⋙ forget₂ LatCat PartOrdCat =
       forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
   rfl
-#align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_lat_partOrdCat_eq_forget_bddOrd_partOrdCat
+#align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_latCat_partOrdCat_eq_forget_bddOrd_partOrdCat
 
 theorem forget_semilatSup_partOrdCat_eq_forget_bddOrd_partOrdCat :
     forget₂ BddLat SemilatSup ⋙ forget₂ SemilatSup PartOrdCat =
@@ -168,10 +168,10 @@ theorem bddLat_dual_comp_forget_to_bddOrd :
   rfl
 #align BddLat_dual_comp_forget_to_BddOrd bddLat_dual_comp_forget_to_bddOrd
 
-theorem bddLat_dual_comp_forget_to_lat :
-    BddLat.dual ⋙ forget₂ BddLat Lat = forget₂ BddLat Lat ⋙ Lat.dual :=
+theorem bddLat_dual_comp_forget_to_latCat :
+    BddLat.dual ⋙ forget₂ BddLat LatCat = forget₂ BddLat LatCat ⋙ LatCat.dual :=
   rfl
-#align BddLat_dual_comp_forget_to_Lat bddLat_dual_comp_forget_to_lat
+#align BddLat_dual_comp_forget_to_Lat bddLat_dual_comp_forget_to_latCat
 
 theorem bddLat_dual_comp_forget_to_semilatSup :
     BddLat.dual ⋙ forget₂ BddLat SemilatSup = forget₂ BddLat SemilatInf ⋙ SemilatInf.dual :=

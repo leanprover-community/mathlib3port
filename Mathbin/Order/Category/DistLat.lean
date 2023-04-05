@@ -56,7 +56,7 @@ instance : BundledHom.ParentProjection @DistribLattice.toLattice :=
 
 deriving instance LargeCategory, ConcreteCategory for DistLat
 
-instance hasForgetToLat : HasForget₂ DistLat Lat :=
+instance hasForgetToLat : HasForget₂ DistLat LatCat :=
   BundledHom.forget₂ _ _
 #align DistLat.has_forget_to_Lat DistLat.hasForgetToLat
 
@@ -92,8 +92,8 @@ def dualEquiv : DistLat ≌ DistLat :=
 
 end DistLat
 
-theorem distLat_dual_comp_forget_to_lat :
-    DistLat.dual ⋙ forget₂ DistLat Lat = forget₂ DistLat Lat ⋙ Lat.dual :=
+theorem distLat_dual_comp_forget_to_latCat :
+    DistLat.dual ⋙ forget₂ DistLat LatCat = forget₂ DistLat LatCat ⋙ LatCat.dual :=
   rfl
-#align DistLat_dual_comp_forget_to_Lat distLat_dual_comp_forget_to_lat
+#align DistLat_dual_comp_forget_to_Lat distLat_dual_comp_forget_to_latCat
 

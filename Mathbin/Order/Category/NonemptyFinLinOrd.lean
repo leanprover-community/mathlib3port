@@ -83,7 +83,7 @@ instance : Inhabited NonemptyFinLinOrdCat :=
 instance (α : NonemptyFinLinOrdCat) : NonemptyFinLinOrd α :=
   α.str
 
-instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrd :=
+instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrdCat :=
   BundledHom.forget₂ _ _
 #align NonemptyFinLinOrd.has_forget_to_LinOrd NonemptyFinLinOrdCat.hasForgetToLinOrd
 
@@ -220,9 +220,9 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
 
 end NonemptyFinLinOrdCat
 
-theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linOrd :
-    NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinOrd =
-      forget₂ NonemptyFinLinOrdCat LinOrd ⋙ LinOrd.dual :=
+theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linOrdCat :
+    NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinOrdCat =
+      forget₂ NonemptyFinLinOrdCat LinOrdCat ⋙ LinOrdCat.dual :=
   rfl
-#align NonemptyFinLinOrd_dual_comp_forget_to_LinOrd nonemptyFinLinOrdCat_dual_comp_forget_to_linOrd
+#align NonemptyFinLinOrd_dual_comp_forget_to_LinOrd nonemptyFinLinOrdCat_dual_comp_forget_to_linOrdCat
 
