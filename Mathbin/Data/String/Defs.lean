@@ -70,10 +70,12 @@ def getRest (s t : String) : Option String :=
   List.asString <$> s.toList.getRest t.toList
 #align string.get_rest String.getRest
 
+#print String.popn /-
 /-- Removes the first `n` elements from the string `s` -/
 def popn (s : String) (n : Nat) : String :=
   (s.mkIterator.nextn n).nextToString
 #align string.popn String.popn
+-/
 
 #print String.isNat /-
 /-- `is_nat s` is true iff `s` is a nonempty sequence of digits. -/
@@ -82,10 +84,12 @@ def isNat (s : String) : Bool :=
 #align string.is_nat String.isNat
 -/
 
+#print String.head /-
 /-- Produce the head character from the string `s`, if `s` is not empty, otherwise 'A'. -/
 def head (s : String) : Char :=
   s.mkIterator.curr
 #align string.head String.head
+-/
 
 end String
 
