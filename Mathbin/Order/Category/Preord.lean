@@ -24,12 +24,14 @@ universe u
 
 open CategoryTheory
 
+#print PreordCat /-
 /-- The category of preorders. -/
-def Preord :=
+def PreordCat :=
   Bundled Preorder
-#align Preord Preord
+#align Preord PreordCat
+-/
 
-namespace Preord
+namespace PreordCat
 
 instance : BundledHom @OrderHom where
   toFun := @OrderHom.toFun
@@ -37,30 +39,35 @@ instance : BundledHom @OrderHom where
   comp := @OrderHom.comp
   hom_ext := @OrderHom.ext
 
-deriving instance LargeCategory, ConcreteCategory for Preord
+deriving instance LargeCategory, ConcreteCategory for PreordCat
 
-instance : CoeSort Preord (Type _) :=
+instance : CoeSort PreordCat (Type _) :=
   Bundled.hasCoeToSort
 
+#print PreordCat.of /-
 /-- Construct a bundled Preord from the underlying type and typeclass. -/
-def of (α : Type _) [Preorder α] : Preord :=
+def of (α : Type _) [Preorder α] : PreordCat :=
   Bundled.of α
-#align Preord.of Preord.of
+#align Preord.of PreordCat.of
+-/
 
+#print PreordCat.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [Preorder α] : ↥(of α) = α :=
   rfl
-#align Preord.coe_of Preord.coe_of
+#align Preord.coe_of PreordCat.coe_of
+-/
 
-instance : Inhabited Preord :=
+instance : Inhabited PreordCat :=
   ⟨of PUnit⟩
 
-instance (α : Preord) : Preorder α :=
+instance (α : PreordCat) : Preorder α :=
   α.str
 
+#print PreordCat.Iso.mk /-
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : Preord.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : PreordCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
@@ -70,39 +77,51 @@ def Iso.mk {α β : Preord.{u}} (e : α ≃o β) : α ≅ β
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply x
-#align Preord.iso.mk Preord.Iso.mk
+#align Preord.iso.mk PreordCat.Iso.mk
+-/
 
+#print PreordCat.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : Preord ⥤ Preord where
+def dual : PreordCat ⥤ PreordCat where
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
-#align Preord.dual Preord.dual
+#align Preord.dual PreordCat.dual
+-/
 
+/- warning: Preord.dual_equiv -> PreordCat.dualEquiv is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} PreordCat.{u1} PreordCat.largeCategory.{u1} PreordCat.{u1} PreordCat.largeCategory.{u1}
+but is expected to have type
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} PreordCat.{u1} PreordCat.{u1} instPreordCatLargeCategory.{u1} instPreordCatLargeCategory.{u1}
+Case conversion may be inaccurate. Consider using '#align Preord.dual_equiv PreordCat.dualEquivₓ'. -/
 /-- The equivalence between `Preord` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : Preord ≌ Preord :=
+def dualEquiv : PreordCat ≌ PreordCat :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align Preord.dual_equiv Preord.dualEquiv
+#align Preord.dual_equiv PreordCat.dualEquiv
 
-end Preord
+end PreordCat
 
+#print preordCatToCat /-
 /-- The embedding of `Preord` into `Cat`.
 -/
 @[simps]
-def preordToCat : Preord.{u} ⥤ Cat where
+def preordCatToCat : PreordCat.{u} ⥤ Cat
+    where
   obj X := Cat.of X.1
   map X Y f := f.Monotone.Functor
   map_id' X := by apply CategoryTheory.Functor.ext; tidy
   map_comp' X Y Z f g := by apply CategoryTheory.Functor.ext; tidy
-#align Preord_to_Cat preordToCat
+#align Preord_to_Cat preordCatToCat
+-/
 
-instance : Faithful preordToCat.{u}
+instance : Faithful preordCatToCat.{u}
     where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
 
-instance : Full preordToCat.{u}
+instance : Full preordCatToCat.{u}
     where
   preimage X Y f := ⟨f.obj, f.Monotone⟩
   witness' X Y f := by apply CategoryTheory.Functor.ext; tidy

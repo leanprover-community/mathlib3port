@@ -54,6 +54,7 @@ which bump up our constant to `9`.
 
 open Nat
 
+#print ack /-
 /-- The two-argument Ackermann function, defined so that
 
 - `ack 0 n = n + 1`
@@ -67,19 +68,27 @@ def ack : ℕ → ℕ → ℕ
   | m + 1, 0 => ack m 1
   | m + 1, n + 1 => ack m (ack (m + 1) n)
 #align ack ack
+-/
 
+#print ack_zero /-
 @[simp]
 theorem ack_zero (n : ℕ) : ack 0 n = n + 1 := by rw [ack]
 #align ack_zero ack_zero
+-/
 
+#print ack_succ_zero /-
 @[simp]
 theorem ack_succ_zero (m : ℕ) : ack (m + 1) 0 = ack m 1 := by rw [ack]
 #align ack_succ_zero ack_succ_zero
+-/
 
+#print ack_succ_succ /-
 @[simp]
 theorem ack_succ_succ (m n : ℕ) : ack (m + 1) (n + 1) = ack m (ack (m + 1) n) := by rw [ack]
 #align ack_succ_succ ack_succ_succ
+-/
 
+#print ack_one /-
 @[simp]
 theorem ack_one (n : ℕ) : ack 1 n = n + 2 :=
   by
@@ -87,7 +96,9 @@ theorem ack_one (n : ℕ) : ack 1 n = n + 2 :=
   · simp
   · simp [IH]
 #align ack_one ack_one
+-/
 
+#print ack_two /-
 @[simp]
 theorem ack_two (n : ℕ) : ack 2 n = 2 * n + 3 :=
   by
@@ -95,6 +106,7 @@ theorem ack_two (n : ℕ) : ack 2 n = 2 * n + 3 :=
   · simp
   · simp [IH, mul_succ]
 #align ack_two ack_two
+-/
 
 private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 :=
   by
@@ -106,6 +118,7 @@ private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 :=
     norm_num
 #align ack_three_aux ack_three_aux
 
+#print ack_three /-
 @[simp]
 theorem ack_three (n : ℕ) : ack 3 n = 2 ^ (n + 3) - 3 :=
   by
@@ -115,7 +128,9 @@ theorem ack_three (n : ℕ) : ack 3 n = 2 ^ (n + 3) - 3 :=
   · have H : 3 ≤ 2 ^ 3 := by norm_num
     exact H.trans (pow_mono one_le_two <| le_add_left le_rfl)
 #align ack_three ack_three
+-/
 
+#print ack_pos /-
 theorem ack_pos : ∀ m n, 0 < ack m n
   | 0, n => by simp
   | m + 1, 0 => by
@@ -125,7 +140,9 @@ theorem ack_pos : ∀ m n, 0 < ack m n
     rw [ack_succ_succ]
     apply ack_pos
 #align ack_pos ack_pos
+-/
 
+#print one_lt_ack_succ_left /-
 theorem one_lt_ack_succ_left : ∀ m n, 1 < ack (m + 1) n
   | 0, n => by simp
   | m + 1, 0 => by
@@ -135,7 +152,9 @@ theorem one_lt_ack_succ_left : ∀ m n, 1 < ack (m + 1) n
     rw [ack_succ_succ]
     apply one_lt_ack_succ_left
 #align one_lt_ack_succ_left one_lt_ack_succ_left
+-/
 
+#print one_lt_ack_succ_right /-
 theorem one_lt_ack_succ_right : ∀ m n, 1 < ack m (n + 1)
   | 0, n => by simp
   | m + 1, n => by
@@ -144,7 +163,9 @@ theorem one_lt_ack_succ_right : ∀ m n, 1 < ack m (n + 1)
     rw [h]
     apply one_lt_ack_succ_right
 #align one_lt_ack_succ_right one_lt_ack_succ_right
+-/
 
+#print ack_strictMono_right /-
 theorem ack_strictMono_right : ∀ m, StrictMono (ack m)
   | 0, n₁, n₂, h => by simpa using h
   | m + 1, 0, n + 1, h => by
@@ -155,34 +176,52 @@ theorem ack_strictMono_right : ∀ m, StrictMono (ack m)
     apply ack_strictMono_right _ (ack_strictMono_right _ _)
     rwa [add_lt_add_iff_right] at h
 #align ack_strict_mono_right ack_strictMono_right
+-/
 
+#print ack_mono_right /-
 theorem ack_mono_right (m : ℕ) : Monotone (ack m) :=
   (ack_strictMono_right m).Monotone
 #align ack_mono_right ack_mono_right
+-/
 
+#print ack_injective_right /-
 theorem ack_injective_right (m : ℕ) : Function.Injective (ack m) :=
   (ack_strictMono_right m).Injective
 #align ack_injective_right ack_injective_right
+-/
 
+#print ack_lt_iff_right /-
 @[simp]
 theorem ack_lt_iff_right {m n₁ n₂ : ℕ} : ack m n₁ < ack m n₂ ↔ n₁ < n₂ :=
   (ack_strictMono_right m).lt_iff_lt
 #align ack_lt_iff_right ack_lt_iff_right
+-/
 
+#print ack_le_iff_right /-
 @[simp]
 theorem ack_le_iff_right {m n₁ n₂ : ℕ} : ack m n₁ ≤ ack m n₂ ↔ n₁ ≤ n₂ :=
   (ack_strictMono_right m).le_iff_le
 #align ack_le_iff_right ack_le_iff_right
+-/
 
+#print ack_inj_right /-
 @[simp]
 theorem ack_inj_right {m n₁ n₂ : ℕ} : ack m n₁ = ack m n₂ ↔ n₁ = n₂ :=
   (ack_injective_right m).eq_iff
 #align ack_inj_right ack_inj_right
+-/
 
+/- warning: max_ack_right -> max_ack_right is a dubious translation:
+lean 3 declaration is
+  forall (m : Nat) (n₁ : Nat) (n₂ : Nat), Eq.{1} Nat (ack m (LinearOrder.max.{0} Nat Nat.linearOrder n₁ n₂)) (LinearOrder.max.{0} Nat Nat.linearOrder (ack m n₁) (ack m n₂))
+but is expected to have type
+  forall (m : Nat) (n₁ : Nat) (n₂ : Nat), Eq.{1} Nat (ack m (Max.max.{0} Nat Nat.instMaxNat n₁ n₂)) (Max.max.{0} Nat Nat.instMaxNat (ack m n₁) (ack m n₂))
+Case conversion may be inaccurate. Consider using '#align max_ack_right max_ack_rightₓ'. -/
 theorem max_ack_right (m n₁ n₂ : ℕ) : ack m (max n₁ n₂) = max (ack m n₁) (ack m n₂) :=
   (ack_mono_right m).map_max
 #align max_ack_right max_ack_right
 
+#print add_lt_ack /-
 theorem add_lt_ack : ∀ m n, m + n < ack m n
   | 0, n => by simp
   | m + 1, 0 => by simpa using add_lt_ack m 1
@@ -195,18 +234,25 @@ theorem add_lt_ack : ∀ m n, m + n < ack m n
       _ = ack (m + 1) (n + 1) := (ack_succ_succ m n).symm
       
 #align add_lt_ack add_lt_ack
+-/
 
+#print add_add_one_le_ack /-
 theorem add_add_one_le_ack (m n : ℕ) : m + n + 1 ≤ ack m n :=
   succ_le_of_lt (add_lt_ack m n)
 #align add_add_one_le_ack add_add_one_le_ack
+-/
 
+#print lt_ack_left /-
 theorem lt_ack_left (m n : ℕ) : m < ack m n :=
   (self_le_add_right m n).trans_lt <| add_lt_ack m n
 #align lt_ack_left lt_ack_left
+-/
 
+#print lt_ack_right /-
 theorem lt_ack_right (m n : ℕ) : n < ack m n :=
   (self_le_add_left n m).trans_lt <| add_lt_ack m n
 #align lt_ack_right lt_ack_right
+-/
 
 -- we reorder the arguments to appease the equation compiler
 private theorem ack_strict_mono_left' : ∀ {m₁ m₂} (n), m₁ < m₂ → ack m₁ n < ack m₂ n
@@ -226,41 +272,62 @@ private theorem ack_strict_mono_left' : ∀ {m₁ m₂} (n), m₁ < m₂ → ack
         (ack_strictMono_right _ <| ack_strict_mono_left' n h)
 #align ack_strict_mono_left' ack_strict_mono_left'
 
+#print ack_strictMono_left /-
 theorem ack_strictMono_left (n : ℕ) : StrictMono fun m => ack m n := fun m₁ m₂ =>
   ack_strict_mono_left' n
 #align ack_strict_mono_left ack_strictMono_left
+-/
 
+#print ack_mono_left /-
 theorem ack_mono_left (n : ℕ) : Monotone fun m => ack m n :=
   (ack_strictMono_left n).Monotone
 #align ack_mono_left ack_mono_left
+-/
 
+#print ack_injective_left /-
 theorem ack_injective_left (n : ℕ) : Function.Injective fun m => ack m n :=
   (ack_strictMono_left n).Injective
 #align ack_injective_left ack_injective_left
+-/
 
+#print ack_lt_iff_left /-
 @[simp]
 theorem ack_lt_iff_left {m₁ m₂ n : ℕ} : ack m₁ n < ack m₂ n ↔ m₁ < m₂ :=
   (ack_strictMono_left n).lt_iff_lt
 #align ack_lt_iff_left ack_lt_iff_left
+-/
 
+#print ack_le_iff_left /-
 @[simp]
 theorem ack_le_iff_left {m₁ m₂ n : ℕ} : ack m₁ n ≤ ack m₂ n ↔ m₁ ≤ m₂ :=
   (ack_strictMono_left n).le_iff_le
 #align ack_le_iff_left ack_le_iff_left
+-/
 
+#print ack_inj_left /-
 @[simp]
 theorem ack_inj_left {m₁ m₂ n : ℕ} : ack m₁ n = ack m₂ n ↔ m₁ = m₂ :=
   (ack_injective_left n).eq_iff
 #align ack_inj_left ack_inj_left
+-/
 
+/- warning: max_ack_left -> max_ack_left is a dubious translation:
+lean 3 declaration is
+  forall (m₁ : Nat) (m₂ : Nat) (n : Nat), Eq.{1} Nat (ack (LinearOrder.max.{0} Nat Nat.linearOrder m₁ m₂) n) (LinearOrder.max.{0} Nat Nat.linearOrder (ack m₁ n) (ack m₂ n))
+but is expected to have type
+  forall (m₁ : Nat) (m₂ : Nat) (n : Nat), Eq.{1} Nat (ack (Max.max.{0} Nat Nat.instMaxNat m₁ m₂) n) (Max.max.{0} Nat Nat.instMaxNat (ack m₁ n) (ack m₂ n))
+Case conversion may be inaccurate. Consider using '#align max_ack_left max_ack_leftₓ'. -/
 theorem max_ack_left (m₁ m₂ n : ℕ) : ack (max m₁ m₂) n = max (ack m₁ n) (ack m₂ n) :=
   (ack_mono_left n).map_max
 #align max_ack_left max_ack_left
 
+#print ack_le_ack /-
 theorem ack_le_ack {m₁ m₂ n₁ n₂ : ℕ} (hm : m₁ ≤ m₂) (hn : n₁ ≤ n₂) : ack m₁ n₁ ≤ ack m₂ n₂ :=
   (ack_mono_left n₁ hm).trans <| ack_mono_right m₂ hn
 #align ack_le_ack ack_le_ack
+-/
 
+#print ack_succ_right_le_ack_succ_left /-
 theorem ack_succ_right_le_ack_succ_left (m n : ℕ) : ack m (n + 1) ≤ ack (m + 1) n :=
   by
   cases n
@@ -269,6 +336,7 @@ theorem ack_succ_right_le_ack_succ_left (m n : ℕ) : ack m (n + 1) ≤ ack (m +
     apply ack_mono_right m (le_trans _ <| add_add_one_le_ack _ n)
     linarith
 #align ack_succ_right_le_ack_succ_left ack_succ_right_le_ack_succ_left
+-/
 
 -- All the inequalities from this point onwards are specific to the main proof.
 private theorem sq_le_two_pow_add_one_minus_three (n : ℕ) : n ^ 2 ≤ 2 ^ (n + 1) - 3 :=
@@ -288,6 +356,7 @@ private theorem sq_le_two_pow_add_one_minus_three (n : ℕ) : n ^ 2 ≤ 2 ^ (n +
         linarith [one_le_pow k 2 zero_lt_two]
 #align sq_le_two_pow_add_one_minus_three sq_le_two_pow_add_one_minus_three
 
+#print ack_add_one_sq_lt_ack_add_three /-
 theorem ack_add_one_sq_lt_ack_add_three : ∀ m n, (ack m n + 1) ^ 2 ≤ ack (m + 3) n
   | 0, n => by simpa using sq_le_two_pow_add_one_minus_three (n + 2)
   | m + 1, 0 => by
@@ -298,7 +367,14 @@ theorem ack_add_one_sq_lt_ack_add_three : ∀ m n, (ack m n + 1) ^ 2 ≤ ack (m 
     apply (ack_add_one_sq_lt_ack_add_three _ _).trans (ack_mono_right _ <| ack_mono_left _ _)
     linarith
 #align ack_add_one_sq_lt_ack_add_three ack_add_one_sq_lt_ack_add_three
+-/
 
+/- warning: ack_ack_lt_ack_max_add_two -> ack_ack_lt_ack_max_add_two is a dubious translation:
+lean 3 declaration is
+  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat Nat.hasLt (ack m (ack n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (LinearOrder.max.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) k)
+but is expected to have type
+  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat instLTNat (ack m (ack n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Max.max.{0} Nat Nat.instMaxNat m n) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) k)
+Case conversion may be inaccurate. Consider using '#align ack_ack_lt_ack_max_add_two ack_ack_lt_ack_max_add_twoₓ'. -/
 theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m n + 2) k :=
   calc
     ack m (ack n k) ≤ ack (max m n) (ack n k) := ack_mono_left _ (le_max_left _ _)
@@ -309,6 +385,7 @@ theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m 
     
 #align ack_ack_lt_ack_max_add_two ack_ack_lt_ack_max_add_two
 
+#print ack_add_one_sq_lt_ack_add_four /-
 theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (m + 4) n :=
   calc
     ack m ((n + 1) ^ 2) < ack m ((ack m n + 1) ^ 2) :=
@@ -319,11 +396,19 @@ theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (
     _ ≤ ack (m + 4) n := ack_succ_right_le_ack_succ_left _ n
     
 #align ack_add_one_sq_lt_ack_add_four ack_add_one_sq_lt_ack_add_four
+-/
 
+/- warning: ack_mkpair_lt -> ack_pair_lt is a dubious translation:
+lean 3 declaration is
+  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat Nat.hasLt (ack m (Nat.pair n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m (OfNat.ofNat.{0} Nat 4 (OfNat.mk.{0} Nat 4 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) (LinearOrder.max.{0} Nat Nat.linearOrder n k))
+but is expected to have type
+  forall (m : Nat) (n : Nat) (k : Nat), LT.lt.{0} Nat instLTNat (ack m (Nat.pair n k)) (ack (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Max.max.{0} Nat Nat.instMaxNat n k))
+Case conversion may be inaccurate. Consider using '#align ack_mkpair_lt ack_pair_ltₓ'. -/
 theorem ack_pair_lt (m n k : ℕ) : ack m (pair n k) < ack (m + 4) (max n k) :=
   (ack_strictMono_right m <| pair_lt_max_add_one_sq n k).trans <| ack_add_one_sq_lt_ack_add_four _ _
 #align ack_mkpair_lt ack_pair_lt
 
+#print exists_lt_ack_of_nat_primrec /-
 /-- If `f` is primitive recursive, there exists `m` such that `f n < ack m n` for all `n`. -/
 theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : ∃ m, ∀ n, f n < ack m n :=
   by
@@ -392,21 +477,28 @@ theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : �
     -- The proof is now simple.
     exact ⟨max a b + 9, fun n => this.trans_le <| ack_mono_right _ <| unpair_add_le n⟩
 #align exists_lt_ack_of_nat_primrec exists_lt_ack_of_nat_primrec
+-/
 
+#print not_nat_primrec_ack_self /-
 theorem not_nat_primrec_ack_self : ¬Nat.Primrec fun n => ack n n := fun h =>
   by
   cases' exists_lt_ack_of_nat_primrec h with m hm
   exact (hm m).False
 #align not_nat_primrec_ack_self not_nat_primrec_ack_self
+-/
 
+#print not_primrec_ack_self /-
 theorem not_primrec_ack_self : ¬Primrec fun n => ack n n :=
   by
   rw [Primrec.nat_iff]
   exact not_nat_primrec_ack_self
 #align not_primrec_ack_self not_primrec_ack_self
+-/
 
+#print not_primrec₂_ack /-
 /-- The Ackermann function is not primitive recursive. -/
 theorem not_primrec₂_ack : ¬Primrec₂ ack := fun h =>
   not_primrec_ack_self <| h.comp Primrec.id Primrec.id
 #align not_primrec₂_ack not_primrec₂_ack
+-/
 

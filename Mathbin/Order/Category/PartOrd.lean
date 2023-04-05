@@ -53,7 +53,7 @@ instance : Inhabited PartOrd :=
 instance (α : PartOrd) : PartialOrder α :=
   α.str
 
-instance hasForgetToPreord : HasForget₂ PartOrd Preord :=
+instance hasForgetToPreord : HasForget₂ PartOrd PreordCat :=
   BundledHom.forget₂ _ _
 #align PartOrd.has_forget_to_Preord PartOrd.hasForgetToPreord
 
@@ -88,13 +88,13 @@ def dualEquiv : PartOrd ≌ PartOrd :=
 
 end PartOrd
 
-theorem partOrd_dual_comp_forget_to_preord :
-    PartOrd.dual ⋙ forget₂ PartOrd Preord = forget₂ PartOrd Preord ⋙ Preord.dual :=
+theorem partOrd_dual_comp_forget_to_preordCat :
+    PartOrd.dual ⋙ forget₂ PartOrd PreordCat = forget₂ PartOrd PreordCat ⋙ PreordCat.dual :=
   rfl
-#align PartOrd_dual_comp_forget_to_Preord partOrd_dual_comp_forget_to_preord
+#align PartOrd_dual_comp_forget_to_Preord partOrd_dual_comp_forget_to_preordCat
 
 /-- `antisymmetrization` as a functor. It is the free functor. -/
-def preordToPartOrd : Preord.{u} ⥤ PartOrd
+def preordToPartOrd : PreordCat.{u} ⥤ PartOrd
     where
   obj X := PartOrd.of (Antisymmetrization X (· ≤ ·))
   map X Y f := f.Antisymmetrization
@@ -108,7 +108,7 @@ def preordToPartOrd : Preord.{u} ⥤ PartOrd
 
 /-- `Preord_to_PartOrd` is left adjoint to the forgetful functor, meaning it is the free
 functor from `Preord` to `PartOrd`. -/
-def preordToPartOrdForgetAdjunction : preordToPartOrd.{u} ⊣ forget₂ PartOrd Preord :=
+def preordToPartOrdForgetAdjunction : preordToPartOrd.{u} ⊣ forget₂ PartOrd PreordCat :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f =>
@@ -127,7 +127,7 @@ def preordToPartOrdForgetAdjunction : preordToPartOrd.{u} ⊣ forget₂ PartOrd 
 /-- `Preord_to_PartOrd` and `order_dual` commute. -/
 @[simps]
 def preordToPartOrdCompToDualIsoToDualCompPreordToPartOrd :
-    preordToPartOrd.{u} ⋙ PartOrd.dual ≅ Preord.dual ⋙ preordToPartOrd :=
+    preordToPartOrd.{u} ⋙ PartOrd.dual ≅ PreordCat.dual ⋙ preordToPartOrd :=
   NatIso.ofComponents (fun X => PartOrd.Iso.mk <| OrderIso.dualAntisymmetrization _) fun X Y f =>
     OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
 #align Preord_to_PartOrd_comp_to_dual_iso_to_dual_comp_Preord_to_PartOrd preordToPartOrdCompToDualIsoToDualCompPreordToPartOrd
