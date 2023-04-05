@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.monge_point
-! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
+! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -392,15 +392,12 @@ theorem direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2
 
 /-- The vector span of the opposite face lies in the direction
 orthogonal to an altitude. -/
-theorem vectorSpan_le_altitude_direction_orthogonal {n : ℕ} (s : Simplex ℝ P (n + 1))
-    (i : Fin (n + 2)) :
-    vectorSpan ℝ (s.points '' ↑(Finset.univ.eraseₓ i)) ≤ (s.altitude i).directionᗮ :=
+theorem vectorSpan_isOrtho_altitude_direction {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
+    vectorSpan ℝ (s.points '' ↑(Finset.univ.eraseₓ i)) ⟂ (s.altitude i).direction :=
   by
   rw [direction_altitude]
-  exact
-    le_trans (vectorSpan ℝ (s.points '' ↑(finset.univ.erase i))).le_orthogonal_orthogonal
-      (Submodule.orthogonal_le inf_le_left)
-#align affine.simplex.vector_span_le_altitude_direction_orthogonal Affine.Simplex.vectorSpan_le_altitude_direction_orthogonal
+  exact (Submodule.isOrtho_orthogonal_right _).mono_right inf_le_left
+#align affine.simplex.vector_span_is_ortho_altitude_direction Affine.Simplex.vectorSpan_isOrtho_altitude_direction
 
 open FiniteDimensional
 
@@ -644,7 +641,7 @@ theorem altitude_replace_orthocenter_eq_affineSpan {t₁ t₂ : Triangle ℝ P}
   rw [hu, Finset.coe_insert, Finset.coe_singleton, Set.image_insert_eq, Set.image_singleton, h₁, h₃]
   have hle : (t₁.altitude i₃).directionᗮ ≤ line[ℝ, t₁.orthocenter, t₁.points i₃].directionᗮ :=
     Submodule.orthogonal_le (direction_le (affine_span_orthocenter_point_le_altitude _ _))
-  refine' hle ((t₁.vector_span_le_altitude_direction_orthogonal i₃) _)
+  refine' hle ((t₁.vector_span_is_ortho_altitude_direction i₃) _)
   have hui : finset.univ.erase i₃ = {i₁, i₂} :=
     by
     clear hle h₂ h₃

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.iterated_deriv
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit d524d0a578db1146460c1aca35bb5db68466347a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,6 +115,11 @@ theorem iteratedFderivWithin_apply_eq_iteratedDerivWithin_mul_prod {m : Fin n �
   rw [iteratedDerivWithin_eq_iteratedFderivWithin, ← ContinuousMultilinearMap.map_smul_univ]
   simp
 #align iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod iteratedFderivWithin_apply_eq_iteratedDerivWithin_mul_prod
+
+theorem norm_iteratedFderivWithin_eq_norm_iteratedDerivWithin :
+    ‖iteratedFderivWithin 𝕜 n f s x‖ = ‖iteratedDerivWithin n f s x‖ := by
+  rw [iteratedDerivWithin_eq_equiv_comp, LinearIsometryEquiv.norm_map]
+#align norm_iterated_fderiv_within_eq_norm_iterated_deriv_within norm_iteratedFderivWithin_eq_norm_iteratedDerivWithin
 
 @[simp]
 theorem iteratedDerivWithin_zero : iteratedDerivWithin 0 f s = f :=
@@ -257,6 +262,11 @@ theorem iteratedFderiv_apply_eq_iteratedDeriv_mul_prod {m : Fin n → 𝕜} :
   rw [iteratedDeriv_eq_iteratedFderiv, ← ContinuousMultilinearMap.map_smul_univ]
   simp
 #align iterated_fderiv_apply_eq_iterated_deriv_mul_prod iteratedFderiv_apply_eq_iteratedDeriv_mul_prod
+
+theorem norm_iteratedFderiv_eq_norm_iteratedDeriv :
+    ‖iteratedFderiv 𝕜 n f x‖ = ‖iteratedDeriv n f x‖ := by
+  rw [iteratedDeriv_eq_equiv_comp, LinearIsometryEquiv.norm_map]
+#align norm_iterated_fderiv_eq_norm_iterated_deriv norm_iteratedFderiv_eq_norm_iteratedDeriv
 
 @[simp]
 theorem iteratedDeriv_zero : iteratedDeriv 0 f = f :=

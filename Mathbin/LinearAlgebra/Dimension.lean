@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 3cacc945118c8c637d89950af01da78307f59325
+! leanprover-community/mathlib commit be2ac64be57e8319fcd5c5547f3a8d9412daf5ec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -486,7 +486,7 @@ theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSMulDivisors R
 
 end
 
-section rank_zero
+section RankZero
 
 variable {R : Type u} {M : Type v}
 
@@ -552,7 +552,7 @@ theorem dim_pos_iff_nontrivial : 0 < Module.rank R M ↔ Nontrivial M :=
   dim_pos_iff_exists_ne_zero.trans (nontrivial_iff_exists_ne 0).symm
 #align dim_pos_iff_nontrivial dim_pos_iff_nontrivial
 
-end rank_zero
+end RankZero
 
 section InvariantBasisNumber
 
@@ -1037,9 +1037,9 @@ variable [∀ i, AddCommGroup (φ i)] [∀ i, Module K (φ i)] [∀ i, Module.Fr
 
 open LinearMap
 
-theorem dim_pi [Nontrivial K] [Finite η] :
-    Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) :=
+theorem dim_pi [Finite η] : Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) :=
   by
+  haveI := nontrivial_of_invariantBasisNumber K
   cases nonempty_fintype η
   let b i := (Module.Free.exists_basis K (φ i)).some.2
   let this : Basis (Σj, _) K (∀ j, φ j) := Pi.basis b
@@ -1050,22 +1050,22 @@ theorem dim_pi [Nontrivial K] [Finite η] :
 
 variable [Fintype η]
 
-theorem dim_fun {V η : Type u} [Nontrivial K] [Fintype η] [AddCommGroup V] [Module K V]
-    [Module.Free K V] : Module.rank K (η → V) = Fintype.card η * Module.rank K V := by
+theorem dim_fun {V η : Type u} [Fintype η] [AddCommGroup V] [Module K V] [Module.Free K V] :
+    Module.rank K (η → V) = Fintype.card η * Module.rank K V := by
   rw [dim_pi, Cardinal.sum_const', Cardinal.mk_fintype]
 #align dim_fun dim_fun
 
-theorem dim_fun_eq_lift_mul [Nontrivial K] :
+theorem dim_fun_eq_lift_mul :
     Module.rank K (η → V) =
       (Fintype.card η : Cardinal.{max u₁' v}) * Cardinal.lift.{u₁'} (Module.rank K V) :=
   by rw [dim_pi, Cardinal.sum_const, Cardinal.mk_fintype, Cardinal.lift_natCast]
 #align dim_fun_eq_lift_mul dim_fun_eq_lift_mul
 
-theorem dim_fun' [Nontrivial K] : Module.rank K (η → K) = Fintype.card η := by
+theorem dim_fun' : Module.rank K (η → K) = Fintype.card η := by
   rw [dim_fun_eq_lift_mul, dim_self, Cardinal.lift_one, mul_one, Cardinal.natCast_inj]
 #align dim_fun' dim_fun'
 
-theorem dim_fin_fun [Nontrivial K] (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_fun']
+theorem dim_fin_fun (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_fun']
 #align dim_fin_fun dim_fin_fun
 
 end Fintype
@@ -1085,7 +1085,7 @@ def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fi
   have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by simp
   have hn := Cardinal.lift_inj.{v, u}.2 hn
   rw [this] at hn
-  rw [← @dim_fin_fun K _ _ _ n] at hn
+  rw [← @dim_fin_fun K _ _ n] at hn
   haveI : Module.Free K (Fin n → K) := Module.Free.pi _ _
   exact Classical.choice (nonempty_linearEquiv_of_lift_dim_eq hn)
 #align fin_dim_vectorspace_equiv finDimVectorspaceEquiv
@@ -1214,78 +1214,11 @@ end
 
 end DivisionRing
 
-section rank
-
-section
-
-variable [Ring K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
-
-variable [AddCommGroup V'] [Module K V']
-
-/-- `rank f` is the rank of a `linear_map f`, defined as the dimension of `f.range`. -/
-def rank (f : V →ₗ[K] V') : Cardinal :=
-  Module.rank K f.range
-#align rank rank
-
-theorem rank_le_range (f : V →ₗ[K] V₁) : rank f ≤ Module.rank K V₁ :=
-  dim_submodule_le _
-#align rank_le_range rank_le_range
-
-@[simp]
-theorem rank_zero [Nontrivial K] : rank (0 : V →ₗ[K] V') = 0 := by
-  rw [rank, LinearMap.range_zero, dim_bot]
-#align rank_zero rank_zero
-
-variable [AddCommGroup V''] [Module K V'']
-
-theorem rank_comp_le1 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'') : rank (f.comp g) ≤ rank f :=
-  by
-  refine' dim_le_of_submodule _ _ _
-  rw [LinearMap.range_comp]
-  exact LinearMap.map_le_range
-#align rank_comp_le1 rank_comp_le1
-
-variable [AddCommGroup V'₁] [Module K V'₁]
-
-theorem rank_comp_le2 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'₁) : rank (f.comp g) ≤ rank g := by
-  rw [rank, rank, LinearMap.range_comp] <;> exact dim_map_le _ _
-#align rank_comp_le2 rank_comp_le2
-
-end
-
-end rank
-
 section DivisionRing
 
 variable [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
 
 variable [AddCommGroup V'] [Module K V']
-
-theorem rank_le_domain (f : V →ₗ[K] V₁) : rank f ≤ Module.rank K V :=
-  by
-  rw [← dim_range_add_dim_ker f]
-  exact self_le_add_right _ _
-#align rank_le_domain rank_le_domain
-
-theorem rank_add_le (f g : V →ₗ[K] V') : rank (f + g) ≤ rank f + rank g :=
-  calc
-    rank (f + g) ≤ Module.rank K (f.range ⊔ g.range : Submodule K V') :=
-      by
-      refine' dim_le_of_submodule _ _ _
-      exact
-        LinearMap.range_le_iff_comap.2 <|
-          eq_top_iff'.2 fun x =>
-            show f x + g x ∈ (f.range ⊔ g.range : Submodule K V') from
-              mem_sup.2 ⟨_, ⟨x, rfl⟩, _, ⟨x, rfl⟩, rfl⟩
-    _ ≤ rank f + rank g := dim_add_le_dim_add_dim _ _
-    
-#align rank_add_le rank_add_le
-
-theorem rank_finset_sum_le {η} (s : Finset η) (f : η → V →ₗ[K] V') :
-    rank (∑ d in s, f d) ≤ ∑ d in s, rank (f d) :=
-  @Finset.sum_hom_rel _ _ _ _ _ (fun a b => rank a ≤ b) f (fun d => rank (f d)) s
-    (le_of_eq rank_zero) fun i g c h => le_trans (rank_add_le _ _) (add_le_add_left h _)
-#align rank_finset_sum_le rank_finset_sum_le
 
 /-- The `ι` indexed basis on `V`, where `ι` is an empty type and `V` is zero-dimensional.
 
@@ -1419,6 +1352,84 @@ theorem Module.rank_le_one_iff_top_isPrincipal :
   rw [← Submodule.rank_le_one_iff_isPrincipal, dim_top]
 #align module.rank_le_one_iff_top_is_principal Module.rank_le_one_iff_top_isPrincipal
 
+end DivisionRing
+
+end Module
+
+/-! ### The rank of a linear map -/
+
+
+namespace LinearMap
+
+section Ring
+
+variable [Ring K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
+
+variable [AddCommGroup V'] [Module K V']
+
+/-- `rank f` is the rank of a `linear_map` `f`, defined as the dimension of `f.range`. -/
+def rank (f : V →ₗ[K] V') : Cardinal :=
+  Module.rank K f.range
+#align linear_map.rank LinearMap.rank
+
+theorem rank_le_range (f : V →ₗ[K] V₁) : rank f ≤ Module.rank K V₁ :=
+  dim_submodule_le _
+#align linear_map.rank_le_range LinearMap.rank_le_range
+
+@[simp]
+theorem rank_zero [Nontrivial K] : rank (0 : V →ₗ[K] V') = 0 := by
+  rw [rank, LinearMap.range_zero, dim_bot]
+#align linear_map.rank_zero LinearMap.rank_zero
+
+variable [AddCommGroup V''] [Module K V'']
+
+theorem rank_comp_le1 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'') : rank (f.comp g) ≤ rank f :=
+  by
+  refine' dim_le_of_submodule _ _ _
+  rw [LinearMap.range_comp]
+  exact LinearMap.map_le_range
+#align linear_map.rank_comp_le1 LinearMap.rank_comp_le1
+
+variable [AddCommGroup V'₁] [Module K V'₁]
+
+theorem rank_comp_le2 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'₁) : rank (f.comp g) ≤ rank g := by
+  rw [rank, rank, LinearMap.range_comp] <;> exact dim_map_le _ _
+#align linear_map.rank_comp_le2 LinearMap.rank_comp_le2
+
+end Ring
+
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
+
+variable [AddCommGroup V'] [Module K V']
+
+theorem rank_le_domain (f : V →ₗ[K] V₁) : rank f ≤ Module.rank K V :=
+  by
+  rw [← dim_range_add_dim_ker f]
+  exact self_le_add_right _ _
+#align linear_map.rank_le_domain LinearMap.rank_le_domain
+
+theorem rank_add_le (f g : V →ₗ[K] V') : rank (f + g) ≤ rank f + rank g :=
+  calc
+    rank (f + g) ≤ Module.rank K (f.range ⊔ g.range : Submodule K V') :=
+      by
+      refine' dim_le_of_submodule _ _ _
+      exact
+        LinearMap.range_le_iff_comap.2 <|
+          eq_top_iff'.2 fun x =>
+            show f x + g x ∈ (f.range ⊔ g.range : Submodule K V') from
+              mem_sup.2 ⟨_, ⟨x, rfl⟩, _, ⟨x, rfl⟩, rfl⟩
+    _ ≤ rank f + rank g := dim_add_le_dim_add_dim _ _
+    
+#align linear_map.rank_add_le LinearMap.rank_add_le
+
+theorem rank_finset_sum_le {η} (s : Finset η) (f : η → V →ₗ[K] V') :
+    rank (∑ d in s, f d) ≤ ∑ d in s, rank (f d) :=
+  @Finset.sum_hom_rel _ _ _ _ _ (fun a b => rank a ≤ b) f (fun d => rank (f d)) s
+    (le_of_eq rank_zero) fun i g c h => le_trans (rank_add_le _ _) (add_le_add_left h _)
+#align linear_map.rank_finset_sum_le LinearMap.rank_finset_sum_le
+
 theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'} :
     c ≤ rank f ↔
       ∃ s : Set V,
@@ -1441,21 +1452,21 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
     convert cardinal_le_dim_of_linearIndependent this.image
     rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_injOn_lift]
     exact inj_on_iff_injective.2 this.injective
-#align le_rank_iff_exists_linear_independent le_rank_iff_exists_linearIndependent
+#align linear_map.le_rank_iff_exists_linear_independent LinearMap.le_rank_iff_exists_linearIndependent
 
 theorem le_rank_iff_exists_linearIndependent_finset {n : ℕ} {f : V →ₗ[K] V'} :
     ↑n ≤ rank f ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K fun x : (s : Set V) => f x :=
   by
-  simp only [le_rank_iff_exists_linearIndependent, Cardinal.lift_natCast, Cardinal.lift_eq_nat_iff,
+  simp only [le_rank_iff_exists_linear_independent, Cardinal.lift_natCast, Cardinal.lift_eq_nat_iff,
     Cardinal.mk_set_eq_nat_iff_finset]
   constructor
   · rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩
     exact ⟨t, rfl, si⟩
   · rintro ⟨s, rfl, si⟩
     exact ⟨s, ⟨s, rfl, rfl⟩, si⟩
-#align le_rank_iff_exists_linear_independent_finset le_rank_iff_exists_linearIndependent_finset
+#align linear_map.le_rank_iff_exists_linear_independent_finset LinearMap.le_rank_iff_exists_linearIndependent_finset
 
 end DivisionRing
 
-end Module
+end LinearMap
 

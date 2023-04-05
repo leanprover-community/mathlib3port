@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit be2ac64be57e8319fcd5c5547f3a8d9412daf5ec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,9 +269,9 @@ theorem isOpen_setOf_linearIndependent {ι : Type _} [Finite ι] :
   isOpen_iff_mem_nhds.2 fun f => LinearIndependent.eventually
 #align is_open_set_of_linear_independent isOpen_setOf_linearIndependent
 
-theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } :=
+theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ (f : E →ₗ[𝕜] F).rank } :=
   by
-  simp only [le_rank_iff_exists_linearIndependent_finset, set_of_exists, ← exists_prop]
+  simp only [LinearMap.le_rank_iff_exists_linearIndependent_finset, set_of_exists, ← exists_prop]
   refine' isOpen_bunionᵢ fun t ht => _
   have : Continuous fun f : E →L[𝕜] F => fun x : (t : Set E) => f x :=
     continuous_pi fun x => (ContinuousLinearMap.apply 𝕜 F (x : E)).Continuous

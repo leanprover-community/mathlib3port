@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit 2ec920d35348cb2d13ac0e1a2ad9df0fdf1a76b4
+! leanprover-community/mathlib commit e655e4ea5c6d02854696f97494997ba4c31be802
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -665,6 +665,11 @@ theorem mem_powers (n : M) : n ∈ powers n :=
   ⟨1, pow_one _⟩
 #align submonoid.mem_powers Submonoid.mem_powers
 
+@[norm_cast]
+theorem coe_powers (x : M) : ↑(powers x) = Set.range fun n : ℕ => x ^ n :=
+  rfl
+#align submonoid.coe_powers Submonoid.coe_powers
+
 /- warning: submonoid.mem_powers_iff -> Submonoid.mem_powers_iff is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M) (z : M), Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.setLike.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x (Submonoid.powers.{u1} M _inst_1 z)) (Exists.{1} Nat (fun (n : Nat) => Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) z n) x))
@@ -963,6 +968,8 @@ def multiples (x : A) : AddSubmonoid A :=
 attribute [to_additive multiples] Submonoid.powers
 
 attribute [to_additive mem_multiples] Submonoid.mem_powers
+
+attribute [to_additive coe_multiples] Submonoid.coe_powers
 
 attribute [to_additive mem_multiples_iff] Submonoid.mem_powers_iff
 

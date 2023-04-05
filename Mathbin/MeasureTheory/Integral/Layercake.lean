@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.layercake
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,7 +194,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     ae_mono (measure.restrict_mono Ioc_subset_Ioi_self le_rfl) g_eq_G
   have G_intble : ∀ t > 0, IntervalIntegrable G volume 0 t :=
     by
-    refine' fun t t_pos => ⟨integrable_on.congr_fun' (g_intble t t_pos).1 (g_eq_G_on t), _⟩
+    refine' fun t t_pos => ⟨(g_intble t t_pos).1.congrFunAe (g_eq_G_on t), _⟩
     rw [Ioc_eq_empty_of_le t_pos.lt.le]
     exact integrable_on_empty
   have eq₁ :

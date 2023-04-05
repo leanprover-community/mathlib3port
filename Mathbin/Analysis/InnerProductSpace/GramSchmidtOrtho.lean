@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao, Kevin Buzzard, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.gram_schmidt_ortho
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,18 +200,16 @@ theorem gramSchmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f 
     apply Finset.sum_eq_zero
     intro j hj
     rw [coe_eq_zero]
-    suffices span 𝕜 (f '' Set.Iic j) ≤ (𝕜 ∙ f i)ᗮ
+    suffices span 𝕜 (f '' Set.Iic j) ⟂ 𝕜 ∙ f i
       by
       apply orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero
       rw [mem_orthogonal_singleton_iff_inner_left]
       rw [← mem_orthogonal_singleton_iff_inner_right]
       exact this (gramSchmidt_mem_span 𝕜 f (le_refl j))
-    rw [span_le]
-    rintro - ⟨k, hk, rfl⟩
-    rw [SetLike.mem_coe, mem_orthogonal_singleton_iff_inner_left]
+    rw [is_ortho_span]
+    rintro u ⟨k, hk, rfl⟩ v (rfl : v = f i)
     apply hf
-    refine' (lt_of_le_of_lt hk _).Ne
-    simpa using hj
+    exact (lt_of_le_of_lt hk (finset.mem_Iio.mp hj)).Ne
   · simp
 #align gram_schmidt_of_orthogonal gramSchmidt_of_orthogonal
 
@@ -388,16 +386,15 @@ theorem inner_gramSchmidtOrthonormalBasis_eq_zero {f : ι → E} {i : ι}
     (hi : gramSchmidtNormed 𝕜 f i = 0) (j : ι) : ⟪gramSchmidtOrthonormalBasis h f i, f j⟫ = 0 :=
   by
   rw [← mem_orthogonal_singleton_iff_inner_right]
-  suffices span 𝕜 (gramSchmidtNormed 𝕜 f '' Iic j) ≤ (𝕜 ∙ gramSchmidtOrthonormalBasis h f i)ᗮ
+  suffices span 𝕜 (gramSchmidtNormed 𝕜 f '' Iic j) ⟂ 𝕜 ∙ gramSchmidtOrthonormalBasis h f i
     by
     apply this
     rw [span_gramSchmidtNormed]
-    simpa using mem_span_gramSchmidt 𝕜 f (le_refl j)
-  rw [span_le]
-  rintro - ⟨k, -, rfl⟩
-  rw [SetLike.mem_coe, mem_orthogonal_singleton_iff_inner_left]
+    exact mem_span_gramSchmidt 𝕜 f le_rfl
+  rw [is_ortho_span]
+  rintro u ⟨k, hk, rfl⟩ v (rfl : v = _)
   by_cases hk : gramSchmidtNormed 𝕜 f k = 0
-  · simp [hk]
+  · rw [hk, inner_zero_left]
   rw [← gramSchmidtOrthonormalBasis_apply h hk]
   have : k ≠ i := by
     rintro rfl

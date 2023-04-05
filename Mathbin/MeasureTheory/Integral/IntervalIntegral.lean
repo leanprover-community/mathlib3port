@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit 733fa0048f88bd38678c283c8c1bb1445ac5e23b
+! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -689,8 +689,9 @@ theorem integral_cases (f : ℝ → E) (a b) :
 theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : (∫ x in a..b, f x ∂μ) = 0 := by
   cases' le_total a b with hab hab <;>
         simp only [integral_of_le, integral_of_ge, hab, neg_eq_zero] <;>
-      refine' integral_undef (not_imp_not.mpr integrable.integrable_on' _) <;>
-    simpa [hab] using not_and_distrib.mp h
+      refine' integral_undef (not_imp_not.mpr _ h) <;>
+    simpa only [hab, Ioc_eq_empty_of_le, integrable_on_empty, not_true, false_or_iff,
+      or_false_iff] using not_and_distrib.mp h
 #align interval_integral.integral_undef intervalIntegral.integral_undef
 
 theorem intervalIntegrableOfIntegralNeZero {a b : ℝ} {f : ℝ → E} {μ : Measure ℝ}

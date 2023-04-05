@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -321,7 +321,7 @@ theorem integral_union_eq_left_of_ae (ht_eq : ∀ᵐ x ∂μ.restrict t, f x = 0
   by
   have ht : integrable_on f t μ :=
     by
-    apply integrable_on.congr_fun' integrable_on_zero
+    apply integrable_on_zero.congr_fun_ae
     symm
     exact ht_eq
   by_cases H : integrable_on f (s ∪ t) μ
@@ -333,7 +333,8 @@ theorem integral_union_eq_left_of_ae (ht_eq : ∀ᵐ x ∂μ.restrict t, f x = 0
     (∫ x : α in s ∪ t, f x ∂μ) = ∫ x : α in s ∪ t, f' x ∂μ := integral_congr_ae H.1.ae_eq_mk
     _ = ∫ x in s, f' x ∂μ :=
       by
-      apply integral_union_eq_left_of_ae_aux _ H.1.stronglyMeasurable_mk (H.congr_fun' H.1.ae_eq_mk)
+      apply
+        integral_union_eq_left_of_ae_aux _ H.1.stronglyMeasurable_mk (H.congr_fun_ae H.1.ae_eq_mk)
       filter_upwards [ht_eq,
         ae_mono (measure.restrict_mono (subset_union_right s t) le_rfl) H.1.ae_eq_mk]with x hx h'x
       rw [← h'x, hx]

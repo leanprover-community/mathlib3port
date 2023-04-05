@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 6e272cd89fa32c72a25dbefd319394c48dce1576
+! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -896,6 +896,22 @@ theorem orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero [Complet
   ext
   convert eq_orthogonalProjection_of_mem_orthogonal _ _ <;> simp [hv]
 #align orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero
+
+/-- The projection into `U` from an orthogonal submodule `V` is the zero map. -/
+theorem Submodule.IsOrtho.orthogonalProjection_comp_subtypeL {U V : Submodule 𝕜 E} [CompleteSpace U]
+    (h : U ⟂ V) : orthogonalProjection U ∘L V.subtypeL = 0 :=
+  ContinuousLinearMap.ext fun v =>
+    orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero <| h.symm v.Prop
+#align submodule.is_ortho.orthogonal_projection_comp_subtypeL Submodule.IsOrtho.orthogonalProjection_comp_subtypeL
+
+/-- The projection into `U` from `V` is the zero map if and only if `U` and `V` are orthogonal. -/
+theorem orthogonalProjection_comp_subtypeL_eq_zero_iff {U V : Submodule 𝕜 E} [CompleteSpace U] :
+    orthogonalProjection U ∘L V.subtypeL = 0 ↔ U ⟂ V :=
+  ⟨fun h u hu v hv => by
+    convert orthogonalProjection_inner_eq_zero v u hu using 2
+    have : orthogonalProjection U v = 0 := FunLike.congr_fun h ⟨_, hv⟩
+    rw [this, Submodule.coe_zero, sub_zero], Submodule.IsOrtho.orthogonalProjection_comp_subtypeL⟩
+#align orthogonal_projection_comp_subtypeL_eq_zero_iff orthogonalProjection_comp_subtypeL_eq_zero_iff
 
 theorem orthogonalProjection_eq_linear_proj [CompleteSpace K] (x : E) :
     orthogonalProjection K x =

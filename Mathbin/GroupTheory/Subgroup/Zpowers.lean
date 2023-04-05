@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.zpowers
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit e655e4ea5c6d02854696f97494997ba4c31be802
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,6 +48,11 @@ theorem mem_zpowers (g : G) : g ∈ zpowers g :=
   ⟨1, zpow_one _⟩
 #align subgroup.mem_zpowers Subgroup.mem_zpowers
 
+@[norm_cast]
+theorem coe_zpowers (g : G) : ↑(zpowers g) = Set.range fun n : ℤ => g ^ n :=
+  rfl
+#align subgroup.coe_zpowers Subgroup.coe_zpowers
+
 #print Subgroup.zpowers_eq_closure /-
 theorem zpowers_eq_closure (g : G) : zpowers g = closure {g} :=
   by
@@ -62,17 +67,6 @@ theorem range_zpowersHom (g : G) : (zpowersHom G g).range = zpowers g :=
   rfl
 #align subgroup.range_zpowers_hom Subgroup.range_zpowersHom
 -/
-
-/- warning: subgroup.zpowers_subset -> Subgroup.zpowers_subset is a dubious translation:
-lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G} {K : Subgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) a K) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 a) K)
-but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G} {K : Subgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) a K) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Subgroup.zpowers.{u1} G _inst_1 a) K)
-Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_subset Subgroup.zpowers_subsetₓ'. -/
-theorem zpowers_subset {a : G} {K : Subgroup G} (h : a ∈ K) : zpowers a ≤ K := fun x hx =>
-  match x, hx with
-  | _, ⟨i, rfl⟩ => K.zpow_mem h i
-#align subgroup.zpowers_subset Subgroup.zpowers_subset
 
 /- warning: subgroup.mem_zpowers_iff -> Subgroup.mem_zpowers_iff is a dubious translation:
 lean 3 declaration is
@@ -173,11 +167,11 @@ attribute [to_additive AddSubgroup.zmultiples] Subgroup.zpowers
 
 attribute [to_additive AddSubgroup.mem_zmultiples] Subgroup.mem_zpowers
 
+attribute [to_additive AddSubgroup.coe_zmultiples] Subgroup.coe_zpowers
+
 attribute [to_additive AddSubgroup.zmultiples_eq_closure] Subgroup.zpowers_eq_closure
 
 attribute [to_additive AddSubgroup.range_zmultiplesHom] Subgroup.range_zpowersHom
-
-attribute [to_additive AddSubgroup.zmultiples_subset] Subgroup.zpowers_subset
 
 attribute [to_additive AddSubgroup.mem_zmultiples_iff] Subgroup.mem_zpowers_iff
 
@@ -286,6 +280,8 @@ theorem ofAdd_image_zmultiples_eq_zpowers_ofAdd {x : A} :
 
 namespace Subgroup
 
+variable {s : Set G} {g : G}
+
 #print Subgroup.zpowers_isCommutative /-
 @[to_additive zmultiples_is_commutative]
 instance zpowers_isCommutative (g : G) : (zpowers g).IsCommutative :=
@@ -308,6 +304,14 @@ theorem zpowers_le {g : G} {H : Subgroup G} : zpowers g ≤ H ↔ g ∈ H := by
 #align subgroup.zpowers_le Subgroup.zpowers_le
 #align add_subgroup.zmultiples_le AddSubgroup.zmultiples_le
 
+alias zpowers_le ↔ _ zpowers_le_of_mem
+#align subgroup.zpowers_le_of_mem Subgroup.zpowers_le_of_mem
+
+alias AddSubgroup.zmultiples_le ↔ _ _root_.add_subgroup.zmultiples_le_of_mem
+#align add_subgroup.zmultiples_le_of_mem AddSubgroup.zmultiples_le_of_mem
+
+attribute [to_additive zmultiples_le_of_mem] zpowers_le_of_mem
+
 /- warning: subgroup.zpowers_eq_bot -> Subgroup.zpowers_eq_bot is a dubious translation:
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))) (Eq.{succ u1} G g (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))
@@ -318,6 +322,12 @@ Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_eq_bo
 theorem zpowers_eq_bot {g : G} : zpowers g = ⊥ ↔ g = 1 := by rw [eq_bot_iff, zpowers_le, mem_bot]
 #align subgroup.zpowers_eq_bot Subgroup.zpowers_eq_bot
 #align add_subgroup.zmultiples_eq_bot AddSubgroup.zmultiples_eq_bot
+
+@[to_additive zmultiples_ne_bot]
+theorem zpowers_ne_bot : zpowers g ≠ ⊥ ↔ g ≠ 1 :=
+  zpowers_eq_bot.Not
+#align subgroup.zpowers_ne_bot Subgroup.zpowers_ne_bot
+#align add_subgroup.zmultiples_ne_bot AddSubgroup.zmultiples_ne_bot
 
 /- warning: subgroup.zpowers_one_eq_bot -> Subgroup.zpowers_one_eq_bot is a dubious translation:
 lean 3 declaration is

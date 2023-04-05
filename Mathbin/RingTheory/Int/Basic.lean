@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.int.basic
-! leanprover-community/mathlib commit c085f3044fe585c575e322bfab45b3633c48d820
+! leanprover-community/mathlib commit e655e4ea5c6d02854696f97494997ba4c31be802
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -618,8 +618,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.zmultiples_nat_abs Int.zmultiples_natAbsₓ'. -/
 theorem zmultiples_natAbs (a : ℤ) :
     AddSubgroup.zmultiples (a.natAbs : ℤ) = AddSubgroup.zmultiples a :=
-  le_antisymm (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (dvd_natAbs.mpr (dvd_refl a))))
-    (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (natAbs_dvd.mpr (dvd_refl a))))
+  le_antisymm
+    (AddSubgroup.zmultiples_le_of_mem (mem_zmultiples_iff.mpr (dvd_natAbs.mpr (dvd_refl a))))
+    (AddSubgroup.zmultiples_le_of_mem (mem_zmultiples_iff.mpr (natAbs_dvd.mpr (dvd_refl a))))
 #align int.zmultiples_nat_abs Int.zmultiples_natAbs
 
 /- warning: int.span_nat_abs -> Int.span_natAbs is a dubious translation:

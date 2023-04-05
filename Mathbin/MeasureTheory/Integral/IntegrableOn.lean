@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
+! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,23 +138,29 @@ theorem IntegrableOn.congrSetAe (h : IntegrableOn f t μ) (hst : s =ᵐ[μ] t) :
   h.monoSetAe hst.le
 #align measure_theory.integrable_on.congr_set_ae MeasureTheory.IntegrableOn.congrSetAe
 
-theorem IntegrableOn.congrFun' (h : IntegrableOn f s μ) (hst : f =ᵐ[μ.restrict s] g) :
+theorem IntegrableOn.congrFunAe (h : IntegrableOn f s μ) (hst : f =ᵐ[μ.restrict s] g) :
     IntegrableOn g s μ :=
   Integrable.congr h hst
-#align measure_theory.integrable_on.congr_fun' MeasureTheory.IntegrableOn.congrFun'
+#align measure_theory.integrable_on.congr_fun_ae MeasureTheory.IntegrableOn.congrFunAe
+
+theorem integrableOn_congr_fun_ae (hst : f =ᵐ[μ.restrict s] g) :
+    IntegrableOn f s μ ↔ IntegrableOn g s μ :=
+  ⟨fun h => h.congrFunAe hst, fun h => h.congrFunAe hst.symm⟩
+#align measure_theory.integrable_on_congr_fun_ae MeasureTheory.integrableOn_congr_fun_ae
 
 theorem IntegrableOn.congrFun (h : IntegrableOn f s μ) (hst : EqOn f g s) (hs : MeasurableSet s) :
     IntegrableOn g s μ :=
-  h.congrFun' ((ae_restrict_iff' hs).2 (eventually_of_forall hst))
+  h.congrFunAe ((ae_restrict_iff' hs).2 (eventually_of_forall hst))
 #align measure_theory.integrable_on.congr_fun MeasureTheory.IntegrableOn.congrFun
+
+theorem integrableOn_congr_fun (hst : EqOn f g s) (hs : MeasurableSet s) :
+    IntegrableOn f s μ ↔ IntegrableOn g s μ :=
+  ⟨fun h => h.congr_fun hst hs, fun h => h.congr_fun hst.symm hs⟩
+#align measure_theory.integrable_on_congr_fun MeasureTheory.integrableOn_congr_fun
 
 theorem Integrable.integrableOn (h : Integrable f μ) : IntegrableOn f s μ :=
   h.monoMeasure <| Measure.restrict_le_self
 #align measure_theory.integrable.integrable_on MeasureTheory.Integrable.integrableOn
-
-theorem Integrable.integrableOn' (h : Integrable f (μ.restrict s)) : IntegrableOn f s μ :=
-  h
-#align measure_theory.integrable.integrable_on' MeasureTheory.Integrable.integrableOn'
 
 theorem IntegrableOn.restrict (h : IntegrableOn f s μ) (hs : MeasurableSet s) :
     IntegrableOn f s (μ.restrict t) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.integral_closure
-! leanprover-community/mathlib commit 641b6a82006416ec431b2987b354af9311fed4f2
+! leanprover-community/mathlib commit 4cf7ca0e69e048b006674cf4499e5c7d296a89e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -254,7 +254,7 @@ theorem IsIntegralClosure.rank [IsPrincipalIdealRing A] [NoZeroSMulDivisors A L]
   haveI : IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
     IsIntegralClosure.isLocalization A K L C
   let b := Basis.localizationLocalization K A⁰ L (Module.Free.chooseBasis A C)
-  rw [Module.Free.finrank_eq_card_chooseBasisIndex, FiniteDimensional.finrank_eq_card_basis b]
+  rw [FiniteDimensional.finrank_eq_card_chooseBasisIndex, FiniteDimensional.finrank_eq_card_basis b]
 #align is_integral_closure.rank IsIntegralClosure.rank
 
 variable {A K}

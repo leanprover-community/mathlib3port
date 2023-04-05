@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.ramification_inertia
-! leanprover-community/mathlib commit 71150516f28d9826c7341f8815b31f7d8770c212
+! leanprover-community/mathlib commit 4cf7ca0e69e048b006674cf4499e5c7d296a89e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -892,7 +892,7 @@ theorem sum_ramification_inertia (K L : Type _) [Field K] [Field L] [IsDomain R]
     _ =
         finrank (R ⧸ p)
           (∀ P : (factors (map (algebraMap R S) p)).toFinset, S ⧸ (P : Ideal S) ^ e P) :=
-      (Module.Free.finrank_pi_fintype (R ⧸ p)).symm
+      (finrank_pi_fintype (R ⧸ p)).symm
     _ = finrank (R ⧸ p) (S ⧸ map (algebraMap R S) p) := _
     _ = finrank K L := _
     

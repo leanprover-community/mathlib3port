@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,8 +119,8 @@ theorem orthogonal_supᵢ_eigenspaces (μ : 𝕜) :
   by
   set p : Submodule 𝕜 E := (⨆ μ, eigenspace T μ)ᗮ
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
-  have H₂ : p ≤ (eigenspace T μ)ᗮ := Submodule.orthogonal_le (le_supᵢ _ _)
-  exact (eigenspace T μ).orthogonal_disjoint.mono_right H₂
+  have H₂ : eigenspace T μ ⟂ p := (Submodule.isOrtho_orthogonal_right _).mono_left (le_supᵢ _ _)
+  exact H₂.disjoint
 #align linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_supᵢ_eigenspaces
 
 /-! ### Finite-dimensional theory -/

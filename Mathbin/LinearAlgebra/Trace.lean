@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen, Antoine Labelle
 
 ! This file was ported from Lean 3 source module linear_algebra.trace
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 4cf7ca0e69e048b006674cf4499e5c7d296a89e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,7 @@ theorem trace_eq_contract' :
 theorem trace_one : trace R M 1 = (finrank R M : R) :=
   by
   have b := Module.Free.chooseBasis R M
-  rw [trace_eq_matrix_trace R b, to_matrix_one, Module.Free.finrank_eq_card_chooseBasisIndex]
+  rw [trace_eq_matrix_trace R b, to_matrix_one, finrank_eq_card_choose_basis_index]
   simp
 #align linear_map.trace_one LinearMap.trace_one
 

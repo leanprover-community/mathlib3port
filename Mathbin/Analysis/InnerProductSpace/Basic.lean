@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 6e272cd89fa32c72a25dbefd319394c48dce1576
+! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2219,6 +2219,7 @@ open DirectSum
 The simple way to express this concept would be as a condition on `V : ι → submodule 𝕜 E`.  We
 We instead implement it as a condition on a family of inner product spaces each equipped with an
 isometric embedding into `E`, thus making it a property of morphisms rather than subobjects.
+The connection to the subobject spelling is shown in `orthogonal_family_iff_pairwise`.
 
 This definition is less lightweight, but allows for better definitional properties when the inner
 product space structure on each of the submodules is important -- for example, when considering

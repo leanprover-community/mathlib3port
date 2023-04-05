@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit bf2a9e0156cc11bf44893ea1b4b2da8ae655c901
+! leanprover-community/mathlib commit 4cf7ca0e69e048b006674cf4499e5c7d296a89e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ noncomputable def rank : ℕ :=
 
 @[simp]
 theorem rank_one : rank (1 : Matrix n n K) = Fintype.card n := by
-  rw [rank, to_lin'_one, LinearMap.range_id, finrank_top, Module.Free.finrank_pi]
+  rw [rank, to_lin'_one, LinearMap.range_id, finrank_top, finrank_pi]
 #align matrix.rank_one Matrix.rank_one
 
 @[simp]
@@ -59,7 +59,7 @@ theorem rank_zero : rank (0 : Matrix n n K) = 0 := by
 theorem rank_le_card_width : A.rank ≤ Fintype.card n :=
   by
   convert le_of_add_le_left A.to_lin'.finrank_range_add_finrank_ker.le
-  exact (Module.Free.finrank_pi K).symm
+  exact (finrank_pi K).symm
 #align matrix.rank_le_card_width Matrix.rank_le_card_width
 
 theorem rank_le_width {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ n :=
@@ -113,7 +113,7 @@ theorem rank_eq_finrank_range_toLin {M₁ M₂ : Type _} [AddCommGroup M₁] [Ad
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
 
 theorem rank_le_card_height : A.rank ≤ Fintype.card m :=
-  (Submodule.finrank_le _).trans (Module.Free.finrank_pi K).le
+  (Submodule.finrank_le _).trans (finrank_pi K).le
 #align matrix.rank_le_card_height Matrix.rank_le_card_height
 
 omit m_fin
