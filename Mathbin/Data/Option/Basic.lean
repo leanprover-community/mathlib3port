@@ -1134,7 +1134,7 @@ theorem getD_map (f : α → β) (x : α) (o : Option α) : getD (o.map f) (f x)
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α o o') (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3038 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3157 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_some Option.orElse_eq_someₓ'. -/
 theorem orElse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -1148,7 +1148,7 @@ theorem orElse_eq_some (o o' : Option α) (x : α) :
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α o o') (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3099 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3218 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_some' Option.orElse_eq_some'ₓ'. -/
 theorem orElse_eq_some' (o o' : Option α) (x : α) :
     o.orelse o' = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -1159,7 +1159,7 @@ theorem orElse_eq_some' (o o' : Option α) (x : α) :
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α o o') (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3151 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3270 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none Option.orElse_eq_noneₓ'. -/
 @[simp]
 theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none :=
@@ -1173,7 +1173,7 @@ theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α o o') (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3201 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3320 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none' Option.orElse_eq_none'ₓ'. -/
 @[simp]
 theorem orElse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧ o' = none :=
