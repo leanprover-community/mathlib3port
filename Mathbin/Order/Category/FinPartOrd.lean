@@ -31,7 +31,7 @@ open CategoryTheory
 
 /-- The category of finite partial orders with monotone functions. -/
 structure FinPartOrd where
-  toPartOrd : PartOrd
+  toPartOrd : PartOrdCat
   [isFintype : Fintype to_PartOrd]
 #align FinPartOrd FinPartOrd
 
@@ -71,7 +71,7 @@ instance concreteCategory : ConcreteCategory FinPartOrd :=
   InducedCategory.concreteCategory FinPartOrd.toPartOrd
 #align FinPartOrd.concrete_category FinPartOrd.concreteCategory
 
-instance hasForgetToPartOrd : HasForget₂ FinPartOrd PartOrd :=
+instance hasForgetToPartOrd : HasForget₂ FinPartOrd PartOrdCat :=
   InducedCategory.hasForget₂ FinPartOrd.toPartOrd
 #align FinPartOrd.has_forget_to_PartOrd FinPartOrd.hasForgetToPartOrd
 
@@ -112,8 +112,9 @@ def dualEquiv : FinPartOrd ≌ FinPartOrd :=
 
 end FinPartOrd
 
-theorem finPartOrd_dual_comp_forget_to_partOrd :
-    FinPartOrd.dual ⋙ forget₂ FinPartOrd PartOrd = forget₂ FinPartOrd PartOrd ⋙ PartOrd.dual :=
+theorem finPartOrd_dual_comp_forget_to_partOrdCat :
+    FinPartOrd.dual ⋙ forget₂ FinPartOrd PartOrdCat =
+      forget₂ FinPartOrd PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
-#align FinPartOrd_dual_comp_forget_to_PartOrd finPartOrd_dual_comp_forget_to_partOrd
+#align FinPartOrd_dual_comp_forget_to_PartOrd finPartOrd_dual_comp_forget_to_partOrdCat
 

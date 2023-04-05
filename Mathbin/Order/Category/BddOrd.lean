@@ -25,7 +25,7 @@ open CategoryTheory
 
 /-- The category of bounded orders with monotone functions. -/
 structure BddOrd where
-  toPartOrd : PartOrd
+  toPartOrd : PartOrdCat
   [isBoundedOrder : BoundedOrder to_PartOrd]
 #align BddOrd BddOrd
 
@@ -68,7 +68,7 @@ instance concreteCategory : ConcreteCategory BddOrd
   forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
 #align BddOrd.concrete_category BddOrd.concreteCategory
 
-instance hasForgetToPartOrd : HasForget₂ BddOrd PartOrd
+instance hasForgetToPartOrd : HasForget₂ BddOrd PartOrdCat
     where forget₂ :=
     { obj := fun X => X.toPartOrd
       map := fun X Y => BoundedOrderHom.toOrderHom }
@@ -113,10 +113,10 @@ def dualEquiv : BddOrd ≌ BddOrd :=
 
 end BddOrd
 
-theorem bddOrd_dual_comp_forget_to_partOrd :
-    BddOrd.dual ⋙ forget₂ BddOrd PartOrd = forget₂ BddOrd PartOrd ⋙ PartOrd.dual :=
+theorem bddOrd_dual_comp_forget_to_partOrdCat :
+    BddOrd.dual ⋙ forget₂ BddOrd PartOrdCat = forget₂ BddOrd PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
-#align BddOrd_dual_comp_forget_to_PartOrd bddOrd_dual_comp_forget_to_partOrd
+#align BddOrd_dual_comp_forget_to_PartOrd bddOrd_dual_comp_forget_to_partOrdCat
 
 theorem bddOrd_dual_comp_forget_to_bipointed :
     BddOrd.dual ⋙ forget₂ BddOrd Bipointed = forget₂ BddOrd Bipointed ⋙ Bipointed.swap :=

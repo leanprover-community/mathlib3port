@@ -113,22 +113,23 @@ theorem coe_forget_to_semilatInf (X : BddLat) : ↥((forget₂ BddLat SemilatInf
   rfl
 #align BddLat.coe_forget_to_SemilatInf BddLat.coe_forget_to_semilatInf
 
-theorem forget_lat_partOrd_eq_forget_bddOrd_partOrd :
-    forget₂ BddLat Lat ⋙ forget₂ Lat PartOrd = forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrd :=
+theorem forget_lat_partOrdCat_eq_forget_bddOrd_partOrdCat :
+    forget₂ BddLat Lat ⋙ forget₂ Lat PartOrdCat =
+      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
   rfl
-#align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_lat_partOrd_eq_forget_bddOrd_partOrd
+#align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_lat_partOrdCat_eq_forget_bddOrd_partOrdCat
 
-theorem forget_semilatSup_partOrd_eq_forget_bddOrd_partOrd :
-    forget₂ BddLat SemilatSup ⋙ forget₂ SemilatSup PartOrd =
-      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrd :=
+theorem forget_semilatSup_partOrdCat_eq_forget_bddOrd_partOrdCat :
+    forget₂ BddLat SemilatSup ⋙ forget₂ SemilatSup PartOrdCat =
+      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
   rfl
-#align BddLat.forget_SemilatSup_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatSup_partOrd_eq_forget_bddOrd_partOrd
+#align BddLat.forget_SemilatSup_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatSup_partOrdCat_eq_forget_bddOrd_partOrdCat
 
-theorem forget_semilatInf_partOrd_eq_forget_bddOrd_partOrd :
-    forget₂ BddLat SemilatInf ⋙ forget₂ SemilatInf PartOrd =
-      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrd :=
+theorem forget_semilatInf_partOrdCat_eq_forget_bddOrd_partOrdCat :
+    forget₂ BddLat SemilatInf ⋙ forget₂ SemilatInf PartOrdCat =
+      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
   rfl
-#align BddLat.forget_SemilatInf_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatInf_partOrd_eq_forget_bddOrd_partOrd
+#align BddLat.forget_SemilatInf_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatInf_partOrdCat_eq_forget_bddOrd_partOrdCat
 
 /-- Constructs an equivalence between bounded lattices from an order isomorphism
 between them. -/

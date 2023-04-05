@@ -933,7 +933,7 @@ to the category attached to the ordered set `{0, 1, ..., n}` -/
 def toCat : SimplexCategory ⥤ Cat.{0} :=
   SimplexCategory.skeletalFunctor ⋙
     forget₂ NonemptyFinLinOrdCat LinOrd ⋙
-      forget₂ LinOrd Lat ⋙ forget₂ Lat PartOrd ⋙ forget₂ PartOrd PreordCat ⋙ preordCatToCat
+      forget₂ LinOrd Lat ⋙ forget₂ Lat PartOrdCat ⋙ forget₂ PartOrdCat PreordCat ⋙ preordCatToCat
 #align simplex_category.to_Cat SimplexCategory.toCat
 
 end SimplexCategory

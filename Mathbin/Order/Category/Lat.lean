@@ -68,7 +68,7 @@ instance : LargeCategory.{u} Lat :=
 instance : ConcreteCategory Lat :=
   BundledHom.concreteCategory LatticeHom
 
-instance hasForgetToPartOrd : HasForget₂ Lat PartOrd
+instance hasForgetToPartOrd : HasForget₂ Lat PartOrdCat
     where
   forget₂ :=
     { obj := fun X => ⟨X⟩
@@ -107,8 +107,8 @@ def dualEquiv : Lat ≌ Lat :=
 
 end Lat
 
-theorem lat_dual_comp_forget_to_partOrd :
-    Lat.dual ⋙ forget₂ Lat PartOrd = forget₂ Lat PartOrd ⋙ PartOrd.dual :=
+theorem lat_dual_comp_forget_to_partOrdCat :
+    Lat.dual ⋙ forget₂ Lat PartOrdCat = forget₂ Lat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
-#align Lat_dual_comp_forget_to_PartOrd lat_dual_comp_forget_to_partOrd
+#align Lat_dual_comp_forget_to_PartOrd lat_dual_comp_forget_to_partOrdCat
 
