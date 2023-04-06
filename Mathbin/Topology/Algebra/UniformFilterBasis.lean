@@ -33,13 +33,13 @@ variable {G : Type _} [AddCommGroup G] (B : AddGroupFilterBasis G)
 /-- The uniform space structure associated to an abelian group filter basis via the associated
 topological abelian group structure. -/
 protected def uniformSpace : UniformSpace G :=
-  @TopologicalAddGroup.toUniformSpace G _ B.topology B.is_topological_add_group
+  @TopologicalAddGroup.toUniformSpace G _ B.topology B.isTopologicalAddGroup
 #align add_group_filter_basis.uniform_space AddGroupFilterBasis.uniformSpace
 
 /-- The uniform space structure associated to an abelian group filter basis via the associated
 topological abelian group structure is compatible with its group structure. -/
 protected theorem uniformAddGroup : @UniformAddGroup G B.UniformSpace _ :=
-  @comm_topologicalAddGroup_is_uniform G _ B.topology B.is_topological_add_group
+  @comm_topologicalAddGroup_is_uniform G _ B.topology B.isTopologicalAddGroup
 #align add_group_filter_basis.uniform_add_group AddGroupFilterBasis.uniformAddGroup
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » M) -/

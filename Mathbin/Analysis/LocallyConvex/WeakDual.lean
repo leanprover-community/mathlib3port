@@ -145,10 +145,10 @@ theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
   exact hx y hy
 #align linear_map.has_basis_weak_bilin LinearMap.hasBasis_weakBilin
 
-theorem LinearMap.weakBilinWithSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
+theorem LinearMap.weakBilin_withSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     WithSeminorms (LinearMap.toSeminormFamily B : F → Seminorm 𝕜 (WeakBilin B)) :=
-  SeminormFamily.withSeminormsOfHasBasis _ B.hasBasis_weakBilin
-#align linear_map.weak_bilin_with_seminorms LinearMap.weakBilinWithSeminorms
+  SeminormFamily.withSeminorms_of_hasBasis _ B.hasBasis_weakBilin
+#align linear_map.weak_bilin_with_seminorms LinearMap.weakBilin_withSeminorms
 
 end Topology
 
@@ -159,7 +159,7 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [M
 variable [Nonempty ι] [NormedSpace ℝ 𝕜] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 
 instance {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} : LocallyConvexSpace ℝ (WeakBilin B) :=
-  B.weakBilinWithSeminorms.toLocallyConvexSpace
+  B.weakBilin_withSeminorms.toLocallyConvexSpace
 
 end LocallyConvex
 

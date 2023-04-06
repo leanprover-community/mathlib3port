@@ -167,9 +167,9 @@ variable [TopologicalAddGroup E] [ContinuousSMul 𝕜 E]
 variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- The topology of a locally convex space is induced by the gauge seminorm family. -/
-theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
+theorem with_gaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   by
-  refine' SeminormFamily.withSeminormsOfHasBasis _ _
+  refine' SeminormFamily.withSeminorms_of_hasBasis _ _
   refine' (nhds_basis_abs_convex_open 𝕜 E).to_hasBasis (fun s hs => _) fun s hs => _
   · refine' ⟨s, ⟨_, rfl.subset⟩⟩
     convert(gaugeSeminormFamily _ _).basisSets_singleton_mem ⟨s, hs⟩ one_pos
@@ -189,5 +189,5 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   have hr'' : (r : 𝕜) ≠ 0 := by simp [hr.ne']
   rw [hr', ← Seminorm.smul_ball_zero hr'', gaugeSeminormFamily_ball]
   exact S.coe_is_open.smul₀ hr''
-#align with_gauge_seminorm_family withGaugeSeminormFamily
+#align with_gauge_seminorm_family with_gaugeSeminormFamily
 

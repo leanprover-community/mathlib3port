@@ -175,7 +175,7 @@ theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} 
   · rintro ⟨H₁, H₂⟩
     apply TopologicalAddGroup.ext
     · apply @TopologicalRing.to_topologicalAddGroup
-    · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.is_topological_add_group
+    · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.isTopologicalAddGroup
     · ext s
       letI := Ideal.adicBasis J
       rw [J.has_basis_nhds_zero_adic.mem_iff]

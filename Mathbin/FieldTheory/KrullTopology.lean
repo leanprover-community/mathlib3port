@@ -211,7 +211,7 @@ instance krullTopology (K L : Type _) [Field K] [Field L] [Algebra K L] :
 
 /-- For a field extension `L/K`, the Krull topology on `L ≃ₐ[K] L` makes it a topological group. -/
 instance (K L : Type _) [Field K] [Field L] [Algebra K L] : TopologicalGroup (L ≃ₐ[K] L) :=
-  GroupFilterBasis.is_topologicalGroup (galGroupBasis K L)
+  GroupFilterBasis.isTopologicalGroup (galGroupBasis K L)
 
 section KrullT2
 

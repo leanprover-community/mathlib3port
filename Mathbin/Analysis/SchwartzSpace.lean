@@ -504,23 +504,23 @@ theorem schwartzSeminormFamily_apply_zero :
 instance : TopologicalSpace 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.topology'
 
-theorem schwartzWithSeminorms : WithSeminorms (schwartzSeminormFamily 𝕜 E F) :=
+theorem schwartz_withSeminorms : WithSeminorms (schwartzSeminormFamily 𝕜 E F) :=
   by
   have A : WithSeminorms (schwartzSeminormFamily ℝ E F) := ⟨rfl⟩
   rw [SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ] at A⊢
   rw [A]
   rfl
-#align schwartz_with_seminorms schwartzWithSeminorms
+#align schwartz_with_seminorms schwartz_withSeminorms
 
 variable {𝕜 E F}
 
 instance : ContinuousSMul 𝕜 𝓢(E, F) :=
   by
-  rw [(schwartzWithSeminorms 𝕜 E F).withSeminorms_eq]
+  rw [(schwartz_withSeminorms 𝕜 E F).withSeminorms_eq]
   exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.ContinuousSMul
 
 instance : TopologicalAddGroup 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.is_topological_add_group
+  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.isTopologicalAddGroup
 
 instance : UniformSpace 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformSpace
@@ -529,10 +529,10 @@ instance : UniformAddGroup 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformAddGroup
 
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
-  (schwartzWithSeminorms ℝ E F).toLocallyConvexSpace
+  (schwartz_withSeminorms ℝ E F).toLocallyConvexSpace
 
 instance : TopologicalSpace.FirstCountableTopology 𝓢(E, F) :=
-  (schwartzWithSeminorms ℝ E F).first_countable
+  (schwartz_withSeminorms ℝ E F).first_countable
 
 end Topology
 
@@ -594,8 +594,8 @@ def mkClm [RingHomIsometric σ] (A : (D → E) → F → G)
   cont := by
     change Continuous (mk_lm A hadd hsmul hsmooth hbound : 𝓢(D, E) →ₛₗ[σ] 𝓢(F, G))
     refine'
-      Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 D E) (schwartzWithSeminorms 𝕜' F G)
-        _ fun n => _
+      Seminorm.continuous_from_bounded (schwartz_withSeminorms 𝕜 D E)
+        (schwartz_withSeminorms 𝕜' F G) _ fun n => _
     rcases hbound n with ⟨s, C, hC, h⟩
     refine' ⟨s, ⟨C, hC⟩, fun f => _⟩
     simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def, Algebra.id.smul_eq_mul,
@@ -686,8 +686,8 @@ def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
     cont := by
       change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
       refine'
-        Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
-          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, fun f => _⟩
+        Seminorm.continuous_from_bounded (schwartz_withSeminorms 𝕜 E F)
+          (norm_withSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, fun f => _⟩
       rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_normSeminorm,
         schwartz_seminorm_family_apply_zero, BoundedContinuousFunction.norm_le (map_nonneg _ _)]
       intro x
