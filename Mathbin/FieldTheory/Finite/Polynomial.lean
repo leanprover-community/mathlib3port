@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.finite.polynomial
-! leanprover-community/mathlib commit 5fd3186f1ec30a75d5f65732e3ce5e623382556f
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,14 +211,14 @@ end CommRing
 
 variable [Field K]
 
-theorem dim_r [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
+theorem rank_r [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
   calc
     Module.rank K (R σ K) =
         Module.rank K (↥{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
-      LinearEquiv.dim_eq
+      LinearEquiv.rank_eq
         (Finsupp.supportedEquivFinsupp { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
     _ = (#{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 }) := by
-      rw [Finsupp.dim_eq, dim_self, mul_one]
+      rw [Finsupp.rank_eq, rank_self, mul_one]
     _ = (#{ s : σ → ℕ | ∀ n : σ, s n < Fintype.card K }) :=
       by
       refine' Quotient.sound ⟨Equiv.subtypeEquiv Finsupp.equivFunOnFinite fun f => _⟩
@@ -231,18 +231,18 @@ theorem dim_r [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
     _ = (#σ → K) := (Equiv.arrowCongr (Equiv.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
-#align mv_polynomial.dim_R MvPolynomial.dim_r
+#align mv_polynomial.rank_R MvPolynomial.rank_r
 
 instance [Finite σ] : FiniteDimensional K (R σ K) :=
   by
   cases nonempty_fintype σ
   exact
     IsNoetherian.iff_fg.1
-      (is_noetherian.iff_dim_lt_aleph_0.mpr <| by
-        simpa only [dim_R] using Cardinal.nat_lt_aleph0 (Fintype.card (σ → K)))
+      (is_noetherian.iff_rank_lt_aleph_0.mpr <| by
+        simpa only [rank_R] using Cardinal.nat_lt_aleph0 (Fintype.card (σ → K)))
 
 theorem finrank_r [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
-  FiniteDimensional.finrank_eq_of_dim_eq (dim_r σ K)
+  FiniteDimensional.finrank_eq_of_rank_eq (rank_r σ K)
 #align mv_polynomial.finrank_R MvPolynomial.finrank_r
 
 theorem range_evalᵢ [Finite σ] : (evalᵢ σ K).range = ⊤ :=

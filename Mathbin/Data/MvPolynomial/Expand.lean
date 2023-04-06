@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.expand
-! leanprover-community/mathlib commit 5da451b4c96b4c2e122c0325a7fce17d62ee46c6
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.MvPolynomial.Monad
 
 /-!
 ## Expand multivariate polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a multivariate polynomial `φ`, one may replace every occurence of `X i` by `X i ^ n`,
 for some natural number `n`.

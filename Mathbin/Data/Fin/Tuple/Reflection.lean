@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.fin.tuple.reflection
-! leanprover-community/mathlib commit d95bef0d215ea58c0fd7bbc4b151bf3fe952c095
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.BigOperators.Fin
 
 /-!
 # Lemmas for tuples `fin m → α`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains alternative definitions of common operators on vectors which expand
 definitionally to the expected expression when evaluated on `![]` notation.

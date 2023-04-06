@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.adjugate
-! leanprover-community/mathlib commit 0bd2ea37bcba5769e14866170f251c9bc64e35d7
+! leanprover-community/mathlib commit 55102fc1d7145d8453f6d35c56d0af6f669f7d12
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,19 +198,17 @@ These will hold for any matrix over a commutative ring.
   matrix replacing a column with a basis vector, since it allows us to use
   facts about the `cramer` map.
 -/
-def adjugate (A : Matrix n n α) : Matrix n n α := fun i => cramer Aᵀ (Pi.single i 1)
+def adjugate (A : Matrix n n α) : Matrix n n α :=
+  of fun i => cramer Aᵀ (Pi.single i 1)
 #align matrix.adjugate Matrix.adjugate
 
-theorem adjugate_def (A : Matrix n n α) : adjugate A = fun i => cramer Aᵀ (Pi.single i 1) :=
+theorem adjugate_def (A : Matrix n n α) : adjugate A = of fun i => cramer Aᵀ (Pi.single i 1) :=
   rfl
 #align matrix.adjugate_def Matrix.adjugate_def
 
 theorem adjugate_apply (A : Matrix n n α) (i j : n) :
-    adjugate A i j = (A.updateRow j (Pi.single i 1)).det :=
-  by
-  rw [adjugate_def]
-  simp only
-  rw [cramer_apply, update_column_transpose, det_transpose]
+    adjugate A i j = (A.updateRow j (Pi.single i 1)).det := by
+  rw [adjugate_def, of_apply, cramer_apply, update_column_transpose, det_transpose]
 #align matrix.adjugate_apply Matrix.adjugate_apply
 
 theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ :=
@@ -331,7 +329,7 @@ theorem adjugate_diagonal (v : n → α) :
     adjugate (diagonal v) = diagonal fun i => ∏ j in Finset.univ.eraseₓ i, v j :=
   by
   ext
-  simp only [adjugate_def, cramer_apply, diagonal_transpose]
+  simp only [adjugate_def, cramer_apply, diagonal_transpose, of_apply]
   obtain rfl | hij := eq_or_ne i j
   ·
     rw [diagonal_apply_eq, diagonal_update_column_single, det_diagonal,

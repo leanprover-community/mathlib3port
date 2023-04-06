@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.galois
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 0ac3057eb6231d2c8dfcd46767cf4a166961c0f1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.FieldTheory.Normal
+import Mathbin.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.FieldTheory.Fixed
 import Mathbin.GroupTheory.GroupAction.FixingSubgroup
@@ -522,4 +522,12 @@ theorem tFAE [FiniteDimensional F E] :
 end IsGalois
 
 end GaloisEquivalentDefinitions
+
+section IsAlgClosure
+
+instance (priority := 100) IsAlgClosure.isGalois (k K : Type _) [Field k] [Field K] [Algebra k K]
+    [IsAlgClosure k K] [CharZero k] : IsGalois k K where
+#align is_alg_closure.is_galois IsAlgClosure.isGalois
+
+end IsAlgClosure
 

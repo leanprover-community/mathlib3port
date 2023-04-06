@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.dual_number
-! leanprover-community/mathlib commit eb0cb4511aaef0da2462207b67358a0e1fe1e2ee
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Matrix.Basic
 
 /-!
 # Matrices of dual numbers are isomorphic to dual numbers over matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Showing this for the more general case of `triv_sq_zero_ext R M` would require an action between
 `matrix n n R` and `matrix n n M`, which would risk causing diamonds.

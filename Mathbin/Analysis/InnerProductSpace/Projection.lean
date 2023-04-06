@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1171,7 +1171,7 @@ theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜
   by
   haveI := Submodule.finiteDimensional_of_le h
   haveI := proper_is_R_or_C 𝕜 K₁
-  have hd := Submodule.dim_sup_add_dim_inf_eq K₁ (K₁ᗮ ⊓ K₂)
+  have hd := Submodule.rank_sup_add_rank_inf_eq K₁ (K₁ᗮ ⊓ K₂)
   rw [← inf_assoc, (Submodule.orthogonal_disjoint K₁).eq_bot, bot_inf_eq, finrank_bot,
     Submodule.sup_orthogonal_inf_of_completeSpace h] at hd
   rw [add_zero] at hd

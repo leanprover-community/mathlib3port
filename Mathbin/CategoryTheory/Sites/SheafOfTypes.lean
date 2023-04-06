@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheaf_of_types
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.Types
 
 /-!
 # Sheaves of types on a Grothendieck topology
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Defines the notion of a sheaf of types (usually called a sheaf of sets by mathematicians)
 on a category equipped with a Grothendieck topology, as well as a range of equivalent

@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.basic
-! leanprover-community/mathlib commit 3e00d81bdcbf77c8188bbd18f5524ddc3ed8cac6
+! leanprover-community/mathlib commit 0ac3057eb6231d2c8dfcd46767cf4a166961c0f1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.FieldTheory.Normal
 import Mathbin.FieldTheory.PerfectClosure
-import Mathbin.FieldTheory.Separable
-import Mathbin.RingTheory.Adjoin.Field
 import Mathbin.RingTheory.Localization.Integral
 
 /-!
@@ -189,6 +188,18 @@ theorem isAlgClosure_iff (K : Type v) [Field K] [Algebra k K] :
     IsAlgClosure k K ↔ IsAlgClosed K ∧ Algebra.IsAlgebraic k K :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 #align is_alg_closure_iff isAlgClosure_iff
+
+instance (priority := 100) IsAlgClosure.normal (R K : Type _) [Field R] [Field K] [Algebra R K]
+    [IsAlgClosure R K] : Normal R K :=
+  ⟨IsAlgClosure.algebraic, fun _ =>
+    @IsAlgClosed.splits_codomain _ _ _ (IsAlgClosure.alg_closed R) _ _ _⟩
+#align is_alg_closure.normal IsAlgClosure.normal
+
+instance (priority := 100) IsAlgClosure.separable (R K : Type _) [Field R] [Field K] [Algebra R K]
+    [IsAlgClosure R K] [CharZero R] : IsSeparable R K :=
+  ⟨fun _ => isAlgebraic_iff_isIntegral.mp (IsAlgClosure.algebraic _), fun _ =>
+    (minpoly.irreducible (isAlgebraic_iff_isIntegral.mp (IsAlgClosure.algebraic _))).Separable⟩
+#align is_alg_closure.separable IsAlgClosure.separable
 
 namespace lift
 

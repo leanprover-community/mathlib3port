@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -513,17 +513,17 @@ instance : Module.Finite R ℍ[R,c₁,c₂] :=
 instance : Module.Free R ℍ[R,c₁,c₂] :=
   Module.Free.of_basis (basisOneIJK c₁ c₂)
 
-theorem dim_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 4 :=
+theorem rank_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 4 :=
   by
-  rw [dim_eq_card_basis (basis_one_i_j_k c₁ c₂), Fintype.card_fin]
+  rw [rank_eq_card_basis (basis_one_i_j_k c₁ c₂), Fintype.card_fin]
   norm_num
-#align quaternion_algebra.dim_eq_four QuaternionAlgebra.dim_eq_four
+#align quaternion_algebra.rank_eq_four QuaternionAlgebra.rank_eq_four
 
 theorem finrank_eq_four [StrongRankCondition R] : FiniteDimensional.finrank R ℍ[R,c₁,c₂] = 4 :=
   by
   have : Cardinal.toNat 4 = 4 := by
     rw [← Cardinal.toNat_cast 4, Nat.cast_bit0, Nat.cast_bit0, Nat.cast_one]
-  rw [FiniteDimensional.finrank, dim_eq_four, this]
+  rw [FiniteDimensional.finrank, rank_eq_four, this]
 #align quaternion_algebra.finrank_eq_four QuaternionAlgebra.finrank_eq_four
 
 end
@@ -1210,9 +1210,9 @@ instance : Module.Finite R ℍ[R] :=
 instance : Module.Free R ℍ[R] :=
   QuaternionAlgebra.Module.free _ _
 
-theorem dim_eq_four [StrongRankCondition R] : Module.rank R ℍ[R] = 4 :=
-  QuaternionAlgebra.dim_eq_four _ _
-#align quaternion.dim_eq_four Quaternion.dim_eq_four
+theorem rank_eq_four [StrongRankCondition R] : Module.rank R ℍ[R] = 4 :=
+  QuaternionAlgebra.rank_eq_four _ _
+#align quaternion.rank_eq_four Quaternion.rank_eq_four
 
 theorem finrank_eq_four [StrongRankCondition R] : FiniteDimensional.finrank R ℍ[R] = 4 :=
   QuaternionAlgebra.finrank_eq_four _ _

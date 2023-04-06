@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit b31173ee05c911d61ad6a05bd2196835c932e0ec
+! leanprover-community/mathlib commit b2a5f0d6fc79f4aa24586177a8d33b20daf3aea5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ Schwartz space, tempered distributions
 
 noncomputable section
 
-variable {𝕜 𝕜' E F : Type _}
+variable {𝕜 𝕜' D E F G : Type _}
 
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
@@ -536,78 +536,98 @@ instance : TopologicalSpace.FirstCountableTopology 𝓢(E, F) :=
 
 end Topology
 
+section Clm
+
+/-! ### Construction of continuous linear maps between Schwartz spaces -/
+
+
+variable [NormedField 𝕜] [NormedField 𝕜']
+
+variable [NormedAddCommGroup D] [NormedSpace ℝ D]
+
+variable [NormedSpace 𝕜 E] [SMulCommClass ℝ 𝕜 E]
+
+variable [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedSpace 𝕜' G] [SMulCommClass ℝ 𝕜' G]
+
+variable {σ : 𝕜 →+* 𝕜'}
+
+/-- Create a semilinear map between Schwartz spaces.
+
+Note: This is a helper definition for `mk_clm`. -/
+def mkLm (A : (D → E) → F → G) (hadd : ∀ (f g : 𝓢(D, E)) (x), A (f + g) x = A f x + A g x)
+    (hsmul : ∀ (a : 𝕜) (f : 𝓢(D, E)) (x), A (a • f) x = σ a • A f x)
+    (hsmooth : ∀ f : 𝓢(D, E), ContDiff ℝ ⊤ (A f))
+    (hbound :
+      ∀ n : ℕ × ℕ,
+        ∃ (s : Finset (ℕ × ℕ))(C : ℝ)(hC : 0 ≤ C),
+          ∀ (f : 𝓢(D, E)) (x : F),
+            ‖x‖ ^ n.fst * ‖iteratedFderiv ℝ n.snd (A f) x‖ ≤
+              C * s.sup (schwartzSeminormFamily 𝕜 D E) f) :
+    𝓢(D, E) →ₛₗ[σ] 𝓢(F, G)
+    where
+  toFun f :=
+    { toFun := A f
+      smooth' := hsmooth f
+      decay' := by
+        intro k n
+        rcases hbound ⟨k, n⟩ with ⟨s, C, hC, h⟩
+        exact ⟨C * (s.sup (schwartzSeminormFamily 𝕜 D E)) f, h f⟩ }
+  map_add' f g := ext (hadd f g)
+  map_smul' a f := ext (hsmul a f)
+#align schwartz_map.mk_lm SchwartzMap.mkLm
+
+/-- Create a continuous semilinear map between Schwartz spaces.
+
+For an example of using this definition, see `fderiv_clm`. -/
+def mkClm [RingHomIsometric σ] (A : (D → E) → F → G)
+    (hadd : ∀ (f g : 𝓢(D, E)) (x), A (f + g) x = A f x + A g x)
+    (hsmul : ∀ (a : 𝕜) (f : 𝓢(D, E)) (x), A (a • f) x = σ a • A f x)
+    (hsmooth : ∀ f : 𝓢(D, E), ContDiff ℝ ⊤ (A f))
+    (hbound :
+      ∀ n : ℕ × ℕ,
+        ∃ (s : Finset (ℕ × ℕ))(C : ℝ)(hC : 0 ≤ C),
+          ∀ (f : 𝓢(D, E)) (x : F),
+            ‖x‖ ^ n.fst * ‖iteratedFderiv ℝ n.snd (A f) x‖ ≤
+              C * s.sup (schwartzSeminormFamily 𝕜 D E) f) :
+    𝓢(D, E) →SL[σ] 𝓢(F, G)
+    where
+  cont := by
+    change Continuous (mk_lm A hadd hsmul hsmooth hbound : 𝓢(D, E) →ₛₗ[σ] 𝓢(F, G))
+    refine'
+      Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 D E) (schwartzWithSeminorms 𝕜' F G)
+        _ fun n => _
+    rcases hbound n with ⟨s, C, hC, h⟩
+    refine' ⟨s, ⟨C, hC⟩, fun f => _⟩
+    simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def, Algebra.id.smul_eq_mul,
+      Subtype.coe_mk]
+    exact (mk_lm A hadd hsmul hsmooth hbound f).seminorm_le_bound 𝕜' n.1 n.2 (by positivity) (h f)
+  toLinearMap := mkLm A hadd hsmul hsmooth hbound
+#align schwartz_map.mk_clm SchwartzMap.mkClm
+
+end Clm
+
 section fderiv
 
 /-! ### Derivatives of Schwartz functions -/
 
 
-variable {E F}
-
-/-- The derivative of a Schwartz function as a Schwartz function with values in the
-continuous linear maps `E→L[ℝ] F`. -/
-@[protected]
-def fderiv (f : 𝓢(E, F)) : 𝓢(E, E →L[ℝ] F)
-    where
-  toFun := fderiv ℝ f
-  smooth' := (contDiff_top_iff_fderiv.mp f.smooth').2
-  decay' := by
-    intro k n
-    cases' f.decay' k (n + 1) with C hC
-    use C
-    intro x
-    rw [norm_iteratedFderiv_fderiv]
-    exact hC x
-#align schwartz_map.fderiv SchwartzMap.fderiv
-
-@[simp, norm_cast]
-theorem coe_fderiv (f : 𝓢(E, F)) : ⇑f.fderiv = fderiv ℝ f :=
-  rfl
-#align schwartz_map.coe_fderiv SchwartzMap.coe_fderiv
-
-@[simp]
-theorem fderiv_apply (f : 𝓢(E, F)) (x : E) : f.fderiv x = fderiv ℝ f x :=
-  rfl
-#align schwartz_map.fderiv_apply SchwartzMap.fderiv_apply
-
 variable (𝕜)
 
 variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
-/-- The derivative on Schwartz space as a linear map. -/
-def fderivLm : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F)
-    where
-  toFun := SchwartzMap.fderiv
-  map_add' f g :=
-    ext fun _ => fderiv_add f.Differentiable.DifferentiableAt g.Differentiable.DifferentiableAt
-  map_smul' a f := ext fun _ => fderiv_const_smul f.Differentiable.DifferentiableAt a
-#align schwartz_map.fderiv_lm SchwartzMap.fderivLm
-
-@[simp, norm_cast]
-theorem fderivLm_apply (f : 𝓢(E, F)) : fderivLm 𝕜 f = SchwartzMap.fderiv f :=
-  rfl
-#align schwartz_map.fderiv_lm_apply SchwartzMap.fderivLm_apply
-
-/-- The derivative on Schwartz space as a continuous linear map. -/
-def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)
-    where
-  cont := by
-    change Continuous (fderiv_lm 𝕜 : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F))
-    refine'
-      Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
-        (schwartzWithSeminorms 𝕜 E (E →L[ℝ] F)) _ _
-    rintro ⟨k, n⟩
-    use {⟨k, n + 1⟩}, 1
-    intro f
-    simp only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton, one_smul]
-    refine' (fderiv_lm 𝕜 f).seminorm_le_bound 𝕜 k n (by positivity) _
-    intro x
-    rw [fderiv_lm_apply, coe_fderiv, norm_iteratedFderiv_fderiv]
-    exact f.le_seminorm 𝕜 k (n + 1) x
-  toLinearMap := fderivLm 𝕜
+/-- The real derivative on Schwartz space as a continuous `𝕜`-linear map. -/
+def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F) :=
+  mkClm (fderiv ℝ)
+    (fun f g _ => fderiv_add f.Differentiable.DifferentiableAt g.Differentiable.DifferentiableAt)
+    (fun a f _ => fderiv_const_smul f.Differentiable.DifferentiableAt a)
+    (fun f => (contDiff_top_iff_fderiv.mp f.smooth').2) fun ⟨k, n⟩ =>
+    ⟨{⟨k, n + 1⟩}, 1, zero_le_one, fun f x => by
+      simpa only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton,
+        one_smul, norm_iteratedFderiv_fderiv, one_mul] using f.le_seminorm 𝕜 k (n + 1) x⟩
 #align schwartz_map.fderiv_clm SchwartzMap.fderivClm
 
-@[simp, norm_cast]
-theorem fderivClm_apply (f : 𝓢(E, F)) : fderivClm 𝕜 f = SchwartzMap.fderiv f :=
+@[simp]
+theorem fderivClm_apply (f : 𝓢(E, F)) (x : E) : fderivClm 𝕜 f x = fderiv ℝ f x :=
   rfl
 #align schwartz_map.fderiv_clm_apply SchwartzMap.fderivClm_apply
 

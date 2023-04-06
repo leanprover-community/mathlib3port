@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.intervals
-! leanprover-community/mathlib commit b71077179fac7179e3a342ff319392ad8dcb773c
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.List.Range
 
 /-!
 # Intervals in ℕ
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines intervals of naturals. `list.Ico m n` is the list of integers greater than `m`
 and strictly less than `n`.

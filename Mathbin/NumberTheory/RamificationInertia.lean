@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.ramification_inertia
-! leanprover-community/mathlib commit 4cf7ca0e69e048b006674cf4499e5c7d296a89e0
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -665,36 +665,36 @@ noncomputable def quotientRangePowQuotSuccInclusionEquiv [IsDomain S] [IsDedekin
 
 /-- Since the inclusion `(P^(i + 1) / P^e) ⊂ (P^i / P^e)` has a kernel isomorphic to `P / S`,
 `[P^i / P^e : R / p] = [P^(i+1) / P^e : R / p] + [P / S : R / p]` -/
-theorem dim_pow_quot_aux [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime] (hP0 : P ≠ ⊥)
+theorem rank_pow_quot_aux [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime] (hP0 : P ≠ ⊥)
     {i : ℕ} (hi : i < e) :
     Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ i)) =
       Module.rank (R ⧸ p) (S ⧸ P) +
         Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ (i + 1))) :=
   by
   letI : Field (R ⧸ p) := Ideal.Quotient.field _
-  rw [dim_eq_of_injective _ (pow_quot_succ_inclusion_injective f p P i),
-    (quotient_range_pow_quot_succ_inclusion_equiv f p P hP0 hi).symm.dim_eq]
-  exact (dim_quotient_add_dim (LinearMap.range (pow_quot_succ_inclusion f p P i))).symm
-#align ideal.dim_pow_quot_aux Ideal.dim_pow_quot_aux
+  rw [rank_eq_of_injective _ (pow_quot_succ_inclusion_injective f p P i),
+    (quotient_range_pow_quot_succ_inclusion_equiv f p P hP0 hi).symm.rank_eq]
+  exact (rank_quotient_add_rank (LinearMap.range (pow_quot_succ_inclusion f p P i))).symm
+#align ideal.rank_pow_quot_aux Ideal.rank_pow_quot_aux
 
-theorem dim_pow_quot [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime] (hP0 : P ≠ ⊥)
+theorem rank_pow_quot [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime] (hP0 : P ≠ ⊥)
     (i : ℕ) (hi : i ≤ e) :
     Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ i)) =
       (e - i) • Module.rank (R ⧸ p) (S ⧸ P) :=
   by
   refine' @Nat.decreasingInduction' _ i e (fun j lt_e le_j ih => _) hi _
-  · rw [dim_pow_quot_aux f p P _ lt_e, ih, ← succ_nsmul, Nat.sub_succ, ← Nat.succ_eq_add_one,
+  · rw [rank_pow_quot_aux f p P _ lt_e, ih, ← succ_nsmul, Nat.sub_succ, ← Nat.succ_eq_add_one,
       Nat.succ_pred_eq_of_pos (Nat.sub_pos_of_lt lt_e)]
     assumption
   · rw [Nat.sub_self, zero_nsmul, map_quotient_self]
-    exact dim_bot (R ⧸ p) (S ⧸ P ^ e)
-#align ideal.dim_pow_quot Ideal.dim_pow_quot
+    exact rank_bot (R ⧸ p) (S ⧸ P ^ e)
+#align ideal.rank_pow_quot Ideal.rank_pow_quot
 
 omit hfp
 
 /-- If `p` is a maximal ideal of `R`, `S` extends `R` and `P^e` lies over `p`,
 then the dimension `[S/(P^e) : R/p]` is equal to `e * [S/P : R/p]`. -/
-theorem dim_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime]
+theorem rank_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime]
     (hP0 : P ≠ ⊥) (he : e ≠ 0) :
     Module.rank (R ⧸ p) (S ⧸ P ^ e) =
       e •
@@ -703,10 +703,10 @@ theorem dim_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] [p.IsMax
             @Quotient.algebraQuotientOfRamificationIdxNeZero _ _ _ _ _ ⟨he⟩) :=
   by
   letI : NeZero e := ⟨he⟩
-  have := dim_pow_quot f p P hP0 0 (Nat.zero_le e)
+  have := rank_pow_quot f p P hP0 0 (Nat.zero_le e)
   rw [pow_zero, Nat.sub_zero, Ideal.one_eq_top, Ideal.map_top] at this
-  exact (dim_top (R ⧸ p) _).symm.trans this
-#align ideal.dim_prime_pow_ramification_idx Ideal.dim_prime_pow_ramificationIdx
+  exact (rank_top (R ⧸ p) _).symm.trans this
+#align ideal.rank_prime_pow_ramification_idx Ideal.rank_prime_pow_ramificationIdx
 
 /-- If `p` is a maximal ideal of `R`, `S` extends `R` and `P^e` lies over `p`,
 then the dimension `[S/(P^e) : R/p]`, as a natural number, is equal to `e * [S/P : R/p]`. -/
@@ -721,12 +721,12 @@ theorem finrank_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] (hP0
   letI : NeZero e := ⟨he⟩
   letI : Algebra (R ⧸ p) (S ⧸ P) := quotient.algebra_quotient_of_ramification_idx_ne_zero f p P
   letI := Ideal.Quotient.field p
-  have hdim := dim_prime_pow_ramification_idx _ _ _ hP0 he
+  have hdim := rank_prime_pow_ramification_idx _ _ _ hP0 he
   by_cases hP : FiniteDimensional (R ⧸ p) (S ⧸ P)
   · haveI := hP
     haveI := (finite_dimensional_iff_of_rank_eq_nsmul he hdim).mpr hP
     refine' Cardinal.natCast_injective _
-    rw [finrank_eq_dim, Nat.cast_mul, finrank_eq_dim, hdim, nsmul_eq_mul]
+    rw [finrank_eq_rank', Nat.cast_mul, finrank_eq_rank', hdim, nsmul_eq_mul]
   have hPe := mt (finite_dimensional_iff_of_rank_eq_nsmul he hdim).mp hP
   simp only [finrank_of_infinite_dimensional hP, finrank_of_infinite_dimensional hPe,
     MulZeroClass.mul_zero]

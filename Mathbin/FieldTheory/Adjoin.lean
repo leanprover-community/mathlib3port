@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.adjoin
-! leanprover-community/mathlib commit 3d32bf9cef95940e3fe1ca0dd2412e0f21579f46
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,7 +23,7 @@ For example, `algebra.adjoin K {x}` might not include `x⁻¹`.
 ## Main results
 
 - `adjoin_adjoin_left`: adjoining S and then T is the same as adjoining `S ∪ T`.
-- `bot_eq_top_of_dim_adjoin_eq_one`: if `F⟮x⟯` has dimension `1` over `F` for every `x`
+- `bot_eq_top_of_rank_adjoin_eq_one`: if `F⟮x⟯` has dimension `1` over `F` for every `x`
   in `E` then `F = E`
 
 ## Notation
@@ -701,16 +701,17 @@ theorem adjoin_nat (n : ℕ) : F⟮⟯ = ⊥ :=
   adjoin_simple_eq_bot_iff.mpr (coe_nat_mem ⊥ n)
 #align intermediate_field.adjoin_nat IntermediateField.adjoin_nat
 
-section AdjoinDim
+section AdjoinRank
 
 open FiniteDimensional Module
 
 variable {K L : IntermediateField F E}
 
 @[simp]
-theorem dim_eq_one_iff : Module.rank F K = 1 ↔ K = ⊥ := by
-  rw [← to_subalgebra_eq_iff, ← dim_eq_dim_subalgebra, Subalgebra.dim_eq_one_iff, bot_to_subalgebra]
-#align intermediate_field.dim_eq_one_iff IntermediateField.dim_eq_one_iff
+theorem rank_eq_one_iff : Module.rank F K = 1 ↔ K = ⊥ := by
+  rw [← to_subalgebra_eq_iff, ← rank_eq_rank_subalgebra, Subalgebra.rank_eq_one_iff,
+    bot_to_subalgebra]
+#align intermediate_field.rank_eq_one_iff IntermediateField.rank_eq_one_iff
 
 @[simp]
 theorem finrank_eq_one_iff : finrank F K = 1 ↔ K = ⊥ := by
@@ -719,23 +720,23 @@ theorem finrank_eq_one_iff : finrank F K = 1 ↔ K = ⊥ := by
 #align intermediate_field.finrank_eq_one_iff IntermediateField.finrank_eq_one_iff
 
 @[simp]
-theorem dim_bot : Module.rank F (⊥ : IntermediateField F E) = 1 := by rw [dim_eq_one_iff]
-#align intermediate_field.dim_bot IntermediateField.dim_bot
+theorem rank_bot : Module.rank F (⊥ : IntermediateField F E) = 1 := by rw [rank_eq_one_iff]
+#align intermediate_field.rank_bot IntermediateField.rank_bot
 
 @[simp]
 theorem finrank_bot : finrank F (⊥ : IntermediateField F E) = 1 := by rw [finrank_eq_one_iff]
 #align intermediate_field.finrank_bot IntermediateField.finrank_bot
 
-theorem dim_adjoin_eq_one_iff : Module.rank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
-  Iff.trans dim_eq_one_iff adjoin_eq_bot_iff
-#align intermediate_field.dim_adjoin_eq_one_iff IntermediateField.dim_adjoin_eq_one_iff
+theorem rank_adjoin_eq_one_iff : Module.rank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
+  Iff.trans rank_eq_one_iff adjoin_eq_bot_iff
+#align intermediate_field.rank_adjoin_eq_one_iff IntermediateField.rank_adjoin_eq_one_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-theorem dim_adjoin_simple_eq_one_iff : Module.rank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) :=
+theorem rank_adjoin_simple_eq_one_iff : Module.rank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) :=
   by
-  rw [dim_adjoin_eq_one_iff]
+  rw [rank_adjoin_eq_one_iff]
   exact Set.singleton_subset_iff
-#align intermediate_field.dim_adjoin_simple_eq_one_iff IntermediateField.dim_adjoin_simple_eq_one_iff
+#align intermediate_field.rank_adjoin_simple_eq_one_iff IntermediateField.rank_adjoin_simple_eq_one_iff
 
 theorem finrank_adjoin_eq_one_iff : finrank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
   Iff.trans finrank_eq_one_iff adjoin_eq_bot_iff
@@ -750,12 +751,12 @@ theorem finrank_adjoin_simple_eq_one_iff : finrank F F⟮⟯ = 1 ↔ α ∈ (⊥
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /-- If `F⟮x⟯` has dimension `1` over `F` for every `x ∈ E` then `F = E`. -/
-theorem bot_eq_top_of_dim_adjoin_eq_one (h : ∀ x : E, Module.rank F F⟮⟯ = 1) :
+theorem bot_eq_top_of_rank_adjoin_eq_one (h : ∀ x : E, Module.rank F F⟮⟯ = 1) :
     (⊥ : IntermediateField F E) = ⊤ := by
   ext
   rw [iff_true_right IntermediateField.mem_top]
-  exact dim_adjoin_simple_eq_one_iff.mp (h x)
-#align intermediate_field.bot_eq_top_of_dim_adjoin_eq_one IntermediateField.bot_eq_top_of_dim_adjoin_eq_one
+  exact rank_adjoin_simple_eq_one_iff.mp (h x)
+#align intermediate_field.bot_eq_top_of_rank_adjoin_eq_one IntermediateField.bot_eq_top_of_rank_adjoin_eq_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem bot_eq_top_of_finrank_adjoin_eq_one (h : ∀ x : E, finrank F F⟮⟯ = 1) :
@@ -766,10 +767,10 @@ theorem bot_eq_top_of_finrank_adjoin_eq_one (h : ∀ x : E, finrank F F⟮⟯ = 
 #align intermediate_field.bot_eq_top_of_finrank_adjoin_eq_one IntermediateField.bot_eq_top_of_finrank_adjoin_eq_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-theorem subsingleton_of_dim_adjoin_eq_one (h : ∀ x : E, Module.rank F F⟮⟯ = 1) :
+theorem subsingleton_of_rank_adjoin_eq_one (h : ∀ x : E, Module.rank F F⟮⟯ = 1) :
     Subsingleton (IntermediateField F E) :=
-  subsingleton_of_bot_eq_top (bot_eq_top_of_dim_adjoin_eq_one h)
-#align intermediate_field.subsingleton_of_dim_adjoin_eq_one IntermediateField.subsingleton_of_dim_adjoin_eq_one
+  subsingleton_of_bot_eq_top (bot_eq_top_of_rank_adjoin_eq_one h)
+#align intermediate_field.subsingleton_of_rank_adjoin_eq_one IntermediateField.subsingleton_of_rank_adjoin_eq_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem subsingleton_of_finrank_adjoin_eq_one (h : ∀ x : E, finrank F F⟮⟯ = 1) :
@@ -793,7 +794,7 @@ theorem subsingleton_of_finrank_adjoin_le_one [FiniteDimensional F E]
   subsingleton_of_bot_eq_top (bot_eq_top_of_finrank_adjoin_le_one h)
 #align intermediate_field.subsingleton_of_finrank_adjoin_le_one IntermediateField.subsingleton_of_finrank_adjoin_le_one
 
-end AdjoinDim
+end AdjoinRank
 
 end AdjoinIntermediateFieldLattice
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Monnet
 
 ! This file was ported from Lean 3 source module field_theory.krull_topology
-! leanprover-community/mathlib commit 83f81aea33931a1edb94ce0f32b9a5d484de6978
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ def fixedByFinite (K L : Type _) [Field K] [Field L] [Algebra K L] : Set (Subgro
 /-- For an field extension `L/K`, the intermediate field `K` is finite-dimensional over `K` -/
 theorem IntermediateField.finiteDimensional_bot (K L : Type _) [Field K] [Field L] [Algebra K L] :
     FiniteDimensional K (⊥ : IntermediateField K L) :=
-  finiteDimensional_of_dim_eq_one IntermediateField.dim_bot
+  finiteDimensional_of_rank_eq_one IntermediateField.rank_bot
 #align intermediate_field.finite_dimensional_bot IntermediateField.finiteDimensional_bot
 
 /-- This lemma says that `Gal(L/K) = L ≃ₐ[K] L` -/

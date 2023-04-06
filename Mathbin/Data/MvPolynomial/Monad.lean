@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.monad
-! leanprover-community/mathlib commit 5120cf49cb659e2499edd7e4d336a04efd598f2f
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.MvPolynomial.Variables
 /-!
 
 # Monad operations on `mv_polynomial`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines two monadic operations on `mv_polynomial`. Given `p : mv_polynomial σ R`,
 

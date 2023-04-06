@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module number_theory.multiplicity
-! leanprover-community/mathlib commit 76de8ae01554c3b37d66544866659ff174e66e1f
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem dvd_geom_sum₂_iff_of_dvd_sub {x y p : R} (h : p ∣ x - y) :
 
 theorem dvd_geom_sum₂_iff_of_dvd_sub' {x y p : R} (h : p ∣ x - y) :
     (p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i)) ↔ p ∣ n * x ^ (n - 1) := by
-  rw [geom_sum₂_comm, dvd_geom_sum₂_iff_of_dvd_sub] <;> simpa using (dvd_neg _ _).mpr h
+  rw [geom_sum₂_comm, dvd_geom_sum₂_iff_of_dvd_sub] <;> simpa using h.neg_right
 #align dvd_geom_sum₂_iff_of_dvd_sub' dvd_geom_sum₂_iff_of_dvd_sub'
 
 theorem dvd_geom_sum₂_self {x y : R} (h : ↑n ∣ x - y) :

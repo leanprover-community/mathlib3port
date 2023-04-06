@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.matrix
-! leanprover-community/mathlib commit bf2a9e0156cc11bf44893ea1b4b2da8ae655c901
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R
     letI := nontrivial_of_invariantBasisNumber R
     have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
     let b := (Matrix.stdBasis _ _ _).map h.symm
-    rw [finrank, dim_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_toNat_eq_card, finrank,
+    rw [finrank, rank_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_toNat_eq_card, finrank,
       finrank, rank_eq_card_choose_basis_index, rank_eq_card_choose_basis_index,
       Cardinal.mk_toNat_eq_card, Cardinal.mk_toNat_eq_card, Fintype.card_prod, mul_comm]
 #align module.free.finrank_linear_hom Module.Free.finrank_linear_hom

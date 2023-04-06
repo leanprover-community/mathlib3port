@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 
 ! This file was ported from Lean 3 source module ring_theory.zmod
-! leanprover-community/mathlib commit 00d163e35035c3577c1c79fa53b68de17781ffc1
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Int.Basic
 
 /-!
 # Ring theoretic facts about `zmod n`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We collect a few facts about `zmod n` that need some ring theory to be proved/stated
 

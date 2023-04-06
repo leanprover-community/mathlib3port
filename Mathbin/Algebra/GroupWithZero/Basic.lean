@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.basic
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -340,6 +340,24 @@ theorem mul_left_eq_self₀ : a * b = b ↔ a = 1 ∨ b = 0 :=
     
 #align mul_left_eq_self₀ mul_left_eq_self₀
 
+@[simp]
+theorem mul_eq_left₀ (ha : a ≠ 0) : a * b = a ↔ b = 1 := by
+  rw [Iff.comm, ← mul_right_inj' ha, mul_one]
+#align mul_eq_left₀ mul_eq_left₀
+
+@[simp]
+theorem mul_eq_right₀ (hb : b ≠ 0) : a * b = b ↔ a = 1 := by
+  rw [Iff.comm, ← mul_left_inj' hb, one_mul]
+#align mul_eq_right₀ mul_eq_right₀
+
+@[simp]
+theorem left_eq_mul₀ (ha : a ≠ 0) : a = a * b ↔ b = 1 := by rw [eq_comm, mul_eq_left₀ ha]
+#align left_eq_mul₀ left_eq_mul₀
+
+@[simp]
+theorem right_eq_mul₀ (hb : b ≠ 0) : b = a * b ↔ a = 1 := by rw [eq_comm, mul_eq_right₀ hb]
+#align right_eq_mul₀ right_eq_mul₀
+
 /- warning: eq_zero_of_mul_eq_self_right -> eq_zero_of_mul_eq_self_right is a dubious translation:
 lean 3 declaration is
   forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b) a) -> (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))))))
@@ -493,6 +511,17 @@ instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ 
     inv_eq_of_mul := fun a b => inv_eq_of_mul }
 #align group_with_zero.to_division_monoid GroupWithZero.toDivisionMonoid
 -/
+
+-- see Note [lower instance priority]
+instance (priority := 10) GroupWithZero.toCancelMonoidWithZero : CancelMonoidWithZero G₀ :=
+  {
+    ‹GroupWithZero
+        G₀› with
+    mul_left_cancel_of_ne_zero := fun x y z hx h => by
+      rw [← inv_mul_cancel_left₀ hx y, h, inv_mul_cancel_left₀ hx z]
+    mul_right_cancel_of_ne_zero := fun x y z hy h => by
+      rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
+#align group_with_zero.to_cancel_monoid_with_zero GroupWithZero.toCancelMonoidWithZero
 
 end GroupWithZero
 

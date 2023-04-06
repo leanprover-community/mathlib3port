@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.fixed
-! leanprover-community/mathlib commit e7bab9a85e92cf46c02cb4725a7be2f04691e3a7
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,13 +280,13 @@ theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) 
     (minpoly.monic G F x)
 #align fixed_points.minpoly_eq_minpoly FixedPoints.minpoly_eq_minpoly
 
-theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card G :=
-  dim_le fun s hs => by
-    simpa only [dim_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_natCast,
+theorem rank_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card G :=
+  rank_le fun s hs => by
+    simpa only [rank_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_natCast,
       Cardinal.natCast_le] using
-      cardinal_lift_le_dim_of_linear_independent'
+      cardinal_lift_le_rank_of_linear_independent'
         (linear_independent_smul_of_linear_independent G F hs)
-#align fixed_points.dim_le_card FixedPoints.dim_le_card
+#align fixed_points.rank_le_card FixedPoints.rank_le_card
 
 end Fintype
 
@@ -318,14 +318,14 @@ instance : FiniteDimensional (subfield G F) F :=
   cases nonempty_fintype G
   exact
     IsNoetherian.iff_fg.1
-      (IsNoetherian.iff_dim_lt_aleph0.2 <| (dim_le_card G F).trans_lt <| Cardinal.nat_lt_aleph0 _)
+      (IsNoetherian.iff_rank_lt_aleph0.2 <| (rank_le_card G F).trans_lt <| Cardinal.nat_lt_aleph0 _)
 
 end Finite
 
 theorem finrank_le_card [Fintype G] : finrank (subfield G F) F ≤ Fintype.card G :=
   by
-  rw [← Cardinal.natCast_le, finrank_eq_dim]
-  apply dim_le_card
+  rw [← Cardinal.natCast_le, finrank_eq_rank]
+  apply rank_le_card
 #align fixed_points.finrank_le_card FixedPoints.finrank_le_card
 
 end FixedPoints

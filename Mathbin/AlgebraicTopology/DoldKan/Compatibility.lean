@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.compatibility
-! leanprover-community/mathlib commit 160f568dcf772b2477791c844fc605f2f91f73d1
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Equivalence
 
-/-! Tools for compatibilities between Dold-Kan equivalences
+/-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+ Tools for compatibilities between Dold-Kan equivalences
 
 The purpose of this file is to introduce tools which will enable the
 construction of the Dold-Kan equivalence `simplicial_object C ≌ chain_complex C ℕ`

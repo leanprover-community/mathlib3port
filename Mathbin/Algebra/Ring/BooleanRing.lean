@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.ring.boolean_ring
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,12 +84,12 @@ theorem neg_eq : -a = a :=
     
 #align neg_eq neg_eq
 
-theorem add_eq_zero : a + b = 0 ↔ a = b :=
+theorem add_eq_zero' : a + b = 0 ↔ a = b :=
   calc
     a + b = 0 ↔ a = -b := add_eq_zero_iff_eq_neg
     _ ↔ a = b := by rw [neg_eq]
     
-#align add_eq_zero add_eq_zero
+#align add_eq_zero' add_eq_zero'
 
 @[simp]
 theorem mul_add_mul : a * b + b * a = 0 :=
@@ -114,7 +114,8 @@ theorem mul_one_add_self : a * (1 + a) = 0 := by rw [mul_add, mul_one, mul_self,
 
 -- Note [lower instance priority]
 instance (priority := 100) BooleanRing.toCommRing : CommRing α :=
-  { (inferInstance : BooleanRing α) with mul_comm := fun a b => by rw [← add_eq_zero, mul_add_mul] }
+  { (inferInstance : BooleanRing α) with
+    mul_comm := fun a b => by rw [← add_eq_zero', mul_add_mul] }
 #align boolean_ring.to_comm_ring BooleanRing.toCommRing
 
 end BooleanRing

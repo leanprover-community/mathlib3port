@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.divisibility.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,7 +180,7 @@ end Semigroup
 
 section Monoid
 
-variable [Monoid α]
+variable [Monoid α] {a b : α}
 
 #print dvd_refl /-
 @[refl, simp]
@@ -207,6 +207,12 @@ Case conversion may be inaccurate. Consider using '#align one_dvd one_dvdₓ'. -
 theorem one_dvd (a : α) : 1 ∣ a :=
   Dvd.intro a (one_mul a)
 #align one_dvd one_dvd
+
+theorem dvd_of_eq (h : a = b) : a ∣ b := by rw [h]
+#align dvd_of_eq dvd_of_eq
+
+alias dvd_of_eq ← Eq.dvd
+#align eq.dvd Eq.dvd
 
 end Monoid
 

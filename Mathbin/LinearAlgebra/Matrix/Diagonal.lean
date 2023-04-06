@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.diagonal
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,8 +91,8 @@ theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
   have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
   have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.toFinite _)
   have B₂ := @infi_ker_proj_equiv K _ _ (fun i : m => K) _ _ _ _ (by simp <;> infer_instance) hd hu
-  rw [rank, range_diagonal, B₁, ← @dim_fun' K]
-  apply LinearEquiv.dim_eq
+  rw [rank, range_diagonal, B₁, ← @rank_fun' K]
+  apply LinearEquiv.rank_eq
   apply B₂
 #align matrix.rank_diagonal Matrix.rank_diagonal
 

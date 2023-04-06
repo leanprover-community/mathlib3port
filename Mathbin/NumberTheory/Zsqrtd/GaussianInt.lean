@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.gaussian_int
-! leanprover-community/mathlib commit 2af0836443b4cfb5feda0df0051acdb398304931
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -345,7 +345,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
       have hpu : ¬IsUnit (p : ℤ[i]) :=
         mt norm_eq_one_iff.2
           (by
-            rw [norm_nat_cast, Int.natAbs_mul, Nat.mul_eq_one_iff] <;>
+            rw [norm_nat_cast, Int.natAbs_mul, mul_eq_one] <;>
               exact fun h => (ne_of_lt hp.1.one_lt).symm h.1)
       obtain ⟨y, hy⟩ := hpk
       have := hpi.2.2 ⟨k, 1⟩ ⟨k, -1⟩ ⟨y, by rw [← hkmul, ← Nat.cast_mul p, ← hy] <;> simp⟩
@@ -357,7 +357,7 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime]
     (hpi : ¬Irreducible (p : ℤ[i])) : ∃ a b, a ^ 2 + b ^ 2 = p :=
   have hpu : ¬IsUnit (p : ℤ[i]) :=
     mt norm_eq_one_iff.2 <| by
-      rw [norm_nat_cast, Int.natAbs_mul, Nat.mul_eq_one_iff] <;>
+      rw [norm_nat_cast, Int.natAbs_mul, mul_eq_one] <;>
         exact fun h => (ne_of_lt hp.1.one_lt).symm h.1
   have hab : ∃ a b, (p : ℤ[i]) = a * b ∧ ¬IsUnit a ∧ ¬IsUnit b := by
     simpa [irreducible_iff, hpu, not_forall, not_or] using hpi

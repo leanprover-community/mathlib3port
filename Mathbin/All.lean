@@ -1416,6 +1416,7 @@ import Mathbin.Data.List.Sigma
 import Mathbin.Data.List.Sort
 import Mathbin.Data.List.Sublists
 import Mathbin.Data.List.Tfae
+import Mathbin.Data.List.ToFinsupp
 import Mathbin.Data.List.Zip
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Data.Matrix.Basis

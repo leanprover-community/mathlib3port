@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.canonical.defs
-! leanprover-community/mathlib commit de87d5053a9fe5cbde723172c0fb7e27e7436473
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -351,6 +351,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} α] {a : α} {b : α}, Iff (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) a b) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1))))))) (And (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1))))))) (Eq.{succ u1} α b (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1))))))))
 Case conversion may be inaccurate. Consider using '#align mul_eq_one_iff mul_eq_one_iffₓ'. -/
+--TODO: This is a special case of `mul_eq_one`. We need the instance
+-- `canonically_ordered_monoid α → unique αˣ`
 @[simp, to_additive]
 theorem mul_eq_one_iff : a * b = 1 ↔ a = 1 ∧ b = 1 :=
   mul_eq_one_iff' (one_le _) (one_le _)

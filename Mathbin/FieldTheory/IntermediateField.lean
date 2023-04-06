@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.intermediate_field
-! leanprover-community/mathlib commit 825edd3cd735e87495b0c2a2114fc3929eefce41
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -664,9 +664,9 @@ instance finiteDimensional_right [FiniteDimensional K L] : FiniteDimensional F L
 #align intermediate_field.finite_dimensional_right IntermediateField.finiteDimensional_right
 
 @[simp]
-theorem dim_eq_dim_subalgebra : Module.rank K F.toSubalgebra = Module.rank K F :=
+theorem rank_eq_rank_subalgebra : Module.rank K F.toSubalgebra = Module.rank K F :=
   rfl
-#align intermediate_field.dim_eq_dim_subalgebra IntermediateField.dim_eq_dim_subalgebra
+#align intermediate_field.rank_eq_rank_subalgebra IntermediateField.rank_eq_rank_subalgebra
 
 @[simp]
 theorem finrank_eq_finrank_subalgebra : finrank K F.toSubalgebra = finrank K F :=

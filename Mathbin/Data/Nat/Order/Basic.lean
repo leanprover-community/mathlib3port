@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.order.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ instance : CanonicallyOrderedCommSemiring ℕ :=
 instance : CanonicallyLinearOrderedAddMonoid ℕ :=
   { (inferInstance : CanonicallyOrderedAddMonoid ℕ), Nat.linearOrder with }
 
-variable {m n k l : ℕ}
+variable {a b m n k l : ℕ}
 
 namespace Nat
 
@@ -390,22 +390,6 @@ theorem sub_succ' (m n : ℕ) : m - n.succ = m - n - 1 :=
 
 /-! ### `mul` -/
 
-
-#print Nat.mul_eq_one_iff /-
-theorem mul_eq_one_iff : ∀ {m n : ℕ}, m * n = 1 ↔ m = 1 ∧ n = 1
-  | 0, 0 => by decide
-  | 0, 1 => by decide
-  | 1, 0 => by decide
-  | m + 2, 0 => by simp
-  | 0, n + 2 => by simp
-  | m + 1, n + 1 =>
-    ⟨fun h => by
-      simp only [add_mul, mul_add, mul_add, one_mul, mul_one, (add_assoc _ _ _).symm, Nat.succ_inj',
-          add_eq_zero_iff] at h <;>
-        simp [h.1.2, h.2],
-      fun h => by simp only [h, mul_one]⟩
-#align nat.mul_eq_one_iff Nat.mul_eq_one_iff
--/
 
 #print Nat.succ_mul_pos /-
 theorem succ_mul_pos (m : ℕ) (hn : 0 < n) : 0 < succ m * n :=

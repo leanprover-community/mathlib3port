@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.rank
-! leanprover-community/mathlib commit 4cf7ca0e69e048b006674cf4499e5c7d296a89e0
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 theorem rank_lt_aleph0 : Module.rank R M < ℵ₀ :=
   by
   letI := nontrivial_of_invariantBasisNumber R
-  rw [← (choose_basis R M).mk_eq_dim'', lt_aleph_0_iff_fintype]
+  rw [← (choose_basis R M).mk_eq_rank'', lt_aleph_0_iff_fintype]
   exact Nonempty.intro inferInstance
 #align finite_dimensional.rank_lt_aleph_0 FiniteDimensional.rank_lt_aleph0
 

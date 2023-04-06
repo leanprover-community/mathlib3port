@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jalex Stark, Scott Morrison, Eric Wieser, Oliver Nash
 
 ! This file was ported from Lean 3 source module data.matrix.basis
-! leanprover-community/mathlib commit 320df450e9abeb5fc6417971e75acb6ae8bc3794
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Matrix.Trace
 
 /-!
 # Matrices with a single non-zero element.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides `matrix.std_basis_matrix`. The matrix `matrix.std_basis_matrix i j c` has `c`
 at position `(i, j)`, and zeroes elsewhere.

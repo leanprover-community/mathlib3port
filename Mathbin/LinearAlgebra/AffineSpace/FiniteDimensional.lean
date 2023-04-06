@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.finite_dimensional
-! leanprover-community/mathlib commit b875cbb7f2aa2b4c685aaa2f99705689c95322ad
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -336,9 +336,10 @@ def Collinear (s : Set P) : Prop :=
 #align collinear Collinear
 
 /-- The definition of `collinear`. -/
-theorem collinear_iff_dim_le_one (s : Set P) : Collinear k s ↔ Module.rank k (vectorSpan k s) ≤ 1 :=
+theorem collinear_iff_rank_le_one (s : Set P) :
+    Collinear k s ↔ Module.rank k (vectorSpan k s) ≤ 1 :=
   Iff.rfl
-#align collinear_iff_dim_le_one collinear_iff_dim_le_one
+#align collinear_iff_rank_le_one collinear_iff_rank_le_one
 
 variable {k}
 
@@ -348,8 +349,8 @@ collinear if and only if their `vector_span` has dimension at most
 theorem collinear_iff_finrank_le_one {s : Set P} [FiniteDimensional k (vectorSpan k s)] :
     Collinear k s ↔ finrank k (vectorSpan k s) ≤ 1 :=
   by
-  have h := collinear_iff_dim_le_one k s
-  rw [← finrank_eq_dim] at h
+  have h := collinear_iff_rank_le_one k s
+  rw [← finrank_eq_rank] at h
   exact_mod_cast h
 #align collinear_iff_finrank_le_one collinear_iff_finrank_le_one
 
@@ -358,13 +359,14 @@ alias collinear_iff_finrank_le_one ↔ Collinear.finrank_le_one _
 
 /-- A subset of a collinear set is collinear. -/
 theorem Collinear.subset {s₁ s₂ : Set P} (hs : s₁ ⊆ s₂) (h : Collinear k s₂) : Collinear k s₁ :=
-  (dim_le_of_submodule (vectorSpan k s₁) (vectorSpan k s₂) (vectorSpan_mono k hs)).trans h
+  (rank_le_of_submodule (vectorSpan k s₁) (vectorSpan k s₂) (vectorSpan_mono k hs)).trans h
 #align collinear.subset Collinear.subset
 
 /-- The `vector_span` of collinear points is finite-dimensional. -/
 theorem Collinear.finiteDimensional_vectorSpan {s : Set P} (h : Collinear k s) :
     FiniteDimensional k (vectorSpan k s) :=
-  IsNoetherian.iff_fg.1 (IsNoetherian.iff_dim_lt_aleph0.2 (lt_of_le_of_lt h Cardinal.one_lt_aleph0))
+  IsNoetherian.iff_fg.1
+    (IsNoetherian.iff_rank_lt_aleph0.2 (lt_of_le_of_lt h Cardinal.one_lt_aleph0))
 #align collinear.finite_dimensional_vector_span Collinear.finiteDimensional_vectorSpan
 
 /-- The direction of the affine span of collinear points is finite-dimensional. -/
@@ -378,7 +380,7 @@ variable (k P)
 /-- The empty set is collinear. -/
 theorem collinear_empty : Collinear k (∅ : Set P) :=
   by
-  rw [collinear_iff_dim_le_one, vectorSpan_empty]
+  rw [collinear_iff_rank_le_one, vectorSpan_empty]
   simp
 #align collinear_empty collinear_empty
 
@@ -387,7 +389,7 @@ variable {P}
 /-- A single point is collinear. -/
 theorem collinear_singleton (p : P) : Collinear k ({p} : Set P) :=
   by
-  rw [collinear_iff_dim_le_one, vectorSpan_singleton]
+  rw [collinear_iff_rank_le_one, vectorSpan_singleton]
   simp
 #align collinear_singleton collinear_singleton
 
@@ -399,7 +401,7 @@ vector, added to `p₀`. -/
 theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
     Collinear k s ↔ ∃ v : V, ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ :=
   by
-  simp_rw [collinear_iff_dim_le_one, dim_submodule_le_one_iff', Submodule.le_span_singleton_iff]
+  simp_rw [collinear_iff_rank_le_one, rank_submodule_le_one_iff', Submodule.le_span_singleton_iff]
   constructor
   · rintro ⟨v₀, hv⟩
     use v₀
@@ -636,7 +638,7 @@ variable {k}
 theorem Coplanar.finiteDimensional_vectorSpan {s : Set P} (h : Coplanar k s) :
     FiniteDimensional k (vectorSpan k s) :=
   by
-  refine' IsNoetherian.iff_fg.1 (IsNoetherian.iff_dim_lt_aleph0.2 (lt_of_le_of_lt h _))
+  refine' IsNoetherian.iff_fg.1 (IsNoetherian.iff_rank_lt_aleph0.2 (lt_of_le_of_lt h _))
   simp
 #align coplanar.finite_dimensional_vector_span Coplanar.finiteDimensional_vectorSpan
 
@@ -652,7 +654,7 @@ theorem coplanar_iff_finrank_le_two {s : Set P} [FiniteDimensional k (vectorSpan
     Coplanar k s ↔ finrank k (vectorSpan k s) ≤ 2 :=
   by
   have h : Coplanar k s ↔ Module.rank k (vectorSpan k s) ≤ 2 := Iff.rfl
-  rw [← finrank_eq_dim] at h
+  rw [← finrank_eq_rank] at h
   exact_mod_cast h
 #align coplanar_iff_finrank_le_two coplanar_iff_finrank_le_two
 
@@ -661,7 +663,7 @@ alias coplanar_iff_finrank_le_two ↔ Coplanar.finrank_le_two _
 
 /-- A subset of a coplanar set is coplanar. -/
 theorem Coplanar.subset {s₁ s₂ : Set P} (hs : s₁ ⊆ s₂) (h : Coplanar k s₂) : Coplanar k s₁ :=
-  (dim_le_of_submodule (vectorSpan k s₁) (vectorSpan k s₂) (vectorSpan_mono k hs)).trans h
+  (rank_le_of_submodule (vectorSpan k s₁) (vectorSpan k s₂) (vectorSpan_mono k hs)).trans h
 #align coplanar.subset Coplanar.subset
 
 /-- Collinear points are coplanar. -/
@@ -733,7 +735,7 @@ theorem finrank_vectorSpan_insert_le (s : AffineSubspace k P) (p : P) :
     rw [← finrank_bot k V]
     convert rfl <;> simp
   · rw [affine_span_coe, direction_affine_span_insert hp₀, add_comm]
-    refine' (Submodule.dim_add_le_dim_add_dim _ _).trans (add_le_add_right _ _)
+    refine' (Submodule.rank_add_le_rank_add_rank _ _).trans (add_le_add_right _ _)
     refine' finrank_le_one ⟨p -ᵥ p₀, Submodule.mem_span_singleton_self _⟩ fun v => _
     have h := v.property
     rw [Submodule.mem_span_singleton] at h

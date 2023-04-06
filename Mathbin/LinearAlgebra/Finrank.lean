@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.finrank
-! leanprover-community/mathlib commit c4658a649d216f57e99621708b09dcb3dcccbd23
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,41 +63,41 @@ noncomputable def finrank (R V : Type _) [Semiring R] [AddCommGroup V] [Module R
   (Module.rank R V).toNat
 #align finite_dimensional.finrank FiniteDimensional.finrank
 
-theorem finrank_eq_of_dim_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
+theorem finrank_eq_of_rank_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
   by
   apply_fun to_nat  at h
   rw [to_nat_cast] at h
   exact_mod_cast h
-#align finite_dimensional.finrank_eq_of_dim_eq FiniteDimensional.finrank_eq_of_dim_eq
+#align finite_dimensional.finrank_eq_of_rank_eq FiniteDimensional.finrank_eq_of_rank_eq
 
-theorem finrank_le_of_dim_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank K V ≤ n :=
+theorem finrank_le_of_rank_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank K V ≤ n :=
   by
   rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, to_nat_cast] at h
   · exact h.trans_lt (nat_lt_aleph_0 n)
   · exact nat_lt_aleph_0 n
-#align finite_dimensional.finrank_le_of_dim_le FiniteDimensional.finrank_le_of_dim_le
+#align finite_dimensional.finrank_le_of_rank_le FiniteDimensional.finrank_le_of_rank_le
 
-theorem finrank_lt_of_dim_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K V < n :=
+theorem finrank_lt_of_rank_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K V < n :=
   by
   rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast] at h
   · exact h.trans (nat_lt_aleph_0 n)
   · exact nat_lt_aleph_0 n
-#align finite_dimensional.finrank_lt_of_dim_lt FiniteDimensional.finrank_lt_of_dim_lt
+#align finite_dimensional.finrank_lt_of_rank_lt FiniteDimensional.finrank_lt_of_rank_lt
 
-theorem dim_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.rank K V :=
+theorem rank_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.rank K V :=
   by
   rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast]
   · exact nat_lt_aleph_0 n
   · contrapose! h
     rw [finrank, Cardinal.toNat_apply_of_aleph0_le h]
     exact n.zero_le
-#align finite_dimensional.dim_lt_of_finrank_lt FiniteDimensional.dim_lt_of_finrank_lt
+#align finite_dimensional.rank_lt_of_finrank_lt FiniteDimensional.rank_lt_of_finrank_lt
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
 basis. -/
 theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) :
     finrank K V = Fintype.card ι :=
-  finrank_eq_of_dim_eq (dim_eq_card_basis h)
+  finrank_eq_of_rank_eq (rank_eq_card_basis h)
 #align finite_dimensional.finrank_eq_card_basis FiniteDimensional.finrank_eq_card_basis
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
@@ -108,7 +108,7 @@ theorem finrank_eq_card_finset_basis {ι : Type w} {b : Finset ι} (h : Basis.{w
 
 /-- A finite dimensional space is nontrivial if it has positive `finrank`. -/
 theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
-  dim_pos_iff_nontrivial.mp (dim_lt_of_finrank_lt h)
+  rank_pos_iff_nontrivial.mp (rank_lt_of_finrank_lt h)
 #align finite_dimensional.nontrivial_of_finrank_pos FiniteDimensional.nontrivial_of_finrank_pos
 
 /-- A finite dimensional space is nontrivial if it has `finrank` equal to the successor of a
@@ -135,13 +135,13 @@ variable (K)
 /-- A division_ring is one-dimensional as a vector space over itself. -/
 @[simp]
 theorem finrank_self : finrank K K = 1 :=
-  finrank_eq_of_dim_eq (by simp)
+  finrank_eq_of_rank_eq (by simp)
 #align finite_dimensional.finrank_self FiniteDimensional.finrank_self
 
 /-- The vector space of functions on a fintype ι has finrank equal to the cardinality of ι. -/
 @[simp]
 theorem finrank_fintype_fun_eq_card {ι : Type v} [Fintype ι] : finrank K (ι → K) = Fintype.card ι :=
-  finrank_eq_of_dim_eq dim_fun'
+  finrank_eq_of_rank_eq rank_fun'
 #align finite_dimensional.finrank_fintype_fun_eq_card FiniteDimensional.finrank_fintype_fun_eq_card
 
 /-- The vector space of functions on `fin n` has finrank equal to `n`. -/
@@ -155,7 +155,7 @@ end FiniteDimensional
 
 variable {K V}
 
-section ZeroDim
+section ZeroRank
 
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
@@ -163,8 +163,8 @@ open FiniteDimensional
 
 theorem finrank_eq_zero_of_basis_imp_not_finite
     (h : ∀ s : Set V, Basis.{v} (s : Set V) K V → ¬s.Finite) : finrank K V = 0 :=
-  dif_neg fun dim_lt =>
-    h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_dim_lt_aleph0 dim_lt)
+  dif_neg fun rank_lt =>
+    h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_rank_lt_aleph0 rank_lt)
 #align finrank_eq_zero_of_basis_imp_not_finite finrank_eq_zero_of_basis_imp_not_finite
 
 theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) :
@@ -195,10 +195,10 @@ variable (K V)
 
 @[simp]
 theorem finrank_bot : finrank K (⊥ : Submodule K V) = 0 :=
-  finrank_eq_of_dim_eq (dim_bot _ _)
+  finrank_eq_of_rank_eq (rank_bot _ _)
 #align finrank_bot finrank_bot
 
-end ZeroDim
+end ZeroRank
 
 namespace LinearEquiv
 
@@ -215,7 +215,7 @@ variable [Module R M] [Module R M₂]
 theorem finrank_eq (f : M ≃ₗ[R] M₂) : finrank R M = finrank R M₂ :=
   by
   unfold finrank
-  rw [← Cardinal.toNat_lift, f.lift_dim_eq, Cardinal.toNat_lift]
+  rw [← Cardinal.toNat_lift, f.lift_rank_eq, Cardinal.toNat_lift]
 #align linear_equiv.finrank_eq LinearEquiv.finrank_eq
 
 /-- Pushforwards of finite-dimensional submodules along a `linear_equiv` have the same finrank. -/
@@ -254,7 +254,7 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 theorem finrank_top : finrank K (⊤ : Submodule K V) = finrank K V :=
   by
   unfold finrank
-  simp [dim_top]
+  simp [rank_top]
 #align finrank_top finrank_top
 
 end
@@ -299,7 +299,7 @@ protected noncomputable def Set.finrank (s : Set V) : ℕ :=
 variable {K}
 
 theorem finrank_span_le_card (s : Set V) [Fintype s] : finrank K (span K s) ≤ s.toFinset.card :=
-  finrank_le_of_dim_le (by simpa using dim_span_le s)
+  finrank_le_of_rank_le (by simpa using rank_span_le s)
 #align finrank_span_le_card finrank_span_le_card
 
 theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s.card :=
@@ -318,18 +318,18 @@ theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} :
 
 theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : LinearIndependent K b) :
     finrank K (span K (Set.range b)) = Fintype.card ι :=
-  finrank_eq_of_dim_eq
+  finrank_eq_of_rank_eq
     (by
-      have : Module.rank K (span K (Set.range b)) = (#Set.range b) := dim_span hb
+      have : Module.rank K (span K (Set.range b)) = (#Set.range b) := rank_span hb
       rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
         lift_eq_nat_iff] at this)
 #align finrank_span_eq_card finrank_span_eq_card
 
 theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent K (coe : s → V)) :
     finrank K (span K s) = s.toFinset.card :=
-  finrank_eq_of_dim_eq
+  finrank_eq_of_rank_eq
     (by
-      have : Module.rank K (span K s) = (#s) := dim_span_set hs
+      have : Module.rank K (span K s) = (#s) := rank_span_set hs
       rwa [Cardinal.mk_fintype, ← Set.toFinset_card] at this)
 #align finrank_span_set_eq_card finrank_span_set_eq_card
 
@@ -517,26 +517,26 @@ theorem finrank_le_one (v : V) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank
 
 end finrank_eq_one
 
-section SubalgebraDim
+section SubalgebraRank
 
 open Module
 
 variable {F E : Type _} [Field F] [Ring E] [Algebra F E]
 
 @[simp]
-theorem Subalgebra.dim_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E) = 1 :=
+theorem Subalgebra.rank_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E) = 1 :=
   ((Subalgebra.toSubmoduleEquiv (⊥ : Subalgebra F E)).symm.trans <|
-          LinearEquiv.ofEq _ _ Algebra.toSubmodule_bot).dim_eq.trans <|
+          LinearEquiv.ofEq _ _ Algebra.toSubmodule_bot).rank_eq.trans <|
     by
-    rw [dim_span_set]
+    rw [rank_span_set]
     exacts[mk_singleton _, linearIndependent_singleton one_ne_zero]
-#align subalgebra.dim_bot Subalgebra.dim_bot
+#align subalgebra.rank_bot Subalgebra.rank_bot
 
 @[simp]
-theorem Subalgebra.dim_toSubmodule (S : Subalgebra F E) :
+theorem Subalgebra.rank_toSubmodule (S : Subalgebra F E) :
     Module.rank F S.toSubmodule = Module.rank F S :=
   rfl
-#align subalgebra.dim_to_submodule Subalgebra.dim_toSubmodule
+#align subalgebra.rank_to_submodule Subalgebra.rank_toSubmodule
 
 @[simp]
 theorem Subalgebra.finrank_toSubmodule (S : Subalgebra F E) :
@@ -544,12 +544,12 @@ theorem Subalgebra.finrank_toSubmodule (S : Subalgebra F E) :
   rfl
 #align subalgebra.finrank_to_submodule Subalgebra.finrank_toSubmodule
 
-theorem subalgebra_top_dim_eq_submodule_top_dim :
+theorem subalgebra_top_rank_eq_submodule_top_rank :
     Module.rank F (⊤ : Subalgebra F E) = Module.rank F (⊤ : Submodule F E) :=
   by
   rw [← Algebra.top_toSubmodule]
   rfl
-#align subalgebra_top_dim_eq_submodule_top_dim subalgebra_top_dim_eq_submodule_top_dim
+#align subalgebra_top_rank_eq_submodule_top_rank subalgebra_top_rank_eq_submodule_top_rank
 
 theorem subalgebra_top_finrank_eq_submodule_top_finrank :
     finrank F (⊤ : Subalgebra F E) = finrank F (⊤ : Submodule F E) :=
@@ -558,16 +558,16 @@ theorem subalgebra_top_finrank_eq_submodule_top_finrank :
   rfl
 #align subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrank
 
-theorem Subalgebra.dim_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank F E :=
+theorem Subalgebra.rank_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank F E :=
   by
-  rw [subalgebra_top_dim_eq_submodule_top_dim]
-  exact dim_top F E
-#align subalgebra.dim_top Subalgebra.dim_top
+  rw [subalgebra_top_rank_eq_submodule_top_rank]
+  exact rank_top F E
+#align subalgebra.rank_top Subalgebra.rank_top
 
 @[simp]
 theorem Subalgebra.finrank_bot [Nontrivial E] : finrank F (⊥ : Subalgebra F E) = 1 :=
-  finrank_eq_of_dim_eq (by simp)
+  finrank_eq_of_rank_eq (by simp)
 #align subalgebra.finrank_bot Subalgebra.finrank_bot
 
-end SubalgebraDim
+end SubalgebraRank
 

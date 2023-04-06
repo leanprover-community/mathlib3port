@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.regular_expressions
-! leanprover-community/mathlib commit a239cd3e7ac2c7cde36c913808f9d40c411344f6
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Computability.Language
 
 /-!
 # Regular Expressions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the formal definition for regular expressions and basic lemmas. Note these are
 regular expressions in terms of formal language theory. Note this is different to regex's used in

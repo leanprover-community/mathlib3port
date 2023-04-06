@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit 728baa2f54e6062c5879a3e397ac6bac323e506f
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -954,7 +954,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.sub_div_of_dvd Int.sub_ediv_of_dvdₓ'. -/
 theorem sub_ediv_of_dvd (a : ℤ) {b c : ℤ} (hcb : c ∣ b) : (a - b) / c = a / c - b / c :=
   by
-  rw [sub_eq_add_neg, sub_eq_add_neg, Int.add_ediv_of_dvd_right ((dvd_neg c b).mpr hcb)]
+  rw [sub_eq_add_neg, sub_eq_add_neg, Int.add_ediv_of_dvd_right hcb.neg_right]
   congr
   exact neg_div_of_dvd hcb
 #align int.sub_div_of_dvd Int.sub_ediv_of_dvd

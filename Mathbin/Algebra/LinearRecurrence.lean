@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module algebra.linear_recurrence
-! leanprover-community/mathlib commit 7aac545b979fe3ffab5c93b833129e5c8d826296
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,10 +201,10 @@ section StrongRankCondition
 variable {α : Type _} [CommRing α] [StrongRankCondition α] (E : LinearRecurrence α)
 
 /-- The dimension of `E.sol_space` is `E.order`. -/
-theorem solSpace_dim : Module.rank α E.solSpace = E.order :=
+theorem solSpace_rank : Module.rank α E.solSpace = E.order :=
   letI := nontrivial_of_invariantBasisNumber α
-  @dim_fin_fun α _ _ E.order ▸ E.to_init.dim_eq
-#align linear_recurrence.sol_space_dim LinearRecurrence.solSpace_dim
+  @rank_fin_fun α _ _ E.order ▸ E.to_init.rank_eq
+#align linear_recurrence.sol_space_rank LinearRecurrence.solSpace_rank
 
 end StrongRankCondition
 

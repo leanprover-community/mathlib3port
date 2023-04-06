@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.additive.e_transform
-! leanprover-community/mathlib commit 207c92594599a06e7c134f8d00a030a83e6c7259
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Finset.Pointwise
 
 /-!
 # e-transforms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 e-transforms are a family of transformations of pairs of finite sets that aim to reduce the size
 of the sumset while keeping some invariant the same. This file defines a few of them, to be used

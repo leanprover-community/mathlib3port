@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle, Kyle Miller
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 5455cb0b5f3be8f8b22c55366fbc6e380dbff579
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -519,15 +519,15 @@ theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : 
   rw [← coe_dual_basis, total_dual_basis]
 #align basis.total_coord Basis.total_coord
 
-theorem dual_dim_eq [CommRing K] [AddCommGroup V] [Module K V] [Finite ι] (b : Basis ι K V) :
+theorem dual_rank_eq [CommRing K] [AddCommGroup V] [Module K V] [Finite ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
   classical
     cases nonempty_fintype ι
-    have := LinearEquiv.lift_dim_eq b.to_dual_equiv
+    have := LinearEquiv.lift_rank_eq b.to_dual_equiv
     simp only [Cardinal.lift_umax] at this
     rw [this, ← Cardinal.lift_umax]
     apply Cardinal.lift_id
-#align basis.dual_dim_eq Basis.dual_dim_eq
+#align basis.dual_rank_eq Basis.dual_rank_eq
 
 end Basis
 
@@ -585,10 +585,10 @@ theorem forall_dual_apply_eq_zero_iff (v : V) : (∀ φ : Module.Dual K V, φ v 
 end
 
 -- TODO(jmc): generalize to rings, once `module.rank` is generalized
-theorem dual_dim_eq [FiniteDimensional K V] :
+theorem dual_rank_eq [FiniteDimensional K V] :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) :=
-  (Basis.ofVectorSpace K V).dual_dim_eq
-#align module.dual_dim_eq Module.dual_dim_eq
+  (Basis.ofVectorSpace K V).dual_rank_eq
+#align module.dual_rank_eq Module.dual_rank_eq
 
 theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ :=
   letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance

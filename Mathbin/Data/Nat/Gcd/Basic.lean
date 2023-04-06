@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.nat.gcd.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -475,6 +475,12 @@ theorem lcm_ne_zero {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) : lcm m n ≠ 0 :=
   simpa [h, hm, hn] using gcd_mul_lcm m n
 #align nat.lcm_ne_zero Nat.lcm_ne_zero
 -/
+
+theorem lcm_pos {m n : ℕ} : 0 < m → 0 < n → 0 < m.lcm n :=
+  by
+  simp_rw [pos_iff_ne_zero]
+  exact lcm_ne_zero
+#align nat.lcm_pos Nat.lcm_pos
 
 /-!
 ### `coprime`

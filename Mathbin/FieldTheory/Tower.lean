@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit c4658a649d216f57e99621708b09dcb3dcccbd23
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,24 +52,24 @@ variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
 /-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem dim_mul_dim' :
+theorem rank_mul_rank' :
     Cardinal.lift.{w} (Module.rank F K) * Cardinal.lift.{v} (Module.rank K A) =
       Cardinal.lift.{v} (Module.rank F A) :=
   by
   let b := Basis.ofVectorSpace F K
   let c := Basis.ofVectorSpace K A
-  rw [← (Module.rank F K).lift_id, ← b.mk_eq_dim, ← (Module.rank K A).lift_id, ← c.mk_eq_dim, ←
-    lift_umax.{w, v}, ← (b.smul c).mk_eq_dim, mk_prod, lift_mul, lift_lift, lift_lift, lift_lift,
+  rw [← (Module.rank F K).lift_id, ← b.mk_eq_rank, ← (Module.rank K A).lift_id, ← c.mk_eq_rank, ←
+    lift_umax.{w, v}, ← (b.smul c).mk_eq_rank, mk_prod, lift_mul, lift_lift, lift_lift, lift_lift,
     lift_lift, lift_umax]
-#align dim_mul_dim' dim_mul_dim'
+#align rank_mul_rank' rank_mul_rank'
 
 /-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem dim_mul_dim (F : Type u) (K A : Type v) [Field F] [Field K] [AddCommGroup A] [Algebra F K]
+theorem rank_mul_rank (F : Type u) (K A : Type v) [Field F] [Field K] [AddCommGroup A] [Algebra F K]
     [Module K A] [Module F A] [IsScalarTower F K A] :
     Module.rank F K * Module.rank K A = Module.rank F A := by
-  convert dim_mul_dim' F K A <;> rw [lift_id]
-#align dim_mul_dim dim_mul_dim
+  convert rank_mul_rank' F K A <;> rw [lift_id]
+#align rank_mul_rank rank_mul_rank
 
 namespace FiniteDimensional
 

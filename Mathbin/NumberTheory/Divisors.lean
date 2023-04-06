@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.divisors
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -290,7 +290,7 @@ theorem divisorsAntidiagonal_zero : divisorsAntidiagonal 0 = ∅ :=
 theorem divisorsAntidiagonal_one : divisorsAntidiagonal 1 = {(1, 1)} :=
   by
   ext
-  simp [Nat.mul_eq_one_iff, Prod.ext_iff]
+  simp [mul_eq_one, Prod.ext_iff]
 #align nat.divisors_antidiagonal_one Nat.divisorsAntidiagonal_one
 -/
 

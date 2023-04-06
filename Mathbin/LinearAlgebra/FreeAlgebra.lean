@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.free_algebra
-! leanprover-community/mathlib commit 59628387770d82eb6f6dd7b7107308aa2509ec95
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,10 +35,10 @@ noncomputable def basisFreeMonoid (R : Type u) (X : Type v) [CommRing R] :
 #align free_algebra.basis_free_monoid FreeAlgebra.basisFreeMonoid
 
 -- TODO: generalize to `X : Type v`
-theorem dim_eq {K : Type u} {X : Type max u v} [Field K] :
+theorem rank_eq {K : Type u} {X : Type max u v} [Field K] :
     Module.rank K (FreeAlgebra K X) = Cardinal.mk (List X) :=
-  (Cardinal.lift_inj.mp (basisFreeMonoid K X).mk_eq_dim).symm
-#align free_algebra.dim_eq FreeAlgebra.dim_eq
+  (Cardinal.lift_inj.mp (basisFreeMonoid K X).mk_eq_rank).symm
+#align free_algebra.rank_eq FreeAlgebra.rank_eq
 
 end FreeAlgebra
 

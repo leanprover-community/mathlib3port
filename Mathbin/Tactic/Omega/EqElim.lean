@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.eq_elim
-! leanprover-community/mathlib commit dccab1c99a3be493f820397c1d9d93f8855d816d
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
       simp only [term.val, mul_add, add_mul, m, a_n]
       ring
     cases' h4 with c h4
-    rw [dvd_add_iff_right (dvd_mul_right m c), h4, ← h1]
+    rw [← dvd_add_right (dvd_mul_right m c), h4, ← h1]
     apply dvd_zero
   apply
     calc
@@ -387,7 +387,7 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
       have h5 : i ∣ b + coeffs.val v as := by
         rw [← h3]
         apply dvd_zero
-      rw [← dvd_add_iff_left h4] at h5
+      rw [dvd_add_left h4] at h5
       apply h2.left h5
     rw [if_neg h2]; apply sat_empty
   | ee.factor i :: es, ((b, as) :: eqs, les), h1 =>

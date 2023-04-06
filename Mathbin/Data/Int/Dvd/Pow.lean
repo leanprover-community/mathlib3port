@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.dvd.pow
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,19 +42,10 @@ lean 3 declaration is
 but is expected to have type
   forall {p : Nat} {m : Nat} {n : Nat} {k : Int}, (LE.le.{0} Nat instLENat m n) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p n)) k) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p m)) k)
 Case conversion may be inaccurate. Consider using '#align int.pow_dvd_of_le_of_pow_dvd Int.pow_dvd_of_le_of_pow_dvdₓ'. -/
+--TODO: Do we really need this lemma?
 theorem pow_dvd_of_le_of_pow_dvd {p m n : ℕ} {k : ℤ} (hmn : m ≤ n) (hdiv : ↑(p ^ n) ∣ k) :
-    ↑(p ^ m) ∣ k := by
-  induction k
-  · apply Int.coe_nat_dvd.2
-    apply pow_dvd_of_le_of_pow_dvd hmn
-    apply Int.coe_nat_dvd.1 hdiv
-  change -[k+1] with -(↑(k + 1) : ℤ)
-  apply dvd_neg_of_dvd
-  apply Int.coe_nat_dvd.2
-  apply pow_dvd_of_le_of_pow_dvd hmn
-  apply Int.coe_nat_dvd.1
-  apply dvd_of_dvd_neg
-  exact hdiv
+    ↑(p ^ m) ∣ k :=
+  (pow_dvd_pow _ hmn).natCast.trans hdiv
 #align int.pow_dvd_of_le_of_pow_dvd Int.pow_dvd_of_le_of_pow_dvd
 
 /- warning: int.dvd_of_pow_dvd -> Int.dvd_of_pow_dvd is a dubious translation:
@@ -63,8 +54,8 @@ lean 3 declaration is
 but is expected to have type
   forall {p : Nat} {k : Nat} {m : Int}, (LE.le.{0} Nat instLENat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) k) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p k)) m) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt p) m)
 Case conversion may be inaccurate. Consider using '#align int.dvd_of_pow_dvd Int.dvd_of_pow_dvdₓ'. -/
-theorem dvd_of_pow_dvd {p k : ℕ} {m : ℤ} (hk : 1 ≤ k) (hpk : ↑(p ^ k) ∣ m) : ↑p ∣ m := by
-  rw [← pow_one p] <;> exact pow_dvd_of_le_of_pow_dvd hk hpk
+theorem dvd_of_pow_dvd {p k : ℕ} {m : ℤ} (hk : 1 ≤ k) (hpk : ↑(p ^ k) ∣ m) : ↑p ∣ m :=
+  (dvd_pow_self _ <| pos_iff_ne_zero.1 hk).natCast.trans hpk
 #align int.dvd_of_pow_dvd Int.dvd_of_pow_dvd
 
 end Int

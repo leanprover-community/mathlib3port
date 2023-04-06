@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit c310cfdc40da4d99a10a58c33a95360ef9e6e0bf
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -190,12 +190,12 @@ theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
 #align complex.finrank_real_complex Complex.finrank_real_complex
 
 @[simp]
-theorem dim_real_complex : Module.rank ℝ ℂ = 2 := by simp [← finrank_eq_dim, finrank_real_complex]
-#align complex.dim_real_complex Complex.dim_real_complex
+theorem rank_real_complex : Module.rank ℝ ℂ = 2 := by simp [← finrank_eq_rank, finrank_real_complex]
+#align complex.rank_real_complex Complex.rank_real_complex
 
-theorem dim_real_complex'.{u} : Cardinal.lift.{u} (Module.rank ℝ ℂ) = 2 := by
-  simp [← finrank_eq_dim, finrank_real_complex, bit0]
-#align complex.dim_real_complex' Complex.dim_real_complex'
+theorem rank_real_complex'.{u} : Cardinal.lift.{u} (Module.rank ℝ ℂ) = 2 := by
+  simp [← finrank_eq_rank, finrank_real_complex, bit0]
+#align complex.rank_real_complex' Complex.rank_real_complex'
 
 /-- `fact` version of the dimension of `ℂ` over `ℝ`, locally useful in the definition of the
 circle. -/
@@ -240,12 +240,13 @@ instance (priority := 100) FiniteDimensional.complexToReal (E : Type _) [AddComm
   FiniteDimensional.trans ℝ ℂ E
 #align finite_dimensional.complex_to_real FiniteDimensional.complexToReal
 
-theorem dim_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
+theorem rank_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
     Module.rank ℝ E = 2 * Module.rank ℂ E :=
-  Cardinal.lift_inj.1 <| by
-    rw [← dim_mul_dim' ℝ ℂ E, Complex.dim_real_complex]
+  Cardinal.lift_inj.1 <|
+    by
+    rw [← rank_mul_rank' ℝ ℂ E, Complex.rank_real_complex]
     simp [bit0]
-#align dim_real_of_complex dim_real_of_complex
+#align rank_real_of_complex rank_real_of_complex
 
 theorem finrank_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
     FiniteDimensional.finrank ℝ E = 2 * FiniteDimensional.finrank ℂ E := by

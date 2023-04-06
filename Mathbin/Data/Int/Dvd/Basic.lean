@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.dvd.basic
-! leanprover-community/mathlib commit e1bccd6e40ae78370f01659715d3c948716e3b7e
+! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,34 +97,6 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
   eq_one_of_mul_eq_one_right H (by rw [mul_comm, H'])
 #align int.eq_one_of_mul_eq_one_left Int.eq_one_of_mul_eq_one_left
 -/
-
-/- warning: int.of_nat_dvd_of_dvd_nat_abs -> Int.ofNat_dvd_of_dvd_natAbs is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {z : Int}, (Dvd.Dvd.{0} Nat Nat.hasDvd a (Int.natAbs z)) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a) z)
-but is expected to have type
-  forall {a : Nat} {z : Int}, (Dvd.dvd.{0} Nat Nat.instDvdNat a (Int.natAbs z)) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt a) z)
-Case conversion may be inaccurate. Consider using '#align int.of_nat_dvd_of_dvd_nat_abs Int.ofNat_dvd_of_dvd_natAbsₓ'. -/
-theorem ofNat_dvd_of_dvd_natAbs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAbs), ↑a ∣ z
-  | Int.ofNat _, haz => Int.coe_nat_dvd.2 haz
-  | -[k+1], haz => by
-    change ↑a ∣ -(k + 1 : ℤ)
-    apply dvd_neg_of_dvd
-    apply Int.coe_nat_dvd.2
-    exact haz
-#align int.of_nat_dvd_of_dvd_nat_abs Int.ofNat_dvd_of_dvd_natAbs
-
-/- warning: int.dvd_nat_abs_of_of_nat_dvd -> Int.dvd_natAbs_of_ofNat_dvd is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {z : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a) z) -> (Dvd.Dvd.{0} Nat Nat.hasDvd a (Int.natAbs z))
-but is expected to have type
-  forall {a : Nat} {z : Int}, (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt a) z) -> (Dvd.dvd.{0} Nat Nat.instDvdNat a (Int.natAbs z))
-Case conversion may be inaccurate. Consider using '#align int.dvd_nat_abs_of_of_nat_dvd Int.dvd_natAbs_of_ofNat_dvdₓ'. -/
-theorem dvd_natAbs_of_ofNat_dvd {a : ℕ} : ∀ {z : ℤ} (haz : ↑a ∣ z), a ∣ z.natAbs
-  | Int.ofNat _, haz => Int.coe_nat_dvd.1 (Int.dvd_natAbs.2 haz)
-  | -[k+1], haz =>
-    have haz' : (↑a : ℤ) ∣ (↑(k + 1) : ℤ) := dvd_of_dvd_neg haz
-    Int.coe_nat_dvd.1 haz'
-#align int.dvd_nat_abs_of_of_nat_dvd Int.dvd_natAbs_of_ofNat_dvd
 
 /- warning: int.dvd_antisymm -> Int.dvd_antisymm is a dubious translation:
 lean 3 declaration is

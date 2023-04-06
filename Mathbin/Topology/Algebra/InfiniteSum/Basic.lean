@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum.basic
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
+! leanprover-community/mathlib commit 3b1890e71632be9e3b2086ab512c3259a7e9a3ef
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1906,8 +1906,6 @@ theorem cauchySeq_finset_iff_vanishing :
     exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
 #align cauchy_seq_finset_iff_vanishing cauchySeq_finset_iff_vanishing
 
-attribute [local instance] TopologicalAddGroup.t3Space
-
 /- warning: tendsto_tsum_compl_at_top_zero -> tendsto_tsum_compl_atTop_zero is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] (f : β -> α), Filter.Tendsto.{u2, u1} (Finset.{u2} β) α (fun (s : Finset.{u2} β) => tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Subtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s))) (fun (b : Subtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s))) => f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s))) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s))) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s))) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s))) β (coeSubtype.{succ u2} β (fun (x : β) => Not (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s)))))) b))) (Filter.atTop.{u2} (Finset.{u2} β) (PartialOrder.toPreorder.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β))) (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α _inst_1)))))))))
@@ -2051,42 +2049,52 @@ theorem Summable.prod_factor {f : β × γ → α} (h : Summable f) (b : β) :
   h.comp_injective fun c₁ c₂ h => (Prod.ext_iff.1 h).2
 #align summable.prod_factor Summable.prod_factor
 
+section LocInstances
+
+-- enable inferring a T3-topological space from a topological group
+attribute [local instance] TopologicalAddGroup.t3Space
+
+-- disable getting a T0-space from a T3-space as this causes loops
+attribute [-instance] T3Space.to_t0Space
+
 /- warning: tsum_sigma -> tsum_sigma is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] [_inst_4 : CompleteSpace.{u1} α _inst_2] [_inst_5 : T1Space.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2)] {γ : β -> Type.{u3}} {f : (Sigma.{u2, u3} β (fun (b : β) => γ b)) -> α}, (Summable.{u1, max u2 u3} α (Sigma.{u2, u3} β (fun (b : β) => γ b)) (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) f) -> (Eq.{succ u1} α (tsum.{u1, max u2 u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Sigma.{u2, u3} β (fun (b : β) => γ b)) (fun (p : Sigma.{u2, u3} β (fun (b : β) => γ b)) => f p)) (tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (γ b) (fun (c : γ b) => f (Sigma.mk.{u2, u3} β (fun (b : β) => γ b) b c)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] [_inst_4 : CompleteSpace.{u1} α _inst_2] [_inst_5 : T0Space.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2)] {γ : β -> Type.{u3}} {f : (Sigma.{u2, u3} β (fun (b : β) => γ b)) -> α}, (Summable.{u1, max u2 u3} α (Sigma.{u2, u3} β (fun (b : β) => γ b)) (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) f) -> (Eq.{succ u1} α (tsum.{u1, max u2 u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Sigma.{u2, u3} β (fun (b : β) => γ b)) (fun (p : Sigma.{u2, u3} β (fun (b : β) => γ b)) => f p)) (tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (γ b) (fun (c : γ b) => f (Sigma.mk.{u2, u3} β (fun (b : β) => γ b) b c)))))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} [_inst_1 : AddCommGroup.{u3} α] [_inst_2 : UniformSpace.{u3} α] [_inst_3 : UniformAddGroup.{u3} α _inst_2 (AddCommGroup.toAddGroup.{u3} α _inst_1)] [_inst_4 : CompleteSpace.{u3} α _inst_2] [_inst_5 : T1Space.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_2)] {γ : β -> Type.{u2}} {f : (Sigma.{u1, u2} β (fun (b : β) => γ b)) -> α}, (Summable.{u3, max u1 u2} α (Sigma.{u1, u2} β (fun (b : β) => γ b)) (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) f) -> (Eq.{succ u3} α (tsum.{u3, max u1 u2} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) (Sigma.{u1, u2} β (fun (b : β) => γ b)) (fun (p : Sigma.{u1, u2} β (fun (b : β) => γ b)) => f p)) (tsum.{u3, u1} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) β (fun (b : β) => tsum.{u3, u2} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) (γ b) (fun (c : γ b) => f (Sigma.mk.{u1, u2} β (fun (b : β) => γ b) b c)))))
 Case conversion may be inaccurate. Consider using '#align tsum_sigma tsum_sigmaₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
-theorem tsum_sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) :
+theorem tsum_sigma [T0Space α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) :
     (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_sigma' (fun b => ha.sigma_factor b) ha
 #align tsum_sigma tsum_sigma
 
 /- warning: tsum_prod -> tsum_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] [_inst_4 : CompleteSpace.{u1} α _inst_2] [_inst_5 : T1Space.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2)] {f : (Prod.{u2, u3} β γ) -> α}, (Summable.{u1, max u2 u3} α (Prod.{u2, u3} β γ) (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) f) -> (Eq.{succ u1} α (tsum.{u1, max u2 u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Prod.{u2, u3} β γ) (fun (p : Prod.{u2, u3} β γ) => f p)) (tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) γ (fun (c : γ) => f (Prod.mk.{u2, u3} β γ b c)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] [_inst_4 : CompleteSpace.{u1} α _inst_2] [_inst_5 : T0Space.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2)] {f : (Prod.{u2, u3} β γ) -> α}, (Summable.{u1, max u2 u3} α (Prod.{u2, u3} β γ) (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) f) -> (Eq.{succ u1} α (tsum.{u1, max u2 u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Prod.{u2, u3} β γ) (fun (p : Prod.{u2, u3} β γ) => f p)) (tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) γ (fun (c : γ) => f (Prod.mk.{u2, u3} β γ b c)))))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : AddCommGroup.{u3} α] [_inst_2 : UniformSpace.{u3} α] [_inst_3 : UniformAddGroup.{u3} α _inst_2 (AddCommGroup.toAddGroup.{u3} α _inst_1)] [_inst_4 : CompleteSpace.{u3} α _inst_2] [_inst_5 : T1Space.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_2)] {f : (Prod.{u2, u1} β γ) -> α}, (Summable.{u3, max u2 u1} α (Prod.{u2, u1} β γ) (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) f) -> (Eq.{succ u3} α (tsum.{u3, max u2 u1} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) (Prod.{u2, u1} β γ) (fun (p : Prod.{u2, u1} β γ) => f p)) (tsum.{u3, u2} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) β (fun (b : β) => tsum.{u3, u1} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) γ (fun (c : γ) => f (Prod.mk.{u2, u1} β γ b c)))))
 Case conversion may be inaccurate. Consider using '#align tsum_prod tsum_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
-theorem tsum_prod [T1Space α] {f : β × γ → α} (h : Summable f) :
+theorem tsum_prod [T0Space α] {f : β × γ → α} (h : Summable f) :
     (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_prod' h h.prod_factor
 #align tsum_prod tsum_prod
 
 /- warning: tsum_comm -> tsum_comm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] [_inst_4 : CompleteSpace.{u1} α _inst_2] [_inst_5 : T1Space.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2)] {f : β -> γ -> α}, (Summable.{u1, max u2 u3} α (Prod.{u2, u3} β γ) (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Function.uncurry.{u2, u3, u1} β γ α f)) -> (Eq.{succ u1} α (tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) γ (fun (c : γ) => tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => f b c))) (tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) γ (fun (c : γ) => f b c))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : AddCommGroup.{u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : UniformAddGroup.{u1} α _inst_2 (AddCommGroup.toAddGroup.{u1} α _inst_1)] [_inst_4 : CompleteSpace.{u1} α _inst_2] [_inst_5 : T0Space.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2)] {f : β -> γ -> α}, (Summable.{u1, max u2 u3} α (Prod.{u2, u3} β γ) (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (Function.uncurry.{u2, u3, u1} β γ α f)) -> (Eq.{succ u1} α (tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) γ (fun (c : γ) => tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => f b c))) (tsum.{u1, u2} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) β (fun (b : β) => tsum.{u1, u3} α (AddCommGroup.toAddCommMonoid.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_2) γ (fun (c : γ) => f b c))))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_1 : AddCommGroup.{u3} α] [_inst_2 : UniformSpace.{u3} α] [_inst_3 : UniformAddGroup.{u3} α _inst_2 (AddCommGroup.toAddGroup.{u3} α _inst_1)] [_inst_4 : CompleteSpace.{u3} α _inst_2] [_inst_5 : T1Space.{u3} α (UniformSpace.toTopologicalSpace.{u3} α _inst_2)] {f : β -> γ -> α}, (Summable.{u3, max u2 u1} α (Prod.{u1, u2} β γ) (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) (Function.uncurry.{u1, u2, u3} β γ α f)) -> (Eq.{succ u3} α (tsum.{u3, u2} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) γ (fun (c : γ) => tsum.{u3, u1} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) β (fun (b : β) => f b c))) (tsum.{u3, u1} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) β (fun (b : β) => tsum.{u3, u2} α (AddCommGroup.toAddCommMonoid.{u3} α _inst_1) (UniformSpace.toTopologicalSpace.{u3} α _inst_2) γ (fun (c : γ) => f b c))))
 Case conversion may be inaccurate. Consider using '#align tsum_comm tsum_commₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c b) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
-theorem tsum_comm [T1Space α] {f : β → γ → α} (h : Summable (Function.uncurry f)) :
+theorem tsum_comm [T0Space α] {f : β → γ → α} (h : Summable (Function.uncurry f)) :
     (∑' (c) (b), f b c) = ∑' (b) (c), f b c :=
   tsum_comm' h h.prod_factor h.prod_symm.prod_factor
 #align tsum_comm tsum_comm
+
+end LocInstances
 
 /- warning: tsum_subtype_add_tsum_subtype_compl -> tsum_subtype_add_tsum_subtype_compl is a dubious translation:
 lean 3 declaration is

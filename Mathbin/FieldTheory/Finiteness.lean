@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.finiteness
-! leanprover-community/mathlib commit 6eeb941cf39066417a09b1bbc6e74761cadfcb1a
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,10 +30,10 @@ variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [Module K V
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
 -/
-theorem iff_dim_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
+theorem iff_rank_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
   by
   let b := Basis.ofVectorSpace K V
-  rw [← b.mk_eq_dim'', lt_aleph_0_iff_set_finite]
+  rw [← b.mk_eq_rank'', lt_aleph_0_iff_set_finite]
   constructor
   · intro
     exact finite_of_linearIndependent (Basis.ofVectorSpaceIndex.linearIndependent K V)
@@ -43,21 +43,21 @@ theorem iff_dim_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
         (id _)
     refine' isNoetherian_of_fg_of_noetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
     rw [Set.Finite.coe_toFinset, ← b.span_eq, Basis.coe_ofVectorSpace, Subtype.range_coe]
-#align is_noetherian.iff_dim_lt_aleph_0 IsNoetherian.iff_dim_lt_aleph0
+#align is_noetherian.iff_rank_lt_aleph_0 IsNoetherian.iff_rank_lt_aleph0
 
 variable (K V)
 
 /-- The dimension of a noetherian module over a division ring, as a cardinal,
 is strictly less than the first infinite cardinal `ℵ₀`. -/
-theorem dim_lt_aleph0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
-  IsNoetherian.iff_dim_lt_aleph0.1
-#align is_noetherian.dim_lt_aleph_0 IsNoetherian.dim_lt_aleph0
+theorem rank_lt_aleph0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
+  IsNoetherian.iff_rank_lt_aleph0.1
+#align is_noetherian.rank_lt_aleph_0 IsNoetherian.rank_lt_aleph0
 
 variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
 noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
-  b.fintypeIndexOfDimLtAleph0 (dim_lt_aleph0 K V)
+  b.fintypeIndexOfRankLtAleph0 (rank_lt_aleph0 K V)
 #align is_noetherian.fintype_basis_index IsNoetherian.fintypeBasisIndex
 
 /-- In a noetherian module over a division ring,
@@ -69,7 +69,7 @@ noncomputable instance [IsNoetherian K V] : Fintype (Basis.ofVectorSpaceIndex K 
 if a basis is indexed by a set, that set is finite. -/
 theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) :
     s.Finite :=
-  b.finite_index_of_dim_lt_aleph0 (dim_lt_aleph0 K V)
+  b.finite_index_of_rank_lt_aleph0 (rank_lt_aleph0 K V)
 #align is_noetherian.finite_basis_index IsNoetherian.finite_basis_index
 
 variable (K V)
@@ -119,8 +119,8 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=
           convert(finset_basis K V).span_eq
           simp⟩⟩
   · rintro ⟨s, hs⟩
-    rw [IsNoetherian.iff_dim_lt_aleph0, ← dim_top, ← hs]
-    exact lt_of_le_of_lt (dim_span_le _) s.finite_to_set.lt_aleph_0
+    rw [IsNoetherian.iff_rank_lt_aleph0, ← rank_top, ← hs]
+    exact lt_of_le_of_lt (rank_span_le _) s.finite_to_set.lt_aleph_0
 #align is_noetherian.iff_fg IsNoetherian.iff_fg
 
 end IsNoetherian

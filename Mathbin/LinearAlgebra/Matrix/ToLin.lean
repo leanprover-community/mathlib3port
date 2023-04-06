@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
+! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -431,7 +431,7 @@ theorem Matrix.rank_vecMulVec {K m n : Type u} [Field K] [Fintype n] [DecidableE
   rw [vec_mul_vec_eq, Matrix.toLin'_mul]
   refine' le_trans (rank_comp_le1 _ _) _
   refine' (rank_le_domain _).trans_eq _
-  rw [dim_fun', Fintype.card_unit, Nat.cast_one]
+  rw [rank_fun', Fintype.card_unit, Nat.cast_one]
 #align matrix.rank_vec_mul_vec Matrix.rank_vecMulVec
 
 end ToMatrix'

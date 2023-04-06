@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.interval
-! leanprover-community/mathlib commit bf07fdbb61a94b65f262287a4b12c7aedf869e72
+! leanprover-community/mathlib commit d64d67d000b974f0d86a2be7918cf800be6271c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Finset.LocallyFinite
 
 /-!
 # Intervals of finsets as finsets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides the `locally_finite_order` instance for `finset α` and calculates the cardinality
 of finite intervals of finsets.
