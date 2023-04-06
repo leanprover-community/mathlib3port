@@ -763,7 +763,7 @@ but is expected to have type
   forall (a : Int) (b : Int) (c : Nat), Iff (Eq.{1} (ZMod c) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) a) (Int.cast.{0} (ZMod c) (Ring.toIntCast.{0} (ZMod c) (CommRing.toRing.{0} (ZMod c) (ZMod.commRing c))) b)) (Int.ModEq (Nat.cast.{0} Int instNatCastInt c) a b)
 Case conversion may be inaccurate. Consider using '#align zmod.int_coe_eq_int_coe_iff ZMod.int_cast_eq_int_cast_iffₓ'. -/
 theorem int_cast_eq_int_cast_iff (a b : ℤ) (c : ℕ) : (a : ZMod c) = (b : ZMod c) ↔ a ≡ b [ZMOD c] :=
-  CharP.int_cast_eq_int_cast (ZMod c) c
+  CharP.intCast_eq_intCast (ZMod c) c
 #align zmod.int_coe_eq_int_coe_iff ZMod.int_cast_eq_int_cast_iff
 
 /- warning: zmod.int_coe_eq_int_coe_iff' -> ZMod.int_cast_eq_int_cast_iff' is a dubious translation:
@@ -1754,29 +1754,47 @@ theorem valMinAbs_natAbs_eq_min {n : ℕ} [hpos : NeZero n] (a : ZMod n) :
     apply Nat.lt_succ_self
 #align zmod.val_min_abs_nat_abs_eq_min ZMod.valMinAbs_natAbs_eq_min
 
-theorem valMinAbs_nat_cast_of_le_half (ha : a ≤ n / 2) : (a : ZMod n).valMinAbs = a :=
+/- warning: zmod.val_min_abs_nat_cast_of_le_half -> ZMod.valMinAbs_natCast_of_le_half is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat}, (LE.le.{0} Nat Nat.hasLe a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))) -> (Eq.{1} Int (ZMod.valMinAbs n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))
+but is expected to have type
+  forall {n : Nat} {a : Nat}, (LE.le.{0} Nat instLENat a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) -> (Eq.{1} Int (ZMod.valMinAbs n (Nat.cast.{0} (ZMod n) (NonAssocRing.toNatCast.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) a)) (Nat.cast.{0} Int instNatCastInt a))
+Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_nat_cast_of_le_half ZMod.valMinAbs_natCast_of_le_halfₓ'. -/
+theorem valMinAbs_natCast_of_le_half (ha : a ≤ n / 2) : (a : ZMod n).valMinAbs = a :=
   by
   cases n
   · simp
   ·
     simp [val_min_abs_def_pos, val_nat_cast, Nat.mod_eq_of_lt (ha.trans_lt <| Nat.div_lt_self' _ 0),
       ha]
-#align zmod.val_min_abs_nat_cast_of_le_half ZMod.valMinAbs_nat_cast_of_le_half
+#align zmod.val_min_abs_nat_cast_of_le_half ZMod.valMinAbs_natCast_of_le_half
 
-theorem valMinAbs_nat_cast_of_half_lt (ha : n / 2 < a) (ha' : a < n) :
+/- warning: zmod.val_min_abs_nat_cast_of_half_lt -> ZMod.valMinAbs_natCast_of_half_lt is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat}, (LT.lt.{0} Nat Nat.hasLt (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) a) -> (LT.lt.{0} Nat Nat.hasLt a n) -> (Eq.{1} Int (ZMod.valMinAbs n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)))
+but is expected to have type
+  forall {n : Nat} {a : Nat}, (LT.lt.{0} Nat instLTNat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) a) -> (LT.lt.{0} Nat instLTNat a n) -> (Eq.{1} Int (ZMod.valMinAbs n (Nat.cast.{0} (ZMod n) (NonAssocRing.toNatCast.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) a)) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int instNatCastInt a) (Nat.cast.{0} Int instNatCastInt n)))
+Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_nat_cast_of_half_lt ZMod.valMinAbs_natCast_of_half_ltₓ'. -/
+theorem valMinAbs_natCast_of_half_lt (ha : n / 2 < a) (ha' : a < n) :
     (a : ZMod n).valMinAbs = a - n := by
   cases n
   · cases not_lt_bot ha'
   · simp [val_min_abs_def_pos, val_nat_cast, Nat.mod_eq_of_lt ha', ha.not_le]
-#align zmod.val_min_abs_nat_cast_of_half_lt ZMod.valMinAbs_nat_cast_of_half_lt
+#align zmod.val_min_abs_nat_cast_of_half_lt ZMod.valMinAbs_natCast_of_half_lt
 
+/- warning: zmod.val_min_nat_abs_nat_cast_eq_self -> ZMod.valMinAbs_natCast_eq_self is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat} [_inst_1 : NeZero.{0} Nat Nat.hasZero n], Iff (Eq.{1} Int (ZMod.valMinAbs n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (ZMod n) (HasLiftT.mk.{1, 1} Nat (ZMod n) (CoeTCₓ.coe.{1, 1} Nat (ZMod n) (Nat.castCoe.{0} (ZMod n) (AddMonoidWithOne.toNatCast.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (AddCommGroupWithOne.toAddGroupWithOne.{0} (ZMod n) (Ring.toAddCommGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))))) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a)) (LE.le.{0} Nat Nat.hasLe a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall {n : Nat} {a : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n], Iff (Eq.{1} Int (ZMod.valMinAbs n (Nat.cast.{0} (ZMod n) (NonAssocRing.toNatCast.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))) a)) (Nat.cast.{0} Int instNatCastInt a)) (LE.le.{0} Nat instLENat a (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
+Case conversion may be inaccurate. Consider using '#align zmod.val_min_nat_abs_nat_cast_eq_self ZMod.valMinAbs_natCast_eq_selfₓ'. -/
 @[simp]
-theorem val_min_nat_abs_nat_cast_eq_self [NeZero n] : (a : ZMod n).valMinAbs = a ↔ a ≤ n / 2 :=
+theorem valMinAbs_natCast_eq_self [NeZero n] : (a : ZMod n).valMinAbs = a ↔ a ≤ n / 2 :=
   by
   refine' ⟨fun ha => _, val_min_abs_nat_cast_of_le_half⟩
   rw [← Int.natAbs_ofNat a, ← ha]
   exact nat_abs_val_min_abs_le a
-#align zmod.val_min_nat_abs_nat_cast_eq_self ZMod.val_min_nat_abs_nat_cast_eq_self
+#align zmod.val_min_nat_abs_nat_cast_eq_self ZMod.valMinAbs_natCast_eq_self
 
 /- warning: zmod.nat_abs_min_of_le_div_two -> ZMod.natAbs_min_of_le_div_two is a dubious translation:
 lean 3 declaration is

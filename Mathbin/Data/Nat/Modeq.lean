@@ -293,9 +293,11 @@ theorem of_mul_right (m : ℕ) : a ≡ b [MOD n * m] → a ≡ b [MOD n] :=
 #align nat.modeq.of_mul_right Nat.ModEq.of_mul_right
 -/
 
+#print Nat.ModEq.of_div /-
 theorem of_div (h : a / c ≡ b / c [MOD m / c]) (ha : c ∣ a) (ha : c ∣ b) (ha : c ∣ m) :
     a ≡ b [MOD m] := by convert h.mul_left' c <;> rwa [Nat.mul_div_cancel']
 #align nat.modeq.of_div Nat.ModEq.of_div
+-/
 
 end Modeq
 

@@ -170,6 +170,12 @@ theorem dvd_iff_dvd_of_dvd_sub (h : a ∣ b - c) : a ∣ b ↔ a ∣ c := by
   rw [← sub_add_cancel b c, dvd_add_right h]
 #align dvd_iff_dvd_of_dvd_sub dvd_iff_dvd_of_dvd_sub
 
+/- warning: dvd_sub_comm -> dvd_sub_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) c b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) c b))
+Case conversion may be inaccurate. Consider using '#align dvd_sub_comm dvd_sub_commₓ'. -/
 theorem dvd_sub_comm : a ∣ b - c ↔ a ∣ c - b := by rw [← dvd_neg, neg_sub]
 #align dvd_sub_comm dvd_sub_comm
 

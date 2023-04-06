@@ -263,12 +263,14 @@ theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
 #align nat.eq_zero_of_dvd_of_lt Nat.eq_zero_of_dvd_of_lt
 -/
 
+#print Nat.le_of_lt_add_of_dvd /-
 theorem le_of_lt_add_of_dvd (h : a < b + n) : n ∣ a → n ∣ b → a ≤ b :=
   by
   rintro ⟨a, rfl⟩ ⟨b, rfl⟩
   rw [← mul_add_one] at h
   exact mul_le_mul_left' (lt_succ_iff.1 <| lt_of_mul_lt_mul_left h bot_le) _
 #align nat.le_of_lt_add_of_dvd Nat.le_of_lt_add_of_dvd
+-/
 
 #print Nat.mod_div_self /-
 @[simp]

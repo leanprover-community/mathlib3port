@@ -211,17 +211,25 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a 
     rw [Int.cast_ofNat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
 #align char_p.int_cast_eq_zero_iff CharP.int_cast_eq_zero_iff
 
-theorem CharP.int_cast_eq_int_cast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℤ} :
+/- warning: char_p.int_cast_eq_int_cast -> CharP.intCast_eq_intCast is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : AddGroupWithOne.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1) p] {a : Int} {b : Int}, Iff (Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R _inst_1)))) a) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R _inst_1)))) b)) (Int.ModEq ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) p) a b)
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : AddGroupWithOne.{u1} R] (p : Nat) [_inst_2 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1) p] {a : Int} {b : Int}, Iff (Eq.{succ u1} R (Int.cast.{u1} R (AddGroupWithOne.toIntCast.{u1} R _inst_1) a) (Int.cast.{u1} R (AddGroupWithOne.toIntCast.{u1} R _inst_1) b)) (Int.ModEq (Nat.cast.{0} Int instNatCastInt p) a b)
+Case conversion may be inaccurate. Consider using '#align char_p.int_cast_eq_int_cast CharP.intCast_eq_intCastₓ'. -/
+theorem CharP.intCast_eq_intCast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℤ} :
     (a : R) = b ↔ a ≡ b [ZMOD p] := by
   rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modEq_iff_dvd]
-#align char_p.int_cast_eq_int_cast CharP.int_cast_eq_int_cast
+#align char_p.int_cast_eq_int_cast CharP.intCast_eq_intCast
 
-theorem CharP.nat_cast_eq_nat_cast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℕ} :
+#print CharP.natCast_eq_natCast /-
+theorem CharP.natCast_eq_natCast [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℕ} :
     (a : R) = b ↔ a ≡ b [MOD p] :=
   by
   rw [← Int.cast_ofNat, ← Int.cast_ofNat b]
-  exact (CharP.int_cast_eq_int_cast _ _).trans Int.coe_nat_modEq_iff
-#align char_p.nat_cast_eq_nat_cast CharP.nat_cast_eq_nat_cast
+  exact (CharP.intCast_eq_intCast _ _).trans Int.coe_nat_modEq_iff
+#align char_p.nat_cast_eq_nat_cast CharP.natCast_eq_natCast
+-/
 
 #print CharP.eq /-
 theorem CharP.eq [AddMonoidWithOne R] {p q : ℕ} (c1 : CharP R p) (c2 : CharP R q) : p = q :=
