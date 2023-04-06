@@ -50,15 +50,23 @@ namespace CategoryTheory
 
 variable (C : Type _) [Category C]
 
+#print CategoryTheory.IsIdempotentComplete /-
 /-- A category is idempotent complete iff all idempotent endomorphisms `p`
 split as a composition `p = e ≫ i` with `i ≫ e = 𝟙 _` -/
 class IsIdempotentComplete : Prop where
   idempotents_split :
     ∀ (X : C) (p : X ⟶ X), p ≫ p = p → ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
 #align category_theory.is_idempotent_complete CategoryTheory.IsIdempotentComplete
+-/
 
 namespace Idempotents
 
+/- warning: category_theory.idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent -> CategoryTheory.Idempotents.isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Category.{u2, u1} C], Iff (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1) (forall (X : C) (p : Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X), (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.CategoryStruct.comp.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X X X p p) p) -> (CategoryTheory.Limits.HasEqualizer.{u2, u1} C _inst_1 X X (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p))
+but is expected to have type
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C], Iff (CategoryTheory.IsIdempotentComplete.{u2, u1} C _inst_1) (forall (X : C) (p : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X X), (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X X) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) X X X p p) p) -> (CategoryTheory.Limits.HasEqualizer.{u1, u2} C _inst_1 X X (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) X) p))
+Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent CategoryTheory.Idempotents.isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotentₓ'. -/
 /-- A category is idempotent complete iff for all idempotent endomorphisms,
 the equalizer of the identity and this idempotent exists. -/
 theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
@@ -101,6 +109,12 @@ theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
 
 variable {C}
 
+/- warning: category_theory.idempotents.idem_of_id_sub_idem -> CategoryTheory.Idempotents.idem_of_id_sub_idem is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] {X : C} (p : Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X), (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.CategoryStruct.comp.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X X X p p) p) -> (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.CategoryStruct.comp.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X X X (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (SubNegMonoid.toHasSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.Preadditive.homGroup.{u2, u1} C _inst_1 _inst_2 X X))))) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p) (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (SubNegMonoid.toHasSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.Preadditive.homGroup.{u2, u1} C _inst_1 _inst_2 X X))))) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p)) (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (SubNegMonoid.toHasSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.Preadditive.homGroup.{u2, u1} C _inst_1 _inst_2 X X))))) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p))
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1] {X : C} (p : Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X), (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.CategoryStruct.comp.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X X X p p) p) -> (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.CategoryStruct.comp.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X X X (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (SubNegMonoid.toSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.Preadditive.homGroup.{u2, u1} C _inst_1 _inst_2 X X))))) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p) (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (SubNegMonoid.toSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.Preadditive.homGroup.{u2, u1} C _inst_1 _inst_2 X X))))) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p)) (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (SubNegMonoid.toSub.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) X X) (CategoryTheory.Preadditive.homGroup.{u2, u1} C _inst_1 _inst_2 X X))))) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) X) p))
+Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.idem_of_id_sub_idem CategoryTheory.Idempotents.idem_of_id_sub_idemₓ'. -/
 /-- In a preadditive category, when `p : X ⟶ X` is idempotent,
 then `𝟙 X - p` is also idempotent. -/
 theorem idem_of_id_sub_idem [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p = p) :
@@ -110,6 +124,7 @@ theorem idem_of_id_sub_idem [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p 
 
 variable (C)
 
+#print CategoryTheory.Idempotents.isIdempotentComplete_iff_idempotents_have_kernels /-
 /-- A preadditive category is pseudoabelian iff all idempotent endomorphisms have a kernel. -/
 theorem isIdempotentComplete_iff_idempotents_have_kernels [Preadditive C] :
     IsIdempotentComplete C ↔ ∀ (X : C) (p : X ⟶ X), p ≫ p = p → HasKernel p :=
@@ -124,7 +139,9 @@ theorem isIdempotentComplete_iff_idempotents_have_kernels [Preadditive C] :
     haveI : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
     apply preadditive.has_equalizer_of_has_kernel
 #align category_theory.idempotents.is_idempotent_complete_iff_idempotents_have_kernels CategoryTheory.Idempotents.isIdempotentComplete_iff_idempotents_have_kernels
+-/
 
+#print CategoryTheory.Idempotents.isIdempotentComplete_of_abelian /-
 /-- An abelian category is idempotent complete. -/
 instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Category D] [Abelian D] :
     IsIdempotentComplete D :=
@@ -133,9 +150,11 @@ instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Categor
   intros
   infer_instance
 #align category_theory.idempotents.is_idempotent_complete_of_abelian CategoryTheory.Idempotents.isIdempotentComplete_of_abelian
+-/
 
 variable {C}
 
+#print CategoryTheory.Idempotents.split_imp_of_iso /-
 theorem split_imp_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X')
     (hpp' : p ≫ φ.Hom = φ.Hom ≫ p') (h : ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) :
     ∃ (Y' : C)(i' : Y' ⟶ X')(e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
@@ -148,7 +167,9 @@ theorem split_imp_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
   · slice_lhs 2 3 => rw [h₂]
     rw [hpp', ← assoc, φ.inv_hom_id, id_comp]
 #align category_theory.idempotents.split_imp_of_iso CategoryTheory.Idempotents.split_imp_of_iso
+-/
 
+#print CategoryTheory.Idempotents.split_iff_of_iso /-
 theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X')
     (hpp' : p ≫ φ.Hom = φ.Hom ≫ p') :
     (∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) ↔
@@ -162,7 +183,14 @@ theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
     slice_rhs 1 2 => erw [φ.inv_hom_id]
     simpa only [id_comp]
 #align category_theory.idempotents.split_iff_of_iso CategoryTheory.Idempotents.split_iff_of_iso
+-/
 
+/- warning: category_theory.idempotents.equivalence.is_idempotent_complete -> CategoryTheory.Idempotents.Equivalence.isIdempotentComplete is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D], (CategoryTheory.Equivalence.{u2, u4, u1, u3} C _inst_1 D _inst_2) -> (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1) -> (CategoryTheory.IsIdempotentComplete.{u3, u4} D _inst_2)
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D], (CategoryTheory.Equivalence.{u2, u3, u1, u4} C D _inst_1 _inst_2) -> (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1) -> (CategoryTheory.IsIdempotentComplete.{u4, u3} D _inst_2)
+Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.equivalence.is_idempotent_complete CategoryTheory.Idempotents.Equivalence.isIdempotentCompleteₓ'. -/
 theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D)
     (h : IsIdempotentComplete C) : IsIdempotentComplete D :=
   by
@@ -182,6 +210,12 @@ theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D
   · simpa only [← ε.functor.map_comp, h₂, equivalence.fun_inv_map]
 #align category_theory.idempotents.equivalence.is_idempotent_complete CategoryTheory.Idempotents.Equivalence.isIdempotentComplete
 
+/- warning: category_theory.idempotents.is_idempotent_complete_iff_of_equivalence -> CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalence is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D], (CategoryTheory.Equivalence.{u2, u4, u1, u3} C _inst_1 D _inst_2) -> (Iff (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1) (CategoryTheory.IsIdempotentComplete.{u3, u4} D _inst_2))
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D], (CategoryTheory.Equivalence.{u2, u3, u1, u4} C D _inst_1 _inst_2) -> (Iff (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1) (CategoryTheory.IsIdempotentComplete.{u4, u3} D _inst_2))
+Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.is_idempotent_complete_iff_of_equivalence CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalenceₓ'. -/
 /-- If `C` and `D` are equivalent categories, that `C` is idempotent complete iff `D` is. -/
 theorem isIdempotentComplete_iff_of_equivalence {D : Type _} [Category D] (ε : C ≌ D) :
     IsIdempotentComplete C ↔ IsIdempotentComplete D :=
@@ -191,6 +225,12 @@ theorem isIdempotentComplete_iff_of_equivalence {D : Type _} [Category D] (ε : 
   · exact equivalence.is_idempotent_complete ε.symm
 #align category_theory.idempotents.is_idempotent_complete_iff_of_equivalence CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalence
 
+/- warning: category_theory.idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite -> CategoryTheory.Idempotents.isIdempotentComplete_of_isIdempotentComplete_opposite is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], (CategoryTheory.IsIdempotentComplete.{u1, u2} (Opposite.{succ u1} C) (CategoryTheory.Category.opposite.{u2, u1} C _inst_1)) -> (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], (CategoryTheory.IsIdempotentComplete.{u2, u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) -> (CategoryTheory.IsIdempotentComplete.{u2, u1} C _inst_1)
+Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite CategoryTheory.Idempotents.isIdempotentComplete_of_isIdempotentComplete_oppositeₓ'. -/
 theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentComplete Cᵒᵖ) :
     IsIdempotentComplete C := by
   refine' ⟨_⟩
@@ -203,6 +243,12 @@ theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentC
   · simpa only [← unop_comp, h₂]
 #align category_theory.idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite CategoryTheory.Idempotents.isIdempotentComplete_of_isIdempotentComplete_opposite
 
+/- warning: category_theory.idempotents.is_idempotent_complete_iff_opposite -> CategoryTheory.Idempotents.isIdempotentComplete_iff_opposite is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C], Iff (CategoryTheory.IsIdempotentComplete.{u1, u2} (Opposite.{succ u1} C) (CategoryTheory.Category.opposite.{u2, u1} C _inst_1)) (CategoryTheory.IsIdempotentComplete.{u1, u2} C _inst_1)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], Iff (CategoryTheory.IsIdempotentComplete.{u2, u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (CategoryTheory.IsIdempotentComplete.{u2, u1} C _inst_1)
+Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.is_idempotent_complete_iff_opposite CategoryTheory.Idempotents.isIdempotentComplete_iff_oppositeₓ'. -/
 theorem isIdempotentComplete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C :=
   by
   constructor
