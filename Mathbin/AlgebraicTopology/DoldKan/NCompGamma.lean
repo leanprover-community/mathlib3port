@@ -192,8 +192,8 @@ def natTrans : (n₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ ⟶ 𝟭 _ 
 
 theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
     Γ₂N₂.natTrans.app P =
-      (n₂ ⋙ Γ₂).map P.decompIdI ≫
-        (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.pt ≫ P.decompIdP :=
+      (n₂ ⋙ Γ₂).map P.decompId_i ≫
+        (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.pt ≫ P.decompId_p :=
   whiskeringLeft_obj_preimage_app (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans) P
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app
 

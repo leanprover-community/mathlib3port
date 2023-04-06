@@ -130,11 +130,11 @@ def complement (P : Karoubi C) : Karoubi C
 instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
   hasBinaryBiproduct_of_total
     { pt := P.pt
-      fst := P.decompIdP
-      snd := P.complement.decompIdP
-      inl := P.decompIdI
-      inr := P.complement.decompIdI
-      inl_fst := P.decomp_id.symm
+      fst := P.decompId_p
+      snd := P.complement.decompId_p
+      inl := P.decompId_i
+      inr := P.complement.decompId_i
+      inl_fst := P.decompId.symm
       inl_snd :=
         by
         simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f, hom_ext,
@@ -145,7 +145,7 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
         simp only [decomp_id_i_f, complement_p, decomp_id_p_f, sub_comp, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [id_comp, sub_self]
-      inr_snd := P.complement.decomp_id.symm }
+      inr_snd := P.complement.decompId.symm }
     (by
       simp only [hom_ext, ← decomp_p, quiver.hom.add_comm_group_add_f, to_karoubi_map_f, id_eq,
         coe_p, complement_p, add_sub_cancel'_right])
@@ -155,8 +155,8 @@ preadditive category is actually a direct factor of the image `(to_karoubi C).ob
 of `P.X` in the category `karoubi C` -/
 def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.pt
     where
-  Hom := biprod.desc P.decompIdI P.complement.decompIdI
-  inv := biprod.lift P.decompIdP P.complement.decompIdP
+  Hom := biprod.desc P.decompId_i P.complement.decompId_i
+  inv := biprod.lift P.decompId_p P.complement.decompId_p
   hom_inv_id' := by
     ext1
     · simp only [← assoc, biprod.inl_desc, comp_id, biprod.lift_eq, comp_add, ← decomp_id, id_comp,
