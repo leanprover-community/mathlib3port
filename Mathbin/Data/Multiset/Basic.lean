@@ -4836,10 +4836,12 @@ def Pairwise (r : α → α → Prop) (m : Multiset α) : Prop :=
 #align multiset.pairwise Multiset.Pairwise
 -/
 
+#print Multiset.pairwise_zero /-
 @[simp]
 theorem pairwise_zero (r : α → α → Prop) : Multiset.Pairwise r 0 :=
   ⟨[], rfl, List.Pairwise.nil⟩
 #align multiset.pairwise_zero Multiset.pairwise_zero
+-/
 
 #print Multiset.pairwise_coe_iff /-
 theorem pairwise_coe_iff {r : α → α → Prop} {l : List α} :
