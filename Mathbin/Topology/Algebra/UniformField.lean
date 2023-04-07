@@ -48,6 +48,7 @@ variable (K : Type _) [Field K] [UniformSpace K]
 -- mathport name: exprhat
 local notation "hat" => Completion
 
+#print CompletableTopField /-
 /-- A topological field is completable if it is separated and the image under
 the mapping x ↦ x⁻¹ of every Cauchy filter (with respect to the additive uniform structure)
 which does not have a cluster point at 0 is a Cauchy filter
@@ -57,6 +58,7 @@ a field.
 class CompletableTopField extends SeparatedSpace K : Prop where
   nice : ∀ F : Filter K, Cauchy F → 𝓝 0 ⊓ F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
 #align completable_top_field CompletableTopField
+-/
 
 namespace UniformSpace
 
@@ -67,11 +69,19 @@ instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
 
 variable {K}
 
+#print UniformSpace.Completion.hatInv /-
 /-- extension of inversion to the completion of a field. -/
 def hatInv : hat K → hat K :=
   denseInducing_coe.extend fun x : K => (coe x⁻¹ : hat K)
 #align uniform_space.completion.hat_inv UniformSpace.Completion.hatInv
+-/
 
+/- warning: uniform_space.completion.continuous_hat_inv -> UniformSpace.Completion.continuous_hatInv is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : CompletableTopField.{u1} K _inst_1 _inst_2] {x : UniformSpace.Completion.{u1} K _inst_2}, (Ne.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) x (OfNat.ofNat.{u1} (UniformSpace.Completion.{u1} K _inst_2) 0 (OfNat.mk.{u1} (UniformSpace.Completion.{u1} K _inst_2) 0 (Zero.zero.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasZero.{u1} K _inst_2 (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))))))))) -> (ContinuousAt.{u1, u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.uniformSpace.{u1} K _inst_2)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.uniformSpace.{u1} K _inst_2)) (UniformSpace.Completion.hatInv.{u1} K _inst_1 _inst_2) x)
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : CompletableTopField.{u1} K _inst_1 _inst_2] {x : UniformSpace.Completion.{u1} K _inst_2}, (Ne.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) x (OfNat.ofNat.{u1} (UniformSpace.Completion.{u1} K _inst_2) 0 (Zero.toOfNat0.{u1} (UniformSpace.Completion.{u1} K _inst_2) (instZeroCompletion.{u1} K _inst_2 (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K _inst_1)))))))) -> (ContinuousAt.{u1, u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.uniformSpace.{u1} K _inst_2)) (UniformSpace.toTopologicalSpace.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.uniformSpace.{u1} K _inst_2)) (UniformSpace.Completion.hatInv.{u1} K _inst_1 _inst_2) x)
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.continuous_hat_inv UniformSpace.Completion.continuous_hatInvₓ'. -/
 theorem continuous_hatInv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x :=
   by
   haveI : T3Space (hat K) := completion.t3_space K
@@ -103,12 +113,24 @@ instance : Inv (hat K) :=
 
 variable [TopologicalDivisionRing K]
 
+/- warning: uniform_space.completion.hat_inv_extends -> UniformSpace.Completion.hatInv_extends is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : TopologicalDivisionRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (UniformSpace.toTopologicalSpace.{u1} K _inst_2)] {x : K}, (Ne.{succ u1} K x (OfNat.ofNat.{u1} K 0 (OfNat.mk.{u1} K 0 (Zero.zero.{u1} K (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))))))))))) -> (Eq.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hatInv.{u1} K _inst_1 _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) K (UniformSpace.Completion.{u1} K _inst_2) (HasLiftT.mk.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (CoeTCₓ.coe.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasCoeT.{u1} K _inst_2))) x)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) K (UniformSpace.Completion.{u1} K _inst_2) (HasLiftT.mk.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (CoeTCₓ.coe.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasCoeT.{u1} K _inst_2))) (Inv.inv.{u1} K (DivInvMonoid.toHasInv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) x)))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : TopologicalDivisionRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (UniformSpace.toTopologicalSpace.{u1} K _inst_2)] {x : K}, (Ne.{succ u1} K x (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K _inst_1))))))) -> (Eq.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hatInv.{u1} K _inst_1 _inst_2 (UniformSpace.Completion.coe'.{u1} K _inst_2 x)) (UniformSpace.Completion.coe'.{u1} K _inst_2 (Inv.inv.{u1} K (Field.toInv.{u1} K _inst_1) x)))
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.hat_inv_extends UniformSpace.Completion.hatInv_extendsₓ'. -/
 theorem hatInv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coe (x⁻¹ : K) :=
   denseInducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (continuousAt_inv₀ h))
 #align uniform_space.completion.hat_inv_extends UniformSpace.Completion.hatInv_extends
 
 variable [CompletableTopField K]
 
+/- warning: uniform_space.completion.coe_inv -> UniformSpace.Completion.coe_inv is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : TopologicalDivisionRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (UniformSpace.toTopologicalSpace.{u1} K _inst_2)] [_inst_4 : CompletableTopField.{u1} K _inst_1 _inst_2] (x : K), Eq.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) (Inv.inv.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasInv.{u1} K _inst_1 _inst_2) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) K (UniformSpace.Completion.{u1} K _inst_2) (HasLiftT.mk.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (CoeTCₓ.coe.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasCoeT.{u1} K _inst_2))) x)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) K (UniformSpace.Completion.{u1} K _inst_2) (HasLiftT.mk.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (CoeTCₓ.coe.{succ u1, succ u1} K (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasCoeT.{u1} K _inst_2))) (Inv.inv.{u1} K (DivInvMonoid.toHasInv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) x))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : TopologicalDivisionRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (UniformSpace.toTopologicalSpace.{u1} K _inst_2)] [_inst_4 : CompletableTopField.{u1} K _inst_1 _inst_2] (x : K), Eq.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) (Inv.inv.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.instInvCompletion.{u1} K _inst_1 _inst_2) (UniformSpace.Completion.coe'.{u1} K _inst_2 x)) (UniformSpace.Completion.coe'.{u1} K _inst_2 (Inv.inv.{u1} K (Field.toInv.{u1} K _inst_1) x))
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.coe_inv UniformSpace.Completion.coe_invₓ'. -/
 @[norm_cast]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
   by
@@ -125,6 +147,12 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
 
 variable [UniformAddGroup K]
 
+/- warning: uniform_space.completion.mul_hat_inv_cancel -> UniformSpace.Completion.mul_hatInv_cancel is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : TopologicalDivisionRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (UniformSpace.toTopologicalSpace.{u1} K _inst_2)] [_inst_4 : CompletableTopField.{u1} K _inst_1 _inst_2] [_inst_5 : UniformAddGroup.{u1} K _inst_2 (AddGroupWithOne.toAddGroup.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))] {x : UniformSpace.Completion.{u1} K _inst_2}, (Ne.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) x (OfNat.ofNat.{u1} (UniformSpace.Completion.{u1} K _inst_2) 0 (OfNat.mk.{u1} (UniformSpace.Completion.{u1} K _inst_2) 0 (Zero.zero.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasZero.{u1} K _inst_2 (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))))))))) -> (Eq.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) (HMul.hMul.{u1, u1, u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.{u1} K _inst_2) (instHMul.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasMul.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)) _inst_2)) x (UniformSpace.Completion.hatInv.{u1} K _inst_1 _inst_2 x)) (OfNat.ofNat.{u1} (UniformSpace.Completion.{u1} K _inst_2) 1 (OfNat.mk.{u1} (UniformSpace.Completion.{u1} K _inst_2) 1 (One.one.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.hasOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)) _inst_2)))))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : Field.{u1} K] [_inst_2 : UniformSpace.{u1} K] [_inst_3 : TopologicalDivisionRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (UniformSpace.toTopologicalSpace.{u1} K _inst_2)] [_inst_4 : CompletableTopField.{u1} K _inst_1 _inst_2] [_inst_5 : UniformAddGroup.{u1} K _inst_2 (AddGroupWithOne.toAddGroup.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))))] {x : UniformSpace.Completion.{u1} K _inst_2}, (Ne.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) x (OfNat.ofNat.{u1} (UniformSpace.Completion.{u1} K _inst_2) 0 (Zero.toOfNat0.{u1} (UniformSpace.Completion.{u1} K _inst_2) (instZeroCompletion.{u1} K _inst_2 (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K _inst_1)))))))) -> (Eq.{succ u1} (UniformSpace.Completion.{u1} K _inst_2) (HMul.hMul.{u1, u1, u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.{u1} K _inst_2) (instHMul.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.mul.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)) _inst_2)) x (UniformSpace.Completion.hatInv.{u1} K _inst_1 _inst_2 x)) (OfNat.ofNat.{u1} (UniformSpace.Completion.{u1} K _inst_2) 1 (One.toOfNat1.{u1} (UniformSpace.Completion.{u1} K _inst_2) (UniformSpace.Completion.one.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)) _inst_2))))
+Case conversion may be inaccurate. Consider using '#align uniform_space.completion.mul_hat_inv_cancel UniformSpace.Completion.mul_hatInv_cancelₓ'. -/
 theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
   by
   haveI : T1Space (hat K) := T2Space.t1Space
@@ -191,6 +219,12 @@ end UniformSpace
 
 variable (L : Type _) [Field L] [UniformSpace L] [CompletableTopField L]
 
+/- warning: subfield.completable_top_field -> Subfield.completableTopField is a dubious translation:
+lean 3 declaration is
+  forall (L : Type.{u1}) [_inst_3 : Field.{u1} L] [_inst_4 : UniformSpace.{u1} L] [_inst_5 : CompletableTopField.{u1} L _inst_3 _inst_4] (K : Subfield.{u1} L _inst_3), CompletableTopField.{u1} (coeSort.{succ u1, succ (succ u1)} (Subfield.{u1} L _inst_3) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subfield.{u1} L _inst_3) L (Subfield.setLike.{u1} L _inst_3)) K) (Subfield.toField.{u1} L _inst_3 K) (Subtype.uniformSpace.{u1} L (fun (x : L) => Membership.Mem.{u1, u1} L (Subfield.{u1} L _inst_3) (SetLike.hasMem.{u1, u1} (Subfield.{u1} L _inst_3) L (Subfield.setLike.{u1} L _inst_3)) x K) _inst_4)
+but is expected to have type
+  forall (L : Type.{u1}) [_inst_3 : Field.{u1} L] [_inst_4 : UniformSpace.{u1} L] [_inst_5 : CompletableTopField.{u1} L _inst_3 _inst_4] (K : Subfield.{u1} L _inst_3), CompletableTopField.{u1} (Subtype.{succ u1} L (fun (x : L) => Membership.mem.{u1, u1} L (Subfield.{u1} L _inst_3) (SetLike.instMembership.{u1, u1} (Subfield.{u1} L _inst_3) L (Subfield.instSetLikeSubfield.{u1} L _inst_3)) x K)) (Subfield.toField.{u1} L _inst_3 K) (instUniformSpaceSubtype.{u1} L (fun (x : L) => Membership.mem.{u1, u1} L (Subfield.{u1} L _inst_3) (SetLike.instMembership.{u1, u1} (Subfield.{u1} L _inst_3) L (Subfield.instSetLikeSubfield.{u1} L _inst_3)) x K) _inst_4)
+Case conversion may be inaccurate. Consider using '#align subfield.completable_top_field Subfield.completableTopFieldₓ'. -/
 instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :=
   { Subtype.separatedSpace (K : Set L) with
     nice := by
@@ -207,6 +241,7 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
       rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
 #align subfield.completable_top_field Subfield.completableTopField
 
+#print completableTopField_of_complete /-
 instance (priority := 100) completableTopField_of_complete (L : Type _) [Field L] [UniformSpace L]
     [TopologicalDivisionRing L] [SeparatedSpace L] [CompleteSpace L] : CompletableTopField L :=
   { ‹SeparatedSpace L› with
@@ -224,4 +259,5 @@ instance (priority := 100) completableTopField_of_complete (L : Type _) [Field L
             _ ≤ 𝓝 x⁻¹ := continuous_at_inv₀ hx'
             ) }
 #align completable_top_field_of_complete completableTopField_of_complete
+-/
 
