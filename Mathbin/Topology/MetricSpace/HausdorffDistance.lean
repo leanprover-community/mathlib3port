@@ -1651,15 +1651,15 @@ theorem ball_subset_thickening {x : X} {E : Set X} (hx : x ∈ E) (δ : ℝ) :
 #align metric.ball_subset_thickening Metric.ball_subset_thickening
 -/
 
-#print Metric.thickening_eq_bUnion_ball /-
+#print Metric.thickening_eq_bunionᵢ_ball /-
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/
-theorem thickening_eq_bUnion_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ :=
+theorem thickening_eq_bunionᵢ_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ :=
   by
   ext x
   rw [mem_Union₂]
   exact mem_thickening_iff
-#align metric.thickening_eq_bUnion_ball Metric.thickening_eq_bUnion_ball
+#align metric.thickening_eq_bUnion_ball Metric.thickening_eq_bunionᵢ_ball
 -/
 
 #print Metric.Bounded.thickening /-
@@ -2361,17 +2361,17 @@ theorem cthickening_subset_unionᵢ_closedBall_of_lt {α : Type _} [PseudoMetric
   exact mem_Union₂.mpr ⟨y, hy₁, hy₂.le⟩
 #align metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_unionᵢ_closedBall_of_lt
 
-/- warning: is_compact.cthickening_eq_bUnion_closed_ball -> IsCompact.cthickening_eq_bUnion_closedBall is a dubious translation:
+/- warning: is_compact.cthickening_eq_bUnion_closed_ball -> IsCompact.cthickening_eq_bunionᵢ_closedBall is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {δ : Real} {E : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {δ : Real} {E : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
-Case conversion may be inaccurate. Consider using '#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bUnion_closedBallₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bunionᵢ_closedBallₓ'. -/
 /-- The closed thickening of a compact set `E` is the union of the balls `closed_ball x δ` over
 `x ∈ E`.
 
 See also `metric.cthickening_eq_bUnion_closed_ball`. -/
-theorem IsCompact.cthickening_eq_bUnion_closedBall {α : Type _} [PseudoMetricSpace α] {δ : ℝ}
+theorem IsCompact.cthickening_eq_bunionᵢ_closedBall {α : Type _} [PseudoMetricSpace α] {δ : ℝ}
     {E : Set α} (hE : IsCompact E) (hδ : 0 ≤ δ) : cthickening δ E = ⋃ x ∈ E, closedBall x δ :=
   by
   rcases eq_empty_or_nonempty E with (rfl | hne)
@@ -2384,7 +2384,7 @@ theorem IsCompact.cthickening_eq_bUnion_closedBall {α : Type _} [PseudoMetricSp
     rw [edist_dist] at D1
     exact (ENNReal.ofReal_le_ofReal_iff hδ).1 D1
   exact mem_bUnion yE D2
-#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bUnion_closedBall
+#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bunionᵢ_closedBall
 
 /- warning: metric.cthickening_eq_bUnion_closed_ball -> Metric.cthickening_eq_bunionᵢ_closedBall is a dubious translation:
 lean 3 declaration is
