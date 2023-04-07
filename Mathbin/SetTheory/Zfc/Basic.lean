@@ -66,50 +66,67 @@ Prove `Set.map_definable_aux` computably.
 
 universe u v
 
+#print Arity /-
 /-- The type of `n`-ary functions `α → α → ... → α`. -/
 def Arity (α : Type u) : ℕ → Type u
   | 0 => α
   | n + 1 => α → Arity n
 #align arity Arity
+-/
 
+#print arity_zero /-
 @[simp]
 theorem arity_zero (α : Type u) : Arity α 0 = α :=
   rfl
 #align arity_zero arity_zero
+-/
 
+#print arity_succ /-
 @[simp]
 theorem arity_succ (α : Type u) (n : ℕ) : Arity α n.succ = (α → Arity α n) :=
   rfl
 #align arity_succ arity_succ
+-/
 
 namespace Arity
 
+#print Arity.Const /-
 /-- Constant `n`-ary function with value `a`. -/
-def const {α : Type u} (a : α) : ∀ n, Arity α n
+def Const {α : Type u} (a : α) : ∀ n, Arity α n
   | 0 => a
   | n + 1 => fun _ => const n
-#align arity.const Arity.const
+#align arity.const Arity.Const
+-/
 
+#print Arity.const_zero /-
 @[simp]
-theorem const_zero {α : Type u} (a : α) : const a 0 = a :=
+theorem const_zero {α : Type u} (a : α) : Const a 0 = a :=
   rfl
 #align arity.const_zero Arity.const_zero
+-/
 
+#print Arity.const_succ /-
 @[simp]
-theorem const_succ {α : Type u} (a : α) (n : ℕ) : const a n.succ = fun _ => const a n :=
+theorem const_succ {α : Type u} (a : α) (n : ℕ) : Const a n.succ = fun _ => Const a n :=
   rfl
 #align arity.const_succ Arity.const_succ
+-/
 
-theorem const_succ_apply {α : Type u} (a : α) (n : ℕ) (x : α) : const a n.succ x = const a n :=
+#print Arity.const_succ_apply /-
+theorem const_succ_apply {α : Type u} (a : α) (n : ℕ) (x : α) : Const a n.succ x = Const a n :=
   rfl
 #align arity.const_succ_apply Arity.const_succ_apply
+-/
 
+#print Arity.Arity.inhabited /-
 instance Arity.inhabited {α n} [Inhabited α] : Inhabited (Arity α n) :=
-  ⟨const default _⟩
+  ⟨Const default _⟩
 #align arity.arity.inhabited Arity.Arity.inhabited
+-/
 
 end Arity
 
+#print PSet /-
 /-- The type of pre-sets in universe `u`. A pre-set
   is a family of pre-sets indexed by a type in `Type u`.
   The ZFC universe is defined as a quotient of this
@@ -117,63 +134,104 @@ end Arity
 inductive PSet : Type (u + 1)
   | mk (α : Type u) (A : α → PSet) : PSet
 #align pSet PSet
+-/
 
 namespace PSet
 
+#print PSet.Type /-
 /-- The underlying type of a pre-set -/
 def Type : PSet → Type u
   | ⟨α, A⟩ => α
 #align pSet.type PSet.Type
+-/
 
+#print PSet.Func /-
 /-- The underlying pre-set family of a pre-set -/
-def func : ∀ x : PSet, x.type → PSet
+def Func : ∀ x : PSet, x.type → PSet
   | ⟨α, A⟩ => A
-#align pSet.func PSet.func
+#align pSet.func PSet.Func
+-/
 
+#print PSet.mk_type /-
 @[simp]
 theorem mk_type (α A) : Type ⟨α, A⟩ = α :=
   rfl
 #align pSet.mk_type PSet.mk_type
+-/
 
+#print PSet.mk_func /-
 @[simp]
-theorem mk_func (α A) : func ⟨α, A⟩ = A :=
+theorem mk_func (α A) : Func ⟨α, A⟩ = A :=
   rfl
 #align pSet.mk_func PSet.mk_func
+-/
 
+#print PSet.eta /-
 @[simp]
-theorem eta : ∀ x : PSet, mk x.type x.func = x
+theorem eta : ∀ x : PSet, mk x.type x.Func = x
   | ⟨α, A⟩ => rfl
 #align pSet.eta PSet.eta
+-/
 
+#print PSet.Equiv /-
 /-- Two pre-sets are extensionally equivalent if every element of the first family is extensionally
 equivalent to some element of the second family and vice-versa. -/
 def Equiv (x y : PSet) : Prop :=
   PSet.rec (fun α z m ⟨β, B⟩ => (∀ a, ∃ b, m a (B b)) ∧ ∀ b, ∃ a, m a (B b)) x y
 #align pSet.equiv PSet.Equiv
+-/
 
+/- warning: pSet.equiv_iff -> PSet.equiv_iff is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}}, Iff (PSet.Equiv.{u1, u2} x y) (And (forall (i : PSet.Type.{u1} x), Exists.{succ u2} (PSet.Type.{u2} y) (fun (j : PSet.Type.{u2} y) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j))) (forall (j : PSet.Type.{u2} y), Exists.{succ u1} (PSet.Type.{u1} x) (fun (i : PSet.Type.{u1} x) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j))))
+but is expected to have type
+  forall {x : PSet.{u2}} {y : PSet.{u1}}, Iff (PSet.Equiv.{u2, u1} x y) (And (forall (i : PSet.Type.{u2} x), Exists.{succ u1} (PSet.Type.{u1} y) (fun (j : PSet.Type.{u1} y) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j))) (forall (j : PSet.Type.{u1} y), Exists.{succ u2} (PSet.Type.{u2} x) (fun (i : PSet.Type.{u2} x) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j))))
+Case conversion may be inaccurate. Consider using '#align pSet.equiv_iff PSet.equiv_iffₓ'. -/
 theorem equiv_iff :
     ∀ {x y : PSet},
-      Equiv x y ↔ (∀ i, ∃ j, Equiv (x.func i) (y.func j)) ∧ ∀ j, ∃ i, Equiv (x.func i) (y.func j)
+      Equiv x y ↔ (∀ i, ∃ j, Equiv (x.Func i) (y.Func j)) ∧ ∀ j, ∃ i, Equiv (x.Func i) (y.Func j)
   | ⟨α, A⟩, ⟨β, B⟩ => Iff.rfl
 #align pSet.equiv_iff PSet.equiv_iff
 
-theorem Equiv.exists_left {x y : PSet} (h : Equiv x y) : ∀ i, ∃ j, Equiv (x.func i) (y.func j) :=
+/- warning: pSet.equiv.exists_left -> PSet.Equiv.exists_left is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}}, (PSet.Equiv.{u1, u2} x y) -> (forall (i : PSet.Type.{u1} x), Exists.{succ u2} (PSet.Type.{u2} y) (fun (j : PSet.Type.{u2} y) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j)))
+but is expected to have type
+  forall {x : PSet.{u2}} {y : PSet.{u1}}, (PSet.Equiv.{u2, u1} x y) -> (forall (i : PSet.Type.{u2} x), Exists.{succ u1} (PSet.Type.{u1} y) (fun (j : PSet.Type.{u1} y) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j)))
+Case conversion may be inaccurate. Consider using '#align pSet.equiv.exists_left PSet.Equiv.exists_leftₓ'. -/
+theorem Equiv.exists_left {x y : PSet} (h : Equiv x y) : ∀ i, ∃ j, Equiv (x.Func i) (y.Func j) :=
   (equiv_iff.1 h).1
 #align pSet.equiv.exists_left PSet.Equiv.exists_left
 
-theorem Equiv.exists_right {x y : PSet} (h : Equiv x y) : ∀ j, ∃ i, Equiv (x.func i) (y.func j) :=
+/- warning: pSet.equiv.exists_right -> PSet.Equiv.exists_right is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}}, (PSet.Equiv.{u1, u2} x y) -> (forall (j : PSet.Type.{u2} y), Exists.{succ u1} (PSet.Type.{u1} x) (fun (i : PSet.Type.{u1} x) => PSet.Equiv.{u1, u2} (PSet.Func.{u1} x i) (PSet.Func.{u2} y j)))
+but is expected to have type
+  forall {x : PSet.{u2}} {y : PSet.{u1}}, (PSet.Equiv.{u2, u1} x y) -> (forall (j : PSet.Type.{u1} y), Exists.{succ u2} (PSet.Type.{u2} x) (fun (i : PSet.Type.{u2} x) => PSet.Equiv.{u2, u1} (PSet.Func.{u2} x i) (PSet.Func.{u1} y j)))
+Case conversion may be inaccurate. Consider using '#align pSet.equiv.exists_right PSet.Equiv.exists_rightₓ'. -/
+theorem Equiv.exists_right {x y : PSet} (h : Equiv x y) : ∀ j, ∃ i, Equiv (x.Func i) (y.Func j) :=
   (equiv_iff.1 h).2
 #align pSet.equiv.exists_right PSet.Equiv.exists_right
 
+#print PSet.Equiv.refl /-
 @[refl]
 protected theorem Equiv.refl (x) : Equiv x x :=
   PSet.recOn x fun α A IH => ⟨fun a => ⟨a, IH a⟩, fun a => ⟨a, IH a⟩⟩
 #align pSet.equiv.refl PSet.Equiv.refl
+-/
 
+#print PSet.Equiv.rfl /-
 protected theorem Equiv.rfl : ∀ {x}, Equiv x x :=
   Equiv.refl
 #align pSet.equiv.rfl PSet.Equiv.rfl
+-/
 
+/- warning: pSet.equiv.euc -> PSet.Equiv.euc is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}} {z : PSet.{u3}}, (PSet.Equiv.{u1, u2} x y) -> (PSet.Equiv.{u3, u2} z y) -> (PSet.Equiv.{u1, u3} x z)
+but is expected to have type
+  forall {x : PSet.{u3}} {y : PSet.{u2}} {z : PSet.{u1}}, (PSet.Equiv.{u3, u2} x y) -> (PSet.Equiv.{u1, u2} z y) -> (PSet.Equiv.{u3, u1} x z)
+Case conversion may be inaccurate. Consider using '#align pSet.equiv.euc PSet.Equiv.eucₓ'. -/
 protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
   PSet.recOn x fun α A IH y =>
     PSet.casesOn y fun β B ⟨γ, Γ⟩ ⟨αβ, βα⟩ ⟨γβ, βγ⟩ =>
@@ -187,33 +245,61 @@ protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x
         ⟨a, IH a ba cb⟩⟩
 #align pSet.equiv.euc PSet.Equiv.euc
 
+/- warning: pSet.equiv.symm -> PSet.Equiv.symm is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}}, (PSet.Equiv.{u1, u2} x y) -> (PSet.Equiv.{u2, u1} y x)
+but is expected to have type
+  forall {x : PSet.{u2}} {y : PSet.{u1}}, (PSet.Equiv.{u2, u1} x y) -> (PSet.Equiv.{u1, u2} y x)
+Case conversion may be inaccurate. Consider using '#align pSet.equiv.symm PSet.Equiv.symmₓ'. -/
 @[symm]
 protected theorem Equiv.symm {x y} : Equiv x y → Equiv y x :=
   (Equiv.refl y).euc
 #align pSet.equiv.symm PSet.Equiv.symm
 
+/- warning: pSet.equiv.comm -> PSet.Equiv.comm is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}}, Iff (PSet.Equiv.{u1, u2} x y) (PSet.Equiv.{u2, u1} y x)
+but is expected to have type
+  forall {x : PSet.{u2}} {y : PSet.{u1}}, Iff (PSet.Equiv.{u2, u1} x y) (PSet.Equiv.{u1, u2} y x)
+Case conversion may be inaccurate. Consider using '#align pSet.equiv.comm PSet.Equiv.commₓ'. -/
 protected theorem Equiv.comm {x y} : Equiv x y ↔ Equiv y x :=
   ⟨Equiv.symm, Equiv.symm⟩
 #align pSet.equiv.comm PSet.Equiv.comm
 
+/- warning: pSet.equiv.trans -> PSet.Equiv.trans is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u2}} {z : PSet.{u3}}, (PSet.Equiv.{u1, u2} x y) -> (PSet.Equiv.{u2, u3} y z) -> (PSet.Equiv.{u1, u3} x z)
+but is expected to have type
+  forall {x : PSet.{u3}} {y : PSet.{u2}} {z : PSet.{u1}}, (PSet.Equiv.{u3, u2} x y) -> (PSet.Equiv.{u2, u1} y z) -> (PSet.Equiv.{u3, u1} x z)
+Case conversion may be inaccurate. Consider using '#align pSet.equiv.trans PSet.Equiv.transₓ'. -/
 @[trans]
 protected theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
   h1.euc h2.symm
 #align pSet.equiv.trans PSet.Equiv.trans
 
+/- warning: pSet.equiv_of_is_empty -> PSet.equiv_of_isEmpty is a dubious translation:
+lean 3 declaration is
+  forall (x : PSet.{u1}) (y : PSet.{u2}) [_inst_1 : IsEmpty.{succ u1} (PSet.Type.{u1} x)] [_inst_2 : IsEmpty.{succ u2} (PSet.Type.{u2} y)], PSet.Equiv.{u1, u2} x y
+but is expected to have type
+  forall (x : PSet.{u2}) (y : PSet.{u1}) [_inst_1 : IsEmpty.{succ u2} (PSet.Type.{u2} x)] [_inst_2 : IsEmpty.{succ u1} (PSet.Type.{u1} y)], PSet.Equiv.{u2, u1} x y
+Case conversion may be inaccurate. Consider using '#align pSet.equiv_of_is_empty PSet.equiv_of_isEmptyₓ'. -/
 protected theorem equiv_of_isEmpty (x y : PSet) [IsEmpty x.type] [IsEmpty y.type] : Equiv x y :=
   equiv_iff.2 <| by simp
 #align pSet.equiv_of_is_empty PSet.equiv_of_isEmpty
 
+#print PSet.setoid /-
 instance setoid : Setoid PSet :=
   ⟨PSet.Equiv, Equiv.refl, fun x y => Equiv.symm, fun x y z => Equiv.trans⟩
 #align pSet.setoid PSet.setoid
+-/
 
+#print PSet.Subset /-
 /-- A pre-set is a subset of another pre-set if every element of the first family is extensionally
 equivalent to some element of the second family.-/
 protected def Subset (x y : PSet) : Prop :=
-  ∀ a, ∃ b, Equiv (x.func a) (y.func b)
+  ∀ a, ∃ b, Equiv (x.Func a) (y.Func b)
 #align pSet.subset PSet.Subset
+-/
 
 instance : HasSubset PSet :=
   ⟨PSet.Subset⟩
@@ -227,6 +313,7 @@ instance : IsTrans PSet (· ⊆ ·) :=
     cases' hyz b with c hc
     exact ⟨c, hb.trans hc⟩⟩
 
+#print PSet.Equiv.ext /-
 theorem Equiv.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
   | ⟨α, A⟩, ⟨β, B⟩ =>
     ⟨fun ⟨αβ, βα⟩ =>
@@ -238,7 +325,9 @@ theorem Equiv.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
         let ⟨a, h⟩ := βα b
         ⟨a, Equiv.symm h⟩⟩⟩
 #align pSet.equiv.ext PSet.Equiv.ext
+-/
 
+#print PSet.Subset.congr_left /-
 theorem Subset.congr_left : ∀ {x y z : PSet}, Equiv x y → (x ⊆ z ↔ y ⊆ z)
   | ⟨α, A⟩, ⟨β, B⟩, ⟨γ, Γ⟩, ⟨αβ, βα⟩ =>
     ⟨fun αγ b =>
@@ -250,7 +339,9 @@ theorem Subset.congr_left : ∀ {x y z : PSet}, Equiv x y → (x ⊆ z ↔ y ⊆
       let ⟨c, bc⟩ := βγ b
       ⟨c, Equiv.trans ab bc⟩⟩
 #align pSet.subset.congr_left PSet.Subset.congr_left
+-/
 
+#print PSet.Subset.congr_right /-
 theorem Subset.congr_right : ∀ {x y z : PSet}, Equiv x y → (z ⊆ x ↔ z ⊆ y)
   | ⟨α, A⟩, ⟨β, B⟩, ⟨γ, Γ⟩, ⟨αβ, βα⟩ =>
     ⟨fun γα c =>
@@ -262,32 +353,42 @@ theorem Subset.congr_right : ∀ {x y z : PSet}, Equiv x y → (z ⊆ x ↔ z �
       let ⟨a, ab⟩ := βα b
       ⟨a, cb.trans (Equiv.symm ab)⟩⟩
 #align pSet.subset.congr_right PSet.Subset.congr_right
+-/
 
+#print PSet.Mem /-
 /-- `x ∈ y` as pre-sets if `x` is extensionally equivalent to a member of the family `y`. -/
 protected def Mem (x y : PSet.{u}) : Prop :=
-  ∃ b, Equiv x (y.func b)
+  ∃ b, Equiv x (y.Func b)
 #align pSet.mem PSet.Mem
+-/
 
 instance : Membership PSet PSet :=
   ⟨PSet.Mem⟩
 
+#print PSet.Mem.mk /-
 theorem Mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
   ⟨a, Equiv.refl (A a)⟩
 #align pSet.mem.mk PSet.Mem.mk
+-/
 
-theorem func_mem (x : PSet) (i : x.type) : x.func i ∈ x :=
+#print PSet.func_mem /-
+theorem func_mem (x : PSet) (i : x.type) : x.Func i ∈ x :=
   by
   cases x
   apply mem.mk
 #align pSet.func_mem PSet.func_mem
+-/
 
+#print PSet.Mem.ext /-
 theorem Mem.ext : ∀ {x y : PSet.{u}}, (∀ w : PSet.{u}, w ∈ x ↔ w ∈ y) → Equiv x y
   | ⟨α, A⟩, ⟨β, B⟩, h =>
     ⟨fun a => (h (A a)).1 (Mem.mk A a), fun b =>
       let ⟨a, ha⟩ := (h (B b)).2 (Mem.mk B b)
       ⟨a, ha.symm⟩⟩
 #align pSet.mem.ext PSet.Mem.ext
+-/
 
+#print PSet.Mem.congr_right /-
 theorem Mem.congr_right : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, w ∈ x ↔ w ∈ y
   | ⟨α, A⟩, ⟨β, B⟩, ⟨αβ, βα⟩, w =>
     ⟨fun ⟨a, ha⟩ =>
@@ -297,7 +398,9 @@ theorem Mem.congr_right : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}
       let ⟨a, ha⟩ := βα b
       ⟨a, hb.euc ha⟩⟩
 #align pSet.mem.congr_right PSet.Mem.congr_right
+-/
 
+#print PSet.equiv_iff_mem /-
 theorem equiv_iff_mem {x y : PSet.{u}} : Equiv x y ↔ ∀ {w : PSet.{u}}, w ∈ x ↔ w ∈ y :=
   ⟨Mem.congr_right,
     match x, y with
@@ -306,10 +409,13 @@ theorem equiv_iff_mem {x y : PSet.{u}} : Equiv x y ↔ ∀ {w : PSet.{u}}, w ∈
         let ⟨a, h⟩ := h.2 (Mem.mk B b)
         ⟨a, h.symm⟩⟩⟩
 #align pSet.equiv_iff_mem PSet.equiv_iff_mem
+-/
 
+#print PSet.Mem.congr_left /-
 theorem Mem.congr_left : ∀ {x y : PSet.{u}}, Equiv x y → ∀ {w : PSet.{u}}, x ∈ w ↔ y ∈ w
   | x, y, h, ⟨α, A⟩ => ⟨fun ⟨a, ha⟩ => ⟨a, h.symm.trans ha⟩, fun ⟨a, ha⟩ => ⟨a, h.trans ha⟩⟩
 #align pSet.mem.congr_left PSet.Mem.congr_left
+-/
 
 private theorem mem_wf_aux : ∀ {x y : PSet.{u}}, Equiv x y → Acc (· ∈ ·) y
   | ⟨α, A⟩, ⟨β, B⟩, H =>
@@ -321,9 +427,11 @@ private theorem mem_wf_aux : ∀ {x y : PSet.{u}}, Equiv x y → Acc (· ∈ ·)
       exact mem_wf_aux H⟩
 #align pSet.mem_wf_aux pSet.mem_wf_aux
 
+#print PSet.mem_wf /-
 theorem mem_wf : @WellFounded PSet (· ∈ ·) :=
   ⟨fun x => mem_wf_aux <| Equiv.refl x⟩
 #align pSet.mem_wf PSet.mem_wf
+-/
 
 instance : WellFoundedRelation PSet :=
   ⟨_, mem_wf⟩
@@ -331,62 +439,86 @@ instance : WellFoundedRelation PSet :=
 instance : IsAsymm PSet (· ∈ ·) :=
   mem_wf.IsAsymm
 
+#print PSet.mem_asymm /-
 theorem mem_asymm {x y : PSet} : x ∈ y → y ∉ x :=
   asymm
 #align pSet.mem_asymm PSet.mem_asymm
+-/
 
+#print PSet.mem_irrefl /-
 theorem mem_irrefl (x : PSet) : x ∉ x :=
   irrefl x
 #align pSet.mem_irrefl PSet.mem_irrefl
+-/
 
+#print PSet.toSet /-
 /-- Convert a pre-set to a `set` of pre-sets. -/
 def toSet (u : PSet.{u}) : Set PSet.{u} :=
   { x | x ∈ u }
 #align pSet.to_set PSet.toSet
+-/
 
+#print PSet.mem_toSet /-
 @[simp]
 theorem mem_toSet (a u : PSet.{u}) : a ∈ u.toSet ↔ a ∈ u :=
   Iff.rfl
 #align pSet.mem_to_set PSet.mem_toSet
+-/
 
+#print PSet.Nonempty /-
 /-- A nonempty set is one that contains some element. -/
 protected def Nonempty (u : PSet) : Prop :=
   u.toSet.Nonempty
 #align pSet.nonempty PSet.Nonempty
+-/
 
+#print PSet.nonempty_def /-
 theorem nonempty_def (u : PSet) : u.Nonempty ↔ ∃ x, x ∈ u :=
   Iff.rfl
 #align pSet.nonempty_def PSet.nonempty_def
+-/
 
+#print PSet.nonempty_of_mem /-
 theorem nonempty_of_mem {x u : PSet} (h : x ∈ u) : u.Nonempty :=
   ⟨x, h⟩
 #align pSet.nonempty_of_mem PSet.nonempty_of_mem
+-/
 
+#print PSet.nonempty_toSet_iff /-
 @[simp]
 theorem nonempty_toSet_iff {u : PSet} : u.toSet.Nonempty ↔ u.Nonempty :=
   Iff.rfl
 #align pSet.nonempty_to_set_iff PSet.nonempty_toSet_iff
+-/
 
+#print PSet.nonempty_type_iff_nonempty /-
 theorem nonempty_type_iff_nonempty {x : PSet} : Nonempty x.type ↔ PSet.Nonempty x :=
   ⟨fun ⟨i⟩ => ⟨_, func_mem _ i⟩, fun ⟨i, j, h⟩ => ⟨j⟩⟩
 #align pSet.nonempty_type_iff_nonempty PSet.nonempty_type_iff_nonempty
+-/
 
+#print PSet.nonempty_of_nonempty_type /-
 theorem nonempty_of_nonempty_type (x : PSet) [h : Nonempty x.type] : PSet.Nonempty x :=
   nonempty_type_iff_nonempty.1 h
 #align pSet.nonempty_of_nonempty_type PSet.nonempty_of_nonempty_type
+-/
 
+#print PSet.Equiv.eq /-
 /-- Two pre-sets are equivalent iff they have the same members. -/
 theorem Equiv.eq {x y : PSet} : Equiv x y ↔ toSet x = toSet y :=
   equiv_iff_mem.trans Set.ext_iff.symm
 #align pSet.equiv.eq PSet.Equiv.eq
+-/
 
 instance : Coe PSet (Set PSet) :=
   ⟨toSet⟩
 
+#print PSet.empty /-
 /-- The empty pre-set -/
 protected def empty : PSet :=
   ⟨_, PEmpty.elim⟩
 #align pSet.empty PSet.empty
+-/
 
 instance : EmptyCollection PSet :=
   ⟨PSet.empty⟩
@@ -397,31 +529,47 @@ instance : Inhabited PSet :=
 instance : IsEmpty (Type ∅) :=
   PEmpty.isEmpty
 
+#print PSet.not_mem_empty /-
 @[simp]
 theorem not_mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
   IsEmpty.exists_iff.1
 #align pSet.not_mem_empty PSet.not_mem_empty
+-/
 
+#print PSet.toSet_empty /-
 @[simp]
 theorem toSet_empty : toSet ∅ = ∅ := by simp [to_set]
 #align pSet.to_set_empty PSet.toSet_empty
+-/
 
+#print PSet.empty_subset /-
 @[simp]
 theorem empty_subset (x : PSet.{u}) : (∅ : PSet) ⊆ x := fun x => x.elim
 #align pSet.empty_subset PSet.empty_subset
+-/
 
+#print PSet.not_nonempty_empty /-
 @[simp]
 theorem not_nonempty_empty : ¬PSet.Nonempty ∅ := by simp [PSet.Nonempty]
 #align pSet.not_nonempty_empty PSet.not_nonempty_empty
+-/
 
+/- warning: pSet.equiv_empty -> PSet.equiv_empty is a dubious translation:
+lean 3 declaration is
+  forall (x : PSet.{u1}) [_inst_1 : IsEmpty.{succ u1} (PSet.Type.{u1} x)], PSet.Equiv.{u1, u2} x (EmptyCollection.emptyCollection.{succ u2} PSet.{u2} PSet.hasEmptyc.{u2})
+but is expected to have type
+  forall (x : PSet.{u2}) [_inst_1 : IsEmpty.{succ u2} (PSet.Type.{u2} x)], PSet.Equiv.{u2, u1} x (EmptyCollection.emptyCollection.{succ u1} PSet.{u1} PSet.instEmptyCollectionPSet.{u1})
+Case conversion may be inaccurate. Consider using '#align pSet.equiv_empty PSet.equiv_emptyₓ'. -/
 protected theorem equiv_empty (x : PSet) [IsEmpty x.type] : Equiv x ∅ :=
   PSet.equiv_of_isEmpty x _
 #align pSet.equiv_empty PSet.equiv_empty
 
+#print PSet.insert /-
 /-- Insert an element into a pre-set -/
 protected def insert (x y : PSet) : PSet :=
-  ⟨Option y.type, fun o => Option.rec x y.func o⟩
+  ⟨Option y.type, fun o => Option.rec x y.Func o⟩
 #align pSet.insert PSet.insert
+-/
 
 instance : Insert PSet PSet :=
   ⟨PSet.insert⟩
@@ -435,30 +583,39 @@ instance : IsLawfulSingleton PSet PSet :=
 instance (x y : PSet) : Inhabited (insert x y).type :=
   Option.inhabited _
 
+#print PSet.ofNat /-
 /-- The n-th von Neumann ordinal -/
 def ofNat : ℕ → PSet
   | 0 => ∅
   | n + 1 => insert (of_nat n) (of_nat n)
 #align pSet.of_nat PSet.ofNat
+-/
 
+#print PSet.omega /-
 /-- The von Neumann ordinal ω -/
 def omega : PSet :=
   ⟨ULift ℕ, fun n => ofNat n.down⟩
 #align pSet.omega PSet.omega
+-/
 
+#print PSet.sep /-
 /-- The pre-set separation operation `{x ∈ a | p x}` -/
 protected def sep (p : PSet → Prop) (x : PSet) : PSet :=
-  ⟨{ a // p (x.func a) }, fun y => x.func y.1⟩
+  ⟨{ a // p (x.Func a) }, fun y => x.Func y.1⟩
 #align pSet.sep PSet.sep
+-/
 
 instance : Sep PSet PSet :=
   ⟨PSet.sep⟩
 
+#print PSet.powerset /-
 /-- The pre-set powerset operator -/
 def powerset (x : PSet) : PSet :=
-  ⟨Set x.type, fun p => ⟨{ a // p a }, fun y => x.func y.1⟩⟩
+  ⟨Set x.type, fun p => ⟨{ a // p a }, fun y => x.Func y.1⟩⟩
 #align pSet.powerset PSet.powerset
+-/
 
+#print PSet.mem_powerset /-
 @[simp]
 theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
   | ⟨α, A⟩, ⟨β, B⟩ =>
@@ -468,21 +625,30 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
         ⟨⟨a, b, ba⟩, ba⟩,
         fun ⟨a, b, ba⟩ => ⟨b, ba⟩⟩⟩
 #align pSet.mem_powerset PSet.mem_powerset
+-/
 
+#print PSet.unionₛ /-
 /-- The pre-set union operator -/
-def sUnion (a : PSet) : PSet :=
-  ⟨Σx, (a.func x).type, fun ⟨x, y⟩ => (a.func x).func y⟩
-#align pSet.sUnion PSet.sUnion
+def unionₛ (a : PSet) : PSet :=
+  ⟨Σx, (a.Func x).type, fun ⟨x, y⟩ => (a.Func x).Func y⟩
+#align pSet.sUnion PSet.unionₛ
+-/
 
 -- mathport name: pSet.sUnion
-prefix:110 "⋃₀ " => PSet.sUnion
+prefix:110 "⋃₀ " => PSet.unionₛ
 
+/- warning: pSet.mem_sUnion -> PSet.mem_unionₛ is a dubious translation:
+lean 3 declaration is
+  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y (PSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y z)))
+but is expected to have type
+  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y (PSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => And (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} z x) (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y z)))
+Case conversion may be inaccurate. Consider using '#align pSet.mem_sUnion PSet.mem_unionₛₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
+theorem mem_unionₛ : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
-    ⟨fun ⟨⟨a, c⟩, (e : Equiv y ((A a).func c))⟩ =>
-      have : func (A a) c ∈ mk (A a).type (A a).func := Mem.mk (A a).func c
+    ⟨fun ⟨⟨a, c⟩, (e : Equiv y ((A a).Func c))⟩ =>
+      have : Func (A a) c ∈ mk (A a).type (A a).Func := Mem.mk (A a).Func c
       ⟨_, Mem.mk _ _, (Mem.congr_left e).2 (by rwa [eta] at this)⟩,
       fun ⟨⟨β, B⟩, ⟨a, (e : Equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ =>
       by
@@ -491,161 +657,215 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
         let ⟨βt, tβ⟩ := e
         let ⟨c, bc⟩ := βt b
         ⟨⟨a, c⟩, yb.trans bc⟩⟩
-#align pSet.mem_sUnion PSet.mem_sUnion
+#align pSet.mem_sUnion PSet.mem_unionₛ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PSet.toSet_unionₛ /-
 @[simp]
-theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
+theorem toSet_unionₛ (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
   by
   ext
   simp
-#align pSet.to_set_sUnion PSet.toSet_sUnion
+#align pSet.to_set_sUnion PSet.toSet_unionₛ
+-/
 
+#print PSet.image /-
 /-- The image of a function from pre-sets to pre-sets. -/
 def image (f : PSet.{u} → PSet.{u}) (x : PSet.{u}) : PSet :=
-  ⟨x.type, f ∘ x.func⟩
+  ⟨x.type, f ∘ x.Func⟩
 #align pSet.image PSet.image
+-/
 
+/- warning: pSet.mem_image -> PSet.mem_image is a dubious translation:
+lean 3 declaration is
+  forall {f : PSet.{u1} -> PSet.{u1}}, (forall {x : PSet.{u1}} {y : PSet.{u1}}, (PSet.Equiv.{u1, u1} x y) -> (PSet.Equiv.{u1, u1} (f x) (f y))) -> (forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y (PSet.image.{u1} f x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) => PSet.Equiv.{u1, u1} y (f z)))))
+but is expected to have type
+  forall {f : PSet.{u1} -> PSet.{u1}}, (forall (x : PSet.{u1}) (y : PSet.{u1}), (PSet.Equiv.{u1, u1} x y) -> (PSet.Equiv.{u1, u1} (f x) (f y))) -> (forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y (PSet.image.{u1} f x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => And (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} z x) (PSet.Equiv.{u1, u1} y (f z)))))
+Case conversion may be inaccurate. Consider using '#align pSet.mem_image PSet.mem_imageₓ'. -/
 theorem mem_image {f : PSet.{u} → PSet.{u}} (H : ∀ {x y}, Equiv x y → Equiv (f x) (f y)) :
     ∀ {x y : PSet.{u}}, y ∈ image f x ↔ ∃ z ∈ x, Equiv y (f z)
   | ⟨α, A⟩, y =>
     ⟨fun ⟨a, ya⟩ => ⟨A a, Mem.mk A a, ya⟩, fun ⟨z, ⟨a, za⟩, yz⟩ => ⟨a, yz.trans (H za)⟩⟩
 #align pSet.mem_image PSet.mem_image
 
+#print PSet.Lift /-
 /-- Universe lift operation -/
-protected def lift : PSet.{u} → PSet.{max u v}
+protected def Lift : PSet.{u} → PSet.{max u v}
   | ⟨α, A⟩ => ⟨ULift α, fun ⟨x⟩ => lift (A x)⟩
-#align pSet.lift PSet.lift
+#align pSet.lift PSet.Lift
+-/
 
+#print PSet.embed /-
 -- intended to be used with explicit universe parameters
 /-- Embedding of one universe in another -/
 @[nolint check_univs]
 def embed : PSet.{max (u + 1) v} :=
-  ⟨ULift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.lift.{u, max (u + 1) v} x⟩
+  ⟨ULift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.Lift.{u, max (u + 1) v} x⟩
 #align pSet.embed PSet.embed
+-/
 
-theorem lift_mem_embed : ∀ x : PSet.{u}, PSet.lift.{u, max (u + 1) v} x ∈ embed.{u, v} := fun x =>
+#print PSet.lift_mem_embed /-
+theorem lift_mem_embed : ∀ x : PSet.{u}, PSet.Lift.{u, max (u + 1) v} x ∈ embed.{u, v} := fun x =>
   ⟨⟨x⟩, Equiv.rfl⟩
 #align pSet.lift_mem_embed PSet.lift_mem_embed
+-/
 
+#print PSet.Arity.Equiv /-
 /-- Function equivalence is defined so that `f ~ g` iff `∀ x y, x ~ y → f x ~ g y`. This extends to
 equivalence of `n`-ary functions. -/
 def Arity.Equiv : ∀ {n}, Arity PSet.{u} n → Arity PSet.{u} n → Prop
   | 0, a, b => Equiv a b
   | n + 1, a, b => ∀ x y, Equiv x y → arity.equiv (a x) (b y)
 #align pSet.arity.equiv PSet.Arity.Equiv
+-/
 
-theorem Arity.equiv_const {a : PSet.{u}} : ∀ n, Arity.Equiv (Arity.const a n) (Arity.const a n)
+#print PSet.Arity.equiv_const /-
+theorem Arity.equiv_const {a : PSet.{u}} : ∀ n, Arity.Equiv (Arity.Const a n) (Arity.Const a n)
   | 0 => Equiv.rfl
   | n + 1 => fun x y h => arity.equiv_const _
 #align pSet.arity.equiv_const PSet.Arity.equiv_const
+-/
 
+#print PSet.Resp /-
 /-- `resp n` is the collection of n-ary functions on `pSet` that respect
   equivalence, i.e. when the inputs are equivalent the output is as well. -/
 def Resp (n) :=
   { x : Arity PSet.{u} n // Arity.Equiv x x }
 #align pSet.resp PSet.Resp
+-/
 
+#print PSet.Resp.inhabited /-
 instance Resp.inhabited {n} : Inhabited (Resp n) :=
-  ⟨⟨Arity.const default _, Arity.equiv_const _⟩⟩
+  ⟨⟨Arity.Const default _, Arity.equiv_const _⟩⟩
 #align pSet.resp.inhabited PSet.Resp.inhabited
+-/
 
+#print PSet.Resp.f /-
 /-- The `n`-ary image of a `(n + 1)`-ary function respecting equivalence as a function respecting
 equivalence. -/
 def Resp.f {n} (f : Resp (n + 1)) (x : PSet) : Resp n :=
   ⟨f.1 x, f.2 _ _ <| Equiv.refl x⟩
 #align pSet.resp.f PSet.Resp.f
+-/
 
+#print PSet.Resp.Equiv /-
 /-- Function equivalence for functions respecting equivalence. See `pSet.arity.equiv`. -/
 def Resp.Equiv {n} (a b : Resp n) : Prop :=
   Arity.Equiv a.1 b.1
 #align pSet.resp.equiv PSet.Resp.Equiv
+-/
 
+#print PSet.Resp.Equiv.refl /-
 protected theorem Resp.Equiv.refl {n} (a : Resp n) : Resp.Equiv a a :=
   a.2
 #align pSet.resp.equiv.refl PSet.Resp.Equiv.refl
+-/
 
+#print PSet.Resp.Equiv.euc /-
 protected theorem Resp.Equiv.euc :
     ∀ {n} {a b c : Resp n}, Resp.Equiv a b → Resp.Equiv c b → Resp.Equiv a c
   | 0, a, b, c, hab, hcb => Equiv.euc hab hcb
   | n + 1, a, b, c, hab, hcb => fun x y h =>
     @resp.equiv.euc n (a.f x) (b.f y) (c.f y) (hab _ _ h) (hcb _ _ <| Equiv.refl y)
 #align pSet.resp.equiv.euc PSet.Resp.Equiv.euc
+-/
 
+#print PSet.Resp.Equiv.symm /-
 protected theorem Resp.Equiv.symm {n} {a b : Resp n} : Resp.Equiv a b → Resp.Equiv b a :=
   (Resp.Equiv.refl b).euc
 #align pSet.resp.equiv.symm PSet.Resp.Equiv.symm
+-/
 
+#print PSet.Resp.Equiv.trans /-
 protected theorem Resp.Equiv.trans {n} {x y z : Resp n} (h1 : Resp.Equiv x y)
     (h2 : Resp.Equiv y z) : Resp.Equiv x z :=
   h1.euc h2.symm
 #align pSet.resp.equiv.trans PSet.Resp.Equiv.trans
+-/
 
+#print PSet.Resp.setoid /-
 instance Resp.setoid {n} : Setoid (Resp n) :=
   ⟨Resp.Equiv, Resp.Equiv.refl, fun x y => Resp.Equiv.symm, fun x y z => Resp.Equiv.trans⟩
 #align pSet.resp.setoid PSet.Resp.setoid
+-/
 
 end PSet
 
+#print ZFSet /-
 /-- The ZFC universe of sets consists of the type of pre-sets,
   quotiented by extensional equivalence. -/
-def SetCat : Type (u + 1) :=
+def ZFSet : Type (u + 1) :=
   Quotient PSet.setoid.{u}
-#align Set SetCat
+#align Set ZFSet
+-/
 
 namespace PSet
 
 namespace Resp
 
+#print PSet.Resp.EvalAux /-
 /-- Helper function for `pSet.eval`. -/
-def evalAux :
-    ∀ {n}, { f : Resp n → Arity SetCat.{u} n // ∀ a b : Resp n, Resp.Equiv a b → f a = f b }
+def EvalAux :
+    ∀ {n}, { f : Resp n → Arity ZFSet.{u} n // ∀ a b : Resp n, Resp.Equiv a b → f a = f b }
   | 0 => ⟨fun a => ⟦a.1⟧, fun a b h => Quotient.sound h⟩
   | n + 1 =>
-    let F : Resp (n + 1) → Arity SetCat (n + 1) := fun a =>
+    let F : Resp (n + 1) → Arity ZFSet (n + 1) := fun a =>
       @Quotient.lift _ _ PSet.setoid (fun x => eval_aux.1 (a.f x)) fun b c h =>
         eval_aux.2 _ _ (a.2 _ _ h)
     ⟨F, fun b c h =>
       funext <|
         @Quotient.ind _ _ (fun q => F b q = F c q) fun z =>
           eval_aux.2 (Resp.f b z) (Resp.f c z) (h _ _ (PSet.Equiv.refl z))⟩
-#align pSet.resp.eval_aux PSet.Resp.evalAux
+#align pSet.resp.eval_aux PSet.Resp.EvalAux
+-/
 
+#print PSet.Resp.eval /-
 /-- An equivalence-respecting function yields an n-ary ZFC set function. -/
-def eval (n) : Resp n → Arity SetCat.{u} n :=
-  evalAux.1
+def eval (n) : Resp n → Arity ZFSet.{u} n :=
+  EvalAux.1
 #align pSet.resp.eval PSet.Resp.eval
+-/
 
-theorem eval_val {n f x} : (@eval (n + 1) f : SetCat → Arity SetCat n) ⟦x⟧ = eval n (Resp.f f x) :=
+#print PSet.Resp.eval_val /-
+theorem eval_val {n f x} : (@eval (n + 1) f : ZFSet → Arity ZFSet n) ⟦x⟧ = eval n (Resp.f f x) :=
   rfl
 #align pSet.resp.eval_val PSet.Resp.eval_val
+-/
 
 end Resp
 
+#print PSet.Definable /-
 /-- A set function is "definable" if it is the image of some n-ary pre-set
   function. This isn't exactly definability, but is useful as a sufficient
   condition for functions that have a computable image. -/
-class inductive Definable (n) : Arity SetCat.{u} n → Type (u + 1)
+class inductive Definable (n) : Arity ZFSet.{u} n → Type (u + 1)
   | mk (f) : definable (Resp.eval n f)
 #align pSet.definable PSet.Definable
+-/
 
 attribute [instance] definable.mk
 
+#print PSet.Definable.EqMk /-
 /-- The evaluation of a function respecting equivalence is definable, by that same function. -/
-def Definable.eqMk {n} (f) : ∀ {s : Arity SetCat.{u} n} (H : Resp.eval _ f = s), Definable n s
+def Definable.EqMk {n} (f) : ∀ {s : Arity ZFSet.{u} n} (H : Resp.eval _ f = s), Definable n s
   | _, rfl => ⟨f⟩
-#align pSet.definable.eq_mk PSet.Definable.eqMk
+#align pSet.definable.eq_mk PSet.Definable.EqMk
+-/
 
+#print PSet.Definable.Resp /-
 /-- Turns a definable function into a function that respects equivalence. -/
-def Definable.resp {n} : ∀ (s : Arity SetCat.{u} n) [Definable n s], Resp n
+def Definable.Resp {n} : ∀ (s : Arity ZFSet.{u} n) [Definable n s], Resp n
   | _, ⟨f⟩ => f
-#align pSet.definable.resp PSet.Definable.resp
+#align pSet.definable.resp PSet.Definable.Resp
+-/
 
+#print PSet.Definable.eq /-
 theorem Definable.eq {n} :
-    ∀ (s : Arity SetCat.{u} n) [H : Definable n s], (@Definable.resp n s H).eval _ = s
+    ∀ (s : Arity ZFSet.{u} n) [H : Definable n s], (@Definable.Resp n s H).eval _ = s
   | _, ⟨f⟩ => rfl
 #align pSet.definable.eq PSet.Definable.eq
+-/
 
 end PSet
 
@@ -653,12 +873,13 @@ namespace Classical
 
 open PSet
 
+#print Classical.AllDefinable /-
 /-- All functions are classically definable. -/
-noncomputable def allDefinable : ∀ {n} (F : Arity SetCat.{u} n), Definable n F
+noncomputable def AllDefinable : ∀ {n} (F : Arity ZFSet.{u} n), Definable n F
   | 0, F =>
     let p := @Quotient.exists_rep PSet _ F
-    Definable.eqMk ⟨choose p, Equiv.rfl⟩ (choose_spec p)
-  | n + 1, (F : Arity SetCat.{u} (n + 1)) =>
+    Definable.EqMk ⟨choose p, Equiv.rfl⟩ (choose_spec p)
+  | n + 1, (F : Arity ZFSet.{u} (n + 1)) =>
     by
     have I := fun x => all_definable (F x)
     refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
@@ -669,72 +890,96 @@ noncomputable def allDefinable : ∀ {n} (F : Arity SetCat.{u} n), Definable n F
     refine' funext fun q => Quotient.inductionOn q fun x => _
     simp_rw [resp.eval_val, resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
     exact @definable.eq _ (F ⟦x⟧) (I ⟦x⟧)
-#align classical.all_definable Classical.allDefinable
+#align classical.all_definable Classical.AllDefinable
+-/
 
 end Classical
 
-namespace SetCat
+namespace ZFSet
 
 open PSet
 
+#print ZFSet.mk /-
 /-- Turns a pre-set into a ZFC set. -/
-def mk : PSet → SetCat :=
+def mk : PSet → ZFSet :=
   Quotient.mk'
-#align Set.mk SetCat.mk
+#align Set.mk ZFSet.mk
+-/
 
+#print ZFSet.mk_eq /-
 @[simp]
-theorem mk'_eq (x : PSet) : @Eq SetCat ⟦x⟧ (mk x) :=
+theorem mk_eq (x : PSet) : @Eq ZFSet ⟦x⟧ (mk x) :=
   rfl
-#align Set.mk_eq SetCat.mk'_eq
+#align Set.mk_eq ZFSet.mk_eq
+-/
 
+#print ZFSet.mk_out /-
 @[simp]
-theorem mk_out : ∀ x : SetCat, mk x.out = x :=
+theorem mk_out : ∀ x : ZFSet, mk x.out = x :=
   Quotient.out_eq
-#align Set.mk_out SetCat.mk_out
+#align Set.mk_out ZFSet.mk_out
+-/
 
+#print ZFSet.eq /-
 theorem eq {x y : PSet} : mk x = mk y ↔ Equiv x y :=
   Quotient.eq'
-#align Set.eq SetCat.eq
+#align Set.eq ZFSet.eq
+-/
 
+#print ZFSet.sound /-
 theorem sound {x y : PSet} (h : PSet.Equiv x y) : mk x = mk y :=
   Quotient.sound h
-#align Set.sound SetCat.sound
+#align Set.sound ZFSet.sound
+-/
 
+#print ZFSet.exact /-
 theorem exact {x y : PSet} : mk x = mk y → PSet.Equiv x y :=
   Quotient.exact
-#align Set.exact SetCat.exact
+#align Set.exact ZFSet.exact
+-/
 
+#print ZFSet.eval_mk /-
 @[simp]
 theorem eval_mk {n f x} :
-    (@Resp.eval (n + 1) f : SetCat → Arity SetCat n) (mk x) = Resp.eval n (Resp.f f x) :=
+    (@Resp.eval (n + 1) f : ZFSet → Arity ZFSet n) (mk x) = Resp.eval n (Resp.f f x) :=
   rfl
-#align Set.eval_mk SetCat.eval_mk
+#align Set.eval_mk ZFSet.eval_mk
+-/
 
+#print ZFSet.Mem /-
 /-- The membership relation for ZFC sets is inherited from the membership relation for pre-sets. -/
-protected def Mem : SetCat → SetCat → Prop :=
+protected def Mem : ZFSet → ZFSet → Prop :=
   Quotient.lift₂ PSet.Mem fun x y x' y' hx hy =>
     propext ((Mem.congr_left hx).trans (Mem.congr_right hy))
-#align Set.mem SetCat.Mem
+#align Set.mem ZFSet.Mem
+-/
 
-instance : Membership SetCat SetCat :=
-  ⟨SetCat.Mem⟩
+instance : Membership ZFSet ZFSet :=
+  ⟨ZFSet.Mem⟩
 
+#print ZFSet.mk_mem_iff /-
 @[simp]
 theorem mk_mem_iff {x y : PSet} : mk x ∈ mk y ↔ x ∈ y :=
   Iff.rfl
-#align Set.mk_mem_iff SetCat.mk_mem_iff
+#align Set.mk_mem_iff ZFSet.mk_mem_iff
+-/
 
+#print ZFSet.toSet /-
 /-- Convert a ZFC set into a `set` of ZFC sets -/
-def toSet (u : SetCat.{u}) : Set SetCat.{u} :=
+def toSet (u : ZFSet.{u}) : Set ZFSet.{u} :=
   { x | x ∈ u }
-#align Set.to_set SetCat.toSet
+#align Set.to_set ZFSet.toSet
+-/
 
+#print ZFSet.mem_toSet /-
 @[simp]
-theorem mem_toSet (a u : SetCat.{u}) : a ∈ u.toSet ↔ a ∈ u :=
+theorem mem_toSet (a u : ZFSet.{u}) : a ∈ u.toSet ↔ a ∈ u :=
   Iff.rfl
-#align Set.mem_to_set SetCat.mem_toSet
+#align Set.mem_to_set ZFSet.mem_toSet
+-/
 
-instance small_toSet (x : SetCat.{u}) : Small.{u} x.toSet :=
+#print ZFSet.small_toSet /-
+instance small_toSet (x : ZFSet.{u}) : Small.{u} x.toSet :=
   Quotient.inductionOn x fun a =>
     by
     let f : a.type → (mk a).toSet := fun i => ⟨mk <| a.func i, func_mem a i⟩
@@ -743,45 +988,61 @@ instance small_toSet (x : SetCat.{u}) : Small.{u} x.toSet :=
     induction y using Quotient.inductionOn
     cases' hb with i h
     exact ⟨i, Subtype.coe_injective (Quotient.sound h.symm)⟩
-#align Set.small_to_set SetCat.small_toSet
+#align Set.small_to_set ZFSet.small_toSet
+-/
 
+#print ZFSet.Nonempty /-
 /-- A nonempty set is one that contains some element. -/
-protected def Nonempty (u : SetCat) : Prop :=
+protected def Nonempty (u : ZFSet) : Prop :=
   u.toSet.Nonempty
-#align Set.nonempty SetCat.Nonempty
+#align Set.nonempty ZFSet.Nonempty
+-/
 
-theorem nonempty_def (u : SetCat) : u.Nonempty ↔ ∃ x, x ∈ u :=
+#print ZFSet.nonempty_def /-
+theorem nonempty_def (u : ZFSet) : u.Nonempty ↔ ∃ x, x ∈ u :=
   Iff.rfl
-#align Set.nonempty_def SetCat.nonempty_def
+#align Set.nonempty_def ZFSet.nonempty_def
+-/
 
-theorem nonempty_of_mem {x u : SetCat} (h : x ∈ u) : u.Nonempty :=
+#print ZFSet.nonempty_of_mem /-
+theorem nonempty_of_mem {x u : ZFSet} (h : x ∈ u) : u.Nonempty :=
   ⟨x, h⟩
-#align Set.nonempty_of_mem SetCat.nonempty_of_mem
+#align Set.nonempty_of_mem ZFSet.nonempty_of_mem
+-/
 
+#print ZFSet.nonempty_toSet_iff /-
 @[simp]
-theorem nonempty_toSet_iff {u : SetCat} : u.toSet.Nonempty ↔ u.Nonempty :=
+theorem nonempty_toSet_iff {u : ZFSet} : u.toSet.Nonempty ↔ u.Nonempty :=
   Iff.rfl
-#align Set.nonempty_to_set_iff SetCat.nonempty_toSet_iff
+#align Set.nonempty_to_set_iff ZFSet.nonempty_toSet_iff
+-/
 
+#print ZFSet.Subset /-
 /-- `x ⊆ y` as ZFC sets means that all members of `x` are members of `y`. -/
-protected def Subset (x y : SetCat.{u}) :=
+protected def Subset (x y : ZFSet.{u}) :=
   ∀ ⦃z⦄, z ∈ x → z ∈ y
-#align Set.subset SetCat.Subset
+#align Set.subset ZFSet.Subset
+-/
 
-instance hasSubset : HasSubset SetCat :=
-  ⟨SetCat.Subset⟩
-#align Set.has_subset SetCat.hasSubset
+#print ZFSet.hasSubset /-
+instance hasSubset : HasSubset ZFSet :=
+  ⟨ZFSet.Subset⟩
+#align Set.has_subset ZFSet.hasSubset
+-/
 
-theorem subset_def {x y : SetCat.{u}} : x ⊆ y ↔ ∀ ⦃z⦄, z ∈ x → z ∈ y :=
+#print ZFSet.subset_def /-
+theorem subset_def {x y : ZFSet.{u}} : x ⊆ y ↔ ∀ ⦃z⦄, z ∈ x → z ∈ y :=
   Iff.rfl
-#align Set.subset_def SetCat.subset_def
+#align Set.subset_def ZFSet.subset_def
+-/
 
-instance : IsRefl SetCat (· ⊆ ·) :=
+instance : IsRefl ZFSet (· ⊆ ·) :=
   ⟨fun x a => id⟩
 
-instance : IsTrans SetCat (· ⊆ ·) :=
+instance : IsTrans ZFSet (· ⊆ ·) :=
   ⟨fun x y z hxy hyz a ha => hyz (hxy ha)⟩
 
+#print ZFSet.subset_iff /-
 @[simp]
 theorem subset_iff : ∀ {x y : PSet}, mk x ⊆ mk y ↔ x ⊆ y
   | ⟨α, A⟩, ⟨β, B⟩ =>
@@ -789,62 +1050,84 @@ theorem subset_iff : ∀ {x y : PSet}, mk x ⊆ mk y ↔ x ⊆ y
       Quotient.inductionOn z fun z ⟨a, za⟩ =>
         let ⟨b, ab⟩ := h a
         ⟨b, za.trans ab⟩⟩
-#align Set.subset_iff SetCat.subset_iff
+#align Set.subset_iff ZFSet.subset_iff
+-/
 
+#print ZFSet.toSet_subset_iff /-
 @[simp]
-theorem toSet_subset_iff {x y : SetCat} : x.toSet ⊆ y.toSet ↔ x ⊆ y := by
+theorem toSet_subset_iff {x y : ZFSet} : x.toSet ⊆ y.toSet ↔ x ⊆ y := by
   simp [subset_def, Set.subset_def]
-#align Set.to_set_subset_iff SetCat.toSet_subset_iff
+#align Set.to_set_subset_iff ZFSet.toSet_subset_iff
+-/
 
+#print ZFSet.ext /-
 @[ext]
-theorem ext {x y : SetCat.{u}} : (∀ z : SetCat.{u}, z ∈ x ↔ z ∈ y) → x = y :=
+theorem ext {x y : ZFSet.{u}} : (∀ z : ZFSet.{u}, z ∈ x ↔ z ∈ y) → x = y :=
   Quotient.induction_on₂ x y fun u v h => Quotient.sound (Mem.ext fun w => h ⟦w⟧)
-#align Set.ext SetCat.ext
+#align Set.ext ZFSet.ext
+-/
 
-theorem ext_iff {x y : SetCat.{u}} : x = y ↔ ∀ z : SetCat.{u}, z ∈ x ↔ z ∈ y :=
+#print ZFSet.ext_iff /-
+theorem ext_iff {x y : ZFSet.{u}} : x = y ↔ ∀ z : ZFSet.{u}, z ∈ x ↔ z ∈ y :=
   ⟨fun h => by simp [h], ext⟩
-#align Set.ext_iff SetCat.ext_iff
+#align Set.ext_iff ZFSet.ext_iff
+-/
 
+#print ZFSet.toSet_injective /-
 theorem toSet_injective : Function.Injective toSet := fun x y h => ext <| Set.ext_iff.1 h
-#align Set.to_set_injective SetCat.toSet_injective
+#align Set.to_set_injective ZFSet.toSet_injective
+-/
 
+#print ZFSet.toSet_inj /-
 @[simp]
-theorem toSet_inj {x y : SetCat} : x.toSet = y.toSet ↔ x = y :=
+theorem toSet_inj {x y : ZFSet} : x.toSet = y.toSet ↔ x = y :=
   toSet_injective.eq_iff
-#align Set.to_set_inj SetCat.toSet_inj
+#align Set.to_set_inj ZFSet.toSet_inj
+-/
 
-instance : IsAntisymm SetCat (· ⊆ ·) :=
+instance : IsAntisymm ZFSet (· ⊆ ·) :=
   ⟨fun a b hab hba => ext fun c => ⟨@hab c, @hba c⟩⟩
 
+#print ZFSet.empty /-
 /-- The empty ZFC set -/
-protected def empty : SetCat :=
+protected def empty : ZFSet :=
   mk ∅
-#align Set.empty SetCat.empty
+#align Set.empty ZFSet.empty
+-/
 
-instance : EmptyCollection SetCat :=
-  ⟨SetCat.empty⟩
+instance : EmptyCollection ZFSet :=
+  ⟨ZFSet.empty⟩
 
-instance : Inhabited SetCat :=
+instance : Inhabited ZFSet :=
   ⟨∅⟩
 
+#print ZFSet.not_mem_empty /-
 @[simp]
-theorem not_mem_empty (x) : x ∉ (∅ : SetCat.{u}) :=
+theorem not_mem_empty (x) : x ∉ (∅ : ZFSet.{u}) :=
   Quotient.inductionOn x PSet.not_mem_empty
-#align Set.not_mem_empty SetCat.not_mem_empty
+#align Set.not_mem_empty ZFSet.not_mem_empty
+-/
 
+#print ZFSet.toSet_empty /-
 @[simp]
 theorem toSet_empty : toSet ∅ = ∅ := by simp [to_set]
-#align Set.to_set_empty SetCat.toSet_empty
+#align Set.to_set_empty ZFSet.toSet_empty
+-/
 
+#print ZFSet.empty_subset /-
 @[simp]
-theorem empty_subset (x : SetCat.{u}) : (∅ : SetCat) ⊆ x :=
+theorem empty_subset (x : ZFSet.{u}) : (∅ : ZFSet) ⊆ x :=
   Quotient.inductionOn x fun y => subset_iff.2 <| PSet.empty_subset y
-#align Set.empty_subset SetCat.empty_subset
+#align Set.empty_subset ZFSet.empty_subset
+-/
 
+#print ZFSet.not_nonempty_empty /-
 @[simp]
-theorem not_nonempty_empty : ¬SetCat.Nonempty ∅ := by simp [SetCat.Nonempty]
-#align Set.not_nonempty_empty SetCat.not_nonempty_empty
+theorem not_nonempty_empty : ¬ZFSet.Nonempty ∅ := by simp [ZFSet.Nonempty]
+#align Set.not_nonempty_empty ZFSet.not_nonempty_empty
+-/
 
+#print ZFSet.nonempty_mk_iff /-
 @[simp]
 theorem nonempty_mk_iff {x : PSet} : (mk x).Nonempty ↔ x.Nonempty :=
   by
@@ -852,22 +1135,28 @@ theorem nonempty_mk_iff {x : PSet} : (mk x).Nonempty ↔ x.Nonempty :=
   rintro ⟨a, h⟩
   induction a using Quotient.inductionOn
   exact ⟨a, h⟩
-#align Set.nonempty_mk_iff SetCat.nonempty_mk_iff
+#align Set.nonempty_mk_iff ZFSet.nonempty_mk_iff
+-/
 
-theorem eq_empty (x : SetCat.{u}) : x = ∅ ↔ ∀ y : SetCat.{u}, y ∉ x :=
+#print ZFSet.eq_empty /-
+theorem eq_empty (x : ZFSet.{u}) : x = ∅ ↔ ∀ y : ZFSet.{u}, y ∉ x :=
   by
   rw [ext_iff]
   simp
-#align Set.eq_empty SetCat.eq_empty
+#align Set.eq_empty ZFSet.eq_empty
+-/
 
-theorem eq_empty_or_nonempty (u : SetCat) : u = ∅ ∨ u.Nonempty :=
+#print ZFSet.eq_empty_or_nonempty /-
+theorem eq_empty_or_nonempty (u : ZFSet) : u = ∅ ∨ u.Nonempty :=
   by
   rw [eq_empty, ← not_exists]
   apply em'
-#align Set.eq_empty_or_nonempty SetCat.eq_empty_or_nonempty
+#align Set.eq_empty_or_nonempty ZFSet.eq_empty_or_nonempty
+-/
 
+#print ZFSet.Insert /-
 /-- `insert x y` is the set `{x} ∪ y` -/
-protected def insert : SetCat → SetCat → SetCat :=
+protected def Insert : ZFSet → ZFSet → ZFSet :=
   Resp.eval 2
     ⟨PSet.insert, fun u v uv ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
       ⟨fun o =>
@@ -882,19 +1171,21 @@ protected def insert : SetCat → SetCat → SetCat :=
           let ⟨a, ha⟩ := βα b
           ⟨some a, ha⟩
         | none => ⟨none, uv⟩⟩⟩
-#align Set.insert SetCat.insert
+#align Set.insert ZFSet.Insert
+-/
 
-instance : Insert SetCat SetCat :=
-  ⟨SetCat.insert⟩
+instance : Insert ZFSet ZFSet :=
+  ⟨ZFSet.Insert⟩
 
-instance : Singleton SetCat SetCat :=
+instance : Singleton ZFSet ZFSet :=
   ⟨fun x => insert x ∅⟩
 
-instance : IsLawfulSingleton SetCat SetCat :=
+instance : IsLawfulSingleton ZFSet ZFSet :=
   ⟨fun x => rfl⟩
 
+#print ZFSet.mem_insert_iff /-
 @[simp]
-theorem mem_insert_iff {x y z : SetCat.{u}} : x ∈ insert y z ↔ x = y ∨ x ∈ z :=
+theorem mem_insert_iff {x y z : ZFSet.{u}} : x ∈ insert y z ↔ x = y ∨ x ∈ z :=
   Quotient.induction_on₃ x y z fun x y ⟨α, A⟩ =>
     show (x ∈ PSet.mk (Option α) fun o => Option.rec y A o) ↔ mk x = mk y ∨ x ∈ PSet.mk α A from
       ⟨fun m =>
@@ -905,103 +1196,132 @@ theorem mem_insert_iff {x y z : SetCat.{u}} : x ∈ insert y z ↔ x = y ∨ x �
         match m with
         | Or.inr ⟨a, ha⟩ => ⟨some a, ha⟩
         | Or.inl h => ⟨none, Quotient.exact h⟩⟩
-#align Set.mem_insert_iff SetCat.mem_insert_iff
+#align Set.mem_insert_iff ZFSet.mem_insert_iff
+-/
 
-theorem mem_insert (x y : SetCat) : x ∈ insert x y :=
+#print ZFSet.mem_insert /-
+theorem mem_insert (x y : ZFSet) : x ∈ insert x y :=
   mem_insert_iff.2 <| Or.inl rfl
-#align Set.mem_insert SetCat.mem_insert
+#align Set.mem_insert ZFSet.mem_insert
+-/
 
-theorem mem_insert_of_mem {y z : SetCat} (x) (h : z ∈ y) : z ∈ insert x y :=
+#print ZFSet.mem_insert_of_mem /-
+theorem mem_insert_of_mem {y z : ZFSet} (x) (h : z ∈ y) : z ∈ insert x y :=
   mem_insert_iff.2 <| Or.inr h
-#align Set.mem_insert_of_mem SetCat.mem_insert_of_mem
+#align Set.mem_insert_of_mem ZFSet.mem_insert_of_mem
+-/
 
+#print ZFSet.toSet_insert /-
 @[simp]
-theorem toSet_insert (x y : SetCat) : (insert x y).toSet = insert x y.toSet :=
+theorem toSet_insert (x y : ZFSet) : (insert x y).toSet = insert x y.toSet :=
   by
   ext
   simp
-#align Set.to_set_insert SetCat.toSet_insert
+#align Set.to_set_insert ZFSet.toSet_insert
+-/
 
+#print ZFSet.mem_singleton /-
 @[simp]
-theorem mem_singleton {x y : SetCat.{u}} : x ∈ @singleton SetCat.{u} SetCat.{u} _ y ↔ x = y :=
+theorem mem_singleton {x y : ZFSet.{u}} : x ∈ @singleton ZFSet.{u} ZFSet.{u} _ y ↔ x = y :=
   Iff.trans mem_insert_iff
     ⟨fun o => Or.ndrec (fun h => h) (fun n => absurd n (not_mem_empty _)) o, Or.inl⟩
-#align Set.mem_singleton SetCat.mem_singleton
+#align Set.mem_singleton ZFSet.mem_singleton
+-/
 
+#print ZFSet.toSet_singleton /-
 @[simp]
-theorem toSet_singleton (x : SetCat) : ({x} : SetCat).toSet = {x} :=
+theorem toSet_singleton (x : ZFSet) : ({x} : ZFSet).toSet = {x} :=
   by
   ext
   simp
-#align Set.to_set_singleton SetCat.toSet_singleton
+#align Set.to_set_singleton ZFSet.toSet_singleton
+-/
 
-theorem insert_nonempty (u v : SetCat) : (insert u v).Nonempty :=
+#print ZFSet.insert_nonempty /-
+theorem insert_nonempty (u v : ZFSet) : (insert u v).Nonempty :=
   ⟨u, mem_insert u v⟩
-#align Set.insert_nonempty SetCat.insert_nonempty
+#align Set.insert_nonempty ZFSet.insert_nonempty
+-/
 
-theorem singleton_nonempty (u : SetCat) : SetCat.Nonempty {u} :=
+#print ZFSet.singleton_nonempty /-
+theorem singleton_nonempty (u : ZFSet) : ZFSet.Nonempty {u} :=
   insert_nonempty u ∅
-#align Set.singleton_nonempty SetCat.singleton_nonempty
+#align Set.singleton_nonempty ZFSet.singleton_nonempty
+-/
 
+#print ZFSet.mem_pair /-
 @[simp]
-theorem mem_pair {x y z : SetCat.{u}} : x ∈ ({y, z} : SetCat) ↔ x = y ∨ x = z :=
+theorem mem_pair {x y z : ZFSet.{u}} : x ∈ ({y, z} : ZFSet) ↔ x = y ∨ x = z :=
   Iff.trans mem_insert_iff <| or_congr Iff.rfl mem_singleton
-#align Set.mem_pair SetCat.mem_pair
+#align Set.mem_pair ZFSet.mem_pair
+-/
 
+#print ZFSet.omega /-
 /-- `omega` is the first infinite von Neumann ordinal -/
-def omega : SetCat :=
+def omega : ZFSet :=
   mk omega
-#align Set.omega SetCat.omega
+#align Set.omega ZFSet.omega
+-/
 
+#print ZFSet.omega_zero /-
 @[simp]
 theorem omega_zero : ∅ ∈ omega :=
   ⟨⟨0⟩, Equiv.rfl⟩
-#align Set.omega_zero SetCat.omega_zero
+#align Set.omega_zero ZFSet.omega_zero
+-/
 
+#print ZFSet.omega_succ /-
 @[simp]
 theorem omega_succ {n} : n ∈ omega.{u} → insert n n ∈ omega.{u} :=
   Quotient.inductionOn n fun x ⟨⟨n⟩, h⟩ =>
     ⟨⟨n + 1⟩,
-      SetCat.exact <|
-        show insert (mk x) (mk x) = insert (mk <| ofNat n) (mk <| ofNat n) by rw [SetCat.sound h];
+      ZFSet.exact <|
+        show insert (mk x) (mk x) = insert (mk <| ofNat n) (mk <| ofNat n) by rw [ZFSet.sound h];
           rfl⟩
-#align Set.omega_succ SetCat.omega_succ
+#align Set.omega_succ ZFSet.omega_succ
+-/
 
+#print ZFSet.sep /-
 /-- `{x ∈ a | p x}` is the set of elements in `a` satisfying `p` -/
-protected def sep (p : SetCat → Prop) : SetCat → SetCat :=
+protected def sep (p : ZFSet → Prop) : ZFSet → ZFSet :=
   Resp.eval 1
     ⟨PSet.sep fun y => p (mk y), fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
       ⟨fun ⟨a, pa⟩ =>
         let ⟨b, hb⟩ := αβ a
-        ⟨⟨b, by rwa [mk_func, ← SetCat.sound hb]⟩, hb⟩,
+        ⟨⟨b, by rwa [mk_func, ← ZFSet.sound hb]⟩, hb⟩,
         fun ⟨b, pb⟩ =>
         let ⟨a, ha⟩ := βα b
-        ⟨⟨a, by rwa [mk_func, SetCat.sound ha]⟩, ha⟩⟩⟩
-#align Set.sep SetCat.sep
+        ⟨⟨a, by rwa [mk_func, ZFSet.sound ha]⟩, ha⟩⟩⟩
+#align Set.sep ZFSet.sep
+-/
 
-instance : Sep SetCat SetCat :=
-  ⟨SetCat.sep⟩
+instance : Sep ZFSet ZFSet :=
+  ⟨ZFSet.sep⟩
 
+#print ZFSet.mem_sep /-
 @[simp]
-theorem mem_sep {p : SetCat.{u} → Prop} {x y : SetCat.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
+theorem mem_sep {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
   Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
     ⟨fun ⟨⟨a, pa⟩, h⟩ => ⟨⟨a, h⟩, by rwa [@Quotient.sound PSet _ _ _ h]⟩, fun ⟨⟨a, h⟩, pa⟩ =>
       ⟨⟨a, by
           rw [mk_func] at h
-          rwa [mk_func, ← SetCat.sound h]⟩,
+          rwa [mk_func, ← ZFSet.sound h]⟩,
         h⟩⟩
-#align Set.mem_sep SetCat.mem_sep
+#align Set.mem_sep ZFSet.mem_sep
+-/
 
+#print ZFSet.toSet_sep /-
 @[simp]
-theorem toSet_sep (a : SetCat) (p : SetCat → Prop) :
-    { x ∈ a | p x }.toSet = { x ∈ a.toSet | p x } :=
+theorem toSet_sep (a : ZFSet) (p : ZFSet → Prop) : { x ∈ a | p x }.toSet = { x ∈ a.toSet | p x } :=
   by
   ext
   simp
-#align Set.to_set_sep SetCat.toSet_sep
+#align Set.to_set_sep ZFSet.toSet_sep
+-/
 
+#print ZFSet.powerset /-
 /-- The powerset operation, the collection of subsets of a ZFC set -/
-def powerset : SetCat → SetCat :=
+def powerset : ZFSet → ZFSet :=
   Resp.eval 1
     ⟨powerset, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
       ⟨fun p =>
@@ -1013,16 +1333,20 @@ def powerset : SetCat → SetCat :=
         ⟨{ a | ∃ b, q b ∧ Equiv (A a) (B b) }, fun ⟨a, b, qb, ab⟩ => ⟨⟨b, qb⟩, ab⟩, fun ⟨b, qb⟩ =>
           let ⟨a, ab⟩ := βα b
           ⟨⟨a, b, qb, ab⟩, ab⟩⟩⟩⟩
-#align Set.powerset SetCat.powerset
+#align Set.powerset ZFSet.powerset
+-/
 
+#print ZFSet.mem_powerset /-
 @[simp]
-theorem mem_powerset {x y : SetCat.{u}} : y ∈ powerset x ↔ y ⊆ x :=
+theorem mem_powerset {x y : ZFSet.{u}} : y ∈ powerset x ↔ y ⊆ x :=
   Quotient.induction_on₂ x y fun ⟨α, A⟩ ⟨β, B⟩ =>
     show (⟨β, B⟩ : PSet.{u}) ∈ PSet.powerset.{u} ⟨α, A⟩ ↔ _ by simp [mem_powerset, subset_iff]
-#align Set.mem_powerset SetCat.mem_powerset
+#align Set.mem_powerset ZFSet.mem_powerset
+-/
 
-theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equiv (A a) (B b)) :
-    ∀ a, ∃ b, Equiv ((sUnion ⟨α, A⟩).func a) ((sUnion ⟨β, B⟩).func b)
+#print ZFSet.unionₛ_lem /-
+theorem unionₛ_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equiv (A a) (B b)) :
+    ∀ a, ∃ b, Equiv ((unionₛ ⟨α, A⟩).Func a) ((unionₛ ⟨β, B⟩).Func b)
   | ⟨a, c⟩ => by
     let ⟨b, hb⟩ := αβ a
     induction' ea : A a with γ Γ
@@ -1032,194 +1356,246 @@ theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : 
     exact
       let c : type (A a) := c
       let ⟨d, hd⟩ := γδ (by rwa [ea] at c)
-      have : PSet.Equiv ((A a).func c) ((B b).func (Eq.ndrec d (Eq.symm eb))) :=
+      have : PSet.Equiv ((A a).Func c) ((B b).Func (Eq.ndrec d (Eq.symm eb))) :=
         match A a, B b, ea, eb, c, d, hd with
         | _, _, rfl, rfl, x, y, hd => hd
       ⟨⟨b, by
           rw [mk_func]
           exact Eq.ndrec d (Eq.symm eb)⟩,
         this⟩
-#align Set.sUnion_lem SetCat.sUnion_lem
+#align Set.sUnion_lem ZFSet.unionₛ_lem
+-/
 
+#print ZFSet.unionₛ /-
 /-- The union operator, the collection of elements of elements of a ZFC set -/
-def sUnion : SetCat → SetCat :=
+def unionₛ : ZFSet → ZFSet :=
   Resp.eval 1
-    ⟨PSet.sUnion, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
-      ⟨sUnion_lem A B αβ, fun a =>
+    ⟨PSet.unionₛ, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
+      ⟨unionₛ_lem A B αβ, fun a =>
         Exists.elim
-          (sUnion_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a)
+          (unionₛ_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a)
           fun b hb => ⟨b, PSet.Equiv.symm hb⟩⟩⟩
-#align Set.sUnion SetCat.sUnion
+#align Set.sUnion ZFSet.unionₛ
+-/
 
 -- mathport name: Set.sUnion
-prefix:110 "⋃₀ " => SetCat.sUnion
+prefix:110 "⋃₀ " => ZFSet.unionₛ
 
 /-- The intersection operator, the collection of elements in all of the elements of a ZFC set. We
 special-case `⋂₀ ∅ = ∅`. -/
-noncomputable def sInter (x : SetCat) : SetCat := by
+noncomputable def sInter (x : ZFSet) : ZFSet := by
   classical exact dite x.nonempty (fun h => { y ∈ h.some | ∀ z ∈ x, y ∈ z }) fun _ => ∅
-#align Set.sInter SetCat.sInter
+#align Set.sInter ZFSet.sInter
 
 -- mathport name: Set.sInter
-prefix:110 "⋂₀ " => SetCat.sInter
+prefix:110 "⋂₀ " => ZFSet.sInter
 
+/- warning: Set.mem_sUnion -> ZFSet.mem_unionₛ is a dubious translation:
+lean 3 declaration is
+  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y z)))
+but is expected to have type
+  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y z)))
+Case conversion may be inaccurate. Consider using '#align Set.mem_sUnion ZFSet.mem_unionₛₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem mem_sUnion {x y : SetCat.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
+theorem mem_unionₛ {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
   Quotient.induction_on₂ x y fun x y =>
-    Iff.trans mem_sUnion
+    Iff.trans mem_unionₛ
       ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotient.inductionOn z (fun z h => ⟨z, h⟩) h⟩
-#align Set.mem_sUnion SetCat.mem_sUnion
+#align Set.mem_sUnion ZFSet.mem_unionₛ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_sInter {x y : SetCat} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
+theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
   by
   rw [sInter, dif_pos h]
   simp only [mem_to_set, mem_sep, and_iff_right_iff_imp]
   exact fun H => H _ h.some_mem
-#align Set.mem_sInter SetCat.mem_sInter
+#align Set.mem_sInter ZFSet.mem_sInter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.unionₛ_empty /-
 @[simp]
-theorem sUnion_empty : ⋃₀ (∅ : SetCat) = ∅ := by
+theorem unionₛ_empty : ⋃₀ (∅ : ZFSet) = ∅ := by
   ext
   simp
-#align Set.sUnion_empty SetCat.sUnion_empty
+#align Set.sUnion_empty ZFSet.unionₛ_empty
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem sInter_empty : ⋂₀ (∅ : SetCat) = ∅ :=
+theorem sInter_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
   dif_neg <| by simp
-#align Set.sInter_empty SetCat.sInter_empty
+#align Set.sInter_empty ZFSet.sInter_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_of_mem_sInter {x y z : SetCat} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+theorem mem_of_mem_sInter {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
   by
   rcases eq_empty_or_nonempty x with (rfl | hx)
   · exact (not_mem_empty z hz).elim
   · exact (mem_sInter hx).1 hy z hz
-#align Set.mem_of_mem_sInter SetCat.mem_of_mem_sInter
+#align Set.mem_of_mem_sInter ZFSet.mem_of_mem_sInter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_sUnion_of_mem {x y z : SetCat} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
-  mem_sUnion.2 ⟨z, hz, hy⟩
-#align Set.mem_sUnion_of_mem SetCat.mem_sUnion_of_mem
+#print ZFSet.mem_unionₛ_of_mem /-
+theorem mem_unionₛ_of_mem {x y z : ZFSet} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
+  mem_unionₛ.2 ⟨z, hz, hy⟩
+#align Set.mem_sUnion_of_mem ZFSet.mem_unionₛ_of_mem
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem not_mem_sInter_of_not_mem {x y z : SetCat} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
+theorem not_mem_sInter_of_not_mem {x y z : ZFSet} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
   fun hx => hy <| mem_of_mem_sInter hx hz
-#align Set.not_mem_sInter_of_not_mem SetCat.not_mem_sInter_of_not_mem
+#align Set.not_mem_sInter_of_not_mem ZFSet.not_mem_sInter_of_not_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.unionₛ_singleton /-
 @[simp]
-theorem sUnion_singleton {x : SetCat.{u}} : ⋃₀ ({x} : SetCat) = x :=
+theorem unionₛ_singleton {x : ZFSet.{u}} : ⋃₀ ({x} : ZFSet) = x :=
   ext fun y => by simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
-#align Set.sUnion_singleton SetCat.sUnion_singleton
+#align Set.sUnion_singleton ZFSet.unionₛ_singleton
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem sInter_singleton {x : SetCat.{u}} : ⋂₀ ({x} : SetCat) = x :=
+theorem sInter_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
   ext fun y => by simp_rw [mem_sInter (singleton_nonempty x), mem_singleton, forall_eq]
-#align Set.sInter_singleton SetCat.sInter_singleton
+#align Set.sInter_singleton ZFSet.sInter_singleton
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.to_set_unionₛ /-
 @[simp]
-theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
+theorem to_set_unionₛ (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
   by
   ext
   simp
-#align Set.to_set_sUnion SetCat.toSet_sUnion
+#align Set.to_set_sUnion ZFSet.to_set_unionₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem toSet_sInter {x : SetCat.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
+theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
   by
   ext
   simp [mem_sInter h]
-#align Set.to_set_sInter SetCat.toSet_sInter
+#align Set.to_set_sInter ZFSet.toSet_sInter
 
-theorem singleton_injective : Function.Injective (@singleton SetCat SetCat _) := fun x y H =>
+#print ZFSet.singleton_injective /-
+theorem singleton_injective : Function.Injective (@singleton ZFSet ZFSet _) := fun x y H =>
   by
-  let this := congr_arg sUnion H
+  let this := congr_arg unionₛ H
   rwa [sUnion_singleton, sUnion_singleton] at this
-#align Set.singleton_injective SetCat.singleton_injective
+#align Set.singleton_injective ZFSet.singleton_injective
+-/
 
+#print ZFSet.singleton_inj /-
 @[simp]
-theorem singleton_inj {x y : SetCat} : ({x} : SetCat) = {y} ↔ x = y :=
+theorem singleton_inj {x y : ZFSet} : ({x} : ZFSet) = {y} ↔ x = y :=
   singleton_injective.eq_iff
-#align Set.singleton_inj SetCat.singleton_inj
+#align Set.singleton_inj ZFSet.singleton_inj
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.union /-
 /-- The binary union operation -/
-protected def union (x y : SetCat.{u}) : SetCat.{u} :=
+protected def union (x y : ZFSet.{u}) : ZFSet.{u} :=
   ⋃₀ {x, y}
-#align Set.union SetCat.union
+#align Set.union ZFSet.union
+-/
 
+#print ZFSet.inter /-
 /-- The binary intersection operation -/
-protected def inter (x y : SetCat.{u}) : SetCat.{u} :=
+protected def inter (x y : ZFSet.{u}) : ZFSet.{u} :=
   { z ∈ x | z ∈ y }
-#align Set.inter SetCat.inter
+#align Set.inter ZFSet.inter
+-/
 
+#print ZFSet.diff /-
 /-- The set difference operation -/
-protected def diff (x y : SetCat.{u}) : SetCat.{u} :=
+protected def diff (x y : ZFSet.{u}) : ZFSet.{u} :=
   { z ∈ x | z ∉ y }
-#align Set.diff SetCat.diff
+#align Set.diff ZFSet.diff
+-/
 
-instance : Union SetCat :=
-  ⟨SetCat.union⟩
+instance : Union ZFSet :=
+  ⟨ZFSet.union⟩
 
-instance : Inter SetCat :=
-  ⟨SetCat.inter⟩
+instance : Inter ZFSet :=
+  ⟨ZFSet.inter⟩
 
-instance : SDiff SetCat :=
-  ⟨SetCat.diff⟩
+instance : SDiff ZFSet :=
+  ⟨ZFSet.diff⟩
 
+/- warning: Set.to_set_union -> ZFSet.toSet_union is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.hasUnion.{u1} x y)) (Union.union.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.hasUnion.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
+but is expected to have type
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.instUnionZFSet.{u1} x y)) (Union.union.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instUnionSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
+Case conversion may be inaccurate. Consider using '#align Set.to_set_union ZFSet.toSet_unionₓ'. -/
 @[simp]
-theorem toSet_union (x y : SetCat.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet :=
+theorem toSet_union (x y : ZFSet.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet :=
   by
   unfold Union.union
-  rw [SetCat.union]
+  rw [ZFSet.union]
   simp
-#align Set.to_set_union SetCat.toSet_union
+#align Set.to_set_union ZFSet.toSet_union
 
+/- warning: Set.to_set_inter -> ZFSet.toSet_inter is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.hasInter.{u1} x y)) (Inter.inter.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.hasInter.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
+but is expected to have type
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y)) (Inter.inter.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instInterSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
+Case conversion may be inaccurate. Consider using '#align Set.to_set_inter ZFSet.toSet_interₓ'. -/
 @[simp]
-theorem toSet_inter (x y : SetCat.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet :=
+theorem toSet_inter (x y : ZFSet.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet :=
   by
   unfold Inter.inter
-  rw [SetCat.inter]
+  rw [ZFSet.inter]
   ext
   simp
-#align Set.to_set_inter SetCat.toSet_inter
+#align Set.to_set_inter ZFSet.toSet_inter
 
+/- warning: Set.to_set_sdiff -> ZFSet.toSet_sdiff is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.hasSdiff.{u1} x y)) (SDiff.sdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (BooleanAlgebra.toHasSdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.booleanAlgebra.{succ u1} ZFSet.{u1})) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
+but is expected to have type
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.instSDiffZFSet.{u1} x y)) (SDiff.sdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instSDiffSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
+Case conversion may be inaccurate. Consider using '#align Set.to_set_sdiff ZFSet.toSet_sdiffₓ'. -/
 @[simp]
-theorem toSet_sdiff (x y : SetCat.{u}) : (x \ y).toSet = x.toSet \ y.toSet :=
+theorem toSet_sdiff (x y : ZFSet.{u}) : (x \ y).toSet = x.toSet \ y.toSet :=
   by
   change { z ∈ x | z ∉ y }.toSet = _
   ext
   simp
-#align Set.to_set_sdiff SetCat.toSet_sdiff
+#align Set.to_set_sdiff ZFSet.toSet_sdiff
 
+#print ZFSet.mem_union /-
 @[simp]
-theorem mem_union {x y z : SetCat.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y :=
+theorem mem_union {x y z : ZFSet.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y :=
   by
   rw [← mem_to_set]
   simp
-#align Set.mem_union SetCat.mem_union
+#align Set.mem_union ZFSet.mem_union
+-/
 
+#print ZFSet.mem_inter /-
 @[simp]
-theorem mem_inter {x y z : SetCat.{u}} : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y :=
-  @mem_sep fun z : SetCat.{u} => z ∈ y
-#align Set.mem_inter SetCat.mem_inter
+theorem mem_inter {x y z : ZFSet.{u}} : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y :=
+  @mem_sep fun z : ZFSet.{u} => z ∈ y
+#align Set.mem_inter ZFSet.mem_inter
+-/
 
+#print ZFSet.mem_diff /-
 @[simp]
-theorem mem_diff {x y z : SetCat.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
-  @mem_sep fun z : SetCat.{u} => z ∉ y
-#align Set.mem_diff SetCat.mem_diff
+theorem mem_diff {x y z : ZFSet.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
+  @mem_sep fun z : ZFSet.{u} => z ∉ y
+#align Set.mem_diff ZFSet.mem_diff
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.unionₛ_pair /-
 @[simp]
-theorem sUnion_pair {x y : SetCat.{u}} : ⋃₀ ({x, y} : SetCat.{u}) = x ∪ y :=
+theorem unionₛ_pair {x y : ZFSet.{u}} : ⋃₀ ({x, y} : ZFSet.{u}) = x ∪ y :=
   by
   ext
   simp_rw [mem_union, mem_sUnion, mem_pair]
@@ -1230,48 +1606,64 @@ theorem sUnion_pair {x y : SetCat.{u}} : ⋃₀ ({x, y} : SetCat.{u}) = x ∪ y 
   · rintro (hz | hz)
     · exact ⟨x, Or.inl rfl, hz⟩
     · exact ⟨y, Or.inr rfl, hz⟩
-#align Set.sUnion_pair SetCat.sUnion_pair
+#align Set.sUnion_pair ZFSet.unionₛ_pair
+-/
 
-theorem mem_wf : @WellFounded SetCat (· ∈ ·) :=
+#print ZFSet.mem_wf /-
+theorem mem_wf : @WellFounded ZFSet (· ∈ ·) :=
   wellFounded_lift₂_iff.mpr PSet.mem_wf
-#align Set.mem_wf SetCat.mem_wf
+#align Set.mem_wf ZFSet.mem_wf
+-/
 
+#print ZFSet.inductionOn /-
 /-- Induction on the `∈` relation. -/
 @[elab_as_elim]
-theorem induction_on {p : SetCat → Prop} (x) (h : ∀ x, (∀ y ∈ x, p y) → p x) : p x :=
+theorem inductionOn {p : ZFSet → Prop} (x) (h : ∀ x, (∀ y ∈ x, p y) → p x) : p x :=
   mem_wf.induction x h
-#align Set.induction_on SetCat.induction_on
+#align Set.induction_on ZFSet.inductionOn
+-/
 
-instance : WellFoundedRelation SetCat :=
+instance : WellFoundedRelation ZFSet :=
   ⟨_, mem_wf⟩
 
-instance : IsAsymm SetCat (· ∈ ·) :=
+instance : IsAsymm ZFSet (· ∈ ·) :=
   mem_wf.IsAsymm
 
-theorem mem_asymm {x y : SetCat} : x ∈ y → y ∉ x :=
+#print ZFSet.mem_asymm /-
+theorem mem_asymm {x y : ZFSet} : x ∈ y → y ∉ x :=
   asymm
-#align Set.mem_asymm SetCat.mem_asymm
+#align Set.mem_asymm ZFSet.mem_asymm
+-/
 
-theorem mem_irrefl (x : SetCat) : x ∉ x :=
+#print ZFSet.mem_irrefl /-
+theorem mem_irrefl (x : ZFSet) : x ∉ x :=
   irrefl x
-#align Set.mem_irrefl SetCat.mem_irrefl
+#align Set.mem_irrefl ZFSet.mem_irrefl
+-/
 
-theorem regularity (x : SetCat.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ :=
+/- warning: Set.regularity -> ZFSet.regularity is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}), (Ne.{succ (succ u1)} ZFSet.{u1} x (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.hasEmptyc.{u1})) -> (Exists.{succ (succ u1)} ZFSet.{u1} (fun (y : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y x) => Eq.{succ (succ u1)} ZFSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.hasInter.{u1} x y) (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.hasEmptyc.{u1}))))
+but is expected to have type
+  forall (x : ZFSet.{u1}), (Ne.{succ (succ u1)} ZFSet.{u1} x (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.instEmptyCollectionZFSet.{u1})) -> (Exists.{succ (succ u1)} ZFSet.{u1} (fun (y : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y x) (Eq.{succ (succ u1)} ZFSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y) (EmptyCollection.emptyCollection.{succ u1} ZFSet.{u1} ZFSet.instEmptyCollectionZFSet.{u1}))))
+Case conversion may be inaccurate. Consider using '#align Set.regularity ZFSet.regularityₓ'. -/
+theorem regularity (x : ZFSet.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ :=
   by_contradiction fun ne =>
     h <|
       (eq_empty x).2 fun y =>
-        induction_on y fun z (IH : ∀ w : SetCat.{u}, w ∈ z → w ∉ x) =>
+        inductionOn y fun z (IH : ∀ w : ZFSet.{u}, w ∈ z → w ∉ x) =>
           show z ∉ x from fun zx =>
             Ne
               ⟨z, zx,
                 (eq_empty _).2 fun w wxz =>
                   let ⟨wx, wz⟩ := mem_inter.1 wxz
                   IH w wz wx⟩
-#align Set.regularity SetCat.regularity
+#align Set.regularity ZFSet.regularity
 
+#print ZFSet.image /-
 /-- The image of a (definable) ZFC set function -/
-def image (f : SetCat → SetCat) [H : Definable 1 f] : SetCat → SetCat :=
-  let r := @Definable.resp 1 f _
+def image (f : ZFSet → ZFSet) [H : Definable 1 f] : ZFSet → ZFSet :=
+  let r := @Definable.Resp 1 f _
   Resp.eval 1
     ⟨image r.1, fun x y e =>
       Mem.ext fun z =>
@@ -1280,38 +1672,52 @@ def image (f : SetCat → SetCat) [H : Definable 1 f] : SetCat → SetCat :=
               ⟨fun ⟨w, h1, h2⟩ => ⟨w, (mem.congr_right e).1 h1, h2⟩, fun ⟨w, h1, h2⟩ =>
                 ⟨w, (mem.congr_right e).2 h1, h2⟩⟩ <|
             Iff.symm (mem_image r.2)⟩
-#align Set.image SetCat.image
+#align Set.image ZFSet.image
+-/
 
+#print ZFSet.image.mk /-
 theorem image.mk :
-    ∀ (f : SetCat.{u} → SetCat.{u}) [H : Definable 1 f] (x) {y} (h : y ∈ x), f y ∈ @image f H x
+    ∀ (f : ZFSet.{u} → ZFSet.{u}) [H : Definable 1 f] (x) {y} (h : y ∈ x), f y ∈ @image f H x
   | _, ⟨F⟩, x, y => Quotient.induction_on₂ x y fun ⟨α, A⟩ y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
-#align Set.image.mk SetCat.image.mk
+#align Set.image.mk ZFSet.image.mk
+-/
 
+/- warning: Set.mem_image -> ZFSet.mem_image is a dubious translation:
+lean 3 declaration is
+  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.image.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Eq.{succ (succ u1)} ZFSet.{u1} (f z) y)))
+but is expected to have type
+  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.image.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Eq.{succ (succ u1)} ZFSet.{u1} (f z) y)))
+Case conversion may be inaccurate. Consider using '#align Set.mem_image ZFSet.mem_imageₓ'. -/
 @[simp]
 theorem mem_image :
-    ∀ {f : SetCat.{u} → SetCat.{u}} [H : Definable 1 f] {x y : SetCat.{u}},
+    ∀ {f : ZFSet.{u} → ZFSet.{u}} [H : Definable 1 f] {x y : ZFSet.{u}},
       y ∈ @image f H x ↔ ∃ z ∈ x, f z = y
   | _, ⟨F⟩, x, y =>
     Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
       ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, Eq.symm <| Quotient.sound ya⟩, fun ⟨z, hz, e⟩ =>
         e ▸ image.mk _ _ hz⟩
-#align Set.mem_image SetCat.mem_image
+#align Set.mem_image ZFSet.mem_image
 
+#print ZFSet.toSet_image /-
 @[simp]
-theorem toSet_image (f : SetCat → SetCat) [H : Definable 1 f] (x : SetCat) :
+theorem toSet_image (f : ZFSet → ZFSet) [H : Definable 1 f] (x : ZFSet) :
     (image f x).toSet = f '' x.toSet := by
   ext
   simp
-#align Set.to_set_image SetCat.toSet_image
+#align Set.to_set_image ZFSet.toSet_image
+-/
 
+#print ZFSet.range /-
 /-- The range of an indexed family of sets. The universes allow for a more general index type
   without manual use of `ulift`. -/
-noncomputable def range {α : Type u} (f : α → SetCat.{max u v}) : SetCat.{max u v} :=
+noncomputable def range {α : Type u} (f : α → ZFSet.{max u v}) : ZFSet.{max u v} :=
   ⟦⟨ULift α, Quotient.out ∘ f ∘ ULift.down⟩⟧
-#align Set.range SetCat.range
+#align Set.range ZFSet.range
+-/
 
+#print ZFSet.mem_range /-
 @[simp]
-theorem mem_range {α : Type u} {f : α → SetCat.{max u v}} {x : SetCat.{max u v}} :
+theorem mem_range {α : Type u} {f : α → ZFSet.{max u v}} {x : ZFSet.{max u v}} :
     x ∈ range f ↔ x ∈ Set.range f :=
   Quotient.inductionOn x fun y => by
     constructor
@@ -1320,31 +1726,46 @@ theorem mem_range {α : Type u} {f : α → SetCat.{max u v}} {x : SetCat.{max u
     · rintro ⟨z, hz⟩
       use z
       simpa [hz] using PSet.Equiv.symm (Quotient.mk_out y)
-#align Set.mem_range SetCat.mem_range
+#align Set.mem_range ZFSet.mem_range
+-/
 
+#print ZFSet.toSet_range /-
 @[simp]
-theorem toSet_range {α : Type u} (f : α → SetCat.{max u v}) : (range f).toSet = Set.range f :=
+theorem toSet_range {α : Type u} (f : α → ZFSet.{max u v}) : (range f).toSet = Set.range f :=
   by
   ext
   simp
-#align Set.to_set_range SetCat.toSet_range
+#align Set.to_set_range ZFSet.toSet_range
+-/
 
+#print ZFSet.pair /-
 /-- Kuratowski ordered pair -/
-def pair (x y : SetCat.{u}) : SetCat.{u} :=
+def pair (x y : ZFSet.{u}) : ZFSet.{u} :=
   {{x}, {x, y}}
-#align Set.pair SetCat.pair
+#align Set.pair ZFSet.pair
+-/
 
+#print ZFSet.toSet_pair /-
 @[simp]
-theorem toSet_pair (x y : SetCat.{u}) : (pair x y).toSet = {{x}, {x, y}} := by simp [pair]
-#align Set.to_set_pair SetCat.toSet_pair
+theorem toSet_pair (x y : ZFSet.{u}) : (pair x y).toSet = {{x}, {x, y}} := by simp [pair]
+#align Set.to_set_pair ZFSet.toSet_pair
+-/
 
+#print ZFSet.pairSep /-
 /-- A subset of pairs `{(a, b) ∈ x × y | p a b}` -/
-def pairSep (p : SetCat.{u} → SetCat.{u} → Prop) (x y : SetCat.{u}) : SetCat.{u} :=
+def pairSep (p : ZFSet.{u} → ZFSet.{u} → Prop) (x y : ZFSet.{u}) : ZFSet.{u} :=
   { z ∈ powerset (powerset (x ∪ y)) | ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b }
-#align Set.pair_sep SetCat.pairSep
+#align Set.pair_sep ZFSet.pairSep
+-/
 
+/- warning: Set.mem_pair_sep -> ZFSet.mem_pairSep is a dubious translation:
+lean 3 declaration is
+  forall {p : ZFSet.{u1} -> ZFSet.{u1} -> Prop} {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z (ZFSet.pairSep.{u1} p x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) => Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) => And (Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b)) (p a b))))))
+but is expected to have type
+  forall {p : ZFSet.{u1} -> ZFSet.{u1} -> Prop} {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z (ZFSet.pairSep.{u1} p x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} a x) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} b y) (And (Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b)) (p a b))))))
+Case conversion may be inaccurate. Consider using '#align Set.mem_pair_sep ZFSet.mem_pairSepₓ'. -/
 @[simp]
-theorem mem_pairSep {p} {x y z : SetCat.{u}} :
+theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
     z ∈ pairSep p x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b :=
   by
   refine' mem_sep.trans ⟨And.right, fun e => ⟨_, e⟩⟩
@@ -1354,8 +1775,9 @@ theorem mem_pairSep {p} {x y z : SetCat.{u}} :
   · rintro rfl
     exact Or.inl ax
   · rintro (rfl | rfl) <;> [left, right] <;> assumption
-#align Set.mem_pair_sep SetCat.mem_pairSep
+#align Set.mem_pair_sep ZFSet.mem_pairSep
 
+#print ZFSet.pair_injective /-
 theorem pair_injective : Function.Injective2 pair := fun x x' y y' H =>
   by
   have ae := ext_iff.1 H
@@ -1363,7 +1785,7 @@ theorem pair_injective : Function.Injective2 pair := fun x x' y y' H =>
   obtain rfl : x = x' := by
     cases' (ae {x}).1 (by simp) with h h
     · exact singleton_injective h
-    · have m : x' ∈ ({x} : SetCat) := by simp [h]
+    · have m : x' ∈ ({x} : ZFSet) := by simp [h]
       rw [mem_singleton.mp m]
   have he : x = y → y = y' := by
     rintro rfl
@@ -1377,75 +1799,107 @@ theorem pair_injective : Function.Injective2 pair := fun x x' y y' H =>
   · obtain rfl | yy' := mem_pair.mp ((ext_iff.1 xyy' y).1 <| by simp)
     · simp [he rfl]
     · simp [yy']
-#align Set.pair_injective SetCat.pair_injective
+#align Set.pair_injective ZFSet.pair_injective
+-/
 
+#print ZFSet.pair_inj /-
 @[simp]
-theorem pair_inj {x y x' y' : SetCat} : pair x y = pair x' y' ↔ x = x' ∧ y = y' :=
+theorem pair_inj {x y x' y' : ZFSet} : pair x y = pair x' y' ↔ x = x' ∧ y = y' :=
   pair_injective.eq_iff
-#align Set.pair_inj SetCat.pair_inj
+#align Set.pair_inj ZFSet.pair_inj
+-/
 
+#print ZFSet.prod /-
 /-- The cartesian product, `{(a, b) | a ∈ x, b ∈ y}` -/
-def prod : SetCat.{u} → SetCat.{u} → SetCat.{u} :=
+def prod : ZFSet.{u} → ZFSet.{u} → ZFSet.{u} :=
   pairSep fun a b => True
-#align Set.prod SetCat.prod
+#align Set.prod ZFSet.prod
+-/
 
+/- warning: Set.mem_prod -> ZFSet.mem_prod is a dubious translation:
+lean 3 declaration is
+  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z (ZFSet.prod.{u1} x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} a x) => Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} b y) => Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b))))))
+but is expected to have type
+  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}} {z : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z (ZFSet.prod.{u1} x y)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (a : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} a x) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (b : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} b y) (Eq.{succ (succ u1)} ZFSet.{u1} z (ZFSet.pair.{u1} a b))))))
+Case conversion may be inaccurate. Consider using '#align Set.mem_prod ZFSet.mem_prodₓ'. -/
 @[simp]
-theorem mem_prod {x y z : SetCat.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b := by
+theorem mem_prod {x y z : ZFSet.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b := by
   simp [Prod]
-#align Set.mem_prod SetCat.mem_prod
+#align Set.mem_prod ZFSet.mem_prod
 
+#print ZFSet.pair_mem_prod /-
 @[simp]
-theorem pair_mem_prod {x y a b : SetCat.{u}} : pair a b ∈ prod x y ↔ a ∈ x ∧ b ∈ y :=
+theorem pair_mem_prod {x y a b : ZFSet.{u}} : pair a b ∈ prod x y ↔ a ∈ x ∧ b ∈ y :=
   ⟨fun h =>
     let ⟨a', a'x, b', b'y, e⟩ := mem_prod.1 h
     match a', b', pair_injective e, a'x, b'y with
     | _, _, ⟨rfl, rfl⟩, ax, bY => ⟨ax, bY⟩,
     fun ⟨ax, bY⟩ => mem_prod.2 ⟨a, ax, b, bY, rfl⟩⟩
-#align Set.pair_mem_prod SetCat.pair_mem_prod
+#align Set.pair_mem_prod ZFSet.pair_mem_prod
+-/
 
+#print ZFSet.IsFunc /-
 /-- `is_func x y f` is the assertion that `f` is a subset of `x × y` which relates to each element
 of `x` a unique element of `y`, so that we can consider `f`as a ZFC function `x → y`. -/
-def IsFunc (x y f : SetCat.{u}) : Prop :=
-  f ⊆ prod x y ∧ ∀ z : SetCat.{u}, z ∈ x → ∃! w, pair z w ∈ f
-#align Set.is_func SetCat.IsFunc
+def IsFunc (x y f : ZFSet.{u}) : Prop :=
+  f ⊆ prod x y ∧ ∀ z : ZFSet.{u}, z ∈ x → ∃! w, pair z w ∈ f
+#align Set.is_func ZFSet.IsFunc
+-/
 
+#print ZFSet.funs /-
 /-- `funs x y` is `y ^ x`, the set of all set functions `x → y` -/
-def funs (x y : SetCat.{u}) : SetCat.{u} :=
+def funs (x y : ZFSet.{u}) : ZFSet.{u} :=
   { f ∈ powerset (prod x y) | IsFunc x y f }
-#align Set.funs SetCat.funs
+#align Set.funs ZFSet.funs
+-/
 
+#print ZFSet.mem_funs /-
 @[simp]
-theorem mem_funs {x y f : SetCat.{u}} : f ∈ funs x y ↔ IsFunc x y f := by simp [funs, is_func]
-#align Set.mem_funs SetCat.mem_funs
+theorem mem_funs {x y f : ZFSet.{u}} : f ∈ funs x y ↔ IsFunc x y f := by simp [funs, is_func]
+#align Set.mem_funs ZFSet.mem_funs
+-/
 
+#print ZFSet.mapDefinableAux /-
 -- TODO(Mario): Prove this computably
-noncomputable instance mapDefinableAux (f : SetCat → SetCat) [H : Definable 1 f] :
+noncomputable instance mapDefinableAux (f : ZFSet → ZFSet) [H : Definable 1 f] :
     Definable 1 fun y => pair y (f y) :=
-  @Classical.allDefinable 1 _
-#align Set.map_definable_aux SetCat.mapDefinableAux
+  @Classical.AllDefinable 1 _
+#align Set.map_definable_aux ZFSet.mapDefinableAux
+-/
 
+#print ZFSet.map /-
 /-- Graph of a function: `map f x` is the ZFC function which maps `a ∈ x` to `f a` -/
-noncomputable def map (f : SetCat → SetCat) [H : Definable 1 f] : SetCat → SetCat :=
+noncomputable def map (f : ZFSet → ZFSet) [H : Definable 1 f] : ZFSet → ZFSet :=
   image fun y => pair y (f y)
-#align Set.map SetCat.map
+#align Set.map ZFSet.map
+-/
 
+/- warning: Set.mem_map -> ZFSet.mem_map is a dubious translation:
+lean 3 declaration is
+  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.map.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Eq.{succ (succ u1)} ZFSet.{u1} (ZFSet.pair.{u1} z (f z)) y)))
+but is expected to have type
+  forall {f : ZFSet.{u1} -> ZFSet.{u1}} [H : PSet.Definable.{u1} (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) f] {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.map.{u1} f H x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Eq.{succ (succ u1)} ZFSet.{u1} (ZFSet.pair.{u1} z (f z)) y)))
+Case conversion may be inaccurate. Consider using '#align Set.mem_map ZFSet.mem_mapₓ'. -/
 @[simp]
-theorem mem_map {f : SetCat → SetCat} [H : Definable 1 f] {x y : SetCat} :
+theorem mem_map {f : ZFSet → ZFSet} [H : Definable 1 f] {x y : ZFSet} :
     y ∈ map f x ↔ ∃ z ∈ x, pair z (f z) = y :=
   mem_image
-#align Set.mem_map SetCat.mem_map
+#align Set.mem_map ZFSet.mem_map
 
-theorem map_unique {f : SetCat.{u} → SetCat.{u}} [H : Definable 1 f] {x z : SetCat.{u}}
-    (zx : z ∈ x) : ∃! w, pair z w ∈ map f x :=
+#print ZFSet.map_unique /-
+theorem map_unique {f : ZFSet.{u} → ZFSet.{u}} [H : Definable 1 f] {x z : ZFSet.{u}} (zx : z ∈ x) :
+    ∃! w, pair z w ∈ map f x :=
   ⟨f z, image.mk _ _ zx, fun y yx =>
     by
     let ⟨w, wx, we⟩ := mem_image.1 yx
     let ⟨wz, fy⟩ := pair_injective we
     rw [← fy, wz]⟩
-#align Set.map_unique SetCat.map_unique
+#align Set.map_unique ZFSet.map_unique
+-/
 
+#print ZFSet.map_isFunc /-
 @[simp]
-theorem map_isFunc {f : SetCat → SetCat} [H : Definable 1 f] {x y : SetCat} :
+theorem map_isFunc {f : ZFSet → ZFSet} [H : Definable 1 f] {x y : ZFSet} :
     IsFunc x y (map f x) ↔ ∀ z ∈ x, f z ∈ y :=
   ⟨fun ⟨ss, h⟩ z zx =>
     let ⟨t, t1, t2⟩ := h z zx
@@ -1455,140 +1909,181 @@ theorem map_isFunc {f : SetCat → SetCat} [H : Definable 1 f] {x y : SetCat} :
       let ⟨z, zx, ze⟩ := mem_image.1 yx
       ze ▸ pair_mem_prod.2 ⟨zx, h z zx⟩,
       fun z => map_unique⟩⟩
-#align Set.map_is_func SetCat.map_isFunc
+#align Set.map_is_func ZFSet.map_isFunc
+-/
 
+#print ZFSet.Hereditarily /-
 /-- Given a predicate `p` on ZFC sets. `hereditarily p x` means that `x` has property `p` and the
 members of `x` are all `hereditarily p`. -/
-def Hereditarily (p : SetCat → Prop) : SetCat → Prop
+def Hereditarily (p : ZFSet → Prop) : ZFSet → Prop
   | x => p x ∧ ∀ y ∈ x, hereditarily y
-#align Set.hereditarily SetCat.Hereditarily
+#align Set.hereditarily ZFSet.Hereditarily
+-/
 
 section Hereditarily
 
-variable {p : SetCat.{u} → Prop} {x y : SetCat.{u}}
+variable {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}}
 
+#print ZFSet.hereditarily_iff /-
 theorem hereditarily_iff : Hereditarily p x ↔ p x ∧ ∀ y ∈ x, Hereditarily p y := by
   rw [← hereditarily]
-#align Set.hereditarily_iff SetCat.hereditarily_iff
+#align Set.hereditarily_iff ZFSet.hereditarily_iff
+-/
 
 alias hereditarily_iff ↔ hereditarily.def _
-#align Set.hereditarily.def SetCat.Hereditarily.def
+#align Set.hereditarily.def ZFSet.Hereditarily.def
 
+#print ZFSet.Hereditarily.self /-
 theorem Hereditarily.self (h : x.Hereditarily p) : p x :=
   h.def.1
-#align Set.hereditarily.self SetCat.Hereditarily.self
+#align Set.hereditarily.self ZFSet.Hereditarily.self
+-/
 
+#print ZFSet.Hereditarily.mem /-
 theorem Hereditarily.mem (h : x.Hereditarily p) (hy : y ∈ x) : y.Hereditarily p :=
   h.def.2 _ hy
-#align Set.hereditarily.mem SetCat.Hereditarily.mem
+#align Set.hereditarily.mem ZFSet.Hereditarily.mem
+-/
 
+#print ZFSet.Hereditarily.empty /-
 theorem Hereditarily.empty : Hereditarily p x → p ∅ :=
   by
   apply x.induction_on
   intro y IH h
-  rcases SetCat.eq_empty_or_nonempty y with (rfl | ⟨a, ha⟩)
+  rcases ZFSet.eq_empty_or_nonempty y with (rfl | ⟨a, ha⟩)
   · exact h.self
   · exact IH a ha (h.mem ha)
-#align Set.hereditarily.empty SetCat.Hereditarily.empty
+#align Set.hereditarily.empty ZFSet.Hereditarily.empty
+-/
 
 end Hereditarily
 
-end SetCat
+end ZFSet
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set] -/
+#print Class /-
 /-- The collection of all classes.
 
 We define `Class` as `set Set`, as this allows us to get many instances automatically. However, in
 practice, we treat it as (the definitionally equal) `Set → Prop`. This means, the preferred way to
 state that `x : Set` belongs to `A : Class` is to write `A x`. -/
 def Class :=
-  Set SetCat deriving HasSubset,
+  Set ZFSet deriving HasSubset,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
   EmptyCollection, Inhabited,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
   Union, Inter, HasCompl, SDiff
 #align Class Class
+-/
 
 namespace Class
 
+#print Class.ext /-
 @[ext]
-theorem ext {x y : Class.{u}} : (∀ z : SetCat.{u}, x z ↔ y z) → x = y :=
+theorem ext {x y : Class.{u}} : (∀ z : ZFSet.{u}, x z ↔ y z) → x = y :=
   Set.ext
 #align Class.ext Class.ext
+-/
 
+#print Class.ext_iff /-
 theorem ext_iff {x y : Class.{u}} : x = y ↔ ∀ z, x z ↔ y z :=
   Set.ext_iff
 #align Class.ext_iff Class.ext_iff
+-/
 
+#print Class.ofSet /-
 /-- Coerce a ZFC set into a class -/
-def ofSet (x : SetCat.{u}) : Class.{u} :=
+def ofSet (x : ZFSet.{u}) : Class.{u} :=
   { y | y ∈ x }
 #align Class.of_Set Class.ofSet
+-/
 
-instance : Coe SetCat Class :=
+instance : Coe ZFSet Class :=
   ⟨ofSet⟩
 
+#print Class.univ /-
 /-- The universal class -/
 def univ : Class :=
   Set.univ
 #align Class.univ Class.univ
+-/
 
+#print Class.ToSet /-
 /-- Assert that `A` is a ZFC set satisfying `B` -/
 def ToSet (B : Class.{u}) (A : Class.{u}) : Prop :=
   ∃ x, ↑x = A ∧ B x
 #align Class.to_Set Class.ToSet
+-/
 
+#print Class.Mem /-
 /-- `A ∈ B` if `A` is a ZFC set which satisfies `B` -/
 protected def Mem (A B : Class.{u}) : Prop :=
   ToSet.{u} B A
 #align Class.mem Class.Mem
+-/
 
 instance : Membership Class Class :=
   ⟨Class.Mem⟩
 
+#print Class.mem_def /-
 theorem mem_def (A B : Class.{u}) : A ∈ B ↔ ∃ x, ↑x = A ∧ B x :=
   Iff.rfl
 #align Class.mem_def Class.mem_def
+-/
 
+#print Class.not_mem_empty /-
 @[simp]
 theorem not_mem_empty (x : Class.{u}) : x ∉ (∅ : Class.{u}) := fun ⟨_, _, h⟩ => h
 #align Class.not_mem_empty Class.not_mem_empty
+-/
 
+#print Class.not_empty_hom /-
 @[simp]
-theorem not_empty_hom (x : SetCat.{u}) : ¬(∅ : Class.{u}) x :=
+theorem not_empty_hom (x : ZFSet.{u}) : ¬(∅ : Class.{u}) x :=
   id
 #align Class.not_empty_hom Class.not_empty_hom
+-/
 
+#print Class.mem_univ /-
 @[simp]
-theorem mem_univ {A : Class.{u}} : A ∈ univ.{u} ↔ ∃ x : SetCat.{u}, ↑x = A :=
+theorem mem_univ {A : Class.{u}} : A ∈ univ.{u} ↔ ∃ x : ZFSet.{u}, ↑x = A :=
   exists_congr fun x => and_true_iff _
 #align Class.mem_univ Class.mem_univ
+-/
 
+#print Class.mem_univ_hom /-
 @[simp]
-theorem mem_univ_hom (x : SetCat.{u}) : univ.{u} x :=
+theorem mem_univ_hom (x : ZFSet.{u}) : univ.{u} x :=
   trivial
 #align Class.mem_univ_hom Class.mem_univ_hom
+-/
 
-theorem eq_univ_iff_forall {A : Class.{u}} : A = univ ↔ ∀ x : SetCat, A x :=
+#print Class.eq_univ_iff_forall /-
+theorem eq_univ_iff_forall {A : Class.{u}} : A = univ ↔ ∀ x : ZFSet, A x :=
   Set.eq_univ_iff_forall
 #align Class.eq_univ_iff_forall Class.eq_univ_iff_forall
+-/
 
-theorem eq_univ_of_forall {A : Class.{u}} : (∀ x : SetCat, A x) → A = univ :=
+#print Class.eq_univ_of_forall /-
+theorem eq_univ_of_forall {A : Class.{u}} : (∀ x : ZFSet, A x) → A = univ :=
   Set.eq_univ_of_forall
 #align Class.eq_univ_of_forall Class.eq_univ_of_forall
+-/
 
+#print Class.mem_wf /-
 theorem mem_wf : @WellFounded Class.{u} (· ∈ ·) :=
   ⟨by
-    have H : ∀ x : SetCat.{u}, @Acc Class.{u} (· ∈ ·) ↑x :=
+    have H : ∀ x : ZFSet.{u}, @Acc Class.{u} (· ∈ ·) ↑x :=
       by
-      refine' fun a => SetCat.induction_on a fun x IH => ⟨x, _⟩
+      refine' fun a => ZFSet.inductionOn a fun x IH => ⟨x, _⟩
       rintro A ⟨z, rfl, hz⟩
       exact IH z hz
     · refine' fun A => ⟨A, _⟩
       rintro B ⟨x, rfl, hx⟩
       exact H x⟩
 #align Class.mem_wf Class.mem_wf
+-/
 
 instance : WellFoundedRelation Class :=
   ⟨_, mem_wf⟩
@@ -1596,14 +2091,19 @@ instance : WellFoundedRelation Class :=
 instance : IsAsymm Class (· ∈ ·) :=
   mem_wf.IsAsymm
 
+#print Class.mem_asymm /-
 theorem mem_asymm {x y : Class} : x ∈ y → y ∉ x :=
   asymm
 #align Class.mem_asymm Class.mem_asymm
+-/
 
+#print Class.mem_irrefl /-
 theorem mem_irrefl (x : Class) : x ∉ x :=
   irrefl x
 #align Class.mem_irrefl Class.mem_irrefl
+-/
 
+#print Class.univ_not_mem_univ /-
 /-- **There is no universal set.**
 
 This is stated as `univ ∉ univ`, meaning that `univ` (the class of all sets) is proper (does not
@@ -1611,44 +2111,57 @@ belong to the class of all sets). -/
 theorem univ_not_mem_univ : univ ∉ univ :=
   mem_irrefl _
 #align Class.univ_not_mem_univ Class.univ_not_mem_univ
+-/
 
+#print Class.congToClass /-
 /-- Convert a conglomerate (a collection of classes) into a class -/
 def congToClass (x : Set Class.{u}) : Class.{u} :=
   { y | ↑y ∈ x }
 #align Class.Cong_to_Class Class.congToClass
+-/
 
+#print Class.congToClass_empty /-
 @[simp]
 theorem congToClass_empty : congToClass ∅ = ∅ :=
   by
   ext
   simp [Cong_to_Class]
 #align Class.Cong_to_Class_empty Class.congToClass_empty
+-/
 
+#print Class.classToCong /-
 /-- Convert a class into a conglomerate (a collection of classes) -/
 def classToCong (x : Class.{u}) : Set Class.{u} :=
   { y | y ∈ x }
 #align Class.Class_to_Cong Class.classToCong
+-/
 
+#print Class.classToCong_empty /-
 @[simp]
 theorem classToCong_empty : classToCong ∅ = ∅ :=
   by
   ext
   simp [Class_to_Cong]
 #align Class.Class_to_Cong_empty Class.classToCong_empty
+-/
 
+#print Class.powerset /-
 /-- The power class of a class is the class of all subclasses that are ZFC sets -/
 def powerset (x : Class) : Class :=
   congToClass (Set.powerset x)
 #align Class.powerset Class.powerset
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.unionₛ /-
 /-- The union of a class is the class of all members of ZFC sets in the class -/
-def sUnion (x : Class) : Class :=
+def unionₛ (x : Class) : Class :=
   ⋃₀ classToCong x
-#align Class.sUnion Class.sUnion
+#align Class.sUnion Class.unionₛ
+-/
 
 -- mathport name: Class.sUnion
-prefix:110 "⋃₀ " => Class.sUnion
+prefix:110 "⋃₀ " => Class.unionₛ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The intersection of a class is the class of all members of ZFC sets in the class -/
@@ -1659,105 +2172,149 @@ def sInter (x : Class) : Class :=
 -- mathport name: Class.sInter
 prefix:110 "⋂₀ " => Class.sInter
 
-theorem ofSet.inj {x y : SetCat.{u}} (h : (x : Class.{u}) = y) : x = y :=
-  SetCat.ext fun z => by
+#print Class.ofSet.inj /-
+theorem ofSet.inj {x y : ZFSet.{u}} (h : (x : Class.{u}) = y) : x = y :=
+  ZFSet.ext fun z => by
     change (x : Class.{u}) z ↔ (y : Class.{u}) z
     rw [h]
 #align Class.of_Set.inj Class.ofSet.inj
+-/
 
+#print Class.toSet_of_setCat /-
 @[simp]
-theorem toSet_of_setCat (A : Class.{u}) (x : SetCat.{u}) : ToSet A x ↔ A x :=
+theorem toSet_of_setCat (A : Class.{u}) (x : ZFSet.{u}) : ToSet A x ↔ A x :=
   ⟨fun ⟨y, yx, py⟩ => by rwa [of_Set.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
 #align Class.to_Set_of_Set Class.toSet_of_setCat
+-/
 
+#print Class.coe_mem /-
 @[simp, norm_cast]
-theorem coe_mem {x : SetCat.{u}} {A : Class.{u}} : (x : Class.{u}) ∈ A ↔ A x :=
+theorem coe_mem {x : ZFSet.{u}} {A : Class.{u}} : (x : Class.{u}) ∈ A ↔ A x :=
   toSet_of_setCat _ _
 #align Class.coe_mem Class.coe_mem
+-/
 
+#print Class.coe_apply /-
 @[simp]
-theorem coe_apply {x y : SetCat.{u}} : (y : Class.{u}) x ↔ x ∈ y :=
+theorem coe_apply {x y : ZFSet.{u}} : (y : Class.{u}) x ↔ x ∈ y :=
   Iff.rfl
 #align Class.coe_apply Class.coe_apply
+-/
 
+#print Class.coe_subset /-
 @[simp, norm_cast]
-theorem coe_subset (x y : SetCat.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
+theorem coe_subset (x y : ZFSet.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
   Iff.rfl
 #align Class.coe_subset Class.coe_subset
+-/
 
+#print Class.coe_sep /-
 @[simp, norm_cast]
-theorem coe_sep (p : Class.{u}) (x : SetCat.{u}) :
+theorem coe_sep (p : Class.{u}) (x : ZFSet.{u}) :
     (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
-  ext fun y => SetCat.mem_sep
+  ext fun y => ZFSet.mem_sep
 #align Class.coe_sep Class.coe_sep
+-/
 
+#print Class.coe_empty /-
 @[simp, norm_cast]
-theorem coe_empty : ↑(∅ : SetCat.{u}) = (∅ : Class.{u}) :=
-  ext fun y => (iff_false_iff _).2 <| SetCat.not_mem_empty y
+theorem coe_empty : ↑(∅ : ZFSet.{u}) = (∅ : Class.{u}) :=
+  ext fun y => (iff_false_iff _).2 <| ZFSet.not_mem_empty y
 #align Class.coe_empty Class.coe_empty
+-/
 
+#print Class.coe_insert /-
 @[simp, norm_cast]
-theorem coe_insert (x y : SetCat.{u}) : ↑(insert x y) = @insert SetCat.{u} Class.{u} _ x y :=
-  ext fun z => SetCat.mem_insert_iff
+theorem coe_insert (x y : ZFSet.{u}) : ↑(insert x y) = @insert ZFSet.{u} Class.{u} _ x y :=
+  ext fun z => ZFSet.mem_insert_iff
 #align Class.coe_insert Class.coe_insert
+-/
 
+/- warning: Class.coe_union -> Class.coe_union is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) (Union.union.{succ u1} ZFSet.{u1} ZFSet.hasUnion.{u1} x y)) (Union.union.{succ u1} Class.{u1} Class.hasUnion.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) x) ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) y))
+but is expected to have type
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} (Class.ofSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.instUnionZFSet.{u1} x y)) (Union.union.{succ u1} Class.{u1} instClassUnion.{u1} (Class.ofSet.{u1} x) (Class.ofSet.{u1} y))
+Case conversion may be inaccurate. Consider using '#align Class.coe_union Class.coe_unionₓ'. -/
 @[simp, norm_cast]
-theorem coe_union (x y : SetCat.{u}) : ↑(x ∪ y) = (x : Class.{u}) ∪ y :=
-  ext fun z => SetCat.mem_union
+theorem coe_union (x y : ZFSet.{u}) : ↑(x ∪ y) = (x : Class.{u}) ∪ y :=
+  ext fun z => ZFSet.mem_union
 #align Class.coe_union Class.coe_union
 
+/- warning: Class.coe_inter -> Class.coe_inter is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.hasInter.{u1} x y)) (Inter.inter.{succ u1} Class.{u1} Class.hasInter.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) x) ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) y))
+but is expected to have type
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} (Class.ofSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y)) (Inter.inter.{succ u1} Class.{u1} instClassInter.{u1} (Class.ofSet.{u1} x) (Class.ofSet.{u1} y))
+Case conversion may be inaccurate. Consider using '#align Class.coe_inter Class.coe_interₓ'. -/
 @[simp, norm_cast]
-theorem coe_inter (x y : SetCat.{u}) : ↑(x ∩ y) = (x : Class.{u}) ∩ y :=
-  ext fun z => SetCat.mem_inter
+theorem coe_inter (x y : ZFSet.{u}) : ↑(x ∩ y) = (x : Class.{u}) ∩ y :=
+  ext fun z => ZFSet.mem_inter
 #align Class.coe_inter Class.coe_inter
 
+/- warning: Class.coe_diff -> Class.coe_diff is a dubious translation:
+lean 3 declaration is
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.hasSdiff.{u1} x y)) (SDiff.sdiff.{succ u1} Class.{u1} Class.hasSdiff.{u1} ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) x) ((fun (a : Type.{succ u1}) (b : Type.{succ u1}) [self : HasLiftT.{succ (succ u1), succ (succ u1)} a b] => self.0) ZFSet.{u1} Class.{u1} (HasLiftT.mk.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (CoeTCₓ.coe.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} (coeBase.{succ (succ u1), succ (succ u1)} ZFSet.{u1} Class.{u1} Class.hasCoe.{u1}))) y))
+but is expected to have type
+  forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} Class.{u1} (Class.ofSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.instSDiffZFSet.{u1} x y)) (SDiff.sdiff.{succ u1} Class.{u1} instClassSDiff.{u1} (Class.ofSet.{u1} x) (Class.ofSet.{u1} y))
+Case conversion may be inaccurate. Consider using '#align Class.coe_diff Class.coe_diffₓ'. -/
 @[simp, norm_cast]
-theorem coe_diff (x y : SetCat.{u}) : ↑(x \ y) = (x : Class.{u}) \ y :=
-  ext fun z => SetCat.mem_diff
+theorem coe_diff (x y : ZFSet.{u}) : ↑(x \ y) = (x : Class.{u}) \ y :=
+  ext fun z => ZFSet.mem_diff
 #align Class.coe_diff Class.coe_diff
 
+#print Class.coe_powerset /-
 @[simp, norm_cast]
-theorem coe_powerset (x : SetCat.{u}) : ↑x.powerset = powerset.{u} x :=
-  ext fun z => SetCat.mem_powerset
+theorem coe_powerset (x : ZFSet.{u}) : ↑x.powerset = powerset.{u} x :=
+  ext fun z => ZFSet.mem_powerset
 #align Class.coe_powerset Class.coe_powerset
+-/
 
+#print Class.powerset_apply /-
 @[simp]
-theorem powerset_apply {A : Class.{u}} {x : SetCat.{u}} : powerset A x ↔ ↑x ⊆ A :=
+theorem powerset_apply {A : Class.{u}} {x : ZFSet.{u}} : powerset A x ↔ ↑x ⊆ A :=
   Iff.rfl
 #align Class.powerset_apply Class.powerset_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.unionₛ_apply /-
 @[simp]
-theorem sUnion_apply {x : Class} {y : SetCat} : (⋃₀ x) y ↔ ∃ z : SetCat, x z ∧ y ∈ z :=
+theorem unionₛ_apply {x : Class} {y : ZFSet} : (⋃₀ x) y ↔ ∃ z : ZFSet, x z ∧ y ∈ z :=
   by
   constructor
   · rintro ⟨-, ⟨z, rfl, hxz⟩, hyz⟩
     exact ⟨z, hxz, hyz⟩
   · exact fun ⟨z, hxz, hyz⟩ => ⟨_, coe_mem.2 hxz, hyz⟩
-#align Class.sUnion_apply Class.sUnion_apply
+#align Class.sUnion_apply Class.unionₛ_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.coe_unionₛ /-
 @[simp, norm_cast]
-theorem coe_sUnion (x : SetCat.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
+theorem coe_unionₛ (x : ZFSet.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
   ext fun y =>
-    SetCat.mem_sUnion.trans (sUnion_apply.trans <| by simp_rw [coe_apply, exists_prop]).symm
-#align Class.coe_sUnion Class.coe_sUnion
+    ZFSet.mem_unionₛ.trans (unionₛ_apply.trans <| by simp_rw [coe_apply, exists_prop]).symm
+#align Class.coe_sUnion Class.coe_unionₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.mem_unionₛ /-
 @[simp]
-theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
+theorem mem_unionₛ {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
   by
   constructor
   · rintro ⟨w, rfl, z, hzx, hwz⟩
     exact ⟨z, hzx, coe_mem.2 hwz⟩
   · rintro ⟨w, hwx, z, rfl, hwz⟩
     exact ⟨z, rfl, w, hwx, hwz⟩
-#align Class.mem_sUnion Class.mem_sUnion
+#align Class.mem_sUnion Class.mem_unionₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem sInter_apply {x : Class.{u}} {y : SetCat.{u}} : (⋂₀ x) y ↔ ∀ z : SetCat.{u}, x z → y ∈ z :=
+theorem sInter_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z :=
   by
   refine' ⟨fun hxy z hxz => hxy _ ⟨z, rfl, hxz⟩, _⟩
   rintro H - ⟨z, rfl, hxz⟩
@@ -1767,8 +2324,8 @@ theorem sInter_apply {x : Class.{u}} {y : SetCat.{u}} : (⋂₀ x) y ↔ ∀ z :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, norm_cast]
-theorem sInter_coe {x : SetCat.{u}} (h : x.Nonempty) : ⋂₀ (x : Class.{u}) = ⋂₀ x :=
-  Set.ext fun y => sInter_apply.trans (SetCat.mem_sInter h).symm
+theorem sInter_coe {x : ZFSet.{u}} (h : x.Nonempty) : ⋂₀ (x : Class.{u}) = ⋂₀ x :=
+  Set.ext fun y => sInter_apply.trans (ZFSet.mem_sInter h).symm
 #align Class.sInter_coe Class.sInter_coe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1790,12 +2347,14 @@ theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z
 #align Class.mem_sInter Class.mem_sInter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.unionₛ_empty /-
 @[simp]
-theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
+theorem unionₛ_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
   by
   ext
   simp
-#align Class.sUnion_empty Class.sUnion_empty
+#align Class.sUnion_empty Class.unionₛ_empty
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -1805,6 +2364,7 @@ theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ :=
   simp [sInter, ← univ]
 #align Class.sInter_empty Class.sInter_empty
 
+#print Class.eq_univ_of_powerset_subset /-
 /-- An induction principle for sets. If every subset of a class is a member, then the class is
   universal. -/
 theorem eq_univ_of_powerset_subset {A : Class} (hA : powerset A ⊆ A) : A = univ :=
@@ -1812,24 +2372,30 @@ theorem eq_univ_of_powerset_subset {A : Class} (hA : powerset A ⊆ A) : A = uni
     (by
       by_contra' hnA
       exact
-        WellFounded.min_mem SetCat.mem_wf _ hnA
+        WellFounded.min_mem ZFSet.mem_wf _ hnA
           (hA fun x hx =>
             Classical.not_not.1 fun hB =>
-              WellFounded.not_lt_min SetCat.mem_wf _ hnA hB <| coe_apply.1 hx))
+              WellFounded.not_lt_min ZFSet.mem_wf _ hnA hB <| coe_apply.1 hx))
 #align Class.eq_univ_of_powerset_subset Class.eq_univ_of_powerset_subset
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.iota /-
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/
 def iota (A : Class) : Class :=
   ⋃₀ { x | ∀ y, A y ↔ y = x }
 #align Class.iota Class.iota
+-/
 
-theorem iota_val (A : Class) (x : SetCat) (H : ∀ y, A y ↔ y = x) : iota A = ↑x :=
+#print Class.iota_val /-
+theorem iota_val (A : Class) (x : ZFSet) (H : ∀ y, A y ↔ y = x) : iota A = ↑x :=
   ext fun y =>
     ⟨fun ⟨_, ⟨x', rfl, h⟩, yx'⟩ => by rwa [← (H x').1 <| (h x').2 rfl], fun yx =>
       ⟨_, ⟨x, rfl, H⟩, yx⟩⟩
 #align Class.iota_val Class.iota_val
+-/
 
+#print Class.iota_ex /-
 /-- Unlike the other set constructors, the `iota` definite descriptor
   is a set for any set input, but not constructively so, so there is no
   associated `Class → Set` function. -/
@@ -1839,64 +2405,79 @@ theorem iota_ex (A) : iota.{u} A ∈ univ.{u} :=
       fun hn =>
       ⟨∅, ext fun z => coe_empty.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
 #align Class.iota_ex Class.iota_ex
+-/
 
+#print Class.fval /-
 /-- Function value -/
 def fval (F A : Class.{u}) : Class.{u} :=
-  iota fun y => ToSet (fun x => F (SetCat.pair x y)) A
+  iota fun y => ToSet (fun x => F (ZFSet.pair x y)) A
 #align Class.fval Class.fval
+-/
 
 -- mathport name: «expr ′ »
 infixl:100 " ′ " => fval
 
+#print Class.fval_ex /-
 theorem fval_ex (F A : Class.{u}) : F ′ A ∈ univ.{u} :=
   iota_ex _
 #align Class.fval_ex Class.fval_ex
+-/
 
 end Class
 
-namespace SetCat
+namespace ZFSet
 
+#print ZFSet.map_fval /-
 @[simp]
-theorem map_fval {f : SetCat.{u} → SetCat.{u}} [H : PSet.Definable 1 f] {x y : SetCat.{u}}
-    (h : y ∈ x) : (SetCat.map f x ′ y : Class.{u}) = f y :=
+theorem map_fval {f : ZFSet.{u} → ZFSet.{u}} [H : PSet.Definable 1 f] {x y : ZFSet.{u}}
+    (h : y ∈ x) : (ZFSet.map f x ′ y : Class.{u}) = f y :=
   Class.iota_val _ _ fun z =>
     by
     rw [Class.toSet_of_setCat, Class.coe_apply, mem_map]
     exact
       ⟨fun ⟨w, wz, pr⟩ => by
-        let ⟨wy, fw⟩ := SetCat.pair_injective pr
+        let ⟨wy, fw⟩ := ZFSet.pair_injective pr
         rw [← fw, wy], fun e => by
         subst e
         exact ⟨_, h, rfl⟩⟩
-#align Set.map_fval SetCat.map_fval
+#align Set.map_fval ZFSet.map_fval
+-/
 
-variable (x : SetCat.{u}) (h : ∅ ∉ x)
+variable (x : ZFSet.{u}) (h : ∅ ∉ x)
 
+#print ZFSet.choice /-
 /-- A choice function on the class of nonempty ZFC sets. -/
-noncomputable def choice : SetCat :=
-  @map (fun y => Classical.epsilon fun z => z ∈ y) (Classical.allDefinable _) x
-#align Set.choice SetCat.choice
+noncomputable def choice : ZFSet :=
+  @map (fun y => Classical.epsilon fun z => z ∈ y) (Classical.AllDefinable _) x
+#align Set.choice ZFSet.choice
+-/
 
 include h
 
-theorem choice_mem_aux (y : SetCat.{u}) (yx : y ∈ x) :
-    (Classical.epsilon fun z : SetCat.{u} => z ∈ y) ∈ y :=
-  (@Classical.epsilon_spec _ fun z : SetCat.{u} => z ∈ y) <|
+#print ZFSet.choice_mem_aux /-
+theorem choice_mem_aux (y : ZFSet.{u}) (yx : y ∈ x) :
+    (Classical.epsilon fun z : ZFSet.{u} => z ∈ y) ∈ y :=
+  (@Classical.epsilon_spec _ fun z : ZFSet.{u} => z ∈ y) <|
     by_contradiction fun n => h <| by rwa [← (eq_empty y).2 fun z zx => n ⟨z, zx⟩]
-#align Set.choice_mem_aux SetCat.choice_mem_aux
+#align Set.choice_mem_aux ZFSet.choice_mem_aux
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.choice_isFunc /-
 theorem choice_isFunc : IsFunc x (⋃₀ x) (choice x) :=
-  (@map_isFunc _ (Classical.allDefinable _) _ _).2 fun y yx =>
-    mem_sUnion.2 ⟨y, yx, choice_mem_aux x h y yx⟩
-#align Set.choice_is_func SetCat.choice_isFunc
+  (@map_isFunc _ (Classical.AllDefinable _) _ _).2 fun y yx =>
+    mem_unionₛ.2 ⟨y, yx, choice_mem_aux x h y yx⟩
+#align Set.choice_is_func ZFSet.choice_isFunc
+-/
 
-theorem choice_mem (y : SetCat.{u}) (yx : y ∈ x) : (choice x ′ y : Class.{u}) ∈ (y : Class.{u}) :=
+#print ZFSet.choice_mem /-
+theorem choice_mem (y : ZFSet.{u}) (yx : y ∈ x) : (choice x ′ y : Class.{u}) ∈ (y : Class.{u}) :=
   by
   delta choice
   rw [map_fval yx, Class.coe_mem, Class.coe_apply]
   exact choice_mem_aux x h y yx
-#align Set.choice_mem SetCat.choice_mem
+#align Set.choice_mem ZFSet.choice_mem
+-/
 
-end SetCat
+end ZFSet
 
