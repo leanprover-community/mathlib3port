@@ -111,9 +111,9 @@ theorem NormalizeFinLt.succ {n} {a : Fin n} {a' b : ℕ} (h : NormalizeFinLt n a
   simpa [normalize_fin_lt, ← e] using h
 #align tactic.norm_fin.normalize_fin_lt.succ Tactic.NormFin.NormalizeFinLt.succ
 
-theorem NormalizeFinLt.castLt {n m} {a : Fin m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.castLt a ha) a' := by simpa [normalize_fin_lt] using h
-#align tactic.norm_fin.normalize_fin_lt.cast_lt Tactic.NormFin.NormalizeFinLt.castLt
+theorem NormalizeFinLt.castLT {n m} {a : Fin m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.castLT a ha) a' := by simpa [normalize_fin_lt] using h
+#align tactic.norm_fin.normalize_fin_lt.cast_lt Tactic.NormFin.NormalizeFinLt.castLT
 
 theorem NormalizeFinLt.castLe {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Fin.castLe nm a) a' := by simpa [normalize_fin_lt] using h
@@ -297,7 +297,7 @@ unsafe def match_fin : expr → Option match_fin_result
   | q(@bit0 (Fin $(n)) _ $(a)) => some (bit0 n a)
   | q(@bit1 _ (@Fin.hasOneOfNeZero $(n) $(n0)) _ $(a)) => some (bit1 n a n0)
   | q(@Fin.succ $(n) $(a)) => some (succ n a)
-  | q(@Fin.castLt $(n) $(m) $(a) $(h)) => some (cast_lt n m a h)
+  | q(@Fin.castLT $(n) $(m) $(a) $(h)) => some (cast_lt n m a h)
   | expr.app q(@coeFn _ _ _ $(f)) a => match_fin_coe_fn a f
   | _ => none
 #align tactic.norm_fin.match_fin tactic.norm_fin.match_fin
@@ -350,7 +350,7 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) :
         pure (b, q(@NormalizeFinLt.succ).mk_app [n, a, a', b, pa, pb])
       | match_fin_result.cast_lt _ m a h => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', q(@NormalizeFinLt.castLt).mk_app [n, m, a, h, a', pa])
+        pure (a', q(@NormalizeFinLt.castLT).mk_app [n, m, a, h, a', pa])
       | match_fin_result.cast_le _ m nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
         pure (a', q(@NormalizeFinLt.castLe).mk_app [n, m, nm, a, a', pa])

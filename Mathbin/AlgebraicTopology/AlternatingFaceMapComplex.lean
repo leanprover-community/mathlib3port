@@ -98,28 +98,28 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     by constructing a bijection φ : S -> Sᶜ, which maps (i,j) to (j,i+1),
     and by comparing the terms -/
   let φ : ∀ ij : P, ij ∈ S → P := fun ij hij =>
-    (Fin.castLt ij.2 (lt_of_le_of_lt (finset.mem_filter.mp hij).right (Fin.is_lt ij.1)), ij.1.succ)
+    (Fin.castLT ij.2 (lt_of_le_of_lt (finset.mem_filter.mp hij).right (Fin.is_lt ij.1)), ij.1.succ)
   apply Finset.sum_bij φ
   · -- φ(S) is contained in Sᶜ
     intro ij hij
     simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.val_succ,
-      Fin.coe_castLt] at hij⊢
+      Fin.coe_castLT] at hij⊢
     linarith
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
     simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul,
-      mul_one, Fin.coe_castLt, Fin.val_succ, pow_one, mul_neg, neg_neg]
+      mul_one, Fin.coe_castLT, Fin.val_succ, pow_one, mul_neg, neg_neg]
     let jj : Fin (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by
       rw [← Fin.val_fin_le]
       simpa using hij
-    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.castSucc_cast_lt, mul_comm]
+    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.castSucc_castLT, mul_comm]
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iff]
     refine' ⟨by simpa using congr_arg Prod.snd h, _⟩
     have h1 := congr_arg Fin.castSucc (congr_arg Prod.fst h)
-    simpa [Fin.castSucc_cast_lt] using h1
+    simpa [Fin.castSucc_castLT] using h1
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
     simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at
@@ -130,7 +130,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     ·
       simpa only [true_and_iff, Finset.mem_univ, Fin.coe_castSucc, Fin.coe_pred,
         Finset.mem_filter] using Nat.le_pred_of_lt hij'
-    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.cast_lt_castSucc]
+    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.castLT_castSucc]
       constructor <;> rfl
 #align algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
 

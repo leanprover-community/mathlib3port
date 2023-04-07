@@ -256,7 +256,7 @@ theorem affineCombination_eq_centerMass {ι : Type _} {t : Finset ι} {p : ι �
     (hw₂ : (∑ i in t, w i) = 1) : t.affineCombination R p w = centerMass t w p :=
   by
   rw [affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one _ w _ hw₂ (0 : E),
-    Finset.weightedVsubOfPoint_apply, vadd_eq_add, add_zero, t.center_mass_eq_of_sum_1 _ hw₂]
+    Finset.weightedVSubOfPoint_apply, vadd_eq_add, add_zero, t.center_mass_eq_of_sum_1 _ hw₂]
   simp_rw [vsub_eq_sub, sub_zero]
 #align affine_combination_eq_center_mass affineCombination_eq_centerMass
 

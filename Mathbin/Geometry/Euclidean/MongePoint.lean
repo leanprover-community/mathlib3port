@@ -209,16 +209,16 @@ include V
 
 /-- The Monge point of an (n+2)-simplex, minus the centroid of an
 n-dimensional face, in terms of `points_with_circumcenter`. -/
-theorem mongePoint_vsub_face_centroid_eq_weightedVsub_of_pointsWithCircumcenter {n : ℕ}
+theorem mongePoint_vsub_face_centroid_eq_weightedVSub_of_pointsWithCircumcenter {n : ℕ}
     (s : Simplex ℝ P (n + 2)) {i₁ i₂ : Fin (n + 3)} (h : i₁ ≠ i₂) :
     s.mongePoint -ᵥ ({i₁, i₂}ᶜ : Finset (Fin (n + 3))).centroid ℝ s.points =
-      (univ : Finset (PointsWithCircumcenterIndex (n + 2))).weightedVsub s.pointsWithCircumcenter
+      (univ : Finset (PointsWithCircumcenterIndex (n + 2))).weightedVSub s.pointsWithCircumcenter
         (mongePointVsubFaceCentroidWeightsWithCircumcenter i₁ i₂) :=
   by
   simp_rw [monge_point_eq_affine_combination_of_points_with_circumcenter,
     centroid_eq_affine_combination_of_points_with_circumcenter, affine_combination_vsub,
     monge_point_vsub_face_centroid_weights_with_circumcenter_eq_sub h]
-#align affine.simplex.monge_point_vsub_face_centroid_eq_weighted_vsub_of_points_with_circumcenter Affine.Simplex.mongePoint_vsub_face_centroid_eq_weightedVsub_of_pointsWithCircumcenter
+#align affine.simplex.monge_point_vsub_face_centroid_eq_weighted_vsub_of_points_with_circumcenter Affine.Simplex.mongePoint_vsub_face_centroid_eq_weightedVSub_of_pointsWithCircumcenter
 
 /-- The Monge point of an (n+2)-simplex, minus the centroid of an
 n-dimensional face, is orthogonal to the difference of the two

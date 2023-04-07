@@ -83,18 +83,18 @@ theorem dist_left_midpoint_eq_dist_right_midpoint (p1 p2 : P) :
 
 /-- The inner product of two vectors given with `weighted_vsub`, in
 terms of the pairwise distances. -/
-theorem inner_weightedVsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P)
+theorem inner_weightedVSub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P)
     (h₁ : (∑ i in s₁, w₁ i) = 0) {ι₂ : Type _} {s₂ : Finset ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P)
     (h₂ : (∑ i in s₂, w₂ i) = 0) :
-    ⟪s₁.weightedVsub p₁ w₁, s₂.weightedVsub p₂ w₂⟫ =
+    ⟪s₁.weightedVSub p₁ w₁, s₂.weightedVSub p₂ w₂⟫ =
       (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (dist (p₁ i₁) (p₂ i₂) * dist (p₁ i₁) (p₂ i₂))) /
         2 :=
   by
-  rw [Finset.weightedVsub_apply, Finset.weightedVsub_apply,
+  rw [Finset.weightedVSub_apply, Finset.weightedVSub_apply,
     inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
   simp_rw [vsub_sub_vsub_cancel_right]
   rcongr (i₁ i₂) <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
-#align euclidean_geometry.inner_weighted_vsub EuclideanGeometry.inner_weightedVsub
+#align euclidean_geometry.inner_weighted_vsub EuclideanGeometry.inner_weightedVSub
 
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that

@@ -57,14 +57,14 @@ nontrivial weighted subtractions (where the sum of weights is 0) are
 0. -/
 def AffineIndependent (p : ι → P) : Prop :=
   ∀ (s : Finset ι) (w : ι → k),
-    (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀ i ∈ s, w i = 0
+    (∑ i in s, w i) = 0 → s.weightedVSub p w = (0 : V) → ∀ i ∈ s, w i = 0
 #align affine_independent AffineIndependent
 
 /-- The definition of `affine_independent`. -/
 theorem affineIndependent_def (p : ι → P) :
     AffineIndependent k p ↔
       ∀ (s : Finset ι) (w : ι → k),
-        (∑ i in s, w i) = 0 → s.weightedVsub p w = (0 : V) → ∀ i ∈ s, w i = 0 :=
+        (∑ i in s, w i) = 0 → s.weightedVSub p w = (0 : V) → ∀ i ∈ s, w i = 0 :=
   Iff.rfl
 #align affine_independent_def affineIndependent_def
 
@@ -78,12 +78,12 @@ only if no nontrivial weighted subtractions over `finset.univ` (where
 the sum of the weights is 0) are 0. -/
 theorem affineIndependent_iff_of_fintype [Fintype ι] (p : ι → P) :
     AffineIndependent k p ↔
-      ∀ w : ι → k, (∑ i, w i) = 0 → Finset.univ.weightedVsub p w = (0 : V) → ∀ i, w i = 0 :=
+      ∀ w : ι → k, (∑ i, w i) = 0 → Finset.univ.weightedVSub p w = (0 : V) → ∀ i, w i = 0 :=
   by
   constructor
   · exact fun h w hw hs i => h Finset.univ w hw hs i (Finset.mem_univ _)
   · intro h s w hw hs i hi
-    rw [Finset.weightedVsub_indicator_subset _ _ (Finset.subset_univ s)] at hs
+    rw [Finset.weightedVSub_indicator_subset _ _ (Finset.subset_univ s)] at hs
     rw [Set.sum_indicator_subset _ (Finset.subset_univ s)] at hw
     replace h := h ((↑s : Set ι).indicator w) hw hs i
     simpa [hi] using h
@@ -124,16 +124,16 @@ theorem affineIndependent_iff_linearIndependent_vsub (p : ι → P) (i1 : ι) :
           by
           simp_rw [hf2def, hg2def, hfg]
           exact fun x => rfl
-        rw [Finset.weightedVsub_eq_weightedVsubOfPoint_of_sum_eq_zero s2 f p hf (p i1),
-          Finset.weightedVsubOfPoint_insert, Finset.weightedVsubOfPoint_apply,
+        rw [Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero s2 f p hf (p i1),
+          Finset.weightedVSubOfPoint_insert, Finset.weightedVSubOfPoint_apply,
           Finset.sum_subtype_map_embedding fun x hx => hf2g2 x]
         exact hg
       exact h s2 f hf hs2 i (Finset.mem_insert_of_mem (Finset.mem_map.2 ⟨i, hi, rfl⟩))
     · intro h
       rw [linearIndependent_iff'] at h
       intro s w hw hs i hi
-      rw [Finset.weightedVsub_eq_weightedVsubOfPoint_of_sum_eq_zero s w p hw (p i1), ←
-        s.weighted_vsub_of_point_erase w p i1, Finset.weightedVsubOfPoint_apply] at hs
+      rw [Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero s w p hw (p i1), ←
+        s.weighted_vsub_of_point_erase w p i1, Finset.weightedVSubOfPoint_apply] at hs
       let f : ι → V := fun i => w i • (p i -ᵥ p i1)
       have hs2 : (∑ i in (s.erase i1).Subtype fun i => i ≠ i1, f i) = 0 :=
         by
@@ -226,7 +226,7 @@ theorem affineIndependent_iff_indicator_eq_of_affineCombination_eq (p : ι → P
       let w2 := w + w1
       have hw2 : (∑ i in s, w2 i) = 1 := by simp [w2, Finset.sum_add_distrib, hw, hw1]
       have hw2s : s.affine_combination k p w2 = p i0 := by
-        simp [w2, ← Finset.weightedVsub_vadd_affineCombination, hs, hw1s]
+        simp [w2, ← Finset.weightedVSub_vadd_affineCombination, hs, hw1s]
       replace ha := ha s s w2 w1 hw2 hw1 (hw1s.symm ▸ hw2s)
       have hws : w2 i0 - w1 i0 = 0 := by
         rw [← Finset.mem_coe] at hi0
@@ -310,7 +310,7 @@ theorem AffineIndependent.comp_embedding {ι2 : Type _} (f : ι2 ↪ ι) {p : ι
       simp [hw']
     have hs' : fs'.weighted_vsub p w' = (0 : V) :=
       by
-      rw [← hs, Finset.weightedVsub_map]
+      rw [← hs, Finset.weightedVSub_map]
       congr with i
       simp [hw']
     rw [← ha fs' w' hw's hs' (f i0) ((Finset.mem_map' _).2 hi0), hw']
@@ -488,8 +488,8 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V}
     rw [affineIndependent_iff_of_fintype] at h
     simp only [exists_prop, not_forall] at h
     obtain ⟨w, hw, hwt, i, hi⟩ := h
-    simp only [Finset.weightedVsub_eq_weightedVsubOfPoint_of_sum_eq_zero _ w (coe : t → V) hw 0,
-      vsub_eq_sub, Finset.weightedVsubOfPoint_apply, sub_zero] at hwt
+    simp only [Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero _ w (coe : t → V) hw 0,
+      vsub_eq_sub, Finset.weightedVSubOfPoint_apply, sub_zero] at hwt
     let f : ∀ x : V, x ∈ t → k := fun x hx => w ⟨x, hx⟩
     refine'
       ⟨fun x => if hx : x ∈ t then f x hx else (0 : k), _, _,
@@ -517,10 +517,10 @@ theorem affineIndependent_iff {ι} {p : ι → V} :
 /-- Given an affinely independent family of points, a weighted subtraction lies in the
 `vector_span` of two points given as affine combinations if and only if it is a weighted
 subtraction with weights a multiple of the difference between the weights of the two points. -/
-theorem weightedVsub_mem_vectorSpan_pair {p : ι → P} (h : AffineIndependent k p) {w w₁ w₂ : ι → k}
+theorem weightedVSub_mem_vectorSpan_pair {p : ι → P} (h : AffineIndependent k p) {w w₁ w₂ : ι → k}
     {s : Finset ι} (hw : (∑ i in s, w i) = 0) (hw₁ : (∑ i in s, w₁ i) = 1)
     (hw₂ : (∑ i in s, w₂ i) = 1) :
-    s.weightedVsub p w ∈
+    s.weightedVSub p w ∈
         vectorSpan k ({s.affineCombination k p w₁, s.affineCombination k p w₂} : Set P) ↔
       ∃ r : k, ∀ i ∈ s, w i = r * (w₁ i - w₂ i) :=
   by
@@ -542,7 +542,7 @@ theorem weightedVsub_mem_vectorSpan_pair {p : ι → P} (h : AffineIndependent k
     rw [s.weighted_vsub_congr hr fun _ _ => rfl, s.affine_combination_vsub, ←
       s.weighted_vsub_const_smul]
     congr
-#align weighted_vsub_mem_vector_span_pair weightedVsub_mem_vectorSpan_pair
+#align weighted_vsub_mem_vector_span_pair weightedVSub_mem_vectorSpan_pair
 
 /-- Given an affinely independent family of points, an affine combination lies in the
 span of two points given as affine combinations if and only if it is an affine combination
@@ -557,7 +557,7 @@ theorem affineCombination_mem_affineSpan_pair {p : ι → P} (h : AffineIndepend
   rw [← vsub_vadd (s.affine_combination k p w) (s.affine_combination k p w₁),
     AffineSubspace.vadd_mem_iff_mem_direction _ (left_mem_affineSpan_pair _ _ _),
     direction_affineSpan, s.affine_combination_vsub, Set.pair_comm,
-    weightedVsub_mem_vectorSpan_pair h _ hw₂ hw₁]
+    weightedVSub_mem_vectorSpan_pair h _ hw₂ hw₁]
   · simp only [Pi.sub_apply, sub_eq_iff_eq_add]
   · simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, hw, hw₁, sub_self]
 #align affine_combination_mem_affine_span_pair affineCombination_mem_affineSpan_pair
@@ -696,8 +696,8 @@ theorem AffineIndependent.affineIndependent_of_not_mem_span {p : ι → P} {i : 
         exact hwx (his.neg_resolve_left hxs)
       have hs' : s'.weighted_vsub p' w' = (0 : V) :=
         by
-        simp_rw [Finset.weightedVsub_subtype_eq_filter]
-        rw [Finset.weightedVsub_filter_of_ne, hs]
+        simp_rw [Finset.weightedVSub_subtype_eq_filter]
+        rw [Finset.weightedVSub_filter_of_ne, hs]
         rintro x hxs hwx rfl
         exact hwx (his.neg_resolve_left hxs)
       intro j hj
