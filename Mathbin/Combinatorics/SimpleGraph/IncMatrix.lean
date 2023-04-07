@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Moise, Yaël Dillies, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.inc_matrix
-! leanprover-community/mathlib commit bb168510ef455e9280a152e7f31673cabd3d7496
+! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Matrix.Basic
 
 /-!
 # Incidence matrix of a simple graph
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the unoriented incidence matrix of a simple graph.
 

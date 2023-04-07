@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit 271bf175e6c51b8d31d6c0107b7bb4a967c7277e
+! leanprover-community/mathlib commit 60da01b41bbe4206f05d34fd70c8dd7498717a30
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -382,9 +382,21 @@ theorem isComplex_iff {w : InfinitePlace K} :
   · exact fun h => ⟨Embedding w, h, mk_embedding w⟩
 #align number_field.infinite_place.is_complex_iff NumberField.InfinitePlace.isComplex_iff
 
+@[simp]
 theorem not_isReal_iff_isComplex {w : InfinitePlace K} : ¬IsReal w ↔ IsComplex w := by
   rw [is_complex_iff, is_real_iff]
 #align number_field.infinite_place.not_is_real_iff_is_complex NumberField.InfinitePlace.not_isReal_iff_isComplex
+
+@[simp]
+theorem not_isComplex_iff_isReal {w : InfinitePlace K} : ¬IsComplex w ↔ IsReal w := by
+  rw [← not_is_real_iff_is_complex, Classical.not_not]
+#align number_field.infinite_place.not_is_complex_iff_is_real NumberField.InfinitePlace.not_isComplex_iff_isReal
+
+theorem isReal_or_isComplex (w : InfinitePlace K) : IsReal w ∨ IsComplex w :=
+  by
+  rw [← not_is_real_iff_is_complex]
+  exact em _
+#align number_field.infinite_place.is_real_or_is_complex NumberField.InfinitePlace.isReal_or_isComplex
 
 /-- For `w` a real infinite place, return the corresponding embedding as a morphism `K →+* ℝ`. -/
 noncomputable def IsReal.embedding {w : InfinitePlace K} (hw : IsReal w) : K →+* ℝ :=
@@ -398,6 +410,14 @@ theorem IsReal.place_embedding_apply {w : InfinitePlace K} (hw : IsReal w) (x : 
   rw [is_real.embedding, complex_embedding.is_real.place_embedding, ← coe_mk]
   exact congr_fun (congr_arg coeFn (mk_embedding w)) x
 #align number_field.infinite_place.is_real.place_embedding_apply NumberField.InfinitePlace.IsReal.place_embedding_apply
+
+@[simp]
+theorem IsReal.abs_embedding_apply {w : InfinitePlace K} (hw : IsReal w) (x : K) :
+    |IsReal.embedding hw x| = w x :=
+  by
+  rw [← is_real.place_embedding_apply hw x]
+  congr
+#align number_field.infinite_place.is_real.abs_embedding_apply NumberField.InfinitePlace.IsReal.abs_embedding_apply
 
 variable (K)
 

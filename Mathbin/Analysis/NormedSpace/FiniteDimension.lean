@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit be2ac64be57e8319fcd5c5547f3a8d9412daf5ec
+! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -440,7 +440,7 @@ variable (𝕜 E)
 
 theorem FiniteDimensional.complete [FiniteDimensional 𝕜 E] : CompleteSpace E :=
   by
-  set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ (finrank 𝕜 E)).symm
+  set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ _ (finrank 𝕜 E)).symm
   have : UniformEmbedding e.to_linear_equiv.to_equiv.symm := e.symm.uniform_embedding
   exact (completeSpace_congr this).1 (by infer_instance)
 #align finite_dimensional.complete FiniteDimensional.complete
@@ -692,7 +692,7 @@ properness of `𝕜`, and the search for `𝕜` as an unknown metavariable. Decl
 explicitly when needed. -/
 theorem FiniteDimensional.proper [FiniteDimensional 𝕜 E] : ProperSpace E :=
   by
-  set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ (finrank 𝕜 E)).symm
+  set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ _ (finrank 𝕜 E)).symm
   exact e.symm.antilipschitz.proper_space e.symm.continuous e.symm.surjective
 #align finite_dimensional.proper FiniteDimensional.proper
 

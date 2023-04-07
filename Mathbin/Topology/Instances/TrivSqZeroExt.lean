@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.triv_sq_zero_ext
-! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
+! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Algebra.Module.Basic
 
 /-!
 # Topology on `triv_sq_zero_ext R M`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The type `triv_sq_zero_ext R M` inherits the topology from `R × M`.
 

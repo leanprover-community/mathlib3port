@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.eigenspace
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -603,7 +603,7 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
   cases n
   -- If the vector space is 0-dimensional, the result is trivial.
   · rw [← top_le_iff]
-    simp only [finrank_eq_zero.1 (Eq.trans finrank_top h_dim), bot_le]
+    simp only [finrank_eq_zero.1 (Eq.trans (finrank_top _ _) h_dim), bot_le]
   -- Otherwise the vector space is nontrivial.
   · haveI : Nontrivial V :=
       finrank_pos_iff.1

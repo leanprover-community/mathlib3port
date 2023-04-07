@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.finrank
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,10 +47,9 @@ namespace FiniteDimensional
 
 open IsNoetherian
 
-section DivisionRing
+section Ring
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
-  [Module K V₂]
+variable [Ring K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
 
 /-- The rank of a module as a natural number.
 
@@ -93,18 +92,9 @@ theorem rank_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.ra
     exact n.zero_le
 #align finite_dimensional.rank_lt_of_finrank_lt FiniteDimensional.rank_lt_of_finrank_lt
 
-/-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
-basis. -/
-theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) :
-    finrank K V = Fintype.card ι :=
-  finrank_eq_of_rank_eq (rank_eq_card_basis h)
-#align finite_dimensional.finrank_eq_card_basis FiniteDimensional.finrank_eq_card_basis
+section
 
-/-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
-basis. This lemma uses a `finset` instead of indexed types. -/
-theorem finrank_eq_card_finset_basis {ι : Type w} {b : Finset ι} (h : Basis.{w} b K V) :
-    finrank K V = Finset.card b := by rw [finrank_eq_card_basis h, Fintype.card_coe]
-#align finite_dimensional.finrank_eq_card_finset_basis FiniteDimensional.finrank_eq_card_finset_basis
+variable [Nontrivial K] [NoZeroSMulDivisors K V]
 
 /-- A finite dimensional space is nontrivial if it has positive `finrank`. -/
 theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
@@ -125,14 +115,29 @@ theorem finrank_zero_of_subsingleton [h : Subsingleton V] : finrank K V = 0 :=
   exact hxy (Subsingleton.elim _ _)
 #align finite_dimensional.finrank_zero_of_subsingleton FiniteDimensional.finrank_zero_of_subsingleton
 
-theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) :
-    s ⊆ hs.extend (Set.subset_univ _) :=
-  hs.subset_extend _
-#align finite_dimensional.basis.subset_extend FiniteDimensional.Basis.subset_extend
+end
+
+section
+
+variable [StrongRankCondition K]
+
+/-- If a vector space (or module) has a finite basis, then its dimension (or rank) is equal to the
+cardinality of the basis. -/
+theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) :
+    finrank K V = Fintype.card ι :=
+  finrank_eq_of_rank_eq (rank_eq_card_basis h)
+#align finite_dimensional.finrank_eq_card_basis FiniteDimensional.finrank_eq_card_basis
+
+/-- If a vector space (or module) has a finite basis, then its dimension (or rank) is equal to the
+cardinality of the basis. This lemma uses a `finset` instead of indexed types. -/
+theorem finrank_eq_card_finset_basis {ι : Type w} {b : Finset ι} (h : Basis.{w} b K V) :
+    finrank K V = Finset.card b := by rw [finrank_eq_card_basis h, Fintype.card_coe]
+#align finite_dimensional.finrank_eq_card_finset_basis FiniteDimensional.finrank_eq_card_finset_basis
 
 variable (K)
 
-/-- A division_ring is one-dimensional as a vector space over itself. -/
+/-- A ring satisfying `strong_rank_condition` (such as a `division_ring`) is one-dimensional as a
+module over itself. -/
 @[simp]
 theorem finrank_self : finrank K K = 1 :=
   finrank_eq_of_rank_eq (by simp)
@@ -149,6 +154,20 @@ theorem finrank_fintype_fun_eq_card {ι : Type v} [Fintype ι] : finrank K (ι �
 theorem finrank_fin_fun {n : ℕ} : finrank K (Fin n → K) = n := by simp
 #align finite_dimensional.finrank_fin_fun FiniteDimensional.finrank_fin_fun
 
+end
+
+end Ring
+
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
+  [Module K V₂]
+
+theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) :
+    s ⊆ hs.extend (Set.subset_univ _) :=
+  hs.subset_extend _
+#align finite_dimensional.basis.subset_extend FiniteDimensional.Basis.subset_extend
+
 end DivisionRing
 
 end FiniteDimensional
@@ -157,14 +176,15 @@ variable {K V}
 
 section ZeroRank
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V]
+variable [Ring K] [StrongRankCondition K] [AddCommGroup V] [Module K V] [Module.Free K V]
 
 open FiniteDimensional
 
 theorem finrank_eq_zero_of_basis_imp_not_finite
     (h : ∀ s : Set V, Basis.{v} (s : Set V) K V → ¬s.Finite) : finrank K V = 0 :=
-  dif_neg fun rank_lt =>
-    h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_rank_lt_aleph0 rank_lt)
+  by
+  obtain ⟨_, ⟨b⟩⟩ := (Module.free_iff_set K V).mp ‹_›
+  exact dif_neg fun rank_lt => h _ b (b.finite_index_of_rank_lt_aleph_0 rank_lt)
 #align finrank_eq_zero_of_basis_imp_not_finite finrank_eq_zero_of_basis_imp_not_finite
 
 theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) :
@@ -191,21 +211,13 @@ theorem finrank_eq_zero_of_not_exists_basis_finset (h : ¬∃ s : Finset V, None
   finrank_eq_zero_of_basis_imp_false fun s b => h ⟨s, ⟨b⟩⟩
 #align finrank_eq_zero_of_not_exists_basis_finset finrank_eq_zero_of_not_exists_basis_finset
 
-variable (K V)
-
-@[simp]
-theorem finrank_bot : finrank K (⊥ : Submodule K V) = 0 :=
-  finrank_eq_of_rank_eq (rank_bot _ _)
-#align finrank_bot finrank_bot
-
 end ZeroRank
 
 namespace LinearEquiv
 
 open FiniteDimensional
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
-  [Module K V₂]
+variable [Ring K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
 
 variable {R M M₂ : Type _} [Ring R] [AddCommGroup M] [AddCommGroup M₂]
 
@@ -230,17 +242,16 @@ namespace LinearMap
 
 open FiniteDimensional
 
-section DivisionRing
+section Ring
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
-  [Module K V₂]
+variable [Ring K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
 
 /-- The dimensions of the domain and range of an injective linear map are equal. -/
 theorem finrank_range_of_inj {f : V →ₗ[K] V₂} (hf : Function.Injective f) :
     finrank K f.range = finrank K V := by rw [(LinearEquiv.ofInjective f hf).finrank_eq]
 #align linear_map.finrank_range_of_inj LinearMap.finrank_range_of_inj
 
-end DivisionRing
+end Ring
 
 end LinearMap
 
@@ -248,7 +259,14 @@ open Module FiniteDimensional
 
 section
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V]
+variable [Ring K] [AddCommGroup V] [Module K V]
+
+variable (K V)
+
+@[simp]
+theorem finrank_bot [Nontrivial K] : finrank K (⊥ : Submodule K V) = 0 :=
+  finrank_eq_of_rank_eq (rank_bot _ _)
+#align finrank_bot finrank_bot
 
 @[simp]
 theorem finrank_top : finrank K (⊤ : Submodule K V) = finrank K V :=
@@ -261,10 +279,9 @@ end
 
 namespace Submodule
 
-section DivisionRing
+section Ring
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
-  [Module K V₂]
+variable [Ring K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
 
 theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t)
     (lt : finrank K s < finrank K t) : s < t :=
@@ -273,11 +290,11 @@ theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t)
 
 theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ :=
   by
-  rw [← @finrank_top K V] at lt
+  rw [← finrank_top K V] at lt
   exact lt_of_le_of_finrank_lt_finrank le_top lt
 #align submodule.lt_top_of_finrank_lt_finrank Submodule.lt_top_of_finrank_lt_finrank
 
-end DivisionRing
+end Ring
 
 end Submodule
 
@@ -490,12 +507,15 @@ We now give characterisations of `finrank K V = 1` and `finrank K V ≤ 1`.
 
 section finrank_eq_one
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V]
+variable [Ring K] [AddCommGroup V] [Module K V]
+
+variable [NoZeroSMulDivisors K V] [StrongRankCondition K]
 
 /-- If there is a nonzero vector and every other vector is a multiple of it,
 then the module has dimension one. -/
 theorem finrank_eq_one (v : V) (n : v ≠ 0) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank K V = 1 :=
   by
+  haveI := nontrivial_of_invariantBasisNumber K
   obtain ⟨b⟩ := (Basis.basis_singleton_iff PUnit).mpr ⟨v, n, h⟩
   rw [finrank_eq_card_basis b, Fintype.card_punit]
 #align finrank_eq_one finrank_eq_one
@@ -504,6 +524,7 @@ theorem finrank_eq_one (v : V) (n : v ≠ 0) (h : ∀ w : V, ∃ c : K, c • v 
 -/
 theorem finrank_le_one (v : V) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank K V ≤ 1 :=
   by
+  haveI := nontrivial_of_invariantBasisNumber K
   rcases eq_or_ne v 0 with (rfl | hn)
   · haveI :=
       subsingleton_of_forall_eq (0 : V) fun w =>
@@ -521,16 +542,7 @@ section SubalgebraRank
 
 open Module
 
-variable {F E : Type _} [Field F] [Ring E] [Algebra F E]
-
-@[simp]
-theorem Subalgebra.rank_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E) = 1 :=
-  ((Subalgebra.toSubmoduleEquiv (⊥ : Subalgebra F E)).symm.trans <|
-          LinearEquiv.ofEq _ _ Algebra.toSubmodule_bot).rank_eq.trans <|
-    by
-    rw [rank_span_set]
-    exacts[mk_singleton _, linearIndependent_singleton one_ne_zero]
-#align subalgebra.rank_bot Subalgebra.rank_bot
+variable {F E : Type _} [CommRing F] [Ring E] [Algebra F E]
 
 @[simp]
 theorem Subalgebra.rank_toSubmodule (S : Subalgebra F E) :
@@ -564,10 +576,26 @@ theorem Subalgebra.rank_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank
   exact rank_top F E
 #align subalgebra.rank_top Subalgebra.rank_top
 
+section
+
+variable [StrongRankCondition F] [NoZeroSMulDivisors F E] [Nontrivial E]
+
 @[simp]
-theorem Subalgebra.finrank_bot [Nontrivial E] : finrank F (⊥ : Subalgebra F E) = 1 :=
+theorem Subalgebra.rank_bot : Module.rank F (⊥ : Subalgebra F E) = 1 :=
+  ((Subalgebra.toSubmoduleEquiv (⊥ : Subalgebra F E)).symm.trans <|
+          LinearEquiv.ofEq _ _ Algebra.toSubmodule_bot).rank_eq.trans <|
+    by
+    letI := Module.nontrivial F E
+    rw [rank_span_set]
+    exacts[mk_singleton _, linearIndependent_singleton one_ne_zero]
+#align subalgebra.rank_bot Subalgebra.rank_bot
+
+@[simp]
+theorem Subalgebra.finrank_bot : finrank F (⊥ : Subalgebra F E) = 1 :=
   finrank_eq_of_rank_eq (by simp)
 #align subalgebra.finrank_bot Subalgebra.finrank_bot
+
+end
 
 end SubalgebraRank
 

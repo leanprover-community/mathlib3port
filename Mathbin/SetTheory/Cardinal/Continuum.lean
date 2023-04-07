@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.continuum
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit e08a42b2dd544cf11eba72e5fc7bf199d4349925
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,6 +67,26 @@ theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by
 ### Inequalities
 -/
 
+
+@[simp]
+theorem continuum_le_lift {c : Cardinal.{u}} : 𝔠 ≤ lift.{v} c ↔ 𝔠 ≤ c := by
+  rw [← lift_continuum, lift_le]
+#align cardinal.continuum_le_lift Cardinal.continuum_le_lift
+
+@[simp]
+theorem lift_le_continuum {c : Cardinal.{u}} : lift.{v} c ≤ 𝔠 ↔ c ≤ 𝔠 := by
+  rw [← lift_continuum, lift_le]
+#align cardinal.lift_le_continuum Cardinal.lift_le_continuum
+
+@[simp]
+theorem continuum_lt_lift {c : Cardinal.{u}} : 𝔠 < lift.{v} c ↔ 𝔠 < c := by
+  rw [← lift_continuum, lift_lt]
+#align cardinal.continuum_lt_lift Cardinal.continuum_lt_lift
+
+@[simp]
+theorem lift_lt_continuum {c : Cardinal.{u}} : lift.{v} c < 𝔠 ↔ c < 𝔠 := by
+  rw [← lift_continuum, lift_lt]
+#align cardinal.lift_lt_continuum Cardinal.lift_lt_continuum
 
 /- warning: cardinal.aleph_0_lt_continuum -> Cardinal.aleph0_lt_continuum is a dubious translation:
 lean 3 declaration is

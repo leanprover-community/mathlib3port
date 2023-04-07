@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.rank
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit 5aa3c1de9f3c642eac76e11071c852766f220fd0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem finrank_eq_card_chooseBasisIndex :
 /-- The finrank of `(ι →₀ R)` is `fintype.card ι`. -/
 @[simp]
 theorem finrank_finsupp {ι : Type v} [Fintype ι] : finrank R (ι →₀ R) = card ι := by
-  rw [finrank, rank_finsupp, ← mk_to_nat_eq_card, to_nat_lift]
+  rw [finrank, rank_finsupp_self, ← mk_to_nat_eq_card, to_nat_lift]
 #align finite_dimensional.finrank_finsupp FiniteDimensional.finrank_finsupp
 
 /-- The finrank of `(ι → R)` is `fintype.card ι`. -/
@@ -83,7 +83,7 @@ theorem finrank_directSum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i 
     finrank R (⨁ i, M i) = ∑ i, finrank R (M i) :=
   by
   letI := nontrivial_of_invariantBasisNumber R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_direct_sum, ← mk_sigma,
+  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_directSum, ← mk_sigma,
     mk_to_nat_eq_card, card_sigma]
 #align finite_dimensional.finrank_direct_sum FiniteDimensional.finrank_directSum
 
@@ -100,7 +100,7 @@ theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) :=
   by
   letI := nontrivial_of_invariantBasisNumber R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_finite, ← mk_sigma,
+  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi, ← mk_sigma,
     mk_to_nat_eq_card, card_sigma]
 #align finite_dimensional.finrank_pi_fintype FiniteDimensional.finrank_pi_fintype
 

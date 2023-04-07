@@ -2265,6 +2265,7 @@ import Mathbin.NumberTheory.ModularForms.SlashActions
 import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
 import Mathbin.NumberTheory.Multiplicity
 import Mathbin.NumberTheory.NumberField.Basic
+import Mathbin.NumberTheory.NumberField.CanonicalEmbedding
 import Mathbin.NumberTheory.NumberField.ClassNumber
 import Mathbin.NumberTheory.NumberField.Embeddings
 import Mathbin.NumberTheory.NumberField.Norm

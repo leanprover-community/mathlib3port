@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.algebra
-! leanprover-community/mathlib commit 43afc5ad87891456c57b5a183e3e617d67c2b1db
+! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
 # Topological (sub)algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A topological algebra over a topological semiring `R` is a topological semiring with a compatible
 continuous scalar multiplication by elements of `R`. We reuse typeclass `has_continuous_smul` for

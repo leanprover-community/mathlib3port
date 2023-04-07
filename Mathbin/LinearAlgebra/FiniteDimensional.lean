@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -820,7 +820,7 @@ theorem finrank_lt [FiniteDimensional K V] {s : Submodule K V} (h : s < ⊤) :
 #align submodule.finrank_lt Submodule.finrank_lt
 
 /-- The sum of the dimensions of s + t and s ∩ t is the sum of the dimensions of s and t -/
-theorem rank_sup_add_rank_inf_eq (s t : Submodule K V) [FiniteDimensional K s]
+theorem finrank_sup_add_finrank_inf_eq (s t : Submodule K V) [FiniteDimensional K s]
     [FiniteDimensional K t] :
     finrank K ↥(s ⊔ t) + finrank K ↥(s ⊓ t) = finrank K ↥s + finrank K ↥t :=
   by
@@ -829,14 +829,14 @@ theorem rank_sup_add_rank_inf_eq (s t : Submodule K V) [FiniteDimensional K s]
   repeat' rw [← finrank_eq_rank] at key
   norm_cast  at key
   exact key
-#align submodule.rank_sup_add_rank_inf_eq Submodule.rank_sup_add_rank_inf_eq
+#align submodule.finrank_sup_add_finrank_inf_eq Submodule.finrank_sup_add_finrank_inf_eq
 
-theorem rank_add_le_rank_add_rank (s t : Submodule K V) [FiniteDimensional K s]
+theorem finrank_add_le_finrank_add_finrank (s t : Submodule K V) [FiniteDimensional K s]
     [FiniteDimensional K t] : finrank K (s ⊔ t : Submodule K V) ≤ finrank K s + finrank K t :=
   by
-  rw [← rank_sup_add_rank_inf_eq]
+  rw [← finrank_sup_add_finrank_inf_eq]
   exact self_le_add_right _ _
-#align submodule.rank_add_le_rank_add_rank Submodule.rank_add_le_rank_add_rank
+#align submodule.finrank_add_le_finrank_add_finrank Submodule.finrank_add_le_finrank_add_finrank
 
 theorem eq_top_of_disjoint [FiniteDimensional K V] (s t : Submodule K V)
     (hdim : finrank K s + finrank K t = finrank K V) (hdisjoint : Disjoint s t) : s ⊔ t = ⊤ :=
@@ -847,7 +847,7 @@ theorem eq_top_of_disjoint [FiniteDimensional K V] (s t : Submodule K V)
     rw [hdisjoint, finrank_bot]
   apply eq_top_of_finrank_eq
   rw [← hdim]
-  convert s.rank_sup_add_rank_inf_eq t
+  convert s.finrank_sup_add_finrank_inf_eq t
   rw [h_finrank_inf]
   rfl
 #align submodule.eq_top_of_disjoint Submodule.eq_top_of_disjoint
@@ -1247,8 +1247,9 @@ theorem finrank_strictMono [FiniteDimensional K V] :
 theorem finrank_add_eq_of_isCompl [FiniteDimensional K V] {U W : Submodule K V} (h : IsCompl U W) :
     finrank K U + finrank K W = finrank K V :=
   by
-  rw [← rank_sup_add_rank_inf_eq, h.codisjoint.eq_top, h.disjoint.eq_bot, finrank_bot, add_zero]
-  exact finrank_top
+  rw [← finrank_sup_add_finrank_inf_eq, h.codisjoint.eq_top, h.disjoint.eq_bot, finrank_bot,
+    add_zero]
+  exact finrank_top _ _
 #align submodule.finrank_add_eq_of_is_compl Submodule.finrank_add_eq_of_isCompl
 
 end DivisionRing
