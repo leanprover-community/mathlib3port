@@ -184,7 +184,7 @@ protected theorem bounded : Metric.Bounded (K : Set V) :=
   K.IsCompact.Bounded
 #align convex_body.bounded ConvexBody.bounded
 
-theorem hausdorffEdist_ne_top {K L : ConvexBody V} : Emetric.hausdorffEdist (K : Set V) L ≠ ⊤ := by
+theorem hausdorffEdist_ne_top {K L : ConvexBody V} : EMetric.hausdorffEdist (K : Set V) L ≠ ⊤ := by
   apply_rules [Metric.hausdorffEdist_ne_top_of_nonempty_of_bounded, ConvexBody.nonempty,
     ConvexBody.bounded]
 #align convex_body.Hausdorff_edist_ne_top ConvexBody.hausdorffEdist_ne_top
@@ -204,7 +204,7 @@ theorem hausdorffDist_coe : Metric.hausdorffDist (K : Set V) L = dist K L :=
 #align convex_body.Hausdorff_dist_coe ConvexBody.hausdorffDist_coe
 
 @[simp, norm_cast]
-theorem hausdorffEdist_coe : Emetric.hausdorffEdist (K : Set V) L = edist K L :=
+theorem hausdorffEdist_coe : EMetric.hausdorffEdist (K : Set V) L = edist K L :=
   by
   rw [edist_dist]
   exact (ENNReal.ofReal_toReal Hausdorff_edist_ne_top).symm
