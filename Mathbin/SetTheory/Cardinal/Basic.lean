@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit e08a42b2dd544cf11eba72e5fc7bf199d4349925
+! leanprover-community/mathlib commit 9dba31df156d9d65b9d78db449542ca73d147c68
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1893,6 +1893,26 @@ Case conversion may be inaccurate. Consider using '#align cardinal.nat_eq_lift_i
 theorem nat_eq_lift_iff {n : ℕ} {a : Cardinal.{u}} :
     (n : Cardinal) = lift.{v} a ↔ (n : Cardinal) = a := by rw [← lift_natCast.{v} n, lift_inj]
 #align cardinal.nat_eq_lift_iff Cardinal.nat_eq_lift_iff
+
+@[simp]
+theorem lift_le_nat_iff {a : Cardinal.{u}} {n : ℕ} : lift.{v} a ≤ n ↔ a ≤ n := by
+  simp only [← lift_nat_cast, lift_le]
+#align cardinal.lift_le_nat_iff Cardinal.lift_le_nat_iff
+
+@[simp]
+theorem nat_le_lift_iff {n : ℕ} {a : Cardinal.{u}} :
+    (n : Cardinal) ≤ lift.{v} a ↔ (n : Cardinal) ≤ a := by simp only [← lift_nat_cast, lift_le]
+#align cardinal.nat_le_lift_iff Cardinal.nat_le_lift_iff
+
+@[simp]
+theorem lift_lt_nat_iff {a : Cardinal.{u}} {n : ℕ} : lift.{v} a < n ↔ a < n := by
+  simp only [← lift_nat_cast, lift_lt]
+#align cardinal.lift_lt_nat_iff Cardinal.lift_lt_nat_iff
+
+@[simp]
+theorem nat_lt_lift_iff {n : ℕ} {a : Cardinal.{u}} :
+    (n : Cardinal) < lift.{v} a ↔ (n : Cardinal) < a := by simp only [← lift_nat_cast, lift_lt]
+#align cardinal.nat_lt_lift_iff Cardinal.nat_lt_lift_iff
 
 /- warning: cardinal.lift_mk_fin -> Cardinal.lift_mk_fin is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 842557b6253ace82c125d567a80b5f74f6ce9f99
+! leanprover-community/mathlib commit dc65937e7a0fff4677f0f5a7086f42da70a69575
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,16 +16,27 @@ import Mathbin.NumberTheory.Zsqrtd.Basic
 /-!
 # Pell's Equation
 
-We prove the following
+*Pell's Equation* is the equation $x^2 - d y^2 = 1$, where $d$ is a positive integer
+that is not a square, and one is interested in solutions in integers $x$ and $y$.
+
+In this file, we aim at providing all of the essential theory of Pell's Equation for general $d$
+(as opposed to the contents of `number_theory.pell_matiyasevic`, which is specific to the case
+$d = a^2 - 1$ for some $a > 1$).
+
+We begin by defining a type `pell.solution₁ d` for solutions of the equation,
+show that it has a natural structure as an abelian group, and prove some basic
+properties.
+
+We then prove the following
 
 **Theorem.** Let $d$ be a positive integer that is not a square. Then the equation
 $x^2 - d y^2 = 1$ has a nontrivial (i.e., with $y \ne 0$) solution in integers.
 
-See `pell.exists_of_not_is_square`.
+See `pell.exists_of_not_is_square` and `pell.exists_nontrivial_of_not_is_square`.
 
-This is the beginning of a development that aims at providing all of the essential theory
-of Pell's Equation for general $d$ (as opposed to the contents of `number_theory.pell_matiyasevic`,
-which is specific to the case $d = a^2 - 1$ for some $a > 1$).
+The next step (TODO) will be to define the *fundamental solution* as the solution
+with smallest $x$ among all solutions satisfying $x > 1$ and $y > 0$ and to show
+that every solution is a power of the fundamental solution up to a (common) sign.
 
 ## References
 
@@ -189,6 +200,129 @@ theorem y_neg (a : Solution₁ d) : (-a).y = -a.y :=
   rfl
 #align pell.solution₁.y_neg Pell.Solution₁.y_neg
 
+/-- When `d` is negative, then `x` or `y` must be zero in a solution. -/
+theorem eq_zero_of_d_neg (h₀ : d < 0) (a : Solution₁ d) : a.x = 0 ∨ a.y = 0 :=
+  by
+  have h := a.prop
+  contrapose! h
+  have h1 := sq_pos_of_ne_zero a.x h.1
+  have h2 := sq_pos_of_ne_zero a.y h.2
+  nlinarith
+#align pell.solution₁.eq_zero_of_d_neg Pell.Solution₁.eq_zero_of_d_neg
+
+/-- A solution has `x ≠ 0`. -/
+theorem x_ne_zero (h₀ : 0 ≤ d) (a : Solution₁ d) : a.x ≠ 0 :=
+  by
+  intro hx
+  have h : 0 ≤ d * a.y ^ 2 := mul_nonneg h₀ (sq_nonneg _)
+  rw [a.prop_y, hx, sq, MulZeroClass.zero_mul, zero_sub] at h
+  exact not_le.mpr (neg_one_lt_zero : (-1 : ℤ) < 0) h
+#align pell.solution₁.x_ne_zero Pell.Solution₁.x_ne_zero
+
+/-- A solution with `x > 1` must have `y ≠ 0`. -/
+theorem y_ne_zero_of_one_lt_x {a : Solution₁ d} (ha : 1 < a.x) : a.y ≠ 0 :=
+  by
+  intro hy
+  have prop := a.prop
+  rw [hy, sq (0 : ℤ), MulZeroClass.zero_mul, MulZeroClass.mul_zero, sub_zero] at prop
+  exact lt_irrefl _ (((one_lt_sq_iff <| zero_le_one.trans ha.le).mpr ha).trans_eq prop)
+#align pell.solution₁.y_ne_zero_of_one_lt_x Pell.Solution₁.y_ne_zero_of_one_lt_x
+
+/-- A solution with `x = 1` is trivial. -/
+theorem eq_one_of_x_eq_one (h₀ : d ≠ 0) {a : Solution₁ d} (ha : a.x = 1) : a = 1 :=
+  by
+  have prop := a.prop_y
+  rw [ha, one_pow, sub_self, mul_eq_zero, or_iff_right h₀, sq_eq_zero_iff] at prop
+  exact ext ha prop
+#align pell.solution₁.eq_one_of_x_eq_one Pell.Solution₁.eq_one_of_x_eq_one
+
+/-- A solution is `1` or `-1` if and only if `y = 0`. -/
+theorem eq_one_or_neg_one_iff_y_eq_zero {a : Solution₁ d} : a = 1 ∨ a = -1 ↔ a.y = 0 :=
+  by
+  refine' ⟨fun H => H.elim (fun h => by simp [h]) fun h => by simp [h], fun H => _⟩
+  have prop := a.prop
+  rw [H, sq (0 : ℤ), MulZeroClass.mul_zero, MulZeroClass.mul_zero, sub_zero, sq_eq_one_iff] at prop
+  exact prop.imp (fun h => ext h H) fun h => ext h H
+#align pell.solution₁.eq_one_or_neg_one_iff_y_eq_zero Pell.Solution₁.eq_one_or_neg_one_iff_y_eq_zero
+
+/-- The set of solutions with `x > 0` is closed under multiplication. -/
+theorem x_mul_pos {a b : Solution₁ d} (ha : 0 < a.x) (hb : 0 < b.x) : 0 < (a * b).x :=
+  by
+  simp only [x_mul]
+  refine' neg_lt_iff_pos_add'.mp (abs_lt.mp _).1
+  rw [← abs_of_pos ha, ← abs_of_pos hb, ← abs_mul, ← sq_lt_sq, mul_pow a.x, a.prop_x, b.prop_x, ←
+    sub_pos]
+  ring_nf
+  cases' le_or_lt 0 d with h h
+  · positivity
+  · rw [(eq_zero_of_d_neg h a).resolve_left ha.ne', (eq_zero_of_d_neg h b).resolve_left hb.ne',
+      zero_pow two_pos, zero_add, MulZeroClass.zero_mul, zero_add]
+    exact one_pos
+#align pell.solution₁.x_mul_pos Pell.Solution₁.x_mul_pos
+
+/-- The set of solutions with `x` and `y` positive is closed under multiplication. -/
+theorem y_mul_pos {a b : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) (hbx : 0 < b.x)
+    (hby : 0 < b.y) : 0 < (a * b).y := by
+  simp only [y_mul]
+  positivity
+#align pell.solution₁.y_mul_pos Pell.Solution₁.y_mul_pos
+
+/-- If `(x, y)` is a solution with `x` positive, then all its powers with natural exponents
+have positive `x`. -/
+theorem x_pow_pos {a : Solution₁ d} (hax : 0 < a.x) (n : ℕ) : 0 < (a ^ n).x :=
+  by
+  induction' n with n ih
+  · simp only [pow_zero, x_one, zero_lt_one]
+  · rw [pow_succ]
+    exact x_mul_pos hax ih
+#align pell.solution₁.x_pow_pos Pell.Solution₁.x_pow_pos
+
+/-- If `(x, y)` is a solution with `x` and `y` positive, then all its powers with positive
+natural exponents have positive `y`. -/
+theorem y_pow_succ_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) (n : ℕ) :
+    0 < (a ^ n.succ).y := by
+  induction' n with n ih
+  · simp only [hay, pow_one]
+  · rw [pow_succ]
+    exact y_mul_pos hax hay (x_pow_pos hax _) ih
+#align pell.solution₁.y_pow_succ_pos Pell.Solution₁.y_pow_succ_pos
+
+/-- If `(x, y)` is a solution with `x` positive, then all its powers have positive `x`. -/
+theorem x_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (n : ℤ) : 0 < (a ^ n).x :=
+  by
+  cases n
+  · rw [zpow_ofNat]
+    exact x_pow_pos hax n
+  · rw [zpow_negSucc]
+    exact x_pow_pos hax (n + 1)
+#align pell.solution₁.x_zpow_pos Pell.Solution₁.x_zpow_pos
+
+/-- If `(x, y)` is a solution with `x` and `y` positive, then the `y` component of any power
+has the same sign as the exponent. -/
+theorem sign_y_zpow_eq_sign_of_x_pos_of_y_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y)
+    (n : ℤ) : (a ^ n).y.sign = n.sign :=
+  by
+  rcases n with ((_ | _) | _)
+  · rfl
+  · rw [zpow_ofNat]
+    exact Int.sign_eq_one_of_pos (y_pow_succ_pos hax hay n)
+  · rw [zpow_negSucc]
+    exact Int.sign_eq_neg_one_of_neg (neg_neg_of_pos (y_pow_succ_pos hax hay n))
+#align pell.solution₁.sign_y_zpow_eq_sign_of_x_pos_of_y_pos Pell.Solution₁.sign_y_zpow_eq_sign_of_x_pos_of_y_pos
+
+/-- If `a` is any solution, then one of `a`, `a⁻¹`, `-a`, `-a⁻¹` has
+positive `x` and nonnegative `y`. -/
+theorem exists_pos_variant (h₀ : 0 < d) (a : Solution₁ d) :
+    ∃ b : Solution₁ d, 0 < b.x ∧ 0 ≤ b.y ∧ a ∈ ({b, b⁻¹, -b, -b⁻¹} : Set (Solution₁ d)) := by
+  refine'
+        (lt_or_gt_of_ne (a.x_ne_zero h₀.le)).elim
+          ((le_total 0 a.y).elim (fun hy hx => ⟨-a⁻¹, _, _, _⟩) fun hy hx => ⟨-a, _, _, _⟩)
+          ((le_total 0 a.y).elim (fun hy hx => ⟨a, hx, hy, _⟩) fun hy hx => ⟨a⁻¹, hx, _, _⟩) <;>
+      simp only [neg_neg, inv_inv, neg_inv, Set.mem_insert_iff, Set.mem_singleton_iff, true_or_iff,
+        eq_self_iff_true, x_neg, x_inv, y_neg, y_inv, neg_pos, neg_nonneg, or_true_iff] <;>
+    assumption
+#align pell.solution₁.exists_pos_variant Pell.Solution₁.exists_pos_variant
+
 end Solution₁
 
 section Existence
@@ -291,16 +425,30 @@ theorem exists_iff_not_isSquare (h₀ : 0 < d) :
   simpa [mul_self_pos.mp h₀, sub_eq_add_neg, eq_neg_self_iff] using Int.eq_of_mul_eq_one hxy
 #align pell.exists_iff_not_is_square Pell.exists_iff_not_isSquare
 
+namespace Solution₁
+
+/-- If `d` is a positive integer that is not a square, then there exists a nontrivial solution
+to the Pell equation `x^2 - d*y^2 = 1`. -/
+theorem exists_nontrivial_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
+    ∃ a : Solution₁ d, a ≠ 1 ∧ a ≠ -1 :=
+  by
+  obtain ⟨x, y, prop, hy⟩ := exists_of_not_is_square h₀ hd
+  refine' ⟨mk x y prop, fun H => _, fun H => _⟩ <;> apply_fun solution₁.y  at H <;>
+    simpa only [hy] using H
+#align pell.solution₁.exists_nontrivial_of_not_is_square Pell.Solution₁.exists_nontrivial_of_not_isSquare
+
 /-- If `d` is a positive integer that is not a square, then there exists a solution
 to the Pell equation `x^2 - d*y^2 = 1` with `x > 1` and `y > 0`. -/
 theorem exists_pos_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
-    ∃ x y : ℤ, x ^ 2 - d * y ^ 2 = 1 ∧ 1 < x ∧ 0 < y :=
+    ∃ a : Solution₁ d, 1 < a.x ∧ 0 < a.y :=
   by
   obtain ⟨x, y, h, hy⟩ := exists_of_not_is_square h₀ hd
-  refine' ⟨|x|, |y|, by rwa [sq_abs, sq_abs], _, abs_pos.mpr hy⟩
-  rw [← one_lt_sq_iff_one_lt_abs, eq_add_of_sub_eq h, lt_add_iff_pos_right]
+  refine' ⟨mk (|x|) (|y|) (by rwa [sq_abs, sq_abs]), _, abs_pos.mpr hy⟩
+  rw [x_mk, ← one_lt_sq_iff_one_lt_abs, eq_add_of_sub_eq h, lt_add_iff_pos_right]
   exact mul_pos h₀ (sq_pos_of_ne_zero y hy)
-#align pell.exists_pos_of_not_is_square Pell.exists_pos_of_not_isSquare
+#align pell.solution₁.exists_pos_of_not_is_square Pell.Solution₁.exists_pos_of_not_isSquare
+
+end Solution₁
 
 end Existence
 
