@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit dd6388c44e6f6b4547070b887c5905d5cfe6c9f8
+! leanprover-community/mathlib commit 284fdd2962e67d2932fa3a79ce19fcf92d38e228
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -613,6 +613,7 @@ theorem contDiffWithinAt_succ_iff_hasFderivWithinAt {n : ℕ} :
             ((p' y 0) 0) z
         unfold_coes
         congr
+        decide
       · convert(Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
         · ext (x y)
           change p' x 0 (init (@snoc 0 (fun i : Fin 1 => E) 0 y)) y = p' x 0 0 y

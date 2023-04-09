@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.fin_category
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
+! leanprover-community/mathlib commit 2efd2423f8d25fa57cf7a179f5d8652ab4d0df44
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ abbrev AsType : Type :=
 #align category_theory.fin_category.as_type CategoryTheory.FinCategory.AsType
 
 #print CategoryTheory.FinCategory.categoryAsType /-
-@[simps (config := lemmasOnly) hom id comp]
+@[simps (config := lemmasOnly) id comp]
 noncomputable instance categoryAsType : SmallCategory (AsType α)
     where
   hom i j := Fin (Fintype.card (@Quiver.Hom (ObjAsType α) _ i j))
@@ -113,7 +113,7 @@ noncomputable instance categoryAsType : SmallCategory (AsType α)
 #align category_theory.fin_category.category_as_type CategoryTheory.FinCategory.categoryAsType
 -/
 
-attribute [local simp] category_as_type_hom category_as_type_id category_as_type_comp
+attribute [local simp] category_as_type_id category_as_type_comp
 
 #print CategoryTheory.FinCategory.asTypeToObjAsType /-
 /-- The "identity" functor from `as_type α` to `obj_as_type α`. -/

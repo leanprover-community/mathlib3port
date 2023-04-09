@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.simple_module
-! leanprover-community/mathlib commit cce7f68a7eaadadf74c82bbac20721cdc03a1cc1
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.JordanHolder
 
 /-!
 # Simple Modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main Definitions
   * `is_simple_module` indicates that a module has no proper submodules

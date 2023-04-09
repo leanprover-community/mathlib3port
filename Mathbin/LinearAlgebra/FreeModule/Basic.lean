@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.basic
-! leanprover-community/mathlib commit 4e7e7009099d4a88a750de710909b95487bf0124
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.LinearAlgebra.TensorProductBasis
 /-!
 
 # Free modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We introduce a class `module.free R M`, for `R` a `semiring` and `M` an `R`-module and we provide
 several basic instances for this class.

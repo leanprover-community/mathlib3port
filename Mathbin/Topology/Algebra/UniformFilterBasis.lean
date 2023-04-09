@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_filter_basis
-! leanprover-community/mathlib commit 531db2ef0fdddf8b3c8dcdcd87138fe969e1a81a
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Algebra.UniformGroup
 
 /-!
 # Uniform properties of neighborhood bases in topological algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This files contains properties of filter bases on algebraic structures that also require the theory
 of uniform spaces.

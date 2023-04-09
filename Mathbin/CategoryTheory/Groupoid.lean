@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison, David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.groupoid
-! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
+! leanprover-community/mathlib commit 2efd2423f8d25fa57cf7a179f5d8652ab4d0df44
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,6 +55,10 @@ class Groupoid (obj : Type u) extends Category.{v} obj : Type max u (v + 1) wher
 restate_axiom groupoid.inv_comp'
 
 restate_axiom groupoid.comp_inv'
+
+initialize_simps_projections Groupoid (-to_category_to_category_struct_to_quiver_hom,
+  to_category_to_category_struct_comp → comp, to_category_to_category_struct_id → id,
+  -to_category_to_category_struct, -toCategory)
 
 #print CategoryTheory.LargeGroupoid /-
 /-- A `large_groupoid` is a groupoid

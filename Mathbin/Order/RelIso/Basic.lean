@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.rel_iso.basic
-! leanprover-community/mathlib commit 5923c4c7df633a157c9b752570a41ba5e8399289
+! leanprover-community/mathlib commit f29120f82f6e24a6f6579896dfa2de6769fec962
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -669,6 +669,8 @@ protected theorem isWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrd
   | f, H => { f.is_strict_total_order with wf := f.well_founded H.wf }
 #align rel_embedding.is_well_order RelEmbedding.isWellOrder
 
+end RelEmbedding
+
 instance Subtype.wellFoundedLT [LT α] [WellFoundedLT α] (p : α → Prop) :
     WellFoundedLT (Subtype p) :=
   (Subtype.relEmbedding (· < ·) p).IsWellFounded
@@ -737,8 +739,7 @@ theorem wellFounded_lift₂_iff [Setoid α] {r : α → α → Prop} {H} :
 #align well_founded_lift₂_iff wellFounded_lift₂_iff
 -/
 
-alias _root_.well_founded_lift₂_iff ↔
-  _root_.well_founded.of_quotient_lift₂ _root_.well_founded.quotient_lift₂
+alias wellFounded_lift₂_iff ↔ WellFounded.of_quotient_lift₂ WellFounded.quotient_lift₂
 #align well_founded.of_quotient_lift₂ WellFounded.of_quotient_lift₂
 #align well_founded.quotient_lift₂ WellFounded.quotient_lift₂
 
@@ -748,10 +749,11 @@ theorem wellFounded_liftOn₂'_iff {s : Setoid α} {r : α → α → Prop} {H} 
   wellFounded_lift₂_iff
 #align well_founded_lift_on₂'_iff wellFounded_liftOn₂'_iff
 
-alias _root_.well_founded_lift_on₂'_iff ↔
-  _root_.well_founded.of_quotient_lift_on₂' _root_.well_founded.quotient_lift_on₂'
+alias wellFounded_liftOn₂'_iff ↔ WellFounded.of_quotient_liftOn₂' WellFounded.quotient_liftOn₂'
 #align well_founded.of_quotient_lift_on₂' WellFounded.of_quotient_liftOn₂'
 #align well_founded.quotient_lift_on₂' WellFounded.quotient_liftOn₂'
+
+namespace RelEmbedding
 
 #print RelEmbedding.ofMapRelIff /-
 /--

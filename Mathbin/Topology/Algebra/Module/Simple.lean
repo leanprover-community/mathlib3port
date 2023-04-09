@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.simple
-! leanprover-community/mathlib commit f430769b562e0cedef59ee1ed968d67e0e0c86ba
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Algebra.Module.Basic
 
 /-!
 # The kernel of a linear function is closed or dense
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove (`linear_map.is_closed_or_dense_ker`) that the kernel of a linear function `f
 : M →ₗ[R] N` is either closed or dense in `M` provided that `N` is a simple module over `R`. This

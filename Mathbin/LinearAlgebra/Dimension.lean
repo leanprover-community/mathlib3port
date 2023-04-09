@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit e08a42b2dd544cf11eba72e5fc7bf199d4349925
+! leanprover-community/mathlib commit 3a2039ad20626aebbece10cddb18ef010f7d912d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,10 +68,6 @@ For vector spaces (i.e. modules over a field), we have
 * `rank_range_add_rank_ker`: the rank-nullity theorem.
 
 ## Implementation notes
-
-There is a naming discrepancy: most of the theorem names refer to `rank`,
-even though the definition is of `module.rank`.
-This reflects that `module.rank` was originally called `rank`, and only defined for vector spaces.
 
 Many theorems in this file are not universe-generic when they relate dimensions
 in different universes. They should be as general as they can be without

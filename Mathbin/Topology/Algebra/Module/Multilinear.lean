@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
+! leanprover-community/mathlib commit 284fdd2962e67d2932fa3a79ce19fcf92d38e228
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,8 +70,22 @@ variable [Semiring R] [∀ i, AddCommMonoid (M i)] [∀ i, AddCommMonoid (M₁ i
   [∀ i, TopologicalSpace (M₁' i)] [TopologicalSpace M₂] [TopologicalSpace M₃] [TopologicalSpace M₄]
   (f f' : ContinuousMultilinearMap R M₁ M₂)
 
+theorem toMultilinearMap_injective :
+    Function.Injective
+      (ContinuousMultilinearMap.toMultilinearMap :
+        ContinuousMultilinearMap R M₁ M₂ → MultilinearMap R M₁ M₂)
+  | ⟨f, hf⟩, ⟨g, hg⟩, rfl => rfl
+#align continuous_multilinear_map.to_multilinear_map_injective ContinuousMultilinearMap.toMultilinearMap_injective
+
+instance continuousMapClass : ContinuousMapClass (ContinuousMultilinearMap R M₁ M₂) (∀ i, M₁ i) M₂
+    where
+  coe f := f.toFun
+  coe_injective' f g h := toMultilinearMap_injective <| MultilinearMap.coe_injective h
+  map_continuous := ContinuousMultilinearMap.cont
+#align continuous_multilinear_map.continuous_map_class ContinuousMultilinearMap.continuousMapClass
+
 instance : CoeFun (ContinuousMultilinearMap R M₁ M₂) fun _ => (∀ i, M₁ i) → M₂ :=
-  ⟨fun f => f.toFun⟩
+  ⟨fun f => f⟩
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
   because it is a composition of multiple projections. -/
@@ -92,20 +106,13 @@ theorem coe_coe : (f.toMultilinearMap : (∀ i, M₁ i) → M₂) = f :=
   rfl
 #align continuous_multilinear_map.coe_coe ContinuousMultilinearMap.coe_coe
 
-theorem toMultilinearMap_inj :
-    Function.Injective
-      (ContinuousMultilinearMap.toMultilinearMap :
-        ContinuousMultilinearMap R M₁ M₂ → MultilinearMap R M₁ M₂)
-  | ⟨f, hf⟩, ⟨g, hg⟩, rfl => rfl
-#align continuous_multilinear_map.to_multilinear_map_inj ContinuousMultilinearMap.toMultilinearMap_inj
-
 @[ext]
 theorem ext {f f' : ContinuousMultilinearMap R M₁ M₂} (H : ∀ x, f x = f' x) : f = f' :=
-  toMultilinearMap_inj <| MultilinearMap.ext H
+  FunLike.ext _ _ H
 #align continuous_multilinear_map.ext ContinuousMultilinearMap.ext
 
 theorem ext_iff {f f' : ContinuousMultilinearMap R M₁ M₂} : f = f' ↔ ∀ x, f x = f' x := by
-  rw [← to_multilinear_map_inj.eq_iff, MultilinearMap.ext_iff] <;> rfl
+  rw [← to_multilinear_map_injective.eq_iff, MultilinearMap.ext_iff] <;> rfl
 #align continuous_multilinear_map.ext_iff ContinuousMultilinearMap.ext_iff
 
 @[simp]
@@ -178,7 +185,7 @@ instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] :
   ⟨fun c₁ f => ext fun x => op_smul_eq_smul _ _⟩
 
 instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
-  Function.Injective.mulAction toMultilinearMap toMultilinearMap_inj fun _ _ => rfl
+  Function.Injective.mulAction toMultilinearMap toMultilinearMap_injective fun _ _ => rfl
 
 end SMul
 
@@ -201,7 +208,7 @@ theorem toMultilinearMap_add (f g : ContinuousMultilinearMap R M₁ M₂) :
 #align continuous_multilinear_map.to_multilinear_map_add ContinuousMultilinearMap.toMultilinearMap_add
 
 instance addCommMonoid : AddCommMonoid (ContinuousMultilinearMap R M₁ M₂) :=
-  toMultilinearMap_inj.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  toMultilinearMap_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align continuous_multilinear_map.add_comm_monoid ContinuousMultilinearMap.addCommMonoid
 
 /-- Evaluation of a `continuous_multilinear_map` at a vector as an `add_monoid_hom`. -/
@@ -441,7 +448,7 @@ theorem sub_apply (m : ∀ i, M₁ i) : (f - f') m = f m - f' m :=
 #align continuous_multilinear_map.sub_apply ContinuousMultilinearMap.sub_apply
 
 instance : AddCommGroup (ContinuousMultilinearMap R M₁ M₂) :=
-  toMultilinearMap_inj.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  toMultilinearMap_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 end TopologicalAddGroup
@@ -477,8 +484,8 @@ variable {R' R'' A : Type _} [Monoid R'] [Monoid R''] [Semiring A] [∀ i, AddCo
 
 instance [ContinuousAdd M₂] : DistribMulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.distribMulAction
-    ⟨toMultilinearMap, toMultilinearMap_zero, toMultilinearMap_add⟩ toMultilinearMap_inj fun _ _ =>
-    rfl
+    ⟨toMultilinearMap, toMultilinearMap_zero, toMultilinearMap_add⟩ toMultilinearMap_injective
+    fun _ _ => rfl
 
 end DistribMulAction
 
@@ -492,7 +499,7 @@ variable {R' A : Type _} [Semiring R'] [Semiring A] [∀ i, AddCommMonoid (M₁ 
 pointwise addition and scalar multiplication. -/
 instance : Module R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.module _ ⟨toMultilinearMap, toMultilinearMap_zero, toMultilinearMap_add⟩
-    toMultilinearMap_inj fun _ _ => rfl
+    toMultilinearMap_injective fun _ _ => rfl
 
 /-- Linear map version of the map `to_multilinear_map` associating to a continuous multilinear map
 the corresponding multilinear map. -/

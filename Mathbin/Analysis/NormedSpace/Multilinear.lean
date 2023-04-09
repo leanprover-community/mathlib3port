@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
+! leanprover-community/mathlib commit 284fdd2962e67d2932fa3a79ce19fcf92d38e228
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -937,7 +937,7 @@ theorem mkPiField_apply (z : G) (m : ι → 𝕜) :
 
 theorem mkPiField_apply_one_eq_self (f : ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G) :
     ContinuousMultilinearMap.mkPiField 𝕜 ι (f fun i => 1) = f :=
-  toMultilinearMap_inj f.toMultilinearMap.mkPiRing_apply_one_eq_self
+  toMultilinearMap_injective f.toMultilinearMap.mkPiRing_apply_one_eq_self
 #align continuous_multilinear_map.mk_pi_field_apply_one_eq_self ContinuousMultilinearMap.mkPiField_apply_one_eq_self
 
 @[simp]
@@ -950,7 +950,7 @@ theorem mkPiField_eq_iff {z₁ z₂ : G} :
     ContinuousMultilinearMap.mkPiField 𝕜 ι z₁ = ContinuousMultilinearMap.mkPiField 𝕜 ι z₂ ↔
       z₁ = z₂ :=
   by
-  rw [← to_multilinear_map_inj.eq_iff]
+  rw [← to_multilinear_map_injective.eq_iff]
   exact MultilinearMap.mkPiRing_eq_iff
 #align continuous_multilinear_map.mk_pi_field_eq_iff ContinuousMultilinearMap.mkPiField_eq_iff
 
@@ -1437,7 +1437,7 @@ theorem ContinuousLinearMap.curry_uncurryLeft
 @[simp]
 theorem ContinuousMultilinearMap.uncurry_curryLeft (f : ContinuousMultilinearMap 𝕜 Ei G) :
     f.curryLeft.uncurryLeft = f :=
-  ContinuousMultilinearMap.toMultilinearMap_inj <| f.toMultilinearMap.uncurry_curryLeft
+  ContinuousMultilinearMap.toMultilinearMap_injective <| f.toMultilinearMap.uncurry_curryLeft
 #align continuous_multilinear_map.uncurry_curry_left ContinuousMultilinearMap.uncurry_curryLeft
 
 variable (𝕜 Ei G)

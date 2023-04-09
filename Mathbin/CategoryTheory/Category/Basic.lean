@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.category.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 2efd2423f8d25fa57cf7a179f5d8652ab4d0df44
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,8 +98,10 @@ infixr:80
   " ≫ " =>-- type as \b1
   CategoryStruct.comp
 
-#print CategoryTheory.Category /-
 -- type as \gg
+initialize_simps_projections CategoryStruct (-to_quiver_hom)
+
+#print CategoryTheory.Category /-
 /-- The typeclass `category C` describes morphisms associated to objects of type `C`.
 The universe levels of the objects and morphisms are unconstrained, and will often need to be
 specified explicitly, as `category.{v} C`. (See also `large_category` and `small_category`.)
@@ -150,8 +152,8 @@ section
 
 variable {C : Type u} [Category.{v} C] {X Y Z : C}
 
-initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom,
-  to_category_struct_comp → comp, to_category_struct_id → id, -toCategoryStruct)
+initialize_simps_projections category (to_category_struct_comp → comp, to_category_struct_id → id,
+  -toCategoryStruct)
 
 #print CategoryTheory.eq_whisker /-
 /-- postcompose an equation between morphisms by another morphism -/

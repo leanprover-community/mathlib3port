@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product_basis
-! leanprover-community/mathlib commit 4977fd9da637b6e0a805c1cf460c3a6b8df3f556
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
 /-!
 # Bases and dimensionality of tensor products of modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 These can not go into `linear_algebra.tensor_product` since they depend on
 `linear_algebra.finsupp_vector_space` which in turn imports `linear_algebra.tensor_product`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.finrank
-! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
+! leanprover-community/mathlib commit 8535b76e601f11868af3e612fbecb730998a5631
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,6 +91,12 @@ theorem rank_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.ra
     rw [finrank, Cardinal.toNat_apply_of_aleph0_le h]
     exact n.zero_le
 #align finite_dimensional.rank_lt_of_finrank_lt FiniteDimensional.rank_lt_of_finrank_lt
+
+theorem finrank_le_finrank_of_rank_le_rank
+    (h : lift.{v'} (Module.rank K V) ≤ Cardinal.lift.{v} (Module.rank K V₂))
+    (h' : Module.rank K V₂ < ℵ₀) : finrank K V ≤ finrank K V₂ := by
+  simpa only [to_nat_lift] using to_nat_le_of_le_of_lt_aleph_0 (lift_lt_aleph_0.mpr h') h
+#align finite_dimensional.finrank_le_finrank_of_rank_le_rank FiniteDimensional.finrank_le_finrank_of_rank_le_rank
 
 section
 

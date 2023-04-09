@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.functor_extension
-! leanprover-community/mathlib commit 5f68029a863bdf76029fa0f7a519e6163c14152e
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Idempotents.Karoubi
 
 /-!
 # Extension of functors to the idempotent completion
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we construct an extension `functor_extension₁`
 of functors `C ⥤ karoubi D` to functors `karoubi C ⥤ karoubi D`. This results in an

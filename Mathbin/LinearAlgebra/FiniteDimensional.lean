@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
+! leanprover-community/mathlib commit 8535b76e601f11868af3e612fbecb730998a5631
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -787,19 +787,6 @@ instance finiteDimensional_supᵢ {ι : Sort _} [Finite ι] (S : ι → Submodul
   exact Submodule.finiteDimensional_finset_sup _ _
 #align submodule.finite_dimensional_supr Submodule.finiteDimensional_supᵢ
 
-/-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
-theorem finrank_le [FiniteDimensional K V] (s : Submodule K V) : finrank K s ≤ finrank K V := by
-  simpa only [Cardinal.natCast_le, ← finrank_eq_rank] using
-    s.subtype.rank_le_of_injective (injective_subtype s)
-#align submodule.finrank_le Submodule.finrank_le
-
-/-- The dimension of a quotient is bounded by the dimension of the ambient space. -/
-theorem finrank_quotient_le [FiniteDimensional K V] (s : Submodule K V) :
-    finrank K (V ⧸ s) ≤ finrank K V := by
-  simpa only [Cardinal.natCast_le, ← finrank_eq_rank] using
-    (mkq s).rank_le_of_surjective (surjective_quot_mk _)
-#align submodule.finrank_quotient_le Submodule.finrank_quotient_le
-
 /-- In a finite-dimensional vector space, the dimensions of a submodule and of the corresponding
 quotient add up to the dimension of the space. -/
 theorem finrank_quotient_add_finrank [FiniteDimensional K V] (s : Submodule K V) :
@@ -1148,15 +1135,6 @@ theorem ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank [FiniteDimensional K V
     f.ker = ⊥ ↔ f.range = ⊤ := by
   rw [range_eq_top, ker_eq_bot, injective_iff_surjective_of_finrank_eq_finrank H]
 #align linear_map.ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank LinearMap.ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank
-
-theorem finrank_le_finrank_of_injective [FiniteDimensional K V] [FiniteDimensional K V₂]
-    {f : V →ₗ[K] V₂} (hf : Function.Injective f) : finrank K V ≤ finrank K V₂ :=
-  calc
-    finrank K V = finrank K f.range + finrank K f.ker := (finrank_range_add_finrank_ker f).symm
-    _ = finrank K f.range := by rw [ker_eq_bot.2 hf, finrank_bot, add_zero]
-    _ ≤ finrank K V₂ := Submodule.finrank_le _
-    
-#align linear_map.finrank_le_finrank_of_injective LinearMap.finrank_le_finrank_of_injective
 
 /-- Given a linear map `f` between two vector spaces with the same dimension, if
 `ker f = ⊥` then `linear_equiv_of_injective` is the induced isomorphism

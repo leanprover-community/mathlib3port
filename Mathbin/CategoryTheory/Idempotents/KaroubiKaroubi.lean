@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.karoubi_karoubi
-! leanprover-community/mathlib commit 31019c2504b17f85af7e0577585fad996935a317
+! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Idempotents.Karoubi
 
 /-!
 # Idempotence of the Karoubi envelope
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we construct the equivalence of categories
 `karoubi_karoubi.equivalence C : karoubi C ≌ karoubi (karoubi C)` for any category `C`.

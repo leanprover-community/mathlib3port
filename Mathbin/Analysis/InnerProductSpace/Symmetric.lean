@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 36172d6661e181c215108035483dbbeabd62942e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,6 +171,42 @@ theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
 #align linear_map.is_symmetric_iff_inner_map_self_real LinearMap.isSymmetric_iff_inner_map_self_real
 
 end Complex
+
+/-- Polarization identity for symmetric linear maps.
+See `inner_map_polarization` for the complex version without the symmetric assumption. -/
+theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (x y : E) :
+    ⟪T x, y⟫ =
+      (⟪T (x + y), x + y⟫ - ⟪T (x - y), x - y⟫ - i * ⟪T (x + (i : 𝕜) • y), x + (i : 𝕜) • y⟫ +
+          i * ⟪T (x - (i : 𝕜) • y), x - (i : 𝕜) • y⟫) /
+        4 :=
+  by
+  rcases@I_mul_I_ax 𝕜 _ with (h | h)
+  · simp_rw [h, MulZeroClass.zero_mul, sub_zero, add_zero, map_add, map_sub, inner_add_left,
+      inner_add_right, inner_sub_left, inner_sub_right, hT x, ← inner_conj_symm x (T y)]
+    suffices (re ⟪T y, x⟫ : 𝕜) = ⟪T y, x⟫
+      by
+      rw [eq_conj_iff_re.mpr this]
+      ring_nf
+    · rw [← re_add_im ⟪T y, x⟫]
+      simp_rw [h, MulZeroClass.mul_zero, add_zero]
+      norm_cast
+  · simp_rw [map_add, map_sub, inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+      LinearMap.map_smul, inner_smul_left, inner_smul_right, IsROrC.conj_i, mul_add, mul_sub,
+      sub_sub, ← mul_assoc, mul_neg, h, neg_neg, one_mul, neg_one_mul]
+    ring
+#align linear_map.is_symmetric.inner_map_polarization LinearMap.IsSymmetric.inner_map_polarization
+
+/-- A symmetric linear map `T` is zero if and only if `⟪T x, x⟫_ℝ = 0` for all `x`.
+See `inner_map_self_eq_zero` for the complex version without the symmetric assumption. -/
+theorem IsSymmetric.inner_map_eq_zero {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
+    (∀ x, ⟪T x, x⟫ = 0) ↔ T = 0 :=
+  by
+  simp_rw [LinearMap.ext_iff, zero_apply]
+  refine' ⟨fun h x => _, fun h => by simp_rw [h, inner_zero_left, forall_const]⟩
+  rw [← @inner_self_eq_zero 𝕜, hT.inner_map_polarization]
+  simp_rw [h _]
+  ring
+#align linear_map.is_symmetric.inner_map_eq_zero LinearMap.IsSymmetric.inner_map_eq_zero
 
 end LinearMap
 

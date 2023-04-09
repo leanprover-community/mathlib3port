@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.rank
-! leanprover-community/mathlib commit 5aa3c1de9f3c642eac76e11071c852766f220fd0
+! leanprover-community/mathlib commit 8535b76e601f11868af3e612fbecb730998a5631
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,4 +130,43 @@ theorem finrank_tensorProduct (M : Type v) (N : Type w) [AddCommGroup M] [Module
 end CommRing
 
 end FiniteDimensional
+
+section
+
+open FiniteDimensional
+
+variable {R M N}
+
+variable [Ring R] [StrongRankCondition R]
+
+variable [AddCommGroup M] [Module R M]
+
+variable [AddCommGroup N] [Module R N]
+
+theorem LinearMap.finrank_le_finrank_of_injective [Module.Free R N] [Module.Finite R N]
+    {f : M →ₗ[R] N} (hf : Function.Injective f) : finrank R M ≤ finrank R N :=
+  finrank_le_finrank_of_rank_le_rank (LinearMap.lift_rank_le_of_injective _ hf) (rank_lt_aleph0 _ _)
+#align linear_map.finrank_le_finrank_of_injective LinearMap.finrank_le_finrank_of_injective
+
+theorem LinearMap.finrank_range_le [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] N) :
+    finrank R f.range ≤ finrank R M :=
+  finrank_le_finrank_of_rank_le_rank (lift_rank_range_le f) (rank_lt_aleph0 _ _)
+#align linear_map.finrank_range_le LinearMap.finrank_range_le
+
+/-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
+theorem Submodule.finrank_le [Module.Free R M] [Module.Finite R M] (s : Submodule R M) :
+    finrank R s ≤ finrank R M := by
+  simpa only [Cardinal.toNat_lift] using
+    to_nat_le_of_le_of_lt_aleph_0 (rank_lt_aleph_0 _ _) (rank_submodule_le s)
+#align submodule.finrank_le Submodule.finrank_le
+
+/-- The dimension of a quotient is bounded by the dimension of the ambient space. -/
+theorem Submodule.finrank_quotient_le [Module.Free R M] [Module.Finite R M] (s : Submodule R M) :
+    finrank R (M ⧸ s) ≤ finrank R M := by
+  simpa only [Cardinal.toNat_lift] using
+    to_nat_le_of_le_of_lt_aleph_0 (rank_lt_aleph_0 _ _)
+      ((Submodule.mkQ s).rank_le_of_surjective (surjective_quot_mk _))
+#align submodule.finrank_quotient_le Submodule.finrank_quotient_le
+
+end
 
