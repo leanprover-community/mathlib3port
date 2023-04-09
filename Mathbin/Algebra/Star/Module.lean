@@ -196,7 +196,7 @@ Case conversion may be inaccurate. Consider using '#align star_module.self_adjoi
 theorem StarModule.selfAdjointPart_add_skewAdjointPart (x : A) :
     (selfAdjointPart R x : A) + skewAdjointPart R x = x := by
   simp only [smul_sub, selfAdjointPart_apply_coe, smul_add, skewAdjointPart_apply_coe,
-    add_add_sub_cancel, inv_of_two_smul_add_inv_of_two_smul]
+    add_add_sub_cancel, invOf_two_smul_add_invOf_two_smul]
 #align star_module.self_adjoint_part_add_skew_adjoint_part StarModule.selfAdjointPart_add_skewAdjointPart
 
 variable (A)

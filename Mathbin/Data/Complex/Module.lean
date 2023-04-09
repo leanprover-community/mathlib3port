@@ -483,7 +483,7 @@ theorem imaginaryPart_apply_coe (a : A) : (ℑ a : A) = -I • (2 : ℝ)⁻¹ �
 theorem realPart_add_i_smul_imaginaryPart (a : A) : (ℜ a + I • ℑ a : A) = a := by
   simpa only [smul_smul, realPart_apply_coe, imaginaryPart_apply_coe, neg_smul, I_mul_I, one_smul,
     neg_sub, add_add_sub_cancel, smul_sub, smul_add, neg_sub_neg, invOf_eq_inv] using
-    inv_of_two_smul_add_inv_of_two_smul ℝ a
+    invOf_two_smul_add_invOf_two_smul ℝ a
 #align real_part_add_I_smul_imaginary_part realPart_add_i_smul_imaginaryPart
 
 @[simp]
