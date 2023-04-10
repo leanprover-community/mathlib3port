@@ -655,6 +655,12 @@ protected theorem wellFounded : ∀ (f : r ↪r s) (h : WellFounded s), WellFoun
   | f, ⟨H⟩ => ⟨fun a => f.Acc _ (H _)⟩
 #align rel_embedding.well_founded RelEmbedding.wellFounded
 
+/- warning: rel_embedding.is_well_founded -> RelEmbedding.isWellFounded is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop}, (RelEmbedding.{u1, u2} α β r s) -> (forall [_inst_1 : IsWellFounded.{u2} β s], IsWellFounded.{u1} α r)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, (RelEmbedding.{u2, u1} α β r s) -> (forall [_inst_1 : IsWellFounded.{u1} β s], IsWellFounded.{u2} α r)
+Case conversion may be inaccurate. Consider using '#align rel_embedding.is_well_founded RelEmbedding.isWellFoundedₓ'. -/
 protected theorem isWellFounded (f : r ↪r s) [IsWellFounded β s] : IsWellFounded α r :=
   ⟨f.WellFounded IsWellFounded.wf⟩
 #align rel_embedding.is_well_founded RelEmbedding.isWellFounded
@@ -671,15 +677,19 @@ protected theorem isWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrd
 
 end RelEmbedding
 
+#print Subtype.wellFoundedLT /-
 instance Subtype.wellFoundedLT [LT α] [WellFoundedLT α] (p : α → Prop) :
     WellFoundedLT (Subtype p) :=
   (Subtype.relEmbedding (· < ·) p).IsWellFounded
 #align subtype.well_founded_lt Subtype.wellFoundedLT
+-/
 
+#print Subtype.wellFoundedGT /-
 instance Subtype.wellFoundedGT [LT α] [WellFoundedGT α] (p : α → Prop) :
     WellFoundedGT (Subtype p) :=
   (Subtype.relEmbedding (· > ·) p).IsWellFounded
 #align subtype.well_founded_gt Subtype.wellFoundedGT
+-/
 
 #print Quotient.mkRelHom /-
 /-- `quotient.mk` as a relation homomorphism between the relation and the lift of a relation. -/

@@ -55,6 +55,12 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 variable {R}
 
+/- warning: module.finite.of_basis -> Module.Finite.of_basis is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {M : Type.{u2}} {ι : Type.{u3}} [_inst_8 : CommRing.{u1} R] [_inst_9 : AddCommGroup.{u2} M] [_inst_10 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_8)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9)] [_inst_11 : Finite.{succ u3} ι], (Basis.{u3, u1, u2} ι R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_8)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) _inst_10) -> (Module.Finite.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_8)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) _inst_10)
+but is expected to have type
+  forall {R : Type.{u3}} {M : Type.{u2}} {ι : Type.{u1}} [_inst_8 : CommRing.{u3} R] [_inst_9 : AddCommGroup.{u2} M] [_inst_10 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_8)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9)] [_inst_11 : Finite.{succ u1} ι], (Basis.{u1, u3, u2} ι R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_8)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) _inst_10) -> (Module.Finite.{u3, u2} R M (Ring.toSemiring.{u3} R (CommRing.toRing.{u3} R _inst_8)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_9) _inst_10)
+Case conversion may be inaccurate. Consider using '#align module.finite.of_basis Module.Finite.of_basisₓ'. -/
 /-- A free module with a basis indexed by a `fintype` is finite. -/
 theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M]
     [Finite ι] (b : Basis ι R M) : Module.Finite R M :=
@@ -65,6 +71,7 @@ theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [
     simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 #align module.finite.of_basis Module.Finite.of_basis
 
+#print Module.Finite.matrix /-
 instance Module.Finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] :
     Module.Finite R (Matrix ι₁ ι₂ R) :=
   by
@@ -72,6 +79,7 @@ instance Module.Finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι�
   cases nonempty_fintype ι₂
   exact Module.Finite.of_basis (Pi.basis fun i => Pi.basisFun R _)
 #align module.finite.matrix Module.Finite.matrix
+-/
 
 end CommRing
 
