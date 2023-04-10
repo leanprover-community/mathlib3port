@@ -881,13 +881,13 @@ section
 
 variable {ι : Sort _} {δ δ' : Type _} [CompleteLinearOrder δ] [ConditionallyCompleteLinearOrder δ']
 
-/- warning: lower_semicontinuous_within_at_csupr -> lowerSemicontinuousWithinAt_csupr is a dubious translation:
+/- warning: lower_semicontinuous_within_at_csupr -> lowerSemicontinuousWithinAt_csupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {s : Set.{u1} α} {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u1} α (fun (y : α) => BddAbove.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i y))) (nhdsWithin.{u1} α _inst_1 x s)) -> (forall (i : ι), LowerSemicontinuousWithinAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i) s x) -> (LowerSemicontinuousWithinAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasSup.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')) s x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {s : Set.{u3} α} {ι : Sort.{u1}} {δ' : Type.{u2}} [_inst_4 : ConditionallyCompleteLinearOrder.{u2} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u3} α (fun (y : α) => BddAbove.{u2} δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (Set.range.{u2, u1} δ' ι (fun (i : ι) => f i y))) (nhdsWithin.{u3} α _inst_1 x s)) -> (forall (i : ι), LowerSemicontinuousWithinAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (f i) s x) -> (LowerSemicontinuousWithinAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u2, u1} δ' (ConditionallyCompleteLattice.toSupSet.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4)) ι (fun (i : ι) => f i x')) s x)
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_within_at_csupr lowerSemicontinuousWithinAt_csuprₓ'. -/
-theorem lowerSemicontinuousWithinAt_csupr {f : ι → α → δ'}
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_within_at_csupr lowerSemicontinuousWithinAt_csupᵢₓ'. -/
+theorem lowerSemicontinuousWithinAt_csupᵢ {f : ι → α → δ'}
     (bdd : ∀ᶠ y in 𝓝[s] x, BddAbove (range fun i => f i y))
     (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ i, f i x') s x :=
@@ -897,7 +897,7 @@ theorem lowerSemicontinuousWithinAt_csupr {f : ι → α → δ'}
   · intro y hy
     rcases exists_lt_of_lt_csupᵢ hy with ⟨i, hi⟩
     filter_upwards [h i y hi, bdd]with y hy hy' using hy.trans_le (le_csupᵢ hy' i)
-#align lower_semicontinuous_within_at_csupr lowerSemicontinuousWithinAt_csupr
+#align lower_semicontinuous_within_at_csupr lowerSemicontinuousWithinAt_csupᵢ
 
 /- warning: lower_semicontinuous_within_at_supr -> lowerSemicontinuousWithinAt_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -908,36 +908,36 @@ Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_w
 theorem lowerSemicontinuousWithinAt_supᵢ {f : ι → α → δ}
     (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ i, f i x') s x :=
-  lowerSemicontinuousWithinAt_csupr (by simp) h
+  lowerSemicontinuousWithinAt_csupᵢ (by simp) h
 #align lower_semicontinuous_within_at_supr lowerSemicontinuousWithinAt_supᵢ
 
-/- warning: lower_semicontinuous_within_at_bsupr -> lowerSemicontinuousWithinAt_bsupr is a dubious translation:
+/- warning: lower_semicontinuous_within_at_bsupr -> lowerSemicontinuousWithinAt_bsupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {s : Set.{u1} α} {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuousWithinAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi) s x) -> (LowerSemicontinuousWithinAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => supᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => supᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))) s x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {s : Set.{u3} α} {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuousWithinAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi) s x) -> (LowerSemicontinuousWithinAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => supᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => supᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))) s x)
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_within_at_bsupr lowerSemicontinuousWithinAt_bsuprₓ'. -/
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_within_at_bsupr lowerSemicontinuousWithinAt_bsupᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem lowerSemicontinuousWithinAt_bsupr {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem lowerSemicontinuousWithinAt_bsupᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, LowerSemicontinuousWithinAt (f i hi) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ (i) (hi), f i hi x') s x :=
   lowerSemicontinuousWithinAt_supᵢ fun i => lowerSemicontinuousWithinAt_supᵢ fun hi => h i hi
-#align lower_semicontinuous_within_at_bsupr lowerSemicontinuousWithinAt_bsupr
+#align lower_semicontinuous_within_at_bsupr lowerSemicontinuousWithinAt_bsupᵢ
 
-/- warning: lower_semicontinuous_at_csupr -> lowerSemicontinuousAt_csupr is a dubious translation:
+/- warning: lower_semicontinuous_at_csupr -> lowerSemicontinuousAt_csupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u1} α (fun (y : α) => BddAbove.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i y))) (nhds.{u1} α _inst_1 x)) -> (forall (i : ι), LowerSemicontinuousAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i) x) -> (LowerSemicontinuousAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasSup.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')) x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {ι : Sort.{u1}} {δ' : Type.{u2}} [_inst_4 : ConditionallyCompleteLinearOrder.{u2} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u3} α (fun (y : α) => BddAbove.{u2} δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (Set.range.{u2, u1} δ' ι (fun (i : ι) => f i y))) (nhds.{u3} α _inst_1 x)) -> (forall (i : ι), LowerSemicontinuousAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (f i) x) -> (LowerSemicontinuousAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u2, u1} δ' (ConditionallyCompleteLattice.toSupSet.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4)) ι (fun (i : ι) => f i x')) x)
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_at_csupr lowerSemicontinuousAt_csuprₓ'. -/
-theorem lowerSemicontinuousAt_csupr {f : ι → α → δ'}
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_at_csupr lowerSemicontinuousAt_csupᵢₓ'. -/
+theorem lowerSemicontinuousAt_csupᵢ {f : ι → α → δ'}
     (bdd : ∀ᶠ y in 𝓝 x, BddAbove (range fun i => f i y)) (h : ∀ i, LowerSemicontinuousAt (f i) x) :
     LowerSemicontinuousAt (fun x' => ⨆ i, f i x') x :=
   by
   simp_rw [← lowerSemicontinuousWithinAt_univ_iff] at *
   rw [← nhdsWithin_univ] at bdd
-  exact lowerSemicontinuousWithinAt_csupr bdd h
-#align lower_semicontinuous_at_csupr lowerSemicontinuousAt_csupr
+  exact lowerSemicontinuousWithinAt_csupᵢ bdd h
+#align lower_semicontinuous_at_csupr lowerSemicontinuousAt_csupᵢ
 
 /- warning: lower_semicontinuous_at_supr -> lowerSemicontinuousAt_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -947,33 +947,33 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_at_supr lowerSemicontinuousAt_supᵢₓ'. -/
 theorem lowerSemicontinuousAt_supᵢ {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousAt (f i) x) :
     LowerSemicontinuousAt (fun x' => ⨆ i, f i x') x :=
-  lowerSemicontinuousAt_csupr (by simp) h
+  lowerSemicontinuousAt_csupᵢ (by simp) h
 #align lower_semicontinuous_at_supr lowerSemicontinuousAt_supᵢ
 
-/- warning: lower_semicontinuous_at_bsupr -> lowerSemicontinuousAt_bsupr is a dubious translation:
+/- warning: lower_semicontinuous_at_bsupr -> lowerSemicontinuousAt_bsupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuousAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi) x) -> (LowerSemicontinuousAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => supᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => supᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))) x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuousAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi) x) -> (LowerSemicontinuousAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => supᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => supᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))) x)
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_at_bsupr lowerSemicontinuousAt_bsuprₓ'. -/
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_at_bsupr lowerSemicontinuousAt_bsupᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem lowerSemicontinuousAt_bsupr {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem lowerSemicontinuousAt_bsupᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, LowerSemicontinuousAt (f i hi) x) :
     LowerSemicontinuousAt (fun x' => ⨆ (i) (hi), f i hi x') x :=
   lowerSemicontinuousAt_supᵢ fun i => lowerSemicontinuousAt_supᵢ fun hi => h i hi
-#align lower_semicontinuous_at_bsupr lowerSemicontinuousAt_bsupr
+#align lower_semicontinuous_at_bsupr lowerSemicontinuousAt_bsupᵢ
 
-/- warning: lower_semicontinuous_on_csupr -> lowerSemicontinuousOn_csupr is a dubious translation:
+/- warning: lower_semicontinuous_on_csupr -> lowerSemicontinuousOn_csupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (BddAbove.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i x)))) -> (forall (i : ι), LowerSemicontinuousOn.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i) s) -> (LowerSemicontinuousOn.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasSup.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')) s)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {s : Set.{u3} α} {ι : Sort.{u1}} {δ' : Type.{u2}} [_inst_4 : ConditionallyCompleteLinearOrder.{u2} δ'] {f : ι -> α -> δ'}, (forall (x : α), (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x s) -> (BddAbove.{u2} δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (Set.range.{u2, u1} δ' ι (fun (i : ι) => f i x)))) -> (forall (i : ι), LowerSemicontinuousOn.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (f i) s) -> (LowerSemicontinuousOn.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u2, u1} δ' (ConditionallyCompleteLattice.toSupSet.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4)) ι (fun (i : ι) => f i x')) s)
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_on_csupr lowerSemicontinuousOn_csuprₓ'. -/
-theorem lowerSemicontinuousOn_csupr {f : ι → α → δ'}
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_on_csupr lowerSemicontinuousOn_csupᵢₓ'. -/
+theorem lowerSemicontinuousOn_csupᵢ {f : ι → α → δ'}
     (bdd : ∀ x ∈ s, BddAbove (range fun i => f i x)) (h : ∀ i, LowerSemicontinuousOn (f i) s) :
     LowerSemicontinuousOn (fun x' => ⨆ i, f i x') s := fun x hx =>
-  lowerSemicontinuousWithinAt_csupr (eventually_nhdsWithin_of_forall bdd) fun i => h i x hx
-#align lower_semicontinuous_on_csupr lowerSemicontinuousOn_csupr
+  lowerSemicontinuousWithinAt_csupᵢ (eventually_nhdsWithin_of_forall bdd) fun i => h i x hx
+#align lower_semicontinuous_on_csupr lowerSemicontinuousOn_csupᵢ
 
 /- warning: lower_semicontinuous_on_supr -> lowerSemicontinuousOn_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -983,32 +983,32 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_on_supr lowerSemicontinuousOn_supᵢₓ'. -/
 theorem lowerSemicontinuousOn_supᵢ {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousOn (f i) s) :
     LowerSemicontinuousOn (fun x' => ⨆ i, f i x') s :=
-  lowerSemicontinuousOn_csupr (by simp) h
+  lowerSemicontinuousOn_csupᵢ (by simp) h
 #align lower_semicontinuous_on_supr lowerSemicontinuousOn_supᵢ
 
-/- warning: lower_semicontinuous_on_bsupr -> lowerSemicontinuousOn_bsupr is a dubious translation:
+/- warning: lower_semicontinuous_on_bsupr -> lowerSemicontinuousOn_bsupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuousOn.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi) s) -> (LowerSemicontinuousOn.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => supᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => supᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))) s)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {s : Set.{u3} α} {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuousOn.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi) s) -> (LowerSemicontinuousOn.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => supᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => supᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))) s)
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_on_bsupr lowerSemicontinuousOn_bsuprₓ'. -/
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_on_bsupr lowerSemicontinuousOn_bsupᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem lowerSemicontinuousOn_bsupr {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem lowerSemicontinuousOn_bsupᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, LowerSemicontinuousOn (f i hi) s) :
     LowerSemicontinuousOn (fun x' => ⨆ (i) (hi), f i hi x') s :=
   lowerSemicontinuousOn_supᵢ fun i => lowerSemicontinuousOn_supᵢ fun hi => h i hi
-#align lower_semicontinuous_on_bsupr lowerSemicontinuousOn_bsupr
+#align lower_semicontinuous_on_bsupr lowerSemicontinuousOn_bsupᵢ
 
-/- warning: lower_semicontinuous_csupr -> lowerSemicontinuous_csupr is a dubious translation:
+/- warning: lower_semicontinuous_csupr -> lowerSemicontinuous_csupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (forall (x : α), BddAbove.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i x))) -> (forall (i : ι), LowerSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i)) -> (LowerSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasSup.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (forall (x : α), BddAbove.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i x))) -> (forall (i : ι), LowerSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i)) -> (LowerSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => supᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toSupSet.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')))
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_csupr lowerSemicontinuous_csuprₓ'. -/
-theorem lowerSemicontinuous_csupr {f : ι → α → δ'} (bdd : ∀ x, BddAbove (range fun i => f i x))
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_csupr lowerSemicontinuous_csupᵢₓ'. -/
+theorem lowerSemicontinuous_csupᵢ {f : ι → α → δ'} (bdd : ∀ x, BddAbove (range fun i => f i x))
     (h : ∀ i, LowerSemicontinuous (f i)) : LowerSemicontinuous fun x' => ⨆ i, f i x' := fun x =>
-  lowerSemicontinuousAt_csupr (eventually_of_forall bdd) fun i => h i x
-#align lower_semicontinuous_csupr lowerSemicontinuous_csupr
+  lowerSemicontinuousAt_csupᵢ (eventually_of_forall bdd) fun i => h i x
+#align lower_semicontinuous_csupr lowerSemicontinuous_csupᵢ
 
 /- warning: lower_semicontinuous_supr -> lowerSemicontinuous_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -1018,21 +1018,21 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_supr lowerSemicontinuous_supᵢₓ'. -/
 theorem lowerSemicontinuous_supᵢ {f : ι → α → δ} (h : ∀ i, LowerSemicontinuous (f i)) :
     LowerSemicontinuous fun x' => ⨆ i, f i x' :=
-  lowerSemicontinuous_csupr (by simp) h
+  lowerSemicontinuous_csupᵢ (by simp) h
 #align lower_semicontinuous_supr lowerSemicontinuous_supᵢ
 
-/- warning: lower_semicontinuous_bsupr -> lowerSemicontinuous_bsupr is a dubious translation:
+/- warning: lower_semicontinuous_bsupr -> lowerSemicontinuous_bsupᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuous.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi)) -> (LowerSemicontinuous.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => supᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => supᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasSup.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))))
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), LowerSemicontinuous.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi)) -> (LowerSemicontinuous.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => supᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => supᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toSupSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))))
-Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_bsupr lowerSemicontinuous_bsuprₓ'. -/
+Case conversion may be inaccurate. Consider using '#align lower_semicontinuous_bsupr lowerSemicontinuous_bsupᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem lowerSemicontinuous_bsupr {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem lowerSemicontinuous_bsupᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, LowerSemicontinuous (f i hi)) :
     LowerSemicontinuous fun x' => ⨆ (i) (hi), f i hi x' :=
   lowerSemicontinuous_supᵢ fun i => lowerSemicontinuous_supᵢ fun hi => h i hi
-#align lower_semicontinuous_bsupr lowerSemicontinuous_bsupr
+#align lower_semicontinuous_bsupr lowerSemicontinuous_bsupᵢ
 
 end
 
@@ -1731,18 +1731,18 @@ section
 
 variable {ι : Sort _} {δ δ' : Type _} [CompleteLinearOrder δ] [ConditionallyCompleteLinearOrder δ']
 
-/- warning: upper_semicontinuous_within_at_cinfi -> upperSemicontinuousWithinAt_cinfi is a dubious translation:
+/- warning: upper_semicontinuous_within_at_cinfi -> upperSemicontinuousWithinAt_cinfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {s : Set.{u1} α} {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u1} α (fun (y : α) => BddBelow.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i y))) (nhdsWithin.{u1} α _inst_1 x s)) -> (forall (i : ι), UpperSemicontinuousWithinAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i) s x) -> (UpperSemicontinuousWithinAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasInf.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')) s x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {s : Set.{u3} α} {ι : Sort.{u1}} {δ' : Type.{u2}} [_inst_4 : ConditionallyCompleteLinearOrder.{u2} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u3} α (fun (y : α) => BddBelow.{u2} δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (Set.range.{u2, u1} δ' ι (fun (i : ι) => f i y))) (nhdsWithin.{u3} α _inst_1 x s)) -> (forall (i : ι), UpperSemicontinuousWithinAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (f i) s x) -> (UpperSemicontinuousWithinAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u2, u1} δ' (ConditionallyCompleteLattice.toInfSet.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4)) ι (fun (i : ι) => f i x')) s x)
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_within_at_cinfi upperSemicontinuousWithinAt_cinfiₓ'. -/
-theorem upperSemicontinuousWithinAt_cinfi {f : ι → α → δ'}
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_within_at_cinfi upperSemicontinuousWithinAt_cinfᵢₓ'. -/
+theorem upperSemicontinuousWithinAt_cinfᵢ {f : ι → α → δ'}
     (bdd : ∀ᶠ y in 𝓝[s] x, BddBelow (range fun i => f i y))
     (h : ∀ i, UpperSemicontinuousWithinAt (f i) s x) :
     UpperSemicontinuousWithinAt (fun x' => ⨅ i, f i x') s x :=
-  @lowerSemicontinuousWithinAt_csupr α _ x s ι δ'ᵒᵈ _ f bdd h
-#align upper_semicontinuous_within_at_cinfi upperSemicontinuousWithinAt_cinfi
+  @lowerSemicontinuousWithinAt_csupᵢ α _ x s ι δ'ᵒᵈ _ f bdd h
+#align upper_semicontinuous_within_at_cinfi upperSemicontinuousWithinAt_cinfᵢ
 
 /- warning: upper_semicontinuous_within_at_infi -> upperSemicontinuousWithinAt_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -1756,30 +1756,30 @@ theorem upperSemicontinuousWithinAt_infᵢ {f : ι → α → δ}
   @lowerSemicontinuousWithinAt_supᵢ α _ x s ι δᵒᵈ _ f h
 #align upper_semicontinuous_within_at_infi upperSemicontinuousWithinAt_infᵢ
 
-/- warning: upper_semicontinuous_within_at_binfi -> upperSemicontinuousWithinAt_binfi is a dubious translation:
+/- warning: upper_semicontinuous_within_at_binfi -> upperSemicontinuousWithinAt_binfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {s : Set.{u1} α} {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuousWithinAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi) s x) -> (UpperSemicontinuousWithinAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => infᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => infᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))) s x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {s : Set.{u3} α} {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuousWithinAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi) s x) -> (UpperSemicontinuousWithinAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => infᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => infᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))) s x)
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_within_at_binfi upperSemicontinuousWithinAt_binfiₓ'. -/
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_within_at_binfi upperSemicontinuousWithinAt_binfᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem upperSemicontinuousWithinAt_binfi {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem upperSemicontinuousWithinAt_binfᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, UpperSemicontinuousWithinAt (f i hi) s x) :
     UpperSemicontinuousWithinAt (fun x' => ⨅ (i) (hi), f i hi x') s x :=
   upperSemicontinuousWithinAt_infᵢ fun i => upperSemicontinuousWithinAt_infᵢ fun hi => h i hi
-#align upper_semicontinuous_within_at_binfi upperSemicontinuousWithinAt_binfi
+#align upper_semicontinuous_within_at_binfi upperSemicontinuousWithinAt_binfᵢ
 
-/- warning: upper_semicontinuous_at_cinfi -> upperSemicontinuousAt_cinfi is a dubious translation:
+/- warning: upper_semicontinuous_at_cinfi -> upperSemicontinuousAt_cinfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u1} α (fun (y : α) => BddBelow.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i y))) (nhds.{u1} α _inst_1 x)) -> (forall (i : ι), UpperSemicontinuousAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i) x) -> (UpperSemicontinuousAt.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasInf.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')) x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {ι : Sort.{u1}} {δ' : Type.{u2}} [_inst_4 : ConditionallyCompleteLinearOrder.{u2} δ'] {f : ι -> α -> δ'}, (Filter.Eventually.{u3} α (fun (y : α) => BddBelow.{u2} δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (Set.range.{u2, u1} δ' ι (fun (i : ι) => f i y))) (nhds.{u3} α _inst_1 x)) -> (forall (i : ι), UpperSemicontinuousAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (f i) x) -> (UpperSemicontinuousAt.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u2, u1} δ' (ConditionallyCompleteLattice.toInfSet.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4)) ι (fun (i : ι) => f i x')) x)
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_at_cinfi upperSemicontinuousAt_cinfiₓ'. -/
-theorem upperSemicontinuousAt_cinfi {f : ι → α → δ'}
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_at_cinfi upperSemicontinuousAt_cinfᵢₓ'. -/
+theorem upperSemicontinuousAt_cinfᵢ {f : ι → α → δ'}
     (bdd : ∀ᶠ y in 𝓝 x, BddBelow (range fun i => f i y)) (h : ∀ i, UpperSemicontinuousAt (f i) x) :
     UpperSemicontinuousAt (fun x' => ⨅ i, f i x') x :=
-  @lowerSemicontinuousAt_csupr α _ x ι δ'ᵒᵈ _ f bdd h
-#align upper_semicontinuous_at_cinfi upperSemicontinuousAt_cinfi
+  @lowerSemicontinuousAt_csupᵢ α _ x ι δ'ᵒᵈ _ f bdd h
+#align upper_semicontinuous_at_cinfi upperSemicontinuousAt_cinfᵢ
 
 /- warning: upper_semicontinuous_at_infi -> upperSemicontinuousAt_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -1792,30 +1792,30 @@ theorem upperSemicontinuousAt_infᵢ {f : ι → α → δ} (h : ∀ i, UpperSem
   @lowerSemicontinuousAt_supᵢ α _ x ι δᵒᵈ _ f h
 #align upper_semicontinuous_at_infi upperSemicontinuousAt_infᵢ
 
-/- warning: upper_semicontinuous_at_binfi -> upperSemicontinuousAt_binfi is a dubious translation:
+/- warning: upper_semicontinuous_at_binfi -> upperSemicontinuousAt_binfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuousAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi) x) -> (UpperSemicontinuousAt.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => infᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => infᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))) x)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {x : α} {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuousAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi) x) -> (UpperSemicontinuousAt.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => infᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => infᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))) x)
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_at_binfi upperSemicontinuousAt_binfiₓ'. -/
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_at_binfi upperSemicontinuousAt_binfᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem upperSemicontinuousAt_binfi {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem upperSemicontinuousAt_binfᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, UpperSemicontinuousAt (f i hi) x) :
     UpperSemicontinuousAt (fun x' => ⨅ (i) (hi), f i hi x') x :=
   upperSemicontinuousAt_infᵢ fun i => upperSemicontinuousAt_infᵢ fun hi => h i hi
-#align upper_semicontinuous_at_binfi upperSemicontinuousAt_binfi
+#align upper_semicontinuous_at_binfi upperSemicontinuousAt_binfᵢ
 
-/- warning: upper_semicontinuous_on_cinfi -> upperSemicontinuousOn_cinfi is a dubious translation:
+/- warning: upper_semicontinuous_on_cinfi -> upperSemicontinuousOn_cinfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (BddBelow.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i x)))) -> (forall (i : ι), UpperSemicontinuousOn.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i) s) -> (UpperSemicontinuousOn.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasInf.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')) s)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {s : Set.{u3} α} {ι : Sort.{u1}} {δ' : Type.{u2}} [_inst_4 : ConditionallyCompleteLinearOrder.{u2} δ'] {f : ι -> α -> δ'}, (forall (x : α), (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) x s) -> (BddBelow.{u2} δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (Set.range.{u2, u1} δ' ι (fun (i : ι) => f i x)))) -> (forall (i : ι), UpperSemicontinuousOn.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (f i) s) -> (UpperSemicontinuousOn.{u3, u2} α _inst_1 δ' (PartialOrder.toPreorder.{u2} δ' (SemilatticeInf.toPartialOrder.{u2} δ' (Lattice.toSemilatticeInf.{u2} δ' (ConditionallyCompleteLattice.toLattice.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u2, u1} δ' (ConditionallyCompleteLattice.toInfSet.{u2} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ' _inst_4)) ι (fun (i : ι) => f i x')) s)
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_on_cinfi upperSemicontinuousOn_cinfiₓ'. -/
-theorem upperSemicontinuousOn_cinfi {f : ι → α → δ'}
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_on_cinfi upperSemicontinuousOn_cinfᵢₓ'. -/
+theorem upperSemicontinuousOn_cinfᵢ {f : ι → α → δ'}
     (bdd : ∀ x ∈ s, BddBelow (range fun i => f i x)) (h : ∀ i, UpperSemicontinuousOn (f i) s) :
     UpperSemicontinuousOn (fun x' => ⨅ i, f i x') s := fun x hx =>
-  upperSemicontinuousWithinAt_cinfi (eventually_nhdsWithin_of_forall bdd) fun i => h i x hx
-#align upper_semicontinuous_on_cinfi upperSemicontinuousOn_cinfi
+  upperSemicontinuousWithinAt_cinfᵢ (eventually_nhdsWithin_of_forall bdd) fun i => h i x hx
+#align upper_semicontinuous_on_cinfi upperSemicontinuousOn_cinfᵢ
 
 /- warning: upper_semicontinuous_on_infi -> upperSemicontinuousOn_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -1828,29 +1828,29 @@ theorem upperSemicontinuousOn_infᵢ {f : ι → α → δ} (h : ∀ i, UpperSem
   upperSemicontinuousWithinAt_infᵢ fun i => h i x hx
 #align upper_semicontinuous_on_infi upperSemicontinuousOn_infᵢ
 
-/- warning: upper_semicontinuous_on_binfi -> upperSemicontinuousOn_binfi is a dubious translation:
+/- warning: upper_semicontinuous_on_binfi -> upperSemicontinuousOn_binfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuousOn.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi) s) -> (UpperSemicontinuousOn.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => infᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => infᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))) s)
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {s : Set.{u3} α} {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuousOn.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi) s) -> (UpperSemicontinuousOn.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => infᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => infᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))) s)
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_on_binfi upperSemicontinuousOn_binfiₓ'. -/
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_on_binfi upperSemicontinuousOn_binfᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem upperSemicontinuousOn_binfi {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem upperSemicontinuousOn_binfᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, UpperSemicontinuousOn (f i hi) s) :
     UpperSemicontinuousOn (fun x' => ⨅ (i) (hi), f i hi x') s :=
   upperSemicontinuousOn_infᵢ fun i => upperSemicontinuousOn_infᵢ fun hi => h i hi
-#align upper_semicontinuous_on_binfi upperSemicontinuousOn_binfi
+#align upper_semicontinuous_on_binfi upperSemicontinuousOn_binfᵢ
 
-/- warning: upper_semicontinuous_cinfi -> upperSemicontinuous_cinfi is a dubious translation:
+/- warning: upper_semicontinuous_cinfi -> upperSemicontinuous_cinfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (forall (x : α), BddBelow.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i x))) -> (forall (i : ι), UpperSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i)) -> (UpperSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toHasInf.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {δ' : Type.{u3}} [_inst_4 : ConditionallyCompleteLinearOrder.{u3} δ'] {f : ι -> α -> δ'}, (forall (x : α), BddBelow.{u3} δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (Set.range.{u3, u2} δ' ι (fun (i : ι) => f i x))) -> (forall (i : ι), UpperSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (f i)) -> (UpperSemicontinuous.{u1, u3} α _inst_1 δ' (PartialOrder.toPreorder.{u3} δ' (SemilatticeInf.toPartialOrder.{u3} δ' (Lattice.toSemilatticeInf.{u3} δ' (ConditionallyCompleteLattice.toLattice.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4))))) (fun (x' : α) => infᵢ.{u3, u2} δ' (ConditionallyCompleteLattice.toInfSet.{u3} δ' (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u3} δ' _inst_4)) ι (fun (i : ι) => f i x')))
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_cinfi upperSemicontinuous_cinfiₓ'. -/
-theorem upperSemicontinuous_cinfi {f : ι → α → δ'} (bdd : ∀ x, BddBelow (range fun i => f i x))
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_cinfi upperSemicontinuous_cinfᵢₓ'. -/
+theorem upperSemicontinuous_cinfᵢ {f : ι → α → δ'} (bdd : ∀ x, BddBelow (range fun i => f i x))
     (h : ∀ i, UpperSemicontinuous (f i)) : UpperSemicontinuous fun x' => ⨅ i, f i x' := fun x =>
-  upperSemicontinuousAt_cinfi (eventually_of_forall bdd) fun i => h i x
-#align upper_semicontinuous_cinfi upperSemicontinuous_cinfi
+  upperSemicontinuousAt_cinfᵢ (eventually_of_forall bdd) fun i => h i x
+#align upper_semicontinuous_cinfi upperSemicontinuous_cinfᵢ
 
 /- warning: upper_semicontinuous_infi -> upperSemicontinuous_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -1862,18 +1862,18 @@ theorem upperSemicontinuous_infᵢ {f : ι → α → δ} (h : ∀ i, UpperSemic
     UpperSemicontinuous fun x' => ⨅ i, f i x' := fun x => upperSemicontinuousAt_infᵢ fun i => h i x
 #align upper_semicontinuous_infi upperSemicontinuous_infᵢ
 
-/- warning: upper_semicontinuous_binfi -> upperSemicontinuous_binfi is a dubious translation:
+/- warning: upper_semicontinuous_binfi -> upperSemicontinuous_binfᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {δ : Type.{u3}} [_inst_3 : CompleteLinearOrder.{u3} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuous.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (f i hi)) -> (UpperSemicontinuous.{u1, u3} α _inst_1 δ (PartialOrder.toPreorder.{u3} δ (CompleteSemilatticeInf.toPartialOrder.{u3} δ (CompleteLattice.toCompleteSemilatticeInf.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3)))) (fun (x' : α) => infᵢ.{u3, u2} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) ι (fun (i : ι) => infᵢ.{u3, 0} δ (ConditionallyCompleteLattice.toHasInf.{u3} δ (CompleteLattice.toConditionallyCompleteLattice.{u3} δ (CompleteLinearOrder.toCompleteLattice.{u3} δ _inst_3))) (p i) (fun (hi : p i) => f i hi x'))))
 but is expected to have type
   forall {α : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} α] {ι : Sort.{u1}} {δ : Type.{u2}} [_inst_3 : CompleteLinearOrder.{u2} δ] {p : ι -> Prop} {f : forall (i : ι), (p i) -> α -> δ}, (forall (i : ι) (hi : p i), UpperSemicontinuous.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (f i hi)) -> (UpperSemicontinuous.{u3, u2} α _inst_1 δ (PartialOrder.toPreorder.{u2} δ (CompleteSemilatticeInf.toPartialOrder.{u2} δ (CompleteLattice.toCompleteSemilatticeInf.{u2} δ (CompleteLinearOrder.toCompleteLattice.{u2} δ _inst_3)))) (fun (x' : α) => infᵢ.{u2, u1} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) ι (fun (i : ι) => infᵢ.{u2, 0} δ (ConditionallyCompleteLattice.toInfSet.{u2} δ (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} δ (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} δ (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{u2} δ _inst_3)))) (p i) (fun (hi : p i) => f i hi x'))))
-Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_binfi upperSemicontinuous_binfiₓ'. -/
+Case conversion may be inaccurate. Consider using '#align upper_semicontinuous_binfi upperSemicontinuous_binfᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-theorem upperSemicontinuous_binfi {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
+theorem upperSemicontinuous_binfᵢ {p : ι → Prop} {f : ∀ (i) (h : p i), α → δ}
     (h : ∀ i hi, UpperSemicontinuous (f i hi)) :
     UpperSemicontinuous fun x' => ⨅ (i) (hi), f i hi x' :=
   upperSemicontinuous_infᵢ fun i => upperSemicontinuous_infᵢ fun hi => h i hi
-#align upper_semicontinuous_binfi upperSemicontinuous_binfi
+#align upper_semicontinuous_binfi upperSemicontinuous_binfᵢ
 
 end
 

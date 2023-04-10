@@ -700,7 +700,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.to_array Vector.toArrayₓ'. -/
 /-- Cast a vector to an array. -/
 def toArray : Vector α n → Array' n α
-  | ⟨xs, h⟩ => cast (by rw [h]) xs.toArray
+  | ⟨xs, h⟩ => cast (by rw [h]) xs.to_array
 #align vector.to_array Vector.toArray
 
 section InsertNth

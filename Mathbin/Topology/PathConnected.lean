@@ -877,18 +877,18 @@ def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t
     · rfl
 #align path.truncate Path.truncate
 
-/- warning: path.truncate_of_le -> Path.truncateOfLe is a dubious translation:
+/- warning: path.truncate_of_le -> Path.truncateOfLE is a dubious translation:
 lean 3 declaration is
   forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] {a : X} {b : X} (γ : Path.{u1} X _inst_3 a b) {t₀ : Real} {t₁ : Real}, (LE.le.{0} Real Real.hasLe t₀ t₁) -> (Path.{u1} X _inst_3 (Path.extend.{u1} X _inst_3 a b γ t₀) (Path.extend.{u1} X _inst_3 a b γ t₁))
 but is expected to have type
   forall {X : Type.{u1}} [_inst_3 : TopologicalSpace.{u1} X] {a : X} {b : X} (γ : Path.{u1} X _inst_3 a b) {t₀ : Real} {t₁ : Real}, (LE.le.{0} Real Real.instLEReal t₀ t₁) -> (Path.{u1} X _inst_3 (Path.extend.{u1} X _inst_3 a b γ t₀) (Path.extend.{u1} X _inst_3 a b γ t₁))
-Case conversion may be inaccurate. Consider using '#align path.truncate_of_le Path.truncateOfLeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align path.truncate_of_le Path.truncateOfLEₓ'. -/
 /-- `γ.truncate_of_le t₀ t₁ h`, where `h : t₀ ≤ t₁` is `γ.truncate t₀ t₁`
   casted as a path from `γ.extend t₀` to `γ.extend t₁`. -/
-def truncateOfLe {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t₀ t₁ : ℝ}
+def truncateOfLE {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t₀ t₁ : ℝ}
     (h : t₀ ≤ t₁) : Path (γ.extend t₀) (γ.extend t₁) :=
   (γ.truncate t₀ t₁).cast (by rw [min_eq_left h]) rfl
-#align path.truncate_of_le Path.truncateOfLe
+#align path.truncate_of_le Path.truncateOfLE
 
 #print Path.truncate_range /-
 theorem truncate_range {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t₀ t₁ : ℝ} :

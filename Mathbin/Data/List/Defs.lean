@@ -109,15 +109,16 @@ def head? : List α → Option α
 #align list.head' List.head?
 -/
 
-/- warning: list.to_array -> List.toArray is a dubious translation:
+/- warning: list.to_array clashes with [anonymous] -> [anonymous]
+warning: list.to_array -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (l : List.{u1} α), Array'.{u1} (List.length.{u1} α l) α
+  forall {α : Type.{u_1}} (l : List.{u_1} α), Array'.{u_1} (List.length.{u_1} α l) α
 but is expected to have type
-  forall {α : Type.{u1}}, (List.{u1} α) -> (Array.{u1} α)
-Case conversion may be inaccurate. Consider using '#align list.to_array List.toArrayₓ'. -/
+  forall {α : Type.{u}} {l : Type.{v}}, (Nat -> α -> l) -> Nat -> (List.{u} α) -> (List.{v} l)
+Case conversion may be inaccurate. Consider using '#align list.to_array [anonymous]ₓ'. -/
 /-- Convert a list into an array (whose length is the length of `l`). -/
-def toArray (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
-#align list.to_array List.toArray
+def [anonymous] (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
+#align list.to_array [anonymous]
 
 #print List.getD /-
 /-- "default" `nth` function: returns `d` instead of `none` in the case

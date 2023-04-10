@@ -528,7 +528,7 @@ theorem hasSum_conj {f : α → 𝕜} {x : 𝕜} : HasSum (fun x => conj (f x)) 
 #align is_R_or_C.has_sum_conj IsROrC.hasSum_conj
 
 theorem hasSum_conj' {f : α → 𝕜} {x : 𝕜} : HasSum (fun x => conj (f x)) (conj x) ↔ HasSum f x :=
-  conjCle.has_sum'
+  conjCle.hasSum'
 #align is_R_or_C.has_sum_conj' IsROrC.hasSum_conj'
 
 @[simp]

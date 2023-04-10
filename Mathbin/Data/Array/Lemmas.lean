@@ -229,7 +229,7 @@ section ToArray
 variable {n : ℕ} {α : Type u}
 
 @[simp]
-theorem toList_toArray (a : Array' n α) : HEq a.toList.toArray a :=
+theorem toList_to_array' (a : Array' n α) : HEq a.toList.to_array a :=
   hEq_of_hEq_of_eq
       (@Eq.drecOn
         (fun m (e : a.toList.length = m) =>
@@ -237,12 +237,12 @@ theorem toList_toArray (a : Array' n α) : HEq a.toList.toArray a :=
             (@DArray.mk m (fun _ => α) fun v => a.toList.nthLe v.1 <| e.symm ▸ v.2))
         a.toList_length HEq.rfl) <|
     DArray.ext fun ⟨i, h⟩ => toList_nthLe i h _
-#align array.to_list_to_array Array'.toList_toArray
+#align array.to_list_to_array Array'.toList_to_array'
 
 @[simp]
-theorem toArray_toList (l : List α) : l.toArray.toList = l :=
+theorem to_array_toList (l : List α) : l.to_array.toList = l :=
   List.ext_nthLe (toList_length _) fun n h1 h2 => toList_nthLe _ h2 _
-#align array.to_array_to_list Array'.toArray_toList
+#align array.to_array_to_list Array'.to_array_toList
 
 end ToArray
 

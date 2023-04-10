@@ -4820,15 +4820,15 @@ theorem diam_ball {r : ℝ} (h : 0 ≤ r) : diam (ball x r) ≤ 2 * r :=
   diam_le_of_subset_closedBall h ball_subset_closedBall
 #align metric.diam_ball Metric.diam_ball
 
-/- warning: is_complete.nonempty_Inter_of_nonempty_bInter -> IsComplete.nonempty_interᵢ_of_nonempty_bInter is a dubious translation:
+/- warning: is_complete.nonempty_Inter_of_nonempty_bInter -> IsComplete.nonempty_interᵢ_of_nonempty_binterᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Nat -> (Set.{u1} α)}, (IsComplete.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (s (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) -> (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => Set.interᵢ.{u1, 0} α (LE.le.{0} Nat Nat.hasLe n N) (fun (H : LE.le.{0} Nat Nat.hasLe n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => s n)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Nat -> (Set.{u1} α)}, (IsComplete.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1) (s (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => Set.interᵢ.{u1, 0} α (LE.le.{0} Nat instLENat n N) (fun (H : LE.le.{0} Nat instLENat n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => s n)))
-Case conversion may be inaccurate. Consider using '#align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_interᵢ_of_nonempty_bInterₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_interᵢ_of_nonempty_binterᵢₓ'. -/
 /-- If a family of complete sets with diameter tending to `0` is such that each finite intersection
 is nonempty, then the total intersection is also nonempty. -/
-theorem IsComplete.nonempty_interᵢ_of_nonempty_bInter {s : ℕ → Set α} (h0 : IsComplete (s 0))
+theorem IsComplete.nonempty_interᵢ_of_nonempty_binterᵢ {s : ℕ → Set α} (h0 : IsComplete (s 0))
     (hs : ∀ n, IsClosed (s n)) (h's : ∀ n, Bounded (s n)) (h : ∀ N, (⋂ n ≤ N, s n).Nonempty)
     (h' : Tendsto (fun n => diam (s n)) atTop (𝓝 0)) : (⋂ n, s n).Nonempty :=
   by
@@ -4850,21 +4850,21 @@ theorem IsComplete.nonempty_interᵢ_of_nonempty_bInter {s : ℕ → Set α} (h0
   apply (hs n).mem_of_tendsto xlim
   filter_upwards [Ici_mem_at_top n]with p hp
   exact I n p hp
-#align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_interᵢ_of_nonempty_bInter
+#align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_interᵢ_of_nonempty_binterᵢ
 
-/- warning: metric.nonempty_Inter_of_nonempty_bInter -> Metric.nonempty_interᵢ_of_nonempty_bInter is a dubious translation:
+/- warning: metric.nonempty_Inter_of_nonempty_bInter -> Metric.nonempty_interᵢ_of_nonempty_binterᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)] {s : Nat -> (Set.{u1} α)}, (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => Set.interᵢ.{u1, 0} α (LE.le.{0} Nat Nat.hasLe n N) (fun (H : LE.le.{0} Nat Nat.hasLe n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => s n)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : CompleteSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)] {s : Nat -> (Set.{u1} α)}, (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_1)) (s n)) -> (forall (n : Nat), Metric.Bounded.{u1} α _inst_1 (s n)) -> (forall (N : Nat), Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => Set.interᵢ.{u1, 0} α (LE.le.{0} Nat instLENat n N) (fun (H : LE.le.{0} Nat instLENat n N) => s n)))) -> (Filter.Tendsto.{0, 0} Nat Real (fun (n : Nat) => Metric.diam.{u1} α _inst_1 (s n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (Set.Nonempty.{u1} α (Set.interᵢ.{u1, 1} α Nat (fun (n : Nat) => s n)))
-Case conversion may be inaccurate. Consider using '#align metric.nonempty_Inter_of_nonempty_bInter Metric.nonempty_interᵢ_of_nonempty_bInterₓ'. -/
+Case conversion may be inaccurate. Consider using '#align metric.nonempty_Inter_of_nonempty_bInter Metric.nonempty_interᵢ_of_nonempty_binterᵢₓ'. -/
 /-- In a complete space, if a family of closed sets with diameter tending to `0` is such that each
 finite intersection is nonempty, then the total intersection is also nonempty. -/
-theorem nonempty_interᵢ_of_nonempty_bInter [CompleteSpace α] {s : ℕ → Set α}
+theorem nonempty_interᵢ_of_nonempty_binterᵢ [CompleteSpace α] {s : ℕ → Set α}
     (hs : ∀ n, IsClosed (s n)) (h's : ∀ n, Bounded (s n)) (h : ∀ N, (⋂ n ≤ N, s n).Nonempty)
     (h' : Tendsto (fun n => diam (s n)) atTop (𝓝 0)) : (⋂ n, s n).Nonempty :=
-  (hs 0).IsComplete.nonempty_interᵢ_of_nonempty_bInter hs h's h h'
-#align metric.nonempty_Inter_of_nonempty_bInter Metric.nonempty_interᵢ_of_nonempty_bInter
+  (hs 0).IsComplete.nonempty_interᵢ_of_nonempty_binterᵢ hs h's h h'
+#align metric.nonempty_Inter_of_nonempty_bInter Metric.nonempty_interᵢ_of_nonempty_binterᵢ
 
 end Diam
 
