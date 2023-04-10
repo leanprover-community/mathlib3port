@@ -284,7 +284,7 @@ theorem rank_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card
   rank_le fun s hs => by
     simpa only [rank_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_natCast,
       Cardinal.natCast_le] using
-      cardinal_lift_le_rank_of_linear_independent'
+      cardinal_lift_le_rank_of_linearIndependent'
         (linear_independent_smul_of_linear_independent G F hs)
 #align fixed_points.rank_le_card FixedPoints.rank_le_card
 
