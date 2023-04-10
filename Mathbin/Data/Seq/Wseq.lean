@@ -1338,7 +1338,7 @@ theorem dropn_ofSeq (s : Seq α) : ∀ n, drop (ofSeq s) n = ofSeq (s.drop n)
   | n + 1 => by dsimp [drop] <;> rw [dropn_of_seq, tail_of_seq]
 #align stream.wseq.dropn_of_seq Stream'.Wseq.dropn_ofSeq
 
-theorem nth_ofSeq (s : Seq α) (n) : nth (ofSeq s) n = return (Seq.nth s n) := by
+theorem nth_ofSeq (s : Seq α) (n) : nth (ofSeq s) n = return (Seq.get? s n) := by
   dsimp [nth] <;> rw [dropn_of_seq, head_of_seq, seq.head_dropn]
 #align stream.wseq.nth_of_seq Stream'.Wseq.nth_ofSeq
 

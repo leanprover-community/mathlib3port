@@ -197,10 +197,10 @@ sequence implies the termination of another sequence.
 
 variable {n : ℕ}
 
-theorem IntFractPair.nth_seq1_eq_succ_nth_stream :
+theorem IntFractPair.get?_seq1_eq_succ_get?_stream :
     (IntFractPair.seq1 v).snd.get? n = (IntFractPair.stream v) (n + 1) :=
   rfl
-#align generalized_continued_fraction.int_fract_pair.nth_seq1_eq_succ_nth_stream GeneralizedContinuedFraction.IntFractPair.nth_seq1_eq_succ_nth_stream
+#align generalized_continued_fraction.int_fract_pair.nth_seq1_eq_succ_nth_stream GeneralizedContinuedFraction.IntFractPair.get?_seq1_eq_succ_get?_stream
 
 section Termination
 
@@ -233,7 +233,7 @@ Now let's show how the values of the sequences correspond to one another.
 -/
 
 
-theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K}
+theorem IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some {gp_n : Pair K}
     (s_nth_eq : (of v).s.get? n = some gp_n) :
     ∃ ifp : IntFractPair K, IntFractPair.stream v (n + 1) = some ifp ∧ (ifp.b : K) = gp_n.b :=
   by
@@ -246,32 +246,32 @@ theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K
   injection gp_n_eq with _ ifp_b_eq_gp_n_b
   exists ifp
   exact ⟨stream_succ_nth_eq, ifp_b_eq_gp_n_b⟩
-#align generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some GeneralizedContinuedFraction.IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some
+#align generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some GeneralizedContinuedFraction.IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some
 
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
 integer parts of the stream of integer and fractional parts.
 -/
-theorem nth_of_eq_some_of_succ_nth_intFractPair_stream {ifp_succ_n : IntFractPair K}
+theorem get?_of_eq_some_of_succ_get?_intFractPair_stream {ifp_succ_n : IntFractPair K}
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) :
     (of v).s.get? n = some ⟨1, ifp_succ_n.b⟩ :=
   by
   unfold of int_fract_pair.seq1
   rw [seq.map_tail, seq.nth_tail, seq.map_nth]
   simp [seq.nth, stream_succ_nth_eq]
-#align generalized_continued_fraction.nth_of_eq_some_of_succ_nth_int_fract_pair_stream GeneralizedContinuedFraction.nth_of_eq_some_of_succ_nth_intFractPair_stream
+#align generalized_continued_fraction.nth_of_eq_some_of_succ_nth_int_fract_pair_stream GeneralizedContinuedFraction.get?_of_eq_some_of_succ_get?_intFractPair_stream
 
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
 fractional parts of the stream of integer and fractional parts.
 -/
-theorem nth_of_eq_some_of_nth_intFractPair_stream_fr_ne_zero {ifp_n : IntFractPair K}
+theorem get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero {ifp_n : IntFractPair K}
     (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_ne_zero : ifp_n.fr ≠ 0) :
     (of v).s.get? n = some ⟨1, (IntFractPair.of ifp_n.fr⁻¹).b⟩ :=
   have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) :=
     by
     cases ifp_n
     simp [int_fract_pair.stream, stream_nth_eq, nth_fr_ne_zero]
-  nth_of_eq_some_of_succ_nth_intFractPair_stream this
-#align generalized_continued_fraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero GeneralizedContinuedFraction.nth_of_eq_some_of_nth_intFractPair_stream_fr_ne_zero
+  get?_of_eq_some_of_succ_get?_intFractPair_stream this
+#align generalized_continued_fraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero GeneralizedContinuedFraction.get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero
 
 open Int IntFractPair
 
@@ -337,7 +337,7 @@ an element `v` of `K` as the coefficient sequence of that of the inverse of the
 fractional part of `v`.
 -/
 theorem of_s_tail : (of v).s.tail = (of (fract v)⁻¹).s :=
-  Seq.ext fun n => Seq.nth_tail (of v).s n ▸ of_s_succ v n
+  Seq.ext fun n => Seq.get?_tail (of v).s n ▸ of_s_succ v n
 #align generalized_continued_fraction.of_s_tail GeneralizedContinuedFraction.of_s_tail
 
 variable (K) (n)

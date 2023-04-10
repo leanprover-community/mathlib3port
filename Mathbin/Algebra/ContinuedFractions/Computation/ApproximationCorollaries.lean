@@ -62,7 +62,7 @@ def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
 
 theorem SimpleContinuedFraction.of_isContinuedFraction :
     (SimpleContinuedFraction.of v).IsContinuedFraction := fun _ denom nth_part_denom_eq =>
-  lt_of_lt_of_le zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
+  lt_of_lt_of_le zero_lt_one (of_one_le_get?_part_denom nth_part_denom_eq)
 #align simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_isContinuedFraction
 
 /-- Creates the continued fraction of a value. -/

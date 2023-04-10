@@ -146,7 +146,7 @@ fraction `generalized_continued_fraction.of`.
 
 
 /-- Shows that the integer parts of the continued fraction are at least one. -/
-theorem of_one_le_nth_part_denom {b : K}
+theorem of_one_le_get?_part_denom {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) : 1 ≤ b :=
   by
   obtain ⟨gp_n, nth_s_eq, ⟨-⟩⟩ : ∃ gp_n, (of v).s.get? n = some gp_n ∧ gp_n.b = b;
@@ -156,7 +156,7 @@ theorem of_one_le_nth_part_denom {b : K}
   exact int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some nth_s_eq
   rw [← ifp_n_b_eq_gp_n_b]
   exact_mod_cast int_fract_pair.one_le_succ_nth_stream_b succ_nth_stream_eq
-#align generalized_continued_fraction.of_one_le_nth_part_denom GeneralizedContinuedFraction.of_one_le_nth_part_denom
+#align generalized_continued_fraction.of_one_le_nth_part_denom GeneralizedContinuedFraction.of_one_le_get?_part_denom
 
 /--
 Shows that the partial numerators `aᵢ` of the continued fraction are equal to one and the partial
@@ -299,7 +299,7 @@ theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
   exact zero_le_of_continuants_aux_b
 #align generalized_continued_fraction.zero_le_of_denom GeneralizedContinuedFraction.zero_le_of_denom
 
-theorem le_of_succ_succ_nth_continuantsAux_b {b : K}
+theorem le_of_succ_succ_get?_continuantsAux_b {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) :
     b * ((of v).continuantsAux <| n + 1).b ≤ ((of v).continuantsAux <| n + 2).b :=
   by
@@ -307,17 +307,17 @@ theorem le_of_succ_succ_nth_continuantsAux_b {b : K}
   exact exists_s_b_of_part_denom nth_part_denom_eq
   simp [of_part_num_eq_one (part_num_eq_s_a nth_s_eq), zero_le_of_continuants_aux_b,
     GeneralizedContinuedFraction.continuantsAux_recurrence nth_s_eq rfl rfl]
-#align generalized_continued_fraction.le_of_succ_succ_nth_continuants_aux_b GeneralizedContinuedFraction.le_of_succ_succ_nth_continuantsAux_b
+#align generalized_continued_fraction.le_of_succ_succ_nth_continuants_aux_b GeneralizedContinuedFraction.le_of_succ_succ_get?_continuantsAux_b
 
 /-- Shows that `bₙ * Bₙ ≤ Bₙ₊₁`, where `bₙ` is the `n`th partial denominator and `Bₙ₊₁` and `Bₙ` are
 the `n + 1`th and `n`th denominator of the continued fraction. -/
-theorem le_of_succ_nth_denom {b : K}
+theorem le_of_succ_get?_denom {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) :
     b * (of v).denominators n ≤ (of v).denominators (n + 1) :=
   by
   rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
   exact le_of_succ_succ_nth_continuants_aux_b nth_part_denom_eq
-#align generalized_continued_fraction.le_of_succ_nth_denom GeneralizedContinuedFraction.le_of_succ_nth_denom
+#align generalized_continued_fraction.le_of_succ_nth_denom GeneralizedContinuedFraction.le_of_succ_get?_denom
 
 /-- Shows that the sequence of denominators is monotone, that is `Bₙ ≤ Bₙ₊₁`. -/
 theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) :=

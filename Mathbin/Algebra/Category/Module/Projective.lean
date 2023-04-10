@@ -37,7 +37,7 @@ theorem IsProjective.iff_projective {R : Type u} [Ring R] {P : Type max u v} [Ad
     exact
       ⟨fun E X f e epi =>
         Module.projective_lifting_property _ _ ((ModuleCat.epi_iff_surjective _).mp epi)⟩
-  · refine' Module.projectiveOfLiftingProperty _
+  · refine' Module.Projective.of_lifting_property _
     intro E X mE mX sE sX f g s
     haveI : epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s
     letI : projective (ModuleCat.of R P) := h
@@ -52,7 +52,7 @@ variable {R : Type u} [Ring R] {M : ModuleCat.{max u v} R}
 /-- Modules that have a basis are projective. -/
 theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
   Projective.of_iso (ModuleCat.ofSelfIso _)
-    (IsProjective.iff_projective.mp (Module.projectiveOfBasis b))
+    (IsProjective.iff_projective.mp (Module.Projective.of_basis b))
 #align Module.projective_of_free ModuleCat.projective_of_free
 
 /-- The category of modules has enough projectives, since every module is a quotient of a free

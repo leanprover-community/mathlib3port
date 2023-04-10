@@ -128,7 +128,7 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
   by
   suffices
     ∀ (n) (l : List (Computation α)) (S c),
-      c ∈ l ∨ some (some c) = Seq.nth S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
+      c ∈ l ∨ some (some c) = Seq.get? S n → Terminates c → Terminates (corec Parallel.aux1 (l, S))
     from
     let ⟨n, h⟩ := h
     this n [] S c (Or.inr h) T

@@ -68,7 +68,7 @@ variable {R M}
 
 /-- An equivalence between modules implies an equivalence between orientations. -/
 def Orientation.map (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N ι :=
-  Module.Ray.map <| AlternatingMap.domLcongr R R ι R e
+  Module.Ray.map <| AlternatingMap.domLCongr R R ι R e
 #align orientation.map Orientation.map
 
 @[simp]
@@ -80,7 +80,7 @@ theorem Orientation.map_apply (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) 
 
 @[simp]
 theorem Orientation.map_refl : (Orientation.map ι <| LinearEquiv.refl R M) = Equiv.refl _ := by
-  rw [Orientation.map, AlternatingMap.domLcongr_refl, Module.Ray.map_refl]
+  rw [Orientation.map, AlternatingMap.domLCongr_refl, Module.Ray.map_refl]
 #align orientation.map_refl Orientation.map_refl
 
 @[simp]
