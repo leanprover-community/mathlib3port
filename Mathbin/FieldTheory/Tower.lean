@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,33 +131,15 @@ theorem Subalgebra.isSimpleOrder_of_finrank_prime (A) [Ring A] [IsDomain A] [Alg
           Algebra.toSubmodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h) }
 #align finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.isSimpleOrder_of_finrank_prime
 
--- TODO: `intermediate_field` version
-instance linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]
-    [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
-    FiniteDimensional F (V →ₗ[F] W) :=
-  let b := Basis.ofVectorSpace F V
-  let c := Basis.ofVectorSpace F W
-  (Matrix.toLin b c).FiniteDimensional
-#align finite_dimensional.linear_map FiniteDimensional.linearMap
-
-theorem finrank_linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V]
-    [Module F V] [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
-    finrank F (V →ₗ[F] W) = finrank F V * finrank F W :=
-  by
-  let b := Basis.ofVectorSpace F V
-  let c := Basis.ofVectorSpace F W
-  rw [LinearEquiv.finrank_eq (LinearMap.toMatrix b c), Matrix.finrank_matrix,
-    finrank_eq_card_basis b, finrank_eq_card_basis c, mul_comm]
-#align finite_dimensional.finrank_linear_map FiniteDimensional.finrank_linearMap
-
+-- TODO: `intermediate_field` version 
 -- TODO: generalize by removing [finite_dimensional F K]
 -- V = ⊕F,
 -- (V →ₗ[F] K) = ((⊕F) →ₗ[F] K) = (⊕ (F →ₗ[F] K)) = ⊕K
-instance linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
-    [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :
+instance LinearMap.finite_dimensional'' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K]
+    [Algebra F K] [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :
     FiniteDimensional K (V →ₗ[F] K) :=
   right F _ _
-#align finite_dimensional.linear_map' FiniteDimensional.linear_map'
+#align linear_map.finite_dimensional'' LinearMap.finite_dimensional''
 
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :

@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Matrix.Block
 import Mathbin.Data.Matrix.Notation
-import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.RingTheory.AlgebraTower
 import Mathbin.Algebra.Module.Algebra
@@ -424,15 +423,6 @@ theorem LinearMap.toMatrixAlgEquiv'_mul (f g : (n → R) →ₗ[R] n → R) :
     (f * g).toMatrixAlgEquiv' = f.toMatrixAlgEquiv' ⬝ g.toMatrixAlgEquiv' :=
   LinearMap.toMatrixAlgEquiv'_comp f g
 #align linear_map.to_matrix_alg_equiv'_mul LinearMap.toMatrixAlgEquiv'_mul
-
-theorem Matrix.rank_vecMulVec {K m n : Type u} [Field K] [Fintype n] [DecidableEq n] (w : m → K)
-    (v : n → K) : rank (vecMulVec w v).toLin' ≤ 1 :=
-  by
-  rw [vec_mul_vec_eq, Matrix.toLin'_mul]
-  refine' le_trans (rank_comp_le1 _ _) _
-  refine' (rank_le_domain _).trans_eq _
-  rw [rank_fun', Fintype.card_unit, Nat.cast_one]
-#align matrix.rank_vec_mul_vec Matrix.rank_vecMulVec
 
 end ToMatrix'
 
@@ -878,55 +868,6 @@ theorem smul_leftMulMatrix_algebraMap_ne (x : S) (i j) {k k'} (h : k ≠ k') :
 end LmulTower
 
 end Algebra
-
-namespace LinearMap
-
-section FiniteDimensional
-
-open Classical
-
-variable {K : Type _} [Field K]
-
-variable {V : Type _} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
-
-variable {W : Type _} [AddCommGroup W] [Module K W] [FiniteDimensional K W]
-
-instance finiteDimensional : FiniteDimensional K (V →ₗ[K] W) :=
-  LinearEquiv.finiteDimensional
-    (LinearMap.toMatrix (Basis.ofVectorSpace K V) (Basis.ofVectorSpace K W)).symm
-#align linear_map.finite_dimensional LinearMap.finiteDimensional
-
-section
-
-variable {A : Type _} [Ring A] [Algebra K A] [Module A V] [IsScalarTower K A V] [Module A W]
-  [IsScalarTower K A W]
-
-/-- Linear maps over a `k`-algebra are finite dimensional (over `k`) if both the source and
-target are, as they form a subspace of all `k`-linear maps. -/
-instance finite_dimensional' : FiniteDimensional K (V →ₗ[A] W) :=
-  FiniteDimensional.of_injective (restrictScalarsLinearMap K A V W) (restrictScalars_injective _)
-#align linear_map.finite_dimensional' LinearMap.finite_dimensional'
-
-end
-
-/-- The dimension of the space of linear transformations is the product of the dimensions of the
-domain and codomain.
--/
-@[simp]
-theorem finrank_linearMap :
-    FiniteDimensional.finrank K (V →ₗ[K] W) =
-      FiniteDimensional.finrank K V * FiniteDimensional.finrank K W :=
-  by
-  let hbV := Basis.ofVectorSpace K V
-  let hbW := Basis.ofVectorSpace K W
-  rw [LinearEquiv.finrank_eq (LinearMap.toMatrix hbV hbW), Matrix.finrank_matrix,
-    FiniteDimensional.finrank_eq_card_basis hbV, FiniteDimensional.finrank_eq_card_basis hbW,
-    mul_comm]
-#align linear_map.finrank_linear_map LinearMap.finrank_linearMap
-
-end FiniteDimensional
-
-end LinearMap
 
 section
 

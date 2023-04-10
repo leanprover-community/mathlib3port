@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.determinant
-! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.LinearAlgebra.Matrix.Reindex
 import Mathbin.Tactic.FieldSimp

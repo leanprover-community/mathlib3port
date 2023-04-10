@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 9dba31df156d9d65b9d78db449542ca73d147c68
+! leanprover-community/mathlib commit e05ead7993520a432bec94ac504842d90707ad63
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1086,6 +1086,56 @@ instance : SuccOrder Cardinal :=
   SuccOrder.ofSuccLeIff (fun c => infₛ { c' | c < c' }) fun a b =>
     ⟨lt_of_lt_of_le <| cinfₛ_mem <| exists_gt a, cinfₛ_le'⟩
 
+/- warning: cardinal.succ_def -> Cardinal.succ_def is a dubious translation:
+lean 3 declaration is
+  forall (c : Cardinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) c c')))
+but is expected to have type
+  forall (c : Cardinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) c c')))
+Case conversion may be inaccurate. Consider using '#align cardinal.succ_def Cardinal.succ_defₓ'. -/
+theorem succ_def (c : Cardinal) : succ c = infₛ { c' | c < c' } :=
+  rfl
+#align cardinal.succ_def Cardinal.succ_def
+
+/- warning: cardinal.succ_pos -> Cardinal.succ_pos is a dubious translation:
+lean 3 declaration is
+  forall (c : Cardinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1}))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c)
+but is expected to have type
+  forall (c : Cardinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1})) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c)
+Case conversion may be inaccurate. Consider using '#align cardinal.succ_pos Cardinal.succ_posₓ'. -/
+theorem succ_pos : ∀ c : Cardinal, 0 < succ c :=
+  bot_lt_succ
+#align cardinal.succ_pos Cardinal.succ_pos
+
+/- warning: cardinal.succ_ne_zero -> Cardinal.succ_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall (c : Cardinal.{u1}), Ne.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1})))
+but is expected to have type
+  forall (c : Cardinal.{u1}), Ne.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1}))
+Case conversion may be inaccurate. Consider using '#align cardinal.succ_ne_zero Cardinal.succ_ne_zeroₓ'. -/
+theorem succ_ne_zero (c : Cardinal) : succ c ≠ 0 :=
+  (succ_pos _).ne'
+#align cardinal.succ_ne_zero Cardinal.succ_ne_zero
+
+/- warning: cardinal.add_one_le_succ -> Cardinal.add_one_le_succ is a dubious translation:
+lean 3 declaration is
+  forall (c : Cardinal.{u1}), LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) c (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (OfNat.mk.{succ u1} Cardinal.{u1} 1 (One.one.{succ u1} Cardinal.{u1} Cardinal.hasOne.{u1})))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c)
+but is expected to have type
+  forall (c : Cardinal.{u1}), LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) c (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (One.toOfNat1.{succ u1} Cardinal.{u1} Cardinal.instOneCardinal.{u1}))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c)
+Case conversion may be inaccurate. Consider using '#align cardinal.add_one_le_succ Cardinal.add_one_le_succₓ'. -/
+theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c :=
+  by
+  refine' (le_cinfₛ_iff'' (exists_gt c)).2 fun b hlt => _
+  rcases b, c with ⟨⟨β⟩, ⟨γ⟩⟩
+  cases' le_of_lt hlt with f
+  have : ¬surjective f := fun hn => (not_le_of_lt hlt) (mk_le_of_surjective hn)
+  simp only [surjective, not_forall] at this
+  rcases this with ⟨b, hb⟩
+  calc
+    (#γ) + 1 = (#Option γ) := mk_option.symm
+    _ ≤ (#β) := (f.option_elim b hb).cardinal_le
+    
+#align cardinal.add_one_le_succ Cardinal.add_one_le_succ
+
 #print Cardinal.IsLimit /-
 /-- A cardinal is a limit if it is not zero or a successor cardinal. Note that `ℵ₀` is a limit
   cardinal by this definition, but `0` isn't.
@@ -1123,56 +1173,6 @@ theorem isSuccLimit_zero : IsSuccLimit (0 : Cardinal) :=
   isSuccLimit_bot
 #align cardinal.is_succ_limit_zero Cardinal.isSuccLimit_zero
 -/
-
-/- warning: cardinal.succ_def -> Cardinal.succ_def is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) c c')))
-but is expected to have type
-  forall (c : Cardinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) c c')))
-Case conversion may be inaccurate. Consider using '#align cardinal.succ_def Cardinal.succ_defₓ'. -/
-theorem succ_def (c : Cardinal) : succ c = infₛ { c' | c < c' } :=
-  rfl
-#align cardinal.succ_def Cardinal.succ_def
-
-/- warning: cardinal.add_one_le_succ -> Cardinal.add_one_le_succ is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}), LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) c (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (OfNat.mk.{succ u1} Cardinal.{u1} 1 (One.one.{succ u1} Cardinal.{u1} Cardinal.hasOne.{u1})))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c)
-but is expected to have type
-  forall (c : Cardinal.{u1}), LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) c (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (One.toOfNat1.{succ u1} Cardinal.{u1} Cardinal.instOneCardinal.{u1}))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c)
-Case conversion may be inaccurate. Consider using '#align cardinal.add_one_le_succ Cardinal.add_one_le_succₓ'. -/
-theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c :=
-  by
-  refine' (le_cinfₛ_iff'' (exists_gt c)).2 fun b hlt => _
-  rcases b, c with ⟨⟨β⟩, ⟨γ⟩⟩
-  cases' le_of_lt hlt with f
-  have : ¬surjective f := fun hn => (not_le_of_lt hlt) (mk_le_of_surjective hn)
-  simp only [surjective, not_forall] at this
-  rcases this with ⟨b, hb⟩
-  calc
-    (#γ) + 1 = (#Option γ) := mk_option.symm
-    _ ≤ (#β) := (f.option_elim b hb).cardinal_le
-    
-#align cardinal.add_one_le_succ Cardinal.add_one_le_succ
-
-/- warning: cardinal.succ_pos -> Cardinal.succ_pos is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1}))) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c)
-but is expected to have type
-  forall (c : Cardinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1})) (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c)
-Case conversion may be inaccurate. Consider using '#align cardinal.succ_pos Cardinal.succ_posₓ'. -/
-theorem succ_pos : ∀ c : Cardinal, 0 < succ c :=
-  bot_lt_succ
-#align cardinal.succ_pos Cardinal.succ_pos
-
-/- warning: cardinal.succ_ne_zero -> Cardinal.succ_ne_zero is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}), Ne.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.succOrder.{u1} c) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1})))
-but is expected to have type
-  forall (c : Cardinal.{u1}), Ne.{succ (succ u1)} Cardinal.{u1} (Order.succ.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u1} c) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1}))
-Case conversion may be inaccurate. Consider using '#align cardinal.succ_ne_zero Cardinal.succ_ne_zeroₓ'. -/
-theorem succ_ne_zero (c : Cardinal) : succ c ≠ 0 :=
-  (succ_pos _).ne'
-#align cardinal.succ_ne_zero Cardinal.succ_ne_zero
 
 #print Cardinal.sum /-
 /-- The indexed sum of cardinals is the cardinality of the
@@ -2116,6 +2116,33 @@ theorem aleph0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
       exact (Nat.lt_succ_self _).not_le (nat_cast_le.1 (h (n + 1)))⟩
 #align cardinal.aleph_0_le Cardinal.aleph0_le
 
+#print Cardinal.isSuccLimit_aleph0 /-
+theorem isSuccLimit_aleph0 : IsSuccLimit ℵ₀ :=
+  isSuccLimit_of_succ_lt fun a ha =>
+    by
+    rcases lt_aleph_0.1 ha with ⟨n, rfl⟩
+    rw [← nat_succ]
+    apply nat_lt_aleph_0
+#align cardinal.is_succ_limit_aleph_0 Cardinal.isSuccLimit_aleph0
+-/
+
+#print Cardinal.isLimit_aleph0 /-
+theorem isLimit_aleph0 : IsLimit ℵ₀ :=
+  ⟨aleph0_ne_zero, isSuccLimit_aleph0⟩
+#align cardinal.is_limit_aleph_0 Cardinal.isLimit_aleph0
+-/
+
+#print Cardinal.IsLimit.aleph0_le /-
+theorem IsLimit.aleph0_le {c : Cardinal} (h : IsLimit c) : ℵ₀ ≤ c :=
+  by
+  by_contra' h'
+  rcases lt_aleph_0.1 h' with ⟨_ | n, rfl⟩
+  · exact h.ne_zero.irrefl
+  · rw [nat_succ] at h
+    exact not_is_succ_limit_succ _ h.is_succ_limit
+#align cardinal.is_limit.aleph_0_le Cardinal.IsLimit.aleph0_le
+-/
+
 /- warning: cardinal.range_nat_cast -> Cardinal.range_natCast is a dubious translation:
 lean 3 declaration is
   Eq.{succ (succ u1)} (Set.{succ u1} Cardinal.{u1}) (Set.range.{succ u1, 1} Cardinal.{u1} Nat ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))))) (Set.Iio.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) Cardinal.aleph0.{u1})
@@ -2164,33 +2191,6 @@ theorem lt_aleph0_iff_set_finite {S : Set α} : (#S) < ℵ₀ ↔ S.Finite :=
 
 alias lt_aleph_0_iff_set_finite ↔ _ _root_.set.finite.lt_aleph_0
 #align set.finite.lt_aleph_0 Set.Finite.lt_aleph0
-
-#print Cardinal.isSuccLimit_aleph0 /-
-theorem isSuccLimit_aleph0 : IsSuccLimit ℵ₀ :=
-  isSuccLimit_of_succ_lt fun a ha =>
-    by
-    rcases lt_aleph_0.1 ha with ⟨n, rfl⟩
-    rw [← nat_succ]
-    apply nat_lt_aleph_0
-#align cardinal.is_succ_limit_aleph_0 Cardinal.isSuccLimit_aleph0
--/
-
-#print Cardinal.isLimit_aleph0 /-
-theorem isLimit_aleph0 : IsLimit ℵ₀ :=
-  ⟨aleph0_ne_zero, isSuccLimit_aleph0⟩
-#align cardinal.is_limit_aleph_0 Cardinal.isLimit_aleph0
--/
-
-#print Cardinal.IsLimit.aleph0_le /-
-theorem IsLimit.aleph0_le {c : Cardinal} (h : IsLimit c) : ℵ₀ ≤ c :=
-  by
-  by_contra' h'
-  rcases lt_aleph_0.1 h' with ⟨_ | n, rfl⟩
-  · exact h.ne_zero.irrefl
-  · rw [nat_succ] at h
-    exact not_is_succ_limit_succ _ h.is_succ_limit
-#align cardinal.is_limit.aleph_0_le Cardinal.IsLimit.aleph0_le
--/
 
 #print Cardinal.lt_aleph0_iff_subtype_finite /-
 @[simp]

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit 67e606eaea14c7854bdc556bd53d98aefdf76ec0
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Dual
+import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 import Mathbin.LinearAlgebra.Matrix.ToLin
 
 /-!

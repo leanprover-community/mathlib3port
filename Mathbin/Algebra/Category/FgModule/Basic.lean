@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.basic
-! leanprover-community/mathlib commit 19a70dceb9dff0994b92d2dd049de7d84d28112b
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
 import Mathbin.CategoryTheory.Monoidal.Subcategory
 import Mathbin.LinearAlgebra.Coevaluation
+import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 import Mathbin.Algebra.Category.Module.Monoidal
 
 /-!
@@ -169,7 +170,7 @@ instance (V W : FgModule K) : Module.Finite K (V ⟶ W) :=
 
 instance closedPredicate_module_finite :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K => Module.Finite K V
-    where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
+    where prop_ihom' X Y hX hY := @Module.Finite.linearMap K X Y _ _ _ _ _ _ _ hX hY
 #align fgModule.closed_predicate_module_finite FgModule.closedPredicate_module_finite
 
 instance : MonoidalClosed (FgModule K) := by dsimp_result => dsimp [FgModule]; infer_instance

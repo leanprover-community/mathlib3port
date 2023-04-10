@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.matrix
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Finrank
-import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
+import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.Matrix.ToLin
 
 /-!
@@ -30,7 +30,9 @@ universe u v w
 
 variable (R : Type u) (M : Type v) (N : Type w)
 
-namespace Module.Free
+open Module.Free (chooseBasis)
+
+open FiniteDimensional (finrank)
 
 section CommRing
 
@@ -38,12 +40,13 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
-instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) :=
+instance Module.Free.linearMap [Module.Finite R M] [Module.Finite R N] :
+    Module.Free R (M →ₗ[R] N) :=
   by
   cases subsingleton_or_nontrivial R
   · apply Module.Free.of_subsingleton'
   classical exact
-      of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
+      Module.Free.of_equiv (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
 #align module.free.linear_map Module.Free.linearMap
 
 variable {R}
@@ -70,7 +73,7 @@ instance Module.Finite.addMonoidHom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 #align module.finite.add_monoid_hom Module.Finite.addMonoidHom
 
-instance addMonoidHom : Module.Free ℤ (M →+ N) :=
+instance Module.Free.addMonoidHom : Module.Free ℤ (M →+ N) :=
   letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linearMap _ _ _
   Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 #align module.free.add_monoid_hom Module.Free.addMonoidHom
@@ -79,27 +82,30 @@ end Integer
 
 section CommRing
 
-open FiniteDimensional
-
 variable [CommRing R] [StrongRankCondition R]
 
 variable [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
---TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
-theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
+theorem FiniteDimensional.finrank_linearMap : finrank R (M →ₗ[R] N) = finrank R M * finrank R N :=
+  by
   classical
     letI := nontrivial_of_invariantBasisNumber R
     have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
-    let b := (Matrix.stdBasis _ _ _).map h.symm
-    rw [finrank, rank_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_toNat_eq_card, finrank,
-      finrank, rank_eq_card_choose_basis_index, rank_eq_card_choose_basis_index,
-      Cardinal.mk_toNat_eq_card, Cardinal.mk_toNat_eq_card, Fintype.card_prod, mul_comm]
-#align module.free.finrank_linear_hom Module.Free.finrank_linear_hom
+    simp_rw [h.finrank_eq, FiniteDimensional.finrank_matrix,
+      FiniteDimensional.finrank_eq_card_chooseBasisIndex, mul_comm]
+#align finite_dimensional.finrank_linear_map FiniteDimensional.finrank_linearMap
 
 end CommRing
 
-end Module.Free
+theorem Matrix.rank_vecMulVec {K m n : Type u} [CommRing K] [StrongRankCondition K] [Fintype n]
+    [DecidableEq n] (w : m → K) (v : n → K) : (Matrix.vecMulVec w v).toLin'.rank ≤ 1 :=
+  by
+  rw [Matrix.vecMulVec_eq, Matrix.toLin'_mul]
+  refine' le_trans (LinearMap.rank_comp_le_left _ _) _
+  refine' (LinearMap.rank_le_domain _).trans_eq _
+  rw [rank_fun', Fintype.card_unit, Nat.cast_one]
+#align matrix.rank_vec_mul_vec Matrix.rank_vecMulVec
 

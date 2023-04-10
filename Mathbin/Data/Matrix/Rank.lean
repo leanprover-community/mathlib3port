@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit 8535b76e601f11868af3e612fbecb730998a5631
+! leanprover-community/mathlib commit 45ce3929e3bf9a086a216feea3b1ab6c14bf0e67
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (F
 theorem rank_mul_le [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ A.rank := by
   rw [rank, rank, to_lin'_mul]
-  refine' Cardinal.toNat_le_of_le_of_lt_aleph0 _ (LinearMap.rank_comp_le1 _ _)
+  refine' Cardinal.toNat_le_of_le_of_lt_aleph0 _ (LinearMap.rank_comp_le_left _ _)
   rw [← Cardinal.lift_lt_aleph0]
   have := lift_rank_range_le A.to_lin'
   rw [rank_fun', Cardinal.lift_natCast] at this

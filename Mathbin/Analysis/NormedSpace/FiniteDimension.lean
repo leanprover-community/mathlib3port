@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
+! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,7 +13,6 @@ import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.RieszLemma
-import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.Topology.Algebra.Module.FiniteDimension
 import Mathbin.Topology.Algebra.InfiniteSum.Module
 import Mathbin.Topology.Instances.Matrix
