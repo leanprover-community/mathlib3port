@@ -681,11 +681,13 @@ instance Subtype.wellFoundedGT [LT α] [WellFoundedGT α] (p : α → Prop) :
   (Subtype.relEmbedding (· > ·) p).IsWellFounded
 #align subtype.well_founded_gt Subtype.wellFoundedGT
 
+#print Quotient.mkRelHom /-
 /-- `quotient.mk` as a relation homomorphism between the relation and the lift of a relation. -/
 @[simps]
 def Quotient.mkRelHom [Setoid α] {r : α → α → Prop} (H) : r →r Quotient.lift₂ r H :=
   ⟨@Quotient.mk' α _, fun _ _ => id⟩
 #align quotient.mk_rel_hom Quotient.mkRelHom
+-/
 
 #print Quotient.outRelEmbedding /-
 /-- `quotient.out` as a relation embedding between the lift of a relation and the relation. -/
@@ -699,13 +701,18 @@ noncomputable def Quotient.outRelEmbedding [Setoid α] {r : α → α → Prop} 
 #align quotient.out_rel_embedding Quotient.outRelEmbedding
 -/
 
+/- warning: quotient.out'_rel_embedding clashes with rel_embedding.quotient.out'_rel_embedding -> Quotient.out'RelEmbedding
+Case conversion may be inaccurate. Consider using '#align quotient.out'_rel_embedding Quotient.out'RelEmbeddingₓ'. -/
+#print Quotient.out'RelEmbedding /-
 /-- `quotient.out'` as a relation embedding between the lift of a relation and the relation. -/
 @[simps]
 noncomputable def Quotient.out'RelEmbedding {s : Setoid α} {r : α → α → Prop} (H) :
     (fun a b => Quotient.liftOn₂' a b r H) ↪r r :=
   { Quotient.outRelEmbedding _ with toFun := Quotient.out' }
 #align quotient.out'_rel_embedding Quotient.out'RelEmbedding
+-/
 
+#print acc_lift₂_iff /-
 @[simp]
 theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop} {H} {a} :
     Acc (Quotient.lift₂ r H) ⟦a⟧ ↔ Acc r a :=
@@ -719,12 +726,15 @@ theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop} {H} {a} :
     obtain ⟨a', rfl⟩ := q.exists_rep
     exact IH a' h
 #align acc_lift₂_iff acc_lift₂_iff
+-/
 
+#print acc_liftOn₂'_iff /-
 @[simp]
 theorem acc_liftOn₂'_iff {s : Setoid α} {r : α → α → Prop} {H} {a} :
     Acc (fun x y => Quotient.liftOn₂' x y r H) (Quotient.mk'' a : Quotient s) ↔ Acc r a :=
   acc_lift₂_iff
 #align acc_lift_on₂'_iff acc_liftOn₂'_iff
+-/
 
 #print wellFounded_lift₂_iff /-
 /-- A relation is well founded iff its lift to a quotient is. -/
@@ -743,11 +753,13 @@ alias wellFounded_lift₂_iff ↔ WellFounded.of_quotient_lift₂ WellFounded.qu
 #align well_founded.of_quotient_lift₂ WellFounded.of_quotient_lift₂
 #align well_founded.quotient_lift₂ WellFounded.quotient_lift₂
 
+#print wellFounded_liftOn₂'_iff /-
 @[simp]
 theorem wellFounded_liftOn₂'_iff {s : Setoid α} {r : α → α → Prop} {H} :
     (WellFounded fun x y : Quotient s => Quotient.liftOn₂' x y r H) ↔ WellFounded r :=
   wellFounded_lift₂_iff
 #align well_founded_lift_on₂'_iff wellFounded_liftOn₂'_iff
+-/
 
 alias wellFounded_liftOn₂'_iff ↔ WellFounded.of_quotient_liftOn₂' WellFounded.quotient_liftOn₂'
 #align well_founded.of_quotient_lift_on₂' WellFounded.of_quotient_liftOn₂'
