@@ -31,20 +31,24 @@ open Classical
 
 open CategoryTheory
 
+#print FintypeCat /-
 /-- The category of finite types. -/
 def FintypeCat :=
   Bundled Fintype
 #align Fintype FintypeCat
+-/
 
 namespace FintypeCat
 
 instance : CoeSort FintypeCat (Type _) :=
   Bundled.hasCoeToSort
 
+#print FintypeCat.of /-
 /-- Construct a bundled `Fintype` from the underlying type and typeclass. -/
 def of (X : Type _) [Fintype X] : FintypeCat :=
   Bundled.of X
 #align Fintype.of FintypeCat.of
+-/
 
 instance : Inhabited FintypeCat :=
   ⟨⟨PEmpty⟩⟩
@@ -55,26 +59,35 @@ instance {X : FintypeCat} : Fintype X :=
 instance : Category FintypeCat :=
   InducedCategory.category Bundled.α
 
+#print FintypeCat.incl /-
 /-- The fully faithful embedding of `Fintype` into the category of types. -/
 @[simps]
 def incl : FintypeCat ⥤ Type _ :=
   inducedFunctor _ deriving Full, Faithful
 #align Fintype.incl FintypeCat.incl
+-/
 
+#print FintypeCat.concreteCategoryFintype /-
 instance concreteCategoryFintype : ConcreteCategory FintypeCat :=
   ⟨incl⟩
 #align Fintype.concrete_category_Fintype FintypeCat.concreteCategoryFintype
+-/
 
+#print FintypeCat.id_apply /-
 @[simp]
 theorem id_apply (X : FintypeCat) (x : X) : (𝟙 X : X → X) x = x :=
   rfl
 #align Fintype.id_apply FintypeCat.id_apply
+-/
 
+#print FintypeCat.comp_apply /-
 @[simp]
 theorem comp_apply {X Y Z : FintypeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g) x = g (f x) :=
   rfl
 #align Fintype.comp_apply FintypeCat.comp_apply
+-/
 
+#print FintypeCat.equivEquivIso /-
 -- See `equiv_equiv_iso` in the root namespace for the analogue in `Type`.
 /-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
 @[simps]
@@ -91,9 +104,11 @@ def equivEquivIso {A B : FintypeCat} : A ≃ B ≃ (A ≅ B)
   left_inv := by tidy
   right_inv := by tidy
 #align Fintype.equiv_equiv_iso FintypeCat.equivEquivIso
+-/
 
 universe u
 
+#print FintypeCat.Skeleton /-
 /--
 The "standard" skeleton for `Fintype`. This is the full subcategory of `Fintype` spanned by objects
 of the form `ulift (fin n)` for `n : ℕ`. We parameterize the objects of `Fintype.skeleton`
@@ -104,26 +119,33 @@ skeletal category equivalent to `Fintype.{u}`.
 def Skeleton : Type u :=
   ULift ℕ
 #align Fintype.skeleton FintypeCat.Skeleton
+-/
 
 namespace Skeleton
 
+#print FintypeCat.Skeleton.mk /-
 /-- Given any natural number `n`, this creates the associated object of `Fintype.skeleton`. -/
 def mk : ℕ → Skeleton :=
   ULift.up
 #align Fintype.skeleton.mk FintypeCat.Skeleton.mk
+-/
 
 instance : Inhabited Skeleton :=
   ⟨mk 0⟩
 
+#print FintypeCat.Skeleton.len /-
 /-- Given any object of `Fintype.skeleton`, this returns the associated natural number. -/
 def len : Skeleton → ℕ :=
   ULift.down
 #align Fintype.skeleton.len FintypeCat.Skeleton.len
+-/
 
+#print FintypeCat.Skeleton.ext /-
 @[ext]
 theorem ext (X Y : Skeleton) : X.len = Y.len → X = Y :=
   ULift.ext _ _
 #align Fintype.skeleton.ext FintypeCat.Skeleton.ext
+-/
 
 instance : SmallCategory Skeleton.{u}
     where
@@ -131,6 +153,7 @@ instance : SmallCategory Skeleton.{u}
   id _ := id
   comp _ _ _ f g := g ∘ f
 
+#print FintypeCat.Skeleton.is_skeletal /-
 theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
   ext _ _ <|
     Fin.equiv_iff_eq.mp <|
@@ -150,13 +173,16 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
             change ((h.inv ≫ h.hom) _).down = _
             simpa }
 #align Fintype.skeleton.is_skeletal FintypeCat.Skeleton.is_skeletal
+-/
 
+#print FintypeCat.Skeleton.incl /-
 /-- The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
 def incl : Skeleton.{u} ⥤ FintypeCat.{u}
     where
   obj X := FintypeCat.of (ULift (Fin X.len))
   map _ _ f := f
 #align Fintype.skeleton.incl FintypeCat.Skeleton.incl
+-/
 
 instance : Full incl where preimage _ _ f := f
 
@@ -173,11 +199,23 @@ instance : EssSurj incl :=
 noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
+/- warning: Fintype.skeleton.equivalence -> FintypeCat.Skeleton.equivalence is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Equivalence.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.CategoryTheory.smallCategory.{u1} FintypeCat.{u1} FintypeCat.CategoryTheory.category.{u1}
+but is expected to have type
+  CategoryTheory.Equivalence.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1} FintypeCat.instCategoryFintypeCat.{u1}
+Case conversion may be inaccurate. Consider using '#align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalenceₓ'. -/
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
 noncomputable def equivalence : Skeleton ≌ FintypeCat :=
   incl.asEquivalence
 #align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalence
 
+/- warning: Fintype.skeleton.incl_mk_nat_card -> FintypeCat.Skeleton.incl_mk_nat_card is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Nat (Fintype.card.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FintypeCat.{u1} Type.{u1} FintypeCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.CategoryTheory.smallCategory.{u1} FintypeCat.{u1} FintypeCat.CategoryTheory.category.{u1} FintypeCat.Skeleton.incl.{u1} (FintypeCat.Skeleton.mk.{u1} n))) (FintypeCat.fintype.{u1} (CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.CategoryTheory.smallCategory.{u1} FintypeCat.{u1} FintypeCat.CategoryTheory.category.{u1} FintypeCat.Skeleton.incl.{u1} (FintypeCat.Skeleton.mk.{u1} n)))) n
+but is expected to have type
+  forall (n : Nat), Eq.{1} Nat (Fintype.card.{u1} (CategoryTheory.Bundled.α.{u1, u1} Fintype.{u1} (Prefunctor.obj.{succ u1, succ u1, u1, succ u1} FintypeCat.Skeleton.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} FintypeCat.Skeleton.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1})) FintypeCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} FintypeCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1} FintypeCat.Skeleton.incl.{u1}) (FintypeCat.Skeleton.mk.{u1} n))) (FintypeCat.instFintypeα.{u1} (Prefunctor.obj.{succ u1, succ u1, u1, succ u1} FintypeCat.Skeleton.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} FintypeCat.Skeleton.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1})) FintypeCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} FintypeCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} FintypeCat.Skeleton.{u1} FintypeCat.Skeleton.instSmallCategorySkeleton.{u1} FintypeCat.{u1} FintypeCat.instCategoryFintypeCat.{u1} FintypeCat.Skeleton.incl.{u1}) (FintypeCat.Skeleton.mk.{u1} n)))) n
+Case conversion may be inaccurate. Consider using '#align Fintype.skeleton.incl_mk_nat_card FintypeCat.Skeleton.incl_mk_nat_cardₓ'. -/
 @[simp]
 theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
   by
@@ -187,12 +225,14 @@ theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
 
 end Skeleton
 
+#print FintypeCat.isSkeleton /-
 /-- `Fintype.skeleton` is a skeleton of `Fintype`. -/
 noncomputable def isSkeleton : IsSkeletonOf FintypeCat Skeleton Skeleton.incl
     where
   skel := Skeleton.is_skeletal
   eqv := by infer_instance
 #align Fintype.is_skeleton FintypeCat.isSkeleton
+-/
 
 end FintypeCat
 
