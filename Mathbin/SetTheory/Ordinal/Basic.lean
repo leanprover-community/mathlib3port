@@ -1846,24 +1846,16 @@ theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
 #align cardinal.ord_le Cardinal.ord_le
 -/
 
-/- warning: cardinal.gc_ord_card -> Cardinal.gc_ord_card is a dubious translation:
-lean 3 declaration is
-  GaloisConnection.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1} Ordinal.card.{u1}
-but is expected to have type
-  GaloisConnection.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1} Ordinal.card.{u1}
-Case conversion may be inaccurate. Consider using '#align cardinal.gc_ord_card Cardinal.gc_ord_cardₓ'. -/
+#print Cardinal.gc_ord_card /-
 theorem gc_ord_card : GaloisConnection ord card := fun _ _ => ord_le
 #align cardinal.gc_ord_card Cardinal.gc_ord_card
+-/
 
-/- warning: cardinal.lt_ord -> Cardinal.lt_ord is a dubious translation:
-lean 3 declaration is
-  forall {c : Cardinal.{u1}} {o : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (Cardinal.ord.{u1} c)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (Ordinal.card.{u1} o) c)
-but is expected to have type
-  forall {c : Cardinal.{u1}} {o : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o (Cardinal.ord.{u1} c)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Ordinal.card.{u1} o) c)
-Case conversion may be inaccurate. Consider using '#align cardinal.lt_ord Cardinal.lt_ordₓ'. -/
+#print Cardinal.lt_ord /-
 theorem lt_ord {c o} : o < ord c ↔ o.card < c :=
   gc_ord_card.lt_iff_lt
 #align cardinal.lt_ord Cardinal.lt_ord
+-/
 
 #print Cardinal.card_ord /-
 @[simp]
@@ -1874,16 +1866,12 @@ theorem card_ord (c) : (ord c).card = c :=
 #align cardinal.card_ord Cardinal.card_ord
 -/
 
-/- warning: cardinal.gci_ord_card -> Cardinal.gciOrdCard is a dubious translation:
-lean 3 declaration is
-  GaloisCoinsertion.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1} Ordinal.card.{u1}
-but is expected to have type
-  GaloisCoinsertion.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1} Ordinal.card.{u1}
-Case conversion may be inaccurate. Consider using '#align cardinal.gci_ord_card Cardinal.gciOrdCardₓ'. -/
+#print Cardinal.gciOrdCard /-
 /-- Galois coinsertion between `cardinal.ord` and `ordinal.card`. -/
 def gciOrdCard : GaloisCoinsertion ord card :=
   gc_ord_card.toGaloisCoinsertion fun c => c.card_ord.le
 #align cardinal.gci_ord_card Cardinal.gciOrdCard
+-/
 
 #print Cardinal.ord_card_le /-
 theorem ord_card_le (o : Ordinal) : o.card.ord ≤ o :=
@@ -1901,27 +1889,19 @@ theorem lt_ord_succ_card (o : Ordinal) : o < (succ o.card).ord :=
   lt_ord.2 <| lt_succ _
 #align cardinal.lt_ord_succ_card Cardinal.lt_ord_succ_card
 
-/- warning: cardinal.ord_strict_mono -> Cardinal.ord_strictMono is a dubious translation:
-lean 3 declaration is
-  StrictMono.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1}
-but is expected to have type
-  StrictMono.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1}
-Case conversion may be inaccurate. Consider using '#align cardinal.ord_strict_mono Cardinal.ord_strictMonoₓ'. -/
+#print Cardinal.ord_strictMono /-
 @[mono]
 theorem ord_strictMono : StrictMono ord :=
   gciOrdCard.strictMono_l
 #align cardinal.ord_strict_mono Cardinal.ord_strictMono
+-/
 
-/- warning: cardinal.ord_mono -> Cardinal.ord_mono is a dubious translation:
-lean 3 declaration is
-  Monotone.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1}))))) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1}
-but is expected to have type
-  Monotone.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Cardinal.ord.{u1}
-Case conversion may be inaccurate. Consider using '#align cardinal.ord_mono Cardinal.ord_monoₓ'. -/
+#print Cardinal.ord_mono /-
 @[mono]
 theorem ord_mono : Monotone ord :=
   gc_ord_card.monotone_l
 #align cardinal.ord_mono Cardinal.ord_mono
+-/
 
 #print Cardinal.ord_le_ord /-
 @[simp]
@@ -1930,16 +1910,12 @@ theorem ord_le_ord {c₁ c₂} : ord c₁ ≤ ord c₂ ↔ c₁ ≤ c₂ :=
 #align cardinal.ord_le_ord Cardinal.ord_le_ord
 -/
 
-/- warning: cardinal.ord_lt_ord -> Cardinal.ord_lt_ord is a dubious translation:
-lean 3 declaration is
-  forall {c₁ : Cardinal.{u1}} {c₂ : Cardinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Cardinal.ord.{u1} c₁) (Cardinal.ord.{u1} c₂)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) c₁ c₂)
-but is expected to have type
-  forall {c₁ : Cardinal.{u1}} {c₂ : Cardinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Cardinal.ord.{u1} c₁) (Cardinal.ord.{u1} c₂)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) c₁ c₂)
-Case conversion may be inaccurate. Consider using '#align cardinal.ord_lt_ord Cardinal.ord_lt_ordₓ'. -/
+#print Cardinal.ord_lt_ord /-
 @[simp]
 theorem ord_lt_ord {c₁ c₂} : ord c₁ < ord c₂ ↔ c₁ < c₂ :=
   ord_strictMono.lt_iff_lt
 #align cardinal.ord_lt_ord Cardinal.ord_lt_ord
+-/
 
 #print Cardinal.ord_zero /-
 @[simp]
@@ -1993,29 +1969,21 @@ theorem mk_ord_out (c : Cardinal) : (#c.ord.out.α) = c := by simp
 #align cardinal.mk_ord_out Cardinal.mk_ord_out
 -/
 
-/- warning: cardinal.card_typein_lt -> Cardinal.card_typein_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsWellOrder.{u1} α r] (x : α), (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (Ordinal.type.{u1} α r _inst_1)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (Ordinal.card.{u1} (Ordinal.typein.{u1} α r _inst_1 x)) (Cardinal.mk.{u1} α))
-but is expected to have type
-  forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsWellOrder.{u1} α r] (x : α), (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (Ordinal.type.{u1} α r _inst_1)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Ordinal.card.{u1} (Ordinal.typein.{u1} α r _inst_1 x)) (Cardinal.mk.{u1} α))
-Case conversion may be inaccurate. Consider using '#align cardinal.card_typein_lt Cardinal.card_typein_ltₓ'. -/
+#print Cardinal.card_typein_lt /-
 theorem card_typein_lt (r : α → α → Prop) [IsWellOrder α r] (x : α) (h : ord (#α) = type r) :
     card (typein r x) < (#α) := by
   rw [← lt_ord, h]
   apply typein_lt_type
 #align cardinal.card_typein_lt Cardinal.card_typein_lt
+-/
 
-/- warning: cardinal.card_typein_out_lt -> Cardinal.card_typein_out_lt is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}) (x : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} (OrderedAddCommMonoid.toPartialOrder.{succ u1} Cardinal.{u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ u1} Cardinal.{u1} (OrderedCommSemiring.toOrderedSemiring.{succ u1} Cardinal.{u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ u1} Cardinal.{u1} Cardinal.canonicallyOrderedCommSemiring.{u1})))))) (Ordinal.card.{u1} (Ordinal.typein.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (LT.lt.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (Preorder.toLT.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (PartialOrder.toPreorder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (SemilatticeInf.toPartialOrder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (Lattice.toSemilatticeInf.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (LinearOrder.toLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (linearOrderOut.{u1} (Cardinal.ord.{u1} c)))))))) (isWellOrder_out_lt.{u1} (Cardinal.ord.{u1} c)) x)) c
-but is expected to have type
-  forall (c : Cardinal.{u1}) (x : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Ordinal.card.{u1} (Ordinal.typein.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (fun (x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16649 : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16651 : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) => LT.lt.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (Preorder.toLT.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (PartialOrder.toPreorder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (SemilatticeInf.toPartialOrder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (Lattice.toSemilatticeInf.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (DistribLattice.toLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (instDistribLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (linearOrderOut.{u1} (Cardinal.ord.{u1} c)))))))) x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16649 x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16651) (isWellOrder_out_lt.{u1} (Cardinal.ord.{u1} c)) x)) c
-Case conversion may be inaccurate. Consider using '#align cardinal.card_typein_out_lt Cardinal.card_typein_out_ltₓ'. -/
+#print Cardinal.card_typein_out_lt /-
 theorem card_typein_out_lt (c : Cardinal) (x : c.ord.out.α) : card (typein (· < ·) x) < c :=
   by
   rw [← lt_ord]
   apply typein_lt_self
 #align cardinal.card_typein_out_lt Cardinal.card_typein_out_lt
+-/
 
 #print Cardinal.ord_injective /-
 theorem ord_injective : Injective ord := by
@@ -2075,26 +2043,18 @@ theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
 #align cardinal.univ_umax Cardinal.univ_umax
 -/
 
-/- warning: cardinal.lift_lt_univ -> Cardinal.lift_lt_univ is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}), LT.lt.{succ (succ u1)} Cardinal.{succ u1} (Preorder.toLT.{succ (succ u1)} Cardinal.{succ u1} (PartialOrder.toPreorder.{succ (succ u1)} Cardinal.{succ u1} (OrderedAddCommMonoid.toPartialOrder.{succ (succ u1)} Cardinal.{succ u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ (succ u1)} Cardinal.{succ u1} (OrderedCommSemiring.toOrderedSemiring.{succ (succ u1)} Cardinal.{succ u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ (succ u1)} Cardinal.{succ u1} Cardinal.canonicallyOrderedCommSemiring.{succ u1})))))) (Cardinal.lift.{succ u1, u1} c) Cardinal.univ.{u1, succ u1}
-but is expected to have type
-  forall (c : Cardinal.{u1}), LT.lt.{succ (succ u1)} Cardinal.{succ u1} (Preorder.toLT.{succ (succ u1)} Cardinal.{succ u1} (PartialOrder.toPreorder.{succ (succ u1)} Cardinal.{succ u1} Cardinal.partialOrder.{succ u1})) (Cardinal.lift.{succ u1, u1} c) Cardinal.univ.{u1, succ u1}
-Case conversion may be inaccurate. Consider using '#align cardinal.lift_lt_univ Cardinal.lift_lt_univₓ'. -/
+#print Cardinal.lift_lt_univ /-
 theorem lift_lt_univ (c : Cardinal) : lift.{u + 1, u} c < univ.{u, u + 1} := by
   simpa only [lift.principal_seg_coe, lift_ord, lift_succ, ord_le, succ_le_iff] using
     le_of_lt (lift.principalSeg.{u, u + 1}.lt_top (succ c).ord)
 #align cardinal.lift_lt_univ Cardinal.lift_lt_univ
+-/
 
-/- warning: cardinal.lift_lt_univ' -> Cardinal.lift_lt_univ' is a dubious translation:
-lean 3 declaration is
-  forall (c : Cardinal.{u1}), LT.lt.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} (Preorder.toLT.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} (PartialOrder.toPreorder.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} (OrderedAddCommMonoid.toPartialOrder.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} (OrderedSemiring.toOrderedAddCommMonoid.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} (OrderedCommSemiring.toOrderedSemiring.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ (max u1 (succ u1) u2)} Cardinal.{max u1 (succ u1) u2} Cardinal.canonicallyOrderedCommSemiring.{max u1 (succ u1) u2})))))) (Cardinal.lift.{max (succ u1) u2, u1} c) Cardinal.univ.{u1, u2}
-but is expected to have type
-  forall (c : Cardinal.{u1}), LT.lt.{max (succ (succ u1)) (succ u2)} Cardinal.{max u1 (succ u1) u2} (Preorder.toLT.{max (succ (succ u1)) (succ u2)} Cardinal.{max u1 (succ u1) u2} (PartialOrder.toPreorder.{max (succ (succ u1)) (succ u2)} Cardinal.{max u1 (succ u1) u2} Cardinal.partialOrder.{max (succ u1) u2})) (Cardinal.lift.{max (succ u1) u2, u1} c) Cardinal.univ.{u1, u2}
-Case conversion may be inaccurate. Consider using '#align cardinal.lift_lt_univ' Cardinal.lift_lt_univ'ₓ'. -/
+#print Cardinal.lift_lt_univ' /-
 theorem lift_lt_univ' (c : Cardinal) : lift.{max (u + 1) v, u} c < univ.{u, v} := by
   simpa only [lift_lift, lift_univ, univ_umax] using lift_lt.{_, max (u + 1) v}.2 (lift_lt_univ c)
 #align cardinal.lift_lt_univ' Cardinal.lift_lt_univ'
+-/
 
 #print Cardinal.ord_univ /-
 @[simp]
@@ -2111,12 +2071,7 @@ theorem ord_univ : ord univ.{u, v} = Ordinal.univ.{u, v} :=
 #align cardinal.ord_univ Cardinal.ord_univ
 -/
 
-/- warning: cardinal.lt_univ -> Cardinal.lt_univ is a dubious translation:
-lean 3 declaration is
-  forall {c : Cardinal.{succ u1}}, Iff (LT.lt.{succ (succ u1)} Cardinal.{succ u1} (Preorder.toLT.{succ (succ u1)} Cardinal.{succ u1} (PartialOrder.toPreorder.{succ (succ u1)} Cardinal.{succ u1} (OrderedAddCommMonoid.toPartialOrder.{succ (succ u1)} Cardinal.{succ u1} (OrderedSemiring.toOrderedAddCommMonoid.{succ (succ u1)} Cardinal.{succ u1} (OrderedCommSemiring.toOrderedSemiring.{succ (succ u1)} Cardinal.{succ u1} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ (succ u1)} Cardinal.{succ u1} Cardinal.canonicallyOrderedCommSemiring.{succ u1})))))) c Cardinal.univ.{u1, succ u1}) (Exists.{succ (succ u1)} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => Eq.{succ (succ (succ u1))} Cardinal.{succ u1} c (Cardinal.lift.{succ u1, u1} c')))
-but is expected to have type
-  forall {c : Cardinal.{succ u1}}, Iff (LT.lt.{succ (succ u1)} Cardinal.{succ u1} (Preorder.toLT.{succ (succ u1)} Cardinal.{succ u1} (PartialOrder.toPreorder.{succ (succ u1)} Cardinal.{succ u1} Cardinal.partialOrder.{succ u1})) c Cardinal.univ.{u1, succ u1}) (Exists.{succ (succ u1)} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => Eq.{succ (succ (succ u1))} Cardinal.{succ u1} c (Cardinal.lift.{succ u1, u1} c')))
-Case conversion may be inaccurate. Consider using '#align cardinal.lt_univ Cardinal.lt_univₓ'. -/
+#print Cardinal.lt_univ /-
 theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
   ⟨fun h => by
     have := ord_lt_ord.2 h
@@ -2126,13 +2081,9 @@ theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
     rw [← e, lift.principal_seg_coe, ← lift_card] at this
     exact ⟨_, this.symm⟩, fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ _⟩
 #align cardinal.lt_univ Cardinal.lt_univ
+-/
 
-/- warning: cardinal.lt_univ' -> Cardinal.lt_univ' is a dubious translation:
-lean 3 declaration is
-  forall {c : Cardinal.{max (succ u1) u2}}, Iff (LT.lt.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} (Preorder.toLT.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} (PartialOrder.toPreorder.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} (OrderedAddCommMonoid.toPartialOrder.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} (OrderedSemiring.toOrderedAddCommMonoid.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} (OrderedCommSemiring.toOrderedSemiring.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ (max (succ u1) u2)} Cardinal.{max (succ u1) u2} Cardinal.canonicallyOrderedCommSemiring.{max (succ u1) u2})))))) c Cardinal.univ.{u1, u2}) (Exists.{succ (succ u1)} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => Eq.{succ (succ (max (succ u1) u2))} Cardinal.{max (succ u1) u2} c (Cardinal.lift.{max (succ u1) u2, u1} c')))
-but is expected to have type
-  forall {c : Cardinal.{max (succ u1) u2}}, Iff (LT.lt.{max (succ (succ u1)) (succ u2)} Cardinal.{max (succ u1) u2} (Preorder.toLT.{max (succ (succ u1)) (succ u2)} Cardinal.{max (succ u1) u2} (PartialOrder.toPreorder.{max (succ (succ u1)) (succ u2)} Cardinal.{max (succ u1) u2} Cardinal.partialOrder.{max (succ u1) u2})) c Cardinal.univ.{u1, u2}) (Exists.{succ (succ u1)} Cardinal.{u1} (fun (c' : Cardinal.{u1}) => Eq.{max (succ (succ (succ u1))) (succ (succ u2))} Cardinal.{max (succ u1) u2} c (Cardinal.lift.{max (succ u1) u2, u1} c')))
-Case conversion may be inaccurate. Consider using '#align cardinal.lt_univ' Cardinal.lt_univ'ₓ'. -/
+#print Cardinal.lt_univ' /-
 theorem lt_univ' {c} : c < univ.{u, v} ↔ ∃ c', c = lift.{max (u + 1) v, u} c' :=
   ⟨fun h => by
     let ⟨a, e, h'⟩ := lt_lift_iff.1 h
@@ -2140,13 +2091,9 @@ theorem lt_univ' {c} : c < univ.{u, v} ↔ ∃ c', c = lift.{max (u + 1) v, u} c
     rcases lt_univ.{u}.1 h' with ⟨c', rfl⟩
     exact ⟨c', by simp only [e.symm, lift_lift]⟩, fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ' _⟩
 #align cardinal.lt_univ' Cardinal.lt_univ'
+-/
 
-/- warning: cardinal.small_iff_lift_mk_lt_univ -> Cardinal.small_iff_lift_mk_lt_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Iff (Small.{u2, u1} α) (LT.lt.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} (Preorder.toLT.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} (PartialOrder.toPreorder.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} (OrderedAddCommMonoid.toPartialOrder.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} (OrderedSemiring.toOrderedAddCommMonoid.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} (OrderedCommSemiring.toOrderedSemiring.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{succ (max u1 (succ u2))} Cardinal.{max u1 (succ u2)} Cardinal.canonicallyOrderedCommSemiring.{max u1 (succ u2)})))))) (Cardinal.lift.{succ u2, u1} (Cardinal.mk.{u1} α)) Cardinal.univ.{u2, max u1 (succ u2)})
-but is expected to have type
-  forall {α : Type.{u1}}, Iff (Small.{u2, u1} α) (LT.lt.{max (succ u1) (succ (succ u2))} Cardinal.{max u1 (succ u2)} (Preorder.toLT.{max (succ u1) (succ (succ u2))} Cardinal.{max u1 (succ u2)} (PartialOrder.toPreorder.{max (succ u1) (succ (succ u2))} Cardinal.{max u1 (succ u2)} Cardinal.partialOrder.{max u1 (succ u2)})) (Cardinal.lift.{succ u2, u1} (Cardinal.mk.{u1} α)) Cardinal.univ.{u2, max u1 (succ u2)})
-Case conversion may be inaccurate. Consider using '#align cardinal.small_iff_lift_mk_lt_univ Cardinal.small_iff_lift_mk_lt_univₓ'. -/
+#print Cardinal.small_iff_lift_mk_lt_univ /-
 theorem small_iff_lift_mk_lt_univ {α : Type u} :
     Small.{v} α ↔ Cardinal.lift (#α) < univ.{v, max u (v + 1)} :=
   by
@@ -2157,6 +2104,7 @@ theorem small_iff_lift_mk_lt_univ {α : Type u} :
   · rintro ⟨c, hc⟩
     exact ⟨⟨c.out, lift_mk_eq.{u, _, v + 1}.1 (hc.trans (congr rfl c.mk_out.symm))⟩⟩
 #align cardinal.small_iff_lift_mk_lt_univ Cardinal.small_iff_lift_mk_lt_univ
+-/
 
 end Cardinal
 
