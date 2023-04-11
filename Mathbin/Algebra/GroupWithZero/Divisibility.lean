@@ -163,33 +163,41 @@ section CancelCommMonoidWithZero
 
 variable [CancelCommMonoidWithZero α] [Subsingleton αˣ] {a b : α}
 
+#print dvd_antisymm /-
 theorem dvd_antisymm : a ∣ b → b ∣ a → a = b :=
   by
   rintro ⟨c, rfl⟩ ⟨d, hcd⟩
   rw [mul_assoc, eq_comm, mul_right_eq_self₀, mul_eq_one] at hcd
   obtain ⟨rfl, -⟩ | rfl := hcd <;> simp
 #align dvd_antisymm dvd_antisymm
+-/
 
 attribute [protected] Nat.dvd_antisymm
 
+#print dvd_antisymm' /-
 --This lemma is in core, so we protect it here
 theorem dvd_antisymm' : a ∣ b → b ∣ a → b = a :=
   flip dvd_antisymm
 #align dvd_antisymm' dvd_antisymm'
+-/
 
-alias dvd_antisymm ← Dvd.Dvd.antisymm
-#align has_dvd.dvd.antisymm Dvd.Dvd.antisymm
+alias dvd_antisymm ← Dvd.dvd.antisymm
+#align has_dvd.dvd.antisymm Dvd.dvd.antisymm
 
-alias dvd_antisymm' ← Dvd.Dvd.antisymm'
-#align has_dvd.dvd.antisymm' Dvd.Dvd.antisymm'
+alias dvd_antisymm' ← Dvd.dvd.antisymm'
+#align has_dvd.dvd.antisymm' Dvd.dvd.antisymm'
 
+#print eq_of_forall_dvd /-
 theorem eq_of_forall_dvd (h : ∀ c, a ∣ c ↔ b ∣ c) : a = b :=
   ((h _).2 dvd_rfl).antisymm <| (h _).1 dvd_rfl
 #align eq_of_forall_dvd eq_of_forall_dvd
+-/
 
+#print eq_of_forall_dvd' /-
 theorem eq_of_forall_dvd' (h : ∀ c, c ∣ a ↔ c ∣ b) : a = b :=
   ((h _).1 dvd_rfl).antisymm <| (h _).2 dvd_rfl
 #align eq_of_forall_dvd' eq_of_forall_dvd'
+-/
 
 end CancelCommMonoidWithZero
 

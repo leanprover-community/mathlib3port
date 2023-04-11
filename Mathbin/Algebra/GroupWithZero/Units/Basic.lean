@@ -570,11 +570,13 @@ section CommGroupWithZero
 -- comm
 variable [CommGroupWithZero G₀] {a b c d : G₀}
 
+#print CommGroupWithZero.toCancelCommMonoidWithZero /-
 -- see Note [lower instance priority]
 instance (priority := 10) CommGroupWithZero.toCancelCommMonoidWithZero :
     CancelCommMonoidWithZero G₀ :=
   { GroupWithZero.toCancelMonoidWithZero, CommGroupWithZero.toCommMonoidWithZero G₀ with }
 #align comm_group_with_zero.to_cancel_comm_monoid_with_zero CommGroupWithZero.toCancelCommMonoidWithZero
+-/
 
 #print CommGroupWithZero.toDivisionCommMonoid /-
 -- See note [lower instance priority]

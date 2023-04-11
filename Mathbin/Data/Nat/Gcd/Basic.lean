@@ -476,11 +476,13 @@ theorem lcm_ne_zero {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) : lcm m n ≠ 0 :=
 #align nat.lcm_ne_zero Nat.lcm_ne_zero
 -/
 
+#print Nat.lcm_pos /-
 theorem lcm_pos {m n : ℕ} : 0 < m → 0 < n → 0 < m.lcm n :=
   by
   simp_rw [pos_iff_ne_zero]
   exact lcm_ne_zero
 #align nat.lcm_pos Nat.lcm_pos
+-/
 
 /-!
 ### `coprime`

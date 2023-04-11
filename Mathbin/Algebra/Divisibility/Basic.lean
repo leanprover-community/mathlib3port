@@ -208,8 +208,10 @@ theorem one_dvd (a : α) : 1 ∣ a :=
   Dvd.intro a (one_mul a)
 #align one_dvd one_dvd
 
+#print dvd_of_eq /-
 theorem dvd_of_eq (h : a = b) : a ∣ b := by rw [h]
 #align dvd_of_eq dvd_of_eq
+-/
 
 alias dvd_of_eq ← Eq.dvd
 #align eq.dvd Eq.dvd

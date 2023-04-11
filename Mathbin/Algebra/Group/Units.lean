@@ -855,18 +855,36 @@ theorem divp_mul_divp (x y : α) (ux uy : αˣ) : x /ₚ ux * (y /ₚ uy) = x * 
 
 variable [Subsingleton αˣ] {a b : α}
 
+/- warning: eq_one_of_mul_right -> eq_one_of_mul_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : Subsingleton.{succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))] {a : α} {b : α}, (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))) -> (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : Subsingleton.{succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))] {a : α} {b : α}, (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) -> (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align eq_one_of_mul_right eq_one_of_mul_rightₓ'. -/
 @[to_additive]
 theorem eq_one_of_mul_right (h : a * b = 1) : a = 1 :=
   congr_arg Units.inv <| Subsingleton.elim (Units.mk _ _ (by rwa [mul_comm]) h) 1
 #align eq_one_of_mul_right eq_one_of_mul_right
 #align eq_zero_of_add_right eq_zero_of_add_right
 
+/- warning: eq_one_of_mul_left -> eq_one_of_mul_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : Subsingleton.{succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))] {a : α} {b : α}, (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))) -> (Eq.{succ u1} α b (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : Subsingleton.{succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))] {a : α} {b : α}, (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) -> (Eq.{succ u1} α b (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align eq_one_of_mul_left eq_one_of_mul_leftₓ'. -/
 @[to_additive]
 theorem eq_one_of_mul_left (h : a * b = 1) : b = 1 :=
   congr_arg Units.inv <| Subsingleton.elim (Units.mk _ _ h <| by rwa [mul_comm]) 1
 #align eq_one_of_mul_left eq_one_of_mul_left
 #align eq_zero_of_add_left eq_zero_of_add_left
 
+/- warning: mul_eq_one -> mul_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : Subsingleton.{succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))] {a : α} {b : α}, Iff (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))) (And (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))) (Eq.{succ u1} α b (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] [_inst_2 : Subsingleton.{succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))] {a : α} {b : α}, Iff (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) (And (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) (Eq.{succ u1} α b (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_one mul_eq_oneₓ'. -/
 @[simp, to_additive]
 theorem mul_eq_one : a * b = 1 ↔ a = 1 ∧ b = 1 :=
   ⟨fun h => ⟨eq_one_of_mul_right h, eq_one_of_mul_left h⟩,
@@ -1211,7 +1229,7 @@ protected theorem mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.6867 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.6869 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.6867 x._@.Mathlib.Algebra.Group.Units._hyg.6869) a))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.7098 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.7100 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.7098 x._@.Mathlib.Algebra.Group.Units._hyg.7100) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_right_injective IsUnit.mul_right_injectiveₓ'. -/
 @[to_additive]
 protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ =>

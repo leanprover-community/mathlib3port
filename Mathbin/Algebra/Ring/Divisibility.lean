@@ -36,8 +36,14 @@ theorem dvd_add [LeftDistribClass α] {a b c : α} (h₁ : a ∣ b) (h₂ : a �
   Dvd.elim h₁ fun d hd => Dvd.elim h₂ fun e he => Dvd.intro (d + e) (by simp [left_distrib, hd, he])
 #align dvd_add dvd_add
 
-alias dvd_add ← Dvd.Dvd.add
-#align has_dvd.dvd.add Dvd.Dvd.add
+/- warning: has_dvd.dvd.add -> Dvd.dvd.add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : Semigroup.{u1} α] [_inst_3 : LeftDistribClass.{u1} α (Semigroup.toHasMul.{u1} α _inst_2) _inst_1] {a : α} {b : α} {c : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_2) a b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_2) a c) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_2) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) b c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : Semigroup.{u1} α] [_inst_3 : LeftDistribClass.{u1} α (Semigroup.toMul.{u1} α _inst_2) _inst_1] {a : α} {b : α} {c : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_2) a b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_2) a c) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_2) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) b c))
+Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.add Dvd.dvd.addₓ'. -/
+alias dvd_add ← Dvd.dvd.add
+#align has_dvd.dvd.add Dvd.dvd.add
 
 end DistribSemigroup
 
@@ -76,7 +82,7 @@ variable [Semigroup α] [HasDistribNeg α] {a b c : α}
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)] {a : α} {b : α}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1) _inst_2)) b)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] (a : α) (b : α), Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) b)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) b)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align dvd_neg dvd_negₓ'. -/
 /-- An element `a` of a semigroup with a distributive negation divides the negation of an element
 `b` iff `a` divides `b`. -/
@@ -89,7 +95,7 @@ theorem dvd_neg : a ∣ -b ↔ a ∣ b :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)] {a : α} {b : α}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1) _inst_2)) a) b) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] (a : α) (b : α), Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) a) b) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) a) b) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align neg_dvd neg_dvdₓ'. -/
 /-- The negation of an element `a` of a semigroup with a distributive negation divides another
 element `b` iff `a` divides `b`. -/
@@ -98,13 +104,37 @@ theorem neg_dvd : -a ∣ b ↔ a ∣ b :=
   (Equiv.neg _).exists_congr_left.trans <| by simpa
 #align neg_dvd neg_dvd
 
-alias neg_dvd ↔ Dvd.Dvd.of_neg_left Dvd.Dvd.neg_left
-#align has_dvd.dvd.of_neg_left Dvd.Dvd.of_neg_left
-#align has_dvd.dvd.neg_left Dvd.Dvd.neg_left
+/- warning: has_dvd.dvd.of_neg_left -> Dvd.dvd.of_neg_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1) _inst_2)) a) b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) a) b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.of_neg_left Dvd.dvd.of_neg_leftₓ'. -/
+/- warning: has_dvd.dvd.neg_left -> Dvd.dvd.neg_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1) _inst_2)) a) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) a) b)
+Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.neg_left Dvd.dvd.neg_leftₓ'. -/
+alias neg_dvd ↔ Dvd.dvd.of_neg_left Dvd.dvd.neg_left
+#align has_dvd.dvd.of_neg_left Dvd.dvd.of_neg_left
+#align has_dvd.dvd.neg_left Dvd.dvd.neg_left
 
-alias dvd_neg ↔ Dvd.Dvd.of_neg_right Dvd.Dvd.neg_right
-#align has_dvd.dvd.of_neg_right Dvd.Dvd.of_neg_right
-#align has_dvd.dvd.neg_right Dvd.Dvd.neg_right
+/- warning: has_dvd.dvd.of_neg_right -> Dvd.dvd.of_neg_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1) _inst_2)) b)) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.of_neg_right Dvd.dvd.of_neg_rightₓ'. -/
+/- warning: has_dvd.dvd.neg_right -> Dvd.dvd.neg_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toHasNeg.{u1} α (HasDistribNeg.toHasInvolutiveNeg.{u1} α (Semigroup.toHasMul.{u1} α _inst_1) _inst_2)) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) b))
+Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.neg_right Dvd.dvd.neg_rightₓ'. -/
+alias dvd_neg ↔ Dvd.dvd.of_neg_right Dvd.dvd.neg_right
+#align has_dvd.dvd.of_neg_right Dvd.dvd.of_neg_right
+#align has_dvd.dvd.neg_right Dvd.dvd.neg_right
 
 end Semigroup
 
@@ -122,8 +152,14 @@ theorem dvd_sub (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b - c := by
   simpa only [← sub_eq_add_neg] using h₁.add h₂.neg_right
 #align dvd_sub dvd_sub
 
-alias dvd_sub ← Dvd.Dvd.sub
-#align has_dvd.dvd.sub Dvd.Dvd.sub
+/- warning: has_dvd.dvd.sub -> Dvd.dvd.sub is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c))
+Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.sub Dvd.dvd.subₓ'. -/
+alias dvd_sub ← Dvd.dvd.sub
+#align has_dvd.dvd.sub Dvd.dvd.sub
 
 /- warning: dvd_add_left -> dvd_add_left is a dubious translation:
 lean 3 declaration is
@@ -148,12 +184,24 @@ element `c` iff `a` divides `c`. -/
 theorem dvd_add_right (h : a ∣ b) : a ∣ b + c ↔ a ∣ c := by rw [add_comm] <;> exact dvd_add_left h
 #align dvd_add_right dvd_add_right
 
+/- warning: dvd_sub_left -> dvd_sub_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c) -> (Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c) -> (Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b))
+Case conversion may be inaccurate. Consider using '#align dvd_sub_left dvd_sub_leftₓ'. -/
 /-- If an element `a` divides another element `c` in a ring, `a` divides the difference of another
 element `b` with `c` iff `a` divides `b`. -/
 theorem dvd_sub_left (h : a ∣ c) : a ∣ b - c ↔ a ∣ b := by
   simpa only [← sub_eq_add_neg] using dvd_add_left (dvd_neg.2 h)
 #align dvd_sub_left dvd_sub_left
 
+/- warning: dvd_sub_right -> dvd_sub_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b) -> (Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b) -> (Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c))
+Case conversion may be inaccurate. Consider using '#align dvd_sub_right dvd_sub_rightₓ'. -/
 /-- If an element `a` divides another element `b` in a ring, `a` divides the difference of `b` and
 another element `c` iff `a` divides `c`. -/
 theorem dvd_sub_right (h : a ∣ b) : a ∣ b - c ↔ a ∣ c := by
@@ -219,12 +267,24 @@ theorem dvd_add_self_right {a b : α} : a ∣ b + a ↔ a ∣ b :=
   dvd_add_left (dvd_refl a)
 #align dvd_add_self_right dvd_add_self_right
 
+/- warning: dvd_sub_self_left -> dvd_sub_self_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1)))))) a b)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α _inst_1)) a b)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a b)
+Case conversion may be inaccurate. Consider using '#align dvd_sub_self_left dvd_sub_self_leftₓ'. -/
 /-- An element `a` divides the difference `a - b` if and only if `a` divides `b`. -/
 @[simp]
 theorem dvd_sub_self_left : a ∣ a - b ↔ a ∣ b :=
   dvd_sub_right dvd_rfl
 #align dvd_sub_self_left dvd_sub_self_left
 
+/- warning: dvd_sub_self_right -> dvd_sub_self_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1)))))) b a)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α _inst_1)) b a)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (Ring.toNonUnitalRing.{u1} α _inst_1))))) a b)
+Case conversion may be inaccurate. Consider using '#align dvd_sub_self_right dvd_sub_self_rightₓ'. -/
 /-- An element `a` divides the difference `b - a` if and only if `a` divides `b`. -/
 @[simp]
 theorem dvd_sub_self_right : a ∣ b - a ↔ a ∣ b :=

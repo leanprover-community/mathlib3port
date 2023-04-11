@@ -340,20 +340,44 @@ theorem mul_left_eq_self₀ : a * b = b ↔ a = 1 ∨ b = 0 :=
     
 #align mul_left_eq_self₀ mul_left_eq_self₀
 
+/- warning: mul_eq_left₀ -> mul_eq_left₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))) -> (Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b) a) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))))
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b) a) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (Monoid.toOne.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_left₀ mul_eq_left₀ₓ'. -/
 @[simp]
 theorem mul_eq_left₀ (ha : a ≠ 0) : a * b = a ↔ b = 1 := by
   rw [Iff.comm, ← mul_right_inj' ha, mul_one]
 #align mul_eq_left₀ mul_eq_left₀
 
+/- warning: mul_eq_right₀ -> mul_eq_right₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))) -> (Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b) b) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))))
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Iff (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b) b) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (Monoid.toOne.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_right₀ mul_eq_right₀ₓ'. -/
 @[simp]
 theorem mul_eq_right₀ (hb : b ≠ 0) : a * b = b ↔ a = 1 := by
   rw [Iff.comm, ← mul_left_inj' hb, one_mul]
 #align mul_eq_right₀ mul_eq_right₀
 
+/- warning: left_eq_mul₀ -> left_eq_mul₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))) -> (Iff (Eq.{succ u1} M₀ a (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b)) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))))
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Iff (Eq.{succ u1} M₀ a (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b)) (Eq.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (Monoid.toOne.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align left_eq_mul₀ left_eq_mul₀ₓ'. -/
 @[simp]
 theorem left_eq_mul₀ (ha : a ≠ 0) : a = a * b ↔ b = 1 := by rw [eq_comm, mul_eq_left₀ ha]
 #align left_eq_mul₀ left_eq_mul₀
 
+/- warning: right_eq_mul₀ -> right_eq_mul₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))) -> (Iff (Eq.{succ u1} M₀ b (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b)) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))))
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {a : M₀} {b : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Iff (Eq.{succ u1} M₀ b (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a b)) (Eq.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (Monoid.toOne.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align right_eq_mul₀ right_eq_mul₀ₓ'. -/
 @[simp]
 theorem right_eq_mul₀ (hb : b ≠ 0) : b = a * b ↔ a = 1 := by rw [eq_comm, mul_eq_right₀ hb]
 #align right_eq_mul₀ right_eq_mul₀
@@ -512,6 +536,7 @@ instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ 
 #align group_with_zero.to_division_monoid GroupWithZero.toDivisionMonoid
 -/
 
+#print GroupWithZero.toCancelMonoidWithZero /-
 -- see Note [lower instance priority]
 instance (priority := 10) GroupWithZero.toCancelMonoidWithZero : CancelMonoidWithZero G₀ :=
   {
@@ -522,6 +547,7 @@ instance (priority := 10) GroupWithZero.toCancelMonoidWithZero : CancelMonoidWit
     mul_right_cancel_of_ne_zero := fun x y z hy h => by
       rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
 #align group_with_zero.to_cancel_monoid_with_zero GroupWithZero.toCancelMonoidWithZero
+-/
 
 end GroupWithZero
 
