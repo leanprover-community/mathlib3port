@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit 284fdd2962e67d2932fa3a79ce19fcf92d38e228
+! leanprover-community/mathlib commit 0a0b3b4148b35efb8b8a38118517c5a1d30d0e69
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -668,6 +668,15 @@ def ContDiffOn (n : ℕ∞) (f : E → F) (s : Set E) : Prop :=
 #align cont_diff_on ContDiffOn
 
 variable {𝕜}
+
+theorem HasFtaylorSeriesUpToOn.contDiffOn {f' : E → FormalMultilinearSeries 𝕜 E F}
+    (hf : HasFtaylorSeriesUpToOn n f f' s) : ContDiffOn 𝕜 n f s :=
+  by
+  intro x hx m hm
+  use s
+  simp only [Set.insert_eq_of_mem hx, self_mem_nhdsWithin, true_and_iff]
+  exact ⟨f', hf.of_le hm⟩
+#align has_ftaylor_series_up_to_on.cont_diff_on HasFtaylorSeriesUpToOn.contDiffOn
 
 theorem ContDiffOn.contDiffWithinAt (h : ContDiffOn 𝕜 n f s) (hx : x ∈ s) :
     ContDiffWithinAt 𝕜 n f s x :=
@@ -1421,6 +1430,12 @@ def ContDiff (n : ℕ∞) (f : E → F) : Prop :=
 #align cont_diff ContDiff
 
 variable {𝕜}
+
+/-- If `f` has a Taylor series up to `n`, then it is `C^n`. -/
+theorem HasFtaylorSeriesUpTo.contDiff {f' : E → FormalMultilinearSeries 𝕜 E F}
+    (hf : HasFtaylorSeriesUpTo n f f') : ContDiff 𝕜 n f :=
+  ⟨f', hf⟩
+#align has_ftaylor_series_up_to.cont_diff HasFtaylorSeriesUpTo.contDiff
 
 theorem contDiffOn_univ : ContDiffOn 𝕜 n f univ ↔ ContDiff 𝕜 n f :=
   by

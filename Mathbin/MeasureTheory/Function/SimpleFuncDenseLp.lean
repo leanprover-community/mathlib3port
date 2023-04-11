@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense_lp
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit a8c97ed34c07fcfd7ebc6b83179b8f687275eba9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1049,6 +1049,65 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
     (Lp.simple_func.dense_range hp_ne_top).inductionOn f h_closed this
   exact fun f hf => h_ae hf.coeFn_toLp (Lp.mem_ℒp _) (this (hf.toLp f))
 #align measure_theory.mem_ℒp.induction MeasureTheory.Memℒp.induction
+
+/-- If a set of ae strongly measurable functions is stable under addition and approximates
+characteristic functions in `ℒp`, then it is dense in `ℒp`. -/
+theorem Memℒp.induction_dense (hp_ne_top : p ≠ ∞) (h'p : 1 ≤ p) (P : (α → E) → Prop)
+    (h0P :
+      ∀ (c : E) ⦃s : Set α⦄,
+        MeasurableSet s →
+          μ s < ∞ →
+            ∀ {ε : ℝ≥0∞}, ε ≠ 0 → ∃ g : α → E, snorm (g - s.indicator fun x => c) p μ ≤ ε ∧ P g)
+    (h1P : ∀ f g, P f → P g → P (f + g)) (h2P : ∀ f, P f → AeStronglyMeasurable f μ) {f : α → E}
+    (hf : Memℒp f p μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) : ∃ g : α → E, snorm (f - g) p μ ≤ ε ∧ P g :=
+  by
+  haveI : Fact (1 ≤ p) := ⟨h'p⟩
+  revert f hf ε
+  refine' mem_ℒp.induction hp_ne_top _ _ _ _ _
+  · intro c s hs hμs ε εpos
+    rcases h0P c hs hμs εpos with ⟨g, hg, Pg⟩
+    rw [← snorm_neg, neg_sub] at hg
+    exact ⟨g, hg, Pg⟩
+  · intro f f' hff' hf hf' Hf Hf' ε εpos
+    have A : ε / 2 ≠ 0 := by simp [εpos]
+    rcases Hf A with ⟨g, hfg, Pg⟩
+    rcases Hf' A with ⟨g', hf'g', Pg'⟩
+    refine' ⟨g + g', _, h1P g g' Pg Pg'⟩
+    calc
+      snorm (f + f' - (g + g')) p μ = snorm (f - g + (f' - g')) p μ :=
+        by
+        congr 1
+        abel
+      _ ≤ snorm (f - g) p μ + snorm (f' - g') p μ :=
+        (snorm_add_le (hf.ae_strongly_measurable.sub (h2P g Pg))
+          (hf'.ae_strongly_measurable.sub (h2P g' Pg')) h'p)
+      _ ≤ ε / 2 + ε / 2 := (add_le_add hfg hf'g')
+      _ = ε := ENNReal.add_halves _
+      
+  · rw [isClosed_iff_nhds]
+    intro f hf ε εpos
+    have A : ε / 2 ≠ 0 := by simp [εpos]
+    rcases hf (EMetric.ball f (ε / 2)) (EMetric.ball_mem_nhds _ A.bot_lt) with ⟨f', hf', h'f'⟩
+    rcases h'f' A with ⟨g, hg, Pg⟩
+    refine' ⟨g, _, Pg⟩
+    calc
+      snorm (f - g) p μ = snorm (f - f' + (f' - g)) p μ := by simp only [sub_add_sub_cancel]
+      _ ≤ snorm (f - f') p μ + snorm (f' - g) p μ :=
+        (snorm_add_le ((Lp.mem_ℒp f).sub (Lp.mem_ℒp f')).AeStronglyMeasurable
+          ((Lp.mem_ℒp f').AeStronglyMeasurable.sub (h2P g Pg)) h'p)
+      _ ≤ ε / 2 + ε / 2 := by
+        refine' add_le_add _ hg
+        rw [← snorm_neg, neg_sub]
+        simp only [Lp.edist_def, EMetric.mem_ball] at hf'
+        exact hf'.le
+      _ = ε := ENNReal.add_halves _
+      
+  · intro f f' hff' hf Hf ε εpos
+    rcases Hf εpos with ⟨g, hg, Pg⟩
+    refine' ⟨g, _, Pg⟩
+    have : f - g =ᵐ[μ] f' - g := hff'.sub (filter.germ.coe_eq.mp rfl)
+    rwa [← snorm_congr_ae this]
+#align measure_theory.mem_ℒp.induction_dense MeasureTheory.Memℒp.induction_dense
 
 section Integrable
 

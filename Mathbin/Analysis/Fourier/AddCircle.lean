@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.add_circle
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit a8c97ed34c07fcfd7ebc6b83179b8f687275eba9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,7 +304,7 @@ theorem coeFn_fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) :
 theorem span_fourierLp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ∞) :
     (span ℂ (range (@fourierLp T _ p _))).topologicalClosure = ⊤ :=
   by
-  convert(ContinuousMap.toLp_denseRange ℂ hp (@haar_add_circle T hT)
+  convert(ContinuousMap.toLp_denseRange ℂ (@haar_add_circle T hT) hp
           ℂ).topologicalClosure_map_submodule
       span_fourier_closure_eq_top
   rw [map_span, range_comp]

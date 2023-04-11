@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit b2a5f0d6fc79f4aa24586177a8d33b20daf3aea5
+! leanprover-community/mathlib commit 8cab1cd8f0fcaa0995b9d98188f7c7edfd4a3983
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ContDiff
+import Mathbin.Analysis.Calculus.IteratedDeriv
 import Mathbin.Analysis.LocallyConvex.WithSeminorms
 import Mathbin.Topology.Algebra.UniformFilterBasis
 import Mathbin.Topology.ContinuousFunction.Bounded
@@ -37,6 +38,8 @@ decay faster than any power of `‖x‖`.
 * `schwartz_map.seminorm`: The family of seminorms as described above
 * `schwartz_map.fderiv_clm`: The differential as a continuous linear map
 `𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)`
+* `schwartz_map.deriv_clm`: The one-dimensional derivative as a continuous linear map
+`𝓢(ℝ, F) →L[𝕜] 𝓢(ℝ, F)`
 
 ## Main statements
 
@@ -119,6 +122,12 @@ theorem continuous (f : 𝓢(E, F)) : Continuous f :=
 theorem differentiable (f : 𝓢(E, F)) : Differentiable ℝ f :=
   (f.smooth 1).Differentiable rfl.le
 #align schwartz_map.differentiable SchwartzMap.differentiable
+
+/-- Every Schwartz function is differentiable at any point. -/
+@[protected]
+theorem differentiableAt (f : 𝓢(E, F)) {x : E} : DifferentiableAt ℝ f x :=
+  f.Differentiable.DifferentiableAt
+#align schwartz_map.differentiable_at SchwartzMap.differentiableAt
 
 @[ext]
 theorem ext {f g : 𝓢(E, F)} (h : ∀ x, (f : E → F) x = g x) : f = g :=
@@ -448,11 +457,31 @@ theorem seminorm_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
   f.seminormAux_le_bound k n hMp hM
 #align schwartz_map.seminorm_le_bound SchwartzMap.seminorm_le_bound
 
+/-- If one controls the seminorm for every `x`, then one controls the seminorm.
+
+Variant for functions `𝓢(ℝ, F)`. -/
+theorem seminorm_le_bound' (k n : ℕ) (f : 𝓢(ℝ, F)) {M : ℝ} (hMp : 0 ≤ M)
+    (hM : ∀ x, |x| ^ k * ‖iteratedDeriv n f x‖ ≤ M) : Seminorm 𝕜 k n f ≤ M :=
+  by
+  refine' seminorm_le_bound 𝕜 k n f hMp _
+  simpa only [Real.norm_eq_abs, norm_iteratedFderiv_eq_norm_iteratedDeriv]
+#align schwartz_map.seminorm_le_bound' SchwartzMap.seminorm_le_bound'
+
 /-- The seminorm controls the Schwartz estimate for any fixed `x`. -/
 theorem le_seminorm (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ Seminorm 𝕜 k n f :=
   f.le_seminormAux k n x
 #align schwartz_map.le_seminorm SchwartzMap.le_seminorm
+
+/-- The seminorm controls the Schwartz estimate for any fixed `x`.
+
+Variant for functions `𝓢(ℝ, F)`. -/
+theorem le_seminorm' (k n : ℕ) (f : 𝓢(ℝ, F)) (x : ℝ) :
+    |x| ^ k * ‖iteratedDeriv n f x‖ ≤ Seminorm 𝕜 k n f :=
+  by
+  have := le_seminorm 𝕜 k n f x
+  rwa [← Real.norm_eq_abs, ← norm_iteratedFderiv_eq_norm_iteratedDeriv]
+#align schwartz_map.le_seminorm' SchwartzMap.le_seminorm'
 
 theorem norm_iteratedFderiv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
     ‖iteratedFderiv ℝ n f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 0 n) f :=
@@ -606,7 +635,7 @@ def mkClm [RingHomIsometric σ] (A : (D → E) → F → G)
 
 end Clm
 
-section fderiv
+section Derivatives
 
 /-! ### Derivatives of Schwartz functions -/
 
@@ -615,11 +644,10 @@ variable (𝕜)
 
 variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
-/-- The real derivative on Schwartz space as a continuous `𝕜`-linear map. -/
+/-- The Fréchet derivative on Schwartz space as a continuous `𝕜`-linear map. -/
 def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F) :=
-  mkClm (fderiv ℝ)
-    (fun f g _ => fderiv_add f.Differentiable.DifferentiableAt g.Differentiable.DifferentiableAt)
-    (fun a f _ => fderiv_const_smul f.Differentiable.DifferentiableAt a)
+  mkClm (fderiv ℝ) (fun f g _ => fderiv_add f.DifferentiableAt g.DifferentiableAt)
+    (fun a f _ => fderiv_const_smul f.DifferentiableAt a)
     (fun f => (contDiff_top_iff_fderiv.mp f.smooth').2) fun ⟨k, n⟩ =>
     ⟨{⟨k, n + 1⟩}, 1, zero_le_one, fun f x => by
       simpa only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton,
@@ -631,7 +659,23 @@ theorem fderivClm_apply (f : 𝓢(E, F)) (x : E) : fderivClm 𝕜 f x = fderiv �
   rfl
 #align schwartz_map.fderiv_clm_apply SchwartzMap.fderivClm_apply
 
-end fderiv
+/-- The 1-dimensional derivative on Schwartz space as a continuous `𝕜`-linear map. -/
+def derivClm : 𝓢(ℝ, F) →L[𝕜] 𝓢(ℝ, F) :=
+  mkClm (fun f => deriv f) (fun f g _ => deriv_add f.DifferentiableAt g.DifferentiableAt)
+    (fun a f _ => deriv_const_smul a f.DifferentiableAt)
+    (fun f => (contDiff_top_iff_deriv.mp f.smooth').2) fun ⟨k, n⟩ =>
+    ⟨{⟨k, n + 1⟩}, 1, zero_le_one, fun f x => by
+      simpa only [Real.norm_eq_abs, Finset.sup_singleton, schwartz_seminorm_family_apply, one_mul,
+        norm_iteratedFderiv_eq_norm_iteratedDeriv, ← iteratedDeriv_succ'] using
+        f.le_seminorm' 𝕜 k (n + 1) x⟩
+#align schwartz_map.deriv_clm SchwartzMap.derivClm
+
+@[simp]
+theorem derivClm_apply (f : 𝓢(ℝ, F)) (x : ℝ) : derivClm 𝕜 f x = deriv f x :=
+  rfl
+#align schwartz_map.deriv_clm_apply SchwartzMap.derivClm_apply
+
+end Derivatives
 
 section BoundedContinuousFunction
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit a8c97ed34c07fcfd7ebc6b83179b8f687275eba9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2065,6 +2065,24 @@ theorem snorm_indicator_const' {c : G} (hs : MeasurableSet s) (hμs : μ s ≠ 0
   · exact snorm_indicator_const hs hp hp_top
 #align measure_theory.snorm_indicator_const' MeasureTheory.snorm_indicator_const'
 
+theorem snorm_indicator_const_le (c : G) (p : ℝ≥0∞) :
+    snorm (s.indicator fun x => c) p μ ≤ ‖c‖₊ * μ s ^ (1 / p.toReal) :=
+  by
+  rcases eq_or_ne p 0 with (rfl | hp)
+  · simp only [snorm_exponent_zero, zero_le']
+  rcases eq_or_ne p ∞ with (rfl | h'p)
+  · simp only [snorm_exponent_top, ENNReal.top_toReal, div_zero, ENNReal.rpow_zero, mul_one]
+    exact snorm_ess_sup_indicator_const_le _ _
+  let t := to_measurable μ s
+  calc
+    snorm (s.indicator fun x => c) p μ ≤ snorm (t.indicator fun x => c) p μ :=
+      snorm_mono (norm_indicator_le_of_subset (subset_to_measurable _ _) _)
+    _ = ‖c‖₊ * μ t ^ (1 / p.to_real) :=
+      (snorm_indicator_const (measurable_set_to_measurable _ _) hp h'p)
+    _ = ‖c‖₊ * μ s ^ (1 / p.to_real) := by rw [measure_to_measurable]
+    
+#align measure_theory.snorm_indicator_const_le MeasureTheory.snorm_indicator_const_le
+
 theorem Memℒp.indicator (hs : MeasurableSet s) (hf : Memℒp f p μ) : Memℒp (s.indicator f) p μ :=
   ⟨hf.AeStronglyMeasurable.indicator hs, lt_of_le_of_lt (snorm_indicator_le f) hf.snorm_lt_top⟩
 #align measure_theory.mem_ℒp.indicator MeasureTheory.Memℒp.indicator
@@ -2126,6 +2144,39 @@ theorem memℒpIndicatorConst (p : ℝ≥0∞) (hs : MeasurableSet s) (c : E) (h
   · exact Or.inl hμsc
   · exact Or.inr hμsc.lt_top
 #align measure_theory.mem_ℒp_indicator_const MeasureTheory.memℒpIndicatorConst
+
+/-- The `ℒ^p` norm of the indicator of a set is uniformly small if the set itself has small measure,
+for any `p < ∞`. Given here as an existential `∀ ε > 0, ∃ η > 0, ...` to avoid later
+management of `ℝ≥0∞`-arithmetic. -/
+theorem exists_snorm_indicator_le (hp : p ≠ ∞) (c : E) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
+    ∃ η : ℝ≥0, 0 < η ∧ ∀ s : Set α, μ s ≤ η → snorm (s.indicator fun x => c) p μ ≤ ε :=
+  by
+  rcases eq_or_ne p 0 with (rfl | h'p)
+  · exact ⟨1, zero_lt_one, fun s hs => by simp⟩
+  have hp₀ : 0 < p := bot_lt_iff_ne_bot.2 h'p
+  have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one ENNReal.toReal_nonneg
+  have hp₀'' : 0 < p.to_real := by
+    simpa [← ENNReal.toReal_lt_toReal ENNReal.zero_ne_top hp] using hp₀
+  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η : ℝ≥0, 0 < η ∧ (‖c‖₊ * η ^ (1 / p.to_real) : ℝ≥0∞) ≤ ε :=
+    by
+    have :
+      Filter.Tendsto (fun x : ℝ≥0 => ((‖c‖₊ * x ^ (1 / p.to_real) : ℝ≥0) : ℝ≥0∞)) (𝓝 0)
+        (𝓝 (0 : ℝ≥0)) :=
+      by
+      rw [ENNReal.tendsto_coe]
+      convert(NNReal.continuousAt_rpow_const (Or.inr hp₀')).Tendsto.const_mul _
+      simp [hp₀''.ne']
+    have hε' : 0 < ε := hε.bot_lt
+    obtain ⟨δ, hδ, hδε'⟩ :=
+      nnreal.nhds_zero_basis.eventually_iff.mp (eventually_le_of_tendsto_lt hε' this)
+    obtain ⟨η, hη, hηδ⟩ := exists_between hδ
+    refine' ⟨η, hη, _⟩
+    rw [ENNReal.coe_rpow_of_nonneg _ hp₀', ← ENNReal.coe_mul]
+    exact hδε' hηδ
+  refine' ⟨η, hη_pos, fun s hs => _⟩
+  refine' (snorm_indicator_const_le _ _).trans (le_trans _ hη_le)
+  exact mul_le_mul_left' (ENNReal.rpow_le_rpow hs hp₀') _
+#align measure_theory.exists_snorm_indicator_le MeasureTheory.exists_snorm_indicator_le
 
 end Indicator
 
