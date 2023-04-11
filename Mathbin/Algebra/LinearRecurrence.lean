@@ -47,12 +47,14 @@ open Finset
 
 open BigOperators Polynomial
 
+#print LinearRecurrence /-
 /-- A "linear recurrence relation" over a commutative semiring is given by its
   order `n` and `n` coefficients. -/
 structure LinearRecurrence (α : Type _) [CommSemiring α] where
   order : ℕ
   coeffs : Fin order → α
 #align linear_recurrence LinearRecurrence
+-/
 
 instance (α : Type _) [CommSemiring α] : Inhabited (LinearRecurrence α) :=
   ⟨⟨0, default⟩⟩
@@ -63,12 +65,15 @@ section CommSemiring
 
 variable {α : Type _} [CommSemiring α] (E : LinearRecurrence α)
 
+#print LinearRecurrence.IsSolution /-
 /-- We say that a sequence `u` is solution of `linear_recurrence order coeffs` when we have
   `u (n + order) = ∑ i : fin order, coeffs i * u (n + i)` for any `n`. -/
 def IsSolution (u : ℕ → α) :=
   ∀ n, u (n + E.order) = ∑ i, E.coeffs i * u (n + i)
 #align linear_recurrence.is_solution LinearRecurrence.IsSolution
+-/
 
+#print LinearRecurrence.mkSol /-
 /-- A solution of a `linear_recurrence` which satisfies certain initial conditions.
   We will prove this is the only such solution. -/
 def mkSol (init : Fin E.order → α) : ℕ → α
@@ -84,19 +89,25 @@ def mkSol (init : Fin E.order → α) : ℕ → α
             simp only [zero_add]
         E.coeffs k * mk_sol (n - E.order + k)
 #align linear_recurrence.mk_sol LinearRecurrence.mkSol
+-/
 
+#print LinearRecurrence.is_sol_mkSol /-
 /-- `E.mk_sol` indeed gives solutions to `E`. -/
 theorem is_sol_mkSol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) := fun n => by
   rw [mk_sol] <;> simp
 #align linear_recurrence.is_sol_mk_sol LinearRecurrence.is_sol_mkSol
+-/
 
+#print LinearRecurrence.mkSol_eq_init /-
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
 theorem mkSol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n :=
   fun n => by
   rw [mk_sol]
   simp only [n.is_lt, dif_pos, Fin.mk_val, Fin.eta]
 #align linear_recurrence.mk_sol_eq_init LinearRecurrence.mkSol_eq_init
+-/
 
+#print LinearRecurrence.eq_mk_of_is_sol_of_eq_init /-
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `∀ n, u n = E.mk_sol init n`. -/
 theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} (h : E.IsSolution u)
@@ -118,7 +129,9 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
             simp only [zero_add]
         rw [eq_mk_of_is_sol_of_eq_init]
 #align linear_recurrence.eq_mk_of_is_sol_of_eq_init LinearRecurrence.eq_mk_of_is_sol_of_eq_init
+-/
 
+#print LinearRecurrence.eq_mk_of_is_sol_of_eq_init' /-
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `u = E.mk_sol init`. This proves that `E.mk_sol init` is the only solution
   of `E` whose first `E.order` values are given by `init`. -/
@@ -126,7 +139,9 @@ theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Fin E.order → α}
     (heq : ∀ n : Fin E.order, u n = init n) : u = E.mkSol init :=
   funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
 #align linear_recurrence.eq_mk_of_is_sol_of_eq_init' LinearRecurrence.eq_mk_of_is_sol_of_eq_init'
+-/
 
+#print LinearRecurrence.solSpace /-
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
 def solSpace : Submodule α (ℕ → α)
     where
@@ -135,13 +150,17 @@ def solSpace : Submodule α (ℕ → α)
   add_mem' u v hu hv n := by simp [mul_add, sum_add_distrib, hu n, hv n]
   smul_mem' a u hu n := by simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl
 #align linear_recurrence.sol_space LinearRecurrence.solSpace
+-/
 
+#print LinearRecurrence.is_sol_iff_mem_solSpace /-
 /-- Defining property of the solution space : `u` is a solution
   iff it belongs to the solution space. -/
 theorem is_sol_iff_mem_solSpace (u : ℕ → α) : E.IsSolution u ↔ u ∈ E.solSpace :=
   Iff.rfl
 #align linear_recurrence.is_sol_iff_mem_sol_space LinearRecurrence.is_sol_iff_mem_solSpace
+-/
 
+#print LinearRecurrence.toInit /-
 /-- The function that maps a solution `u` of `E` to its first
   `E.order` terms as a `linear_equiv`. -/
 def toInit : E.solSpace ≃ₗ[α] Fin E.order → α
@@ -157,7 +176,9 @@ def toInit : E.solSpace ≃ₗ[α] Fin E.order → α
   left_inv u := by ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
   right_inv u := Function.funext_iff.mpr fun n => E.mkSol_eq_init u n
 #align linear_recurrence.to_init LinearRecurrence.toInit
+-/
 
+#print LinearRecurrence.sol_eq_of_eq_init /-
 /-- Two solutions are equal iff they are equal on `range E.order`. -/
 theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSolution v) :
     u = v ↔ Set.EqOn u v ↑(range E.order) :=
@@ -172,12 +193,14 @@ theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSol
   ext x
   exact_mod_cast h (mem_range.mpr x.2)
 #align linear_recurrence.sol_eq_of_eq_init LinearRecurrence.sol_eq_of_eq_init
+-/
 
 /-! `E.tuple_succ` maps `![s₀, s₁, ..., sₙ]` to `![s₁, ..., sₙ, ∑ (E.coeffs i) * sᵢ]`,
   where `n := E.order`. This operation is quite useful for determining closed-form
   solutions of `E`. -/
 
 
+#print LinearRecurrence.tupleSucc /-
 /-- `E.tuple_succ` maps `![s₀, s₁, ..., sₙ]` to `![s₁, ..., sₙ, ∑ (E.coeffs i) * sᵢ]`,
   where `n := E.order`. -/
 def tupleSucc : (Fin E.order → α) →ₗ[α] Fin E.order → α
@@ -191,6 +214,7 @@ def tupleSucc : (Fin E.order → α) →ₗ[α] Fin E.order → α
     split_ifs <;> simp [h, mul_sum]
     exact sum_congr rfl fun x _ => by ac_rfl
 #align linear_recurrence.tuple_succ LinearRecurrence.tupleSucc
+-/
 
 end CommSemiring
 
@@ -200,6 +224,12 @@ section StrongRankCondition
 -- `comm_ring_strong_rank_condition`, is in a much later file.
 variable {α : Type _} [CommRing α] [StrongRankCondition α] (E : LinearRecurrence α)
 
+/- warning: linear_recurrence.sol_space_rank -> LinearRecurrence.solSpace_rank is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : StrongRankCondition.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1))] (E : LinearRecurrence.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)), Eq.{succ (succ u1)} Cardinal.{u1} (Module.rank.{u1, u1} α (coeSort.{succ u1, succ (succ u1)} (Submodule.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.Function.module.{0, u1, u1} Nat α α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submodule.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.Function.module.{0, u1, u1} Nat α α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Nat -> α) (Submodule.setLike.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.Function.module.{0, u1, u1} Nat α α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (LinearRecurrence.solSpace.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E)) (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) (Submodule.addCommMonoid.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.Function.module.{0, u1, u1} Nat α α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))) (LinearRecurrence.solSpace.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E)) (Submodule.module.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.Function.module.{0, u1, u1} Nat α α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))) (LinearRecurrence.solSpace.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E))) ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) (LinearRecurrence.order.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] [_inst_2 : StrongRankCondition.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1))] (E : LinearRecurrence.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)), Eq.{succ (succ u1)} Cardinal.{u1} (Module.rank.{u1, u1} α (Subtype.{succ u1} (Nat -> α) (fun (x : Nat -> α) => Membership.mem.{u1, u1} (Nat -> α) (Submodule.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.module.{0, u1, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (fun (i : Nat) => Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (SetLike.instMembership.{u1, u1} (Submodule.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.module.{0, u1, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (fun (i : Nat) => Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (Nat -> α) (Submodule.setLike.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.module.{0, u1, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (fun (i : Nat) => Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) x (LinearRecurrence.solSpace.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E))) (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) (Submodule.addCommMonoid.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.module.{0, u1, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (fun (i : Nat) => Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))) (LinearRecurrence.solSpace.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E)) (Submodule.module.{u1, u1} α (Nat -> α) (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (Pi.addCommMonoid.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))))) (Pi.module.{0, u1, u1} Nat (fun (a._@.Mathlib.Algebra.LinearRecurrence._hyg.1024 : Nat) => α) α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (fun (i : Nat) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1))))) (fun (i : Nat) => Semiring.toModule.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)))) (LinearRecurrence.solSpace.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E))) (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} (LinearRecurrence.order.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E))
+Case conversion may be inaccurate. Consider using '#align linear_recurrence.sol_space_rank LinearRecurrence.solSpace_rankₓ'. -/
 /-- The dimension of `E.sol_space` is `E.order`. -/
 theorem solSpace_rank : Module.rank α E.solSpace = E.order :=
   letI := nontrivial_of_invariantBasisNumber α
@@ -212,12 +242,20 @@ section CommRing
 
 variable {α : Type _} [CommRing α] (E : LinearRecurrence α)
 
+#print LinearRecurrence.charPoly /-
 /-- The characteristic polynomial of `E` is
 `X ^ E.order - ∑ i : fin E.order, (E.coeffs i) * X ^ i`. -/
 def charPoly : α[X] :=
   Polynomial.monomial E.order 1 - ∑ i : Fin E.order, Polynomial.monomial i (E.coeffs i)
 #align linear_recurrence.char_poly LinearRecurrence.charPoly
+-/
 
+/- warning: linear_recurrence.geom_sol_iff_root_char_poly -> LinearRecurrence.geom_sol_iff_root_charPoly is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] (E : LinearRecurrence.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (q : α), Iff (LinearRecurrence.IsSolution.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E (fun (n : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (Ring.toMonoid.{u1} α (CommRing.toRing.{u1} α _inst_1)))) q n)) (Polynomial.IsRoot.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) (LinearRecurrence.charPoly.{u1} α _inst_1 E) q)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommRing.{u1} α] (E : LinearRecurrence.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1)) (q : α), Iff (LinearRecurrence.IsSolution.{u1} α (CommRing.toCommSemiring.{u1} α _inst_1) E (fun (n : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)))))) q n)) (Polynomial.IsRoot.{u1} α (Ring.toSemiring.{u1} α (CommRing.toRing.{u1} α _inst_1)) (LinearRecurrence.charPoly.{u1} α _inst_1 E) q)
+Case conversion may be inaccurate. Consider using '#align linear_recurrence.geom_sol_iff_root_char_poly LinearRecurrence.geom_sol_iff_root_charPolyₓ'. -/
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=

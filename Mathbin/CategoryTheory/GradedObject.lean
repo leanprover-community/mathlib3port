@@ -39,17 +39,22 @@ namespace CategoryTheory
 
 universe w v u
 
+#print CategoryTheory.GradedObject /-
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`. -/
 def GradedObject (β : Type w) (C : Type u) : Type max w u :=
   β → C
 #align category_theory.graded_object CategoryTheory.GradedObject
+-/
 
+#print CategoryTheory.inhabitedGradedObject /-
 -- Satisfying the inhabited linter...
 instance inhabitedGradedObject (β : Type w) (C : Type u) [Inhabited C] :
     Inhabited (GradedObject β C) :=
   ⟨fun b => Inhabited.default⟩
 #align category_theory.inhabited_graded_object CategoryTheory.inhabitedGradedObject
+-/
 
+#print CategoryTheory.GradedObjectWithShift /-
 -- `s` is here to distinguish type synonyms asking for different shifts
 /-- A type synonym for `β → C`, used for `β`-graded objects in a category `C`
 with a shift functor given by translation by `s`.
@@ -58,15 +63,19 @@ with a shift functor given by translation by `s`.
 abbrev GradedObjectWithShift {β : Type w} [AddCommGroup β] (s : β) (C : Type u) : Type max w u :=
   GradedObject β C
 #align category_theory.graded_object_with_shift CategoryTheory.GradedObjectWithShift
+-/
 
 namespace GradedObject
 
 variable {C : Type u} [Category.{v} C]
 
+#print CategoryTheory.GradedObject.categoryOfGradedObjects /-
 instance categoryOfGradedObjects (β : Type w) : Category.{max w v} (GradedObject β C) :=
   CategoryTheory.pi fun _ => C
 #align category_theory.graded_object.category_of_graded_objects CategoryTheory.GradedObject.categoryOfGradedObjects
+-/
 
+#print CategoryTheory.GradedObject.eval /-
 /-- The projection of a graded object to its `i`-th component. -/
 @[simps]
 def eval {β : Type w} (b : β) : GradedObject β C ⥤ C
@@ -74,11 +83,13 @@ def eval {β : Type w} (b : β) : GradedObject β C ⥤ C
   obj X := X b
   map X Y f := f b
 #align category_theory.graded_object.eval CategoryTheory.GradedObject.eval
+-/
 
 section
 
 variable (C)
 
+#print CategoryTheory.GradedObject.comapEq /-
 /-- The natural isomorphism comparing between
 pulling back along two propositionally equal functions.
 -/
@@ -88,18 +99,24 @@ def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) 
   Hom := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
   inv := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
 #align category_theory.graded_object.comap_eq CategoryTheory.GradedObject.comapEq
+-/
 
+#print CategoryTheory.GradedObject.comapEq_symm /-
 theorem comapEq_symm {β γ : Type w} {f g : β → γ} (h : f = g) :
     comapEq C h.symm = (comapEq C h).symm := by tidy
 #align category_theory.graded_object.comap_eq_symm CategoryTheory.GradedObject.comapEq_symm
+-/
 
+#print CategoryTheory.GradedObject.comapEq_trans /-
 theorem comapEq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
     comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l :=
   by
   ext (X b)
   simp
 #align category_theory.graded_object.comap_eq_trans CategoryTheory.GradedObject.comapEq_trans
+-/
 
+#print CategoryTheory.GradedObject.eqToHom_apply /-
 @[simp]
 theorem eqToHom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
     (eqToHom h : X ⟶ Y) b = eqToHom (by subst h) :=
@@ -107,7 +124,14 @@ theorem eqToHom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
   subst h
   rfl
 #align category_theory.graded_object.eq_to_hom_apply CategoryTheory.GradedObject.eqToHom_apply
+-/
 
+/- warning: category_theory.graded_object.comap_equiv -> CategoryTheory.GradedObject.comapEquiv is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] {β : Type.{u1}} {γ : Type.{u1}}, (Equiv.{succ u1, succ u1} β γ) -> (CategoryTheory.Equivalence.{max u1 u2, max u1 u2, max u1 u3, max u1 u3} (CategoryTheory.GradedObject.{u1, u3} β C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.GradedObject.{u1, u3} γ C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 γ))
+but is expected to have type
+  forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] {β : Type.{u1}} {γ : Type.{u1}}, (Equiv.{succ u1, succ u1} β γ) -> (CategoryTheory.Equivalence.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (CategoryTheory.GradedObject.{u1, u3} β C) (CategoryTheory.GradedObject.{u1, u3} γ C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 γ))
+Case conversion may be inaccurate. Consider using '#align category_theory.graded_object.comap_equiv CategoryTheory.GradedObject.comapEquivₓ'. -/
 /-- The equivalence between β-graded objects and γ-graded objects,
 given an equivalence between β and γ.
 -/
@@ -137,6 +161,12 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
 -- See note [dsimp, simp].
 end
 
+/- warning: category_theory.graded_object.has_shift -> CategoryTheory.GradedObject.hasShift is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {β : Type.{u3}} [_inst_2 : AddCommGroup.{u3} β] (s : β), CategoryTheory.HasShift.{max u3 u1, max u3 u2, 0} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) Int.addMonoid
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {β : Type.{u3}} [_inst_2 : AddCommGroup.{u3} β] (s : β), CategoryTheory.HasShift.{max u1 u3, max u2 u3, 0} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) Int.instAddMonoidInt
+Case conversion may be inaccurate. Consider using '#align category_theory.graded_object.has_shift CategoryTheory.GradedObject.hasShiftₓ'. -/
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => comap (fun _ => C) fun b : β => b + n • s
@@ -166,12 +196,24 @@ instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObj
         simpa }
 #align category_theory.graded_object.has_shift CategoryTheory.GradedObject.hasShift
 
+/- warning: category_theory.graded_object.shift_functor_obj_apply -> CategoryTheory.GradedObject.shiftFunctor_obj_apply is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {β : Type.{u3}} [_inst_2 : AddCommGroup.{u3} β] (s : β) (X : β -> C) (t : β) (n : Int), Eq.{succ u2} C (CategoryTheory.Functor.obj.{max u3 u1, max u3 u1, max u3 u2, max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u3 u1, max u3 u2, 0} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) Int.addMonoid (CategoryTheory.GradedObject.hasShift.{u1, u2, u3} C _inst_1 β _inst_2 s) n) X t) (X (HAdd.hAdd.{u3, u3, u3} β β β (instHAdd.{u3} β (AddZeroClass.toHasAdd.{u3} β (AddMonoid.toAddZeroClass.{u3} β (SubNegMonoid.toAddMonoid.{u3} β (AddGroup.toSubNegMonoid.{u3} β (AddCommGroup.toAddGroup.{u3} β _inst_2)))))) t (SMul.smul.{0, u3} Int β (SubNegMonoid.SMulInt.{u3} β (AddGroup.toSubNegMonoid.{u3} β (AddCommGroup.toAddGroup.{u3} β _inst_2))) n s)))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {β : Type.{u1}} [_inst_2 : AddCommGroup.{u1} β] (s : β) (X : β -> C) (t : β) (n : Int), Eq.{succ u3} C (Prefunctor.obj.{max (succ u2) (succ u1), max (succ u2) (succ u1), max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u2 u1, max u3 u1, 0} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) Int.instAddMonoidInt (CategoryTheory.GradedObject.hasShift.{u2, u3, u1} C _inst_1 β _inst_2 s) n)) X t) (X (HAdd.hAdd.{u1, u1, u1} β β β (instHAdd.{u1} β (AddZeroClass.toAdd.{u1} β (AddMonoid.toAddZeroClass.{u1} β (SubNegMonoid.toAddMonoid.{u1} β (AddGroup.toSubNegMonoid.{u1} β (AddCommGroup.toAddGroup.{u1} β _inst_2)))))) t (HSMul.hSMul.{0, u1, u1} Int β β (instHSMul.{0, u1} Int β (SubNegMonoid.SMulInt.{u1} β (AddGroup.toSubNegMonoid.{u1} β (AddCommGroup.toAddGroup.{u1} β _inst_2)))) n s)))
+Case conversion may be inaccurate. Consider using '#align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shiftFunctor_obj_applyₓ'. -/
 @[simp]
 theorem shiftFunctor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
 #align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shiftFunctor_obj_apply
 
+/- warning: category_theory.graded_object.shift_functor_map_apply -> CategoryTheory.GradedObject.shiftFunctor_map_apply is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {β : Type.{u3}} [_inst_2 : AddCommGroup.{u3} β] (s : β) {X : CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C} {Y : CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C} (f : Quiver.Hom.{succ (max u3 u1), max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u1, max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β))) X Y) (t : β) (n : Int), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} ((fun (_x : β) => C) t) (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} ((fun (_x : β) => C) t) (CategoryTheory.Category.toCategoryStruct.{u1, u2} ((fun (_x : β) => C) t) ((fun (i : β) => _inst_1) t))) (CategoryTheory.Functor.obj.{max u3 u1, max u3 u1, max u3 u2, max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u3 u1, max u3 u2, 0} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) Int.addMonoid (CategoryTheory.GradedObject.hasShift.{u1, u2, u3} C _inst_1 β _inst_2 s) n) X t) (CategoryTheory.Functor.obj.{max u3 u1, max u3 u1, max u3 u2, max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u3 u1, max u3 u2, 0} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) Int.addMonoid (CategoryTheory.GradedObject.hasShift.{u1, u2, u3} C _inst_1 β _inst_2 s) n) Y t)) (CategoryTheory.Functor.map.{max u3 u1, max u3 u1, max u3 u2, max u3 u2} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u3 u1, max u3 u2, 0} (CategoryTheory.GradedObjectWithShift.{u3, u2} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u3, u1, u2} C _inst_1 β) Int.addMonoid (CategoryTheory.GradedObject.hasShift.{u1, u2, u3} C _inst_1 β _inst_2 s) n) X Y f t) (f (HAdd.hAdd.{u3, u3, u3} β β β (instHAdd.{u3} β (AddZeroClass.toHasAdd.{u3} β (AddMonoid.toAddZeroClass.{u3} β (SubNegMonoid.toAddMonoid.{u3} β (AddGroup.toSubNegMonoid.{u3} β (AddCommGroup.toAddGroup.{u3} β _inst_2)))))) t (SMul.smul.{0, u3} Int β (SubNegMonoid.SMulInt.{u3} β (AddGroup.toSubNegMonoid.{u3} β (AddCommGroup.toAddGroup.{u3} β _inst_2))) n s)))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {β : Type.{u1}} [_inst_2 : AddCommGroup.{u1} β] (s : β) {X : CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C} {Y : CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C} (f : Quiver.Hom.{max (succ u2) (succ u1), max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) X Y) (t : β) (n : Int), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} ((fun (_x : β) => C) t) (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} ((fun (_x : β) => C) t) (CategoryTheory.Category.toCategoryStruct.{u2, u3} ((fun (_x : β) => C) t) ((fun (i : β) => _inst_1) t))) (Prefunctor.obj.{max (succ u2) (succ u1), max (succ u2) (succ u1), max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u2 u1, max u3 u1, 0} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) Int.instAddMonoidInt (CategoryTheory.GradedObject.hasShift.{u2, u3, u1} C _inst_1 β _inst_2 s) n)) X t) (Prefunctor.obj.{max (succ u2) (succ u1), max (succ u2) (succ u1), max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u2 u1, max u3 u1, 0} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) Int.instAddMonoidInt (CategoryTheory.GradedObject.hasShift.{u2, u3, u1} C _inst_1 β _inst_2 s) n)) Y t)) (Prefunctor.map.{max (succ u2) (succ u1), max (succ u2) (succ u1), max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β))) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) (CategoryTheory.shiftFunctor.{max u2 u1, max u3 u1, 0} (CategoryTheory.GradedObjectWithShift.{u1, u3} β _inst_2 s C) Int (CategoryTheory.GradedObject.categoryOfGradedObjects.{u1, u2, u3} C _inst_1 β) Int.instAddMonoidInt (CategoryTheory.GradedObject.hasShift.{u2, u3, u1} C _inst_1 β _inst_2 s) n)) X Y f t) (f (HAdd.hAdd.{u1, u1, u1} β β β (instHAdd.{u1} β (AddZeroClass.toAdd.{u1} β (AddMonoid.toAddZeroClass.{u1} β (SubNegMonoid.toAddMonoid.{u1} β (AddGroup.toSubNegMonoid.{u1} β (AddCommGroup.toAddGroup.{u1} β _inst_2)))))) t (HSMul.hSMul.{0, u1, u1} Int β β (instHSMul.{0, u1} Int β (SubNegMonoid.SMulInt.{u1} β (AddGroup.toSubNegMonoid.{u1} β (AddCommGroup.toAddGroup.{u1} β _inst_2)))) n s)))
+Case conversion may be inaccurate. Consider using '#align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shiftFunctor_map_applyₓ'. -/
 @[simp]
 theorem shiftFunctor_map_apply {β : Type _} [AddCommGroup β] (s : β)
     {X Y : GradedObjectWithShift s C} (f : X ⟶ Y) (t : β) (n : ℤ) :
@@ -179,20 +221,25 @@ theorem shiftFunctor_map_apply {β : Type _} [AddCommGroup β] (s : β)
   rfl
 #align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shiftFunctor_map_apply
 
+#print CategoryTheory.GradedObject.hasZeroMorphisms /-
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
     HasZeroMorphisms.{max w v} (GradedObject β C) where Zero X Y := { zero := fun b => 0 }
 #align category_theory.graded_object.has_zero_morphisms CategoryTheory.GradedObject.hasZeroMorphisms
+-/
 
+#print CategoryTheory.GradedObject.zero_apply /-
 @[simp]
 theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) (b : β) :
     (0 : X ⟶ Y) b = 0 :=
   rfl
 #align category_theory.graded_object.zero_apply CategoryTheory.GradedObject.zero_apply
+-/
 
 section
 
 open ZeroObject
 
+#print CategoryTheory.GradedObject.hasZeroObject /-
 instance hasZeroObject [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
     HasZeroObject.{max w v} (GradedObject β C) := by
   refine'
@@ -200,6 +247,7 @@ instance hasZeroObject [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
           ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩⟩⟩ <;>
     ext
 #align category_theory.graded_object.has_zero_object CategoryTheory.GradedObject.hasZeroObject
+-/
 
 end
 
@@ -220,6 +268,7 @@ section
 
 attribute [local tidy] tactic.discrete_cases
 
+#print CategoryTheory.GradedObject.total /-
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
 noncomputable def total : GradedObject β C ⥤ C
@@ -227,6 +276,7 @@ noncomputable def total : GradedObject β C ⥤ C
   obj X := ∐ fun i : β => X i
   map X Y f := Limits.Sigma.map fun i => f i
 #align category_theory.graded_object.total CategoryTheory.GradedObject.total
+-/
 
 end
 

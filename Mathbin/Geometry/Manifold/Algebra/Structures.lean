@@ -37,30 +37,30 @@ class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [Topo
   smooth_mul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
 #align smooth_ring SmoothRing
 
-instance SmoothRing.to_hasSmoothMul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R]
+instance SmoothRing.toHasSmoothMul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R]
     [TopologicalSpace R] [ChartedSpace H R] [h : SmoothRing I R] : HasSmoothMul I R :=
   { h with }
-#align smooth_ring.to_has_smooth_mul SmoothRing.to_hasSmoothMul
+#align smooth_ring.to_has_smooth_mul SmoothRing.toHasSmoothMul
 
-instance SmoothRing.to_lieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) [Ring R]
+instance SmoothRing.toLieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) [Ring R]
     [TopologicalSpace R] [ChartedSpace H R] [SmoothRing I R] : LieAddGroup I R
     where
   compatible e e' := HasGroupoid.compatible (contDiffGroupoid ⊤ I)
   smooth_add := smooth_add I
   smooth_neg := by simpa only [neg_one_mul] using @smooth_mul_left 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
-#align smooth_ring.to_lie_add_group SmoothRing.to_lieAddGroup
+#align smooth_ring.to_lie_add_group SmoothRing.toLieAddGroup
 
 end SmoothRing
 
-instance field_smoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
-  { normedSpace_lieAddGroup with
+instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
+  { normedSpaceLieAddGroup with
     smooth_mul := by
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
       simp only [Prod.mk.eta, mfld_simps]
       rw [contDiffOn_univ]
       exact contDiff_mul }
-#align field_smooth_ring field_smoothRing
+#align field_smooth_ring fieldSmoothRing
 
 variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NontriviallyNormedField 𝕜]
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] [ChartedSpace H R] (I : ModelWithCorners 𝕜 E H)

@@ -165,6 +165,7 @@ We use primes in the structure names as we will reformulate them below (without 
 -/
 
 
+#print StructureGroupoid /-
 /-- A structure groupoid is a set of local homeomorphisms of a topological space stable under
 composition and inverse. They appear in the definition of the smoothness class of a manifold. -/
 structure StructureGroupoid (H : Type u) [TopologicalSpace H] where
@@ -177,36 +178,52 @@ structure StructureGroupoid (H : Type u) [TopologicalSpace H] where
       (∀ x ∈ e.source, ∃ s, IsOpen s ∧ x ∈ s ∧ e.restr s ∈ members) → e ∈ members
   eq_on_source' : ∀ e e' : LocalHomeomorph H H, e ∈ members → e' ≈ e → e' ∈ members
 #align structure_groupoid StructureGroupoid
+-/
 
 variable [TopologicalSpace H]
 
 instance : Membership (LocalHomeomorph H H) (StructureGroupoid H) :=
   ⟨fun (e : LocalHomeomorph H H) (G : StructureGroupoid H) => e ∈ G.members⟩
 
+#print StructureGroupoid.trans /-
 theorem StructureGroupoid.trans (G : StructureGroupoid H) {e e' : LocalHomeomorph H H} (he : e ∈ G)
     (he' : e' ∈ G) : e ≫ₕ e' ∈ G :=
   G.trans' e e' he he'
 #align structure_groupoid.trans StructureGroupoid.trans
+-/
 
+#print StructureGroupoid.symm /-
 theorem StructureGroupoid.symm (G : StructureGroupoid H) {e : LocalHomeomorph H H} (he : e ∈ G) :
     e.symm ∈ G :=
   G.symm' e he
 #align structure_groupoid.symm StructureGroupoid.symm
+-/
 
+#print StructureGroupoid.id_mem /-
 theorem StructureGroupoid.id_mem (G : StructureGroupoid H) : LocalHomeomorph.refl H ∈ G :=
   G.id_mem'
 #align structure_groupoid.id_mem StructureGroupoid.id_mem
+-/
 
+#print StructureGroupoid.locality /-
 theorem StructureGroupoid.locality (G : StructureGroupoid H) {e : LocalHomeomorph H H}
     (h : ∀ x ∈ e.source, ∃ s, IsOpen s ∧ x ∈ s ∧ e.restr s ∈ G) : e ∈ G :=
   G.locality' e h
 #align structure_groupoid.locality StructureGroupoid.locality
+-/
 
+/- warning: structure_groupoid.eq_on_source -> StructureGroupoid.eq_on_source is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (G : StructureGroupoid.{u1} H _inst_1) {e : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1} {e' : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1}, (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) e G) -> (HasEquivₓ.Equiv.{succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (setoidHasEquiv.{succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (LocalHomeomorph.setoid.{u1, u1} H H _inst_1 _inst_1)) e' e) -> (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) e' G)
+but is expected to have type
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (G : StructureGroupoid.{u1} H _inst_1) {e : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1} {e' : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1}, (Membership.mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u1} H _inst_1) e G) -> (HasEquiv.Equiv.{succ u1, 0} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (instHasEquiv.{succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (LocalHomeomorph.eqOnSourceSetoid.{u1, u1} H H _inst_1 _inst_1)) e' e) -> (Membership.mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u1} H _inst_1) e' G)
+Case conversion may be inaccurate. Consider using '#align structure_groupoid.eq_on_source StructureGroupoid.eq_on_sourceₓ'. -/
 theorem StructureGroupoid.eq_on_source (G : StructureGroupoid H) {e e' : LocalHomeomorph H H}
     (he : e ∈ G) (h : e' ≈ e) : e' ∈ G :=
   G.eq_on_source' e e' he h
 #align structure_groupoid.eq_on_source StructureGroupoid.eq_on_source
 
+#print StructureGroupoid.partialOrder /-
 /-- Partial order on the set of groupoids, given by inclusion of the members of the groupoid -/
 instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
   PartialOrder.lift StructureGroupoid.members fun a b h =>
@@ -217,11 +234,15 @@ instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
     induction h
     rfl
 #align structure_groupoid.partial_order StructureGroupoid.partialOrder
+-/
 
+#print StructureGroupoid.le_iff /-
 theorem StructureGroupoid.le_iff {G₁ G₂ : StructureGroupoid H} : G₁ ≤ G₂ ↔ ∀ e, e ∈ G₁ → e ∈ G₂ :=
   Iff.rfl
 #align structure_groupoid.le_iff StructureGroupoid.le_iff
+-/
 
+#print idGroupoid /-
 /-- The trivial groupoid, containing only the identity (and maps with empty source, as this is
 necessary from the definition) -/
 def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
@@ -278,6 +299,7 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
       change e.to_local_equiv.source = ∅ at he
       rwa [Set.mem_setOf_eq, he'e.source_eq]
 #align id_groupoid idGroupoid
+-/
 
 /-- Every structure groupoid contains the identity groupoid -/
 instance : OrderBot (StructureGroupoid H)
@@ -298,6 +320,7 @@ instance : OrderBot (StructureGroupoid H)
 instance (H : Type u) [TopologicalSpace H] : Inhabited (StructureGroupoid H) :=
   ⟨idGroupoid H⟩
 
+#print Pregroupoid /-
 /-- To construct a groupoid, one may consider classes of local homeos such that both the function
 and its inverse have some property. If this property is stable under composition,
 one gets a groupoid. `pregroupoid` bundles the properties needed for this construction, with the
@@ -313,7 +336,9 @@ structure Pregroupoid (H : Type _) [TopologicalSpace H] where
     ∀ {f u}, IsOpen u → (∀ x ∈ u, ∃ v, IsOpen v ∧ x ∈ v ∧ property f (u ∩ v)) → property f u
   congr : ∀ {f g : H → H} {u}, IsOpen u → (∀ x ∈ u, g x = f x) → property f u → property g u
 #align pregroupoid Pregroupoid
+-/
 
+#print Pregroupoid.groupoid /-
 /-- Construct a groupoid of local homeos for which the map and its inverse have some property,
 from a pregroupoid asserting that this property is stable under composition. -/
 def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H
@@ -353,12 +378,16 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H
       rw [A.1]
       rfl
 #align pregroupoid.groupoid Pregroupoid.groupoid
+-/
 
+#print mem_groupoid_of_pregroupoid /-
 theorem mem_groupoid_of_pregroupoid {PG : Pregroupoid H} {e : LocalHomeomorph H H} :
     e ∈ PG.groupoid ↔ PG.property e e.source ∧ PG.property e.symm e.target :=
   Iff.rfl
 #align mem_groupoid_of_pregroupoid mem_groupoid_of_pregroupoid
+-/
 
+#print groupoid_of_pregroupoid_le /-
 theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
     (h : ∀ f s, PG₁.property f s → PG₂.property f s) : PG₁.groupoid ≤ PG₂.groupoid :=
   by
@@ -366,7 +395,14 @@ theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
   rw [mem_groupoid_of_pregroupoid] at he⊢
   exact ⟨h _ _ he.1, h _ _ he.2⟩
 #align groupoid_of_pregroupoid_le groupoid_of_pregroupoid_le
+-/
 
+/- warning: mem_pregroupoid_of_eq_on_source -> mem_pregroupoid_of_eq_on_source is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (PG : Pregroupoid.{u1} H _inst_1) {e : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1} {e' : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1}, (HasEquivₓ.Equiv.{succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (setoidHasEquiv.{succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (LocalHomeomorph.setoid.{u1, u1} H H _inst_1 _inst_1)) e e') -> (Pregroupoid.Property.{u1} H _inst_1 PG (coeFn.{succ u1, succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (fun (_x : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) => H -> H) (LocalHomeomorph.hasCoeToFun.{u1, u1} H H _inst_1 _inst_1) e) (LocalEquiv.source.{u1, u1} H H (LocalHomeomorph.toLocalEquiv.{u1, u1} H H _inst_1 _inst_1 e))) -> (Pregroupoid.Property.{u1} H _inst_1 PG (coeFn.{succ u1, succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (fun (_x : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) => H -> H) (LocalHomeomorph.hasCoeToFun.{u1, u1} H H _inst_1 _inst_1) e') (LocalEquiv.source.{u1, u1} H H (LocalHomeomorph.toLocalEquiv.{u1, u1} H H _inst_1 _inst_1 e')))
+but is expected to have type
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (PG : Pregroupoid.{u1} H _inst_1) {e : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1} {e' : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1}, (HasEquiv.Equiv.{succ u1, 0} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (instHasEquiv.{succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (LocalHomeomorph.eqOnSourceSetoid.{u1, u1} H H _inst_1 _inst_1)) e e') -> (Pregroupoid.property.{u1} H _inst_1 PG (LocalHomeomorph.toFun'.{u1, u1} H H _inst_1 _inst_1 e) (LocalEquiv.source.{u1, u1} H H (LocalHomeomorph.toLocalEquiv.{u1, u1} H H _inst_1 _inst_1 e))) -> (Pregroupoid.property.{u1} H _inst_1 PG (LocalHomeomorph.toFun'.{u1, u1} H H _inst_1 _inst_1 e') (LocalEquiv.source.{u1, u1} H H (LocalHomeomorph.toLocalEquiv.{u1, u1} H H _inst_1 _inst_1 e')))
+Case conversion may be inaccurate. Consider using '#align mem_pregroupoid_of_eq_on_source mem_pregroupoid_of_eq_on_sourceₓ'. -/
 theorem mem_pregroupoid_of_eq_on_source (PG : Pregroupoid H) {e e' : LocalHomeomorph H H}
     (he' : e ≈ e') (he : PG.property e e.source) : PG.property e' e'.source :=
   by
@@ -374,6 +410,7 @@ theorem mem_pregroupoid_of_eq_on_source (PG : Pregroupoid H) {e e' : LocalHomeom
   exact PG.congr e.open_source he'.eq_on.symm he
 #align mem_pregroupoid_of_eq_on_source mem_pregroupoid_of_eq_on_source
 
+#print continuousPregroupoid /-
 /-- The pregroupoid of all local maps on a topological space `H` -/
 @[reducible]
 def continuousPregroupoid (H : Type _) [TopologicalSpace H] : Pregroupoid H
@@ -384,14 +421,17 @@ def continuousPregroupoid (H : Type _) [TopologicalSpace H] : Pregroupoid H
   locality f u u_open h := trivial
   congr f g u u_open hcongr hf := trivial
 #align continuous_pregroupoid continuousPregroupoid
+-/
 
 instance (H : Type _) [TopologicalSpace H] : Inhabited (Pregroupoid H) :=
   ⟨continuousPregroupoid H⟩
 
+#print continuousGroupoid /-
 /-- The groupoid of all local homeomorphisms on a topological space `H` -/
 def continuousGroupoid (H : Type _) [TopologicalSpace H] : StructureGroupoid H :=
   Pregroupoid.groupoid (continuousPregroupoid H)
 #align continuous_groupoid continuousGroupoid
+-/
 
 /-- Every structure groupoid is contained in the groupoid of all local homeomorphisms -/
 instance : OrderTop (StructureGroupoid H)
@@ -399,18 +439,23 @@ instance : OrderTop (StructureGroupoid H)
   top := continuousGroupoid H
   le_top u f hf := by constructor <;> exact by decide
 
+#print ClosedUnderRestriction /-
 /-- A groupoid is closed under restriction if it contains all restrictions of its element local
 homeomorphisms to open subsets of the source. -/
 class ClosedUnderRestriction (G : StructureGroupoid H) : Prop where
   ClosedUnderRestriction :
     ∀ {e : LocalHomeomorph H H}, e ∈ G → ∀ s : Set H, IsOpen s → e.restr s ∈ G
 #align closed_under_restriction ClosedUnderRestriction
+-/
 
+#print closed_under_restriction' /-
 theorem closed_under_restriction' {G : StructureGroupoid H} [ClosedUnderRestriction G]
     {e : LocalHomeomorph H H} (he : e ∈ G) {s : Set H} (hs : IsOpen s) : e.restr s ∈ G :=
   ClosedUnderRestriction.closedUnderRestriction he s hs
 #align closed_under_restriction' closed_under_restriction'
+-/
 
+#print idRestrGroupoid /-
 /-- The trivial restriction-closed groupoid, containing only local homeomorphisms equivalent to the
 restriction of the identity to the various open subsets. -/
 def idRestrGroupoid : StructureGroupoid H
@@ -442,11 +487,15 @@ def idRestrGroupoid : StructureGroupoid H
     rintro e e' ⟨s, hs, hse⟩ hee'
     exact ⟨s, hs, Setoid.trans hee' hse⟩
 #align id_restr_groupoid idRestrGroupoid
+-/
 
+#print idRestrGroupoid_mem /-
 theorem idRestrGroupoid_mem {s : Set H} (hs : IsOpen s) : ofSet s hs ∈ @idRestrGroupoid H _ :=
   ⟨s, hs, by rfl⟩
 #align id_restr_groupoid_mem idRestrGroupoid_mem
+-/
 
+#print closedUnderRestriction_idRestrGroupoid /-
 /-- The trivial restriction-closed groupoid is indeed `closed_under_restriction`. -/
 instance closedUnderRestriction_idRestrGroupoid : ClosedUnderRestriction (@idRestrGroupoid H _) :=
   ⟨by
@@ -455,7 +504,9 @@ instance closedUnderRestriction_idRestrGroupoid : ClosedUnderRestriction (@idRes
     refine' Setoid.trans (LocalHomeomorph.EqOnSource.restr he s) _
     exact ⟨by simp only [hs.interior_eq, mfld_simps], by simp only [mfld_simps]⟩⟩
 #align closed_under_restriction_id_restr_groupoid closedUnderRestriction_idRestrGroupoid
+-/
 
+#print closedUnderRestriction_iff_id_le /-
 /-- A groupoid is closed under restriction if and only if it contains the trivial restriction-closed
 groupoid. -/
 theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
@@ -478,6 +529,7 @@ theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
     apply structure_groupoid.le_iff.mp h
     exact idRestrGroupoid_mem hs
 #align closed_under_restriction_iff_id_le closedUnderRestriction_iff_id_le
+-/
 
 /-- The groupoid of all local homeomorphisms on a topological space `H` is closed under restriction.
 -/
@@ -489,6 +541,7 @@ end Groupoid
 /-! ### Charted spaces -/
 
 
+#print ChartedSpace /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`atlas] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`chartAt] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] [] -/
@@ -509,6 +562,7 @@ class ChartedSpace (H : Type _) [TopologicalSpace H] (M : Type _) [TopologicalSp
   mem_chart_source : ∀ x, x ∈ (chart_at x).source
   chart_mem_atlas : ∀ x, chart_at x ∈ atlas
 #align charted_space ChartedSpace
+-/
 
 export ChartedSpace ()
 
@@ -516,6 +570,7 @@ attribute [simp, mfld_simps] mem_chart_source chart_mem_atlas
 
 section ChartedSpace
 
+#print chartedSpaceSelf /-
 /-- Any space is a charted_space modelled over itself, by just using the identity chart -/
 instance chartedSpaceSelf (H : Type _) [TopologicalSpace H] : ChartedSpace H H
     where
@@ -524,62 +579,117 @@ instance chartedSpaceSelf (H : Type _) [TopologicalSpace H] : ChartedSpace H H
   mem_chart_source x := mem_univ x
   chart_mem_atlas x := mem_singleton _
 #align charted_space_self chartedSpaceSelf
+-/
 
+#print chartedSpaceSelf_atlas /-
 /-- In the trivial charted_space structure of a space modelled over itself through the identity, the
 atlas members are just the identity -/
 @[simp, mfld_simps]
 theorem chartedSpaceSelf_atlas {H : Type _} [TopologicalSpace H] {e : LocalHomeomorph H H} :
     e ∈ atlas H H ↔ e = LocalHomeomorph.refl H := by simp [atlas, ChartedSpace.atlas]
 #align charted_space_self_atlas chartedSpaceSelf_atlas
+-/
 
+#print chartAt_self_eq /-
 /-- In the model space, chart_at is always the identity -/
 theorem chartAt_self_eq {H : Type _} [TopologicalSpace H] {x : H} :
     chartAt H x = LocalHomeomorph.refl H := by simpa using chart_mem_atlas H x
 #align chart_at_self_eq chartAt_self_eq
+-/
 
 section
 
 variable (H) [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
+/- warning: mem_chart_target -> mem_chart_target is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Membership.Mem.{u1, u1} H (Set.{u1} H) (Set.hasMem.{u1} H) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (fun (_x : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) => M -> H) (LocalHomeomorph.hasCoeToFun.{u2, u1} M H _inst_2 _inst_1) (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x) x) (LocalEquiv.target.{u2, u1} M H (LocalHomeomorph.toLocalEquiv.{u2, u1} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x)))
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Membership.mem.{u2, u2} H (Set.{u2} H) (Set.instMembershipSet.{u2} H) (LocalHomeomorph.toFun'.{u1, u2} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x) x) (LocalEquiv.target.{u1, u2} M H (LocalHomeomorph.toLocalEquiv.{u1, u2} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x)))
+Case conversion may be inaccurate. Consider using '#align mem_chart_target mem_chart_targetₓ'. -/
 theorem mem_chart_target (x : M) : chartAt H x x ∈ (chartAt H x).target :=
   (chartAt H x).map_source (mem_chart_source _ _)
 #align mem_chart_target mem_chart_target
 
+/- warning: chart_source_mem_nhds -> chart_source_mem_nhds is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Membership.Mem.{u2, u2} (Set.{u2} M) (Filter.{u2} M) (Filter.hasMem.{u2} M) (LocalEquiv.source.{u2, u1} M H (LocalHomeomorph.toLocalEquiv.{u2, u1} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x))) (nhds.{u2} M _inst_2 x)
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Membership.mem.{u1, u1} (Set.{u1} M) (Filter.{u1} M) (instMembershipSetFilter.{u1} M) (LocalEquiv.source.{u1, u2} M H (LocalHomeomorph.toLocalEquiv.{u1, u2} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x))) (nhds.{u1} M _inst_2 x)
+Case conversion may be inaccurate. Consider using '#align chart_source_mem_nhds chart_source_mem_nhdsₓ'. -/
 theorem chart_source_mem_nhds (x : M) : (chartAt H x).source ∈ 𝓝 x :=
   (chartAt H x).open_source.mem_nhds <| mem_chart_source H x
 #align chart_source_mem_nhds chart_source_mem_nhds
 
+/- warning: chart_target_mem_nhds -> chart_target_mem_nhds is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Membership.Mem.{u1, u1} (Set.{u1} H) (Filter.{u1} H) (Filter.hasMem.{u1} H) (LocalEquiv.target.{u2, u1} M H (LocalHomeomorph.toLocalEquiv.{u2, u1} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x))) (nhds.{u1} H _inst_1 (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (fun (_x : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) => M -> H) (LocalHomeomorph.hasCoeToFun.{u2, u1} M H _inst_2 _inst_1) (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x) x))
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Membership.mem.{u2, u2} (Set.{u2} H) (Filter.{u2} H) (instMembershipSetFilter.{u2} H) (LocalEquiv.target.{u1, u2} M H (LocalHomeomorph.toLocalEquiv.{u1, u2} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x))) (nhds.{u2} H _inst_1 (LocalHomeomorph.toFun'.{u1, u2} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x) x))
+Case conversion may be inaccurate. Consider using '#align chart_target_mem_nhds chart_target_mem_nhdsₓ'. -/
 theorem chart_target_mem_nhds (x : M) : (chartAt H x).target ∈ 𝓝 (chartAt H x x) :=
   (chartAt H x).open_target.mem_nhds <| mem_chart_target H x
 #align chart_target_mem_nhds chart_target_mem_nhds
 
+#print achart /-
 /-- `achart H x` is the chart at `x`, considered as an element of the atlas.
 Especially useful for working with `basic_smooth_vector_bundle_core` -/
 def achart (x : M) : atlas H M :=
   ⟨chartAt H x, chart_mem_atlas H x⟩
 #align achart achart
+-/
 
+/- warning: achart_def -> achart_def is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Eq.{succ (max u2 u1)} (coeSort.{succ (max u2 u1), succ (succ (max u2 u1))} (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) Type.{max u2 u1} (Set.hasCoeToSort.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (achart.{u1, u2} H M _inst_1 _inst_2 _inst_3 x) (Subtype.mk.{succ (max u2 u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) => Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x) (ChartedSpace.chart_mem_atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3 x))
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Eq.{max (succ u2) (succ u1)} (Set.Elem.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) (achart.{u2, u1} H M _inst_1 _inst_2 _inst_3 x) (Subtype.mk.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) => Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x) (ChartedSpace.chart_mem_atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3 x))
+Case conversion may be inaccurate. Consider using '#align achart_def achart_defₓ'. -/
 theorem achart_def (x : M) : achart H x = ⟨chartAt H x, chart_mem_atlas H x⟩ :=
   rfl
 #align achart_def achart_def
 
+/- warning: coe_achart -> coe_achart is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) ((fun (a : Type.{max u2 u1}) (b : Sort.{max (succ u2) (succ u1)}) [self : HasLiftT.{succ (max u2 u1), max (succ u2) (succ u1)} a b] => self.0) (coeSort.{succ (max u2 u1), succ (succ (max u2 u1))} (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) Type.{max u2 u1} (Set.hasCoeToSort.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (HasLiftT.mk.{succ (max u2 u1), max (succ u2) (succ u1)} (coeSort.{succ (max u2 u1), succ (succ (max u2 u1))} (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) Type.{max u2 u1} (Set.hasCoeToSort.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (CoeTCₓ.coe.{succ (max u2 u1), max (succ u2) (succ u1)} (coeSort.{succ (max u2 u1), succ (succ (max u2 u1))} (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) Type.{max u2 u1} (Set.hasCoeToSort.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (coeBase.{succ (max u2 u1), max (succ u2) (succ u1)} (coeSort.{succ (max u2 u1), succ (succ (max u2 u1))} (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) Type.{max u2 u1} (Set.hasCoeToSort.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (coeSubtype.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) => Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)))))) (achart.{u1, u2} H M _inst_1 _inst_2 _inst_3 x)) (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x)
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Subtype.val.{succ (max u2 u1)} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) => Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) (achart.{u2, u1} H M _inst_1 _inst_2 _inst_3 x)) (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x)
+Case conversion may be inaccurate. Consider using '#align coe_achart coe_achartₓ'. -/
 @[simp, mfld_simps]
 theorem coe_achart (x : M) : (achart H x : LocalHomeomorph M H) = chartAt H x :=
   rfl
 #align coe_achart coe_achart
 
+/- warning: achart_val -> achart_val is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Subtype.val.{succ (max u2 u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) => Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (achart.{u1, u2} H M _inst_1 _inst_2 _inst_3 x)) (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x)
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Subtype.val.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) => Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) (achart.{u2, u1} H M _inst_1 _inst_2 _inst_3 x)) (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x)
+Case conversion may be inaccurate. Consider using '#align achart_val achart_valₓ'. -/
 @[simp, mfld_simps]
 theorem achart_val (x : M) : (achart H x).1 = chartAt H x :=
   rfl
 #align achart_val achart_val
 
+/- warning: mem_achart_source -> mem_achart_source is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (x : M), Membership.Mem.{u2, u2} M (Set.{u2} M) (Set.hasMem.{u2} M) x (LocalEquiv.source.{u2, u1} M H (LocalHomeomorph.toLocalEquiv.{u2, u1} M H _inst_2 _inst_1 (Subtype.val.{succ (max u2 u1)} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) => Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) (achart.{u1, u2} H M _inst_1 _inst_2 _inst_3 x))))
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (x : M), Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x (LocalEquiv.source.{u1, u2} M H (LocalHomeomorph.toLocalEquiv.{u1, u2} M H _inst_2 _inst_1 (Subtype.val.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (fun (x : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) => Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) x (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) (achart.{u2, u1} H M _inst_1 _inst_2 _inst_3 x))))
+Case conversion may be inaccurate. Consider using '#align mem_achart_source mem_achart_sourceₓ'. -/
 theorem mem_achart_source (x : M) : x ∈ (achart H x).1.source :=
   mem_chart_source H x
 #align mem_achart_source mem_achart_source
 
 open TopologicalSpace
 
-theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopology H] {s : Set M}
+/- warning: charted_space.second_countable_of_countable_cover -> ChartedSpace.secondCountable_of_countable_cover is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] [_inst_4 : TopologicalSpace.SecondCountableTopology.{u1} H _inst_1] {s : Set.{u2} M}, (Eq.{succ u2} (Set.{u2} M) (Set.unionᵢ.{u2, succ u2} M M (fun (x : M) => Set.unionᵢ.{u2, 0} M (Membership.Mem.{u2, u2} M (Set.{u2} M) (Set.hasMem.{u2} M) x s) (fun (hx : Membership.Mem.{u2, u2} M (Set.{u2} M) (Set.hasMem.{u2} M) x s) => LocalEquiv.source.{u2, u1} M H (LocalHomeomorph.toLocalEquiv.{u2, u1} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x))))) (Set.univ.{u2} M)) -> (Set.Countable.{u2} M s) -> (TopologicalSpace.SecondCountableTopology.{u2} M _inst_2)
+but is expected to have type
+  forall (H : Type.{u2}) {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] [_inst_4 : TopologicalSpace.SecondCountableTopology.{u2} H _inst_1] {s : Set.{u1} M}, (Eq.{succ u1} (Set.{u1} M) (Set.unionᵢ.{u1, succ u1} M M (fun (x : M) => Set.unionᵢ.{u1, 0} M (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x s) (fun (hx : Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x s) => LocalEquiv.source.{u1, u2} M H (LocalHomeomorph.toLocalEquiv.{u1, u2} M H _inst_2 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x))))) (Set.univ.{u1} M)) -> (Set.Countable.{u1} M s) -> (TopologicalSpace.SecondCountableTopology.{u1} M _inst_2)
+Case conversion may be inaccurate. Consider using '#align charted_space.second_countable_of_countable_cover ChartedSpace.secondCountable_of_countable_coverₓ'. -/
+theorem ChartedSpace.secondCountable_of_countable_cover [SecondCountableTopology H] {s : Set M}
     (hs : (⋃ (x) (hx : x ∈ s), (chartAt H x).source) = univ) (hsc : s.Countable) :
     SecondCountableTopology M :=
   by
@@ -589,22 +699,34 @@ theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopolog
   rw [bUnion_eq_Union] at hs
   exact
     second_countable_topology_of_countable_cover (fun x : s => (chart_at H (x : M)).open_source) hs
-#align charted_space.second_countable_of_countable_cover ChartedSpace.second_countable_of_countable_cover
+#align charted_space.second_countable_of_countable_cover ChartedSpace.secondCountable_of_countable_cover
 
 variable (M)
 
-theorem ChartedSpace.second_countable_of_sigma_compact [SecondCountableTopology H]
+/- warning: charted_space.second_countable_of_sigma_compact -> ChartedSpace.secondCountable_of_sigma_compact is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) (M : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] [_inst_4 : TopologicalSpace.SecondCountableTopology.{u1} H _inst_1] [_inst_5 : SigmaCompactSpace.{u2} M _inst_2], TopologicalSpace.SecondCountableTopology.{u2} M _inst_2
+but is expected to have type
+  forall (H : Type.{u2}) (M : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] [_inst_4 : TopologicalSpace.SecondCountableTopology.{u2} H _inst_1] [_inst_5 : SigmaCompactSpace.{u1} M _inst_2], TopologicalSpace.SecondCountableTopology.{u1} M _inst_2
+Case conversion may be inaccurate. Consider using '#align charted_space.second_countable_of_sigma_compact ChartedSpace.secondCountable_of_sigma_compactₓ'. -/
+theorem ChartedSpace.secondCountable_of_sigma_compact [SecondCountableTopology H]
     [SigmaCompactSpace M] : SecondCountableTopology M :=
   by
   obtain ⟨s, hsc, hsU⟩ :
     ∃ s, Set.Countable s ∧ (⋃ (x) (hx : x ∈ s), (chart_at H x).source) = univ :=
     countable_cover_nhds_of_sigma_compact fun x : M => chart_source_mem_nhds H x
-  exact ChartedSpace.second_countable_of_countable_cover H hsU hsc
-#align charted_space.second_countable_of_sigma_compact ChartedSpace.second_countable_of_sigma_compact
+  exact ChartedSpace.secondCountable_of_countable_cover H hsU hsc
+#align charted_space.second_countable_of_sigma_compact ChartedSpace.secondCountable_of_sigma_compact
 
+/- warning: charted_space.locally_compact -> ChartedSpace.locallyCompact is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) (M : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] [_inst_4 : LocallyCompactSpace.{u1} H _inst_1], LocallyCompactSpace.{u2} M _inst_2
+but is expected to have type
+  forall (H : Type.{u2}) (M : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] [_inst_4 : LocallyCompactSpace.{u2} H _inst_1], LocallyCompactSpace.{u1} M _inst_2
+Case conversion may be inaccurate. Consider using '#align charted_space.locally_compact ChartedSpace.locallyCompactₓ'. -/
 /-- If a topological space admits an atlas with locally compact charts, then the space itself
 is locally compact. -/
-theorem ChartedSpace.locally_compact [LocallyCompactSpace H] : LocallyCompactSpace M :=
+theorem ChartedSpace.locallyCompact [LocallyCompactSpace H] : LocallyCompactSpace M :=
   by
   have :
     ∀ x : M,
@@ -618,8 +740,14 @@ theorem ChartedSpace.locally_compact [LocallyCompactSpace H] : LocallyCompactSpa
   refine' locallyCompactSpace_of_hasBasis this _
   rintro x s ⟨h₁, h₂, h₃⟩
   exact h₂.image_of_continuous_on ((chart_at H x).continuousOn_symm.mono h₃)
-#align charted_space.locally_compact ChartedSpace.locally_compact
+#align charted_space.locally_compact ChartedSpace.locallyCompact
 
+/- warning: charted_space.locally_connected_space -> ChartedSpace.locallyConnectedSpace is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) (M : Type.{u2}) [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] [_inst_4 : LocallyConnectedSpace.{u1} H _inst_1], LocallyConnectedSpace.{u2} M _inst_2
+but is expected to have type
+  forall (H : Type.{u2}) (M : Type.{u1}) [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] [_inst_4 : LocallyConnectedSpace.{u2} H _inst_1], LocallyConnectedSpace.{u1} M _inst_2
+Case conversion may be inaccurate. Consider using '#align charted_space.locally_connected_space ChartedSpace.locallyConnectedSpaceₓ'. -/
 /-- If a topological space admits an atlas with locally connected charts, then the space itself is
 locally connected. -/
 theorem ChartedSpace.locallyConnectedSpace [LocallyConnectedSpace H] : LocallyConnectedSpace M :=
@@ -637,6 +765,7 @@ theorem ChartedSpace.locallyConnectedSpace [LocallyConnectedSpace H] : LocallyCo
     exact hsconn.is_preconnected.image _ ((E x).continuousOn_symm.mono hssubset)
 #align charted_space.locally_connected_space ChartedSpace.locallyConnectedSpace
 
+#print ChartedSpace.comp /-
 /-- If `M` is modelled on `H'` and `H'` is itself modelled on `H`, then we can consider `M` as being
 modelled on `H`. -/
 def ChartedSpace.comp (H : Type _) [TopologicalSpace H] (H' : Type _) [TopologicalSpace H']
@@ -647,6 +776,7 @@ def ChartedSpace.comp (H : Type _) [TopologicalSpace H] (H' : Type _) [Topologic
   mem_chart_source p := by simp only [mfld_simps]
   chart_mem_atlas p := ⟨chartAt H' p, chartAt H _, chart_mem_atlas H' p, chart_mem_atlas H _, rfl⟩
 #align charted_space.comp ChartedSpace.comp
+-/
 
 end
 
@@ -666,30 +796,42 @@ of `id` and `id` is not defeq to `id`), which is bad as we know. This expedient 
 solves this problem. -/
 
 
+#print ModelProd /-
 /-- Same thing as `H × H'` We introduce it for technical reasons,
 see note [Manifold type tags]. -/
 def ModelProd (H : Type _) (H' : Type _) :=
   H × H'
 #align model_prod ModelProd
+-/
 
+#print ModelPi /-
 /-- Same thing as `Π i, H i` We introduce it for technical reasons,
 see note [Manifold type tags]. -/
 def ModelPi {ι : Type _} (H : ι → Type _) :=
   ∀ i, H i
 #align model_pi ModelPi
+-/
 
 section
 
 attribute [local reducible] ModelProd
 
+#print modelProdInhabited /-
 instance modelProdInhabited [Inhabited H] [Inhabited H'] : Inhabited (ModelProd H H') :=
   Prod.inhabited
 #align model_prod_inhabited modelProdInhabited
+-/
 
 instance (H : Type _) [TopologicalSpace H] (H' : Type _) [TopologicalSpace H'] :
     TopologicalSpace (ModelProd H H') :=
   Prod.topologicalSpace
 
+/- warning: model_prod_range_prod_id -> modelProd_range_prod_id is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {H' : Type.{u2}} {α : Type.{u3}} (f : H -> α), Eq.{succ (max u3 u2)} (Set.{max u3 u2} (Prod.{u3, u2} α H')) (Set.range.{max u3 u2, max (succ u1) (succ u2)} (Prod.{u3, u2} α H') (ModelProd.{u1, u2} H H') (fun (p : ModelProd.{u1, u2} H H') => Prod.mk.{u3, u2} α H' (f (Prod.fst.{u1, u2} H H' p)) (Prod.snd.{u1, u2} H H' p))) (Set.prod.{u3, u2} α H' (Set.range.{u3, succ u1} α H f) (Set.univ.{u2} H'))
+but is expected to have type
+  forall {H : Type.{u3}} {H' : Type.{u2}} {α : Type.{u1}} (f : H -> α), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Prod.{u1, u2} α H')) (Set.range.{max u2 u1, max (succ u3) (succ u2)} (Prod.{u1, u2} α H') (ModelProd.{u3, u2} H H') (fun (p : ModelProd.{u3, u2} H H') => Prod.mk.{u1, u2} α H' (f (Prod.fst.{u3, u2} H H' p)) (Prod.snd.{u3, u2} H H' p))) (Set.prod.{u1, u2} α H' (Set.range.{u1, succ u3} α H f) (Set.univ.{u2} H'))
+Case conversion may be inaccurate. Consider using '#align model_prod_range_prod_id modelProd_range_prod_idₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- Next lemma shows up often when dealing with derivatives, register it as simp.
 @[simp, mfld_simps]
@@ -704,15 +846,23 @@ section
 
 variable {ι : Type _} {Hi : ι → Type _}
 
+#print modelPiInhabited /-
 instance modelPiInhabited [∀ i, Inhabited (Hi i)] : Inhabited (ModelPi Hi) :=
   Pi.inhabited _
 #align model_pi_inhabited modelPiInhabited
+-/
 
 instance [∀ i, TopologicalSpace (Hi i)] : TopologicalSpace (ModelPi Hi) :=
   Pi.topologicalSpace
 
 end
 
+/- warning: prod_charted_space -> prodChartedSpace is a dubious translation:
+lean 3 declaration is
+  forall (H : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} H] (M : Type.{u2}) [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (H' : Type.{u3}) [_inst_4 : TopologicalSpace.{u3} H'] (M' : Type.{u4}) [_inst_5 : TopologicalSpace.{u4} M'] [_inst_6 : ChartedSpace.{u3, u4} H' _inst_4 M' _inst_5], ChartedSpace.{max u1 u3, max u2 u4} (ModelProd.{u1, u3} H H') (ModelProd.topologicalSpace.{u1, u3} H _inst_1 H' _inst_4) (Prod.{u2, u4} M M') (Prod.topologicalSpace.{u2, u4} M M' _inst_2 _inst_5)
+but is expected to have type
+  forall (H : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} H] (M : Type.{u2}) [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (H' : Type.{u3}) [_inst_4 : TopologicalSpace.{u3} H'] (M' : Type.{u4}) [_inst_5 : TopologicalSpace.{u4} M'] [_inst_6 : ChartedSpace.{u3, u4} H' _inst_4 M' _inst_5], ChartedSpace.{max u3 u1, max u4 u2} (ModelProd.{u1, u3} H H') (instTopologicalSpaceModelProd.{u1, u3} H _inst_1 H' _inst_4) (Prod.{u2, u4} M M') (instTopologicalSpaceProd.{u2, u4} M M' _inst_2 _inst_5)
+Case conversion may be inaccurate. Consider using '#align prod_charted_space prodChartedSpaceₓ'. -/
 /-- The product of two charted spaces is naturally a charted space, with the canonical
 construction of the atlas of product maps. -/
 instance prodChartedSpace (H : Type _) [TopologicalSpace H] (M : Type _) [TopologicalSpace M]
@@ -730,12 +880,24 @@ section prodChartedSpace
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M] [TopologicalSpace H']
   [TopologicalSpace M'] [ChartedSpace H' M'] {x : M × M'}
 
+/- warning: prod_charted_space_chart_at -> prodChartedSpace_chartAt is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {H' : Type.{u2}} {M : Type.{u3}} {M' : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u3} M] [_inst_3 : ChartedSpace.{u1, u3} H _inst_1 M _inst_2] [_inst_4 : TopologicalSpace.{u2} H'] [_inst_5 : TopologicalSpace.{u4} M'] [_inst_6 : ChartedSpace.{u2, u4} H' _inst_4 M' _inst_5] {x : Prod.{u3, u4} M M'}, Eq.{max (succ (max u3 u4)) (succ (max u1 u2))} (LocalHomeomorph.{max u3 u4, max u1 u2} (Prod.{u3, u4} M M') (ModelProd.{u1, u2} H H') (Prod.topologicalSpace.{u3, u4} M M' _inst_2 _inst_5) (ModelProd.topologicalSpace.{u1, u2} H _inst_1 H' _inst_4)) (ChartedSpace.chartAt.{max u1 u2, max u3 u4} (ModelProd.{u1, u2} H H') (ModelProd.topologicalSpace.{u1, u2} H _inst_1 H' _inst_4) (Prod.{u3, u4} M M') (Prod.topologicalSpace.{u3, u4} M M' _inst_2 _inst_5) (prodChartedSpace.{u1, u3, u2, u4} H _inst_1 M _inst_2 _inst_3 H' _inst_4 M' _inst_5 _inst_6) x) (LocalHomeomorph.prod.{u3, u1, u4, u2} M H M' H' _inst_2 _inst_1 _inst_5 _inst_4 (ChartedSpace.chartAt.{u1, u3} H _inst_1 M _inst_2 _inst_3 (Prod.fst.{u3, u4} M M' x)) (ChartedSpace.chartAt.{u2, u4} H' _inst_4 M' _inst_5 _inst_6 (Prod.snd.{u3, u4} M M' x)))
+but is expected to have type
+  forall {H : Type.{u4}} {H' : Type.{u3}} {M : Type.{u2}} {M' : Type.{u1}} [_inst_1 : TopologicalSpace.{u4} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u4, u2} H _inst_1 M _inst_2] [_inst_4 : TopologicalSpace.{u3} H'] [_inst_5 : TopologicalSpace.{u1} M'] [_inst_6 : ChartedSpace.{u3, u1} H' _inst_4 M' _inst_5] {x : Prod.{u2, u1} M M'}, Eq.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (LocalHomeomorph.{max u2 u1, max u3 u4} (Prod.{u2, u1} M M') (ModelProd.{u4, u3} H H') (instTopologicalSpaceProd.{u2, u1} M M' _inst_2 _inst_5) (instTopologicalSpaceModelProd.{u4, u3} H _inst_1 H' _inst_4)) (ChartedSpace.chartAt.{max u3 u4, max u2 u1} (ModelProd.{u4, u3} H H') (instTopologicalSpaceModelProd.{u4, u3} H _inst_1 H' _inst_4) (Prod.{u2, u1} M M') (instTopologicalSpaceProd.{u2, u1} M M' _inst_2 _inst_5) (prodChartedSpace.{u4, u2, u3, u1} H _inst_1 M _inst_2 _inst_3 H' _inst_4 M' _inst_5 _inst_6) x) (LocalHomeomorph.prod.{u2, u4, u1, u3} M H M' H' _inst_2 _inst_1 _inst_5 _inst_4 (ChartedSpace.chartAt.{u4, u2} H _inst_1 M _inst_2 _inst_3 (Prod.fst.{u2, u1} M M' x)) (ChartedSpace.chartAt.{u3, u1} H' _inst_4 M' _inst_5 _inst_6 (Prod.snd.{u2, u1} M M' x)))
+Case conversion may be inaccurate. Consider using '#align prod_charted_space_chart_at prodChartedSpace_chartAtₓ'. -/
 @[simp, mfld_simps]
 theorem prodChartedSpace_chartAt :
     chartAt (ModelProd H H') x = (chartAt H x.fst).Prod (chartAt H' x.snd) :=
   rfl
 #align prod_charted_space_chart_at prodChartedSpace_chartAt
 
+/- warning: charted_space_self_prod -> chartedSpaceSelf_prod is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {H' : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_4 : TopologicalSpace.{u2} H'], Eq.{succ (max u1 u2)} (ChartedSpace.{max u1 u2, max u1 u2} (ModelProd.{u1, u2} H H') (ModelProd.topologicalSpace.{u1, u2} H _inst_1 H' _inst_4) (Prod.{u1, u2} H H') (Prod.topologicalSpace.{u1, u2} H H' _inst_1 _inst_4)) (prodChartedSpace.{u1, u1, u2, u2} H _inst_1 H _inst_1 (chartedSpaceSelf.{u1} H _inst_1) H' _inst_4 H' _inst_4 (chartedSpaceSelf.{u2} H' _inst_4)) (chartedSpaceSelf.{max u1 u2} (Prod.{u1, u2} H H') (ModelProd.topologicalSpace.{u1, u2} H _inst_1 H' _inst_4))
+but is expected to have type
+  forall {H : Type.{u2}} {H' : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_4 : TopologicalSpace.{u1} H'], Eq.{max (succ u2) (succ u1)} (ChartedSpace.{max u1 u2, max u1 u2} (ModelProd.{u2, u1} H H') (instTopologicalSpaceModelProd.{u2, u1} H _inst_1 H' _inst_4) (Prod.{u2, u1} H H') (instTopologicalSpaceProd.{u2, u1} H H' _inst_1 _inst_4)) (prodChartedSpace.{u2, u2, u1, u1} H _inst_1 H _inst_1 (chartedSpaceSelf.{u2} H _inst_1) H' _inst_4 H' _inst_4 (chartedSpaceSelf.{u1} H' _inst_4)) (chartedSpaceSelf.{max u1 u2} (Prod.{u2, u1} H H') (instTopologicalSpaceProd.{u2, u1} H H' _inst_1 _inst_4))
+Case conversion may be inaccurate. Consider using '#align charted_space_self_prod chartedSpaceSelf_prodₓ'. -/
 theorem chartedSpaceSelf_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H × H') :=
   by
   ext1
@@ -747,6 +909,7 @@ theorem chartedSpaceSelf_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H
 
 end prodChartedSpace
 
+#print piChartedSpace /-
 /-- The product of a finite family of charted spaces is naturally a charted space, with the
 canonical construction of the atlas of finite product maps. -/
 instance piChartedSpace {ι : Type _} [Fintype ι] (H : ι → Type _) [∀ i, TopologicalSpace (H i)]
@@ -758,7 +921,14 @@ instance piChartedSpace {ι : Type _} [Fintype ι] (H : ι → Type _) [∀ i, T
   mem_chart_source f i hi := mem_chart_source (H i) (f i)
   chart_mem_atlas f := mem_image_of_mem _ fun i hi => chart_mem_atlas (H i) (f i)
 #align pi_charted_space piChartedSpace
+-/
 
+/- warning: pi_charted_space_chart_at -> piChartedSpace_chartAt is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (H : ι -> Type.{u2}) [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (H i)] (M : ι -> Type.{u3}) [_inst_3 : forall (i : ι), TopologicalSpace.{u3} (M i)] [_inst_4 : forall (i : ι), ChartedSpace.{u2, u3} (H i) (_inst_2 i) (M i) (_inst_3 i)] (f : forall (i : ι), M i), Eq.{max (succ (max u1 u3)) (succ (max u1 u2))} (LocalHomeomorph.{max u1 u3, max u1 u2} (forall (i : ι), M i) (ModelPi.{u1, u2} ι H) (Pi.topologicalSpace.{u1, u3} ι (fun (i : ι) => M i) (fun (a : ι) => _inst_3 a)) (ModelPi.topologicalSpace.{u1, u2} ι H (fun (i : ι) => _inst_2 i))) (ChartedSpace.chartAt.{max u1 u2, max u1 u3} (ModelPi.{u1, u2} ι H) (ModelPi.topologicalSpace.{u1, u2} ι H (fun (i : ι) => _inst_2 i)) (forall (i : ι), M i) (Pi.topologicalSpace.{u1, u3} ι (fun (i : ι) => M i) (fun (a : ι) => _inst_3 a)) (piChartedSpace.{u1, u2, u3} ι _inst_1 H (fun (i : ι) => _inst_2 i) (fun (i : ι) => M i) (fun (a : ι) => _inst_3 a) (fun (i : ι) => _inst_4 i)) f) (LocalHomeomorph.pi.{u1, u3, u2} ι _inst_1 (fun (i : ι) => M i) (fun (i : ι) => H i) (fun (i : ι) => _inst_3 i) (fun (a : ι) => (fun (i : ι) => _inst_2 i) a) (fun (i : ι) => ChartedSpace.chartAt.{u2, u3} (H i) ((fun (i : ι) => _inst_2 i) i) (M i) (_inst_3 i) (_inst_4 i) (f i)))
+but is expected to have type
+  forall {ι : Type.{u3}} [_inst_1 : Fintype.{u3} ι] (H : ι -> Type.{u2}) [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (H i)] (M : ι -> Type.{u1}) [_inst_3 : forall (i : ι), TopologicalSpace.{u1} (M i)] [_inst_4 : forall (i : ι), ChartedSpace.{u2, u1} (H i) (_inst_2 i) (M i) (_inst_3 i)] (f : forall (i : ι), M i), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (LocalHomeomorph.{max u3 u1, max u2 u3} (forall (i : ι), M i) (ModelPi.{u3, u2} ι H) (Pi.topologicalSpace.{u3, u1} ι (fun (i : ι) => M i) (fun (a : ι) => _inst_3 a)) (instTopologicalSpaceModelPi.{u3, u2} ι H (fun (i : ι) => _inst_2 i))) (ChartedSpace.chartAt.{max u2 u3, max u3 u1} (ModelPi.{u3, u2} ι H) (instTopologicalSpaceModelPi.{u3, u2} ι H (fun (i : ι) => _inst_2 i)) (forall (i : ι), M i) (Pi.topologicalSpace.{u3, u1} ι (fun (i : ι) => M i) (fun (a : ι) => _inst_3 a)) (piChartedSpace.{u3, u2, u1} ι _inst_1 H (fun (i : ι) => _inst_2 i) (fun (i : ι) => M i) (fun (a : ι) => _inst_3 a) (fun (i : ι) => _inst_4 i)) f) (LocalHomeomorph.pi.{u3, u1, u2} ι _inst_1 (fun (i : ι) => M i) (fun (i : ι) => H i) (fun (i : ι) => _inst_3 i) (fun (a : ι) => (fun (i : ι) => _inst_2 i) a) (fun (i : ι) => ChartedSpace.chartAt.{u2, u1} (H i) ((fun (i : ι) => _inst_2 i) i) (M i) (_inst_3 i) (_inst_4 i) (f i)))
+Case conversion may be inaccurate. Consider using '#align pi_charted_space_chart_at piChartedSpace_chartAtₓ'. -/
 @[simp, mfld_simps]
 theorem piChartedSpace_chartAt {ι : Type _} [Fintype ι] (H : ι → Type _)
     [∀ i, TopologicalSpace (H i)] (M : ι → Type _) [∀ i, TopologicalSpace (M i)]
@@ -772,6 +942,7 @@ end ChartedSpace
 /-! ### Constructing a topology from an atlas -/
 
 
+#print ChartedSpaceCore /-
 /-- Sometimes, one may want to construct a charted space structure on a space which does not yet
 have a topological structure, where the topology would come from the charts. For this, one needs
 charts that are only local equivs, and continuity properties for their composition.
@@ -787,17 +958,26 @@ structure ChartedSpaceCore (H : Type _) [TopologicalSpace H] (M : Type _) where
     ∀ e e' : LocalEquiv M H,
       e ∈ atlas → e' ∈ atlas → ContinuousOn (e.symm.trans e') (e.symm.trans e').source
 #align charted_space_core ChartedSpaceCore
+-/
 
 namespace ChartedSpaceCore
 
 variable [TopologicalSpace H] (c : ChartedSpaceCore H M) {e : LocalEquiv M H}
 
+#print ChartedSpaceCore.toTopologicalSpace /-
 /-- Topology generated by a set of charts on a Type. -/
 protected def toTopologicalSpace : TopologicalSpace M :=
   TopologicalSpace.generateFrom <|
     ⋃ (e : LocalEquiv M H) (he : e ∈ c.atlas) (s : Set H) (s_open : IsOpen s), {e ⁻¹' s ∩ e.source}
 #align charted_space_core.to_topological_space ChartedSpaceCore.toTopologicalSpace
+-/
 
+/- warning: charted_space_core.open_source' -> ChartedSpaceCore.open_source' is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] (c : ChartedSpaceCore.{u1, u2} H _inst_1 M) {e : LocalEquiv.{u2, u1} M H}, (Membership.Mem.{max u2 u1, max u2 u1} (LocalEquiv.{u2, u1} M H) (Set.{max u2 u1} (LocalEquiv.{u2, u1} M H)) (Set.hasMem.{max u2 u1} (LocalEquiv.{u2, u1} M H)) e (ChartedSpaceCore.atlas.{u1, u2} H _inst_1 M c)) -> (IsOpen.{u2} M (ChartedSpaceCore.toTopologicalSpace.{u1, u2} H M _inst_1 c) (LocalEquiv.source.{u2, u1} M H e))
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] (c : ChartedSpaceCore.{u2, u1} H _inst_1 M) {e : LocalEquiv.{u1, u2} M H}, (Membership.mem.{max u2 u1, max u2 u1} (LocalEquiv.{u1, u2} M H) (Set.{max u2 u1} (LocalEquiv.{u1, u2} M H)) (Set.instMembershipSet.{max u2 u1} (LocalEquiv.{u1, u2} M H)) e (ChartedSpaceCore.atlas.{u2, u1} H _inst_1 M c)) -> (IsOpen.{u1} M (ChartedSpaceCore.toTopologicalSpace.{u2, u1} H M _inst_1 c) (LocalEquiv.source.{u1, u2} M H e))
+Case conversion may be inaccurate. Consider using '#align charted_space_core.open_source' ChartedSpaceCore.open_source'ₓ'. -/
 theorem open_source' (he : e ∈ c.atlas) : is_open[c.toTopologicalSpace] e.source :=
   by
   apply TopologicalSpace.GenerateOpen.basic
@@ -806,6 +986,12 @@ theorem open_source' (he : e ∈ c.atlas) : is_open[c.toTopologicalSpace] e.sour
   simp only [Set.univ_inter, Set.preimage_univ]
 #align charted_space_core.open_source' ChartedSpaceCore.open_source'
 
+/- warning: charted_space_core.open_target -> ChartedSpaceCore.open_target is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] (c : ChartedSpaceCore.{u1, u2} H _inst_1 M) {e : LocalEquiv.{u2, u1} M H}, (Membership.Mem.{max u2 u1, max u2 u1} (LocalEquiv.{u2, u1} M H) (Set.{max u2 u1} (LocalEquiv.{u2, u1} M H)) (Set.hasMem.{max u2 u1} (LocalEquiv.{u2, u1} M H)) e (ChartedSpaceCore.atlas.{u1, u2} H _inst_1 M c)) -> (IsOpen.{u1} H _inst_1 (LocalEquiv.target.{u2, u1} M H e))
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] (c : ChartedSpaceCore.{u2, u1} H _inst_1 M) {e : LocalEquiv.{u1, u2} M H}, (Membership.mem.{max u2 u1, max u2 u1} (LocalEquiv.{u1, u2} M H) (Set.{max u2 u1} (LocalEquiv.{u1, u2} M H)) (Set.instMembershipSet.{max u2 u1} (LocalEquiv.{u1, u2} M H)) e (ChartedSpaceCore.atlas.{u2, u1} H _inst_1 M c)) -> (IsOpen.{u2} H _inst_1 (LocalEquiv.target.{u1, u2} M H e))
+Case conversion may be inaccurate. Consider using '#align charted_space_core.open_target ChartedSpaceCore.open_targetₓ'. -/
 theorem open_target (he : e ∈ c.atlas) : IsOpen e.target :=
   by
   have E : e.target ∩ e.symm ⁻¹' e.source = e.target :=
@@ -814,6 +1000,7 @@ theorem open_target (he : e ∈ c.atlas) : IsOpen e.target :=
   simpa [LocalEquiv.trans_source, E] using c.open_source e e he he
 #align charted_space_core.open_target ChartedSpaceCore.open_target
 
+#print ChartedSpaceCore.localHomeomorph /-
 /-- An element of the atlas in a charted space without topology becomes a local homeomorphism
 for the topology constructed from this atlas. The `local_homeomorph` version is given in this
 definition. -/
@@ -851,7 +1038,9 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
         exact inter_comm _ _
       simpa [LocalEquiv.trans_source, preimage_inter, preimage_comp.symm, A] using this }
 #align charted_space_core.local_homeomorph ChartedSpaceCore.localHomeomorph
+-/
 
+#print ChartedSpaceCore.toChartedSpace /-
 /-- Given a charted space without topology, endow it with a genuine charted space structure with
 respect to the topology constructed from the atlas. -/
 def toChartedSpace : @ChartedSpace H _ M c.toTopologicalSpace
@@ -863,6 +1052,7 @@ def toChartedSpace : @ChartedSpace H _ M c.toTopologicalSpace
     simp only [mem_Union, mem_singleton_iff]
     exact ⟨c.chart_at x, c.chart_mem_atlas x, rfl⟩
 #align charted_space_core.to_charted_space ChartedSpaceCore.toChartedSpace
+-/
 
 end ChartedSpaceCore
 
@@ -873,6 +1063,7 @@ section HasGroupoid
 
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
+#print HasGroupoid /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`compatible] [] -/
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
@@ -880,7 +1071,14 @@ class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpa
   [ChartedSpace H M] (G : StructureGroupoid H) : Prop where
   compatible : ∀ {e e' : LocalHomeomorph M H}, e ∈ atlas H M → e' ∈ atlas H M → e.symm ≫ₕ e' ∈ G
 #align has_groupoid HasGroupoid
+-/
 
+/- warning: structure_groupoid.compatible -> StructureGroupoid.compatible is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} H] (G : StructureGroupoid.{u1} H _inst_4) {M : Type.{u2}} [_inst_5 : TopologicalSpace.{u2} M] [_inst_6 : ChartedSpace.{u1, u2} H _inst_4 M _inst_5] [_inst_7 : HasGroupoid.{u1, u2} H _inst_4 M _inst_5 _inst_6 G] {e : LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4} {e' : LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4}, (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4)) e (ChartedSpace.atlas.{u1, u2} H _inst_4 M _inst_5 _inst_6)) -> (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_5 _inst_4)) e' (ChartedSpace.atlas.{u1, u2} H _inst_4 M _inst_5 _inst_6)) -> (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_4 _inst_4) (StructureGroupoid.{u1} H _inst_4) (StructureGroupoid.hasMem.{u1} H _inst_4) (LocalHomeomorph.trans.{u1, u2, u1} H M H _inst_4 _inst_5 _inst_4 (LocalHomeomorph.symm.{u2, u1} M H _inst_5 _inst_4 e) e') G)
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} H] (G : StructureGroupoid.{u2} H _inst_4) {M : Type.{u1}} [_inst_5 : TopologicalSpace.{u1} M] [_inst_6 : ChartedSpace.{u2, u1} H _inst_4 M _inst_5] [_inst_7 : HasGroupoid.{u2, u1} H _inst_4 M _inst_5 _inst_6 G] {e : LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4} {e' : LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4}, (Membership.mem.{max u2 u1, max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4)) e (ChartedSpace.atlas.{u2, u1} H _inst_4 M _inst_5 _inst_6)) -> (Membership.mem.{max u2 u1, max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_5 _inst_4)) e' (ChartedSpace.atlas.{u2, u1} H _inst_4 M _inst_5 _inst_6)) -> (Membership.mem.{u2, u2} (LocalHomeomorph.{u2, u2} H H _inst_4 _inst_4) (StructureGroupoid.{u2} H _inst_4) (instMembershipLocalHomeomorphStructureGroupoid.{u2} H _inst_4) (LocalHomeomorph.trans.{u2, u1, u2} H M H _inst_4 _inst_5 _inst_4 (LocalHomeomorph.symm.{u1, u2} M H _inst_5 _inst_4 e) e') G)
+Case conversion may be inaccurate. Consider using '#align structure_groupoid.compatible StructureGroupoid.compatibleₓ'. -/
 /-- Reformulate in the `structure_groupoid` namespace the compatibility condition of charts in a
 charted space admitting a structure groupoid, to make it more easily accessible with dot
 notation. -/
@@ -890,11 +1088,23 @@ theorem StructureGroupoid.compatible {H : Type _} [TopologicalSpace H] (G : Stru
   HasGroupoid.compatible G he he'
 #align structure_groupoid.compatible StructureGroupoid.compatible
 
+/- warning: has_groupoid_of_le -> hasGroupoid_of_le is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] {G₁ : StructureGroupoid.{u1} H _inst_1} {G₂ : StructureGroupoid.{u1} H _inst_1}, (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G₁) -> (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toLE.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) G₁ G₂) -> (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G₂)
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] {G₁ : StructureGroupoid.{u2} H _inst_1} {G₂ : StructureGroupoid.{u2} H _inst_1}, (HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 G₁) -> (LE.le.{u2} (StructureGroupoid.{u2} H _inst_1) (Preorder.toLE.{u2} (StructureGroupoid.{u2} H _inst_1) (PartialOrder.toPreorder.{u2} (StructureGroupoid.{u2} H _inst_1) (StructureGroupoid.partialOrder.{u2} H _inst_1))) G₁ G₂) -> (HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 G₂)
+Case conversion may be inaccurate. Consider using '#align has_groupoid_of_le hasGroupoid_of_leₓ'. -/
 theorem hasGroupoid_of_le {G₁ G₂ : StructureGroupoid H} (h : HasGroupoid M G₁) (hle : G₁ ≤ G₂) :
     HasGroupoid M G₂ :=
   ⟨fun e e' he he' => hle (h.compatible he he')⟩
 #align has_groupoid_of_le hasGroupoid_of_le
 
+/- warning: has_groupoid_of_pregroupoid -> hasGroupoid_of_pregroupoid is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (PG : Pregroupoid.{u1} H _inst_1), (forall {e : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1} {e' : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1}, (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) e (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) -> (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) e' (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) -> (Pregroupoid.Property.{u1} H _inst_1 PG (coeFn.{succ u1, succ u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (fun (_x : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) => H -> H) (LocalHomeomorph.hasCoeToFun.{u1, u1} H H _inst_1 _inst_1) (LocalHomeomorph.trans.{u1, u2, u1} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u2, u1} M H _inst_2 _inst_1 e) e')) (LocalEquiv.source.{u1, u1} H H (LocalHomeomorph.toLocalEquiv.{u1, u1} H H _inst_1 _inst_1 (LocalHomeomorph.trans.{u1, u2, u1} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u2, u1} M H _inst_2 _inst_1 e) e'))))) -> (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 (Pregroupoid.groupoid.{u1} H _inst_1 PG))
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (PG : Pregroupoid.{u2} H _inst_1), (forall {e : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1} {e' : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1}, (Membership.mem.{max u2 u1, max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) e (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) -> (Membership.mem.{max u2 u1, max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) e' (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) -> (Pregroupoid.property.{u2} H _inst_1 PG (LocalHomeomorph.toFun'.{u2, u2} H H _inst_1 _inst_1 (LocalHomeomorph.trans.{u2, u1, u2} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u1, u2} M H _inst_2 _inst_1 e) e')) (LocalEquiv.source.{u2, u2} H H (LocalHomeomorph.toLocalEquiv.{u2, u2} H H _inst_1 _inst_1 (LocalHomeomorph.trans.{u2, u1, u2} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u1, u2} M H _inst_2 _inst_1 e) e'))))) -> (HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 (Pregroupoid.groupoid.{u2} H _inst_1 PG))
+Case conversion may be inaccurate. Consider using '#align has_groupoid_of_pregroupoid hasGroupoid_of_pregroupoidₓ'. -/
 theorem hasGroupoid_of_pregroupoid (PG : Pregroupoid H)
     (h :
       ∀ {e e' : LocalHomeomorph M H},
@@ -903,6 +1113,7 @@ theorem hasGroupoid_of_pregroupoid (PG : Pregroupoid H)
   ⟨fun e e' he he' => mem_groupoid_of_pregroupoid.mpr ⟨h he he', h he' he⟩⟩
 #align has_groupoid_of_pregroupoid hasGroupoid_of_pregroupoid
 
+#print hasGroupoid_model_space /-
 /-- The trivial charted space structure on the model space is compatible with any groupoid -/
 instance hasGroupoid_model_space (H : Type _) [TopologicalSpace H] (G : StructureGroupoid H) :
     HasGroupoid H G
@@ -913,7 +1124,9 @@ instance hasGroupoid_model_space (H : Type _) [TopologicalSpace H] (G : Structur
     rw [chartedSpaceSelf_atlas] at he he'
     simp [he, he', StructureGroupoid.id_mem]
 #align has_groupoid_model_space hasGroupoid_model_space
+-/
 
+#print hasGroupoid_continuousGroupoid /-
 /-- Any charted space structure is compatible with the groupoid of all local homeomorphisms -/
 instance hasGroupoid_continuousGroupoid : HasGroupoid M (continuousGroupoid H) :=
   ⟨by
@@ -921,25 +1134,40 @@ instance hasGroupoid_continuousGroupoid : HasGroupoid M (continuousGroupoid H) :
     rw [continuousGroupoid, mem_groupoid_of_pregroupoid]
     simp only [and_self_iff]⟩
 #align has_groupoid_continuous_groupoid hasGroupoid_continuousGroupoid
+-/
 
 section MaximalAtlas
 
 variable (M) (G : StructureGroupoid H)
 
+#print StructureGroupoid.maximalAtlas /-
 /-- Given a charted space admitting a structure groupoid, the maximal atlas associated to this
 structure groupoid is the set of all local charts that are compatible with the atlas, i.e., such
 that changing coordinates with an atlas member gives an element of the groupoid. -/
 def StructureGroupoid.maximalAtlas : Set (LocalHomeomorph M H) :=
   { e | ∀ e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G }
 #align structure_groupoid.maximal_atlas StructureGroupoid.maximalAtlas
+-/
 
 variable {M}
 
+/- warning: structure_groupoid.subset_maximal_atlas -> StructureGroupoid.subset_maximalAtlas is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (G : StructureGroupoid.{u1} H _inst_1) [_inst_4 : HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G], HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasSubset.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3) (StructureGroupoid.maximalAtlas.{u1, u2} H M _inst_1 _inst_2 _inst_3 G)
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (G : StructureGroupoid.{u2} H _inst_1) [_inst_4 : HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 G], HasSubset.Subset.{max u1 u2} (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instHasSubsetSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3) (StructureGroupoid.maximalAtlas.{u2, u1} H M _inst_1 _inst_2 _inst_3 G)
+Case conversion may be inaccurate. Consider using '#align structure_groupoid.subset_maximal_atlas StructureGroupoid.subset_maximalAtlasₓ'. -/
 /-- The elements of the atlas belong to the maximal atlas for any structure groupoid -/
 theorem StructureGroupoid.subset_maximalAtlas [HasGroupoid M G] : atlas H M ⊆ G.maximalAtlas M :=
   fun e he e' he' => ⟨G.compatible he he', G.compatible he' he⟩
 #align structure_groupoid.subset_maximal_atlas StructureGroupoid.subset_maximalAtlas
 
+/- warning: structure_groupoid.chart_mem_maximal_atlas -> StructureGroupoid.chart_mem_maximalAtlas is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] (G : StructureGroupoid.{u1} H _inst_1) [_inst_4 : HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G] (x : M), Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (ChartedSpace.chartAt.{u1, u2} H _inst_1 M _inst_2 _inst_3 x) (StructureGroupoid.maximalAtlas.{u1, u2} H M _inst_1 _inst_2 _inst_3 G)
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] (G : StructureGroupoid.{u2} H _inst_1) [_inst_4 : HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 G] (x : M), Membership.mem.{max u1 u2, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (ChartedSpace.chartAt.{u2, u1} H _inst_1 M _inst_2 _inst_3 x) (StructureGroupoid.maximalAtlas.{u2, u1} H M _inst_1 _inst_2 _inst_3 G)
+Case conversion may be inaccurate. Consider using '#align structure_groupoid.chart_mem_maximal_atlas StructureGroupoid.chart_mem_maximalAtlasₓ'. -/
 theorem StructureGroupoid.chart_mem_maximalAtlas [HasGroupoid M G] (x : M) :
     chartAt H x ∈ G.maximalAtlas M :=
   G.subset_maximalAtlas (chart_mem_atlas H x)
@@ -947,11 +1175,23 @@ theorem StructureGroupoid.chart_mem_maximalAtlas [HasGroupoid M G] (x : M) :
 
 variable {G}
 
+/- warning: mem_maximal_atlas_iff -> mem_maximalAtlas_iff is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] {G : StructureGroupoid.{u1} H _inst_1} {e : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1}, Iff (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) e (StructureGroupoid.maximalAtlas.{u1, u2} H M _inst_1 _inst_2 _inst_3 G)) (forall (e' : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1), (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) e' (ChartedSpace.atlas.{u1, u2} H _inst_1 M _inst_2 _inst_3)) -> (And (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) (LocalHomeomorph.trans.{u1, u2, u1} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u2, u1} M H _inst_2 _inst_1 e) e') G) (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) (LocalHomeomorph.trans.{u1, u2, u1} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u2, u1} M H _inst_2 _inst_1 e') e) G)))
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] {G : StructureGroupoid.{u2} H _inst_1} {e : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1}, Iff (Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) e (StructureGroupoid.maximalAtlas.{u2, u1} H M _inst_1 _inst_2 _inst_3 G)) (forall (e' : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1), (Membership.mem.{max u1 u2, max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u1 u2} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) e' (ChartedSpace.atlas.{u2, u1} H _inst_1 M _inst_2 _inst_3)) -> (And (Membership.mem.{u2, u2} (LocalHomeomorph.{u2, u2} H H _inst_1 _inst_1) (StructureGroupoid.{u2} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u2} H _inst_1) (LocalHomeomorph.trans.{u2, u1, u2} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u1, u2} M H _inst_2 _inst_1 e) e') G) (Membership.mem.{u2, u2} (LocalHomeomorph.{u2, u2} H H _inst_1 _inst_1) (StructureGroupoid.{u2} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u2} H _inst_1) (LocalHomeomorph.trans.{u2, u1, u2} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u1, u2} M H _inst_2 _inst_1 e') e) G)))
+Case conversion may be inaccurate. Consider using '#align mem_maximal_atlas_iff mem_maximalAtlas_iffₓ'. -/
 theorem mem_maximalAtlas_iff {e : LocalHomeomorph M H} :
     e ∈ G.maximalAtlas M ↔ ∀ e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G :=
   Iff.rfl
 #align mem_maximal_atlas_iff mem_maximalAtlas_iff
 
+/- warning: structure_groupoid.compatible_of_mem_maximal_atlas -> StructureGroupoid.compatible_of_mem_maximalAtlas is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] {G : StructureGroupoid.{u1} H _inst_1} {e : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1} {e' : LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1}, (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) e (StructureGroupoid.maximalAtlas.{u1, u2} H M _inst_1 _inst_2 _inst_3 G)) -> (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} M H _inst_2 _inst_1)) e' (StructureGroupoid.maximalAtlas.{u1, u2} H M _inst_1 _inst_2 _inst_3 G)) -> (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) (LocalHomeomorph.trans.{u1, u2, u1} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u2, u1} M H _inst_2 _inst_1 e) e') G)
+but is expected to have type
+  forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] {G : StructureGroupoid.{u2} H _inst_1} {e : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1} {e' : LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1}, (Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) e (StructureGroupoid.maximalAtlas.{u2, u1} H M _inst_1 _inst_2 _inst_3 G)) -> (Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} M H _inst_2 _inst_1)) e' (StructureGroupoid.maximalAtlas.{u2, u1} H M _inst_1 _inst_2 _inst_3 G)) -> (Membership.mem.{u2, u2} (LocalHomeomorph.{u2, u2} H H _inst_1 _inst_1) (StructureGroupoid.{u2} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u2} H _inst_1) (LocalHomeomorph.trans.{u2, u1, u2} H M H _inst_1 _inst_2 _inst_1 (LocalHomeomorph.symm.{u1, u2} M H _inst_2 _inst_1 e) e') G)
+Case conversion may be inaccurate. Consider using '#align structure_groupoid.compatible_of_mem_maximal_atlas StructureGroupoid.compatible_of_mem_maximalAtlasₓ'. -/
 /-- Changing coordinates between two elements of the maximal atlas gives rise to an element
 of the structure groupoid. -/
 theorem StructureGroupoid.compatible_of_mem_maximalAtlas {e e' : LocalHomeomorph M H}
@@ -983,17 +1223,21 @@ theorem StructureGroupoid.compatible_of_mem_maximalAtlas {e e' : LocalHomeomorph
 
 variable (G)
 
+#print StructureGroupoid.id_mem_maximalAtlas /-
 /-- In the model space, the identity is in any maximal atlas. -/
 theorem StructureGroupoid.id_mem_maximalAtlas : LocalHomeomorph.refl H ∈ G.maximalAtlas H :=
   G.subset_maximalAtlas <| by simp
 #align structure_groupoid.id_mem_maximal_atlas StructureGroupoid.id_mem_maximalAtlas
+-/
 
+#print StructureGroupoid.mem_maximalAtlas_of_mem_groupoid /-
 /-- In the model space, any element of the groupoid is in the maximal atlas. -/
 theorem StructureGroupoid.mem_maximalAtlas_of_mem_groupoid {f : LocalHomeomorph H H} (hf : f ∈ G) :
     f ∈ G.maximalAtlas H := by
   rintro e (rfl : e = LocalHomeomorph.refl H)
   exact ⟨G.trans (G.symm hf) G.id_mem, G.trans (G.symm G.id_mem) hf⟩
 #align structure_groupoid.mem_maximal_atlas_of_mem_groupoid StructureGroupoid.mem_maximalAtlas_of_mem_groupoid
+-/
 
 end MaximalAtlas
 
@@ -1005,6 +1249,7 @@ namespace LocalHomeomorph
 
 variable (e : LocalHomeomorph α H)
 
+#print LocalHomeomorph.singletonChartedSpace /-
 /-- If a single local homeomorphism `e` from a space `α` into `H` has source covering the whole
 space `α`, then that local homeomorphism induces an `H`-charted space structure on `α`.
 (This condition is equivalent to `e` being an open embedding of `α` into `H`; see
@@ -1016,23 +1261,48 @@ def singletonChartedSpace (h : e.source = Set.univ) : ChartedSpace H α
   mem_chart_source _ := by simp only [h, mfld_simps]
   chart_mem_atlas _ := by tauto
 #align local_homeomorph.singleton_charted_space LocalHomeomorph.singletonChartedSpace
+-/
 
+/- warning: local_homeomorph.singleton_charted_space_chart_at_eq -> LocalHomeomorph.singletonChartedSpace_chartAt_eq is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] (e : LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (h : Eq.{succ u2} (Set.{u2} α) (LocalEquiv.source.{u2, u1} α H (LocalHomeomorph.toLocalEquiv.{u2, u1} α H _inst_4 _inst_1 e)) (Set.univ.{u2} α)) {x : α}, Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (ChartedSpace.chartAt.{u1, u2} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u1, u2} H _inst_1 α _inst_4 e h) x) e
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} H] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] (e : LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) (h : Eq.{succ u1} (Set.{u1} α) (LocalEquiv.source.{u1, u2} α H (LocalHomeomorph.toLocalEquiv.{u1, u2} α H _inst_4 _inst_1 e)) (Set.univ.{u1} α)) {x : α}, Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) (ChartedSpace.chartAt.{u2, u1} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u2, u1} H _inst_1 α _inst_4 e h) x) e
+Case conversion may be inaccurate. Consider using '#align local_homeomorph.singleton_charted_space_chart_at_eq LocalHomeomorph.singletonChartedSpace_chartAt_eqₓ'. -/
 @[simp, mfld_simps]
 theorem singletonChartedSpace_chartAt_eq (h : e.source = Set.univ) {x : α} :
     @chartAt H _ α _ (e.singletonChartedSpace h) x = e :=
   rfl
 #align local_homeomorph.singleton_charted_space_chart_at_eq LocalHomeomorph.singletonChartedSpace_chartAt_eq
 
+/- warning: local_homeomorph.singleton_charted_space_chart_at_source -> LocalHomeomorph.singletonChartedSpace_chartAt_source is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] (e : LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (h : Eq.{succ u2} (Set.{u2} α) (LocalEquiv.source.{u2, u1} α H (LocalHomeomorph.toLocalEquiv.{u2, u1} α H _inst_4 _inst_1 e)) (Set.univ.{u2} α)) {x : α}, Eq.{succ u2} (Set.{u2} α) (LocalEquiv.source.{u2, u1} α H (LocalHomeomorph.toLocalEquiv.{u2, u1} α H _inst_4 _inst_1 (ChartedSpace.chartAt.{u1, u2} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u1, u2} H _inst_1 α _inst_4 e h) x))) (Set.univ.{u2} α)
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} H] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] (e : LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) (h : Eq.{succ u1} (Set.{u1} α) (LocalEquiv.source.{u1, u2} α H (LocalHomeomorph.toLocalEquiv.{u1, u2} α H _inst_4 _inst_1 e)) (Set.univ.{u1} α)) {x : α}, Eq.{succ u1} (Set.{u1} α) (LocalEquiv.source.{u1, u2} α H (LocalHomeomorph.toLocalEquiv.{u1, u2} α H _inst_4 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u2, u1} H _inst_1 α _inst_4 e h) x))) (Set.univ.{u1} α)
+Case conversion may be inaccurate. Consider using '#align local_homeomorph.singleton_charted_space_chart_at_source LocalHomeomorph.singletonChartedSpace_chartAt_sourceₓ'. -/
 theorem singletonChartedSpace_chartAt_source (h : e.source = Set.univ) {x : α} :
     (@chartAt H _ α _ (e.singletonChartedSpace h) x).source = Set.univ :=
   h
 #align local_homeomorph.singleton_charted_space_chart_at_source LocalHomeomorph.singletonChartedSpace_chartAt_source
 
+/- warning: local_homeomorph.singleton_charted_space_mem_atlas_eq -> LocalHomeomorph.singletonChartedSpace_mem_atlas_eq is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] (e : LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (h : Eq.{succ u2} (Set.{u2} α) (LocalEquiv.source.{u2, u1} α H (LocalHomeomorph.toLocalEquiv.{u2, u1} α H _inst_4 _inst_1 e)) (Set.univ.{u2} α)) (e' : LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1), (Membership.Mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1)) (Set.hasMem.{max u2 u1} (LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1)) e' (ChartedSpace.atlas.{u1, u2} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u1, u2} H _inst_1 α _inst_4 e h))) -> (Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) e' e)
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} H] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] (e : LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) (h : Eq.{succ u1} (Set.{u1} α) (LocalEquiv.source.{u1, u2} α H (LocalHomeomorph.toLocalEquiv.{u1, u2} α H _inst_4 _inst_1 e)) (Set.univ.{u1} α)) (e' : LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1), (Membership.mem.{max u2 u1, max u2 u1} (LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) (Set.{max u2 u1} (LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1)) (Set.instMembershipSet.{max u2 u1} (LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1)) e' (ChartedSpace.atlas.{u2, u1} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u2, u1} H _inst_1 α _inst_4 e h))) -> (Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) e' e)
+Case conversion may be inaccurate. Consider using '#align local_homeomorph.singleton_charted_space_mem_atlas_eq LocalHomeomorph.singletonChartedSpace_mem_atlas_eqₓ'. -/
 theorem singletonChartedSpace_mem_atlas_eq (h : e.source = Set.univ) (e' : LocalHomeomorph α H)
     (h' : e' ∈ (e.singletonChartedSpace h).atlas) : e' = e :=
   h'
 #align local_homeomorph.singleton_charted_space_mem_atlas_eq LocalHomeomorph.singletonChartedSpace_mem_atlas_eq
 
+/- warning: local_homeomorph.singleton_has_groupoid -> LocalHomeomorph.singleton_hasGroupoid is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] (e : LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (h : Eq.{succ u2} (Set.{u2} α) (LocalEquiv.source.{u2, u1} α H (LocalHomeomorph.toLocalEquiv.{u2, u1} α H _inst_4 _inst_1 e)) (Set.univ.{u2} α)) (G : StructureGroupoid.{u1} H _inst_1) [_inst_5 : ClosedUnderRestriction.{u1} H _inst_1 G], HasGroupoid.{u1, u2} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u1, u2} H _inst_1 α _inst_4 e h) G
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} H] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] (e : LocalHomeomorph.{u1, u2} α H _inst_4 _inst_1) (h : Eq.{succ u1} (Set.{u1} α) (LocalEquiv.source.{u1, u2} α H (LocalHomeomorph.toLocalEquiv.{u1, u2} α H _inst_4 _inst_1 e)) (Set.univ.{u1} α)) (G : StructureGroupoid.{u2} H _inst_1) [_inst_5 : ClosedUnderRestriction.{u2} H _inst_1 G], HasGroupoid.{u2, u1} H _inst_1 α _inst_4 (LocalHomeomorph.singletonChartedSpace.{u2, u1} H _inst_1 α _inst_4 e h) G
+Case conversion may be inaccurate. Consider using '#align local_homeomorph.singleton_has_groupoid LocalHomeomorph.singleton_hasGroupoidₓ'. -/
 /-- Given a local homeomorphism `e` from a space `α` into `H`, if its source covers the whole
 space `α`, then the induced charted space structure on `α` is `has_groupoid G` for any structure
 groupoid `G` which is closed under restrictions. -/
@@ -1054,17 +1324,31 @@ namespace OpenEmbedding
 
 variable [Nonempty α]
 
+#print OpenEmbedding.singletonChartedSpace /-
 /-- An open embedding of `α` into `H` induces an `H`-charted space structure on `α`.
 See `local_homeomorph.singleton_charted_space` -/
 def singletonChartedSpace {f : α → H} (h : OpenEmbedding f) : ChartedSpace H α :=
   (h.toLocalHomeomorph f).singletonChartedSpace (by simp)
 #align open_embedding.singleton_charted_space OpenEmbedding.singletonChartedSpace
+-/
 
+/- warning: open_embedding.singleton_charted_space_chart_at_eq -> OpenEmbedding.singletonChartedSpace_chartAt_eq is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] [_inst_5 : Nonempty.{succ u2} α] {f : α -> H} (h : OpenEmbedding.{u2, u1} α H _inst_4 _inst_1 f) {x : α}, Eq.{max (succ u2) (succ u1)} (α -> H) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) (fun (_x : LocalHomeomorph.{u2, u1} α H _inst_4 _inst_1) => α -> H) (LocalHomeomorph.hasCoeToFun.{u2, u1} α H _inst_4 _inst_1) (ChartedSpace.chartAt.{u1, u2} H _inst_1 α _inst_4 (OpenEmbedding.singletonChartedSpace.{u1, u2} H _inst_1 α _inst_4 _inst_5 f h) x)) f
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} H] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] [_inst_5 : Nonempty.{succ u1} α] {f : α -> H} (h : OpenEmbedding.{u1, u2} α H _inst_4 _inst_1 f) {x : α}, Eq.{max (succ u2) (succ u1)} (α -> H) (LocalHomeomorph.toFun'.{u1, u2} α H _inst_4 _inst_1 (ChartedSpace.chartAt.{u2, u1} H _inst_1 α _inst_4 (OpenEmbedding.singletonChartedSpace.{u2, u1} H _inst_1 α _inst_4 _inst_5 f h) x)) f
+Case conversion may be inaccurate. Consider using '#align open_embedding.singleton_charted_space_chart_at_eq OpenEmbedding.singletonChartedSpace_chartAt_eqₓ'. -/
 theorem singletonChartedSpace_chartAt_eq {f : α → H} (h : OpenEmbedding f) {x : α} :
     ⇑(@chartAt H _ α _ h.singletonChartedSpace x) = f :=
   rfl
 #align open_embedding.singleton_charted_space_chart_at_eq OpenEmbedding.singletonChartedSpace_chartAt_eq
 
+/- warning: open_embedding.singleton_has_groupoid -> OpenEmbedding.singleton_hasGroupoid is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] [_inst_5 : Nonempty.{succ u2} α] {f : α -> H} (h : OpenEmbedding.{u2, u1} α H _inst_4 _inst_1 f) (G : StructureGroupoid.{u1} H _inst_1) [_inst_6 : ClosedUnderRestriction.{u1} H _inst_1 G], HasGroupoid.{u1, u2} H _inst_1 α _inst_4 (OpenEmbedding.singletonChartedSpace.{u1, u2} H _inst_1 α _inst_4 _inst_5 f h) G
+but is expected to have type
+  forall {H : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} H] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] [_inst_5 : Nonempty.{succ u1} α] {f : α -> H} (h : OpenEmbedding.{u1, u2} α H _inst_4 _inst_1 f) (G : StructureGroupoid.{u2} H _inst_1) [_inst_6 : ClosedUnderRestriction.{u2} H _inst_1 G], HasGroupoid.{u2, u1} H _inst_1 α _inst_4 (OpenEmbedding.singletonChartedSpace.{u2, u1} H _inst_1 α _inst_4 _inst_5 f h) G
+Case conversion may be inaccurate. Consider using '#align open_embedding.singleton_has_groupoid OpenEmbedding.singleton_hasGroupoidₓ'. -/
 theorem singleton_hasGroupoid {f : α → H} (h : OpenEmbedding f) (G : StructureGroupoid H)
     [ClosedUnderRestriction G] : @HasGroupoid _ _ _ _ h.singletonChartedSpace G :=
   (h.toLocalHomeomorph f).singleton_hasGroupoid (by simp) G
@@ -1114,6 +1398,7 @@ end TopologicalSpace.Opens
 /-! ### Structomorphisms -/
 
 
+#print Structomorph /-
 /-- A `G`-diffeomorphism between two charted spaces is a homeomorphism which, when read in the
 charts, belongs to `G`. We avoid the word diffeomorph as it is too related to the smooth category,
 and use structomorph instead. -/
@@ -1125,10 +1410,12 @@ structure Structomorph (G : StructureGroupoid H) (M : Type _) (M' : Type _) [Top
       ∀ c' : LocalHomeomorph M' H,
         c ∈ atlas H M → c' ∈ atlas H M' → c.symm ≫ₕ to_homeomorph.toLocalHomeomorph ≫ₕ c' ∈ G
 #align structomorph Structomorph
+-/
 
 variable [TopologicalSpace M'] [TopologicalSpace M''] {G : StructureGroupoid H} [ChartedSpace H M']
   [ChartedSpace H M'']
 
+#print Structomorph.refl /-
 /-- The identity is a diffeomorphism of any charted space, for any groupoid. -/
 def Structomorph.refl (M : Type _) [TopologicalSpace M] [ChartedSpace H M] [HasGroupoid M G] :
     Structomorph G M M :=
@@ -1139,7 +1426,9 @@ def Structomorph.refl (M : Type _) [TopologicalSpace M] [ChartedSpace H M] [HasG
       rw [LocalHomeomorph.refl_trans]
       exact HasGroupoid.compatible G hc hc' }
 #align structomorph.refl Structomorph.refl
+-/
 
+#print Structomorph.symm /-
 /-- The inverse of a structomorphism is a structomorphism -/
 def Structomorph.symm (e : Structomorph G M M') : Structomorph G M' M :=
   { e.toHomeomorph.symm with
@@ -1150,7 +1439,9 @@ def Structomorph.symm (e : Structomorph G M M') : Structomorph G M' M :=
       rwa [trans_symm_eq_symm_trans_symm, trans_symm_eq_symm_trans_symm, symm_symm, trans_assoc] at
         this }
 #align structomorph.symm Structomorph.symm
+-/
 
+#print Structomorph.trans /-
 /-- The composition of structomorphisms is a structomorphism -/
 def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') :
     Structomorph G M M'' :=
@@ -1199,6 +1490,7 @@ def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') :
       have : F₂ ∈ G := G.eq_on_source A (Setoid.symm this)
       exact this }
 #align structomorph.trans Structomorph.trans
+-/
 
 end HasGroupoid
 

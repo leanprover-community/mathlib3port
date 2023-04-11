@@ -186,7 +186,7 @@ the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
 theorem contMdiff_finsum_smul {g : ι → M → F}
     (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
-  (contMdiff_finsum fun i => f.contMdiff_smul (hg i)) <|
+  (cont_mdiff_finsum fun i => f.contMdiff_smul (hg i)) <|
     f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 #align smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.contMdiff_finsum_smul
 
@@ -331,7 +331,7 @@ theorem exists_isSubordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s)
   by
   -- First we deduce some missing instances
   haveI : LocallyCompactSpace H := I.locally_compact
-  haveI : LocallyCompactSpace M := ChartedSpace.locally_compact H M
+  haveI : LocallyCompactSpace M := ChartedSpace.locallyCompact H M
   haveI : NormalSpace M := normal_of_paracompact_t2
   -- Next we choose a covering by supports of smooth bump functions
   have hB := fun x hx => SmoothBumpFunction.nhds_basis_support I (hU x hx)
@@ -516,7 +516,7 @@ theorem exists_isSubordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (h
     (hU : s ⊆ ⋃ i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.IsSubordinate U :=
   by
   haveI : LocallyCompactSpace H := I.locally_compact
-  haveI : LocallyCompactSpace M := ChartedSpace.locally_compact H M
+  haveI : LocallyCompactSpace M := ChartedSpace.locallyCompact H M
   haveI : NormalSpace M := normal_of_paracompact_t2
   rcases BumpCovering.exists_isSubordinate_of_prop (Smooth I 𝓘(ℝ)) _ hs U ho hU with ⟨f, hf, hfU⟩
   · exact ⟨f.to_smooth_partition_of_unity hf, hfU.to_smooth_partition_of_unity hf⟩

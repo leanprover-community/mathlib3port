@@ -310,27 +310,27 @@ theorem contMdiffWithinAt_finset_prod' (h : ∀ i ∈ t, ContMdiffWithinAt I' I 
   Finset.prod_induction f (fun f => ContMdiffWithinAt I' I n f s x) (fun f g hf hg => hf.mul hg)
     contMdiffWithinAt_const h
 #align cont_mdiff_within_at_finset_prod' contMdiffWithinAt_finset_prod'
-#align cont_mdiff_within_at_finset_sum' contMdiffWithinAt_finset_sum'
+#align cont_mdiff_within_at_finset_sum' cont_mdiff_within_at_finset_sum'
 
 @[to_additive]
 theorem contMdiffAt_finset_prod' (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
     ContMdiffAt I' I n (∏ i in t, f i) x :=
   contMdiffWithinAt_finset_prod' h
 #align cont_mdiff_at_finset_prod' contMdiffAt_finset_prod'
-#align cont_mdiff_at_finset_sum' contMdiffAt_finset_sum'
+#align cont_mdiff_at_finset_sum' cont_mdiff_at_finset_sum'
 
 @[to_additive]
 theorem contMdiffOn_finset_prod' (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
     ContMdiffOn I' I n (∏ i in t, f i) s := fun x hx =>
   contMdiffWithinAt_finset_prod' fun i hi => h i hi x hx
 #align cont_mdiff_on_finset_prod' contMdiffOn_finset_prod'
-#align cont_mdiff_on_finset_sum' contMdiffOn_finset_sum'
+#align cont_mdiff_on_finset_sum' cont_mdiff_on_finset_sum'
 
 @[to_additive]
 theorem contMdiff_finset_prod' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
     ContMdiff I' I n (∏ i in t, f i) := fun x => contMdiffAt_finset_prod' fun i hi => h i hi x
 #align cont_mdiff_finset_prod' contMdiff_finset_prod'
-#align cont_mdiff_finset_sum' contMdiff_finset_sum'
+#align cont_mdiff_finset_sum' cont_mdiff_finset_sum'
 
 @[to_additive]
 theorem contMdiffWithinAt_finset_prod (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
@@ -339,49 +339,49 @@ theorem contMdiffWithinAt_finset_prod (h : ∀ i ∈ t, ContMdiffWithinAt I' I n
   simp only [← Finset.prod_apply]
   exact contMdiffWithinAt_finset_prod' h
 #align cont_mdiff_within_at_finset_prod contMdiffWithinAt_finset_prod
-#align cont_mdiff_within_at_finset_sum contMdiffWithinAt_finset_sum
+#align cont_mdiff_within_at_finset_sum cont_mdiff_within_at_finset_sum
 
 @[to_additive]
 theorem contMdiffAt_finset_prod (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
     ContMdiffAt I' I n (fun x => ∏ i in t, f i x) x :=
   contMdiffWithinAt_finset_prod h
 #align cont_mdiff_at_finset_prod contMdiffAt_finset_prod
-#align cont_mdiff_at_finset_sum contMdiffAt_finset_sum
+#align cont_mdiff_at_finset_sum cont_mdiff_at_finset_sum
 
 @[to_additive]
 theorem contMdiffOn_finset_prod (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
     ContMdiffOn I' I n (fun x => ∏ i in t, f i x) s := fun x hx =>
   contMdiffWithinAt_finset_prod fun i hi => h i hi x hx
 #align cont_mdiff_on_finset_prod contMdiffOn_finset_prod
-#align cont_mdiff_on_finset_sum contMdiffOn_finset_sum
+#align cont_mdiff_on_finset_sum cont_mdiff_on_finset_sum
 
 @[to_additive]
 theorem contMdiff_finset_prod (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
     ContMdiff I' I n fun x => ∏ i in t, f i x := fun x =>
   contMdiffAt_finset_prod fun i hi => h i hi x
 #align cont_mdiff_finset_prod contMdiff_finset_prod
-#align cont_mdiff_finset_sum contMdiff_finset_sum
+#align cont_mdiff_finset_sum cont_mdiff_finset_sum
 
 @[to_additive]
 theorem smoothWithinAt_finset_prod' (h : ∀ i ∈ t, SmoothWithinAt I' I (f i) s x) :
     SmoothWithinAt I' I (∏ i in t, f i) s x :=
   contMdiffWithinAt_finset_prod' h
 #align smooth_within_at_finset_prod' smoothWithinAt_finset_prod'
-#align smooth_within_at_finset_sum' smoothWithinAt_finset_sum'
+#align smooth_within_at_finset_sum' smooth_within_at_finset_sum'
 
 @[to_additive]
 theorem smoothAt_finset_prod' (h : ∀ i ∈ t, SmoothAt I' I (f i) x) :
     SmoothAt I' I (∏ i in t, f i) x :=
   contMdiffAt_finset_prod' h
 #align smooth_at_finset_prod' smoothAt_finset_prod'
-#align smooth_at_finset_sum' smoothAt_finset_sum'
+#align smooth_at_finset_sum' smooth_at_finset_sum'
 
 @[to_additive]
 theorem smoothOn_finset_prod' (h : ∀ i ∈ t, SmoothOn I' I (f i) s) :
     SmoothOn I' I (∏ i in t, f i) s :=
   contMdiffOn_finset_prod' h
 #align smooth_on_finset_prod' smoothOn_finset_prod'
-#align smooth_on_finset_sum' smoothOn_finset_sum'
+#align smooth_on_finset_sum' smooth_on_finset_sum'
 
 @[to_additive]
 theorem smooth_finset_prod' (h : ∀ i ∈ t, Smooth I' I (f i)) : Smooth I' I (∏ i in t, f i) :=
@@ -394,21 +394,21 @@ theorem smoothWithinAt_finset_prod (h : ∀ i ∈ t, SmoothWithinAt I' I (f i) s
     SmoothWithinAt I' I (fun x => ∏ i in t, f i x) s x :=
   contMdiffWithinAt_finset_prod h
 #align smooth_within_at_finset_prod smoothWithinAt_finset_prod
-#align smooth_within_at_finset_sum smoothWithinAt_finset_sum
+#align smooth_within_at_finset_sum smooth_within_at_finset_sum
 
 @[to_additive]
 theorem smoothAt_finset_prod (h : ∀ i ∈ t, SmoothAt I' I (f i) x) :
     SmoothAt I' I (fun x => ∏ i in t, f i x) x :=
   contMdiffAt_finset_prod h
 #align smooth_at_finset_prod smoothAt_finset_prod
-#align smooth_at_finset_sum smoothAt_finset_sum
+#align smooth_at_finset_sum smooth_at_finset_sum
 
 @[to_additive]
 theorem smoothOn_finset_prod (h : ∀ i ∈ t, SmoothOn I' I (f i) s) :
     SmoothOn I' I (fun x => ∏ i in t, f i x) s :=
   contMdiffOn_finset_prod h
 #align smooth_on_finset_prod smoothOn_finset_prod
-#align smooth_on_finset_sum smoothOn_finset_sum
+#align smooth_on_finset_sum smooth_on_finset_sum
 
 @[to_additive]
 theorem smooth_finset_prod (h : ∀ i ∈ t, Smooth I' I (f i)) :
@@ -427,7 +427,7 @@ theorem contMdiff_finprod (h : ∀ i, ContMdiff I' I n (f i))
   rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
   exact (contMdiff_finset_prod (fun i hi => h i) x).congr_of_eventuallyEq hs
 #align cont_mdiff_finprod contMdiff_finprod
-#align cont_mdiff_finsum contMdiff_finsum
+#align cont_mdiff_finsum cont_mdiff_finsum
 
 @[to_additive]
 theorem contMdiff_finprod_cond (hc : ∀ i, p i → ContMdiff I' I n (f i))
@@ -437,7 +437,7 @@ theorem contMdiff_finprod_cond (hc : ∀ i, p i → ContMdiff I' I n (f i))
   simp only [← finprod_subtype_eq_finprod_cond]
   exact contMdiff_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 #align cont_mdiff_finprod_cond contMdiff_finprod_cond
-#align cont_mdiff_finsum_cond contMdiff_finsum_cond
+#align cont_mdiff_finsum_cond cont_mdiff_finsum_cond
 
 @[to_additive]
 theorem smooth_finprod (h : ∀ i, Smooth I' I (f i))

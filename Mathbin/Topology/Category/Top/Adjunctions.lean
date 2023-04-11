@@ -28,6 +28,7 @@ open TopCat
 
 namespace TopCat
 
+#print TopCat.adj₁ /-
 /-- Equipping a type with the discrete topology is left adjoint to the forgetful functor
 `Top ⥤ Type`. -/
 @[simps Unit counit]
@@ -36,7 +37,9 @@ def adj₁ : discrete ⊣ forget TopCat.{u} :=
     { Unit := { app := fun X => id }
       counit := { app := fun X => ⟨id, continuous_bot⟩ } }
 #align Top.adj₁ TopCat.adj₁
+-/
 
+#print TopCat.adj₂ /-
 /-- Equipping a type with the trivial topology is right adjoint to the forgetful functor
 `Top ⥤ Type`. -/
 @[simps Unit counit]
@@ -45,6 +48,7 @@ def adj₂ : forget TopCat.{u} ⊣ trivial :=
     { Unit := { app := fun X => ⟨id, continuous_top⟩ }
       counit := { app := fun X => id } }
 #align Top.adj₂ TopCat.adj₂
+-/
 
 instance : IsRightAdjoint (forget TopCat.{u}) :=
   ⟨_, adj₁⟩
