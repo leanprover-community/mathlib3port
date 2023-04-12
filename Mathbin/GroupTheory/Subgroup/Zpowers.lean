@@ -48,6 +48,12 @@ theorem mem_zpowers (g : G) : g ∈ zpowers g :=
   ⟨1, zpow_one _⟩
 #align subgroup.mem_zpowers Subgroup.mem_zpowers
 
+/- warning: subgroup.coe_zpowers -> Subgroup.coe_zpowers is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 g)) (Set.range.{u1, 1} G Int (fun (n : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g n))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (g : G), Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g)) (Set.range.{u1, 1} G Int (fun (n : Int) => HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) g n))
+Case conversion may be inaccurate. Consider using '#align subgroup.coe_zpowers Subgroup.coe_zpowersₓ'. -/
 @[norm_cast]
 theorem coe_zpowers (g : G) : ↑(zpowers g) = Set.range fun n : ℤ => g ^ n :=
   rfl
@@ -304,9 +310,21 @@ theorem zpowers_le {g : G} {H : Subgroup G} : zpowers g ≤ H ↔ g ∈ H := by
 #align subgroup.zpowers_le Subgroup.zpowers_le
 #align add_subgroup.zmultiples_le AddSubgroup.zmultiples_le
 
+/- warning: subgroup.zpowers_le_of_mem -> Subgroup.zpowers_le_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {H : Subgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) g H) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Subgroup.zpowers.{u1} G _inst_1 g) H)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G} {H : Subgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) g H) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Subgroup.zpowers.{u1} G _inst_1 g) H)
+Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_le_of_mem Subgroup.zpowers_le_of_memₓ'. -/
 alias zpowers_le ↔ _ zpowers_le_of_mem
 #align subgroup.zpowers_le_of_mem Subgroup.zpowers_le_of_mem
 
+/- warning: add_subgroup.zmultiples_le_of_mem -> AddSubgroup.zmultiples_le_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : AddGroup.{u1} G] {g : G} {H : AddSubgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} G (AddSubgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (AddSubgroup.{u1} G _inst_1) G (AddSubgroup.setLike.{u1} G _inst_1)) g H) -> (LE.le.{u1} (AddSubgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (AddSubgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (AddSubgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (AddSubgroup.{u1} G _inst_1) G (AddSubgroup.setLike.{u1} G _inst_1)))) (AddSubgroup.zmultiples.{u1} G _inst_1 g) H)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : AddGroup.{u1} G] {g : G} {H : AddSubgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} G (AddSubgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} G _inst_1) G (AddSubgroup.instSetLikeAddSubgroup.{u1} G _inst_1)) g H) -> (LE.le.{u1} (AddSubgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (AddSubgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (AddSubgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (AddSubgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (AddSubgroup.{u1} G _inst_1) (AddSubgroup.instCompleteLatticeAddSubgroup.{u1} G _inst_1))))) (AddSubgroup.zmultiples.{u1} G _inst_1 g) H)
+Case conversion may be inaccurate. Consider using '#align add_subgroup.zmultiples_le_of_mem AddSubgroup.zmultiples_le_of_memₓ'. -/
 alias AddSubgroup.zmultiples_le ↔ _ _root_.add_subgroup.zmultiples_le_of_mem
 #align add_subgroup.zmultiples_le_of_mem AddSubgroup.zmultiples_le_of_mem
 
@@ -323,6 +341,12 @@ theorem zpowers_eq_bot {g : G} : zpowers g = ⊥ ↔ g = 1 := by rw [eq_bot_iff,
 #align subgroup.zpowers_eq_bot Subgroup.zpowers_eq_bot
 #align add_subgroup.zmultiples_eq_bot AddSubgroup.zmultiples_eq_bot
 
+/- warning: subgroup.zpowers_ne_bot -> Subgroup.zpowers_ne_bot is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Ne.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))) (Ne.{succ u1} G g (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {g : G}, Iff (Ne.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.zpowers.{u1} G _inst_1 g) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))) (Ne.{succ u1} G g (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align subgroup.zpowers_ne_bot Subgroup.zpowers_ne_botₓ'. -/
 @[to_additive zmultiples_ne_bot]
 theorem zpowers_ne_bot : zpowers g ≠ ⊥ ↔ g ≠ 1 :=
   zpowers_eq_bot.Not

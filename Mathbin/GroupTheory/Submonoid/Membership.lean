@@ -665,6 +665,12 @@ theorem mem_powers (n : M) : n ∈ powers n :=
   ⟨1, pow_one _⟩
 #align submonoid.mem_powers Submonoid.mem_powers
 
+/- warning: submonoid.coe_powers -> Submonoid.coe_powers is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M), Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.setLike.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))))) (Submonoid.powers.{u1} M _inst_1 x)) (Set.range.{u1, 1} M Nat (fun (n : Nat) => HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (x : M), Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Submonoid.powers.{u1} M _inst_1 x)) (Set.range.{u1, 1} M Nat (fun (n : Nat) => HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n))
+Case conversion may be inaccurate. Consider using '#align submonoid.coe_powers Submonoid.coe_powersₓ'. -/
 @[norm_cast]
 theorem coe_powers (x : M) : ↑(powers x) = Set.range fun n : ℕ => x ^ n :=
   rfl
