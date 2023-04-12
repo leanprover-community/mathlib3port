@@ -494,9 +494,11 @@ theorem lt_iff_le_and_ne [PartialOrder α] {a b : α} : a < b ↔ a ≤ b ∧ a 
 #align lt_iff_le_and_ne lt_iff_le_and_ne
 -/
 
+#print eq_iff_not_lt_of_le /-
 theorem eq_iff_not_lt_of_le {α} [PartialOrder α] {x y : α} : x ≤ y → y = x ↔ ¬x < y := by
   rw [lt_iff_le_and_ne, not_and, Classical.not_not, eq_comm]
 #align eq_iff_not_lt_of_le eq_iff_not_lt_of_le
+-/
 
 #print Decidable.eq_iff_le_not_lt /-
 -- See Note [decidable namespace]
