@@ -60,8 +60,8 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
     have L : ∀ᶠ n in at_top, u (c n) - c n * l ≤ ε * c n :=
       by
-      rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ, Asymptotics.isOCat_iff] at
-        clim
+      rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ,
+        Asymptotics.isLittleO_iff] at clim
       filter_upwards [clim εpos, Ctop (Ioi_mem_at_top 0)]with n hn cnpos'
       have cnpos : 0 < c n := cnpos'
       calc
@@ -128,8 +128,8 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
     have L : ∀ᶠ n : ℕ in at_top, (c n : ℝ) * l - u (c n) ≤ ε * c n :=
       by
-      rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ, Asymptotics.isOCat_iff] at
-        clim
+      rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ,
+        Asymptotics.isLittleO_iff] at clim
       filter_upwards [clim εpos, Ctop (Ioi_mem_at_top 0)]with n hn cnpos'
       have cnpos : 0 < c n := cnpos'
       calc

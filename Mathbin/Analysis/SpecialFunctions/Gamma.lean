@@ -81,7 +81,7 @@ theorem integral_exp_neg_Ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 :=
 namespace Real
 
 /-- Asymptotic bound for the `Γ` function integrand. -/
-theorem Gamma_integrand_isOCat (s : ℝ) :
+theorem Gamma_integrand_isLittleO (s : ℝ) :
     (fun x : ℝ => exp (-x) * x ^ s) =o[atTop] fun x : ℝ => exp (-(1 / 2) * x) :=
   by
   refine' is_o_of_tendsto (fun x hx => _) _
@@ -97,7 +97,7 @@ theorem Gamma_integrand_isOCat (s : ℝ) :
     ring
   rw [this]
   exact (tendsto_exp_mul_div_rpow_atTop s (1 / 2) one_half_pos).inv_tendsto_atTop
-#align real.Gamma_integrand_is_o Real.Gamma_integrand_isOCat
+#align real.Gamma_integrand_is_o Real.Gamma_integrand_isLittleO
 
 /-- The Euler integral for the `Γ` function converges for positive real `s`. -/
 theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) :
@@ -109,7 +109,7 @@ theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) :
     refine' integrable_on.continuous_on_mul continuous_on_id.neg.exp _ is_compact_Icc
     refine' (intervalIntegrable_iff_integrable_Icc_of_le zero_le_one).mp _
     exact interval_integrable_rpow' (by linarith)
-  · refine' integrableOfIsOExpNeg one_half_pos _ (Gamma_integrand_is_o _).IsO
+  · refine' integrableOfIsOExpNeg one_half_pos _ (Gamma_integrand_is_o _).IsBigO
     refine' continuous_on_id.neg.exp.mul (continuous_on_id.rpow_const _)
     intro x hx
     exact Or.inl ((zero_lt_one : (0 : ℝ) < 1).trans_le hx).ne'
@@ -505,7 +505,7 @@ def dGammaIntegrandReal (s x : ℝ) : ℝ :=
   |exp (-x) * log x * x ^ (s - 1)|
 #align dGamma_integrand_real dGammaIntegrandReal
 
-theorem dGamma_integrand_isOCat_atTop (s : ℝ) :
+theorem dGamma_integrand_isLittleO_atTop (s : ℝ) :
     (fun x : ℝ => exp (-x) * log x * x ^ (s - 1)) =o[atTop] fun x => exp (-(1 / 2) * x) :=
   by
   refine' is_o_of_tendsto (fun x hx => _) _
@@ -530,7 +530,7 @@ theorem dGamma_integrand_isOCat_atTop (s : ℝ) :
   apply eventually_eq_of_mem (Ioi_mem_at_top (0 : ℝ))
   intro x hx
   simp [exp_log hx]
-#align dGamma_integrand_is_o_at_top dGamma_integrand_isOCat_atTop
+#align dGamma_integrand_is_o_at_top dGamma_integrand_isLittleO_atTop
 
 /-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
 `1 < re s`. -/
@@ -555,7 +555,7 @@ theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
     · rw [abs_of_pos (exp_pos (-x)), exp_le_one_iff, neg_le, neg_zero]
       exact hx.1.le
     · exact (abs_log_mul_self_rpow_lt x (s - 1) hx.1 hx.2 (sub_pos.mpr hs)).le
-  · have := (dGamma_integrand_isOCat_atTop s).IsO.norm_left
+  · have := (dGamma_integrand_isLittleO_atTop s).IsBigO.norm_left
     refine' integrableOfIsOExpNeg one_half_pos (ContinuousOn.mul _ _).norm this
     · refine' (continuous_exp.comp continuous_neg).ContinuousOn.mul (continuous_on_log.mono _)
       simp

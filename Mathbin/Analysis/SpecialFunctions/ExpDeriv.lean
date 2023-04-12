@@ -36,9 +36,9 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ]
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
 theorem hasDerivAt_exp (x : ℂ) : HasDerivAt exp (exp x) x :=
   by
-  rw [hasDerivAt_iff_isOCat_nhds_zero]
+  rw [hasDerivAt_iff_isLittleO_nhds_zero]
   have : (1 : ℕ) < 2 := by norm_num
-  refine' (is_O.of_bound ‖exp x‖ _).trans_isOCat (is_o_pow_id this)
+  refine' (is_O.of_bound ‖exp x‖ _).trans_isLittleO (is_o_pow_id this)
   filter_upwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
   simp only [Metric.mem_ball, dist_zero_right, norm_pow]
   exact fun z hz => exp_bound_sq x z hz.le

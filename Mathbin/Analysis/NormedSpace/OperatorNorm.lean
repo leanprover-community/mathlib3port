@@ -680,33 +680,33 @@ variable [RingHomIsometric σ₁₂] (c : 𝕜) (f g : E →SL[σ₁₂] F) (h :
 
 open Asymptotics
 
-theorem isOWith_id (l : Filter E) : IsOWith ‖f‖ l f fun x => x :=
-  isOWith_of_le' _ f.le_op_norm
-#align continuous_linear_map.is_O_with_id ContinuousLinearMap.isOWith_id
+theorem isBigOWith_id (l : Filter E) : IsBigOWith ‖f‖ l f fun x => x :=
+  isBigOWith_of_le' _ f.le_op_norm
+#align continuous_linear_map.is_O_with_id ContinuousLinearMap.isBigOWith_id
 
-theorem isO_id (l : Filter E) : f =O[l] fun x => x :=
-  (f.isOWith_id l).IsO
-#align continuous_linear_map.is_O_id ContinuousLinearMap.isO_id
+theorem isBigO_id (l : Filter E) : f =O[l] fun x => x :=
+  (f.isBigOWith_id l).IsBigO
+#align continuous_linear_map.is_O_id ContinuousLinearMap.isBigO_id
 
-theorem isOWith_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F)
-    (l : Filter α) : IsOWith ‖g‖ l (fun x' => g (f x')) f :=
-  (g.isOWith_id ⊤).comp_tendsto le_top
-#align continuous_linear_map.is_O_with_comp ContinuousLinearMap.isOWith_comp
+theorem isBigOWith_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F)
+    (l : Filter α) : IsBigOWith ‖g‖ l (fun x' => g (f x')) f :=
+  (g.isBigOWith_id ⊤).comp_tendsto le_top
+#align continuous_linear_map.is_O_with_comp ContinuousLinearMap.isBigOWith_comp
 
-theorem isO_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F) (l : Filter α) :
-    (fun x' => g (f x')) =O[l] f :=
-  (g.isOWith_comp f l).IsO
-#align continuous_linear_map.is_O_comp ContinuousLinearMap.isO_comp
+theorem isBigO_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F)
+    (l : Filter α) : (fun x' => g (f x')) =O[l] f :=
+  (g.isBigOWith_comp f l).IsBigO
+#align continuous_linear_map.is_O_comp ContinuousLinearMap.isBigO_comp
 
-theorem isOWith_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
-    IsOWith ‖f‖ l (fun x' => f (x' - x)) fun x' => x' - x :=
-  f.isOWith_comp _ l
-#align continuous_linear_map.is_O_with_sub ContinuousLinearMap.isOWith_sub
+theorem isBigOWith_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
+    IsBigOWith ‖f‖ l (fun x' => f (x' - x)) fun x' => x' - x :=
+  f.isBigOWith_comp _ l
+#align continuous_linear_map.is_O_with_sub ContinuousLinearMap.isBigOWith_sub
 
-theorem isO_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
+theorem isBigO_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
     (fun x' => f (x' - x)) =O[l] fun x' => x' - x :=
-  f.isO_comp _ l
-#align continuous_linear_map.is_O_sub ContinuousLinearMap.isO_sub
+  f.isBigO_comp _ l
+#align continuous_linear_map.is_O_sub ContinuousLinearMap.isBigO_sub
 
 end IsO
 
@@ -1296,13 +1296,13 @@ protected theorem lipschitz : LipschitzWith ‖(e : E →SL[σ₁₂] F)‖₊ e
   (e : E →SL[σ₁₂] F).lipschitz
 #align continuous_linear_equiv.lipschitz ContinuousLinearEquiv.lipschitz
 
-theorem isO_comp {α : Type _} (f : α → E) (l : Filter α) : (fun x' => e (f x')) =O[l] f :=
-  (e : E →SL[σ₁₂] F).isO_comp f l
-#align continuous_linear_equiv.is_O_comp ContinuousLinearEquiv.isO_comp
+theorem isBigO_comp {α : Type _} (f : α → E) (l : Filter α) : (fun x' => e (f x')) =O[l] f :=
+  (e : E →SL[σ₁₂] F).isBigO_comp f l
+#align continuous_linear_equiv.is_O_comp ContinuousLinearEquiv.isBigO_comp
 
-theorem isO_sub (l : Filter E) (x : E) : (fun x' => e (x' - x)) =O[l] fun x' => x' - x :=
-  (e : E →SL[σ₁₂] F).isO_sub l x
-#align continuous_linear_equiv.is_O_sub ContinuousLinearEquiv.isO_sub
+theorem isBigO_sub (l : Filter E) (x : E) : (fun x' => e (x' - x)) =O[l] fun x' => x' - x :=
+  (e : E →SL[σ₁₂] F).isBigO_sub l x
+#align continuous_linear_equiv.is_O_sub ContinuousLinearEquiv.isBigO_sub
 
 end
 
@@ -1312,13 +1312,13 @@ variable [RingHomIsometric σ₂₁] (e : E ≃SL[σ₁₂] F)
 
 include σ₂₁
 
-theorem isO_comp_rev {α : Type _} (f : α → E) (l : Filter α) : f =O[l] fun x' => e (f x') :=
-  (e.symm.isO_comp _ l).congr_left fun _ => e.symm_apply_apply _
-#align continuous_linear_equiv.is_O_comp_rev ContinuousLinearEquiv.isO_comp_rev
+theorem isBigO_comp_rev {α : Type _} (f : α → E) (l : Filter α) : f =O[l] fun x' => e (f x') :=
+  (e.symm.isBigO_comp _ l).congr_left fun _ => e.symm_apply_apply _
+#align continuous_linear_equiv.is_O_comp_rev ContinuousLinearEquiv.isBigO_comp_rev
 
-theorem isO_sub_rev (l : Filter E) (x : E) : (fun x' => x' - x) =O[l] fun x' => e (x' - x) :=
-  e.isO_comp_rev _ _
-#align continuous_linear_equiv.is_O_sub_rev ContinuousLinearEquiv.isO_sub_rev
+theorem isBigO_sub_rev (l : Filter E) (x : E) : (fun x' => x' - x) =O[l] fun x' => e (x' - x) :=
+  e.isBigO_comp_rev _ _
+#align continuous_linear_equiv.is_O_sub_rev ContinuousLinearEquiv.isBigO_sub_rev
 
 end ContinuousLinearEquiv
 

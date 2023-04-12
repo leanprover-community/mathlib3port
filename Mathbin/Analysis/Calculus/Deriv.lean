@@ -262,10 +262,10 @@ theorem UniqueDiffWithinAt.eq_deriv (s : Set 𝕜) (H : UniqueDiffWithinAt 𝕜 
   smulRight_one_eq_iff.mp <| UniqueDiffWithinAt.eq H h h₁
 #align unique_diff_within_at.eq_deriv UniqueDiffWithinAt.eq_deriv
 
-theorem hasDerivAtFilter_iff_isOCat :
+theorem hasDerivAtFilter_iff_isLittleO :
     HasDerivAtFilter f f' x L ↔ (fun x' : 𝕜 => f x' - f x - (x' - x) • f') =o[L] fun x' => x' - x :=
   Iff.rfl
-#align has_deriv_at_filter_iff_is_o hasDerivAtFilter_iff_isOCat
+#align has_deriv_at_filter_iff_is_o hasDerivAtFilter_iff_isLittleO
 
 theorem hasDerivAtFilter_iff_tendsto :
     HasDerivAtFilter f f' x L ↔
@@ -273,11 +273,11 @@ theorem hasDerivAtFilter_iff_tendsto :
   hasFderivAtFilter_iff_tendsto
 #align has_deriv_at_filter_iff_tendsto hasDerivAtFilter_iff_tendsto
 
-theorem hasDerivWithinAt_iff_isOCat :
+theorem hasDerivWithinAt_iff_isLittleO :
     HasDerivWithinAt f f' s x ↔
       (fun x' : 𝕜 => f x' - f x - (x' - x) • f') =o[𝓝[s] x] fun x' => x' - x :=
   Iff.rfl
-#align has_deriv_within_at_iff_is_o hasDerivWithinAt_iff_isOCat
+#align has_deriv_within_at_iff_is_o hasDerivWithinAt_iff_isLittleO
 
 theorem hasDerivWithinAt_iff_tendsto :
     HasDerivWithinAt f f' s x ↔
@@ -285,10 +285,10 @@ theorem hasDerivWithinAt_iff_tendsto :
   hasFderivAtFilter_iff_tendsto
 #align has_deriv_within_at_iff_tendsto hasDerivWithinAt_iff_tendsto
 
-theorem hasDerivAt_iff_isOCat :
+theorem hasDerivAt_iff_isLittleO :
     HasDerivAt f f' x ↔ (fun x' : 𝕜 => f x' - f x - (x' - x) • f') =o[𝓝 x] fun x' => x' - x :=
   Iff.rfl
-#align has_deriv_at_iff_is_o hasDerivAt_iff_isOCat
+#align has_deriv_at_iff_is_o hasDerivAt_iff_isLittleO
 
 theorem hasDerivAt_iff_tendsto :
     HasDerivAt f f' x ↔ Tendsto (fun x' => ‖x' - x‖⁻¹ * ‖f x' - f x - (x' - x) • f'‖) (𝓝 x) (𝓝 0) :=
@@ -379,10 +379,10 @@ alias HasDerivWithinAt.Ioi_iff_Ioo ↔ HasDerivWithinAt.Ioi_of_Ioo HasDerivWithi
 #align has_deriv_within_at.Ioi_of_Ioo HasDerivWithinAt.Ioi_of_Ioo
 #align has_deriv_within_at.Ioo_of_Ioi HasDerivWithinAt.Ioo_of_Ioi
 
-theorem hasDerivAt_iff_isOCat_nhds_zero :
+theorem hasDerivAt_iff_isLittleO_nhds_zero :
     HasDerivAt f f' x ↔ (fun h => f (x + h) - f x - h • f') =o[𝓝 0] fun h => h :=
-  hasFderivAt_iff_isOCat_nhds_zero
-#align has_deriv_at_iff_is_o_nhds_zero hasDerivAt_iff_isOCat_nhds_zero
+  hasFderivAt_iff_isLittleO_nhds_zero
+#align has_deriv_at_iff_is_o_nhds_zero hasDerivAt_iff_isLittleO_nhds_zero
 
 theorem HasDerivAtFilter.mono (h : HasDerivAtFilter f f' x L₂) (hst : L₁ ≤ L₂) :
     HasDerivAtFilter f f' x L₁ :=
@@ -1214,17 +1214,17 @@ theorem deriv_sub (hf : DifferentiableAt 𝕜 f x) (hg : DifferentiableAt 𝕜 g
   (hf.HasDerivAt.sub hg.HasDerivAt).deriv
 #align deriv_sub deriv_sub
 
-theorem HasDerivAtFilter.isO_sub (h : HasDerivAtFilter f f' x L) :
+theorem HasDerivAtFilter.isBigO_sub (h : HasDerivAtFilter f f' x L) :
     (fun x' => f x' - f x) =O[L] fun x' => x' - x :=
-  HasFderivAtFilter.isO_sub h
-#align has_deriv_at_filter.is_O_sub HasDerivAtFilter.isO_sub
+  HasFderivAtFilter.isBigO_sub h
+#align has_deriv_at_filter.is_O_sub HasDerivAtFilter.isBigO_sub
 
-theorem HasDerivAtFilter.isO_sub_rev (hf : HasDerivAtFilter f f' x L) (hf' : f' ≠ 0) :
+theorem HasDerivAtFilter.isBigO_sub_rev (hf : HasDerivAtFilter f f' x L) (hf' : f' ≠ 0) :
     (fun x' => x' - x) =O[L] fun x' => f x' - f x :=
-  suffices AntilipschitzWith ‖f'‖₊⁻¹ (smulRight (1 : 𝕜 →L[𝕜] 𝕜) f') from hf.isO_sub_rev this
+  suffices AntilipschitzWith ‖f'‖₊⁻¹ (smulRight (1 : 𝕜 →L[𝕜] 𝕜) f') from hf.isBigO_sub_rev this
   AddMonoidHomClass.antilipschitz_of_bound (smulRight (1 : 𝕜 →L[𝕜] 𝕜) f') fun x => by
     simp [norm_smul, ← div_eq_inv_mul, mul_div_cancel _ (mt norm_eq_zero.1 hf')]
-#align has_deriv_at_filter.is_O_sub_rev HasDerivAtFilter.isO_sub_rev
+#align has_deriv_at_filter.is_O_sub_rev HasDerivAtFilter.isBigO_sub_rev
 
 theorem HasDerivAtFilter.sub_const (hf : HasDerivAtFilter f f' x L) (c : F) :
     HasDerivAtFilter (fun x => f x - c) f' x L := by
@@ -1728,7 +1728,7 @@ theorem hasStrictDerivAt_inv (hx : x ≠ 0) : HasStrictDerivAt Inv.inv (-(x ^ 2)
     -- hy : y ≠ 0, hz : z ≠ 0
     field_simp [hx, hy, hz]
     ring
-  refine' (is_O_refl (fun p : 𝕜 × 𝕜 => p.1 - p.2) _).mul_isOCat ((is_o_one_iff _).2 _)
+  refine' (is_O_refl (fun p : 𝕜 × 𝕜 => p.1 - p.2) _).mul_isLittleO ((is_o_one_iff _).2 _)
   rw [← sub_self (x * x)⁻¹]
   exact tendsto_const_nhds.sub ((continuous_mul.tendsto (x, x)).inv₀ <| mul_ne_zero hx hx)
 #align has_strict_deriv_at_inv hasStrictDerivAt_inv

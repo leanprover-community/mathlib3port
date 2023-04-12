@@ -245,7 +245,7 @@ theorem abs_div_tendsto_atTop_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q 
 
 end PolynomialDivAtTop
 
-theorem isO_of_degree_le (h : P.degree ≤ Q.degree) :
+theorem isBigO_of_degree_le (h : P.degree ≤ Q.degree) :
     (fun x => eval x P) =O[atTop] fun x => eval x Q :=
   by
   by_cases hp : P = 0
@@ -256,7 +256,7 @@ theorem isO_of_degree_le (h : P.degree ≤ Q.degree) :
     cases' le_iff_lt_or_eq.mp h with h h
     · exact is_O_of_div_tendsto_nhds hPQ 0 (div_tendsto_zero_of_degree_lt P Q h)
     · exact is_O_of_div_tendsto_nhds hPQ _ (div_tendsto_leading_coeff_div_of_degree_eq P Q h)
-#align polynomial.is_O_of_degree_le Polynomial.isO_of_degree_le
+#align polynomial.is_O_of_degree_le Polynomial.isBigO_of_degree_le
 
 end Polynomial
 

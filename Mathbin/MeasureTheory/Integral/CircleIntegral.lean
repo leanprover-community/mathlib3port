@@ -316,7 +316,7 @@ theorem circleIntegrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     rcases hw with ⟨θ, hθ, rfl⟩
     replace hθ : θ ∈ [0, 2 * π]
     exact Icc_subset_uIcc (Ioc_subset_Icc_self hθ)
-    refine' not_intervalIntegrable_of_sub_inv_isO_punctured _ real.two_pi_pos.ne hθ
+    refine' not_intervalIntegrable_of_sub_inv_isBigO_punctured _ real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ
     have : ∀ᶠ θ' in 𝓝[≠] θ, f θ' ∈ ball (0 : ℂ) 1 \ {0} :=
       by
@@ -330,7 +330,7 @@ theorem circleIntegrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
         mem_singleton_iff, mem_ball, mem_diff, mem_ball_zero_iff, norm_eq_abs, not_false_iff,
         and_self_iff, imp_true_iff]
     refine'
-      (((hasDerivAt_circleMap c R θ).isO_sub.mono inf_le_left).inv_rev
+      (((hasDerivAt_circleMap c R θ).isBigO_sub.mono inf_le_left).inv_rev
             (this.mono fun θ' h₁ h₂ => absurd h₂ h₁.2)).trans
         _
     refine' is_O.of_bound (|R|)⁻¹ (this.mono fun θ' hθ' => _)

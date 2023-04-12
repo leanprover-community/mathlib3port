@@ -33,6 +33,7 @@ section MetricSpace
 
 variable [NormedOrderedGroup α] {s : Set α}
 
+#print IsUpperSet.thickening' /-
 @[to_additive IsUpperSet.thickening]
 protected theorem IsUpperSet.thickening' (hs : IsUpperSet s) (ε : ℝ) :
     IsUpperSet (thickening ε s) := by
@@ -40,7 +41,9 @@ protected theorem IsUpperSet.thickening' (hs : IsUpperSet s) (ε : ℝ) :
   exact hs.mul_left
 #align is_upper_set.thickening' IsUpperSet.thickening'
 #align is_upper_set.thickening IsUpperSet.thickening
+-/
 
+#print IsLowerSet.thickening' /-
 @[to_additive IsLowerSet.thickening]
 protected theorem IsLowerSet.thickening' (hs : IsLowerSet s) (ε : ℝ) :
     IsLowerSet (thickening ε s) := by
@@ -48,7 +51,9 @@ protected theorem IsLowerSet.thickening' (hs : IsLowerSet s) (ε : ℝ) :
   exact hs.mul_left
 #align is_lower_set.thickening' IsLowerSet.thickening'
 #align is_lower_set.thickening IsLowerSet.thickening
+-/
 
+#print IsUpperSet.cthickening' /-
 @[to_additive IsUpperSet.cthickening]
 protected theorem IsUpperSet.cthickening' (hs : IsUpperSet s) (ε : ℝ) :
     IsUpperSet (cthickening ε s) :=
@@ -57,7 +62,9 @@ protected theorem IsUpperSet.cthickening' (hs : IsUpperSet s) (ε : ℝ) :
   exact isUpperSet_interᵢ₂ fun δ hδ => hs.thickening' _
 #align is_upper_set.cthickening' IsUpperSet.cthickening'
 #align is_upper_set.cthickening IsUpperSet.cthickening
+-/
 
+#print IsLowerSet.cthickening' /-
 @[to_additive IsLowerSet.cthickening]
 protected theorem IsLowerSet.cthickening' (hs : IsLowerSet s) (ε : ℝ) :
     IsLowerSet (cthickening ε s) :=
@@ -66,6 +73,7 @@ protected theorem IsLowerSet.cthickening' (hs : IsLowerSet s) (ε : ℝ) :
   exact isLowerSet_interᵢ₂ fun δ hδ => hs.thickening' _
 #align is_lower_set.cthickening' IsLowerSet.cthickening'
 #align is_lower_set.cthickening IsLowerSet.cthickening
+-/
 
 end MetricSpace
 
@@ -76,6 +84,12 @@ section Finite
 
 variable [Finite ι] {s : Set (ι → ℝ)} {x y : ι → ℝ} {δ : ℝ}
 
+/- warning: is_upper_set.mem_interior_of_forall_lt -> IsUpperSet.mem_interior_of_forall_lt is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {y : ι -> Real}, (IsUpperSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasLe)) s) -> (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (forall (i : ι), LT.lt.{0} Real Real.hasLt (x i) (y i)) -> (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) y (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {y : ι -> Real}, (IsUpperSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.instLEReal)) s) -> (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (forall (i : ι), LT.lt.{0} Real Real.instLTReal (x i) (y i)) -> (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) y (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))
+Case conversion may be inaccurate. Consider using '#align is_upper_set.mem_interior_of_forall_lt IsUpperSet.mem_interior_of_forall_ltₓ'. -/
 theorem IsUpperSet.mem_interior_of_forall_lt (hs : IsUpperSet s) (hx : x ∈ closure s)
     (h : ∀ i, x i < y i) : y ∈ interior s :=
   by
@@ -96,6 +110,12 @@ theorem IsUpperSet.mem_interior_of_forall_lt (hs : IsUpperSet s) (hx : x ∈ clo
   exact ((lt_sub_iff_add_lt.2 <| hyz _).trans (hw _ <| mem_univ _).1).le
 #align is_upper_set.mem_interior_of_forall_lt IsUpperSet.mem_interior_of_forall_lt
 
+/- warning: is_lower_set.mem_interior_of_forall_lt -> IsLowerSet.mem_interior_of_forall_lt is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {y : ι -> Real}, (IsLowerSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasLe)) s) -> (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (forall (i : ι), LT.lt.{0} Real Real.hasLt (y i) (x i)) -> (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) y (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Finite.{succ u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {y : ι -> Real}, (IsLowerSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.instLEReal)) s) -> (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (forall (i : ι), LT.lt.{0} Real Real.instLTReal (y i) (x i)) -> (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) y (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))
+Case conversion may be inaccurate. Consider using '#align is_lower_set.mem_interior_of_forall_lt IsLowerSet.mem_interior_of_forall_ltₓ'. -/
 theorem IsLowerSet.mem_interior_of_forall_lt (hs : IsLowerSet s) (hx : x ∈ closure s)
     (h : ∀ i, y i < x i) : y ∈ interior s :=
   by
@@ -123,6 +143,12 @@ section Fintype
 
 variable [Fintype ι] {s : Set (ι → ℝ)} {x y : ι → ℝ} {δ : ℝ}
 
+/- warning: is_upper_set.exists_subset_ball -> IsUpperSet.exists_subset_ball is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {δ : Real}, (IsUpperSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasLe)) s) -> (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Exists.{succ u1} (ι -> Real) (fun (y : ι -> Real) => And (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) δ (OfNat.ofNat.{0} Real 4 (OfNat.mk.{0} Real 4 (bit0.{0} Real Real.hasAdd (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) x δ)) (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) δ (OfNat.ofNat.{0} Real 4 (OfNat.mk.{0} Real 4 (bit0.{0} Real Real.hasAdd (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))) (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {δ : Real}, (IsUpperSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.instLEReal)) s) -> (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Exists.{succ u1} (ι -> Real) (fun (y : ι -> Real) => And (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) δ (OfNat.ofNat.{0} Real 4 (instOfNat.{0} Real 4 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) x δ)) (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) δ (OfNat.ofNat.{0} Real 4 (instOfNat.{0} Real 4 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))))
+Case conversion may be inaccurate. Consider using '#align is_upper_set.exists_subset_ball IsUpperSet.exists_subset_ballₓ'. -/
 theorem IsUpperSet.exists_subset_ball (hs : IsUpperSet s) (hx : x ∈ closure s) (hδ : 0 < δ) :
     ∃ y, closedBall y (δ / 4) ⊆ closedBall x δ ∧ closedBall y (δ / 4) ⊆ interior s :=
   by
@@ -142,6 +168,12 @@ theorem IsUpperSet.exists_subset_ball (hs : IsUpperSet s) (hx : x ∈ closure s)
   linarith
 #align is_upper_set.exists_subset_ball IsUpperSet.exists_subset_ball
 
+/- warning: is_lower_set.exists_subset_ball -> IsLowerSet.exists_subset_ball is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {δ : Real}, (IsLowerSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasLe)) s) -> (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Exists.{succ u1} (ι -> Real) (fun (y : ι -> Real) => And (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) δ (OfNat.ofNat.{0} Real 4 (OfNat.mk.{0} Real 4 (bit0.{0} Real Real.hasAdd (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) x δ)) (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (DivInvMonoid.toHasDiv.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) δ (OfNat.ofNat.{0} Real 4 (OfNat.mk.{0} Real 4 (bit0.{0} Real Real.hasAdd (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne))))))) (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {s : Set.{u1} (ι -> Real)} {x : ι -> Real} {δ : Real}, (IsLowerSet.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.instLEReal)) s) -> (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) x (closure.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s)) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Exists.{succ u1} (ι -> Real) (fun (y : ι -> Real) => And (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) δ (OfNat.ofNat.{0} Real 4 (instOfNat.{0} Real 4 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) x δ)) (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (Metric.closedBall.{u1} (ι -> Real) (pseudoMetricSpacePi.{u1, 0} ι (fun (ᾰ : ι) => Real) _inst_1 (fun (a : ι) => Real.pseudoMetricSpace)) y (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) δ (OfNat.ofNat.{0} Real 4 (instOfNat.{0} Real 4 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (interior.{u1} (ι -> Real) (Pi.topologicalSpace.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (a : ι) => UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))) s))))
+Case conversion may be inaccurate. Consider using '#align is_lower_set.exists_subset_ball IsLowerSet.exists_subset_ballₓ'. -/
 theorem IsLowerSet.exists_subset_ball (hs : IsLowerSet s) (hx : x ∈ closure s) (hδ : 0 < δ) :
     ∃ y, closedBall y (δ / 4) ⊆ closedBall x δ ∧ closedBall y (δ / 4) ⊆ interior s :=
   by

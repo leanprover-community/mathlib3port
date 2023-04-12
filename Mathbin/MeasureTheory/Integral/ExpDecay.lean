@@ -65,7 +65,7 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
     (h2 : f =O[atTop] fun x => exp (-b * x)) : IntegrableOn f (Ioi a) :=
   by
   cases' h2.is_O_with with c h3
-  rw [Asymptotics.isOWith_iff, eventually_at_top] at h3
+  rw [Asymptotics.isBigOWith_iff, eventually_at_top] at h3
   cases' h3 with r bdr
   let v := max a r
   -- show integrable on `(a, v]` from continuity

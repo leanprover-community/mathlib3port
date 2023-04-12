@@ -977,7 +977,7 @@ along `li`. Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_re
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem Filter.Tendsto.integral_sub_linear_isOCat_ae [NormedSpace ℝ E] [CompleteSpace E]
+theorem Filter.Tendsto.integral_sub_linear_isLittleO_ae [NormedSpace ℝ E] [CompleteSpace E]
     {μ : Measure α} {l : Filter α} [l.IsMeasurablyGenerated] {f : α → E} {b : E}
     (h : Tendsto f (l ⊓ μ.ae) (𝓝 b)) (hfm : StronglyMeasurableAtFilter f l μ)
     (hμ : μ.FiniteAtFilter l) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li l.smallSets)
@@ -997,7 +997,7 @@ theorem Filter.Tendsto.integral_sub_linear_isOCat_ae [NormedSpace ℝ E] [Comple
   rw [← set_integral_const, ← integral_sub h_integrable (integrable_on_const.2 <| Or.inr hμs),
     Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
   exact norm_set_integral_le_of_norm_le_const_ae' hμs h_norm (hfm.sub ae_strongly_measurable_const)
-#align filter.tendsto.integral_sub_linear_is_o_ae Filter.Tendsto.integral_sub_linear_isOCat_ae
+#align filter.tendsto.integral_sub_linear_is_o_ae Filter.Tendsto.integral_sub_linear_isLittleO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure and `f` is an almost everywhere measurable function that is continuous at a point `a`
@@ -1008,7 +1008,7 @@ number, we use `(μ (s i)).to_real` in the actual statement.
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousWithinAt.integral_sub_linear_isOCat_ae [TopologicalSpace α]
+theorem ContinuousWithinAt.integral_sub_linear_isLittleO_ae [TopologicalSpace α]
     [OpensMeasurableSpace α] [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α}
     [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (ha : ContinuousWithinAt f t a)
     (ht : MeasurableSet t) (hfm : StronglyMeasurableAtFilter f (𝓝[t] a) μ) {s : ι → Set α}
@@ -1016,9 +1016,9 @@ theorem ContinuousWithinAt.integral_sub_linear_isOCat_ae [TopologicalSpace α]
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
-  (ha.mono_left inf_le_left).integral_sub_linear_isOCat_ae hfm (μ.finite_at_nhds_within a t) hs m
+  (ha.mono_left inf_le_left).integral_sub_linear_isLittleO_ae hfm (μ.finite_at_nhds_within a t) hs m
     hsμ
-#align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_isOCat_ae
+#align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_isLittleO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds` version: if `μ` is a locally finite
 measure and `f` is an almost everywhere measurable function that is continuous at a point `a`, then
@@ -1029,14 +1029,14 @@ the actual statement.
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousAt.integral_sub_linear_isOCat_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousAt.integral_sub_linear_isLittleO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α} [IsLocallyFiniteMeasure μ] {a : α}
     {f : α → E} (ha : ContinuousAt f a) (hfm : StronglyMeasurableAtFilter f (𝓝 a) μ) {s : ι → Set α}
     {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (ha.mono_left inf_le_left).integral_sub_linear_isOCat_ae hfm (μ.finiteAtNhds a) hs m hsμ
-#align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isOCat_ae
+  (ha.mono_left inf_le_left).integral_sub_linear_isLittleO_ae hfm (μ.finiteAtNhds a) hs m hsμ
+#align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isLittleO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure, `f` is continuous on a measurable set `t`, and `a ∈ t`, then `∫ x in (s i), f x ∂μ =
@@ -1046,16 +1046,16 @@ Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the a
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousOn.integral_sub_linear_isOCat_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousOn.integral_sub_linear_isLittleO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] [SecondCountableTopologyEither α E] {μ : Measure α}
     [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ha : a ∈ t)
     (ht : MeasurableSet t) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li (𝓝[t] a).smallSets)
     (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (hft a ha).integral_sub_linear_isOCat_ae ht ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩
-    hs m hsμ
-#align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isOCat_ae
+  (hft a ha).integral_sub_linear_isLittleO_ae ht
+    ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩ hs m hsμ
+#align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isLittleO_ae
 
 section
 

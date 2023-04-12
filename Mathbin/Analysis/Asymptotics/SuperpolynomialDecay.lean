@@ -337,7 +337,7 @@ variable {l k}
 
 variable [OrderTopology β]
 
-theorem superpolynomialDecay_iff_isO (hk : Tendsto k l atTop) :
+theorem superpolynomialDecay_iff_isBigO (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =O[l] fun a : α => k a ^ z :=
   by
   refine' (superpolynomial_decay_iff_zpow_tendsto_zero f hk).trans _
@@ -354,12 +354,12 @@ theorem superpolynomialDecay_iff_isO (hk : Tendsto k l atTop) :
         (is_O.of_bound 1 <| hk0.mono fun a ha0 => _)
     simp only [one_mul, neg_add z 1, zpow_add₀ ha0, ← mul_assoc, zpow_neg,
       mul_inv_cancel (zpow_ne_zero z ha0), zpow_one]
-#align asymptotics.superpolynomial_decay_iff_is_O Asymptotics.superpolynomialDecay_iff_isO
+#align asymptotics.superpolynomial_decay_iff_is_O Asymptotics.superpolynomialDecay_iff_isBigO
 
-theorem superpolynomialDecay_iff_isOCat (hk : Tendsto k l atTop) :
+theorem superpolynomialDecay_iff_isLittleO (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =o[l] fun a : α => k a ^ z :=
   by
-  refine' ⟨fun h z => _, fun h => (superpolynomial_decay_iff_is_O f hk).2 fun z => (h z).IsO⟩
+  refine' ⟨fun h z => _, fun h => (superpolynomial_decay_iff_is_O f hk).2 fun z => (h z).IsBigO⟩
   have hk0 : ∀ᶠ x in l, k x ≠ 0 := hk.eventually_ne_at_top 0
   have : (fun x : α => (1 : β)) =o[l] k :=
     is_o_of_tendsto' (hk0.mono fun x hkx hkx' => absurd hkx' hkx)
@@ -368,7 +368,7 @@ theorem superpolynomialDecay_iff_isOCat (hk : Tendsto k l atTop) :
     simpa using this.mul_is_O ((superpolynomial_decay_iff_is_O f hk).1 h <| z - 1)
   refine' this.trans_is_O (is_O.of_bound 1 (hk0.mono fun x hkx => le_of_eq _))
   rw [one_mul, zpow_sub_one₀ hkx, mul_comm (k x), mul_assoc, inv_mul_cancel hkx, mul_one]
-#align asymptotics.superpolynomial_decay_iff_is_o Asymptotics.superpolynomialDecay_iff_isOCat
+#align asymptotics.superpolynomial_decay_iff_is_o Asymptotics.superpolynomialDecay_iff_isLittleO
 
 end NormedLinearOrderedField
 

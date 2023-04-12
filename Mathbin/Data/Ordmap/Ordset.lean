@@ -174,11 +174,11 @@ instance BalancedSz.dec : DecidableRel BalancedSz := fun l r => Or.decidable
 (at every level). -/
 def Balanced : Ordnode α → Prop
   | nil => True
-  | node _ l _ r => BalancedSz (size l) (size r) ∧ balanced l ∧ balanced r
+  | node _ l _ r => BalancedSz (size l) (size r) ∧ Balanced l ∧ Balanced r
 #align ordnode.balanced Ordnode.Balanced
 
 instance Balanced.dec : DecidablePred (@Balanced α)
-  | t => by induction t <;> unfold balanced <;> skip <;> infer_instance
+  | t => by induction t <;> unfold Balanced <;> skip <;> infer_instance
 #align ordnode.balanced.dec Ordnode.Balanced.dec
 
 theorem BalancedSz.symm {l r : ℕ} : BalancedSz l r → BalancedSz r l :=

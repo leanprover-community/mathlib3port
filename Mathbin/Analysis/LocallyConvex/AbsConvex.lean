@@ -182,7 +182,7 @@ theorem with_gaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
       isOpen_binterᵢ (to_finite _) fun S _ => _,
-      balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
+      balanced_interᵢ₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
       convex_interᵢ₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open
   have hr' : r = ‖(r : 𝕜)‖ * 1 := by simp [abs_of_pos hr]

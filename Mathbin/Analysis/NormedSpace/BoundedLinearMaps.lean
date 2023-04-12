@@ -189,20 +189,20 @@ section
 
 open Asymptotics Filter
 
-theorem isO_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : f =O[l] fun x => x :=
+theorem isBigO_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : f =O[l] fun x => x :=
   let ⟨M, hMp, hM⟩ := h.bound
-  IsO.of_bound _ (mem_of_superset univ_mem fun x _ => hM x)
-#align is_bounded_linear_map.is_O_id IsBoundedLinearMap.isO_id
+  IsBigO.of_bound _ (mem_of_superset univ_mem fun x _ => hM x)
+#align is_bounded_linear_map.is_O_id IsBoundedLinearMap.isBigO_id
 
-theorem isO_comp {E : Type _} {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) {f : E → F} (l : Filter E) :
-    (fun x' => g (f x')) =O[l] f :=
-  (hg.isO_id ⊤).comp_tendsto le_top
-#align is_bounded_linear_map.is_O_comp IsBoundedLinearMap.isO_comp
+theorem isBigO_comp {E : Type _} {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) {f : E → F}
+    (l : Filter E) : (fun x' => g (f x')) =O[l] f :=
+  (hg.isBigO_id ⊤).comp_tendsto le_top
+#align is_bounded_linear_map.is_O_comp IsBoundedLinearMap.isBigO_comp
 
-theorem isO_sub {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) (x : E) :
+theorem isBigO_sub {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) (x : E) :
     (fun x' => f (x' - x)) =O[l] fun x' => x' - x :=
-  isO_comp h l
-#align is_bounded_linear_map.is_O_sub IsBoundedLinearMap.isO_sub
+  isBigO_comp h l
+#align is_bounded_linear_map.is_O_sub IsBoundedLinearMap.isBigO_sub
 
 end
 
@@ -365,23 +365,23 @@ theorem ContinuousLinearMap.isBoundedBilinearMap (f : E →L[𝕜] F →L[𝕜] 
           apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, le_max_left] ⟩ }
 #align continuous_linear_map.is_bounded_bilinear_map ContinuousLinearMap.isBoundedBilinearMap
 
-protected theorem IsBoundedBilinearMap.isO (h : IsBoundedBilinearMap 𝕜 f) :
+protected theorem IsBoundedBilinearMap.isBigO (h : IsBoundedBilinearMap 𝕜 f) :
     f =O[⊤] fun p : E × F => ‖p.1‖ * ‖p.2‖ :=
   let ⟨C, Cpos, hC⟩ := h.bound
-  Asymptotics.IsO.of_bound _ <|
+  Asymptotics.IsBigO.of_bound _ <|
     Filter.eventually_of_forall fun ⟨x, y⟩ => by simpa [mul_assoc] using hC x y
-#align is_bounded_bilinear_map.is_O IsBoundedBilinearMap.isO
+#align is_bounded_bilinear_map.is_O IsBoundedBilinearMap.isBigO
 
-theorem IsBoundedBilinearMap.isO_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E}
+theorem IsBoundedBilinearMap.isBigO_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E}
     {h : α → F} {l : Filter α} : (fun x => f (g x, h x)) =O[l] fun x => ‖g x‖ * ‖h x‖ :=
-  H.IsO.comp_tendsto le_top
-#align is_bounded_bilinear_map.is_O_comp IsBoundedBilinearMap.isO_comp
+  H.IsBigO.comp_tendsto le_top
+#align is_bounded_bilinear_map.is_O_comp IsBoundedBilinearMap.isBigO_comp
 
 protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) :
     f =O[⊤] fun p : E × F => ‖p‖ * ‖p‖ :=
-  h.IsO.trans <|
-    (@Asymptotics.isO_fst_prod' _ E F _ _ _ _).norm_norm.mul
-      (@Asymptotics.isO_snd_prod' _ E F _ _ _ _).norm_norm
+  h.IsBigO.trans <|
+    (@Asymptotics.isBigO_fst_prod' _ E F _ _ _ _).norm_norm.mul
+      (@Asymptotics.isBigO_snd_prod' _ E F _ _ _ _).norm_norm
 #align is_bounded_bilinear_map.is_O' IsBoundedBilinearMap.is_O'
 
 theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y : E} {z : F} :
@@ -415,20 +415,20 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     simpa [mul_assoc] using hC a b
   have h₁ : (fun e : E × F => f (e.1 - x.1, e.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
-    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_isOCat _
-    rw [Asymptotics.isOCat_const_iff one_ne]
+    refine' (Asymptotics.isBigO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_isLittleO _
+    rw [Asymptotics.isLittleO_const_iff one_ne]
     convert((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
     · simp
     infer_instance
   have h₂ : (fun e : E × F => f (x.1, e.2 - x.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
-    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_isOCat _
-    rw [Asymptotics.isOCat_const_iff one_ne]
+    refine' (Asymptotics.isBigO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_isLittleO _
+    rw [Asymptotics.isLittleO_const_iff one_ne]
     convert(continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
     · simp
     infer_instance
   have := h₁.add h₂
-  rw [Asymptotics.isOCat_const_iff one_ne] at this
+  rw [Asymptotics.isLittleO_const_iff one_ne] at this
   change tendsto _ _ _
   convert this.add_const (f x)
   · ext e

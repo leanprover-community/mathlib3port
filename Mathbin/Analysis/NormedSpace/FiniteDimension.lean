@@ -776,25 +776,25 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
 theorem summable_of_is_O' {ι E F : Type _} [NormedAddCommGroup E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {f : ι → E} {g : ι → F}
     (hg : Summable g) (h : f =O[cofinite] g) : Summable f :=
-  summable_of_isO (summable_norm_iff.mpr hg) h.norm_right
+  summable_of_isBigO (summable_norm_iff.mpr hg) h.norm_right
 #align summable_of_is_O' summable_of_is_O'
 
-theorem summable_of_isO_nat' {E F : Type _} [NormedAddCommGroup E] [CompleteSpace E]
+theorem summable_of_isBigO_nat' {E F : Type _} [NormedAddCommGroup E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {f : ℕ → E} {g : ℕ → F}
     (hg : Summable g) (h : f =O[atTop] g) : Summable f :=
-  summable_of_isO_nat (summable_norm_iff.mpr hg) h.norm_right
-#align summable_of_is_O_nat' summable_of_isO_nat'
+  summable_of_isBigO_nat (summable_norm_iff.mpr hg) h.norm_right
+#align summable_of_is_O_nat' summable_of_isBigO_nat'
 
 theorem summable_of_isEquivalent {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ι → E} {g : ι → E} (hg : Summable g) (h : f ~[cofinite] g) :
     Summable f :=
-  hg.trans_sub (summable_of_is_O' hg h.IsOCat.IsO)
+  hg.trans_sub (summable_of_is_O' hg h.IsLittleO.IsBigO)
 #align summable_of_is_equivalent summable_of_isEquivalent
 
 theorem summable_of_isEquivalent_nat {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ℕ → E} {g : ℕ → E} (hg : Summable g) (h : f ~[atTop] g) :
     Summable f :=
-  hg.trans_sub (summable_of_isO_nat' hg h.IsOCat.IsO)
+  hg.trans_sub (summable_of_isBigO_nat' hg h.IsLittleO.IsBigO)
 #align summable_of_is_equivalent_nat summable_of_isEquivalent_nat
 
 theorem IsEquivalent.summable_iff {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]

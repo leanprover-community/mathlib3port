@@ -53,7 +53,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     · rw [← closure_closure] at hx
       exact hasFderivWithinAt_of_not_mem_closure hx
     push_neg  at hx
-    rw [HasFderivWithinAt, HasFderivAtFilter, Asymptotics.isOCat_iff]
+    rw [HasFderivWithinAt, HasFderivAtFilter, Asymptotics.isLittleO_iff]
     /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in `closure
       s`, where `ε` is an arbitrary positive constant. By continuity of the functions, it suffices to
       prove this for nearby points inside `s`. In a neighborhood of `x`, the derivative of `f` is

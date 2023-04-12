@@ -540,15 +540,15 @@ theorem addRothNumber_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat 
 
 open Asymptotics Filter
 
-theorem rothNumberNat_isOWith_id :
-    IsOWith 1 atTop (fun N => (rothNumberNat N : ℝ)) fun N => (N : ℝ) :=
-  isOWith_of_le _ <| by simpa only [Real.norm_coe_nat, Nat.cast_le] using rothNumberNat_le
-#align roth_number_nat_is_O_with_id rothNumberNat_isOWith_id
+theorem rothNumberNat_isBigOWith_id :
+    IsBigOWith 1 atTop (fun N => (rothNumberNat N : ℝ)) fun N => (N : ℝ) :=
+  isBigOWith_of_le _ <| by simpa only [Real.norm_coe_nat, Nat.cast_le] using rothNumberNat_le
+#align roth_number_nat_is_O_with_id rothNumberNat_isBigOWith_id
 
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
-theorem rothNumberNat_isO_id : (fun N => (rothNumberNat N : ℝ)) =O[atTop] fun N => (N : ℝ) :=
-  rothNumberNat_isOWith_id.IsO
-#align roth_number_nat_is_O_id rothNumberNat_isO_id
+theorem rothNumberNat_isBigO_id : (fun N => (rothNumberNat N : ℝ)) =O[atTop] fun N => (N : ℝ) :=
+  rothNumberNat_isBigOWith_id.IsBigO
+#align roth_number_nat_is_O_id rothNumberNat_isBigO_id
 
 end rothNumberNat
 

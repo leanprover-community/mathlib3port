@@ -327,17 +327,17 @@ theorem efixedPoint_mem' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
   (Classical.choose_spec <| hf.exists_fixedPoint' hsc hsf hxs hx).fst
 #align contracting_with.efixed_point_mem' ContractingWith.efixedPoint_mem'
 
-/- warning: contracting_with.efixed_point_is_fixed_pt' -> ContractingWith.efixedPoint_is_fixed_pt' is a dubious translation:
+/- warning: contracting_with.efixed_point_is_fixed_pt' -> ContractingWith.efixedPoint_isFixedPt' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : EMetricSpace.{u1} α] {K : NNReal} {f : α -> α} {s : Set.{u1} α} (hsc : IsComplete.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α (EMetricSpace.toPseudoEmetricSpace.{u1} α _inst_1)) s) (hsf : Set.MapsTo.{u1, u1} α α f s s) (hf : ContractingWith.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.emetricSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1) K (Set.MapsTo.restrict.{u1, u1} α α f s s hsf)) {x : α} (hxs : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (hx : Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toHasEdist.{u1} α (EMetricSpace.toPseudoEmetricSpace.{u1} α _inst_1)) x (f x)) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))), Function.IsFixedPt.{u1} α f (ContractingWith.efixedPoint'.{u1} α _inst_1 K f s hsc hsf hf x hxs hx)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : EMetricSpace.{u1} α] {K : NNReal} {f : α -> α} {s : Set.{u1} α} (hsc : IsComplete.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) s) (hsf : Set.MapsTo.{u1, u1} α α f s s) (hf : ContractingWith.{u1} (Set.Elem.{u1} α s) (instEMetricSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) K (Set.MapsTo.restrict.{u1, u1} α α f s s hsf)) {x : α} (hxs : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (hx : Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) x (f x)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))), Function.IsFixedPt.{u1} α f (ContractingWith.efixedPoint'.{u1} α _inst_1 K f s hsc hsf hf x hxs hx)
-Case conversion may be inaccurate. Consider using '#align contracting_with.efixed_point_is_fixed_pt' ContractingWith.efixedPoint_is_fixed_pt'ₓ'. -/
-theorem efixedPoint_is_fixed_pt' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
+Case conversion may be inaccurate. Consider using '#align contracting_with.efixed_point_is_fixed_pt' ContractingWith.efixedPoint_isFixedPt'ₓ'. -/
+theorem efixedPoint_isFixedPt' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
     (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     IsFixedPt f (efixedPoint' f hsc hsf hf x hxs hx) :=
   (Classical.choose_spec <| hf.exists_fixedPoint' hsc hsf hxs hx).snd.1
-#align contracting_with.efixed_point_is_fixed_pt' ContractingWith.efixedPoint_is_fixed_pt'
+#align contracting_with.efixed_point_is_fixed_pt' ContractingWith.efixedPoint_isFixedPt'
 
 /- warning: contracting_with.tendsto_iterate_efixed_point' -> ContractingWith.tendsto_iterate_efixedPoint' is a dubious translation:
 lean 3 declaration is

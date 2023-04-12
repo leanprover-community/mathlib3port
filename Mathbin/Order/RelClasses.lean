@@ -364,10 +364,12 @@ class IsWellFounded (α : Type u) (r : α → α → Prop) : Prop where
 #align is_well_founded IsWellFounded
 -/
 
+#print WellFoundedRelation.isWellFounded /-
 instance WellFoundedRelation.isWellFounded [h : WellFoundedRelation α] :
     IsWellFounded α WellFoundedRelation.R :=
   { h with }
 #align has_well_founded.is_well_founded WellFoundedRelation.isWellFounded
+-/
 
 namespace IsWellFounded
 

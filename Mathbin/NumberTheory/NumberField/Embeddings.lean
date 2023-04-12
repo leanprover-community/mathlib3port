@@ -90,7 +90,7 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x�
     ‖(minpoly ℚ x).coeff i‖ ≤ max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2) :=
   by
   have hx := IsSeparable.isIntegral ℚ x
-  rw [← norm_algebra_map' A, ← coeff_map (algebraMap ℚ A)]
+  rw [← norm_algebraMap' A, ← coeff_map (algebraMap ℚ A)]
   refine'
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)
       (minpoly.natDegree_le hx) (fun z hz => _) i

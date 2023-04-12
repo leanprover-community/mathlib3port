@@ -94,11 +94,11 @@ theorem get?_mk (f hf) : @get? α ⟨f, hf⟩ = f :=
 #align stream.seq.nth_mk Stream'.Seq.get?_mk
 -/
 
-#print Stream'.Seq.nth_nil /-
+#print Stream'.Seq.get?_nil /-
 @[simp]
-theorem nth_nil (n : ℕ) : (@nil α).get? n = none :=
+theorem get?_nil (n : ℕ) : (@nil α).get? n = none :=
   rfl
-#align stream.seq.nth_nil Stream'.Seq.nth_nil
+#align stream.seq.nth_nil Stream'.Seq.get?_nil
 -/
 
 #print Stream'.Seq.get?_cons_zero /-
@@ -610,14 +610,12 @@ unsafe def toLazyList : Seq α → LazyList α
 #align stream.seq.to_lazy_list Stream'.Seq.toLazyList
 -/
 
-/- warning: stream.seq.force_to_list clashes with stream.seq.to_lazy_list -> Stream'.Seq.toLazyList
-Case conversion may be inaccurate. Consider using '#align stream.seq.force_to_list Stream'.Seq.toLazyListₓ'. -/
-#print Stream'.Seq.toLazyList /-
+#print Stream'.Seq.forceToList /-
 /-- Translate a sequence to a list. This function will run forever if
   run on an infinite sequence. -/
-unsafe def toLazyList (s : Seq α) : List α :=
+unsafe def forceToList (s : Seq α) : List α :=
   (toLazyList s).toList
-#align stream.seq.force_to_list Stream'.Seq.toLazyList
+#align stream.seq.force_to_list Stream'.Seq.forceToList
 -/
 
 #print Stream'.Seq.nats /-
@@ -627,11 +625,11 @@ def nats : Seq ℕ :=
 #align stream.seq.nats Stream'.Seq.nats
 -/
 
-#print Stream'.Seq.nats_nth /-
+#print Stream'.Seq.nats_get? /-
 @[simp]
-theorem nats_nth (n : ℕ) : nats.get? n = some n :=
+theorem nats_get? (n : ℕ) : nats.get? n = some n :=
   rfl
-#align stream.seq.nats_nth Stream'.Seq.nats_nth
+#align stream.seq.nats_nth Stream'.Seq.nats_get?
 -/
 
 #print Stream'.Seq.append /-

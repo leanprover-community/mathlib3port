@@ -172,8 +172,8 @@ theorem norm_jacobiTheta_sub_one_le (τ : ℍ) :
 #align norm_jacobi_theta_sub_one_le norm_jacobiTheta_sub_one_le
 
 /-- The norm of `jacobi_theta τ - 1` decays exponentially as `im τ → ∞`. -/
-theorem isO_atImInfty_jacobiTheta_sub_one :
-    IsO UpperHalfPlane.atImInfty (fun τ => jacobiTheta τ - 1) fun τ => rexp (-π * τ.im) :=
+theorem isBigO_atImInfty_jacobiTheta_sub_one :
+    IsBigO UpperHalfPlane.atImInfty (fun τ => jacobiTheta τ - 1) fun τ => rexp (-π * τ.im) :=
   by
   simp_rw [is_O, is_O_with, Filter.Eventually, UpperHalfPlane.atImInfty_mem]
   refine' ⟨2 / (1 - rexp (-π)), 1, fun τ hτ => (norm_jacobiTheta_sub_one_le τ).trans _⟩
@@ -185,7 +185,7 @@ theorem isO_atImInfty_jacobiTheta_sub_one :
     exact mul_pos pi_pos τ.im_pos
   · rw [sub_pos, exp_lt_one_iff, neg_lt_zero]
     exact pi_pos
-#align is_O_at_im_infty_jacobi_theta_sub_one isO_atImInfty_jacobiTheta_sub_one
+#align is_O_at_im_infty_jacobi_theta_sub_one isBigO_atImInfty_jacobiTheta_sub_one
 
 theorem differentiableAt_tsum_exp_mul_sq (τ : ℍ) :
     DifferentiableAt ℂ (fun z => ∑' n : ℤ, cexp (π * I * n ^ 2 * z)) ↑τ :=

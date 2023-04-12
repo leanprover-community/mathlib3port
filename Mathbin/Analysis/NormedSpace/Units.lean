@@ -292,7 +292,8 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
 theorem inverse_continuousAt (x : Rˣ) : ContinuousAt inverse (x : R) :=
   by
   have h_is_o : (fun t : R => inverse (↑x + t) - ↑x⁻¹) =o[𝓝 0] (fun _ => 1 : R → ℝ) :=
-    (inverse_add_norm_diff_first_order x).trans_isOCat (is_o.norm_left <| is_o_id_const one_ne_zero)
+    (inverse_add_norm_diff_first_order x).trans_isLittleO
+      (is_o.norm_left <| is_o_id_const one_ne_zero)
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) :=
     by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _

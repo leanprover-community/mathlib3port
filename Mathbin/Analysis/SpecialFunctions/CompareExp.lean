@@ -47,7 +47,7 @@ In particular, the second property is automatically satisfied if the imaginary p
 `l`. -/
 structure IsExpCmpFilter (l : Filter ℂ) : Prop where
   tendsto_re : Tendsto re l atTop
-  isO_im_pow_re : ∀ n : ℕ, (fun z : ℂ => z.im ^ n) =O[l] fun z => Real.exp z.re
+  isBigO_im_pow_re : ∀ n : ℕ, (fun z : ℂ => z.im ^ n) =O[l] fun z => Real.exp z.re
 #align complex.is_exp_cmp_filter Complex.IsExpCmpFilter
 
 namespace IsExpCmpFilter
@@ -59,27 +59,27 @@ variable {l : Filter ℂ}
 -/
 
 
-theorem of_isO_im_re_rpow (hre : Tendsto re l atTop) (r : ℝ) (hr : im =O[l] fun z => z.re ^ r) :
+theorem of_isBigO_im_re_rpow (hre : Tendsto re l atTop) (r : ℝ) (hr : im =O[l] fun z => z.re ^ r) :
     IsExpCmpFilter l :=
   ⟨hre, fun n =>
-    IsOCat.isO <|
+    IsLittleO.isBigO <|
       calc
         (fun z : ℂ => z.im ^ n) =O[l] fun z => (z.re ^ r) ^ n := hr.pow n
         _ =ᶠ[l] fun z => z.re ^ (r * n) :=
           ((hre.eventually_ge_atTop 0).mono fun z hz => by
             simp only [Real.rpow_mul hz r n, Real.rpow_nat_cast])
-        _ =o[l] fun z => Real.exp z.re := (isOCat_rpow_exp_atTop _).comp_tendsto hre
+        _ =o[l] fun z => Real.exp z.re := (isLittleO_rpow_exp_atTop _).comp_tendsto hre
         ⟩
-#align complex.is_exp_cmp_filter.of_is_O_im_re_rpow Complex.IsExpCmpFilter.of_isO_im_re_rpow
+#align complex.is_exp_cmp_filter.of_is_O_im_re_rpow Complex.IsExpCmpFilter.of_isBigO_im_re_rpow
 
-theorem of_isO_im_re_pow (hre : Tendsto re l atTop) (n : ℕ) (hr : im =O[l] fun z => z.re ^ n) :
+theorem of_isBigO_im_re_pow (hre : Tendsto re l atTop) (n : ℕ) (hr : im =O[l] fun z => z.re ^ n) :
     IsExpCmpFilter l :=
-  of_isO_im_re_rpow hre n <| by simpa only [Real.rpow_nat_cast]
-#align complex.is_exp_cmp_filter.of_is_O_im_re_pow Complex.IsExpCmpFilter.of_isO_im_re_pow
+  of_isBigO_im_re_rpow hre n <| by simpa only [Real.rpow_nat_cast]
+#align complex.is_exp_cmp_filter.of_is_O_im_re_pow Complex.IsExpCmpFilter.of_isBigO_im_re_pow
 
 theorem of_bounded_under_abs_im (hre : Tendsto re l atTop)
     (him : IsBoundedUnder (· ≤ ·) l fun z => |z.im|) : IsExpCmpFilter l :=
-  of_isO_im_re_pow hre 0 <| by
+  of_isBigO_im_re_pow hre 0 <| by
     simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
 #align complex.is_exp_cmp_filter.of_bounded_under_abs_im Complex.IsExpCmpFilter.of_bounded_under_abs_im
 
@@ -105,22 +105,22 @@ theorem tendsto_abs (hl : IsExpCmpFilter l) : Tendsto abs l atTop :=
   tendsto_atTop_mono abs_re_le_abs hl.tendsto_abs_re
 #align complex.is_exp_cmp_filter.tendsto_abs Complex.IsExpCmpFilter.tendsto_abs
 
-theorem isOCat_log_re_re (hl : IsExpCmpFilter l) : (fun z => Real.log z.re) =o[l] re :=
-  Real.isOCat_log_id_atTop.comp_tendsto hl.tendsto_re
-#align complex.is_exp_cmp_filter.is_o_log_re_re Complex.IsExpCmpFilter.isOCat_log_re_re
+theorem isLittleO_log_re_re (hl : IsExpCmpFilter l) : (fun z => Real.log z.re) =o[l] re :=
+  Real.isLittleO_log_id_atTop.comp_tendsto hl.tendsto_re
+#align complex.is_exp_cmp_filter.is_o_log_re_re Complex.IsExpCmpFilter.isLittleO_log_re_re
 
-theorem isOCat_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
+theorem isLittleO_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
     (fun z : ℂ => z.im ^ n) =o[l] fun z => Real.exp z.re :=
-  flip IsOCat.of_pow two_ne_zero <|
+  flip IsLittleO.of_pow two_ne_zero <|
     calc
       (fun z : ℂ => (z.im ^ n) ^ 2) = fun z => z.im ^ (2 * n) := by simp only [pow_mul']
-      _ =O[l] fun z => Real.exp z.re := (hl.isO_im_pow_re _)
+      _ =O[l] fun z => Real.exp z.re := (hl.isBigO_im_pow_re _)
       _ = fun z => Real.exp z.re ^ 1 := by simp only [pow_one]
       _ =o[l] fun z => Real.exp z.re ^ 2 :=
-        (isOCat_pow_pow_atTop_of_lt one_lt_two).comp_tendsto <|
+        (isLittleO_pow_pow_atTop_of_lt one_lt_two).comp_tendsto <|
           Real.tendsto_exp_atTop.comp hl.tendsto_re
       
-#align complex.is_exp_cmp_filter.is_o_im_pow_exp_re Complex.IsExpCmpFilter.isOCat_im_pow_exp_re
+#align complex.is_exp_cmp_filter.is_o_im_pow_exp_re Complex.IsExpCmpFilter.isLittleO_im_pow_exp_re
 
 theorem abs_im_pow_eventuallyLE_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
     (fun z : ℂ => |z.im| ^ n) ≤ᶠ[l] fun z => Real.exp z.re := by
@@ -130,11 +130,11 @@ theorem abs_im_pow_eventuallyLE_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
 /-- If `l : filter ℂ` is an "exponential comparison filter", then $\log |z| =o(ℜ z)$ along `l`.
 This is the main lemma in the proof of `complex.is_exp_cmp_filter.is_o_cpow_exp` below.
 -/
-theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o[l] re :=
+theorem isLittleO_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o[l] re :=
   calc
     (fun z => Real.log (abs z)) =O[l] fun z =>
         Real.log (Real.sqrt 2) + Real.log (max z.re (|z.im|)) :=
-      IsO.of_bound 1 <|
+      IsBigO.of_bound 1 <|
         (hl.tendsto_re.eventually_ge_atTop 1).mono fun z hz =>
           by
           have h2 : 0 < Real.sqrt 2 := by simp
@@ -146,8 +146,8 @@ theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) 
           rw [← Real.log_mul, Real.log_le_log, ← _root_.abs_of_nonneg (le_trans zero_le_one hz)]
           exacts[abs_le_sqrt_two_mul_max z, one_pos.trans_le hz', mul_pos h2 hm₀, h2.ne', hm₀.ne']
     _ =o[l] re :=
-      IsOCat.add (isOCat_const_left.2 <| Or.inr <| hl.tendsto_abs_re) <|
-        isOCat_iff_nat_mul_le.2 fun n =>
+      IsLittleO.add (isLittleO_const_left.2 <| Or.inr <| hl.tendsto_abs_re) <|
+        isLittleO_iff_nat_mul_le.2 fun n =>
           by
           filter_upwards [is_o_iff_nat_mul_le.1 hl.is_o_log_re_re n,
             hl.abs_im_pow_eventually_le_exp_re n,
@@ -159,7 +159,7 @@ theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) 
               ← Real.log_pow, Real.log_le_iff_le_exp (pow_pos (one_pos.trans H) _),
               abs_of_pos (one_pos.trans h₁)]
     
-#align complex.is_exp_cmp_filter.is_o_log_abs_re Complex.IsExpCmpFilter.isOCat_log_abs_re
+#align complex.is_exp_cmp_filter.is_o_log_abs_re Complex.IsExpCmpFilter.isLittleO_log_abs_re
 
 /-!
 ### Main results
@@ -168,7 +168,7 @@ theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) 
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then for any complex `a` and any
 positive real `b`, we have `(λ z, z ^ a) =o[l] (λ z, exp (b * z))`. -/
-theorem isOCat_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b) :
+theorem isLittleO_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b) :
     (fun z => z ^ a) =o[l] fun z => exp (b * z) :=
   calc
     (fun z => z ^ a) =Θ[l] fun z => abs z ^ re a :=
@@ -176,18 +176,18 @@ theorem isOCat_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b)
     _ =ᶠ[l] fun z => Real.exp (re a * Real.log (abs z)) :=
       (hl.eventually_ne.mono fun z hz => by simp only [Real.rpow_def_of_pos, abs.pos hz, mul_comm])
     _ =o[l] fun z => exp (b * z) :=
-      IsOCat.of_norm_right <|
+      IsLittleO.of_norm_right <|
         by
-        simp only [norm_eq_abs, abs_exp, of_real_mul_re, Real.isOCat_exp_comp_exp_comp]
+        simp only [norm_eq_abs, abs_exp, of_real_mul_re, Real.isLittleO_exp_comp_exp_comp]
         refine'
           (is_equivalent.refl.sub_is_o _).symm.tendsto_atTop (hl.tendsto_re.const_mul_at_top hb)
         exact (hl.is_o_log_abs_re.const_mul_left _).const_mul_right hb.ne'
     
-#align complex.is_exp_cmp_filter.is_o_cpow_exp Complex.IsExpCmpFilter.isOCat_cpow_exp
+#align complex.is_exp_cmp_filter.is_o_cpow_exp Complex.IsExpCmpFilter.isLittleO_cpow_exp
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then for any complex `a₁`, `a₂` and any
 real `b₁ < b₂`, we have `(λ z, z ^ a₁ * exp (b₁ * z)) =o[l] (λ z, z ^ a₂ * exp (b₂ * z))`. -/
-theorem isOCat_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ < b₂) (a₁ a₂ : ℂ) :
+theorem isLittleO_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ < b₂) (a₁ a₂ : ℂ) :
     (fun z => z ^ a₁ * exp (b₁ * z)) =o[l] fun z => z ^ a₂ * exp (b₂ * z) :=
   calc
     (fun z => z ^ a₁ * exp (b₁ * z)) =ᶠ[l] fun z => z ^ a₂ * exp (b₁ * z) * z ^ (a₁ - a₂) :=
@@ -195,32 +195,32 @@ theorem isOCat_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁
         simp only
         rw [mul_right_comm, ← cpow_add _ _ hz, add_sub_cancel'_right]
     _ =o[l] fun z => z ^ a₂ * exp (b₁ * z) * exp (↑(b₂ - b₁) * z) :=
-      ((isO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_isOCat <|
-        hl.isOCat_cpow_exp _ (sub_pos.2 hb))
+      ((isBigO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_isLittleO <|
+        hl.isLittleO_cpow_exp _ (sub_pos.2 hb))
     _ =ᶠ[l] fun z => z ^ a₂ * exp (b₂ * z) := by
       simp only [of_real_sub, sub_mul, mul_assoc, ← exp_add, add_sub_cancel'_right]
     
-#align complex.is_exp_cmp_filter.is_o_cpow_mul_exp Complex.IsExpCmpFilter.isOCat_cpow_mul_exp
+#align complex.is_exp_cmp_filter.is_o_cpow_mul_exp Complex.IsExpCmpFilter.isLittleO_cpow_mul_exp
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then for any complex `a` and any
 negative real `b`, we have `(λ z, exp (b * z)) =o[l] (λ z, z ^ a)`. -/
-theorem isOCat_exp_cpow (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : b < 0) :
+theorem isLittleO_exp_cpow (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : b < 0) :
     (fun z => exp (b * z)) =o[l] fun z => z ^ a := by simpa using hl.is_o_cpow_mul_exp hb 0 a
-#align complex.is_exp_cmp_filter.is_o_exp_cpow Complex.IsExpCmpFilter.isOCat_exp_cpow
+#align complex.is_exp_cmp_filter.is_o_exp_cpow Complex.IsExpCmpFilter.isLittleO_exp_cpow
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then for any complex `a₁`, `a₂` and any
 natural `b₁ < b₂`, we have `(λ z, z ^ a₁ * exp (b₁ * z)) =o[l] (λ z, z ^ a₂ * exp (b₂ * z))`. -/
-theorem isOCat_pow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ < b₂) (m n : ℕ) :
+theorem isLittleO_pow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ < b₂) (m n : ℕ) :
     (fun z => z ^ m * exp (b₁ * z)) =o[l] fun z => z ^ n * exp (b₂ * z) := by
   simpa only [cpow_nat_cast] using hl.is_o_cpow_mul_exp hb m n
-#align complex.is_exp_cmp_filter.is_o_pow_mul_exp Complex.IsExpCmpFilter.isOCat_pow_mul_exp
+#align complex.is_exp_cmp_filter.is_o_pow_mul_exp Complex.IsExpCmpFilter.isLittleO_pow_mul_exp
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then for any complex `a₁`, `a₂` and any
 integer `b₁ < b₂`, we have `(λ z, z ^ a₁ * exp (b₁ * z)) =o[l] (λ z, z ^ a₂ * exp (b₂ * z))`. -/
-theorem isOCat_zpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ < b₂) (m n : ℤ) :
+theorem isLittleO_zpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ < b₂) (m n : ℤ) :
     (fun z => z ^ m * exp (b₁ * z)) =o[l] fun z => z ^ n * exp (b₂ * z) := by
   simpa only [cpow_int_cast] using hl.is_o_cpow_mul_exp hb m n
-#align complex.is_exp_cmp_filter.is_o_zpow_mul_exp Complex.IsExpCmpFilter.isOCat_zpow_mul_exp
+#align complex.is_exp_cmp_filter.is_o_zpow_mul_exp Complex.IsExpCmpFilter.isLittleO_zpow_mul_exp
 
 end IsExpCmpFilter
 

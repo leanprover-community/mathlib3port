@@ -57,7 +57,7 @@ notation "cexp" => Complex.exp
 -- mathport name: exprrexp
 notation "rexp" => Real.exp
 
-theorem exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) :
+theorem exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) :
     (fun x : ℝ => exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-x) :=
   by
   have A : (fun x : ℝ => -x - -b * x ^ 2) = fun x => x * (b * x + -1) :=
@@ -68,16 +68,17 @@ theorem exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) :
   apply tendsto.at_top_mul_at_top tendsto_id
   apply tendsto_at_top_add_const_right at_top (-1 : ℝ)
   exact tendsto.const_mul_at_top hb tendsto_id
-#align exp_neg_mul_sq_is_o_exp_neg exp_neg_mul_sq_isOCat_exp_neg
+#align exp_neg_mul_sq_is_o_exp_neg exp_neg_mul_sq_isLittleO_exp_neg
 
-theorem rpow_mul_exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
+theorem rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
     (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-(1 / 2) * x) :=
   by
   apply
-    ((is_O_refl (fun x : ℝ => x ^ s) at_top).mul_isOCat (exp_neg_mul_sq_isOCat_exp_neg hb)).trans
+    ((is_O_refl (fun x : ℝ => x ^ s) at_top).mul_isLittleO
+        (exp_neg_mul_sq_isLittleO_exp_neg hb)).trans
   convert Gamma_integrand_is_o s
   simp_rw [mul_comm]
-#align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_isOCat_exp_neg
+#align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg
 
 theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (Ioi 0) :=
@@ -90,7 +91,7 @@ theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1
       exact intervalIntegral.intervalIntegrableRpow' hs
     · exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousOn
   · have B : (0 : ℝ) < 1 / 2 := by norm_num
-    apply integrableOfIsOExpNeg B _ (is_o.is_O (rpow_mul_exp_neg_mul_sq_isOCat_exp_neg hb _))
+    apply integrableOfIsOExpNeg B _ (is_o.is_O (rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg hb _))
     intro x hx
     have N : x ≠ 0 := by
       refine' (zero_lt_one.trans_le _).ne'
@@ -662,11 +663,11 @@ theorem tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact {a : ℝ} (ha : 0 < a) (s 
     @tendsto_comap'_iff _ _ _ (fun y => y ^ s * rexp (-a * y ^ 2)) _ _ _
       (mem_at_top_sets.mpr ⟨0, fun b hb => ⟨b, abs_of_nonneg hb⟩⟩)]
   exact
-    (rpow_mul_exp_neg_mul_sq_isOCat_exp_neg ha s).tendsto_zero_of_tendsto
+    (rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg ha s).tendsto_zero_of_tendsto
       (tendsto_exp_at_bot.comp <| tendsto_id.neg_const_mul_at_top (neg_lt_zero.mpr one_half_pos))
 #align tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact
 
-theorem isOCat_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
+theorem isLittleO_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
     (fun x : ℝ => Complex.exp (-a * x ^ 2)) =o[cocompact ℝ] fun x : ℝ => |x| ^ s :=
   by
   rw [← is_o_norm_left]
@@ -682,7 +683,7 @@ theorem isOCat_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
     refine' (eventually_cofinite_ne 0).mp (eventually_of_forall fun x hx => _)
     rw [norm_mul, norm_of_nonneg (rpow_nonneg_of_nonneg (abs_nonneg _) _), mul_comm,
       rpow_neg (abs_nonneg x), div_eq_mul_inv, norm_of_nonneg (exp_pos _).le]
-#align is_o_exp_neg_mul_sq_cocompact isOCat_exp_neg_mul_sq_cocompact
+#align is_o_exp_neg_mul_sq_cocompact isLittleO_exp_neg_mul_sq_cocompact
 
 theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
     (∑' n : ℤ, cexp (-π * a * n ^ 2)) = 1 / a ^ (1 / 2 : ℂ) * ∑' n : ℤ, cexp (-π / a * n ^ 2) :=
@@ -699,7 +700,7 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
     rw [ha, zero_re]
   have f_bd : f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
     by
-    convert(isOCat_exp_neg_mul_sq_cocompact h1 _).IsO
+    convert(isLittleO_exp_neg_mul_sq_cocompact h1 _).IsBigO
     ext1 x
     dsimp only [f]
     congr 1
@@ -707,7 +708,7 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
   have Ff_bd : 𝓕 f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
     by
     rw [fourier_transform_gaussian_pi ha]
-    convert(isOCat_exp_neg_mul_sq_cocompact h2 _).IsO.const_mul_left _
+    convert(isLittleO_exp_neg_mul_sq_cocompact h2 _).IsBigO.const_mul_left _
     ext1 x
     congr 1
     ring_nf

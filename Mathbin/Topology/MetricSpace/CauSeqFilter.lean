@@ -108,37 +108,37 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
     apply hN <;> assumption
 #align cau_seq.cauchy_seq CauSeq.cauchySeq
 
-/- warning: cau_seq_iff_cauchy_seq -> cau_seq_iff_cauchySeq is a dubious translation:
+/- warning: cau_seq_iff_cauchy_seq -> isCauSeq_iff_cauchySeq is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_2 : NormedField.{u1} α] {u : Nat -> α}, Iff (IsCauSeq.{0, u1} Real Real.linearOrderedField α (NormedRing.toRing.{u1} α (NormedCommRing.toNormedRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))) (Norm.norm.{u1} α (NormedField.toHasNorm.{u1} α _inst_2)) u) (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α (SeminormedRing.toPseudoMetricSpace.{u1} α (SeminormedCommRing.toSemiNormedRing.{u1} α (NormedCommRing.toSeminormedCommRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))))) (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) u)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : NormedField.{u1} α] {u : Nat -> α}, Iff (IsCauSeq.{0, u1} Real Real.instLinearOrderedFieldReal α (NormedRing.toRing.{u1} α (NormedCommRing.toNormedRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))) (Norm.norm.{u1} α (NormedField.toNorm.{u1} α _inst_2)) u) (CauchySeq.{u1, 0} α Nat (PseudoMetricSpace.toUniformSpace.{u1} α (SeminormedRing.toPseudoMetricSpace.{u1} α (SeminormedCommRing.toSeminormedRing.{u1} α (NormedCommRing.toSeminormedCommRing.{u1} α (NormedField.toNormedCommRing.{u1} α _inst_2))))) (Lattice.toSemilatticeSup.{0} Nat Nat.instLatticeNat) u)
-Case conversion may be inaccurate. Consider using '#align cau_seq_iff_cauchy_seq cau_seq_iff_cauchySeqₓ'. -/
+Case conversion may be inaccurate. Consider using '#align cau_seq_iff_cauchy_seq isCauSeq_iff_cauchySeqₓ'. -/
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
-theorem cau_seq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :
+theorem isCauSeq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :
     IsCauSeq norm u ↔ CauchySeq u :=
   ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
-#align cau_seq_iff_cauchy_seq cau_seq_iff_cauchySeq
+#align cau_seq_iff_cauchy_seq isCauSeq_iff_cauchySeq
 
-/- warning: complete_space_of_cau_seq_complete -> completeSpace_of_cau_seq_complete is a dubious translation:
+/- warning: complete_space_of_cau_seq_complete -> completeSpace_of_cauSeq_isComplete is a dubious translation:
 lean 3 declaration is
   forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] [_inst_2 : CauSeq.IsComplete.{0, u1} Real Real.linearOrderedField β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toHasNorm.{u1} β _inst_1)) (isAbsoluteValue_norm.{u1} β (NormedField.toNormedDivisionRing.{u1} β _inst_1))], CompleteSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSemiNormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1)))))
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : NormedField.{u1} β] [_inst_2 : CauSeq.IsComplete.{0, u1} Real Real.instLinearOrderedFieldReal β (NormedRing.toRing.{u1} β (NormedCommRing.toNormedRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1))) (Norm.norm.{u1} β (NormedField.toNorm.{u1} β _inst_1)) (isAbsoluteValue_norm.{u1} β (NormedField.toNormedDivisionRing.{u1} β _inst_1))], CompleteSpace.{u1} β (PseudoMetricSpace.toUniformSpace.{u1} β (SeminormedRing.toPseudoMetricSpace.{u1} β (SeminormedCommRing.toSeminormedRing.{u1} β (NormedCommRing.toSeminormedCommRing.{u1} β (NormedField.toNormedCommRing.{u1} β _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align complete_space_of_cau_seq_complete completeSpace_of_cau_seq_completeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align complete_space_of_cau_seq_complete completeSpace_of_cauSeq_isCompleteₓ'. -/
 -- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/
-instance (priority := 100) completeSpace_of_cau_seq_complete [CauSeq.IsComplete β norm] :
+instance (priority := 100) completeSpace_of_cauSeq_isComplete [CauSeq.IsComplete β norm] :
     CompleteSpace β := by
   apply complete_of_cauchy_seq_tendsto
   intro u hu
-  have C : IsCauSeq norm u := cau_seq_iff_cauchySeq.2 hu
+  have C : IsCauSeq norm u := isCauSeq_iff_cauchySeq.2 hu
   exists CauSeq.lim ⟨u, C⟩
   rw [Metric.tendsto_atTop]
   intro ε εpos
   cases' (CauSeq.equiv_lim ⟨u, C⟩) _ εpos with N hN
   exists N
   simpa [dist_eq_norm] using hN
-#align complete_space_of_cau_seq_complete completeSpace_of_cau_seq_complete
+#align complete_space_of_cau_seq_complete completeSpace_of_cauSeq_isComplete
 

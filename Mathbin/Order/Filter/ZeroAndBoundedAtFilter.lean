@@ -78,19 +78,19 @@ def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [Continuous
 /-- If `l` is a filter on `α`, then a function `f: α → β` is `bounded_at_filter l`
 if `f =O[l] 1`. -/
 def BoundedAtFilter [Norm β] (l : Filter α) (f : α → β) : Prop :=
-  Asymptotics.IsO l f (1 : α → ℝ)
+  Asymptotics.IsBigO l f (1 : α → ℝ)
 #align filter.bounded_at_filter Filter.BoundedAtFilter
 
 theorem ZeroAtFilter.boundedAtFilter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
     (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
   by
-  rw [zero_at_filter, ← Asymptotics.isOCat_const_iff (one_ne_zero' ℝ)] at hf
+  rw [zero_at_filter, ← Asymptotics.isLittleO_const_iff (one_ne_zero' ℝ)] at hf
   exact hf.is_O
 #align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.boundedAtFilter
 
 theorem const_boundedAtFilter [NormedField β] (l : Filter α) (c : β) :
     BoundedAtFilter l (Function.const α c : α → β) :=
-  Asymptotics.isO_const_const c one_ne_zero l
+  Asymptotics.isBigO_const_const c one_ne_zero l
 #align filter.const_bounded_at_filter Filter.const_boundedAtFilter
 
 theorem BoundedAtFilter.add [NormedAddCommGroup β] {l : Filter α} {f g : α → β}
@@ -112,7 +112,7 @@ theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (
     (hg : BoundedAtFilter l g) : BoundedAtFilter l (f * g) :=
   by
   refine' (hf.mul hg).trans _
-  convert Asymptotics.isO_refl _ l
+  convert Asymptotics.isBigO_refl _ l
   ext x
   simp
 #align filter.bounded_at_filter.mul Filter.BoundedAtFilter.mul

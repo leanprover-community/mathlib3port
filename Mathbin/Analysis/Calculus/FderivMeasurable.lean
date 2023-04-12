@@ -339,7 +339,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
   -- Let us show that `f` has derivative `f'` at `x`.
   have : HasFderivAt f f' x :=
     by
-    simp only [hasFderivAt_iff_isOCat_nhds_zero, is_o_iff]
+    simp only [hasFderivAt_iff_isLittleO_nhds_zero, is_o_iff]
     /- to get an approximation with a precision `ε`, we will replace `f` with `L e (n e) m` for
         some large enough `e` (yielding a small error by uniform approximation). As one can vary `m`,
         this makes it possible to cover all scales, and thus to obtain a good linear approximation in
@@ -578,7 +578,7 @@ theorem mem_a_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
     ∃ R > 0, ∀ r ∈ Ioo (0 : ℝ) R, x ∈ a f (derivWithin f (Ici x) x) r ε :=
   by
   have := hx.has_deriv_within_at
-  simp_rw [hasDerivWithinAt_iff_isOCat, is_o_iff] at this
+  simp_rw [hasDerivWithinAt_iff_isLittleO, is_o_iff] at this
   rcases mem_nhdsWithin_Ici_iff_exists_Ico_subset.1 (this (half_pos hε)) with ⟨m, xm, hm⟩
   refine' ⟨m - x, by linarith [show x < m from xm], fun r hr => _⟩
   have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_rfl⟩
@@ -743,7 +743,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
   -- Let us show that `f` has right derivative `f'` at `x`.
   have : HasDerivWithinAt f f' (Ici x) x :=
     by
-    simp only [hasDerivWithinAt_iff_isOCat, is_o_iff]
+    simp only [hasDerivWithinAt_iff_isLittleO, is_o_iff]
     /- to get an approximation with a precision `ε`, we will replace `f` with `L e (n e) m` for
         some large enough `e` (yielding a small error by uniform approximation). As one can vary `m`,
         this makes it possible to cover all scales, and thus to obtain a good linear approximation in

@@ -610,7 +610,7 @@ theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
     exists_seq_strictAnti_tendsto (0 : ℝ)
   have := fun i => strong_law_aux1 X hint hindep hident hnonneg c_one (v_pos i)
   filter_upwards [ae_all_iff.2 this]with ω hω
-  apply Asymptotics.isOCat_iff.2 fun ε εpos => _
+  apply Asymptotics.isLittleO_iff.2 fun ε εpos => _
   obtain ⟨i, hi⟩ : ∃ i, v i < ε := ((tendsto_order.1 v_lim).2 ε εpos).exists
   filter_upwards [hω i]with n hn
   simp only [Real.norm_eq_abs, LatticeOrderedCommGroup.abs_abs, Nat.abs_cast]
@@ -629,7 +629,7 @@ theorem strong_law_aux3 :
     convert(tendsto_integral_truncation hint).comp tendsto_nat_cast_atTop_atTop
     ext i
     exact (hident i).truncation.integral_eq
-  convert Asymptotics.isOCat_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 A)
+  convert Asymptotics.isLittleO_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 A)
   ext1 n
   simp only [sum_sub_distrib, sum_const, card_range, nsmul_eq_mul, sum_apply, sub_left_inj]
   rw [integral_finset_sum _ fun i hi => _]
@@ -703,7 +703,7 @@ theorem strong_law_aux6 {c : ℝ} (c_one : 1 < c) :
     simp only [Nat.one_le_cast, Nat.one_le_floor_iff, one_le_pow_of_one_le c_one.le n]
   filter_upwards [strong_law_aux4 X hint hindep hident hnonneg c_one,
     strong_law_aux5 X hint hident hnonneg]with ω hω h'ω
-  rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ]
+  rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ]
   have L :
     (fun n : ℕ => (∑ i in range ⌊c ^ n⌋₊, X i ω) - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[at_top] fun n =>
       (⌊c ^ n⌋₊ : ℝ) :=

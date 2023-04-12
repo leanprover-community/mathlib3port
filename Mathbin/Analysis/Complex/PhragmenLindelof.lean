@@ -66,7 +66,7 @@ variable {E : Type _} [NormedAddCommGroup E]
 
 /-- An auxiliary lemma that combines two double exponential estimates into a similar estimate
 on the difference of the functions. -/
-theorem isO_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ → ℝ}
+theorem isBigO_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ → ℝ}
     (hBf : ∃ c < a, ∃ B, f =O[l] fun z => expR (B * expR (c * |u z|)))
     (hBg : ∃ c < a, ∃ B, g =O[l] fun z => expR (B * expR (c * |u z|))) :
     ∃ c < a, ∃ B, (f - g) =O[l] fun z => expR (B * expR (c * |u z|)) :=
@@ -87,11 +87,11 @@ theorem isO_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ �
   refine' (hOf.trans_le <| this _ _ _).sub (hOg.trans_le <| this _ _ _)
   exacts[le_max_left _ _, le_max_left _ _, (le_max_left _ _).trans (le_max_right _ _),
     le_max_right _ _, le_max_left _ _, (le_max_right _ _).trans (le_max_right _ _)]
-#align phragmen_lindelof.is_O_sub_exp_exp PhragmenLindelof.isO_sub_exp_exp
+#align phragmen_lindelof.is_O_sub_exp_exp PhragmenLindelof.isBigO_sub_exp_exp
 
 /-- An auxiliary lemma that combines two “exponential of a power” estimates into a similar estimate
 on the difference of the functions. -/
-theorem isO_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
+theorem isBigO_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
     (hBf : ∃ c < a, ∃ B, f =O[comap Complex.abs atTop ⊓ l] fun z => expR (B * abs z ^ c))
     (hBg : ∃ c < a, ∃ B, g =O[comap Complex.abs atTop ⊓ l] fun z => expR (B * abs z ^ c)) :
     ∃ c < a, ∃ B, (f - g) =O[comap Complex.abs atTop ⊓ l] fun z => expR (B * abs z ^ c) :=
@@ -117,7 +117,7 @@ theorem isO_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
   refine' (hOf.trans <| this _ _ _).sub (hOg.trans <| this _ _ _)
   exacts[le_max_left _ _, le_max_left _ _, (le_max_left _ _).trans (le_max_right _ _),
     le_max_right _ _, le_max_left _ _, (le_max_right _ _).trans (le_max_right _ _)]
-#align phragmen_lindelof.is_O_sub_exp_rpow PhragmenLindelof.isO_sub_exp_rpow
+#align phragmen_lindelof.is_O_sub_exp_rpow PhragmenLindelof.isBigO_sub_exp_rpow
 
 variable [NormedSpace ℂ E] {a b C : ℝ} {f g : ℂ → E} {z : ℂ}
 
@@ -318,7 +318,7 @@ theorem eqOn_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻�
     (ha : ∀ z : ℂ, z.im = a → f z = g z) (hb : ∀ z : ℂ, z.im = b → f z = g z) :
     EqOn f g (im ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
-    (eq_zero_on_horizontal_strip (hdf.sub hdg) (isO_sub_exp_exp hBf hBg)
+    (eq_zero_on_horizontal_strip (hdf.sub hdg) (isBigO_sub_exp_exp hBf hBg)
       (fun w hw => sub_eq_zero.2 (ha w hw)) (fun w hw => sub_eq_zero.2 (hb w hw)) hz)
 #align phragmen_lindelof.eq_on_horizontal_strip PhragmenLindelof.eqOn_horizontal_strip
 
@@ -413,7 +413,7 @@ theorem eqOn_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹'
     (ha : ∀ z : ℂ, re z = a → f z = g z) (hb : ∀ z : ℂ, re z = b → f z = g z) :
     EqOn f g (re ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
-    (eq_zero_on_vertical_strip (hdf.sub hdg) (isO_sub_exp_exp hBf hBg)
+    (eq_zero_on_vertical_strip (hdf.sub hdg) (isBigO_sub_exp_exp hBf hBg)
       (fun w hw => sub_eq_zero.2 (ha w hw)) (fun w hw => sub_eq_zero.2 (hb w hw)) hz)
 #align phragmen_lindelof.eq_on_vertical_strip PhragmenLindelof.eqOn_vertical_strip
 
@@ -478,7 +478,7 @@ theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
         refine' (hd.continuous_on _ _).mono subset_closure
         simp [closure_re_prod_im, mem_re_prod_im]
       refine'
-        ((hc.tendsto.comp <| tendsto_exp_comap_re_at_bot.inf H.tendsto).isO_one ℝ).trans
+        ((hc.tendsto.comp <| tendsto_exp_comap_re_at_bot.inf H.tendsto).isBigO_one ℝ).trans
           (is_O_of_le _ fun w => _)
       rw [norm_one, Real.norm_of_nonneg (Real.exp_pos _).le, Real.one_le_exp_iff]
       exact mul_nonneg (le_max_right _ _) (Real.exp_pos _).le
@@ -539,7 +539,7 @@ theorem eqOn_quadrant_i (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_i (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_i (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
 #align phragmen_lindelof.eq_on_quadrant_I PhragmenLindelof.eqOn_quadrant_i
 
@@ -614,7 +614,7 @@ theorem eqOn_quadrant_II (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g { z | z.re ≤ 0 ∧ 0 ≤ z.im } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_II (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_II (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
 #align phragmen_lindelof.eq_on_quadrant_II PhragmenLindelof.eqOn_quadrant_II
 
@@ -691,7 +691,7 @@ theorem eqOn_quadrant_III (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
     EqOn f g { z | z.re ≤ 0 ∧ z.im ≤ 0 } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_III (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_III (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
 #align phragmen_lindelof.eq_on_quadrant_III PhragmenLindelof.eqOn_quadrant_III
 
@@ -768,7 +768,7 @@ theorem eqOn_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
     EqOn f g { z | 0 ≤ z.re ∧ z.im ≤ 0 } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_IV (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_IV (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
 #align phragmen_lindelof.eq_on_quadrant_IV PhragmenLindelof.eqOn_quadrant_IV
 

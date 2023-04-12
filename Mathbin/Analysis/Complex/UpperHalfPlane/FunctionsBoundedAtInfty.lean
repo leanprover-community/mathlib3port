@@ -81,7 +81,7 @@ theorem IsBoundedAtImInfty.mul {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f)
 
 theorem bounded_mem (f : ℍ → ℂ) :
     IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
-  simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.isO_iff, Filter.Eventually,
+  simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.isBigO_iff, Filter.Eventually,
     at_im_infty_mem]
 #align upper_half_plane.bounded_mem UpperHalfPlane.bounded_mem
 

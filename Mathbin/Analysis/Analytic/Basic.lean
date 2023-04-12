@@ -141,14 +141,14 @@ theorem le_radius_of_bound_nNReal (C : ℝ≥0) {r : ℝ≥0} (h : ∀ n : ℕ, 
 #align formal_multilinear_series.le_radius_of_bound_nnreal FormalMultilinearSeries.le_radius_of_bound_nNReal
 
 /-- If `‖pₙ‖ rⁿ = O(1)`, as `n → ∞`, then the radius of `p` is at least `r`. -/
-theorem le_radius_of_isO (h : (fun n => ‖p n‖ * r ^ n) =O[atTop] fun n => (1 : ℝ)) :
+theorem le_radius_of_isBigO (h : (fun n => ‖p n‖ * r ^ n) =O[atTop] fun n => (1 : ℝ)) :
     ↑r ≤ p.radius :=
-  Exists.elim (isO_one_nat_atTop_iff.1 h) fun C hC =>
+  Exists.elim (isBigO_one_nat_atTop_iff.1 h) fun C hC =>
     p.le_radius_of_bound C fun n => (le_abs_self _).trans (hC n)
-#align formal_multilinear_series.le_radius_of_is_O FormalMultilinearSeries.le_radius_of_isO
+#align formal_multilinear_series.le_radius_of_is_O FormalMultilinearSeries.le_radius_of_isBigO
 
 theorem le_radius_of_eventually_le (C) (h : ∀ᶠ n in atTop, ‖p n‖ * r ^ n ≤ C) : ↑r ≤ p.radius :=
-  p.le_radius_of_isO <| IsO.of_bound C <| h.mono fun n hn => by simpa
+  p.le_radius_of_isBigO <| IsBigO.of_bound C <| h.mono fun n hn => by simpa
 #align formal_multilinear_series.le_radius_of_eventually_le FormalMultilinearSeries.le_radius_of_eventually_le
 
 theorem le_radius_of_summable_nnnorm (h : Summable fun n => ‖p n‖₊ * r ^ n) : ↑r ≤ p.radius :=
@@ -161,14 +161,14 @@ theorem le_radius_of_summable (h : Summable fun n => ‖p n‖ * r ^ n) : ↑r �
     exact_mod_cast h
 #align formal_multilinear_series.le_radius_of_summable FormalMultilinearSeries.le_radius_of_summable
 
-theorem radius_eq_top_of_forall_nNReal_isO
+theorem radius_eq_top_of_forall_nNReal_isBigO
     (h : ∀ r : ℝ≥0, (fun n => ‖p n‖ * r ^ n) =O[atTop] fun n => (1 : ℝ)) : p.radius = ∞ :=
-  ENNReal.eq_top_of_forall_nnreal_le fun r => p.le_radius_of_isO (h r)
-#align formal_multilinear_series.radius_eq_top_of_forall_nnreal_is_O FormalMultilinearSeries.radius_eq_top_of_forall_nNReal_isO
+  ENNReal.eq_top_of_forall_nnreal_le fun r => p.le_radius_of_isBigO (h r)
+#align formal_multilinear_series.radius_eq_top_of_forall_nnreal_is_O FormalMultilinearSeries.radius_eq_top_of_forall_nNReal_isBigO
 
 theorem radius_eq_top_of_eventually_eq_zero (h : ∀ᶠ n in atTop, p n = 0) : p.radius = ∞ :=
-  p.radius_eq_top_of_forall_nNReal_isO fun r =>
-    (isO_zero _ _).congr' (h.mono fun n hn => by simp [hn]) EventuallyEq.rfl
+  p.radius_eq_top_of_forall_nNReal_isBigO fun r =>
+    (isBigO_zero _ _).congr' (h.mono fun n hn => by simp [hn]) EventuallyEq.rfl
 #align formal_multilinear_series.radius_eq_top_of_eventually_eq_zero FormalMultilinearSeries.radius_eq_top_of_eventually_eq_zero
 
 theorem radius_eq_top_of_forall_image_add_eq_zero (n : ℕ) (hn : ∀ m, p (m + n) = 0) :
@@ -186,10 +186,10 @@ theorem constFormalMultilinearSeries_radius {v : F} :
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` tends to zero exponentially:
 for some `0 < a < 1`, `‖p n‖ rⁿ = o(aⁿ)`. -/
-theorem isOCat_of_lt_radius (h : ↑r < p.radius) :
+theorem isLittleO_of_lt_radius (h : ↑r < p.radius) :
     ∃ a ∈ Ioo (0 : ℝ) 1, (fun n => ‖p n‖ * r ^ n) =o[atTop] pow a :=
   by
-  rw [(tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 4]
+  rw [(tFAE_exists_lt_isLittleO_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 4]
   simp only [radius, lt_supᵢ_iff] at h
   rcases h with ⟨t, C, hC, rt⟩
   rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at rt
@@ -201,31 +201,31 @@ theorem isOCat_of_lt_radius (h : ↑r < p.radius) :
       field_simp [mul_right_comm, abs_mul, this.ne']
     _ ≤ C * (r / t) ^ n := mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
     
-#align formal_multilinear_series.is_o_of_lt_radius FormalMultilinearSeries.isOCat_of_lt_radius
+#align formal_multilinear_series.is_o_of_lt_radius FormalMultilinearSeries.isLittleO_of_lt_radius
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ = o(1)`. -/
-theorem isOCat_one_of_lt_radius (h : ↑r < p.radius) :
+theorem isLittleO_one_of_lt_radius (h : ↑r < p.radius) :
     (fun n => ‖p n‖ * r ^ n) =o[atTop] (fun _ => 1 : ℕ → ℝ) :=
-  let ⟨a, ha, hp⟩ := p.isOCat_of_lt_radius h
-  hp.trans <| (isOCat_pow_pow_of_lt_left ha.1.le ha.2).congr (fun n => rfl) one_pow
-#align formal_multilinear_series.is_o_one_of_lt_radius FormalMultilinearSeries.isOCat_one_of_lt_radius
+  let ⟨a, ha, hp⟩ := p.isLittleO_of_lt_radius h
+  hp.trans <| (isLittleO_pow_pow_of_lt_left ha.1.le ha.2).congr (fun n => rfl) one_pow
+#align formal_multilinear_series.is_o_one_of_lt_radius FormalMultilinearSeries.isLittleO_one_of_lt_radius
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` tends to zero exponentially:
 for some `0 < a < 1` and `C > 0`,  `‖p n‖ * r ^ n ≤ C * a ^ n`. -/
 theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
     ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C > 0, ∀ n, ‖p n‖ * r ^ n ≤ C * a ^ n :=
   by
-  rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 5).mp
+  rcases((tFAE_exists_lt_isLittleO_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 5).mp
       (p.is_o_of_lt_radius h) with
     ⟨a, ha, C, hC, H⟩
   exact ⟨a, ha, C, hC, fun n => (le_abs_self _).trans (H n)⟩
 #align formal_multilinear_series.norm_mul_pow_le_mul_pow_of_lt_radius FormalMultilinearSeries.norm_mul_pow_le_mul_pow_of_lt_radius
 
 /-- If `r ≠ 0` and `‖pₙ‖ rⁿ = O(aⁿ)` for some `-1 < a < 1`, then `r < p.radius`. -/
-theorem lt_radius_of_isO (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1)
+theorem lt_radius_of_isBigO (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1)
     (hp : (fun n => ‖p n‖ * r ^ n) =O[atTop] pow a) : ↑r < p.radius :=
   by
-  rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with
+  rcases((tFAE_exists_lt_isLittleO_pow (fun n => ‖p n‖ * r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with
     ⟨a, ha, C, hC, hp⟩
   rw [← pos_iff_ne_zero, ← NNReal.coe_pos] at h₀
   lift a to ℝ≥0 using ha.1.le
@@ -236,7 +236,7 @@ theorem lt_radius_of_isO (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1
   refine' this.trans_le (p.le_radius_of_bound C fun n => _)
   rw [NNReal.coe_div, div_pow, ← mul_div_assoc, div_le_iff (pow_pos ha.1 n)]
   exact (le_abs_self _).trans (hp n)
-#align formal_multilinear_series.lt_radius_of_is_O FormalMultilinearSeries.lt_radius_of_isO
+#align formal_multilinear_series.lt_radius_of_is_O FormalMultilinearSeries.lt_radius_of_isBigO
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` is bounded. -/
 theorem norm_mul_pow_le_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ≥0}
@@ -261,7 +261,7 @@ theorem nnnorm_mul_pow_le_of_lt_radius (p : FormalMultilinearSeries 𝕜 E F) {r
 
 theorem le_radius_of_tendsto (p : FormalMultilinearSeries 𝕜 E F) {l : ℝ}
     (h : Tendsto (fun n => ‖p n‖ * r ^ n) atTop (𝓝 l)) : ↑r ≤ p.radius :=
-  p.le_radius_of_isO (h.isO_one _)
+  p.le_radius_of_isBigO (h.isBigO_one _)
 #align formal_multilinear_series.le_radius_of_tendsto FormalMultilinearSeries.le_radius_of_tendsto
 
 theorem le_radius_of_summable_norm (p : FormalMultilinearSeries 𝕜 E F)
@@ -345,8 +345,8 @@ theorem min_radius_le_radius_add (p q : FormalMultilinearSeries 𝕜 E F) :
   by
   refine' ENNReal.le_of_forall_nnreal_lt fun r hr => _
   rw [lt_min_iff] at hr
-  have := ((p.is_o_one_of_lt_radius hr.1).add (q.is_o_one_of_lt_radius hr.2)).IsO
-  refine' (p + q).le_radius_of_isO ((is_O_of_le _ fun n => _).trans this)
+  have := ((p.is_o_one_of_lt_radius hr.1).add (q.is_o_one_of_lt_radius hr.2)).IsBigO
+  refine' (p + q).le_radius_of_isBigO ((is_O_of_le _ fun n => _).trans this)
   rw [← add_mul, norm_mul, norm_mul, norm_norm]
   exact mul_le_mul_of_nonneg_right ((norm_add_le _ _).trans (le_abs_self _)) (norm_nonneg _)
 #align formal_multilinear_series.min_radius_le_radius_add FormalMultilinearSeries.min_radius_le_radius_add
@@ -365,7 +365,7 @@ theorem radius_le_radius_continuousLinearMap_comp (p : FormalMultilinearSeries �
   by
   refine' ENNReal.le_of_forall_nnreal_lt fun r hr => _
   apply le_radius_of_is_O
-  apply (is_O.trans_is_o _ (p.is_o_one_of_lt_radius hr)).IsO
+  apply (is_O.trans_is_o _ (p.is_o_one_of_lt_radius hr)).IsBigO
   refine' is_O.mul (@is_O_with.is_O _ _ _ _ _ ‖f‖ _ _ _ _) (is_O_refl _ _)
   apply is_O_with.of_bound (eventually_of_forall fun n => _)
   simpa only [norm_norm] using f.norm_comp_continuous_multilinear_map_le (p n)
@@ -708,7 +708,7 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx {r' : ℝ≥0}
 #align has_fpower_series_on_ball.uniform_geometric_approx HasFpowerSeriesOnBall.uniform_geometric_approx
 
 /-- Taylor formula for an analytic function, `is_O` version. -/
-theorem HasFpowerSeriesAt.isO_sub_partialSum_pow (hf : HasFpowerSeriesAt f p x) (n : ℕ) :
+theorem HasFpowerSeriesAt.isBigO_sub_partialSum_pow (hf : HasFpowerSeriesAt f p x) (n : ℕ) :
     (fun y : E => f (x + y) - p.partialSum n y) =O[𝓝 0] fun y => ‖y‖ ^ n :=
   by
   rcases hf with ⟨r, hf⟩
@@ -723,14 +723,14 @@ theorem HasFpowerSeriesAt.isO_sub_partialSum_pow (hf : HasFpowerSeriesAt f p x) 
   replace r'0 : 0 < (r' : ℝ); · exact_mod_cast r'0
   filter_upwards [Metric.ball_mem_nhds (0 : E) r'0]with y hy
   simpa [mul_pow, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
-#align has_fpower_series_at.is_O_sub_partial_sum_pow HasFpowerSeriesAt.isO_sub_partialSum_pow
+#align has_fpower_series_at.is_O_sub_partial_sum_pow HasFpowerSeriesAt.isBigO_sub_partialSum_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ‖y - x‖ ‖z - x‖) * ‖y - z‖`. This lemma formulates this property using `is_O` and
 `filter.principal` on `E × E`. -/
-theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
+theorem HasFpowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
     (hf : HasFpowerSeriesOnBall f p x r) (hr : r' < r) :
     (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) =O[𝓟 (EMetric.ball (x, x) r')]
       fun y => ‖y - (x, x)‖ * ‖y.1 - y.2‖ :=
@@ -793,7 +793,7 @@ theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
     exact (hL y hy).trans (le_abs_self _)
   simp_rw [L, mul_right_comm _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
-#align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
+#align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFpowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
@@ -813,7 +813,7 @@ theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall
 /-- If `f` has formal power series `∑ n, pₙ` at `x`, then
 `f y - f z - p 1 (λ _, y - z) = O(‖(y, z) - (x, x)‖ * ‖y - z‖)` as `(y, z) → (x, x)`.
 In particular, `f` is strictly differentiable at `x`. -/
-theorem HasFpowerSeriesAt.isO_image_sub_norm_mul_norm_sub (hf : HasFpowerSeriesAt f p x) :
+theorem HasFpowerSeriesAt.isBigO_image_sub_norm_mul_norm_sub (hf : HasFpowerSeriesAt f p x) :
     (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) =O[𝓝 (x, x)] fun y =>
       ‖y - (x, x)‖ * ‖y.1 - y.2‖ :=
   by
@@ -821,7 +821,7 @@ theorem HasFpowerSeriesAt.isO_image_sub_norm_mul_norm_sub (hf : HasFpowerSeriesA
   rcases ENNReal.lt_iff_exists_nnreal_btwn.1 hf.r_pos with ⟨r', r'0, h⟩
   refine' (hf.is_O_image_sub_image_sub_deriv_principal h).mono _
   exact le_principal_iff.2 (EMetric.ball_mem_nhds _ r'0)
-#align has_fpower_series_at.is_O_image_sub_norm_mul_norm_sub HasFpowerSeriesAt.isO_image_sub_norm_mul_norm_sub
+#align has_fpower_series_at.is_O_image_sub_norm_mul_norm_sub HasFpowerSeriesAt.isBigO_image_sub_norm_mul_norm_sub
 
 /-- If a function admits a power series expansion at `x`, then it is the uniform limit of the
 partial sums of this power series on strict subdisks of the disk of convergence, i.e., `f (x + y)`
@@ -954,7 +954,7 @@ section Uniqueness
 
 open ContinuousMultilinearMap
 
-theorem Asymptotics.IsO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p : E[×n]→L[𝕜] F}
+theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p : E[×n]→L[𝕜] F}
     (h : (fun y => p fun i => y) =O[𝓝 0] fun y => ‖y‖ ^ (n + 1)) (y : E) : (p fun i => y) = 0 :=
   by
   obtain ⟨c, c_pos, hc⟩ := h.exists_pos
@@ -1009,7 +1009,7 @@ theorem Asymptotics.IsO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p : E[
         rw [inv_mul_cancel (norm_pos_iff.mp k_pos)]
         simpa using h₃.le
       
-#align asymptotics.is_O.continuous_multilinear_map_apply_eq_zero Asymptotics.IsO.continuousMultilinearMap_apply_eq_zero
+#align asymptotics.is_O.continuous_multilinear_map_apply_eq_zero Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero
 
 /-- If a formal multilinear series `p` represents the zero function at `x : E`, then the
 terms `p n (λ i, y)` appearing the in sum are zero for any `n : ℕ`, `y : E`. -/
@@ -1025,7 +1025,7 @@ theorem HasFpowerSeriesAt.apply_eq_zero {p : FormalMultilinearSeries 𝕜 E F} {
       simp only [hk b (this.lt_of_ne hnb), Pi.zero_apply, zero_apply]
     · exact False.elim (hn (finset.mem_range.mpr (lt_add_one k)))
   replace h := h.is_O_sub_partial_sum_pow k.succ
-  simp only [psum_eq, zero_sub, Pi.zero_apply, Asymptotics.isO_neg_left] at h
+  simp only [psum_eq, zero_sub, Pi.zero_apply, Asymptotics.isBigO_neg_left] at h
   exact h.continuous_multilinear_map_apply_eq_zero
 #align has_fpower_series_at.apply_eq_zero HasFpowerSeriesAt.apply_eq_zero
 

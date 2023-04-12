@@ -38,7 +38,7 @@ We also register the fact that `ℂ` is an `is_R_or_C` field.
 -/
 
 
-assert_not_exists absorbs
+assert_not_exists Absorbs
 
 noncomputable section
 
@@ -83,7 +83,7 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
   norm_smul_le r x :=
     by
     rw [norm_eq_abs, norm_eq_abs, ← algebraMap_smul ℝ r x, Algebra.smul_def, map_mul, ←
-      norm_algebra_map' ℝ r, coe_algebra_map, abs_of_real]
+      norm_algebraMap' ℝ r, coe_algebra_map, abs_of_real]
     rfl
   toAlgebra := Complex.algebra
 

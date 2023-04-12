@@ -349,17 +349,17 @@ theorem tendsto_exp_comp_nhds_zero {f : α → ℝ} :
   rw [← tendsto_comap_iff, comap_exp_nhds_zero]
 #align real.tendsto_exp_comp_nhds_zero Real.tendsto_exp_comp_nhds_zero
 
-theorem isOCat_pow_exp_atTop {n : ℕ} : (fun x => x ^ n) =o[atTop] Real.exp := by
+theorem isLittleO_pow_exp_atTop {n : ℕ} : (fun x => x ^ n) =o[atTop] Real.exp := by
   simpa [is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
     tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
-#align real.is_o_pow_exp_at_top Real.isOCat_pow_exp_atTop
+#align real.is_o_pow_exp_at_top Real.isLittleO_pow_exp_atTop
 
 @[simp]
-theorem isO_exp_comp_exp_comp {f g : α → ℝ} :
+theorem isBigO_exp_comp_exp_comp {f g : α → ℝ} :
     ((fun x => exp (f x)) =O[l] fun x => exp (g x)) ↔ IsBoundedUnder (· ≤ ·) l (f - g) :=
-  Iff.trans (isO_iff_isBoundedUnder_le_div <| eventually_of_forall fun x => exp_ne_zero _) <| by
+  Iff.trans (isBigO_iff_isBoundedUnder_le_div <| eventually_of_forall fun x => exp_ne_zero _) <| by
     simp only [norm_eq_abs, abs_exp, ← exp_sub, is_bounded_under_le_exp_comp, Pi.sub_def]
-#align real.is_O_exp_comp_exp_comp Real.isO_exp_comp_exp_comp
+#align real.is_O_exp_comp_exp_comp Real.isBigO_exp_comp_exp_comp
 
 @[simp]
 theorem isTheta_exp_comp_exp_comp {f g : α → ℝ} :
@@ -371,32 +371,32 @@ theorem isTheta_exp_comp_exp_comp {f g : α → ℝ} :
 #align real.is_Theta_exp_comp_exp_comp Real.isTheta_exp_comp_exp_comp
 
 @[simp]
-theorem isOCat_exp_comp_exp_comp {f g : α → ℝ} :
+theorem isLittleO_exp_comp_exp_comp {f g : α → ℝ} :
     ((fun x => exp (f x)) =o[l] fun x => exp (g x)) ↔ Tendsto (fun x => g x - f x) l atTop := by
   simp only [is_o_iff_tendsto, exp_ne_zero, ← exp_sub, ← tendsto_neg_at_top_iff, false_imp_iff,
     imp_true_iff, tendsto_exp_comp_nhds_zero, neg_sub]
-#align real.is_o_exp_comp_exp_comp Real.isOCat_exp_comp_exp_comp
+#align real.is_o_exp_comp_exp_comp Real.isLittleO_exp_comp_exp_comp
 
 @[simp]
-theorem isOCat_one_exp_comp {f : α → ℝ} :
+theorem isLittleO_one_exp_comp {f : α → ℝ} :
     ((fun x => 1 : α → ℝ) =o[l] fun x => exp (f x)) ↔ Tendsto f l atTop := by
   simp only [← exp_zero, is_o_exp_comp_exp_comp, sub_zero]
-#align real.is_o_one_exp_comp Real.isOCat_one_exp_comp
+#align real.is_o_one_exp_comp Real.isLittleO_one_exp_comp
 
 /-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
 from below under `f`. -/
 @[simp]
-theorem isO_one_exp_comp {f : α → ℝ} :
+theorem isBigO_one_exp_comp {f : α → ℝ} :
     ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ IsBoundedUnder (· ≥ ·) l f := by
   simp only [← exp_zero, is_O_exp_comp_exp_comp, Pi.sub_def, zero_sub, is_bounded_under_le_neg]
-#align real.is_O_one_exp_comp Real.isO_one_exp_comp
+#align real.is_O_one_exp_comp Real.isBigO_one_exp_comp
 
 /-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
 from below under `f`. -/
-theorem isO_exp_comp_one {f : α → ℝ} :
+theorem isBigO_exp_comp_one {f : α → ℝ} :
     (fun x => exp (f x)) =O[l] (fun x => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l f := by
   simp only [is_O_one_iff, norm_eq_abs, abs_exp, is_bounded_under_le_exp_comp]
-#align real.is_O_exp_comp_one Real.isO_exp_comp_one
+#align real.is_O_exp_comp_one Real.isBigO_exp_comp_one
 
 /-- `real.exp (f x)` is bounded away from zero and infinity along a filter `l` if and only if
 `|f x|` is bounded from above along this filter. -/
