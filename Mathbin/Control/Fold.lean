@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Sean Leather
 
 ! This file was ported from Lean 3 source module control.fold
-! leanprover-community/mathlib commit 364d871405dff5a56a5ba2a82eb21a9c1deaa8d7
+! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.CategoryTheory.Category.Kleisli
 /-!
 
 # List folds generalized to `traversable`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Informally, we can think of `foldl` as a special case of `traverse` where we do not care about the
 reconstructed data structure and, in a state monad, we care about the final state.

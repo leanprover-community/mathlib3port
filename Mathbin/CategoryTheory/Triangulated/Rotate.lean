@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.rotate
-! leanprover-community/mathlib commit 94d4e70e97c36c896cb70fb42821acfed040de60
+! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Triangulated.Basic
 
 /-!
 # Rotate
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file adds the ability to rotate triangles and triangle morphisms.
 It also shows that rotation gives an equivalence on the category of triangles.

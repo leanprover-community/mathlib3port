@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit 0a0b3b4148b35efb8b8a38118517c5a1d30d0e69
+! leanprover-community/mathlib commit a493616c740a3252e4cd0e4d0851984946b7b268
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1172,6 +1172,17 @@ theorem contDiffOn_succ_iff_fderivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
   rwa [fderivWithin_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
 #align cont_diff_on_succ_iff_fderiv_within contDiffOn_succ_iff_fderivWithin
 
+theorem contDiffOn_succ_iff_has_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
+    ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔
+      ∃ f' : E → E →L[𝕜] F, ContDiffOn 𝕜 n f' s ∧ ∀ x, x ∈ s → HasFderivWithinAt f (f' x) s x :=
+  by
+  rw [contDiffOn_succ_iff_fderivWithin hs]
+  refine' ⟨fun h => ⟨fderivWithin 𝕜 f s, h.2, fun x hx => (h.1 x hx).HasFderivWithinAt⟩, fun h => _⟩
+  rcases h with ⟨f', h1, h2⟩
+  refine' ⟨fun x hx => (h2 x hx).DifferentiableWithinAt, fun x hx => _⟩
+  exact (h1 x hx).congr' (fun y hy => (h2 y hy).fderivWithin (hs y hy)) hx
+#align cont_diff_on_succ_iff_has_fderiv_within contDiffOn_succ_iff_has_fderiv_within
+
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
@@ -1520,6 +1531,15 @@ theorem contDiff_iff_forall_nat_le : ContDiff 𝕜 n f ↔ ∀ m : ℕ, ↑m ≤
   simp_rw [← contDiffOn_univ]
   exact contDiffOn_iff_forall_nat_le
 #align cont_diff_iff_forall_nat_le contDiff_iff_forall_nat_le
+
+/-- A function is `C^(n+1)` iff it has a `C^n` derivative. -/
+theorem contDiff_succ_iff_has_fderiv {n : ℕ} :
+    ContDiff 𝕜 (n + 1 : ℕ) f ↔
+      ∃ f' : E → E →L[𝕜] F, ContDiff 𝕜 n f' ∧ ∀ x, HasFderivAt f (f' x) x :=
+  by
+  simp only [← contDiffOn_univ, ← hasFderivWithinAt_univ,
+    contDiffOn_succ_iff_has_fderiv_within uniqueDiffOn_univ, Set.mem_univ, forall_true_left]
+#align cont_diff_succ_iff_has_fderiv contDiff_succ_iff_has_fderiv
 
 /-! ### Iterated derivative -/
 

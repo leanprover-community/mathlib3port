@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 
 ! This file was ported from Lean 3 source module linear_algebra.alternating
-! leanprover-community/mathlib commit 284fdd2962e67d2932fa3a79ce19fcf92d38e228
+! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.LinearAlgebra.Multilinear.TensorProduct
 
 /-!
 # Alternating Maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We construct the bundled function `alternating_map`, which extends `multilinear_map` with all the
 arguments of the same type.

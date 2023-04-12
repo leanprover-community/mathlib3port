@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 8535b76e601f11868af3e612fbecb730998a5631
+! leanprover-community/mathlib commit 039ef89bef6e58b32b62898dd48e9d1a4312bb65
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -982,7 +982,7 @@ theorem finiteDimensional_of_surjective [FiniteDimensional K V] (f : V →ₗ[K]
 /-- The range of a linear map defined on a finite-dimensional space is also finite-dimensional. -/
 instance finiteDimensional_range [FiniteDimensional K V] (f : V →ₗ[K] V₂) :
     FiniteDimensional K f.range :=
-  f.quotKerEquivRange.FiniteDimensional
+  Module.Finite.range f
 #align linear_map.finite_dimensional_range LinearMap.finiteDimensional_range
 
 /-- On a finite-dimensional space, a linear map is injective if and only if it is surjective. -/

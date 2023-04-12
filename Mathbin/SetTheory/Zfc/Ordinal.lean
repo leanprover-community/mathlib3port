@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.zfc.ordinal
-! leanprover-community/mathlib commit 98bbc3526516bca903bff09ea10c4206bf079e6b
+! leanprover-community/mathlib commit 25a9423c6b2c8626e91c688bfd6c1d0a986a3e6e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.SetTheory.Zfc.Basic
 
 /-!
 # Von Neumann ordinals
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file works towards the development of von Neumann ordinals, i.e. transitive sets, well-ordered
 under `∈`. We currently only have an initial development of transitive sets.

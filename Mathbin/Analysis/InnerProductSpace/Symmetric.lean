@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit 36172d6661e181c215108035483dbbeabd62942e
+! leanprover-community/mathlib commit 23b80727b34e571e2e3bd8e8b720820cb215e880
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymm
 
 /-- A symmetric linear map `T` is zero if and only if `⟪T x, x⟫_ℝ = 0` for all `x`.
 See `inner_map_self_eq_zero` for the complex version without the symmetric assumption. -/
-theorem IsSymmetric.inner_map_eq_zero {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
+theorem IsSymmetric.inner_map_self_eq_zero {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
     (∀ x, ⟪T x, x⟫ = 0) ↔ T = 0 :=
   by
   simp_rw [LinearMap.ext_iff, zero_apply]
@@ -206,7 +206,7 @@ theorem IsSymmetric.inner_map_eq_zero {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric
   rw [← @inner_self_eq_zero 𝕜, hT.inner_map_polarization]
   simp_rw [h _]
   ring
-#align linear_map.is_symmetric.inner_map_eq_zero LinearMap.IsSymmetric.inner_map_eq_zero
+#align linear_map.is_symmetric.inner_map_self_eq_zero LinearMap.IsSymmetric.inner_map_self_eq_zero
 
 end LinearMap
 

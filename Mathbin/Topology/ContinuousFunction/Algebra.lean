@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
+! leanprover-community/mathlib commit 37ffa4ee6ae02f5f6ca7226922143d3a10961e3d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,7 +273,7 @@ section Subtype
 /-- The `submonoid` of continuous maps `α → β`. -/
 @[to_additive "The `add_submonoid` of continuous maps `α → β`. "]
 def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β]
-    [Monoid β] [ContinuousMul β] : Submonoid (α → β)
+    [MulOneClass β] [ContinuousMul β] : Submonoid (α → β)
     where
   carrier := { f : α → β | Continuous f }
   one_mem' := @continuous_const _ _ _ _ 1
@@ -466,7 +466,7 @@ section Subtype
 
 /-- The subsemiring of continuous maps `α → β`. -/
 def continuousSubsemiring (α : Type _) (R : Type _) [TopologicalSpace α] [TopologicalSpace R]
-    [Semiring R] [TopologicalSemiring R] : Subsemiring (α → R) :=
+    [NonAssocSemiring R] [TopologicalSemiring R] : Subsemiring (α → R) :=
   { continuousAddSubmonoid α R, continuousSubmonoid α R with }
 #align continuous_subsemiring continuousSubsemiring
 
