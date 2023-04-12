@@ -131,7 +131,7 @@ theorem comp_hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     skip
     rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
   rw [Fin.sum_univ_castSucc]
-  simp only [Fin.last, Fin.castLe_mk, Fin.coe_cast, Fin.cast_mk, Fin.coe_castLe, Fin.val_mk,
+  simp only [Fin.last, Fin.castLE_mk, Fin.coe_cast, Fin.cast_mk, Fin.coe_castLE, Fin.val_mk,
     Fin.castSucc_mk, Fin.coe_castSucc]
   /- the purpose of the following `simplif` is to create three subgoals in order
       to finish the proof -/
@@ -155,7 +155,7 @@ theorem comp_hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     rintro ⟨i, hi⟩ h₀
     have hia : (⟨i, by linarith⟩ : Fin (n + 2)) ≤ Fin.castSucc (⟨a, by linarith⟩ : Fin (n + 1)) :=
       by simpa only [Fin.le_iff_val_le_val, Fin.val_mk, Fin.castSucc_mk, ← lt_succ_iff] using hi
-    simp only [Fin.val_mk, Fin.castLe_mk, Fin.castSucc_mk, Fin.succ_mk, assoc, Fin.cast_mk, ←
+    simp only [Fin.val_mk, Fin.castLE_mk, Fin.castSucc_mk, Fin.succ_mk, assoc, Fin.cast_mk, ←
       δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
     congr
     ring
@@ -172,7 +172,7 @@ theorem comp_hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
       Fin.mk_zero, one_zsmul, eq_to_hom_refl, comp_id, comp_sum,
       alternating_face_map_complex.obj_d_eq]
     rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by linarith), Fin.sum_trunc]
-    · simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLe_mk,
+    · simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLE_mk,
         Fin.cast_mk, Fin.castSucc_mk]
       simp only [Fin.mk_zero, Fin.val_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.val_one, pow_one,
         neg_smul, comp_neg]

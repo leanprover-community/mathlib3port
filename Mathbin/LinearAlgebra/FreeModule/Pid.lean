@@ -182,9 +182,9 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
                   ∀ (m') (hn'm' : n' ≤ m') (bM' : Basis (Fin m') R M'),
                     ∃ (hnm : n' + 1 ≤ m' + 1)(bM : Basis (Fin (m' + 1)) R M),
                       ∀ (as : Fin n' → R)
-                        (h : ∀ i : Fin n', (bN' i : O) = as i • (bM' (Fin.castLe hn'm' i) : O)),
+                        (h : ∀ i : Fin n', (bN' i : O) = as i • (bM' (Fin.castLE hn'm' i) : O)),
                         ∃ as' : Fin (n' + 1) → R,
-                          ∀ i : Fin (n' + 1), (bN i : O) = as' i • (bM (Fin.castLe hnm i) : O) :=
+                          ∀ i : Fin (n' + 1), (bN i : O) = as' i • (bM (Fin.castLE hnm i) : O) :=
   by
   -- Let `ϕ` be a maximal projection of `M` onto `R`, in the sense that there is
   -- no `ψ` whose image of `N` is larger than `ϕ`'s image of `N`.
@@ -295,9 +295,9 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   intro i
   rw [Basis.coe_mkFinConsOfLe, Basis.coe_mkFinConsOfLe]
   refine' Fin.cases _ (fun i => _) i
-  · simp only [Fin.cons_zero, Fin.castLe_zero]
+  · simp only [Fin.cons_zero, Fin.castLE_zero]
     exact a_smul_y'.symm
-  · rw [Fin.castLe_succ]
+  · rw [Fin.castLE_succ]
     simp only [Fin.cons_succ, coe_of_le, h i]
 #align submodule.basis_of_pid_aux Submodule.basis_of_pid_aux
 
@@ -471,7 +471,7 @@ This is a strengthening of `submodule.basis_of_pid_of_le`.
 theorem Submodule.exists_smith_normal_form_of_le [Finite ι] (b : Basis ι R M) (N O : Submodule R M)
     (N_le_O : N ≤ O) :
     ∃ (n o : ℕ)(hno : n ≤ o)(bO : Basis (Fin o) R O)(bN : Basis (Fin n) R N)(a : Fin n → R),
-      ∀ i, (bN i : M) = a i • bO (Fin.castLe hno i) :=
+      ∀ i, (bN i : M) = a i • bO (Fin.castLE hno i) :=
   by
   cases nonempty_fintype ι
   revert N
@@ -504,7 +504,7 @@ noncomputable def Submodule.smithNormalFormOfLe [Finite ι] (b : Basis ι R M) (
   by
   choose n o hno bO bN a snf using N.exists_smith_normal_form_of_le b O N_le_O
   refine'
-    ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Fin.castLe hno).toEmbedding, a,
+    ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Fin.castLE hno).toEmbedding, a,
       fun i => _⟩
   ext
   simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symm_apply,

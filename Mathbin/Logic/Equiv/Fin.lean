@@ -783,18 +783,18 @@ def Int.divModEquiv (n : ℕ) [NeZero n] : ℤ ≃ ℤ × Fin n
 #align int.div_mod_equiv Int.divModEquiv
 -/
 
-#print Fin.castLeOrderIso /-
+#print Fin.castLEOrderIso /-
 /-- Promote a `fin n` into a larger `fin m`, as a subtype where the underlying
 values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 @[simps apply symm_apply]
-def Fin.castLeOrderIso {n m : ℕ} (h : n ≤ m) : Fin n ≃o { i : Fin m // (i : ℕ) < n }
+def Fin.castLEOrderIso {n m : ℕ} (h : n ≤ m) : Fin n ≃o { i : Fin m // (i : ℕ) < n }
     where
-  toFun i := ⟨Fin.castLe h i, by simp⟩
+  toFun i := ⟨Fin.castLE h i, by simp⟩
   invFun i := ⟨i, i.Prop⟩
   left_inv _ := by simp
   right_inv _ := by simp
   map_rel_iff' _ _ := by simp
-#align fin.cast_le_order_iso Fin.castLeOrderIso
+#align fin.cast_le_order_iso Fin.castLEOrderIso
 -/
 
 #print subsingleton_fin_zero /-

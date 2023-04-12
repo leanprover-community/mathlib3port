@@ -284,7 +284,7 @@ theorem read_pushBack_left (i : Fin n) : (a.pushBack v).read i.cast_succ = a.rea
   by
   cases' i with i hi
   have : ¬i = n := ne_of_lt hi
-  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLT, read, DArray.read]
+  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLE, Fin.castLT, read, DArray.read]
 #align array.read_push_back_left Array'.read_pushBack_left
 
 @[simp]
@@ -292,7 +292,7 @@ theorem read_pushBack_right : (a.pushBack v).read (Fin.last _) = v :=
   by
   cases' hn : Fin.last n with k hk
   have : k = n := by simpa [Fin.eq_iff_veq] using hn.symm
-  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLT, read, DArray.read]
+  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLE, Fin.castLT, read, DArray.read]
 #align array.read_push_back_right Array'.read_pushBack_right
 
 end PushBack

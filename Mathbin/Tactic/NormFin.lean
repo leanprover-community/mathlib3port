@@ -115,9 +115,9 @@ theorem NormalizeFinLt.castLT {n m} {a : Fin m} {ha} {a' : ℕ} (h : NormalizeFi
     NormalizeFinLt n (Fin.castLT a ha) a' := by simpa [normalize_fin_lt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_lt Tactic.NormFin.NormalizeFinLt.castLT
 
-theorem NormalizeFinLt.castLe {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.castLe nm a) a' := by simpa [normalize_fin_lt] using h
-#align tactic.norm_fin.normalize_fin_lt.cast_le Tactic.NormFin.NormalizeFinLt.castLe
+theorem NormalizeFinLt.castLE {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.castLE nm a) a' := by simpa [normalize_fin_lt] using h
+#align tactic.norm_fin.normalize_fin_lt.cast_le Tactic.NormFin.NormalizeFinLt.castLE
 
 theorem NormalizeFinLt.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Fin.cast nm a) a' := by simpa [normalize_fin_lt] using h
@@ -278,7 +278,7 @@ open MatchFinResult
 functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fin m` is not actually a
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
-  | q(@Fin.castLe $(n) $(m) $(h)) => some (cast_le n m h a)
+  | q(@Fin.castLE $(n) $(m) $(h)) => some (cast_le n m h a)
   | q(@Fin.cast $(m) $(n) $(h)) => some (cast n m h a)
   | q(@Fin.castAdd $(n) $(m)) => some (cast_add n m a)
   | q(@Fin.castSucc $(n)) => some (cast_succ n a)
@@ -353,7 +353,7 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) :
         pure (a', q(@NormalizeFinLt.castLT).mk_app [n, m, a, h, a', pa])
       | match_fin_result.cast_le _ m nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', q(@NormalizeFinLt.castLe).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFinLt.castLE).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast m _ nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
         pure (a', q(@NormalizeFinLt.cast).mk_app [n, m, nm, a, a', pa])

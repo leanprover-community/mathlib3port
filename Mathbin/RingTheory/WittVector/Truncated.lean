@@ -436,10 +436,10 @@ theorem truncate_surjective {m : ℕ} (hm : n ≤ m) : Surjective (@truncate p _
 
 @[simp]
 theorem coeff_truncate {m : ℕ} (hm : n ≤ m) (i : Fin n) (x : TruncatedWittVector p m R) :
-    (truncate hm x).coeff i = x.coeff (Fin.castLe hm i) :=
+    (truncate hm x).coeff i = x.coeff (Fin.castLE hm i) :=
   by
   obtain ⟨y, rfl⟩ := WittVector.truncate_surjective p _ _ x
-  simp only [truncate_witt_vector_truncate, WittVector.coeff_truncate, Fin.coe_castLe]
+  simp only [truncate_witt_vector_truncate, WittVector.coeff_truncate, Fin.coe_castLE]
 #align truncated_witt_vector.coeff_truncate TruncatedWittVector.coeff_truncate
 
 section Fintype
@@ -507,7 +507,7 @@ theorem truncate_liftFun (s : S) : WittVector.truncate n (liftFun f s) = f n s :
   rw [← f_compat (i + 1) n i.is_lt, RingHom.comp_apply, TruncatedWittVector.coeff_truncate]
   -- this is a bit unfortunate
   congr with _
-  simp only [Fin.val_last, Fin.coe_castLe]
+  simp only [Fin.val_last, Fin.coe_castLE]
 #align witt_vector.truncate_lift_fun WittVector.truncate_liftFun
 
 variable (f)

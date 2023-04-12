@@ -127,7 +127,7 @@ theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
   have C :
     ((p.left_inv i (Composition.ones (n + 2)).length)
         fun j : Fin (Composition.ones n.succ.succ).length =>
-        p 1 fun k => v ((Fin.castLe (Composition.length_le _)) j)) =
+        p 1 fun k => v ((Fin.castLE (Composition.length_le _)) j)) =
       p.left_inv i (n + 2) fun j : Fin (n + 2) => p 1 fun k => v j :=
     by
     apply FormalMultilinearSeries.congr _ (Composition.ones_length _) fun j hj1 hj2 => _

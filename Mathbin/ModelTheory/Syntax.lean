@@ -498,26 +498,26 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.b
 def castLe : ∀ {m n : ℕ} (h : m ≤ n), L.BoundedFormula α m → L.BoundedFormula α n
   | m, n, h, falsum => falsum
   | m, n, h, equal t₁ t₂ =>
-    equal (t₁.relabel (Sum.map id (Fin.castLe h))) (t₂.relabel (Sum.map id (Fin.castLe h)))
-  | m, n, h, Rel R ts => rel R (Term.relabel (Sum.map id (Fin.castLe h)) ∘ ts)
-  | m, n, h, imp f₁ f₂ => (f₁.castLe h).imp (f₂.castLe h)
-  | m, n, h, all f => (f.castLe (add_le_add_right h 1)).all
+    equal (t₁.relabel (Sum.map id (Fin.castLE h))) (t₂.relabel (Sum.map id (Fin.castLE h)))
+  | m, n, h, Rel R ts => rel R (Term.relabel (Sum.map id (Fin.castLE h)) ∘ ts)
+  | m, n, h, imp f₁ f₂ => (f₁.castLE h).imp (f₂.castLE h)
+  | m, n, h, all f => (f.castLE (add_le_add_right h 1)).all
 #align first_order.language.bounded_formula.cast_le FirstOrder.Language.BoundedFormula.castLe
 
 @[simp]
-theorem castLe_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.castLe h = φ :=
+theorem castLe_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.castLE h = φ :=
   by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-  · simp [Fin.castLe_of_eq]
-  · simp [Fin.castLe_of_eq]
-  · simp [Fin.castLe_of_eq, ih1, ih2]
-  · simp [Fin.castLe_of_eq, ih3]
+  · simp [Fin.castLE_of_eq]
+  · simp [Fin.castLE_of_eq]
+  · simp [Fin.castLE_of_eq, ih1, ih2]
+  · simp [Fin.castLE_of_eq, ih3]
 #align first_order.language.bounded_formula.cast_le_rfl FirstOrder.Language.BoundedFormula.castLe_rfl
 
 @[simp]
 theorem castLe_castLe {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFormula α k) :
-    (φ.castLe km).castLe mn = φ.castLe (km.trans mn) :=
+    (φ.castLE km).castLE mn = φ.castLE (km.trans mn) :=
   by
   revert m n
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 <;> intro m n km mn
@@ -720,7 +720,7 @@ theorem relabel_ex (g : α → Sum β (Fin n)) {k} (φ : L.BoundedFormula α (k 
 
 @[simp]
 theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
-    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.castLe (ge_of_eq (zero_add n)) :=
+    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.castLE (ge_of_eq (zero_add n)) :=
   by
   simp only [relabel, relabel_aux_sum_inl]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
@@ -790,7 +790,7 @@ theorem IsAtomic.liftAt {k m : ℕ} (h : IsAtomic φ) : (φ.liftAt k m).IsAtomic
   IsAtomic.rec_on h (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.rel _ _
 #align first_order.language.bounded_formula.is_atomic.lift_at FirstOrder.Language.BoundedFormula.IsAtomic.liftAt
 
-theorem IsAtomic.castLe {h : l ≤ n} (hφ : IsAtomic φ) : (φ.castLe h).IsAtomic :=
+theorem IsAtomic.castLe {h : l ≤ n} (hφ : IsAtomic φ) : (φ.castLE h).IsAtomic :=
   IsAtomic.rec_on hφ (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.rel _ _
 #align first_order.language.bounded_formula.is_atomic.cast_le FirstOrder.Language.BoundedFormula.IsAtomic.castLe
 
@@ -823,8 +823,8 @@ theorem IsQf.liftAt {k m : ℕ} (h : IsQf φ) : (φ.liftAt k m).IsQf :=
   IsQf.rec_on h isQf_bot (fun _ ih => ih.liftAt.IsQf) fun _ _ _ _ ih1 ih2 => ih1.imp ih2
 #align first_order.language.bounded_formula.is_qf.lift_at FirstOrder.Language.BoundedFormula.IsQf.liftAt
 
-theorem IsQf.castLe {h : l ≤ n} (hφ : IsQf φ) : (φ.castLe h).IsQf :=
-  IsQf.rec_on hφ isQf_bot (fun _ ih => ih.castLe.IsQf) fun _ _ _ _ ih1 ih2 => ih1.imp ih2
+theorem IsQf.castLe {h : l ≤ n} (hφ : IsQf φ) : (φ.castLE h).IsQf :=
+  IsQf.rec_on hφ isQf_bot (fun _ ih => ih.castLE.IsQf) fun _ _ _ _ ih1 ih2 => ih1.imp ih2
 #align first_order.language.bounded_formula.is_qf.cast_le FirstOrder.Language.BoundedFormula.IsQf.castLe
 
 theorem not_all_isQf (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsQf := fun con =>
@@ -870,14 +870,14 @@ theorem IsPrenex.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsPrenex
     fun _ _ _ h => by simp [h.ex]
 #align first_order.language.bounded_formula.is_prenex.relabel FirstOrder.Language.BoundedFormula.IsPrenex.relabel
 
-theorem IsPrenex.castLe (hφ : IsPrenex φ) : ∀ {n} {h : l ≤ n}, (φ.castLe h).IsPrenex :=
-  IsPrenex.rec_on hφ (fun _ _ ih _ _ => ih.castLe.IsPrenex) (fun _ _ _ ih _ _ => ih.all)
+theorem IsPrenex.castLe (hφ : IsPrenex φ) : ∀ {n} {h : l ≤ n}, (φ.castLE h).IsPrenex :=
+  IsPrenex.rec_on hφ (fun _ _ ih _ _ => ih.castLE.IsPrenex) (fun _ _ _ ih _ _ => ih.all)
     fun _ _ _ ih _ _ => ih.ex
 #align first_order.language.bounded_formula.is_prenex.cast_le FirstOrder.Language.BoundedFormula.IsPrenex.castLe
 
 theorem IsPrenex.liftAt {k m : ℕ} (h : IsPrenex φ) : (φ.liftAt k m).IsPrenex :=
-  IsPrenex.rec_on h (fun _ _ ih => ih.liftAt.IsPrenex) (fun _ _ _ ih => ih.castLe.all)
-    fun _ _ _ ih => ih.castLe.ex
+  IsPrenex.rec_on h (fun _ _ ih => ih.liftAt.IsPrenex) (fun _ _ _ ih => ih.castLE.all)
+    fun _ _ _ ih => ih.castLE.ex
 #align first_order.language.bounded_formula.is_prenex.lift_at FirstOrder.Language.BoundedFormula.IsPrenex.liftAt
 
 /- warning: first_order.language.bounded_formula.to_prenex_imp_right -> FirstOrder.Language.BoundedFormula.toPrenexImpRight is a dubious translation:
