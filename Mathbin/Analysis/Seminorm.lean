@@ -1246,5 +1246,5 @@ theorem balanced_ball_zero : Balanced 𝕜 (Metric.ball (0 : E) r) :=
 end normSeminorm
 
 -- Guard against import creep.
-assert_not_exists balanced_core
+assert_not_exists balancedCore
 

@@ -565,7 +565,7 @@ theorem isTheta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).
     (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re :=
   calc
     (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
-      isTheta_of_norm_eventually_eq' <| hl.mono fun x => abs_cpow_of_imp
+      isTheta_of_norm_eventuallyEq' <| hl.mono fun x => abs_cpow_of_imp
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl_im))
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
