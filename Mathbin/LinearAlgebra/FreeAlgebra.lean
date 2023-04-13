@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.free_algebra
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
 /-!
 # Linear algebra properties of `free_algebra R X`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides a `free_monoid X` basis on the `free_algebra R X`, and uses it to show the
 dimension of the algebra is the cardinality of `list X`

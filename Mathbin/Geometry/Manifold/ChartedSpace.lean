@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.charted_space
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.LocalHomeomorph
 
 /-!
 # Charted spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A smooth manifold is a topological space `M` locally modelled on a euclidean space (or a euclidean
 half-space for manifolds with boundaries, or an infinite dimensional vector space for more general

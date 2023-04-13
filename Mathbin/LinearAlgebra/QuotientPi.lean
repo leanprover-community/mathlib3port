@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient_pi
-! leanprover-community/mathlib commit 398f60f60b43ef42154bd2bdadf5133daf1577a4
+! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Quotient
 
 /-!
 # Submodule quotients and direct sums
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains some results on the quotient of a module by a direct sum of submodules,
 and the direct sum of quotients of modules by submodules.

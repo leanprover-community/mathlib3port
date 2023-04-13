@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.rank
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit b5b5dd5a47b5744260e2c9185013075ce9dadccd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,23 +38,35 @@ section Ring
 
 variable [Ring R] [StrongRankCondition R]
 
-variable [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
+variable [AddCommGroup M] [Module R M] [Module.Finite R M]
 
-variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
+variable [AddCommGroup N] [Module R N] [Module.Finite R N]
 
-/-- The rank of a finite and free module is finite. -/
+/-- The rank of a finite module is finite. -/
 theorem rank_lt_aleph0 : Module.rank R M < ℵ₀ :=
   by
+  dsimp only [Module.rank]
   letI := nontrivial_of_invariantBasisNumber R
-  rw [← (choose_basis R M).mk_eq_rank'', lt_aleph_0_iff_fintype]
-  exact Nonempty.intro inferInstance
+  obtain ⟨S, hS⟩ := module.finite_def.mp ‹_›
+  refine' (csupᵢ_le' fun i => _).trans_lt (nat_lt_aleph_0 S.card)
+  exact linearIndependent_le_span_finset _ i.prop S hS
 #align finite_dimensional.rank_lt_aleph_0 FiniteDimensional.rank_lt_aleph0
 
-/-- If `M` is finite and free, `finrank M = rank M`. -/
+/-- If `M` is finite, `finrank M = rank M`. -/
 @[simp]
 theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
   rw [finrank, cast_to_nat_of_lt_aleph_0 (rank_lt_aleph_0 R M)]
 #align finite_dimensional.finrank_eq_rank FiniteDimensional.finrank_eq_rank
+
+end Ring
+
+section RingFree
+
+variable [Ring R] [StrongRankCondition R]
+
+variable [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
+
+variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 /-- The finrank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem finrank_eq_card_chooseBasisIndex :
@@ -110,7 +122,7 @@ theorem finrank_matrix (m n : Type _) [Fintype m] [Fintype n] :
     finrank R (Matrix m n R) = card m * card n := by simp [finrank]
 #align finite_dimensional.finrank_matrix FiniteDimensional.finrank_matrix
 
-end Ring
+end RingFree
 
 section CommRing
 
@@ -143,25 +155,25 @@ variable [AddCommGroup M] [Module R M]
 
 variable [AddCommGroup N] [Module R N]
 
-theorem LinearMap.finrank_le_finrank_of_injective [Module.Free R N] [Module.Finite R N]
-    {f : M →ₗ[R] N} (hf : Function.Injective f) : finrank R M ≤ finrank R N :=
+theorem LinearMap.finrank_le_finrank_of_injective [Module.Finite R N] {f : M →ₗ[R] N}
+    (hf : Function.Injective f) : finrank R M ≤ finrank R N :=
   finrank_le_finrank_of_rank_le_rank (LinearMap.lift_rank_le_of_injective _ hf) (rank_lt_aleph0 _ _)
 #align linear_map.finrank_le_finrank_of_injective LinearMap.finrank_le_finrank_of_injective
 
-theorem LinearMap.finrank_range_le [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] N) :
+theorem LinearMap.finrank_range_le [Module.Finite R M] (f : M →ₗ[R] N) :
     finrank R f.range ≤ finrank R M :=
   finrank_le_finrank_of_rank_le_rank (lift_rank_range_le f) (rank_lt_aleph0 _ _)
 #align linear_map.finrank_range_le LinearMap.finrank_range_le
 
 /-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
-theorem Submodule.finrank_le [Module.Free R M] [Module.Finite R M] (s : Submodule R M) :
-    finrank R s ≤ finrank R M := by
+theorem Submodule.finrank_le [Module.Finite R M] (s : Submodule R M) : finrank R s ≤ finrank R M :=
+  by
   simpa only [Cardinal.toNat_lift] using
     to_nat_le_of_le_of_lt_aleph_0 (rank_lt_aleph_0 _ _) (rank_submodule_le s)
 #align submodule.finrank_le Submodule.finrank_le
 
 /-- The dimension of a quotient is bounded by the dimension of the ambient space. -/
-theorem Submodule.finrank_quotient_le [Module.Free R M] [Module.Finite R M] (s : Submodule R M) :
+theorem Submodule.finrank_quotient_le [Module.Finite R M] (s : Submodule R M) :
     finrank R (M ⧸ s) ≤ finrank R M := by
   simpa only [Cardinal.toNat_lift] using
     to_nat_le_of_le_of_lt_aleph_0 (rank_lt_aleph_0 _ _)

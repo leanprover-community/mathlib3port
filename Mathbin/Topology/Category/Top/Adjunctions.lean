@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.category.Top.adjunctions
-! leanprover-community/mathlib commit f7baecbb54bd0f24f228576f97b1752fc3c9b318
+! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Adjunction.Basic
 
 /-!
 # Adjunctions regarding the category of topological spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file shows that the forgetful functor from topological spaces to types has a left and right
 adjoint, given by `Top.discrete`, resp. `Top.trivial`, the functors which equip a type with the

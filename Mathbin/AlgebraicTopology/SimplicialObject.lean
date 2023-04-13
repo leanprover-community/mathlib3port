@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplicial_object
-! leanprover-community/mathlib commit 5ed51dc37c6b891b79314ee11a50adc2b1df6fd6
+! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Opposites
 
 /-!
 # Simplicial objects in a category.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A simplicial object in a category `C` is a `C`-valued presheaf on `simplex_category`.
 (Similarly a cosimplicial object is functor `simplex_category ⥤ C`.)
