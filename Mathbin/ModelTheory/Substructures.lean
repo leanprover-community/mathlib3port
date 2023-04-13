@@ -724,18 +724,18 @@ def substructureReduct : L'.Substructure M ↪o L.Substructure M
     simp only [SetLike.coe_set_eq] at h
     exact h
   map_rel_iff' S T := Iff.rfl
-#align first_order.language.Lhom.substructure_reduct FirstOrder.Language.Lhom.substructureReduct
+#align first_order.language.Lhom.substructure_reduct FirstOrder.Language.LHom.substructureReduct
 
 @[simp]
 theorem mem_substructureReduct {x : M} {S : L'.Substructure M} :
     x ∈ φ.substructureReduct S ↔ x ∈ S :=
   Iff.rfl
-#align first_order.language.Lhom.mem_substructure_reduct FirstOrder.Language.Lhom.mem_substructureReduct
+#align first_order.language.Lhom.mem_substructure_reduct FirstOrder.Language.LHom.mem_substructureReduct
 
 @[simp]
 theorem coe_substructureReduct {S : L'.Substructure M} : (φ.substructureReduct S : Set M) = ↑S :=
   rfl
-#align first_order.language.Lhom.coe_substructure_reduct FirstOrder.Language.Lhom.coe_substructureReduct
+#align first_order.language.Lhom.coe_substructure_reduct FirstOrder.Language.LHom.coe_substructureReduct
 
 end Lhom
 

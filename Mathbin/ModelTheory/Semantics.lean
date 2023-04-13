@@ -209,7 +209,7 @@ theorem realize_onTerm [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] 
   induction' t with _ n f ts ih
   · rfl
   · simp only [term.realize, Lhom.on_term, Lhom.map_on_function, ih]
-#align first_order.language.Lhom.realize_on_term FirstOrder.Language.Lhom.realize_onTerm
+#align first_order.language.Lhom.realize_on_term FirstOrder.Language.LHom.realize_onTerm
 
 end Lhom
 
@@ -605,7 +605,7 @@ theorem realize_onBoundedFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpan
     rfl
   · simp only [on_bounded_formula, ih1, ih2, realize_imp]
   · simp only [on_bounded_formula, ih3, realize_all]
-#align first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.Lhom.realize_onBoundedFormula
+#align first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.LHom.realize_onBoundedFormula
 
 end Lhom
 
@@ -713,18 +713,18 @@ theorem realize_graph {f : L.Functions n} {x : Fin n → M} {y : M} :
 end Formula
 
 @[simp]
-theorem Lhom.realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Formula α)
+theorem LHom.realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Formula α)
     {v : α → M} : (φ.onFormula ψ).realize v ↔ ψ.realize v :=
   φ.realize_onBoundedFormula ψ
-#align first_order.language.Lhom.realize_on_formula FirstOrder.Language.Lhom.realize_onFormula
+#align first_order.language.Lhom.realize_on_formula FirstOrder.Language.LHom.realize_onFormula
 
 @[simp]
-theorem Lhom.setOf_realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
+theorem LHom.setOf_realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Formula α) : (setOf (φ.onFormula ψ).realize : Set (α → M)) = setOf ψ.realize :=
   by
   ext
   simp
-#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.Lhom.setOf_realize_onFormula
+#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LHom.setOf_realize_onFormula
 
 variable (M)
 
@@ -775,10 +775,10 @@ theorem realize_equivSentence_symm (φ : L[[α]].Sentence) (v : α → M) :
 end Formula
 
 @[simp]
-theorem Lhom.realize_onSentence [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
+theorem LHom.realize_onSentence [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Sentence) : M ⊨ φ.onSentence ψ ↔ M ⊨ ψ :=
   φ.realize_onFormula ψ
-#align first_order.language.Lhom.realize_on_sentence FirstOrder.Language.Lhom.realize_onSentence
+#align first_order.language.Lhom.realize_on_sentence FirstOrder.Language.LHom.realize_onSentence
 
 variable (L)
 
@@ -839,9 +839,9 @@ theorem Theory.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ ∈ T
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem Lhom.onTheory_model [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (T : L.Theory) :
+theorem LHom.onTheory_model [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (T : L.Theory) :
     M ⊨ φ.onTheory T ↔ M ⊨ T := by simp [Theory.model_iff, Lhom.on_Theory]
-#align first_order.language.Lhom.on_Theory_model FirstOrder.Language.Lhom.onTheory_model
+#align first_order.language.Lhom.on_Theory_model FirstOrder.Language.LHom.onTheory_model
 
 variable {M} {T}
 

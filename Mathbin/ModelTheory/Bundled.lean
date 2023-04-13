@@ -152,7 +152,7 @@ def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) : T
   carrier := M
   struc := φ.reduct M
   nonempty' := M.nonempty'
-  is_model := (@Lhom.onTheory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
+  is_model := (@LHom.onTheory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
 #align first_order.language.Theory.Model.reduct FirstOrder.Language.Theory.ModelCat.reduct
 
 /-- When `φ` is injective, `default_expansion` expands a model of `T` to a model of `φ.on_Theory T`
@@ -167,16 +167,16 @@ noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.In
   struc := φ.defaultExpansion M
   nonempty' := M.nonempty'
   is_model :=
-    (@Lhom.onTheory_model L L' M _ (φ.defaultExpansion M) φ (h.isExpansionOn_default M) T).2
+    (@LHom.onTheory_model L L' M _ (φ.defaultExpansion M) φ (h.isExpansionOn_default M) T).2
       M.is_model
 #align first_order.language.Theory.Model.default_expansion FirstOrder.Language.Theory.ModelCat.defaultExpansion
 
 instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.ModelCat) : L.Structure M :=
-  (Lhom.sumInl : L →ᴸ L.Sum L').reduct M
+  (LHom.sumInl : L →ᴸ L.Sum L').reduct M
 #align first_order.language.Theory.Model.left_Structure FirstOrder.Language.Theory.ModelCat.leftStructure
 
 instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.ModelCat) : L'.Structure M :=
-  (Lhom.sumInr : L' →ᴸ L.Sum L').reduct M
+  (LHom.sumInr : L' →ᴸ L.Sum L').reduct M
 #align first_order.language.Theory.Model.right_Structure FirstOrder.Language.Theory.ModelCat.rightStructure
 
 /-- A model of a theory is also a model of any subtheory. -/

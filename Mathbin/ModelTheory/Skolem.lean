@@ -85,7 +85,7 @@ noncomputable instance skolem₁Structure : L.skolem₁.Structure M :=
 namespace Substructure
 
 theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
-    (Lhom.sumInl.substructureReduct S).IsElementary :=
+    (LHom.sumInl.substructureReduct S).IsElementary :=
   by
   apply (Lhom.sum_inl.substructure_reduct S).is_elementary_of_exists
   intro n φ x a h
@@ -98,7 +98,7 @@ theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
 noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :
     L.ElementarySubstructure M :=
-  ⟨Lhom.sumInl.substructureReduct S, S.skolem₁_reduct_isElementary⟩
+  ⟨LHom.sumInl.substructureReduct S, S.skolem₁_reduct_isElementary⟩
 #align first_order.language.substructure.elementary_skolem₁_reduct FirstOrder.Language.Substructure.elementarySkolem₁Reduct
 
 theorem coeSort_elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :

@@ -90,7 +90,7 @@ variable (L)
 /-- The language homomorphism sending the unique symbol `≤` of `language.order` to `≤` in an ordered
  language. -/
 def orderLhom : Language.order →ᴸ L :=
-  Lhom.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => leSymb
+  LHom.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => leSymb
 #align first_order.language.order_Lhom FirstOrder.Language.orderLhom
 
 end IsOrdered
@@ -105,8 +105,8 @@ theorem orderLhom_leSymb [L.IsOrdered] :
 #align first_order.language.order_Lhom_le_symb FirstOrder.Language.orderLhom_leSymb
 
 @[simp]
-theorem orderLhom_order : orderLhom Language.order = Lhom.id Language.order :=
-  Lhom.funext (Subsingleton.elim _ _) (Subsingleton.elim _ _)
+theorem orderLhom_order : orderLhom Language.order = LHom.id Language.order :=
+  LHom.funext (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align first_order.language.order_Lhom_order FirstOrder.Language.orderLhom_order
 
 instance : IsOrdered (L.Sum Language.order) :=
@@ -160,14 +160,14 @@ variable (L M)
 
 /-- A structure is ordered if its language has a `≤` symbol whose interpretation is -/
 abbrev OrderedStructure [IsOrdered L] [LE M] [L.Structure M] : Prop :=
-  Lhom.IsExpansionOn (orderLhom L) M
+  LHom.IsExpansionOn (orderLhom L) M
 #align first_order.language.ordered_structure FirstOrder.Language.OrderedStructure
 
 variable {L M}
 
 @[simp]
 theorem orderedStructure_iff [IsOrdered L] [LE M] [L.Structure M] :
-    L.OrderedStructure M ↔ Lhom.IsExpansionOn (orderLhom L) M :=
+    L.OrderedStructure M ↔ LHom.IsExpansionOn (orderLhom L) M :=
   Iff.rfl
 #align first_order.language.ordered_structure_iff FirstOrder.Language.orderedStructure_iff
 
