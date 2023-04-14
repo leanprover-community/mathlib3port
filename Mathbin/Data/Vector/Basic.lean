@@ -984,7 +984,7 @@ instance : IsLawfulTraversable.{u} (flip Vector n)
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
-unsafe instance reflect [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
+unsafe instance reflect [Lean.ToLevel.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v
     ((by

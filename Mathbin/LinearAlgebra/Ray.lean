@@ -369,7 +369,7 @@ def RayVector (R M : Type _) [Zero M] :=
 lean 3 declaration is
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_7 : Zero.{u2} M], Coe.{succ u2, succ u2} (RayVector.{u1, u2} R M _inst_7) M
 but is expected to have type
-  forall {R : Type.{u1}} {M : Type.{u2}} {_inst_7 : Zero.{u2} M}, CoeOut.{succ u2, succ u2} (RayVector.{u1, u2} R M _inst_7) M
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_7 : Zero.{u2} M], CoeOut.{succ u2, succ u2} (RayVector.{u1, u2} R M _inst_7) M
 Case conversion may be inaccurate. Consider using '#align ray_vector.has_coe RayVector.coeₓ'. -/
 instance RayVector.coe {R M : Type _} [Zero M] : Coe (RayVector R M) M :=
   coeSubtype

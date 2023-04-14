@@ -155,7 +155,7 @@ instance (priority := 100) [MulOneClass M] [MulOneClass N] [MulEquivClass F M N]
 lean 3 declaration is
   forall (F : Type.{u1}) {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MulZeroOneClass.{u2} α] [_inst_2 : MulZeroOneClass.{u3} β] [_inst_3 : MulEquivClass.{u1, u2, u3} F α β (MulZeroClass.toHasMul.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α _inst_1)) (MulZeroClass.toHasMul.{u3} β (MulZeroOneClass.toMulZeroClass.{u3} β _inst_2))], MonoidWithZeroHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
 but is expected to have type
-  forall (F : Type.{u1}) {α : Type.{u2}} {β : Type.{u3}} {_inst_1 : MulZeroOneClass.{u2} α} {_inst_2 : MulZeroOneClass.{u3} β} [_inst_3 : MulEquivClass.{u1, u2, u3} F α β (MulZeroClass.toMul.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α _inst_1)) (MulZeroClass.toMul.{u3} β (MulZeroOneClass.toMulZeroClass.{u3} β _inst_2))], MonoidWithZeroHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+  forall (F : Type.{u1}) {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MulZeroOneClass.{u2} α] [_inst_2 : MulZeroOneClass.{u3} β] [_inst_3 : MulEquivClass.{u1, u2, u3} F α β (MulZeroClass.toMul.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α _inst_1)) (MulZeroClass.toMul.{u3} β (MulZeroOneClass.toMulZeroClass.{u3} β _inst_2))], MonoidWithZeroHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
 Case conversion may be inaccurate. Consider using '#align mul_equiv_class.to_monoid_with_zero_hom_class MulEquivClass.toMonoidWithZeroHomClassₓ'. -/
 -- See note [lower instance priority]
 instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOneClass α]

@@ -29,38 +29,40 @@ This file provides a typeclass `reflected_univ.{u}` to match a universe variable
 -/
 
 
+#print Lean.ToLevel /-
 /-- A typeclass to translate a universe argument into a `level`. Note that `level.mvar` and
 `level.param` are not supported.
 
 Note that the `instance_priority` linter will complain if instance of this class have the default
 priority, as it takes no arguments! Since it doesn't make any difference, we do what the linter
 asks. -/
-unsafe class reflected_univ.{u} where
+unsafe class Lean.ToLevel.{u} where
   lvl : level
-#align reflected_univ reflected_univ
+#align reflected_univ Lean.ToLevel
+-/
 
 universe u v w x y
 
 /-- Reflect a universe variable `u` into a `level` via typeclass search. -/
-unsafe def reflect_univ [reflected_univ.{u}] : level :=
-  reflected_univ.lvl
+unsafe def reflect_univ [Lean.ToLevel.{u}] : level :=
+  Lean.ToLevel.toLevel
 #align reflect_univ reflect_univ
 
-unsafe instance (priority := 100) reflect_univ.zero : reflected_univ.{0} :=
+unsafe instance (priority := 100) reflect_univ.zero : Lean.ToLevel.{0} :=
   ⟨level.zero⟩
 #align reflect_univ.zero reflect_univ.zero
 
-unsafe instance (priority := 100) reflect_univ.succ [reflected_univ.{u}] : reflected_univ.{u + 1} :=
+unsafe instance (priority := 100) reflect_univ.succ [Lean.ToLevel.{u}] : Lean.ToLevel.{u + 1} :=
   ⟨level.succ reflect_univ.{u}⟩
 #align reflect_univ.succ reflect_univ.succ
 
-unsafe instance (priority := 100) reflect_univ.max [reflected_univ.{u}] [reflected_univ.{v}] :
-    reflected_univ.{max u v} :=
+unsafe instance (priority := 100) reflect_univ.max [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
+    Lean.ToLevel.{max u v} :=
   ⟨level.max reflect_univ.{u} reflect_univ.{v}⟩
 #align reflect_univ.max reflect_univ.max
 
-unsafe instance (priority := 100) reflect_univ.imax [reflected_univ.{u}] [reflected_univ.{v}] :
-    reflected_univ.{imax u v} :=
+unsafe instance (priority := 100) reflect_univ.imax [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
+    Lean.ToLevel.{imax u v} :=
   ⟨level.imax reflect_univ.{u} reflect_univ.{v}⟩
 #align reflect_univ.imax reflect_univ.imax
 
@@ -120,7 +122,7 @@ unsafe def reflected.subst₄ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `punit.reflect`. -/
-unsafe instance punit.reflect' [reflected_univ.{u}] : has_reflect PUnit.{u}
+unsafe instance punit.reflect' [Lean.ToLevel.{u}] : has_reflect PUnit.{u}
   | PUnit.unit => by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]"
@@ -129,7 +131,7 @@ unsafe instance punit.reflect' [reflected_univ.{u}] : has_reflect PUnit.{u}
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `list.reflect`. -/
-unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] :
+unsafe instance list.reflect' [Lean.ToLevel.{u}] {α : Type u} [has_reflect α] [reflected _ α] :
     has_reflect (List α)
   | [] =>
     (by
@@ -146,8 +148,8 @@ unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α
 #align list.reflect' list.reflect'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
-unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : Type v}
-    [reflected _ α] [has_reflect α] : has_reflect (ULift.{u, v} α)
+unsafe instance ulift.reflect' [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] {α : Type v} [reflected _ α]
+    [has_reflect α] : has_reflect (ULift.{u, v} α)
   | ULift.up x =>
     (by
           trace

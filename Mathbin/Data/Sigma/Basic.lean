@@ -312,7 +312,7 @@ theorem Prod.toSigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 -- we generate this manually as `@[derive has_reflect]` fails
 @[instance]
-protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u}
+protected unsafe def sigma.reflect.{u, v} [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] {α : Type u}
     (β : α → Type v) [reflected _ α] [reflected _ β] [hα : has_reflect α]
     [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) := fun ⟨a, b⟩ =>
   (by

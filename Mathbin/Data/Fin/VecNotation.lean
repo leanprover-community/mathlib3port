@@ -266,7 +266,7 @@ theorem cons_fin_one (x : α) (u : Fin 0 → α) : vecCons x u = fun _ => x :=
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
-unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
+unsafe instance _root_.pi_fin.reflect [Lean.ToLevel.{u}] [reflected _ α] [has_reflect α] :
     ∀ {n}, has_reflect (Fin n → α)
   | 0, v =>
     (Subsingleton.elim vecEmpty v).rec

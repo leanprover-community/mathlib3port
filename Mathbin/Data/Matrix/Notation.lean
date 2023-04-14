@@ -58,7 +58,7 @@ open Matrix
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
-unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}]
+unsafe instance matrix.reflect [Lean.ToLevel.{u}] [Lean.ToLevel.{u_1}] [Lean.ToLevel.{u_2}]
     [reflected _ α] [reflected _ m'] [reflected _ n'] [h : has_reflect (m' → n' → α)] :
     has_reflect (Matrix m' n' α) := fun m =>
   (by

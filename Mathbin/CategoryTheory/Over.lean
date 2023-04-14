@@ -108,12 +108,16 @@ def mk {X Y : T} (f : Y ⟶ X) : Over X :=
 #align category_theory.over.mk CategoryTheory.Over.mk
 -/
 
-#print CategoryTheory.Over.coeFromHom /-
+/- warning: category_theory.over.coe_from_hom -> CategoryTheory.Over.coeFromHom is a dubious translation:
+lean 3 declaration is
+  forall {T : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} T] {X : T} {Y : T}, Coe.{succ u1, succ (max u2 u1)} (Quiver.Hom.{succ u1, u2} T (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} T (CategoryTheory.Category.toCategoryStruct.{u1, u2} T _inst_1)) Y X) (CategoryTheory.Over.{u1, u2} T _inst_1 X)
+but is expected to have type
+  forall {T : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} T] {X : T} {Y : T}, CoeOut.{succ u1, max (succ u2) (succ u1)} (Quiver.Hom.{succ u1, u2} T (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} T (CategoryTheory.Category.toCategoryStruct.{u1, u2} T _inst_1)) Y X) (CategoryTheory.Over.{u1, u2} T _inst_1 X)
+Case conversion may be inaccurate. Consider using '#align category_theory.over.coe_from_hom CategoryTheory.Over.coeFromHomₓ'. -/
 /-- We can set up a coercion from arrows with codomain `X` to `over X`. This most likely should not
     be a global instance, but it is sometimes useful. -/
 def coeFromHom {X Y : T} : Coe (Y ⟶ X) (Over X) where coe := mk
 #align category_theory.over.coe_from_hom CategoryTheory.Over.coeFromHom
--/
 
 section
 
