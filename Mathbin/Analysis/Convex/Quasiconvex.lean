@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.quasiconvex
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.Convex.Function
 
 /-!
 # Quasiconvex and quasiconcave functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines quasiconvexity, quasiconcavity and quasilinearity of functions, which are
 generalizations of unimodality and monotonicity. Convexity implies quasiconvexity, concavity implies

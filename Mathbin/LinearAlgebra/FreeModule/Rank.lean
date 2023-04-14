@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.rank
-! leanprover-community/mathlib commit 5aa3c1de9f3c642eac76e11071c852766f220fd0
+! leanprover-community/mathlib commit 465d4301d8da5945ef1dc1b29fb34c2f2b315ac4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,12 +114,9 @@ open Module.Free
 theorem rank_tensorProduct :
     Module.rank R (M ⊗[R] N) = lift.{w, v} (Module.rank R M) * lift.{v, w} (Module.rank R N) :=
   by
-  let ιM := choose_basis_index R M
-  let ιN := choose_basis_index R N
-  have h₁ := LinearEquiv.lift_rank_eq (TensorProduct.congr (repr R M) (repr R N))
-  let b : Basis (ιM × ιN) R (_ →₀ R) := Finsupp.basisSingleOne
-  rw [LinearEquiv.rank_eq (finsuppTensorFinsupp' R ιM ιN), ← b.mk_eq_rank, mk_prod] at h₁
-  rw [lift_inj.1 h₁, rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N]
+  obtain ⟨⟨_, bM⟩⟩ := Module.Free.exists_basis R M
+  obtain ⟨⟨_, bN⟩⟩ := Module.Free.exists_basis R N
+  rw [← bM.mk_eq_rank'', ← bN.mk_eq_rank'', ← (bM.tensor_product bN).mk_eq_rank'', Cardinal.mk_prod]
 #align rank_tensor_product rank_tensorProduct
 
 /-- If `M` and `N` lie in the same universe, the rank of `M ⊗[R] N` is

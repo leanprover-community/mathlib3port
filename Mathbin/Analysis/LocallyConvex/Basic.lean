@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.NormedSpace.Basic
 
 /-!
 # Local convexity
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines absorbent and balanced sets.
 

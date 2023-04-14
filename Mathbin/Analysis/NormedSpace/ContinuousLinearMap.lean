@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.continuous_linear_map
-! leanprover-community/mathlib commit e0e2f10d64d8a5fd11140de398eaa1322eb46c07
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Basic
 
 /-! # Constructions of continuous linear maps between (semi-)normed spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A fundamental fact about (semi-)linear maps between normed spaces over sensible fields is that
 continuity and boundedness are equivalent conditions.  That is, for normed spaces `E`, `F`, a

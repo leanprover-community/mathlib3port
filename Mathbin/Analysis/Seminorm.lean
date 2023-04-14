@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 832a8ba8f10f11fea99367c469ff802e69a5b8ec
+! leanprover-community/mathlib commit 7ebf83ed9c262adbf983ef64d5e8c2ae94b625f4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -255,12 +255,22 @@ theorem smul_sup [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r 
 instance : PartialOrder (Seminorm 𝕜 E) :=
   PartialOrder.lift _ FunLike.coe_injective
 
-theorem le_def (p q : Seminorm 𝕜 E) : p ≤ q ↔ (p : E → ℝ) ≤ q :=
+@[simp, norm_cast]
+theorem coe_le_coe {p q : Seminorm 𝕜 E} : (p : E → ℝ) ≤ q ↔ p ≤ q :=
+  Iff.rfl
+#align seminorm.coe_le_coe Seminorm.coe_le_coe
+
+@[simp, norm_cast]
+theorem coe_lt_coe {p q : Seminorm 𝕜 E} : (p : E → ℝ) < q ↔ p < q :=
+  Iff.rfl
+#align seminorm.coe_lt_coe Seminorm.coe_lt_coe
+
+theorem le_def {p q : Seminorm 𝕜 E} : p ≤ q ↔ ∀ x, p x ≤ q x :=
   Iff.rfl
 #align seminorm.le_def Seminorm.le_def
 
-theorem lt_def (p q : Seminorm 𝕜 E) : p < q ↔ (p : E → ℝ) < q :=
-  Iff.rfl
+theorem lt_def {p q : Seminorm 𝕜 E} : p < q ↔ p ≤ q ∧ ∃ x, p x < q x :=
+  Pi.lt_def
 #align seminorm.lt_def Seminorm.lt_def
 
 instance : SemilatticeSup (Seminorm 𝕜 E) :=
@@ -364,7 +374,7 @@ theorem bot_eq_zero : (⊥ : Seminorm 𝕜 E) = 0 :=
 
 theorem smul_le_smul {p q : Seminorm 𝕜 E} {a b : ℝ≥0} (hpq : p ≤ q) (hab : a ≤ b) : a • p ≤ b • q :=
   by
-  simp_rw [le_def, Pi.le_def, coe_smul]
+  simp_rw [le_def, coe_smul]
   intro x
   simp_rw [Pi.smul_apply, NNReal.smul_def, smul_eq_mul]
   exact mul_le_mul hab (hpq x) (map_nonneg p x) (NNReal.coe_nonneg b)

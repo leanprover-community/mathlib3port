@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit b5b5dd5a47b5744260e2c9185013075ce9dadccd
+! leanprover-community/mathlib commit 86add5ce96b35c2cc6ee6946ab458e7302584e21
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,7 +23,7 @@ This definition does not depend on the choice of basis, see `matrix.rank_eq_finr
 
 ## TODO
 
-* Show that `matrix.rank` is equal to the row-rank and column-rank
+* Show that `matrix.rank` is equal to the row-rank, and that `rank Aᵀ = rank A`.
 
 -/
 
@@ -34,30 +34,31 @@ namespace Matrix
 
 open FiniteDimensional
 
-variable {m n o R : Type _} [m_fin : Fintype m] [Fintype n] [Fintype o]
+variable {l m n o R : Type _} [m_fin : Fintype m] [Fintype n] [Fintype o]
 
-variable [DecidableEq n] [DecidableEq o] [CommRing R]
+variable [CommRing R]
 
 /-- The rank of a matrix is the rank of its image. -/
 noncomputable def rank (A : Matrix m n R) : ℕ :=
-  finrank R A.toLin'.range
+  finrank R A.mulVecLin.range
 #align matrix.rank Matrix.rank
 
 @[simp]
-theorem rank_one [StrongRankCondition R] : rank (1 : Matrix n n R) = Fintype.card n := by
-  rw [rank, to_lin'_one, LinearMap.range_id, finrank_top, finrank_pi]
+theorem rank_one [StrongRankCondition R] [DecidableEq n] :
+    rank (1 : Matrix n n R) = Fintype.card n := by
+  rw [rank, mul_vec_lin_one, LinearMap.range_id, finrank_top, finrank_pi]
 #align matrix.rank_one Matrix.rank_one
 
 @[simp]
 theorem rank_zero [Nontrivial R] : rank (0 : Matrix m n R) = 0 := by
-  rw [rank, LinearEquiv.map_zero, LinearMap.range_zero, finrank_bot]
+  rw [rank, mul_vec_lin_zero, LinearMap.range_zero, finrank_bot]
 #align matrix.rank_zero Matrix.rank_zero
 
 theorem rank_le_card_width [StrongRankCondition R] (A : Matrix m n R) : A.rank ≤ Fintype.card n :=
   by
   haveI : Module.Finite R (n → R) := Module.Finite.pi
   haveI : Module.Free R (n → R) := Module.Free.pi _ _
-  exact A.to_lin'.finrank_range_le.trans_eq (finrank_pi _)
+  exact A.mul_vec_lin.finrank_range_le.trans_eq (finrank_pi _)
 #align matrix.rank_le_card_width Matrix.rank_le_card_width
 
 theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (Fin n) R) :
@@ -65,21 +66,37 @@ theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (F
   A.rank_le_card_width.trans <| (Fintype.card_fin n).le
 #align matrix.rank_le_width Matrix.rank_le_width
 
-theorem rank_mul_le [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
+theorem rank_mul_le_left [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ A.rank := by
-  rw [rank, rank, to_lin'_mul]
+  rw [rank, rank, mul_vec_lin_mul]
   exact Cardinal.toNat_le_of_le_of_lt_aleph0 (rank_lt_aleph_0 _ _) (LinearMap.rank_comp_le_left _ _)
+#align matrix.rank_mul_le_left Matrix.rank_mul_le_left
+
+include m_fin
+
+theorem rank_mul_le_right [StrongRankCondition R] (A : Matrix l m R) (B : Matrix m n R) :
+    (A ⬝ B).rank ≤ B.rank := by
+  rw [rank, rank, mul_vec_lin_mul]
+  exact
+    finrank_le_finrank_of_rank_le_rank (LinearMap.lift_rank_comp_le_right _ _) (rank_lt_aleph_0 _ _)
+#align matrix.rank_mul_le_right Matrix.rank_mul_le_right
+
+omit m_fin
+
+theorem rank_mul_le [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
+    (A ⬝ B).rank ≤ min A.rank B.rank :=
+  le_min (rank_mul_le_left _ _) (rank_mul_le_right _ _)
 #align matrix.rank_mul_le Matrix.rank_mul_le
 
-theorem rank_unit [StrongRankCondition R] (A : (Matrix n n R)ˣ) :
+theorem rank_unit [StrongRankCondition R] [DecidableEq n] (A : (Matrix n n R)ˣ) :
     (A : Matrix n n R).rank = Fintype.card n :=
   by
   refine' le_antisymm (rank_le_card_width A) _
-  have := rank_mul_le (A : Matrix n n R) (↑A⁻¹ : Matrix n n R)
+  have := rank_mul_le_left (A : Matrix n n R) (↑A⁻¹ : Matrix n n R)
   rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this
 #align matrix.rank_unit Matrix.rank_unit
 
-theorem rank_of_isUnit [StrongRankCondition R] (A : Matrix n n R) (h : IsUnit A) :
+theorem rank_of_isUnit [StrongRankCondition R] [DecidableEq n] (A : Matrix n n R) (h : IsUnit A) :
     A.rank = Fintype.card n := by
   obtain ⟨A, rfl⟩ := h
   exact rank_unit A
@@ -87,9 +104,9 @@ theorem rank_of_isUnit [StrongRankCondition R] (A : Matrix n n R) (h : IsUnit A)
 
 include m_fin
 
-theorem rank_eq_finrank_range_toLin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂]
-    [Module R M₁] [Module R M₂] (A : Matrix m n R) (v₁ : Basis m R M₁) (v₂ : Basis n R M₂) :
-    A.rank = finrank R (toLin v₂ v₁ A).range :=
+theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCommGroup M₁]
+    [AddCommGroup M₂] [Module R M₁] [Module R M₂] (A : Matrix m n R) (v₁ : Basis m R M₁)
+    (v₂ : Basis n R M₂) : A.rank = finrank R (toLin v₂ v₁ A).range :=
   by
   let e₁ := (Pi.basisFun R m).Equiv v₁ (Equiv.refl _)
   let e₂ := (Pi.basisFun R n).Equiv v₂ (Equiv.refl _)
@@ -105,7 +122,7 @@ theorem rank_eq_finrank_range_toLin {M₁ M₂ : Type _} [AddCommGroup M₁] [Ad
   apply LinearMap.ext_ring
   have aux₁ := to_lin_self (Pi.basisFun R n) (Pi.basisFun R m) A i
   have aux₂ := Basis.equiv_apply (Pi.basisFun R n) i v₂
-  rw [to_lin_eq_to_lin'] at aux₁
+  rw [to_lin_eq_to_lin', to_lin'_apply'] at aux₁
   rw [Pi.basisFun_apply, LinearMap.coe_stdBasis] at aux₁ aux₂
   simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
     LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
@@ -124,6 +141,11 @@ theorem rank_le_height [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (
     A.rank ≤ m :=
   A.rank_le_card_height.trans <| (Fintype.card_fin m).le
 #align matrix.rank_le_height Matrix.rank_le_height
+
+/-- The rank of a matrix is the rank of the space spanned by its columns. -/
+theorem rank_eq_finrank_span_cols (A : Matrix m n R) :
+    A.rank = finrank R (Submodule.span R (Set.range Aᵀ)) := by rw [rank, Matrix.range_mulVecLin]
+#align matrix.rank_eq_finrank_span_cols Matrix.rank_eq_finrank_span_cols
 
 end Matrix
 

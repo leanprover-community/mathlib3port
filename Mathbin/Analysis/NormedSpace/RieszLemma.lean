@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.riesz_lemma
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Applications of the Hausdorff distance in normed spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Riesz's lemma, stated for a normed space over a normed field: for any
 closed proper subspace `F` of `E`, there is a nonzero `x` such that `‖x - F‖`

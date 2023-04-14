@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.language_map
-! leanprover-community/mathlib commit b3951c65c6e797ff162ae8b69eab0063bcfb3d73
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.ModelTheory.Basic
 
 /-!
 # Language Maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 Maps between first-order languages in the style of the
 [Flypitch project](https://flypitch.github.io/), as well as several important maps between
 structures.

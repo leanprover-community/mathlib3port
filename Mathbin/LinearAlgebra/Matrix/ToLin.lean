@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit 86add5ce96b35c2cc6ee6946ab458e7302584e21
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,6 @@ variable {R : Type _} [CommSemiring R]
 variable {l m n : Type _}
 
 /-- `matrix.mul_vec M` is a linear map. -/
-@[simps]
 def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → R
     where
   toFun := M.mulVec
@@ -206,18 +205,63 @@ def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → 
   map_smul' c v := funext fun i => dotProduct_smul _ _ _
 #align matrix.mul_vec_lin Matrix.mulVecLin
 
-variable [Fintype n] [DecidableEq n]
+@[simp]
+theorem Matrix.mulVecLin_apply [Fintype n] (M : Matrix m n R) (v : n → R) :
+    M.mulVecLin v = M.mulVec v :=
+  rfl
+#align matrix.mul_vec_lin_apply Matrix.mulVecLin_apply
 
-theorem Matrix.mulVec_stdBasis (M : Matrix m n R) (i j) :
+@[simp]
+theorem Matrix.mulVecLin_zero [Fintype n] : Matrix.mulVecLin (0 : Matrix m n R) = 0 :=
+  LinearMap.ext zero_mulVec
+#align matrix.mul_vec_lin_zero Matrix.mulVecLin_zero
+
+@[simp]
+theorem Matrix.mulVecLin_add [Fintype n] (M N : Matrix m n R) :
+    (M + N).mulVecLin = M.mulVecLin + N.mulVecLin :=
+  LinearMap.ext fun _ => add_mulVec _ _ _
+#align matrix.mul_vec_lin_add Matrix.mulVecLin_add
+
+variable [Fintype n]
+
+@[simp]
+theorem Matrix.mulVecLin_one [DecidableEq n] : Matrix.mulVecLin (1 : Matrix n n R) = id :=
+  by
+  ext
+  simp [LinearMap.one_apply, std_basis_apply]
+#align matrix.mul_vec_lin_one Matrix.mulVecLin_one
+
+@[simp]
+theorem Matrix.mulVecLin_mul [Fintype m] (M : Matrix l m R) (N : Matrix m n R) :
+    Matrix.mulVecLin (M ⬝ N) = (Matrix.mulVecLin M).comp (Matrix.mulVecLin N) :=
+  LinearMap.ext fun x => (mulVec_mulVec _ _ _).symm
+#align matrix.mul_vec_lin_mul Matrix.mulVecLin_mul
+
+theorem Matrix.ker_mulVecLin_eq_bot_iff {M : Matrix n n R} :
+    M.mulVecLin.ker = ⊥ ↔ ∀ v, M.mulVec v = 0 → v = 0 := by
+  simp only [Submodule.eq_bot_iff, LinearMap.mem_ker, Matrix.mulVecLin_apply]
+#align matrix.ker_mul_vec_lin_eq_bot_iff Matrix.ker_mulVecLin_eq_bot_iff
+
+theorem Matrix.mulVec_stdBasis [DecidableEq n] (M : Matrix m n R) (i j) :
     M.mulVec (stdBasis R (fun _ => R) j 1) i = M i j :=
   (congr_fun (Matrix.mulVec_single _ _ (1 : R)) i).trans <| mul_one _
 #align matrix.mul_vec_std_basis Matrix.mulVec_stdBasis
 
 @[simp]
-theorem Matrix.mulVec_stdBasis_apply (M : Matrix m n R) (j) :
+theorem Matrix.mulVec_stdBasis_apply [DecidableEq n] (M : Matrix m n R) (j) :
     M.mulVec (stdBasis R (fun _ => R) j 1) = Mᵀ j :=
   funext fun i => Matrix.mulVec_stdBasis M i j
 #align matrix.mul_vec_std_basis_apply Matrix.mulVec_stdBasis_apply
+
+theorem Matrix.range_mulVecLin (M : Matrix m n R) : M.mulVecLin.range = span R (range Mᵀ) :=
+  by
+  letI := Classical.decEq n
+  simp_rw [range_eq_map, ← supr_range_std_basis, Submodule.map_supᵢ, range_eq_map, ←
+    Ideal.span_singleton_one, Ideal.span, Submodule.map_span, image_image, image_singleton,
+    Matrix.mulVecLin_apply, M.mul_vec_std_basis_apply, supr_span, range_eq_Union]
+#align matrix.range_mul_vec_lin Matrix.range_mulVecLin
+
+variable [DecidableEq n]
 
 /-- Linear maps `(n → R) →ₗ[R] (m → R)` are linearly equivalent to `matrix m n R`. -/
 def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R
@@ -239,10 +283,16 @@ def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R
     simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply, of_apply]
 #align linear_map.to_matrix' LinearMap.toMatrix'
 
-/-- A `matrix m n R` is linearly equivalent to a linear map `(n → R) →ₗ[R] (m → R)`. -/
+/-- A `matrix m n R` is linearly equivalent to a linear map `(n → R) →ₗ[R] (m → R)`.
+
+Note that the forward-direction does not require `decidable_eq` and is `matrix.vec_mul_lin`. -/
 def Matrix.toLin' : Matrix m n R ≃ₗ[R] (n → R) →ₗ[R] m → R :=
   LinearMap.toMatrix'.symm
 #align matrix.to_lin' Matrix.toLin'
+
+theorem Matrix.toLin'_apply' (M : Matrix m n R) : Matrix.toLin' M = M.mulVecLin :=
+  rfl
+#align matrix.to_lin'_apply' Matrix.toLin'_apply'
 
 @[simp]
 theorem LinearMap.toMatrix'_symm :
@@ -286,9 +336,7 @@ theorem Matrix.toLin'_apply (M : Matrix m n R) (v : n → R) : Matrix.toLin' M v
 
 @[simp]
 theorem Matrix.toLin'_one : Matrix.toLin' (1 : Matrix n n R) = id :=
-  by
-  ext
-  simp [LinearMap.one_apply, std_basis_apply]
+  Matrix.mulVecLin_one
 #align matrix.to_lin'_one Matrix.toLin'_one
 
 @[simp]
@@ -301,7 +349,7 @@ theorem LinearMap.toMatrix'_id : LinearMap.toMatrix' (LinearMap.id : (n → R) �
 @[simp]
 theorem Matrix.toLin'_mul [Fintype m] [DecidableEq m] (M : Matrix l m R) (N : Matrix m n R) :
     Matrix.toLin' (M ⬝ N) = (Matrix.toLin' M).comp (Matrix.toLin' N) :=
-  LinearMap.ext fun x => (mulVec_mulVec _ _ _).symm
+  Matrix.mulVecLin_mul _ _
 #align matrix.to_lin'_mul Matrix.toLin'_mul
 
 /-- Shortcut lemma for `matrix.to_lin'_mul` and `linear_map.comp_apply` -/
@@ -329,14 +377,12 @@ theorem LinearMap.toMatrix'_algebraMap (x : R) :
 #align linear_map.to_matrix'_algebra_map LinearMap.toMatrix'_algebraMap
 
 theorem Matrix.ker_toLin'_eq_bot_iff {M : Matrix n n R} :
-    M.toLin'.ker = ⊥ ↔ ∀ v, M.mulVec v = 0 → v = 0 := by
-  simp only [Submodule.eq_bot_iff, LinearMap.mem_ker, Matrix.toLin'_apply]
+    M.toLin'.ker = ⊥ ↔ ∀ v, M.mulVec v = 0 → v = 0 :=
+  Matrix.ker_mulVecLin_eq_bot_iff
 #align matrix.ker_to_lin'_eq_bot_iff Matrix.ker_toLin'_eq_bot_iff
 
-theorem Matrix.range_toLin' (M : Matrix m n R) : M.toLin'.range = span R (range Mᵀ) := by
-  simp_rw [range_eq_map, ← supr_range_std_basis, Submodule.map_supᵢ, range_eq_map, ←
-    Ideal.span_singleton_one, Ideal.span, Submodule.map_span, image_image, image_singleton,
-    Matrix.toLin'_apply, M.mul_vec_std_basis_apply, supr_span, range_eq_Union]
+theorem Matrix.range_toLin' (M : Matrix m n R) : M.toLin'.range = span R (range Mᵀ) :=
+  Matrix.range_mulVecLin _
 #align matrix.range_to_lin' Matrix.range_toLin'
 
 /-- If `M` and `M'` are each other's inverse matrices, they provide an equivalence between `m → A`

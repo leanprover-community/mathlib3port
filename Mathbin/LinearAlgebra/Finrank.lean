@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.finrank
-! leanprover-community/mathlib commit 347636a7a80595d55bedf6e6fbd996a3c39da69a
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.LinearAlgebra.Dimension
 
 /-!
 # Finite dimension of vector spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Definition of the rank of a module, or dimension of a vector space, as a natural number.
 

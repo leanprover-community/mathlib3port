@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.alternating
-! leanprover-community/mathlib commit 0f6670b8af2dff699de1c0b4b49039b31bc13c46
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.IntervalCases
 
 /-!
 # Alternating Groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The alternating group on a finite type `α` is the subgroup of the permutation group `perm α`
 consisting of the even permutations.

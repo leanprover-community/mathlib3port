@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.ray
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.NormedSpace.Basic
 
 /-!
 # Rays in a real normed vector space
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove some lemmas about the `same_ray` predicate in case of a real normed space. In
 this case, for two vectors `x y` in the same ray, the norm of their sum is equal to the sum of their
