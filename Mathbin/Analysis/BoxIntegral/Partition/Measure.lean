@@ -45,9 +45,9 @@ namespace Box
 
 variable (I : Box ι)
 
-theorem measure_icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
+theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
   show μ (Icc I.lower I.upper) < ∞ from I.isCompact_Icc.measure_lt_top
-#align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_icc_lt_top
+#align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
   (measure_mono <| coe_subset_icc).trans_lt (I.measure_Icc_lt_top μ)
@@ -63,27 +63,27 @@ theorem measurableSet_coe : MeasurableSet (I : Set (ι → ℝ)) :=
   exact MeasurableSet.univ_pi fun i => measurableSet_Ioc
 #align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSet_coe
 
-theorem measurableSet_icc : MeasurableSet I.Icc :=
+theorem measurableSet_Icc : MeasurableSet I.Icc :=
   measurableSet_Icc
-#align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSet_icc
+#align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSet_Icc
 
-theorem measurableSet_ioo : MeasurableSet I.Ioo :=
+theorem measurableSet_Ioo : MeasurableSet I.Ioo :=
   MeasurableSet.univ_pi fun i => measurableSet_Ioo
-#align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSet_ioo
+#align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSet_Ioo
 
 end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc :=
+theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc :=
   by
   rw [coe_eq_pi]
   exact measure.univ_pi_Ioc_ae_eq_Icc
-#align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_icc
+#align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_Icc
 
-theorem ioo_ae_eq_icc : I.Ioo =ᵐ[volume] I.Icc :=
+theorem Ioo_ae_eq_Icc : I.Ioo =ᵐ[volume] I.Icc :=
   Measure.univ_pi_Ioo_ae_eq_Icc
-#align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.ioo_ae_eq_icc
+#align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.Ioo_ae_eq_Icc
 
 end Box
 

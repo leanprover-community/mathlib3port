@@ -281,16 +281,12 @@ theorem lift_uzero (a : Cardinal.{u}) : lift.{0} a = a :=
 #align cardinal.lift_uzero Cardinal.lift_uzero
 -/
 
-/- warning: cardinal.lift_lift -> Cardinal.lift_lift is a dubious translation:
-lean 3 declaration is
-  forall (a : Cardinal.{u3}), Eq.{succ (succ (max (max u3 u1) u2))} Cardinal.{max (max u3 u1) u2} (Cardinal.lift.{u2, max u3 u1} (Cardinal.lift.{u1, u3} a)) (Cardinal.lift.{max u1 u2, u3} a)
-but is expected to have type
-  forall (a : Cardinal.{u1}), Eq.{max (max (succ (succ u2)) (succ (succ u3))) (succ (succ u1))} Cardinal.{max (max u2 u1) u3} (Cardinal.lift.{u3, max u2 u1} (Cardinal.lift.{u2, u1} a)) (Cardinal.lift.{max u2 u3, u1} a)
-Case conversion may be inaccurate. Consider using '#align cardinal.lift_lift Cardinal.lift_liftₓ'. -/
+#print Cardinal.lift_lift /-
 @[simp]
 theorem lift_lift (a : Cardinal) : lift.{w} (lift.{v} a) = lift.{max v w} a :=
   inductionOn a fun α => (Equiv.ulift.trans <| Equiv.ulift.trans Equiv.ulift.symm).cardinal_eq
 #align cardinal.lift_lift Cardinal.lift_lift
+-/
 
 /-- We define the order on cardinal numbers by `#α ≤ #β` if and only if
   there exists an embedding (injective function) from α to β. -/

@@ -52,7 +52,12 @@ TODO: generalize `nat.le_of_le_of_sub_le_sub_right`, `nat.sub_le_sub_right_iff`,
 
 variable {α β : Type _}
 
-#print OrderedSub /-
+/- warning: has_ordered_sub -> OrderedSub is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : LE.{u1} α] [_inst_2 : Add.{u1} α] [_inst_3 : Sub.{u1} α], Type
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : LE.{u1} α] [_inst_2 : Add.{u1} α] [_inst_3 : Sub.{u1} α], Prop
+Case conversion may be inaccurate. Consider using '#align has_ordered_sub OrderedSubₓ'. -/
 /-- `has_ordered_sub α` means that `α` has a subtraction characterized by `a - b ≤ c ↔ a ≤ c + b`.
 In other words, `a - b` is the least `c` such that `a ≤ b + c`.
 
@@ -62,7 +67,6 @@ in canonically ordered monoids on many specific types.
 class OrderedSub (α : Type _) [LE α] [Add α] [Sub α] where
   tsub_le_iff_right : ∀ a b c : α, a - b ≤ c ↔ a ≤ c + b
 #align has_ordered_sub OrderedSub
--/
 
 section Add
 

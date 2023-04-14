@@ -43,7 +43,7 @@ prepartition. For simiplicity we require that `tag` is defined for all boxes in 
 we will use onle the values of `tag` on the boxes of the partition. -/
 structure TaggedPrepartition (I : Box ι) extends Prepartition I where
   Tag : Box ι → ι → ℝ
-  tag_mem_icc : ∀ J, tag J ∈ I.Icc
+  tag_mem_Icc : ∀ J, tag J ∈ I.Icc
 #align box_integral.tagged_prepartition BoxIntegral.TaggedPrepartition
 
 namespace TaggedPrepartition
@@ -134,7 +134,7 @@ def bUnionTagged (π : Prepartition I) (πi : ∀ J, TaggedPrepartition J) : Tag
     where
   toPrepartition := π.bunionᵢ fun J => (πi J).toPrepartition
   Tag J := (πi (π.bUnionIndex (fun J => (πi J).toPrepartition) J)).Tag J
-  tag_mem_icc J := Box.le_iff_icc.1 (π.bUnionIndex_le _ _) ((πi _).tag_mem_icc _)
+  tag_mem_Icc J := Box.le_iff_icc.1 (π.bUnionIndex_le _ _) ((πi _).tag_mem_Icc _)
 #align box_integral.prepartition.bUnion_tagged BoxIntegral.Prepartition.bUnionTagged
 
 @[simp]
@@ -192,7 +192,7 @@ def bUnionPrepartition (π : TaggedPrepartition I) (πi : ∀ J, Prepartition J)
     where
   toPrepartition := π.toPrepartition.bunionᵢ πi
   Tag J := π.Tag (π.toPrepartition.bUnionIndex πi J)
-  tag_mem_icc J := π.tag_mem_icc _
+  tag_mem_Icc J := π.tag_mem_Icc _
 #align box_integral.tagged_prepartition.bUnion_prepartition BoxIntegral.TaggedPrepartition.bUnionPrepartition
 
 theorem IsPartition.bUnionPrepartition {π : TaggedPrepartition I} (h : IsPartition π)
@@ -249,7 +249,7 @@ theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : �
       refine' Finset.card_le_of_subset fun J hJ => _
       rw [Finset.mem_filter] at hJ⊢; rcases hJ with ⟨hJ, rfl⟩
       exact ⟨hJ, h J hJ⟩
-    _ ≤ 2 ^ Fintype.card ι := π.toPrepartition.card_filter_mem_icc_le x
+    _ ≤ 2 ^ Fintype.card ι := π.toPrepartition.card_filter_mem_Icc_le x
     
 #align box_integral.tagged_prepartition.is_Henstock.card_filter_tag_eq_le BoxIntegral.TaggedPrepartition.IsHenstock.card_filter_tag_eq_le
 
@@ -286,7 +286,7 @@ theorem IsSubordinate.mono' [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π
 
 theorem IsSubordinate.mono [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
     (h : ∀ x ∈ I.Icc, r₁ x ≤ r₂ x) : π.IsSubordinate r₂ :=
-  hr₁.mono' fun J _ => h _ <| π.tag_mem_icc J
+  hr₁.mono' fun J _ => h _ <| π.tag_mem_Icc J
 #align box_integral.tagged_prepartition.is_subordinate.mono BoxIntegral.TaggedPrepartition.IsSubordinate.mono
 
 theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.IsSubordinate r)
@@ -352,7 +352,7 @@ def disjUnion (π₁ π₂ : TaggedPrepartition I) (h : Disjoint π₁.unionᵢ 
     where
   toPrepartition := π₁.toPrepartition.disjUnion π₂.toPrepartition h
   Tag := π₁.boxes.piecewise π₁.Tag π₂.Tag
-  tag_mem_icc J := by
+  tag_mem_Icc J := by
     dsimp only [Finset.piecewise]
     split_ifs
     exacts[π₁.tag_mem_Icc J, π₂.tag_mem_Icc J]
@@ -412,7 +412,7 @@ def embedBox (I J : Box ι) (h : I ≤ J) : TaggedPrepartition I ↪ TaggedPrepa
   toFun π :=
     { π with
       le_of_mem' := fun J' hJ' => (π.le_of_mem' J' hJ').trans h
-      tag_mem_icc := fun J => Box.le_iff_icc.1 h (π.tag_mem_icc J) }
+      tag_mem_Icc := fun J => Box.le_iff_icc.1 h (π.tag_mem_Icc J) }
   inj' := by
     rintro ⟨⟨b₁, h₁le, h₁d⟩, t₁, ht₁⟩ ⟨⟨b₂, h₂le, h₂d⟩, t₂, ht₂⟩ H
     simpa using H

@@ -188,7 +188,7 @@ theorem bot_boxes : (⊥ : Prepartition I).boxes = ∅ :=
 
 /-- An auxiliary lemma used to prove that the same point can't belong to more than
 `2 ^ fintype.card ι` closed boxes of a prepartition. -/
-theorem injOn_setOf_mem_icc_setOf_lower_eq (x : ι → ℝ) :
+theorem injOn_setOf_mem_Icc_setOf_lower_eq (x : ι → ℝ) :
     InjOn (fun J : Box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.Icc } :=
   by
   rintro J₁ ⟨h₁, hx₁⟩ J₂ ⟨h₂, hx₂⟩ (H : { i | J₁.lower i = x i } = { i | J₂.lower i = x i })
@@ -206,11 +206,11 @@ theorem injOn_setOf_mem_icc_setOf_lower_eq (x : ι → ℝ) :
     exact lt_min H₁ H₂
   · have hi₂ : J₂.lower i < x i := (hx₂.1 i).lt_of_ne (mt (H _).2 hi₁.ne)
     exact ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩
-#align box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq BoxIntegral.Prepartition.injOn_setOf_mem_icc_setOf_lower_eq
+#align box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq BoxIntegral.Prepartition.injOn_setOf_mem_Icc_setOf_lower_eq
 
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
-theorem card_filter_mem_icc_le [Fintype ι] (x : ι → ℝ) :
+theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
     (π.boxes.filterₓ fun J : Box ι => x ∈ J.Icc).card ≤ 2 ^ Fintype.card ι :=
   by
   rw [← Fintype.card_set]
@@ -218,7 +218,7 @@ theorem card_filter_mem_icc_le [Fintype ι] (x : ι → ℝ) :
     Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i })
       (fun _ _ => Finset.mem_univ _) _
   simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
-#align box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_icc_le
+#align box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_Icc_le
 
 /-- Given a prepartition `π : box_integral.prepartition I`, `π.Union` is the part of `I` covered by
 the boxes of `π`. -/
