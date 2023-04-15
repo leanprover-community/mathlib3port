@@ -674,7 +674,7 @@ This functor is left adjoint to the `pullback f` functor (shown in `exists_pullb
 provided both are defined, and generalises the `map f` functor, again provided it is defined.
 -/
 def exists (f : X ⟶ Y) : Subobject X ⥤ Subobject Y :=
-  lower (MonoOver.exists f)
+  lower (MonoOver.exists_ f)
 #align category_theory.subobject.exists CategoryTheory.Subobject.exists
 
 /-- When `f : X ⟶ Y` is a monomorphism, `exists f` agrees with `map f`.

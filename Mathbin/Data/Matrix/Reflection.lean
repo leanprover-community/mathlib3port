@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.reflection
-! leanprover-community/mathlib commit d95bef0d215ea58c0fd7bbc4b151bf3fe952c095
+! leanprover-community/mathlib commit 820b22968a2bc4a47ce5cf1d2f36a9ebe52510aa
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,6 +30,8 @@ corresponding `*_eq` lemmas to be used in a place where they are definitionally 
 * `matrix.transposeᵣ`
 * `matrix.dot_productᵣ`
 * `matrix.mulᵣ`
+* `matrix.mul_vecᵣ`
+* `matrix.vec_mulᵣ`
 * `matrix.eta_expand`
 
 -/
@@ -162,18 +164,18 @@ example (a b c d : α) [Mul α] [AddCommMonoid α] : dotProduct ![a, b] ![c, d] 
 /-- `matrix.mul` with better defeq for `fin` -/
 def mulᵣ [Mul α] [Add α] [Zero α] (A : Matrix (Fin l) (Fin m) α) (B : Matrix (Fin m) (Fin n) α) :
     Matrix (Fin l) (Fin n) α :=
-  of <| FinVec.map (fun v₁ => FinVec.map (fun v₂ => dotProductᵣ v₁ v₂) (transposeᵣ B)) A
+  of <| FinVec.map (fun v₁ => FinVec.map (fun v₂ => dotProductᵣ v₁ v₂) Bᵀ) A
 #align matrix.mulᵣ Matrix.mulᵣ
 
 /-- This can be used to prove
 ```lean
-example [add_comm_monoid α] [has_mul α]
-  (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
+example [add_comm_monoid α] [has_mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
   !![a₁₁, a₁₂;
      a₂₁, a₂₂] ⬝ !![b₁₁, b₁₂;
                     b₂₁, b₂₂] =
   !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
      a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
+(mulᵣ_eq _ _).symm
 ```
 -/
 @[simp]
@@ -190,8 +192,7 @@ theorem mulᵣ_eq [Mul α] [AddCommMonoid α] (A : Matrix (Fin l) (Fin m) α)
 /- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
-example [AddCommMonoid α] [Mul α]
-    (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
+example [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
     («expr!![ »
             "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation").mul
         («expr!![ »
@@ -199,6 +200,64 @@ example [AddCommMonoid α] [Mul α]
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
   (mulᵣ_eq _ _).symm
+
+/-- `matrix.mul_vec` with better defeq for `fin` -/
+def mulVecᵣ [Mul α] [Add α] [Zero α] (A : Matrix (Fin l) (Fin m) α) (v : Fin m → α) : Fin l → α :=
+  FinVec.map (fun a => dotProductᵣ a v) A
+#align matrix.mul_vecᵣ Matrix.mulVecᵣ
+
+/-- This can be used to prove
+```lean
+example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
+  !![a₁₁, a₁₂;
+     a₂₁, a₂₂].mul_vec ![b₁, b₂] = ![a₁₁*b₁ + a₁₂*b₂, a₂₁*b₁ + a₂₂*b₂] :=
+(mul_vecᵣ_eq _ _).symm
+```
+-/
+@[simp]
+theorem mulVecᵣ_eq [NonUnitalNonAssocSemiring α] (A : Matrix (Fin l) (Fin m) α) (v : Fin m → α) :
+    mulVecᵣ A v = A.mulVec v := by
+  simp [mul_vecᵣ, Function.comp]
+  rfl
+#align matrix.mul_vecᵣ_eq Matrix.mulVecᵣ_eq
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+example [NonUnitalNonAssocSemiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
+    («expr!![ »
+            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation").mulVec
+        ![b₁, b₂] =
+      ![a₁₁ * b₁ + a₁₂ * b₂, a₂₁ * b₁ + a₂₂ * b₂] :=
+  (mulVecᵣ_eq _ _).symm
+
+/-- `matrix.vec_mul` with better defeq for `fin` -/
+def vecMulᵣ [Mul α] [Add α] [Zero α] (v : Fin l → α) (A : Matrix (Fin l) (Fin m) α) : Fin m → α :=
+  FinVec.map (fun a => dotProductᵣ v a) Aᵀ
+#align matrix.vec_mulᵣ Matrix.vecMulᵣ
+
+/-- This can be used to prove
+```lean
+example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
+  vec_mul ![b₁, b₂] !![a₁₁, a₁₂;
+                       a₂₁, a₂₂] = ![b₁*a₁₁ + b₂*a₂₁, b₁*a₁₂ + b₂*a₂₂] :=
+(vec_mulᵣ_eq _ _).symm
+```
+-/
+@[simp]
+theorem vecMulᵣ_eq [NonUnitalNonAssocSemiring α] (v : Fin l → α) (A : Matrix (Fin l) (Fin m) α) :
+    vecMulᵣ v A = vecMul v A := by
+  simp [vec_mulᵣ, Function.comp]
+  rfl
+#align matrix.vec_mulᵣ_eq Matrix.vecMulᵣ_eq
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+example [NonUnitalNonAssocSemiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
+    vecMul ![b₁, b₂]
+        («expr!![ »
+          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
+      ![b₁ * a₁₁ + b₂ * a₂₁, b₁ * a₁₂ + b₂ * a₂₂] :=
+  (vecMulᵣ_eq _ _).symm
 
 /-- Expand `A` to `!![A 0 0, ...; ..., A m n]` -/
 def etaExpand {m n} (A : Matrix (Fin m) (Fin n) α) : Matrix (Fin m) (Fin n) α :=

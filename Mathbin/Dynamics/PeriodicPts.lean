@@ -504,8 +504,8 @@ theorem minimalPeriod_id : minimalPeriod id x = 1 :=
 #align function.minimal_period_id Function.minimalPeriod_id
 -/
 
-#print Function.is_fixed_point_iff_minimalPeriod_eq_one /-
-theorem is_fixed_point_iff_minimalPeriod_eq_one : minimalPeriod f x = 1 ↔ IsFixedPt f x :=
+#print Function.minimalPeriod_eq_one_iff_isFixedPt /-
+theorem minimalPeriod_eq_one_iff_isFixedPt : minimalPeriod f x = 1 ↔ IsFixedPt f x :=
   by
   refine' ⟨fun h => _, fun h => _⟩
   · rw [← iterate_one f]
@@ -516,7 +516,7 @@ theorem is_fixed_point_iff_minimalPeriod_eq_one : minimalPeriod f x = 1 ↔ IsFi
     exact
       ((h.is_periodic_pt 1).minimalPeriod_le Nat.one_pos).antisymm
         (Nat.succ_le_of_lt ((h.is_periodic_pt 1).minimalPeriod_pos Nat.one_pos))
-#align function.is_fixed_point_iff_minimal_period_eq_one Function.is_fixed_point_iff_minimalPeriod_eq_one
+#align function.is_fixed_point_iff_minimal_period_eq_one Function.minimalPeriod_eq_one_iff_isFixedPt
 -/
 
 #print Function.IsPeriodicPt.eq_zero_of_lt_minimalPeriod /-
@@ -567,7 +567,7 @@ theorem minimalPeriod_eq_minimalPeriod_iff {g : β → β} {y : β} :
 theorem minimalPeriod_eq_prime {p : ℕ} [hp : Fact p.Prime] (hper : IsPeriodicPt f p x)
     (hfix : ¬IsFixedPt f x) : minimalPeriod f x = p :=
   (hp.out.eq_one_or_self_of_dvd _ hper.minimalPeriod_dvd).resolve_left
-    (mt is_fixed_point_iff_minimalPeriod_eq_one.1 hfix)
+    (mt minimalPeriod_eq_one_iff_isFixedPt.1 hfix)
 #align function.minimal_period_eq_prime Function.minimalPeriod_eq_prime
 -/
 

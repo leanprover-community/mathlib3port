@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit 86add5ce96b35c2cc6ee6946ab458e7302584e21
+! leanprover-community/mathlib commit 0e2aab2b0d521f060f62a14d2cf2e2c54e8491d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,6 +101,29 @@ theorem rank_of_isUnit [StrongRankCondition R] [DecidableEq n] (A : Matrix n n R
   obtain ⟨A, rfl⟩ := h
   exact rank_unit A
 #align matrix.rank_of_is_unit Matrix.rank_of_isUnit
+
+/-- Taking a subset of the rows and permuting the columns reduces the rank. -/
+theorem rank_submatrix_le [StrongRankCondition R] [Fintype m] (f : n → m) (e : n ≃ m)
+    (A : Matrix m m R) : rank (A.submatrix f e) ≤ rank A :=
+  by
+  rw [rank, rank, mul_vec_lin_submatrix, LinearMap.range_comp, LinearMap.range_comp,
+    show LinearMap.funLeft R R e.symm = LinearEquiv.funCongrLeft R R e.symm from rfl,
+    LinearEquiv.range, Submodule.map_top]
+  -- TODO: generalize `finite_dimensional.finrank_map_le` and use it here
+  exact finrank_le_finrank_of_rank_le_rank (lift_rank_map_le _ _) (rank_lt_aleph_0 _ _)
+#align matrix.rank_submatrix_le Matrix.rank_submatrix_le
+
+theorem rank_reindex [Fintype m] (e₁ e₂ : m ≃ n) (A : Matrix m m R) :
+    rank (reindex e₁ e₂ A) = rank A := by
+  rw [rank, rank, mul_vec_lin_reindex, LinearMap.range_comp, LinearMap.range_comp,
+    LinearEquiv.range, Submodule.map_top, LinearEquiv.finrank_map_eq]
+#align matrix.rank_reindex Matrix.rank_reindex
+
+@[simp]
+theorem rank_submatrix [Fintype m] (A : Matrix m m R) (e₁ e₂ : n ≃ m) :
+    rank (A.submatrix e₁ e₂) = rank A := by
+  simpa only [reindex_apply] using rank_reindex e₁.symm e₂.symm A
+#align matrix.rank_submatrix Matrix.rank_submatrix
 
 include m_fin
 

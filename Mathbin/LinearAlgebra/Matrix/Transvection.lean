@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.transvection
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 0e2aab2b0d521f060f62a14d2cf2e2c54e8491d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,16 +104,16 @@ theorem updateRow_eq_transvection [Finite n] (c : R) :
   ext (a b)
   by_cases ha : i = a; by_cases hb : j = b
   ·
-    simp only [update_row, transvection, ha, hb, Function.update_same, std_basis_matrix.apply_same,
-      Pi.add_apply, one_apply_eq, Pi.smul_apply, mul_one, Algebra.id.smul_eq_mul]
+    simp only [update_row_self, transvection, ha, hb, Pi.add_apply, std_basis_matrix.apply_same,
+      one_apply_eq, Pi.smul_apply, mul_one, Algebra.id.smul_eq_mul]
   ·
-    simp only [update_row, transvection, ha, hb, std_basis_matrix.apply_of_ne, Function.update_same,
-      Pi.add_apply, Ne.def, not_false_iff, Pi.smul_apply, and_false_iff, one_apply_ne,
-      Algebra.id.smul_eq_mul, MulZeroClass.mul_zero]
+    simp only [update_row_self, transvection, ha, hb, std_basis_matrix.apply_of_ne, Pi.add_apply,
+      Ne.def, not_false_iff, Pi.smul_apply, and_false_iff, one_apply_ne, Algebra.id.smul_eq_mul,
+      MulZeroClass.mul_zero]
   ·
-    simp only [update_row, transvection, ha, Ne.symm ha, std_basis_matrix.apply_of_ne, add_zero,
-      Algebra.id.smul_eq_mul, Function.update_noteq, Ne.def, not_false_iff, DMatrix.add_apply,
-      Pi.smul_apply, MulZeroClass.mul_zero, false_and_iff]
+    simp only [update_row_ne, transvection, ha, Ne.symm ha, std_basis_matrix.apply_of_ne, add_zero,
+      Algebra.id.smul_eq_mul, Ne.def, not_false_iff, DMatrix.add_apply, Pi.smul_apply,
+      MulZeroClass.mul_zero, false_and_iff]
 #align matrix.update_row_eq_transvection Matrix.updateRow_eq_transvection
 
 variable [Fintype n]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit a493616c740a3252e4cd0e4d0851984946b7b268
+! leanprover-community/mathlib commit 2cf3ee29d9361ee308a14a46d820a49b8856d041
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,6 +262,20 @@ theorem hasFtaylorSeriesUpToOn_top_iff :
     · intro m hm
       apply (H m).cont m le_rfl
 #align has_ftaylor_series_up_to_on_top_iff hasFtaylorSeriesUpToOn_top_iff
+
+/-- In the case that `n = ∞` we don't need the continuity assumption in
+`has_ftaylor_series_up_to_on`. -/
+theorem hasFtaylorSeriesUpToOn_top_iff' :
+    HasFtaylorSeriesUpToOn ∞ f p s ↔
+      (∀ x ∈ s, (p x 0).uncurry0 = f x) ∧
+        ∀ m : ℕ, ∀ x ∈ s, HasFderivWithinAt (fun y => p y m) (p x m.succ).curryLeft s x :=
+  ⟨-- Everything except for the continuity is trivial:
+  fun h => ⟨h.1, fun m => h.2 m (WithTop.coe_lt_top m)⟩, fun h =>
+    ⟨h.1, fun m _ => h.2 m, fun m _ x hx =>
+      (-- The continuity follows from the existence of a derivative:
+            h.2
+          m x hx).ContinuousWithinAt⟩⟩
+#align has_ftaylor_series_up_to_on_top_iff' hasFtaylorSeriesUpToOn_top_iff'
 
 /-- If a function has a Taylor series at order at least `1`, then the term of order `1` of this
 series is a derivative of `f`. -/
@@ -1326,6 +1340,22 @@ theorem hasFtaylorSeriesUpTo_zero_iff :
   simp [has_ftaylor_series_up_to_on_univ_iff.symm, continuous_iff_continuousOn_univ,
     hasFtaylorSeriesUpToOn_zero_iff]
 #align has_ftaylor_series_up_to_zero_iff hasFtaylorSeriesUpTo_zero_iff
+
+theorem hasFtaylorSeriesUpTo_top_iff :
+    HasFtaylorSeriesUpTo ∞ f p ↔ ∀ n : ℕ, HasFtaylorSeriesUpTo n f p := by
+  simp only [← hasFtaylorSeriesUpToOn_univ_iff, hasFtaylorSeriesUpToOn_top_iff]
+#align has_ftaylor_series_up_to_top_iff hasFtaylorSeriesUpTo_top_iff
+
+/-- In the case that `n = ∞` we don't need the continuity assumption in
+`has_ftaylor_series_up_to`. -/
+theorem hasFtaylorSeriesUpTo_top_iff' :
+    HasFtaylorSeriesUpTo ∞ f p ↔
+      (∀ x, (p x 0).uncurry0 = f x) ∧
+        ∀ (m : ℕ) (x), HasFderivAt (fun y => p y m) (p x m.succ).curryLeft x :=
+  by
+  simp only [← hasFtaylorSeriesUpToOn_univ_iff, hasFtaylorSeriesUpToOn_top_iff', mem_univ,
+    forall_true_left, hasFderivWithinAt_univ]
+#align has_ftaylor_series_up_to_top_iff' hasFtaylorSeriesUpTo_top_iff'
 
 /-- If a function has a Taylor series at order at least `1`, then the term of order `1` of this
 series is a derivative of `f`. -/

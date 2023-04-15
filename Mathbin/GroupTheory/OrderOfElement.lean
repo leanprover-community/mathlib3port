@@ -701,20 +701,24 @@ section CancelMonoid
 
 variable [LeftCancelMonoid G] (x y)
 
-#print pow_injective_of_lt_orderOf /-
+/- warning: pow_injective_of_lt_order_of -> pow_injective_of_lt_orderOf is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} (x : G) {n : Nat} {m : Nat} [_inst_1 : LeftCancelMonoid.{u1} G], (LT.lt.{0} Nat Nat.hasLt n (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) -> (LT.lt.{0} Nat Nat.hasLt m (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) -> (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x n) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x m)) -> (Eq.{1} Nat n m)
+but is expected to have type
+  forall {G : Type.{u1}} {x : Nat} {n : Nat} [m : Monoid.{u1} G] (_inst_1 : G), (LT.lt.{0} Nat instLTNat x (orderOf.{u1} G m _inst_1)) -> (LT.lt.{0} Nat instLTNat n (orderOf.{u1} G m _inst_1)) -> (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G m)) _inst_1 x) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G m)) _inst_1 n)) -> (Eq.{1} Nat x n)
+Case conversion may be inaccurate. Consider using '#align pow_injective_of_lt_order_of pow_injective_of_lt_orderOfₓ'. -/
 @[to_additive nsmul_injective_of_lt_addOrderOf]
 theorem pow_injective_of_lt_orderOf (hn : n < orderOf x) (hm : m < orderOf x) (eq : x ^ n = x ^ m) :
     n = m :=
   eq_of_lt_minimalPeriod_of_iterate_eq hn hm (by simpa only [mul_left_iterate, mul_one] )
 #align pow_injective_of_lt_order_of pow_injective_of_lt_orderOf
 #align nsmul_injective_of_lt_add_order_of nsmul_injective_of_lt_addOrderOf
--/
 
 /- warning: mem_powers_iff_mem_range_order_of' -> mem_powers_iff_mem_range_order_of' is a dubious translation:
 lean 3 declaration is
   forall {G : Type.{u1}} (x : G) (y : G) [_inst_1 : LeftCancelMonoid.{u1} G] [_inst_2 : DecidableEq.{succ u1} G], (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) -> (Iff (Membership.Mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1)))) y (Submonoid.powers.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_2 a b) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x) (Finset.range (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)))))
 but is expected to have type
-  forall {G : Type.{u1}} (x : G) (y : G) [_inst_1 : LeftCancelMonoid.{u1} G] [_inst_2 : DecidableEq.{succ u1} G], (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) -> (Iff (Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1)))) y (Submonoid.powers.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_2 a b) ((fun (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.4406 : G) (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.4408 : Nat) => HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.OrderOfElement._hyg.4406 x._@.Mathlib.GroupTheory.OrderOfElement._hyg.4408) x) (Finset.range (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)))))
+  forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : Monoid.{u1} G] [_inst_2 : DecidableEq.{succ u1} G], (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (orderOf.{u1} G _inst_1 x)) -> (Iff (Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) y (Submonoid.powers.{u1} G _inst_1 x)) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_2 a b) (fun (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.2063 : Nat) => HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) x x._@.Mathlib.GroupTheory.OrderOfElement._hyg.2063) (Finset.range (orderOf.{u1} G _inst_1 x)))))
 Case conversion may be inaccurate. Consider using '#align mem_powers_iff_mem_range_order_of' mem_powers_iff_mem_range_order_of'ₓ'. -/
 @[to_additive mem_multiples_iff_mem_range_addOrderOf']
 theorem mem_powers_iff_mem_range_order_of' [DecidableEq G] (hx : 0 < orderOf x) :
@@ -727,7 +731,7 @@ theorem mem_powers_iff_mem_range_order_of' [DecidableEq G] (hx : 0 < orderOf x) 
 lean 3 declaration is
   forall {G : Type.{u1}} (x : G) {n : Nat} [_inst_1 : LeftCancelMonoid.{u1} G], Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))))))) (Nat.ModEq (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x) n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
 but is expected to have type
-  forall {G : Type.{u1}} (x : G) {n : Nat} [_inst_1 : LeftCancelMonoid.{u1} G], Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (LeftCancelMonoid.toOne.{u1} G _inst_1)))) (Nat.ModEq (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x) n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
+  forall {G : Type.{u1}} {x : G} {n : Nat} [_inst_1 : Monoid.{u1} G], Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) x n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))) (Nat.ModEq (orderOf.{u1} G _inst_1 x) n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
 Case conversion may be inaccurate. Consider using '#align pow_eq_one_iff_modeq pow_eq_one_iff_modEqₓ'. -/
 @[to_additive]
 theorem pow_eq_one_iff_modEq : x ^ n = 1 ↔ n ≡ 0 [MOD orderOf x] := by
@@ -868,7 +872,12 @@ theorem zpow_eq_mod_orderOf : x ^ i = x ^ (i % orderOf x) :=
 #align zsmul_eq_mod_add_order_of zsmul_eq_mod_addOrderOf
 -/
 
-#print pow_inj_iff_of_orderOf_eq_zero /-
+/- warning: pow_inj_iff_of_order_of_eq_zero -> pow_inj_iff_of_orderOf_eq_zero is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {x : G} [_inst_1 : Group.{u1} G], (Eq.{1} Nat (orderOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (forall {n : Nat} {m : Nat}, Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x n) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x m)) (Eq.{1} Nat n m))
+but is expected to have type
+  forall {G : Type.{u1}} (x : G) [_inst_1 : LeftCancelMonoid.{u1} G], (Eq.{1} Nat (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {n : Nat} {m : Nat}, Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x n) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x m)) (Eq.{1} Nat n m))
+Case conversion may be inaccurate. Consider using '#align pow_inj_iff_of_order_of_eq_zero pow_inj_iff_of_orderOf_eq_zeroₓ'. -/
 @[to_additive nsmul_inj_iff_of_addOrderOf_eq_zero]
 theorem pow_inj_iff_of_orderOf_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n = x ^ m ↔ n = m :=
   by
@@ -883,9 +892,13 @@ theorem pow_inj_iff_of_orderOf_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n =
     · simp [pow_succ, IH]
 #align pow_inj_iff_of_order_of_eq_zero pow_inj_iff_of_orderOf_eq_zero
 #align nsmul_inj_iff_of_add_order_of_eq_zero nsmul_inj_iff_of_addOrderOf_eq_zero
--/
 
-#print pow_inj_mod /-
+/- warning: pow_inj_mod -> pow_inj_mod is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {x : G} [_inst_1 : Group.{u1} G] {n : Nat} {m : Nat}, Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x n) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x m)) (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (orderOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) m (orderOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x)))
+but is expected to have type
+  forall {G : Type.{u1}} (x : G) [_inst_1 : LeftCancelMonoid.{u1} G] {n : Nat} {m : Nat}, Iff (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x n) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x m)) (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) m (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)))
+Case conversion may be inaccurate. Consider using '#align pow_inj_mod pow_inj_modₓ'. -/
 @[to_additive]
 theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf x :=
   by
@@ -895,7 +908,6 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
   exact ⟨pow_injective_of_lt_orderOf _ (Nat.mod_lt _ hx) (Nat.mod_lt _ hx), fun h => congr_arg _ h⟩
 #align pow_inj_mod pow_inj_mod
 #align nsmul_inj_mod nsmul_inj_mod
--/
 
 /- warning: zpow_pow_order_of -> zpow_pow_orderOf is a dubious translation:
 lean 3 declaration is
@@ -1058,14 +1070,18 @@ theorem exists_pow_eq_one [Finite G] (x : G) : IsOfFinOrder x :=
 #align exists_nsmul_eq_zero exists_nsmul_eq_zero
 -/
 
-#print orderOf_le_card_univ /-
+/- warning: order_of_le_card_univ -> orderOf_le_card_univ is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {x : G} [_inst_1 : LeftCancelMonoid.{u1} G] [_inst_3 : Fintype.{u1} G], LE.le.{0} Nat Nat.hasLe (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x) (Fintype.card.{u1} G _inst_3)
+but is expected to have type
+  forall {G : Type.{u1}} {x : G} [_inst_1 : Monoid.{u1} G] [_inst_3 : Fintype.{u1} G], LE.le.{0} Nat instLENat (orderOf.{u1} G _inst_1 x) (Fintype.card.{u1} G _inst_3)
+Case conversion may be inaccurate. Consider using '#align order_of_le_card_univ orderOf_le_card_univₓ'. -/
 @[to_additive addOrderOf_le_card_univ]
 theorem orderOf_le_card_univ [Fintype G] : orderOf x ≤ Fintype.card G :=
   Finset.le_card_of_inj_on_range ((· ^ ·) x) (fun n _ => Finset.mem_univ _) fun i hi j hj =>
     pow_injective_of_lt_orderOf x hi hj
 #align order_of_le_card_univ orderOf_le_card_univ
 #align add_order_of_le_card_univ addOrderOf_le_card_univ
--/
 
 #print orderOf_pos /-
 /-- This is the same as `order_of_pos' but with one fewer explicit assumption since this is
@@ -1095,7 +1111,7 @@ theorem orderOf_pow [Finite G] (x : G) : orderOf (x ^ n) = orderOf x / gcd (orde
 lean 3 declaration is
   forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : LeftCancelMonoid.{u1} G] [_inst_3 : Finite.{succ u1} G] [_inst_4 : DecidableEq.{succ u1} G], Iff (Membership.Mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.setLike.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1)))) y (Submonoid.powers.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_4 a b) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x) (Finset.range (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x))))
 but is expected to have type
-  forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : LeftCancelMonoid.{u1} G] [_inst_3 : Finite.{succ u1} G] [_inst_4 : DecidableEq.{succ u1} G], Iff (Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1)))) y (Submonoid.powers.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_4 a b) ((fun (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7040 : G) (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7042 : Nat) => HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7040 x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7042) x) (Finset.range (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x))))
+  forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : LeftCancelMonoid.{u1} G] [_inst_3 : Finite.{succ u1} G] [_inst_4 : DecidableEq.{succ u1} G], Iff (Membership.mem.{u1, u1} G (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) G (Submonoid.instSetLikeSubmonoid.{u1} G (Monoid.toMulOneClass.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1)))) y (Submonoid.powers.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x)) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_4 a b) ((fun (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.6916 : G) (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.6918 : Nat) => HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1))) x._@.Mathlib.GroupTheory.OrderOfElement._hyg.6916 x._@.Mathlib.GroupTheory.OrderOfElement._hyg.6918) x) (Finset.range (orderOf.{u1} G (LeftCancelMonoid.toMonoid.{u1} G _inst_1) x))))
 Case conversion may be inaccurate. Consider using '#align mem_powers_iff_mem_range_order_of mem_powers_iff_mem_range_orderOfₓ'. -/
 @[to_additive mem_multiples_iff_mem_range_addOrderOf]
 theorem mem_powers_iff_mem_range_orderOf [Finite G] [DecidableEq G] :
@@ -1257,7 +1273,7 @@ theorem powers_eq_zpowers [Finite G] (x : G) : (Submonoid.powers x : Set G) = zp
 lean 3 declaration is
   forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : Group.{u1} G] [_inst_3 : Finite.{succ u1} G] [_inst_4 : DecidableEq.{succ u1} G], Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) y (Subgroup.zpowers.{u1} G _inst_1 x)) (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_4 a b) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x) (Finset.range (orderOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x))))
 but is expected to have type
-  forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : Group.{u1} G] [_inst_3 : Finite.{succ u1} G] [_inst_4 : DecidableEq.{succ u1} G], Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) y (Subgroup.zpowers.{u1} G _inst_1 x)) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_4 a b) ((fun (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.8097 : G) (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.8099 : Nat) => HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x._@.Mathlib.GroupTheory.OrderOfElement._hyg.8097 x._@.Mathlib.GroupTheory.OrderOfElement._hyg.8099) x) (Finset.range (orderOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x))))
+  forall {G : Type.{u1}} {x : G} {y : G} [_inst_1 : Group.{u1} G] [_inst_3 : Finite.{succ u1} G] [_inst_4 : DecidableEq.{succ u1} G], Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) y (Subgroup.zpowers.{u1} G _inst_1 x)) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) y (Finset.image.{0, u1} Nat G (fun (a : G) (b : G) => _inst_4 a b) ((fun (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7973 : G) (x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7975 : Nat) => HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7973 x._@.Mathlib.GroupTheory.OrderOfElement._hyg.7975) x) (Finset.range (orderOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) x))))
 Case conversion may be inaccurate. Consider using '#align mem_zpowers_iff_mem_range_order_of mem_zpowers_iff_mem_range_orderOfₓ'. -/
 @[to_additive mem_zmultiples_iff_mem_range_addOrderOf]
 theorem mem_zpowers_iff_mem_range_orderOf [Finite G] [DecidableEq G] :

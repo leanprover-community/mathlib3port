@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 86add5ce96b35c2cc6ee6946ab458e7302584e21
+! leanprover-community/mathlib commit 0e2aab2b0d521f060f62a14d2cf2e2c54e8491d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,7 +195,7 @@ section ToMatrix'
 
 variable {R : Type _} [CommSemiring R]
 
-variable {l m n : Type _}
+variable {k l m n : Type _}
 
 /-- `matrix.mul_vec M` is a linear map. -/
 def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → R
@@ -221,6 +221,21 @@ theorem Matrix.mulVecLin_add [Fintype n] (M N : Matrix m n R) :
     (M + N).mulVecLin = M.mulVecLin + N.mulVecLin :=
   LinearMap.ext fun _ => add_mulVec _ _ _
 #align matrix.mul_vec_lin_add Matrix.mulVecLin_add
+
+theorem Matrix.mulVecLin_submatrix [Fintype n] [Fintype l] (f₁ : m → k) (e₂ : n ≃ l)
+    (M : Matrix k l R) :
+    (M.submatrix f₁ e₂).mulVecLin = funLeft R R f₁ ∘ₗ M.mulVecLin ∘ₗ funLeft _ _ e₂.symm :=
+  LinearMap.ext fun x => submatrix_mulVec_equiv _ _ _ _
+#align matrix.mul_vec_lin_submatrix Matrix.mulVecLin_submatrix
+
+/-- A variant of `matrix.mul_vec_lin_submatrix` that keeps around `linear_equiv`s. -/
+theorem Matrix.mulVecLin_reindex [Fintype n] [Fintype l] (e₁ : k ≃ m) (e₂ : l ≃ n)
+    (M : Matrix k l R) :
+    (reindex e₁ e₂ M).mulVecLin =
+      ↑(LinearEquiv.funCongrLeft R R e₁.symm) ∘ₗ
+        M.mulVecLin ∘ₗ ↑(LinearEquiv.funCongrLeft R R e₂) :=
+  Matrix.mulVecLin_submatrix _ _ _
+#align matrix.mul_vec_lin_reindex Matrix.mulVecLin_reindex
 
 variable [Fintype n]
 
@@ -351,6 +366,21 @@ theorem Matrix.toLin'_mul [Fintype m] [DecidableEq m] (M : Matrix l m R) (N : Ma
     Matrix.toLin' (M ⬝ N) = (Matrix.toLin' M).comp (Matrix.toLin' N) :=
   Matrix.mulVecLin_mul _ _
 #align matrix.to_lin'_mul Matrix.toLin'_mul
+
+@[simp]
+theorem Matrix.toLin'_submatrix [Fintype l] [DecidableEq l] (f₁ : m → k) (e₂ : n ≃ l)
+    (M : Matrix k l R) :
+    (M.submatrix f₁ e₂).toLin' = funLeft R R f₁ ∘ₗ M.toLin' ∘ₗ funLeft _ _ e₂.symm :=
+  Matrix.mulVecLin_submatrix _ _ _
+#align matrix.to_lin'_submatrix Matrix.toLin'_submatrix
+
+/-- A variant of `matrix.to_lin'_submatrix` that keeps around `linear_equiv`s. -/
+theorem Matrix.toLin'_reindex [Fintype l] [DecidableEq l] (e₁ : k ≃ m) (e₂ : l ≃ n)
+    (M : Matrix k l R) :
+    (reindex e₁ e₂ M).toLin' =
+      ↑(LinearEquiv.funCongrLeft R R e₁.symm) ∘ₗ M.toLin' ∘ₗ ↑(LinearEquiv.funCongrLeft R R e₂) :=
+  Matrix.mulVecLin_reindex _ _ _
+#align matrix.to_lin'_reindex Matrix.toLin'_reindex
 
 /-- Shortcut lemma for `matrix.to_lin'_mul` and `linear_map.comp_apply` -/
 theorem Matrix.toLin'_mul_apply [Fintype m] [DecidableEq m] (M : Matrix l m R) (N : Matrix m n R)

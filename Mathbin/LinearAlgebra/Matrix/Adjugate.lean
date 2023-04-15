@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.adjugate
-! leanprover-community/mathlib commit 55102fc1d7145d8453f6d35c56d0af6f669f7d12
+! leanprover-community/mathlib commit 0e2aab2b0d521f060f62a14d2cf2e2c54e8491d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,9 +47,11 @@ cramer, cramer's rule, adjugate
 
 namespace Matrix
 
-universe u v
+universe u v w
 
-variable {n : Type u} [DecidableEq n] [Fintype n] {α : Type v} [CommRing α]
+variable {m : Type u} {n : Type v} {α : Type w}
+
+variable [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m] [CommRing α]
 
 open Matrix BigOperators Polynomial
 
@@ -115,7 +117,7 @@ theorem cramer_transpose_row_self (i : n) : Aᵀ.cramer (A i) = Pi.single i A.de
   split_ifs with h
   · -- i = j: this entry should be `A.det`
     subst h
-    simp only [update_column_transpose, det_transpose, update_row, Function.update_eq_self]
+    simp only [update_column_transpose, det_transpose, update_row_eq_self]
   · -- i ≠ j: this entry should be 0
     rw [update_column_transpose, det_transpose]
     apply det_zero_of_row_eq h
@@ -177,6 +179,19 @@ theorem sum_cramer_apply {β} (s : Finset β) (f : n → β → α) (i : n) :
       apply Finset.sum_apply
     
 #align matrix.sum_cramer_apply Matrix.sum_cramer_apply
+
+theorem cramer_submatrix_equiv (A : Matrix m m α) (e : n ≃ m) (b : n → α) :
+    cramer (A.submatrix e e) b = cramer A (b ∘ e.symm) ∘ e :=
+  by
+  ext i
+  simp_rw [Function.comp_apply, cramer_apply, update_column_submatrix_equiv,
+    det_submatrix_equiv_self e]
+#align matrix.cramer_submatrix_equiv Matrix.cramer_submatrix_equiv
+
+theorem cramer_reindex (e : m ≃ n) (A : Matrix m m α) (b : n → α) :
+    cramer (reindex e e A) b = cramer A (b ∘ e) ∘ e.symm :=
+  cramer_submatrix_equiv _ _ _
+#align matrix.cramer_reindex Matrix.cramer_reindex
 
 end Cramer
 
@@ -241,6 +256,22 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ
     intro h'
     exact h ((symm_apply_eq σ).mp h')
 #align matrix.adjugate_transpose Matrix.adjugate_transpose
+
+@[simp]
+theorem adjugate_submatrix_equiv_self (e : n ≃ m) (A : Matrix m m α) :
+    adjugate (A.submatrix e e) = (adjugate A).submatrix e e :=
+  by
+  ext (i j)
+  rw [adjugate_apply, submatrix_apply, adjugate_apply, ← det_submatrix_equiv_self e,
+    update_row_submatrix_equiv]
+  congr
+  exact Function.update_comp_equiv _ e.symm _ _
+#align matrix.adjugate_submatrix_equiv_self Matrix.adjugate_submatrix_equiv_self
+
+theorem adjugate_reindex (e : m ≃ n) (A : Matrix m m α) :
+    adjugate (reindex e e A) = reindex e e (adjugate A) :=
+  adjugate_submatrix_equiv_self _ _
+#align matrix.adjugate_reindex Matrix.adjugate_reindex
 
 /-- Since the map `b ↦ cramer A b` is linear in `b`, it must be multiplication by some matrix. This
 matrix is `A.adjugate`. -/
