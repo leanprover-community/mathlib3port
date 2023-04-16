@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.theta
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.Asymptotics.Asymptotics
 
 /-!
 # Asymptotic equivalence up to a constant
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define `asymptotics.is_Theta l f g` (notation: `f =Θ[l] g`) as
 `f =O[l] g ∧ g =O[l] f`, then prove basic properties of this equivalence relation.

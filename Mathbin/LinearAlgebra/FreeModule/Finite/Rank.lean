@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.rank
-! leanprover-community/mathlib commit b5b5dd5a47b5744260e2c9185013075ce9dadccd
+! leanprover-community/mathlib commit e95e4f92c8f8da3c7f693c3ec948bcf9b6683f51
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,6 +36,22 @@ open Module.Free
 
 section Ring
 
+variable [Ring R]
+
+variable [AddCommGroup M] [Module R M]
+
+variable [AddCommGroup N] [Module R N]
+
+@[simp]
+theorem Submodule.finrank_map_subtype_eq (p : Submodule R M) (q : Submodule R p) :
+    finrank R (q.map p.Subtype) = finrank R q :=
+  (Submodule.equivSubtypeMap p q).symm.finrank_eq
+#align finite_dimensional.submodule.finrank_map_subtype_eq FiniteDimensional.Submodule.finrank_map_subtype_eq
+
+end Ring
+
+section RingFinite
+
 variable [Ring R] [StrongRankCondition R]
 
 variable [AddCommGroup M] [Module R M] [Module.Finite R M]
@@ -58,7 +74,7 @@ theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
   rw [finrank, cast_to_nat_of_lt_aleph_0 (rank_lt_aleph_0 R M)]
 #align finite_dimensional.finrank_eq_rank FiniteDimensional.finrank_eq_rank
 
-end Ring
+end RingFinite
 
 section RingFree
 
@@ -122,6 +138,26 @@ theorem finrank_matrix (m n : Type _) [Fintype m] [Fintype n] :
     finrank R (Matrix m n R) = card m * card n := by simp [finrank]
 #align finite_dimensional.finrank_matrix FiniteDimensional.finrank_matrix
 
+variable {R M N}
+
+/-- Two finite and free modules are isomorphic if they have the same (finite) rank. -/
+theorem nonempty_linearEquiv_of_finrank_eq (cond : finrank R M = finrank R N) :
+    Nonempty (M ≃ₗ[R] N) :=
+  nonempty_linearEquiv_of_lift_rank_eq <| by simp only [← finrank_eq_rank, cond, lift_nat_cast]
+#align finite_dimensional.nonempty_linear_equiv_of_finrank_eq FiniteDimensional.nonempty_linearEquiv_of_finrank_eq
+
+/-- Two finite and free modules are isomorphic if and only if they have the same (finite) rank. -/
+theorem nonempty_linearEquiv_iff_finrank_eq : Nonempty (M ≃ₗ[R] N) ↔ finrank R M = finrank R N :=
+  ⟨fun ⟨h⟩ => h.finrank_eq, fun h => nonempty_linearEquiv_of_finrank_eq h⟩
+#align finite_dimensional.nonempty_linear_equiv_iff_finrank_eq FiniteDimensional.nonempty_linearEquiv_iff_finrank_eq
+
+variable (M N)
+
+/-- Two finite and free modules are isomorphic if they have the same (finite) rank. -/
+noncomputable def LinearEquiv.ofFinrankEq (cond : finrank R M = finrank R N) : M ≃ₗ[R] N :=
+  Classical.choice <| nonempty_linearEquiv_of_finrank_eq cond
+#align linear_equiv.of_finrank_eq LinearEquiv.ofFinrankEq
+
 end RingFree
 
 section CommRing
@@ -179,6 +215,21 @@ theorem Submodule.finrank_quotient_le [Module.Finite R M] (s : Submodule R M) :
     to_nat_le_of_le_of_lt_aleph_0 (rank_lt_aleph_0 _ _)
       ((Submodule.mkQ s).rank_le_of_surjective (surjective_quot_mk _))
 #align submodule.finrank_quotient_le Submodule.finrank_quotient_le
+
+/-- Pushforwards of finite submodules have a smaller finrank. -/
+theorem Submodule.finrank_map_le (f : M →ₗ[R] N) (p : Submodule R M) [Module.Finite R p] :
+    finrank R (p.map f) ≤ finrank R p :=
+  finrank_le_finrank_of_rank_le_rank (lift_rank_map_le _ _) (rank_lt_aleph0 _ _)
+#align submodule.finrank_map_le Submodule.finrank_map_le
+
+theorem Submodule.finrank_le_finrank_of_le {s t : Submodule R M} [Module.Finite R t] (hst : s ≤ t) :
+    finrank R s ≤ finrank R t :=
+  calc
+    finrank R s = finrank R (s.comap t.Subtype) :=
+      (Submodule.comapSubtypeEquivOfLe hst).finrank_eq.symm
+    _ ≤ finrank R t := Submodule.finrank_le _
+    
+#align submodule.finrank_le_finrank_of_le Submodule.finrank_le_finrank_of_le
 
 end
 

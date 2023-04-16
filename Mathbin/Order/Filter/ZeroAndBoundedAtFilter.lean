@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module order.filter.zero_and_bounded_at_filter
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.Asymptotics.Asymptotics
 
 /-!
 # Zero and Bounded at filter
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a filter `l` we define the notion of a function being `zero_at_filter` as well as being
 `bounded_at_filter`. Alongside this we construct the `submodule`, `add_submonoid` of functions

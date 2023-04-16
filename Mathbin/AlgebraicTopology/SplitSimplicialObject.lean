@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.split_simplicial_object
-! leanprover-community/mathlib commit dd1f8496baa505636a82748e6b652165ea888733
+! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 /-!
 
 # Split simplicial objects
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we introduce the notion of split simplicial object.
 If `C` is a category that has finite coproducts, a splitting

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit e95e4f92c8f8da3c7f693c3ec948bcf9b6683f51
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1456,7 +1456,7 @@ theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b
       finrank K V + finrank K (W ⊓ B.orthogonal ⊤ : Subspace K V) :=
   by
   rw [← to_lin_restrict_ker_eq_inf_orthogonal _ _ b₁, ←
-    to_lin_restrict_range_dual_coannihilator_eq_orthogonal _ _, finrank_map_subtype_eq]
+    to_lin_restrict_range_dual_coannihilator_eq_orthogonal _ _, submodule.finrank_map_subtype_eq]
   conv_rhs =>
     rw [←
       @Subspace.finrank_add_finrank_dualCoannihilator_eq K V _ _ _ _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.over
-! leanprover-community/mathlib commit 3e0dd193514c9380edc69f1da92e80c02713c41d
+! leanprover-community/mathlib commit 4f4a1c875d0baa92ab5d92f3fb1bb258ad9f3e5b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.CategoryTheory.Limits.Comma
 
 /-!
 # Limits and colimits in the over and under categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Show that the forgetful functor `forget X : over X ⥤ C` creates colimits, and hence `over X` has
 any colimits that `C` has (as well as the dual that `forget X : under X ⟶ C` creates limits).

@@ -235,7 +235,7 @@ theorem map_linearMap_add_haar_eq_smul_add_haar {f : E →ₗ[ℝ] E} (hf : f.de
   let ι := Fin (finrank ℝ E)
   haveI : FiniteDimensional ℝ (ι → ℝ) := by infer_instance
   have : finrank ℝ E = finrank ℝ (ι → ℝ) := by simp
-  have e : E ≃ₗ[ℝ] ι → ℝ := linear_equiv.of_finrank_eq E (ι → ℝ) this
+  have e : E ≃ₗ[ℝ] ι → ℝ := LinearEquiv.ofFinrankEq E (ι → ℝ) this
   -- next line is to avoid `g` getting reduced by `simp`.
   obtain ⟨g, hg⟩ : ∃ g, g = (e : E →ₗ[ℝ] ι → ℝ).comp (f.comp (e.symm : (ι → ℝ) →ₗ[ℝ] E)) := ⟨_, rfl⟩
   have gdet : g.det = f.det := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit b3f4f007a962e3787aa0f3b5c7942a1317f7d88e
+! leanprover-community/mathlib commit de29c328903507bb7aff506af9135f4bdaf1849c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1430,7 +1430,7 @@ theorem coe_sub_def {r p : ℝ≥0} : ↑(r - p) = max (r - p : ℝ) 0 :=
   rfl
 #align nnreal.coe_sub_def NNReal.coe_sub_def
 
-noncomputable example : OrderedSub ℝ≥0 := by infer_instance
+example : OrderedSub ℝ≥0 := by infer_instance
 
 /- warning: nnreal.sub_div -> NNReal.sub_div is a dubious translation:
 lean 3 declaration is
