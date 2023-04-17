@@ -310,14 +310,11 @@ theorem conjAe_coe : ⇑conjAe = conj :=
   rfl
 #align complex.conj_ae_coe Complex.conjAe_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem toMatrix_conjAe :
-    LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
-      «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+    LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap = !![1, 0; 0, -1] :=
   by
   ext (i j)
   simp [LinearMap.toMatrix_apply]

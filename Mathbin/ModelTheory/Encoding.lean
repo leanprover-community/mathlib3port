@@ -279,7 +279,7 @@ def listDecode :
   | Sum.inr (Sum.inl ⟨n, R⟩)::Sum.inr (Sum.inr k)::l =>
     ⟨if h : ∀ i : Fin n, ((l.map Sum.getLeft).get? i).join.isSome then
         if h' : ∀ i, (Option.get (h i)).1 = k then
-          ⟨k, BoundedFormula.rel R fun i => Eq.mp (by rw [h' i]) (Option.get (h i)).2⟩
+          ⟨k, BoundedFormula.Rel R fun i => Eq.mp (by rw [h' i]) (Option.get (h i)).2⟩
         else default
       else default,
       l.drop n, le_max_of_le_right (le_add_left (le_add_left (List.drop_sizeOf_le _ _)))⟩

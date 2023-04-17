@@ -50,7 +50,7 @@ def fintypeDiagram : DiscreteQuotient X ⥤ FintypeCat
   obj S :=
     haveI := Fintype.ofFinite S
     FintypeCat.of S
-  map S T f := DiscreteQuotient.ofLe f.le
+  map S T f := DiscreteQuotient.ofLE f.le
 #align Profinite.fintype_diagram Profinite.fintypeDiagram
 
 /-- An abbreviation for `X.fintype_diagram ⋙ Fintype_to_Profinite`. -/

@@ -445,12 +445,9 @@ theorem toContinuousLinearEquivOfDetNeZero_apply (f : E →L[𝕜] E) (hf : f.de
   rfl
 #align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem Matrix.toLin_finTwoProd_toContinuousLinearMap (a b c d : 𝕜) :
-    (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜)
-          («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
+    (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜) !![a, b; c, d]).toContinuousLinearMap =
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
   ContinuousLinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _

@@ -101,13 +101,11 @@ theorem rotation_symm_apply (θ : Real.Angle) (x : V) :
   rfl
 #align orientation.rotation_symm_apply Orientation.rotation_symm_apply
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem rotation_eq_matrix_toLin (θ : Real.Angle) {x : V} (hx : x ≠ 0) :
     (o.rotation θ).toLinearMap =
       Matrix.toLin (o.basisRightAngleRotation x hx) (o.basisRightAngleRotation x hx)
-        («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") :=
+        !![θ.cos, -θ.sin; θ.sin, θ.cos] :=
   by
   apply (o.basis_right_angle_rotation x hx).ext
   intro i

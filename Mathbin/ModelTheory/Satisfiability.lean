@@ -616,19 +616,19 @@ end Formula
 
 namespace BoundedFormula
 
-theorem IsQf.induction_on_sup_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n}
-    (h : IsQf φ) (hf : P (⊥ : L.BoundedFormula α n))
+theorem IsQF.induction_on_sup_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n}
+    (h : IsQF φ) (hf : P (⊥ : L.BoundedFormula α n))
     (ha : ∀ ψ : L.BoundedFormula α n, IsAtomic ψ → P ψ)
     (hsup : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁ ⊔ φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
     (hse :
       ∀ {φ₁ φ₂ : L.BoundedFormula α n} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) :
     P φ :=
-  IsQf.rec_on h hf ha fun φ₁ φ₂ _ _ h1 h2 =>
+  IsQF.rec_on h hf ha fun φ₁ φ₂ _ _ h1 h2 =>
     (hse (φ₁.imp_semanticallyEquivalent_not_sup φ₂)).2 (hsup (hnot h1) h2)
-#align first_order.language.bounded_formula.is_qf.induction_on_sup_not FirstOrder.Language.BoundedFormula.IsQf.induction_on_sup_not
+#align first_order.language.bounded_formula.is_qf.induction_on_sup_not FirstOrder.Language.BoundedFormula.IsQF.induction_on_sup_not
 
-theorem IsQf.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n}
-    (h : IsQf φ) (hf : P (⊥ : L.BoundedFormula α n))
+theorem IsQF.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n}
+    (h : IsQF φ) (hf : P (⊥ : L.BoundedFormula α n))
     (ha : ∀ ψ : L.BoundedFormula α n, IsAtomic ψ → P ψ)
     (hinf : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁ ⊓ φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
     (hse :
@@ -638,7 +638,7 @@ theorem IsQf.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.B
     (fun φ₁ φ₂ h1 h2 =>
       (hse (φ₁.sup_semanticallyEquivalent_not_inf_not φ₂)).2 (hnot (hinf (hnot h1) (hnot h2))))
     (fun _ => hnot) fun _ _ => hse
-#align first_order.language.bounded_formula.is_qf.induction_on_inf_not FirstOrder.Language.BoundedFormula.IsQf.induction_on_inf_not
+#align first_order.language.bounded_formula.is_qf.induction_on_inf_not FirstOrder.Language.BoundedFormula.IsQF.induction_on_inf_not
 
 theorem semanticallyEquivalent_toPrenex (φ : L.BoundedFormula α n) :
     (∅ : L.Theory).SemanticallyEquivalent φ φ.toPrenex := fun M v xs => by
@@ -646,7 +646,7 @@ theorem semanticallyEquivalent_toPrenex (φ : L.BoundedFormula α n) :
 #align first_order.language.bounded_formula.semantically_equivalent_to_prenex FirstOrder.Language.BoundedFormula.semanticallyEquivalent_toPrenex
 
 theorem induction_on_all_ex {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : L.BoundedFormula α n)
-    (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQf ψ → P ψ)
+    (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQF ψ → P ψ)
     (hall : ∀ {m} {ψ : L.BoundedFormula α (m + 1)} (h : P ψ), P ψ.all)
     (hex : ∀ {m} {φ : L.BoundedFormula α (m + 1)} (h : P φ), P φ.ex)
     (hse :
@@ -663,7 +663,7 @@ theorem induction_on_all_ex {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : 
 #align first_order.language.bounded_formula.induction_on_all_ex FirstOrder.Language.BoundedFormula.induction_on_all_ex
 
 theorem induction_on_exists_not {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : L.BoundedFormula α n)
-    (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQf ψ → P ψ)
+    (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQF ψ → P ψ)
     (hnot : ∀ {m} {φ : L.BoundedFormula α m} (h : P φ), P φ.Not)
     (hex : ∀ {m} {φ : L.BoundedFormula α (m + 1)} (h : P φ), P φ.ex)
     (hse :

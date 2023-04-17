@@ -800,24 +800,17 @@ theorem Matrix.toLinAlgEquiv_mul (A B : Matrix n n R) :
   by convert Matrix.toLin_mul v₁ v₁ v₁ A B
 #align matrix.to_lin_alg_equiv_mul Matrix.toLinAlgEquiv_mul
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 @[simp]
 theorem Matrix.toLin_finTwoProd_apply (a b c d : R) (x : R × R) :
-    Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
-        («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation")
-        x =
+    Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R) !![a, b; c, d] x =
       (a * x.fst + b * x.snd, c * x.fst + d * x.snd) :=
   by simp [Matrix.toLin_apply, Matrix.mulVec, Matrix.dotProduct]
 #align matrix.to_lin_fin_two_prod_apply Matrix.toLin_finTwoProd_apply
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem Matrix.toLin_finTwoProd (a b c d : R) :
-    Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
-        («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
+    Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R) !![a, b; c, d] =
       (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod
         (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _

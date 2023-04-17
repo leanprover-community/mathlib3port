@@ -361,12 +361,12 @@ theorem realize_iff : (φ.Iff ψ).realize v xs ↔ (φ.realize v xs ↔ ψ.reali
   simp only [bounded_formula.iff, realize_inf, realize_imp, and_imp, ← iff_def]
 #align first_order.language.bounded_formula.realize_iff FirstOrder.Language.BoundedFormula.realize_iff
 
-theorem realize_castLe_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.BoundedFormula α m}
+theorem realize_castLE_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.BoundedFormula α m}
     {v : α → M} {xs : Fin n → M} : (φ.castLE h').realize v xs ↔ φ.realize v (xs ∘ Fin.cast h) :=
   by
   subst h
   simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]
-#align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_castLe_of_eq
+#align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_castLE_of_eq
 
 theorem realize_mapTermRel_id [L'.Structure M]
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n))}
@@ -386,7 +386,7 @@ theorem realize_mapTermRel_id [L'.Structure M]
   · simp only [map_term_rel, realize, ih, id.def]
 #align first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_mapTermRel_id
 
-theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
+theorem realize_mapTermRel_add_castLE [L'.Structure M] {k : ℕ}
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (k + n)))}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n}
     (v : ∀ {n}, (Fin (k + n) → M) → α → M) {v' : β → M} (xs : Fin (k + n) → M)
@@ -395,7 +395,7 @@ theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
         (ft n t).realize (Sum.elim v' xs') = t.realize (Sum.elim (v xs') (xs' ∘ Fin.natAdd _)))
     (h2 : ∀ (n) (R : L.Relations n) (x : Fin n → M), RelMap (fr n R) x = RelMap R x)
     (hv : ∀ (n) (xs : Fin (k + n) → M) (x : M), @v (n + 1) (snoc xs x : Fin _ → M) = v xs) :
-    (φ.mapTermRel ft fr fun n => castLe (add_assoc _ _ _).symm.le).realize v' xs ↔
+    (φ.mapTermRel ft fr fun n => castLE (add_assoc _ _ _).symm.le).realize v' xs ↔
       φ.realize (v xs) (xs ∘ Fin.natAdd _) :=
   by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
@@ -404,7 +404,7 @@ theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
   · simp [map_term_rel, realize, h1, h2]
   · simp [map_term_rel, realize, ih1, ih2]
   · simp [map_term_rel, realize, ih, hv]
-#align first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_mapTermRel_add_castLe
+#align first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_mapTermRel_add_castLE
 
 theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum β (Fin m)} {v : β → M}
     {xs : Fin (m + n) → M} :
@@ -524,7 +524,7 @@ theorem realize_all_liftAt_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : 
     simp
 #align first_order.language.bounded_formula.realize_all_lift_at_one_self FirstOrder.Language.BoundedFormula.realize_all_liftAt_one_self
 
-theorem realize_toPrenexImpRight {φ ψ : L.BoundedFormula α n} (hφ : IsQf φ) (hψ : IsPrenex ψ)
+theorem realize_toPrenexImpRight {φ ψ : L.BoundedFormula α n} (hφ : IsQF φ) (hψ : IsPrenex ψ)
     {v : α → M} {xs : Fin n → M} : (φ.toPrenexImpRight ψ).realize v xs ↔ (φ.imp ψ).realize v xs :=
   by
   revert φ

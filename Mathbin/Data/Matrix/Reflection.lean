@@ -63,14 +63,9 @@ theorem forall_iff : ∀ {m n} (P : Matrix (Fin m) (Fin n) α → Prop), Forall 
     exact Iff.symm Fin.forall_fin_succ_pi
 #align matrix.forall_iff Matrix.forall_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 example (P : Matrix (Fin 2) (Fin 3) α → Prop) :
-    (∀ x, P x) ↔
-      ∀ a b c d e f,
-        P
-          («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") :=
+    (∀ x, P x) ↔ ∀ a b c d e f, P !![a, b, c; d, e, f] :=
   (forall_iff _).symm
 
 /-- `∃` with better defeq for `∃ x : matrix (fin m) (fin n) α, P x`. -/
@@ -93,14 +88,9 @@ theorem exists_iff : ∀ {m n} (P : Matrix (Fin m) (Fin n) α → Prop), Exists 
     exact Iff.symm Fin.exists_fin_succ_pi
 #align matrix.exists_iff Matrix.exists_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 example (P : Matrix (Fin 2) (Fin 3) α → Prop) :
-    (∃ x, P x) ↔
-      ∃ a b c d e f,
-        P
-          («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") :=
+    (∃ x, P x) ↔ ∃ a b c d e f, P !![a, b, c; d, e, f] :=
   (exists_iff _).symm
 
 /-- `matrix.tranpose` with better defeq for `fin` -/
@@ -128,16 +118,9 @@ theorem transposeᵣ_eq : ∀ {m n} (A : Matrix (Fin m) (Fin n) α), transpose�
         rfl
 #align matrix.transposeᵣ_eq Matrix.transposeᵣ_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
-example (a b c d : α) :
-    transpose
-        («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
-      «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
+example (a b c d : α) : transpose !![a, b; c, d] = !![a, c; b, d] :=
   (transposeᵣ_eq _).symm
 
 /-- `matrix.dot_product` with better defeq for `fin` -/
@@ -186,19 +169,13 @@ theorem mulᵣ_eq [Mul α] [AddCommMonoid α] (A : Matrix (Fin l) (Fin m) α)
   rfl
 #align matrix.mulᵣ_eq Matrix.mulᵣ_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 example [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
-    («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation").mul
-        («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
-      «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+    !![a₁₁, a₁₂; a₂₁, a₂₂].mul !![b₁₁, b₁₂; b₂₁, b₂₂] =
+      !![a₁₁ * b₁₁ + a₁₂ * b₂₁, a₁₁ * b₁₂ + a₁₂ * b₂₂; a₂₁ * b₁₁ + a₂₂ * b₂₁,
+        a₂₁ * b₁₂ + a₂₂ * b₂₂] :=
   (mulᵣ_eq _ _).symm
 
 /-- `matrix.mul_vec` with better defeq for `fin` -/
@@ -221,13 +198,9 @@ theorem mulVecᵣ_eq [NonUnitalNonAssocSemiring α] (A : Matrix (Fin l) (Fin m) 
   rfl
 #align matrix.mul_vecᵣ_eq Matrix.mulVecᵣ_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 example [NonUnitalNonAssocSemiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
-    («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation").mulVec
-        ![b₁, b₂] =
-      ![a₁₁ * b₁ + a₁₂ * b₂, a₂₁ * b₁ + a₂₂ * b₂] :=
+    !![a₁₁, a₁₂; a₂₁, a₂₂].mulVec ![b₁, b₂] = ![a₁₁ * b₁ + a₁₂ * b₂, a₂₁ * b₁ + a₂₂ * b₂] :=
   (mulVecᵣ_eq _ _).symm
 
 /-- `matrix.vec_mul` with better defeq for `fin` -/
@@ -250,13 +223,9 @@ theorem vecMulᵣ_eq [NonUnitalNonAssocSemiring α] (v : Fin l → α) (A : Matr
   rfl
 #align matrix.vec_mulᵣ_eq Matrix.vecMulᵣ_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 example [NonUnitalNonAssocSemiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
-    vecMul ![b₁, b₂]
-        («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation") =
-      ![b₁ * a₁₁ + b₂ * a₂₁, b₁ * a₁₂ + b₂ * a₂₂] :=
+    vecMul ![b₁, b₂] !![a₁₁, a₁₂; a₂₁, a₂₂] = ![b₁ * a₁₁ + b₂ * a₂₁, b₁ * a₁₂ + b₂ * a₂₂] :=
   (vecMulᵣ_eq _ _).symm
 
 /-- Expand `A` to `!![A 0 0, ...; ..., A m n]` -/
@@ -276,12 +245,8 @@ theorem etaExpand_eq {m n} (A : Matrix (Fin m) (Fin n) α) : etaExpand A = A := 
   simp_rw [eta_expand, FinVec.etaExpand_eq, Matrix.of, Equiv.refl_apply]
 #align matrix.eta_expand_eq Matrix.etaExpand_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation -/
-example (A : Matrix (Fin 2) (Fin 2) α) :
-    A =
-      «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:387:14: unsupported user notation matrix.notation" :=
+/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
+example (A : Matrix (Fin 2) (Fin 2) α) : A = !![A 0 0, A 0 1; A 1 0, A 1 1] :=
   (etaExpand_eq _).symm
 
 end Matrix
