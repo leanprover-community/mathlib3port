@@ -31,6 +31,7 @@ Nevertheless, sometimes proof by computational reflection requires natural numbe
 
 namespace PosNum
 
+#print PosNum.minFacAux /-
 /-- Auxiliary function for computing the smallest prime factor of a `pos_num`. Unlike
 `nat.min_fac_aux`, we use a natural number `fuel` variable that is set to an upper bound on the
 number of iterations. It is initialized to the number `n` we are determining primality for. Even
@@ -42,7 +43,9 @@ def minFacAux (n : PosNum) : ℕ → PosNum → PosNum
   | fuel + 1, k =>
     if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
 #align pos_num.min_fac_aux PosNum.minFacAux
+-/
 
+#print PosNum.minFacAux_to_nat /-
 theorem minFacAux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
     (minFacAux n fuel k : ℕ) = Nat.minFacAux n k.bit1 :=
   by
@@ -55,14 +58,18 @@ theorem minFacAux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.
     simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assoc,
       add_left_comm]
 #align pos_num.min_fac_aux_to_nat PosNum.minFacAux_to_nat
+-/
 
+#print PosNum.minFac /-
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
 def minFac : PosNum → PosNum
   | 1 => 1
   | bit0 n => 2
   | bit1 n => minFacAux (bit1 n) n 1
 #align pos_num.min_fac PosNum.minFac
+-/
 
+#print PosNum.minFac_to_nat /-
 @[simp]
 theorem minFac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n :=
   by
@@ -81,13 +88,17 @@ theorem minFac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n :=
     · rfl
     simp
 #align pos_num.min_fac_to_nat PosNum.minFac_to_nat
+-/
 
+#print PosNum.Prime /-
 /-- Primality predicate for a `pos_num`. -/
 @[simp]
 def Prime (n : PosNum) : Prop :=
   Nat.Prime n
 #align pos_num.prime PosNum.Prime
+-/
 
+#print PosNum.decidablePrime /-
 instance decidablePrime : DecidablePred PosNum.Prime
   | 1 => Decidable.isFalse Nat.not_prime_one
   | bit0 n =>
@@ -104,33 +115,42 @@ instance decidablePrime : DecidablePred PosNum.Prime
         · exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)
         rw [← min_fac_to_nat, to_nat_inj]; rfl)
 #align pos_num.decidable_prime PosNum.decidablePrime
+-/
 
 end PosNum
 
 namespace Num
 
+#print Num.minFac /-
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
 def minFac : Num → PosNum
   | 0 => 2
   | Pos n => n.minFac
 #align num.min_fac Num.minFac
+-/
 
+#print Num.minFac_to_nat /-
 @[simp]
 theorem minFac_to_nat : ∀ n : Num, (minFac n : ℕ) = Nat.minFac n
   | 0 => rfl
   | Pos n => PosNum.minFac_to_nat _
 #align num.min_fac_to_nat Num.minFac_to_nat
+-/
 
+#print Num.Prime /-
 /-- Primality predicate for a `num`. -/
 @[simp]
 def Prime (n : Num) : Prop :=
   Nat.Prime n
 #align num.prime Num.Prime
+-/
 
+#print Num.decidablePrime /-
 instance decidablePrime : DecidablePred Num.Prime
   | 0 => Decidable.isFalse Nat.not_prime_zero
   | Pos n => PosNum.decidablePrime n
 #align num.decidable_prime Num.decidablePrime
+-/
 
 end Num
 

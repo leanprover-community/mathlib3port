@@ -42,6 +42,7 @@ section
 
 variable {α : Type u} [EMetricSpace α] {s : Set α}
 
+#print EMetric.Closeds.emetricSpace /-
 /-- In emetric spaces, the Hausdorff edistance defines an emetric space structure
 on the type of closed subsets -/
 instance Closeds.emetricSpace : EMetricSpace (Closeds α)
@@ -52,7 +53,8 @@ instance Closeds.emetricSpace : EMetricSpace (Closeds α)
   edist_triangle s t u := hausdorffEdist_triangle
   eq_of_edist_eq_zero s t h :=
     Closeds.ext <| (hausdorffEdist_zero_iff_eq_of_closed s.closed t.closed).1 h
-#align emetric.closeds.emetric_space Emetric.Closeds.emetricSpace
+#align emetric.closeds.emetric_space EMetric.Closeds.emetricSpace
+-/
 
 /-- The edistance to a closed set depends continuously on the point and the set -/
 theorem continuous_infEdist_Hausdorff_edist :
@@ -73,6 +75,7 @@ theorem continuous_infEdist_Hausdorff_edist :
     
 #align emetric.continuous_inf_edist_Hausdorff_edist Emetric.continuous_infEdist_Hausdorff_edist
 
+#print EMetric.isClosed_subsets_of_isClosed /-
 /-- Subsets of a given closed subset form a closed set -/
 theorem isClosed_subsets_of_isClosed (hs : IsClosed s) :
     IsClosed { t : Closeds α | (t : Set α) ⊆ s } :=
@@ -89,13 +92,17 @@ theorem isClosed_subsets_of_isClosed (hs : IsClosed s) :
     -- y : α,  hy : y ∈ u, Dxy : edist x y < ε
     exact ⟨y, hu hy, Dxy⟩
   rwa [hs.closure_eq] at this
-#align emetric.is_closed_subsets_of_is_closed Emetric.isClosed_subsets_of_isClosed
+#align emetric.is_closed_subsets_of_is_closed EMetric.isClosed_subsets_of_isClosed
+-/
 
+#print EMetric.Closeds.edist_eq /-
 /-- By definition, the edistance on `closeds α` is given by the Hausdorff edistance -/
 theorem Closeds.edist_eq {s t : Closeds α} : edist s t = hausdorffEdist (s : Set α) t :=
   rfl
-#align emetric.closeds.edist_eq Emetric.Closeds.edist_eq
+#align emetric.closeds.edist_eq EMetric.Closeds.edist_eq
+-/
 
+#print EMetric.Closeds.completeSpace /-
 /-- In a complete space, the type of closed subsets is complete for the
 Hausdorff edistance. -/
 instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :=
@@ -200,9 +207,11 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_atTop
   exact ⟨N, fun n hn => lt_of_le_of_lt (main n) (hN n hn)⟩
-#align emetric.closeds.complete_space Emetric.Closeds.completeSpace
+#align emetric.closeds.complete_space EMetric.Closeds.completeSpace
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ⊆ » s) -/
+#print EMetric.Closeds.compactSpace /-
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -250,8 +259,10 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
       have : edist u t < ε := lt_of_le_of_lt Dut0 δlt
       apply mem_Union₂.2
       exact ⟨t, ‹t ∈ F›, this⟩⟩
-#align emetric.closeds.compact_space Emetric.Closeds.compactSpace
+#align emetric.closeds.compact_space EMetric.Closeds.compactSpace
+-/
 
+#print EMetric.NonemptyCompacts.emetricSpace /-
 /-- In an emetric space, the type of non-empty compact subsets is an emetric space,
 where the edistance is the Hausdorff edistance -/
 instance NonemptyCompacts.emetricSpace : EMetricSpace (NonemptyCompacts α)
@@ -265,14 +276,18 @@ instance NonemptyCompacts.emetricSpace : EMetricSpace (NonemptyCompacts α)
       by
       have : closure (s : Set α) = closure t := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
       rwa [s.is_compact.is_closed.closure_eq, t.is_compact.is_closed.closure_eq] at this
-#align emetric.nonempty_compacts.emetric_space Emetric.NonemptyCompacts.emetricSpace
+#align emetric.nonempty_compacts.emetric_space EMetric.NonemptyCompacts.emetricSpace
+-/
 
+#print EMetric.NonemptyCompacts.ToCloseds.uniformEmbedding /-
 /-- `nonempty_compacts.to_closeds` is a uniform embedding (as it is an isometry) -/
 theorem NonemptyCompacts.ToCloseds.uniformEmbedding :
     UniformEmbedding (@NonemptyCompacts.toCloseds α _ _) :=
   Isometry.uniformEmbedding fun x y => rfl
-#align emetric.nonempty_compacts.to_closeds.uniform_embedding Emetric.NonemptyCompacts.ToCloseds.uniformEmbedding
+#align emetric.nonempty_compacts.to_closeds.uniform_embedding EMetric.NonemptyCompacts.ToCloseds.uniformEmbedding
+-/
 
+#print EMetric.NonemptyCompacts.isClosed_in_closeds /-
 /-- The range of `nonempty_compacts.to_closeds` is closed in a complete space -/
 theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
     IsClosed (range <| @NonemptyCompacts.toCloseds α _ _) :=
@@ -313,16 +328,20 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
         _ = ε := ENNReal.add_halves _
         
     exact mem_bUnion hy this
-#align emetric.nonempty_compacts.is_closed_in_closeds Emetric.NonemptyCompacts.isClosed_in_closeds
+#align emetric.nonempty_compacts.is_closed_in_closeds EMetric.NonemptyCompacts.isClosed_in_closeds
+-/
 
+#print EMetric.NonemptyCompacts.completeSpace /-
 /-- In a complete space, the type of nonempty compact subsets is complete. This follows
 from the same statement for closed subsets -/
 instance NonemptyCompacts.completeSpace [CompleteSpace α] : CompleteSpace (NonemptyCompacts α) :=
   (completeSpace_iff_isComplete_range
         NonemptyCompacts.ToCloseds.uniformEmbedding.to_uniformInducing).2 <|
     NonemptyCompacts.isClosed_in_closeds.IsComplete
-#align emetric.nonempty_compacts.complete_space Emetric.NonemptyCompacts.completeSpace
+#align emetric.nonempty_compacts.complete_space EMetric.NonemptyCompacts.completeSpace
+-/
 
+#print EMetric.NonemptyCompacts.compactSpace /-
 /-- In a compact space, the type of nonempty compact subsets is compact. This follows from
 the same statement for closed subsets -/
 instance NonemptyCompacts.compactSpace [CompactSpace α] : CompactSpace (NonemptyCompacts α) :=
@@ -330,8 +349,10 @@ instance NonemptyCompacts.compactSpace [CompactSpace α] : CompactSpace (Nonempt
     rw [nonempty_compacts.to_closeds.uniform_embedding.embedding.is_compact_iff_is_compact_image]
     rw [image_univ]
     exact nonempty_compacts.is_closed_in_closeds.is_compact⟩
-#align emetric.nonempty_compacts.compact_space Emetric.NonemptyCompacts.compactSpace
+#align emetric.nonempty_compacts.compact_space EMetric.NonemptyCompacts.compactSpace
+-/
 
+#print EMetric.NonemptyCompacts.secondCountableTopology /-
 /-- In a second countable space, the type of nonempty compact subsets is second countable -/
 instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
     SecondCountableTopology (NonemptyCompacts α) :=
@@ -414,7 +435,8 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
       -- we have proved that `d` is a good approximation of `t` as requested
       exact ⟨d, ‹d ∈ v›, Dtc⟩
   UniformSpace.secondCountable_of_separable (nonempty_compacts α)
-#align emetric.nonempty_compacts.second_countable_topology Emetric.NonemptyCompacts.secondCountableTopology
+#align emetric.nonempty_compacts.second_countable_topology EMetric.NonemptyCompacts.secondCountableTopology
+-/
 
 end
 
@@ -428,6 +450,7 @@ section
 
 variable {α : Type u} [MetricSpace α]
 
+#print Metric.NonemptyCompacts.metricSpace /-
 /-- `nonempty_compacts α` inherits a metric space structure, as the Hausdorff
 edistance between two such sets is finite. -/
 instance NonemptyCompacts.metricSpace : MetricSpace (NonemptyCompacts α) :=
@@ -435,24 +458,41 @@ instance NonemptyCompacts.metricSpace : MetricSpace (NonemptyCompacts α) :=
     hausdorffEdist_ne_top_of_nonempty_of_bounded x.Nonempty y.Nonempty x.IsCompact.Bounded
       y.IsCompact.Bounded
 #align metric.nonempty_compacts.metric_space Metric.NonemptyCompacts.metricSpace
+-/
 
+#print Metric.NonemptyCompacts.dist_eq /-
 /-- The distance on `nonempty_compacts α` is the Hausdorff distance, by construction -/
 theorem NonemptyCompacts.dist_eq {x y : NonemptyCompacts α} :
     dist x y = hausdorffDist (x : Set α) y :=
   rfl
 #align metric.nonempty_compacts.dist_eq Metric.NonemptyCompacts.dist_eq
+-/
 
+#print Metric.lipschitz_infDist_set /-
 theorem lipschitz_infDist_set (x : α) : LipschitzWith 1 fun s : NonemptyCompacts α => infDist x s :=
   LipschitzWith.of_le_add fun s t => by
     rw [dist_comm]
     exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
 #align metric.lipschitz_inf_dist_set Metric.lipschitz_infDist_set
+-/
 
+/- warning: metric.lipschitz_inf_dist -> Metric.lipschitz_infDist is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α], LipschitzWith.{u1, 0} (Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) Real (Prod.pseudoEMetricSpaceMax.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (MetricSpace.toPseudoMetricSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Metric.NonemptyCompacts.metricSpace.{u1} α _inst_1)))) (PseudoMetricSpace.toPseudoEMetricSpace.{0} Real Real.pseudoMetricSpace) (OfNat.ofNat.{0} NNReal 2 (OfNat.mk.{0} NNReal 2 (bit0.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) (fun (p : Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) => Metric.infDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1) (Prod.fst.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) α (TopologicalSpace.NonemptyCompacts.setLike.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))))) (Prod.snd.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α], LipschitzWith.{u1, 0} (Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) Real (Prod.pseudoEMetricSpaceMax.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1)) (EMetricSpace.toPseudoEMetricSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (EMetric.NonemptyCompacts.emetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1)))) (EMetricSpace.toPseudoEMetricSpace.{0} Real (MetricSpace.toEMetricSpace.{0} Real Real.metricSpace)) (OfNat.ofNat.{0} NNReal 2 (instOfNat.{0} NNReal 2 (CanonicallyOrderedCommSemiring.toNatCast.{0} NNReal instNNRealCanonicallyOrderedCommSemiring) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) (fun (p : Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) => Metric.infDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1) (Prod.fst.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p) (SetLike.coe.{u1, u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) α (TopologicalSpace.NonemptyCompacts.instSetLikeNonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Prod.snd.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p)))
+Case conversion may be inaccurate. Consider using '#align metric.lipschitz_inf_dist Metric.lipschitz_infDistₓ'. -/
 theorem lipschitz_infDist : LipschitzWith 2 fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
   @LipschitzWith.uncurry _ _ _ _ _ _ (fun (x : α) (s : NonemptyCompacts α) => infDist x s) 1 1
     (fun s => lipschitz_infDist_pt s) lipschitz_infDist_set
 #align metric.lipschitz_inf_dist Metric.lipschitz_infDist
 
+/- warning: metric.uniform_continuous_inf_dist_Hausdorff_dist -> Metric.uniformContinuous_infDist_Hausdorff_dist is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α], UniformContinuous.{u1, 0} (Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) Real (Prod.uniformSpace.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) (PseudoMetricSpace.toUniformSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (MetricSpace.toPseudoMetricSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Metric.NonemptyCompacts.metricSpace.{u1} α _inst_1)))) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) => Metric.infDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1) (Prod.fst.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) α (TopologicalSpace.NonemptyCompacts.setLike.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))))) (Prod.snd.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α], UniformContinuous.{u1, 0} (Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) Real (instUniformSpaceProd.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) (PseudoMetricSpace.toUniformSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (MetricSpace.toPseudoMetricSpace.{u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Metric.NonemptyCompacts.metricSpace.{u1} α _inst_1)))) (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace) (fun (p : Prod.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1))))) => Metric.infDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1) (Prod.fst.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p) (SetLike.coe.{u1, u1} (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) α (TopologicalSpace.NonemptyCompacts.instSetLikeNonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) (Prod.snd.{u1, u1} α (TopologicalSpace.NonemptyCompacts.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)))) p)))
+Case conversion may be inaccurate. Consider using '#align metric.uniform_continuous_inf_dist_Hausdorff_dist Metric.uniformContinuous_infDist_Hausdorff_distₓ'. -/
 theorem uniformContinuous_infDist_Hausdorff_dist :
     UniformContinuous fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
   lipschitz_infDist.UniformContinuous
