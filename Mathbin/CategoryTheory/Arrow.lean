@@ -164,14 +164,14 @@ theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) :
   sq.w
 #align category_theory.arrow.w_mk_right CategoryTheory.Arrow.w_mk_right
 
-#print CategoryTheory.Arrow.isIso_of_iso_left_of_isIso_right /-
-theorem isIso_of_iso_left_of_isIso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left]
+#print CategoryTheory.Arrow.isIso_of_isIso_left_of_isIso_right /-
+theorem isIso_of_isIso_left_of_isIso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left]
     [IsIso ff.right] : IsIso ff :=
   {
     out :=
       ⟨⟨inv ff.left, inv ff.right⟩, by ext <;> dsimp <;> simp only [is_iso.hom_inv_id], by
         ext <;> dsimp <;> simp only [is_iso.inv_hom_id]⟩ }
-#align category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.isIso_of_iso_left_of_isIso_right
+#align category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.isIso_of_isIso_left_of_isIso_right
 -/
 
 /- warning: category_theory.arrow.iso_mk -> CategoryTheory.Arrow.isoMk is a dubious translation:

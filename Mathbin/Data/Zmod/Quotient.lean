@@ -193,7 +193,7 @@ variable {α : Type _} [Group α] (a : α)
 theorem order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) :=
   by
   have := Nat.card_congr (MulAction.orbitZpowersEquiv a (1 : α))
-  rwa [Nat.card_zMod, orbit_subgroup_one_eq_self, eq_comm] at this
+  rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this
 #align order_eq_card_zpowers' order_eq_card_zpowers'
 #align add_order_eq_card_zmultiples' add_order_eq_card_zmultiples'
 

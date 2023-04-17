@@ -533,7 +533,7 @@ theorem add_haar_closedBall_mul_of_pos (x : E) {r : ℝ} (hr : 0 < r) (s : ℝ) 
     μ (closedBall x (r * s)) = ENNReal.ofReal (r ^ finrank ℝ E) * μ (closedBall 0 s) :=
   by
   have : closed_ball (0 : E) (r * s) = r • closed_ball 0 s := by
-    simp [smul_closed_ball' hr.ne' (0 : E), abs_of_nonneg hr.le]
+    simp [smul_closedBall' hr.ne' (0 : E), abs_of_nonneg hr.le]
   simp only [this, add_haar_smul, abs_of_nonneg hr.le, add_haar_closed_ball_center, abs_pow]
 #align measure_theory.measure.add_haar_closed_ball_mul_of_pos MeasureTheory.Measure.add_haar_closedBall_mul_of_pos
 

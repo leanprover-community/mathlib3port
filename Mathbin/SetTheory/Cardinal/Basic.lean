@@ -575,16 +575,16 @@ theorem mk_option {α : Type u} : (#Option α) = (#α) + 1 :=
   (Equiv.optionEquivSumPUnit α).cardinal_eq
 #align cardinal.mk_option Cardinal.mk_option
 
-/- warning: cardinal.mk_psum -> Cardinal.mk_pSum is a dubious translation:
+/- warning: cardinal.mk_psum -> Cardinal.mk_psum is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) (β : Type.{u2}), Eq.{succ (succ (max u1 u2))} Cardinal.{max u1 u2} (Cardinal.mk.{max u1 u2} (PSum.{succ u1, succ u2} α β)) (HAdd.hAdd.{succ (max u1 u2), succ (max u1 u2), succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.{max u1 u2} Cardinal.{max u1 u2} (instHAdd.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.hasAdd.{max u1 u2}) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} α)) (Cardinal.lift.{u1, u2} (Cardinal.mk.{u2} β)))
 but is expected to have type
   forall (α : Type.{u1}) (β : Type.{u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Cardinal.{max u1 u2} (Cardinal.mk.{max u1 u2} (PSum.{succ u1, succ u2} α β)) (HAdd.hAdd.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.{max u2 u1} Cardinal.{max u1 u2} (instHAdd.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instAddCardinal.{max u1 u2}) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} α)) (Cardinal.lift.{u1, u2} (Cardinal.mk.{u2} β)))
-Case conversion may be inaccurate. Consider using '#align cardinal.mk_psum Cardinal.mk_pSumₓ'. -/
+Case conversion may be inaccurate. Consider using '#align cardinal.mk_psum Cardinal.mk_psumₓ'. -/
 @[simp]
-theorem mk_pSum (α : Type u) (β : Type v) : (#PSum α β) = lift.{v} (#α) + lift.{u} (#β) :=
+theorem mk_psum (α : Type u) (β : Type v) : (#PSum α β) = lift.{v} (#α) + lift.{u} (#β) :=
   (mk_congr (Equiv.psumEquivSum α β)).trans (mk_sum α β)
-#align cardinal.mk_psum Cardinal.mk_pSum
+#align cardinal.mk_psum Cardinal.mk_psum
 
 /- warning: cardinal.mk_fintype -> Cardinal.mk_fintype is a dubious translation:
 lean 3 declaration is
@@ -920,7 +920,7 @@ private theorem add_le_add' : ∀ {a b c d : Cardinal}, a ≤ b → c ≤ d → 
 lean 3 declaration is
   CovariantClass.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1})) (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1})
 but is expected to have type
-  CovariantClass.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5036 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5038 : Cardinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5036 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5038) (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5051 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5053 : Cardinal.{u1}) => LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5051 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5053)
+  CovariantClass.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5061 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5063 : Cardinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5061 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5063) (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5076 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5078 : Cardinal.{u1}) => LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5076 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5078)
 Case conversion may be inaccurate. Consider using '#align cardinal.add_covariant_class Cardinal.add_covariantClassₓ'. -/
 instance add_covariantClass : CovariantClass Cardinal Cardinal (· + ·) (· ≤ ·) :=
   ⟨fun a b c => add_le_add' le_rfl⟩
@@ -930,7 +930,7 @@ instance add_covariantClass : CovariantClass Cardinal Cardinal (· + ·) (· ≤
 lean 3 declaration is
   CovariantClass.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} (Function.swap.{succ (succ u1), succ (succ u1), succ (succ u1)} Cardinal.{u1} Cardinal.{u1} (fun (ᾰ : Cardinal.{u1}) (ᾰ : Cardinal.{u1}) => Cardinal.{u1}) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}))) (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1})
 but is expected to have type
-  CovariantClass.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} (Function.swap.{succ (succ u1), succ (succ u1), succ (succ u1)} Cardinal.{u1} Cardinal.{u1} (fun (ᾰ : Cardinal.{u1}) (ᾰ : Cardinal.{u1}) => Cardinal.{u1}) (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5103 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5105 : Cardinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5103 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5105)) (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5118 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5120 : Cardinal.{u1}) => LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5118 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5120)
+  CovariantClass.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} (Function.swap.{succ (succ u1), succ (succ u1), succ (succ u1)} Cardinal.{u1} Cardinal.{u1} (fun (ᾰ : Cardinal.{u1}) (ᾰ : Cardinal.{u1}) => Cardinal.{u1}) (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5128 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5130 : Cardinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5128 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5130)) (fun (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5143 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5145 : Cardinal.{u1}) => LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5143 x._@.Mathlib.SetTheory.Cardinal.Basic._hyg.5145)
 Case conversion may be inaccurate. Consider using '#align cardinal.add_swap_covariant_class Cardinal.add_swap_covariantClassₓ'. -/
 instance add_swap_covariantClass : CovariantClass Cardinal Cardinal (swap (· + ·)) (· ≤ ·) :=
   ⟨fun a b c h => add_le_add' h le_rfl⟩
@@ -2909,23 +2909,23 @@ theorem mk_empty : (#Empty) = 0 :=
 #align cardinal.mk_empty Cardinal.mk_empty
 -/
 
-#print Cardinal.mk_pEmpty /-
+#print Cardinal.mk_pempty /-
 @[simp]
-theorem mk_pEmpty : (#PEmpty) = 0 :=
+theorem mk_pempty : (#PEmpty) = 0 :=
   mk_eq_zero _
-#align cardinal.mk_pempty Cardinal.mk_pEmpty
+#align cardinal.mk_pempty Cardinal.mk_pempty
 -/
 
-#print Cardinal.mk_pUnit /-
+#print Cardinal.mk_punit /-
 @[simp]
-theorem mk_pUnit : (#PUnit) = 1 :=
+theorem mk_punit : (#PUnit) = 1 :=
   mk_eq_one PUnit
-#align cardinal.mk_punit Cardinal.mk_pUnit
+#align cardinal.mk_punit Cardinal.mk_punit
 -/
 
 #print Cardinal.mk_unit /-
 theorem mk_unit : (#Unit) = 1 :=
-  mk_pUnit
+  mk_punit
 #align cardinal.mk_unit Cardinal.mk_unit
 -/
 
@@ -2936,18 +2936,18 @@ theorem mk_singleton {α : Type u} (x : α) : (#({x} : Set α)) = 1 :=
 #align cardinal.mk_singleton Cardinal.mk_singleton
 -/
 
-#print Cardinal.mk_pLift_true /-
+#print Cardinal.mk_plift_true /-
 @[simp]
-theorem mk_pLift_true : (#PLift True) = 1 :=
+theorem mk_plift_true : (#PLift True) = 1 :=
   mk_eq_one _
-#align cardinal.mk_plift_true Cardinal.mk_pLift_true
+#align cardinal.mk_plift_true Cardinal.mk_plift_true
 -/
 
-#print Cardinal.mk_pLift_false /-
+#print Cardinal.mk_plift_false /-
 @[simp]
-theorem mk_pLift_false : (#PLift False) = 0 :=
+theorem mk_plift_false : (#PLift False) = 0 :=
   mk_eq_zero _
-#align cardinal.mk_plift_false Cardinal.mk_pLift_false
+#align cardinal.mk_plift_false Cardinal.mk_plift_false
 -/
 
 #print Cardinal.mk_vector /-

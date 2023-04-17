@@ -360,7 +360,7 @@ theorem w_integral {D : ℝ} (Dpos : 0 < D) : (∫ x : E, w D x ∂μ) = 1 :=
 theorem w_support {D : ℝ} (Dpos : 0 < D) : support (w D : E → ℝ) = ball 0 D :=
   by
   have B : D • ball (0 : E) 1 = ball 0 D := by
-    rw [smul_unit_ball Dpos.ne', Real.norm_of_nonneg Dpos.le]
+    rw [smul_unitBall Dpos.ne', Real.norm_of_nonneg Dpos.le]
   have C : D ^ finrank ℝ E ≠ 0 := pow_ne_zero _ Dpos.ne'
   simp only [W_def, Algebra.id.smul_eq_mul, support_mul, support_inv, univ_inter,
     support_comp_inv_smul₀ Dpos.ne', u_support, B, support_const (u_int_pos E).ne', support_const C,

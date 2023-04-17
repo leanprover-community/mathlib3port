@@ -392,7 +392,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.preimage_smul_closed_ball EMetric.preimage_smul_closedBallₓ'. -/
 @[simp, to_additive]
 theorem preimage_smul_closedBall (c : G) (x : X) (r : ℝ≥0∞) :
-    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closed_ball]
+    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closedBall]
 #align emetric.preimage_smul_closed_ball EMetric.preimage_smul_closedBall
 #align emetric.preimage_vadd_closed_ball EMetric.preimage_vadd_closedBall
 
@@ -626,7 +626,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.preimage_smul_closed_ball Metric.preimage_smul_closedBallₓ'. -/
 @[simp, to_additive]
 theorem preimage_smul_closedBall (c : G) (x : X) (r : ℝ) :
-    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closed_ball]
+    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closedBall]
 #align metric.preimage_smul_closed_ball Metric.preimage_smul_closedBall
 #align metric.preimage_vadd_closed_ball Metric.preimage_vadd_closedBall
 

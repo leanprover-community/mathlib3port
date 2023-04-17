@@ -54,7 +54,7 @@ open Topology Pointwise
 
 namespace Ideal
 
-theorem adicBasis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
+theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
   { inter := by
       suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
       intro i j
@@ -71,21 +71,21 @@ theorem adicBasis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • 
       use n
       rintro a ⟨x, b, hx, hb, rfl⟩
       exact (I ^ n).smul_mem x hb }
-#align ideal.adic_basis Ideal.adicBasis
+#align ideal.adic_basis Ideal.adic_basis
 
 /-- The adic ring filter basis associated to an ideal `I` is made of powers of `I`. -/
 def ringFilterBasis (I : Ideal R) :=
-  I.adicBasis.toRing_subgroups_basis.toRingFilterBasis
+  I.adic_basis.toRing_subgroups_basis.toRingFilterBasis
 #align ideal.ring_filter_basis Ideal.ringFilterBasis
 
 /-- The adic topology associated to an ideal `I`. This topology admits powers of `I` as a basis of
 neighborhoods of zero. It is compatible with the ring structure and is non-archimedean. -/
 def adicTopology (I : Ideal R) : TopologicalSpace R :=
-  (adicBasis I).topology
+  (adic_basis I).topology
 #align ideal.adic_topology Ideal.adicTopology
 
 theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
-  I.adicBasis.toRing_subgroups_basis.nonarchimedean
+  I.adic_basis.toRing_subgroups_basis.nonarchimedean
 #align ideal.nonarchimedean Ideal.nonarchimedean
 
 /-- For the `I`-adic topology, the neighborhoods of zero has basis given by the powers of `I`. -/
@@ -114,7 +114,7 @@ theorem hasBasis_nhds_adic (I : Ideal R) (x : R) :
 
 variable (I : Ideal R) (M : Type _) [AddCommGroup M] [Module R M]
 
-theorem adicModuleBasis :
+theorem adic_module_basis :
     I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
       ⟨max i j,
@@ -126,13 +126,13 @@ theorem adicModuleBasis :
         by
         replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in
         exact smul_mem_smul a_in mem_top⟩ }
-#align ideal.adic_module_basis Ideal.adicModuleBasis
+#align ideal.adic_module_basis Ideal.adic_module_basis
 
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/
 def adicModuleTopology : TopologicalSpace M :=
-  @ModuleFilterBasis.topology R M _ I.adicBasis.topology _ _
-    (I.RingFilterBasis.ModuleFilterBasis (I.adicModuleBasis M))
+  @ModuleFilterBasis.topology R M _ I.adic_basis.topology _ _
+    (I.RingFilterBasis.ModuleFilterBasis (I.adic_module_basis M))
 #align ideal.adic_module_topology Ideal.adicModuleTopology
 
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology
@@ -177,7 +177,7 @@ theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} 
     · apply @TopologicalRing.to_topologicalAddGroup
     · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.isTopologicalAddGroup
     · ext s
-      letI := Ideal.adicBasis J
+      letI := Ideal.adic_basis J
       rw [J.has_basis_nhds_zero_adic.mem_iff]
       constructor <;> intro H
       · rcases H₂ s H with ⟨n, h⟩

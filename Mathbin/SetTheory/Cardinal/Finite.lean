@@ -150,22 +150,22 @@ theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.car
   simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
 #align nat.card_prod Nat.card_prod
 
-/- warning: nat.card_ulift -> Nat.card_uLift is a dubious translation:
+/- warning: nat.card_ulift -> Nat.card_ulift is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}), Eq.{1} Nat (Nat.card.{max u1 u2} (ULift.{u2, u1} α)) (Nat.card.{u1} α)
 but is expected to have type
   forall (α : Type.{u2}), Eq.{1} Nat (Nat.card.{max u2 u1} (ULift.{u1, u2} α)) (Nat.card.{u2} α)
-Case conversion may be inaccurate. Consider using '#align nat.card_ulift Nat.card_uLiftₓ'. -/
+Case conversion may be inaccurate. Consider using '#align nat.card_ulift Nat.card_uliftₓ'. -/
 @[simp]
-theorem card_uLift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
+theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
   card_congr Equiv.ulift
-#align nat.card_ulift Nat.card_uLift
+#align nat.card_ulift Nat.card_ulift
 
-#print Nat.card_pLift /-
+#print Nat.card_plift /-
 @[simp]
-theorem card_pLift (α : Type _) : Nat.card (PLift α) = Nat.card α :=
+theorem card_plift (α : Type _) : Nat.card (PLift α) = Nat.card α :=
   card_congr Equiv.plift
-#align nat.card_plift Nat.card_pLift
+#align nat.card_plift Nat.card_plift
 -/
 
 #print Nat.card_pi /-
@@ -186,14 +186,14 @@ theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α 
   rw [Nat.card_pi, Finset.prod_const, Finset.card_univ, ← Nat.card_eq_fintype_card]
 #align nat.card_fun Nat.card_fun
 
-#print Nat.card_zMod /-
+#print Nat.card_zmod /-
 @[simp]
-theorem card_zMod (n : ℕ) : Nat.card (ZMod n) = n :=
+theorem card_zmod (n : ℕ) : Nat.card (ZMod n) = n :=
   by
   cases n
   · exact Nat.card_eq_zero_of_infinite
   · rw [Nat.card_eq_fintype_card, ZMod.card]
-#align nat.card_zmod Nat.card_zMod
+#align nat.card_zmod Nat.card_zmod
 -/
 
 end Nat

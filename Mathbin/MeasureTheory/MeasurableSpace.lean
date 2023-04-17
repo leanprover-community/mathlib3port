@@ -701,17 +701,17 @@ theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f 
   measurable_to_countable
 #align measurable_to_nat measurable_to_nat
 
-/- warning: measurable_find_greatest' -> measurable_find_greatest' is a dubious translation:
+/- warning: measurable_find_greatest' -> measurable_findGreatest' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {p : α -> Nat -> Prop} [_inst_2 : forall (x : α), DecidablePred.{1} Nat (p x)] {N : Nat}, (forall (k : Nat), (LE.le.{0} Nat Nat.hasLe k N) -> (MeasurableSet.{u1} α _inst_1 (setOf.{u1} α (fun (x : α) => Eq.{1} Nat (Nat.findGreatest (p x) (fun (a : Nat) => _inst_2 x a) N) k)))) -> (Measurable.{u1, 0} α Nat _inst_1 Nat.measurableSpace (fun (x : α) => Nat.findGreatest (p x) (fun (a : Nat) => _inst_2 x a) N))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {p : α -> Nat -> Prop} [_inst_2 : forall (x : α), DecidablePred.{1} Nat (p x)] {N : Nat}, (forall (k : Nat), (LE.le.{0} Nat instLENat k N) -> (MeasurableSet.{u1} α _inst_1 (setOf.{u1} α (fun (x : α) => Eq.{1} Nat (Nat.findGreatest (p x) (fun (a : Nat) => _inst_2 x a) N) k)))) -> (Measurable.{u1, 0} α Nat _inst_1 instMeasurableSpaceNat (fun (x : α) => Nat.findGreatest (p x) (fun (a : Nat) => _inst_2 x a) N))
-Case conversion may be inaccurate. Consider using '#align measurable_find_greatest' measurable_find_greatest'ₓ'. -/
-theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N : ℕ}
+Case conversion may be inaccurate. Consider using '#align measurable_find_greatest' measurable_findGreatest'ₓ'. -/
+theorem measurable_findGreatest' {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N : ℕ}
     (hN : ∀ k ≤ N, MeasurableSet { x | Nat.findGreatest (p x) N = k }) :
     Measurable fun x => Nat.findGreatest (p x) N :=
   measurable_to_nat fun x => hN _ N.findGreatest_le
-#align measurable_find_greatest' measurable_find_greatest'
+#align measurable_find_greatest' measurable_findGreatest'
 
 /- warning: measurable_find_greatest -> measurable_findGreatest is a dubious translation:
 lean 3 declaration is
@@ -722,7 +722,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_find_greate
 theorem measurable_findGreatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
     (hN : ∀ k ≤ N, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N :=
   by
-  refine' measurable_find_greatest' fun k hk => _
+  refine' measurable_findGreatest' fun k hk => _
   simp only [Nat.findGreatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
     apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.interᵢ,
@@ -1452,18 +1452,18 @@ theorem measurable_piEquivPiSubtypeProd (p : δ → Prop) [DecidablePred p] :
 
 end Pi
 
-/- warning: tprod.measurable_space -> Tprod.measurableSpace is a dubious translation:
+/- warning: tprod.measurable_space -> TProd.measurableSpace is a dubious translation:
 lean 3 declaration is
   forall {δ : Type.{u_4}} (π : δ -> Type.{u_1}) [_inst_1 : forall (x : δ), MeasurableSpace.{u_1} (π x)] (l : List.{u_4} δ), MeasurableSpace.{max u_1 u_2} (List.TProd.{u_4, u_1, u_2} δ π l)
 but is expected to have type
   forall {δ : Type.{u_1}} (π : δ -> Type.{u_2}) [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] (l : List.{u_1} δ), MeasurableSpace.{u_2} (List.TProd.{u_1, u_2} δ π l)
-Case conversion may be inaccurate. Consider using '#align tprod.measurable_space Tprod.measurableSpaceₓ'. -/
+Case conversion may be inaccurate. Consider using '#align tprod.measurable_space TProd.measurableSpaceₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance Tprod.measurableSpace (π : δ → Type _) [∀ x, MeasurableSpace (π x)] :
+instance TProd.measurableSpace (π : δ → Type _) [∀ x, MeasurableSpace (π x)] :
     ∀ l : List δ, MeasurableSpace (List.TProd π l)
   | [] => PUnit.measurableSpace
-  | i::is => @Prod.measurableSpace _ _ _ (Tprod.measurableSpace is)
-#align tprod.measurable_space Tprod.measurableSpace
+  | i::is => @Prod.measurableSpace _ _ _ (TProd.measurableSpace is)
+#align tprod.measurable_space TProd.measurableSpace
 
 section Tprod
 
@@ -1473,9 +1473,9 @@ variable {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
 /- warning: measurable_tprod_mk -> measurable_tProd_mk is a dubious translation:
 lean 3 declaration is
-  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] (l : List.{u_4} δ), Measurable.{max u_4 u_7, max u_7 u_1} (forall (i : δ), π i) (List.TProd.{u_4, u_7, u_1} δ π l) (MeasurableSpace.pi.{u_4, u_7} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x)) (Tprod.measurableSpace.{u_4, u_7, u_1} δ π (fun (x : δ) => _inst_1 x) l) (List.TProd.mk.{u_4, u_7, u_1} δ π l)
+  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] (l : List.{u_4} δ), Measurable.{max u_4 u_7, max u_7 u_1} (forall (i : δ), π i) (List.TProd.{u_4, u_7, u_1} δ π l) (MeasurableSpace.pi.{u_4, u_7} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x)) (TProd.measurableSpace.{u_4, u_7, u_1} δ π (fun (x : δ) => _inst_1 x) l) (List.TProd.mk.{u_4, u_7, u_1} δ π l)
 but is expected to have type
-  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] (l : List.{u_1} δ), Measurable.{max u_1 u_2, u_2} (forall (i : δ), π i) (List.TProd.{u_1, u_2} δ π l) (MeasurableSpace.pi.{u_1, u_2} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x)) (Tprod.measurableSpace.{u_1, u_2} δ π (fun (x : δ) => _inst_1 x) l) (List.TProd.mk.{u_1, u_2} δ π l)
+  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] (l : List.{u_1} δ), Measurable.{max u_1 u_2, u_2} (forall (i : δ), π i) (List.TProd.{u_1, u_2} δ π l) (MeasurableSpace.pi.{u_1, u_2} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x)) (TProd.measurableSpace.{u_1, u_2} δ π (fun (x : δ) => _inst_1 x) l) (List.TProd.mk.{u_1, u_2} δ π l)
 Case conversion may be inaccurate. Consider using '#align measurable_tprod_mk measurable_tProd_mkₓ'. -/
 theorem measurable_tProd_mk (l : List δ) : Measurable (@TProd.mk δ π l) :=
   by
@@ -1486,9 +1486,9 @@ theorem measurable_tProd_mk (l : List δ) : Measurable (@TProd.mk δ π l) :=
 
 /- warning: measurable_tprod_elim -> measurable_tProd_elim is a dubious translation:
 lean 3 declaration is
-  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] [_inst_2 : DecidableEq.{succ u_4} δ] {l : List.{u_4} δ} {i : δ} (hi : Membership.Mem.{u_4, u_4} δ (List.{u_4} δ) (List.hasMem.{u_4} δ) i l), Measurable.{max u_7 u_1, u_7} (List.TProd.{u_4, u_7, u_1} δ π l) (π i) (Tprod.measurableSpace.{u_4, u_7, u_1} δ π (fun (x : δ) => _inst_1 x) l) (_inst_1 i) (fun (v : List.TProd.{u_4, u_7, u_1} δ π l) => List.TProd.elim.{u_4, u_7, u_1} δ π (fun (a : δ) (b : δ) => _inst_2 a b) l v i hi)
+  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] [_inst_2 : DecidableEq.{succ u_4} δ] {l : List.{u_4} δ} {i : δ} (hi : Membership.Mem.{u_4, u_4} δ (List.{u_4} δ) (List.hasMem.{u_4} δ) i l), Measurable.{max u_7 u_1, u_7} (List.TProd.{u_4, u_7, u_1} δ π l) (π i) (TProd.measurableSpace.{u_4, u_7, u_1} δ π (fun (x : δ) => _inst_1 x) l) (_inst_1 i) (fun (v : List.TProd.{u_4, u_7, u_1} δ π l) => List.TProd.elim.{u_4, u_7, u_1} δ π (fun (a : δ) (b : δ) => _inst_2 a b) l v i hi)
 but is expected to have type
-  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] [_inst_2 : DecidableEq.{succ u_1} δ] {l : List.{u_1} δ} {i : δ} (hi : Membership.mem.{u_1, u_1} δ (List.{u_1} δ) (List.instMembershipList.{u_1} δ) i l), Measurable.{u_2, u_2} (List.TProd.{u_1, u_2} δ π l) (π i) (Tprod.measurableSpace.{u_1, u_2} δ π (fun (x : δ) => _inst_1 x) l) (_inst_1 i) (fun (v : List.TProd.{u_1, u_2} δ π l) => List.TProd.elim.{u_1, u_2} δ π (fun (a : δ) (b : δ) => _inst_2 a b) l v i hi)
+  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] [_inst_2 : DecidableEq.{succ u_1} δ] {l : List.{u_1} δ} {i : δ} (hi : Membership.mem.{u_1, u_1} δ (List.{u_1} δ) (List.instMembershipList.{u_1} δ) i l), Measurable.{u_2, u_2} (List.TProd.{u_1, u_2} δ π l) (π i) (TProd.measurableSpace.{u_1, u_2} δ π (fun (x : δ) => _inst_1 x) l) (_inst_1 i) (fun (v : List.TProd.{u_1, u_2} δ π l) => List.TProd.elim.{u_1, u_2} δ π (fun (a : δ) (b : δ) => _inst_2 a b) l v i hi)
 Case conversion may be inaccurate. Consider using '#align measurable_tprod_elim measurable_tProd_elimₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem measurable_tProd_elim [DecidableEq δ] :
@@ -1503,9 +1503,9 @@ theorem measurable_tProd_elim [DecidableEq δ] :
 
 /- warning: measurable_tprod_elim' -> measurable_tProd_elim' is a dubious translation:
 lean 3 declaration is
-  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] [_inst_2 : DecidableEq.{succ u_4} δ] {l : List.{u_4} δ} (h : forall (i : δ), Membership.Mem.{u_4, u_4} δ (List.{u_4} δ) (List.hasMem.{u_4} δ) i l), Measurable.{max u_7 u_1, max u_4 u_7} (List.TProd.{u_4, u_7, u_1} δ π l) (forall (i : δ), π i) (Tprod.measurableSpace.{u_4, u_7, u_1} δ π (fun (a : δ) => _inst_1 a) l) (MeasurableSpace.pi.{u_4, u_7} δ (fun (i : δ) => π i) (fun (a : δ) => _inst_1 a)) (List.TProd.elim'.{u_4, u_7, u_1} δ π l (fun (a : δ) (b : δ) => _inst_2 a b) h)
+  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] [_inst_2 : DecidableEq.{succ u_4} δ] {l : List.{u_4} δ} (h : forall (i : δ), Membership.Mem.{u_4, u_4} δ (List.{u_4} δ) (List.hasMem.{u_4} δ) i l), Measurable.{max u_7 u_1, max u_4 u_7} (List.TProd.{u_4, u_7, u_1} δ π l) (forall (i : δ), π i) (TProd.measurableSpace.{u_4, u_7, u_1} δ π (fun (a : δ) => _inst_1 a) l) (MeasurableSpace.pi.{u_4, u_7} δ (fun (i : δ) => π i) (fun (a : δ) => _inst_1 a)) (List.TProd.elim'.{u_4, u_7, u_1} δ π l (fun (a : δ) (b : δ) => _inst_2 a b) h)
 but is expected to have type
-  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] [_inst_2 : DecidableEq.{succ u_1} δ] {l : List.{u_1} δ} (h : forall (i : δ), Membership.mem.{u_1, u_1} δ (List.{u_1} δ) (List.instMembershipList.{u_1} δ) i l), Measurable.{u_2, max u_1 u_2} (List.TProd.{u_1, u_2} δ π l) (forall (i : δ), π i) (Tprod.measurableSpace.{u_1, u_2} δ π (fun (a : δ) => _inst_1 a) l) (MeasurableSpace.pi.{u_1, u_2} δ (fun (i : δ) => π i) (fun (a : δ) => _inst_1 a)) (List.TProd.elim'.{u_1, u_2} δ π l (fun (a : δ) (b : δ) => _inst_2 a b) h)
+  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] [_inst_2 : DecidableEq.{succ u_1} δ] {l : List.{u_1} δ} (h : forall (i : δ), Membership.mem.{u_1, u_1} δ (List.{u_1} δ) (List.instMembershipList.{u_1} δ) i l), Measurable.{u_2, max u_1 u_2} (List.TProd.{u_1, u_2} δ π l) (forall (i : δ), π i) (TProd.measurableSpace.{u_1, u_2} δ π (fun (a : δ) => _inst_1 a) l) (MeasurableSpace.pi.{u_1, u_2} δ (fun (i : δ) => π i) (fun (a : δ) => _inst_1 a)) (List.TProd.elim'.{u_1, u_2} δ π l (fun (a : δ) (b : δ) => _inst_2 a b) h)
 Case conversion may be inaccurate. Consider using '#align measurable_tprod_elim' measurable_tProd_elim'ₓ'. -/
 theorem measurable_tProd_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l) :
     Measurable (TProd.elim' h : TProd π l → ∀ i, π i) :=
@@ -1514,9 +1514,9 @@ theorem measurable_tProd_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ 
 
 /- warning: measurable_set.tprod -> MeasurableSet.tProd is a dubious translation:
 lean 3 declaration is
-  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] (l : List.{u_4} δ) {s : forall (i : δ), Set.{u_7} (π i)}, (forall (i : δ), MeasurableSet.{u_7} (π i) (_inst_1 i) (s i)) -> (MeasurableSet.{max u_7 u_1} (List.TProd.{u_4, u_7, u_1} δ (fun (i : δ) => π i) l) (Tprod.measurableSpace.{u_4, u_7, u_1} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x) l) (Set.tprod.{u_4, u_7, u_1} δ (fun (i : δ) => π i) l s))
+  forall {δ : Type.{u_4}} {π : δ -> Type.{u_7}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_7} (π x)] (l : List.{u_4} δ) {s : forall (i : δ), Set.{u_7} (π i)}, (forall (i : δ), MeasurableSet.{u_7} (π i) (_inst_1 i) (s i)) -> (MeasurableSet.{max u_7 u_1} (List.TProd.{u_4, u_7, u_1} δ (fun (i : δ) => π i) l) (TProd.measurableSpace.{u_4, u_7, u_1} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x) l) (Set.tprod.{u_4, u_7, u_1} δ (fun (i : δ) => π i) l s))
 but is expected to have type
-  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] (l : List.{u_1} δ) {s : forall (i : δ), Set.{u_2} (π i)}, (forall (i : δ), MeasurableSet.{u_2} (π i) (_inst_1 i) (s i)) -> (MeasurableSet.{u_2} (List.TProd.{u_1, u_2} δ (fun (i : δ) => π i) l) (Tprod.measurableSpace.{u_1, u_2} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x) l) (Set.tprod.{u_1, u_2} δ (fun (i : δ) => π i) l s))
+  forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] (l : List.{u_1} δ) {s : forall (i : δ), Set.{u_2} (π i)}, (forall (i : δ), MeasurableSet.{u_2} (π i) (_inst_1 i) (s i)) -> (MeasurableSet.{u_2} (List.TProd.{u_1, u_2} δ (fun (i : δ) => π i) l) (TProd.measurableSpace.{u_1, u_2} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x) l) (Set.tprod.{u_1, u_2} δ (fun (i : δ) => π i) l s))
 Case conversion may be inaccurate. Consider using '#align measurable_set.tprod MeasurableSet.tProdₓ'. -/
 theorem MeasurableSet.tProd (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
     MeasurableSet (Set.tprod l s) := by
@@ -2390,21 +2390,21 @@ def piCongrRight (e : ∀ a, π a ≃ᵐ π' a) : (∀ a, π a) ≃ᵐ ∀ a, π
 #align measurable_equiv.Pi_congr_right MeasurableEquiv.piCongrRight
 -/
 
-/- warning: measurable_equiv.pi_measurable_equiv_tprod -> MeasurableEquiv.piMeasurableEquivTprod is a dubious translation:
+/- warning: measurable_equiv.pi_measurable_equiv_tprod -> MeasurableEquiv.piMeasurableEquivTProd is a dubious translation:
 lean 3 declaration is
-  forall {δ' : Type.{u_5}} {π : δ' -> Type.{u_7}} [_inst_5 : forall (x : δ'), MeasurableSpace.{u_7} (π x)] [_inst_7 : DecidableEq.{succ u_5} δ'] {l : List.{u_5} δ'}, (List.Nodup.{u_5} δ' l) -> (forall (i : δ'), Membership.Mem.{u_5, u_5} δ' (List.{u_5} δ') (List.hasMem.{u_5} δ') i l) -> (MeasurableEquiv.{max u_5 u_7, max u_7 u_1} (forall (i : δ'), π i) (List.TProd.{u_5, u_7, u_1} δ' π l) (MeasurableSpace.pi.{u_5, u_7} δ' (fun (i : δ') => π i) (fun (a : δ') => _inst_5 a)) (Tprod.measurableSpace.{u_5, u_7, u_1} δ' π (fun (a : δ') => _inst_5 a) l))
+  forall {δ' : Type.{u_5}} {π : δ' -> Type.{u_7}} [_inst_5 : forall (x : δ'), MeasurableSpace.{u_7} (π x)] [_inst_7 : DecidableEq.{succ u_5} δ'] {l : List.{u_5} δ'}, (List.Nodup.{u_5} δ' l) -> (forall (i : δ'), Membership.Mem.{u_5, u_5} δ' (List.{u_5} δ') (List.hasMem.{u_5} δ') i l) -> (MeasurableEquiv.{max u_5 u_7, max u_7 u_1} (forall (i : δ'), π i) (List.TProd.{u_5, u_7, u_1} δ' π l) (MeasurableSpace.pi.{u_5, u_7} δ' (fun (i : δ') => π i) (fun (a : δ') => _inst_5 a)) (TProd.measurableSpace.{u_5, u_7, u_1} δ' π (fun (a : δ') => _inst_5 a) l))
 but is expected to have type
-  forall {δ' : Type.{u_1}} {π : δ' -> Type.{u_2}} [_inst_5 : forall (x : δ'), MeasurableSpace.{u_2} (π x)] [_inst_7 : DecidableEq.{succ u_1} δ'] {l : List.{u_1} δ'}, (List.Nodup.{u_1} δ' l) -> (forall (i : δ'), Membership.mem.{u_1, u_1} δ' (List.{u_1} δ') (List.instMembershipList.{u_1} δ') i l) -> (MeasurableEquiv.{max u_1 u_2, u_2} (forall (i : δ'), π i) (List.TProd.{u_1, u_2} δ' π l) (MeasurableSpace.pi.{u_1, u_2} δ' (fun (i : δ') => π i) (fun (a : δ') => _inst_5 a)) (Tprod.measurableSpace.{u_1, u_2} δ' π (fun (a : δ') => _inst_5 a) l))
-Case conversion may be inaccurate. Consider using '#align measurable_equiv.pi_measurable_equiv_tprod MeasurableEquiv.piMeasurableEquivTprodₓ'. -/
+  forall {δ' : Type.{u_1}} {π : δ' -> Type.{u_2}} [_inst_5 : forall (x : δ'), MeasurableSpace.{u_2} (π x)] [_inst_7 : DecidableEq.{succ u_1} δ'] {l : List.{u_1} δ'}, (List.Nodup.{u_1} δ' l) -> (forall (i : δ'), Membership.mem.{u_1, u_1} δ' (List.{u_1} δ') (List.instMembershipList.{u_1} δ') i l) -> (MeasurableEquiv.{max u_1 u_2, u_2} (forall (i : δ'), π i) (List.TProd.{u_1, u_2} δ' π l) (MeasurableSpace.pi.{u_1, u_2} δ' (fun (i : δ') => π i) (fun (a : δ') => _inst_5 a)) (TProd.measurableSpace.{u_1, u_2} δ' π (fun (a : δ') => _inst_5 a) l))
+Case conversion may be inaccurate. Consider using '#align measurable_equiv.pi_measurable_equiv_tprod MeasurableEquiv.piMeasurableEquivTProdₓ'. -/
 /-- Pi-types are measurably equivalent to iterated products. -/
 @[simps (config := { fullyApplied := false })]
-def piMeasurableEquivTprod [DecidableEq δ'] {l : List δ'} (hnd : l.Nodup) (h : ∀ i, i ∈ l) :
+def piMeasurableEquivTProd [DecidableEq δ'] {l : List δ'} (hnd : l.Nodup) (h : ∀ i, i ∈ l) :
     (∀ i, π i) ≃ᵐ List.TProd π l
     where
   toEquiv := List.TProd.piEquivTProd hnd h
   measurable_to_fun := measurable_tProd_mk l
   measurable_inv_fun := measurable_tProd_elim' h
-#align measurable_equiv.pi_measurable_equiv_tprod MeasurableEquiv.piMeasurableEquivTprod
+#align measurable_equiv.pi_measurable_equiv_tprod MeasurableEquiv.piMeasurableEquivTProd
 
 #print MeasurableEquiv.funUnique /-
 /-- If `α` has a unique term, then the type of function `α → β` is measurably equivalent to `β`. -/

@@ -494,7 +494,7 @@ theorem gauge_unit_ball (x : E) : gauge (Metric.ball (0 : E) 1) x = ‖x‖ :=
 
 theorem gauge_ball (hr : 0 < r) (x : E) : gauge (Metric.ball (0 : E) r) x = ‖x‖ / r :=
   by
-  rw [← smul_unit_ball_of_pos hr, gauge_smul_left, Pi.smul_apply, gauge_unit_ball, smul_eq_mul,
+  rw [← smul_unitBall_of_pos hr, gauge_smul_left, Pi.smul_apply, gauge_unit_ball, smul_eq_mul,
     abs_of_nonneg hr.le, div_eq_inv_mul]
   simp_rw [mem_ball_zero_iff, norm_neg]
   exact fun _ => id
