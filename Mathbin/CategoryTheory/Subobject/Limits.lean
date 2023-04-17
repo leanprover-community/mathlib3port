@@ -250,7 +250,7 @@ theorem kernelSubobject_comp_mono (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶
 #align category_theory.limits.kernel_subobject_comp_mono CategoryTheory.Limits.kernelSubobject_comp_mono
 
 instance kernelSubobject_comp_mono_isIso (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [Mono h] :
-    IsIso (Subobject.ofLe _ _ (kernelSubobject_comp_le f h)) :=
+    IsIso (Subobject.ofLE _ _ (kernelSubobject_comp_le f h)) :=
   by
   rw [of_le_mk_le_mk_of_comm (kernel_comp_mono f h).inv]
   · infer_instance
@@ -416,7 +416,7 @@ In general this does not imply that `image_subobject (h ≫ f) = image_subobject
 although it will when the ambient category is abelian.
  -/
 instance imageSubobject_comp_le_epi_of_epi {X' : C} (h : X' ⟶ X) [Epi h] (f : X ⟶ Y) [HasImage f]
-    [HasImage (h ≫ f)] : Epi (Subobject.ofLe _ _ (imageSubobject_comp_le h f)) :=
+    [HasImage (h ≫ f)] : Epi (Subobject.ofLE _ _ (imageSubobject_comp_le h f)) :=
   by
   rw [of_le_mk_le_mk_of_comm (image.pre_comp h f)]
   · infer_instance

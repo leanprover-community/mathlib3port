@@ -346,11 +346,11 @@ def Simps.apply (e : P₁ ≃ᵃ[k] P₂) : P₁ → P₂ :=
 #align affine_equiv.simps.apply AffineEquiv.Simps.apply
 -/
 
-#print AffineEquiv.Simps.symmApply /-
+#print AffineEquiv.Simps.symm_apply /-
 /-- See Note [custom simps projection] -/
-def Simps.symmApply (e : P₁ ≃ᵃ[k] P₂) : P₂ → P₁ :=
+def Simps.symm_apply (e : P₁ ≃ᵃ[k] P₂) : P₂ → P₁ :=
   e.symm
-#align affine_equiv.simps.symm_apply AffineEquiv.Simps.symmApply
+#align affine_equiv.simps.symm_apply AffineEquiv.Simps.symm_apply
 -/
 
 initialize_simps_projections AffineEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply,

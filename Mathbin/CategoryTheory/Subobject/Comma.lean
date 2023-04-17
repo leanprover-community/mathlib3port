@@ -220,17 +220,17 @@ theorem lift_projectQuotient [HasColimits C] [PreservesColimits S] {A : Costruct
 #align category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_projectQuotient
 
 /-- Technical lemma for `quotient_equiv`. -/
-theorem unop_left_comp_ofMkLeMk_unop {A : CostructuredArrow S T} {P Q : (CostructuredArrow S T)ᵒᵖ}
+theorem unop_left_comp_ofMkLEMk_unop {A : CostructuredArrow S T} {P Q : (CostructuredArrow S T)ᵒᵖ}
     {f : P ⟶ op A} {g : Q ⟶ op A} [Mono f.unop.left.op] [Mono g.unop.left.op]
     (h : Subobject.mk f.unop.left.op ≤ Subobject.mk g.unop.left.op) :
-    g.unop.left ≫ (Subobject.ofMkLeMk f.unop.left.op g.unop.left.op h).unop = f.unop.left :=
+    g.unop.left ≫ (Subobject.ofMkLEMk f.unop.left.op g.unop.left.op h).unop = f.unop.left :=
   by
   conv_lhs =>
     congr
     rw [← Quiver.Hom.unop_op g.unop.left]
   rw [← unop_comp]
   simp only [subobject.of_mk_le_mk_comp, Quiver.Hom.unop_op]
-#align category_theory.costructured_arrow.unop_left_comp_of_mk_le_mk_unop CategoryTheory.CostructuredArrow.unop_left_comp_ofMkLeMk_unop
+#align category_theory.costructured_arrow.unop_left_comp_of_mk_le_mk_unop CategoryTheory.CostructuredArrow.unop_left_comp_ofMkLEMk_unop
 
 /-- If `A : S.obj B ⟶ T` is a costructured arrow for `S : C ⥤ D` and `T : D`, then we can
     explicitly describe the quotients of `A` as the quotients `P` of `B` in `C` for which `A.hom`

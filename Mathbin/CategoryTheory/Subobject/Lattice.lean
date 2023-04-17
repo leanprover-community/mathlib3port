@@ -438,11 +438,11 @@ theorem inf_factors {A B : C} {X Y : Subobject B} (f : A ⟶ B) :
 #align category_theory.subobject.inf_factors CategoryTheory.Subobject.inf_factors
 
 theorem inf_arrow_factors_left {B : C} (X Y : Subobject B) : X.Factors (X ⊓ Y).arrow :=
-  (factors_iff _ _).mpr ⟨ofLe (X ⊓ Y) X (inf_le_left X Y), by simp⟩
+  (factors_iff _ _).mpr ⟨ofLE (X ⊓ Y) X (inf_le_left X Y), by simp⟩
 #align category_theory.subobject.inf_arrow_factors_left CategoryTheory.Subobject.inf_arrow_factors_left
 
 theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X ⊓ Y).arrow :=
-  (factors_iff _ _).mpr ⟨ofLe (X ⊓ Y) Y (inf_le_right X Y), by simp⟩
+  (factors_iff _ _).mpr ⟨ofLE (X ⊓ Y) Y (inf_le_right X Y), by simp⟩
 #align category_theory.subobject.inf_arrow_factors_right CategoryTheory.Subobject.inf_arrow_factors_right
 
 @[simp]
@@ -809,7 +809,7 @@ def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.Iic
   toFun Z :=
     ⟨Subobject.mk (Z.arrow ≫ Y.arrow),
       Set.mem_Iic.mpr (le_of_comm ((underlyingIso _).Hom ≫ Z.arrow) (by simp))⟩
-  invFun Z := Subobject.mk (ofLe _ _ Z.2)
+  invFun Z := Subobject.mk (ofLE _ _ Z.2)
   left_inv Z :=
     mk_eq_of_comm _ (underlyingIso _)
       (by
@@ -823,13 +823,13 @@ def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.Iic
           simp [← iso.eq_inv_comp]))
   map_rel_iff' W Z :=
     ⟨fun h =>
-      le_of_comm ((underlyingIso _).inv ≫ ofLe _ _ (Subtype.mk_le_mk.mp h) ≫ (underlyingIso _).Hom)
+      le_of_comm ((underlyingIso _).inv ≫ ofLE _ _ (Subtype.mk_le_mk.mp h) ≫ (underlyingIso _).Hom)
         (by
           ext
           simp),
       fun h =>
       Subtype.mk_le_mk.mpr
-        (le_of_comm ((underlyingIso _).Hom ≫ ofLe _ _ h ≫ (underlyingIso _).inv) (by simp))⟩
+        (le_of_comm ((underlyingIso _).Hom ≫ ofLE _ _ h ≫ (underlyingIso _).inv) (by simp))⟩
 #align category_theory.subobject.subobject_order_iso CategoryTheory.Subobject.subobjectOrderIso
 
 end SubobjectSubobject
