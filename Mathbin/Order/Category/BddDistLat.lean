@@ -27,7 +27,7 @@ open CategoryTheory
 
 /-- The category of bounded distributive lattices with bounded lattice morphisms. -/
 structure BddDistLat where
-  toDistLat : DistLat
+  toDistLat : DistLatCat
   [isBoundedOrder : BoundedOrder to_DistLat]
 #align BddDistLat BddDistLat
 
@@ -70,7 +70,7 @@ instance : LargeCategory.{u} BddDistLat :=
 instance : ConcreteCategory BddDistLat :=
   InducedCategory.concreteCategory toBddLat
 
-instance hasForgetToDistLat : HasForget₂ BddDistLat DistLat
+instance hasForgetToDistLat : HasForget₂ BddDistLat DistLatCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toLatticeHom }
@@ -80,11 +80,11 @@ instance hasForgetToBddLat : HasForget₂ BddDistLat BddLat :=
   InducedCategory.hasForget₂ toBddLat
 #align BddDistLat.has_forget_to_BddLat BddDistLat.hasForgetToBddLat
 
-theorem forget_bddLat_latCat_eq_forget_distLat_latCat :
+theorem forget_bddLat_latCat_eq_forget_distLatCat_latCat :
     forget₂ BddDistLat BddLat ⋙ forget₂ BddLat LatCat =
-      forget₂ BddDistLat DistLat ⋙ forget₂ DistLat LatCat :=
+      forget₂ BddDistLat DistLatCat ⋙ forget₂ DistLatCat LatCat :=
   rfl
-#align BddDistLat.forget_BddLat_Lat_eq_forget_DistLat_Lat BddDistLat.forget_bddLat_latCat_eq_forget_distLat_latCat
+#align BddDistLat.forget_BddLat_Lat_eq_forget_DistLat_Lat BddDistLat.forget_bddLat_latCat_eq_forget_distLatCat_latCat
 
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/
@@ -118,8 +118,9 @@ def dualEquiv : BddDistLat ≌ BddDistLat :=
 
 end BddDistLat
 
-theorem bddDistLat_dual_comp_forget_to_distLat :
-    BddDistLat.dual ⋙ forget₂ BddDistLat DistLat = forget₂ BddDistLat DistLat ⋙ DistLat.dual :=
+theorem bddDistLat_dual_comp_forget_to_distLatCat :
+    BddDistLat.dual ⋙ forget₂ BddDistLat DistLatCat =
+      forget₂ BddDistLat DistLatCat ⋙ DistLatCat.dual :=
   rfl
-#align BddDistLat_dual_comp_forget_to_DistLat bddDistLat_dual_comp_forget_to_distLat
+#align BddDistLat_dual_comp_forget_to_DistLat bddDistLat_dual_comp_forget_to_distLatCat
 

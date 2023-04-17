@@ -194,16 +194,16 @@ theorem continuousAt_length : ∀ l : List α, ContinuousAt List.length l :=
     refine' tendsto.comp ih tendsto_snd
 #align list.continuous_at_length List.continuousAt_length
 
-/- warning: list.tendsto_insert_nth' -> List.tendsto_insert_nth' is a dubious translation:
+/- warning: list.tendsto_insert_nth' -> List.tendsto_insertNth' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {n : Nat} {l : List.{u1} α}, Filter.Tendsto.{u1, u1} (Prod.{u1, u1} α (List.{u1} α)) (List.{u1} α) (fun (p : Prod.{u1, u1} α (List.{u1} α)) => List.insertNth.{u1} α n (Prod.fst.{u1, u1} α (List.{u1} α) p) (Prod.snd.{u1, u1} α (List.{u1} α) p)) (Filter.prod.{u1, u1} α (List.{u1} α) (nhds.{u1} α _inst_1 a) (nhds.{u1} (List.{u1} α) (List.topologicalSpace.{u1} α _inst_1) l)) (nhds.{u1} (List.{u1} α) (List.topologicalSpace.{u1} α _inst_1) (List.insertNth.{u1} α n a l))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {n : Nat} {l : List.{u1} α}, Filter.Tendsto.{u1, u1} (Prod.{u1, u1} α (List.{u1} α)) (List.{u1} α) (fun (p : Prod.{u1, u1} α (List.{u1} α)) => List.insertNth.{u1} α n (Prod.fst.{u1, u1} α (List.{u1} α) p) (Prod.snd.{u1, u1} α (List.{u1} α) p)) (Filter.prod.{u1, u1} α (List.{u1} α) (nhds.{u1} α _inst_1 a) (nhds.{u1} (List.{u1} α) (instTopologicalSpaceList.{u1} α _inst_1) l)) (nhds.{u1} (List.{u1} α) (instTopologicalSpaceList.{u1} α _inst_1) (List.insertNth.{u1} α n a l))
-Case conversion may be inaccurate. Consider using '#align list.tendsto_insert_nth' List.tendsto_insert_nth'ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align list.tendsto_insert_nth' List.tendsto_insertNth'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tendsto_insert_nth' {a : α} :
+theorem tendsto_insertNth' {a : α} :
     ∀ {n : ℕ} {l : List α},
       Tendsto (fun p : α × List α => insertNth n p.1 p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (insertNth n a l))
   | 0, l => tendsto_cons
@@ -219,7 +219,7 @@ theorem tendsto_insert_nth' {a : α} :
     exact
       (tendsto_fst.comp tendsto_snd).cons
         ((@tendsto_insert_nth' n l).comp <| tendsto_fst.prod_mk <| tendsto_snd.comp tendsto_snd)
-#align list.tendsto_insert_nth' List.tendsto_insert_nth'
+#align list.tendsto_insert_nth' List.tendsto_insertNth'
 
 /- warning: list.tendsto_insert_nth -> List.tendsto_insertNth is a dubious translation:
 lean 3 declaration is
@@ -230,7 +230,7 @@ Case conversion may be inaccurate. Consider using '#align list.tendsto_insert_nt
 theorem tendsto_insertNth {β} {n : ℕ} {a : α} {l : List α} {f : β → α} {g : β → List α}
     {b : Filter β} (hf : Tendsto f b (𝓝 a)) (hg : Tendsto g b (𝓝 l)) :
     Tendsto (fun b : β => insertNth n (f b) (g b)) b (𝓝 (insertNth n a l)) :=
-  tendsto_insert_nth'.comp (Tendsto.prod_mk hf hg)
+  tendsto_insertNth'.comp (Tendsto.prod_mk hf hg)
 #align list.tendsto_insert_nth List.tendsto_insertNth
 
 /- warning: list.continuous_insert_nth -> List.continuous_insertNth is a dubious translation:
@@ -339,17 +339,17 @@ theorem tendsto_insertNth {n : ℕ} {i : Fin (n + 1)} {a : α} :
     exact List.tendsto_insertNth tendsto_fst (tendsto.comp continuousAt_subtype_val tendsto_snd : _)
 #align vector.tendsto_insert_nth Vector.tendsto_insertNth
 
-/- warning: vector.continuous_insert_nth' -> Vector.continuous_insert_nth' is a dubious translation:
+/- warning: vector.continuous_insert_nth' -> Vector.continuous_insertNth' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {n : Nat} {i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))}, Continuous.{u1, u1} (Prod.{u1, u1} α (Vector.{u1} α n)) (Vector.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Prod.topologicalSpace.{u1, u1} α (Vector.{u1} α n) _inst_1 (Vector.topologicalSpace.{u1} α _inst_1 n)) (Vector.topologicalSpace.{u1} α _inst_1 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (p : Prod.{u1, u1} α (Vector.{u1} α n)) => Vector.insertNth.{u1} n α (Prod.fst.{u1, u1} α (Vector.{u1} α n) p) i (Prod.snd.{u1, u1} α (Vector.{u1} α n) p))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {n : Nat} {i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))}, Continuous.{u1, u1} (Prod.{u1, u1} α (Vector.{u1} α n)) (Vector.{u1} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instTopologicalSpaceProd.{u1, u1} α (Vector.{u1} α n) _inst_1 (Vector.instTopologicalSpaceVector.{u1} α _inst_1 n)) (Vector.instTopologicalSpaceVector.{u1} α _inst_1 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (p : Prod.{u1, u1} α (Vector.{u1} α n)) => Vector.insertNth.{u1} n α (Prod.fst.{u1, u1} α (Vector.{u1} α n) p) i (Prod.snd.{u1, u1} α (Vector.{u1} α n) p))
-Case conversion may be inaccurate. Consider using '#align vector.continuous_insert_nth' Vector.continuous_insert_nth'ₓ'. -/
-theorem continuous_insert_nth' {n : ℕ} {i : Fin (n + 1)} :
+Case conversion may be inaccurate. Consider using '#align vector.continuous_insert_nth' Vector.continuous_insertNth'ₓ'. -/
+theorem continuous_insertNth' {n : ℕ} {i : Fin (n + 1)} :
     Continuous fun p : α × Vector α n => insertNth p.1 i p.2 :=
   continuous_iff_continuousAt.mpr fun ⟨a, l⟩ => by
     rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth
-#align vector.continuous_insert_nth' Vector.continuous_insert_nth'
+#align vector.continuous_insert_nth' Vector.continuous_insertNth'
 
 /- warning: vector.continuous_insert_nth -> Vector.continuous_insertNth is a dubious translation:
 lean 3 declaration is
@@ -359,7 +359,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.continuous_insert_nth Vector.continuous_insertNthₓ'. -/
 theorem continuous_insertNth {n : ℕ} {i : Fin (n + 1)} {f : β → α} {g : β → Vector α n}
     (hf : Continuous f) (hg : Continuous g) : Continuous fun b => insertNth (f b) i (g b) :=
-  continuous_insert_nth'.comp (hf.prod_mk hg : _)
+  continuous_insertNth'.comp (hf.prod_mk hg : _)
 #align vector.continuous_insert_nth Vector.continuous_insertNth
 
 /- warning: vector.continuous_at_remove_nth -> Vector.continuousAt_removeNth is a dubious translation:
