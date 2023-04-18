@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.mean_inequalities
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 13bf7613c96a9fd66a81b9020a82cad9a6ea1fcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,6 +404,30 @@ theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AeMeasurab
     exact lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top hf hf_top hg_top hp1
   exact lintegral_Lp_add_le_aux hpq hf hf_top hg hg_top h0 htop
 #align ennreal.lintegral_Lp_add_le ENNReal.lintegral_Lp_add_le
+
+/-- Variant of Minkowski's inequality for functions `α → ℝ≥0∞` in `ℒp` with `p ≤ 1`: the `ℒp`
+seminorm of the sum of two functions is bounded by a constant multiple of the sum
+of their `ℒp` seminorms. -/
+theorem lintegral_Lp_add_le_of_le_one {p : ℝ} {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ) (hp0 : 0 ≤ p)
+    (hp1 : p ≤ 1) :
+    (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≤
+      2 ^ (1 / p - 1) * ((∫⁻ a, f a ^ p ∂μ) ^ (1 / p) + (∫⁻ a, g a ^ p ∂μ) ^ (1 / p)) :=
+  by
+  rcases eq_or_lt_of_le hp0 with (rfl | hp)
+  · simp only [Pi.add_apply, rpow_zero, lintegral_one, _root_.div_zero, zero_sub]
+    norm_num
+    rw [rpow_neg, rpow_one, ENNReal.inv_mul_cancel two_ne_zero two_ne_top]
+    exact le_rfl
+  calc
+    (∫⁻ a, (f + g) a ^ p ∂μ) ^ (1 / p) ≤ ((∫⁻ a, f a ^ p ∂μ) + ∫⁻ a, g a ^ p ∂μ) ^ (1 / p) :=
+      by
+      apply rpow_le_rpow _ (div_nonneg zero_le_one hp0)
+      rw [← lintegral_add_left' (hf.pow_const p)]
+      exact lintegral_mono fun a => rpow_add_le_add_rpow _ _ hp0 hp1
+    _ ≤ 2 ^ (1 / p - 1) * ((∫⁻ a, f a ^ p ∂μ) ^ (1 / p) + (∫⁻ a, g a ^ p ∂μ) ^ (1 / p)) :=
+      rpow_add_le_mul_rpow_add_rpow _ _ ((one_le_div hp).2 hp1)
+    
+#align ennreal.lintegral_Lp_add_le_of_le_one ENNReal.lintegral_Lp_add_le_of_le_one
 
 end ENNReal
 

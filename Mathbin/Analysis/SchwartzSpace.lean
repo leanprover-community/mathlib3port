@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 8cab1cd8f0fcaa0995b9d98188f7c7edfd4a3983
+! leanprover-community/mathlib commit a968611b6a772cf7bdf61146e6d62fc882c92372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ smooth functions `f : E → F`, where `E` and `F` are real normed vector spaces 
 natural numbers `k` and `n` we have uniform bounds `‖x‖^k * ‖iterated_fderiv ℝ n f x‖ < C`.
 This approach completely avoids using partial derivatives as well as polynomials.
 We construct the topology on the Schwartz space by a family of seminorms, which are the best
-constants in the above estimates, which is by abstract theory from
+constants in the above estimates. The abstract theory of topological vector spaces developed in
 `seminorm_family.module_filter_basis` and `with_seminorms.to_locally_convex_space` turns the
 Schwartz space into a locally convex topological vector space.
 
@@ -45,6 +45,8 @@ decay faster than any power of `‖x‖`.
 
 * `schwartz_map.uniform_add_group` and `schwartz_map.locally_convex`: The Schwartz space is a
 locally convex topological vector space.
+* `schwartz_map.one_add_le_sup_seminorm_apply`: For a Schwartz function `f` there is a uniform bound
+on `(1 + ‖x‖) ^ k * ‖iterated_fderiv ℝ n f x‖`.
 
 ## Implementation details
 
@@ -505,19 +507,10 @@ theorem norm_le_seminorm (f : 𝓢(E, F)) (x₀ : E) : ‖f x₀‖ ≤ (Schwart
   rwa [pow_zero, one_mul] at this
 #align schwartz_map.norm_le_seminorm SchwartzMap.norm_le_seminorm
 
-end Seminorms
-
-section Topology
-
-/-! ### The topology on the Schwartz space-/
-
-
-variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
-
 variable (𝕜 E F)
 
 /-- The family of Schwartz seminorms. -/
-def schwartzSeminormFamily : SeminormFamily 𝕜 𝓢(E, F) (ℕ × ℕ) := fun n => Seminorm 𝕜 n.1 n.2
+def schwartzSeminormFamily : SeminormFamily 𝕜 𝓢(E, F) (ℕ × ℕ) := fun m => Seminorm 𝕜 m.1 m.2
 #align schwartz_seminorm_family schwartzSeminormFamily
 
 @[simp]
@@ -531,6 +524,50 @@ theorem schwartzSeminormFamily_apply_zero :
     schwartzSeminormFamily 𝕜 E F 0 = SchwartzMap.seminorm 𝕜 0 0 :=
   rfl
 #align schwartz_map.schwartz_seminorm_family_apply_zero SchwartzMap.schwartzSeminormFamily_apply_zero
+
+variable {𝕜 E F}
+
+/-- A more convenient version of `le_sup_seminorm_apply`.
+
+The set `finset.Iic m` is the set of all pairs `(k', n')` with `k' ≤ m.1` and `n' ≤ m.2`.
+Note that the constant is far from optimal. -/
+theorem one_add_le_sup_seminorm_apply {m : ℕ × ℕ} {k n : ℕ} (hk : k ≤ m.1) (hn : n ≤ m.2)
+    (f : 𝓢(E, F)) (x : E) :
+    (1 + ‖x‖) ^ k * ‖iteratedFderiv ℝ n f x‖ ≤
+      2 ^ m.1 * (Finset.Iic m).sup (fun m => Seminorm 𝕜 m.1 m.2) f :=
+  by
+  rw [add_comm, add_pow]
+  simp only [one_pow, mul_one, Finset.sum_congr, Finset.sum_mul]
+  norm_cast
+  rw [← Nat.sum_range_choose m.1]
+  push_cast
+  rw [Finset.sum_mul]
+  have hk' : Finset.range (k + 1) ⊆ Finset.range (m.1 + 1) := by
+    rwa [Finset.range_subset, add_le_add_iff_right]
+  refine' le_trans (Finset.sum_le_sum_of_subset_of_nonneg hk' fun _ _ _ => by positivity) _
+  refine' Finset.sum_le_sum fun i hi => _
+  rw [mul_comm (‖x‖ ^ i), mul_assoc]
+  refine' mul_le_mul _ _ (by positivity) (by positivity)
+  · norm_cast
+    exact i.choose_le_choose hk
+  exact
+    (le_seminorm 𝕜 i n f x).trans
+      (Seminorm.le_def.1
+        (Finset.le_sup_of_le
+          (Finset.mem_Iic.2 <| Prod.mk_le_mk.2 ⟨finset.mem_range_succ_iff.mp hi, hn⟩) le_rfl)
+        _)
+#align schwartz_map.one_add_le_sup_seminorm_apply SchwartzMap.one_add_le_sup_seminorm_apply
+
+end Seminorms
+
+section Topology
+
+/-! ### The topology on the Schwartz space-/
+
+
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
+
+variable (𝕜 E F)
 
 instance : TopologicalSpace 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.topology'

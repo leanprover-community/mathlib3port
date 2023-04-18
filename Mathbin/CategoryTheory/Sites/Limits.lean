@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.limits
-! leanprover-community/mathlib commit 94b2c2cba7d64557ac30df4df8a25e9bdfa50911
+! leanprover-community/mathlib commit 95e83ced9542828815f53a1096a4d373c1b08a77
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ section Limits
 
 universe w v u z
 
-variable {C : Type max v u} [Category.{v} C] {J : GrothendieckTopology C}
+variable {C : Type u} [Category.{v} C] {J : GrothendieckTopology C}
 
 variable {D : Type w} [Category.{max v u} D]
 
@@ -186,7 +186,7 @@ section Colimits
 
 universe w v u
 
-variable {C : Type max v u} [Category.{v} C] {J : GrothendieckTopology C}
+variable {C : Type u} [Category.{v} C] {J : GrothendieckTopology C}
 
 variable {D : Type w} [Category.{max v u} D]
 

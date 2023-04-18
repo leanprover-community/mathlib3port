@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.cantor_normal_form
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 991ff3b5269848f6dd942ae8e9dd3c946035dc8b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ noncomputable section
 
 universe u
 
-open Order
+open List
 
 namespace Ordinal
 
@@ -166,7 +166,7 @@ theorem CNF_foldr (b o : Ordinal) : (CNF b o).foldr (fun p r => b ^ p.1 * p.2 + 
     (by
       rw [CNF_zero]
       rfl)
-    (fun o ho IH => by rw [CNF_ne_zero ho, List.foldr_cons, IH, div_add_mod]) o
+    (fun o ho IH => by rw [CNF_ne_zero ho, foldr_cons, IH, div_add_mod]) o
 #align ordinal.CNF_foldr Ordinal.CNF_foldr
 
 #print Ordinal.CNF_fst_le_log /-
@@ -174,9 +174,8 @@ theorem CNF_foldr (b o : Ordinal) : (CNF b o).foldr (fun p r => b ^ p.1 * p.2 + 
 theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ CNF b o → x.1 ≤ log b o :=
   by
   refine' CNF_rec b _ (fun o ho H => _) o
-  · rw [CNF_zero]
-    exact False.elim
-  · rw [CNF_ne_zero ho, List.mem_cons]
+  · simp
+  · rw [CNF_ne_zero ho, mem_cons_iff]
     rintro (rfl | h)
     · exact le_rfl
     · exact (H h).trans (log_mono_right _ (mod_opow_log_lt_self b ho).le)
@@ -196,17 +195,10 @@ theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ CNF b o 
   by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
-  · rcases eq_zero_or_pos b with (rfl | hb)
-    · rw [zero_CNF ho, List.mem_singleton]
-      rintro rfl
-      exact Ordinal.pos_iff_ne_zero.2 ho
-    · rw [CNF_ne_zero ho]
-      rintro (rfl | h)
-      · simp
-        rw [div_pos]
-        · exact opow_log_le_self _ ho
-        · exact (opow_pos _ hb).ne'
-      · exact IH h
+  · rw [CNF_ne_zero ho]
+    rintro (rfl | h)
+    · exact div_opow_log_pos b ho
+    · exact IH h
 #align ordinal.CNF_lt_snd Ordinal.CNF_lt_snd
 -/
 

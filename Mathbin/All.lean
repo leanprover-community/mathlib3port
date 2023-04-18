@@ -2991,6 +2991,7 @@ import Mathbin.Topology.MetricSpace.Algebra
 import Mathbin.Topology.MetricSpace.Antilipschitz
 import Mathbin.Topology.MetricSpace.Baire
 import Mathbin.Topology.MetricSpace.Basic
+import Mathbin.Topology.MetricSpace.CantorScheme
 import Mathbin.Topology.MetricSpace.CauSeqFilter
 import Mathbin.Topology.MetricSpace.Closeds
 import Mathbin.Topology.MetricSpace.Completion

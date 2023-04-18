@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities_pow
-! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
+! leanprover-community/mathlib commit 13bf7613c96a9fd66a81b9020a82cad9a6ea1fcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,6 +124,20 @@ theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0) (hw'
   · simp [hw', Fin.sum_univ_succ]
 #align nnreal.rpow_arith_mean_le_arith_mean2_rpow NNReal.rpow_arith_mean_le_arith_mean2_rpow
 
+/-- Unweighted mean inequality, version for two elements of `ℝ≥0` and real exponents. -/
+theorem rpow_add_le_mul_rpow_add_rpow (z₁ z₂ : ℝ≥0) {p : ℝ} (hp : 1 ≤ p) :
+    (z₁ + z₂) ^ p ≤ 2 ^ (p - 1) * (z₁ ^ p + z₂ ^ p) :=
+  by
+  rcases eq_or_lt_of_le hp with (rfl | h'p)
+  · simp only [rpow_one, sub_self, rpow_zero, one_mul]
+  convert rpow_arith_mean_le_arith_mean2_rpow (1 / 2) (1 / 2) (2 * z₁) (2 * z₂) (add_halves 1) hp
+  · simp only [one_div, inv_mul_cancel_left₀, Ne.def, bit0_eq_zero, one_ne_zero, not_false_iff]
+  · simp only [one_div, inv_mul_cancel_left₀, Ne.def, bit0_eq_zero, one_ne_zero, not_false_iff]
+  · have A : p - 1 ≠ 0 := ne_of_gt (sub_pos.2 h'p)
+    simp only [mul_rpow, rpow_sub' _ A, div_eq_inv_mul, rpow_one, mul_one]
+    ring
+#align nnreal.rpow_add_le_mul_rpow_add_rpow NNReal.rpow_add_le_mul_rpow_add_rpow
+
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0`-valued
 functions and real exponents. -/
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) = 1) {p : ℝ} (hp : 1 ≤ p) :
@@ -132,10 +146,6 @@ theorem arith_mean_le_rpow_mean (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) 
     Real.arith_mean_le_rpow_mean s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
 #align nnreal.arith_mean_le_rpow_mean NNReal.arith_mean_le_rpow_mean
-
-end NNReal
-
-namespace NNReal
 
 private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0) (hab : a + b ≤ 1) (hp1 : 1 ≤ p) :
     a ^ p + b ^ p ≤ 1 :=
@@ -269,9 +279,21 @@ theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0∞) (
   · simp [hw', Fin.sum_univ_succ]
 #align ennreal.rpow_arith_mean_le_arith_mean2_rpow ENNReal.rpow_arith_mean_le_arith_mean2_rpow
 
-end ENNReal
-
-namespace ENNReal
+/-- Unweighted mean inequality, version for two elements of `ℝ≥0∞` and real exponents. -/
+theorem rpow_add_le_mul_rpow_add_rpow (z₁ z₂ : ℝ≥0∞) {p : ℝ} (hp : 1 ≤ p) :
+    (z₁ + z₂) ^ p ≤ 2 ^ (p - 1) * (z₁ ^ p + z₂ ^ p) :=
+  by
+  rcases eq_or_lt_of_le hp with (rfl | h'p)
+  · simp only [rpow_one, sub_self, rpow_zero, one_mul, le_refl]
+  convert rpow_arith_mean_le_arith_mean2_rpow (1 / 2) (1 / 2) (2 * z₁) (2 * z₂)
+      (ENNReal.add_halves 1) hp
+  · simp [← mul_assoc, ENNReal.inv_mul_cancel two_ne_zero two_ne_top]
+  · simp [← mul_assoc, ENNReal.inv_mul_cancel two_ne_zero two_ne_top]
+  · have A : p - 1 ≠ 0 := ne_of_gt (sub_pos.2 h'p)
+    simp only [mul_rpow_of_nonneg _ _ (zero_le_one.trans hp), rpow_sub _ _ two_ne_zero two_ne_top,
+      div_eq_inv_mul, rpow_one, mul_one]
+    ring
+#align ennreal.rpow_add_le_mul_rpow_add_rpow ENNReal.rpow_add_le_mul_rpow_add_rpow
 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p :=
   by
