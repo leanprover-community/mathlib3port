@@ -162,8 +162,8 @@ theorem isUnit_res_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
 theorem basicOpen_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
     @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ⊓ @basicOpen X (unop U) f :=
   by
-  induction U using Opposite.rec
-  induction V using Opposite.rec
+  induction U using Opposite.rec'
+  induction V using Opposite.rec'
   let g := i.unop; have : i = g.op := rfl; clear_value g; subst this
   ext; constructor
   · rintro ⟨x, hx : IsUnit _, rfl⟩

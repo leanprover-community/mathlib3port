@@ -118,11 +118,11 @@ theorem id_c_app (X : SheafedSpace C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       eqToHom
         (by
-          induction U using Opposite.rec
+          induction U using Opposite.rec'
           cases U
           rfl) :=
   by
-  induction U using Opposite.rec
+  induction U using Opposite.rec'
   cases U
   simp only [id_c]
   dsimp

@@ -153,7 +153,7 @@ def pushforwardDiagramToColimit (F : J ⥤ PresheafedSpace.{v} C) :
   map_id' j := by
     apply (op_equiv _ _).Injective
     ext U
-    induction U using Opposite.rec
+    induction U using Opposite.rec'
     cases U
     dsimp; simp; dsimp; simp
   map_comp' j₁ j₂ j₃ f g := by
@@ -220,7 +220,7 @@ def colimitCocone (F : J ⥤ PresheafedSpace.{v} C) : Cocone F
         · ext x
           exact colimit.w_apply (F ⋙ PresheafedSpace.forget C) f x
         · ext U
-          induction U using Opposite.rec
+          induction U using Opposite.rec'
           cases U
           dsimp
           simp only [PresheafedSpace.id_c_app, eq_to_hom_op, eq_to_hom_map, assoc,

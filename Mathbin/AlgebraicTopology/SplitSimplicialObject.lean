@@ -108,8 +108,8 @@ instance : Fintype (IndexSet Δ) :=
       IndexSet Δ → Sigma fun k : Fin (Δ.unop.len + 1) => Fin (Δ.unop.len + 1) → Fin (k + 1))
     (by
       rintro ⟨Δ₁, α₁⟩ ⟨Δ₂, α₂⟩ h₁
-      induction Δ₁ using Opposite.rec
-      induction Δ₂ using Opposite.rec
+      induction Δ₁ using Opposite.rec'
+      induction Δ₂ using Opposite.rec'
       simp only at h₁
       have h₂ : Δ₁ = Δ₂ := by
         ext1
@@ -425,7 +425,7 @@ theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :
   ext Δ
   apply s.hom_ext'
   intro A
-  induction Δ using Opposite.rec
+  induction Δ using Opposite.rec'
   induction' Δ using SimplexCategory.rec with n
   dsimp
   simp only [s.ι_summand_comp_app, h]

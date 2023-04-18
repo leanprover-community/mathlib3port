@@ -335,8 +335,8 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
       π :=
         { app := fun j => D.ιInvAppπApp U (unop j)
           naturality' := fun X Y f' => by
-            induction X using Opposite.rec
-            induction Y using Opposite.rec
+            induction X using Opposite.rec'
+            induction Y using Opposite.rec'
             let f : Y ⟶ X := f'.unop
             have : f' = f.op := rfl
             clear_value f
@@ -445,7 +445,7 @@ theorem π_ιInvApp_eq_id (i : D.J) (U : Opens (D.U i).carrier) :
     D.diagramOverOpenπ U i ≫ D.ιInvAppπEqMap U ≫ D.ιInvApp U = 𝟙 _ :=
   by
   ext j
-  induction j using Opposite.rec
+  induction j using Opposite.rec'
   rcases j with (⟨j, k⟩ | ⟨j⟩)
   · rw [←
       limit.w (componentwise_diagram 𝖣.diagram.multispan _)

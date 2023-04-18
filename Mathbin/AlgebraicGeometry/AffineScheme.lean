@@ -285,7 +285,7 @@ theorem Scheme.specMap_presheaf_map_eqToHom {X : Scheme} {U V : Opens X.carrier}
       eqToHom
         (by
           cases h
-          induction W using Opposite.rec
+          induction W using Opposite.rec'
           dsimp
           simp
           rfl) :=

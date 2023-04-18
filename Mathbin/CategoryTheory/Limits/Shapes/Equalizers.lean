@@ -201,11 +201,11 @@ def walkingParallelPairOpEquiv : WalkingParallelPair ≌ WalkingParallelPairᵒ�
       (fun j =>
         eqToIso
           (by
-            induction j using Opposite.rec
+            induction j using Opposite.rec'
             cases j <;> rfl))
       fun i j f => by
-      induction i using Opposite.rec
-      induction j using Opposite.rec
+      induction i using Opposite.rec'
+      induction j using Opposite.rec'
       let g := f.unop
       have : f = g.op := rfl
       clear_value g

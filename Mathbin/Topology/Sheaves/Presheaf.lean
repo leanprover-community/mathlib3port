@@ -235,7 +235,7 @@ attribute [local tidy] tactic.op_induction'
 theorem id_hom_app (U) : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_obj U)) :=
   by
   -- was `tidy`
-  induction U using Opposite.rec
+  induction U using Opposite.rec'
   cases U
   rw [id_hom_app']
   congr

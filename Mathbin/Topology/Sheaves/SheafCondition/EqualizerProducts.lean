@@ -267,14 +267,14 @@ def coneEquivInverseObj (c : Limits.Cone (SheafConditionEqualizerProducts.diagra
   π :=
     { app := by
         intro x
-        induction x using Opposite.rec
+        induction x using Opposite.rec'
         rcases x with (⟨i⟩ | ⟨i, j⟩)
         · exact c.π.app walking_parallel_pair.zero ≫ pi.π _ i
         · exact c.π.app walking_parallel_pair.one ≫ pi.π _ (i, j)
       naturality' := by
         intro x y f
-        induction x using Opposite.rec
-        induction y using Opposite.rec
+        induction x using Opposite.rec'
+        induction y using Opposite.rec'
         have ef : f = f.unop.op := rfl
         revert ef
         generalize f.unop = f'
@@ -316,7 +316,7 @@ def coneEquivInverse :
     { Hom := f.Hom
       w' := by
         intro x
-        induction x using Opposite.rec
+        induction x using Opposite.rec'
         rcases x with (⟨i⟩ | ⟨i, j⟩)
         · dsimp
           dsimp only [fork.ι]
@@ -332,13 +332,13 @@ def coneEquivUnitIsoApp (c : Cone ((diagram U).op ⋙ F)) :
     where
   Hom :=
     { Hom := 𝟙 _
-      w' := fun j => by induction j using Opposite.rec;
+      w' := fun j => by induction j using Opposite.rec';
         rcases j with ⟨⟩ <;>
           · dsimp
             simp only [limits.fan.mk_π_app, category.id_comp, limits.limit.lift_π] }
   inv :=
     { Hom := 𝟙 _
-      w' := fun j => by induction j using Opposite.rec;
+      w' := fun j => by induction j using Opposite.rec';
         rcases j with ⟨⟩ <;>
           · dsimp
             simp only [limits.fan.mk_π_app, category.id_comp, limits.limit.lift_π] }
@@ -424,7 +424,7 @@ def isLimitMapConeOfIsLimitSheafConditionFork
         { Hom := 𝟙 _
           w' := by
             intro x
-            induction x using Opposite.rec
+            induction x using Opposite.rec'
             rcases x with ⟨⟩
             · dsimp
               simp
@@ -438,7 +438,7 @@ def isLimitMapConeOfIsLimitSheafConditionFork
         { Hom := 𝟙 _
           w' := by
             intro x
-            induction x using Opposite.rec
+            induction x using Opposite.rec'
             rcases x with ⟨⟩
             · dsimp
               simp

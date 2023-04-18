@@ -252,7 +252,7 @@ theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
   ext A
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
-  induction Δ using Opposite.rec
+  induction Δ using Opposite.rec'
   induction' Δ with n
   dsimp
   simp only [colimit.ι_desc, cofan.mk_ι_app, comp_id, Γ₀.obj_map]

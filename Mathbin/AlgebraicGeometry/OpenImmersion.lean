@@ -131,7 +131,7 @@ noncomputable def isoRestrict : X ≅ Y.restrict H.base_open :=
       intro U
       refine'
         as_iso (f.c.app (op (H.open_functor.obj (unop U)))) ≪≫ X.presheaf.map_iso (eq_to_iso _)
-      · induction U using Opposite.rec
+      · induction U using Opposite.rec'
         cases U
         dsimp only [IsOpenMap.functor, functor.op, opens.map]
         congr 2
@@ -327,7 +327,7 @@ theorem to_iso (f : X ⟶ Y) [h : is_open_immersion f] [h' : Epi f.base] : IsIso
     intro U
     have : U = op (h.open_functor.obj ((opens.map f.base).obj (unop U))) :=
       by
-      induction U using Opposite.rec
+      induction U using Opposite.rec'
       cases U
       dsimp only [functor.op, opens.map]
       congr
@@ -375,8 +375,8 @@ def pullbackConeOfLeftFst :
                     exact ⟨_, h₁, concrete_category.congr_hom pullback.condition x⟩))
       naturality' := by
         intro U V i
-        induction U using Opposite.rec
-        induction V using Opposite.rec
+        induction U using Opposite.rec'
+        induction V using Opposite.rec'
         simp only [Quiver.Hom.unop_op, TopCat.Presheaf.pushforwardObj_map, category.assoc,
           nat_trans.naturality_assoc, functor.op_map, inv_naturality_assoc, ← Y.presheaf.map_comp]
         erw [← Y.presheaf.map_comp]
@@ -386,7 +386,7 @@ def pullbackConeOfLeftFst :
 theorem pullback_cone_of_left_condition : pullbackConeOfLeftFst f g ≫ f = Y.of_restrict _ ≫ g :=
   by
   ext U
-  · induction U using Opposite.rec
+  · induction U using Opposite.rec'
     dsimp only [comp_c_app, nat_trans.comp_app, unop_op, whisker_right_app,
       pullback_cone_of_left_fst]
     simp only [Quiver.Hom.unop_op, TopCat.Presheaf.pushforwardObj_map, app_inv_app_assoc,
@@ -441,7 +441,7 @@ theorem pullbackConeOfLeftLift_fst :
     pullbackConeOfLeftLift f g s ≫ (pullbackConeOfLeft f g).fst = s.fst :=
   by
   ext x
-  · induction x using Opposite.rec
+  · induction x using Opposite.rec'
     change ((_ ≫ _) ≫ _ ≫ _) ≫ _ = _
     simp_rw [category.assoc]
     erw [← s.X.presheaf.map_comp]
@@ -961,7 +961,7 @@ instance sigma_ι_isOpenImmersion [HasStrictTerminalObjects C] :
     · infer_instance
     apply limit_π_is_iso_of_is_strict_terminal
     intro j hj
-    induction j using Opposite.rec
+    induction j using Opposite.rec'
     dsimp
     convert(F.obj j).Sheaf.isTerminalOfEmpty
     convert image_preimage_is_empty F i j (fun h => hj (congr_arg op h.symm)) U

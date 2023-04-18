@@ -100,7 +100,7 @@ theorem restrictStalkIso_inv_eq_ofRestrict {U : TopCat} (X : PresheafedSpace.{v}
     (X.restrictStalkIso h x).inv = stalkMap (X.of_restrict h) x :=
   by
   ext V
-  induction V using Opposite.rec
+  induction V using Opposite.rec'
   let i : (h.is_open_map.functor_nhds x).obj ((open_nhds.map f x).obj V) ⟶ V :=
     hom_of_le (Set.image_preimage_subset f _)
   erw [iso.comp_inv_eq, colimit.ι_map_assoc, colimit.ι_map_assoc, colimit.ι_pre]
@@ -142,7 +142,7 @@ theorem comp {X Y Z : PresheafedSpace.{v} C} (α : X ⟶ Y) (β : Y ⟶ Z) (x : 
   by
   dsimp [stalk_map, stalk_functor, stalk_pushforward]
   ext U
-  induction U using Opposite.rec
+  induction U using Opposite.rec'
   cases U
   simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, colimit.ι_pre, whisker_left_app,
     whisker_right_app, assoc, id_comp, map_id, map_comp]

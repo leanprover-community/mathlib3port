@@ -99,7 +99,7 @@ theorem id_app {X : Scheme} (U : (Opens X.carrier)ᵒᵖ) :
       X.Presheaf.map
         (eqToHom
           (by
-            induction U using Opposite.rec
+            induction U using Opposite.rec'
             cases U
             rfl)) :=
   PresheafedSpace.id_c_app X.toPresheafedSpace U

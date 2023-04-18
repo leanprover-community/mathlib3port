@@ -193,11 +193,11 @@ theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
       X.Presheaf.map
         (eqToHom
           (by
-            induction U using Opposite.rec
+            induction U using Opposite.rec'
             cases U
             rfl)) :=
   by
-  induction U using Opposite.rec
+  induction U using Opposite.rec'
   cases U
   simp only [id_c]
   dsimp
@@ -274,7 +274,7 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y
     simp
   inv_hom_id' := by
     ext x
-    induction x using Opposite.rec
+    induction x using Opposite.rec'
     simp only [comp_c_app, whisker_right_app, presheaf.to_pushforward_of_iso_app,
       nat_trans.comp_app, eq_to_hom_app, id_c_app, category.assoc]
     erw [← α.hom.naturality]
@@ -360,7 +360,7 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
   constructor
   intro Z g₁ g₂ eq
   ext V
-  · induction V using Opposite.rec
+  · induction V using Opposite.rec'
     have hV : (opens.map (X.of_restrict hf).base).obj (hf.is_open_map.functor.obj V) = V :=
       by
       ext1
@@ -409,7 +409,7 @@ theorem ofRestrict_top_c (X : PresheafedSpace C) :
   ext U;
   change X.presheaf.map _ = _; convert eq_to_hom_map _ _ using 1
   congr ; simpa
-  · induction U using Opposite.rec
+  · induction U using Opposite.rec'
     dsimp
     congr
     ext

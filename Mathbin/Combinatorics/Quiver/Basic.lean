@@ -170,12 +170,16 @@ end Prefunctor
 
 namespace Quiver
 
-#print Quiver.opposite /-
+/- warning: quiver.opposite -> Quiver.opposite is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Quiver.{u2, u1} V], Quiver.{u2, u1} (Opposite.{succ u1} V)
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : Quiver.{u2, u1} V], Quiver.{max 1 u2, u1} (Opposite.{succ u1} V)
+Case conversion may be inaccurate. Consider using '#align quiver.opposite Quiver.oppositeₓ'. -/
 /-- `Vᵒᵖ` reverses the direction of all arrows of `V`. -/
 instance opposite {V} [Quiver V] : Quiver Vᵒᵖ :=
   ⟨fun a b => unop b ⟶ unop a⟩
 #align quiver.opposite Quiver.opposite
--/
 
 #print Quiver.Hom.op /-
 /-- The opposite of an arrow in `V`.

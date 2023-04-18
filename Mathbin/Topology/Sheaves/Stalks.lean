@@ -115,7 +115,7 @@ composition with the `germ` morphisms.
 theorem stalk_hom_ext (F : X.Presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ Y}
     (ih : ∀ (U : Opens X) (hxU : x ∈ U), F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
   colimit.hom_ext fun U => by
-    induction U using Opposite.rec
+    induction U using Opposite.rec'
     cases' U with U hxU
     exact ih U hxU
 #align Top.presheaf.stalk_hom_ext TopCat.Presheaf.stalk_hom_ext
@@ -192,7 +192,7 @@ theorem comp (ℱ : X.Presheaf C) (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
   by
   dsimp [stalk_pushforward, stalk_functor]
   ext U
-  induction U using Opposite.rec
+  induction U using Opposite.rec'
   rcases U with ⟨⟨_, _⟩, _⟩
   simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, whisker_right_app, category.assoc]
   dsimp
@@ -278,7 +278,7 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
     delta
       stalk_pullback_hom stalk_pullback_inv stalk_functor presheaf.pullback stalk_pushforward germ_to_pullback_stalk germ
     ext j
-    induction j using Opposite.rec
+    induction j using Opposite.rec'
     cases j
     simp only [TopologicalSpace.OpenNhds.inclusionMapIso_inv, whisker_right_app, whisker_left_app,
       whiskering_left_obj_map, functor.comp_map, colimit.ι_map_assoc, nat_trans.op_id, Lan_obj_map,
@@ -289,7 +289,7 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
     by
     delta stalk_pullback_hom stalk_pullback_inv stalk_functor presheaf.pullback stalk_pushforward
     ext (U j)
-    induction U using Opposite.rec
+    induction U using Opposite.rec'
     cases U; cases j; rcases j_right with ⟨⟨⟩⟩
     erw [colimit.map_desc, colimit.map_desc, colimit.ι_desc_assoc, colimit.ι_desc_assoc,
       colimit.ι_desc, category.comp_id]
@@ -618,7 +618,7 @@ theorem isIso_of_stalkFunctor_map_iso {F G : Sheaf C X} (f : F ⟶ G)
   suffices ∀ U : (opens X)ᵒᵖ, is_iso (f.1.app U) by
     exact @nat_iso.is_iso_of_is_iso_app _ _ _ _ F.1 G.1 f.1 this
   intro U
-  induction U using Opposite.rec
+  induction U using Opposite.rec'
   apply app_is_iso_of_stalk_functor_map_iso
 #align Top.presheaf.is_iso_of_stalk_functor_map_iso TopCat.Presheaf.isIso_of_stalkFunctor_map_iso
 
