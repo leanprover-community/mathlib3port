@@ -310,7 +310,6 @@ theorem conjAe_coe : ⇑conjAe = conj :=
   rfl
 #align complex.conj_ae_coe Complex.conjAe_coe
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem toMatrix_conjAe :

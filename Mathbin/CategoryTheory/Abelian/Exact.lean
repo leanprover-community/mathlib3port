@@ -180,11 +180,11 @@ def isColimitImage (h : Exact f g) :
     (cancel_mono (Limits.image.ι g)).1 <| by simp
 #align category_theory.abelian.is_colimit_image CategoryTheory.Abelian.isColimitImage
 
-theorem exact_cokernel : Exact f (cokernel.π f) :=
+theorem exactCokernel : Exact f (cokernel.π f) :=
   by
   rw [exact_iff]
   tidy
-#align category_theory.abelian.exact_cokernel CategoryTheory.Abelian.exact_cokernel
+#align category_theory.abelian.exact_cokernel CategoryTheory.Abelian.exactCokernel
 
 instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
   suffices h :
@@ -231,21 +231,21 @@ def isLimitOfExactOfMono [Mono f] (h : Exact f g) : IsLimit (KernelFork.ofι _ h
       fun j => by cases j <;> simp
 #align category_theory.abelian.is_limit_of_exact_of_mono CategoryTheory.Abelian.isLimitOfExactOfMono
 
-theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g :=
+theorem exactOfIsCokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g :=
   by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (cokernel_cofork.of_π _ (cokernel.condition f)) walking_parallel_pair.one
   simp only [cofork.of_π_ι_app] at this
   rw [← this, ← category.assoc, kernel.condition, zero_comp]
-#align category_theory.abelian.exact_of_is_cokernel CategoryTheory.Abelian.exact_of_is_cokernel
+#align category_theory.abelian.exact_of_is_cokernel CategoryTheory.Abelian.exactOfIsCokernel
 
-theorem exact_of_is_kernel (w : f ≫ g = 0) (h : IsLimit (KernelFork.ofι _ w)) : Exact f g :=
+theorem exactOfIsKernel (w : f ≫ g = 0) (h : IsLimit (KernelFork.ofι _ w)) : Exact f g :=
   by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (kernel_fork.of_ι _ (kernel.condition g)) walking_parallel_pair.zero
   simp only [fork.of_ι_π_app] at this
   rw [← this, category.assoc, cokernel.condition, comp_zero]
-#align category_theory.abelian.exact_of_is_kernel CategoryTheory.Abelian.exact_of_is_kernel
+#align category_theory.abelian.exact_of_is_kernel CategoryTheory.Abelian.exactOfIsKernel
 
 theorem exact_iff_exact_image_ι : Exact f g ↔ Exact (Abelian.image.ι f) g := by
   conv_lhs => rw [← abelian.image.fac f] <;> apply exact_epi_comp_iff
@@ -374,14 +374,13 @@ variable [PreservesFiniteLimits L] [PreservesFiniteColimits L]
 /-- A functor preserving finite limits and finite colimits preserves exactness. The converse
 result is also true, see `functor.preserves_finite_limits_of_map_exact` and
 `functor.preserves_finite_colimits_of_map_exact`. -/
-theorem map_exact {X Y Z : A} (f : X ⟶ Y) (g : Y ⟶ Z) (e1 : Exact f g) :
-    Exact (L.map f) (L.map g) :=
+theorem mapExact {X Y Z : A} (f : X ⟶ Y) (g : Y ⟶ Z) (e1 : Exact f g) : Exact (L.map f) (L.map g) :=
   by
   let hcoker := is_colimit_of_has_cokernel_of_preserves_colimit L f
   let hker := is_limit_of_has_kernel_of_preserves_limit L g
   refine' (exact_iff' _ _ hker hcoker).2 ⟨by simp [← L.map_comp, e1.1], _⟩
   rw [fork.ι_of_ι, cofork.π_of_π, ← L.map_comp, kernel_comp_cokernel _ _ e1, L.map_zero]
-#align category_theory.functor.map_exact CategoryTheory.Functor.map_exact
+#align category_theory.functor.map_exact CategoryTheory.Functor.mapExact
 
 end
 

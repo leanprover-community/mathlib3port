@@ -101,7 +101,6 @@ theorem rotation_symm_apply (θ : Real.Angle) (x : V) :
   rfl
 #align orientation.rotation_symm_apply Orientation.rotation_symm_apply
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem rotation_eq_matrix_toLin (θ : Real.Angle) {x : V} (hx : x ≠ 0) :
     (o.rotation θ).toLinearMap =
       Matrix.toLin (o.basisRightAngleRotation x hx) (o.basisRightAngleRotation x hx)

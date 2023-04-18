@@ -201,7 +201,6 @@ def Matrix.ToLieAlgebra :=
 
 namespace CartanMatrix
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The Cartan matrix of type e₆. See [bourbaki1968] plate V, page 277.
 
 The corresponding Dynkin diagram is:
@@ -220,7 +219,6 @@ def e₆ : Matrix (Fin 6) (Fin 6) ℤ :=
     0, 0, 0, 0, -1, 2]
 #align cartan_matrix.E₆ CartanMatrix.e₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The Cartan matrix of type e₇. See [bourbaki1968] plate VI, page 281.
 
 The corresponding Dynkin diagram is:
@@ -240,7 +238,6 @@ def e₇ : Matrix (Fin 7) (Fin 7) ℤ :=
     0, 0, 0, 0, 0, -1, 2]
 #align cartan_matrix.E₇ CartanMatrix.e₇
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The Cartan matrix of type e₈. See [bourbaki1968] plate VII, page 285.
 
 The corresponding Dynkin diagram is:
@@ -261,7 +258,6 @@ def e₈ : Matrix (Fin 8) (Fin 8) ℤ :=
     0, 0, 0, 0, 0, 0, -1, 2]
 #align cartan_matrix.E₈ CartanMatrix.e₈
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The Cartan matrix of type f₄. See [bourbaki1968] plate VIII, page 288.
 
 The corresponding Dynkin diagram is:
@@ -273,7 +269,6 @@ def f₄ : Matrix (Fin 4) (Fin 4) ℤ :=
   !![2, -1, 0, 0; -1, 2, -2, 0; 0, -1, 2, -1; 0, 0, -1, 2]
 #align cartan_matrix.F₄ CartanMatrix.f₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The Cartan matrix of type g₂. See [bourbaki1968] plate IX, page 290.
 
 The corresponding Dynkin diagram is:

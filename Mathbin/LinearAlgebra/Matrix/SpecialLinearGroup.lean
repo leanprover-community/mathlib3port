@@ -296,7 +296,6 @@ theorem SL2_inv_expl (A : SL(2, R)) :
   rfl
 #align matrix.special_linear_group.SL2_inv_expl Matrix.SpecialLinearGroup.SL2_inv_expl
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem fin_two_induction (P : SL(2, R) → Prop)
     (h : ∀ (a b c d : R) (hdet : a * d - b * c = 1), P ⟨!![a, b; c, d], by rwa [det_fin_two_of]⟩)
     (g : SL(2, R)) : P g := by
@@ -305,7 +304,6 @@ theorem fin_two_induction (P : SL(2, R) → Prop)
   ext (i j); fin_cases i <;> fin_cases j <;> rfl
 #align matrix.special_linear_group.fin_two_induction Matrix.SpecialLinearGroup.fin_two_induction
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem fin_two_exists_eq_mk_of_apply_zero_one_eq_zero {R : Type _} [Field R] (g : SL(2, R))
     (hg : (g : Matrix (Fin 2) (Fin 2) R) 1 0 = 0) :
     ∃ (a b : R)(h : a ≠ 0), g = (⟨!![a, b; 0, a⁻¹], by simp [h]⟩ : SL(2, R)) :=
@@ -345,7 +343,6 @@ open Matrix Matrix.SpecialLinearGroup
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) ℤ) _
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The matrix `S = [[0, -1], [1, 0]]` as an element of `SL(2, ℤ)`.
 
 This element acts naturally on the Euclidean plane as a rotation about the origin by `π / 2`.
@@ -356,29 +353,24 @@ def s : SL(2, ℤ) :=
   ⟨!![0, -1; 1, 0], by norm_num [Matrix.det_fin_two_of] ⟩
 #align modular_group.S ModularGroup.s
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 /-- The matrix `T = [[1, 1], [0, 1]]` as an element of `SL(2, ℤ)` -/
 def t : SL(2, ℤ) :=
   ⟨!![1, 1; 0, 1], by norm_num [Matrix.det_fin_two_of] ⟩
 #align modular_group.T ModularGroup.t
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem coe_s : ↑ₘs = !![0, -1; 1, 0] :=
   rfl
 #align modular_group.coe_S ModularGroup.coe_s
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem coe_t : ↑ₘt = !![1, 1; 0, 1] :=
   rfl
 #align modular_group.coe_T ModularGroup.coe_t
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem coe_t_inv : ↑ₘt⁻¹ = !![1, -1; 0, 1] := by simp [coe_inv, coe_T, adjugate_fin_two]
 #align modular_group.coe_T_inv ModularGroup.coe_t_inv
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem coe_t_zpow (n : ℤ) : ↑ₘ(t ^ n) = !![1, n; 0, 1] :=
   by
   induction' n using Int.induction_on with n h n h

@@ -825,7 +825,6 @@ theorem det_fin_one (A : Matrix (Fin 1) (Fin 1) R) : det A = A 0 0 :=
   det_unique A
 #align matrix.det_fin_one Matrix.det_fin_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem det_fin_one_of (a : R) : det !![a] = a :=
   det_fin_one _
 #align matrix.det_fin_one_of Matrix.det_fin_one_of
@@ -837,7 +836,6 @@ theorem det_fin_two (A : Matrix (Fin 2) (Fin 2) R) : det A = A 0 0 * A 1 1 - A 0
   ring
 #align matrix.det_fin_two Matrix.det_fin_two
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 @[simp]
 theorem det_fin_two_of (a b c d : R) : Matrix.det !![a, b; c, d] = a * d - b * c :=
   det_fin_two _

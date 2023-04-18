@@ -41,10 +41,10 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
-theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
+theorem exactDF [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
   (Abelian.exact_iff _ _).2 <|
     ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
-#align category_theory.exact_d_f CategoryTheory.exact_d_f
+#align category_theory.exact_d_f CategoryTheory.exactDF
 
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
 def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
@@ -81,7 +81,7 @@ variable [EnoughProjectives C]
 def ofComplex (Z : C) : ChainComplex C ℕ :=
   ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z))
     (Projective.d (Projective.π Z)) fun ⟨X, Y, f⟩ =>
-    ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
+    ⟨Projective.syzygies f, Projective.d f, (exactDF f).w⟩
 #align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolution.ofComplex
 
 /-- In any abelian category with enough projectives,
@@ -124,8 +124,8 @@ def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
   complex := X
   π := f
   Projective := H
-  exact₀ := f.to_single₀_exact_d_f_at_zero
-  exact := f.to_single₀_exact_at_succ
+  exact₀ := f.toSingle₀ExactDFAtZero
+  exact := f.toSingle₀ExactAtSucc
   Epi := f.to_single₀_epi_at_zero
 #align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
 

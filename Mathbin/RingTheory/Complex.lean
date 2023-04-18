@@ -17,7 +17,6 @@ import Mathbin.RingTheory.Trace
 
 open Complex
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem Algebra.leftMulMatrix_complex (z : ℂ) :
     Algebra.leftMulMatrix Complex.basisOneI z = !![z.re, -z.im; z.im, z.re] :=
   by

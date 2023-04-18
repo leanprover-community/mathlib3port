@@ -247,10 +247,10 @@ section
 
 variable [Abelian C] [EnoughInjectives C]
 
-theorem exact_f_d {X Y : C} (f : X ⟶ Y) : Exact f (d f) :=
+theorem exactFD {X Y : C} (f : X ⟶ Y) : Exact f (d f) :=
   (Abelian.exact_iff _ _).2 <|
     ⟨by simp, zero_of_comp_mono (ι _) <| by rw [category.assoc, kernel.condition]⟩
-#align category_theory.exact_f_d CategoryTheory.exact_f_d
+#align category_theory.exact_f_d CategoryTheory.exactFD
 
 end
 
@@ -273,7 +273,7 @@ variable [Abelian C] [EnoughInjectives C]
 def ofCocomplex (Z : C) : CochainComplex C ℕ :=
   CochainComplex.mk' (Injective.under Z) (Injective.syzygies (Injective.ι Z))
     (Injective.d (Injective.ι Z)) fun ⟨X, Y, f⟩ =>
-    ⟨Injective.syzygies f, Injective.d f, (exact_f_d f).w⟩
+    ⟨Injective.syzygies f, Injective.d f, (exactFD f).w⟩
 #align category_theory.InjectiveResolution.of_cocomplex CategoryTheory.InjectiveResolution.ofCocomplex
 
 /-- In any abelian category with enough injectives,
@@ -317,8 +317,8 @@ def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex 
   cocomplex := X
   ι := f
   Injective := H
-  exact₀ := f.from_single₀_exact_f_d_at_zero
-  exact := f.from_single₀_exact_at_succ
+  exact₀ := f.fromSingle₀ExactFDAtZero
+  exact := f.fromSingle₀ExactAtSucc
   Mono := f.from_single₀_mono_at_zero
 #align homological_complex.hom.homological_complex.hom.from_single₀_InjectiveResolution HomologicalComplex.Hom.HomologicalComplex.Hom.fromSingle₀InjectiveResolution
 

@@ -111,7 +111,7 @@ structure Split : Prop where
 
 variable [HasKernels 𝒜] [HasImages 𝒜]
 
-theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B} {φ : B ⟶ A} (hfg : f ≫ g = 0)
+theorem exactOfSplit {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B} {φ : B ⟶ A} (hfg : f ≫ g = 0)
     (H : φ ≫ f + g ≫ χ = 𝟙 B) : Exact f g :=
   { w := hfg
     Epi :=
@@ -133,7 +133,7 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
         
       rw [← H, preadditive.comp_add]
       simp only [add_zero, zero_comp, kernel_subobject_arrow_comp_assoc] }
-#align category_theory.exact_of_split CategoryTheory.exact_of_split
+#align category_theory.exact_of_split CategoryTheory.exactOfSplit
 
 section
 
@@ -187,16 +187,14 @@ theorem Split.map {𝒜 ℬ : Type _} [Category 𝒜] [Preadditive 𝒜] [Catego
 #align category_theory.split.map CategoryTheory.Split.map
 
 /-- The sequence `A ⟶ A ⊞ B ⟶ B` is exact. -/
-theorem exact_inl_snd [HasBinaryBiproducts 𝒜] (A B : 𝒜) :
-    Exact (biprod.inl : A ⟶ A ⊞ B) biprod.snd :=
-  exact_of_split biprod.inl_snd biprod.total
-#align category_theory.exact_inl_snd CategoryTheory.exact_inl_snd
+theorem exactInlSnd [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inl : A ⟶ A ⊞ B) biprod.snd :=
+  exactOfSplit biprod.inl_snd biprod.total
+#align category_theory.exact_inl_snd CategoryTheory.exactInlSnd
 
 /-- The sequence `B ⟶ A ⊞ B ⟶ A` is exact. -/
-theorem exact_inr_fst [HasBinaryBiproducts 𝒜] (A B : 𝒜) :
-    Exact (biprod.inr : B ⟶ A ⊞ B) biprod.fst :=
-  exact_of_split biprod.inr_fst ((add_comm _ _).trans biprod.total)
-#align category_theory.exact_inr_fst CategoryTheory.exact_inr_fst
+theorem exactInrFst [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inr : B ⟶ A ⊞ B) biprod.fst :=
+  exactOfSplit biprod.inr_fst ((add_comm _ _).trans biprod.total)
+#align category_theory.exact_inr_fst CategoryTheory.exactInrFst
 
 end Preadditive
 

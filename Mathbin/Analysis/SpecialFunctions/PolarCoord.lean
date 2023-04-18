@@ -101,7 +101,6 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     · exact complex.equiv_real_prod_clm.symm.continuous.continuous_on
 #align polar_coord polarCoord
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem hasFderivAt_polarCoord_symm (p : ℝ × ℝ) :
     HasFderivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
@@ -135,7 +134,6 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
   exact le_antisymm ((measure_mono A).trans (le_of_eq B)) bot_le
 #align polar_coord_source_ae_eq_univ polarCoord_source_ae_eq_univ
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: matrix.notation ... #[[]] -/
 theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : ℝ × ℝ → E) :
     (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p :=

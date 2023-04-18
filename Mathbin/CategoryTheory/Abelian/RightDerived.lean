@@ -196,21 +196,21 @@ variable [Abelian C] [Abelian D] [Additive F]
 
 /-- If `preserves_finite_limits F` and `mono f`, then `exact (F.map f) (F.map g)` if
 `exact f g`. -/
-theorem preserves_exact_of_preservesFiniteLimits_of_mono [PreservesFiniteLimits F] [Mono f]
+theorem preservesExactOfPreservesFiniteLimitsOfMono [PreservesFiniteLimits F] [Mono f]
     (ex : Exact f g) : Exact (F.map f) (F.map g) :=
-  Abelian.exact_of_is_kernel _ _ (by simp [← functor.map_comp, ex.w]) <|
+  Abelian.exactOfIsKernel _ _ (by simp [← functor.map_comp, ex.w]) <|
     Limits.isLimitForkMapOfIsLimit' _ ex.w (Abelian.isLimitOfExactOfMono _ _ ex)
-#align category_theory.abelian.functor.preserves_exact_of_preserves_finite_limits_of_mono CategoryTheory.Abelian.Functor.preserves_exact_of_preservesFiniteLimits_of_mono
+#align category_theory.abelian.functor.preserves_exact_of_preserves_finite_limits_of_mono CategoryTheory.Abelian.Functor.preservesExactOfPreservesFiniteLimitsOfMono
 
-theorem exact_of_map_injective_resolution (P : InjectiveResolution X) [PreservesFiniteLimits F] :
+theorem exactOfMapInjectiveResolution (P : InjectiveResolution X) [PreservesFiniteLimits F] :
     Exact (F.map (P.ι.f 0))
       (((F.mapHomologicalComplex (ComplexShape.up ℕ)).obj P.cocomplex).dFrom 0) :=
-  Preadditive.exact_of_iso_of_exact' (F.map (P.ι.f 0)) (F.map (P.cocomplex.d 0 1)) _ _ (Iso.refl _)
+  Preadditive.exactOfIsoOfExact' (F.map (P.ι.f 0)) (F.map (P.cocomplex.d 0 1)) _ _ (Iso.refl _)
     (Iso.refl _)
     (HomologicalComplex.xNextIso ((F.mapHomologicalComplex _).obj P.cocomplex) rfl).symm (by simp)
     (by rw [iso.refl_hom, category.id_comp, iso.symm_hom, HomologicalComplex.dFrom_eq] <;> congr )
     (preserves_exact_of_preserves_finite_limits_of_mono _ P.exact₀)
-#align category_theory.abelian.functor.exact_of_map_injective_resolution CategoryTheory.Abelian.Functor.exact_of_map_injective_resolution
+#align category_theory.abelian.functor.exact_of_map_injective_resolution CategoryTheory.Abelian.Functor.exactOfMapInjectiveResolution
 
 /-- Given `P : InjectiveResolution X`, a morphism `(F.right_derived 0).obj X ⟶ F.obj X` given
 `preserves_finite_limits F`. -/

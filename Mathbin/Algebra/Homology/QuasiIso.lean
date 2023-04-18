@@ -133,7 +133,7 @@ theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) :=
   rw [(@cancel_epi _ _ _ _ _ _ (epi_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.to_single₀_epi_at_zero HomologicalComplex.Hom.to_single₀_epi_at_zero
 
-theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 0) :=
+theorem toSingle₀ExactDFAtZero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 0) :=
   by
   rw [preadditive.exact_iff_homology_zero]
   have h : X.d 1 0 ≫ f.f 0 = 0 := by
@@ -144,15 +144,15 @@ theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 
       apply kernel.of_mono
     rw [← to_single₀_cokernel_at_zero_iso_hom_eq]
     infer_instance
-#align homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.to_single₀_exact_d_f_at_zero
+#align homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.toSingle₀ExactDFAtZero
 
-theorem to_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
+theorem toSingle₀ExactAtSucc [hf : QuasiIso f] (n : ℕ) :
     Exact (X.d (n + 2) (n + 1)) (X.d (n + 1) n) :=
   (Preadditive.exact_iff_homology_zero _ _).2
     ⟨X.d_comp_d _ _ _,
       ⟨(ChainComplex.homologySuccIso _ _).symm.trans
           ((@asIso _ _ _ _ _ (hf.1 (n + 1))).trans homologyZeroZero)⟩⟩
-#align homological_complex.hom.to_single₀_exact_at_succ HomologicalComplex.Hom.to_single₀_exact_at_succ
+#align homological_complex.hom.to_single₀_exact_at_succ HomologicalComplex.Hom.toSingle₀ExactAtSucc
 
 end
 
@@ -192,7 +192,7 @@ theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
   rw [(@cancel_mono _ _ _ _ _ _ (mono_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zero
 
-theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 0 1) :=
+theorem fromSingle₀ExactFDAtZero [hf : QuasiIso f] : Exact (f.f 0) (X.d 0 1) :=
   by
   rw [preadditive.exact_iff_homology_zero]
   have h : f.f 0 ≫ X.d 0 1 = 0 := by
@@ -204,15 +204,15 @@ theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 
       apply cokernel.of_epi
     rw [← from_single₀_kernel_at_zero_iso_inv_eq f]
     infer_instance
-#align homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.from_single₀_exact_f_d_at_zero
+#align homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.fromSingle₀ExactFDAtZero
 
-theorem from_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
+theorem fromSingle₀ExactAtSucc [hf : QuasiIso f] (n : ℕ) :
     Exact (X.d n (n + 1)) (X.d (n + 1) (n + 2)) :=
   (Preadditive.exact_iff_homology_zero _ _).2
     ⟨X.d_comp_d _ _ _,
       ⟨(CochainComplex.homologySuccIso _ _).symm.trans
           ((@asIso _ _ _ _ _ (hf.1 (n + 1))).symm.trans homologyZeroZero)⟩⟩
-#align homological_complex.hom.from_single₀_exact_at_succ HomologicalComplex.Hom.from_single₀_exact_at_succ
+#align homological_complex.hom.from_single₀_exact_at_succ HomologicalComplex.Hom.fromSingle₀ExactAtSucc
 
 end
 
