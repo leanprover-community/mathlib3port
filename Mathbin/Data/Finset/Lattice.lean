@@ -189,9 +189,11 @@ theorem le_sup {b : β} (hb : b ∈ s) : f b ≤ s.sup f :=
 #align finset.le_sup Finset.le_sup
 -/
 
+#print Finset.le_sup_of_le /-
 theorem le_sup_of_le {b : β} (hb : b ∈ s) (h : a ≤ f b) : a ≤ s.sup f :=
   h.trans <| le_sup hb
 #align finset.le_sup_of_le Finset.le_sup_of_le
+-/
 
 /- warning: finset.sup_bUnion -> Finset.sup_bunionᵢ is a dubious translation:
 lean 3 declaration is
@@ -368,7 +370,7 @@ theorem sup_toFinset {α β} [DecidableEq β] (s : Finset α) (f : α → Multis
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} α (List.foldr.{u1, u1} α α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2)) l) (Finset.sup.{u1, u1} α α _inst_1 _inst_2 (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b) l) (id.{succ u1} α))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} α (List.foldr.{u1, u1} α α (fun (x._@.Mathlib.Data.Finset.Lattice._hyg.2294 : α) (x._@.Mathlib.Data.Finset.Lattice._hyg.2296 : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) x._@.Mathlib.Data.Finset.Lattice._hyg.2294 x._@.Mathlib.Data.Finset.Lattice._hyg.2296) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2)) l) (Finset.sup.{u1, u1} α α _inst_1 _inst_2 (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b) l) (id.{succ u1} α))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} α (List.foldr.{u1, u1} α α (fun (x._@.Mathlib.Data.Finset.Lattice._hyg.2342 : α) (x._@.Mathlib.Data.Finset.Lattice._hyg.2344 : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) x._@.Mathlib.Data.Finset.Lattice._hyg.2342 x._@.Mathlib.Data.Finset.Lattice._hyg.2344) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2)) l) (Finset.sup.{u1, u1} α α _inst_1 _inst_2 (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b) l) (id.{succ u1} α))
 Case conversion may be inaccurate. Consider using '#align list.foldr_sup_eq_sup_to_finset List.foldr_sup_eq_sup_toFinsetₓ'. -/
 theorem List.foldr_sup_eq_sup_toFinset [DecidableEq α] (l : List α) :
     l.foldr (· ⊔ ·) ⊥ = l.toFinset.sup id :=
@@ -411,7 +413,7 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3)))] (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3)))) s) -> (forall (t : Finset.{u1} α), (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x t) -> (Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) x y)))) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) (Finset.sup.{u1, u1} α α _inst_3 _inst_4 t (id.{succ u1} α)) x))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3)))] (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Data.Finset.Lattice._hyg.2644 : α) (x._@.Mathlib.Data.Finset.Lattice._hyg.2646 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) x._@.Mathlib.Data.Finset.Lattice._hyg.2644 x._@.Mathlib.Data.Finset.Lattice._hyg.2646) s) -> (forall (t : Finset.{u1} α), (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x t) -> (Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) x y)))) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) (Finset.sup.{u1, u1} α α _inst_3 _inst_4 t (id.{succ u1} α)) x))))
+  forall {α : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} α] [_inst_4 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3)))] (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Data.Finset.Lattice._hyg.2692 : α) (x._@.Mathlib.Data.Finset.Lattice._hyg.2694 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) x._@.Mathlib.Data.Finset.Lattice._hyg.2692 x._@.Mathlib.Data.Finset.Lattice._hyg.2694) s) -> (forall (t : Finset.{u1} α), (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x t) -> (Exists.{succ u1} α (fun (y : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) x y)))) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_3))) (Finset.sup.{u1, u1} α α _inst_3 _inst_4 t (id.{succ u1} α)) x))))
 Case conversion may be inaccurate. Consider using '#align finset.sup_le_of_le_directed Finset.sup_le_of_le_directedₓ'. -/
 theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s : Set α)
     (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
@@ -697,9 +699,11 @@ theorem inf_le {b : β} (hb : b ∈ s) : s.inf f ≤ f b :=
 #align finset.inf_le Finset.inf_le
 -/
 
+#print Finset.inf_le_of_le /-
 theorem inf_le_of_le {b : β} (hb : b ∈ s) (h : f b ≤ a) : s.inf f ≤ a :=
   (inf_le hb).trans h
 #align finset.inf_le_of_le Finset.inf_le_of_le
+-/
 
 #print Finset.inf_mono_fun /-
 theorem inf_mono_fun {g : β → α} (h : ∀ b ∈ s, f b ≤ g b) : s.inf f ≤ s.inf g :=
@@ -835,7 +839,7 @@ theorem inf_coe {P : α → Prop} {Ptop : P ⊤} {Pinf : ∀ ⦃x y⦄, P x → 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} α (List.foldr.{u1, u1} α α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1)) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)) l) (Finset.inf.{u1, u1} α α _inst_1 _inst_2 (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b) l) (id.{succ u1} α))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} α (List.foldr.{u1, u1} α α (fun (x._@.Mathlib.Data.Finset.Lattice._hyg.5298 : α) (x._@.Mathlib.Data.Finset.Lattice._hyg.5300 : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) x._@.Mathlib.Data.Finset.Lattice._hyg.5298 x._@.Mathlib.Data.Finset.Lattice._hyg.5300) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)) l) (Finset.inf.{u1, u1} α α _inst_1 _inst_2 (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b) l) (id.{succ u1} α))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} α (List.foldr.{u1, u1} α α (fun (x._@.Mathlib.Data.Finset.Lattice._hyg.5395 : α) (x._@.Mathlib.Data.Finset.Lattice._hyg.5397 : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) x._@.Mathlib.Data.Finset.Lattice._hyg.5395 x._@.Mathlib.Data.Finset.Lattice._hyg.5397) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)) l) (Finset.inf.{u1, u1} α α _inst_1 _inst_2 (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b) l) (id.{succ u1} α))
 Case conversion may be inaccurate. Consider using '#align list.foldr_inf_eq_inf_to_finset List.foldr_inf_eq_inf_toFinsetₓ'. -/
 theorem List.foldr_inf_eq_inf_toFinset [DecidableEq α] (l : List α) :
     l.foldr (· ⊓ ·) ⊤ = l.toFinset.inf id :=
@@ -1270,9 +1274,11 @@ theorem le_sup' {b : β} (h : b ∈ s) : f b ≤ s.sup' ⟨b, h⟩ f :=
 #align finset.le_sup' Finset.le_sup'
 -/
 
+#print Finset.le_sup'_of_le /-
 theorem le_sup'_of_le {a : α} {b : β} (hb : b ∈ s) (h : a ≤ f b) : a ≤ s.sup' ⟨b, hb⟩ f :=
   h.trans <| le_sup' _ hb
 #align finset.le_sup'_of_le Finset.le_sup'_of_le
+-/
 
 /- warning: finset.sup'_const -> Finset.sup'_const is a dubious translation:
 lean 3 declaration is
@@ -1463,6 +1469,12 @@ theorem inf'_le (h : b ∈ s) : s.inf' ⟨b, h⟩ f ≤ f b :=
 #align finset.inf'_le Finset.inf'_le
 -/
 
+/- warning: finset.inf'_le_of_le -> Finset.inf'_le_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] {s : Finset.{u2} β} (f : β -> α) {a : α} {b : β} (hb : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (f b) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (Finset.inf'.{u1, u2} α β _inst_1 s (Exists.intro.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) x s) b hb) f) a)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] {s : Finset.{u2} β} (f : β -> α) {a : β} {b : α} (hb : Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a s), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (f a) b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (Finset.inf'.{u1, u2} α β _inst_1 s (Exists.intro.{succ u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) x s) a hb) f) b)
+Case conversion may be inaccurate. Consider using '#align finset.inf'_le_of_le Finset.inf'_le_of_leₓ'. -/
 theorem inf'_le_of_le (hb : b ∈ s) (h : f b ≤ a) : s.inf' ⟨b, hb⟩ f ≤ a :=
   (inf'_le _ hb).trans h
 #align finset.inf'_le_of_le Finset.inf'_le_of_le
