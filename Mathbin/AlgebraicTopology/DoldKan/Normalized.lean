@@ -105,7 +105,7 @@ theorem inclusionOfMooreComplexMap_comp_pInfty (X : SimplicialObject A) :
   cases n
   · dsimp
     simp only [comp_id]
-  · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_p_eq_self
+  · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_P_eq_self
 #align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_pInfty
 
 instance : Mono (inclusionOfMooreComplexMap X) :=

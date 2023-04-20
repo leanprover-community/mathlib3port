@@ -58,7 +58,7 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
 theorem σ_comp_p_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
-    X.σ i ≫ (p q).f (n + 1) = 0 :=
+    X.σ i ≫ (P q).f (n + 1) = 0 :=
   by
   induction' q with q hq generalizing i hi
   · exfalso

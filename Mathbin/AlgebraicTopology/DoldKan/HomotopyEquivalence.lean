@@ -34,7 +34,7 @@ namespace DoldKan
 variable {C : Type _} [Category C] [Preadditive C] (X : SimplicialObject C)
 
 /-- Inductive construction of homotopies from `P q` to `𝟙 _` -/
-noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (p q : K[X] ⟶ _) (𝟙 _)
+noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (P q : K[X] ⟶ _) (𝟙 _)
   | 0 => Homotopy.refl _
   | q + 1 =>
     by
@@ -49,7 +49,7 @@ noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (p q : K[X] ⟶ _) (𝟙
 #align algebraic_topology.dold_kan.homotopy_P_to_id AlgebraicTopology.DoldKan.homotopyPToId
 
 /-- The complement projection `Q q` to `P q` is homotopic to zero. -/
-def homotopyQToZero (q : ℕ) : Homotopy (q q : K[X] ⟶ _) 0 :=
+def homotopyQToZero (q : ℕ) : Homotopy (Q q : K[X] ⟶ _) 0 :=
   Homotopy.equivSubZero.toFun (homotopyPToId X q).symm
 #align algebraic_topology.dold_kan.homotopy_Q_to_zero AlgebraicTopology.DoldKan.homotopyQToZero
 

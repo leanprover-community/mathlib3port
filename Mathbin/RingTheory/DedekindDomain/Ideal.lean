@@ -1257,7 +1257,7 @@ theorem normalizedFactorsEquivOfQuotEquiv_multiplicity_eq_multiplicity (hI : I �
   by
   rw [normalizedFactorsEquivOfQuotEquiv, Equiv.coe_fn_mk, Subtype.coe_mk]
   exact
-    multiplicity_factor_dvd_iso_eq_multiplicity_of_mem_normalized_factor hI hJ hL
+    multiplicity_factor_dvd_iso_eq_multiplicity_of_mem_normalizedFactors hI hJ hL
       fun ⟨l, hl⟩ ⟨l', hl'⟩ => idealFactorsEquivOfQuotEquiv_is_dvd_iso f hl hl'
 #align normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity normalizedFactorsEquivOfQuotEquiv_multiplicity_eq_multiplicity
 

@@ -384,7 +384,7 @@ theorem pInfty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : 
   rw [P_infty_f]
   cases n
   · simpa only [P_f_0_eq] using comp_id _
-  · exact (higher_faces_vanish.on_Γ₀_summand_id K n).comp_p_eq_self
+  · exact (higher_faces_vanish.on_Γ₀_summand_id K n).comp_P_eq_self
 #align algebraic_topology.dold_kan.P_infty_on_Γ₀_splitting_summand_eq_self AlgebraicTopology.DoldKan.pInfty_on_Γ₀_splitting_summand_eq_self
 
 end DoldKan

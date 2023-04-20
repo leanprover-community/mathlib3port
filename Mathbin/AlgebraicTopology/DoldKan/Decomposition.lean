@@ -52,9 +52,9 @@ simplicial abelian groups, any $(n+1)$-simplex $x$ can be decomposed as
 $x = x' + \sum (i=0}^{q-1} σ_{n-i}(y_i)$ where $x'$ is in the image of `P q` and
 the $y_i$ are in degree $n$. -/
 theorem decomposition_q (n q : ℕ) :
-    ((q q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1]) =
+    ((Q q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1]) =
       ∑ i : Fin (n + 1) in Finset.filter (fun i : Fin (n + 1) => (i : ℕ) < q) Finset.univ,
-        (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ X.σ i.rev :=
+        (P i).f (n + 1) ≫ X.δ i.rev.succ ≫ X.σ i.rev :=
   by
   induction' q with q hq
   ·
@@ -103,7 +103,7 @@ variable {X} {n : ℕ} {Z Z' : C} (f : MorphComponents X n Z) (g : X' ⟶ X) (h 
 
 /-- The morphism `X _[n+1] ⟶ Z ` associated to `f : morph_components X n Z`. -/
 def φ {Z : C} (f : MorphComponents X n Z) : X _[n + 1] ⟶ Z :=
-  pInfty.f (n + 1) ≫ f.a + ∑ i : Fin (n + 1), (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ f.b i.rev
+  pInfty.f (n + 1) ≫ f.a + ∑ i : Fin (n + 1), (P i).f (n + 1) ≫ X.δ i.rev.succ ≫ f.b i.rev
 #align algebraic_topology.dold_kan.morph_components.φ AlgebraicTopology.DoldKan.MorphComponents.φ
 
 variable (X n)
