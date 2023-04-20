@@ -48,18 +48,23 @@ namespace ForgetCreatesLimits
 
 variable (D : J ⥤ Algebra T) (c : Cone (D ⋙ T.forget)) (t : IsLimit c)
 
+#print CategoryTheory.Monad.ForgetCreatesLimits.γ /-
 /-- (Impl) The natural transformation used to define the new cone -/
 @[simps]
 def γ : D ⋙ T.forget ⋙ ↑T ⟶ D ⋙ T.forget where app j := (D.obj j).a
 #align category_theory.monad.forget_creates_limits.γ CategoryTheory.Monad.ForgetCreatesLimits.γ
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesLimits.newCone /-
 /-- (Impl) This new cone is used to construct the algebra structure -/
 @[simps π_app]
 def newCone : Cone (D ⋙ forget T) where
   pt := T.obj c.pt
   π := (Functor.constComp _ _ ↑T).inv ≫ whiskerRight c.π T ≫ γ D
 #align category_theory.monad.forget_creates_limits.new_cone CategoryTheory.Monad.ForgetCreatesLimits.newCone
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesLimits.conePoint /-
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps]
 def conePoint : Algebra T where
@@ -80,7 +85,9 @@ def conePoint : Algebra T where
         (D.obj j).and_assoc, functor.map_comp, category.assoc]
       rfl
 #align category_theory.monad.forget_creates_limits.cone_point CategoryTheory.Monad.ForgetCreatesLimits.conePoint
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesLimits.liftedCone /-
 /-- (Impl) Construct the lifted cone in `algebra T` which will be limiting. -/
 @[simps]
 def liftedCone : Cone D where
@@ -93,7 +100,9 @@ def liftedCone : Cone D where
         erw [c.w f]
         simp }
 #align category_theory.monad.forget_creates_limits.lifted_cone CategoryTheory.Monad.ForgetCreatesLimits.liftedCone
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesLimits.liftedConeIsLimit /-
 /-- (Impl) Prove that the lifted cone is limiting. -/
 @[simps]
 def liftedConeIsLimit : IsLimit (liftedCone D c t)
@@ -112,9 +121,11 @@ def liftedConeIsLimit : IsLimit (liftedCone D c t)
     intro j
     simpa [t.fac ((forget T).mapCone s) j] using congr_arg algebra.hom.f (J j)
 #align category_theory.monad.forget_creates_limits.lifted_cone_is_limit CategoryTheory.Monad.ForgetCreatesLimits.liftedConeIsLimit
+-/
 
 end ForgetCreatesLimits
 
+#print CategoryTheory.Monad.forgetCreatesLimits /-
 -- Theorem 5.6.5 from [Riehl][riehl2017]
 /-- The forgetful functor from the Eilenberg-Moore category creates limits. -/
 noncomputable instance forgetCreatesLimits : CreatesLimitsOfSize (forget T)
@@ -126,18 +137,22 @@ noncomputable instance forgetCreatesLimits : CreatesLimitsOfSize (forget T)
             validLift := cones.ext (iso.refl _) fun j => (id_comp _).symm
             makesLimit := forget_creates_limits.lifted_cone_is_limit _ _ _ } }
 #align category_theory.monad.forget_creates_limits CategoryTheory.Monad.forgetCreatesLimits
+-/
 
+#print CategoryTheory.Monad.hasLimit_of_comp_forget_hasLimit /-
 /-- `D ⋙ forget T` has a limit, then `D` has a limit. -/
 theorem hasLimit_of_comp_forget_hasLimit (D : J ⥤ Algebra T) [HasLimit (D ⋙ forget T)] :
     HasLimit D :=
   hasLimit_of_created D (forget T)
 #align category_theory.monad.has_limit_of_comp_forget_has_limit CategoryTheory.Monad.hasLimit_of_comp_forget_hasLimit
+-/
 
 namespace ForgetCreatesColimits
 
 -- Let's hide the implementation details in a namespace
 variable {D : J ⥤ Algebra T} (c : Cocone (D ⋙ forget T)) (t : IsColimit c)
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.γ /-
 -- We have a diagram D of shape J in the category of algebras, and we assume that we are given a
 -- colimit for its image D ⋙ forget T under the forgetful functor, say its apex is L.
 -- We'll construct a colimiting coalgebra for D, whose carrier will also be L.
@@ -154,7 +169,9 @@ apex `colimit (D ⋙ forget T)`.
 @[simps]
 def γ : (D ⋙ forget T) ⋙ ↑T ⟶ D ⋙ forget T where app j := (D.obj j).a
 #align category_theory.monad.forget_creates_colimits.γ CategoryTheory.Monad.ForgetCreatesColimits.γ
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.newCocone /-
 /-- (Impl)
 A cocone for the diagram `(D ⋙ forget T) ⋙ T` found by composing the natural transformation `γ`
 with the colimiting cocone for `D ⋙ forget T`.
@@ -165,9 +182,16 @@ def newCocone : Cocone ((D ⋙ forget T) ⋙ ↑T)
   pt := c.pt
   ι := γ ≫ c.ι
 #align category_theory.monad.forget_creates_colimits.new_cocone CategoryTheory.Monad.ForgetCreatesColimits.newCocone
+-/
 
 variable [PreservesColimit (D ⋙ forget T) (T : C ⥤ C)]
 
+/- warning: category_theory.monad.forget_creates_colimits.lambda -> CategoryTheory.Monad.ForgetCreatesColimits.lambda is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {T : CategoryTheory.Monad.{u3, u4} C _inst_1} {J : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} J] {D : CategoryTheory.Functor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T)} (c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))), (CategoryTheory.Limits.IsColimit.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) -> (forall [_inst_3 : CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u3, u4, u4} C _inst_1 C _inst_1 J _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T)], Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, u4, u4} J _inst_2 C _inst_1 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T)) (CategoryTheory.Functor.mapCocone.{u1, u3, u3, u2, u4, u4} J _inst_2 C _inst_1 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T) c)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {T : CategoryTheory.Monad.{u3, u4} C _inst_1} {J : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} J] {D : CategoryTheory.Functor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T)} (c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))), (CategoryTheory.Limits.IsColimit.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) -> (forall [_inst_3 : CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u3, u4, u4} C _inst_1 C _inst_1 J _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)], Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, u4, u4} J _inst_2 C _inst_1 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)) (CategoryTheory.Functor.mapCocone.{u1, u3, u3, u2, u4, u4} J _inst_2 C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T) (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c))
+Case conversion may be inaccurate. Consider using '#align category_theory.monad.forget_creates_colimits.lambda CategoryTheory.Monad.ForgetCreatesColimits.lambdaₓ'. -/
 /-- (Impl)
 Define the map `λ : TL ⟶ L`, which will serve as the structure of the coalgebra on `L`, and
 we will show is the colimiting object. We use the cocone constructed by `c` and the fact that
@@ -178,6 +202,12 @@ def lambda : ((T : C ⥤ C).mapCocone c).pt ⟶ c.pt :=
   (isColimitOfPreserves _ t).desc (newCocone c)
 #align category_theory.monad.forget_creates_colimits.lambda CategoryTheory.Monad.ForgetCreatesColimits.lambda
 
+/- warning: category_theory.monad.forget_creates_colimits.commuting -> CategoryTheory.Monad.ForgetCreatesColimits.commuting is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {T : CategoryTheory.Monad.{u3, u4} C _inst_1} {J : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} J] {D : CategoryTheory.Functor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T)} (c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))) (t : CategoryTheory.Limits.IsColimit.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) [_inst_3 : CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u3, u4, u4} C _inst_1 C _inst_1 J _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T)] (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.obj.{u3, u3, u4, u4} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T) (CategoryTheory.Functor.obj.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) j)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) (CategoryTheory.Functor.obj.{u3, u3, u4, u4} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T) (CategoryTheory.Functor.obj.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) j)) (CategoryTheory.Functor.obj.{u3, u3, u4, u4} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T) (CategoryTheory.Functor.obj.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.obj.{u3, max u2 u3, u4, max u1 u3 u2 u4} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) j)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) (CategoryTheory.Functor.map.{u3, u3, u4, u4} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T) (CategoryTheory.Functor.obj.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) j) (CategoryTheory.Functor.obj.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.obj.{u3, max u2 u3, u4, max u1 u3 u2 u4} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) j) (CategoryTheory.NatTrans.app.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (CategoryTheory.Functor.obj.{u3, max u2 u3, u4, max u1 u3 u2 u4} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.Limits.Cocone.ι.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) j)) (CategoryTheory.Monad.ForgetCreatesColimits.lambda.{u1, u2, u3, u4} C _inst_1 T J _inst_2 D c t _inst_3)) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) (CategoryTheory.Functor.obj.{u3, u3, u4, u4} C _inst_1 C _inst_1 ((fun (a : Sort.{max (succ u4) (succ u3)}) (b : Type.{max u3 u4}) [self : HasLiftT.{max (succ u4) (succ u3), succ (max u3 u4)} a b] => self.0) (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (HasLiftT.mk.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CoeTCₓ.coe.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (coeBase.{max (succ u4) (succ u3), succ (max u3 u4)} (CategoryTheory.Monad.{u3, u4} C _inst_1) (CategoryTheory.Functor.{u3, u3, u4, u4} C _inst_1 C _inst_1) (CategoryTheory.coeMonad.{u3, u4} C _inst_1)))) T) (CategoryTheory.Functor.obj.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) j)) (CategoryTheory.Monad.Algebra.A.{u3, u4} C _inst_1 T (CategoryTheory.Functor.obj.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) D j)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) (CategoryTheory.Monad.Algebra.a.{u3, u4} C _inst_1 T (CategoryTheory.Functor.obj.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) D j)) (CategoryTheory.NatTrans.app.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (CategoryTheory.Functor.obj.{u3, max u2 u3, u4, max u1 u3 u2 u4} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.Limits.Cocone.ι.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) j))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {T : CategoryTheory.Monad.{u3, u4} C _inst_1} {J : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} J] {D : CategoryTheory.Functor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T)} (c : CategoryTheory.Limits.Cocone.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))) (t : CategoryTheory.Limits.IsColimit.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) [_inst_3 : CategoryTheory.Limits.PreservesColimit.{u1, u2, u3, u3, u4, u4} C _inst_1 C _inst_1 J _inst_2 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)] (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (Prefunctor.obj.{succ u3, succ u3, u4, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u3, u4, u4} C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)) (Prefunctor.obj.{succ u1, succ u3, u2, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))) j)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) (Prefunctor.obj.{succ u3, succ u3, u4, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u3, u4, u4} C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)) (Prefunctor.obj.{succ u1, succ u3, u2, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))) j)) (Prefunctor.obj.{succ u3, succ u3, u4, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u3, u4, u4} C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)) (Prefunctor.obj.{succ u1, succ u3, u2, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} J _inst_2 C _inst_1 (Prefunctor.obj.{succ u3, max (succ u2) (succ u3), u4, max (max (max u2 u1) u3) u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u3, max u2 u3, u4, max (max (max u2 u1) u4) u3} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c))) j)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) (Prefunctor.map.{succ u3, succ u3, u4, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u3, u4, u4} C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)) (Prefunctor.obj.{succ u1, succ u3, u2, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T))) j) (Prefunctor.obj.{succ u1, succ u3, u2, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} J _inst_2 C _inst_1 (Prefunctor.obj.{succ u3, max (succ u2) (succ u3), u4, max (max (max u2 u1) u3) u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u3, max u2 u3, u4, max (max (max u2 u1) u4) u3} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c))) j) (CategoryTheory.NatTrans.app.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (Prefunctor.obj.{succ u3, max (succ u2) (succ u3), u4, max (max (max u2 u1) u3) u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u3, max u2 u3, u4, max (max (max u2 u1) u4) u3} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.Limits.Cocone.ι.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) j)) (CategoryTheory.Monad.ForgetCreatesColimits.lambda.{u1, u2, u3, u4} C _inst_1 T J _inst_2 D c t _inst_3)) (CategoryTheory.CategoryStruct.comp.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1) (Prefunctor.obj.{succ u3, succ u3, u4, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u3, u4, u4} C _inst_1 C _inst_1 (CategoryTheory.Monad.toFunctor.{u3, u4} C _inst_1 T)) (CategoryTheory.Monad.Algebra.A.{u3, u4} C _inst_1 T (Prefunctor.obj.{succ u1, succ u3, u2, max u4 u3} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.CategoryStruct.toQuiver.{u3, max u4 u3} (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Category.toCategoryStruct.{u3, max u4 u3} (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T))) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) D) j))) (CategoryTheory.Monad.Algebra.A.{u3, u4} C _inst_1 T (Prefunctor.obj.{succ u1, succ u3, u2, max u4 u3} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.CategoryStruct.toQuiver.{u3, max u4 u3} (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Category.toCategoryStruct.{u3, max u4 u3} (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T))) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) D) j)) (Prefunctor.obj.{succ u1, succ u3, u2, u4} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} J _inst_2 C _inst_1 (Prefunctor.obj.{succ u3, max (succ u2) (succ u3), u4, max (max (max u2 u1) u3) u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u3, max u2 u3, u4, max (max (max u2 u1) u4) u3} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c))) j) (CategoryTheory.Monad.Algebra.a.{u3, u4} C _inst_1 T (Prefunctor.obj.{succ u1, succ u3, u2, max u4 u3} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_2)) (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.CategoryStruct.toQuiver.{u3, max u4 u3} (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Category.toCategoryStruct.{u3, max u4 u3} (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T))) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, max u4 u3} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) D) j)) (CategoryTheory.NatTrans.app.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) (Prefunctor.obj.{succ u3, max (succ u2) (succ u3), u4, max (max (max u2 u1) u3) u4} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, max (max (max u2 u1) u4) u3} (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u3, max u2 u3, u4, max (max (max u2 u1) u4) u3} C _inst_1 (CategoryTheory.Functor.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.category.{u1, u3, u2, u4} J _inst_2 C _inst_1) (CategoryTheory.Functor.const.{u1, u3, u2, u4} J _inst_2 C _inst_1)) (CategoryTheory.Limits.Cocone.pt.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c)) (CategoryTheory.Limits.Cocone.ι.{u1, u3, u2, u4} J _inst_2 C _inst_1 (CategoryTheory.Functor.comp.{u1, u3, u3, u2, max u4 u3, u4} J _inst_2 (CategoryTheory.Monad.Algebra.{u3, u4} C _inst_1 T) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u3, u4} C _inst_1 T) C _inst_1 D (CategoryTheory.Monad.forget.{u3, u4} C _inst_1 T)) c) j))
+Case conversion may be inaccurate. Consider using '#align category_theory.monad.forget_creates_colimits.commuting CategoryTheory.Monad.ForgetCreatesColimits.commutingₓ'. -/
 /-- (Impl) The key property defining the map `λ : TL ⟶ L`. -/
 theorem commuting (j : J) : (T : C ⥤ C).map (c.ι.app j) ≫ lambda c t = (D.obj j).a ≫ c.ι.app j :=
   (isColimitOfPreserves _ t).fac (newCocone c) j
@@ -185,6 +215,7 @@ theorem commuting (j : J) : (T : C ⥤ C).map (c.ι.app j) ≫ lambda c t = (D.o
 
 variable [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)]
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.coconePoint /-
 /-- (Impl)
 Construct the colimiting algebra from the map `λ : TL ⟶ L` given by `lambda`. We are required to
 show it satisfies the two algebra laws, which follow from the algebra laws for the image of `D` and
@@ -210,7 +241,9 @@ def coconePoint : Algebra T where
       functor.map_comp_assoc, commuting, functor.map_comp, category.assoc, commuting]
     apply (D.obj j).assoc_assoc _
 #align category_theory.monad.forget_creates_colimits.cocone_point CategoryTheory.Monad.ForgetCreatesColimits.coconePoint
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.liftedCocone /-
 /-- (Impl) Construct the lifted cocone in `algebra T` which will be colimiting. -/
 @[simps]
 def liftedCocone : Cocone D where
@@ -225,7 +258,9 @@ def liftedCocone : Cocone D where
         rw [comp_id]
         apply c.w }
 #align category_theory.monad.forget_creates_colimits.lifted_cocone CategoryTheory.Monad.ForgetCreatesColimits.liftedCocone
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.liftedCoconeIsColimit /-
 /-- (Impl) Prove that the lifted cocone is colimiting. -/
 @[simps]
 def liftedCoconeIsColimit : IsColimit (liftedCocone c t)
@@ -244,11 +279,13 @@ def liftedCoconeIsColimit : IsColimit (liftedCocone c t)
     intro j
     simpa using congr_arg algebra.hom.f (J j)
 #align category_theory.monad.forget_creates_colimits.lifted_cocone_is_colimit CategoryTheory.Monad.ForgetCreatesColimits.liftedCoconeIsColimit
+-/
 
 end ForgetCreatesColimits
 
 open ForgetCreatesColimits
 
+#print CategoryTheory.Monad.forgetCreatesColimit /-
 -- TODO: the converse of this is true as well
 /-- The forgetful functor from the Eilenberg-Moore category for a monad creates any colimit
 which the monad itself preserves.
@@ -270,15 +307,21 @@ noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T)
       validLift := Cocones.ext (Iso.refl _) (by tidy)
       makesColimit := liftedCoconeIsColimit _ _ }
 #align category_theory.monad.forget_creates_colimit CategoryTheory.Monad.forgetCreatesColimit
+-/
 
+#print CategoryTheory.Monad.forgetCreatesColimitsOfShape /-
 noncomputable instance forgetCreatesColimitsOfShape [PreservesColimitsOfShape J (T : C ⥤ C)] :
     CreatesColimitsOfShape J (forget T) where CreatesColimit K := by infer_instance
 #align category_theory.monad.forget_creates_colimits_of_shape CategoryTheory.Monad.forgetCreatesColimitsOfShape
+-/
 
+#print CategoryTheory.Monad.forgetCreatesColimits /-
 noncomputable instance forgetCreatesColimits [PreservesColimitsOfSize.{v, u} (T : C ⥤ C)] :
     CreatesColimitsOfSize.{v, u} (forget T) where CreatesColimitsOfShape J 𝒥₁ := by infer_instance
 #align category_theory.monad.forget_creates_colimits CategoryTheory.Monad.forgetCreatesColimits
+-/
 
+#print CategoryTheory.Monad.forget_creates_colimits_of_monad_preserves /-
 /-- For `D : J ⥤ algebra T`, `D ⋙ forget T` has a colimit, then `D` has a colimit provided colimits
 of shape `J` are preserved by `T`.
 -/
@@ -286,6 +329,7 @@ theorem forget_creates_colimits_of_monad_preserves [PreservesColimitsOfShape J (
     (D : J ⥤ Algebra T) [HasColimit (D ⋙ forget T)] : HasColimit D :=
   hasColimit_of_created D (forget T)
 #align category_theory.monad.forget_creates_colimits_of_monad_preserves CategoryTheory.Monad.forget_creates_colimits_of_monad_preserves
+-/
 
 end Monad
 
@@ -293,24 +337,31 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 variable {J : Type u} [Category.{v} J]
 
+#print CategoryTheory.comp_comparison_forget_hasLimit /-
 instance comp_comparison_forget_hasLimit (F : J ⥤ D) (R : D ⥤ C) [MonadicRightAdjoint R]
     [HasLimit (F ⋙ R)] :
     HasLimit ((F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R)) ⋙ Monad.forget _) :=
   @hasLimitOfIso _ _ _ _ (F ⋙ R) _ _
     (isoWhiskerLeft F (Monad.comparisonForget (Adjunction.ofRightAdjoint R)).symm)
 #align category_theory.comp_comparison_forget_has_limit CategoryTheory.comp_comparison_forget_hasLimit
+-/
 
+#print CategoryTheory.comp_comparison_hasLimit /-
 instance comp_comparison_hasLimit (F : J ⥤ D) (R : D ⥤ C) [MonadicRightAdjoint R]
     [HasLimit (F ⋙ R)] : HasLimit (F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R)) :=
   Monad.hasLimit_of_comp_forget_hasLimit (F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R))
 #align category_theory.comp_comparison_has_limit CategoryTheory.comp_comparison_hasLimit
+-/
 
+#print CategoryTheory.monadicCreatesLimits /-
 /-- Any monadic functor creates limits. -/
 noncomputable def monadicCreatesLimits (R : D ⥤ C) [MonadicRightAdjoint R] :
     CreatesLimitsOfSize.{v, u} R :=
   createsLimitsOfNatIso (Monad.comparisonForget (Adjunction.ofRightAdjoint R))
 #align category_theory.monadic_creates_limits CategoryTheory.monadicCreatesLimits
+-/
 
+#print CategoryTheory.monadicCreatesColimitOfPreservesColimit /-
 /-- The forgetful functor from the Eilenberg-Moore category for a monad creates any colimit
 which the monad itself preserves.
 -/
@@ -330,7 +381,9 @@ noncomputable def monadicCreatesColimitOfPreservesColimit (R : D ⥤ C) (K : J �
   · dsimp
     refine' preserves_colimit_of_iso_diagram _ (iso_whisker_right i (left_adjoint R ⋙ R)).symm
 #align category_theory.monadic_creates_colimit_of_preserves_colimit CategoryTheory.monadicCreatesColimitOfPreservesColimit
+-/
 
+#print CategoryTheory.monadicCreatesColimitsOfShapeOfPreservesColimitsOfShape /-
 /-- A monadic functor creates any colimits of shapes it preserves. -/
 noncomputable def monadicCreatesColimitsOfShapeOfPreservesColimitsOfShape (R : D ⥤ C)
     [MonadicRightAdjoint R] [PreservesColimitsOfShape J R] : CreatesColimitsOfShape J R :=
@@ -341,34 +394,44 @@ noncomputable def monadicCreatesColimitsOfShapeOfPreservesColimitsOfShape (R : D
     infer_instance
   ⟨fun K => monadic_creates_colimit_of_preserves_colimit _ _⟩
 #align category_theory.monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape CategoryTheory.monadicCreatesColimitsOfShapeOfPreservesColimitsOfShape
+-/
 
+#print CategoryTheory.monadicCreatesColimitsOfPreservesColimits /-
 /-- A monadic functor creates colimits if it preserves colimits. -/
 noncomputable def monadicCreatesColimitsOfPreservesColimits (R : D ⥤ C) [MonadicRightAdjoint R]
     [PreservesColimitsOfSize.{v, u} R] : CreatesColimitsOfSize.{v, u} R
     where CreatesColimitsOfShape J 𝒥₁ :=
     monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape _
 #align category_theory.monadic_creates_colimits_of_preserves_colimits CategoryTheory.monadicCreatesColimitsOfPreservesColimits
+-/
 
 section
 
+#print CategoryTheory.hasLimit_of_reflective /-
 theorem hasLimit_of_reflective (F : J ⥤ D) (R : D ⥤ C) [HasLimit (F ⋙ R)] [Reflective R] :
     HasLimit F :=
   haveI := monadicCreatesLimits.{v, u} R
   has_limit_of_created F R
 #align category_theory.has_limit_of_reflective CategoryTheory.hasLimit_of_reflective
+-/
 
+#print CategoryTheory.hasLimitsOfShape_of_reflective /-
 /-- If `C` has limits of shape `J` then any reflective subcategory has limits of shape `J`. -/
 theorem hasLimitsOfShape_of_reflective [HasLimitsOfShape J C] (R : D ⥤ C) [Reflective R] :
     HasLimitsOfShape J D :=
   { HasLimit := fun F => hasLimit_of_reflective F R }
 #align category_theory.has_limits_of_shape_of_reflective CategoryTheory.hasLimitsOfShape_of_reflective
+-/
 
+#print CategoryTheory.has_limits_of_reflective /-
 /-- If `C` has limits then any reflective subcategory has limits. -/
 theorem has_limits_of_reflective (R : D ⥤ C) [HasLimitsOfSize.{v, u} C] [Reflective R] :
     HasLimitsOfSize.{v, u} D :=
   { HasLimitsOfShape := fun J 𝒥₁ => has_limits_of_shape_of_reflective R }
 #align category_theory.has_limits_of_reflective CategoryTheory.has_limits_of_reflective
+-/
 
+#print CategoryTheory.hasColimitsOfShape_of_reflective /-
 /-- If `C` has colimits of shape `J` then any reflective subcategory has colimits of shape `J`. -/
 theorem hasColimitsOfShape_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfShape J C] :
     HasColimitsOfShape J D :=
@@ -383,13 +446,17 @@ theorem hasColimitsOfShape_of_reflective (R : D ⥤ C) [Reflective R] [HasColimi
       apply
         (iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _) ≪≫ F.right_unitor }
 #align category_theory.has_colimits_of_shape_of_reflective CategoryTheory.hasColimitsOfShape_of_reflective
+-/
 
+#print CategoryTheory.has_colimits_of_reflective /-
 /-- If `C` has colimits then any reflective subcategory has colimits. -/
 theorem has_colimits_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfSize.{v, u} C] :
     HasColimitsOfSize.{v, u} D :=
   { HasColimitsOfShape := fun J 𝒥 => has_colimits_of_shape_of_reflective R }
 #align category_theory.has_colimits_of_reflective CategoryTheory.has_colimits_of_reflective
+-/
 
+#print CategoryTheory.leftAdjointPreservesTerminalOfReflective /-
 /-- The reflector always preserves terminal objects. Note this in general doesn't apply to any other
 limit.
 -/
@@ -408,6 +475,7 @@ noncomputable def leftAdjointPreservesTerminalOfReflective (R : D ⥤ C) [Reflec
       apply (this (limit.is_limit F)).conePointUniqueUpToIso h
     infer_instance
 #align category_theory.left_adjoint_preserves_terminal_of_reflective CategoryTheory.leftAdjointPreservesTerminalOfReflective
+-/
 
 end
 

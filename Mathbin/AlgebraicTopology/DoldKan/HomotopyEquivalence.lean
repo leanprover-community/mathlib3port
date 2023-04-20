@@ -69,7 +69,7 @@ variable (X)
 /-- Construction of the homotopy from `P_infty` to the identity using eventually
 (termwise) constant homotopies from `P q` to the identity for all `q` -/
 @[simps]
-def homotopyPInftyToId : Homotopy (pInfty : K[X] ⟶ _) (𝟙 _)
+def homotopyPInftyToId : Homotopy (PInfty : K[X] ⟶ _) (𝟙 _)
     where
   Hom i j := (homotopyPToId X (j + 1)).Hom i j
   zero' i j hij := Homotopy.zero _ i j hij

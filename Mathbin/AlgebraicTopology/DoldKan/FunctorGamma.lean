@@ -378,7 +378,7 @@ theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ)
 
 @[simp, reassoc.1]
 theorem pInfty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : ℕ} :
-    (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) ≫ (pInfty : K[Γ₀.obj K] ⟶ _).f n =
+    (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) ≫ (PInfty : K[Γ₀.obj K] ⟶ _).f n =
       (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) :=
   by
   rw [P_infty_f]

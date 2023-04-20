@@ -103,7 +103,7 @@ variable {X} {n : ℕ} {Z Z' : C} (f : MorphComponents X n Z) (g : X' ⟶ X) (h 
 
 /-- The morphism `X _[n+1] ⟶ Z ` associated to `f : morph_components X n Z`. -/
 def φ {Z : C} (f : MorphComponents X n Z) : X _[n + 1] ⟶ Z :=
-  pInfty.f (n + 1) ≫ f.a + ∑ i : Fin (n + 1), (P i).f (n + 1) ≫ X.δ i.rev.succ ≫ f.b i.rev
+  PInfty.f (n + 1) ≫ f.a + ∑ i : Fin (n + 1), (P i).f (n + 1) ≫ X.δ i.rev.succ ≫ f.b i.rev
 #align algebraic_topology.dold_kan.morph_components.φ AlgebraicTopology.DoldKan.MorphComponents.φ
 
 variable (X n)
@@ -113,7 +113,7 @@ variable (X n)
 @[simps]
 def id : MorphComponents X n (X _[n + 1])
     where
-  a := pInfty.f (n + 1)
+  a := PInfty.f (n + 1)
   b i := X.σ i
 #align algebraic_topology.dold_kan.morph_components.id AlgebraicTopology.DoldKan.MorphComponents.id
 

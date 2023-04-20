@@ -68,9 +68,9 @@ def Γ₀'CompNondegComplexFunctor : Γ₀' ⋙ Split.nondegComplexFunctor ≅ �
 #align algebraic_topology.dold_kan.Γ₀'_comp_nondeg_complex_functor AlgebraicTopology.DoldKan.Γ₀'CompNondegComplexFunctor
 
 /-- The natural isomorphism `Γ₀ ⋙ N₁ ≅ to_karoubi (chain_complex C ℕ)`. -/
-def n₁Γ₀ : Γ₀ ⋙ n₁ ≅ toKaroubi (ChainComplex C ℕ) :=
+def n₁Γ₀ : Γ₀ ⋙ N₁ ≅ toKaroubi (ChainComplex C ℕ) :=
   calc
-    Γ₀ ⋙ n₁ ≅ Γ₀' ⋙ Split.forget C ⋙ n₁ := Functor.associator _ _ _
+    Γ₀ ⋙ N₁ ≅ Γ₀' ⋙ Split.forget C ⋙ N₁ := Functor.associator _ _ _
     _ ≅ Γ₀' ⋙ Split.nondegComplexFunctor ⋙ toKaroubi _ :=
       (isoWhiskerLeft Γ₀' Split.toKaroubiNondegComplexFunctorIsoN₁.symm)
     _ ≅ (Γ₀' ⋙ Split.nondegComplexFunctor) ⋙ toKaroubi _ := (Functor.associator _ _ _).symm
@@ -124,7 +124,7 @@ theorem n₁Γ₀_inv_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
   apply id_comp
 #align algebraic_topology.dold_kan.N₁Γ₀_inv_app_f_f AlgebraicTopology.DoldKan.n₁Γ₀_inv_app_f_f
 
-theorem N₂Γ₂_toKaroubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ n₂ = Γ₀ ⋙ n₁ :=
+theorem N₂Γ₂_toKaroubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ = Γ₀ ⋙ N₁ :=
   by
   have h :=
     functor.congr_obj
@@ -141,12 +141,12 @@ theorem N₂Γ₂_toKaroubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ n₂ 
 /-- Compatibility isomorphism between `to_karoubi _ ⋙ Γ₂ ⋙ N₂` and `Γ₀ ⋙ N₁` which
 are functors `chain_complex C ℕ ⥤ karoubi (chain_complex C ℕ)`. -/
 @[simps]
-def n₂Γ₂ToKaroubiIso : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ n₂ ≅ Γ₀ ⋙ n₁ :=
+def n₂Γ₂ToKaroubiIso : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ ≅ Γ₀ ⋙ N₁ :=
   eqToIso N₂Γ₂_toKaroubi
 #align algebraic_topology.dold_kan.N₂Γ₂_to_karoubi_iso AlgebraicTopology.DoldKan.n₂Γ₂ToKaroubiIso
 
 /-- The counit isomorphism of the Dold-Kan equivalence for additive categories. -/
-def n₂Γ₂ : Γ₂ ⋙ n₂ ≅ 𝟭 (Karoubi (ChainComplex C ℕ)) :=
+def n₂Γ₂ : Γ₂ ⋙ N₂ ≅ 𝟭 (Karoubi (ChainComplex C ℕ)) :=
   ((whiskeringLeft _ _ _).obj (toKaroubi (ChainComplex C ℕ))).preimageIso (n₂Γ₂ToKaroubiIso ≪≫ n₁Γ₀)
 #align algebraic_topology.dold_kan.N₂Γ₂ AlgebraicTopology.DoldKan.n₂Γ₂
 

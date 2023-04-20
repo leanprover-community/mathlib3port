@@ -125,7 +125,7 @@ theorem σ_comp_p_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
 
 @[simp, reassoc.1]
 theorem σ_comp_pInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
-    X.σ i ≫ pInfty.f (n + 1) = 0 :=
+    X.σ i ≫ PInfty.f (n + 1) = 0 :=
   by
   rw [P_infty_f, σ_comp_P_eq_zero X i]
   simp only [le_add_iff_nonneg_left, zero_le]
@@ -133,7 +133,7 @@ theorem σ_comp_pInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
 
 @[reassoc.1]
 theorem degeneracy_comp_pInfty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
-    (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ pInfty.f n = 0 :=
+    (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ PInfty.f n = 0 :=
   by
   rw [SimplexCategory.mono_iff_injective] at hθ
   cases n

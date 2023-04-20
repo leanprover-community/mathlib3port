@@ -35,7 +35,7 @@ namespace DoldKan
 the Dold-Kan equivalence for additive categories. -/
 @[simps]
 def n : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ) :=
-  n₂
+  N₂
 #align category_theory.preadditive.dold_kan.N CategoryTheory.Preadditive.DoldKan.n
 
 variable [HasFiniteCoproducts C]

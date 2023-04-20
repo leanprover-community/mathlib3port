@@ -108,14 +108,14 @@ then `P_infty` vanishes on all the summands of `X _[n]` which do
 not correspond to the identity of `[n]`. -/
 theorem ιSummand_comp_pInfty_eq_zero {X : SimplicialObject C} (s : SimplicialObject.Splitting X)
     {n : ℕ} (A : SimplicialObject.Splitting.IndexSet (op [n])) (hA : ¬A.EqId) :
-    s.ιSummand A ≫ pInfty.f n = 0 :=
+    s.ιSummand A ≫ PInfty.f n = 0 :=
   by
   rw [SimplicialObject.Splitting.IndexSet.eqId_iff_mono] at hA
   rw [SimplicialObject.Splitting.ιSummand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
 #align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ιSummand_comp_pInfty_eq_zero
 
 theorem comp_pInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
-    f ≫ pInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 :=
+    f ≫ PInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 :=
   by
   constructor
   · intro h
@@ -143,7 +143,7 @@ theorem comp_pInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
 
 @[simp, reassoc.1]
 theorem pInfty_comp_πSummand_id (n : ℕ) :
-    pInfty.f n ≫ s.πSummand (IndexSet.id (op [n])) = s.πSummand (IndexSet.id (op [n])) :=
+    PInfty.f n ≫ s.πSummand (IndexSet.id (op [n])) = s.πSummand (IndexSet.id (op [n])) :=
   by
   conv_rhs => rw [← id_comp (s.π_summand _)]
   symm
@@ -153,8 +153,8 @@ theorem pInfty_comp_πSummand_id (n : ℕ) :
 
 @[simp, reassoc.1]
 theorem πSummand_comp_ιSummand_comp_pInfty_eq_pInfty (n : ℕ) :
-    s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ pInfty.f n =
-      pInfty.f n :=
+    s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ PInfty.f n =
+      PInfty.f n :=
   by
   conv_rhs => rw [← id_comp (P_infty.f n)]
   erw [s.decomposition_id, preadditive.sum_comp]
@@ -206,11 +206,11 @@ def nondegComplex : ChainComplex C ℕ where
 becomes isomorphic to the normalized Moore complex `N₁.obj X` defined as a formal direct
 factor in the category `karoubi (chain_complex C ℕ)`. -/
 @[simps]
-def toKaroubiNondegComplexIsoN₁ : (toKaroubi _).obj s.nondegComplex ≅ n₁.obj X
+def toKaroubiNondegComplexIsoN₁ : (toKaroubi _).obj s.nondegComplex ≅ N₁.obj X
     where
   Hom :=
     { f :=
-        { f := fun n => s.ιSummand (IndexSet.id (op [n])) ≫ pInfty.f n
+        { f := fun n => s.ιSummand (IndexSet.id (op [n])) ≫ PInfty.f n
           comm' := fun i j hij => by
             dsimp
             rw [assoc, assoc, assoc, π_summand_comp_ι_summand_comp_P_infty_eq_P_infty,
@@ -285,7 +285,7 @@ of nondegenerate simplices of a split simplicial object and the normalized Moore
 defined as a formal direct factor of the alternating face map complex. -/
 @[simps]
 def toKaroubiNondegComplexFunctorIsoN₁ :
-    nondegComplexFunctor ⋙ toKaroubi (ChainComplex C ℕ) ≅ forget C ⋙ DoldKan.n₁ :=
+    nondegComplexFunctor ⋙ toKaroubi (ChainComplex C ℕ) ≅ forget C ⋙ DoldKan.N₁ :=
   NatIso.ofComponents (fun S => S.s.toKaroubiNondegComplexIsoN₁) fun S₁ S₂ Φ =>
     by
     ext n

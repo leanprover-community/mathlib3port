@@ -43,7 +43,7 @@ variable {C : Type _} [Category C] [Preadditive C]
 
 open MorphComponents
 
-instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)) :=
+instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)) :=
   ⟨fun X Y f => by
     intro
     -- restating the result in a way that allows induction on the degree n
@@ -79,9 +79,9 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
       tauto⟩
 
 theorem compatibility_n₂_n₁_karoubi :
-    n₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
+    N₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
       karoubiFunctorCategoryEmbedding SimplexCategoryᵒᵖ C ⋙
-        n₁ ⋙
+        N₁ ⋙
           (karoubiChainComplexEquivalence (Karoubi C) ℕ).Functor ⋙
             Functor.mapHomologicalComplex (KaroubiKaroubi.equivalence C).inverse _ :=
   by
@@ -111,7 +111,7 @@ theorem compatibility_n₂_n₁_karoubi :
 /-- We deduce that `N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms from the fact that
 `N₁ : simplicial_object (karoubi C) ⥤ karoubi (chain_complex (karoubi C) ℕ)` does. -/
-instance : ReflectsIsomorphisms (n₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ)) :=
+instance : ReflectsIsomorphisms (N₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ)) :=
   ⟨fun X Y f => by
     intro
     -- The following functor `F` reflects isomorphism because it is

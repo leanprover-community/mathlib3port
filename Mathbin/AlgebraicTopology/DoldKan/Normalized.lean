@@ -57,7 +57,7 @@ theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
 #align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap
 
 theorem factors_normalized_Moore_complex_pInfty (n : ℕ) :
-    Subobject.Factors (NormalizedMooreComplex.objX X n) (pInfty.f n) :=
+    Subobject.Factors (NormalizedMooreComplex.objX X n) (PInfty.f n) :=
   by
   cases n
   · apply top_factors
@@ -82,7 +82,7 @@ def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
 
 @[simp, reassoc.1]
 theorem pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap (X : SimplicialObject A) :
-    pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = pInfty := by tidy
+    pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = PInfty := by tidy
 #align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap
 
 @[simp, reassoc.1]
@@ -94,12 +94,12 @@ theorem pInftyToNormalizedMooreComplex_naturality {X Y : SimplicialObject A} (f 
 
 @[simp, reassoc.1]
 theorem pInfty_comp_pInftyToNormalizedMooreComplex (X : SimplicialObject A) :
-    pInfty ≫ pInftyToNormalizedMooreComplex X = pInftyToNormalizedMooreComplex X := by tidy
+    PInfty ≫ pInftyToNormalizedMooreComplex X = pInftyToNormalizedMooreComplex X := by tidy
 #align algebraic_topology.dold_kan.P_infty_comp_P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.pInfty_comp_pInftyToNormalizedMooreComplex
 
 @[simp, reassoc.1]
 theorem inclusionOfMooreComplexMap_comp_pInfty (X : SimplicialObject A) :
-    inclusionOfMooreComplexMap X ≫ pInfty = inclusionOfMooreComplexMap X :=
+    inclusionOfMooreComplexMap X ≫ PInfty = inclusionOfMooreComplexMap X :=
   by
   ext n
   cases n
@@ -130,7 +130,7 @@ variable (A)
 the functor `N₁ : simplicial_object A ⥤ karoubi (chain_complex A ℕ)` defined
 using `P_infty` identifies to the composition of the normalized Moore complex functor
 and the inclusion in the Karoubi envelope. -/
-def n₁IsoNormalizedMooreComplexCompToKaroubi : n₁ ≅ normalizedMooreComplex A ⋙ toKaroubi _
+def n₁IsoNormalizedMooreComplexCompToKaroubi : N₁ ≅ normalizedMooreComplex A ⋙ toKaroubi _
     where
   Hom :=
     { app := fun X =>
