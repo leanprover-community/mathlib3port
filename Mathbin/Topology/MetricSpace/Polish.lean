@@ -60,6 +60,7 @@ variable {α : Type _} {β : Type _}
 /-! ### Basic properties of Polish spaces -/
 
 
+#print PolishSpace /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
@@ -73,33 +74,43 @@ class PolishSpace (α : Type _) [h : TopologicalSpace α] : Prop where
   complete :
     ∃ m : MetricSpace α, m.toUniformSpace.toTopologicalSpace = h ∧ @CompleteSpace α m.toUniformSpace
 #align polish_space PolishSpace
+-/
 
+#print UpgradedPolishSpace /-
 /-- A convenience class, for a Polish space endowed with a complete metric. No instance of this
 class should be registered: It should be used as `letI := upgrade_polish_space α` to endow a Polish
 space with a complete metric. -/
 class UpgradedPolishSpace (α : Type _) extends MetricSpace α, SecondCountableTopology α,
   CompleteSpace α
 #align upgraded_polish_space UpgradedPolishSpace
+-/
 
+#print polishSpace_of_complete_second_countable /-
 instance (priority := 100) polishSpace_of_complete_second_countable [m : MetricSpace α]
     [h : SecondCountableTopology α] [h' : CompleteSpace α] : PolishSpace α
     where
   second_countable := h
   complete := ⟨m, rfl, h'⟩
 #align polish_space_of_complete_second_countable polishSpace_of_complete_second_countable
+-/
 
+#print polishSpaceMetric /-
 /-- Construct on a Polish space a metric (compatible with the topology) which is complete. -/
 def polishSpaceMetric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] : MetricSpace α :=
   h.complete.some.replaceTopology h.complete.choose_spec.1.symm
 #align polish_space_metric polishSpaceMetric
+-/
 
+#print complete_polishSpaceMetric /-
 theorem complete_polishSpaceMetric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] :
     @CompleteSpace α (polishSpaceMetric α).toUniformSpace :=
   by
   convert h.complete.some_spec.2
   exact MetricSpace.replaceTopology_eq _ _
 #align complete_polish_space_metric complete_polishSpaceMetric
+-/
 
+#print upgradePolishSpace /-
 /-- This definition endows a Polish space with a complete metric. Use it as:
 `letI := upgrade_polish_space α`. -/
 def upgradePolishSpace (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] :
@@ -107,15 +118,19 @@ def upgradePolishSpace (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace
   letI := polishSpaceMetric α
   { complete_polishSpaceMetric α, PolishSpace.second_countable α with }
 #align upgrade_polish_space upgradePolishSpace
+-/
 
 namespace PolishSpace
 
+#print PolishSpace.t2Space /-
 instance (priority := 100) t2Space (α : Type _) [TopologicalSpace α] [PolishSpace α] : T2Space α :=
   by
   letI := upgradePolishSpace α
   infer_instance
 #align polish_space.t2_space PolishSpace.t2Space
+-/
 
+#print PolishSpace.pi_countable /-
 /-- A countable product of Polish spaces is Polish. -/
 instance pi_countable {ι : Type _} [Countable ι] {E : ι → Type _} [∀ i, TopologicalSpace (E i)]
     [∀ i, PolishSpace (E i)] : PolishSpace (∀ i, E i) :=
@@ -125,11 +140,20 @@ instance pi_countable {ι : Type _} [Countable ι] {E : ι → Type _} [∀ i, T
   letI : MetricSpace (∀ i, E i) := PiCountable.metricSpace
   infer_instance
 #align polish_space.pi_countable PolishSpace.pi_countable
+-/
 
+#print PolishSpace.nat_fun /-
 /-- Without this instance, `polish_space (ℕ → ℕ)` is not found by typeclass inference. -/
 instance nat_fun [TopologicalSpace α] [PolishSpace α] : PolishSpace (ℕ → α) := by infer_instance
 #align polish_space.nat_fun PolishSpace.nat_fun
+-/
 
+/- warning: polish_space.sigma -> PolishSpace.sigma is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] {E : ι -> Type.{u2}} [_inst_2 : forall (n : ι), TopologicalSpace.{u2} (E n)] [_inst_3 : forall (n : ι), PolishSpace.{u2} (E n) (_inst_2 n)], PolishSpace.{max u1 u2} (Sigma.{u1, u2} ι (fun (n : ι) => E n)) (Sigma.topologicalSpace.{u1, u2} ι (fun (n : ι) => E n) (fun (a : ι) => _inst_2 a))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Countable.{succ u1} ι] {E : ι -> Type.{u2}} [_inst_2 : forall (n : ι), TopologicalSpace.{u2} (E n)] [_inst_3 : forall (n : ι), PolishSpace.{u2} (E n) (_inst_2 n)], PolishSpace.{max u2 u1} (Sigma.{u1, u2} ι (fun (n : ι) => E n)) (instTopologicalSpaceSigma.{u1, u2} ι (fun (n : ι) => E n) (fun (a : ι) => _inst_2 a))
+Case conversion may be inaccurate. Consider using '#align polish_space.sigma PolishSpace.sigmaₓ'. -/
 /-- A countable disjoint union of Polish spaces is Polish. -/
 instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, TopologicalSpace (E n)]
     [∀ n, PolishSpace (E n)] : PolishSpace (Σn, E n) :=
@@ -140,6 +164,12 @@ instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, Topologi
   infer_instance
 #align polish_space.sigma PolishSpace.sigma
 
+/- warning: polish_space.sum -> PolishSpace.sum is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : PolishSpace.{u2} β _inst_3], PolishSpace.{max u1 u2} (Sum.{u1, u2} α β) (Sum.topologicalSpace.{u1, u2} α β _inst_1 _inst_3)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] [_inst_3 : TopologicalSpace.{u2} β] [_inst_4 : PolishSpace.{u2} β _inst_3], PolishSpace.{max u2 u1} (Sum.{u1, u2} α β) (instTopologicalSpaceSum.{u1, u2} α β _inst_1 _inst_3)
+Case conversion may be inaccurate. Consider using '#align polish_space.sum PolishSpace.sumₓ'. -/
 /-- The disjoint union of two Polish spaces is Polish. -/
 instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [PolishSpace β] :
     PolishSpace (Sum α β) := by
@@ -149,6 +179,12 @@ instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [Polis
   infer_instance
 #align polish_space.sum PolishSpace.sum
 
+/- warning: polish_space.exists_nat_nat_continuous_surjective -> PolishSpace.exists_nat_nat_continuous_surjective is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] [_inst_3 : Nonempty.{succ u1} α], Exists.{succ u1} ((Nat -> Nat) -> α) (fun (f : (Nat -> Nat) -> α) => And (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => Nat.topologicalSpace)) _inst_1 f) (Function.Surjective.{1, succ u1} (Nat -> Nat) α f))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] [_inst_3 : Nonempty.{succ u1} α], Exists.{succ u1} ((Nat -> Nat) -> α) (fun (f : (Nat -> Nat) -> α) => And (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => instTopologicalSpaceNat)) _inst_1 f) (Function.Surjective.{1, succ u1} (Nat -> Nat) α f))
+Case conversion may be inaccurate. Consider using '#align polish_space.exists_nat_nat_continuous_surjective PolishSpace.exists_nat_nat_continuous_surjectiveₓ'. -/
 /-- Any nonempty Polish space is the continuous image of the fundamental space `ℕ → ℕ`. -/
 theorem exists_nat_nat_continuous_surjective (α : Type _) [TopologicalSpace α] [PolishSpace α]
     [Nonempty α] : ∃ f : (ℕ → ℕ) → α, Continuous f ∧ Surjective f :=
@@ -156,6 +192,12 @@ theorem exists_nat_nat_continuous_surjective (α : Type _) [TopologicalSpace α]
   exists_nat_nat_continuous_surjective_of_completeSpace α
 #align polish_space.exists_nat_nat_continuous_surjective PolishSpace.exists_nat_nat_continuous_surjective
 
+/- warning: closed_embedding.polish_space -> ClosedEmbedding.polishSpace is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : PolishSpace.{u2} β _inst_2] {f : α -> β}, (ClosedEmbedding.{u1, u2} α β _inst_1 _inst_2 f) -> (PolishSpace.{u1} α _inst_1)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : PolishSpace.{u1} β _inst_2] {f : α -> β}, (ClosedEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (PolishSpace.{u2} α _inst_1)
+Case conversion may be inaccurate. Consider using '#align closed_embedding.polish_space ClosedEmbedding.polishSpaceₓ'. -/
 /-- Given a closed embedding into a Polish space, the source space is also Polish. -/
 theorem ClosedEmbedding.polishSpace [TopologicalSpace α] [TopologicalSpace β] [PolishSpace β]
     {f : α → β} (hf : ClosedEmbedding f) : PolishSpace α :=
@@ -171,26 +213,38 @@ theorem ClosedEmbedding.polishSpace [TopologicalSpace α] [TopologicalSpace β] 
   infer_instance
 #align closed_embedding.polish_space ClosedEmbedding.polishSpace
 
+#print Equiv.polishSpace_induced /-
 /-- Pulling back a Polish topology under an equiv gives again a Polish topology. -/
 theorem Equiv.polishSpace_induced [t : TopologicalSpace β] [PolishSpace β] (f : α ≃ β) :
     @PolishSpace α (t.induced f) :=
   letI : TopologicalSpace α := t.induced f
   (f.to_homeomorph_of_inducing ⟨rfl⟩).ClosedEmbedding.PolishSpace
 #align equiv.polish_space_induced Equiv.polishSpace_induced
+-/
 
+#print IsClosed.polishSpace /-
 /-- A closed subset of a Polish space is also Polish. -/
 theorem IsClosed.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
     (hs : IsClosed s) : PolishSpace s :=
   (IsClosed.closedEmbedding_subtype_val hs).PolishSpace
 #align is_closed.polish_space IsClosed.polishSpace
+-/
 
+#print PolishSpace.AuxCopy /-
 /-- A sequence of type synonyms of a given type `α`, useful in the proof of
 `exists_polish_space_forall_le` to endow each copy with a different topology. -/
 @[nolint unused_arguments has_nonempty_instance]
 def AuxCopy (α : Type _) {ι : Type _} (i : ι) : Type _ :=
   α
 #align polish_space.aux_copy PolishSpace.AuxCopy
+-/
 
+/- warning: polish_space.exists_polish_space_forall_le -> PolishSpace.exists_polishSpace_forall_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Countable.{succ u2} ι] [t : TopologicalSpace.{u1} α] [p : PolishSpace.{u1} α t] (m : ι -> (TopologicalSpace.{u1} α)), (forall (n : ι), LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.partialOrder.{u1} α))) (m n) t) -> (forall (n : ι), PolishSpace.{u1} α (m n)) -> (Exists.{succ u1} (TopologicalSpace.{u1} α) (fun (t' : TopologicalSpace.{u1} α) => And (forall (n : ι), LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.partialOrder.{u1} α))) t' (m n)) (And (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.partialOrder.{u1} α))) t' t) (PolishSpace.{u1} α t'))))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : Countable.{succ u2} ι] [t : TopologicalSpace.{u1} α] [p : PolishSpace.{u1} α t] (m : ι -> (TopologicalSpace.{u1} α)), (forall (n : ι), LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α))) (m n) t) -> (forall (n : ι), PolishSpace.{u1} α (m n)) -> (Exists.{succ u1} (TopologicalSpace.{u1} α) (fun (t' : TopologicalSpace.{u1} α) => And (forall (n : ι), LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α))) t' (m n)) (And (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α))) t' t) (PolishSpace.{u1} α t'))))
+Case conversion may be inaccurate. Consider using '#align polish_space.exists_polish_space_forall_le PolishSpace.exists_polishSpace_forall_leₓ'. -/
 /-- Given a Polish space, and countably many finer Polish topologies, there exists another Polish
 topology which is finer than all of them. -/
 theorem exists_polishSpace_forall_le {ι : Type _} [Countable ι] [t : TopologicalSpace α]
@@ -273,34 +327,37 @@ variable [MetricSpace α] {s : Set α}
 /-- A type synonym for a subset `s` of a metric space, on which we will construct another metric
 for which it will be complete. -/
 @[nolint has_nonempty_instance]
-def CompleteCopy {α : Type _} (s : Set α) : Type _ :=
+def TopologicalSpace.Opens.CompleteCopy {α : Type _} (s : Set α) : Type _ :=
   s
-#align polish_space.complete_copy PolishSpace.CompleteCopy
+#align polish_space.complete_copy TopologicalSpace.Opens.CompleteCopyₓ
 
 /-- A distance on a subset `s` of a metric space, designed to make it complete if `s` is open.
 It is given by `dist' x y = dist x y + |1 / dist x sᶜ - 1 / dist y sᶜ|`, where the second term
 blows up close to the boundary to ensure that Cauchy sequences for `dist'` remain well
 inside `s`. -/
-def hasDistCompleteCopy (s : Set α) : Dist (CompleteCopy s) :=
+def TopologicalSpace.Opens.CompleteCopy.instDist (s : Set α) :
+    Dist (TopologicalSpace.Opens.CompleteCopy s) :=
   ⟨fun x y => dist x.1 y.1 + abs (1 / infDist x.1 (sᶜ) - 1 / infDist y.1 (sᶜ))⟩
-#align polish_space.has_dist_complete_copy PolishSpace.hasDistCompleteCopy
+#align polish_space.has_dist_complete_copy TopologicalSpace.Opens.CompleteCopy.instDistₓ
 
 attribute [local instance] has_dist_complete_copy
 
-theorem dist_completeCopy_eq (x y : CompleteCopy s) :
+theorem TopologicalSpace.Opens.CompleteCopy.dist_eq (x y : TopologicalSpace.Opens.CompleteCopy s) :
     dist x y = dist x.1 y.1 + abs (1 / infDist x.1 (sᶜ) - 1 / infDist y.1 (sᶜ)) :=
   rfl
-#align polish_space.dist_complete_copy_eq PolishSpace.dist_completeCopy_eq
+#align polish_space.dist_complete_copy_eq TopologicalSpace.Opens.CompleteCopy.dist_eqₓ
 
-theorem dist_le_dist_completeCopy (x y : CompleteCopy s) : dist x.1 y.1 ≤ dist x y :=
+theorem TopologicalSpace.Opens.CompleteCopy.dist_val_le_dist
+    (x y : TopologicalSpace.Opens.CompleteCopy s) : dist x.1 y.1 ≤ dist x y :=
   (le_add_iff_nonneg_right _).2 (abs_nonneg _)
-#align polish_space.dist_le_dist_complete_copy PolishSpace.dist_le_dist_completeCopy
+#align polish_space.dist_le_dist_complete_copy TopologicalSpace.Opens.CompleteCopy.dist_val_le_distₓ
 
 /-- A metric space structure on a subset `s` of a metric space, designed to make it complete
 if `s` is open. It is given by `dist' x y = dist x y + |1 / dist x sᶜ - 1 / dist y sᶜ|`, where the
 second term blows up close to the boundary to ensure that Cauchy sequences for `dist'` remain well
 inside `s`. -/
-def completeCopyMetricSpace (s : Set α) : MetricSpace (CompleteCopy s)
+def TopologicalSpace.Opens.CompleteCopy.instMetricSpace (s : Set α) :
+    MetricSpace (TopologicalSpace.Opens.CompleteCopy s)
     where
   dist_self x := by simp [dist_complete_copy_eq]
   dist_comm x y := by simp [dist_complete_copy_eq, dist_comm, abs_sub_comm]
@@ -325,13 +382,20 @@ def completeCopyMetricSpace (s : Set α) : MetricSpace (CompleteCopy s)
     refine' dist_le_zero.1 _
     rw [← hxy]
     exact dist_le_dist_complete_copy x y
-#align polish_space.complete_copy_metric_space PolishSpace.completeCopyMetricSpace
+#align polish_space.complete_copy_metric_space TopologicalSpace.Opens.CompleteCopy.instMetricSpaceₓ
 
 attribute [local instance] complete_copy_metric_space
 
+/- warning: polish_space.complete_copy_id_homeo clashes with [anonymous] -> [anonymous]
+warning: polish_space.complete_copy_id_homeo -> [anonymous] is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : MetricSpace.{u_1} α] {s : Set.{u_1} α}, (IsOpen.{u_1} α (UniformSpace.toTopologicalSpace.{u_1} α (PseudoMetricSpace.toUniformSpace.{u_1} α (MetricSpace.toPseudoMetricSpace.{u_1} α _inst_1))) s) -> (Set.Nonempty.{u_1} α (HasCompl.compl.{u_1} (Set.{u_1} α) (BooleanAlgebra.toHasCompl.{u_1} (Set.{u_1} α) (Set.booleanAlgebra.{u_1} α)) s)) -> (Homeomorph.{u_1, u_1} (TopologicalSpace.Opens.CompleteCopyₓ.{u_1} α s) (coeSort.{max (succ u_1) 1, succ (succ u_1)} (Set.{u_1} α) Type.{u_1} (Set.hasCoeToSort.{u_1} α) s) (UniformSpace.toTopologicalSpace.{u_1} (TopologicalSpace.Opens.CompleteCopyₓ.{u_1} α s) (PseudoMetricSpace.toUniformSpace.{u_1} (TopologicalSpace.Opens.CompleteCopyₓ.{u_1} α s) (MetricSpace.toPseudoMetricSpace.{u_1} (TopologicalSpace.Opens.CompleteCopyₓ.{u_1} α s) (TopologicalSpace.Opens.CompleteCopy.instMetricSpaceₓ.{u_1} α _inst_1 s)))) (Subtype.topologicalSpace.{u_1} α (fun (x : α) => Membership.Mem.{u_1, u_1} α (Set.{u_1} α) (Set.hasMem.{u_1} α) x s) (UniformSpace.toTopologicalSpace.{u_1} α (PseudoMetricSpace.toUniformSpace.{u_1} α (MetricSpace.toPseudoMetricSpace.{u_1} α _inst_1)))))
+but is expected to have type
+  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
+Case conversion may be inaccurate. Consider using '#align polish_space.complete_copy_id_homeo [anonymous]ₓ'. -/
 /-- The identity between the type synonym `complete_copy s` (with its modified metric) and the
 original subtype `s` is a homeomorphism. -/
-def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s ≃ₜ s
+def [anonymous] (hs : IsOpen s) (h's : sᶜ.Nonempty) : TopologicalSpace.Opens.CompleteCopy s ≃ₜ s
     where
   toFun := id
   invFun := id
@@ -360,10 +424,10 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
     · refine' (tendsto.sub_const _ _).abs
       refine' tendsto.div tendsto_const_nhds _ I.ne'
       exact ((continuous_inf_dist_pt _).comp continuous_subtype_val).Tendsto _
-#align polish_space.complete_copy_id_homeo PolishSpace.completeCopyIdHomeo
+#align polish_space.complete_copy_id_homeo [anonymous]
 
-theorem completeSpace_completeCopy [CompleteSpace α] (hs : IsOpen s) (h's : sᶜ.Nonempty) :
-    CompleteSpace (CompleteCopy s) :=
+theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α] (hs : IsOpen s)
+    (h's : sᶜ.Nonempty) : CompleteSpace (TopologicalSpace.Opens.CompleteCopy s) :=
   by
   refine' Metric.complete_of_convergent_controlled_sequences (fun n => (1 / 2) ^ n) (by simp) _
   intro u hu
@@ -423,8 +487,9 @@ theorem completeSpace_completeCopy [CompleteSpace α] (hs : IsOpen s) (h's : s�
   suffices x ∉ sᶜ by simpa
   apply (hs.is_closed_compl.not_mem_iff_inf_dist_pos h's).2 (lt_of_lt_of_le _ I')
   simp [Cpos]
-#align polish_space.complete_space_complete_copy PolishSpace.completeSpace_completeCopy
+#align polish_space.complete_space_complete_copy TopologicalSpace.Opens.CompleteCopy.instCompleteSpaceₓ
 
+#print IsOpen.polishSpace /-
 /-- An open subset of a Polish space is also Polish. -/
 theorem IsOpen.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
     (hs : IsOpen s) : PolishSpace s :=
@@ -440,19 +505,23 @@ theorem IsOpen.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] 
       (complete_copy_id_homeo hs h's).Embedding.SecondCountableTopology
     exact (complete_copy_id_homeo hs h's).symm.ClosedEmbedding.PolishSpace
 #align is_open.polish_space IsOpen.polishSpace
+-/
 
 end CompleteCopy
 
 /-! ### Clopenable sets in Polish spaces -/
 
 
+#print PolishSpace.IsClopenable /-
 /-- A set in a topological space is clopenable if there exists a finer Polish topology for which
 this set is open and closed. It turns out that this notion is equivalent to being Borel-measurable,
 but this is nontrivial (see `is_clopenable_iff_measurable_set`). -/
 def IsClopenable [t : TopologicalSpace α] (s : Set α) : Prop :=
   ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ is_closed[t'] s ∧ is_open[t'] s
 #align polish_space.is_clopenable PolishSpace.IsClopenable
+-/
 
+#print IsClosed.isClopenable /-
 /-- Given a closed set `s` in a Polish space, one can construct a finer Polish topology for
 which `s` is both open and closed. -/
 theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsClosed s) :
@@ -510,17 +579,27 @@ theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α
     convert this
     exact A.symm
 #align is_closed.is_clopenable IsClosed.isClopenable
+-/
 
+/- warning: polish_space.is_clopenable.compl -> PolishSpace.IsClopenable.compl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (PolishSpace.IsClopenable.{u1} α _inst_1 s) -> (PolishSpace.IsClopenable.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (PolishSpace.IsClopenable.{u1} α _inst_1 s) -> (PolishSpace.IsClopenable.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
+Case conversion may be inaccurate. Consider using '#align polish_space.is_clopenable.compl PolishSpace.IsClopenable.complₓ'. -/
 theorem IsClopenable.compl [TopologicalSpace α] {s : Set α} (hs : IsClopenable s) :
     IsClopenable (sᶜ) := by
   rcases hs with ⟨t, t_le, t_polish, h, h'⟩
   exact ⟨t, t_le, t_polish, @IsOpen.isClosed_compl α t s h', @IsClosed.isOpen_compl α t s h⟩
 #align polish_space.is_clopenable.compl PolishSpace.IsClopenable.compl
 
+#print IsOpen.isClopenable /-
 theorem IsOpen.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsOpen s) :
     IsClopenable s := by simpa using hs.is_closed_compl.is_clopenable.compl
 #align is_open.is_clopenable IsOpen.isClopenable
+-/
 
+#print PolishSpace.IsClopenable.unionᵢ /-
 theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : ℕ → Set α}
     (hs : ∀ n, IsClopenable (s n)) : IsClopenable (⋃ n, s n) :=
   by
@@ -539,6 +618,7 @@ theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : �
     @IsOpen.isClopenable α t' t'_polish _ A
   exact ⟨t'', t''_le.trans ((t'm 0).trans (mt 0)), t''_polish, h1, h2⟩
 #align polish_space.is_clopenable.Union PolishSpace.IsClopenable.unionᵢ
+-/
 
 end PolishSpace
 
