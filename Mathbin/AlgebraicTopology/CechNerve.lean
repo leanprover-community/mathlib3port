@@ -50,6 +50,7 @@ variable (f : Arrow C)
 
 variable [∀ n : ℕ, HasWidePullback.{0} f.right (fun i : Fin (n + 1) => f.left) fun i => f.Hom]
 
+#print CategoryTheory.Arrow.cechNerve /-
 /-- The Čech nerve associated to an arrow. -/
 @[simps]
 def cechNerve : SimplicialObject C
@@ -67,7 +68,9 @@ def cechNerve : SimplicialObject C
     · simpa
     · simp
 #align category_theory.arrow.cech_nerve CategoryTheory.Arrow.cechNerve
+-/
 
+#print CategoryTheory.Arrow.mapCechNerve /-
 /-- The morphism between Čech nerves associated to a morphism of arrows. -/
 @[simps]
 def mapCechNerve {f g : Arrow C}
@@ -83,7 +86,9 @@ def mapCechNerve {f g : Arrow C}
     · simp
     · simp
 #align category_theory.arrow.map_cech_nerve CategoryTheory.Arrow.mapCechNerve
+-/
 
+#print CategoryTheory.Arrow.augmentedCechNerve /-
 /-- The augmented Čech nerve associated to an arrow. -/
 @[simps]
 def augmentedCechNerve : SimplicialObject.Augmented C
@@ -96,7 +101,9 @@ def augmentedCechNerve : SimplicialObject.Augmented C
         dsimp
         simp }
 #align category_theory.arrow.augmented_cech_nerve CategoryTheory.Arrow.augmentedCechNerve
+-/
 
+#print CategoryTheory.Arrow.mapAugmentedCechNerve /-
 /-- The morphism between augmented Čech nerve associated to a morphism of arrows. -/
 @[simps]
 def mapAugmentedCechNerve {f g : Arrow C}
@@ -110,6 +117,7 @@ def mapAugmentedCechNerve {f g : Arrow C}
     ext
     simp
 #align category_theory.arrow.map_augmented_cech_nerve CategoryTheory.Arrow.mapAugmentedCechNerve
+-/
 
 end CategoryTheory.Arrow
 
@@ -120,6 +128,7 @@ namespace SimplicialObject
 variable
   [∀ (n : ℕ) (f : Arrow C), HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.Hom]
 
+#print CategoryTheory.SimplicialObject.cechNerve /-
 /-- The Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
 def cechNerve : Arrow C ⥤ SimplicialObject C
@@ -135,7 +144,9 @@ def cechNerve : Arrow C ⥤ SimplicialObject C
     · simp
     · simp
 #align category_theory.simplicial_object.cech_nerve CategoryTheory.SimplicialObject.cechNerve
+-/
 
+#print CategoryTheory.SimplicialObject.augmentedCechNerve /-
 /-- The augmented Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
 def augmentedCechNerve : Arrow C ⥤ SimplicialObject.Augmented C
@@ -153,7 +164,14 @@ def augmentedCechNerve : Arrow C ⥤ SimplicialObject.Augmented C
     · simp
     · rfl
 #align category_theory.simplicial_object.augmented_cech_nerve CategoryTheory.SimplicialObject.augmentedCechNerve
+-/
 
+/- warning: category_theory.simplicial_object.equivalence_right_to_left -> CategoryTheory.SimplicialObject.equivalenceRightToLeft is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePullback.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) C _inst_1 (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (X : CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (F : CategoryTheory.Arrow.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.category.{u1, u2} C _inst_1))) X (CategoryTheory.Arrow.augmentedCechNerve.{u1, u2} C _inst_1 F (CategoryTheory.SimplicialObject.equivalenceRightToLeft._proof_1.{u2, u1} C _inst_1 _inst_2 F))) -> (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1))) (CategoryTheory.Functor.obj.{u1, u1, max (max u1 u2) u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.category.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1) X) F)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePullback.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) C _inst_1 (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (X : CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (F : CategoryTheory.Arrow.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) X (CategoryTheory.Arrow.augmentedCechNerve.{u1, u2} C _inst_1 F (fun (n : Nat) => _inst_2 n F))) -> (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (Prefunctor.obj.{succ u1, succ u1, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1)) X) F)
+Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.equivalence_right_to_left CategoryTheory.SimplicialObject.equivalenceRightToLeftₓ'. -/
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
 def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
@@ -167,6 +185,12 @@ def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
     simpa using this
 #align category_theory.simplicial_object.equivalence_right_to_left CategoryTheory.SimplicialObject.equivalenceRightToLeft
 
+/- warning: category_theory.simplicial_object.equivalence_left_to_right -> CategoryTheory.SimplicialObject.equivalenceLeftToRight is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePullback.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) C _inst_1 (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (X : CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (F : CategoryTheory.Arrow.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1))) (CategoryTheory.Functor.obj.{u1, u1, max (max u1 u2) u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.category.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1) X) F) -> (Quiver.Hom.{succ u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.category.{u1, u2} C _inst_1))) X (CategoryTheory.Arrow.augmentedCechNerve.{u1, u2} C _inst_1 F (CategoryTheory.SimplicialObject.equivalenceLeftToRight._proof_1.{u2, u1} C _inst_1 _inst_2 F)))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePullback.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) C _inst_1 (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (X : CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (F : CategoryTheory.Arrow.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (Prefunctor.obj.{succ u1, succ u1, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1)) X) F) -> (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) X (CategoryTheory.Arrow.augmentedCechNerve.{u1, u2} C _inst_1 F (fun (n : Nat) => _inst_2 n F)))
+Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.equivalence_left_to_right CategoryTheory.SimplicialObject.equivalenceLeftToRightₓ'. -/
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
 def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
@@ -198,6 +222,12 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
     simp
 #align category_theory.simplicial_object.equivalence_left_to_right CategoryTheory.SimplicialObject.equivalenceLeftToRight
 
+/- warning: category_theory.simplicial_object.cech_nerve_equiv -> CategoryTheory.SimplicialObject.cechNerveEquiv is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePullback.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) C _inst_1 (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (X : CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (F : CategoryTheory.Arrow.{u1, u2} C _inst_1), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1))) (CategoryTheory.Functor.obj.{u1, u1, max (max u1 u2) u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.category.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1) X) F) (Quiver.Hom.{succ u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max (max u1 u2) u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.category.{u1, u2} C _inst_1))) X (CategoryTheory.Arrow.augmentedCechNerve.{u1, u2} C _inst_1 F (CategoryTheory.SimplicialObject.cechNerveEquiv._proof_1.{u2, u1} C _inst_1 _inst_2 F)))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePullback.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) C _inst_1 (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (X : CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (F : CategoryTheory.Arrow.{u1, u2} C _inst_1), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (Prefunctor.obj.{succ u1, succ u1, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1)) X) F) (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.SimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.SimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) X (CategoryTheory.Arrow.augmentedCechNerve.{u1, u2} C _inst_1 F (fun (n : Nat) => _inst_2 n F)))
+Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.cech_nerve_equiv CategoryTheory.SimplicialObject.cechNerveEquivₓ'. -/
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
 def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
@@ -237,6 +267,7 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
     · rfl
 #align category_theory.simplicial_object.cech_nerve_equiv CategoryTheory.SimplicialObject.cechNerveEquiv
 
+#print CategoryTheory.SimplicialObject.cechNerveAdjunction /-
 /-- The augmented Čech nerve construction is right adjoint to the `to_arrow` functor. -/
 abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmentedCechNerve :=
   Adjunction.mkOfHomEquiv
@@ -253,6 +284,7 @@ abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmentedCe
         · simp
         · rfl }
 #align category_theory.simplicial_object.cech_nerve_adjunction CategoryTheory.SimplicialObject.cechNerveAdjunction
+-/
 
 end SimplicialObject
 
@@ -264,6 +296,7 @@ variable (f : Arrow C)
 
 variable [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.Hom]
 
+#print CategoryTheory.Arrow.cechConerve /-
 /-- The Čech conerve associated to an arrow. -/
 @[simps]
 def cechConerve : CosimplicialObject C
@@ -282,7 +315,9 @@ def cechConerve : CosimplicialObject C
     · simpa
     · simp
 #align category_theory.arrow.cech_conerve CategoryTheory.Arrow.cechConerve
+-/
 
+#print CategoryTheory.Arrow.mapCechConerve /-
 /-- The morphism between Čech conerves associated to a morphism of arrows. -/
 @[simps]
 def mapCechConerve {f g : Arrow C}
@@ -298,7 +333,9 @@ def mapCechConerve {f g : Arrow C}
     · simp
     · simp
 #align category_theory.arrow.map_cech_conerve CategoryTheory.Arrow.mapCechConerve
+-/
 
+#print CategoryTheory.Arrow.augmentedCechConerve /-
 /-- The augmented Čech conerve associated to an arrow. -/
 @[simps]
 def augmentedCechConerve : CosimplicialObject.Augmented C
@@ -311,7 +348,9 @@ def augmentedCechConerve : CosimplicialObject.Augmented C
         dsimp
         simp }
 #align category_theory.arrow.augmented_cech_conerve CategoryTheory.Arrow.augmentedCechConerve
+-/
 
+#print CategoryTheory.Arrow.mapAugmentedCechConerve /-
 /-- The morphism between augmented Čech conerves associated to a morphism of arrows. -/
 @[simps]
 def mapAugmentedCechConerve {f g : Arrow C}
@@ -325,6 +364,7 @@ def mapAugmentedCechConerve {f g : Arrow C}
     ext
     simp
 #align category_theory.arrow.map_augmented_cech_conerve CategoryTheory.Arrow.mapAugmentedCechConerve
+-/
 
 end CategoryTheory.Arrow
 
@@ -335,6 +375,7 @@ namespace CosimplicialObject
 variable
   [∀ (n : ℕ) (f : Arrow C), HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.Hom]
 
+#print CategoryTheory.CosimplicialObject.cechConerve /-
 /-- The Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]
 def cechConerve : Arrow C ⥤ CosimplicialObject C
@@ -352,7 +393,9 @@ def cechConerve : Arrow C ⥤ CosimplicialObject C
     · simp
     · simp
 #align category_theory.cosimplicial_object.cech_conerve CategoryTheory.CosimplicialObject.cechConerve
+-/
 
+#print CategoryTheory.CosimplicialObject.augmentedCechConerve /-
 /-- The augmented Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]
 def augmentedCechConerve : Arrow C ⥤ CosimplicialObject.Augmented C
@@ -372,7 +415,14 @@ def augmentedCechConerve : Arrow C ⥤ CosimplicialObject.Augmented C
     · simp
     · simp
 #align category_theory.cosimplicial_object.augmented_cech_conerve CategoryTheory.CosimplicialObject.augmentedCechConerve
+-/
 
+/- warning: category_theory.cosimplicial_object.equivalence_left_to_right -> CategoryTheory.CosimplicialObject.equivalenceLeftToRight is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePushout.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) C _inst_1 (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (F : CategoryTheory.Arrow.{u1, u2} C _inst_1) (X : CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.category.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.augmentedCechConerve.{u1, u2} C _inst_1 F (CategoryTheory.CosimplicialObject.equivalenceLeftToRight._proof_1.{u2, u1} C _inst_1 _inst_2 F)) X) -> (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1))) F (CategoryTheory.Functor.obj.{u1, u1, max u1 u2, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.category.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1) X))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePushout.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) C _inst_1 (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (F : CategoryTheory.Arrow.{u1, u2} C _inst_1) (X : CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.augmentedCechConerve.{u1, u2} C _inst_1 F (fun (n : Nat) => _inst_2 n F)) X) -> (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) F (Prefunctor.obj.{succ u1, succ u1, max u2 u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1)) X))
+Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.equivalence_left_to_right CategoryTheory.CosimplicialObject.equivalenceLeftToRightₓ'. -/
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
 def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
@@ -387,6 +437,12 @@ def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
       wide_pushout.arrow_ι_assoc fun i => F.hom]
 #align category_theory.cosimplicial_object.equivalence_left_to_right CategoryTheory.CosimplicialObject.equivalenceLeftToRight
 
+/- warning: category_theory.cosimplicial_object.equivalence_right_to_left -> CategoryTheory.CosimplicialObject.equivalenceRightToLeft is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePushout.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) C _inst_1 (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (F : CategoryTheory.Arrow.{u1, u2} C _inst_1) (X : CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1))) F (CategoryTheory.Functor.obj.{u1, u1, max u1 u2, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.category.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1) X)) -> (Quiver.Hom.{succ u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.category.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.augmentedCechConerve.{u1, u2} C _inst_1 F (CategoryTheory.CosimplicialObject.equivalenceRightToLeft._proof_1.{u2, u1} C _inst_1 _inst_2 F)) X)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePushout.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) C _inst_1 (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (F : CategoryTheory.Arrow.{u1, u2} C _inst_1) (X : CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1), (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) F (Prefunctor.obj.{succ u1, succ u1, max u2 u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1)) X)) -> (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.augmentedCechConerve.{u1, u2} C _inst_1 F (fun (n : Nat) => _inst_2 n F)) X)
+Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.equivalence_right_to_left CategoryTheory.CosimplicialObject.equivalenceRightToLeftₓ'. -/
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
 def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
@@ -420,6 +476,12 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
     simp
 #align category_theory.cosimplicial_object.equivalence_right_to_left CategoryTheory.CosimplicialObject.equivalenceRightToLeft
 
+/- warning: category_theory.cosimplicial_object.cech_conerve_equiv -> CategoryTheory.CosimplicialObject.cechConerveEquiv is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePushout.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) C _inst_1 (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (F : CategoryTheory.Arrow.{u1, u2} C _inst_1) (X : CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u1 u2} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.category.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.augmentedCechConerve.{u1, u2} C _inst_1 F (CategoryTheory.CosimplicialObject.cechConerveEquiv._proof_1.{u2, u1} C _inst_1 _inst_2 F)) X) (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1))) F (CategoryTheory.Functor.obj.{u1, u1, max u1 u2, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.category.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Arrow.category.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1) X))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : forall (n : Nat) (f : CategoryTheory.Arrow.{u1, u2} C _inst_1), CategoryTheory.Limits.HasWidePushout.{0, u1, u2} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) C _inst_1 (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f) (fun (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)] (F : CategoryTheory.Arrow.{u1, u2} C _inst_1) (X : CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.augmentedCechConerve.{u1, u2} C _inst_1 F (fun (n : Nat) => _inst_2 n F)) X) (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) F (Prefunctor.obj.{succ u1, succ u1, max u2 u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1))) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.CosimplicialObject.Augmented.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.instCategoryAugmented.{u1, u2} C _inst_1) (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) (CategoryTheory.CosimplicialObject.Augmented.toArrow.{u1, u2} C _inst_1)) X))
+Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.cech_conerve_equiv CategoryTheory.CosimplicialObject.cechConerveEquivₓ'. -/
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
 def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
@@ -457,6 +519,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
       linarith
 #align category_theory.cosimplicial_object.cech_conerve_equiv CategoryTheory.CosimplicialObject.cechConerveEquiv
 
+#print CategoryTheory.CosimplicialObject.cechConerveAdjunction /-
 /-- The augmented Čech conerve construction is left adjoint to the `to_arrow` functor. -/
 abbrev cechConerveAdjunction : augmentedCechConerve ⊣ (Augmented.toArrow : _ ⥤ Arrow C) :=
   Adjunction.mkOfHomEquiv
@@ -473,11 +536,13 @@ abbrev cechConerveAdjunction : augmentedCechConerve ⊣ (Augmented.toArrow : _ �
         · simp
         · simp }
 #align category_theory.cosimplicial_object.cech_conerve_adjunction CategoryTheory.CosimplicialObject.cechConerveAdjunction
+-/
 
 end CosimplicialObject
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.cechNerveTerminalFrom /-
 /-- Given an object `X : C`, the natural simplicial object sending `[n]` to `Xⁿ⁺¹`. -/
 def cechNerveTerminalFrom {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X : C) :
     SimplicialObject C where
@@ -494,22 +559,37 @@ def cechNerveTerminalFrom {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]" <;>
         simpa only [category.assoc, limit.lift_π, fan.mk_π_app]
 #align category_theory.cech_nerve_terminal_from CategoryTheory.cechNerveTerminalFrom
+-/
 
 namespace CechNerveTerminalFrom
 
 variable [HasTerminal C] (ι : Type w)
 
+#print CategoryTheory.CechNerveTerminalFrom.wideCospan /-
 /-- The diagram `option ι ⥤ C` sending `none` to the terminal object and `some j` to `X`. -/
 def wideCospan (X : C) : WidePullbackShape ι ⥤ C :=
   WidePullbackShape.wideCospan (terminal C) (fun i : ι => X) fun i => terminal.from X
-#align category_theory.cech_nerve_terminal_from.wide_cospan CategoryTheory.cechNerveTerminalFrom.wideCospan
+#align category_theory.cech_nerve_terminal_from.wide_cospan CategoryTheory.CechNerveTerminalFrom.wideCospan
+-/
 
+/- warning: category_theory.cech_nerve_terminal_from.unique_to_wide_cospan_none -> CategoryTheory.CechNerveTerminalFrom.uniqueToWideCospanNone is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasTerminal.{u1, u2} C _inst_1] (ι : Type.{u3}) (X : C) (Y : C), Unique.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y (CategoryTheory.Functor.obj.{u3, u1, u3, u2} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.Limits.WidePullbackShape.category.{u3} ι) C _inst_1 (CategoryTheory.CechNerveTerminalFrom.wideCospan.{u1, u2, u3} C _inst_1 _inst_2 ι X) (Option.none.{u3} ι)))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasTerminal.{u1, u2} C _inst_1] (ι : Type.{u3}) (X : C) (Y : C), Unique.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Y (Prefunctor.obj.{succ u3, succ u1, u3, u2} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.CategoryStruct.toQuiver.{u3, u3} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.Category.toCategoryStruct.{u3, u3} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.Limits.WidePullbackShape.category.{u3} ι))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u3, u2} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.Limits.WidePullbackShape.category.{u3} ι) C _inst_1 (CategoryTheory.CechNerveTerminalFrom.wideCospan.{u1, u2, u3} C _inst_1 _inst_2 ι X)) (Option.none.{u3} ι)))
+Case conversion may be inaccurate. Consider using '#align category_theory.cech_nerve_terminal_from.unique_to_wide_cospan_none CategoryTheory.CechNerveTerminalFrom.uniqueToWideCospanNoneₓ'. -/
 instance uniqueToWideCospanNone (X Y : C) : Unique (Y ⟶ (wideCospan ι X).obj none) := by
   unfold wide_cospan <;> dsimp <;> infer_instance
-#align category_theory.cech_nerve_terminal_from.unique_to_wide_cospan_none CategoryTheory.cechNerveTerminalFrom.uniqueToWideCospanNone
+#align category_theory.cech_nerve_terminal_from.unique_to_wide_cospan_none CategoryTheory.CechNerveTerminalFrom.uniqueToWideCospanNone
 
 variable [HasFiniteProducts C]
 
+/- warning: category_theory.cech_nerve_terminal_from.wide_cospan.limit_cone -> CategoryTheory.CechNerveTerminalFrom.wideCospan.limitCone is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasTerminal.{u1, u2} C _inst_1] (ι : Type.{u3}) [_inst_3 : CategoryTheory.Limits.HasFiniteProducts.{u1, u2} C _inst_1] [_inst_4 : Fintype.{u3} ι] (X : C), CategoryTheory.Limits.LimitCone.{u3, u3, u1, u2} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.Limits.WidePullbackShape.category.{u3} ι) C _inst_1 (CategoryTheory.CechNerveTerminalFrom.wideCospan.{u1, u2, u3} C _inst_1 _inst_2 ι X)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasTerminal.{u1, u2} C _inst_1] (ι : Type.{u3}) [_inst_3 : CategoryTheory.Limits.HasFiniteProducts.{u1, u2} C _inst_1] [_inst_4 : Finite.{succ u3} ι] (X : C), CategoryTheory.Limits.LimitCone.{u3, u3, u1, u2} (CategoryTheory.Limits.WidePullbackShape.{u3} ι) (CategoryTheory.Limits.WidePullbackShape.category.{u3} ι) C _inst_1 (CategoryTheory.CechNerveTerminalFrom.wideCospan.{u1, u2, u3} C _inst_1 _inst_2 ι X)
+Case conversion may be inaccurate. Consider using '#align category_theory.cech_nerve_terminal_from.wide_cospan.limit_cone CategoryTheory.CechNerveTerminalFrom.wideCospan.limitConeₓ'. -/
 /-- The product `Xᶥ` is the vertex of a limit cone on `wide_cospan ι X`. -/
 def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
     where
@@ -536,16 +616,19 @@ def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
         congr
         ext
         rfl }
-#align category_theory.cech_nerve_terminal_from.wide_cospan.limit_cone CategoryTheory.cechNerveTerminalFrom.wideCospan.limitCone
+#align category_theory.cech_nerve_terminal_from.wide_cospan.limit_cone CategoryTheory.CechNerveTerminalFrom.wideCospan.limitCone
 
+#print CategoryTheory.CechNerveTerminalFrom.hasWidePullback /-
 instance hasWidePullback [Finite ι] (X : C) :
     HasWidePullback (Arrow.mk (terminal.from X)).right
       (fun i : ι => (Arrow.mk (terminal.from X)).left) fun i => (Arrow.mk (terminal.from X)).Hom :=
   by
   cases nonempty_fintype ι
   exact ⟨⟨wide_cospan.limit_cone ι X⟩⟩
-#align category_theory.cech_nerve_terminal_from.has_wide_pullback CategoryTheory.cechNerveTerminalFrom.hasWidePullback
+#align category_theory.cech_nerve_terminal_from.has_wide_pullback CategoryTheory.CechNerveTerminalFrom.hasWidePullback
+-/
 
+#print CategoryTheory.CechNerveTerminalFrom.iso /-
 /-- Given an object `X : C`, the Čech nerve of the hom to the terminal object `X ⟶ ⊤_ C` is
 naturally isomorphic to a simplicial object sending `[n]` to `Xⁿ⁺¹` (when `C` is `G-Set`, this is
 `EG`, the universal cover of the classifying space of `G`. -/
@@ -567,7 +650,8 @@ def iso (X : C) : (Arrow.mk (terminal.from X)).cechNerve ≅ cechNerveTerminalFr
             limit.lift_π]
           rfl)
         (@Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _))
-#align category_theory.cech_nerve_terminal_from.iso CategoryTheory.cechNerveTerminalFrom.iso
+#align category_theory.cech_nerve_terminal_from.iso CategoryTheory.CechNerveTerminalFrom.iso
+-/
 
 end CechNerveTerminalFrom
 

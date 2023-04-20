@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit cd8fafa2fac98e1a67097e8a91ad9901cfde48af
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.LinearAlgebra.Orientation
 import Mathbin.Algebra.Order.Smul
 import Mathbin.Data.Complex.Basic
 import Mathbin.Data.Fin.VecNotation
@@ -202,11 +201,6 @@ circle. -/
 theorem finrank_real_complex_fact : Fact (finrank ℝ ℂ = 2) :=
   ⟨finrank_real_complex⟩
 #align complex.finrank_real_complex_fact Complex.finrank_real_complex_fact
-
-/-- The standard orientation on `ℂ`. -/
-protected noncomputable def orientation : Orientation ℝ ℂ (Fin 2) :=
-  Complex.basisOneI.Orientation
-#align complex.orientation Complex.orientation
 
 end Complex
 

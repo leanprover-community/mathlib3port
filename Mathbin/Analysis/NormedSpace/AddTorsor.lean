@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor
-! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Topology.Instances.RealVectorSpace
 
 /-!
 # Torsors of normed space actions.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains lemmas about normed additive torsors over normed spaces.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.exposed
-! leanprover-community/mathlib commit 48024901a8e2a462363650c50d62248a77cbcab3
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Order.Basic
 
 /-!
 # Exposed sets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines exposed sets and exposed points for sets in a real vector space.
 

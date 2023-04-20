@@ -419,7 +419,7 @@ theorem apply_eq_zero_of_comp_eq_zero {P Q R : C} (f : Q ⟶ R) (a : P ⟶ Q) : 
 section
 
 /-- If two morphisms are exact on pseudoelements, they are exact. -/
-theorem exactOfPseudoExact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
+theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
     ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → Exact f g := fun ⟨h₁, h₂⟩ =>
   (Abelian.exact_iff _ _).2
     ⟨zero_morphism_ext _ fun a => by rw [comp_apply, h₁ a],
@@ -452,7 +452,7 @@ theorem exactOfPseudoExact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       -- are done.
       rw [(iso.eq_inv_comp (as_iso j)).2 pullback.condition.symm]
       simp only [category.assoc, kernel.condition, has_zero_morphisms.comp_zero]⟩
-#align category_theory.abelian.pseudoelement.exact_of_pseudo_exact CategoryTheory.Abelian.Pseudoelement.exactOfPseudoExact
+#align category_theory.abelian.pseudoelement.exact_of_pseudo_exact CategoryTheory.Abelian.Pseudoelement.exact_of_pseudo_exact
 
 end
 

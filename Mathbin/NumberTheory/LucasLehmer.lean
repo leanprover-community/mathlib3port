@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 
 ! This file was ported from Lean 3 source module number_theory.lucas_lehmer
-! leanprover-community/mathlib commit 10b4e499f43088dd3bb7b5796184ad5216648ab1
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Tactic.RingExp
 
 /-!
 # The Lucas-Lehmer test for Mersenne primes.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `lucas_lehmer_residue : Π p : ℕ, zmod (2^p - 1)`, and
 prove `lucas_lehmer_residue p = 0 → prime (mersenne p)`.

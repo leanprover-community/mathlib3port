@@ -391,7 +391,7 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
     HomotopyEquiv (AlgebraicTopology.AlternatingFaceMapComplex.obj (drop.obj X))
       ((ChainComplex.single₀ C).obj (point.obj X))
     where
-  Hom := alternatingFaceMapComplex.ε.app X
+  Hom := AlternatingFaceMapComplex.ε.app X
   inv := (ChainComplex.fromSingle₀Equiv _ _).invFun ed.s'
   homotopyInvHomId :=
     Homotopy.ofEq

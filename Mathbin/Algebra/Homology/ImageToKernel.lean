@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.image_to_kernel
-! leanprover-community/mathlib commit 618ea3d5c99240cd7000d8376924906a148bf9ff
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Subobject.Limits
 
 /-!
 # Image-to-kernel comparison maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Whenever `f : A ⟶ B` and `g : B ⟶ C` satisfy `w : f ≫ g = 0`,
 we have `image_le_kernel f g w : image_subobject f ≤ kernel_subobject g`
@@ -522,10 +525,10 @@ private unsafe def aux_tac : tactic Unit :=
   sorry
 #align aux_tac aux_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.601314589.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.601314589.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.601314589.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.601314589.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1451867403.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1451867403.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1451867403.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1451867403.aux_tac -/
 #print homology.congr /-
 /-- `homology f g w ≅ homology f' g' w'` if `f = f'` and `g = g'`.
 (Note the objects are not changing here.)

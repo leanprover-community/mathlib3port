@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 
 ! This file was ported from Lean 3 source module analysis.convex.body
-! leanprover-community/mathlib commit 858a10cf68fd6c06872950fc58c4dcc68d465591
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Convex bodies
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the definition of the type `convex_body V`
 consisting of

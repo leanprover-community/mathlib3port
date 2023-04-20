@@ -34,12 +34,20 @@ open CategoryTheory.Subobject
 
 open CategoryTheory.Type
 
+#print subtype_val_mono /-
 theorem subtype_val_mono {α : Type u} (s : Set α) : Mono (↾(Subtype.val : s → α)) :=
   (mono_iff_injective _).mpr Subtype.val_injective
 #align subtype_val_mono subtype_val_mono
+-/
 
 attribute [local instance] subtype_val_mono
 
+/- warning: types.mono_over_equivalence_set -> Types.monoOverEquivalenceSet is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}), CategoryTheory.Equivalence.{u1, u1, succ u1, u1} (CategoryTheory.MonoOver.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.MonoOver.category.{succ u1, u1} Type.{u1} CategoryTheory.types.{u1} α) (Set.{u1} α) (Preorder.smallCategory.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))))
+but is expected to have type
+  forall (α : Type.{u1}), CategoryTheory.Equivalence.{u1, u1, succ u1, u1} (CategoryTheory.MonoOver.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Set.{u1} α) (CategoryTheory.instCategoryMonoOver.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Preorder.smallCategory.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)))))))))
+Case conversion may be inaccurate. Consider using '#align types.mono_over_equivalence_set Types.monoOverEquivalenceSetₓ'. -/
 /-- The category of `mono_over α`, for `α : Type u`, is equivalent to the partial order `set α`.
 -/
 @[simps]
@@ -71,9 +79,11 @@ instance : WellPowered (Type u) :=
   wellPowered_of_essentiallySmall_monoOver fun α =>
     EssentiallySmall.mk' (Types.monoOverEquivalenceSet α)
 
+#print Types.subobjectEquivSet /-
 /-- For `α : Type u`, `subobject α` is order isomorphic to `set α`.
 -/
 noncomputable def Types.subobjectEquivSet (α : Type u) : Subobject α ≃o Set α :=
   (Types.monoOverEquivalenceSet α).thinSkeletonOrderIso
 #align types.subobject_equiv_set Types.subobjectEquivSet
+-/
 

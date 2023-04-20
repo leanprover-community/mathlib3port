@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.limits
-! leanprover-community/mathlib commit 956af7c76589f444f2e1313911bad16366ea476d
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Subobject.Lattice
 
 /-!
 # Specific subobjects
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `equalizer_subobject`, `kernel_subobject` and `image_subobject`, which are the subobjects
 represented by the equalizer, kernel and image of (a pair of) morphism(s) and provide conditions

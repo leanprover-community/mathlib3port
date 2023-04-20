@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.prime
-! leanprover-community/mathlib commit 58581d0fe523063f5651df0619be2bf65012a94a
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Tactic.Ring
 
 /-!
 # Primality for binary natural numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines versions of `nat.min_fac` and `nat.prime` for `num` and `pos_num`. As with other
 `num` definitions, they are not intended for general use (`nat` should be used instead of `num` in

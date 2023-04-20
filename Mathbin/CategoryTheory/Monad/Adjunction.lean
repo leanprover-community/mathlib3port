@@ -115,7 +115,7 @@ and essentially surjective when `R` is reflective.
 def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra
     where
   obj X :=
-    { a := R.obj X
+    { A := R.obj X
       a := R.map (h.counit.app X)
       assoc' := by
         dsimp
@@ -149,7 +149,7 @@ instance (T : Monad C) : Full (Monad.comparison T.adj)
 
 instance (T : Monad C) : EssSurj (Monad.comparison T.adj)
     where mem_essImage X :=
-    ⟨{  a := X.a
+    ⟨{  A := X.A
         a := X.a
         unit' := by simpa using X.unit
         assoc' := by simpa using X.assoc }, ⟨Monad.Algebra.isoMk (Iso.refl _) (by simp)⟩⟩
@@ -163,7 +163,7 @@ sending objects `X : C` to Eilenberg-Moore coalgebras for `L ⋙ R` with underly
 def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra
     where
   obj X :=
-    { a := L.obj X
+    { A := L.obj X
       a := L.map (h.Unit.app X)
       coassoc' := by
         dsimp
@@ -201,7 +201,7 @@ instance (G : Comonad C) : Full (Comonad.comparison G.adj)
 
 instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj)
     where mem_essImage X :=
-    ⟨{  a := X.a
+    ⟨{  A := X.A
         a := X.a
         counit' := by simpa using X.counit
         coassoc' := by simpa using X.coassoc }, ⟨Comonad.Coalgebra.isoMk (Iso.refl _) (by simp)⟩⟩
@@ -241,7 +241,7 @@ attribute [instance] comonadic_left_adjoint.eqv
 namespace Reflective
 
 instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
-    IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
+    IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.A) :=
   ⟨⟨X.a,
       ⟨X.Unit, by
         dsimp only [functor.id_obj]
@@ -254,7 +254,7 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
 instance comparison_essSurj [Reflective R] :
     EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
   by
-  refine' ⟨fun X => ⟨(left_adjoint R).obj X.a, ⟨_⟩⟩⟩
+  refine' ⟨fun X => ⟨(left_adjoint R).obj X.A, ⟨_⟩⟩⟩
   symm
   refine' monad.algebra.iso_mk _ _
   · exact as_iso ((adjunction.of_right_adjoint R).Unit.app X.A)

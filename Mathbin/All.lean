@@ -1234,6 +1234,7 @@ import Mathbin.Data.Complex.Determinant
 import Mathbin.Data.Complex.Exponential
 import Mathbin.Data.Complex.ExponentialBounds
 import Mathbin.Data.Complex.Module
+import Mathbin.Data.Complex.Orientation
 import Mathbin.Data.Countable.Basic
 import Mathbin.Data.Countable.Defs
 import Mathbin.Data.Countable.Small

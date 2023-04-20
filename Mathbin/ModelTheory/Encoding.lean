@@ -52,30 +52,21 @@ open Computability List Structure Cardinal Fin
 
 namespace Term
 
-/- warning: first_order.language.term.list_encode -> FirstOrder.Language.Term.listEncode is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (List.{max u3 u1} (Sum.{u3, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u2} L i))))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}}, (FirstOrder.Language.Term.{u1, u3, u2} L α) -> (List.{max u2 u1} (Sum.{u2, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u3} L i))))
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.list_encode FirstOrder.Language.Term.listEncodeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Term.listEncode /-
 /-- Encodes a term as a list of variables and function symbols. -/
 def listEncode : L.term α → List (Sum α (Σi, L.Functions i))
   | var i => [Sum.inl i]
   | func f ts =>
     Sum.inr (⟨_, f⟩ : Σi, L.Functions i)::(List.finRange _).bind fun i => (ts i).listEncode
 #align first_order.language.term.list_encode FirstOrder.Language.Term.listEncode
+-/
 
-/- warning: first_order.language.term.list_decode -> FirstOrder.Language.Term.listDecode is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, (List.{max u3 u1} (Sum.{u3, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u2} L i)))) -> (List.{max u1 u3} (Option.{max u1 u3} (FirstOrder.Language.Term.{u1, u2, u3} L α)))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}}, (List.{max u2 u1} (Sum.{u2, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u3} L i)))) -> (List.{max u1 u2} (Option.{max u1 u2} (FirstOrder.Language.Term.{u1, u3, u2} L α)))
-Case conversion may be inaccurate. Consider using '#align first_order.language.term.list_decode FirstOrder.Language.Term.listDecodeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Term.listDecode /-
 /-- Decodes a list of variables and function symbols as a list of terms. -/
 def listDecode : List (Sum α (Σi, L.Functions i)) → List (Option (L.term α))
   | [] => []
@@ -85,8 +76,10 @@ def listDecode : List (Sum α (Σi, L.Functions i)) → List (Option (L.term α)
       (func f fun i => Option.get (h i))::(list_decode l).drop n
     else [none]
 #align first_order.language.term.list_decode FirstOrder.Language.Term.listDecode
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Term.listDecode_encode_list /-
 theorem listDecode_encode_list (l : List (L.term α)) :
     listDecode (l.bind listEncode) = l.map Option.some :=
   by
@@ -126,7 +119,9 @@ theorem listDecode_encode_list (l : List (L.term α)) :
       · rw [h, drop_left']
         rw [length_map, length_fin_range]
 #align first_order.language.term.list_decode_encode_list FirstOrder.Language.Term.listDecode_encode_list
+-/
 
+#print FirstOrder.Language.Term.encoding /-
 /-- An encoding of terms as lists. -/
 @[simps]
 protected def encoding : Encoding (L.term α)
@@ -139,16 +134,31 @@ protected def encoding : Encoding (L.term α)
     rw [bind_singleton] at h
     simp only [h, Option.join, head', List.map, Option.some_bind, id.def]
 #align first_order.language.term.encoding FirstOrder.Language.Term.encoding
+-/
 
+#print FirstOrder.Language.Term.listEncode_injective /-
 theorem listEncode_injective :
     Function.Injective (listEncode : L.term α → List (Sum α (Σi, L.Functions i))) :=
   Term.encoding.encode_injective
 #align first_order.language.term.list_encode_injective FirstOrder.Language.Term.listEncode_injective
+-/
 
+/- warning: first_order.language.term.card_le -> FirstOrder.Language.Term.card_le is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, LE.le.{succ (max u1 u3)} Cardinal.{max u1 u3} Cardinal.hasLe.{max u1 u3} (Cardinal.mk.{max u1 u3} (FirstOrder.Language.Term.{u1, u2, u3} L α)) (LinearOrder.max.{succ (max u1 u3)} Cardinal.{max u1 u3} Cardinal.linearOrder.{max u1 u3} Cardinal.aleph0.{max u1 u3} (Cardinal.mk.{max u1 u3} (Sum.{u3, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u2} L i)))))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, LE.le.{max (succ u1) (succ u3)} Cardinal.{max u1 u3} Cardinal.instLECardinal.{max u1 u3} (Cardinal.mk.{max u1 u3} (FirstOrder.Language.Term.{u1, u2, u3} L α)) (Max.max.{succ (max u1 u3)} Cardinal.{max u1 u3} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u3)} Cardinal.{max u1 u3} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u3}) Cardinal.aleph0.{max u1 u3} (Cardinal.mk.{max u1 u3} (Sum.{u3, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u2} L i)))))
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.card_le FirstOrder.Language.Term.card_leₓ'. -/
 theorem card_le : (#L.term α) ≤ max ℵ₀ (#Sum α (Σi, L.Functions i)) :=
   lift_le.1 (trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
 #align first_order.language.term.card_le FirstOrder.Language.Term.card_le
 
+/- warning: first_order.language.term.card_sigma -> FirstOrder.Language.Term.card_sigma is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, Eq.{succ (succ (max u1 u3))} Cardinal.{max u1 u3} (Cardinal.mk.{max u1 u3} (Sigma.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))))) (LinearOrder.max.{succ (max u1 u3)} Cardinal.{max u1 u3} Cardinal.linearOrder.{max u1 u3} Cardinal.aleph0.{max u1 u3} (Cardinal.mk.{max u1 u3} (Sum.{u3, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u2} L i)))))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, Eq.{max (succ (succ u1)) (succ (succ u3))} Cardinal.{max u1 u3} (Cardinal.mk.{max u1 u3} (Sigma.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))))) (Max.max.{succ (max u1 u3)} Cardinal.{max u1 u3} (CanonicallyLinearOrderedAddMonoid.toMax.{max (succ u1) (succ u3)} Cardinal.{max u1 u3} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max u1 u3}) Cardinal.aleph0.{max u1 u3} (Cardinal.mk.{max u1 u3} (Sum.{u3, u1} α (Sigma.{0, u1} Nat (fun (i : Nat) => FirstOrder.Language.Functions.{u1, u2} L i)))))
+Case conversion may be inaccurate. Consider using '#align first_order.language.term.card_sigma FirstOrder.Language.Term.card_sigmaₓ'. -/
 theorem card_sigma : (#Σn, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σi, L.Functions i)) :=
   by
   refine' le_antisymm _ _
@@ -196,22 +206,19 @@ instance [h1 : Countable α] [h2 : Countable (Σl, L.Functions l)] : Countable (
   simp only [le_refl, mk_sum, add_le_aleph_0, lift_le_aleph_0, true_and_iff]
   exact ⟨Cardinal.mk_le_aleph0, Cardinal.mk_le_aleph0⟩
 
+#print FirstOrder.Language.Term.small /-
 instance small [Small.{u} α] : Small.{u} (L.term α) :=
   small_of_injective listEncode_injective
 #align first_order.language.term.small FirstOrder.Language.Term.small
+-/
 
 end Term
 
 namespace BoundedFormula
 
-/- warning: first_order.language.bounded_formula.list_encode -> FirstOrder.Language.BoundedFormula.listEncode is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n) -> (List.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat)))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} {n : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n) -> (List.{max (max u1 u2) u3} (Sum.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat)))
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.list_encode FirstOrder.Language.BoundedFormula.listEncodeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.BoundedFormula.listEncode /-
 /-- Encodes a bounded formula as a list of symbols. -/
 def listEncode :
     ∀ {n : ℕ},
@@ -224,37 +231,30 @@ def listEncode :
   | n, imp φ₁ φ₂ => (Sum.inr (Sum.inr 0)::φ₁.listEncode) ++ φ₂.listEncode
   | n, all φ => Sum.inr (Sum.inr 1)::φ.listEncode
 #align first_order.language.bounded_formula.list_encode FirstOrder.Language.BoundedFormula.listEncode
+-/
 
-/- warning: first_order.language.bounded_formula.sigma_all -> FirstOrder.Language.BoundedFormula.sigmaAll is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)) -> (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}}, (Sigma.{0, max u1 u3 u2} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)) -> (Sigma.{0, max u1 u3 u2} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n))
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.sigma_all FirstOrder.Language.BoundedFormula.sigmaAllₓ'. -/
+#print FirstOrder.Language.BoundedFormula.sigmaAll /-
 /-- Applies the `forall` quantifier to an element of `(Σ n, L.bounded_formula α n)`,
 or returns `default` if not possible. -/
 def sigmaAll : (Σn, L.BoundedFormula α n) → Σn, L.BoundedFormula α n
   | ⟨n + 1, φ⟩ => ⟨n, φ.all⟩
   | _ => default
 #align first_order.language.bounded_formula.sigma_all FirstOrder.Language.BoundedFormula.sigmaAll
+-/
 
-/- warning: first_order.language.bounded_formula.sigma_imp -> FirstOrder.Language.BoundedFormula.sigmaImp is a dubious translation:
-lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)) -> (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)) -> (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n))
-but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}}, (Sigma.{0, max u1 u3 u2} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)) -> (Sigma.{0, max u1 u3 u2} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)) -> (Sigma.{0, max u1 u3 u2} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n))
-Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.sigma_imp FirstOrder.Language.BoundedFormula.sigmaImpₓ'. -/
+#print FirstOrder.Language.BoundedFormula.sigmaImp /-
 /-- Applies `imp` to two elements of `(Σ n, L.bounded_formula α n)`,
 or returns `default` if not possible. -/
 def sigmaImp : (Σn, L.BoundedFormula α n) → (Σn, L.BoundedFormula α n) → Σn, L.BoundedFormula α n
   | ⟨m, φ⟩, ⟨n, ψ⟩ => if h : m = n then ⟨m, φ.imp (Eq.mp (by rw [h]) ψ)⟩ else default
 #align first_order.language.bounded_formula.sigma_imp FirstOrder.Language.BoundedFormula.sigmaImp
+-/
 
 /- warning: first_order.language.bounded_formula.list_decode -> FirstOrder.Language.BoundedFormula.listDecode is a dubious translation:
 lean 3 declaration is
   forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} (l : List.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))), Prod.{max u1 u2 u3, max (max u1 u3) u2} (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)) (Subtype.{succ (max (max u1 u3) u2)} (List.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))) (fun (l' : List.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))) => LE.le.{0} Nat Nat.hasLe (List.sizeof.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat)) (Sum.hasSizeof.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat) (Sigma.hasSizeof.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k))) Nat.hasSizeof (fun (a : Nat) => FirstOrder.Language.Term.hasSizeofInst.{u1, u2, u3} L (Sum.{u3, 0} α (Fin a)) (Sum.hasSizeof.{u3, 0} α (Fin a) (defaultHasSizeof.{succ u3} α) (Fin.hasSizeofInst a)))) (Sum.hasSizeof.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat (Sigma.hasSizeof.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n) Nat.hasSizeof (fun (a : Nat) => defaultHasSizeof.{succ u2} (FirstOrder.Language.Relations.{u1, u2} L a))) Nat.hasSizeof)) l') (LinearOrder.max.{0} Nat Nat.linearOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (List.sizeof.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat)) (Sum.hasSizeof.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat) (Sigma.hasSizeof.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k))) Nat.hasSizeof (fun (a : Nat) => FirstOrder.Language.Term.hasSizeofInst.{u1, u2, u3} L (Sum.{u3, 0} α (Fin a)) (Sum.hasSizeof.{u3, 0} α (Fin a) (defaultHasSizeof.{succ u3} α) (Fin.hasSizeofInst a)))) (Sum.hasSizeof.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat (Sigma.hasSizeof.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n) Nat.hasSizeof (fun (a : Nat) => defaultHasSizeof.{succ u2} (FirstOrder.Language.Relations.{u1, u2} L a))) Nat.hasSizeof)) l))))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {α : Type.{u2}} (l : List.{max (max u1 u2) u3} (Sum.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat))), Prod.{max u1 u3 u2, max (max u1 u2) u3} (Sigma.{0, max u1 u3 u2} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α n)) (Subtype.{succ (max (max u1 u2) u3)} (List.{max (max u1 u2) u3} (Sum.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat))) (fun (l' : List.{max (max u1 u2) u3} (Sum.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat))) => LE.le.{0} Nat Nat.hasLe (List.sizeof.{max (max u1 u2) u3} (Sum.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat)) (Sum.hasSizeof.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat) (Sigma.hasSizeof.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k))) Nat.hasSizeof (fun (a : Nat) => FirstOrder.Language.Term.hasSizeofInst.{u1, u3, u2} L (Sum.{u2, 0} α (Fin a)) (Sum.hasSizeof.{u2, 0} α (Fin a) (defaultHasSizeof.{succ u2} α) (Fin.hasSizeofInst a)))) (Sum.hasSizeof.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat (Sigma.hasSizeof.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n) Nat.hasSizeof (fun (a : Nat) => defaultHasSizeof.{succ u3} (FirstOrder.Language.Relations.{u1, u3} L a))) Nat.hasSizeof)) l') (LinearOrder.max.{0} Nat Nat.linearOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (List.sizeof.{max (max u1 u2) u3} (Sum.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat)) (Sum.hasSizeof.{max u1 u2, u3} (Sigma.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k)))) (Sum.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat) (Sigma.hasSizeof.{0, max u1 u2} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u3, u2} L (Sum.{u2, 0} α (Fin k))) Nat.hasSizeof (fun (a : Nat) => FirstOrder.Language.Term.hasSizeofInst.{u1, u3, u2} L (Sum.{u2, 0} α (Fin a)) (Sum.hasSizeof.{u2, 0} α (Fin a) (defaultHasSizeof.{succ u2} α) (Fin.hasSizeofInst a)))) (Sum.hasSizeof.{u3, 0} (Sigma.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n)) Nat (Sigma.hasSizeof.{0, u3} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u3} L n) Nat.hasSizeof (fun (a : Nat) => defaultHasSizeof.{succ u3} (FirstOrder.Language.Relations.{u1, u3} L a))) Nat.hasSizeof)) l))))
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}} (l : List.{max u2 u1 u3} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))), Prod.{max (max u1 u2) u3, max (max u1 u3) u2} (Sigma.{0, max (max u1 u2) u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n)) (Subtype.{max (max (succ u1) (succ u3)) (succ u2)} (List.{max u2 u1 u3} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))) (fun (l' : List.{max u2 u1 u3} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))) => LE.le.{0} Nat instLENat (SizeOf.sizeOf.{max (max (succ u1) (succ u3)) (succ u2)} (List.{max u2 u1 u3} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))) (List._sizeOf_inst.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat)) (Sum._sizeOf_inst.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat) (Sigma._sizeOf_inst.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))) instSizeOfNat (fun (a : Nat) => FirstOrder.Language.Term._sizeOf_inst.{u1, u2, u3} L (Sum.{u3, 0} α (Fin a)) (Sum._sizeOf_inst.{u3, 0} α (Fin a) (instSizeOf.{succ u3} α) (Fin._sizeOf_inst a)))) (Sum._sizeOf_inst.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat (Sigma._sizeOf_inst.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n) instSizeOfNat (fun (a._@.Init.Core._hyg.2531 : Nat) => instSizeOf.{succ u2} (FirstOrder.Language.Relations.{u1, u2} L a._@.Init.Core._hyg.2531))) instSizeOfNat))) l') (Max.max.{0} Nat Nat.instMaxNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (SizeOf.sizeOf.{max (max (succ u1) (succ u3)) (succ u2)} (List.{max u2 u1 u3} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat))) (List._sizeOf_inst.{max (max u1 u3) u2} (Sum.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (k : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin k)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat)) (Sum._sizeOf_inst.{max u1 u3, u2} (Sigma.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n)))) (Sum.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat) (Sigma._sizeOf_inst.{0, max u1 u3} Nat (fun (n : Nat) => FirstOrder.Language.Term.{u1, u2, u3} L (Sum.{u3, 0} α (Fin n))) instSizeOfNat (fun (a : Nat) => FirstOrder.Language.Term._sizeOf_inst.{u1, u2, u3} L (Sum.{u3, 0} α (Fin a)) (Sum._sizeOf_inst.{u3, 0} α (Fin a) (instSizeOf.{succ u3} α) (Fin._sizeOf_inst a)))) (Sum._sizeOf_inst.{u2, 0} (Sigma.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n)) Nat (Sigma._sizeOf_inst.{0, u2} Nat (fun (n : Nat) => FirstOrder.Language.Relations.{u1, u2} L n) instSizeOfNat (fun (a._@.Init.Core._hyg.2531 : Nat) => instSizeOf.{succ u2} (FirstOrder.Language.Relations.{u1, u2} L a._@.Init.Core._hyg.2531))) instSizeOfNat))) l))))
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.list_decode FirstOrder.Language.BoundedFormula.listDecodeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -304,6 +304,7 @@ def listDecode :
   | _ => ⟨default, [], le_max_left _ _⟩
 #align first_order.language.bounded_formula.list_decode FirstOrder.Language.BoundedFormula.listDecode
 
+#print FirstOrder.Language.BoundedFormula.listDecode_encode_list /-
 @[simp]
 theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
     (listDecode (l.bind fun φ => φ.2.listEncode)).1 = l.headI :=
@@ -373,7 +374,9 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
       rw [(ih _).1, (ih _).2, sigma_all]
       exact ⟨rfl, rfl⟩
 #align first_order.language.bounded_formula.list_decode_encode_list FirstOrder.Language.BoundedFormula.listDecode_encode_list
+-/
 
+#print FirstOrder.Language.BoundedFormula.encoding /-
 /-- An encoding of bounded formulas as lists. -/
 @[simps]
 protected def encoding : Encoding (Σn, L.BoundedFormula α n)
@@ -387,12 +390,21 @@ protected def encoding : Encoding (Σn, L.BoundedFormula α n)
     rw [h]
     rfl
 #align first_order.language.bounded_formula.encoding FirstOrder.Language.BoundedFormula.encoding
+-/
 
+#print FirstOrder.Language.BoundedFormula.listEncode_sigma_injective /-
 theorem listEncode_sigma_injective :
     Function.Injective fun φ : Σn, L.BoundedFormula α n => φ.2.listEncode :=
   BoundedFormula.encoding.encode_injective
 #align first_order.language.bounded_formula.list_encode_sigma_injective FirstOrder.Language.BoundedFormula.listEncode_sigma_injective
+-/
 
+/- warning: first_order.language.bounded_formula.card_le -> FirstOrder.Language.BoundedFormula.card_le is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, LE.le.{succ (max u1 u2 u3)} Cardinal.{max u1 u2 u3} Cardinal.hasLe.{max u1 u2 u3} (Cardinal.mk.{max u1 u2 u3} (Sigma.{0, max u1 u2 u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n))) (LinearOrder.max.{succ (max u1 u2 u3)} Cardinal.{max u1 u2 u3} Cardinal.linearOrder.{max u1 u2 u3} Cardinal.aleph0.{max u1 u2 u3} (HAdd.hAdd.{succ (max u1 u2 u3), succ (max u1 u2 u3), succ (max u1 u2 u3)} Cardinal.{max u1 u2 u3} Cardinal.{max u1 u2 u3} Cardinal.{max u1 u2 u3} (instHAdd.{succ (max u1 u2 u3)} Cardinal.{max u1 u2 u3} Cardinal.hasAdd.{max u1 u2 u3}) (Cardinal.lift.{max u1 u2, u3} (Cardinal.mk.{u3} α)) (Cardinal.lift.{u3, max u1 u2} (FirstOrder.Language.card.{u1, u2} L))))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u1, u2}} {α : Type.{u3}}, LE.le.{max (max (succ u1) (succ u3)) (succ u2)} Cardinal.{max (max u1 u2) u3} Cardinal.instLECardinal.{max (max u1 u3) u2} (Cardinal.mk.{max (max u1 u2) u3} (Sigma.{0, max (max u1 u2) u3} Nat (fun (n : Nat) => FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α n))) (Max.max.{succ (max (max u1 u3) u2)} Cardinal.{max (max u1 u3) u2} (CanonicallyLinearOrderedAddMonoid.toMax.{max (max (succ u1) (succ u3)) (succ u2)} Cardinal.{max (max u1 u3) u2} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{max (max u1 u3) u2}) Cardinal.aleph0.{max (max u1 u3) u2} (HAdd.hAdd.{max (max (succ u1) (succ u3)) (succ u2), max (max (succ u1) (succ u3)) (succ u2), max (max (succ u1) (succ u3)) (succ u2)} Cardinal.{max u3 u1 u2} Cardinal.{max (max u1 u2) u3} Cardinal.{max u3 u1 u2} (instHAdd.{max (max (succ u1) (succ u3)) (succ u2)} Cardinal.{max u3 u1 u2} Cardinal.instAddCardinal.{max (max u1 u3) u2}) (Cardinal.lift.{max u1 u2, u3} (Cardinal.mk.{u3} α)) (Cardinal.lift.{u3, max u1 u2} (FirstOrder.Language.card.{u1, u2} L))))
+Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.card_le FirstOrder.Language.BoundedFormula.card_leₓ'. -/
 theorem card_le :
     (#Σn, L.BoundedFormula α n) ≤
       max ℵ₀ (Cardinal.lift.{max u v} (#α) + Cardinal.lift.{u'} L.card) :=

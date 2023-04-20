@@ -654,7 +654,7 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (G : Homotop
     HomotopyWith f₀ f₂ P :=
   { F.toHomotopy.trans G.toHomotopy with
     prop' := fun t => by
-      simp only [homotopy.trans]
+      simp only [Homotopy.trans]
       change P ⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩
       split_ifs
       · exact F.extend_prop _
@@ -819,7 +819,7 @@ def trans (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) : Homotopy
   { Homotopy.trans F.toHomotopy G.toHomotopy with
     prop' := fun t => by
       intro x hx
-      simp only [homotopy.trans]
+      simp only [Homotopy.trans]
       change (⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩ : C(X, Y)) _ = _ ∧ _ = _
       split_ifs
       · simp [(homotopy_with.extend_prop F (2 * t) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx]

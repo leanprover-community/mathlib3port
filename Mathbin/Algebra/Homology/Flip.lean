@@ -32,6 +32,7 @@ variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
 variable {ι : Type _} {c : ComplexShape ι} {ι' : Type _} {c' : ComplexShape ι'}
 
+#print HomologicalComplex.flipObj /-
 /-- Flip a complex of complexes over the diagonal,
 exchanging the horizontal and vertical directions.
 -/
@@ -53,9 +54,11 @@ def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') :
     ext j
     exact (C.X j).shape i i' w
 #align homological_complex.flip_obj HomologicalComplex.flipObj
+-/
 
 variable (V c c')
 
+#print HomologicalComplex.flip /-
 /-- Flipping a complex of complexes over the diagonal, as a functor. -/
 @[simps]
 def flip :
@@ -68,7 +71,9 @@ def flip :
         { f := fun j => (f.f j).f i
           comm' := fun j j' h => congr_hom (f.comm j j') i } }
 #align homological_complex.flip HomologicalComplex.flip
+-/
 
+#print HomologicalComplex.flipEquivalenceUnitIso /-
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
 def flipEquivalenceUnitIso :
@@ -92,7 +97,9 @@ def flipEquivalenceUnitIso :
     dsimp
     simp only [category.id_comp, category.comp_id]
 #align homological_complex.flip_equivalence_unit_iso HomologicalComplex.flipEquivalenceUnitIso
+-/
 
+#print HomologicalComplex.flipEquivalenceCounitIso /-
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
 def flipEquivalenceCounitIso :
@@ -116,7 +123,14 @@ def flipEquivalenceCounitIso :
     dsimp
     simp only [category.id_comp, category.comp_id]
 #align homological_complex.flip_equivalence_counit_iso HomologicalComplex.flipEquivalenceCounitIso
+-/
 
+/- warning: homological_complex.flip_equivalence -> HomologicalComplex.flipEquivalence is a dubious translation:
+lean 3 declaration is
+  forall (V : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] {ι : Type.{u3}} (c : ComplexShape.{u3} ι) {ι' : Type.{u4}} (c' : ComplexShape.{u4} ι'), CategoryTheory.Equivalence.{max u4 u3 u1, max u3 u4 u1, max (max u2 u3 u1) u4 u3 u1, max (max u2 u4 u1) u3 u4 u1} (HomologicalComplex.{max u3 u1, max u2 u3 u1, u4} ι' (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.Limits.hasZeroMorphisms.{u1, u2, u3} ι V _inst_1 _inst_2 c) c') (HomologicalComplex.CategoryTheory.category.{max u3 u1, max u2 u3 u1, u4} ι' (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.category.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.CategoryTheory.Limits.hasZeroMorphisms.{u1, u2, u3} ι V _inst_1 _inst_2 c) c') (HomologicalComplex.{max u4 u1, max u2 u4 u1, u3} ι (HomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.CategoryTheory.category.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.CategoryTheory.Limits.hasZeroMorphisms.{u1, u2, u4} ι' V _inst_1 _inst_2 c') c) (HomologicalComplex.CategoryTheory.category.{max u4 u1, max u2 u4 u1, u3} ι (HomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.CategoryTheory.category.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.CategoryTheory.Limits.hasZeroMorphisms.{u1, u2, u4} ι' V _inst_1 _inst_2 c') c)
+but is expected to have type
+  forall (V : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} V] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} V _inst_1] {ι : Type.{u3}} (c : ComplexShape.{u3} ι) {ι' : Type.{u4}} (c' : ComplexShape.{u4} ι'), CategoryTheory.Equivalence.{max (max u1 u3) u4, max (max u1 u3) u4, max (max u4 (max u3 u2) u1) u1 u3, max (max u3 (max u4 u2) u1) u1 u4} (HomologicalComplex.{max u1 u3, max (max u3 u2) u1, u4} ι' (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.instHasZeroMorphismsHomologicalComplexInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) c') (HomologicalComplex.{max u1 u4, max (max u4 u2) u1, u3} ι (HomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.instHasZeroMorphismsHomologicalComplexInstCategoryHomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') c) (HomologicalComplex.instCategoryHomologicalComplex.{max u1 u3, max (max u2 u1) u3, u4} ι' (HomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) (HomologicalComplex.instHasZeroMorphismsHomologicalComplexInstCategoryHomologicalComplex.{u1, u2, u3} ι V _inst_1 _inst_2 c) c') (HomologicalComplex.instCategoryHomologicalComplex.{max u1 u4, max (max u2 u1) u4, u3} ι (HomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.instCategoryHomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') (HomologicalComplex.instHasZeroMorphismsHomologicalComplexInstCategoryHomologicalComplex.{u1, u2, u4} ι' V _inst_1 _inst_2 c') c)
+Case conversion may be inaccurate. Consider using '#align homological_complex.flip_equivalence HomologicalComplex.flipEquivalenceₓ'. -/
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/
 @[simps]
 def flipEquivalence :

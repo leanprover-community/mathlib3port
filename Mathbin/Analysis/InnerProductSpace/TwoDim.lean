@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.two_dim
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit cd8fafa2fac98e1a67097e8a91ad9901cfde48af
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.InnerProductSpace.Orientation
+import Mathbin.Data.Complex.Orientation
 import Mathbin.Tactic.LinearCombination
 
 /-!

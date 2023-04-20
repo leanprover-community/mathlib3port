@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module group_theory.free_abelian_group_finsupp
-! leanprover-community/mathlib commit 47b51515e69f59bca5cf34ef456e6000fe205a69
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.LinearAlgebra.Dimension
 
 /-!
 # Isomorphism between `free_abelian_group X` and `X →₀ ℤ`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we construct the canonical isomorphism between `free_abelian_group X` and `X →₀ ℤ`.
 We use this to transport the notion of `support` from `finsupp` to `free_abelian_group`.

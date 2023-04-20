@@ -73,7 +73,7 @@ category.
 def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X)
     where
   obj f :=
-    { a := f.left
+    { A := f.left
       a := prod.lift f.Hom (𝟙 _) }
   map f₁ f₂ g := { f := g.left }
 #align category_theory.over_to_coalgebra CategoryTheory.overToCoalgebra
@@ -139,7 +139,7 @@ category.
 def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X)
     where
   obj f :=
-    { a := f.right
+    { A := f.right
       a := coprod.desc f.Hom (𝟙 _) }
   map f₁ f₂ g := { f := g.right }
 #align category_theory.under_to_algebra CategoryTheory.underToAlgebra

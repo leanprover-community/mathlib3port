@@ -417,7 +417,7 @@ theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f :=
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
 noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X]
     [T2Space X] : Compactum where
-  a := X
+  A := X
   a := Ultrafilter.lim
   unit' := by
     ext x

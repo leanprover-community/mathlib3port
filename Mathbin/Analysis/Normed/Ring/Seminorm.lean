@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.ring.seminorm
-! leanprover-community/mathlib commit 7ea604785a41a0681eac70c5a82372493dbefc68
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.Normed.Field.Basic
 
 /-!
 # Seminorms and norms on rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines seminorms and norms on rings. These definitions are useful when one needs to
 consider multiple (semi)norms on a given ring.

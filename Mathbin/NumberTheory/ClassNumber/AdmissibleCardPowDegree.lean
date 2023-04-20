@@ -44,7 +44,7 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   -- there must be two elements of A with the same coefficients at
   -- `0`, ... `degree b - 1` ≤ `d - 1`.
   -- In other words, the following map is not injective:
-  set f : Fin m.succ → Fin d → Fq := fun i j => (A i).coeff j
+  set f : Fin m.succ → Fin d → Fq := fun i j => (A i).Coeff j
   have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ) := by
     simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
   -- Therefore, the differences have all coefficients higher than `deg b - d` equal.
@@ -78,7 +78,7 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   -- there must be two elements of A with the same coefficients at
   -- `degree b - 1`, ... `degree b - d`.
   -- In other words, the following map is not injective:
-  set f : Fin m.succ → Fin d → Fq := fun i j => (A i).coeff (nat_degree b - j.succ)
+  set f : Fin m.succ → Fin d → Fq := fun i j => (A i).Coeff (nat_degree b - j.succ)
   have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ) := by
     simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
   -- Therefore, the differences have all coefficients higher than `deg b - d` equal.

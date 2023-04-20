@@ -63,7 +63,7 @@ def newCone : Cone (D ⋙ forget T) where
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps]
 def conePoint : Algebra T where
-  a := c.pt
+  A := c.pt
   a := t.lift (newCone D c)
   unit' :=
     t.hom_ext fun j =>
@@ -192,12 +192,12 @@ our `commuting` lemma.
 -/
 @[simps]
 def coconePoint : Algebra T where
-  a := c.pt
+  A := c.pt
   a := lambda c t
   unit' := by
     apply t.hom_ext
     intro j
-    rw [show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).a ≫ _ ≫ _ from
+    rw [show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).A ≫ _ ≫ _ from
         T.η.naturality_assoc _ _,
       commuting, algebra.unit_assoc (D.obj j)]
     dsimp; simp

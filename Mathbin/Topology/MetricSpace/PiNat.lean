@@ -266,6 +266,7 @@ variable {α : Type _}
 open List
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PiNat.res /-
 /-- In the case where `E` has constant value `α`,
 the cylinder `cylinder x n` can be identified with the element of `list α`
 consisting of the first `n` entries of `x`. See `cylinder_eq_res`.
@@ -274,22 +275,30 @@ def res (x : ℕ → α) : ℕ → List α
   | 0 => nil
   | Nat.succ n => x n::res n
 #align pi_nat.res PiNat.res
+-/
 
+#print PiNat.res_zero /-
 @[simp]
 theorem res_zero (x : ℕ → α) : res x 0 = @nil α :=
   rfl
 #align pi_nat.res_zero PiNat.res_zero
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PiNat.res_succ /-
 @[simp]
 theorem res_succ (x : ℕ → α) (n : ℕ) : res x n.succ = x n::res x n :=
   rfl
 #align pi_nat.res_succ PiNat.res_succ
+-/
 
+#print PiNat.res_length /-
 @[simp]
 theorem res_length (x : ℕ → α) (n : ℕ) : (res x n).length = n := by induction n <;> simp [*]
 #align pi_nat.res_length PiNat.res_length
+-/
 
+#print PiNat.res_eq_res /-
 /-- The restrictions of `x` and `y` to `n` are equal if and only if `x m = y m` for all `m < n`.-/
 theorem res_eq_res {x y : ℕ → α} {n : ℕ} : res x n = res y n ↔ ∀ ⦃m⦄, m < n → x m = y m :=
   by
@@ -306,7 +315,9 @@ theorem res_eq_res {x y : ℕ → α} {n : ℕ} : res x n = res y n ↔ ∀ ⦃m
   refine' ⟨h (Nat.lt_succ_self _), ih fun m hm => _⟩
   exact h (hm.trans (Nat.lt_succ_self _))
 #align pi_nat.res_eq_res PiNat.res_eq_res
+-/
 
+#print PiNat.res_injective /-
 theorem res_injective : Injective (@res α) :=
   by
   intro x y h
@@ -314,7 +325,9 @@ theorem res_injective : Injective (@res α) :=
   apply res_eq_res.mp _ (Nat.lt_succ_self _)
   rw [h]
 #align pi_nat.res_injective PiNat.res_injective
+-/
 
+#print PiNat.cylinder_eq_res /-
 /-- `cylinder x n` is equal to the set of sequences `y` with the same restriction to `n` as `x`.-/
 theorem cylinder_eq_res (x : ℕ → α) (n : ℕ) : cylinder x n = { y | res y n = res x n } :=
   by
@@ -322,6 +335,7 @@ theorem cylinder_eq_res (x : ℕ → α) (n : ℕ) : cylinder x n = { y | res y 
   dsimp [cylinder]
   rw [res_eq_res]
 #align pi_nat.cylinder_eq_res PiNat.cylinder_eq_res
+-/
 
 end Res
 
@@ -495,11 +509,13 @@ theorem lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder {α : Type _
 
 variable (E) [∀ n, TopologicalSpace (E n)] [∀ n, DiscreteTopology (E n)]
 
+#print PiNat.isOpen_cylinder /-
 theorem isOpen_cylinder (x : ∀ n, E n) (n : ℕ) : IsOpen (cylinder x n) :=
   by
   rw [PiNat.cylinder_eq_pi]
   exact isOpen_set_pi (Finset.range n).finite_toSet fun a ha => isOpen_discrete _
 #align pi_nat.is_open_cylinder PiNat.isOpen_cylinder
+-/
 
 #print PiNat.isTopologicalBasis_cylinders /-
 theorem isTopologicalBasis_cylinders :

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.whiskering
-! leanprover-community/mathlib commit 9f9015c645d85695581237cc761981036be8bd37
+! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Sites.Sheaf
 
 /-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+
 
 In this file we construct the functor `Sheaf J A ⥤ Sheaf J B` between sheaf categories
 obtained by composition with a functor `F : A ⥤ B`.
