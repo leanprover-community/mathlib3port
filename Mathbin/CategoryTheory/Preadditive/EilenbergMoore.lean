@@ -31,6 +31,7 @@ variable (C : Type u₁) [Category.{v₁} C] [Preadditive C] (T : Monad C)
 
 open CategoryTheory.Limits Preadditive
 
+#print CategoryTheory.Monad.algebraPreadditive /-
 /-- The category of algebras over an additive monad on a preadditive category is preadditive. -/
 @[simps]
 instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T)
@@ -109,12 +110,16 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T)
     ext
     apply comp_add
 #align category_theory.monad.algebra_preadditive CategoryTheory.Monad.algebraPreadditive
+-/
 
+#print CategoryTheory.Monad.forget_additive /-
 instance Monad.forget_additive : (Monad.forget T).Additive where
 #align category_theory.monad.forget_additive CategoryTheory.Monad.forget_additive
+-/
 
 variable (U : Comonad C) [Functor.Additive (U : C ⥤ C)]
 
+#print CategoryTheory.Comonad.coalgebraPreadditive /-
 /-- The category of coalgebras over an additive comonad on a preadditive category is preadditive. -/
 @[simps]
 instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U)
@@ -193,9 +198,12 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U)
     ext
     apply comp_add
 #align category_theory.comonad.coalgebra_preadditive CategoryTheory.Comonad.coalgebraPreadditive
+-/
 
+#print CategoryTheory.Comonad.forget_additive /-
 instance Comonad.forget_additive : (Comonad.forget U).Additive where
 #align category_theory.comonad.forget_additive CategoryTheory.Comonad.forget_additive
+-/
 
 end CategoryTheory
 

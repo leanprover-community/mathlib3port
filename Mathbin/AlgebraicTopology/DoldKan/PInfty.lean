@@ -58,7 +58,7 @@ theorem p_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
   · unfold P
     simp only [add_right_eq_self, comp_add, HomologicalComplex.comp_f,
       HomologicalComplex.add_f_apply, comp_id]
-    exact (higher_faces_vanish.of_P q n).comp_hσ_eq_zero (nat.succ_le_iff.mp hqn)
+    exact (higher_faces_vanish.of_P q n).comp_Hσ_eq_zero (nat.succ_le_iff.mp hqn)
 #align algebraic_topology.dold_kan.P_is_eventually_constant AlgebraicTopology.DoldKan.p_is_eventually_constant
 
 theorem q_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
