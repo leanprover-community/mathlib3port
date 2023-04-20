@@ -134,7 +134,7 @@ def bUnionTagged (π : Prepartition I) (πi : ∀ J, TaggedPrepartition J) : Tag
     where
   toPrepartition := π.bunionᵢ fun J => (πi J).toPrepartition
   Tag J := (πi (π.bUnionIndex (fun J => (πi J).toPrepartition) J)).Tag J
-  tag_mem_Icc J := Box.le_iff_icc.1 (π.bUnionIndex_le _ _) ((πi _).tag_mem_Icc _)
+  tag_mem_Icc J := Box.le_iff_Icc.1 (π.bUnionIndex_le _ _) ((πi _).tag_mem_Icc _)
 #align box_integral.prepartition.bUnion_tagged BoxIntegral.Prepartition.bUnionTagged
 
 @[simp]
@@ -270,7 +270,7 @@ theorem isSubordinate_bUnionTagged [Fintype ι] {π : Prepartition I}
 
 theorem IsSubordinate.bUnionPrepartition [Fintype ι] (h : IsSubordinate π r)
     (πi : ∀ J, Prepartition J) : IsSubordinate (π.bUnionPrepartition πi) r := fun J hJ =>
-  Subset.trans (Box.le_iff_icc.1 <| π.toPrepartition.le_bUnionIndex hJ) <|
+  Subset.trans (Box.le_iff_Icc.1 <| π.toPrepartition.le_bUnionIndex hJ) <|
     h _ <| π.toPrepartition.bUnionIndex_mem hJ
 #align box_integral.tagged_prepartition.is_subordinate.bUnion_prepartition BoxIntegral.TaggedPrepartition.IsSubordinate.bUnionPrepartition
 
@@ -309,7 +309,7 @@ theorem mem_single {J'} (hJ : J ≤ I) (h : x ∈ I.Icc) : J' ∈ single I J hJ 
 #align box_integral.tagged_prepartition.mem_single BoxIntegral.TaggedPrepartition.mem_single
 
 instance (I : Box ι) : Inhabited (TaggedPrepartition I) :=
-  ⟨single I I le_rfl I.upper I.upper_mem_icc⟩
+  ⟨single I I le_rfl I.upper I.upper_mem_Icc⟩
 
 theorem isPartition_single_iff (hJ : J ≤ I) (h : x ∈ I.Icc) :
     (single I J hJ x h).IsPartition ↔ J = I :=
@@ -412,7 +412,7 @@ def embedBox (I J : Box ι) (h : I ≤ J) : TaggedPrepartition I ↪ TaggedPrepa
   toFun π :=
     { π with
       le_of_mem' := fun J' hJ' => (π.le_of_mem' J' hJ').trans h
-      tag_mem_Icc := fun J => Box.le_iff_icc.1 h (π.tag_mem_Icc J) }
+      tag_mem_Icc := fun J => Box.le_iff_Icc.1 h (π.tag_mem_Icc J) }
   inj' := by
     rintro ⟨⟨b₁, h₁le, h₁d⟩, t₁, ht₁⟩ ⟨⟨b₂, h₂le, h₂d⟩, t₂, ht₂⟩ H
     simpa using H

@@ -314,7 +314,7 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
     rw [AlgHom.card L F E]
   · intro σ
     simp only [algHomEquivSigma, Equiv.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
-      IsScalarTower.coe_to_alg_hom']
+      IsScalarTower.coe_toAlgHom']
 #align algebra.prod_embeddings_eq_finrank_pow Algebra.prod_embeddings_eq_finrank_pow
 
 variable (K)

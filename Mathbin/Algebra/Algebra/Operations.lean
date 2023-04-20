@@ -270,7 +270,7 @@ theorem mul_toAddSubmonoid (M N : Submodule R A) :
     (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid :=
   by
   dsimp [Mul.mul]
-  simp_rw [← LinearMap.mulLeft_toAddMonoid_hom R, LinearMap.mulLeft, ← map_to_add_submonoid _ N,
+  simp_rw [← LinearMap.mulLeft_toAddMonoidHom R, LinearMap.mulLeft, ← map_to_add_submonoid _ N,
     map₂]
   rw [supr_to_add_submonoid]
   rfl

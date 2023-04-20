@@ -189,8 +189,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
     by
     rw [box.Icc_eq_pi] at hJ_sub'
     refine' tendsto_finset_sum _ fun i hi => (this _ _ _ _ (hJu _)).sub (this _ _ _ _ (hJl _))
-    exacts[fun k => hJ_sub' k (J k).upper_mem_icc _ trivial, fun k =>
-      hJ_sub' k (J k).lower_mem_icc _ trivial]
+    exacts[fun k => hJ_sub' k (J k).upper_mem_Icc _ trivial, fun k =>
+      hJ_sub' k (J k).lower_mem_Icc _ trivial]
   intro i c d hc hcd
   /- First we prove that the integrals of the restriction of `f` to `{x | x i = d}` over increasing
     boxes `((J k).face i).Icc` tend to the desired limit. The proof mostly repeats the one above. -/
@@ -253,7 +253,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
       refine'
         div_le_div_of_le_left εpos.le (hvol_pos _) (prod_le_prod (fun j hj => _) fun j hj => _)
       exacts[sub_nonneg.2 (box.lower_le_upper _ _),
-        sub_le_sub ((hJ_sub' _ (J _).upper_mem_icc).2 _) ((hJ_sub' _ (J _).lower_mem_icc).1 _)]
+        sub_le_sub ((hJ_sub' _ (J _).upper_mem_Icc).2 _) ((hJ_sub' _ (J _).lower_mem_Icc).1 _)]
     
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂
 

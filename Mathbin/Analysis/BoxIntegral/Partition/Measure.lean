@@ -50,7 +50,7 @@ theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure �
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
-  (measure_mono <| coe_subset_icc).trans_lt (I.measure_Icc_lt_top μ)
+  (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
 #align box_integral.box.measure_coe_lt_top BoxIntegral.Box.measure_coe_lt_top
 
 section Countable

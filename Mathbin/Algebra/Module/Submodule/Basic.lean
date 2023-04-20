@@ -580,15 +580,15 @@ variable {α β : Type _}
 instance [VAdd M α] : VAdd p α :=
   p.toAddSubmonoid.VAdd
 
-/- warning: submodule.vadd_comm_class -> Submodule.vAddCommClass is a dubious translation:
+/- warning: submodule.vadd_comm_class -> Submodule.vaddCommClass is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] {module_M : Module.{u1, u2} R M _inst_1 _inst_2} (p : Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) {α : Type.{u3}} {β : Type.{u4}} [_inst_3 : VAdd.{u2, u4} M β] [_inst_4 : VAdd.{u3, u4} α β] [_inst_5 : VAddCommClass.{u2, u3, u4} M α β _inst_3 _inst_4], VAddCommClass.{u2, u3, u4} (coeSort.{succ u2, succ (succ u2)} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_2 module_M)) p) α β (Submodule.hasVadd.{u1, u2, u4} R M _inst_1 _inst_2 module_M p β _inst_3) _inst_4
 but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] {module_M : Module.{u1, u2} R M _inst_1 _inst_2} (p : Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) {α : Type.{u3}} {β : Type.{u4}} [_inst_3 : VAdd.{u2, u4} M β] [_inst_4 : VAdd.{u3, u4} α β] [_inst_5 : VAddCommClass.{u2, u3, u4} M α β _inst_3 _inst_4], VAddCommClass.{u2, u3, u4} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) α β (Submodule.instVAddSubtypeMemSubmoduleInstMembershipSetLike.{u1, u2, u4} R M _inst_1 _inst_2 module_M p β _inst_3) _inst_4
-Case conversion may be inaccurate. Consider using '#align submodule.vadd_comm_class Submodule.vAddCommClassₓ'. -/
-instance vAddCommClass [VAdd M β] [VAdd α β] [VAddCommClass M α β] : VAddCommClass p α β :=
+Case conversion may be inaccurate. Consider using '#align submodule.vadd_comm_class Submodule.vaddCommClassₓ'. -/
+instance vaddCommClass [VAdd M β] [VAdd α β] [VAddCommClass M α β] : VAddCommClass p α β :=
   ⟨fun a => (vadd_comm (a : M) : _)⟩
-#align submodule.vadd_comm_class Submodule.vAddCommClass
+#align submodule.vadd_comm_class Submodule.vaddCommClass
 
 instance [VAdd M α] [FaithfulVAdd M α] : FaithfulVAdd p α :=
   ⟨fun x y h => Subtype.ext <| eq_of_vadd_eq_vadd h⟩

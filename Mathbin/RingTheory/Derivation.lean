@@ -613,7 +613,7 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
       convert Ideal.mul_mem_mul (F x).2 (F y).2 using 1
     ext
     dsimp only [Submodule.coe_add, Submodule.coe_mk, LinearMap.coe_mk,
-      diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_to_alg_hom',
+      diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_toAlgHom',
       LinearMap.toFun_eq_coe]
     simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this⊢
     rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this

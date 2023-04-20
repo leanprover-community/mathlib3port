@@ -438,7 +438,7 @@ variable {L} {α} {n : ℕ}
 /-- Applies a relation to terms as a bounded formula. -/
 def Relations.boundedFormula {l : ℕ} (R : L.Relations n) (ts : Fin n → L.term (Sum α (Fin l))) :
     L.BoundedFormula α l :=
-  BoundedFormula.Rel R ts
+  BoundedFormula.rel R ts
 #align first_order.language.relations.bounded_formula FirstOrder.Language.Relations.boundedFormula
 -/
 
@@ -554,7 +554,7 @@ def castLE : ∀ {m n : ℕ} (h : m ≤ n), L.BoundedFormula α m → L.BoundedF
   | m, n, h, falsum => falsum
   | m, n, h, equal t₁ t₂ =>
     equal (t₁.relabel (Sum.map id (Fin.castLE h))) (t₂.relabel (Sum.map id (Fin.castLE h)))
-  | m, n, h, Rel R ts => Rel R (Term.relabel (Sum.map id (Fin.castLE h)) ∘ ts)
+  | m, n, h, Rel R ts => rel R (Term.relabel (Sum.map id (Fin.castLE h)) ∘ ts)
   | m, n, h, imp f₁ f₂ => (f₁.castLE h).imp (f₂.castLE h)
   | m, n, h, all f => (f.castLE (add_le_add_right h 1)).all
 #align first_order.language.bounded_formula.cast_le FirstOrder.Language.BoundedFormula.castLE
@@ -609,7 +609,7 @@ def restrictFreeVar [DecidableEq α] :
     equal (t₁.restrictVarLeft (f ∘ Set.inclusion (subset_union_left _ _)))
       (t₂.restrictVarLeft (f ∘ Set.inclusion (subset_union_right _ _)))
   | n, Rel R ts, f =>
-    Rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
+    rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
   | n, imp φ₁ φ₂, f =>
     (φ₁.restrictFreeVar (f ∘ Set.inclusion (subset_union_left _ _))).imp
       (φ₂.restrictFreeVar (f ∘ Set.inclusion (subset_union_right _ _)))
@@ -641,7 +641,7 @@ def mapTermRel {g : ℕ → ℕ} (ft : ∀ n, L.term (Sum α (Fin n)) → L'.ter
     ∀ {n}, L.BoundedFormula α n → L'.BoundedFormula β (g n)
   | n, falsum => falsum
   | n, equal t₁ t₂ => equal (ft _ t₁) (ft _ t₂)
-  | n, Rel R ts => Rel (fr _ R) fun i => ft _ (ts i)
+  | n, Rel R ts => rel (fr _ R) fun i => ft _ (ts i)
   | n, imp φ₁ φ₂ => φ₁.mapTermRel.imp φ₂.mapTermRel
   | n, all φ => (h n φ.mapTermRel).all
 #align first_order.language.bounded_formula.map_term_rel FirstOrder.Language.BoundedFormula.mapTermRel
@@ -880,19 +880,19 @@ theorem not_ex_isAtomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsAtomic :=
 #print FirstOrder.Language.BoundedFormula.IsAtomic.relabel /-
 theorem IsAtomic.relabel {m : ℕ} {φ : L.BoundedFormula α m} (h : φ.IsAtomic)
     (f : α → Sum β (Fin n)) : (φ.relabel f).IsAtomic :=
-  IsAtomic.rec_on h (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.Rel _ _
+  IsAtomic.rec_on h (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.rel _ _
 #align first_order.language.bounded_formula.is_atomic.relabel FirstOrder.Language.BoundedFormula.IsAtomic.relabel
 -/
 
 #print FirstOrder.Language.BoundedFormula.IsAtomic.liftAt /-
 theorem IsAtomic.liftAt {k m : ℕ} (h : IsAtomic φ) : (φ.liftAt k m).IsAtomic :=
-  IsAtomic.rec_on h (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.Rel _ _
+  IsAtomic.rec_on h (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.rel _ _
 #align first_order.language.bounded_formula.is_atomic.lift_at FirstOrder.Language.BoundedFormula.IsAtomic.liftAt
 -/
 
 #print FirstOrder.Language.BoundedFormula.IsAtomic.castLE /-
 theorem IsAtomic.castLE {h : l ≤ n} (hφ : IsAtomic φ) : (φ.castLE h).IsAtomic :=
-  IsAtomic.rec_on hφ (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.Rel _ _
+  IsAtomic.rec_on hφ (fun _ _ => IsAtomic.equal _ _) fun _ _ _ => IsAtomic.rel _ _
 #align first_order.language.bounded_formula.is_atomic.cast_le FirstOrder.Language.BoundedFormula.IsAtomic.castLE
 -/
 
@@ -1092,7 +1092,7 @@ theorem isPrenex_toPrenexImp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ)
 def toPrenex : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n
   | _, falsum => ⊥
   | _, equal t₁ t₂ => t₁.bdEqual t₂
-  | _, Rel R ts => Rel R ts
+  | _, Rel R ts => rel R ts
   | _, imp f₁ f₂ => f₁.toPrenex.toPrenexImp f₂.toPrenex
   | _, all f => f.toPrenex.all
 #align first_order.language.bounded_formula.to_prenex FirstOrder.Language.BoundedFormula.toPrenex
@@ -1101,7 +1101,7 @@ def toPrenex : ∀ {n}, L.BoundedFormula α n → L.BoundedFormula α n
 #print FirstOrder.Language.BoundedFormula.toPrenex_isPrenex /-
 theorem toPrenex_isPrenex (φ : L.BoundedFormula α n) : φ.toPrenex.IsPrenex :=
   BoundedFormula.recOn φ (fun _ => isQF_bot.IsPrenex) (fun _ _ _ => (IsAtomic.equal _ _).IsPrenex)
-    (fun _ _ _ _ => (IsAtomic.Rel _ _).IsPrenex) (fun _ _ _ h1 h2 => isPrenex_toPrenexImp h1 h2)
+    (fun _ _ _ _ => (IsAtomic.rel _ _).IsPrenex) (fun _ _ _ h1 h2 => isPrenex_toPrenexImp h1 h2)
     fun _ _ => IsPrenex.all
 #align first_order.language.bounded_formula.to_prenex_is_prenex FirstOrder.Language.BoundedFormula.toPrenex_isPrenex
 -/

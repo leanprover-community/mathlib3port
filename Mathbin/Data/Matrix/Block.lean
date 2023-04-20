@@ -130,64 +130,64 @@ def toBlocks₂₂ (M : Matrix (Sum n o) (Sum l m) α) : Matrix o m α :=
 #align matrix.to_blocks₂₂ Matrix.toBlocks₂₂
 -/
 
-/- warning: matrix.from_blocks_to_blocks -> Matrix.fromBlocks_to_blocks is a dubious translation:
+/- warning: matrix.from_blocks_to_blocks -> Matrix.fromBlocks_toBlocks is a dubious translation:
 lean 3 declaration is
   forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u5}} (M : Matrix.{max u3 u4, max u1 u2, u5} (Sum.{u3, u4} n o) (Sum.{u1, u2} l m) α), Eq.{succ (max (max u3 u4) (max u1 u2) u5)} (Matrix.{max u3 u4, max u1 u2, u5} (Sum.{u3, u4} n o) (Sum.{u1, u2} l m) α) (Matrix.fromBlocks.{u1, u2, u3, u4, u5} l m n o α (Matrix.toBlocks₁₁.{u1, u2, u3, u4, u5} l m n o α M) (Matrix.toBlocks₁₂.{u1, u2, u3, u4, u5} l m n o α M) (Matrix.toBlocks₂₁.{u1, u2, u3, u4, u5} l m n o α M) (Matrix.toBlocks₂₂.{u1, u2, u3, u4, u5} l m n o α M)) M
 but is expected to have type
   forall {l : Type.{u2}} {m : Type.{u3}} {n : Type.{u4}} {o : Type.{u5}} {α : Type.{u1}} (M : Matrix.{max u5 u4, max u3 u2, u1} (Sum.{u4, u5} n o) (Sum.{u2, u3} l m) α), Eq.{max (max (max (max (succ u2) (succ u3)) (succ u4)) (succ u5)) (succ u1)} (Matrix.{max u5 u4, max u3 u2, u1} (Sum.{u4, u5} n o) (Sum.{u2, u3} l m) α) (Matrix.fromBlocks.{u2, u3, u4, u5, u1} l m n o α (Matrix.toBlocks₁₁.{u2, u3, u4, u5, u1} l m n o α M) (Matrix.toBlocks₁₂.{u2, u3, u4, u5, u1} l m n o α M) (Matrix.toBlocks₂₁.{u2, u3, u4, u5, u1} l m n o α M) (Matrix.toBlocks₂₂.{u2, u3, u4, u5, u1} l m n o α M)) M
-Case conversion may be inaccurate. Consider using '#align matrix.from_blocks_to_blocks Matrix.fromBlocks_to_blocksₓ'. -/
-theorem fromBlocks_to_blocks (M : Matrix (Sum n o) (Sum l m) α) :
+Case conversion may be inaccurate. Consider using '#align matrix.from_blocks_to_blocks Matrix.fromBlocks_toBlocksₓ'. -/
+theorem fromBlocks_toBlocks (M : Matrix (Sum n o) (Sum l m) α) :
     fromBlocks M.toBlocks₁₁ M.toBlocks₁₂ M.toBlocks₂₁ M.toBlocks₂₂ = M := by ext (i j);
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> rfl
-#align matrix.from_blocks_to_blocks Matrix.fromBlocks_to_blocks
+#align matrix.from_blocks_to_blocks Matrix.fromBlocks_toBlocks
 
-/- warning: matrix.to_blocks_from_blocks₁₁ -> Matrix.to_blocks_from_blocks₁₁ is a dubious translation:
+/- warning: matrix.to_blocks_from_blocks₁₁ -> Matrix.toBlocks_fromBlocks₁₁ is a dubious translation:
 lean 3 declaration is
   forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u5}} (A : Matrix.{u3, u1, u5} n l α) (B : Matrix.{u3, u2, u5} n m α) (C : Matrix.{u4, u1, u5} o l α) (D : Matrix.{u4, u2, u5} o m α), Eq.{succ (max u3 u1 u5)} (Matrix.{u3, u1, u5} n l α) (Matrix.toBlocks₁₁.{u1, u2, u3, u4, u5} l m n o α (Matrix.fromBlocks.{u1, u2, u3, u4, u5} l m n o α A B C D)) A
 but is expected to have type
   forall {l : Type.{u4}} {m : Type.{u2}} {n : Type.{u5}} {o : Type.{u1}} {α : Type.{u3}} (A : Matrix.{u5, u4, u3} n l α) (B : Matrix.{u5, u2, u3} n m α) (C : Matrix.{u1, u4, u3} o l α) (D : Matrix.{u1, u2, u3} o m α), Eq.{max (max (succ u4) (succ u5)) (succ u3)} (Matrix.{u5, u4, u3} n l α) (Matrix.toBlocks₁₁.{u4, u2, u5, u1, u3} l m n o α (Matrix.fromBlocks.{u4, u2, u5, u1, u3} l m n o α A B C D)) A
-Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₁₁ Matrix.to_blocks_from_blocks₁₁ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₁₁ Matrix.toBlocks_fromBlocks₁₁ₓ'. -/
 @[simp]
-theorem to_blocks_from_blocks₁₁ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
+theorem toBlocks_fromBlocks₁₁ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) : (fromBlocks A B C D).toBlocks₁₁ = A :=
   rfl
-#align matrix.to_blocks_from_blocks₁₁ Matrix.to_blocks_from_blocks₁₁
+#align matrix.to_blocks_from_blocks₁₁ Matrix.toBlocks_fromBlocks₁₁
 
-/- warning: matrix.to_blocks_from_blocks₁₂ -> Matrix.to_blocks_from_blocks₁₂ is a dubious translation:
+/- warning: matrix.to_blocks_from_blocks₁₂ -> Matrix.toBlocks_fromBlocks₁₂ is a dubious translation:
 lean 3 declaration is
   forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u5}} (A : Matrix.{u3, u1, u5} n l α) (B : Matrix.{u3, u2, u5} n m α) (C : Matrix.{u4, u1, u5} o l α) (D : Matrix.{u4, u2, u5} o m α), Eq.{succ (max u3 u2 u5)} (Matrix.{u3, u2, u5} n m α) (Matrix.toBlocks₁₂.{u1, u2, u3, u4, u5} l m n o α (Matrix.fromBlocks.{u1, u2, u3, u4, u5} l m n o α A B C D)) B
 but is expected to have type
   forall {l : Type.{u4}} {m : Type.{u2}} {n : Type.{u5}} {o : Type.{u1}} {α : Type.{u3}} (A : Matrix.{u5, u4, u3} n l α) (B : Matrix.{u5, u2, u3} n m α) (C : Matrix.{u1, u4, u3} o l α) (D : Matrix.{u1, u2, u3} o m α), Eq.{max (max (succ u2) (succ u5)) (succ u3)} (Matrix.{u5, u2, u3} n m α) (Matrix.toBlocks₁₂.{u4, u2, u5, u1, u3} l m n o α (Matrix.fromBlocks.{u4, u2, u5, u1, u3} l m n o α A B C D)) B
-Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₁₂ Matrix.to_blocks_from_blocks₁₂ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₁₂ Matrix.toBlocks_fromBlocks₁₂ₓ'. -/
 @[simp]
-theorem to_blocks_from_blocks₁₂ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
+theorem toBlocks_fromBlocks₁₂ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) : (fromBlocks A B C D).toBlocks₁₂ = B :=
   rfl
-#align matrix.to_blocks_from_blocks₁₂ Matrix.to_blocks_from_blocks₁₂
+#align matrix.to_blocks_from_blocks₁₂ Matrix.toBlocks_fromBlocks₁₂
 
-/- warning: matrix.to_blocks_from_blocks₂₁ -> Matrix.to_blocks_from_blocks₂₁ is a dubious translation:
+/- warning: matrix.to_blocks_from_blocks₂₁ -> Matrix.toBlocks_fromBlocks₂₁ is a dubious translation:
 lean 3 declaration is
   forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u5}} (A : Matrix.{u3, u1, u5} n l α) (B : Matrix.{u3, u2, u5} n m α) (C : Matrix.{u4, u1, u5} o l α) (D : Matrix.{u4, u2, u5} o m α), Eq.{succ (max u4 u1 u5)} (Matrix.{u4, u1, u5} o l α) (Matrix.toBlocks₂₁.{u1, u2, u3, u4, u5} l m n o α (Matrix.fromBlocks.{u1, u2, u3, u4, u5} l m n o α A B C D)) C
 but is expected to have type
   forall {l : Type.{u4}} {m : Type.{u2}} {n : Type.{u5}} {o : Type.{u1}} {α : Type.{u3}} (A : Matrix.{u5, u4, u3} n l α) (B : Matrix.{u5, u2, u3} n m α) (C : Matrix.{u1, u4, u3} o l α) (D : Matrix.{u1, u2, u3} o m α), Eq.{max (max (succ u4) (succ u1)) (succ u3)} (Matrix.{u1, u4, u3} o l α) (Matrix.toBlocks₂₁.{u4, u2, u5, u1, u3} l m n o α (Matrix.fromBlocks.{u4, u2, u5, u1, u3} l m n o α A B C D)) C
-Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₂₁ Matrix.to_blocks_from_blocks₂₁ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₂₁ Matrix.toBlocks_fromBlocks₂₁ₓ'. -/
 @[simp]
-theorem to_blocks_from_blocks₂₁ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
+theorem toBlocks_fromBlocks₂₁ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) : (fromBlocks A B C D).toBlocks₂₁ = C :=
   rfl
-#align matrix.to_blocks_from_blocks₂₁ Matrix.to_blocks_from_blocks₂₁
+#align matrix.to_blocks_from_blocks₂₁ Matrix.toBlocks_fromBlocks₂₁
 
-/- warning: matrix.to_blocks_from_blocks₂₂ -> Matrix.to_blocks_from_blocks₂₂ is a dubious translation:
+/- warning: matrix.to_blocks_from_blocks₂₂ -> Matrix.toBlocks_fromBlocks₂₂ is a dubious translation:
 lean 3 declaration is
   forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u4}} {α : Type.{u5}} (A : Matrix.{u3, u1, u5} n l α) (B : Matrix.{u3, u2, u5} n m α) (C : Matrix.{u4, u1, u5} o l α) (D : Matrix.{u4, u2, u5} o m α), Eq.{succ (max u4 u2 u5)} (Matrix.{u4, u2, u5} o m α) (Matrix.toBlocks₂₂.{u1, u2, u3, u4, u5} l m n o α (Matrix.fromBlocks.{u1, u2, u3, u4, u5} l m n o α A B C D)) D
 but is expected to have type
   forall {l : Type.{u4}} {m : Type.{u2}} {n : Type.{u5}} {o : Type.{u1}} {α : Type.{u3}} (A : Matrix.{u5, u4, u3} n l α) (B : Matrix.{u5, u2, u3} n m α) (C : Matrix.{u1, u4, u3} o l α) (D : Matrix.{u1, u2, u3} o m α), Eq.{max (max (succ u2) (succ u1)) (succ u3)} (Matrix.{u1, u2, u3} o m α) (Matrix.toBlocks₂₂.{u4, u2, u5, u1, u3} l m n o α (Matrix.fromBlocks.{u4, u2, u5, u1, u3} l m n o α A B C D)) D
-Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₂₂ Matrix.to_blocks_from_blocks₂₂ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align matrix.to_blocks_from_blocks₂₂ Matrix.toBlocks_fromBlocks₂₂ₓ'. -/
 @[simp]
-theorem to_blocks_from_blocks₂₂ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
+theorem toBlocks_fromBlocks₂₂ (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) : (fromBlocks A B C D).toBlocks₂₂ = D :=
   rfl
-#align matrix.to_blocks_from_blocks₂₂ Matrix.to_blocks_from_blocks₂₂
+#align matrix.to_blocks_from_blocks₂₂ Matrix.toBlocks_fromBlocks₂₂
 
 /- warning: matrix.from_blocks_map -> Matrix.fromBlocks_map is a dubious translation:
 lean 3 declaration is
