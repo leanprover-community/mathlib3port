@@ -236,7 +236,7 @@ theorem not_cliqueFree_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Fin n
   use finset.univ.map f.to_embedding
   simp only [card_map, Finset.card_fin, eq_self_iff_true, and_true_iff]
   ext (⟨v, hv⟩⟨w, hw⟩)
-  simp only [coe_map, RelEmbedding.coeFn_toEmbedding, Set.mem_image, coe_univ, Set.mem_univ,
+  simp only [coe_map, RelEmbedding.coe_toEmbedding, Set.mem_image, coe_univ, Set.mem_univ,
     true_and_iff] at hv hw
   obtain ⟨v', rfl⟩ := hv
   obtain ⟨w', rfl⟩ := hw

@@ -108,7 +108,7 @@ theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
     · contrapose! h
       exact order_le_of_coeff_ne_zero h.symm
     · contrapose! h
-      simp only [Set.mem_range, RelEmbedding.coeFn_mk, Function.Embedding.coeFn_mk] at h
+      simp only [Set.mem_range, RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at h
       obtain ⟨m, hm⟩ := h
       rw [← sub_nonneg, ← hm]
       exact Int.zero_le_ofNat _
@@ -228,9 +228,9 @@ theorem coeff_coe (i : ℤ) :
       if_neg (Int.coe_nat_nonneg _).not_lt]
   · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support,
       if_pos (Int.negSucc_lt_zero _)]
-    simp only [not_exists, RelEmbedding.coeFn_mk, Set.mem_image, not_and,
-      Function.Embedding.coeFn_mk, Ne.def, to_power_series_symm_apply_coeff, mem_support,
-      Int.coe_nat_eq, imp_true_iff, not_false_iff]
+    simp only [not_exists, RelEmbedding.coe_mk, Set.mem_image, not_and, Function.Embedding.coeFn_mk,
+      Ne.def, to_power_series_symm_apply_coeff, mem_support, Int.coe_nat_eq, imp_true_iff,
+      not_false_iff]
 #align power_series.coeff_coe PowerSeries.coeff_coe
 
 @[simp, norm_cast]

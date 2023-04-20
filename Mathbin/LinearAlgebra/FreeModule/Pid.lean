@@ -508,7 +508,7 @@ noncomputable def Submodule.smithNormalFormOfLe [Finite ι] (b : Basis ι R M) (
       fun i => _⟩
   ext
   simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symm_apply,
-    Submodule.coe_smul_of_tower, RelEmbedding.coeFn_toEmbedding]
+    Submodule.coe_smul_of_tower, RelEmbedding.coe_toEmbedding]
 #align submodule.smith_normal_form_of_le Submodule.smithNormalFormOfLe
 
 /-- If `M` is finite free over a PID `R`, then any submodule `N` is free

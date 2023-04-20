@@ -1241,7 +1241,7 @@ theorem integrable_mk {f : α → β} (hf : AeStronglyMeasurable f μ) :
   by
   simp [integrable]
   apply integrable_congr
-  exact [anonymous] f hf
+  exact coe_fn_mk f hf
 #align measure_theory.ae_eq_fun.integrable_mk MeasureTheory.AeEqFun.integrable_mk
 
 theorem integrable_coeFn {f : α →ₘ[μ] β} : MeasureTheory.Integrable f μ ↔ Integrable f := by

@@ -1260,7 +1260,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.fst_prod_ex
 @[simp]
 theorem fst_prodExtendRight (ab : α₁ × β₁) : (prodExtendRight a e ab).fst = ab.fst :=
   by
-  rw [prod_extend_right, [anonymous]]
+  rw [prod_extend_right, coe_fn_mk]
   split_ifs with h
   · rw [h]
   · rfl

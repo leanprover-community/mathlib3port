@@ -122,7 +122,7 @@ instance add_contravariantClass_le : ContravariantClass Ordinal.{u} Ordinal.{u} 
             ⟨⟨⟨g, fun x y h => by
                   injection f.inj' (by rw [fr, fr, h] : f (Sum.inr x) = f (Sum.inr y))⟩,
                 fun a b => by
-                simpa only [Sum.lex_inr_inr, fr, RelEmbedding.coeFn_toEmbedding,
+                simpa only [Sum.lex_inr_inr, fr, RelEmbedding.coe_toEmbedding,
                   InitialSeg.coeFn_toRelEmbedding, embedding.coe_fn_mk] using
                   @RelEmbedding.map_rel_iff _ _ _ _ f.to_rel_embedding (Sum.inr a) (Sum.inr b)⟩,
               fun a b H =>

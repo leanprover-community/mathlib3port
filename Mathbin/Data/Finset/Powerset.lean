@@ -445,7 +445,7 @@ theorem powersetLen_map {β : Type _} (f : α ↪ β) (n : ℕ) (s : Finset α) 
   eq_of_veq <|
     Multiset.map_injective (@eq_of_veq _) <| by
       simp_rw [map_val_val_powerset_len, map_val, Multiset.map_map, Function.comp,
-        RelEmbedding.coeFn_toEmbedding, map_embedding_apply, map_val, ← Multiset.map_map _ val,
+        RelEmbedding.coe_toEmbedding, map_embedding_apply, map_val, ← Multiset.map_map _ val,
         map_val_val_powerset_len, Multiset.powersetLen_map]
 #align finset.powerset_len_map Finset.powersetLen_map
 -/

@@ -82,7 +82,7 @@ def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) : BilinForm R₂ (n →
 theorem Matrix.toBilin'Aux_stdBasis [Fintype n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
     M.toBilin'Aux (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) = M i j :=
   by
-  rw [Matrix.toBilin'Aux, [anonymous], sum_eq_single i, sum_eq_single j]
+  rw [Matrix.toBilin'Aux, coe_fn_mk, sum_eq_single i, sum_eq_single j]
   · simp only [std_basis_same, std_basis_same, one_mul, mul_one]
   · rintro j' - hj'
     apply mul_eq_zero_of_right

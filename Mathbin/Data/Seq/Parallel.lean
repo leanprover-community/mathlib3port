@@ -37,8 +37,8 @@ def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def Parallel.aux1 :
-    List (Computation α) × Wseq (Computation α) →
-      Sum α (List (Computation α) × Wseq (Computation α))
+    List (Computation α) × WSeq (Computation α) →
+      Sum α (List (Computation α) × WSeq (Computation α))
   | (l, S) =>
     rmap
       (fun l' =>
@@ -51,7 +51,7 @@ def Parallel.aux1 :
 
 /-- Parallel computation of an infinite stream of computations,
   taking the first result -/
-def parallel (S : Wseq (Computation α)) : Computation α :=
+def parallel (S : WSeq (Computation α)) : Computation α :=
   corec Parallel.aux1 ([], S)
 #align computation.parallel Computation.parallel
 
@@ -123,7 +123,7 @@ theorem TerminatesParallel.aux :
         simp [this]
 #align computation.terminates_parallel.aux Computation.TerminatesParallel.aux
 
-theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : Terminates c] :
+theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : Terminates c] :
     Terminates (parallel S) :=
   by
   suffices
@@ -197,7 +197,7 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
         cases' o with c <;> simp [parallel.aux1, TT]
 #align computation.terminates_parallel Computation.terminates_parallel
 
-theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parallel S) :
+theorem exists_of_mem_parallel {S : WSeq (Computation α)} {a} (h : a ∈ parallel S) :
     ∃ c ∈ S, a ∈ c :=
   by
   suffices
@@ -308,17 +308,17 @@ theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map 
         exact ⟨_, _, rfl, rfl⟩
 #align computation.map_parallel Computation.map_parallel
 
-theorem parallel_empty (S : Wseq (Computation α)) (h : S.headI ~> none) : parallel S = empty _ :=
+theorem parallel_empty (S : WSeq (Computation α)) (h : S.headI ~> none) : parallel S = empty _ :=
   eq_empty_of_not_terminates fun ⟨⟨a, m⟩⟩ =>
     by
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel m
-    let ⟨n, nm⟩ := Wseq.exists_nth_of_mem cs
-    let ⟨c', h'⟩ := Wseq.head_some_of_nth_some nm
+    let ⟨n, nm⟩ := WSeq.exists_get?_of_mem cs
+    let ⟨c', h'⟩ := WSeq.head_some_of_get?_some nm
     injection h h'
 #align computation.parallel_empty Computation.parallel_empty
 
 -- The reason this isn't trivial from exists_of_mem_parallel is because it eliminates to Sort
-def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀ s ∈ S, ∀ a ∈ s, C a) {a}
+def parallelRec {S : WSeq (Computation α)} (C : α → Sort v) (H : ∀ s ∈ S, ∀ a ∈ s, C a) {a}
     (h : a ∈ parallel S) : C a :=
   by
   let T : wseq (Computation (α × Computation α)) := S.map fun c => c.map fun a => (a, c)
@@ -354,31 +354,31 @@ def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀ s ∈ S
   apply H _ cs _ ac
 #align computation.parallel_rec Computation.parallelRec
 
-theorem parallel_promises {S : Wseq (Computation α)} {a} (H : ∀ s ∈ S, s ~> a) : parallel S ~> a :=
+theorem parallel_promises {S : WSeq (Computation α)} {a} (H : ∀ s ∈ S, s ~> a) : parallel S ~> a :=
   fun a' ma' =>
   let ⟨c, cs, ac⟩ := exists_of_mem_parallel ma'
   H _ cs ac
 #align computation.parallel_promises Computation.parallel_promises
 
-theorem mem_parallel {S : Wseq (Computation α)} {a} (H : ∀ s ∈ S, s ~> a) {c} (cs : c ∈ S)
+theorem mem_parallel {S : WSeq (Computation α)} {a} (H : ∀ s ∈ S, s ~> a) {c} (cs : c ∈ S)
     (ac : a ∈ c) : a ∈ parallel S := by
   haveI := terminates_of_mem ac <;> haveI := terminates_parallel cs <;>
     exact mem_of_promises _ (parallel_promises H)
 #align computation.mem_parallel Computation.mem_parallel
 
-theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equiv T) :
+theorem parallel_congr_lem {S T : WSeq (Computation α)} {a} (H : S.LiftRel Equiv T) :
     (∀ s ∈ S, s ~> a) ↔ ∀ t ∈ T, t ~> a :=
   ⟨fun h1 t tT =>
-    let ⟨s, sS, se⟩ := Wseq.exists_of_liftRel_right H tT
+    let ⟨s, sS, se⟩ := WSeq.exists_of_liftRel_right H tT
     (promises_congr se _).1 (h1 _ sS),
     fun h2 s sS =>
-    let ⟨t, tT, se⟩ := Wseq.exists_of_liftRel_left H sS
+    let ⟨t, tT, se⟩ := WSeq.exists_of_liftRel_left H sS
     (promises_congr se _).2 (h2 _ tT)⟩
 #align computation.parallel_congr_lem Computation.parallel_congr_lem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- The parallel operation is only deterministic when all computation paths lead to the same value
-theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S, s ~> a)
+theorem parallel_congr_left {S T : WSeq (Computation α)} {a} (h1 : ∀ s ∈ S, s ~> a)
     (H : S.LiftRel Equiv T) : parallel S ~ parallel T :=
   let h2 := (parallel_congr_lem H).1 h1
   fun a' =>
@@ -399,7 +399,7 @@ theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S,
 #align computation.parallel_congr_left Computation.parallel_congr_left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀ t ∈ T, t ~> a)
+theorem parallel_congr_right {S T : WSeq (Computation α)} {a} (h2 : ∀ t ∈ T, t ~> a)
     (H : S.LiftRel Equiv T) : parallel S ~ parallel T :=
   parallel_congr_left ((parallel_congr_lem H).2 h2) H
 #align computation.parallel_congr_right Computation.parallel_congr_right
