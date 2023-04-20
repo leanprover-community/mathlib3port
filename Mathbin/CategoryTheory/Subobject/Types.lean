@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.types
-! leanprover-community/mathlib commit 610955826b3be3caaab5170fef04ecd5458521bf
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Types
 
 /-!
 # `Type u` is well-powered
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 By building a categorical equivalence `mono_over α ≌ set α` for any `α : Type u`,
 we deduce that `subobject α ≃o set α` and that `Type u` is well-powered.

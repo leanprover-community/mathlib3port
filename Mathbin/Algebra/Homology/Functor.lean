@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.homology.functor
-! leanprover-community/mathlib commit 8e25bb6c1645bb80670e13848b79a54aa45cb84f
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Homology.HomologicalComplex
 
 /-!
 # Complexes in functor categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We can view a complex valued in a functor category `T ⥤ V` as
 a functor from `T` to complexes valued in `V`.

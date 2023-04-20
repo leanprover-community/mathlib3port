@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.qpf.univariate.basic
-! leanprover-community/mathlib commit 14b69e9f3c16630440a2cbd46f1ddad0d561dee7
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Pfunctor.Univariate.M
 /-!
 
 # Quotients of Polynomial Functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We assume the following:
 

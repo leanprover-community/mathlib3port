@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Felix Weilacher
 
 ! This file was ported from Lean 3 source module topology.metric_space.cantor_scheme
-! leanprover-community/mathlib commit 49b7f94aab3a3bdca1f9f34c5d818afb253b3993
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.MetricSpace.PiNat
 
 /-!
 # (Topological) Schemes and their induced maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In topology, and especially descriptive set theory, one often constructs functions `(ℕ → β) → α`,
 where α is some topological space and β is a discrete space, as an appropriate limit of some map

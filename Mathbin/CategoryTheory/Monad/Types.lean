@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.types
-! leanprover-community/mathlib commit 7c77279eec0b350e1e15ebda7cc4f74ee3fd58fb
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Types
 /-!
 
 # Convert from `monad` (i.e. Lean's `Type`-based monads) to `category_theory.monad`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This allows us to use these monads in category theory.
 

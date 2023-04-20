@@ -2576,6 +2576,7 @@ import Mathbin.RingTheory.Polynomial.Dickson
 import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
 import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
 import Mathbin.RingTheory.Polynomial.GaussLemma
+import Mathbin.RingTheory.Polynomial.Hermite
 import Mathbin.RingTheory.Polynomial.Opposites
 import Mathbin.RingTheory.Polynomial.Pochhammer
 import Mathbin.RingTheory.Polynomial.Quotient

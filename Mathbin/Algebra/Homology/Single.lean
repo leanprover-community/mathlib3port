@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.single
-! leanprover-community/mathlib commit 324a7502510e835cdbd3de1519b6c66b51fb2467
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Homology.Homology
 
 /-!
 # Chain complexes supported in a single degree
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `single V j c : V ⥤ homological_complex V c`,
 which constructs complexes in `V` of shape `c`, supported in degree `j`.

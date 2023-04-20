@@ -4168,13 +4168,13 @@ section
 -- the expression we use here is equivalent.
 attribute [local semireducible] reflected
 
-unsafe instance reflect : ∀ n, has_reflect (Fin n)
+unsafe instance toExpr : ∀ n, has_reflect (Fin n)
   | 0 => finZeroElim
   | n + 1 =>
     nat.mk_numeral q(Fin n.succ) q((by infer_instance : Zero (Fin n.succ)))
         q((by infer_instance : One (Fin n.succ))) q((by infer_instance : Add (Fin n.succ))) ∘
       Fin.val
-#align fin.reflect fin.reflect
+#align fin.reflect Fin.toExprₓ
 
 end
 

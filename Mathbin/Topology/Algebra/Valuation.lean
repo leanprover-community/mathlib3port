@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valuation
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Valuation.Basic
 
 /-!
 # The topology on a valued ring
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we define the non archimedean topology induced by a valuation on a ring.
 The main definition is a `valued` type class which equips a ring with a valuation taking

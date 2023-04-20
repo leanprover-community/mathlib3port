@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Urysohn's lemma
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove Urysohn's lemma `exists_continuous_zero_one_of_closed`: for any two disjoint
 closed sets `s` and `t` in a normal topological space `X` there exists a continuous function

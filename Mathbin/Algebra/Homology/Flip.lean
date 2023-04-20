@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.flip
-! leanprover-community/mathlib commit ff511590476ef357b6132a45816adc120d5d7b1d
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Homology.HomologicalComplex
 
 /-!
 # Flip a complex of complexes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For now we don't have double complexes as a distinct thing,
 but we can model them as complexes of complexes.

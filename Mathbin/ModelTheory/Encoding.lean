@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.encoding
-! leanprover-community/mathlib commit 91288e351d51b3f0748f0a38faa7613fb0ae2ada
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.ModelTheory.Syntax
 import Mathbin.SetTheory.Cardinal.Ordinal
 
 /-! # Encodings and Cardinality of First-Order Syntax
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main Definitions
 * `first_order.language.term.encoding` encodes terms as lists.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pim Spelier, Daan van Gent
 
 ! This file was ported from Lean 3 source module computability.tm_computable
-! leanprover-community/mathlib commit 6f9cb03e8a39ea345796a13c6639cb330e50869b
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Polynomial.Eval
 
 /-!
 # Computable functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the definition of a Turing machine with some finiteness conditions
 (bundling the definition of TM2 in turing_machine.lean), a definition of when a TM gives a certain

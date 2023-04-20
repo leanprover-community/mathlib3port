@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.homology.exact
-! leanprover-community/mathlib commit 3feb151caefe53df080ca6ca67a0c6685cfd1b82
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Homology.ImageToKernel
 
 /-!
 # Exact sequences
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In a category with zero morphisms, images, and equalizers we say that `f : A ⟶ B` and `g : B ⟶ C`
 are exact if `f ≫ g = 0` and the natural map `image f ⟶ kernel g` is an epimorphism.

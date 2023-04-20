@@ -1,15 +1,18 @@
 /-
 Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Johan Commelin
+Authors: Johan Commelin, Eric Wieer
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit 0e2aab2b0d521f060f62a14d2cf2e2c54e8491d6
+! leanprover-community/mathlib commit 17219820a8aa8abe85adf5dfde19af1dd1bd8ae7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.Matrix.ToLin
+import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.LinearAlgebra.Matrix.DotProduct
+import Mathbin.Data.Complex.Module
 
 /-!
 # Rank of matrices
@@ -23,7 +26,9 @@ This definition does not depend on the choice of basis, see `matrix.rank_eq_finr
 
 ## TODO
 
-* Show that `matrix.rank` is equal to the row-rank, and that `rank Aᵀ = rank A`.
+* Do a better job of generalizing over `ℚ`, `ℝ`, and `ℂ` in `matrix.rank_transpose` and
+  `matrix.rank_conj_transpose`. See
+  [this Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/row.20rank.20equals.20column.20rank/near/350462992).
 
 -/
 
@@ -35,6 +40,8 @@ namespace Matrix
 open FiniteDimensional
 
 variable {l m n o R : Type _} [m_fin : Fintype m] [Fintype n] [Fintype o]
+
+section CommRing
 
 variable [CommRing R]
 
@@ -109,8 +116,7 @@ theorem rank_submatrix_le [StrongRankCondition R] [Fintype m] (f : n → m) (e :
   rw [rank, rank, mul_vec_lin_submatrix, LinearMap.range_comp, LinearMap.range_comp,
     show LinearMap.funLeft R R e.symm = LinearEquiv.funCongrLeft R R e.symm from rfl,
     LinearEquiv.range, Submodule.map_top]
-  -- TODO: generalize `finite_dimensional.finrank_map_le` and use it here
-  exact finrank_le_finrank_of_rank_le_rank (lift_rank_map_le _ _) (rank_lt_aleph_0 _ _)
+  exact Submodule.finrank_map_le _ _
 #align matrix.rank_submatrix_le Matrix.rank_submatrix_le
 
 theorem rank_reindex [Fintype m] (e₁ e₂ : m ≃ n) (A : Matrix m m R) :
@@ -169,6 +175,120 @@ theorem rank_le_height [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (
 theorem rank_eq_finrank_span_cols (A : Matrix m n R) :
     A.rank = finrank R (Submodule.span R (Set.range Aᵀ)) := by rw [rank, Matrix.range_mulVecLin]
 #align matrix.rank_eq_finrank_span_cols Matrix.rank_eq_finrank_span_cols
+
+end CommRing
+
+/-! ### Lemmas about transpose and conjugate transpose
+
+This section contains lemmas about the rank of `matrix.transpose` and `matrix.conj_transpose`.
+
+Unfortunately the proofs are essentially duplicated between the two; `ℚ` is a linearly-ordered ring
+but can't be a star-ordered ring, while `ℂ` is star-ordered (with `open_locale complex_order`) but
+not linearly ordered. For now we don't prove the transpose case for `ℂ`.
+
+TODO: the lemmas `matrix.rank_transpose` and `matrix.rank_conj_transpose` current follow a short
+proof that is a simple consequence of `matrix.rank_transpose_mul_self` and
+`matrix.rank_conj_transpose_mul_self`. This proof pulls in unecessary assumptions on `R`, and should
+be replaced with a proof that uses Gaussian reduction or argues via linear combinations.
+-/
+
+
+section StarOrderedField
+
+variable [Fintype m] [Field R] [PartialOrder R] [StarOrderedRing R]
+
+theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
+    LinearMap.ker (Aᴴ ⬝ A).mulVecLin = LinearMap.ker (mulVecLin A) :=
+  by
+  ext x
+  simp only [LinearMap.mem_ker, mul_vec_lin_apply, ← mul_vec_mul_vec]
+  constructor
+  · intro h
+    replace h := congr_arg (dot_product (star x)) h
+    rwa [dot_product_mul_vec, dot_product_zero, vec_mul_conj_transpose, star_star,
+      dot_product_star_self_eq_zero] at h
+  · intro h
+    rw [h, mul_vec_zero]
+#align matrix.ker_mul_vec_lin_conj_transpose_mul_self Matrix.ker_mulVecLin_conjTranspose_mul_self
+
+theorem rank_conjTranspose_mul_self (A : Matrix m n R) : (Aᴴ ⬝ A).rank = A.rank :=
+  by
+  dsimp only [rank]
+  refine' add_left_injective (finrank R A.mul_vec_lin.ker) _
+  dsimp only
+  rw [LinearMap.finrank_range_add_finrank_ker, ← (Aᴴ ⬝ A).mulVecLin.finrank_range_add_finrank_ker]
+  congr 1
+  rw [ker_mul_vec_lin_conj_transpose_mul_self]
+#align matrix.rank_conj_transpose_mul_self Matrix.rank_conjTranspose_mul_self
+
+-- this follows the proof here https://math.stackexchange.com/a/81903/1896
+/-- TODO: prove this in greater generality. -/
+@[simp]
+theorem rank_conjTranspose (A : Matrix m n R) : Aᴴ.rank = A.rank :=
+  le_antisymm
+    (((rank_conjTranspose_mul_self _).symm.trans_le <| rank_mul_le_left _ _).trans_eq <|
+      congr_arg _ <| conjTranspose_conjTranspose _)
+    ((rank_conjTranspose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
+#align matrix.rank_conj_transpose Matrix.rank_conjTranspose
+
+@[simp]
+theorem rank_self_mul_conjTranspose (A : Matrix m n R) : (A ⬝ Aᴴ).rank = A.rank := by
+  simpa only [rank_conj_transpose, conj_transpose_conj_transpose] using
+    rank_conj_transpose_mul_self Aᴴ
+#align matrix.rank_self_mul_conj_transpose Matrix.rank_self_mul_conjTranspose
+
+end StarOrderedField
+
+section LinearOrderedField
+
+variable [Fintype m] [LinearOrderedField R]
+
+theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
+    LinearMap.ker (Aᵀ ⬝ A).mulVecLin = LinearMap.ker (mulVecLin A) :=
+  by
+  ext x
+  simp only [LinearMap.mem_ker, mul_vec_lin_apply, ← mul_vec_mul_vec]
+  constructor
+  · intro h
+    replace h := congr_arg (dot_product x) h
+    rwa [dot_product_mul_vec, dot_product_zero, vec_mul_transpose, dot_product_self_eq_zero] at h
+  · intro h
+    rw [h, mul_vec_zero]
+#align matrix.ker_mul_vec_lin_transpose_mul_self Matrix.ker_mulVecLin_transpose_mul_self
+
+theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ ⬝ A).rank = A.rank :=
+  by
+  dsimp only [rank]
+  refine' add_left_injective (finrank R A.mul_vec_lin.ker) _
+  dsimp only
+  rw [LinearMap.finrank_range_add_finrank_ker, ← (Aᵀ ⬝ A).mulVecLin.finrank_range_add_finrank_ker]
+  congr 1
+  rw [ker_mul_vec_lin_transpose_mul_self]
+#align matrix.rank_transpose_mul_self Matrix.rank_transpose_mul_self
+
+/-- TODO: prove this in greater generality. -/
+@[simp]
+theorem rank_transpose (A : Matrix m n R) : Aᵀ.rank = A.rank :=
+  le_antisymm ((rank_transpose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
+    ((rank_transpose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
+#align matrix.rank_transpose Matrix.rank_transpose
+
+@[simp]
+theorem rank_self_mul_transpose (A : Matrix m n R) : (A ⬝ Aᵀ).rank = A.rank := by
+  simpa only [rank_transpose, transpose_transpose] using rank_transpose_mul_self Aᵀ
+#align matrix.rank_self_mul_transpose Matrix.rank_self_mul_transpose
+
+end LinearOrderedField
+
+/-- The rank of a matrix is the rank of the space spanned by its rows.
+
+TODO: prove this in a generality that works for `ℂ` too, not just `ℚ` and `ℝ`. -/
+theorem rank_eq_finrank_span_row [LinearOrderedField R] [Finite m] (A : Matrix m n R) :
+    A.rank = finrank R (Submodule.span R (Set.range A)) :=
+  by
+  cases nonempty_fintype m
+  rw [← rank_transpose, rank_eq_finrank_span_cols, transpose_transpose]
+#align matrix.rank_eq_finrank_span_row Matrix.rank_eq_finrank_span_row
 
 end Matrix
 

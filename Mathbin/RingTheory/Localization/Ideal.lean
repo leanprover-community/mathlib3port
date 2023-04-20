@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.ideal
-! leanprover-community/mathlib commit e7f0ddbf65bd7181a85edb74b64bdc35ba4bdc74
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Localization.Basic
 
 /-!
 # Ideals in localizations of commutative rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Implementation notes
 

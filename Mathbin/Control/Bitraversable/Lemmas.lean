@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.bitraversable.lemmas
-! leanprover-community/mathlib commit 58581d0fe523063f5651df0619be2bf65012a94a
+! leanprover-community/mathlib commit 8eb9c42d4d34c77f6ee84ea766ae4070233a973c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Control.Bitraversable.Basic
 
 /-!
 # Bitraversable Lemmas
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main definitions
   * tfst - traverse on first functor argument
