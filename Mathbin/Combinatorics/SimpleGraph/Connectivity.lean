@@ -2582,11 +2582,23 @@ protected theorem Reachable.map {G : SimpleGraph V} {G' : SimpleGraph V'} (f : G
   h.elim fun p => ⟨p.map f⟩
 #align simple_graph.reachable.map SimpleGraph.Reachable.map
 
+/- warning: simple_graph.iso.reachable_iff -> SimpleGraph.Iso.reachable_iff is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V}, Iff (SimpleGraph.Reachable.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ u) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ v)) (SimpleGraph.Reachable.{u1} V G u v)
+but is expected to have type
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V}, Iff (SimpleGraph.Reachable.{u2} V' G' (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ u) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ v)) (SimpleGraph.Reachable.{u1} V G u v)
+Case conversion may be inaccurate. Consider using '#align simple_graph.iso.reachable_iff SimpleGraph.Iso.reachable_iffₓ'. -/
 theorem Iso.reachable_iff {G : SimpleGraph V} {G' : SimpleGraph V'} {φ : G ≃g G'} {u v : V} :
     G'.Reachable (φ u) (φ v) ↔ G.Reachable u v :=
   ⟨fun r => φ.left_inv u ▸ φ.left_inv v ▸ r.map φ.symm.toHom, Reachable.map φ.toHom⟩
 #align simple_graph.iso.reachable_iff SimpleGraph.Iso.reachable_iff
 
+/- warning: simple_graph.iso.symm_apply_reachable -> SimpleGraph.Iso.symm_apply_reachable is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V'}, Iff (SimpleGraph.Reachable.{u1} V G (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (SimpleGraph.Iso.{u2, u1} V' V G' G) (fun (_x : RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) => V' -> V) (RelIso.hasCoeToFun.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v) u) (SimpleGraph.Reachable.{u2} V' G' v (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ u))
+but is expected to have type
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {u : V} {v : V'}, Iff (SimpleGraph.Reachable.{u1} V G (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' (fun (_x : V') => V) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G) (RelIso.instRelHomClassRelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v) u) (SimpleGraph.Reachable.{u2} V' G' v (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ u))
+Case conversion may be inaccurate. Consider using '#align simple_graph.iso.symm_apply_reachable SimpleGraph.Iso.symm_apply_reachableₓ'. -/
 theorem Iso.symm_apply_reachable {G : SimpleGraph V} {G' : SimpleGraph V'} {φ : G ≃g G'} {u : V}
     {v : V'} : G.Reachable (φ.symm v) u ↔ G'.Reachable v (φ u) := by
   rw [← iso.reachable_iff, RelIso.apply_symm_apply]
@@ -2726,10 +2738,12 @@ protected theorem eq {v w : V} :
 #align simple_graph.connected_component.eq SimpleGraph.ConnectedComponent.eq
 -/
 
+#print SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj /-
 theorem connectedComponentMk_eq_of_adj {v w : V} (a : G.Adj v w) :
     G.connectedComponentMk v = G.connectedComponentMk w :=
   ConnectedComponent.sound a.Reachable
 #align simple_graph.connected_component.connected_component_mk_eq_of_adj SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj
+-/
 
 #print SimpleGraph.ConnectedComponent.lift /-
 /-- The `connected_component` specialization of `quot.lift`. Provides the stronger
@@ -2810,6 +2824,12 @@ theorem map_comp (C : G.ConnectedComponent) (φ : G →g G') (ψ : G' →g G'') 
 
 variable {φ : G ≃g G'} {v : V} {v' : V'}
 
+/- warning: simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp -> SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v : V} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (fun (_x : RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) => V -> V') (RelIso.hasCoeToFun.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) φ v)) (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Embedding.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (RelEmbedding.RelHom.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))))) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Embedding.{u1, u2} V V' G G') (RelIso.RelEmbedding.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))))) φ)) C)) (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G v) C)
+but is expected to have type
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v : V} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V (fun (_x : V) => V') (RelHomClass.toFunLike.{max u1 u2, u1, u2} (RelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.instRelHomClassRelIso.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) φ v)) (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' (RelEmbedding.toRelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.toRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') φ)) C)) (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G v) C)
+Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_compₓ'. -/
 @[simp]
 theorem iso_image_comp_eq_map_iff_eq_comp {C : G.ConnectedComponent} :
     G'.connectedComponentMk (φ v) = C.map ↑(↑φ : G ↪g G') ↔ G.connectedComponentMk v = C :=
@@ -2819,6 +2839,12 @@ theorem iso_image_comp_eq_map_iff_eq_comp {C : G.ConnectedComponent} :
     RelIso.coe_coeFn, connected_component.eq]
 #align simple_graph.connected_component.iso_image_comp_eq_map_iff_eq_comp SimpleGraph.ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp
 
+/- warning: simple_graph.connected_component.iso_inv_image_comp_eq_iff_eq_map -> SimpleGraph.ConnectedComponent.iso_inv_image_comp_eq_iff_eq_map is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v' : V'} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (SimpleGraph.Iso.{u2, u1} V' V G' G) (fun (_x : RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) => V' -> V) (RelIso.hasCoeToFun.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v')) C) (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' v') (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (SimpleGraph.Hom.{u1, u2} V V' G G') (coeTrans.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (SimpleGraph.Iso.{u1, u2} V V' G G') (RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) (SimpleGraph.Hom.{u1, u2} V V' G G') (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G')) (SimpleGraph.Hom.{u1, u2} V V' G G') (RelEmbedding.RelHom.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))) (RelIso.RelEmbedding.hasCoe.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G'))))) φ) C))
+but is expected to have type
+  forall {V : Type.{u1}} {V' : Type.{u2}} {G : SimpleGraph.{u1} V} {G' : SimpleGraph.{u2} V'} {φ : SimpleGraph.Iso.{u1, u2} V V' G G'} {v' : V'} {C : SimpleGraph.ConnectedComponent.{u1} V G}, Iff (Eq.{succ u1} (SimpleGraph.ConnectedComponent.{u1} V G) (SimpleGraph.connectedComponentMk.{u1} V G (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' (fun (_x : V') => V) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G)) V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G) (RelIso.instRelHomClassRelIso.{u2, u1} V' V (SimpleGraph.Adj.{u2} V' G') (SimpleGraph.Adj.{u1} V G))) (SimpleGraph.Iso.symm.{u1, u2} V V' G G' φ) v')) C) (Eq.{succ u2} (SimpleGraph.ConnectedComponent.{u2} V' G') (SimpleGraph.connectedComponentMk.{u2} V' G' v') (SimpleGraph.ConnectedComponent.map.{u1, u2} V V' G G' (RelEmbedding.toRelHom.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') (RelIso.toRelEmbedding.{u1, u2} V V' (SimpleGraph.Adj.{u1} V G) (SimpleGraph.Adj.{u2} V' G') φ)) C))
+Case conversion may be inaccurate. Consider using '#align simple_graph.connected_component.iso_inv_image_comp_eq_iff_eq_map SimpleGraph.ConnectedComponent.iso_inv_image_comp_eq_iff_eq_mapₓ'. -/
 @[simp]
 theorem iso_inv_image_comp_eq_iff_eq_map {C : G.ConnectedComponent} :
     G.connectedComponentMk (φ.symm v') = C ↔ G'.connectedComponentMk v' = C.map φ :=
@@ -2832,6 +2858,7 @@ end connectedComponent
 
 namespace Iso
 
+#print SimpleGraph.Iso.connectedComponentEquiv /-
 /-- An isomorphism of graphs induces a bijection of connected components. -/
 @[simps]
 def connectedComponentEquiv (φ : G ≃g G') : G.ConnectedComponent ≃ G'.ConnectedComponent
@@ -2845,14 +2872,18 @@ def connectedComponentEquiv (φ : G ≃g G') : G.ConnectedComponent ≃ G'.Conne
     ConnectedComponent.ind
       (fun v => congr_arg G'.connectedComponentMk (Equiv.right_inv φ.toEquiv v)) C
 #align simple_graph.iso.connected_component_equiv SimpleGraph.Iso.connectedComponentEquiv
+-/
 
+#print SimpleGraph.Iso.connectedComponentEquiv_refl /-
 @[simp]
 theorem connectedComponentEquiv_refl : (Iso.refl : G ≃g G).connectedComponentEquiv = Equiv.refl _ :=
   by
   ext ⟨v⟩
   rfl
 #align simple_graph.iso.connected_component_equiv_refl SimpleGraph.Iso.connectedComponentEquiv_refl
+-/
 
+#print SimpleGraph.Iso.connectedComponentEquiv_symm /-
 @[simp]
 theorem connectedComponentEquiv_symm (φ : G ≃g G') :
     φ.symm.connectedComponentEquiv = φ.connectedComponentEquiv.symm :=
@@ -2860,7 +2891,9 @@ theorem connectedComponentEquiv_symm (φ : G ≃g G') :
   ext ⟨_⟩
   rfl
 #align simple_graph.iso.connected_component_equiv_symm SimpleGraph.Iso.connectedComponentEquiv_symm
+-/
 
+#print SimpleGraph.Iso.connectedComponentEquiv_trans /-
 @[simp]
 theorem connectedComponentEquiv_trans (φ : G ≃g G') (φ' : G' ≃g G'') :
     connectedComponentEquiv (φ.trans φ') =
@@ -2869,16 +2902,20 @@ theorem connectedComponentEquiv_trans (φ : G ≃g G') (φ' : G' ≃g G'') :
   ext ⟨_⟩
   rfl
 #align simple_graph.iso.connected_component_equiv_trans SimpleGraph.Iso.connectedComponentEquiv_trans
+-/
 
 end Iso
 
 namespace connectedComponent
 
+#print SimpleGraph.ConnectedComponent.supp /-
 /-- The set of vertices in a connected component of a graph. -/
 def supp (C : G.ConnectedComponent) :=
   { v | G.connectedComponentMk v = C }
 #align simple_graph.connected_component.supp SimpleGraph.ConnectedComponent.supp
+-/
 
+#print SimpleGraph.ConnectedComponent.supp_injective /-
 @[ext]
 theorem supp_injective :
     Function.Injective (ConnectedComponent.supp : G.ConnectedComponent → Set V) :=
@@ -2889,27 +2926,35 @@ theorem supp_injective :
   intro h
   rw [reachable_comm, h]
 #align simple_graph.connected_component.supp_injective SimpleGraph.ConnectedComponent.supp_injective
+-/
 
+#print SimpleGraph.ConnectedComponent.supp_inj /-
 @[simp]
 theorem supp_inj {C D : G.ConnectedComponent} : C.supp = D.supp ↔ C = D :=
   ConnectedComponent.supp_injective.eq_iff
 #align simple_graph.connected_component.supp_inj SimpleGraph.ConnectedComponent.supp_inj
+-/
 
 instance : SetLike G.ConnectedComponent V
     where
   coe := ConnectedComponent.supp
   coe_injective' := ConnectedComponent.supp_injective
 
+#print SimpleGraph.ConnectedComponent.mem_supp_iff /-
 @[simp]
 theorem mem_supp_iff (C : G.ConnectedComponent) (v : V) :
     v ∈ C.supp ↔ G.connectedComponentMk v = C :=
   Iff.rfl
 #align simple_graph.connected_component.mem_supp_iff SimpleGraph.ConnectedComponent.mem_supp_iff
+-/
 
+#print SimpleGraph.ConnectedComponent.connectedComponentMk_mem /-
 theorem connectedComponentMk_mem {v : V} : v ∈ G.connectedComponentMk v :=
   rfl
 #align simple_graph.connected_component.connected_component_mk_mem SimpleGraph.ConnectedComponent.connectedComponentMk_mem
+-/
 
+#print SimpleGraph.ConnectedComponent.isoEquivSupp /-
 /-- The equivalence between connected components, induced by an isomorphism of graphs,
 itself defines an equivalence on the supports of each connected component.
 -/
@@ -2921,6 +2966,7 @@ def isoEquivSupp (φ : G ≃g G') (C : G.ConnectedComponent) :
   left_inv v := Subtype.ext_val (φ.toEquiv.left_inv ↑v)
   right_inv v := Subtype.ext_val (φ.toEquiv.right_inv ↑v)
 #align simple_graph.connected_component.iso_equiv_supp SimpleGraph.ConnectedComponent.isoEquivSupp
+-/
 
 end connectedComponent
 

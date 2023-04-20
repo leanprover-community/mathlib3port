@@ -415,7 +415,7 @@ noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] : Fintype (Cl
   letI := IsIntegralClosure.isDedekindDomain R K L S
   choose s b hb_int using FiniteDimensional.exists_is_basis_integral R K L
   obtain ⟨n, b⟩ :=
-    Submodule.basisOfPidOfLeSpan _ (IsIntegralClosure.range_le_span_dualBasis S b hb_int)
+    Submodule.basisOfPidOfLESpan _ (IsIntegralClosure.range_le_span_dualBasis S b hb_int)
   let bS := b.map ((LinearMap.quotKerEquivRange _).symm ≪≫ₗ _)
   refine'
     fintype_of_admissible_of_algebraic L bS adm fun x =>
