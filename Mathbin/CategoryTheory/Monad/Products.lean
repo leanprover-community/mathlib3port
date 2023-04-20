@@ -43,6 +43,7 @@ open Comonad
 
 variable [HasBinaryProducts C]
 
+#print CategoryTheory.prodComonad /-
 /-- `X ⨯ -` has a comonad structure. This is sometimes called the writer comonad. -/
 @[simps]
 def prodComonad : Comonad C where
@@ -50,7 +51,9 @@ def prodComonad : Comonad C where
   ε' := { app := fun Y => Limits.prod.snd }
   δ' := { app := fun Y => prod.lift Limits.prod.fst (𝟙 _) }
 #align category_theory.prod_comonad CategoryTheory.prodComonad
+-/
 
+#print CategoryTheory.coalgebraToOver /-
 /-- The forward direction of the equivalence from coalgebras for the product comonad to the over
 category.
 -/
@@ -65,7 +68,9 @@ def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X
         dsimp
         simp)
 #align category_theory.coalgebra_to_over CategoryTheory.coalgebraToOver
+-/
 
+#print CategoryTheory.overToCoalgebra /-
 /-- The backward direction of the equivalence from coalgebras for the product comonad to the over
 category.
 -/
@@ -77,7 +82,14 @@ def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X)
       a := prod.lift f.Hom (𝟙 _) }
   map f₁ f₂ g := { f := g.left }
 #align category_theory.over_to_coalgebra CategoryTheory.overToCoalgebra
+-/
 
+/- warning: category_theory.coalgebra_equiv_over -> CategoryTheory.coalgebraEquivOver is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryProducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Comonad.Coalgebra.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Comonad.Coalgebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Over.{u1, u2} C _inst_1 X) (CategoryTheory.Over.category.{u2, u1} C _inst_1 X)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryProducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Comonad.Coalgebra.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Over.{u1, u2} C _inst_1 X) (CategoryTheory.Comonad.Coalgebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.prodComonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_1 X)
+Case conversion may be inaccurate. Consider using '#align category_theory.coalgebra_equiv_over CategoryTheory.coalgebraEquivOverₓ'. -/
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
 def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X
@@ -109,6 +121,7 @@ open _Root_.Monad
 
 variable [HasBinaryCoproducts C]
 
+#print CategoryTheory.coprodMonad /-
 /-- `X ⨿ -` has a monad structure. This is sometimes called the either monad. -/
 @[simps]
 def coprodMonad : Monad C where
@@ -116,7 +129,9 @@ def coprodMonad : Monad C where
   η' := { app := fun Y => coprod.inr }
   μ' := { app := fun Y => coprod.desc coprod.inl (𝟙 _) }
 #align category_theory.coprod_monad CategoryTheory.coprodMonad
+-/
 
+#print CategoryTheory.algebraToUnder /-
 /-- The forward direction of the equivalence from algebras for the coproduct monad to the under
 category.
 -/
@@ -131,7 +146,9 @@ def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X
         dsimp
         simp)
 #align category_theory.algebra_to_under CategoryTheory.algebraToUnder
+-/
 
+#print CategoryTheory.underToAlgebra /-
 /-- The backward direction of the equivalence from algebras for the coproduct monad to the under
 category.
 -/
@@ -143,7 +160,14 @@ def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X)
       a := coprod.desc f.Hom (𝟙 _) }
   map f₁ f₂ g := { f := g.right }
 #align category_theory.under_to_algebra CategoryTheory.underToAlgebra
+-/
 
+/- warning: category_theory.algebra_equiv_under -> CategoryTheory.algebraEquivUnder is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryCoproducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Monad.Algebra.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Under.{u1, u2} C _inst_1 X) (CategoryTheory.Under.category.{u2, u1} C _inst_1 X)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : C) [_inst_2 : CategoryTheory.Limits.HasBinaryCoproducts.{u1, u2} C _inst_1], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Monad.Algebra.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.Under.{u1, u2} C _inst_1 X) (CategoryTheory.Monad.Algebra.eilenbergMoore.{u1, u2} C _inst_1 (CategoryTheory.coprodMonad.{u1, u2} C _inst_1 X _inst_2)) (CategoryTheory.instCategoryUnder.{u1, u2} C _inst_1 X)
+Case conversion may be inaccurate. Consider using '#align category_theory.algebra_equiv_under CategoryTheory.algebraEquivUnderₓ'. -/
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/
 @[simps]
