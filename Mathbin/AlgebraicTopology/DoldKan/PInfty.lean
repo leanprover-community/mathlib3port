@@ -108,10 +108,10 @@ theorem QInfty_f_0 : (QInfty.f 0 : X _[0] ⟶ X _[0]) = 0 :=
 #align algebraic_topology.dold_kan.Q_infty_f_0 AlgebraicTopology.DoldKan.QInfty_f_0
 -/
 
-#print AlgebraicTopology.DoldKan.qInfty_f /-
-theorem qInfty_f (n : ℕ) : (QInfty.f n : X _[n] ⟶ X _[n]) = (Q n).f n :=
+#print AlgebraicTopology.DoldKan.QInfty_f /-
+theorem QInfty_f (n : ℕ) : (QInfty.f n : X _[n] ⟶ X _[n]) = (Q n).f n :=
   rfl
-#align algebraic_topology.dold_kan.Q_infty_f AlgebraicTopology.DoldKan.qInfty_f
+#align algebraic_topology.dold_kan.Q_infty_f AlgebraicTopology.DoldKan.QInfty_f
 -/
 
 /- warning: algebraic_topology.dold_kan.P_infty_f_naturality -> AlgebraicTopology.DoldKan.PInfty_f_naturality is a dubious translation:
