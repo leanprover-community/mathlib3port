@@ -2046,6 +2046,7 @@ import Mathbin.LinearAlgebra.TensorAlgebra.Grading
 import Mathbin.LinearAlgebra.TensorAlgebra.ToTensorPower
 import Mathbin.LinearAlgebra.TensorPower
 import Mathbin.LinearAlgebra.TensorProduct
+import Mathbin.LinearAlgebra.TensorProduct.Matrix
 import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.LinearAlgebra.Trace
 import Mathbin.LinearAlgebra.UnitaryGroup

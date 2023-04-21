@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.ring.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 44e29dbcff83ba7114a464d592b8c3743987c1e5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -608,6 +608,26 @@ theorem mul_le_mul_of_nonpos_of_nonpos' (hca : c ≤ a) (hdb : d ≤ b) (ha : a 
   (mul_le_mul_of_nonpos_left hdb ha).trans <| mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonpos_of_nonpos' mul_le_mul_of_nonpos_of_nonpos'
 
+/-- Variant of `mul_le_of_le_one_left` for `b` non-positive instead of non-negative.  -/
+theorem le_mul_of_le_one_left (hb : b ≤ 0) (h : a ≤ 1) : b ≤ a * b := by
+  simpa only [one_mul] using mul_le_mul_of_nonpos_right h hb
+#align le_mul_of_le_one_left le_mul_of_le_one_left
+
+/-- Variant of `le_mul_of_one_le_left` for `b` non-positive instead of non-negative. -/
+theorem mul_le_of_one_le_left (hb : b ≤ 0) (h : 1 ≤ a) : a * b ≤ b := by
+  simpa only [one_mul] using mul_le_mul_of_nonpos_right h hb
+#align mul_le_of_one_le_left mul_le_of_one_le_left
+
+/-- Variant of `mul_le_of_le_one_right` for `a` non-positive instead of non-negative. -/
+theorem le_mul_of_le_one_right (ha : a ≤ 0) (h : b ≤ 1) : a ≤ a * b := by
+  simpa only [mul_one] using mul_le_mul_of_nonpos_left h ha
+#align le_mul_of_le_one_right le_mul_of_le_one_right
+
+/-- Variant of `le_mul_of_one_le_right` for `a` non-positive instead of non-negative. -/
+theorem mul_le_of_one_le_right (ha : a ≤ 0) (h : 1 ≤ b) : a * b ≤ a := by
+  simpa only [mul_one] using mul_le_mul_of_nonpos_left h ha
+#align mul_le_of_one_le_right mul_le_of_one_le_right
+
 section Monotone
 
 variable [Preorder β] {f g : β → α}
@@ -1135,6 +1155,26 @@ Case conversion may be inaccurate. Consider using '#align mul_pos_of_neg_of_neg 
 theorem mul_pos_of_neg_of_neg {a b : α} (ha : a < 0) (hb : b < 0) : 0 < a * b := by
   simpa only [MulZeroClass.zero_mul] using mul_lt_mul_of_neg_right ha hb
 #align mul_pos_of_neg_of_neg mul_pos_of_neg_of_neg
+
+/-- Variant of `mul_lt_of_lt_one_left` for `b` negative instead of positive. -/
+theorem lt_mul_of_lt_one_left (hb : b < 0) (h : a < 1) : b < a * b := by
+  simpa only [one_mul] using mul_lt_mul_of_neg_right h hb
+#align lt_mul_of_lt_one_left lt_mul_of_lt_one_left
+
+/-- Variant of `lt_mul_of_one_lt_left` for `b` negative instead of positive. -/
+theorem mul_lt_of_one_lt_left (hb : b < 0) (h : 1 < a) : a * b < b := by
+  simpa only [one_mul] using mul_lt_mul_of_neg_right h hb
+#align mul_lt_of_one_lt_left mul_lt_of_one_lt_left
+
+/-- Variant of `mul_lt_of_lt_one_right` for `a` negative instead of positive. -/
+theorem lt_mul_of_lt_one_right (ha : a < 0) (h : b < 1) : a < a * b := by
+  simpa only [mul_one] using mul_lt_mul_of_neg_left h ha
+#align lt_mul_of_lt_one_right lt_mul_of_lt_one_right
+
+/-- Variant of `lt_mul_of_lt_one_right` for `a` negative instead of positive. -/
+theorem mul_lt_of_one_lt_right (ha : a < 0) (h : 1 < b) : a * b < a := by
+  simpa only [mul_one] using mul_lt_mul_of_neg_left h ha
+#align mul_lt_of_one_lt_right mul_lt_of_one_lt_right
 
 section Monotone
 

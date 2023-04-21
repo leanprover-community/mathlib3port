@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 9ac7c0c8c4d7a535ec3e5b34b8859aab9233b2f4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -713,6 +713,11 @@ theorem Codisjoint.himp_inf_cancel_left (h : Codisjoint a b) : b ⇨ a ⊓ b = a
   rw [himp_inf_distrib, himp_self, inf_top_eq, h.himp_eq_right]
 #align codisjoint.himp_inf_cancel_left Codisjoint.himp_inf_cancel_left
 
+/-- See `himp_le` for a stronger version in Boolean algebras. -/
+theorem Codisjoint.himp_le_of_right_le (hac : Codisjoint a c) (hba : b ≤ a) : c ⇨ b ≤ a :=
+  (himp_le_himp_left hba).trans_eq hac.himp_eq_right
+#align codisjoint.himp_le_of_right_le Codisjoint.himp_le_of_right_le
+
 /- warning: le_himp_himp -> le_himp_himp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] {a : α} {b : α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))))) a (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHasHimp.{u1} α _inst_1) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHasHimp.{u1} α _inst_1) a b) b)
@@ -1288,6 +1293,11 @@ Case conversion may be inaccurate. Consider using '#align disjoint.sup_sdiff_can
 theorem Disjoint.sup_sdiff_cancel_right (h : Disjoint a b) : (a ⊔ b) \ b = a := by
   rw [sup_sdiff, sdiff_self, sup_bot_eq, h.sdiff_eq_left]
 #align disjoint.sup_sdiff_cancel_right Disjoint.sup_sdiff_cancel_right
+
+/-- See `le_sdiff` for a stronger version in generalised Boolean algebras. -/
+theorem Disjoint.le_sdiff_of_le_left (hac : Disjoint a c) (hab : a ≤ b) : a ≤ b \ c :=
+  hac.sdiff_eq_left.ge.trans <| sdiff_le_sdiff_right hab
+#align disjoint.le_sdiff_of_le_left Disjoint.le_sdiff_of_le_left
 
 /- warning: sdiff_sdiff_le -> sdiff_sdiff_le is a dubious translation:
 lean 3 declaration is

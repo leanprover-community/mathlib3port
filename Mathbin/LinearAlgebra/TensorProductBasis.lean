@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product_basis
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
+! leanprover-community/mathlib commit f784cc6142443d9ee623a20788c282112c322081
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,6 +68,12 @@ Case conversion may be inaccurate. Consider using '#align basis.tensor_product_a
 theorem Basis.tensorProduct_apply' (b : Basis ι R M) (c : Basis κ R N) (i : ι × κ) :
     Basis.tensorProduct b c i = b i.1 ⊗ₜ c i.2 := by simp [Basis.tensorProduct]
 #align basis.tensor_product_apply' Basis.tensorProduct_apply'
+
+@[simp]
+theorem Basis.tensorProduct_repr_tmul_apply (b : Basis ι R M) (c : Basis κ R N) (m : M) (n : N)
+    (i : ι) (j : κ) : (Basis.tensorProduct b c).repr (m ⊗ₜ n) (i, j) = b.repr m i * c.repr n j := by
+  simp [Basis.tensorProduct]
+#align basis.tensor_product_repr_tmul_apply Basis.tensorProduct_repr_tmul_apply
 
 end CommRing
 

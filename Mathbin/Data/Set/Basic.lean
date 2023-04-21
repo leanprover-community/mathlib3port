@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit 29cb56a7b35f72758b05a30490e1f10bd62c35c1
+! leanprover-community/mathlib commit 9ac7c0c8c4d7a535ec3e5b34b8859aab9233b2f4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2841,6 +2841,14 @@ Case conversion may be inaccurate. Consider using '#align set.disjoint_sdiff_rig
 theorem disjoint_sdiff_right : Disjoint s (t \ s) :=
   disjoint_sdiff_self_right
 #align set.disjoint_sdiff_right Set.disjoint_sdiff_right
+
+theorem diff_union_diff_cancel (hts : t ⊆ s) (hut : u ⊆ t) : s \ t ∪ t \ u = s \ u :=
+  sdiff_sup_sdiff_cancel hts hut
+#align set.diff_union_diff_cancel Set.diff_union_diff_cancel
+
+theorem diff_diff_eq_sdiff_union (h : u ⊆ s) : s \ (t \ u) = s \ t ∪ u :=
+  sdiff_sdiff_eq_sdiff_sup h
+#align set.diff_diff_eq_sdiff_union Set.diff_diff_eq_sdiff_union
 
 /- warning: set.disjoint_singleton_left -> Set.disjoint_singleton_left is a dubious translation:
 lean 3 declaration is

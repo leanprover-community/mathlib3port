@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
+! leanprover-community/mathlib commit 13b8e258f14bffb5def542aa78b803b0b80541aa
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,6 +46,9 @@ This defines the localization as a quotient type, `localization`, but the majori
 subsequent lemmas in the file are given in terms of localizations up to isomorphism, using maps
 which satisfy the characteristic predicate.
 
+The Grothendieck group construction corresponds to localizing at the top submonoid, namely making
+every element invertible.
+
 ## Implementation notes
 
 In maths it is natural to reason up to isomorphism, but in Lean we cannot naturally `rewrite` one
@@ -66,11 +69,20 @@ localization as a quotient type satisfies the characteristic predicate). The lem
 `mk_eq_monoid_of_mk'` hence gives you access to the results in the rest of the file, which are
 about the `localization_map.mk'` induced by any localization map.
 
+## TODO
+
+* Show that the localization at the top monoid is a group.
+* Generalise to (nonempty) subsemigroups.
+* If we acquire more bundlings, we can make `localization.mk_order_embedding` be an ordered monoid
+  embedding.
+
 ## Tags
 localization, monoid localization, quotient monoid, congruence relation, characteristic predicate,
-commutative monoid
+commutative monoid, grothendieck group
 -/
 
+
+open Function
 
 namespace AddSubmonoid
 
@@ -339,11 +351,11 @@ but is expected to have type
   forall {M : Type.{u2}} [_inst_1 : CommMonoid.{u2} M] {S : Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))} {p : (Localization.{u2} M _inst_1 S) -> Sort.{u1}} (f : forall (a : M) (b : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)), p (Localization.mk.{u2} M _inst_1 S a b)), (forall {a : M} {c : M} {b : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)} {d : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)} (h : FunLike.coe.{succ u2, succ u2, succ u2} (Con.{u2} (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) (Prod.instMulProd.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (Submonoid.mul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) S))) (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) (fun (_x : Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) => (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) -> Prop) _x) (Con.instFunLikeConForAllProp.{u2} (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) (Prod.instMulProd.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (Submonoid.mul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) S))) (Localization.r.{u2} M _inst_1 S) (Prod.mk.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) a b) (Prod.mk.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) c d)), Eq.{u1} (p (Localization.mk.{u2} M _inst_1 S c d)) (Eq.ndrec.{u1, succ u2} (Localization.{u2} M _inst_1 S) (Localization.mk.{u2} M _inst_1 S a b) p (f a b) (Localization.mk.{u2} M _inst_1 S c d) (Iff.mpr (Eq.{succ u2} (Localization.{u2} M _inst_1 S) (Localization.mk.{u2} M _inst_1 S a b) (Localization.mk.{u2} M _inst_1 S c d)) (FunLike.coe.{succ u2, succ u2, succ u2} (Con.{u2} (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) (Prod.instMulProd.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (Submonoid.mul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) S))) (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) (fun (a : Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) => (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) -> Prop) a) (Con.instFunLikeConForAllProp.{u2} (Prod.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S))) (Prod.instMulProd.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (Submonoid.mul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) S))) (Localization.r.{u2} M _inst_1 S) (Prod.mk.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) a b) (Prod.mk.{u2, u2} M (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)))) x S)) c d)) (Localization.mk_eq_mk_iff.{u2} M _inst_1 S a c b d) h)) (f c d)) -> (forall (x : Localization.{u2} M _inst_1 S), p x)
 Case conversion may be inaccurate. Consider using '#align localization.rec Localization.recₓ'. -/
 /-- Dependent recursion principle for localizations: given elements `f a b : p (mk a b)`
-for all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d` (wih the correct coercions),
+for all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d` (with the correct coercions),
 then `f` is defined on the whole `localization S`. -/
 @[elab_as_elim,
   to_additive
-      "Dependent recursion principle for `add_localizations`: given elements `f a b : p (mk a b)`\nfor all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d` (wih the correct coercions),\nthen `f` is defined on the whole `add_localization S`."]
+      "Dependent recursion principle for `add_localization`s: given elements `f a b : p (mk a b)`\nfor all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d` (with the correct coercions),\nthen `f` is defined on the whole `add_localization S`."]
 def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
     (H :
       ∀ {a c : M} {b d : S} (h : r S (a, b) (c, d)),
@@ -357,6 +369,16 @@ def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
     x
 #align localization.rec Localization.rec
 #align add_localization.rec addLocalization.rec
+
+/-- Copy of `quotient.rec_on_subsingleton₂` for `localization` -/
+@[elab_as_elim, to_additive "Copy of `quotient.rec_on_subsingleton₂` for `add_localization`"]
+def recOnSubsingleton₂ {r : Localization S → Localization S → Sort u}
+    [h : ∀ (a c : M) (b d : S), Subsingleton (r (mk a b) (mk c d))] (x y : Localization S)
+    (f : ∀ (a c : M) (b d : S), r (mk a b) (mk c d)) : r x y :=
+  @Quotient.recOnSubsingleton₂' _ _ _ _ r (Prod.rec fun _ _ => Prod.rec fun _ _ => h _ _ _ _) x y
+    (Prod.rec fun _ _ => Prod.rec fun _ _ => f _ _ _ _)
+#align localization.rec_on_subsingleton₂ Localization.recOnSubsingleton₂
+#align add_localization.rec_on_subsingleton₂ addLocalization.recOnSubsingleton₂
 
 /- warning: localization.mk_mul -> Localization.mk_mul is a dubious translation:
 lean 3 declaration is
@@ -2807,4 +2829,158 @@ end LocalizationWithZeroMap
 end Submonoid
 
 end CommMonoidWithZero
+
+namespace Localization
+
+variable {α : Type _} [CancelCommMonoid α] {s : Submonoid α} {a₁ b₁ : α} {a₂ b₂ : s}
+
+@[to_additive]
+theorem mk_left_injective (b : s) : Injective fun a => mk a b := fun c d h => by
+  simpa [-mk_eq_monoid_of_mk', mk_eq_mk_iff, r_iff_exists] using h
+#align localization.mk_left_injective Localization.mk_left_injective
+#align add_localization.mk_left_injective addLocalization.mk_left_injective
+
+@[to_additive]
+theorem mk_eq_mk_iff' : mk a₁ a₂ = mk b₁ b₂ ↔ ↑b₂ * a₁ = a₂ * b₁ := by
+  simp_rw [mk_eq_mk_iff, r_iff_exists, mul_left_cancel_iff, exists_const]
+#align localization.mk_eq_mk_iff' Localization.mk_eq_mk_iff'
+#align add_localization.mk_eq_mk_iff' addLocalization.mk_eq_mk_iff'
+
+@[to_additive]
+instance decidableEq [DecidableEq α] : DecidableEq (Localization s) := fun a b =>
+  Localization.recOnSubsingleton₂ a b fun a₁ a₂ b₁ b₂ => decidable_of_iff' _ mk_eq_mk_iff'
+#align localization.decidable_eq Localization.decidableEq
+#align add_localization.decidable_eq addLocalization.decidableEq
+
+end Localization
+
+/-! ### Order -/
+
+
+namespace Localization
+
+variable {α : Type _}
+
+section OrderedCancelCommMonoid
+
+variable [OrderedCancelCommMonoid α] {s : Submonoid α} {a₁ b₁ : α} {a₂ b₂ : s}
+
+@[to_additive]
+instance : LE (Localization s) :=
+  ⟨fun a b =>
+    Localization.liftOn₂ a b (fun a₁ a₂ b₁ b₂ => ↑b₂ * a₁ ≤ a₂ * b₁)
+      fun a₁ b₁ a₂ b₂ c₁ d₁ c₂ d₂ hab hcd =>
+      propext
+        (by
+          obtain ⟨e, he⟩ := r_iff_exists.1 hab
+          obtain ⟨f, hf⟩ := r_iff_exists.1 hcd
+          simp only [mul_right_inj] at he hf
+          dsimp
+          rw [← mul_le_mul_iff_right, mul_right_comm, ← hf, mul_right_comm, mul_right_comm ↑a₂,
+            mul_le_mul_iff_right, ← mul_le_mul_iff_left, mul_left_comm, he, mul_left_comm,
+            mul_left_comm ↑b₂, mul_le_mul_iff_left])⟩
+
+@[to_additive]
+instance : LT (Localization s) :=
+  ⟨fun a b =>
+    Localization.liftOn₂ a b (fun a₁ a₂ b₁ b₂ => ↑b₂ * a₁ < a₂ * b₁)
+      fun a₁ b₁ a₂ b₂ c₁ d₁ c₂ d₂ hab hcd =>
+      propext
+        (by
+          obtain ⟨e, he⟩ := r_iff_exists.1 hab
+          obtain ⟨f, hf⟩ := r_iff_exists.1 hcd
+          simp only [mul_right_inj] at he hf
+          dsimp
+          rw [← mul_lt_mul_iff_right, mul_right_comm, ← hf, mul_right_comm, mul_right_comm ↑a₂,
+            mul_lt_mul_iff_right, ← mul_lt_mul_iff_left, mul_left_comm, he, mul_left_comm,
+            mul_left_comm ↑b₂, mul_lt_mul_iff_left])⟩
+
+@[to_additive]
+theorem mk_le_mk : mk a₁ a₂ ≤ mk b₁ b₂ ↔ ↑b₂ * a₁ ≤ a₂ * b₁ :=
+  Iff.rfl
+#align localization.mk_le_mk Localization.mk_le_mk
+#align add_localization.mk_le_mk addLocalization.mk_le_mk
+
+@[to_additive]
+theorem mk_lt_mk : mk a₁ a₂ < mk b₁ b₂ ↔ ↑b₂ * a₁ < a₂ * b₁ :=
+  Iff.rfl
+#align localization.mk_lt_mk Localization.mk_lt_mk
+#align add_localization.mk_lt_mk addLocalization.mk_lt_mk
+
+@[to_additive]
+instance : OrderedCancelCommMonoid (Localization s) :=
+  { Localization.commMonoid _, Localization.hasLe,
+    Localization.hasLt with
+    le_refl := fun a => Localization.induction_on a fun a => le_rfl
+    le_trans := fun a b c =>
+      Localization.induction_on₃ a b c fun a b c hab hbc =>
+        by
+        simp only [mk_le_mk] at hab hbc⊢
+        refine' le_of_mul_le_mul_left' _
+        · exact b.2
+        rw [mul_left_comm]
+        refine' (mul_le_mul_left' hab _).trans _
+        rwa [mul_left_comm, mul_left_comm ↑b.2, mul_le_mul_iff_left]
+    le_antisymm := fun a b => by
+      induction' a with a₁ a₂
+      induction' b with b₁ b₂
+      simp_rw [mk_le_mk, mk_eq_mk_iff, r_iff_exists]
+      exact fun hab hba => ⟨1, by rw [hab.antisymm hba]⟩
+      all_goals intros ; rfl
+    lt_iff_le_not_le := fun a b => Localization.induction_on₂ a b fun a b => lt_iff_le_not_le
+    mul_le_mul_left := fun a b =>
+      Localization.induction_on₂ a b fun a b hab c =>
+        Localization.induction_on c fun c =>
+          by
+          simp only [mk_mul, mk_le_mk, Submonoid.coe_mul, mul_mul_mul_comm _ _ c.1] at hab⊢
+          exact mul_le_mul_left' hab _
+    le_of_mul_le_mul_left := fun a b c =>
+      Localization.induction_on₃ a b c fun a b c hab =>
+        by
+        simp only [mk_mul, mk_le_mk, Submonoid.coe_mul, mul_mul_mul_comm _ _ a.1] at hab⊢
+        exact le_of_mul_le_mul_left' hab }
+
+@[to_additive]
+instance decidableLe [DecidableRel ((· ≤ ·) : α → α → Prop)] :
+    DecidableRel ((· ≤ ·) : Localization s → Localization s → Prop) := fun a b =>
+  Localization.recOnSubsingleton₂ a b fun a₁ a₂ b₁ b₂ => decidable_of_iff' _ mk_le_mk
+#align localization.decidable_le Localization.decidableLe
+#align add_localization.decidable_le addLocalization.decidableLe
+
+@[to_additive]
+instance decidableLt [DecidableRel ((· < ·) : α → α → Prop)] :
+    DecidableRel ((· < ·) : Localization s → Localization s → Prop) := fun a b =>
+  Localization.recOnSubsingleton₂ a b fun a₁ a₂ b₁ b₂ => decidable_of_iff' _ mk_lt_mk
+#align localization.decidable_lt Localization.decidableLt
+#align add_localization.decidable_lt addLocalization.decidableLt
+
+/-- An ordered cancellative monoid injects into its localization by sending `a` to `a / b`. -/
+@[to_additive
+      "An ordered cancellative monoid injects into its localization by sending `a` to\n`a - b`.",
+  simps]
+def mkOrderEmbedding (b : s) : α ↪o Localization s
+    where
+  toFun a := mk a b
+  inj' := mk_left_injective _
+  map_rel_iff' a b := by simp [-mk_eq_monoid_of_mk', mk_le_mk]
+#align localization.mk_order_embedding Localization.mkOrderEmbedding
+#align add_localization.mk_order_embedding addLocalization.mkOrderEmbedding
+
+end OrderedCancelCommMonoid
+
+@[to_additive]
+instance [LinearOrderedCancelCommMonoid α] {s : Submonoid α} :
+    LinearOrderedCancelCommMonoid (Localization s) :=
+  {
+    Localization.orderedCancelCommMonoid with
+    le_total := fun a b =>
+      Localization.induction_on₂ a b fun _ _ =>
+        by
+        simp_rw [mk_le_mk]
+        exact le_total _ _
+    decidableLe := @Localization.decidableLe α _ _ LE.le.decidable
+    decidableLt := @Localization.decidableLt α _ _ LT.lt.decidable
+    decidableLt := Localization.decidableEq }
+
+end Localization
 

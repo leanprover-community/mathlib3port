@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.torsion
-! leanprover-community/mathlib commit a50170a88a47570ed186b809ca754110590f9476
+! leanprover-community/mathlib commit cdc34484a07418af43daf8198beaf5c00324bca8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -667,24 +667,26 @@ variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 open BigOperators
 
-theorem isTorsion_by_ideal_of_finite_of_isTorsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
-    ∃ I : Ideal R, (I : Set R) ∩ R⁰ ≠ ∅ ∧ Module.IsTorsionBySet R M I :=
+variable (R M)
+
+theorem Module.isTorsionBySet_annihilator_top :
+    Module.IsTorsionBySet R M (⊤ : Submodule R M).annihilator := fun x ha =>
+  mem_annihilator.mp ha.Prop x mem_top
+#align module.is_torsion_by_set_annihilator_top Module.isTorsionBySet_annihilator_top
+
+variable {R M}
+
+theorem Submodule.annihilator_top_inter_nonZeroDivisors [Module.Finite R M]
+    (hM : Module.IsTorsion R M) : ((⊤ : Submodule R M).annihilator : Set R) ∩ R⁰ ≠ ∅ :=
   by
-  cases' (module.finite_def.mp inferInstance : (⊤ : Submodule R M).Fg) with S h
-  refine' ⟨∏ x in S, Ideal.torsionOf R M x, _, _⟩
-  · refine' Set.Nonempty.ne_empty ⟨_, _, (∏ x in S, (@hM x).some : R⁰).2⟩
-    rw [Subtype.val_eq_coe, Submonoid.coe_finset_prod]
-    apply Ideal.prod_mem_prod
-    exact fun x _ => (@hM x).choose_spec
-  · rw [Module.isTorsionBySet_iff_torsionBySet_eq_top, eq_top_iff, ← h, span_le]
-    intro x hx
-    apply torsion_by_set_le_torsion_by_set_of_subset
-    · apply Ideal.le_of_dvd
-      exact Finset.dvd_prod_of_mem _ hx
-    · rw [mem_torsion_by_set_iff]
-      rintro ⟨a, ha⟩
-      exact ha
-#align submodule.is_torsion_by_ideal_of_finite_of_is_torsion Submodule.isTorsion_by_ideal_of_finite_of_isTorsion
+  obtain ⟨S, hS⟩ := ‹Module.Finite R M›.out
+  refine' Set.Nonempty.ne_empty ⟨_, _, (∏ x in S, (@hM x).some : R⁰).Prop⟩
+  rw [Submonoid.coe_finset_prod, SetLike.mem_coe, ← hS, mem_annihilator_span]
+  intro n
+  letI := Classical.decEq M
+  rw [← Finset.prod_erase_mul _ _ n.prop, mul_smul, ← Submonoid.smul_def, (@hM n).choose_spec,
+    smul_zero]
+#align submodule.annihilator_top_inter_non_zero_divisors Submodule.annihilator_top_inter_nonZeroDivisors
 
 variable [NoZeroDivisors R] [Nontrivial R]
 

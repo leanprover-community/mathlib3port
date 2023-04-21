@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.pid
-! leanprover-community/mathlib commit f62c15c01a5409b31b97a82d79a12980be4eff35
+! leanprover-community/mathlib commit cdc34484a07418af43daf8198beaf5c00324bca8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ Finitely generated module, principal ideal domain, classification, structure the
 
 universe u v
 
-open BigOperators
+open BigOperators Classical
 
 variable {R : Type u} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 
@@ -66,23 +66,36 @@ open DirectSum
 
 open Submodule
 
+open UniqueFactorizationMonoid
+
 /-- A finitely generated torsion module over a PID is an internal direct sum of its
 `p i ^ e i`-torsion submodules for some primes `p i` and numbers `e i`.-/
 theorem Submodule.isInternal_prime_power_torsion_of_pid [Module.Finite R M]
     (hM : Module.IsTorsion R M) :
+    DirectSum.IsInternal fun p : (factors (⊤ : Submodule R M).annihilator).toFinset =>
+      torsionBy R M
+        (IsPrincipal.generator (p : Ideal R) ^ (factors (⊤ : Submodule R M).annihilator).count p) :=
+  by
+  convert is_internal_prime_power_torsion hM
+  ext p : 1
+  rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ← Ideal.span_singleton_pow,
+    Ideal.span_singleton_generator]
+#align submodule.is_internal_prime_power_torsion_of_pid Submodule.isInternal_prime_power_torsion_of_pid
+
+/-- A finitely generated torsion module over a PID is an internal direct sum of its
+`p i ^ e i`-torsion submodules for some primes `p i` and numbers `e i`.-/
+theorem Submodule.exists_isInternal_prime_power_torsion_of_pid [Module.Finite R M]
+    (hM : Module.IsTorsion R M) :
     ∃ (ι : Type u)(_ : Fintype ι)(_ : DecidableEq ι)(p : ι → R)(h : ∀ i, Irreducible <| p i)(e :
       ι → ℕ), DirectSum.IsInternal fun i => torsion_by R M <| p i ^ e i :=
   by
-  obtain ⟨P, dec, hP, e, this⟩ := is_internal_prime_power_torsion hM
-  refine' ⟨P, inferInstance, dec, fun p => is_principal.generator (p : Ideal R), _, e, _⟩
+  refine' ⟨_, _, _, _, _, _, Submodule.isInternal_prime_power_torsion_of_pid hM⟩
+  exact Finset.fintypeCoeSort _
   · rintro ⟨p, hp⟩
-    haveI := Ideal.isPrime_of_prime (hP p hp)
-    exact (is_principal.prime_generator_of_is_prime p (hP p hp).NeZero).Irreducible
-  · convert this
-    ext p : 1
-    rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ← Ideal.span_singleton_pow,
-      Ideal.span_singleton_generator]
-#align submodule.is_internal_prime_power_torsion_of_pid Submodule.isInternal_prime_power_torsion_of_pid
+    have hP := prime_of_factor p (multiset.mem_to_finset.mp hp)
+    haveI := Ideal.isPrime_of_prime hP
+    exact (is_principal.prime_generator_of_is_prime p hP.ne_zero).Irreducible
+#align submodule.exists_is_internal_prime_power_torsion_of_pid Submodule.exists_isInternal_prime_power_torsion_of_pid
 
 namespace Module
 
@@ -256,7 +269,7 @@ theorem equiv_directSum_of_isTorsion [h' : Module.Finite R N] (hN : Module.IsTor
     ∃ (ι : Type u)(_ : Fintype ι)(p : ι → R)(h : ∀ i, Irreducible <| p i)(e : ι → ℕ),
       Nonempty <| N ≃ₗ[R] ⨁ i : ι, R ⧸ R ∙ p i ^ e i :=
   by
-  obtain ⟨I, fI, _, p, hp, e, h⟩ := Submodule.isInternal_prime_power_torsion_of_pid hN
+  obtain ⟨I, fI, _, p, hp, e, h⟩ := Submodule.exists_isInternal_prime_power_torsion_of_pid hN
   haveI := fI
   have :
     ∀ i,

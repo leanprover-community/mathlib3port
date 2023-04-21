@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.basic
-! leanprover-community/mathlib commit acb3d204d4ee883eb686f45d486a2a6811a01329
+! leanprover-community/mathlib commit 44e29dbcff83ba7114a464d592b8c3743987c1e5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1610,6 +1610,10 @@ Case conversion may be inaccurate. Consider using '#align lt_div_iff_of_neg' lt_
 theorem lt_div_iff_of_neg' (hc : c < 0) : a < b / c ↔ b < c * a := by
   rw [mul_comm, lt_div_iff_of_neg hc]
 #align lt_div_iff_of_neg' lt_div_iff_of_neg'
+
+theorem div_le_one_of_ge (h : b ≤ a) (hb : b ≤ 0) : a / b ≤ 1 := by
+  simpa only [neg_div_neg_eq] using div_le_one_of_le (neg_le_neg h) (neg_nonneg_of_nonpos hb)
+#align div_le_one_of_ge div_le_one_of_ge
 
 /-! ### Bi-implications of inequalities using inversions -/
 

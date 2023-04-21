@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.group.pi
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 246f6f7989ff86bd07e1b014846f11304f33cf9e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ variable {I : Type u}
 variable {f : I → Type v}
 
 -- The family of types already equipped with instances
-variable (x y : ∀ i, f i) (i : I)
+variable (x y : ∀ i, f i) (i j : I)
 
 /- warning: set.preimage_one -> Set.preimage_one is a dubious translation:
 lean 3 declaration is
@@ -607,6 +607,26 @@ theorem Pi.single_mul [∀ i, MulZeroClass <| f i] (i : I) (x y : f i) :
     single i (x * y) = single i x * single i y :=
   (MulHom.single f i).map_mul x y
 #align pi.single_mul Pi.single_mul
+
+theorem Pi.single_mul_left_apply [∀ i, MulZeroClass <| f i] (a : f i) :
+    Pi.single i (a * x i) j = Pi.single i a j * x j :=
+  (Pi.apply_single (fun i => (· * x i)) (fun i => MulZeroClass.zero_mul _) _ _ _).symm
+#align pi.single_mul_left_apply Pi.single_mul_left_apply
+
+theorem Pi.single_mul_right_apply [∀ i, MulZeroClass <| f i] (a : f i) :
+    Pi.single i (x i * a) j = x j * Pi.single i a j :=
+  (Pi.apply_single (fun i => (· * ·) (x i)) (fun i => MulZeroClass.mul_zero _) _ _ _).symm
+#align pi.single_mul_right_apply Pi.single_mul_right_apply
+
+theorem Pi.single_mul_left [∀ i, MulZeroClass <| f i] (a : f i) :
+    Pi.single i (a * x i) = Pi.single i a * x :=
+  funext fun j => Pi.single_mul_left_apply _ _ _ _
+#align pi.single_mul_left Pi.single_mul_left
+
+theorem Pi.single_mul_right [∀ i, MulZeroClass <| f i] (a : f i) :
+    Pi.single i (x i * a) = x * Pi.single i a :=
+  funext fun j => Pi.single_mul_right_apply _ _ _ _
+#align pi.single_mul_right Pi.single_mul_right
 
 /- warning: pi.mul_single_commute -> Pi.mulSingle_commute is a dubious translation:
 lean 3 declaration is

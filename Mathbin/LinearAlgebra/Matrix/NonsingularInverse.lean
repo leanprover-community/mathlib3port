@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.nonsingular_inverse
-! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
+! leanprover-community/mathlib commit 996a85302b992a170cf7336beb4af2d8c3df688c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -537,6 +537,8 @@ theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : (adjugate A)⁻¹ 
   rw [smul_mul, mul_adjugate, Units.smul_def, smul_smul, h.coe_inv_mul, one_smul]
 #align matrix.inv_adjugate Matrix.inv_adjugate
 
+section Diagonal
+
 /-- `diagonal v` is invertible if `v` is -/
 def diagonalInvertible {α} [NonAssocSemiring α] (v : n → α) [Invertible v] :
     Invertible (diagonal v) :=
@@ -603,6 +605,8 @@ theorem inv_diagonal (v : n → α) : (diagonal v)⁻¹ = diagonal (Ring.inverse
     rw [Ring.inverse_non_unit _ h, Pi.zero_def, diagonal_zero, Ring.inverse_non_unit _ this]
 #align matrix.inv_diagonal Matrix.inv_diagonal
 
+end Diagonal
+
 @[simp]
 theorem inv_inv_inv (A : Matrix n n α) : A⁻¹⁻¹⁻¹ = A⁻¹ :=
   by
@@ -642,6 +646,86 @@ theorem det_smul_inv_vecMul_eq_cramer_transpose (A : Matrix n n α) (b : n → �
   rw [← A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ← det_transpose,
     Aᵀ.det_smul_inv_mulVec_eq_cramer _ (is_unit_det_transpose A h)]
 #align matrix.det_smul_inv_vec_mul_eq_cramer_transpose Matrix.det_smul_inv_vecMul_eq_cramer_transpose
+
+/-! ### Inverses of permutated matrices
+
+Note that the simp-normal form of `matrix.reindex` is `matrix.submatrix`, so we prove most of these
+results about only the latter.
+-/
+
+
+section Submatrix
+
+variable [Fintype m]
+
+variable [DecidableEq m]
+
+/-- `A.submatrix e₁ e₂` is invertible if `A` is -/
+def submatrixEquivInvertible (A : Matrix m m α) (e₁ e₂ : n ≃ m) [Invertible A] :
+    Invertible (A.submatrix e₁ e₂) :=
+  invertibleOfRightInverse _ ((⅟ A).submatrix e₂ e₁) <| by
+    rw [Matrix.submatrix_mul_equiv, Matrix.mul_invOf_self, submatrix_one_equiv]
+#align matrix.submatrix_equiv_invertible Matrix.submatrixEquivInvertible
+
+/-- `A` is invertible if `A.submatrix e₁ e₂` is -/
+def invertibleOfSubmatrixEquivInvertible (A : Matrix m m α) (e₁ e₂ : n ≃ m)
+    [Invertible (A.submatrix e₁ e₂)] : Invertible A :=
+  invertibleOfRightInverse _ ((⅟ (A.submatrix e₁ e₂)).submatrix e₂.symm e₁.symm) <|
+    by
+    have : A = (A.submatrix e₁ e₂).submatrix e₁.symm e₂.symm := by simp
+    conv in _ ⬝ _ =>
+      congr
+      rw [this]
+    rw [Matrix.submatrix_mul_equiv, Matrix.mul_invOf_self, submatrix_one_equiv]
+#align matrix.invertible_of_submatrix_equiv_invertible Matrix.invertibleOfSubmatrixEquivInvertible
+
+theorem invOf_submatrix_equiv_eq (A : Matrix m m α) (e₁ e₂ : n ≃ m) [Invertible A]
+    [Invertible (A.submatrix e₁ e₂)] : ⅟ (A.submatrix e₁ e₂) = (⅟ A).submatrix e₂ e₁ :=
+  by
+  letI := submatrix_equiv_invertible A e₁ e₂
+  haveI := Invertible.subsingleton (A.submatrix e₁ e₂)
+  convert(rfl : ⅟ (A.submatrix e₁ e₂) = _)
+#align matrix.inv_of_submatrix_equiv_eq Matrix.invOf_submatrix_equiv_eq
+
+/-- Together `matrix.submatrix_equiv_invertible` and
+`matrix.invertible_of_submatrix_equiv_invertible` form an equivalence, although both sides of the
+equiv are subsingleton anyway. -/
+@[simps]
+def submatrixEquivInvertibleEquivInvertible (A : Matrix m m α) (e₁ e₂ : n ≃ m) :
+    Invertible (A.submatrix e₁ e₂) ≃ Invertible A
+    where
+  toFun _ := invertible_of_submatrix_equiv_invertible A e₁ e₂
+  invFun _ := submatrix_equiv_invertible A e₁ e₂
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
+#align matrix.submatrix_equiv_invertible_equiv_invertible Matrix.submatrixEquivInvertibleEquivInvertible
+
+/-- When lowered to a prop, `matrix.invertible_of_submatrix_equiv_invertible` forms an `iff`. -/
+@[simp]
+theorem isUnit_submatrix_equiv {A : Matrix m m α} (e₁ e₂ : n ≃ m) :
+    IsUnit (A.submatrix e₁ e₂) ↔ IsUnit A := by
+  simp only [← nonempty_invertible_iff_isUnit,
+    (submatrix_equiv_invertible_equiv_invertible A _ _).nonempty_congr]
+#align matrix.is_unit_submatrix_equiv Matrix.isUnit_submatrix_equiv
+
+@[simp]
+theorem inv_submatrix_equiv (A : Matrix m m α) (e₁ e₂ : n ≃ m) :
+    (A.submatrix e₁ e₂)⁻¹ = A⁻¹.submatrix e₂ e₁ :=
+  by
+  by_cases h : IsUnit A
+  · cases h.nonempty_invertible
+    letI := submatrix_equiv_invertible A e₁ e₂
+    rw [← inv_of_eq_nonsing_inv, ← inv_of_eq_nonsing_inv, inv_of_submatrix_equiv_eq]
+  · have := (is_unit_submatrix_equiv e₁ e₂).Not.mpr h
+    simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ this,
+      submatrix_zero, Pi.zero_apply]
+#align matrix.inv_submatrix_equiv Matrix.inv_submatrix_equiv
+
+theorem inv_reindex (e₁ e₂ : n ≃ m) (A : Matrix n n α) : (reindex e₁ e₂ A)⁻¹ = reindex e₂ e₁ A⁻¹ :=
+  inv_submatrix_equiv A e₁.symm e₂.symm
+#align matrix.inv_reindex Matrix.inv_reindex
+
+end Submatrix
 
 /-! ### More results about determinants -/
 

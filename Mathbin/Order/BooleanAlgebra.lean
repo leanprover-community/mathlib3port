@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module order.boolean_algebra
-! leanprover-community/mathlib commit bc7d81beddb3d6c66f71449c5bc76c38cb77cf9e
+! leanprover-community/mathlib commit 9ac7c0c8c4d7a535ec3e5b34b8859aab9233b2f4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -763,6 +763,10 @@ theorem inf_sdiff_distrib_right (a b c : α) : a \ b ⊓ c = (a ⊓ c) \ (b ⊓ 
   simp_rw [@inf_comm _ _ _ c, inf_sdiff_distrib_left]
 #align inf_sdiff_distrib_right inf_sdiff_distrib_right
 
+theorem disjoint_sdiff_comm : Disjoint (x \ z) y ↔ Disjoint x (y \ z) := by
+  simp_rw [disjoint_iff, inf_sdiff_right_comm, inf_sdiff_assoc]
+#align disjoint_sdiff_comm disjoint_sdiff_comm
+
 /- warning: sup_eq_sdiff_sup_sdiff_sup_inf -> sup_eq_sdiff_sup_sdiff_sup_inf is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {x : α} {y : α} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) x y) (SDiff.sdiff.{u1} α (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) y x)) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) x y))
@@ -1203,6 +1207,18 @@ theorem disjoint_compl_right_iff : Disjoint x (yᶜ) ↔ x ≤ y := by
   rw [← le_compl_iff_disjoint_right, compl_compl]
 #align disjoint_compl_right_iff disjoint_compl_right_iff
 -/
+
+theorem codisjoint_himp_self_left : Codisjoint (x ⇨ y) x :=
+  @disjoint_sdiff_self_left αᵒᵈ _ _ _
+#align codisjoint_himp_self_left codisjoint_himp_self_left
+
+theorem codisjoint_himp_self_right : Codisjoint x (x ⇨ y) :=
+  @disjoint_sdiff_self_right αᵒᵈ _ _ _
+#align codisjoint_himp_self_right codisjoint_himp_self_right
+
+theorem himp_le : x ⇨ y ≤ z ↔ y ≤ z ∧ Codisjoint x z :=
+  (@le_sdiff αᵒᵈ _ _ _ _).trans <| and_congr_right' Codisjoint_comm
+#align himp_le himp_le
 
 end BooleanAlgebra
 
