@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.mv_polynomial
-! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
+! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.MvPolynomial.CommRing
 
 /-!
 # Matrices of multivariate polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we prove results about matrices over an mv_polynomial ring.
 In particular, we provide `matrix.mv_polynomial_X` which associates every entry of a matrix with a

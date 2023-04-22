@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz, Johan Commelin, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.opposite
-! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
+! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Logic.Equiv.TransferInstance
 
 /-!
 # If `C` is preadditive, `Cᵒᵖ` has a natural preadditive structure.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 -/
 

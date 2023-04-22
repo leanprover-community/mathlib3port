@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.reflection
-! leanprover-community/mathlib commit 820b22968a2bc4a47ce5cf1d2f36a9ebe52510aa
+! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Fin.Tuple.Reflection
 
 /-!
 # Lemmas for concrete matrices `matrix (fin m) (fin n) α`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains alternative definitions of common operators on matrices that expand
 definitionally to the expected expression when evaluated on `!![]` notation.

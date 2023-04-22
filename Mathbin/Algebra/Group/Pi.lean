@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.group.pi
-! leanprover-community/mathlib commit 246f6f7989ff86bd07e1b014846f11304f33cf9e
+! leanprover-community/mathlib commit 90df25ded755a2cf9651ea850d1abe429b1e4eb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -843,4 +843,22 @@ noncomputable def Function.ExtendByOne.hom [MulOneClass R] : (ι → R) →* η 
 -/
 
 end Extend
+
+namespace Pi
+
+variable [DecidableEq I] [∀ i, Preorder (f i)] [∀ i, One (f i)]
+
+@[to_additive]
+theorem mulSingle_mono : Monotone (Pi.mulSingle i : f i → ∀ i, f i) :=
+  Function.update_mono
+#align pi.mul_single_mono Pi.mulSingle_mono
+#align pi.single_mono Pi.single_mono
+
+@[to_additive]
+theorem mulSingle_strictMono : StrictMono (Pi.mulSingle i : f i → ∀ i, f i) :=
+  Function.update_strictMono
+#align pi.mul_single_strict_mono Pi.mulSingle_strictMono
+#align pi.single_strict_mono Pi.single_strictMono
+
+end Pi
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.reindex
-! leanprover-community/mathlib commit 1cfdf5f34e1044ecb65d10be753008baaf118edf
+! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.LinearAlgebra.Matrix.Determinant
 
 /-!
 # Changing the index type of a matrix
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file concerns the map `matrix.reindex`, mapping a `m` by `n` matrix
 to an `m'` by `n'` matrix, as long as `m ≃ m'` and `n ≃ n'`.

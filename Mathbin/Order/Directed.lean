@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit 485b24ed47b1b7978d38a1e445158c6224c3f42c
+! leanprover-community/mathlib commit e8cf0cfec5fcab9baf46dc17d30c5e22048468be
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,11 +72,15 @@ theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s
 alias directedOn_iff_directed ↔ DirectedOn.directed_val _
 #align directed_on.directed_coe DirectedOn.directed_val
 
-#print directedOn_range /-
-theorem directedOn_range {f : β → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
+/- warning: directed_on_range -> directedOn_range is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {r : α -> α -> Prop} {f : ι -> α}, Iff (Directed.{u1, u2} α ι r f) (DirectedOn.{u1} α r (Set.range.{u1, u2} α ι f))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} {r : α -> α -> Prop} {f : ι -> α}, Iff (Directed.{u1, succ u2} α ι r f) (DirectedOn.{u1} α r (Set.range.{u1, succ u2} α ι f))
+Case conversion may be inaccurate. Consider using '#align directed_on_range directedOn_rangeₓ'. -/
+theorem directedOn_range {f : ι → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
   simp_rw [Directed, DirectedOn, Set.forall_range_iff, Set.exists_range_iff]
 #align directed_on_range directedOn_range
--/
 
 #print directedOn_image /-
 theorem directedOn_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.nonsingular_inverse
-! leanprover-community/mathlib commit 996a85302b992a170cf7336beb4af2d8c3df688c
+! leanprover-community/mathlib commit e49764de5f8377071189dc4fa347ef5d6bb352b1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ namespace Matrix
 
 universe u u' v
 
-variable {m : Type u} {n : Type u'} {α : Type v}
+variable {l : Type _} {m : Type u} {n : Type u'} {α : Type v}
 
 open Matrix BigOperators
 
@@ -727,6 +727,47 @@ theorem inv_reindex (e₁ e₂ : n ≃ m) (A : Matrix n n α) : (reindex e₁ e�
 
 end Submatrix
 
+/-! ### Block matrices -/
+
+
+section Block
+
+variable [Fintype l]
+
+variable [DecidableEq l]
+
+variable [Fintype m]
+
+variable [DecidableEq m]
+
+/-- LDU decomposition of a block matrix with an invertible top-left corner, using the
+Schur complement. -/
+theorem fromBlocks_eq_of_invertible₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix l m α)
+    (D : Matrix l n α) [Invertible A] :
+    fromBlocks A B C D =
+      fromBlocks 1 0 (C ⬝ ⅟ A) 1 ⬝ fromBlocks A 0 0 (D - C ⬝ ⅟ A ⬝ B) ⬝
+        fromBlocks 1 (⅟ A ⬝ B) 0 1 :=
+  by
+  simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
+    Matrix.one_mul, Matrix.mul_one, Matrix.invOf_mul_self, Matrix.mul_invOf_self_assoc,
+    Matrix.mul_invOf_mul_self_cancel, Matrix.mul_assoc, add_sub_cancel'_right]
+#align matrix.from_blocks_eq_of_invertible₁₁ Matrix.fromBlocks_eq_of_invertible₁₁
+
+/-- LDU decomposition of a block matrix with an invertible bottom-right corner, using the
+Schur complement. -/
+theorem fromBlocks_eq_of_invertible₂₂ (A : Matrix l m α) (B : Matrix l n α) (C : Matrix n m α)
+    (D : Matrix n n α) [Invertible D] :
+    fromBlocks A B C D =
+      fromBlocks 1 (B ⬝ ⅟ D) 0 1 ⬝ fromBlocks (A - B ⬝ ⅟ D ⬝ C) 0 0 D ⬝
+        fromBlocks 1 0 (⅟ D ⬝ C) 1 :=
+  (Matrix.reindex (Equiv.sumComm _ _) (Equiv.sumComm _ _)).Injective <| by
+    simpa [reindex_apply, sum_comm_symm, ← submatrix_mul_equiv _ _ _ (Equiv.sumComm n m), ←
+      submatrix_mul_equiv _ _ _ (Equiv.sumComm n l), sum_comm_apply,
+      from_blocks_submatrix_sum_swap_sum_swap] using from_blocks_eq_of_invertible₁₁ D C B A
+#align matrix.from_blocks_eq_of_invertible₂₂ Matrix.fromBlocks_eq_of_invertible₂₂
+
+end Block
+
 /-! ### More results about determinants -/
 
 
@@ -748,18 +789,9 @@ theorem det_conj' {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) :
 the Schur complement. -/
 theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α)
     (D : Matrix n n α) [Invertible A] :
-    (Matrix.fromBlocks A B C D).det = det A * det (D - C ⬝ ⅟ A ⬝ B) :=
-  by
-  have :
-    from_blocks A B C D =
-      from_blocks 1 0 (C ⬝ ⅟ A) 1 ⬝ from_blocks A 0 0 (D - C ⬝ ⅟ A ⬝ B) ⬝
-        from_blocks 1 (⅟ A ⬝ B) 0 1 :=
-    by
-    simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
-      Matrix.one_mul, Matrix.mul_one, Matrix.invOf_mul_self, Matrix.mul_invOf_self_assoc,
-      Matrix.mul_invOf_mul_self_cancel, Matrix.mul_assoc, add_sub_cancel'_right]
-  rw [this, det_mul, det_mul, det_from_blocks_zero₂₁, det_from_blocks_zero₂₁,
-    det_from_blocks_zero₁₂, det_one, det_one, one_mul, one_mul, mul_one]
+    (Matrix.fromBlocks A B C D).det = det A * det (D - C ⬝ ⅟ A ⬝ B) := by
+  rw [from_blocks_eq_of_invertible₁₁, det_mul, det_mul, det_from_blocks_zero₂₁,
+    det_from_blocks_zero₂₁, det_from_blocks_zero₁₂, det_one, det_one, one_mul, one_mul, mul_one]
 #align matrix.det_from_blocks₁₁ Matrix.det_from_blocks₁₁
 
 @[simp]

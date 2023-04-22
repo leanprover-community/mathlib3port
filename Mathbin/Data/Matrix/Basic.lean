@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 0e2aab2b0d521f060f62a14d2cf2e2c54e8491d6
+! leanprover-community/mathlib commit eba5bb3155cab51d80af00e8d7d69fa271b1302b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1081,6 +1081,18 @@ theorem dotProduct_pUnit [AddCommMonoid α] [Mul α] (v w : PUnit → α) : v �
   simp [dot_product]
 #align matrix.dot_product_punit Matrix.dotProduct_pUnit
 
+section MulOneClass
+
+variable [MulOneClass α] [AddCommMonoid α]
+
+theorem dotProduct_one (v : n → α) : v ⬝ᵥ 1 = ∑ i, v i := by simp [(· ⬝ᵥ ·)]
+#align matrix.dot_product_one Matrix.dotProduct_one
+
+theorem one_dotProduct (v : n → α) : 1 ⬝ᵥ v = ∑ i, v i := by simp [(· ⬝ᵥ ·)]
+#align matrix.one_dot_product Matrix.one_dotProduct
+
+end MulOneClass
+
 section NonUnitalNonAssocSemiring
 
 variable [NonUnitalNonAssocSemiring α] (u v w : m → α) (x y : n → α)
@@ -1279,6 +1291,17 @@ theorem dotProduct_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x :=
 #align matrix.dot_product_single Matrix.dotProduct_single
 
 end NonUnitalNonAssocSemiringDecidable
+
+section NonAssocSemiring
+
+variable [NonAssocSemiring α]
+
+@[simp]
+theorem one_dotProduct_one : (1 : n → α) ⬝ᵥ 1 = Fintype.card n := by
+  simp [dot_product, Fintype.card]
+#align matrix.one_dot_product_one Matrix.one_dotProduct_one
+
+end NonAssocSemiring
 
 section NonUnitalNonAssocRing
 
@@ -2972,13 +2995,23 @@ end NonUnitalSemiring
 
 section NonAssocSemiring
 
-variable [Fintype m] [DecidableEq m] [NonAssocSemiring α]
+variable [NonAssocSemiring α]
+
+theorem mulVec_one [Fintype n] (A : Matrix m n α) : mulVec A 1 = fun i => ∑ j, A i j := by
+  ext <;> simp [mul_vec, dot_product]
+#align matrix.mul_vec_one Matrix.mulVec_one
+
+theorem vec_one_mul [Fintype m] (A : Matrix m n α) : vecMul 1 A = fun j => ∑ i, A i j := by
+  ext <;> simp [vec_mul, dot_product]
+#align matrix.vec_one_mul Matrix.vec_one_mul
+
+variable [Fintype m] [Fintype n] [DecidableEq m]
 
 /- warning: matrix.one_mul_vec -> Matrix.one_mulVec is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u2}} {α : Type.{u1}} [_inst_1 : Fintype.{u2} m] [_inst_2 : DecidableEq.{succ u2} m] [_inst_3 : NonAssocSemiring.{u1} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.mulVec.{u1, u2, u2} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3) _inst_1 (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (OfNat.mk.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (One.one.{max u2 u1} (Matrix.{u2, u2, u1} m m α) (Matrix.hasOne.{u1, u2} m α (fun (a : m) (b : m) => _inst_2 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_3))))))) v) v
+  forall {m : Type.{u2}} {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] [_inst_2 : Fintype.{u2} m] [_inst_4 : DecidableEq.{succ u2} m] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.mulVec.{u1, u2, u2} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1) _inst_2 (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (OfNat.mk.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (One.one.{max u2 u1} (Matrix.{u2, u2, u1} m m α) (Matrix.hasOne.{u1, u2} m α (fun (a : m) (b : m) => _inst_4 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_1))))))) v) v
 but is expected to have type
-  forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} m] [_inst_2 : DecidableEq.{succ u1} m] [_inst_3 : NonAssocSemiring.{u2} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.mulVec.{u2, u1, u1} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_3) _inst_1 (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} m m α) (Matrix.one.{u2, u1} m α (fun (a : m) (b : m) => _inst_2 a b) (MulZeroOneClass.toZero.{u2} α (NonAssocSemiring.toMulZeroOneClass.{u2} α _inst_3)) (NonAssocSemiring.toOne.{u2} α _inst_3)))) v) v
+  forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} m] [_inst_2 : DecidableEq.{succ u1} m] [_inst_4 : NonAssocSemiring.{u2} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.mulVec.{u2, u1, u1} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_4) _inst_1 (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} m m α) (Matrix.one.{u2, u1} m α (fun (a : m) (b : m) => _inst_2 a b) (MulZeroOneClass.toZero.{u2} α (NonAssocSemiring.toMulZeroOneClass.{u2} α _inst_4)) (NonAssocSemiring.toOne.{u2} α _inst_4)))) v) v
 Case conversion may be inaccurate. Consider using '#align matrix.one_mul_vec Matrix.one_mulVecₓ'. -/
 @[simp]
 theorem one_mulVec (v : m → α) : mulVec 1 v = v :=
@@ -2989,9 +3022,9 @@ theorem one_mulVec (v : m → α) : mulVec 1 v = v :=
 
 /- warning: matrix.vec_mul_one -> Matrix.vecMul_one is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u2}} {α : Type.{u1}} [_inst_1 : Fintype.{u2} m] [_inst_2 : DecidableEq.{succ u2} m] [_inst_3 : NonAssocSemiring.{u1} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.vecMul.{u1, u2, u2} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3) _inst_1 v (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (OfNat.mk.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (One.one.{max u2 u1} (Matrix.{u2, u2, u1} m m α) (Matrix.hasOne.{u1, u2} m α (fun (a : m) (b : m) => _inst_2 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_3)))))))) v
+  forall {m : Type.{u2}} {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] [_inst_2 : Fintype.{u2} m] [_inst_4 : DecidableEq.{succ u2} m] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.vecMul.{u1, u2, u2} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1) _inst_2 v (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (OfNat.mk.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (One.one.{max u2 u1} (Matrix.{u2, u2, u1} m m α) (Matrix.hasOne.{u1, u2} m α (fun (a : m) (b : m) => _inst_4 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_1)))))))) v
 but is expected to have type
-  forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} m] [_inst_2 : DecidableEq.{succ u1} m] [_inst_3 : NonAssocSemiring.{u2} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.vecMul.{u2, u1, u1} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_3) _inst_1 v (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} m m α) (Matrix.one.{u2, u1} m α (fun (a : m) (b : m) => _inst_2 a b) (MulZeroOneClass.toZero.{u2} α (NonAssocSemiring.toMulZeroOneClass.{u2} α _inst_3)) (NonAssocSemiring.toOne.{u2} α _inst_3))))) v
+  forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} m] [_inst_2 : DecidableEq.{succ u1} m] [_inst_4 : NonAssocSemiring.{u2} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.vecMul.{u2, u1, u1} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_4) _inst_1 v (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} m m α) (Matrix.one.{u2, u1} m α (fun (a : m) (b : m) => _inst_2 a b) (MulZeroOneClass.toZero.{u2} α (NonAssocSemiring.toMulZeroOneClass.{u2} α _inst_4)) (NonAssocSemiring.toOne.{u2} α _inst_4))))) v
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_one Matrix.vecMul_oneₓ'. -/
 @[simp]
 theorem vecMul_one (v : m → α) : vecMul v 1 = v :=
@@ -4148,14 +4181,15 @@ theorem submatrix_vecMul_equiv [Fintype l] [Fintype m] [NonUnitalNonAssocSemirin
 
 /- warning: matrix.mul_submatrix_one -> Matrix.mul_submatrix_one is a dubious translation:
 lean 3 declaration is
-  forall {l : Type.{u2}} {m : Type.{u3}} {n : Type.{u4}} {o : Type.{u5}} {α : Type.{u1}} [_inst_1 : Fintype.{u4} n] [_inst_2 : Fintype.{u5} o] [_inst_3 : NonAssocSemiring.{u1} α] [_inst_4 : DecidableEq.{succ u5} o] (e₁ : Equiv.{succ u4, succ u5} n o) (e₂ : l -> o) (M : Matrix.{u3, u4, u1} m n α), Eq.{succ (max u3 u2 u1)} (Matrix.{u3, u2, u1} m l α) (Matrix.mul.{u1, u3, u4, u2} m n l α _inst_1 (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3)) M (Matrix.submatrix.{u1, u4, u5, u5, u2} n o o l α (OfNat.ofNat.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (OfNat.mk.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (One.one.{max u5 u1} (Matrix.{u5, u5, u1} o o α) (Matrix.hasOne.{u1, u5} o α (fun (a : o) (b : o) => _inst_4 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_3))))))) (coeFn.{max 1 (max (succ u4) (succ u5)) (succ u5) (succ u4), max (succ u4) (succ u5)} (Equiv.{succ u4, succ u5} n o) (fun (_x : Equiv.{succ u4, succ u5} n o) => n -> o) (Equiv.hasCoeToFun.{succ u4, succ u5} n o) e₁) e₂)) (Matrix.submatrix.{u1, u3, u3, u4, u2} m m n l α M (id.{succ u3} m) (Function.comp.{succ u2, succ u5, succ u4} l o n (coeFn.{max 1 (max (succ u5) (succ u4)) (succ u4) (succ u5), max (succ u5) (succ u4)} (Equiv.{succ u5, succ u4} o n) (fun (_x : Equiv.{succ u5, succ u4} o n) => o -> n) (Equiv.hasCoeToFun.{succ u5, succ u4} o n) (Equiv.symm.{succ u4, succ u5} n o e₁)) e₂))
+  forall {l : Type.{u2}} {m : Type.{u3}} {n : Type.{u4}} {o : Type.{u5}} {α : Type.{u1}} [_inst_1 : Fintype.{u4} n] [_inst_2 : Finite.{succ u5} o] [_inst_3 : NonAssocSemiring.{u1} α] [_inst_4 : DecidableEq.{succ u5} o] (e₁ : Equiv.{succ u4, succ u5} n o) (e₂ : l -> o) (M : Matrix.{u3, u4, u1} m n α), Eq.{succ (max u3 u2 u1)} (Matrix.{u3, u2, u1} m l α) (Matrix.mul.{u1, u3, u4, u2} m n l α _inst_1 (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3)) M (Matrix.submatrix.{u1, u4, u5, u5, u2} n o o l α (OfNat.ofNat.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (OfNat.mk.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (One.one.{max u5 u1} (Matrix.{u5, u5, u1} o o α) (Matrix.hasOne.{u1, u5} o α (fun (a : o) (b : o) => _inst_4 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_3))))))) (coeFn.{max 1 (max (succ u4) (succ u5)) (succ u5) (succ u4), max (succ u4) (succ u5)} (Equiv.{succ u4, succ u5} n o) (fun (_x : Equiv.{succ u4, succ u5} n o) => n -> o) (Equiv.hasCoeToFun.{succ u4, succ u5} n o) e₁) e₂)) (Matrix.submatrix.{u1, u3, u3, u4, u2} m m n l α M (id.{succ u3} m) (Function.comp.{succ u2, succ u5, succ u4} l o n (coeFn.{max 1 (max (succ u5) (succ u4)) (succ u4) (succ u5), max (succ u5) (succ u4)} (Equiv.{succ u5, succ u4} o n) (fun (_x : Equiv.{succ u5, succ u4} o n) => o -> n) (Equiv.hasCoeToFun.{succ u5, succ u4} o n) (Equiv.symm.{succ u4, succ u5} n o e₁)) e₂))
 but is expected to have type
   forall {l : Type.{u1}} {m : Type.{u2}} {n : Type.{u4}} {o : Type.{u3}} {α : Type.{u5}} [_inst_1 : Fintype.{u4} n] [_inst_2 : Fintype.{u3} o] [_inst_3 : NonAssocSemiring.{u5} α] [_inst_4 : DecidableEq.{succ u3} o] (e₁ : Equiv.{succ u4, succ u3} n o) (e₂ : l -> o) (M : Matrix.{u2, u4, u5} m n α), Eq.{max (max (succ u5) (succ u1)) (succ u2)} (Matrix.{u2, u1, u5} m l α) (Matrix.mul.{u5, u2, u4, u1} m n l α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u5} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_3)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u5} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_3)) M (Matrix.submatrix.{u5, u4, u3, u3, u1} n o o l α (OfNat.ofNat.{max u5 u3} (Matrix.{u3, u3, u5} o o α) 1 (One.toOfNat1.{max u5 u3} (Matrix.{u3, u3, u5} o o α) (Matrix.one.{u5, u3} o α (fun (a : o) (b : o) => _inst_4 a b) (MulZeroOneClass.toZero.{u5} α (NonAssocSemiring.toMulZeroOneClass.{u5} α _inst_3)) (NonAssocSemiring.toOne.{u5} α _inst_3)))) (FunLike.coe.{max (succ u4) (succ u3), succ u4, succ u3} (Equiv.{succ u4, succ u3} n o) n (fun (_x : n) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : n) => o) _x) (Equiv.instFunLikeEquiv.{succ u4, succ u3} n o) e₁) e₂)) (Matrix.submatrix.{u5, u2, u2, u4, u1} m m n l α M (id.{succ u2} m) (Function.comp.{succ u1, succ u3, succ u4} l o n (FunLike.coe.{max (succ u4) (succ u3), succ u3, succ u4} (Equiv.{succ u3, succ u4} o n) o (fun (_x : o) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : o) => n) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u4} o n) (Equiv.symm.{succ u4, succ u3} n o e₁)) e₂))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_submatrix_one Matrix.mul_submatrix_oneₓ'. -/
-theorem mul_submatrix_one [Fintype n] [Fintype o] [NonAssocSemiring α] [DecidableEq o] (e₁ : n ≃ o)
+theorem mul_submatrix_one [Fintype n] [Finite o] [NonAssocSemiring α] [DecidableEq o] (e₁ : n ≃ o)
     (e₂ : l → o) (M : Matrix m n α) :
     M ⬝ (1 : Matrix o o α).submatrix e₁ e₂ = submatrix M id (e₁.symm ∘ e₂) :=
   by
+  cases nonempty_fintype o
   let A := M.submatrix id e₁.symm
   have : M = A.submatrix id e₁ := by
     simp only [submatrix_submatrix, Function.comp.right_id, submatrix_id_id, Equiv.symm_comp_self]
@@ -4166,14 +4200,15 @@ theorem mul_submatrix_one [Fintype n] [Fintype o] [NonAssocSemiring α] [Decidab
 
 /- warning: matrix.one_submatrix_mul -> Matrix.one_submatrix_mul is a dubious translation:
 lean 3 declaration is
-  forall {l : Type.{u2}} {m : Type.{u3}} {n : Type.{u4}} {o : Type.{u5}} {α : Type.{u1}} [_inst_1 : Fintype.{u3} m] [_inst_2 : Fintype.{u5} o] [_inst_3 : NonAssocSemiring.{u1} α] [_inst_4 : DecidableEq.{succ u5} o] (e₁ : l -> o) (e₂ : Equiv.{succ u3, succ u5} m o) (M : Matrix.{u3, u4, u1} m n α), Eq.{succ (max u2 u4 u1)} (Matrix.{u2, u4, u1} l n α) (Matrix.mul.{u1, u2, u3, u4} l m n α _inst_1 (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3)) (Matrix.submatrix.{u1, u2, u5, u5, u3} l o o m α (OfNat.ofNat.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (OfNat.mk.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (One.one.{max u5 u1} (Matrix.{u5, u5, u1} o o α) (Matrix.hasOne.{u1, u5} o α (fun (a : o) (b : o) => _inst_4 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_3))))))) e₁ (coeFn.{max 1 (max (succ u3) (succ u5)) (succ u5) (succ u3), max (succ u3) (succ u5)} (Equiv.{succ u3, succ u5} m o) (fun (_x : Equiv.{succ u3, succ u5} m o) => m -> o) (Equiv.hasCoeToFun.{succ u3, succ u5} m o) e₂)) M) (Matrix.submatrix.{u1, u2, u3, u4, u4} l m n n α M (Function.comp.{succ u2, succ u5, succ u3} l o m (coeFn.{max 1 (max (succ u5) (succ u3)) (succ u3) (succ u5), max (succ u5) (succ u3)} (Equiv.{succ u5, succ u3} o m) (fun (_x : Equiv.{succ u5, succ u3} o m) => o -> m) (Equiv.hasCoeToFun.{succ u5, succ u3} o m) (Equiv.symm.{succ u3, succ u5} m o e₂)) e₁) (id.{succ u4} n))
+  forall {l : Type.{u2}} {m : Type.{u3}} {n : Type.{u4}} {o : Type.{u5}} {α : Type.{u1}} [_inst_1 : Fintype.{u3} m] [_inst_2 : Finite.{succ u5} o] [_inst_3 : NonAssocSemiring.{u1} α] [_inst_4 : DecidableEq.{succ u5} o] (e₁ : l -> o) (e₂ : Equiv.{succ u3, succ u5} m o) (M : Matrix.{u3, u4, u1} m n α), Eq.{succ (max u2 u4 u1)} (Matrix.{u2, u4, u1} l n α) (Matrix.mul.{u1, u2, u3, u4} l m n α _inst_1 (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3)) (Matrix.submatrix.{u1, u2, u5, u5, u3} l o o m α (OfNat.ofNat.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (OfNat.mk.{max u5 u1} (Matrix.{u5, u5, u1} o o α) 1 (One.one.{max u5 u1} (Matrix.{u5, u5, u1} o o α) (Matrix.hasOne.{u1, u5} o α (fun (a : o) (b : o) => _inst_4 a b) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_3))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α _inst_3))))))) e₁ (coeFn.{max 1 (max (succ u3) (succ u5)) (succ u5) (succ u3), max (succ u3) (succ u5)} (Equiv.{succ u3, succ u5} m o) (fun (_x : Equiv.{succ u3, succ u5} m o) => m -> o) (Equiv.hasCoeToFun.{succ u3, succ u5} m o) e₂)) M) (Matrix.submatrix.{u1, u2, u3, u4, u4} l m n n α M (Function.comp.{succ u2, succ u5, succ u3} l o m (coeFn.{max 1 (max (succ u5) (succ u3)) (succ u3) (succ u5), max (succ u5) (succ u3)} (Equiv.{succ u5, succ u3} o m) (fun (_x : Equiv.{succ u5, succ u3} o m) => o -> m) (Equiv.hasCoeToFun.{succ u5, succ u3} o m) (Equiv.symm.{succ u3, succ u5} m o e₂)) e₁) (id.{succ u4} n))
 but is expected to have type
   forall {l : Type.{u1}} {m : Type.{u4}} {n : Type.{u2}} {o : Type.{u3}} {α : Type.{u5}} [_inst_1 : Fintype.{u4} m] [_inst_2 : Fintype.{u3} o] [_inst_3 : NonAssocSemiring.{u5} α] [_inst_4 : DecidableEq.{succ u3} o] (e₁ : l -> o) (e₂ : Equiv.{succ u4, succ u3} m o) (M : Matrix.{u4, u2, u5} m n α), Eq.{max (max (succ u5) (succ u1)) (succ u2)} (Matrix.{u1, u2, u5} l n α) (Matrix.mul.{u5, u1, u4, u2} l m n α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u5} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_3)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u5} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_3)) (Matrix.submatrix.{u5, u1, u3, u3, u4} l o o m α (OfNat.ofNat.{max u5 u3} (Matrix.{u3, u3, u5} o o α) 1 (One.toOfNat1.{max u5 u3} (Matrix.{u3, u3, u5} o o α) (Matrix.one.{u5, u3} o α (fun (a : o) (b : o) => _inst_4 a b) (MulZeroOneClass.toZero.{u5} α (NonAssocSemiring.toMulZeroOneClass.{u5} α _inst_3)) (NonAssocSemiring.toOne.{u5} α _inst_3)))) e₁ (FunLike.coe.{max (succ u4) (succ u3), succ u4, succ u3} (Equiv.{succ u4, succ u3} m o) m (fun (_x : m) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : m) => o) _x) (Equiv.instFunLikeEquiv.{succ u4, succ u3} m o) e₂)) M) (Matrix.submatrix.{u5, u1, u4, u2, u2} l m n n α M (Function.comp.{succ u1, succ u3, succ u4} l o m (FunLike.coe.{max (succ u4) (succ u3), succ u3, succ u4} (Equiv.{succ u3, succ u4} o m) o (fun (_x : o) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : o) => m) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u4} o m) (Equiv.symm.{succ u4, succ u3} m o e₂)) e₁) (id.{succ u2} n))
 Case conversion may be inaccurate. Consider using '#align matrix.one_submatrix_mul Matrix.one_submatrix_mulₓ'. -/
-theorem one_submatrix_mul [Fintype m] [Fintype o] [NonAssocSemiring α] [DecidableEq o] (e₁ : l → o)
+theorem one_submatrix_mul [Fintype m] [Finite o] [NonAssocSemiring α] [DecidableEq o] (e₁ : l → o)
     (e₂ : m ≃ o) (M : Matrix m n α) :
     ((1 : Matrix o o α).submatrix e₁ e₂).mul M = submatrix M (e₂.symm ∘ e₁) id :=
   by
+  cases nonempty_fintype o
   let A := M.submatrix e₂.symm id
   have : M = A.submatrix e₂ id := by
     simp only [submatrix_submatrix, Function.comp.right_id, submatrix_id_id, Equiv.symm_comp_self]

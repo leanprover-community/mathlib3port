@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.homological_complex
-! leanprover-community/mathlib commit 200eda15d8ff5669854ff6bcc10aaf37cb70498f
+! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Idempotents.Karoubi
 
 /-!
 # Idempotent completeness and homological complexes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains simplifications lemmas for categories
 `karoubi (homological_complex C c)` and the construction of an equivalence

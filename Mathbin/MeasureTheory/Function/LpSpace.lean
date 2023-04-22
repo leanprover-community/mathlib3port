@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 13bf7613c96a9fd66a81b9020a82cad9a6ea1fcf
+! leanprover-community/mathlib commit 52932b3a083d4142e78a15dc928084a22fea9ba0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -932,6 +932,14 @@ theorem snorm_add_lt_top {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g 
       exact (ENNReal.add_lt_top.2 ⟨hf.2, hg.2⟩).Ne
     
 #align measure_theory.snorm_add_lt_top MeasureTheory.snorm_add_lt_top
+
+theorem ae_le_snormEssSup {f : α → F} : ∀ᵐ y ∂μ, ↑‖f y‖₊ ≤ snormEssSup f μ :=
+  ae_le_essSup
+#align measure_theory.ae_le_snorm_ess_sup MeasureTheory.ae_le_snormEssSup
+
+theorem meas_snormEssSup_lt {f : α → F} : μ { y | snormEssSup f μ < ‖f y‖₊ } = 0 :=
+  meas_essSup_lt
+#align measure_theory.meas_snorm_ess_sup_lt MeasureTheory.meas_snormEssSup_lt
 
 section MapMeasure
 

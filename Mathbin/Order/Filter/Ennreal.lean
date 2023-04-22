@@ -4,13 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.filter.ennreal
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 52932b3a083d4142e78a15dc928084a22fea9ba0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Real.Ennreal
-import Mathbin.Order.Filter.CountableInter
-import Mathbin.Order.LiminfLimsup
+import Mathbin.Topology.Instances.Ennreal
 
 /-!
 # Order properties of extended non-negative reals
@@ -38,23 +36,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ennreal.eventually_le_limsup ENNReal.eventually_le_limsupₓ'. -/
 theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) :
     ∀ᶠ y in f, u y ≤ f.limsup u :=
-  by
-  by_cases hx_top : f.limsup u = ⊤
-  · simp_rw [hx_top]
-    exact eventually_of_forall fun a => le_top
-  have h_forall_le : ∀ᶠ y in f, ∀ n : ℕ, u y < f.limsup u + (1 : ℝ≥0∞) / n :=
-    by
-    rw [eventually_countable_forall]
-    refine' fun n => eventually_lt_of_limsup_lt _
-    nth_rw 1 [← add_zero (f.limsup u)]
-    exact (ENNReal.add_lt_add_iff_left hx_top).mpr (by simp)
-  refine' h_forall_le.mono fun y hy => le_of_forall_pos_le_add fun r hr_pos hx_top => _
-  have hr_ne_zero : (r : ℝ≥0∞) ≠ 0 := by
-    rw [Ne.def, coe_eq_zero]
-    exact (ne_of_lt hr_pos).symm
-  cases' exists_inv_nat_lt hr_ne_zero with i hi
-  rw [inv_eq_one_div] at hi
-  exact (hy i).le.trans (add_le_add_left hi.le (f.limsup u))
+  eventually_le_limsup
 #align ennreal.eventually_le_limsup ENNReal.eventually_le_limsup
 
 /- warning: ennreal.limsup_eq_zero_iff -> ENNReal.limsup_eq_zero_iff is a dubious translation:
@@ -64,13 +46,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} [_inst_1 : CountableInterFilter.{u1} α f] {u : α -> ENNReal}, Iff (Eq.{1} ENNReal (Filter.limsup.{0, u1} ENNReal α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) u f) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (Filter.EventuallyEq.{u1, 0} α ENNReal f u (OfNat.ofNat.{u1} (α -> ENNReal) 0 (Zero.toOfNat0.{u1} (α -> ENNReal) (Pi.instZero.{u1, 0} α (fun (a._@.Mathlib.Order.Filter.Basic._hyg.19139 : α) => ENNReal) (fun (i : α) => instENNRealZero)))))
 Case conversion may be inaccurate. Consider using '#align ennreal.limsup_eq_zero_iff ENNReal.limsup_eq_zero_iffₓ'. -/
 theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.limsup u = 0 ↔ u =ᶠ[f] 0 :=
-  by
-  constructor <;> intro h
-  · have hu_zero :=
-      eventually_le.trans (eventually_le_limsup u) (eventually_of_forall fun _ => le_of_eq h)
-    exact hu_zero.mono fun x hx => le_antisymm hx (zero_le _)
-  · rw [limsup_congr h]
-    simp_rw [Pi.zero_apply, ← ENNReal.bot_eq_zero, limsup_const_bot]
+  limsup_eq_bot
 #align ennreal.limsup_eq_zero_iff ENNReal.limsup_eq_zero_iff
 
 /- warning: ennreal.limsup_const_mul_of_ne_top -> ENNReal.limsup_const_mul_of_ne_top is a dubious translation:

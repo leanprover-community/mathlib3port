@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ess_sup
-! leanprover-community/mathlib commit 394f6e63f63ebc49b2b723e62f89f1604aa4b87d
+! leanprover-community/mathlib commit 52932b3a083d4142e78a15dc928084a22fea9ba0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,9 +32,9 @@ sense). We do not define that quantity here, which is simply the supremum of a m
 -/
 
 
-open MeasureTheory Filter TopologicalSpace
+open MeasureTheory Filter Set TopologicalSpace
 
-open ENNReal MeasureTheory
+open ENNReal MeasureTheory NNReal
 
 variable {α β : Type _} {m : MeasurableSpace α} {μ ν : Measure α}
 
@@ -62,20 +62,105 @@ theorem essInf_congr_ae {f g : α → β} (hfg : f =ᵐ[μ] g) : essInf f μ = e
   @essSup_congr_ae α βᵒᵈ _ _ _ _ _ hfg
 #align ess_inf_congr_ae essInf_congr_ae
 
+@[simp]
+theorem essSup_const' [μ.ae.ne_bot] (c : β) : essSup (fun x : α => c) μ = c :=
+  limsup_const _
+#align ess_sup_const' essSup_const'
+
+@[simp]
+theorem essInf_const' [μ.ae.ne_bot] (c : β) : essInf (fun x : α => c) μ = c :=
+  liminf_const _
+#align ess_inf_const' essInf_const'
+
+theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
+  by
+  rw [← ae_ne_bot] at hμ
+  exact essSup_const' _
+#align ess_sup_const essSup_const
+
+theorem essInf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c :=
+  by
+  rw [← ae_ne_bot] at hμ
+  exact essInf_const' _
+#align ess_inf_const essInf_const
+
 end ConditionallyCompleteLattice
 
 section ConditionallyCompleteLinearOrder
 
-variable [ConditionallyCompleteLinearOrder β]
+variable [ConditionallyCompleteLinearOrder β] {x : β} {f : α → β}
 
 theorem essSup_eq_infₛ {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
     essSup f μ = infₛ { a | μ { x | a < f x } = 0 } :=
   by
   dsimp [essSup, limsup, Limsup]
-  congr
-  ext a
-  simp [eventually_map, ae_iff]
+  simp only [ae_iff, not_le]
 #align ess_sup_eq_Inf essSup_eq_infₛ
+
+theorem essInf_eq_supₛ {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
+    essInf f μ = supₛ { a | μ { x | f x < a } = 0 } :=
+  by
+  dsimp [essInf, liminf, Liminf]
+  simp only [ae_iff, not_le]
+#align ess_inf_eq_Sup essInf_eq_supₛ
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+theorem ae_lt_of_essSup_lt (hx : essSup f μ < x)
+    (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
+      run_tac
+        is_bounded_default) :
+    ∀ᵐ y ∂μ, f y < x :=
+  eventually_lt_of_limsup_lt hx hf
+#align ae_lt_of_ess_sup_lt ae_lt_of_essSup_lt
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+theorem ae_lt_of_lt_essInf (hx : x < essInf f μ)
+    (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
+      run_tac
+        is_bounded_default) :
+    ∀ᵐ y ∂μ, x < f y :=
+  eventually_lt_of_lt_liminf hx hf
+#align ae_lt_of_lt_ess_inf ae_lt_of_lt_essInf
+
+variable [TopologicalSpace β] [FirstCountableTopology β] [OrderTopology β]
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+theorem ae_le_essSup
+    (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
+      run_tac
+        is_bounded_default) :
+    ∀ᵐ y ∂μ, f y ≤ essSup f μ :=
+  eventually_le_limsup hf
+#align ae_le_ess_sup ae_le_essSup
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+theorem ae_essInf_le
+    (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
+      run_tac
+        is_bounded_default) :
+    ∀ᵐ y ∂μ, essInf f μ ≤ f y :=
+  eventually_liminf_le hf
+#align ae_ess_inf_le ae_essInf_le
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+theorem meas_essSup_lt
+    (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
+      run_tac
+        is_bounded_default) :
+    μ { y | essSup f μ < f y } = 0 := by
+  simp_rw [← not_le]
+  exact ae_le_essSup hf
+#align meas_ess_sup_lt meas_essSup_lt
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+theorem meas_lt_essInf
+    (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
+      run_tac
+        is_bounded_default) :
+    μ { y | f y < essInf f μ } = 0 := by
+  simp_rw [← not_le]
+  exact ae_essInf_le hf
+#align meas_lt_ess_inf meas_lt_essInf
 
 end ConditionallyCompleteLinearOrder
 
@@ -101,11 +186,6 @@ theorem essInf_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essInf f μ �
   liminf_le_liminf hfg
 #align ess_inf_mono_ae essInf_mono_ae
 
-theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
-  haveI hμ_ne_bot : μ.ae.ne_bot := by rwa [ne_bot_iff, Ne.def, ae_eq_bot]
-  limsup_const c
-#align ess_sup_const essSup_const
-
 theorem essSup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c :=
   by
   refine' (essSup_mono_ae hf).trans _
@@ -113,10 +193,6 @@ theorem essSup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => 
   · simp [hμ]
   · rwa [essSup_const]
 #align ess_sup_le_of_ae_le essSup_le_of_ae_le
-
-theorem essInf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c :=
-  @essSup_const α βᵒᵈ _ _ _ _ hμ
-#align ess_inf_const essInf_const
 
 theorem le_essInf_of_ae_le {f : α → β} (c : β) (hf : (fun _ => c) ≤ᵐ[μ] f) : c ≤ essInf f μ :=
   @essSup_le_of_ae_le α βᵒᵈ _ _ _ _ c hf
@@ -267,14 +343,6 @@ section CompleteLinearOrder
 
 variable [CompleteLinearOrder β]
 
-theorem ae_lt_of_essSup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : ∀ᵐ y ∂μ, f y < x :=
-  Filter.eventually_lt_of_limsup_lt hf
-#align ae_lt_of_ess_sup_lt ae_lt_of_essSup_lt
-
-theorem ae_lt_of_lt_essInf {f : α → β} {x : β} (hf : x < essInf f μ) : ∀ᵐ y ∂μ, x < f y :=
-  @ae_lt_of_essSup_lt α βᵒᵈ _ _ _ _ _ hf
-#align ae_lt_of_lt_ess_inf ae_lt_of_lt_essInf
-
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
@@ -357,6 +425,13 @@ theorem essSup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α →
   simp_rw [essSup]
   exact ENNReal.limsup_liminf_le_liminf_limsup fun a b => f b a
 #align ennreal.ess_sup_liminf_le ENNReal.essSup_liminf_le
+
+theorem coe_essSup {f : α → ℝ≥0} (hf : IsBoundedUnder (· ≤ ·) μ.ae f) :
+    (↑(essSup f μ) : ℝ≥0∞) = essSup (fun x => f x) μ :=
+  (ENNReal.coe_infₛ <| hf).trans <|
+    eq_of_forall_le_iff fun r => by
+      simp [essSup, limsup, Limsup, eventually_map, ENNReal.forall_ennreal]
+#align ennreal.coe_ess_sup ENNReal.coe_essSup
 
 end ENNReal
 

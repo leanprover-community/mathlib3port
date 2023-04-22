@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 90df25ded755a2cf9651ea850d1abe429b1e4eb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,8 @@ open Function OrderDual
 
 universe u v w
 
-variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type _} {r : α → α → Prop}
+variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w} {δ : Type _} {π : ι → Type _}
+  {r : α → α → Prop}
 
 section MonotoneDef
 
@@ -1576,9 +1577,18 @@ theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti
 
 end PartialOrder
 
+/-! ### Pi types -/
+
+
 namespace Function
 
-variable [Preorder α]
+variable [Preorder α] [DecidableEq ι] [∀ i, Preorder (π i)] {f : ∀ i, π i} {i : ι}
+
+theorem update_mono : Monotone (f.update i) := fun a b => update_le_update_iff'.2
+#align function.update_mono Function.update_mono
+
+theorem update_strictMono : StrictMono (f.update i) := fun a b => update_lt_update_iff.2
+#align function.update_strict_mono Function.update_strictMono
 
 #print Function.const_mono /-
 theorem const_mono : Monotone (const β : α → β → α) := fun a b h i => h

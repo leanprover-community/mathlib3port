@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.notation
-! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
+! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.BigOperators.Fin
 
 /-!
 # Matrix and vector notation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file includes `simp` lemmas for applying operations in `data.matrix.basic` to values built out
 of the matrix notation `![a, b] = vec_cons a (vec_cons b vec_empty)` defined in
