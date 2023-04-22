@@ -55,7 +55,7 @@ def equivalence : Karoubi (SimplicialObject C) ≌ Karoubi (ChainComplex C ℕ)
   Functor := n
   inverse := Γ
   unitIso := Γ₂N₂
-  counitIso := n₂Γ₂
+  counitIso := N₂Γ₂
   functor_unitIso_comp' P := by
     let α := N.map_iso (Γ₂N₂.app P)
     let β := N₂Γ₂.app (N.obj P)

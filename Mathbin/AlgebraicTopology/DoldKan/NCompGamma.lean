@@ -212,7 +212,7 @@ theorem compatibilityΓ₂N₁Γ₂N₂_natTrans (X : SimplicialObject C) :
 #align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.compatibilityΓ₂N₁Γ₂N₂_natTrans
 
 theorem identity_n₂_objectwise (P : Karoubi (SimplicialObject C)) :
-    n₂Γ₂.inv.app (N₂.obj P) ≫ N₂.map (Γ₂N₂.natTrans.app P) = 𝟙 (N₂.obj P) :=
+    N₂Γ₂.inv.app (N₂.obj P) ≫ N₂.map (Γ₂N₂.natTrans.app P) = 𝟙 (N₂.obj P) :=
   by
   ext n
   have eq₁ :
@@ -242,7 +242,7 @@ theorem identity_n₂_objectwise (P : Karoubi (SimplicialObject C)) :
 #align algebraic_topology.dold_kan.identity_N₂_objectwise AlgebraicTopology.DoldKan.identity_n₂_objectwise
 
 theorem identity_n₂ :
-    ((𝟙 (N₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ n₂Γ₂.inv) ≫ Γ₂N₂.natTrans ◫ 𝟙 N₂ : N₂ ⟶ N₂) =
+    ((𝟙 (N₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ N₂Γ₂.inv) ≫ Γ₂N₂.natTrans ◫ 𝟙 N₂ : N₂ ⟶ N₂) =
       𝟙 N₂ :=
   by
   ext P : 2
