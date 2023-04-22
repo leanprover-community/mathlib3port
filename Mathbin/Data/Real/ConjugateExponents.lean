@@ -198,24 +198,24 @@ theorem div_conj_eq_sub_one : p / q = p - 1 :=
   rw [h.sub_one_mul_conj]
 #align real.is_conjugate_exponent.div_conj_eq_sub_one Real.IsConjugateExponent.div_conj_eq_sub_one
 
-#print Real.IsConjugateExponent.one_lt_nNReal /-
-theorem one_lt_nNReal : 1 < Real.toNNReal p :=
+#print Real.IsConjugateExponent.one_lt_nnreal /-
+theorem one_lt_nnreal : 1 < Real.toNNReal p :=
   by
   rw [← Real.toNNReal_one, Real.toNNReal_lt_toNNReal_iff h.pos]
   exact h.one_lt
-#align real.is_conjugate_exponent.one_lt_nnreal Real.IsConjugateExponent.one_lt_nNReal
+#align real.is_conjugate_exponent.one_lt_nnreal Real.IsConjugateExponent.one_lt_nnreal
 -/
 
-/- warning: real.is_conjugate_exponent.inv_add_inv_conj_nnreal -> Real.IsConjugateExponent.inv_add_inv_conj_nNReal is a dubious translation:
+/- warning: real.is_conjugate_exponent.inv_add_inv_conj_nnreal -> Real.IsConjugateExponent.inv_add_inv_conj_nnreal is a dubious translation:
 lean 3 declaration is
   forall {p : Real} {q : Real}, (Real.IsConjugateExponent p q) -> (Eq.{1} NNReal (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal NNReal.hasDiv) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (Real.toNNReal p)) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal NNReal.hasDiv) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (Real.toNNReal q))) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))))
 but is expected to have type
   forall {p : Real} {q : Real}, (Real.IsConjugateExponent p q) -> (Eq.{1} NNReal (HAdd.hAdd.{0, 0, 0} NNReal NNReal NNReal (instHAdd.{0} NNReal (Distrib.toAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))))) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal (CanonicallyLinearOrderedSemifield.toDiv.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal)) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)) (Real.toNNReal p)) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal (CanonicallyLinearOrderedSemifield.toDiv.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal)) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)) (Real.toNNReal q))) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)))
-Case conversion may be inaccurate. Consider using '#align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nNRealₓ'. -/
-theorem inv_add_inv_conj_nNReal : 1 / Real.toNNReal p + 1 / Real.toNNReal q = 1 := by
+Case conversion may be inaccurate. Consider using '#align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nnrealₓ'. -/
+theorem inv_add_inv_conj_nnreal : 1 / Real.toNNReal p + 1 / Real.toNNReal q = 1 := by
   rw [← Real.toNNReal_one, ← Real.toNNReal_div' h.nonneg, ← Real.toNNReal_div' h.symm.nonneg, ←
     Real.toNNReal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
-#align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nNReal
+#align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nnreal
 
 /- warning: real.is_conjugate_exponent.inv_add_inv_conj_ennreal -> Real.IsConjugateExponent.inv_add_inv_conj_ennreal is a dubious translation:
 lean 3 declaration is
