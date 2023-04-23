@@ -1584,11 +1584,15 @@ namespace Function
 
 variable [Preorder α] [DecidableEq ι] [∀ i, Preorder (π i)] {f : ∀ i, π i} {i : ι}
 
+#print Function.update_mono /-
 theorem update_mono : Monotone (f.update i) := fun a b => update_le_update_iff'.2
 #align function.update_mono Function.update_mono
+-/
 
+#print Function.update_strictMono /-
 theorem update_strictMono : StrictMono (f.update i) := fun a b => update_lt_update_iff.2
 #align function.update_strict_mono Function.update_strictMono
+-/
 
 #print Function.const_mono /-
 theorem const_mono : Monotone (const β : α → β → α) := fun a b h i => h

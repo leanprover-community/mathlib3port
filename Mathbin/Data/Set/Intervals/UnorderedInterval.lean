@@ -202,12 +202,24 @@ theorem bdd_below_bdd_above_iff_subset_uIcc (s : Set α) :
 
 section Prod
 
+/- warning: set.uIcc_prod_uIcc -> Set.uIcc_prod_uIcc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : Lattice.{u2} β] (a₁ : α) (a₂ : α) (b₁ : β) (b₂ : β), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.prod.{u1, u2} α β (Set.uIcc.{u1} α _inst_1 a₁ a₂) (Set.uIcc.{u2} β _inst_2 b₁ b₂)) (Set.uIcc.{max u1 u2} (Prod.{u1, u2} α β) (Prod.lattice.{u1, u2} α β _inst_1 _inst_2) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : Lattice.{u1} β] (a₁ : α) (a₂ : α) (b₁ : β) (b₂ : β), Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.prod.{u2, u1} α β (Set.uIcc.{u2} α _inst_1 a₁ a₂) (Set.uIcc.{u1} β _inst_2 b₁ b₂)) (Set.uIcc.{max u1 u2} (Prod.{u2, u1} α β) (Prod.lattice.{u2, u1} α β _inst_1 _inst_2) (Prod.mk.{u2, u1} α β a₁ b₁) (Prod.mk.{u2, u1} α β a₂ b₂))
+Case conversion may be inaccurate. Consider using '#align set.uIcc_prod_uIcc Set.uIcc_prod_uIccₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem uIcc_prod_uIcc (a₁ a₂ : α) (b₁ b₂ : β) : [a₁, a₂] ×ˢ [b₁, b₂] = [(a₁, b₁), (a₂, b₂)] :=
   Icc_prod_Icc _ _ _ _
 #align set.uIcc_prod_uIcc Set.uIcc_prod_uIcc
 
+/- warning: set.uIcc_prod_eq -> Set.uIcc_prod_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Lattice.{u1} α] [_inst_2 : Lattice.{u2} β] (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.uIcc.{max u1 u2} (Prod.{u1, u2} α β) (Prod.lattice.{u1, u2} α β _inst_1 _inst_2) a b) (Set.prod.{u1, u2} α β (Set.uIcc.{u1} α _inst_1 (Prod.fst.{u1, u2} α β a) (Prod.fst.{u1, u2} α β b)) (Set.uIcc.{u2} β _inst_2 (Prod.snd.{u1, u2} α β a) (Prod.snd.{u1, u2} α β b)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : Lattice.{u1} β] (a : Prod.{u2, u1} α β) (b : Prod.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Prod.{u2, u1} α β)) (Set.uIcc.{max u2 u1} (Prod.{u2, u1} α β) (Prod.lattice.{u2, u1} α β _inst_1 _inst_2) a b) (Set.prod.{u2, u1} α β (Set.uIcc.{u2} α _inst_1 (Prod.fst.{u2, u1} α β a) (Prod.fst.{u2, u1} α β b)) (Set.uIcc.{u1} β _inst_2 (Prod.snd.{u2, u1} α β a) (Prod.snd.{u2, u1} α β b)))
+Case conversion may be inaccurate. Consider using '#align set.uIcc_prod_eq Set.uIcc_prod_eqₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem uIcc_prod_eq (a b : α × β) : [a, b] = [a.1, b.1] ×ˢ [a.2, b.2] := by simp
 #align set.uIcc_prod_eq Set.uIcc_prod_eq

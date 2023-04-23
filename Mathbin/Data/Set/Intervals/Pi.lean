@@ -189,6 +189,12 @@ section PiLattice
 
 variable [∀ i, Lattice (α i)]
 
+/- warning: set.pi_univ_uIcc -> Set.pi_univ_uIcc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] (a : forall (i : ι), α i) (b : forall (i : ι), α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.pi.{u1, u2} ι (fun (i : ι) => α i) (Set.univ.{u1} ι) (fun (i : ι) => Set.uIcc.{u2} (α i) (_inst_1 i) (a i) (b i))) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) a b)
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] (a : forall (i : ι), α i) (b : forall (i : ι), α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (Set.univ.{u2} ι) (fun (i : ι) => Set.uIcc.{u1} (α i) (_inst_1 i) (a i) (b i))) (Set.uIcc.{max u2 u1} (forall (i : ι), α i) (Pi.lattice.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) a b)
+Case conversion may be inaccurate. Consider using '#align set.pi_univ_uIcc Set.pi_univ_uIccₓ'. -/
 @[simp]
 theorem pi_univ_uIcc (a b : ∀ i, α i) : (pi univ fun i => uIcc (a i) (b i)) = uIcc a b :=
   pi_univ_Icc _ _

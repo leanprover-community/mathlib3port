@@ -40,7 +40,7 @@ variable (x y : ∀ i, f i) (i j : I)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : One.{u2} β] (s : Set.{u2} β) [_inst_2 : Decidable (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β _inst_1))) s)], Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u2} α β (OfNat.ofNat.{max u1 u2} (α -> β) 1 (OfNat.mk.{max u1 u2} (α -> β) 1 (One.one.{max u1 u2} (α -> β) (Pi.instOne.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1))))) s) (ite.{succ u1} (Set.{u1} α) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β _inst_1))) s) _inst_2 (Set.univ.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u1} β] (s : Set.{u1} β) [_inst_2 : Decidable (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_1)) s)], Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β (OfNat.ofNat.{max u2 u1} (α -> β) 1 (One.toOfNat1.{max u2 u1} (α -> β) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Algebra.Group.Pi._hyg.90 : α) => β) (fun (i : α) => _inst_1)))) s) (ite.{succ u2} (Set.{u2} α) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_1)) s) _inst_2 (Set.univ.{u2} α) (EmptyCollection.emptyCollection.{u2} (Set.{u2} α) (Set.instEmptyCollectionSet.{u2} α)))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u1} β] (s : Set.{u1} β) [_inst_2 : Decidable (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_1)) s)], Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β (OfNat.ofNat.{max u2 u1} (α -> β) 1 (One.toOfNat1.{max u2 u1} (α -> β) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Algebra.Group.Pi._hyg.93 : α) => β) (fun (i : α) => _inst_1)))) s) (ite.{succ u2} (Set.{u2} α) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_1)) s) _inst_2 (Set.univ.{u2} α) (EmptyCollection.emptyCollection.{u2} (Set.{u2} α) (Set.instEmptyCollectionSet.{u2} α)))
 Case conversion may be inaccurate. Consider using '#align set.preimage_one Set.preimage_oneₓ'. -/
 @[to_additive]
 theorem Set.preimage_one {α β : Type _} [One β] (s : Set β) [Decidable ((1 : β) ∈ s)] :
@@ -608,21 +608,45 @@ theorem Pi.single_mul [∀ i, MulZeroClass <| f i] (i : I) (x y : f i) :
   (MulHom.single f i).map_mul x y
 #align pi.single_mul Pi.single_mul
 
+/- warning: pi.single_mul_left_apply -> Pi.single_mul_left_apply is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) (j : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{succ u2} (f j) (Pi.single.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toHasMul.{u2} (f i) (_inst_2 i))) a (x i)) j) (HMul.hMul.{u2, u2, u2} (f j) (f j) (f j) (instHMul.{u2} (f j) (MulZeroClass.toHasMul.{u2} (f j) (_inst_2 j))) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i a j) (x j))
+but is expected to have type
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) (j : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{succ u2} (f j) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toMul.{u2} (f i) (_inst_2 i))) a (x i)) j) (HMul.hMul.{u2, u2, u2} (f j) (f j) (f j) (instHMul.{u2} (f j) (MulZeroClass.toMul.{u2} (f j) (_inst_2 j))) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i a j) (x j))
+Case conversion may be inaccurate. Consider using '#align pi.single_mul_left_apply Pi.single_mul_left_applyₓ'. -/
 theorem Pi.single_mul_left_apply [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (a * x i) j = Pi.single i a j * x j :=
   (Pi.apply_single (fun i => (· * x i)) (fun i => MulZeroClass.zero_mul _) _ _ _).symm
 #align pi.single_mul_left_apply Pi.single_mul_left_apply
 
+/- warning: pi.single_mul_right_apply -> Pi.single_mul_right_apply is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) (j : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{succ u2} (f j) (Pi.single.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toHasMul.{u2} (f i) (_inst_2 i))) (x i) a) j) (HMul.hMul.{u2, u2, u2} (f j) (f j) (f j) (instHMul.{u2} (f j) (MulZeroClass.toHasMul.{u2} (f j) (_inst_2 j))) (x j) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i a j))
+but is expected to have type
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) (j : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{succ u2} (f j) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toMul.{u2} (f i) (_inst_2 i))) (x i) a) j) (HMul.hMul.{u2, u2, u2} (f j) (f j) (f j) (instHMul.{u2} (f j) (MulZeroClass.toMul.{u2} (f j) (_inst_2 j))) (x j) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i a j))
+Case conversion may be inaccurate. Consider using '#align pi.single_mul_right_apply Pi.single_mul_right_applyₓ'. -/
 theorem Pi.single_mul_right_apply [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (x i * a) j = x j * Pi.single i a j :=
   (Pi.apply_single (fun i => (· * ·) (x i)) (fun i => MulZeroClass.mul_zero _) _ _ _).symm
 #align pi.single_mul_right_apply Pi.single_mul_right_apply
 
+/- warning: pi.single_mul_left -> Pi.single_mul_left is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.single.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toHasMul.{u2} (f i) (_inst_2 i))) a (x i))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (forall (i : I), f i) (forall (i : I), f i) (forall (i : I), f i) (instHMul.{max u1 u2} (forall (i : I), f i) (Pi.instMul.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => MulZeroClass.toHasMul.{u2} (f i) (_inst_2 i)))) (Pi.single.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i a) x)
+but is expected to have type
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toMul.{u2} (f i) (_inst_2 i))) a (x i))) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (forall (i : I), f i) (forall (i : I), f i) (forall (i : I), f i) (instHMul.{max u1 u2} (forall (i : I), f i) (Pi.instMul.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => MulZeroClass.toMul.{u2} (f i) (_inst_2 i)))) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i a) x)
+Case conversion may be inaccurate. Consider using '#align pi.single_mul_left Pi.single_mul_leftₓ'. -/
 theorem Pi.single_mul_left [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (a * x i) = Pi.single i a * x :=
   funext fun j => Pi.single_mul_left_apply _ _ _ _
 #align pi.single_mul_left Pi.single_mul_left
 
+/- warning: pi.single_mul_right -> Pi.single_mul_right is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.single.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toHasMul.{u2} (f i) (_inst_2 i))) (x i) a)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (forall (i : I), f i) (forall (i : I), f i) (forall (i : I), f i) (instHMul.{max u1 u2} (forall (i : I), f i) (Pi.instMul.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => MulZeroClass.toHasMul.{u2} (f i) (_inst_2 i)))) x (Pi.single.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toHasZero.{u2} (f i) (_inst_2 i)) i a))
+but is expected to have type
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} (x : forall (i : I), f i) (i : I) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulZeroClass.{u2} (f i)] (a : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i (HMul.hMul.{u2, u2, u2} (f i) (f i) (f i) (instHMul.{u2} (f i) (MulZeroClass.toMul.{u2} (f i) (_inst_2 i))) (x i) a)) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (forall (i : I), f i) (forall (i : I), f i) (forall (i : I), f i) (instHMul.{max u1 u2} (forall (i : I), f i) (Pi.instMul.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => MulZeroClass.toMul.{u2} (f i) (_inst_2 i)))) x (Pi.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulZeroClass.toZero.{u2} (f i) (_inst_2 i)) i a))
+Case conversion may be inaccurate. Consider using '#align pi.single_mul_right Pi.single_mul_rightₓ'. -/
 theorem Pi.single_mul_right [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (x i * a) = x * Pi.single i a :=
   funext fun j => Pi.single_mul_right_apply _ _ _ _
@@ -848,17 +872,21 @@ namespace Pi
 
 variable [DecidableEq I] [∀ i, Preorder (f i)] [∀ i, One (f i)]
 
+#print Pi.mulSingle_mono /-
 @[to_additive]
 theorem mulSingle_mono : Monotone (Pi.mulSingle i : f i → ∀ i, f i) :=
   Function.update_mono
 #align pi.mul_single_mono Pi.mulSingle_mono
 #align pi.single_mono Pi.single_mono
+-/
 
+#print Pi.mulSingle_strictMono /-
 @[to_additive]
 theorem mulSingle_strictMono : StrictMono (Pi.mulSingle i : f i → ∀ i, f i) :=
   Function.update_strictMono
 #align pi.mul_single_strict_mono Pi.mulSingle_strictMono
 #align pi.single_strict_mono Pi.single_strictMono
+-/
 
 end Pi
 

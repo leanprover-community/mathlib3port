@@ -1218,11 +1218,23 @@ theorem update_le_update_iff :
   simp (config := { contextual := true }) [update_le_iff]
 #align update_le_update_iff update_le_update_iff
 
+/- warning: update_le_update_iff' -> update_le_update_iff' is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (π i)] {x : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LE.le.{max u1 u2} (forall (a : ι), π a) (Pi.hasLe.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u1, succ u2} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) x i b)) (LE.le.{u2} (π i) (Preorder.toLE.{u2} (π i) (_inst_2 i)) a b)
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LE.le.{max u2 u1} (forall (a : ι), π a) (Pi.hasLe.{u2, u1} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u2, succ u1} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) x i b)) (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) a b)
+Case conversion may be inaccurate. Consider using '#align update_le_update_iff' update_le_update_iff'ₓ'. -/
 @[simp]
 theorem update_le_update_iff' : update x i a ≤ update x i b ↔ a ≤ b := by
   simp [update_le_update_iff]
 #align update_le_update_iff' update_le_update_iff'
 
+/- warning: update_lt_update_iff -> update_lt_update_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (π i)] {x : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LT.lt.{max u1 u2} (forall (a : ι), π a) (Preorder.toLT.{max u1 u2} (forall (a : ι), π a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => _inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u1, succ u2} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) x i b)) (LT.lt.{u2} (π i) (Preorder.toLT.{u2} (π i) (_inst_2 i)) a b)
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LT.lt.{max u2 u1} (forall (a : ι), π a) (Preorder.toLT.{max u2 u1} (forall (a : ι), π a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => π a) (fun (i : ι) => _inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u2, succ u1} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) x i b)) (LT.lt.{u1} (π i) (Preorder.toLT.{u1} (π i) (_inst_2 i)) a b)
+Case conversion may be inaccurate. Consider using '#align update_lt_update_iff update_lt_update_iffₓ'. -/
 @[simp]
 theorem update_lt_update_iff : update x i a < update x i b ↔ a < b :=
   lt_iff_lt_of_le_iff_le' update_le_update_iff' update_le_update_iff'
