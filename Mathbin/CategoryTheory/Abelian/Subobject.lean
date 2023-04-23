@@ -27,6 +27,7 @@ namespace CategoryTheory.Abelian
 
 variable {C : Type u} [Category.{v} C]
 
+#print CategoryTheory.Abelian.subobjectIsoSubobjectOp /-
 /-- In an abelian category, the subobjects and quotient objects of an object `X` are
     order-isomorphic via taking kernels and cokernels.
     Implemented here using subobjects in the opposite category,
@@ -66,12 +67,15 @@ def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (o
         autoParam_eq]
     · simp only [mono_lift_comp]
 #align category_theory.abelian.subobject_iso_subobject_op CategoryTheory.Abelian.subobjectIsoSubobjectOp
+-/
 
+#print CategoryTheory.Abelian.wellPowered_opposite /-
 /-- A well-powered abelian category is also well-copowered. -/
 instance wellPowered_opposite [Abelian C] [WellPowered C] : WellPowered Cᵒᵖ
     where subobject_small X :=
     (small_congr (subobjectIsoSubobjectOp (unop X)).toEquiv).1 inferInstance
 #align category_theory.abelian.well_powered_opposite CategoryTheory.Abelian.wellPowered_opposite
+-/
 
 end CategoryTheory.Abelian
 
