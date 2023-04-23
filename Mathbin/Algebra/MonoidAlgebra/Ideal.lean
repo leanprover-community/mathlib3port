@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.ideal
-! leanprover-community/mathlib commit 72c366d0475675f1309d3027d3d7d47ee4423951
+! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Ideal.Basic
 
 /-!
 # Lemmas about ideals of `monoid_algebra` and `add_monoid_algebra`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

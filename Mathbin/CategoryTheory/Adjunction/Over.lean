@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.over
-! leanprover-community/mathlib commit cea27692b3fdeb328a2ddba6aabf181754543184
+! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Over
 
 /-!
 # Adjunctions related to the over category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Construct the left adjoint `star X` to `over.forget X : over X ⥤ C`.
 

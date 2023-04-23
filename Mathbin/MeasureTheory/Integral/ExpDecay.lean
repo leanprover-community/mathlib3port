@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module measure_theory.integral.exp_decay
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit d4817f8867c368d6c5571f7379b3888aaec1d95a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,37 +26,18 @@ noncomputable section
 
 open Real intervalIntegral MeasureTheory Set Filter
 
-/-- Integral of `exp (-b * x)` over `(a, X)` is bounded as `X → ∞`. -/
-theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) :
-    (∫ x in a..X, exp (-b * x)) ≤ exp (-b * a) / b :=
-  by
-  rw [integral_deriv_eq_sub' fun x => -exp (-b * x) / b]
-  -- goal 1/4: F(X) - F(a) is bounded
-  · simp only [tsub_le_iff_right]
-    rw [neg_div b (exp (-b * a)), neg_div b (exp (-b * X)), add_neg_self, neg_le, neg_zero]
-    exact (div_pos (exp_pos _) h2).le
-  -- goal 2/4: the derivative of F is exp(-b x)
-  · ext1
-    simp [h2.ne']
-  -- goal 3/4: F is differentiable
-  · intro x hx
-    simp [h2.ne']
-  -- goal 4/4: exp(-b x) is continuous
-  · apply Continuous.continuousOn
-    continuity
-#align integral_exp_neg_le integral_exp_neg_le
+open Topology
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
     IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) :=
   by
-  have : ∀ X : ℝ, integrable_on (fun x : ℝ => exp (-b * x)) (Ioc a X) :=
+  have : tendsto (fun x => -exp (-b * x) / b) at_top (𝓝 (-0 / b)) :=
     by
-    intro X
-    exact (continuous_const.mul continuous_id).exp.integrableOnIoc
-  apply integrable_on_Ioi_of_interval_integral_norm_bounded (exp (-b * a) / b) a this tendsto_id
-  simp only [eventually_at_top, norm_of_nonneg (exp_pos _).le]
-  exact ⟨a, fun b2 hb2 => integral_exp_neg_le a b2 h⟩
+    refine' tendsto.div_const (tendsto.neg _) _
+    exact tendsto_exp_at_bot.comp (tendsto_id.neg_const_mul_at_top (Right.neg_neg_iff.2 h))
+  refine' integrable_on_Ioi_deriv_of_nonneg' (fun x hx => _) (fun x hx => (exp_pos _).le) this
+  simpa [h.ne'] using ((hasDerivAt_id x).const_mul b).neg.exp.neg.div_const b
 #align exp_neg_integrable_on_Ioi expNegIntegrableOnIoi
 
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.n_reflects_iso
-! leanprover-community/mathlib commit 88bca0ce5d22ebfd9e73e682e51d60ea13b48347
+! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Idempotents.KaroubiKaroubi
 /-!
 
 # N₁ and N₂ reflects isomorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, it is shown that the functors
 `N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ)` and

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit 34d3797325d202bd7250431275bb871133cdb611
+! leanprover-community/mathlib commit d4817f8867c368d6c5571f7379b3888aaec1d95a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,11 +188,6 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
   have hb' : b ≠ 0 := by
     contrapose! hb
     rw [hb, zero_re]
-  refine'
-    tendsto_nhds_unique
-      (interval_integral_tendsto_integral_Ioi _ (integrableMulCexpNegMulSq hb).IntegrableOn
-        Filter.tendsto_id)
-      _
   have A :
     ∀ x : ℂ, HasDerivAt (fun x => -(2 * b)⁻¹ * cexp (-b * x ^ 2)) (x * cexp (-b * x ^ 2)) x :=
     by
@@ -200,24 +195,17 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     convert((hasDerivAt_pow 2 x).const_mul (-b)).cexp.const_mul (-(2 * b)⁻¹) using 1
     field_simp [hb']
     ring
-  have :
-    ∀ y : ℝ,
-      (∫ x in 0 ..id y, ↑x * cexp (-b * x ^ 2)) =
-        -(2 * b)⁻¹ * cexp (-b * y ^ 2) - -(2 * b)⁻¹ * cexp (-b * 0 ^ 2) :=
-    fun y =>
-    intervalIntegral.integral_eq_sub_of_hasDerivAt (fun x hx => (A x).comp_of_real)
-      (integrableMulCexpNegMulSq hb).IntervalIntegrable
-  simp_rw [this]
-  have L :
-    tendsto (fun x : ℝ => (2 * b)⁻¹ - (2 * b)⁻¹ * cexp (-b * x ^ 2)) at_top
-      (𝓝 ((2 * b)⁻¹ - (2 * b)⁻¹ * 0)) :=
+  have B : tendsto (fun y : ℝ => -(2 * b)⁻¹ * cexp (-b * ↑y ^ 2)) at_top (𝓝 (-(2 * b)⁻¹ * 0)) :=
     by
-    refine' tendsto_const_nhds.sub (tendsto.const_mul _ <| tendsto_zero_iff_norm_tendsto_zero.mpr _)
+    refine' tendsto.const_mul _ (tendsto_zero_iff_norm_tendsto_zero.mpr _)
     simp_rw [norm_cexp_neg_mul_sq b]
     exact
       tendsto_exp_at_bot.comp
         (tendsto.neg_const_mul_at_top (neg_lt_zero.2 hb) (tendsto_pow_at_top two_ne_zero))
-  simpa using L
+  convert integral_Ioi_of_has_deriv_at_of_tendsto' (fun x hx => (A ↑x).comp_of_real)
+      (integrableMulCexpNegMulSq hb).IntegrableOn B
+  simp only [MulZeroClass.mul_zero, of_real_zero, zero_pow', Ne.def, bit0_eq_zero, Nat.one_ne_zero,
+    not_false_iff, Complex.exp_zero, mul_one, sub_neg_eq_add, zero_add]
 #align integral_mul_cexp_neg_mul_sq integral_mul_cexp_neg_mul_sq
 
 /-- The *square* of the Gaussian integral `∫ x:ℝ, exp (-b * x^2)` is equal to `π / b`. -/

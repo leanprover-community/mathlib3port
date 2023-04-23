@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.decomposition
-! leanprover-community/mathlib commit 9af20344b24ef1801b599d296aaed8b9fffdc360
+! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.AlgebraicTopology.DoldKan.PInfty
 /-!
 
 # Decomposition of the Q endomorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we obtain a lemma `decomposition_Q` which expresses
 explicitly the projection `(Q q).f (n+1) : X _[n+1] ⟶ X _[n+1]`

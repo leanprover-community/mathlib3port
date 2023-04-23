@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.split_simplicial_object
-! leanprover-community/mathlib commit 31019c2504b17f85af7e0577585fad996935a317
+! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 /-!
 
 # Split simplicial objects in preadditive categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define a functor `nondeg_complex : simplicial_object.split C ⥤ chain_complex C ℕ`
 when `C` is a preadditive category with finite coproducts, and get an isomorphism

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 91862a6001a8b6ae3f261cdd8eea42f6ac596886
+! leanprover-community/mathlib commit 323b7f2616426313505aae4e09ffbea6013862fc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -186,6 +186,20 @@ theorem contDiffOn_of_subsingleton [Subsingleton F] : ContDiffOn 𝕜 n f s :=
   rw [Subsingleton.elim f fun _ => 0]
   exact contDiffOn_const
 #align cont_diff_on_of_subsingleton contDiffOn_of_subsingleton
+
+theorem iteratedFderiv_succ_const (n : ℕ) (c : F) : (iteratedFderiv 𝕜 (n + 1) fun y : E => c) = 0 :=
+  by
+  ext (x m)
+  simp only [iteratedFderiv_succ_apply_right, fderiv_const, Pi.zero_apply, iteratedFderiv_zero_fun,
+    ContinuousMultilinearMap.zero_apply, ContinuousLinearMap.zero_apply]
+#align iterated_fderiv_succ_const iteratedFderiv_succ_const
+
+theorem iteratedFderiv_const_of_ne {n : ℕ} (hn : n ≠ 0) (c : F) :
+    (iteratedFderiv 𝕜 n fun y : E => c) = 0 :=
+  by
+  cases' Nat.exists_eq_succ_of_ne_zero hn with k hk
+  rw [hk, iteratedFderiv_succ_const]
+#align iterated_fderiv_const_of_ne iteratedFderiv_const_of_ne
 
 /-! ### Smoothness of linear functions -/
 
@@ -2776,4 +2790,59 @@ theorem norm_iteratedFderiv_mul_le {f : E → A} {g : E → A} {N : WithTop ℕ}
 #align norm_iterated_fderiv_mul_le norm_iteratedFderiv_mul_le
 
 end
+
+section Apply
+
+theorem norm_iteratedFderivWithin_clm_apply {f : E → F →L[𝕜] G} {g : E → F} {s : Set E} {x : E}
+    {N : ℕ∞} {n : ℕ} (hf : ContDiffOn 𝕜 N f s) (hg : ContDiffOn 𝕜 N g s) (hs : UniqueDiffOn 𝕜 s)
+    (hx : x ∈ s) (hn : ↑n ≤ N) :
+    ‖iteratedFderivWithin 𝕜 n (fun y => (f y) (g y)) s x‖ ≤
+      (Finset.range (n + 1)).Sum fun i =>
+        ↑(n.choose i) * ‖iteratedFderivWithin 𝕜 i f s x‖ * ‖iteratedFderivWithin 𝕜 (n - i) g s x‖ :=
+  by
+  let B : (F →L[𝕜] G) →L[𝕜] F →L[𝕜] G := ContinuousLinearMap.flip (ContinuousLinearMap.apply 𝕜 G)
+  have hB : ‖B‖ ≤ 1 :=
+    by
+    simp only [ContinuousLinearMap.op_norm_flip, ContinuousLinearMap.apply]
+    refine' ContinuousLinearMap.op_norm_le_bound _ zero_le_one fun f => _
+    simp only [ContinuousLinearMap.coe_id', id.def, one_mul]
+  exact B.norm_iterated_fderiv_within_le_of_bilinear_of_le_one hf hg hs hx hn hB
+#align norm_iterated_fderiv_within_clm_apply norm_iteratedFderivWithin_clm_apply
+
+theorem norm_iteratedFderiv_clm_apply {f : E → F →L[𝕜] G} {g : E → F} {N : ℕ∞} {n : ℕ}
+    (hf : ContDiff 𝕜 N f) (hg : ContDiff 𝕜 N g) (x : E) (hn : ↑n ≤ N) :
+    ‖iteratedFderiv 𝕜 n (fun y : E => (f y) (g y)) x‖ ≤
+      (Finset.range (n + 1)).Sum fun i : ℕ =>
+        ↑(n.choose i) * ‖iteratedFderiv 𝕜 i f x‖ * ‖iteratedFderiv 𝕜 (n - i) g x‖ :=
+  by
+  simp only [← iteratedFderivWithin_univ]
+  exact
+    norm_iteratedFderivWithin_clm_apply hf.cont_diff_on hg.cont_diff_on uniqueDiffOn_univ
+      (Set.mem_univ x) hn
+#align norm_iterated_fderiv_clm_apply norm_iteratedFderiv_clm_apply
+
+theorem norm_iteratedFderivWithin_clm_apply_const {f : E → F →L[𝕜] G} {c : F} {s : Set E} {x : E}
+    {N : ℕ∞} {n : ℕ} (hf : ContDiffOn 𝕜 N f s) (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) (hn : ↑n ≤ N) :
+    ‖iteratedFderivWithin 𝕜 n (fun y : E => (f y) c) s x‖ ≤
+      ‖c‖ * ‖iteratedFderivWithin 𝕜 n f s x‖ :=
+  by
+  let g : (F →L[𝕜] G) →L[𝕜] G := ContinuousLinearMap.apply 𝕜 G c
+  have h := g.norm_comp_continuous_multilinear_map_le (iteratedFderivWithin 𝕜 n f s x)
+  rw [← g.iterated_fderiv_within_comp_left hf hs hx hn] at h
+  refine' h.trans (mul_le_mul_of_nonneg_right _ (norm_nonneg _))
+  refine' g.op_norm_le_bound (norm_nonneg _) fun f => _
+  rw [ContinuousLinearMap.apply_apply, mul_comm]
+  exact f.le_op_norm c
+#align norm_iterated_fderiv_within_clm_apply_const norm_iteratedFderivWithin_clm_apply_const
+
+theorem norm_iteratedFderiv_clm_apply_const {f : E → F →L[𝕜] G} {c : F} {x : E} {N : ℕ∞} {n : ℕ}
+    (hf : ContDiff 𝕜 N f) (hn : ↑n ≤ N) :
+    ‖iteratedFderiv 𝕜 n (fun y : E => (f y) c) x‖ ≤ ‖c‖ * ‖iteratedFderiv 𝕜 n f x‖ :=
+  by
+  simp only [← iteratedFderivWithin_univ]
+  refine'
+    norm_iteratedFderivWithin_clm_apply_const hf.cont_diff_on uniqueDiffOn_univ (Set.mem_univ x) hn
+#align norm_iterated_fderiv_clm_apply_const norm_iteratedFderiv_clm_apply_const
+
+end Apply
 

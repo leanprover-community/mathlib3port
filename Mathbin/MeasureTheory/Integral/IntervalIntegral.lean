@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
+! leanprover-community/mathlib commit d4817f8867c368d6c5571f7379b3888aaec1d95a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2806,10 +2806,13 @@ theorem integral_deriv_eq_sub' (f) (hderiv : deriv f = f')
 
 
 /-- When the right derivative of a function is nonnegative, then it is automatically integrable. -/
-theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (Icc a b))
+theorem integrableOnDerivRightOfNonneg (hcont : ContinuousOn g (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivWithinAt g (g' x) (Ioi x) x)
     (g'pos : ∀ x ∈ Ioo a b, 0 ≤ g' x) : IntegrableOn g' (Ioc a b) :=
   by
+  by_cases hab : a < b
+  swap
+  · simp [Ioc_eq_empty hab]
   rw [integrableOn_Ioc_iff_integrableOn_Ioo]
   have meas_g' : AeMeasurable g' (volume.restrict (Ioo a b)) :=
     by
@@ -2834,8 +2837,8 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
   rw [A] at hf
   have B : (∫ x : ℝ in Ioo a b, F x) ≤ g b - g a :=
     by
-    rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hab]
-    apply integral_le_sub_of_has_deriv_right_of_le hab hcont hderiv _ fun x hx => _
+    rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hab.le]
+    apply integral_le_sub_of_has_deriv_right_of_le hab.le hcont hderiv _ fun x hx => _
     · rwa [integrableOn_Icc_iff_integrableOn_Ioo]
     · convert NNReal.coe_le_coe.2 (fle x)
       simp only [Real.norm_of_nonneg (g'pos x hx), coe_nnnorm]
@@ -2844,10 +2847,10 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
 
 /-- When the derivative of a function is nonnegative, then it is automatically integrable,
 Ioc version. -/
-theorem integrableOnDerivOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (Icc a b))
+theorem integrableOnDerivOfNonneg (hcont : ContinuousOn g (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (g'pos : ∀ x ∈ Ioo a b, 0 ≤ g' x) :
     IntegrableOn g' (Ioc a b) :=
-  integrableOnDerivRightOfNonneg hab hcont (fun x hx => (hderiv x hx).HasDerivWithinAt) g'pos
+  integrableOnDerivRightOfNonneg hcont (fun x hx => (hderiv x hx).HasDerivWithinAt) g'pos
 #align interval_integral.integrable_on_deriv_of_nonneg intervalIntegral.integrableOnDerivOfNonneg
 
 /-- When the derivative of a function is nonnegative, then it is automatically integrable,
@@ -2859,10 +2862,10 @@ theorem intervalIntegrableDerivOfNonneg (hcont : ContinuousOn g (uIcc a b))
   cases' le_total a b with hab hab
   · simp only [uIcc_of_le, min_eq_left, max_eq_right, hab, IntervalIntegrable, hab,
       Ioc_eq_empty_of_le, integrable_on_empty, and_true_iff] at hcont hderiv hpos⊢
-    exact integrable_on_deriv_of_nonneg hab hcont hderiv hpos
+    exact integrable_on_deriv_of_nonneg hcont hderiv hpos
   · simp only [uIcc_of_ge, min_eq_right, max_eq_left, hab, IntervalIntegrable, Ioc_eq_empty_of_le,
       integrable_on_empty, true_and_iff] at hcont hderiv hpos⊢
-    exact integrable_on_deriv_of_nonneg hab hcont hderiv hpos
+    exact integrable_on_deriv_of_nonneg hcont hderiv hpos
 #align interval_integral.interval_integrable_deriv_of_nonneg intervalIntegral.intervalIntegrableDerivOfNonneg
 
 /-!

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Patrick Massot, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.basic
-! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
+! leanprover-community/mathlib commit 7dfe85833014fb54258a228081ebb76b7e96ec98
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ open Bundle Set
 
 open Classical Bundle
 
-variable (R 𝕜 : Type _) {B : Type _} (F : Type _) (E : B → Type _)
+variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _)
 
 section TopologicalVectorSpace
 
@@ -653,7 +653,7 @@ instance addCommGroupFiber [AddCommGroup F] : ∀ x : B, AddCommGroup (Z.Fiber x
 
 /-- The projection from the total space of a fiber bundle core, on its base. -/
 @[reducible, simp, mfld_simps]
-def proj : TotalSpace Z.Fiber → B :=
+protected def proj : TotalSpace Z.Fiber → B :=
   TotalSpace.proj
 #align vector_bundle_core.proj VectorBundleCore.proj
 
@@ -661,7 +661,7 @@ def proj : TotalSpace Z.Fiber → B :=
 It is by definition equal to `bundle.total_space Z.fiber`, a.k.a. `Σ x, Z.fiber x` but with a
 different name for typeclass inference. -/
 @[nolint unused_arguments, reducible]
-def TotalSpace :=
+protected def TotalSpace :=
   Bundle.TotalSpace Z.Fiber
 #align vector_bundle_core.total_space VectorBundleCore.TotalSpace
 
@@ -808,6 +808,49 @@ theorem continuous_proj : Continuous Z.proj :=
 theorem isOpenMap_proj : IsOpenMap Z.proj :=
   FiberBundleCore.isOpenMap_proj Z
 #align vector_bundle_core.is_open_map_proj VectorBundleCore.isOpenMap_proj
+
+variable {i j}
+
+@[simp, mfld_simps]
+theorem localTriv_continuousLinearMapAt {b : B} (hb : b ∈ Z.baseSet i) :
+    (Z.localTriv i).continuousLinearMapAt R b = Z.coordChange (Z.indexAt b) i b :=
+  by
+  ext1 v
+  rw [(Z.local_triv i).continuousLinearMapAt_apply R, (Z.local_triv i).coe_linearMapAt_of_mem]
+  exacts[rfl, hb]
+#align vector_bundle_core.local_triv_continuous_linear_map_at VectorBundleCore.localTriv_continuousLinearMapAt
+
+@[simp, mfld_simps]
+theorem trivializationAt_continuousLinearMapAt {b₀ b : B}
+    (hb : b ∈ (trivializationAt F Z.Fiber b₀).baseSet) :
+    (trivializationAt F Z.Fiber b₀).continuousLinearMapAt R b =
+      Z.coordChange (Z.indexAt b) (Z.indexAt b₀) b :=
+  Z.localTriv_continuousLinearMapAt hb
+#align vector_bundle_core.trivialization_at_continuous_linear_map_at VectorBundleCore.trivializationAt_continuousLinearMapAt
+
+@[simp, mfld_simps]
+theorem localTriv_symmL {b : B} (hb : b ∈ Z.baseSet i) :
+    (Z.localTriv i).symmL R b = Z.coordChange i (Z.indexAt b) b :=
+  by
+  ext1 v
+  rw [(Z.local_triv i).symmL_apply R, (Z.local_triv i).symm_apply]
+  exacts[rfl, hb]
+#align vector_bundle_core.local_triv_symmL VectorBundleCore.localTriv_symmL
+
+@[simp, mfld_simps]
+theorem trivializationAt_symmL {b₀ b : B} (hb : b ∈ (trivializationAt F Z.Fiber b₀).baseSet) :
+    (trivializationAt F Z.Fiber b₀).symmL R b = Z.coordChange (Z.indexAt b₀) (Z.indexAt b) b :=
+  Z.localTriv_symmL hb
+#align vector_bundle_core.trivialization_at_symmL VectorBundleCore.trivializationAt_symmL
+
+@[simp, mfld_simps]
+theorem trivializationAt_coordChange_eq {b₀ b₁ b : B}
+    (hb : b ∈ (trivializationAt F Z.Fiber b₀).baseSet ∩ (trivializationAt F Z.Fiber b₁).baseSet)
+    (v : F) :
+    (trivializationAt F Z.Fiber b₀).coordChangeL R (trivializationAt F Z.Fiber b₁) b v =
+      Z.coordChange (Z.indexAt b₀) (Z.indexAt b₁) b v :=
+  Z.localTriv_coordChange_eq _ _ hb v
+#align vector_bundle_core.trivialization_at_coord_change_eq VectorBundleCore.trivializationAt_coordChange_eq
 
 end VectorBundleCore
 

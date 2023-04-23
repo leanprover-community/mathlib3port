@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.tangent
-! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
+! leanprover-community/mathlib commit 7dfe85833014fb54258a228081ebb76b7e96ec98
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,11 +169,9 @@ does not pick wrong instances. In this section, we record the right instances fo
 them, noting in particular that the tangent bundle is a smooth manifold. -/
 section
 
-attribute [local reducible] TangentSpace
-
 variable {M} (x : M)
 
-instance : Module 𝕜 (TangentSpace I x) := by infer_instance
+instance : Module 𝕜 (TangentSpace I x) := by delta_instance tangent_space
 
 instance : Inhabited (TangentSpace I x) :=
   ⟨0⟩
@@ -267,6 +265,45 @@ theorem coe_chartAt_symm_fst (p : H × E) (q : TM) :
   rfl
 #align tangent_bundle.coe_chart_at_symm_fst TangentBundle.coe_chartAt_symm_fst
 
+@[simp, mfld_simps]
+theorem trivializationAt_continuousLinearMapAt {b₀ b : M}
+    (hb : b ∈ (trivializationAt E (TangentSpace I) b₀).baseSet) :
+    (trivializationAt E (TangentSpace I) b₀).continuousLinearMapAt 𝕜 b =
+      (tangentBundleCore I M).coordChange (achart H b) (achart H b₀) b :=
+  (tangentBundleCore I M).localTriv_continuousLinearMapAt hb
+#align tangent_bundle.trivialization_at_continuous_linear_map_at TangentBundle.trivializationAt_continuousLinearMapAt
+
+@[simp, mfld_simps]
+theorem trivializationAt_symmL {b₀ b : M}
+    (hb : b ∈ (trivializationAt E (TangentSpace I) b₀).baseSet) :
+    (trivializationAt E (TangentSpace I) b₀).symmL 𝕜 b =
+      (tangentBundleCore I M).coordChange (achart H b₀) (achart H b) b :=
+  (tangentBundleCore I M).localTriv_symmL hb
+#align tangent_bundle.trivialization_at_symmL TangentBundle.trivializationAt_symmL
+
+@[simp, mfld_simps]
+theorem coordChange_model_space (b b' x : F) :
+    (tangentBundleCore 𝓘(𝕜, F) F).coordChange (achart F b) (achart F b') x = 1 := by
+  simpa only [tangentBundleCore_coordChange, mfld_simps] using
+    fderivWithin_id uniqueDiffWithinAt_univ
+#align tangent_bundle.coord_change_model_space TangentBundle.coordChange_model_space
+
+@[simp, mfld_simps]
+theorem symmL_model_space (b b' : F) :
+    (trivializationAt F (TangentSpace 𝓘(𝕜, F)) b).symmL 𝕜 b' = (1 : F →L[𝕜] F) :=
+  by
+  rw [TangentBundle.trivializationAt_symmL, coord_change_model_space]
+  apply mem_univ
+#align tangent_bundle.symmL_model_space TangentBundle.symmL_model_space
+
+@[simp, mfld_simps]
+theorem continuousLinearMapAt_model_space (b b' : F) :
+    (trivializationAt F (TangentSpace 𝓘(𝕜, F)) b).continuousLinearMapAt 𝕜 b' = (1 : F →L[𝕜] F) :=
+  by
+  rw [TangentBundle.trivializationAt_continuousLinearMapAt, coord_change_model_space]
+  apply mem_univ
+#align tangent_bundle.continuous_linear_map_at_model_space TangentBundle.continuousLinearMapAt_model_space
+
 end TangentBundle
 
 instance tangentBundleCore.isSmooth : (tangentBundleCore I M).IsSmooth I :=
@@ -328,6 +365,13 @@ theorem tangentBundle_model_space_coe_chartAt_symm (p : TangentBundle I H) :
   simp_rw [LocalHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]
   rfl
 #align tangent_bundle_model_space_coe_chart_at_symm tangentBundle_model_space_coe_chartAt_symm
+
+theorem tangentBundleCore_coordChange_model_space (x x' z : H) :
+    (tangentBundleCore I H).coordChange (achart H x) (achart H x') z = ContinuousLinearMap.id 𝕜 E :=
+  by
+  ext v
+  exact (tangentBundleCore I H).coordChange_self (achart _ z) z (mem_univ _) v
+#align tangent_bundle_core_coord_change_model_space tangentBundleCore_coordChange_model_space
 
 variable (H)
 

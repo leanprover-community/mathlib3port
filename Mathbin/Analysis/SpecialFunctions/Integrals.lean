@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit 8c8c544bf24ced19b1e76c34bb3262bdae620f82
+! leanprover-community/mathlib commit d4817f8867c368d6c5571f7379b3888aaec1d95a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
       convert(Real.hasDerivAt_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
       field_simp [(by linarith : r + 1 ≠ 0)]
       ring
-    apply integrable_on_deriv_of_nonneg hc _ hderiv
+    apply integrable_on_deriv_of_nonneg _ hderiv
     · intro x hx
       apply rpow_nonneg_of_nonneg hx.1.le
     · refine' (continuous_on_id.rpow_const _).div_const _

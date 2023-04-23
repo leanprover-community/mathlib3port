@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.degeneracies
-! leanprover-community/mathlib commit ec1c7d810034d4202b0dd239112d1792be9f6fdc
+! leanprover-community/mathlib commit 4f81bc21e32048db7344b7867946e992cf5f68cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Tactic.FinCases
 /-!
 
 # Behaviour of P_infty with respect to degeneracies
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For any `X : simplicial_object C` where `C` is an abelian category,
 the projector `P_infty : K[X] ⟶ K[X]` is supposed to be the projection

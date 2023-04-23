@@ -2950,6 +2950,7 @@ import Mathbin.Topology.Covering
 import Mathbin.Topology.DenseEmbedding
 import Mathbin.Topology.DiscreteQuotient
 import Mathbin.Topology.ExtendFrom
+import Mathbin.Topology.ExtremallyDisconnected
 import Mathbin.Topology.FiberBundle.Basic
 import Mathbin.Topology.FiberBundle.Constructions
 import Mathbin.Topology.FiberBundle.IsHomeomorphicTrivialBundle
