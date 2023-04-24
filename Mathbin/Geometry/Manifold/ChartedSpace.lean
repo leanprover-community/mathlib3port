@@ -451,11 +451,11 @@ class ClosedUnderRestriction (G : StructureGroupoid H) : Prop where
 #align closed_under_restriction ClosedUnderRestriction
 -/
 
-#print closed_under_restriction' /-
-theorem closed_under_restriction' {G : StructureGroupoid H} [ClosedUnderRestriction G]
+#print closedUnderRestriction' /-
+theorem closedUnderRestriction' {G : StructureGroupoid H} [ClosedUnderRestriction G]
     {e : LocalHomeomorph H H} (he : e ∈ G) {s : Set H} (hs : IsOpen s) : e.restr s ∈ G :=
   ClosedUnderRestriction.closedUnderRestriction he s hs
-#align closed_under_restriction' closed_under_restriction'
+#align closed_under_restriction' closedUnderRestriction'
 -/
 
 #print idRestrGroupoid /-
@@ -520,7 +520,7 @@ theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
     apply structure_groupoid.le_iff.mpr
     rintro e ⟨s, hs, hes⟩
     refine' G.eq_on_source _ hes
-    convert closed_under_restriction' G.id_mem hs
+    convert closedUnderRestriction' G.id_mem hs
     change s = _ ∩ _
     rw [hs.interior_eq]
     simp only [mfld_simps]
@@ -1392,7 +1392,7 @@ instance [ClosedUnderRestriction G] : HasGroupoid s G
     rw [he, he']
     convert G.eq_on_source _
         (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
-    apply closed_under_restriction'
+    apply closedUnderRestriction'
     · exact G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')
     · exact preimage_open_of_open_symm (chart_at H x) s.2
 

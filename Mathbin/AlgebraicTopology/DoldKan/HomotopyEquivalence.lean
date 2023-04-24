@@ -93,11 +93,11 @@ def homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex {A : Type _} [C
     HomotopyEquiv ((normalizedMooreComplex A).obj Y) ((alternatingFaceMapComplex A).obj Y)
     where
   Hom := inclusionOfMooreComplexMap Y
-  inv := pInftyToNormalizedMooreComplex Y
+  inv := PInftyToNormalizedMooreComplex Y
   homotopyHomInvId := Homotopy.ofEq (splitMonoInclusionOfMooreComplexMap Y).id
   homotopyInvHomId :=
     Homotopy.trans
-      (Homotopy.ofEq (pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap Y))
+      (Homotopy.ofEq (PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap Y))
       (homotopyPInftyToId Y)
 #align algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex
 

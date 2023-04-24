@@ -309,6 +309,12 @@ instance OrderDual.isDirected_le [LE α] [IsDirected α (· ≥ ·)] : IsDirecte
 
 section Reflexive
 
+/- warning: directed_on.insert -> DirectedOn.insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {r : α -> α -> Prop}, (Reflexive.{succ u1} α r) -> (forall (a : α) {s : Set.{u1} α}, (DirectedOn.{u1} α r s) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Exists.{succ u1} α (fun (c : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c s) => And (r a c) (r b c))))) -> (DirectedOn.{u1} α r (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)))
+but is expected to have type
+  forall {α : Type.{u1}} {r : α -> α -> Prop}, (Reflexive.{succ u1} α r) -> (forall (a : α) {s : Set.{u1} α}, (DirectedOn.{u1} α r s) -> (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Exists.{succ u1} α (fun (c : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c s) (And (r a c) (r b c))))) -> (DirectedOn.{u1} α r (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)))
+Case conversion may be inaccurate. Consider using '#align directed_on.insert DirectedOn.insertₓ'. -/
 theorem DirectedOn.insert (h : Reflexive r) (a : α) {s : Set α} (hd : DirectedOn r s)
     (ha : ∀ b ∈ s, ∃ c ∈ s, a ≼ c ∧ b ≼ c) : DirectedOn r (insert a s) :=
   by
@@ -322,19 +328,25 @@ theorem DirectedOn.insert (h : Reflexive r) (a : α) {s : Set α} (hd : Directed
     exact ⟨w, Set.mem_insert_of_mem _ hws, hwr⟩
 #align directed_on.insert DirectedOn.insert
 
+#print directedOn_singleton /-
 theorem directedOn_singleton (h : Reflexive r) (a : α) : DirectedOn r ({a} : Set α) :=
   fun x hx y hy => ⟨x, hx, h _, hx.symm ▸ hy.symm ▸ h _⟩
 #align directed_on_singleton directedOn_singleton
+-/
 
+#print directedOn_pair /-
 theorem directedOn_pair (h : Reflexive r) {a b : α} (hab : a ≼ b) : DirectedOn r ({a, b} : Set α) :=
   (directedOn_singleton h _).insert h _ fun c hc => ⟨c, hc, hc.symm ▸ hab, h _⟩
 #align directed_on_pair directedOn_pair
+-/
 
+#print directedOn_pair' /-
 theorem directedOn_pair' (h : Reflexive r) {a b : α} (hab : a ≼ b) :
     DirectedOn r ({b, a} : Set α) := by
   rw [Set.pair_comm]
   apply directedOn_pair h hab
 #align directed_on_pair' directedOn_pair'
+-/
 
 end Reflexive
 
@@ -448,6 +460,7 @@ section ScottContinuous
 
 variable [Preorder α] {a : α}
 
+#print ScottContinuous /-
 /-- A function between preorders is said to be Scott continuous if it preserves `is_lub` on directed
 sets. It can be shown that a function is Scott continuous if and only if it is continuous wrt the
 Scott topology.
@@ -463,7 +476,9 @@ does not appear to play a significant role in the literature, so is omitted here
 def ScottContinuous [Preorder β] (f : α → β) : Prop :=
   ∀ ⦃d : Set α⦄, d.Nonempty → DirectedOn (· ≤ ·) d → ∀ ⦃a⦄, IsLUB d a → IsLUB (f '' d) (f a)
 #align scott_continuous ScottContinuous
+-/
 
+#print ScottContinuous.monotone /-
 protected theorem ScottContinuous.monotone [Preorder β] {f : α → β} (h : ScottContinuous f) :
     Monotone f := by
   intro a b hab
@@ -478,6 +493,7 @@ protected theorem ScottContinuous.monotone [Preorder β] {f : α → β} (h : Sc
   rw [Set.image_pair]
   exact Set.mem_insert _ _
 #align scott_continuous.monotone ScottContinuous.monotone
+-/
 
 end ScottContinuous
 

@@ -424,7 +424,7 @@ def Homotopic (f₀ f₁ : C(X, Y)) : Prop :=
 #align continuous_map.homotopic ContinuousMap.Homotopic
 -/
 
-namespace Homotopic
+namespace homotopic
 
 #print ContinuousMap.Homotopic.refl /-
 @[refl]
@@ -460,7 +460,7 @@ theorem equivalence : Equivalence (@Homotopic X Y _ _) :=
 #align continuous_map.homotopic.equivalence ContinuousMap.Homotopic.equivalence
 -/
 
-end Homotopic
+end homotopic
 
 #print ContinuousMap.HomotopyWith /-
 /--

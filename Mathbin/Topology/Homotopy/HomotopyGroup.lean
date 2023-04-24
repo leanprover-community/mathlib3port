@@ -135,7 +135,7 @@ def Homotopic (f g : GenLoop n x) : Prop :=
   f.toContinuousMap.HomotopicRel g.toContinuousMap (Cube.boundary n)
 #align gen_loop.homotopic GenLoop.Homotopic
 
-namespace Homotopic
+namespace homotopic
 
 section
 
@@ -166,7 +166,7 @@ instance setoid (n : ℕ) (x : X) : Setoid (GenLoop n x) :=
 
 end
 
-end Homotopic
+end homotopic
 
 end GenLoop
 

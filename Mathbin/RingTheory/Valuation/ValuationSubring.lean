@@ -988,7 +988,7 @@ variable {Γ : Type _} [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) 
 
 @[simp]
 theorem mem_unitGroup_iff : x ∈ v.ValuationSubring.unitGroup ↔ v x = 1 :=
-  (Valuation.IsEquiv_iff_val_eq_one _ _).mp (Valuation.isEquiv_valuation_valuationSubring _).symm
+  (Valuation.isEquiv_iff_val_eq_one _ _).mp (Valuation.isEquiv_valuation_valuationSubring _).symm
 #align valuation.mem_unit_group_iff Valuation.mem_unitGroup_iff
 
 end Valuation
