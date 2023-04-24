@@ -713,6 +713,12 @@ theorem Codisjoint.himp_inf_cancel_left (h : Codisjoint a b) : b ⇨ a ⊓ b = a
   rw [himp_inf_distrib, himp_self, inf_top_eq, h.himp_eq_right]
 #align codisjoint.himp_inf_cancel_left Codisjoint.himp_inf_cancel_left
 
+/- warning: codisjoint.himp_le_of_right_le -> Codisjoint.himp_le_of_right_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] {a : α} {b : α} {c : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))))) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))))) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHasHimp.{u1} α _inst_1) c b) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] {a : α} {b : α} {c : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))))) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))))) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) c b) a)
+Case conversion may be inaccurate. Consider using '#align codisjoint.himp_le_of_right_le Codisjoint.himp_le_of_right_leₓ'. -/
 /-- See `himp_le` for a stronger version in Boolean algebras. -/
 theorem Codisjoint.himp_le_of_right_le (hac : Codisjoint a c) (hba : b ≤ a) : c ⇨ b ≤ a :=
   (himp_le_himp_left hba).trans_eq hac.himp_eq_right
@@ -1294,6 +1300,12 @@ theorem Disjoint.sup_sdiff_cancel_right (h : Disjoint a b) : (a ⊔ b) \ b = a :
   rw [sup_sdiff, sdiff_self, sup_bot_eq, h.sdiff_eq_left]
 #align disjoint.sup_sdiff_cancel_right Disjoint.sup_sdiff_cancel_right
 
+/- warning: disjoint.le_sdiff_of_le_left -> Disjoint.le_sdiff_of_le_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] {a : α} {b : α} {c : α}, (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toOrderBot.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) a (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toHasSdiff.{u1} α _inst_1) b c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] {a : α} {b : α} {c : α}, (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toOrderBot.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) a (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) b c))
+Case conversion may be inaccurate. Consider using '#align disjoint.le_sdiff_of_le_left Disjoint.le_sdiff_of_le_leftₓ'. -/
 /-- See `le_sdiff` for a stronger version in generalised Boolean algebras. -/
 theorem Disjoint.le_sdiff_of_le_left (hac : Disjoint a c) (hab : a ≤ b) : a ≤ b \ c :=
   hac.sdiff_eq_left.ge.trans <| sdiff_le_sdiff_right hab

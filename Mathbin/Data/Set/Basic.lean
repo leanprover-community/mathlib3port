@@ -2842,10 +2842,22 @@ theorem disjoint_sdiff_right : Disjoint s (t \ s) :=
   disjoint_sdiff_self_right
 #align set.disjoint_sdiff_right Set.disjoint_sdiff_right
 
+/- warning: set.diff_union_diff_cancel -> Set.diff_union_diff_cancel is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) u t) -> (Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t u)) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s u))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) u t) -> (Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t u)) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s u))
+Case conversion may be inaccurate. Consider using '#align set.diff_union_diff_cancel Set.diff_union_diff_cancelₓ'. -/
 theorem diff_union_diff_cancel (hts : t ⊆ s) (hut : u ⊆ t) : s \ t ∪ t \ u = s \ u :=
   sdiff_sup_sdiff_cancel hts hut
 #align set.diff_union_diff_cancel Set.diff_union_diff_cancel
 
+/- warning: set.diff_diff_eq_sdiff_union -> Set.diff_diff_eq_sdiff_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) u s) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t u)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s t) u))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) u s) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t u)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) u))
+Case conversion may be inaccurate. Consider using '#align set.diff_diff_eq_sdiff_union Set.diff_diff_eq_sdiff_unionₓ'. -/
 theorem diff_diff_eq_sdiff_union (h : u ⊆ s) : s \ (t \ u) = s \ t ∪ u :=
   sdiff_sdiff_eq_sdiff_sup h
 #align set.diff_diff_eq_sdiff_union Set.diff_diff_eq_sdiff_union

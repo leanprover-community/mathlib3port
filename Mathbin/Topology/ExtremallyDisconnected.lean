@@ -49,16 +49,19 @@ variable (X : Type u) [TopologicalSpace X]
 
 open Function
 
+#print ExtremallyDisconnected /-
 /-- An extremally disconnected topological space is a space
 in which the closure of every open set is open. -/
 class ExtremallyDisconnected : Prop where
   open_closure : ∀ U : Set X, IsOpen U → IsOpen (closure U)
 #align extremally_disconnected ExtremallyDisconnected
+-/
 
 section
 
 include X
 
+#print CompactT2.Projective /-
 /-- The assertion `compact_t2.projective` states that given continuous maps
 `f : X → Z` and `g : Y → Z` with `g` surjective between `t_2`, compact topological spaces,
 there exists a continuous lift `h : X → Y`, such that `f = g ∘ h`. -/
@@ -68,11 +71,13 @@ def CompactT2.Projective : Prop :=
       ∀ {f : X → Z} {g : Y → Z} (hf : Continuous f) (hg : Continuous g) (g_sur : surjective g),
         ∃ h : X → Y, Continuous h ∧ g ∘ h = f
 #align compact_t2.projective CompactT2.Projective
+-/
 
 end
 
 variable {X}
 
+#print StoneCech.projective /-
 theorem StoneCech.projective [DiscreteTopology X] : CompactT2.Projective (StoneCech X) :=
   by
   intro Y Z _tsY _tsZ _csY _t2Y _csZ _csZ f g hf hg g_sur
@@ -85,9 +90,11 @@ theorem StoneCech.projective [DiscreteTopology X] : CompactT2.Projective (StoneC
   refine' ⟨h, hh, dense_range_stone_cech_unit.equalizer (hg.comp hh) hf _⟩
   rw [comp.assoc, stoneCechExtend_extends ht, ← comp.assoc, hs, comp.left_id]
 #align stone_cech.projective StoneCech.projective
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CompactT2.Projective.extremallyDisconnected /-
 protected theorem CompactT2.Projective.extremallyDisconnected [CompactSpace X] [T2Space X]
     (h : CompactT2.Projective X) : ExtremallyDisconnected X :=
   by
@@ -124,4 +131,5 @@ protected theorem CompactT2.Projective.extremallyDisconnected [CompactSpace X] [
   · rw [← hφ₁ x]
     exact hx.1
 #align compact_t2.projective.extremally_disconnected CompactT2.Projective.extremallyDisconnected
+-/
 
