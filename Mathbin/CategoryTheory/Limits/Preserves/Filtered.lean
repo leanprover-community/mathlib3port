@@ -52,7 +52,7 @@ class PreservesFilteredColimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
 #align category_theory.limits.preserves_filtered_colimits CategoryTheory.Limits.PreservesFilteredColimits
 -/
 
-attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
+attribute [instance 100] preserves_filtered_colimits.preserves_filtered_colimits
 
 #print CategoryTheory.Limits.PreservesColimits.preservesFilteredColimits /-
 instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C ⥤ D)
@@ -78,7 +78,7 @@ class PreservesCofilteredLimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
 #align category_theory.limits.preserves_cofiltered_limits CategoryTheory.Limits.PreservesCofilteredLimits
 -/
 
-attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
+attribute [instance 100] preserves_cofiltered_limits.preserves_cofiltered_limits
 
 #print CategoryTheory.Limits.PreservesLimits.preservesCofilteredLimits /-
 instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ D)

@@ -596,7 +596,7 @@ theorem mem_lift_of_splits_of_roots_mem_range (R : Type _) [CommRing R] [Algebra
 
 section UFD
 
-attribute [local instance] PrincipalIdealRing.to_uniqueFactorizationMonoid
+attribute [local instance 10] PrincipalIdealRing.to_uniqueFactorizationMonoid
 
 -- mathport name: «expr ~ᵤ »
 local infixl:50 " ~ᵤ " => Associated

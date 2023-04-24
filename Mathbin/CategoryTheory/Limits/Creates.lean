@@ -148,7 +148,7 @@ abbrev CreatesColimits (F : C ⥤ D) :=
 #align category_theory.creates_colimits CategoryTheory.CreatesColimits
 -/
 
-attribute [instance]
+attribute [instance 100]
   creates_limits_of_shape.creates_limit creates_limits_of_size.creates_limits_of_shape creates_colimits_of_shape.creates_colimit creates_colimits_of_size.creates_colimits_of_shape
 
 #print CategoryTheory.liftLimit /-

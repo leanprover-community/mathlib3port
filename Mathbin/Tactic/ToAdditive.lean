@@ -42,7 +42,7 @@ section PerformanceHack
 attribute [local semireducible] reflected
 
 /-- Temporarily change the `has_reflect` instance for `name`. -/
-@[local instance]
+@[local instance 9000]
 unsafe def hacky_name_reflect : has_reflect Name := fun n => q((id $(expr.const n []) : Name))
 #align to_additive.hacky_name_reflect to_additive.hacky_name_reflect
 

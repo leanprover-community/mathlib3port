@@ -503,7 +503,7 @@ universe u v w
 
 variable {G : Type u} {α : Type v} {β : Type w} [Group G]
 
-attribute [local instance] Subtype.fintype setFintype Classical.propDecidable
+attribute [local instance 10] Subtype.fintype setFintype Classical.propDecidable
 
 theorem QuotientGroup.card_preimage_mk [Fintype G] (s : Subgroup G) (t : Set (G ⧸ s)) :
     Fintype.card (QuotientGroup.mk ⁻¹' t) = Fintype.card s * Fintype.card t := by

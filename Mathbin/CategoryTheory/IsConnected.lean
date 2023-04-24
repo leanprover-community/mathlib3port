@@ -86,7 +86,7 @@ class IsConnected (J : Type u₁) [Category.{v₁} J] extends IsPreconnected J :
 #align category_theory.is_connected CategoryTheory.IsConnected
 -/
 
-attribute [instance] is_connected.is_nonempty
+attribute [instance 100] is_connected.is_nonempty
 
 variable {J : Type u₁} [Category.{v₁} J]
 

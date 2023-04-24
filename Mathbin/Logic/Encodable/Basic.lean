@@ -46,7 +46,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 open Option List Nat Function
 
 #print Encodable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
@@ -629,7 +629,7 @@ instance : Countable ℕ+ :=
 -- short-circuit instance search
 section Ulower
 
-attribute [local instance] Encodable.decidableRangeEncode
+attribute [local instance 100] Encodable.decidableRangeEncode
 
 #print Ulower /-
 /-- `ulower α : Type` is an equivalent type in the lowest universe, given `encodable α`. -/

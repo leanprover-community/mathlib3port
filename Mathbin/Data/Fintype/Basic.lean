@@ -54,7 +54,7 @@ universe u v
 variable {α β γ : Type _}
 
 #print Fintype /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
@@ -1230,7 +1230,7 @@ theorem Fin.univ_succAbove (n : ℕ) (p : Fin (n + 1)) :
 -/
 
 #print Unique.fintype /-
-@[instance]
+@[instance 10]
 def Unique.fintype {α : Type _} [Unique α] : Fintype α :=
   Fintype.ofSubsingleton default
 #align unique.fintype Unique.fintype

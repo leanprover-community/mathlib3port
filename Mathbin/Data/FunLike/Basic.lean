@@ -134,7 +134,7 @@ instead of linearly increasing the work per `my_hom`-related declaration.
 
 -- This instance should have low priority, to ensure we follow the chain
 -- `fun_like → has_coe_to_fun`
-attribute [instance] coeFnTrans
+attribute [instance 10] coeFnTrans
 
 /- warning: fun_like -> FunLike is a dubious translation:
 lean 3 declaration is

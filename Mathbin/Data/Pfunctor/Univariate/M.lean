@@ -739,7 +739,7 @@ open PFunctor.Approx
 
 variable {F}
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 0] Classical.propDecidable
 
 #print PFunctor.M.ext /-
 theorem ext [Inhabited (M F)] (x y : M F) (H : ∀ ps : Path F, iselect ps x = iselect ps y) :

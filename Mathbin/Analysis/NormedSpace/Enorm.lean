@@ -38,7 +38,7 @@ normed space, extended norm
 
 noncomputable section
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 1001] Classical.propDecidable
 
 open ENNReal
 

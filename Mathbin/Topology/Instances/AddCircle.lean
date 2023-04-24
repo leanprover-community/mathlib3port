@@ -540,7 +540,7 @@ end AddCircle
 
 attribute [local instance] Real.fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:328:31: unsupported: @[derive] abbrev -/
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=
   AddCircle (1 : ℝ)

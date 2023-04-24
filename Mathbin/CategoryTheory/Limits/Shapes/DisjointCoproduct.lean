@@ -135,7 +135,7 @@ class CoproductsDisjoint (C : Type u) [Category.{v} C] where
 #align category_theory.limits.coproducts_disjoint CategoryTheory.Limits.CoproductsDisjoint
 -/
 
-attribute [instance] coproducts_disjoint.coproduct_disjoint
+attribute [instance 999] coproducts_disjoint.coproduct_disjoint
 
 #print CategoryTheory.Limits.initialMonoClass_of_disjoint_coproducts /-
 /-- If `C` has disjoint coproducts, any morphism out of initial is mono. Note it isn't true in

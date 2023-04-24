@@ -270,7 +270,7 @@ theorem liftOn'_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p
   exact lift_on_condition_of_lift_on'_condition @H
 #align ratfunc.lift_on'_mk Ratfunc.liftOn'_mk
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
 

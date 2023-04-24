@@ -1131,7 +1131,7 @@ theorem IsClosed.isCompact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsC
 -/
 
 #print NoncompactSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (univ : Set α)
@@ -2606,7 +2606,7 @@ theorem isClosed_irreducibleComponent {x : α} : IsClosed (irreducibleComponent 
 -/
 
 #print PreirreducibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isPreirreducible_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isPreirreducible_univ] [] -/
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   isPreirreducible_univ : IsPreirreducible (univ : Set α)
@@ -2614,7 +2614,7 @@ class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
 -/
 
 #print IrreducibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where
@@ -2623,7 +2623,7 @@ class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends Preirreducibl
 -/
 
 -- see Note [lower instance priority]
-attribute [instance] IrreducibleSpace.to_nonempty
+attribute [instance 50] IrreducibleSpace.to_nonempty
 
 /- warning: irreducible_space.is_irreducible_univ -> IrreducibleSpace.isIrreducible_univ is a dubious translation:
 lean 3 declaration is

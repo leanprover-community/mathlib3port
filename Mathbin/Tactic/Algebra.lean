@@ -28,7 +28,7 @@ section Performance
 -- see Note [user attribute parameters]
 attribute [local semireducible] reflected
 
-@[local instance]
+@[local instance 9000]
 private unsafe def reflect_name_list : has_reflect (List Name)
   | ns => q((id $(expr.mk_app q(Prop) <| ns.map flip expr.const []) : List Name))
 #align tactic.reflect_name_list tactic.reflect_name_list

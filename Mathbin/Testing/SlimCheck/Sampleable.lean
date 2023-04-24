@@ -120,7 +120,7 @@ def ShrinkFn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // SizeofLt y x }
 #align slim_check.shrink_fn SlimCheck.ShrinkFn
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
@@ -131,11 +131,11 @@ class Sampleable where
     LazyList.nil
 #align slim_check.sampleable SlimCheck.Sampleable
 
-attribute [instance] hasWellFoundedOfHasSizeof defaultHasSizeof
+attribute [instance 100] hasWellFoundedOfHasSizeof defaultHasSizeof
 
-attribute [instance] sampleable.wf
+attribute [instance 200] sampleable.wf
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
@@ -146,7 +146,7 @@ class SampleableFunctor (F : Type u → Type v) [Functor F] where
   pRepr : ∀ α, Repr α → Repr (F α)
 #align slim_check.sampleable_functor SlimCheck.SampleableFunctor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
@@ -171,8 +171,8 @@ lean 3 declaration is
 but is expected to have type
   Sort.{u1} -> Sort.{max u1 (succ (succ u2))}
 Case conversion may be inaccurate. Consider using '#align slim_check.sampleable_ext SlimCheck.SampleableExtₓ'. -/
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
@@ -191,7 +191,7 @@ class SampleableExt (α : Sort u) where
   shrink : ShrinkFn proxy_repr
 #align slim_check.sampleable_ext SlimCheck.SampleableExt
 
-attribute [instance] sampleable_ext.p_repr sampleable_ext.wf
+attribute [instance 100] sampleable_ext.p_repr sampleable_ext.wf
 
 open Nat LazyList
 
@@ -347,7 +347,7 @@ def Int.hasSizeof : SizeOf ℤ :=
   ⟨Int.natAbs⟩
 #align slim_check.int.has_sizeof SlimCheck.Int.hasSizeof
 
-attribute [local instance] int.has_sizeof
+attribute [local instance 2000] int.has_sizeof
 
 instance Int.sampleable : Sampleable ℤ where
   wf := _

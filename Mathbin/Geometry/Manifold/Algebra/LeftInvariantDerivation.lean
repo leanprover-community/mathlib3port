@@ -33,7 +33,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [HasSmoothMul I G] (g h : G)
 
 -- Generate trivial has_sizeof instance. It prevents weird type class inference timeout problems
-@[local nolint instance_priority, local instance]
+@[local nolint instance_priority, local instance 10000]
 private def disable_has_sizeof {α} : SizeOf α :=
   ⟨fun _ => 0⟩
 #align disable_has_sizeof disable_has_sizeof

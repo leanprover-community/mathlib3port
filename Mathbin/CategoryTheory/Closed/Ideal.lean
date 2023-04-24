@@ -115,7 +115,7 @@ theorem reflective_products [HasFiniteProducts C] [Reflective i] : HasFiniteProd
   ⟨fun n => hasLimitsOfShape_of_reflective i⟩
 #align category_theory.reflective_products CategoryTheory.reflective_products
 
-attribute [local instance] reflective_products
+attribute [local instance 10] reflective_products
 
 open CartesianClosed
 

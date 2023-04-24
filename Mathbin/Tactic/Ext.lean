@@ -206,7 +206,7 @@ see Note [user attribute parameters]
 
 attribute [local semireducible] reflected
 
-@[local instance]
+@[local instance 9000]
 private unsafe def hacky_name_reflect : has_reflect Name := fun n =>
   q((id $(expr.const n []) : Name))
 #align hacky_name_reflect hacky_name_reflect

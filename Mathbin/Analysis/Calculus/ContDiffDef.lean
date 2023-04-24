@@ -167,7 +167,7 @@ open Classical BigOperators NNReal Topology
 -- mathport name: «expr∞»
 local notation "∞" => (⊤ : ℕ∞)
 
-attribute [local instance]
+attribute [local instance 1001]
   NormedAddCommGroup.toAddCommGroup NormedSpace.toModule' AddCommGroup.toAddCommMonoid
 
 open Set Fin Filter Function

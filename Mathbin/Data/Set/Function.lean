@@ -2474,7 +2474,7 @@ namespace Function
 
 variable [Nonempty α] {s : Set α} {f : α → β} {a : α} {b : β}
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 #print Function.invFunOn /-
 /-- Construct the inverse for a function `f` on domain `s`. This function is a right inverse of `f`

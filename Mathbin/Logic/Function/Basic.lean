@@ -738,7 +738,7 @@ theorem LeftInverse.eq_rightInverse {f : α → β} {g₁ g₂ : β → α} (h�
     
 #align function.left_inverse.eq_right_inverse Function.LeftInverse.eq_rightInverse
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 #print Function.partialInv /-
 /-- We can use choice to construct explicitly a partial inverse for
@@ -784,7 +784,7 @@ section InvFun
 
 variable {α β : Sort _} [Nonempty α] {f : α → β} {a : α} {b : β}
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 #print Function.invFun /-
 /-- The inverse of a function (which is a left inverse if `f` is injective
@@ -1213,7 +1213,7 @@ section Extend
 
 noncomputable section
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 variable {α β γ : Sort _} {f : α → β}
 
@@ -1686,7 +1686,7 @@ end Injective2
 
 section Sometimes
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 #print Function.sometimes /-
 /-- `sometimes f` evaluates to some value of `f`, if it exists. This function is especially

@@ -234,7 +234,7 @@ protected def setoid (α : Type _) [Monoid α] : Setoid α
 
 end IsConj
 
-attribute [local instance] IsConj.setoid
+attribute [local instance 100] IsConj.setoid
 
 #print ConjClasses /-
 /-- The quotient type of conjugacy classes of a group. -/

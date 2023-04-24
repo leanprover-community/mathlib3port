@@ -33,7 +33,7 @@ namespace CategoryTheory.NormalMonoCategory
 
 variable [HasFiniteProducts C] [HasKernels C] [NormalMonoCategory C]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalMonoCategory.pullback_of_mono /-
 /-- The pullback of two monomorphisms exists. -/
 irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] [Mono b] :
@@ -116,7 +116,7 @@ private abbrev P {X Y : C} (f g : X ⟶ Y) [Mono (prod.lift (𝟙 X) f)] [Mono (
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
 #align category_theory.normal_mono_category.P category_theory.normal_mono_category.P
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalMonoCategory.hasLimit_parallelPair /-
 /-- The equalizer of `f` and `g` exists. -/
 irreducible_def hasLimit_parallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
@@ -203,7 +203,7 @@ namespace CategoryTheory.NormalEpiCategory
 
 variable [HasFiniteCoproducts C] [HasCokernels C] [NormalEpiCategory C]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalEpiCategory.pushout_of_epi /-
 /-- The pushout of two epimorphisms exists. -/
 irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Epi b] :
@@ -288,7 +288,7 @@ private abbrev Q {X Y : C} (f g : X ⟶ Y) [Epi (coprod.desc (𝟙 Y) f)] [Epi (
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
 #align category_theory.normal_epi_category.Q category_theory.normal_epi_category.Q
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalEpiCategory.hasColimit_parallelPair /-
 /-- The coequalizer of `f` and `g` exists. -/
 irreducible_def hasColimit_parallelPair {X Y : C} (f g : X ⟶ Y) : HasColimit (parallelPair f g) :=

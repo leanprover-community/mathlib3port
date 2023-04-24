@@ -400,7 +400,7 @@ def sumAlgEquiv : MvPolynomial (Sum S₁ S₂) R ≃ₐ[R] MvPolynomial S₁ (Mv
 section
 
 -- this speeds up typeclass search in the lemma below
-attribute [local instance] IsScalarTower.right
+attribute [local instance 2000] IsScalarTower.right
 
 #print MvPolynomial.optionEquivLeft /-
 /-- The algebra isomorphism between multivariable polynomials in `option S₁` and

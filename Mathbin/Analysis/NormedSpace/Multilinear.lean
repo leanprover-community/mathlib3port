@@ -65,7 +65,7 @@ open BigOperators NNReal
 
 open Finset Metric
 
-attribute [local instance]
+attribute [local instance 1001]
   AddCommGroup.toAddCommMonoid NormedAddCommGroup.toAddCommGroup NormedSpace.toModule'
 
 /-!

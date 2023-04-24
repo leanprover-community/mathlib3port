@@ -124,7 +124,7 @@ instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α 
 #align nontrivial.to_nonempty Nontrivial.to_nonempty
 -/
 
-attribute [instance] instNonempty
+attribute [instance 500] instNonempty
 
 #print nontrivialPSumUnique /-
 /-- An inhabited type is either nontrivial, or has a unique element. -/

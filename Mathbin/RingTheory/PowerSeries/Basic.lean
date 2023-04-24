@@ -2117,7 +2117,7 @@ namespace PowerSeries
 
 variable {R : Type _}
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 1] Classical.propDecidable
 
 noncomputable section
 

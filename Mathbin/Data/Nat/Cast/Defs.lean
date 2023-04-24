@@ -110,9 +110,9 @@ If `coe_trans` is tried first, then `nat.cast_coe` doesn't get a chance to apply
 -/
 
 
-attribute [instance] coeBase
+attribute [instance 950] coeBase
 
-attribute [instance] coeTrans
+attribute [instance 500] coeTrans
 
 namespace Nat
 

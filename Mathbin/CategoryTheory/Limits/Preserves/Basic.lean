@@ -128,7 +128,7 @@ abbrev PreservesColimits (F : C ⥤ D) :=
 #align category_theory.limits.preserves_colimits CategoryTheory.Limits.PreservesColimits
 -/
 
-attribute [instance]
+attribute [instance 100]
   preserves_limits_of_shape.preserves_limit preserves_limits_of_size.preserves_limits_of_shape preserves_colimits_of_shape.preserves_colimit preserves_colimits_of_size.preserves_colimits_of_shape
 
 /- warning: category_theory.limits.is_limit_of_preserves -> CategoryTheory.Limits.isLimitOfPreserves is a dubious translation:

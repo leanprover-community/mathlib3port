@@ -371,7 +371,7 @@ namespace LinearMap
 
 variable [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] [FiniteDimensional 𝕜 G]
 
-attribute [local instance] FiniteDimensional.complete
+attribute [local instance 20] FiniteDimensional.complete
 
 /-- The adjoint of an operator from the finite-dimensional inner product space E to the finite-
 dimensional inner product space F. -/

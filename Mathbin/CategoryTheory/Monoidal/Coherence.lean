@@ -102,7 +102,7 @@ instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftOb
     where lift := LiftHom.lift f ⊗ LiftHom.lift g
 #align category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.

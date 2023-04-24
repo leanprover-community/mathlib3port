@@ -191,9 +191,9 @@ def hasInf : Inf α :=
 #align boolean_ring.has_inf BooleanRing.hasInf
 
 scoped[-- Note [lower instance priority]
-BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
+BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.hasSup
 
-scoped[BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
+scoped[BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.hasInf
 
 theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a :=
   by
@@ -279,7 +279,7 @@ def toBooleanAlgebra : BooleanAlgebra α :=
       rw [← add_assoc, add_self] }
 #align boolean_ring.to_boolean_algebra BooleanRing.toBooleanAlgebra
 
-scoped[BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.toBooleanAlgebra
+scoped[BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.toBooleanAlgebra
 
 end BooleanRing
 
@@ -499,7 +499,8 @@ def BooleanAlgebra.toBooleanRing : BooleanRing α :=
 #align boolean_algebra.to_boolean_ring BooleanAlgebra.toBooleanRing
 
 scoped[BooleanRingOfBooleanAlgebra]
-  attribute [instance] GeneralizedBooleanAlgebra.toNonUnitalCommRing BooleanAlgebra.toBooleanRing
+  attribute [instance 100]
+    GeneralizedBooleanAlgebra.toNonUnitalCommRing BooleanAlgebra.toBooleanRing
 
 instance : BooleanRing (AsBoolring α) :=
   @BooleanAlgebra.toBooleanRing α _

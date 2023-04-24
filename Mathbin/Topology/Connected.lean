@@ -1086,7 +1086,7 @@ class ConnectedSpace (α : Type u) [TopologicalSpace α] extends PreconnectedSpa
 #align connected_space ConnectedSpace
 -/
 
-attribute [instance] ConnectedSpace.to_nonempty
+attribute [instance 50] ConnectedSpace.to_nonempty
 
 #print isConnected_univ /-
 -- see Note [lower instance priority]
@@ -2013,7 +2013,7 @@ alias isTotallyDisconnected_of_isTotallySeparated ← IsTotallySeparated.isTotal
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.isTotallyDisconnected
 
 #print TotallySeparatedSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where

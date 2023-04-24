@@ -51,7 +51,7 @@ class MonoidalClosed (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] wher
 #align category_theory.monoidal_closed CategoryTheory.MonoidalClosed
 -/
 
-attribute [instance] monoidal_closed.closed'
+attribute [instance 100] monoidal_closed.closed'
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 

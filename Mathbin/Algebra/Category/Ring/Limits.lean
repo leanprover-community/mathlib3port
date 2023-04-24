@@ -104,7 +104,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v} SemiRing.{max v u} :=
   {
@@ -233,7 +233,7 @@ def limitConeIsLimit (F : J ⥤ CommSemiRing.{max v u}) : IsLimit (limitCone F) 
   liftedLimitIsLimit _
 #align CommSemiRing.limit_cone_is_limit CommSemiRing.limitConeIsLimit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommSemiRing.{max v u} :=
   {
@@ -331,7 +331,7 @@ def limitConeIsLimit (F : J ⥤ RingCat.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 #align Ring.limit_cone_is_limit RingCat.limitConeIsLimit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
   {
@@ -458,7 +458,7 @@ def limitConeIsLimit (F : J ⥤ CommRingCat.{max v u}) : IsLimit (limitCone F) :
   liftedLimitIsLimit _
 #align CommRing.limit_cone_is_limit CommRingCat.limitConeIsLimit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 /-- The category of commutative rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
   {

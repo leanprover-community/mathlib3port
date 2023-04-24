@@ -22,7 +22,7 @@ import Mathbin.Data.Fintype.Units
 
 variable {α : Type _} [Monoid α]
 
-attribute [local instance] IsConj.setoid
+attribute [local instance 100] IsConj.setoid
 
 instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
   Quotient.fintype (IsConj.setoid α)

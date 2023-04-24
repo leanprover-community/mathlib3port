@@ -1536,7 +1536,7 @@ class HasCokernels : Prop where
 #align category_theory.limits.has_cokernels CategoryTheory.Limits.HasCokernels
 -/
 
-attribute [instance] has_kernels.has_limit has_cokernels.has_colimit
+attribute [instance 100] has_kernels.has_limit has_cokernels.has_colimit
 
 #print CategoryTheory.Limits.hasKernels_of_hasEqualizers /-
 instance (priority := 100) hasKernels_of_hasEqualizers [HasEqualizers C] : HasKernels C where

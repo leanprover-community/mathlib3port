@@ -87,7 +87,7 @@ structure ProjectiveResolution (Z : C) where
 
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where
@@ -106,7 +106,7 @@ class HasProjectiveResolutions : Prop where
   out : ∀ Z : C, HasProjectiveResolution Z
 #align category_theory.has_projective_resolutions CategoryTheory.HasProjectiveResolutions
 
-attribute [instance] has_projective_resolutions.out
+attribute [instance 100] has_projective_resolutions.out
 
 end
 

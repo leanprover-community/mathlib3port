@@ -505,7 +505,7 @@ class HasImages : Prop where
 #align category_theory.limits.has_images CategoryTheory.Limits.HasImages
 -/
 
-attribute [instance] has_images.has_image
+attribute [instance 100] has_images.has_image
 
 end
 
@@ -1055,7 +1055,7 @@ class HasImageMaps where
 #align category_theory.limits.has_image_maps CategoryTheory.Limits.HasImageMaps
 -/
 
-attribute [instance] has_image_maps.has_image_map
+attribute [instance 100] has_image_maps.has_image_map
 
 end
 

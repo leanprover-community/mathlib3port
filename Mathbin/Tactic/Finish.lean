@@ -122,7 +122,7 @@ variable (p q : Prop)
 
 variable (s : α → Prop)
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 theorem not_not_eq : (¬¬p) = p :=
   propext Classical.not_not

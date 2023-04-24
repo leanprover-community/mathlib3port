@@ -61,7 +61,7 @@ theorem isGalois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
       to_normal := h.2 }⟩
 #align is_galois_iff isGalois_iff
 
-attribute [instance] IsGalois.to_isSeparable IsGalois.to_normal
+attribute [instance 100] IsGalois.to_isSeparable IsGalois.to_normal
 
 -- see Note [lower instance priority]
 variable (F E)

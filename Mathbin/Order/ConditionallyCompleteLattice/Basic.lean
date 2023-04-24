@@ -249,7 +249,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, SupSet α, 
 -/
 
 #print ConditionallyCompleteLinearOrder /-
-/- ./././Mathport/Syntax/Translate/Command.lean:417:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -260,7 +260,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "./././Mathport/Syntax/Translate/Command.lean:417:11: unsupported: advanced extends in structure"
+  "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
 #align conditionally_complete_linear_order ConditionallyCompleteLinearOrder
 -/
 

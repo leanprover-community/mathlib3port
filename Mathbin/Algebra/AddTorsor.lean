@@ -60,7 +60,7 @@ class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] ex
 #align add_torsor AddTorsor
 -/
 
-attribute [instance, nolint dangerous_instance] AddTorsor.nonempty
+attribute [instance 100, nolint dangerous_instance] AddTorsor.nonempty
 
 attribute [nolint dangerous_instance] AddTorsor.toHasVsub
 

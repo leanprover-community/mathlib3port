@@ -54,7 +54,7 @@ uniform spaces, completion, universal property
 
 noncomputable section
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 open Filter Set Function
 

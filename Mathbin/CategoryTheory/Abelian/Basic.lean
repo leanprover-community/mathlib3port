@@ -120,9 +120,9 @@ class Abelian extends Preadditive C, NormalMonoCategory C, NormalEpiCategory C w
 #align category_theory.abelian CategoryTheory.Abelian
 -/
 
-attribute [instance] abelian.has_finite_products
+attribute [instance 100] abelian.has_finite_products
 
-attribute [instance] abelian.has_kernels abelian.has_cokernels
+attribute [instance 100] abelian.has_kernels abelian.has_cokernels
 
 end CategoryTheory
 

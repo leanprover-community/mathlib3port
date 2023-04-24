@@ -149,7 +149,7 @@ class PreservesBiproductsOfShape (F : C ⥤ D) [PreservesZeroMorphisms F] where
 #align category_theory.limits.preserves_biproducts_of_shape CategoryTheory.Limits.PreservesBiproductsOfShape
 -/
 
-attribute [instance] preserves_biproducts_of_shape.preserves
+attribute [instance 100] preserves_biproducts_of_shape.preserves
 
 end Bicone
 
@@ -161,7 +161,7 @@ class PreservesFiniteBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
 #align category_theory.limits.preserves_finite_biproducts CategoryTheory.Limits.PreservesFiniteBiproducts
 -/
 
-attribute [instance] preserves_finite_biproducts.preserves
+attribute [instance 100] preserves_finite_biproducts.preserves
 
 #print CategoryTheory.Limits.PreservesBiproducts /-
 /-- A functor `F` preserves biproducts if it preserves biproducts of any shape `J` of size `w`.
@@ -172,7 +172,7 @@ class PreservesBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
 #align category_theory.limits.preserves_biproducts CategoryTheory.Limits.PreservesBiproducts
 -/
 
-attribute [instance] preserves_biproducts.preserves
+attribute [instance 100] preserves_biproducts.preserves
 
 #print CategoryTheory.Limits.preservesBiproductsShrink /-
 /-- Preserving biproducts at a bigger universe level implies preserving biproducts at a
@@ -254,7 +254,7 @@ def preservesBinaryBiproductsOfPreservesBiproducts (F : C ⥤ D) [PreservesZeroM
 #align category_theory.limits.preserves_binary_biproducts_of_preserves_biproducts CategoryTheory.Limits.preservesBinaryBiproductsOfPreservesBiproducts
 -/
 
-attribute [instance] preserves_binary_biproducts.preserves
+attribute [instance 100] preserves_binary_biproducts.preserves
 
 end Limits
 

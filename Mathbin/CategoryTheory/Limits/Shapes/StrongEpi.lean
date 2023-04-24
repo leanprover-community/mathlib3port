@@ -90,9 +90,9 @@ theorem StrongMono.mk' {f : P ⟶ Q} [Mono f]
 #align category_theory.strong_mono.mk' CategoryTheory.StrongMono.mk'
 -/
 
-attribute [instance] strong_epi.llp
+attribute [instance 100] strong_epi.llp
 
-attribute [instance] strong_mono.rlp
+attribute [instance 100] strong_mono.rlp
 
 #print CategoryTheory.epi_of_strongEpi /-
 instance (priority := 100) epi_of_strongEpi (f : P ⟶ Q) [StrongEpi f] : Epi f :=

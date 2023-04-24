@@ -59,7 +59,7 @@ lean 3 declaration is
 but is expected to have type
   forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.HasShift.{u1, u2, 0} C Int _inst_1 Int.instAddMonoidInt] [_inst_4 : CategoryTheory.Preadditive.{u1, u2} C _inst_1], Sort.{max (succ u2) (succ u1)}
 Case conversion may be inaccurate. Consider using '#align category_theory.pretriangulated CategoryTheory.Pretriangulatedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:

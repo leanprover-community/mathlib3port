@@ -31,7 +31,7 @@ maybe it is useful for writing automation.
 
 open Function
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 10] Classical.propDecidable
 
 section Miscellany
 
@@ -156,7 +156,7 @@ theorem coeFn_coe_base' {α β} {γ : _} [Coe α β] [CoeFun β fun _ => γ] (x 
 
 -- This instance should have low priority, to ensure we follow the chain
 -- `set_like → has_coe_to_sort`
-attribute [instance] coeSortTrans
+attribute [instance 10] coeSortTrans
 
 theorem coeSort_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeSort γ δ] (x : α) :
     @coeSort α _ _ x = @coeSort β _ _ x :=
@@ -302,7 +302,7 @@ theorem eq_iff_eq_cancel_right {α : Sort _} {a b : α} : (∀ {c}, a = c ↔ b 
 -/
 
 #print Fact /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 

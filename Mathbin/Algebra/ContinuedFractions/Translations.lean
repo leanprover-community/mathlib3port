@@ -22,7 +22,7 @@ Some simple translation lemmas between the different definitions of functions de
 
 namespace GeneralizedContinuedFraction
 
-/- ./././Mathport/Syntax/Translate/Command.lean:224:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
 section General
 
 /-!

@@ -156,9 +156,9 @@ notation
 scoped[-- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
 -- the priority of decidability instances that make Lean run through all the algebraic hierarchy
 -- whenever it wants to solve a decidability question
-Classical] attribute [instance] Classical.propDecidable
+Classical] attribute [instance 9] Classical.propDecidable
 
-scoped[Classical] attribute [instance] Eq.decidable
+scoped[Classical] attribute [instance 8] Eq.decidable
 
 -- mathport name: parser.optional
 scoped[Parser] postfix:1024 "?" => optional

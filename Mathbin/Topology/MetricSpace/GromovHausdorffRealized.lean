@@ -111,7 +111,7 @@ section Constructions
 variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y]
   [CompactSpace Y] [Nonempty Y] {f : ProdSpaceFun X Y} {x y z t : Sum X Y}
 
-attribute [local instance] inhabited_of_nonempty'
+attribute [local instance 10] inhabited_of_nonempty'
 
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc

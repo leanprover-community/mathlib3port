@@ -45,10 +45,12 @@ def isPrefixOf (x y : String) : Bool :=
 #align string.is_prefix_of String.isPrefixOf
 -/
 
+#print String.isSuffixOf /-
 /-- Tests whether the first string is a suffix of the second string. -/
 def isSuffixOf (x y : String) : Bool :=
   x.toList.isSuffixOfₓ y.toList
 #align string.is_suffix_of String.isSuffixOf
+-/
 
 #print String.startsWith /-
 /-- `x.starts_with y` is true if `y` is a prefix of `x`, and is false otherwise. -/
@@ -64,11 +66,13 @@ abbrev endsWith (x y : String) : Bool :=
 #align string.ends_with String.endsWith
 -/
 
+#print String.getRest /-
 /-- `get_rest s t` returns `some r` if `s = t ++ r`.
   If `t` is not a prefix of `s`, returns `none` -/
 def getRest (s t : String) : Option String :=
   List.asString <$> s.toList.getRest t.toList
 #align string.get_rest String.getRest
+-/
 
 #print String.popn /-
 /-- Removes the first `n` elements from the string `s` -/

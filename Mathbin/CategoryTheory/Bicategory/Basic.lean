@@ -54,11 +54,11 @@ universe w v u
 open Category Iso
 
 #print CategoryTheory.Bicategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:401:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:401:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:401:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:401:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:401:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/

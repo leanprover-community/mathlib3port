@@ -372,7 +372,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u1}} {D : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u3, u1} C] [_inst_2 : CategoryTheory.Category.{u4, u2} D], (CategoryTheory.Functor.{u3, u4, u1, u2} C _inst_1 D _inst_2) -> (forall {W : Type.{u5}} [E : CategoryTheory.Category.{u6, u5} W], (CategoryTheory.MorphismProperty.{u3, u1} C _inst_1) -> (CategoryTheory.Functor.{u3, u6, u1, u5} C _inst_1 W E) -> (CategoryTheory.Functor.{u4, u6, u2, u5} D _inst_2 W E) -> Sort.{max (succ u1) (succ u6)})
 Case conversion may be inaccurate. Consider using '#align category_theory.localization.lifting CategoryTheory.Localization.Liftingₓ'. -/
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
 /-- When `L : C ⥤ D` is a localization functor for `W : morphism_property C` and
 `F : C ⥤ E` is a functor, we shall say that `F' : D ⥤ E` lifts `F` if the obvious diagram
 is commutative up to an isomorphism. -/

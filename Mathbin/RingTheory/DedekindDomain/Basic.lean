@@ -110,7 +110,7 @@ class IsDedekindDomain : Prop where
 #align is_dedekind_domain IsDedekindDomain
 
 -- See library note [lower instance priority]
-attribute [instance] IsDedekindDomain.isNoetherianRing IsDedekindDomain.isIntegrallyClosed
+attribute [instance 100] IsDedekindDomain.isNoetherianRing IsDedekindDomain.isIntegrallyClosed
 
 /-- An integral domain is a Dedekind domain iff and only if it is
 Noetherian, has dimension ≤ 1, and is integrally closed in a given fraction field.

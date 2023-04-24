@@ -236,7 +236,7 @@ theorem genericPoint_specializes [QuasiSober α] [IrreducibleSpace α] (x : α) 
 #align generic_point_specializes genericPoint_specializes
 -/
 
-attribute [local instance] specializationOrder
+attribute [local instance 10] specializationOrder
 
 #print irreducibleSetEquivPoints /-
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/

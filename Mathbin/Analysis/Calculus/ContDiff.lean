@@ -40,7 +40,7 @@ local notation "∞" => (⊤ : ℕ∞)
 
 universe u v w uD uE uF uG
 
-attribute [local instance]
+attribute [local instance 1001]
   NormedAddCommGroup.toAddCommGroup NormedSpace.toModule' AddCommGroup.toAddCommMonoid
 
 namespace Finset

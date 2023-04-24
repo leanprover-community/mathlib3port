@@ -148,7 +148,7 @@ def coeHTCT (R A : Type _) [CommSemiring R] [Semiring A] [Algebra R A] : HasLift
   ⟨fun r => algebraMap R A r⟩
 #align algebra_map.has_lift_t algebraMap.coeHTCT
 
-attribute [instance] algebraMap.coeHTCT
+attribute [instance 900] algebraMap.coeHTCT
 
 section CommSemiringSemiring
 
@@ -433,7 +433,7 @@ instance (priority := 200) toModule : Module R A
 
 -- From now on, we don't want to use the following instance anymore.
 -- Unfortunately, leaving it in place causes deterministic timeouts later in mathlib.
-attribute [instance] Algebra.toHasSmul
+attribute [instance 0] Algebra.toHasSmul
 
 /- warning: algebra.smul_def -> Algebra.smul_def is a dubious translation:
 lean 3 declaration is

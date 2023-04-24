@@ -24,7 +24,7 @@ This file contains results on the `R`-module structure on functions of finite su
 
 noncomputable section
 
-attribute [local instance] Classical.propDecidable
+attribute [local instance 100] Classical.propDecidable
 
 open Set LinearMap Submodule
 

@@ -43,7 +43,7 @@ universe u v w
 variable (M : Type u) (G : Type v) (X : Type w)
 
 #print IsometricVAdd /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isometry_vadd] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isometry_vadd] [] -/
 /-- An additive action is isometric if each map `x ↦ c +ᵥ x` is an isometry. -/
 class IsometricVAdd [PseudoEMetricSpace X] [VAdd M X] : Prop where
   isometry_vadd : ∀ c : M, Isometry ((· +ᵥ ·) c : X → X)
@@ -51,7 +51,7 @@ class IsometricVAdd [PseudoEMetricSpace X] [VAdd M X] : Prop where
 -/
 
 #print IsometricSMul /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isometry_smul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isometry_smul] [] -/
 /-- A multiplicative action is isometric if each map `x ↦ c • x` is an isometry. -/
 @[to_additive]
 class IsometricSMul [PseudoEMetricSpace X] [SMul M X] : Prop where

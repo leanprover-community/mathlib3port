@@ -1527,7 +1527,7 @@ class AddCommGroup (G : Type u) extends AddGroup G, AddCommMonoid G
 
 attribute [to_additive] CommGroup
 
-attribute [instance] AddCommGroup.toAddCommMonoid
+attribute [instance 300] AddCommGroup.toAddCommMonoid
 
 #print CommGroup.toGroup_injective /-
 @[to_additive]
