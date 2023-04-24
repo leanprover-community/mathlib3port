@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 09079525fd01b3dda35e96adaa08d2f943e1648c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -666,7 +666,7 @@ instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R 
 theorem smul_sup (r : R) (p q : AddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).coe_nonneg
   ext fun x => real.smul_max _ _
 #align add_group_seminorm.smul_sup AddGroupSeminorm.smul_sup
 -/
@@ -927,7 +927,7 @@ theorem smul_apply (r : R) (p : GroupSeminorm E) (x : E) : (r • p) x = r • p
 theorem smul_sup (r : R) (p q : GroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).coe_nonneg
   ext fun x => real.smul_max _ _
 #align group_seminorm.smul_sup GroupSeminorm.smul_sup
 #align add_group_seminorm.smul_sup AddGroupSeminorm.smul_sup
@@ -1006,7 +1006,7 @@ theorem smul_apply (r : R) (p : NonarchAddGroupSeminorm E) (x : E) : (r • p) x
 theorem smul_sup (r : R) (p q : NonarchAddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).coe_nonneg
   ext fun x => real.smul_max _ _
 #align nonarch_add_group_seminorm.smul_sup NonarchAddGroupSeminorm.smul_sup
 -/

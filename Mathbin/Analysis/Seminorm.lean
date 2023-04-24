@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 7ebf83ed9c262adbf983ef64d5e8c2ae94b625f4
+! leanprover-community/mathlib commit 09079525fd01b3dda35e96adaa08d2f943e1648c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,7 +248,7 @@ theorem smul_sup [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r 
     r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).coe_nonneg
   ext fun x => real.smul_max _ _
 #align seminorm.smul_sup Seminorm.smul_sup
 
