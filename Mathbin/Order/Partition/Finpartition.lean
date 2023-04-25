@@ -240,16 +240,16 @@ instance : Unique (Finpartition (⊥ : α)) :=
       ext a
       exact iff_of_false (fun h => P.ne_bot h <| le_bot_iff.1 <| P.le h) (not_mem_empty a) }
 
-/- warning: is_atom.unique_finpartition -> Finpartition.IsAtom.uniqueFinpartition is a dubious translation:
+/- warning: is_atom.unique_finpartition -> IsAtom.uniqueFinpartition is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) _inst_2 a) -> (Unique.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 a))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {a : α} {ha : Finpartition.{u1} α _inst_1 _inst_2 a}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) _inst_2 a) -> (Unique.{succ u1} (Finpartition.{u1} α _inst_1 _inst_2 a))
-Case conversion may be inaccurate. Consider using '#align is_atom.unique_finpartition Finpartition.IsAtom.uniqueFinpartitionₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_atom.unique_finpartition IsAtom.uniqueFinpartitionₓ'. -/
 -- See note [reducible non instances]
 /-- There's a unique partition of an atom. -/
 @[reducible]
-def Finpartition.IsAtom.uniqueFinpartition (ha : IsAtom a) : Unique (Finpartition a)
+def IsAtom.uniqueFinpartition (ha : IsAtom a) : Unique (Finpartition a)
     where
   default := indiscrete ha.1
   uniq P :=
@@ -262,7 +262,7 @@ def Finpartition.IsAtom.uniqueFinpartition (ha : IsAtom a) : Unique (Finpartitio
     obtain ⟨c, hc⟩ := P.parts_nonempty ha.1
     simp_rw [← h c hc]
     exact hc
-#align is_atom.unique_finpartition Finpartition.IsAtom.uniqueFinpartition
+#align is_atom.unique_finpartition IsAtom.uniqueFinpartition
 
 instance [Fintype α] [DecidableEq α] (a : α) : Fintype (Finpartition a) :=
   @Fintype.ofSurjective { p : Finset α // p.SupIndep id ∧ p.sup id = a ∧ ⊥ ∉ p } (Finpartition a) _

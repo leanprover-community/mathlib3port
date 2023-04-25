@@ -146,10 +146,10 @@ theorem decode_ofEquiv {α β} [Encodable α] (e : β ≃ α) (n : ℕ) :
   rfl
 #align encodable.decode_of_equiv Encodable.decode_ofEquiv
 
-#print Encodable.Nat.encodable /-
-instance Encodable.Nat.encodable : Encodable ℕ :=
+#print Nat.encodable /-
+instance Nat.encodable : Encodable ℕ :=
   ⟨id, some, fun a => rfl⟩
-#align nat.encodable Encodable.Nat.encodable
+#align nat.encodable Nat.encodable
 -/
 
 #print Encodable.encode_nat /-
@@ -166,16 +166,16 @@ theorem decode_nat (n : ℕ) : decode ℕ n = some n :=
 #align encodable.decode_nat Encodable.decode_nat
 -/
 
-#print Encodable.IsEmpty.toEncodable /-
-instance (priority := 100) Encodable.IsEmpty.toEncodable [IsEmpty α] : Encodable α :=
+#print IsEmpty.toEncodable /-
+instance (priority := 100) IsEmpty.toEncodable [IsEmpty α] : Encodable α :=
   ⟨isEmptyElim, fun n => none, isEmptyElim⟩
-#align is_empty.to_encodable Encodable.IsEmpty.toEncodable
+#align is_empty.to_encodable IsEmpty.toEncodable
 -/
 
-#print Encodable.PUnit.encodable /-
-instance Encodable.PUnit.encodable : Encodable PUnit :=
+#print PUnit.encodable /-
+instance PUnit.encodable : Encodable PUnit :=
   ⟨fun _ => 0, fun n => Nat.casesOn n (some PUnit.unit) fun _ => none, fun _ => by simp⟩
-#align punit.encodable Encodable.PUnit.encodable
+#align punit.encodable PUnit.encodable
 -/
 
 #print Encodable.encode_star /-
@@ -329,11 +329,11 @@ def equivRangeEncode (α : Type _) [Encodable α] : α ≃ Set.range (@encode α
 #align encodable.equiv_range_encode Encodable.equivRangeEncode
 -/
 
-#print Encodable.Unique.encodable /-
+#print Unique.encodable /-
 /-- A type with unique element is encodable. This is not an instance to avoid diamonds. -/
-def Encodable.Unique.encodable [Unique α] : Encodable α :=
+def Unique.encodable [Unique α] : Encodable α :=
   ⟨fun _ => 0, fun _ => some default, Unique.forall_iff.2 rfl⟩
-#align unique.encodable Encodable.Unique.encodable
+#align unique.encodable Unique.encodable
 -/
 
 section Sum
@@ -357,11 +357,11 @@ def decodeSum (n : ℕ) : Option (Sum α β) :=
 #align encodable.decode_sum Encodable.decodeSum
 -/
 
-#print Encodable.Sum.encodable /-
+#print Sum.encodable /-
 /-- If `α` and `β` are encodable, then so is their sum. -/
-instance Encodable.Sum.encodable : Encodable (Sum α β) :=
+instance Sum.encodable : Encodable (Sum α β) :=
   ⟨encodeSum, decodeSum, fun s => by cases s <;> simp [encode_sum, decode_sum, encodek] <;> rfl⟩
-#align sum.encodable Encodable.Sum.encodable
+#align sum.encodable Sum.encodable
 -/
 
 @[simp]
@@ -376,9 +376,9 @@ theorem encode_inr (b : β) : @encode (Sum α β) _ (Sum.inr b) = bit1 (encode b
 
 /- warning: encodable.decode_sum_val -> Encodable.decode_sum_val is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Encodable.{u2} β] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sum.{u1, u2} α β)) (Encodable.decode.{max u1 u2} (Sum.{u1, u2} α β) (Encodable.Sum.encodable.{u1, u2} α β _inst_1 _inst_2) n) (Encodable.decodeSum.{u1, u2} α β _inst_1 _inst_2 n)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Encodable.{u2} β] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sum.{u1, u2} α β)) (Encodable.decode.{max u1 u2} (Sum.{u1, u2} α β) (Sum.encodable.{u1, u2} α β _inst_1 _inst_2) n) (Encodable.decodeSum.{u1, u2} α β _inst_1 _inst_2 n)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u2} α] [_inst_2 : Encodable.{u1} β] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sum.{u2, u1} α β)) (Encodable.decode.{max u2 u1} (Sum.{u2, u1} α β) (Encodable.Sum.encodable.{u2, u1} α β _inst_1 _inst_2) n) (Encodable.decodeSum.{u2, u1} α β _inst_1 _inst_2 n)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u2} α] [_inst_2 : Encodable.{u1} β] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sum.{u2, u1} α β)) (Encodable.decode.{max u2 u1} (Sum.{u2, u1} α β) (Sum.encodable.{u2, u1} α β _inst_1 _inst_2) n) (Encodable.decodeSum.{u2, u1} α β _inst_1 _inst_2 n)
 Case conversion may be inaccurate. Consider using '#align encodable.decode_sum_val Encodable.decode_sum_valₓ'. -/
 @[simp]
 theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decodeSum n :=
@@ -387,10 +387,10 @@ theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decodeSum n :=
 
 end Sum
 
-#print Encodable.Bool.encodable /-
-instance Encodable.Bool.encodable : Encodable Bool :=
+#print Bool.encodable /-
+instance Bool.encodable : Encodable Bool :=
   ofEquiv (Sum Unit Unit) Equiv.boolEquivPUnitSumPUnit
-#align bool.encodable Encodable.Bool.encodable
+#align bool.encodable Bool.encodable
 -/
 
 #print Encodable.encode_true /-
@@ -436,10 +436,10 @@ theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none :=
 #align encodable.decode_ge_two Encodable.decode_ge_two
 -/
 
-#print Encodable.Prop.encodable /-
-noncomputable instance Encodable.Prop.encodable : Encodable Prop :=
+#print Prop.encodable /-
+noncomputable instance Prop.encodable : Encodable Prop :=
   ofEquiv Bool Equiv.propEquivBool
-#align Prop.encodable Encodable.Prop.encodable
+#align Prop.encodable Prop.encodable
 -/
 
 section Sigma
@@ -461,18 +461,18 @@ def decodeSigma (n : ℕ) : Option (Sigma γ) :=
 #align encodable.decode_sigma Encodable.decodeSigma
 -/
 
-#print Encodable.Sigma.encodable /-
-instance Encodable.Sigma.encodable : Encodable (Sigma γ) :=
+#print Sigma.encodable /-
+instance Sigma.encodable : Encodable (Sigma γ) :=
   ⟨encodeSigma, decodeSigma, fun ⟨a, b⟩ => by
     simp [encode_sigma, decode_sigma, unpair_mkpair, encodek]⟩
-#align sigma.encodable Encodable.Sigma.encodable
+#align sigma.encodable Sigma.encodable
 -/
 
 /- warning: encodable.decode_sigma_val -> Encodable.decode_sigma_val is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {γ : α -> Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : forall (a : α), Encodable.{u2} (γ a)] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sigma.{u1, u2} α γ)) (Encodable.decode.{max u1 u2} (Sigma.{u1, u2} α γ) (Encodable.Sigma.encodable.{u1, u2} α γ _inst_1 (fun (a : α) => _inst_2 a)) n) (Option.bind.{u1, max u1 u2} α (Sigma.{u1, u2} α γ) (Encodable.decode.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u2, max u1 u2} (γ a) (Sigma.{u1, u2} α γ) (Sigma.mk.{u1, u2} α γ a) (Encodable.decode.{u2} (γ a) (_inst_2 a) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
+  forall {α : Type.{u1}} {γ : α -> Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : forall (a : α), Encodable.{u2} (γ a)] (n : Nat), Eq.{succ (max u1 u2)} (Option.{max u1 u2} (Sigma.{u1, u2} α γ)) (Encodable.decode.{max u1 u2} (Sigma.{u1, u2} α γ) (Sigma.encodable.{u1, u2} α γ _inst_1 (fun (a : α) => _inst_2 a)) n) (Option.bind.{u1, max u1 u2} α (Sigma.{u1, u2} α γ) (Encodable.decode.{u1} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u2, max u1 u2} (γ a) (Sigma.{u1, u2} α γ) (Sigma.mk.{u1, u2} α γ a) (Encodable.decode.{u2} (γ a) (_inst_2 a) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
 but is expected to have type
-  forall {α : Type.{u2}} {γ : α -> Type.{u1}} [_inst_1 : Encodable.{u2} α] [_inst_2 : forall (a : α), Encodable.{u1} (γ a)] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sigma.{u2, u1} α γ)) (Encodable.decode.{max u2 u1} (Sigma.{u2, u1} α γ) (Encodable.Sigma.encodable.{u2, u1} α γ _inst_1 (fun (a : α) => _inst_2 a)) n) (Option.bind.{u2, max u2 u1} α (Sigma.{u2, u1} α γ) (Encodable.decode.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u1, max u2 u1} (γ a) (Sigma.{u2, u1} α γ) (Sigma.mk.{u2, u1} α γ a) (Encodable.decode.{u1} (γ a) (_inst_2 a) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
+  forall {α : Type.{u2}} {γ : α -> Type.{u1}} [_inst_1 : Encodable.{u2} α] [_inst_2 : forall (a : α), Encodable.{u1} (γ a)] (n : Nat), Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Sigma.{u2, u1} α γ)) (Encodable.decode.{max u2 u1} (Sigma.{u2, u1} α γ) (Sigma.encodable.{u2, u1} α γ _inst_1 (fun (a : α) => _inst_2 a)) n) (Option.bind.{u2, max u2 u1} α (Sigma.{u2, u1} α γ) (Encodable.decode.{u2} α _inst_1 (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (fun (a : α) => Option.map.{u1, max u2 u1} (γ a) (Sigma.{u2, u1} α γ) (Sigma.mk.{u2, u1} α γ a) (Encodable.decode.{u1} (γ a) (_inst_2 a) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))))
 Case conversion may be inaccurate. Consider using '#align encodable.decode_sigma_val Encodable.decode_sigma_valₓ'. -/
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
@@ -545,11 +545,11 @@ def decodeSubtype (v : ℕ) : Option { a : α // P a } :=
 #align encodable.decode_subtype Encodable.decodeSubtype
 -/
 
-#print Encodable.Subtype.encodable /-
+#print Subtype.encodable /-
 /-- A decidable subtype of an encodable type is encodable. -/
-instance Encodable.Subtype.encodable : Encodable { a : α // P a } :=
+instance Subtype.encodable : Encodable { a : α // P a } :=
   ⟨encodeSubtype, decodeSubtype, fun ⟨v, h⟩ => by simp [encode_subtype, decode_subtype, encodek, h]⟩
-#align subtype.encodable Encodable.Subtype.encodable
+#align subtype.encodable Subtype.encodable
 -/
 
 #print Encodable.Subtype.encode_eq /-
@@ -559,36 +559,36 @@ theorem Subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by cases 
 
 end Subtype
 
-#print Encodable.Fin.encodable /-
-instance Encodable.Fin.encodable (n) : Encodable (Fin n) :=
+#print Fin.encodable /-
+instance Fin.encodable (n) : Encodable (Fin n) :=
   ofEquiv _ Fin.equivSubtype
-#align fin.encodable Encodable.Fin.encodable
+#align fin.encodable Fin.encodable
 -/
 
-#print Encodable.Int.encodable /-
-instance Encodable.Int.encodable : Encodable ℤ :=
+#print Int.encodable /-
+instance Int.encodable : Encodable ℤ :=
   ofEquiv _ Equiv.intEquivNat
-#align int.encodable Encodable.Int.encodable
+#align int.encodable Int.encodable
 -/
 
-#print Encodable.PNat.encodable /-
-instance Encodable.PNat.encodable : Encodable ℕ+ :=
+#print PNat.encodable /-
+instance PNat.encodable : Encodable ℕ+ :=
   ofEquiv _ Equiv.pnatEquivNat
-#align pnat.encodable Encodable.PNat.encodable
+#align pnat.encodable PNat.encodable
 -/
 
-#print Encodable.ULift.encodable /-
+#print ULift.encodable /-
 /-- The lift of an encodable type is encodable. -/
-instance Encodable.ULift.encodable [Encodable α] : Encodable (ULift α) :=
+instance ULift.encodable [Encodable α] : Encodable (ULift α) :=
   ofEquiv _ Equiv.ulift
-#align ulift.encodable Encodable.ULift.encodable
+#align ulift.encodable ULift.encodable
 -/
 
-#print Encodable.PLift.encodable /-
+#print PLift.encodable /-
 /-- The lift of an encodable type is encodable. -/
-instance Encodable.PLift.encodable [Encodable α] : Encodable (PLift α) :=
+instance PLift.encodable [Encodable α] : Encodable (PLift α) :=
   ofEquiv _ Equiv.plift
-#align plift.encodable Encodable.PLift.encodable
+#align plift.encodable PLift.encodable
 -/
 
 #print Encodable.ofInj /-

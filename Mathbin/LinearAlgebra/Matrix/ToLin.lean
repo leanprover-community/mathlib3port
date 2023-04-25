@@ -835,7 +835,7 @@ variable {R S : Type _} [CommRing R] [Ring S] [Algebra R S]
 variable {m : Type _} [Fintype m] [DecidableEq m] (b : Basis m R S)
 
 theorem toMatrix_lmul' (x : S) (i j) :
-    LinearMap.toMatrix b b (LinearMap.Algebra.lmul R S x) i j = b.repr (x * b j) i := by
+    LinearMap.toMatrix b b (lmul R S x) i j = b.repr (x * b j) i := by
   simp only [LinearMap.toMatrix_apply', coe_lmul_eq_mul, LinearMap.mul_apply']
 #align algebra.to_matrix_lmul' Algebra.toMatrix_lmul'
 
@@ -854,7 +854,7 @@ such as the trace form or norm map for algebras.
 -/
 noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
     where
-  toFun x := LinearMap.toMatrix b b (LinearMap.Algebra.lmul R S x)
+  toFun x := LinearMap.toMatrix b b (Algebra.lmul R S x)
   map_zero' := by rw [AlgHom.map_zero, LinearEquiv.map_zero]
   map_one' := by rw [AlgHom.map_one, LinearMap.toMatrix_one]
   map_add' x y := by rw [AlgHom.map_add, LinearEquiv.map_add]
@@ -865,8 +865,7 @@ noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
       Algebra.id.map_eq_self]
 #align algebra.left_mul_matrix Algebra.leftMulMatrix
 
-theorem leftMulMatrix_apply (x : S) :
-    leftMulMatrix b x = LinearMap.toMatrix b b (LinearMap.Algebra.lmul R S x) :=
+theorem leftMulMatrix_apply (x : S) : leftMulMatrix b x = LinearMap.toMatrix b b (lmul R S x) :=
   rfl
 #align algebra.left_mul_matrix_apply Algebra.leftMulMatrix_apply
 
@@ -889,8 +888,8 @@ theorem toMatrix_lmul_eq (x : S) :
 
 theorem leftMulMatrix_injective : Function.Injective (leftMulMatrix b) := fun x x' h =>
   calc
-    x = LinearMap.Algebra.lmul R S x 1 := (mul_one x).symm
-    _ = LinearMap.Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).Injective h]
+    x = Algebra.lmul R S x 1 := (mul_one x).symm
+    _ = Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).Injective h]
     _ = x' := mul_one x'
     
 #align algebra.left_mul_matrix_injective Algebra.leftMulMatrix_injective

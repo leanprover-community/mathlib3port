@@ -485,7 +485,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.matrix IsSMulRegular.matrixₓ'. -/
 theorem IsSMulRegular.matrix [SMul R S] {k : R} (hk : IsSMulRegular S k) :
     IsSMulRegular (Matrix m n S) k :=
-  Pi.IsSMulRegular.pi fun _ => Pi.IsSMulRegular.pi fun _ => hk
+  IsSMulRegular.pi fun _ => IsSMulRegular.pi fun _ => hk
 #align is_smul_regular.matrix IsSMulRegular.matrix
 
 /- warning: is_left_regular.matrix -> IsLeftRegular.matrix is a dubious translation:

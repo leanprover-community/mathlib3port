@@ -40,7 +40,7 @@ instance : Denumerable ℚ :=
   by
   let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.coprime x.2 }
   letI : Infinite T := Infinite.of_injective _ denumerable_aux.injective
-  letI : Encodable T := Encodable.Subtype.encodable
+  letI : Encodable T := Subtype.encodable
   letI : Denumerable T := of_encodable_of_infinite T
   exact Denumerable.ofEquiv T denumerable_aux
 

@@ -176,7 +176,7 @@ theorem leftInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algeb
 def foldr'Aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) :
     M →ₗ[R] Module.End R (CliffordAlgebra Q × N) :=
   by
-  have v_mul := (LinearMap.Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
+  have v_mul := (Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
   have l := v_mul.compl₂ (LinearMap.fst _ _ N)
   exact
     { toFun := fun m => (l m).Prod (f m)

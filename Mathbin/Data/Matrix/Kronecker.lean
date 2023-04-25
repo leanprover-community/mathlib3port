@@ -292,7 +292,7 @@ theorem kronecker_apply [Mul α] (A : Matrix l m α) (B : Matrix n p α) (i₁ i
 /-- `matrix.kronecker` as a bilinear map. -/
 def kroneckerBilinear [CommSemiring R] [Semiring α] [Algebra R α] :
     Matrix l m α →ₗ[R] Matrix n p α →ₗ[R] Matrix (l × n) (m × p) α :=
-  kroneckerMapBilinear (LinearMap.Algebra.lmul R α)
+  kroneckerMapBilinear (Algebra.lmul R α)
 #align matrix.kronecker_bilinear Matrix.kroneckerBilinear
 
 /-! What follows is a copy, in order, of every `matrix.kronecker_map` lemma above that has
@@ -366,7 +366,7 @@ theorem one_kronecker [MulZeroOneClass α] [DecidableEq l] (B : Matrix m n α) :
 theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiring α] (A : Matrix l m α)
     (B : Matrix m n α) (A' : Matrix l' m' α) (B' : Matrix m' n' α) :
     (A ⬝ B) ⊗ₖ (A' ⬝ B') = A ⊗ₖ A' ⬝ B ⊗ₖ B' :=
-  kroneckerMapBilinear_mul_mul (LinearMap.Algebra.lmul ℕ α).toLinearMap mul_mul_mul_comm A B A' B'
+  kroneckerMapBilinear_mul_mul (Algebra.lmul ℕ α).toLinearMap mul_mul_mul_comm A B A' B'
 #align matrix.mul_kronecker_mul Matrix.mul_kronecker_mul
 
 @[simp]
@@ -377,16 +377,14 @@ theorem kronecker_assoc [Semigroup α] (A : Matrix l m α) (B : Matrix n p α) (
 
 theorem trace_kronecker [Fintype m] [Fintype n] [Semiring α] (A : Matrix m m α) (B : Matrix n n α) :
     trace (A ⊗ₖ B) = trace A * trace B :=
-  trace_kroneckerMapBilinear (LinearMap.Algebra.lmul ℕ α).toLinearMap _ _
+  trace_kroneckerMapBilinear (Algebra.lmul ℕ α).toLinearMap _ _
 #align matrix.trace_kronecker Matrix.trace_kronecker
 
 theorem det_kronecker [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [CommRing R]
     (A : Matrix m m R) (B : Matrix n n R) :
     det (A ⊗ₖ B) = det A ^ Fintype.card n * det B ^ Fintype.card m :=
   by
-  refine'
-    (det_kronecker_map_bilinear (LinearMap.Algebra.lmul ℕ R).toLinearMap mul_mul_mul_comm _ _).trans
-      _
+  refine' (det_kronecker_map_bilinear (Algebra.lmul ℕ R).toLinearMap mul_mul_mul_comm _ _).trans _
   congr 3
   · ext (i j)
     exact mul_one _

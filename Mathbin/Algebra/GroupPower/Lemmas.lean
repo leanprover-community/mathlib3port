@@ -94,7 +94,7 @@ def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : M�
     (by rwa [← pow_succ, Nat.sub_add_cancel (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn)])
     (Commute.self_pow _ _)
 #align units.of_pow Units.ofPow
-#align units.of_nsmul AddUnits.ofNSMul
+#align add_units.of_nsmul AddUnits.ofNSMul
 -/
 
 #print isUnit_pow_iff /-
@@ -1211,7 +1211,7 @@ alias le_self_sq ← le_self_pow_two
 lean 3 declaration is
   forall {x : Int}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x))
 but is expected to have type
-  forall {x : Int}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int ((fun (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8037 : Int) (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8039 : Nat) => HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8037 x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8039) x))
+  forall {x : Int}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int ((fun (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8036 : Int) (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8038 : Nat) => HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8036 x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.8038) x))
 Case conversion may be inaccurate. Consider using '#align int.pow_right_injective Int.pow_right_injectiveₓ'. -/
 theorem pow_right_injective {x : ℤ} (h : 1 < x.natAbs) : Function.Injective ((· ^ ·) x : ℕ → ℤ) :=
   by

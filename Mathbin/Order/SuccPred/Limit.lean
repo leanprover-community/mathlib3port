@@ -68,10 +68,10 @@ section Preorder
 
 variable [Preorder α] {a : α}
 
-#print Order.IsMin.isSuccLimit /-
-protected theorem Order.IsMin.isSuccLimit : IsMin a → IsSuccLimit a := fun h b hab =>
+#print IsMin.isSuccLimit /-
+protected theorem IsMin.isSuccLimit : IsMin a → IsSuccLimit a := fun h b hab =>
   not_isMin_of_lt hab.lt h
-#align is_min.is_succ_limit Order.IsMin.isSuccLimit
+#align is_min.is_succ_limit IsMin.isSuccLimit
 -/
 
 /- warning: order.is_succ_limit_bot -> Order.isSuccLimit_bot is a dubious translation:
@@ -139,7 +139,7 @@ theorem IsSuccLimit.isMin_of_noMax [NoMaxOrder α] (h : IsSuccLimit a) : IsMin a
 #print Order.isSuccLimit_iff_of_noMax /-
 @[simp]
 theorem isSuccLimit_iff_of_noMax [NoMaxOrder α] : IsSuccLimit a ↔ IsMin a :=
-  ⟨IsSuccLimit.isMin_of_noMax, Order.IsMin.isSuccLimit⟩
+  ⟨IsSuccLimit.isMin_of_noMax, IsMin.isSuccLimit⟩
 #align order.is_succ_limit_iff_of_no_max Order.isSuccLimit_iff_of_noMax
 -/
 
@@ -304,7 +304,7 @@ protected theorem IsSuccLimit.isMin (h : IsSuccLimit a) : IsMin a := fun b hb =>
 #print Order.isSuccLimit_iff /-
 @[simp]
 theorem isSuccLimit_iff : IsSuccLimit a ↔ IsMin a :=
-  ⟨IsSuccLimit.isMin, Order.IsMin.isSuccLimit⟩
+  ⟨IsSuccLimit.isMin, IsMin.isSuccLimit⟩
 #align order.is_succ_limit_iff Order.isSuccLimit_iff
 -/
 
@@ -371,10 +371,10 @@ section Preorder
 
 variable [Preorder α] {a : α}
 
-#print Order.IsMax.isPredLimit /-
-protected theorem Order.IsMax.isPredLimit : IsMax a → IsPredLimit a := fun h b hab =>
+#print IsMax.isPredLimit /-
+protected theorem IsMax.isPredLimit : IsMax a → IsPredLimit a := fun h b hab =>
   not_isMax_of_lt hab.lt h
-#align is_max.is_pred_limit Order.IsMax.isPredLimit
+#align is_max.is_pred_limit IsMax.isPredLimit
 -/
 
 /- warning: order.is_pred_limit_top -> Order.isPredLimit_top is a dubious translation:

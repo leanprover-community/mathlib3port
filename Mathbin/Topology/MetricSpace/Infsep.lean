@@ -931,13 +931,13 @@ theorem Finite.infsep_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
 #align set.finite.infsep_of_nontrivial Set.Finite.infsep_of_nontrivial
 -/
 
-/- warning: finset.coe_infsep -> Set.Finset.coe_infsep is a dubious translation:
+/- warning: finset.coe_infsep -> Finset.coe_infsep is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{1} Real (Set.infsep.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) (dite.{1} Real (Finset.Nonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s)) (Finset.decidableNonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s)) (fun (hs : Finset.Nonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s)) => Finset.inf'.{0, u1} Real (Prod.{u1, u1} α α) Real.semilatticeInf (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s) hs (Function.uncurry.{u1, u1, 0} α α Real (Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1)))) (fun (hs : Not (Finset.Nonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s))) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{1} Real (Set.infsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) (Finset.toSet.{u1} α s)) (dite.{1} Real (Finset.Nonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s)) (Finset.decidableNonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s)) (fun (hs : Finset.Nonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s)) => Finset.inf'.{0, u1} Real (Prod.{u1, u1} α α) Real.instSemilatticeInfReal (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s) hs (Function.uncurry.{u1, u1, 0} α α Real (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1)))) (fun (hs : Not (Finset.Nonempty.{u1} (Prod.{u1, u1} α α) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s))) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align finset.coe_infsep Set.Finset.coe_infsepₓ'. -/
-theorem Set.Finset.coe_infsep [DecidableEq α] (s : Finset α) :
+Case conversion may be inaccurate. Consider using '#align finset.coe_infsep Finset.coe_infsepₓ'. -/
+theorem Finset.coe_infsep [DecidableEq α] (s : Finset α) :
     (s : Set α).infsep = if hs : s.offDiag.Nonempty then s.offDiag.inf' hs (uncurry dist) else 0 :=
   by
   have H : (s : Set α).Nontrivial ↔ s.off_diag.nonempty := by
@@ -945,27 +945,27 @@ theorem Set.Finset.coe_infsep [DecidableEq α] (s : Finset α) :
   split_ifs with hs
   · simp_rw [(H.mpr hs).infsep_of_fintype, ← Finset.coe_offDiag, Finset.toFinset_coe]
   · exact (not_nontrivial_iff.mp (H.mp.mt hs)).infsep_zero
-#align finset.coe_infsep Set.Finset.coe_infsep
+#align finset.coe_infsep Finset.coe_infsep
 
-#print Set.Finset.coe_infsep_of_offDiag_nonempty /-
-theorem Set.Finset.coe_infsep_of_offDiag_nonempty [DecidableEq α] {s : Finset α}
+#print Finset.coe_infsep_of_offDiag_nonempty /-
+theorem Finset.coe_infsep_of_offDiag_nonempty [DecidableEq α] {s : Finset α}
     (hs : s.offDiag.Nonempty) : (s : Set α).infsep = s.offDiag.inf' hs (uncurry dist) := by
-  rw [Set.Finset.coe_infsep, dif_pos hs]
-#align finset.coe_infsep_of_off_diag_nonempty Set.Finset.coe_infsep_of_offDiag_nonempty
+  rw [Finset.coe_infsep, dif_pos hs]
+#align finset.coe_infsep_of_off_diag_nonempty Finset.coe_infsep_of_offDiag_nonempty
 -/
 
-/- warning: finset.coe_infsep_of_off_diag_empty -> Set.Finset.coe_infsep_of_offDiag_empty is a dubious translation:
+/- warning: finset.coe_infsep_of_off_diag_empty -> Finset.coe_infsep_of_offDiag_empty is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, (Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.hasEmptyc.{u1} (Prod.{u1, u1} α α)))) -> (Eq.{1} Real (Set.infsep.{u1} α (PseudoMetricSpace.toEDist.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, (Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.instEmptyCollectionFinset.{u1} (Prod.{u1, u1} α α)))) -> (Eq.{1} Real (Set.infsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) (Finset.toSet.{u1} α s)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align finset.coe_infsep_of_off_diag_empty Set.Finset.coe_infsep_of_offDiag_emptyₓ'. -/
-theorem Set.Finset.coe_infsep_of_offDiag_empty [DecidableEq α] {s : Finset α} (hs : s.offDiag = ∅) :
+Case conversion may be inaccurate. Consider using '#align finset.coe_infsep_of_off_diag_empty Finset.coe_infsep_of_offDiag_emptyₓ'. -/
+theorem Finset.coe_infsep_of_offDiag_empty [DecidableEq α] {s : Finset α} (hs : s.offDiag = ∅) :
     (s : Set α).infsep = 0 :=
   by
   rw [← Finset.not_nonempty_iff_eq_empty] at hs
-  rw [Set.Finset.coe_infsep, dif_neg hs]
-#align finset.coe_infsep_of_off_diag_empty Set.Finset.coe_infsep_of_offDiag_empty
+  rw [Finset.coe_infsep, dif_neg hs]
+#align finset.coe_infsep_of_off_diag_empty Finset.coe_infsep_of_offDiag_empty
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial.infsep_exists_of_finite /-
@@ -1042,27 +1042,27 @@ theorem Finite.infsep_pos_iff_nontrivial (hs : s.Finite) : 0 < s.infsep ↔ s.No
   infsep_pos_iff_nontrivial_of_finite
 #align set.finite.infsep_pos_iff_nontrivial Set.Finite.infsep_pos_iff_nontrivial
 
-/- warning: finset.infsep_zero_iff_subsingleton -> Set.Finset.infsep_zero_iff_subsingleton is a dubious translation:
+/- warning: finset.infsep_zero_iff_subsingleton -> Finset.infsep_zero_iff_subsingleton is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] (s : Finset.{u1} α), Iff (Eq.{1} Real (Set.infsep.{u1} α (PseudoMetricSpace.toEDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (Set.Subsingleton.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] (s : Finset.{u1} α), Iff (Eq.{1} Real (Set.infsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1))) (Finset.toSet.{u1} α s)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Set.Subsingleton.{u1} α (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.infsep_zero_iff_subsingleton Set.Finset.infsep_zero_iff_subsingletonₓ'. -/
-theorem Set.Finset.infsep_zero_iff_subsingleton (s : Finset α) :
+Case conversion may be inaccurate. Consider using '#align finset.infsep_zero_iff_subsingleton Finset.infsep_zero_iff_subsingletonₓ'. -/
+theorem Finset.infsep_zero_iff_subsingleton (s : Finset α) :
     (s : Set α).infsep = 0 ↔ (s : Set α).Subsingleton :=
   infsep_zero_iff_subsingleton_of_finite
-#align finset.infsep_zero_iff_subsingleton Set.Finset.infsep_zero_iff_subsingleton
+#align finset.infsep_zero_iff_subsingleton Finset.infsep_zero_iff_subsingleton
 
-/- warning: finset.infsep_pos_iff_nontrivial -> Set.Finset.infsep_pos_iff_nontrivial is a dubious translation:
+/- warning: finset.infsep_pos_iff_nontrivial -> Finset.infsep_pos_iff_nontrivial is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] (s : Finset.{u1} α), Iff (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Set.infsep.{u1} α (PseudoMetricSpace.toEDist.{u1} α (MetricSpace.toPseudoMetricSpace.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))) (Set.Nontrivial.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MetricSpace.{u1} α] (s : Finset.{u1} α), Iff (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Set.infsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α _inst_1))) (Finset.toSet.{u1} α s))) (Set.Nontrivial.{u1} α (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.infsep_pos_iff_nontrivial Set.Finset.infsep_pos_iff_nontrivialₓ'. -/
-theorem Set.Finset.infsep_pos_iff_nontrivial (s : Finset α) :
+Case conversion may be inaccurate. Consider using '#align finset.infsep_pos_iff_nontrivial Finset.infsep_pos_iff_nontrivialₓ'. -/
+theorem Finset.infsep_pos_iff_nontrivial (s : Finset α) :
     0 < (s : Set α).infsep ↔ (s : Set α).Nontrivial :=
   infsep_pos_iff_nontrivial_of_finite
-#align finset.infsep_pos_iff_nontrivial Set.Finset.infsep_pos_iff_nontrivial
+#align finset.infsep_pos_iff_nontrivial Finset.infsep_pos_iff_nontrivial
 
 end MetricSpace
 

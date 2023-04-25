@@ -65,11 +65,11 @@ def esymm (s : Multiset R) (n : ℕ) : R :=
 #align multiset.esymm Multiset.esymm
 -/
 
-#print Multiset.Finset.esymm_map_val /-
-theorem Multiset.Finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
+#print Finset.esymm_map_val /-
+theorem Finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
     (s.val.map f).esymm n = (s.powersetLen n).Sum fun t => t.Prod f := by
   simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powersetLen, map_map]
-#align finset.esymm_map_val Multiset.Finset.esymm_map_val
+#align finset.esymm_map_val Finset.esymm_map_val
 -/
 
 end Multiset

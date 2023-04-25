@@ -180,6 +180,7 @@ Case conversion may be inaccurate. Consider using '#align units.mk_coe Units.mk_
 theorem mk_val (u : αˣ) (y h₁ h₂) : mk (u : α) y h₁ h₂ = u :=
   ext rfl
 #align units.mk_coe Units.mk_val
+#align add_units.mk_coe AddUnits.mk_val
 
 #print Units.copy /-
 /-- Copy a unit, adjusting definition equalities. -/

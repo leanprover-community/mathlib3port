@@ -191,7 +191,7 @@ noncomputable def Fintype.toEncodable (α : Type _) [Fintype α] : Encodable α 
 #print Vector.encodable /-
 /-- If `α` is encodable, then so is `vector α n`. -/
 instance Vector.encodable [Encodable α] {n} : Encodable (Vector α n) :=
-  Encodable.Subtype.encodable
+  Subtype.encodable
 #align vector.encodable Vector.encodable
 -/
 
@@ -248,10 +248,9 @@ encoding is not unique, we wrap it in `trunc` to preserve computability. -/
 def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
   (Fintype.truncEncodable α).bind fun a =>
-    (@fintypeArrow α (Σa, π a) _ _ (@Encodable.Sigma.encodable _ _ a _)).bind fun f =>
+    (@fintypeArrow α (Σa, π a) _ _ (@Sigma.encodable _ _ a _)).bind fun f =>
       Trunc.mk <|
-        @Encodable.ofEquiv _ _ (@Encodable.Subtype.encodable _ _ f _)
-          (Equiv.piEquivSubtypeSigma α π)
+        @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equiv.piEquivSubtypeSigma α π)
 #align encodable.fintype_pi Encodable.fintypePi
 -/
 

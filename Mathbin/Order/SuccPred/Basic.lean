@@ -507,19 +507,19 @@ theorem le_le_succ_iff : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a :=
 #align order.le_le_succ_iff Order.le_le_succ_iff
 -/
 
-#print Order.Covby.succ_eq /-
-theorem Order.Covby.succ_eq (h : a ⋖ b) : succ a = b :=
+#print Covby.succ_eq /-
+theorem Covby.succ_eq (h : a ⋖ b) : succ a = b :=
   (succ_le_of_lt h.lt).eq_of_not_lt fun h' => h.2 (lt_succ_of_not_isMax h.lt.not_isMax) h'
-#align covby.succ_eq Order.Covby.succ_eq
+#align covby.succ_eq Covby.succ_eq
 -/
 
-#print Order.Wcovby.le_succ /-
-theorem Order.Wcovby.le_succ (h : a ⩿ b) : b ≤ succ a :=
+#print Wcovby.le_succ /-
+theorem Wcovby.le_succ (h : a ⩿ b) : b ≤ succ a :=
   by
   obtain h | rfl := h.covby_or_eq
   · exact h.succ_eq.ge
   · exact le_succ _
-#align wcovby.le_succ Order.Wcovby.le_succ
+#align wcovby.le_succ Wcovby.le_succ
 -/
 
 #print Order.le_succ_iff_eq_or_le /-
@@ -610,7 +610,7 @@ theorem lt_succ_iff_eq_or_lt : a < succ b ↔ a = b ∨ a < b :=
 theorem succ_eq_iff_covby : succ a = b ↔ a ⋖ b :=
   ⟨by
     rintro rfl
-    exact covby_succ _, Order.Covby.succ_eq⟩
+    exact covby_succ _, Covby.succ_eq⟩
 #align order.succ_eq_iff_covby Order.succ_eq_iff_covby
 -/
 
@@ -730,7 +730,7 @@ instance [PartialOrder α] : Subsingleton (SuccOrder α) :=
     ext a
     by_cases ha : IsMax a
     · exact (@IsMax.succ_eq _ _ h₀ _ ha).trans ha.succ_eq.symm
-    · exact @Order.Covby.succ_eq _ _ h₀ _ _ (covby_succ_of_not_is_max ha)⟩
+    · exact @Covby.succ_eq _ _ h₀ _ _ (covby_succ_of_not_is_max ha)⟩
 
 section CompleteLattice
 
@@ -1027,19 +1027,19 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
 #align order.pred_le_le_iff Order.pred_le_le_iff
 -/
 
-#print Order.Covby.pred_eq /-
-theorem Order.Covby.pred_eq {a b : α} (h : a ⋖ b) : pred b = a :=
+#print Covby.pred_eq /-
+theorem Covby.pred_eq {a b : α} (h : a ⋖ b) : pred b = a :=
   (le_pred_of_lt h.lt).eq_of_not_gt fun h' => h.2 h' <| pred_lt_of_not_isMin h.lt.not_isMin
-#align covby.pred_eq Order.Covby.pred_eq
+#align covby.pred_eq Covby.pred_eq
 -/
 
-#print Order.Wcovby.pred_le /-
-theorem Order.Wcovby.pred_le (h : a ⩿ b) : pred b ≤ a :=
+#print Wcovby.pred_le /-
+theorem Wcovby.pred_le (h : a ⩿ b) : pred b ≤ a :=
   by
   obtain h | rfl := h.covby_or_eq
   · exact h.pred_eq.le
   · exact pred_le _
-#align wcovby.pred_le Order.Wcovby.pred_le
+#align wcovby.pred_le Wcovby.pred_le
 -/
 
 #print Order.pred_le_iff_eq_or_le /-
@@ -1118,7 +1118,7 @@ theorem pred_lt_iff_eq_or_lt : pred a < b ↔ a = b ∨ a < b :=
 theorem pred_eq_iff_covby : pred b = a ↔ a ⋖ b :=
   ⟨by
     rintro rfl
-    exact pred_covby _, Order.Covby.pred_eq⟩
+    exact pred_covby _, Covby.pred_eq⟩
 #align order.pred_eq_iff_covby Order.pred_eq_iff_covby
 -/
 
@@ -1239,7 +1239,7 @@ instance [PartialOrder α] : Subsingleton (PredOrder α) :=
     ext a
     by_cases ha : IsMin a
     · exact (@IsMin.pred_eq _ _ h₀ _ ha).trans ha.pred_eq.symm
-    · exact @Order.Covby.pred_eq _ _ h₀ _ _ (pred_covby_of_not_is_min ha)⟩
+    · exact @Covby.pred_eq _ _ h₀ _ _ (pred_covby_of_not_is_min ha)⟩
 
 section CompleteLattice
 

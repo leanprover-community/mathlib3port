@@ -408,8 +408,8 @@ theorem absNorm_span_singleton (r : S) : absNorm (span ({r} : Set S)) = (Algebra
   rw [Algebra.norm_apply]
   by_cases hr : r = 0
   ·
-    simp only [hr, Ideal.span_zero, LinearMap.Algebra.coe_lmul_eq_mul, eq_self_iff_true,
-      Ideal.absNorm_bot, LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
+    simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.absNorm_bot,
+      LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
   letI := Ideal.fintypeQuotientOfFreeOfNeBot (span {r}) (mt span_singleton_eq_bot.mp hr)
   let b := Module.Free.chooseBasis ℤ S
   rw [← nat_abs_det_equiv _ (b.equiv (basis_span_singleton b hr) (Equiv.refl _))]

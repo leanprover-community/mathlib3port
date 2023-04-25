@@ -143,20 +143,20 @@ theorem pow_down [Pow α β] (a : ULift.{v} α) (b : β) : (a ^ b).down = a.down
 #align ulift.pow_down ULift.pow_down
 #align ulift.smul_down ULift.smul_down
 
-#print ULift.MulEquiv.ulift /-
+#print MulEquiv.ulift /-
 /-- The multiplicative equivalence between `ulift α` and `α`.
 -/
 @[to_additive "The additive equivalence between `ulift α` and `α`."]
-def ULift.MulEquiv.ulift [Mul α] : ULift α ≃* α :=
+def MulEquiv.ulift [Mul α] : ULift α ≃* α :=
   { Equiv.ulift with map_mul' := fun x y => rfl }
-#align mul_equiv.ulift ULift.MulEquiv.ulift
+#align mul_equiv.ulift MulEquiv.ulift
 #align add_equiv.ulift AddEquiv.ulift
 -/
 
 #print ULift.semigroup /-
 @[to_additive]
 instance semigroup [Semigroup α] : Semigroup (ULift α) :=
-  ULift.MulEquiv.ulift.Injective.Semigroup _ fun x y => rfl
+  MulEquiv.ulift.Injective.Semigroup _ fun x y => rfl
 #align ulift.semigroup ULift.semigroup
 #align ulift.add_semigroup ULift.addSemigroup
 -/

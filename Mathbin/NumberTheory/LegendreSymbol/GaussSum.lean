@@ -107,7 +107,7 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
       Finset.sum_const_zero, map_zero_one, mul_one]
     exact hχ.sum_eq_zero.symm
   · -- case `b ≠ 0`
-    refine' (Fintype.sum_bijective _ (Equiv.mulLeft_bijective₀ b hb) _ _ fun x => _).symm
+    refine' (Fintype.sum_bijective _ (mulLeft_bijective₀ b hb) _ _ fun x => _).symm
     rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
 #align gauss_sum_mul_aux gauss_sum_mul_aux
 

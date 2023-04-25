@@ -108,7 +108,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_X_add_C_co
 theorem Finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
     (∏ i in s, X + C (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i :=
   by
-  rw [Finset.prod, prod_X_add_C_coeff' _ r h, Multiset.Finset.esymm_map_val]
+  rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]
   rfl
 #align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeff
 

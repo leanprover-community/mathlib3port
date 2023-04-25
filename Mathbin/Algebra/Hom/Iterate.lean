@@ -430,6 +430,7 @@ Case conversion may be inaccurate. Consider using '#align semiconj_by.function_s
 theorem SemiconjBy.function_semiconj_mul_right_swap (h : SemiconjBy a b c) :
     Function.Semiconj (· * a) (· * c) (· * b) := fun j => by simp_rw [mul_assoc, ← h.eq]
 #align semiconj_by.function_semiconj_mul_right_swap SemiconjBy.function_semiconj_mul_right_swap
+#align add_semiconj_by.function_semiconj_add_right_swap AddSemiconjBy.function_semiconj_add_right_swap
 
 /- warning: commute.function_commute_mul_right -> Commute.function_commute_mul_right is a dubious translation:
 lean 3 declaration is

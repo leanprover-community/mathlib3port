@@ -185,7 +185,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
     ⟨s',
       bs'.map
         {
-          LinearMap.Algebra.lmul _ _
+          Algebra.lmul _ _
             (algebraMap A L y) with
           toFun := fun x => algebraMap A L y * x
           invFun := fun x => (algebraMap A L y)⁻¹ * x
