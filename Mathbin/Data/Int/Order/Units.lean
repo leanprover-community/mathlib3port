@@ -75,7 +75,7 @@ theorem units_mul_self (u : ℤˣ) : u * u = 1 := by rw [← sq, units_sq]
 lean 3 declaration is
   forall (u : Units.{0} Int Int.monoid), Eq.{1} (Units.{0} Int Int.monoid) (Inv.inv.{0} (Units.{0} Int Int.monoid) (Units.hasInv.{0} Int Int.monoid) u) u
 but is expected to have type
-  forall (u : Units.{0} Int Int.instMonoidInt), Eq.{1} (Units.{0} Int Int.instMonoidInt) (Inv.inv.{0} (Units.{0} Int Int.instMonoidInt) (Units.instInvUnits.{0} Int Int.instMonoidInt) u) u
+  forall (u : Units.{0} Int Int.instMonoidInt), Eq.{1} (Units.{0} Int Int.instMonoidInt) (Inv.inv.{0} (Units.{0} Int Int.instMonoidInt) (Units.instInv.{0} Int Int.instMonoidInt) u) u
 Case conversion may be inaccurate. Consider using '#align int.units_inv_eq_self Int.units_inv_eq_selfₓ'. -/
 @[simp]
 theorem units_inv_eq_self (u : ℤˣ) : u⁻¹ = u := by rw [inv_eq_iff_mul_eq_one, units_mul_self]
