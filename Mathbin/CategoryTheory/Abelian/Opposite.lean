@@ -37,6 +37,7 @@ section
 
 variable {C} {X Y : C} (f : X ⟶ Y) {A B : Cᵒᵖ} (g : A ⟶ B)
 
+#print CategoryTheory.kernelOpUnop /-
 -- TODO: Generalize (this will work whenever f has a cokernel)
 -- (The abelian case is probably sufficient for most applications.)
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
@@ -60,7 +61,9 @@ def kernelOpUnop : (kernel f.op).unop ≅ cokernel f
     ext
     simp [← unop_comp]
 #align category_theory.kernel_op_unop CategoryTheory.kernelOpUnop
+-/
 
+#print CategoryTheory.cokernelOpUnop /-
 -- TODO: Generalize (this will work whenever f has a kernel)
 -- (The abelian case is probably sufficient for most applications.)
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
@@ -84,88 +87,118 @@ def cokernelOpUnop : (cokernel f.op).unop ≅ kernel f
     ext
     simp [← unop_comp]
 #align category_theory.cokernel_op_unop CategoryTheory.cokernelOpUnop
+-/
 
+#print CategoryTheory.kernelUnopOp /-
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
 def kernelUnopOp : Opposite.op (kernel g.unop) ≅ cokernel g :=
   (cokernelOpUnop g.unop).op
 #align category_theory.kernel_unop_op CategoryTheory.kernelUnopOp
+-/
 
+#print CategoryTheory.cokernelUnopOp /-
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]
 def cokernelUnopOp : Opposite.op (cokernel g.unop) ≅ kernel g :=
   (kernelOpUnop g.unop).op
 #align category_theory.cokernel_unop_op CategoryTheory.cokernelUnopOp
+-/
 
-theorem Cokernel.π_op :
+#print CategoryTheory.cokernel.π_op /-
+theorem cokernel.π_op :
     (cokernel.π f.op).unop =
       (cokernelOpUnop f).Hom ≫ kernel.ι f ≫ eqToHom (Opposite.unop_op _).symm :=
   by simp [cokernel_op_unop]
-#align category_theory.cokernel.π_op CategoryTheory.Cokernel.π_op
+#align category_theory.cokernel.π_op CategoryTheory.cokernel.π_op
+-/
 
-theorem Kernel.ι_op :
+#print CategoryTheory.kernel.ι_op /-
+theorem kernel.ι_op :
     (kernel.ι f.op).unop = eqToHom (Opposite.unop_op _) ≫ cokernel.π f ≫ (kernelOpUnop f).inv := by
   simp [kernel_op_unop]
-#align category_theory.kernel.ι_op CategoryTheory.Kernel.ι_op
+#align category_theory.kernel.ι_op CategoryTheory.kernel.ι_op
+-/
 
+#print CategoryTheory.kernelOpOp /-
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]
 def kernelOpOp : kernel f.op ≅ Opposite.op (cokernel f) :=
   (kernelOpUnop f).op.symm
 #align category_theory.kernel_op_op CategoryTheory.kernelOpOp
+-/
 
+#print CategoryTheory.cokernelOpOp /-
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
 @[simps]
 def cokernelOpOp : cokernel f.op ≅ Opposite.op (kernel f) :=
   (cokernelOpUnop f).op.symm
 #align category_theory.cokernel_op_op CategoryTheory.cokernelOpOp
+-/
 
+#print CategoryTheory.kernelUnopUnop /-
 /-- The kernel of `g.unop` is the opposite of `cokernel g`. -/
 @[simps]
 def kernelUnopUnop : kernel g.unop ≅ (cokernel g).unop :=
   (kernelUnopOp g).unop.symm
 #align category_theory.kernel_unop_unop CategoryTheory.kernelUnopUnop
+-/
 
-theorem Kernel.ι_unop :
+#print CategoryTheory.kernel.ι_unop /-
+theorem kernel.ι_unop :
     (kernel.ι g.unop).op = eqToHom (Opposite.op_unop _) ≫ cokernel.π g ≫ (kernelUnopOp g).inv := by
   simp
-#align category_theory.kernel.ι_unop CategoryTheory.Kernel.ι_unop
+#align category_theory.kernel.ι_unop CategoryTheory.kernel.ι_unop
+-/
 
-theorem Cokernel.π_unop :
+#print CategoryTheory.cokernel.π_unop /-
+theorem cokernel.π_unop :
     (cokernel.π g.unop).op =
       (cokernelUnopOp g).Hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm :=
   by simp
-#align category_theory.cokernel.π_unop CategoryTheory.Cokernel.π_unop
+#align category_theory.cokernel.π_unop CategoryTheory.cokernel.π_unop
+-/
 
+#print CategoryTheory.cokernelUnopUnop /-
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]
 def cokernelUnopUnop : cokernel g.unop ≅ (kernel g).unop :=
   (cokernelUnopOp g).unop.symm
 #align category_theory.cokernel_unop_unop CategoryTheory.cokernelUnopUnop
+-/
 
+#print CategoryTheory.imageUnopOp /-
 /-- The opposite of the image of `g.unop` is the image of `g.` -/
 def imageUnopOp : Opposite.op (image g.unop) ≅ image g :=
   (Abelian.imageIsoImage _).op ≪≫
     (cokernelOpOp _).symm ≪≫
-      cokernelIsoOfEq (Cokernel.π_unop _) ≪≫
+      cokernelIsoOfEq (cokernel.π_unop _) ≪≫
         cokernelEpiComp _ _ ≪≫ cokernelCompIsIso _ _ ≪≫ Abelian.coimageIsoImage' _
 #align category_theory.image_unop_op CategoryTheory.imageUnopOp
+-/
 
+#print CategoryTheory.imageOpOp /-
 /-- The opposite of the image of `f` is the image of `f.op`. -/
 def imageOpOp : Opposite.op (image f) ≅ image f.op :=
   imageUnopOp f.op
 #align category_theory.image_op_op CategoryTheory.imageOpOp
+-/
 
+#print CategoryTheory.imageOpUnop /-
 /-- The image of `f.op` is the opposite of the image of `f`. -/
 def imageOpUnop : (image f.op).unop ≅ image f :=
   (imageUnopOp f.op).unop
 #align category_theory.image_op_unop CategoryTheory.imageOpUnop
+-/
 
+#print CategoryTheory.imageUnopUnop /-
 /-- The image of `g` is the opposite of the image of `g.unop.` -/
 def imageUnopUnop : (image g).unop ≅ image g.unop :=
   (imageUnopOp g).unop
 #align category_theory.image_unop_unop CategoryTheory.imageUnopUnop
+-/
 
+#print CategoryTheory.image_ι_op_comp_imageUnopOp_hom /-
 theorem image_ι_op_comp_imageUnopOp_hom :
     (image.ι g.unop).op ≫ (imageUnopOp g).Hom = factorThruImage g :=
   by
@@ -177,22 +210,29 @@ theorem image_ι_op_comp_imageUnopOp_hom :
   simp only [category.assoc, abelian.image_iso_image_hom_comp_image_ι, kernel.lift_ι,
     Quiver.Hom.op_unop, cokernel.π_desc]
 #align category_theory.image_ι_op_comp_image_unop_op_hom CategoryTheory.image_ι_op_comp_imageUnopOp_hom
+-/
 
+#print CategoryTheory.imageUnopOp_hom_comp_image_ι /-
 theorem imageUnopOp_hom_comp_image_ι :
     (imageUnopOp g).Hom ≫ image.ι g = (factorThruImage g.unop).op := by
   simp only [← cancel_epi (image.ι g.unop).op, ← category.assoc, image_ι_op_comp_image_unop_op_hom,
     ← op_comp, image.fac, Quiver.Hom.op_unop]
 #align category_theory.image_unop_op_hom_comp_image_ι CategoryTheory.imageUnopOp_hom_comp_image_ι
+-/
 
+#print CategoryTheory.factorThruImage_comp_imageUnopOp_inv /-
 theorem factorThruImage_comp_imageUnopOp_inv :
     factorThruImage g ≫ (imageUnopOp g).inv = (image.ι g.unop).op := by
   rw [iso.comp_inv_eq, image_ι_op_comp_image_unop_op_hom]
 #align category_theory.factor_thru_image_comp_image_unop_op_inv CategoryTheory.factorThruImage_comp_imageUnopOp_inv
+-/
 
+#print CategoryTheory.imageUnopOp_inv_comp_op_factorThruImage /-
 theorem imageUnopOp_inv_comp_op_factorThruImage :
     (imageUnopOp g).inv ≫ (factorThruImage g.unop).op = image.ι g := by
   rw [iso.inv_comp_eq, image_unop_op_hom_comp_image_ι]
 #align category_theory.image_unop_op_inv_comp_op_factor_thru_image CategoryTheory.imageUnopOp_inv_comp_op_factorThruImage
+-/
 
 end
 
