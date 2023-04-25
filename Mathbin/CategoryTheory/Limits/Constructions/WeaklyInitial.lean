@@ -32,6 +32,7 @@ open Limits
 
 variable {C : Type u} [Category.{v} C]
 
+#print CategoryTheory.has_weakly_initial_of_weakly_initial_set_and_hasProducts /-
 /--
 If `C` has (small) products and a small weakly initial set of objects, then it has a weakly initial
 object.
@@ -40,7 +41,9 @@ theorem has_weakly_initial_of_weakly_initial_set_and_hasProducts [HasProducts.{v
     {B : ι → C} (hB : ∀ A : C, ∃ i, Nonempty (B i ⟶ A)) : ∃ T : C, ∀ X, Nonempty (T ⟶ X) :=
   ⟨∏ B, fun X => ⟨Pi.π _ _ ≫ (hB X).choose_spec.some⟩⟩
 #align category_theory.has_weakly_initial_of_weakly_initial_set_and_has_products CategoryTheory.has_weakly_initial_of_weakly_initial_set_and_hasProducts
+-/
 
+#print CategoryTheory.hasInitial_of_weakly_initial_and_hasWideEqualizers /-
 /-- If `C` has (small) wide equalizers and a weakly initial object, then it has an initial object.
 
 The initial object is constructed as the wide equalizer of all endomorphisms on the given weakly
@@ -69,6 +72,7 @@ theorem hasInitial_of_weakly_initial_and_hasWideEqualizers [HasWideEqualizers.{v
     apply equalizer.condition
   exact has_initial_of_unique (wide_equalizer (id : endos → endos))
 #align category_theory.has_initial_of_weakly_initial_and_has_wide_equalizers CategoryTheory.hasInitial_of_weakly_initial_and_hasWideEqualizers
+-/
 
 end CategoryTheory
 
