@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 2651125b48fc5c170ab1111afd0817c903b1fc6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,6 +206,17 @@ Case conversion may be inaccurate. Consider using '#align rat.smul_def Rat.smul_
 theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
   DivisionRing.qsmul_eq_mul' a x
 #align rat.smul_def Rat.smul_def
+
+/- warning: rat.smul_one_eq_coe -> Rat.smul_one_eq_coe is a dubious translation:
+lean 3 declaration is
+  forall (A : Type.{u1}) [_inst_2 : DivisionRing.{u1} A] (m : Rat), Eq.{succ u1} A (SMul.smul.{0, u1} Rat A (Rat.smulDivisionRing.{u1} A _inst_2) m (OfNat.ofNat.{u1} A 1 (OfNat.mk.{u1} A 1 (One.one.{u1} A (AddMonoidWithOne.toOne.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A (DivisionRing.toRing.{u1} A _inst_2))))))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat A (HasLiftT.mk.{1, succ u1} Rat A (CoeTCₓ.coe.{1, succ u1} Rat A (Rat.castCoe.{u1} A (DivisionRing.toHasRatCast.{u1} A _inst_2)))) m)
+but is expected to have type
+  forall {A : Type.{u1}} [_inst_2 : DivisionRing.{u1} A] [m : Algebra.{0, u1} Rat A Rat.commSemiring (DivisionSemiring.toSemiring.{u1} A (DivisionRing.toDivisionSemiring.{u1} A _inst_2))] (m_1 : Rat), Eq.{succ u1} A (SMul.smul.{0, u1} Rat A (Algebra.toSMul.{0, u1} Rat A Rat.commSemiring (DivisionSemiring.toSemiring.{u1} A (DivisionRing.toDivisionSemiring.{u1} A _inst_2)) m) m_1 (OfNat.ofNat.{u1} A 1 (One.toOfNat1.{u1} A (NonAssocRing.toOne.{u1} A (Ring.toNonAssocRing.{u1} A (DivisionRing.toRing.{u1} A _inst_2)))))) (Rat.cast.{u1} A (DivisionRing.toRatCast.{u1} A _inst_2) m_1)
+Case conversion may be inaccurate. Consider using '#align rat.smul_one_eq_coe Rat.smul_one_eq_coeₓ'. -/
+@[simp]
+theorem smul_one_eq_coe (A : Type _) [DivisionRing A] (m : ℚ) : m • (1 : A) = ↑m := by
+  rw [Rat.smul_def, mul_one]
+#align rat.smul_one_eq_coe Rat.smul_one_eq_coe
 
 end Rat
 

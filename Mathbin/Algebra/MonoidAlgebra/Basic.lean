@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit 57e09a1296bfb4330ddf6624f1028ba186117d82
+! leanprover-community/mathlib commit 2651125b48fc5c170ab1111afd0817c903b1fc6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1693,6 +1693,9 @@ instance [CommRing k] [AddCommMonoid G] : CommRing (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.nonUnitalCommRing, AddMonoidAlgebra.ring with }
 
 variable {S : Type _}
+
+instance [Semiring k] [DistribSMul R k] : DistribSMul R (AddMonoidAlgebra k G) :=
+  Finsupp.distribSMul G k
 
 instance [Monoid R] [Semiring k] [DistribMulAction R k] :
     DistribMulAction R (AddMonoidAlgebra k G) :=

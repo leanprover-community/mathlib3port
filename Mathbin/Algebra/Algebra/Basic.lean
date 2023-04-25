@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.basic
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit 2651125b48fc5c170ab1111afd0817c903b1fc6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1121,17 +1121,6 @@ theorem map_mul_algebraMap (f : A →ₗ[R] B) (a : A) (r : R) :
 #align linear_map.map_mul_algebra_map LinearMap.map_mul_algebraMap
 
 end LinearMap
-
-/- warning: rat.smul_one_eq_coe -> Rat.smul_one_eq_coe is a dubious translation:
-lean 3 declaration is
-  forall {A : Type.{u1}} [_inst_1 : DivisionRing.{u1} A] [_inst_2 : Algebra.{0, u1} Rat A Rat.commSemiring (Ring.toSemiring.{u1} A (DivisionRing.toRing.{u1} A _inst_1))] (m : Rat), Eq.{succ u1} A (SMul.smul.{0, u1} Rat A (Algebra.toHasSmul.{0, u1} Rat A Rat.commSemiring (Ring.toSemiring.{u1} A (DivisionRing.toRing.{u1} A _inst_1)) _inst_2) m (OfNat.ofNat.{u1} A 1 (OfNat.mk.{u1} A 1 (One.one.{u1} A (AddMonoidWithOne.toOne.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A (DivisionRing.toRing.{u1} A _inst_1))))))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat A (HasLiftT.mk.{1, succ u1} Rat A (CoeTCₓ.coe.{1, succ u1} Rat A (Rat.castCoe.{u1} A (DivisionRing.toHasRatCast.{u1} A _inst_1)))) m)
-but is expected to have type
-  forall {A : Type.{u1}} [_inst_1 : DivisionRing.{u1} A] [_inst_2 : Algebra.{0, u1} Rat A Rat.commSemiring (DivisionSemiring.toSemiring.{u1} A (DivisionRing.toDivisionSemiring.{u1} A _inst_1))] (m : Rat), Eq.{succ u1} A (SMul.smul.{0, u1} Rat A (Algebra.toSMul.{0, u1} Rat A Rat.commSemiring (DivisionSemiring.toSemiring.{u1} A (DivisionRing.toDivisionSemiring.{u1} A _inst_1)) _inst_2) m (OfNat.ofNat.{u1} A 1 (One.toOfNat1.{u1} A (NonAssocRing.toOne.{u1} A (Ring.toNonAssocRing.{u1} A (DivisionRing.toRing.{u1} A _inst_1)))))) (Rat.cast.{u1} A (DivisionRing.toRatCast.{u1} A _inst_1) m)
-Case conversion may be inaccurate. Consider using '#align rat.smul_one_eq_coe Rat.smul_one_eq_coeₓ'. -/
-@[simp]
-theorem Rat.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) :
-    @SMul.smul Algebra.toHasSmul m (1 : A) = ↑m := by rw [Algebra.smul_def, mul_one, eq_ratCast]
-#align rat.smul_one_eq_coe Rat.smul_one_eq_coe
 
 section Nat
 
