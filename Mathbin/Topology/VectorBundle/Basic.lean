@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Patrick Massot, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.basic
-! leanprover-community/mathlib commit 7dfe85833014fb54258a228081ebb76b7e96ec98
+! leanprover-community/mathlib commit d2d964c64f8ddcccd6704a731c41f95d13e72f5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,6 +32,21 @@ norm topology on `F →L[R] F`.
 If these conditions are satisfied, we register the typeclass `vector_bundle R F E`.
 
 We define constructions on vector bundles like pullbacks and direct sums in other files.
+
+## Main Definitions
+
+* `trivialization.is_linear`: a class stating that a trivialization is fiberwise linear on its base
+  set.
+* `trivialization.linear_equiv_at` and `trivialization.continuous_linear_map_at` are the
+  (continuous) linear fiberwise equivalences a trivialization induces.
+* They have forward maps `trivialization.linear_map_at` / `trivialization.continuous_linear_map_at`
+  and inverses `trivialization.symmₗ` / `trivialization.symmL`. Note that these are all defined
+  everywhere, since they are extended using the zero function.
+* `trivialization.coord_changeL` is the coordinate change induced by two trivializations. It only
+  makes sense on the intersection of their base sets, but is extended outside it using the identity.
+* Given a continuous (semi)linear map between `E x` and `E' y` where `E` and `E'` are bundles over
+  possibly different base sets, `continuous_linear_map.in_coordinates` turns this into a continuous
+  (semi)linear map between the chosen fibers of those bundles.
 
 ## Implementation notes
 
@@ -1035,6 +1050,75 @@ theorem to_vectorBundle :
 #align vector_prebundle.to_vector_bundle VectorPrebundle.to_vectorBundle
 
 end VectorPrebundle
+
+namespace ContinuousLinearMap
+
+variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [NontriviallyNormedField 𝕜₂]
+
+variable {σ : 𝕜₁ →+* 𝕜₂}
+
+variable {B' : Type _} [TopologicalSpace B']
+
+variable [NormedSpace 𝕜₁ F] [∀ x, Module 𝕜₁ (E x)] [TopologicalSpace (TotalSpace E)]
+
+variable {F' : Type _} [NormedAddCommGroup F'] [NormedSpace 𝕜₂ F'] {E' : B' → Type _}
+  [∀ x, AddCommMonoid (E' x)] [∀ x, Module 𝕜₂ (E' x)] [TopologicalSpace (TotalSpace E')]
+
+variable [∀ x, TopologicalSpace (E x)] [FiberBundle F E] [VectorBundle 𝕜₁ F E]
+
+variable [∀ x, TopologicalSpace (E' x)] [FiberBundle F' E'] [VectorBundle 𝕜₂ F' E']
+
+variable (F E F' E')
+
+/-- When `ϕ` is a continuous (semi)linear map between the fibers `E x` and `E' y` of two vector
+bundles `E` and `E'`, `continuous_linear_map.in_coordinates F E F' E' x₀ x y₀ y ϕ` is a coordinate
+change of this continuous linear map w.r.t. the chart around `x₀` and the chart around `y₀`.
+
+It is defined by composing `ϕ` with appropriate coordinate changes given by the vector bundles
+`E` and `E'`.
+We use the operations `trivialization.continuous_linear_map_at` and `trivialization.symmL` in the
+definition, instead of `trivialization.continuous_linear_equiv_at`, so that
+`continuous_linear_map.in_coordinates` is defined everywhere (but see
+`continuous_linear_map.in_coordinates_eq`).
+
+This is the (second component of the) underlying function of a trivialization of the hom-bundle
+(see `hom_trivialization_at_apply`). However, note that `continuous_linear_map.in_coordinates` is
+defined even when `x` and `y` live in different base sets.
+Therefore, it is is also convenient when working with the hom-bundle between pulled back bundles.
+-/
+def inCoordinates (x₀ x : B) (y₀ y : B') (ϕ : E x →SL[σ] E' y) : F →SL[σ] F' :=
+  ((trivializationAt F' E' y₀).continuousLinearMapAt 𝕜₂ y).comp <|
+    ϕ.comp <| (trivializationAt F E x₀).symmL 𝕜₁ x
+#align continuous_linear_map.in_coordinates ContinuousLinearMap.inCoordinates
+
+variable {F F'}
+
+/-- rewrite `in_coordinates` using continuous linear equivalences. -/
+theorem inCoordinates_eq (x₀ x : B) (y₀ y : B') (ϕ : E x →SL[σ] E' y)
+    (hx : x ∈ (trivializationAt F E x₀).baseSet) (hy : y ∈ (trivializationAt F' E' y₀).baseSet) :
+    inCoordinates F E F' E' x₀ x y₀ y ϕ =
+      ((trivializationAt F' E' y₀).continuousLinearEquivAt 𝕜₂ y hy : E' y →L[𝕜₂] F').comp
+        (ϕ.comp <|
+          (((trivializationAt F E x₀).continuousLinearEquivAt 𝕜₁ x hx).symm : F →L[𝕜₁] E x)) :=
+  by
+  ext
+  simp_rw [in_coordinates, ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe,
+    Trivialization.coe_continuousLinearEquivAt_eq, Trivialization.symm_continuousLinearEquivAt_eq]
+#align continuous_linear_map.in_coordinates_eq ContinuousLinearMap.inCoordinates_eq
+
+/-- rewrite `in_coordinates` in a `vector_bundle_core`. -/
+protected theorem VectorBundleCore.inCoordinates_eq {ι ι'} (Z : VectorBundleCore 𝕜₁ B F ι)
+    (Z' : VectorBundleCore 𝕜₂ B' F' ι') {x₀ x : B} {y₀ y : B'} (ϕ : F →SL[σ] F')
+    (hx : x ∈ Z.baseSet (Z.indexAt x₀)) (hy : y ∈ Z'.baseSet (Z'.indexAt y₀)) :
+    inCoordinates F Z.Fiber F' Z'.Fiber x₀ x y₀ y ϕ =
+      (Z'.coordChange (Z'.indexAt y) (Z'.indexAt y₀) y).comp
+        (ϕ.comp <| Z.coordChange (Z.indexAt x₀) (Z.indexAt x) x) :=
+  by
+  simp_rw [in_coordinates, Z'.trivialization_at_continuous_linear_map_at hy,
+    Z.trivialization_at_symmL hx]
+#align continuous_linear_map.vector_bundle_core.in_coordinates_eq ContinuousLinearMap.VectorBundleCore.inCoordinates_eq
+
+end ContinuousLinearMap
 
 end
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.types
-! leanprover-community/mathlib commit a50170a88a47570ed186b809ca754110590f9476
+! leanprover-community/mathlib commit 98bd247d933fb581ff37244a5998bd33d81dd46d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,10 +18,15 @@ This file defines the space of complete types over a first-order theory.
 ## Main Definitions
 * `first_order.language.Theory.complete_type`:
   `T.complete_type α` consists of complete types over the theory `T` with variables `α`.
+* `first_order.language.Theory.type_of` is the type of a given tuple.
+* `first_order.language.Theory.realized_types`: `T.realized_types M α` is the set of
+  types in `T.complete_type α` that are realized in `M` - that is, the type of some tuple in `M`.
 
 ## Main Results
 * `first_order.language.Theory.complete_type.nonempty_iff`:
   The space `T.complete_type α` is nonempty exactly when `T` is satisfiable.
+* `first_order.language.Theory.complete_type.exists_Model_is_realized_in`: Every type is realized in
+some model.
 
 ## Implementation Notes
 * Complete types are implemented as maximal consistent theories in an expanded language.
@@ -169,6 +174,57 @@ theorem toList_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentenc
 #align first_order.language.Theory.complete_type.to_list_foldr_inf_mem FirstOrder.Language.Theory.CompleteType.toList_foldr_inf_mem
 
 end CompleteType
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+variable {M : Type w'} [L.Structure M] [Nonempty M] [M ⊨ T] (T)
+
+/-- The set of all formulas true at a tuple in a structure forms a complete type. -/
+def typeOf (v : α → M) : T.CompleteType α :=
+  haveI : (constants_on α).Structure M := constants_on.Structure v
+  { toTheory := L[[α]].completeTheory M
+    subset' := model_iff_subset_complete_theory.1 ((Lhom.on_Theory_model _ T).2 inferInstance)
+    is_maximal' := complete_theory.is_maximal _ _ }
+#align first_order.language.Theory.type_of FirstOrder.Language.Theory.typeOf
+
+namespace CompleteType
+
+variable {T} {v : α → M}
+
+@[simp]
+theorem mem_typeOf {φ : L[[α]].Sentence} :
+    φ ∈ T.typeOf v ↔ (Formula.equivSentence.symm φ).realize v :=
+  letI : (constants_on α).Structure M := constants_on.Structure v
+  mem_complete_theory.trans (formula.realize_equiv_sentence_symm _ _ _).symm
+#align first_order.language.Theory.complete_type.mem_type_of FirstOrder.Language.Theory.CompleteType.mem_typeOf
+
+theorem formula_mem_typeOf {φ : L.Formula α} : Formula.equivSentence φ ∈ T.typeOf v ↔ φ.realize v :=
+  by simp
+#align first_order.language.Theory.complete_type.formula_mem_type_of FirstOrder.Language.Theory.CompleteType.formula_mem_typeOf
+
+end CompleteType
+
+variable (M)
+
+/-- A complete type `p` is realized in a particular structure when there is some
+  tuple `v` whose type is `p`. -/
+@[simp]
+def realizedTypes (α : Type w) : Set (T.CompleteType α) :=
+  Set.range (T.typeOf : (α → M) → T.CompleteType α)
+#align first_order.language.Theory.realized_types FirstOrder.Language.Theory.realizedTypes
+
+theorem exists_modelCat_is_realized_in (p : T.CompleteType α) :
+    ∃ M : Theory.ModelCat.{u, v, max u v w} T, p ∈ T.realizedTypes M α :=
+  by
+  obtain ⟨M⟩ := p.is_maximal.1
+  refine' ⟨(M.subtheory_Model p.subset).reduct (L.Lhom_with_constants α), fun a => (L.con a : M), _⟩
+  refine' SetLike.ext fun φ => _
+  simp only [complete_type.mem_type_of]
+  refine'
+    (formula.realize_equiv_sentence_symm_con _ _).trans
+      (trans (trans _ (p.is_maximal.is_complete.realize_sentence_iff φ M))
+        (p.is_maximal.mem_iff_models φ).symm)
+  rfl
+#align first_order.language.Theory.exists_Model_is_realized_in FirstOrder.Language.Theory.exists_modelCat_is_realized_in
 
 end Theory
 

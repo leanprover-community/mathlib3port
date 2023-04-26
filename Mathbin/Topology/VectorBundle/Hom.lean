@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.hom
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit d2d964c64f8ddcccd6704a731c41f95d13e72f5c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,11 +56,11 @@ variable {B : Type _}
 
 variable (F₁ : Type _) (E₁ : B → Type _) [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜₁ (E₁ x)]
 
-variable [∀ x : B, TopologicalSpace (E₁ x)]
+variable [∀ x, TopologicalSpace (E₁ x)]
 
 variable (F₂ : Type _) (E₂ : B → Type _) [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜₂ (E₂ x)]
 
-variable [∀ x : B, TopologicalSpace (E₂ x)]
+variable [∀ x, TopologicalSpace (E₂ x)]
 
 include F₁ F₂
 
@@ -74,7 +74,7 @@ include F₁ F₂
 We intentionally add `F₁` and `F₂` as arguments to this type, so that instances on this type
 (that depend on `F₁` and `F₂`) actually refer to `F₁` and `F₂`. -/
 @[nolint unused_arguments]
-def Bundle.ContinuousLinearMap (x : B) : Type _ :=
+protected def Bundle.ContinuousLinearMap (x : B) : Type _ :=
   E₁ x →SL[σ] E₂ x deriving Inhabited
 #align bundle.continuous_linear_map Bundle.ContinuousLinearMap
 
@@ -125,9 +125,9 @@ def continuousLinearMapCoordChange [e₁.isLinear 𝕜₁] [e₁'.isLinear 𝕜�
 
 variable {σ e₁ e₁' e₂ e₂'}
 
-variable [∀ x : B, TopologicalSpace (E₁ x)] [FiberBundle F₁ E₁]
+variable [∀ x, TopologicalSpace (E₁ x)] [FiberBundle F₁ E₁]
 
-variable [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₂ E₂]
+variable [∀ x, TopologicalSpace (E₂ x)] [FiberBundle F₂ E₂]
 
 theorem continuousOn_continuousLinearMapCoordChange [VectorBundle 𝕜₁ F₁ E₁] [VectorBundle 𝕜₂ F₂ E₂]
     [MemTrivializationAtlas e₁] [MemTrivializationAtlas e₁'] [MemTrivializationAtlas e₂]
@@ -340,4 +340,29 @@ theorem Trivialization.continuousLinearMap_apply
       ⟨p.1, (e₂.continuousLinearMapAt 𝕜₂ p.1).comp <| p.2.comp <| e₁.symmL 𝕜₁ p.1⟩ :=
   rfl
 #align trivialization.continuous_linear_map_apply Trivialization.continuousLinearMap_apply
+
+omit he₁ he₂
+
+theorem hom_trivializationAt_apply (x₀ : B)
+    (x : TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :
+    trivializationAt (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) x₀ x =
+      ⟨x.1, inCoordinates F₁ E₁ F₂ E₂ x₀ x.1 x₀ x.1 x.2⟩ :=
+  rfl
+#align hom_trivialization_at_apply hom_trivializationAt_apply
+
+@[simp, mfld_simps]
+theorem hom_trivializationAt_source (x₀ : B) :
+    (trivializationAt (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) x₀).source =
+      π (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) ⁻¹'
+        ((trivializationAt F₁ E₁ x₀).baseSet ∩ (trivializationAt F₂ E₂ x₀).baseSet) :=
+  rfl
+#align hom_trivialization_at_source hom_trivializationAt_source
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp, mfld_simps]
+theorem hom_trivializationAt_target (x₀ : B) :
+    (trivializationAt (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) x₀).target =
+      ((trivializationAt F₁ E₁ x₀).baseSet ∩ (trivializationAt F₂ E₂ x₀).baseSet) ×ˢ Set.univ :=
+  rfl
+#align hom_trivialization_at_target hom_trivializationAt_target
 
