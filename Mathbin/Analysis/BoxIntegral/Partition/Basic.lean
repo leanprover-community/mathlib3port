@@ -51,6 +51,7 @@ namespace BoxIntegral
 
 variable {ι : Type _}
 
+#print BoxIntegral.Prepartition /-
 /-- A prepartition of `I : box_integral.box ι` is a finite set of pairwise disjoint subboxes of
 `I`. -/
 structure Prepartition (I : Box ι) where
@@ -58,6 +59,7 @@ structure Prepartition (I : Box ι) where
   le_of_mem' : ∀ J ∈ boxes, J ≤ I
   PairwiseDisjoint : Set.Pairwise (↑boxes) (Disjoint on (coe : Box ι → Set (ι → ℝ)))
 #align box_integral.prepartition BoxIntegral.Prepartition
+-/
 
 namespace Prepartition
 
@@ -66,66 +68,108 @@ variable {I J J₁ J₂ : Box ι} (π : Prepartition I) {π₁ π₂ : Prepartit
 instance : Membership (Box ι) (Prepartition I) :=
   ⟨fun J π => J ∈ π.boxes⟩
 
+#print BoxIntegral.Prepartition.mem_boxes /-
 @[simp]
 theorem mem_boxes : J ∈ π.boxes ↔ J ∈ π :=
   Iff.rfl
 #align box_integral.prepartition.mem_boxes BoxIntegral.Prepartition.mem_boxes
+-/
 
+/- warning: box_integral.prepartition.mem_mk -> BoxIntegral.Prepartition.mem_mk is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {s : Finset.{u1} (BoxIntegral.Box.{u1} ι)} {h₁ : forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.hasMem.{u1} (BoxIntegral.Box.{u1} ι)) J s) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι) J I)} {h₂ : Set.Pairwise.{u1} (BoxIntegral.Box.{u1} ι) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.Set.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) s) (Function.onFun.{succ u1, succ u1, 1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) Prop (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι)))))}, Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.mk.{u1} ι I s h₁ h₂)) (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.hasMem.{u1} (BoxIntegral.Box.{u1} ι)) J s)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {s : Finset.{u1} (BoxIntegral.Box.{u1} ι)} {h₁ : forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instMembershipFinset.{u1} (BoxIntegral.Box.{u1} ι)) J s) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) J I)} {h₂ : Set.Pairwise.{u1} (BoxIntegral.Box.{u1} ι) (Finset.toSet.{u1} (BoxIntegral.Box.{u1} ι) s) (Function.onFun.{succ u1, succ u1, 1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) Prop (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real)))))))) (BoxIntegral.Box.toSet.{u1} ι))}, Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.mk.{u1} ι I s h₁ h₂)) (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instMembershipFinset.{u1} (BoxIntegral.Box.{u1} ι)) J s)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_mk BoxIntegral.Prepartition.mem_mkₓ'. -/
 @[simp]
 theorem mem_mk {s h₁ h₂} : J ∈ (mk s h₁ h₂ : Prepartition I) ↔ J ∈ s :=
   Iff.rfl
 #align box_integral.prepartition.mem_mk BoxIntegral.Prepartition.mem_mk
 
+/- warning: box_integral.prepartition.disjoint_coe_of_mem -> BoxIntegral.Prepartition.disjoint_coe_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J₁ : BoxIntegral.Box.{u1} ι} {J₂ : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J₁ π) -> (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J₂ π) -> (Ne.{succ u1} (BoxIntegral.Box.{u1} ι) J₁ J₂) -> (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J₁ : BoxIntegral.Box.{u1} ι} {J₂ : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J₁ π) -> (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J₂ π) -> (Ne.{succ u1} (BoxIntegral.Box.{u1} ι) J₁ J₂) -> (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Box.toSet.{u1} ι J₁) (BoxIntegral.Box.toSet.{u1} ι J₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.disjoint_coe_of_mem BoxIntegral.Prepartition.disjoint_coe_of_memₓ'. -/
 theorem disjoint_coe_of_mem (h₁ : J₁ ∈ π) (h₂ : J₂ ∈ π) (h : J₁ ≠ J₂) :
     Disjoint (J₁ : Set (ι → ℝ)) J₂ :=
   π.PairwiseDisjoint h₁ h₂ h
 #align box_integral.prepartition.disjoint_coe_of_mem BoxIntegral.Prepartition.disjoint_coe_of_mem
 
+#print BoxIntegral.Prepartition.eq_of_mem_of_mem /-
 theorem eq_of_mem_of_mem (h₁ : J₁ ∈ π) (h₂ : J₂ ∈ π) (hx₁ : x ∈ J₁) (hx₂ : x ∈ J₂) : J₁ = J₂ :=
   by_contra fun H => (π.disjoint_coe_of_mem h₁ h₂ H).le_bot ⟨hx₁, hx₂⟩
 #align box_integral.prepartition.eq_of_mem_of_mem BoxIntegral.Prepartition.eq_of_mem_of_mem
+-/
 
+#print BoxIntegral.Prepartition.eq_of_le_of_le /-
 theorem eq_of_le_of_le (h₁ : J₁ ∈ π) (h₂ : J₂ ∈ π) (hle₁ : J ≤ J₁) (hle₂ : J ≤ J₂) : J₁ = J₂ :=
   π.eq_of_mem_of_mem h₁ h₂ (hle₁ J.upper_mem) (hle₂ J.upper_mem)
 #align box_integral.prepartition.eq_of_le_of_le BoxIntegral.Prepartition.eq_of_le_of_le
+-/
 
+#print BoxIntegral.Prepartition.eq_of_le /-
 theorem eq_of_le (h₁ : J₁ ∈ π) (h₂ : J₂ ∈ π) (hle : J₁ ≤ J₂) : J₁ = J₂ :=
   π.eq_of_le_of_le h₁ h₂ le_rfl hle
 #align box_integral.prepartition.eq_of_le BoxIntegral.Prepartition.eq_of_le
+-/
 
+#print BoxIntegral.Prepartition.le_of_mem /-
 theorem le_of_mem (hJ : J ∈ π) : J ≤ I :=
   π.le_of_mem' J hJ
 #align box_integral.prepartition.le_of_mem BoxIntegral.Prepartition.le_of_mem
+-/
 
+/- warning: box_integral.prepartition.lower_le_lower -> BoxIntegral.Prepartition.lower_le_lower is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (LE.le.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasLe)) (BoxIntegral.Box.lower.{u1} ι I) (BoxIntegral.Box.lower.{u1} ι J))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (LE.le.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.instLEReal)) (BoxIntegral.Box.lower.{u1} ι I) (BoxIntegral.Box.lower.{u1} ι J))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.lower_le_lower BoxIntegral.Prepartition.lower_le_lowerₓ'. -/
 theorem lower_le_lower (hJ : J ∈ π) : I.lower ≤ J.lower :=
   Box.antitone_lower (π.le_of_mem hJ)
 #align box_integral.prepartition.lower_le_lower BoxIntegral.Prepartition.lower_le_lower
 
+/- warning: box_integral.prepartition.upper_le_upper -> BoxIntegral.Prepartition.upper_le_upper is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (LE.le.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.hasLe)) (BoxIntegral.Box.upper.{u1} ι J) (BoxIntegral.Box.upper.{u1} ι I))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (LE.le.{u1} (ι -> Real) (Pi.hasLe.{u1, 0} ι (fun (ᾰ : ι) => Real) (fun (i : ι) => Real.instLEReal)) (BoxIntegral.Box.upper.{u1} ι J) (BoxIntegral.Box.upper.{u1} ι I))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.upper_le_upper BoxIntegral.Prepartition.upper_le_upperₓ'. -/
 theorem upper_le_upper (hJ : J ∈ π) : J.upper ≤ I.upper :=
   Box.monotone_upper (π.le_of_mem hJ)
 #align box_integral.prepartition.upper_le_upper BoxIntegral.Prepartition.upper_le_upper
 
+#print BoxIntegral.Prepartition.injective_boxes /-
 theorem injective_boxes : Function.Injective (boxes : Prepartition I → Finset (Box ι)) :=
   by
   rintro ⟨s₁, h₁, h₁'⟩ ⟨s₂, h₂, h₂'⟩ (rfl : s₁ = s₂)
   rfl
 #align box_integral.prepartition.injective_boxes BoxIntegral.Prepartition.injective_boxes
+-/
 
+#print BoxIntegral.Prepartition.ext /-
 @[ext]
 theorem ext (h : ∀ J, J ∈ π₁ ↔ J ∈ π₂) : π₁ = π₂ :=
   injective_boxes <| Finset.ext h
 #align box_integral.prepartition.ext BoxIntegral.Prepartition.ext
+-/
 
+#print BoxIntegral.Prepartition.single /-
 /-- The singleton prepartition `{J}`, `J ≤ I`. -/
 @[simps]
 def single (I J : Box ι) (h : J ≤ I) : Prepartition I :=
   ⟨{J}, by simpa, by simp⟩
 #align box_integral.prepartition.single BoxIntegral.Prepartition.single
+-/
 
+#print BoxIntegral.Prepartition.mem_single /-
 @[simp]
 theorem mem_single {J'} (h : J ≤ I) : J' ∈ single I J h ↔ J' = J :=
   mem_singleton
 #align box_integral.prepartition.mem_single BoxIntegral.Prepartition.mem_single
+-/
 
 /-- We say that `π ≤ π'` if each box of `π` is a subbox of some box of `π'`. -/
 instance : LE (Prepartition I) :=
@@ -162,30 +206,66 @@ instance : OrderBot (Prepartition I)
 instance : Inhabited (Prepartition I) :=
   ⟨⊤⟩
 
+/- warning: box_integral.prepartition.le_def -> BoxIntegral.Prepartition.le_def is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π₁ π₂) (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π₁) -> (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π₂) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π₂) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι) J J'))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π₁ π₂) (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π₁) -> (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π₂) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) J J'))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.le_def BoxIntegral.Prepartition.le_defₓ'. -/
 theorem le_def : π₁ ≤ π₂ ↔ ∀ J ∈ π₁, ∃ J' ∈ π₂, J ≤ J' :=
   Iff.rfl
 #align box_integral.prepartition.le_def BoxIntegral.Prepartition.le_def
 
+/- warning: box_integral.prepartition.mem_top -> BoxIntegral.Prepartition.mem_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι}, Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))) (Eq.{succ u1} (BoxIntegral.Box.{u1} ι) J I)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι}, Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))) (Eq.{succ u1} (BoxIntegral.Box.{u1} ι) J I)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_top BoxIntegral.Prepartition.mem_topₓ'. -/
 @[simp]
 theorem mem_top : J ∈ (⊤ : Prepartition I) ↔ J = I :=
   mem_singleton
 #align box_integral.prepartition.mem_top BoxIntegral.Prepartition.mem_top
 
+/- warning: box_integral.prepartition.top_boxes -> BoxIntegral.Prepartition.top_boxes is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Prepartition.boxes.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))) (Singleton.singleton.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.hasSingleton.{u1} (BoxIntegral.Box.{u1} ι)) I)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Prepartition.boxes.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))) (Singleton.singleton.{u1, u1} (BoxIntegral.Box.{u1} ι) (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instSingletonFinset.{u1} (BoxIntegral.Box.{u1} ι)) I)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.top_boxes BoxIntegral.Prepartition.top_boxesₓ'. -/
 @[simp]
 theorem top_boxes : (⊤ : Prepartition I).boxes = {I} :=
   rfl
 #align box_integral.prepartition.top_boxes BoxIntegral.Prepartition.top_boxes
 
+/- warning: box_integral.prepartition.not_mem_bot -> BoxIntegral.Prepartition.not_mem_bot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι}, Not (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι}, Not (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.not_mem_bot BoxIntegral.Prepartition.not_mem_botₓ'. -/
 @[simp]
 theorem not_mem_bot : J ∉ (⊥ : Prepartition I) :=
   id
 #align box_integral.prepartition.not_mem_bot BoxIntegral.Prepartition.not_mem_bot
 
+/- warning: box_integral.prepartition.bot_boxes -> BoxIntegral.Prepartition.bot_boxes is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Prepartition.boxes.{u1} ι I (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I)))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.hasEmptyc.{u1} (BoxIntegral.Box.{u1} ι)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Prepartition.boxes.{u1} ι I (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I)))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instEmptyCollectionFinset.{u1} (BoxIntegral.Box.{u1} ι)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.bot_boxes BoxIntegral.Prepartition.bot_boxesₓ'. -/
 @[simp]
 theorem bot_boxes : (⊥ : Prepartition I).boxes = ∅ :=
   rfl
 #align box_integral.prepartition.bot_boxes BoxIntegral.Prepartition.bot_boxes
 
+/- warning: box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq -> BoxIntegral.Prepartition.injOn_setOf_mem_Icc_setOf_lower_eq is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (x : ι -> Real), Set.InjOn.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => setOf.{u1} ι (fun (i : ι) => Eq.{1} Real (BoxIntegral.Box.lower.{u1} ι J i) (x i))) (setOf.{u1} (BoxIntegral.Box.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => And (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.hasLe.{u1} ι) (Set.hasLe.{u1} (ι -> Real))) (fun (_x : RelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) => (BoxIntegral.Box.{u1} ι) -> (Set.{u1} (ι -> Real))) (RelEmbedding.hasCoeToFun.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) (BoxIntegral.Box.Icc.{u1} ι) J))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (x : ι -> Real), Set.InjOn.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => setOf.{u1} ι (fun (i : ι) => Eq.{1} Real (BoxIntegral.Box.lower.{u1} ι J i) (x i))) (setOf.{u1} (BoxIntegral.Box.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) (Membership.mem.{u1, u1} (ι -> Real) ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) J) (Set.instMembershipSet.{u1} (ι -> Real)) x (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (fun (_x : BoxIntegral.Box.{u1} ι) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) (BoxIntegral.Box.Icc.{u1} ι) J))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq BoxIntegral.Prepartition.injOn_setOf_mem_Icc_setOf_lower_eqₓ'. -/
 /-- An auxiliary lemma used to prove that the same point can't belong to more than
 `2 ^ fintype.card ι` closed boxes of a prepartition. -/
 theorem injOn_setOf_mem_Icc_setOf_lower_eq (x : ι → ℝ) :
@@ -208,6 +288,12 @@ theorem injOn_setOf_mem_Icc_setOf_lower_eq (x : ι → ℝ) :
     exact ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩
 #align box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq BoxIntegral.Prepartition.injOn_setOf_mem_Icc_setOf_lower_eq
 
+/- warning: box_integral.prepartition.card_filter_mem_Icc_le -> BoxIntegral.Prepartition.card_filter_mem_Icc_le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) [_inst_1 : Fintype.{u1} ι] (x : ι -> Real), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} (BoxIntegral.Box.{u1} ι) (Finset.filter.{u1} (BoxIntegral.Box.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.hasLe.{u1} ι) (Set.hasLe.{u1} (ι -> Real))) (fun (_x : RelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) => (BoxIntegral.Box.{u1} ι) -> (Set.{u1} (ι -> Real))) (RelEmbedding.hasCoeToFun.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) (BoxIntegral.Box.Icc.{u1} ι) J)) (fun (a : BoxIntegral.Box.{u1} ι) => Classical.propDecidable ((fun (J : BoxIntegral.Box.{u1} ι) => Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.hasLe.{u1} ι) (Set.hasLe.{u1} (ι -> Real))) (fun (_x : RelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) => (BoxIntegral.Box.{u1} ι) -> (Set.{u1} (ι -> Real))) (RelEmbedding.hasCoeToFun.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) (BoxIntegral.Box.Icc.{u1} ι) J)) a)) (BoxIntegral.Prepartition.boxes.{u1} ι I π))) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Fintype.card.{u1} ι _inst_1))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) [_inst_1 : Fintype.{u1} ι] (x : ι -> Real), LE.le.{0} Nat instLENat (Finset.card.{u1} (BoxIntegral.Box.{u1} ι) (Finset.filter.{u1} (BoxIntegral.Box.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => Membership.mem.{u1, u1} (ι -> Real) ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) J) (Set.instMembershipSet.{u1} (ι -> Real)) x (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (fun (_x : BoxIntegral.Box.{u1} ι) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) (BoxIntegral.Box.Icc.{u1} ι) J)) (fun (a : BoxIntegral.Box.{u1} ι) => Classical.propDecidable ((fun (J : BoxIntegral.Box.{u1} ι) => Membership.mem.{u1, u1} (ι -> Real) ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) J) (Set.instMembershipSet.{u1} (ι -> Real)) x (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (fun (_x : BoxIntegral.Box.{u1} ι) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) (BoxIntegral.Box.Icc.{u1} ι) J)) a)) (BoxIntegral.Prepartition.boxes.{u1} ι I π))) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Fintype.card.{u1} ι _inst_1))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_Icc_leₓ'. -/
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
 theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
@@ -220,65 +306,119 @@ theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
   simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
 #align box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_Icc_le
 
+#print BoxIntegral.Prepartition.unionᵢ /-
 /-- Given a prepartition `π : box_integral.prepartition I`, `π.Union` is the part of `I` covered by
 the boxes of `π`. -/
-protected def union : Set (ι → ℝ) :=
+protected def unionᵢ : Set (ι → ℝ) :=
   ⋃ J ∈ π, ↑J
-#align box_integral.prepartition.Union BoxIntegral.Prepartition.union
+#align box_integral.prepartition.Union BoxIntegral.Prepartition.unionᵢ
+-/
 
-theorem union_def : π.unionᵢ = ⋃ J ∈ π, ↑J :=
+#print BoxIntegral.Prepartition.unionᵢ_def /-
+theorem unionᵢ_def : π.unionᵢ = ⋃ J ∈ π, ↑J :=
   rfl
-#align box_integral.prepartition.Union_def BoxIntegral.Prepartition.union_def
+#align box_integral.prepartition.Union_def BoxIntegral.Prepartition.unionᵢ_def
+-/
 
-theorem union_def' : π.unionᵢ = ⋃ J ∈ π.boxes, ↑J :=
+#print BoxIntegral.Prepartition.unionᵢ_def' /-
+theorem unionᵢ_def' : π.unionᵢ = ⋃ J ∈ π.boxes, ↑J :=
   rfl
-#align box_integral.prepartition.Union_def' BoxIntegral.Prepartition.union_def'
+#align box_integral.prepartition.Union_def' BoxIntegral.Prepartition.unionᵢ_def'
+-/
 
+/- warning: box_integral.prepartition.mem_Union -> BoxIntegral.Prepartition.mem_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {x : ι -> Real}, Iff (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) => Membership.Mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasMem.{u1} ι) x J)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {x : ι -> Real}, Iff (Membership.mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.instMembershipSet.{u1} (ι -> Real)) x (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) (Membership.mem.{u1, u1} (ι -> Real) (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instMembershipForAllRealBox.{u1} ι) x J)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_Union BoxIntegral.Prepartition.mem_unionᵢₓ'. -/
 @[simp]
-theorem mem_union : x ∈ π.unionᵢ ↔ ∃ J ∈ π, x ∈ J :=
+theorem mem_unionᵢ : x ∈ π.unionᵢ ↔ ∃ J ∈ π, x ∈ J :=
   Set.mem_unionᵢ₂
-#align box_integral.prepartition.mem_Union BoxIntegral.Prepartition.mem_union
+#align box_integral.prepartition.mem_Union BoxIntegral.Prepartition.mem_unionᵢ
 
+#print BoxIntegral.Prepartition.unionᵢ_single /-
 @[simp]
-theorem union_single (h : J ≤ I) : (single I J h).unionᵢ = J := by simp [Union_def]
-#align box_integral.prepartition.Union_single BoxIntegral.Prepartition.union_single
+theorem unionᵢ_single (h : J ≤ I) : (single I J h).unionᵢ = J := by simp [Union_def]
+#align box_integral.prepartition.Union_single BoxIntegral.Prepartition.unionᵢ_single
+-/
 
+/- warning: box_integral.prepartition.Union_top -> BoxIntegral.Prepartition.unionᵢ_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))) (BoxIntegral.Box.toSet.{u1} ι I)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_top BoxIntegral.Prepartition.unionᵢ_topₓ'. -/
 @[simp]
-theorem union_top : (⊤ : Prepartition I).unionᵢ = I := by simp [prepartition.Union]
-#align box_integral.prepartition.Union_top BoxIntegral.Prepartition.union_top
+theorem unionᵢ_top : (⊤ : Prepartition I).unionᵢ = I := by simp [prepartition.Union]
+#align box_integral.prepartition.Union_top BoxIntegral.Prepartition.unionᵢ_top
 
+/- warning: box_integral.prepartition.Union_eq_empty -> BoxIntegral.Prepartition.unionᵢ_eq_empty is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I}, Iff (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (ι -> Real)) (Set.hasEmptyc.{u1} (ι -> Real)))) (Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) π₁ (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I}, Iff (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (ι -> Real)) (Set.instEmptyCollectionSet.{u1} (ι -> Real)))) (Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) π₁ (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_eq_empty BoxIntegral.Prepartition.unionᵢ_eq_emptyₓ'. -/
 @[simp]
-theorem union_eq_empty : π₁.unionᵢ = ∅ ↔ π₁ = ⊥ := by
+theorem unionᵢ_eq_empty : π₁.unionᵢ = ∅ ↔ π₁ = ⊥ := by
   simp [← injective_boxes.eq_iff, Finset.ext_iff, prepartition.Union, imp_false]
-#align box_integral.prepartition.Union_eq_empty BoxIntegral.Prepartition.union_eq_empty
+#align box_integral.prepartition.Union_eq_empty BoxIntegral.Prepartition.unionᵢ_eq_empty
 
+/- warning: box_integral.prepartition.Union_bot -> BoxIntegral.Prepartition.unionᵢ_bot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (ι -> Real)) (Set.hasEmptyc.{u1} (ι -> Real)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι}, Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I)))) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (ι -> Real)) (Set.instEmptyCollectionSet.{u1} (ι -> Real)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_bot BoxIntegral.Prepartition.unionᵢ_botₓ'. -/
 @[simp]
-theorem union_bot : (⊥ : Prepartition I).unionᵢ = ∅ :=
-  union_eq_empty.2 rfl
-#align box_integral.prepartition.Union_bot BoxIntegral.Prepartition.union_bot
+theorem unionᵢ_bot : (⊥ : Prepartition I).unionᵢ = ∅ :=
+  unionᵢ_eq_empty.2 rfl
+#align box_integral.prepartition.Union_bot BoxIntegral.Prepartition.unionᵢ_bot
 
-theorem subset_union (h : J ∈ π) : ↑J ⊆ π.unionᵢ :=
+#print BoxIntegral.Prepartition.subset_unionᵢ /-
+theorem subset_unionᵢ (h : J ∈ π) : ↑J ⊆ π.unionᵢ :=
   subset_bunionᵢ_of_mem h
-#align box_integral.prepartition.subset_Union BoxIntegral.Prepartition.subset_union
+#align box_integral.prepartition.subset_Union BoxIntegral.Prepartition.subset_unionᵢ
+-/
 
-theorem union_subset : π.unionᵢ ⊆ I :=
+#print BoxIntegral.Prepartition.unionᵢ_subset /-
+theorem unionᵢ_subset : π.unionᵢ ⊆ I :=
   unionᵢ₂_subset π.le_of_mem'
-#align box_integral.prepartition.Union_subset BoxIntegral.Prepartition.union_subset
+#align box_integral.prepartition.Union_subset BoxIntegral.Prepartition.unionᵢ_subset
+-/
 
+/- warning: box_integral.prepartition.Union_mono -> BoxIntegral.Prepartition.unionᵢ_mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π₁ π₂) -> (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π₁ π₂) -> (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_mono BoxIntegral.Prepartition.unionᵢ_monoₓ'. -/
 @[mono]
-theorem union_mono (h : π₁ ≤ π₂) : π₁.unionᵢ ⊆ π₂.unionᵢ := fun x hx =>
+theorem unionᵢ_mono (h : π₁ ≤ π₂) : π₁.unionᵢ ⊆ π₂.unionᵢ := fun x hx =>
   let ⟨J₁, hJ₁, hx⟩ := π₁.mem_unionᵢ.1 hx
   let ⟨J₂, hJ₂, hle⟩ := h hJ₁
   π₂.mem_unionᵢ.2 ⟨J₂, hJ₂, hle hx⟩
-#align box_integral.prepartition.Union_mono BoxIntegral.Prepartition.union_mono
+#align box_integral.prepartition.Union_mono BoxIntegral.Prepartition.unionᵢ_mono
 
-theorem disjoint_boxes_of_disjoint_union (h : Disjoint π₁.unionᵢ π₂.unionᵢ) :
+/- warning: box_integral.prepartition.disjoint_boxes_of_disjoint_Union -> BoxIntegral.Prepartition.disjoint_boxes_of_disjoint_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)) -> (Disjoint.{u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.partialOrder.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.orderBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Prepartition.boxes.{u1} ι I π₁) (BoxIntegral.Prepartition.boxes.{u1} ι I π₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)) -> (Disjoint.{u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.partialOrder.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Prepartition.boxes.{u1} ι I π₁) (BoxIntegral.Prepartition.boxes.{u1} ι I π₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.disjoint_boxes_of_disjoint_Union BoxIntegral.Prepartition.disjoint_boxes_of_disjoint_unionᵢₓ'. -/
+theorem disjoint_boxes_of_disjoint_unionᵢ (h : Disjoint π₁.unionᵢ π₂.unionᵢ) :
     Disjoint π₁.boxes π₂.boxes :=
   Finset.disjoint_left.2 fun J h₁ h₂ =>
     Disjoint.le_bot (h.mono (π₁.subset_unionᵢ h₁) (π₂.subset_unionᵢ h₂)) ⟨J.upper_mem, J.upper_mem⟩
-#align box_integral.prepartition.disjoint_boxes_of_disjoint_Union BoxIntegral.Prepartition.disjoint_boxes_of_disjoint_union
+#align box_integral.prepartition.disjoint_boxes_of_disjoint_Union BoxIntegral.Prepartition.disjoint_boxes_of_disjoint_unionᵢ
 
-theorem le_iff_nonempty_imp_le_and_union_subset :
+/- warning: box_integral.prepartition.le_iff_nonempty_imp_le_and_Union_subset -> BoxIntegral.Prepartition.le_iff_nonempty_imp_le_and_unionᵢ_subset is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π₁ π₂) (And (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π₁) -> (forall (J' : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π₂) -> (Set.Nonempty.{u1} (ι -> Real) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J'))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι) J J'))) (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.hasSubset.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π₁ π₂) (And (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π₁) -> (forall (J' : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π₂) -> (Set.Nonempty.{u1} (ι -> Real) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (BoxIntegral.Box.toSet.{u1} ι J'))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) J J'))) (HasSubset.Subset.{u1} (Set.{u1} (ι -> Real)) (Set.instHasSubsetSet.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.le_iff_nonempty_imp_le_and_Union_subset BoxIntegral.Prepartition.le_iff_nonempty_imp_le_and_unionᵢ_subsetₓ'. -/
+theorem le_iff_nonempty_imp_le_and_unionᵢ_subset :
     π₁ ≤ π₂ ↔
       (∀ J ∈ π₁, ∀ J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J') ∧ π₁.unionᵢ ⊆ π₂.unionᵢ :=
   by
@@ -291,23 +431,26 @@ theorem le_iff_nonempty_imp_le_and_union_subset :
     simp only [Set.subset_def, mem_Union] at HU
     rcases HU J.upper ⟨J, hJ, J.upper_mem⟩ with ⟨J₂, hJ₂, hx⟩
     exact ⟨J₂, hJ₂, H _ hJ _ hJ₂ ⟨_, J.upper_mem, hx⟩⟩
-#align box_integral.prepartition.le_iff_nonempty_imp_le_and_Union_subset BoxIntegral.Prepartition.le_iff_nonempty_imp_le_and_union_subset
+#align box_integral.prepartition.le_iff_nonempty_imp_le_and_Union_subset BoxIntegral.Prepartition.le_iff_nonempty_imp_le_and_unionᵢ_subset
 
-theorem eq_of_boxes_subset_union_superset (h₁ : π₁.boxes ⊆ π₂.boxes) (h₂ : π₂.unionᵢ ⊆ π₁.unionᵢ) :
+#print BoxIntegral.Prepartition.eq_of_boxes_subset_unionᵢ_superset /-
+theorem eq_of_boxes_subset_unionᵢ_superset (h₁ : π₁.boxes ⊆ π₂.boxes) (h₂ : π₂.unionᵢ ⊆ π₁.unionᵢ) :
     π₁ = π₂ :=
   (le_antisymm fun J hJ => ⟨J, h₁ hJ, le_rfl⟩) <|
-    le_iff_nonempty_imp_le_and_union_subset.2
+    le_iff_nonempty_imp_le_and_unionᵢ_subset.2
       ⟨fun J₁ hJ₁ J₂ hJ₂ Hne =>
         (π₂.eq_of_mem_of_mem hJ₁ (h₁ hJ₂) Hne.choose_spec.1 Hne.choose_spec.2).le, h₂⟩
-#align box_integral.prepartition.eq_of_boxes_subset_Union_superset BoxIntegral.Prepartition.eq_of_boxes_subset_union_superset
+#align box_integral.prepartition.eq_of_boxes_subset_Union_superset BoxIntegral.Prepartition.eq_of_boxes_subset_unionᵢ_superset
+-/
 
+#print BoxIntegral.Prepartition.bunionᵢ /-
 /-- Given a prepartition `π` of a box `I` and a collection of prepartitions `πi J` of all boxes
 `J ∈ π`, returns the prepartition of `I` into the union of the boxes of all `πi J`.
 
 Though we only use the values of `πi` on the boxes of `π`, we require `πi` to be a globally defined
 function. -/
 @[simps]
-def bUnion (πi : ∀ J : Box ι, Prepartition J) : Prepartition I
+def bunionᵢ (πi : ∀ J : Box ι, Prepartition J) : Prepartition I
     where
   boxes := π.boxes.bunionᵢ fun J => (πi J).boxes
   le_of_mem' J hJ :=
@@ -324,44 +467,75 @@ def bUnion (πi : ∀ J : Box ι, Prepartition J) : Prepartition I
     obtain rfl : J₁ = J₂
     exact π.eq_of_mem_of_mem hJ₁ hJ₂ ((πi J₁).le_of_mem hJ₁' hx₁) ((πi J₂).le_of_mem hJ₂' hx₂)
     exact (πi J₁).eq_of_mem_of_mem hJ₁' hJ₂' hx₁ hx₂
-#align box_integral.prepartition.bUnion BoxIntegral.Prepartition.bUnion
+#align box_integral.prepartition.bUnion BoxIntegral.Prepartition.bunionᵢ
+-/
 
 variable {πi πi₁ πi₂ : ∀ J : Box ι, Prepartition J}
 
+/- warning: box_integral.prepartition.mem_bUnion -> BoxIntegral.Prepartition.mem_bunionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J}, Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) => Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι J') (BoxIntegral.Prepartition.hasMem.{u1} ι J') J (πi J'))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J}, Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π) (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι J') (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι J') J (πi J'))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_bUnion BoxIntegral.Prepartition.mem_bunionᵢₓ'. -/
 @[simp]
-theorem mem_bUnion : J ∈ π.bunionᵢ πi ↔ ∃ J' ∈ π, J ∈ πi J' := by simp [bUnion]
-#align box_integral.prepartition.mem_bUnion BoxIntegral.Prepartition.mem_bUnion
+theorem mem_bunionᵢ : J ∈ π.bunionᵢ πi ↔ ∃ J' ∈ π, J ∈ πi J' := by simp [bUnion]
+#align box_integral.prepartition.mem_bUnion BoxIntegral.Prepartition.mem_bunionᵢ
 
-theorem bUnion_le (πi : ∀ J, Prepartition J) : π.bunionᵢ πi ≤ π := fun J hJ =>
+/- warning: box_integral.prepartition.bUnion_le -> BoxIntegral.Prepartition.bunionᵢ_le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J), LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi) π
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J), LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi) π
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.bUnion_le BoxIntegral.Prepartition.bunionᵢ_leₓ'. -/
+theorem bunionᵢ_le (πi : ∀ J, Prepartition J) : π.bunionᵢ πi ≤ π := fun J hJ =>
   let ⟨J', hJ', hJ⟩ := π.mem_bunionᵢ.1 hJ
   ⟨J', hJ', (πi J').le_of_mem hJ⟩
-#align box_integral.prepartition.bUnion_le BoxIntegral.Prepartition.bUnion_le
+#align box_integral.prepartition.bUnion_le BoxIntegral.Prepartition.bunionᵢ_le
 
+/- warning: box_integral.prepartition.bUnion_top -> BoxIntegral.Prepartition.bunionᵢ_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π (fun (_x : BoxIntegral.Box.{u1} ι) => Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι _x) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι _x) (BoxIntegral.Prepartition.hasLe.{u1} ι _x) (BoxIntegral.Prepartition.orderTop.{u1} ι _x)))) π
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π (fun (_x : BoxIntegral.Box.{u1} ι) => Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι _x) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι _x) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι _x) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι _x)))) π
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.bUnion_top BoxIntegral.Prepartition.bunionᵢ_topₓ'. -/
 @[simp]
-theorem bUnion_top : (π.bunionᵢ fun _ => ⊤) = π :=
+theorem bunionᵢ_top : (π.bunionᵢ fun _ => ⊤) = π :=
   by
   ext
   simp
-#align box_integral.prepartition.bUnion_top BoxIntegral.Prepartition.bUnion_top
+#align box_integral.prepartition.bUnion_top BoxIntegral.Prepartition.bunionᵢ_top
 
+#print BoxIntegral.Prepartition.bunionᵢ_congr /-
 @[congr]
-theorem bUnion_congr (h : π₁ = π₂) (hi : ∀ J ∈ π₁, πi₁ J = πi₂ J) :
+theorem bunionᵢ_congr (h : π₁ = π₂) (hi : ∀ J ∈ π₁, πi₁ J = πi₂ J) :
     π₁.bunionᵢ πi₁ = π₂.bunionᵢ πi₂ := by
   subst π₂
   ext J
   simp (config := { contextual := true }) [hi]
-#align box_integral.prepartition.bUnion_congr BoxIntegral.Prepartition.bUnion_congr
+#align box_integral.prepartition.bUnion_congr BoxIntegral.Prepartition.bunionᵢ_congr
+-/
 
-theorem bUnion_congr_of_le (h : π₁ = π₂) (hi : ∀ J ≤ I, πi₁ J = πi₂ J) :
+#print BoxIntegral.Prepartition.bunionᵢ_congr_of_le /-
+theorem bunionᵢ_congr_of_le (h : π₁ = π₂) (hi : ∀ J ≤ I, πi₁ J = πi₂ J) :
     π₁.bunionᵢ πi₁ = π₂.bunionᵢ πi₂ :=
-  bUnion_congr h fun J hJ => hi J (π₁.le_of_mem hJ)
-#align box_integral.prepartition.bUnion_congr_of_le BoxIntegral.Prepartition.bUnion_congr_of_le
+  bunionᵢ_congr h fun J hJ => hi J (π₁.le_of_mem hJ)
+#align box_integral.prepartition.bUnion_congr_of_le BoxIntegral.Prepartition.bunionᵢ_congr_of_le
+-/
 
+#print BoxIntegral.Prepartition.unionᵢ_bunionᵢ /-
 @[simp]
-theorem union_bUnion (πi : ∀ J : Box ι, Prepartition J) :
+theorem unionᵢ_bunionᵢ (πi : ∀ J : Box ι, Prepartition J) :
     (π.bunionᵢ πi).unionᵢ = ⋃ J ∈ π, (πi J).unionᵢ := by simp [prepartition.Union]
-#align box_integral.prepartition.Union_bUnion BoxIntegral.Prepartition.union_bUnion
+#align box_integral.prepartition.Union_bUnion BoxIntegral.Prepartition.unionᵢ_bunionᵢ
+-/
 
+/- warning: box_integral.prepartition.sum_bUnion_boxes -> BoxIntegral.Prepartition.sum_bunionᵢ_boxes is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (π : BoxIntegral.Prepartition.{u1} ι I) (πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J) (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (Finset.bunionᵢ.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.{u1} ι) (fun (a : BoxIntegral.Box.{u1} ι) (b : BoxIntegral.Box.{u1} ι) => Classical.propDecidable (Eq.{succ u1} (BoxIntegral.Box.{u1} ι) a b)) (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => BoxIntegral.Prepartition.boxes.{u1} ι J (πi J))) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι J (πi J)) (fun (J' : BoxIntegral.Box.{u1} ι) => f J')))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (π : BoxIntegral.Prepartition.{u1} ι I) (πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J) (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (Finset.bunionᵢ.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.{u1} ι) (fun (a : BoxIntegral.Box.{u1} ι) (b : BoxIntegral.Box.{u1} ι) => decidableEq_of_decidableLE.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι) (fun (a : BoxIntegral.Box.{u1} ι) (b : BoxIntegral.Box.{u1} ι) => Classical.propDecidable ((fun (x._@.Mathlib.Init.Algebra.Order._hyg.1911 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Init.Algebra.Order._hyg.1913 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι))) x._@.Mathlib.Init.Algebra.Order._hyg.1911 x._@.Mathlib.Init.Algebra.Order._hyg.1913) a b)) a b) (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => BoxIntegral.Prepartition.boxes.{u1} ι J (πi J))) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι J (πi J)) (fun (J' : BoxIntegral.Box.{u1} ι) => f J')))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.sum_bUnion_boxes BoxIntegral.Prepartition.sum_bunionᵢ_boxesₓ'. -/
 @[simp]
 theorem sum_bunionᵢ_boxes {M : Type _} [AddCommMonoid M] (π : Prepartition I)
     (πi : ∀ J, Prepartition J) (f : Box ι → M) :
@@ -372,43 +546,56 @@ theorem sum_bunionᵢ_boxes {M : Type _} [AddCommMonoid M] (π : Prepartition I)
   exact hne (π.eq_of_le_of_le h₁ h₂ ((πi J₁).le_of_mem h₁') ((πi J₂).le_of_mem h₂'))
 #align box_integral.prepartition.sum_bUnion_boxes BoxIntegral.Prepartition.sum_bunionᵢ_boxes
 
+#print BoxIntegral.Prepartition.bunionᵢIndex /-
 /-- Given a box `J ∈ π.bUnion πi`, returns the box `J' ∈ π` such that `J ∈ πi J'`.
 For `J ∉ π.bUnion πi`, returns `I`. -/
-def bUnionIndex (πi : ∀ J, Prepartition J) (J : Box ι) : Box ι :=
+def bunionᵢIndex (πi : ∀ J, Prepartition J) (J : Box ι) : Box ι :=
   if hJ : J ∈ π.bunionᵢ πi then (π.mem_bunionᵢ.1 hJ).some else I
-#align box_integral.prepartition.bUnion_index BoxIntegral.Prepartition.bUnionIndex
+#align box_integral.prepartition.bUnion_index BoxIntegral.Prepartition.bunionᵢIndex
+-/
 
-theorem bUnionIndex_mem (hJ : J ∈ π.bunionᵢ πi) : π.bUnionIndex πi J ∈ π :=
+#print BoxIntegral.Prepartition.bunionᵢIndex_mem /-
+theorem bunionᵢIndex_mem (hJ : J ∈ π.bunionᵢ πi) : π.bunionᵢIndex πi J ∈ π :=
   by
   rw [bUnion_index, dif_pos hJ]
   exact (π.mem_bUnion.1 hJ).choose_spec.fst
-#align box_integral.prepartition.bUnion_index_mem BoxIntegral.Prepartition.bUnionIndex_mem
+#align box_integral.prepartition.bUnion_index_mem BoxIntegral.Prepartition.bunionᵢIndex_mem
+-/
 
-theorem bUnionIndex_le (πi : ∀ J, Prepartition J) (J : Box ι) : π.bUnionIndex πi J ≤ I :=
+#print BoxIntegral.Prepartition.bunionᵢIndex_le /-
+theorem bunionᵢIndex_le (πi : ∀ J, Prepartition J) (J : Box ι) : π.bunionᵢIndex πi J ≤ I :=
   by
   by_cases hJ : J ∈ π.bUnion πi
   · exact π.le_of_mem (π.bUnion_index_mem hJ)
   · rw [bUnion_index, dif_neg hJ]
     exact le_rfl
-#align box_integral.prepartition.bUnion_index_le BoxIntegral.Prepartition.bUnionIndex_le
+#align box_integral.prepartition.bUnion_index_le BoxIntegral.Prepartition.bunionᵢIndex_le
+-/
 
-theorem mem_bUnionIndex (hJ : J ∈ π.bunionᵢ πi) : J ∈ πi (π.bUnionIndex πi J) := by
+#print BoxIntegral.Prepartition.mem_bunionᵢIndex /-
+theorem mem_bunionᵢIndex (hJ : J ∈ π.bunionᵢ πi) : J ∈ πi (π.bunionᵢIndex πi J) := by
   convert(π.mem_bUnion.1 hJ).choose_spec.snd <;> exact dif_pos hJ
-#align box_integral.prepartition.mem_bUnion_index BoxIntegral.Prepartition.mem_bUnionIndex
+#align box_integral.prepartition.mem_bUnion_index BoxIntegral.Prepartition.mem_bunionᵢIndex
+-/
 
-theorem le_bUnionIndex (hJ : J ∈ π.bunionᵢ πi) : J ≤ π.bUnionIndex πi J :=
-  le_of_mem _ (π.mem_bUnionIndex hJ)
-#align box_integral.prepartition.le_bUnion_index BoxIntegral.Prepartition.le_bUnionIndex
+#print BoxIntegral.Prepartition.le_bunionᵢIndex /-
+theorem le_bunionᵢIndex (hJ : J ∈ π.bunionᵢ πi) : J ≤ π.bunionᵢIndex πi J :=
+  le_of_mem _ (π.mem_bunionᵢIndex hJ)
+#align box_integral.prepartition.le_bUnion_index BoxIntegral.Prepartition.le_bunionᵢIndex
+-/
 
+#print BoxIntegral.Prepartition.bunionᵢIndex_of_mem /-
 /-- Uniqueness property of `box_integral.partition.bUnion_index`. -/
-theorem bUnionIndex_of_mem (hJ : J ∈ π) {J'} (hJ' : J' ∈ πi J) : π.bUnionIndex πi J' = J :=
+theorem bunionᵢIndex_of_mem (hJ : J ∈ π) {J'} (hJ' : J' ∈ πi J) : π.bunionᵢIndex πi J' = J :=
   have : J' ∈ π.bunionᵢ πi := π.mem_bunionᵢ.2 ⟨J, hJ, hJ'⟩
-  π.eq_of_le_of_le (π.bUnionIndex_mem this) hJ (π.le_bUnionIndex this) (le_of_mem _ hJ')
-#align box_integral.prepartition.bUnion_index_of_mem BoxIntegral.Prepartition.bUnionIndex_of_mem
+  π.eq_of_le_of_le (π.bunionᵢIndex_mem this) hJ (π.le_bunionᵢIndex this) (le_of_mem _ hJ')
+#align box_integral.prepartition.bUnion_index_of_mem BoxIntegral.Prepartition.bunionᵢIndex_of_mem
+-/
 
-theorem bUnion_assoc (πi : ∀ J, Prepartition J) (πi' : Box ι → ∀ J : Box ι, Prepartition J) :
+#print BoxIntegral.Prepartition.bunionᵢ_assoc /-
+theorem bunionᵢ_assoc (πi : ∀ J, Prepartition J) (πi' : Box ι → ∀ J : Box ι, Prepartition J) :
     (π.bunionᵢ fun J => (πi J).bunionᵢ (πi' J)) =
-      (π.bunionᵢ πi).bunionᵢ fun J => πi' (π.bUnionIndex πi J) J :=
+      (π.bunionᵢ πi).bunionᵢ fun J => πi' (π.bunionᵢIndex πi J) J :=
   by
   ext J
   simp only [mem_bUnion, exists_prop]
@@ -419,8 +606,15 @@ theorem bUnion_assoc (πi : ∀ J, Prepartition J) (πi' : Box ι → ∀ J : Bo
   · rintro ⟨J₁, ⟨J₂, hJ₂, hJ₁⟩, hJ⟩
     refine' ⟨J₂, hJ₂, J₁, hJ₁, _⟩
     rwa [π.bUnion_index_of_mem hJ₂ hJ₁] at hJ
-#align box_integral.prepartition.bUnion_assoc BoxIntegral.Prepartition.bUnion_assoc
+#align box_integral.prepartition.bUnion_assoc BoxIntegral.Prepartition.bunionᵢ_assoc
+-/
 
+/- warning: box_integral.prepartition.of_with_bot -> BoxIntegral.Prepartition.ofWithBot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))), (forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))) -> (Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))) -> (BoxIntegral.Prepartition.{u1} ι I)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))), (forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))) -> (Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))) -> (BoxIntegral.Prepartition.{u1} ι I)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.of_with_bot BoxIntegral.Prepartition.ofWithBotₓ'. -/
 /-- Create a `box_integral.prepartition` from a collection of possibly empty boxes by filtering out
 the empty one if it exists. -/
 def ofWithBot (boxes : Finset (WithBot (Box ι)))
@@ -437,14 +631,26 @@ def ofWithBot (boxes : Finset (WithBot (Box ι)))
     exact box.disjoint_coe.1 (pairwise_disjoint h₁ h₂ (mt Option.some_inj.1 hne))
 #align box_integral.prepartition.of_with_bot BoxIntegral.Prepartition.ofWithBot
 
+/- warning: box_integral.prepartition.mem_of_with_bot -> BoxIntegral.Prepartition.mem_ofWithBot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {h₁ : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))} {h₂ : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))}, Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes h₁ h₂)) (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J) boxes)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {h₁ : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))} {h₂ : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))}, Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes h₁ h₂)) (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J) boxes)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_of_with_bot BoxIntegral.Prepartition.mem_ofWithBotₓ'. -/
 @[simp]
 theorem mem_ofWithBot {boxes : Finset (WithBot (Box ι))} {h₁ h₂} :
     J ∈ (ofWithBot boxes h₁ h₂ : Prepartition I) ↔ (J : WithBot (Box ι)) ∈ boxes :=
   mem_eraseNone
 #align box_integral.prepartition.mem_of_with_bot BoxIntegral.Prepartition.mem_ofWithBot
 
+/- warning: box_integral.prepartition.Union_of_with_bot -> BoxIntegral.Prepartition.unionᵢ_ofWithBot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))) (pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint)) (Set.unionᵢ.{u1, succ u1} (ι -> Real) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (fun (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => Set.unionᵢ.{u1, 0} (ι -> Real) (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) (fun (H : Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.withBotCoe.{u1} ι))) J)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))) (pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint)) (Set.unionᵢ.{u1, succ u1} (ι -> Real) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (fun (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => Set.unionᵢ.{u1, 0} (ι -> Real) (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) (fun (H : Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) => BoxIntegral.Box.withBotToSet.{u1} ι J)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_of_with_bot BoxIntegral.Prepartition.unionᵢ_ofWithBotₓ'. -/
 @[simp]
-theorem union_ofWithBot (boxes : Finset (WithBot (Box ι)))
+theorem unionᵢ_ofWithBot (boxes : Finset (WithBot (Box ι)))
     (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) :
     (ofWithBot boxes le_of_mem pairwise_disjoint).unionᵢ = ⋃ J ∈ boxes, ↑J :=
@@ -453,8 +659,14 @@ theorem union_ofWithBot (boxes : Finset (WithBot (Box ι)))
     simpa [of_with_bot, prepartition.Union]
   simp only [← box.bUnion_coe_eq_coe, @Union_comm _ _ (box ι), @Union_comm _ _ (@Eq _ _ _),
     Union_Union_eq_right]
-#align box_integral.prepartition.Union_of_with_bot BoxIntegral.Prepartition.union_ofWithBot
+#align box_integral.prepartition.Union_of_with_bot BoxIntegral.Prepartition.unionᵢ_ofWithBot
 
+/- warning: box_integral.prepartition.of_with_bot_le -> BoxIntegral.Prepartition.ofWithBot_le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))} {pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))}, (forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (Ne.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) J (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasBot.{u1} (BoxIntegral.Box.{u1} ι)))) -> (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) => LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J'))))) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint) π)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))} {pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))}, (forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (Ne.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) J (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.bot.{u1} (BoxIntegral.Box.{u1} ι)))) -> (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π) (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J'))))) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint) π)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.of_with_bot_le BoxIntegral.Prepartition.ofWithBot_leₓ'. -/
 theorem ofWithBot_le {boxes : Finset (WithBot (Box ι))}
     {le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I}
     {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint}
@@ -466,6 +678,12 @@ theorem ofWithBot_le {boxes : Finset (WithBot (Box ι))}
   simpa [of_with_bot, le_def]
 #align box_integral.prepartition.of_with_bot_le BoxIntegral.Prepartition.ofWithBot_le
 
+/- warning: box_integral.prepartition.le_of_with_bot -> BoxIntegral.Prepartition.le_ofWithBot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))} {pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))}, (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (Exists.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (fun (J' : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => Exists.{0} (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J' boxes) (fun (H : Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J' boxes) => LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J) J')))) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))} {pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))}, (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (Exists.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (fun (J' : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => And (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J' boxes) (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J) J')))) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.le_of_with_bot BoxIntegral.Prepartition.le_ofWithBotₓ'. -/
 theorem le_ofWithBot {boxes : Finset (WithBot (Box ι))}
     {le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I}
     {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint}
@@ -477,6 +695,12 @@ theorem le_ofWithBot {boxes : Finset (WithBot (Box ι))}
   exact ⟨J', mem_of_with_bot.2 J'mem, WithBot.coe_le_coe.1 hle⟩
 #align box_integral.prepartition.le_of_with_bot BoxIntegral.Prepartition.le_ofWithBot
 
+/- warning: box_integral.prepartition.of_with_bot_mono -> BoxIntegral.Prepartition.ofWithBot_mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {boxes₁ : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem₁ : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes₁) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))} {pairwise_disjoint₁ : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes₁) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))} {boxes₂ : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem₂ : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes₂) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))} {pairwise_disjoint₂ : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes₂) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))}, (forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes₁) -> (Ne.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) J (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasBot.{u1} (BoxIntegral.Box.{u1} ι)))) -> (Exists.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (fun (J' : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => Exists.{0} (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J' boxes₂) (fun (H : Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J' boxes₂) => LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J J')))) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes₁ le_of_mem₁ pairwise_disjoint₁) (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes₂ le_of_mem₂ pairwise_disjoint₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {boxes₁ : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem₁ : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes₁) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))} {pairwise_disjoint₁ : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes₁) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))} {boxes₂ : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))} {le_of_mem₂ : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes₂) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))} {pairwise_disjoint₂ : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes₂) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))}, (forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes₁) -> (Ne.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) J (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.bot.{u1} (BoxIntegral.Box.{u1} ι)))) -> (Exists.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (fun (J' : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => And (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J' boxes₂) (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J J')))) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes₁ le_of_mem₁ pairwise_disjoint₁) (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes₂ le_of_mem₂ pairwise_disjoint₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.of_with_bot_mono BoxIntegral.Prepartition.ofWithBot_monoₓ'. -/
 theorem ofWithBot_mono {boxes₁ : Finset (WithBot (Box ι))}
     {le_of_mem₁ : ∀ J ∈ boxes₁, (J : WithBot (Box ι)) ≤ I}
     {pairwise_disjoint₁ : Set.Pairwise (boxes₁ : Set (WithBot (Box ι))) Disjoint}
@@ -488,6 +712,12 @@ theorem ofWithBot_mono {boxes₁ : Finset (WithBot (Box ι))}
   le_ofWithBot _ fun J hJ => H J (mem_ofWithBot.1 hJ) WithBot.coe_ne_bot
 #align box_integral.prepartition.of_with_bot_mono BoxIntegral.Prepartition.ofWithBot_mono
 
+/- warning: box_integral.prepartition.sum_of_with_bot -> BoxIntegral.Prepartition.sum_ofWithBot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.Mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.hasMem.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)))) J ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) I))) (pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Set.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.Set.hasCoeT.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))))) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.partialOrder.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)))) (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint)) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (Finset.sum.{u2, u1} M (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) _inst_1 boxes (fun (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => Option.elim'.{u1, u2} (BoxIntegral.Box.{u1} ι) M (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))))) f J))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (boxes : Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (le_of_mem : forall (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)), (Membership.mem.{u1, u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) (Finset.instMembershipFinset.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι))) J boxes) -> (LE.le.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Preorder.toLE.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.preorder.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))) J (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) I))) (pairwise_disjoint : Set.Pairwise.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.toSet.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) boxes) (Disjoint.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.partialOrder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)) (WithBot.orderBot.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι)))))) (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I (BoxIntegral.Prepartition.ofWithBot.{u1} ι I boxes le_of_mem pairwise_disjoint)) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (Finset.sum.{u2, u1} M (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) _inst_1 boxes (fun (J : WithBot.{u1} (BoxIntegral.Box.{u1} ι)) => Option.elim'.{u1, u2} (BoxIntegral.Box.{u1} ι) M (OfNat.ofNat.{u2} M 0 (Zero.toOfNat0.{u2} M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) f J))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.sum_of_with_bot BoxIntegral.Prepartition.sum_ofWithBotₓ'. -/
 theorem sum_ofWithBot {M : Type _} [AddCommMonoid M] (boxes : Finset (WithBot (Box ι)))
     (le_of_mem : ∀ J ∈ boxes, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) (f : Box ι → M) :
@@ -496,6 +726,7 @@ theorem sum_ofWithBot {M : Type _} [AddCommMonoid M] (boxes : Finset (WithBot (B
   Finset.sum_eraseNone _ _
 #align box_integral.prepartition.sum_of_with_bot BoxIntegral.Prepartition.sum_ofWithBot
 
+#print BoxIntegral.Prepartition.restrict /-
 /-- Restrict a prepartition to a box. -/
 def restrict (π : Prepartition I) (J : Box ι) : Prepartition J :=
   ofWithBot (π.boxes.image fun J' => J ⊓ J')
@@ -510,16 +741,35 @@ def restrict (π : Prepartition I) (J : Box ι) : Prepartition J :=
         exact Hne rfl
       exact ((box.disjoint_coe.2 <| π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _)
 #align box_integral.prepartition.restrict BoxIntegral.Prepartition.restrict
+-/
 
+/- warning: box_integral.prepartition.mem_restrict -> BoxIntegral.Prepartition.mem_restrict is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {J₁ : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.hasMem.{u1} ι J) J₁ (BoxIntegral.Prepartition.restrict.{u1} ι I π J)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) => Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J₁) (Inf.inf.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.WithBot.hasInf.{u1} ι) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J')))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {J₁ : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι J) J₁ (BoxIntegral.Prepartition.restrict.{u1} ι I π J)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π) (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J₁) (Inf.inf.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.WithBot.inf.{u1} ι) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J')))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_restrict BoxIntegral.Prepartition.mem_restrictₓ'. -/
 @[simp]
 theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : WithBot (Box ι)) = J ⊓ J' := by
   simp [restrict, eq_comm]
 #align box_integral.prepartition.mem_restrict BoxIntegral.Prepartition.mem_restrict
 
+/- warning: box_integral.prepartition.mem_restrict' -> BoxIntegral.Prepartition.mem_restrict' is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {J₁ : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.hasMem.{u1} ι J) J₁ (BoxIntegral.Prepartition.restrict.{u1} ι I π J)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π) => Eq.{succ u1} (Set.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J₁) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J')))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {J₁ : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι J) J₁ (BoxIntegral.Prepartition.restrict.{u1} ι I π J)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J' : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J₁) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (BoxIntegral.Box.toSet.{u1} ι J')))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_restrict' BoxIntegral.Prepartition.mem_restrict'ₓ'. -/
 theorem mem_restrict' : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : Set (ι → ℝ)) = J ∩ J' := by
   simp only [mem_restrict, ← box.with_bot_coe_inj, box.coe_inf, box.coe_coe]
 #align box_integral.prepartition.mem_restrict' BoxIntegral.Prepartition.mem_restrict'
 
+/- warning: box_integral.prepartition.restrict_mono -> BoxIntegral.Prepartition.restrict_mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π₁ π₂) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.hasLe.{u1} ι J) (BoxIntegral.Prepartition.restrict.{u1} ι I π₁ J) (BoxIntegral.Prepartition.restrict.{u1} ι I π₂ J))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π₁ π₂) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι J) (BoxIntegral.Prepartition.restrict.{u1} ι I π₁ J) (BoxIntegral.Prepartition.restrict.{u1} ι I π₂ J))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.restrict_mono BoxIntegral.Prepartition.restrict_monoₓ'. -/
 @[mono]
 theorem restrict_mono {π₁ π₂ : Prepartition I} (Hle : π₁ ≤ π₂) : π₁.restrict J ≤ π₂.restrict J :=
   by
@@ -529,10 +779,13 @@ theorem restrict_mono {π₁ π₂ : Prepartition I} (Hle : π₁ ≤ π₂) : �
   exact ⟨_, Finset.mem_image_of_mem _ hJ₂, inf_le_inf_left _ <| WithBot.coe_le_coe.2 hle⟩
 #align box_integral.prepartition.restrict_mono BoxIntegral.Prepartition.restrict_mono
 
+#print BoxIntegral.Prepartition.monotone_restrict /-
 theorem monotone_restrict : Monotone fun π : Prepartition I => restrict π J := fun π₁ π₂ =>
   restrict_mono
 #align box_integral.prepartition.monotone_restrict BoxIntegral.Prepartition.monotone_restrict
+-/
 
+#print BoxIntegral.Prepartition.restrict_boxes_of_le /-
 /-- Restricting to a larger box does not change the set of boxes. We cannot claim equality
 of prepartitions because they have different types. -/
 theorem restrict_boxes_of_le (π : Prepartition I) (h : I ≤ J) : (π.restrict J).boxes = π.boxes :=
@@ -544,19 +797,29 @@ theorem restrict_boxes_of_le (π : Prepartition I) (h : I ≤ J) : (π.restrict 
   rw [inf_of_le_right, ← WithBot.some_eq_coe, Option.toFinset_some]
   exact WithBot.coe_le_coe.2 ((π.le_of_mem hJ').trans h)
 #align box_integral.prepartition.restrict_boxes_of_le BoxIntegral.Prepartition.restrict_boxes_of_le
+-/
 
+#print BoxIntegral.Prepartition.restrict_self /-
 @[simp]
 theorem restrict_self : π.restrict I = π :=
   injective_boxes <| restrict_boxes_of_le π le_rfl
 #align box_integral.prepartition.restrict_self BoxIntegral.Prepartition.restrict_self
+-/
 
+/- warning: box_integral.prepartition.Union_restrict -> BoxIntegral.Prepartition.unionᵢ_restrict is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι J (BoxIntegral.Prepartition.restrict.{u1} ι I π J)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι J (BoxIntegral.Prepartition.restrict.{u1} ι I π J)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_restrict BoxIntegral.Prepartition.unionᵢ_restrictₓ'. -/
 @[simp]
-theorem union_restrict : (π.restrict J).unionᵢ = J ∩ π.unionᵢ := by
+theorem unionᵢ_restrict : (π.restrict J).unionᵢ = J ∩ π.unionᵢ := by
   simp [restrict, ← inter_Union, ← Union_def]
-#align box_integral.prepartition.Union_restrict BoxIntegral.Prepartition.union_restrict
+#align box_integral.prepartition.Union_restrict BoxIntegral.Prepartition.unionᵢ_restrict
 
+#print BoxIntegral.Prepartition.restrict_bunionᵢ /-
 @[simp]
-theorem restrict_bUnion (πi : ∀ J, Prepartition J) (hJ : J ∈ π) :
+theorem restrict_bunionᵢ (πi : ∀ J, Prepartition J) (hJ : J ∈ π) :
     (π.bunionᵢ πi).restrict J = πi J :=
   by
   refine' (eq_of_boxes_subset_Union_superset (fun J₁ h₁ => _) _).symm
@@ -567,9 +830,16 @@ theorem restrict_bUnion (πi : ∀ J, Prepartition J) (hJ : J ∈ π) :
     obtain rfl : J = J₁
     exact π.eq_of_mem_of_mem hJ h₁ hxJ (Union_subset _ hx)
     exact hx
-#align box_integral.prepartition.restrict_bUnion BoxIntegral.Prepartition.restrict_bUnion
+#align box_integral.prepartition.restrict_bUnion BoxIntegral.Prepartition.restrict_bunionᵢ
+-/
 
-theorem bUnion_le_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
+/- warning: box_integral.prepartition.bUnion_le_iff -> BoxIntegral.Prepartition.bunionᵢ_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J} {π' : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi) π') (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.hasLe.{u1} ι J) (πi J) (BoxIntegral.Prepartition.restrict.{u1} ι I π' J)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J} {π' : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi) π') (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι J) (πi J) (BoxIntegral.Prepartition.restrict.{u1} ι I π' J)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.bUnion_le_iff BoxIntegral.Prepartition.bunionᵢ_le_iffₓ'. -/
+theorem bunionᵢ_le_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
     π.bunionᵢ πi ≤ π' ↔ ∀ J ∈ π, πi J ≤ π'.restrict J :=
   by
   fconstructor <;> intro H J hJ
@@ -580,9 +850,15 @@ theorem bUnion_le_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
     rcases H J₁ h₁ hJ with ⟨J₂, h₂, Hle⟩
     rcases π'.mem_restrict.mp h₂ with ⟨J₃, h₃, H⟩
     exact ⟨J₃, h₃, Hle.trans <| WithBot.coe_le_coe.1 <| H.trans_le inf_le_right⟩
-#align box_integral.prepartition.bUnion_le_iff BoxIntegral.Prepartition.bUnion_le_iff
+#align box_integral.prepartition.bUnion_le_iff BoxIntegral.Prepartition.bunionᵢ_le_iff
 
-theorem le_bUnion_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
+/- warning: box_integral.prepartition.le_bUnion_iff -> BoxIntegral.Prepartition.le_bunionᵢ_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J} {π' : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π' (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi)) (And (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π' π) (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.hasLe.{u1} ι J) (BoxIntegral.Prepartition.restrict.{u1} ι I π' J) (πi J))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J} {π' : BoxIntegral.Prepartition.{u1} ι I}, Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π' (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi)) (And (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π' π) (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι J) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι J) (BoxIntegral.Prepartition.restrict.{u1} ι I π' J) (πi J))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.le_bUnion_iff BoxIntegral.Prepartition.le_bunionᵢ_iffₓ'. -/
+theorem le_bunionᵢ_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
     π' ≤ π.bunionᵢ πi ↔ π' ≤ π ∧ ∀ J ∈ π, π'.restrict J ≤ πi J :=
   by
   refine' ⟨fun H => ⟨H.trans (π.bUnion_le πi), fun J hJ => _⟩, _⟩
@@ -594,33 +870,48 @@ theorem le_bUnion_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
       π'.mem_restrict.2 ⟨J', hJ', (inf_of_le_right <| WithBot.coe_le_coe.2 hle).symm⟩
     rcases Hi J hJ this with ⟨Ji, hJi, hlei⟩
     exact ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩
-#align box_integral.prepartition.le_bUnion_iff BoxIntegral.Prepartition.le_bUnion_iff
+#align box_integral.prepartition.le_bUnion_iff BoxIntegral.Prepartition.le_bunionᵢ_iff
 
 instance : Inf (Prepartition I) :=
   ⟨fun π₁ π₂ => π₁.bunionᵢ fun J => π₂.restrict J⟩
 
+#print BoxIntegral.Prepartition.inf_def /-
 theorem inf_def (π₁ π₂ : Prepartition I) : π₁ ⊓ π₂ = π₁.bunionᵢ fun J => π₂.restrict J :=
   rfl
 #align box_integral.prepartition.inf_def BoxIntegral.Prepartition.inf_def
+-/
 
+/- warning: box_integral.prepartition.mem_inf -> BoxIntegral.Prepartition.mem_inf is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (Inf.inf.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasInf.{u1} ι I) π₁ π₂)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J₁ : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J₁ π₁) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J₁ π₁) => Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J₂ : BoxIntegral.Box.{u1} ι) => Exists.{0} (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J₂ π₂) (fun (H : Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J₂ π₂) => Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J) (Inf.inf.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.WithBot.hasInf.{u1} ι) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.hasCoeT.{u1} (BoxIntegral.Box.{u1} ι)))) J₂)))))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (Inf.inf.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.inf.{u1} ι I) π₁ π₂)) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J₁ : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J₁ π₁) (Exists.{succ u1} (BoxIntegral.Box.{u1} ι) (fun (J₂ : BoxIntegral.Box.{u1} ι) => And (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J₂ π₂) (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J) (Inf.inf.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.WithBot.inf.{u1} ι) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J₁) (WithBot.some.{u1} (BoxIntegral.Box.{u1} ι) J₂)))))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_inf BoxIntegral.Prepartition.mem_infₓ'. -/
 @[simp]
 theorem mem_inf {π₁ π₂ : Prepartition I} :
     J ∈ π₁ ⊓ π₂ ↔ ∃ J₁ ∈ π₁, ∃ J₂ ∈ π₂, (J : WithBot (Box ι)) = J₁ ⊓ J₂ := by
   simp only [inf_def, mem_bUnion, mem_restrict]
 #align box_integral.prepartition.mem_inf BoxIntegral.Prepartition.mem_inf
 
+/- warning: box_integral.prepartition.Union_inf -> BoxIntegral.Prepartition.unionᵢ_inf is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π₁ : BoxIntegral.Prepartition.{u1} ι I) (π₂ : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (Inf.inf.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasInf.{u1} ι I) π₁ π₂)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π₁ : BoxIntegral.Prepartition.{u1} ι I) (π₂ : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (Inf.inf.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.inf.{u1} ι I) π₁ π₂)) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_inf BoxIntegral.Prepartition.unionᵢ_infₓ'. -/
 @[simp]
-theorem union_inf (π₁ π₂ : Prepartition I) : (π₁ ⊓ π₂).unionᵢ = π₁.unionᵢ ∩ π₂.unionᵢ := by
+theorem unionᵢ_inf (π₁ π₂ : Prepartition I) : (π₁ ⊓ π₂).unionᵢ = π₁.unionᵢ ∩ π₂.unionᵢ := by
   simp only [inf_def, Union_bUnion, Union_restrict, ← Union_inter, ← Union_def]
-#align box_integral.prepartition.Union_inf BoxIntegral.Prepartition.union_inf
+#align box_integral.prepartition.Union_inf BoxIntegral.Prepartition.unionᵢ_inf
 
 instance : SemilatticeInf (Prepartition I) :=
   { Prepartition.hasInf,
     Prepartition.partialOrder with
-    inf_le_left := fun π₁ π₂ => π₁.bUnion_le _
-    inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl
-    le_inf := fun π π₁ π₂ h₁ h₂ => π₁.le_bUnion_iff.2 ⟨h₁, fun J hJ => restrict_mono h₂⟩ }
+    inf_le_left := fun π₁ π₂ => π₁.bunionᵢ_le _
+    inf_le_right := fun π₁ π₂ => (bunionᵢ_le_iff _).2 fun J hJ => le_rfl
+    le_inf := fun π π₁ π₂ h₁ h₂ => π₁.le_bunionᵢ_iff.2 ⟨h₁, fun J hJ => restrict_mono h₂⟩ }
 
+#print BoxIntegral.Prepartition.filter /-
 /-- The prepartition with boxes `{J ∈ π | p J}`. -/
 @[simps]
 def filter (π : Prepartition I) (p : Box ι → Prop) : Prepartition I
@@ -629,30 +920,49 @@ def filter (π : Prepartition I) (p : Box ι → Prop) : Prepartition I
   le_of_mem' J hJ := π.le_of_mem (mem_filter.1 hJ).1
   PairwiseDisjoint J₁ h₁ J₂ h₂ := π.disjoint_coe_of_mem (mem_filter.1 h₁).1 (mem_filter.1 h₂).1
 #align box_integral.prepartition.filter BoxIntegral.Prepartition.filter
+-/
 
+#print BoxIntegral.Prepartition.mem_filter /-
 @[simp]
 theorem mem_filter {p : Box ι → Prop} : J ∈ π.filterₓ p ↔ J ∈ π ∧ p J :=
   Finset.mem_filter
 #align box_integral.prepartition.mem_filter BoxIntegral.Prepartition.mem_filter
+-/
 
+/- warning: box_integral.prepartition.filter_le -> BoxIntegral.Prepartition.filter_le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (p : (BoxIntegral.Box.{u1} ι) -> Prop), LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.filter.{u1} ι I π p) π
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (p : (BoxIntegral.Box.{u1} ι) -> Prop), LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.filter.{u1} ι I π p) π
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.filter_le BoxIntegral.Prepartition.filter_leₓ'. -/
 theorem filter_le (π : Prepartition I) (p : Box ι → Prop) : π.filterₓ p ≤ π := fun J hJ =>
   let ⟨hπ, hp⟩ := π.mem_filter.1 hJ
   ⟨J, hπ, le_rfl⟩
 #align box_integral.prepartition.filter_le BoxIntegral.Prepartition.filter_le
 
+#print BoxIntegral.Prepartition.filter_of_true /-
 theorem filter_of_true {p : Box ι → Prop} (hp : ∀ J ∈ π, p J) : π.filterₓ p = π :=
   by
   ext J
   simpa using hp J
 #align box_integral.prepartition.filter_of_true BoxIntegral.Prepartition.filter_of_true
+-/
 
+#print BoxIntegral.Prepartition.filter_true /-
 @[simp]
 theorem filter_true : (π.filterₓ fun _ => True) = π :=
   π.filter_of_true fun _ _ => trivial
 #align box_integral.prepartition.filter_true BoxIntegral.Prepartition.filter_true
+-/
 
+/- warning: box_integral.prepartition.Union_filter_not -> BoxIntegral.Prepartition.unionᵢ_filter_not is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (p : (BoxIntegral.Box.{u1} ι) -> Prop), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.filter.{u1} ι I π (fun (J : BoxIntegral.Box.{u1} ι) => Not (p J)))) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.filter.{u1} ι I π p)))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π : BoxIntegral.Prepartition.{u1} ι I) (p : (BoxIntegral.Box.{u1} ι) -> Prop), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.filter.{u1} ι I π (fun (J : BoxIntegral.Box.{u1} ι) => Not (p J)))) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.filter.{u1} ι I π p)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_filter_not BoxIntegral.Prepartition.unionᵢ_filter_notₓ'. -/
 @[simp]
-theorem union_filter_not (π : Prepartition I) (p : Box ι → Prop) :
+theorem unionᵢ_filter_not (π : Prepartition I) (p : Box ι → Prop) :
     (π.filterₓ fun J => ¬p J).unionᵢ = π.unionᵢ \ (π.filterₓ p).unionᵢ :=
   by
   simp only [prepartition.Union]
@@ -661,14 +971,26 @@ theorem union_filter_not (π : Prepartition I) (p : Box ι → Prop) :
     simp (config := { contextual := true })
   · convert π.pairwise_disjoint
     simp
-#align box_integral.prepartition.Union_filter_not BoxIntegral.Prepartition.union_filter_not
+#align box_integral.prepartition.Union_filter_not BoxIntegral.Prepartition.unionᵢ_filter_not
 
+/- warning: box_integral.prepartition.sum_fiberwise -> BoxIntegral.Prepartition.sum_fiberwise is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {α : Type.{u2}} {M : Type.{u3}} [_inst_1 : AddCommMonoid.{u3} M] (π : BoxIntegral.Prepartition.{u1} ι I) (f : (BoxIntegral.Box.{u1} ι) -> α) (g : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u3} M (Finset.sum.{u3, u2} M α _inst_1 (Finset.image.{u1, u2} (BoxIntegral.Box.{u1} ι) α (fun (a : α) (b : α) => Classical.propDecidable (Eq.{succ u2} α a b)) f (BoxIntegral.Prepartition.boxes.{u1} ι I π)) (fun (y : α) => Finset.sum.{u3, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I (BoxIntegral.Prepartition.filter.{u1} ι I π (fun (J : BoxIntegral.Box.{u1} ι) => Eq.{succ u2} α (f J) y))) (fun (J : BoxIntegral.Box.{u1} ι) => g J))) (Finset.sum.{u3, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => g J))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {α : Type.{u3}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (π : BoxIntegral.Prepartition.{u1} ι I) (f : (BoxIntegral.Box.{u1} ι) -> α) (g : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u3} M α _inst_1 (Finset.image.{u1, u3} (BoxIntegral.Box.{u1} ι) α (fun (a : α) (b : α) => Classical.propDecidable (Eq.{succ u3} α a b)) f (BoxIntegral.Prepartition.boxes.{u1} ι I π)) (fun (y : α) => Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I (BoxIntegral.Prepartition.filter.{u1} ι I π (fun (J : BoxIntegral.Box.{u1} ι) => Eq.{succ u3} α (f J) y))) (fun (J : BoxIntegral.Box.{u1} ι) => g J))) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => g J))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.sum_fiberwise BoxIntegral.Prepartition.sum_fiberwiseₓ'. -/
 theorem sum_fiberwise {α M} [AddCommMonoid M] (π : Prepartition I) (f : Box ι → α) (g : Box ι → M) :
     (∑ y in π.boxes.image f, ∑ J in (π.filterₓ fun J => f J = y).boxes, g J) =
       ∑ J in π.boxes, g J :=
   by convert sum_fiberwise_of_maps_to (fun _ => Finset.mem_image_of_mem f) g
 #align box_integral.prepartition.sum_fiberwise BoxIntegral.Prepartition.sum_fiberwise
 
+/- warning: box_integral.prepartition.disj_union -> BoxIntegral.Prepartition.disjUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π₁ : BoxIntegral.Prepartition.{u1} ι I) (π₂ : BoxIntegral.Prepartition.{u1} ι I), (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)) -> (BoxIntegral.Prepartition.{u1} ι I)
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} (π₁ : BoxIntegral.Prepartition.{u1} ι I) (π₂ : BoxIntegral.Prepartition.{u1} ι I), (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)) -> (BoxIntegral.Prepartition.{u1} ι I)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.disj_union BoxIntegral.Prepartition.disjUnionₓ'. -/
 /-- Union of two disjoint prepartitions. -/
 @[simps]
 def disjUnion (π₁ π₂ : Prepartition I) (h : Disjoint π₁.unionᵢ π₂.unionᵢ) : Prepartition I
@@ -681,64 +1003,114 @@ def disjUnion (π₁ π₂ : Prepartition I) (h : Disjoint π₁.unionᵢ π₂.
     fun J₁ h₁ J₂ h₂ _ => h.mono (π₁.subset_unionᵢ h₁) (π₂.subset_unionᵢ h₂)
 #align box_integral.prepartition.disj_union BoxIntegral.Prepartition.disjUnion
 
+/- warning: box_integral.prepartition.mem_disj_union -> BoxIntegral.Prepartition.mem_disjUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} (H : Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)), Iff (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ H)) (Or (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π₁) (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {J : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} (H : Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)), Iff (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ H)) (Or (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π₁) (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.mem_disj_union BoxIntegral.Prepartition.mem_disjUnionₓ'. -/
 @[simp]
 theorem mem_disjUnion (H : Disjoint π₁.unionᵢ π₂.unionᵢ) :
     J ∈ π₁.disjUnion π₂ H ↔ J ∈ π₁ ∨ J ∈ π₂ :=
   Finset.mem_union
 #align box_integral.prepartition.mem_disj_union BoxIntegral.Prepartition.mem_disjUnion
 
+/- warning: box_integral.prepartition.Union_disj_union -> BoxIntegral.Prepartition.unionᵢ_disjUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} (h : Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ h)) (Union.union.{u1} (Set.{u1} (ι -> Real)) (Set.hasUnion.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} (h : Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ h)) (Union.union.{u1} (Set.{u1} (ι -> Real)) (Set.instUnionSet.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_disj_union BoxIntegral.Prepartition.unionᵢ_disjUnionₓ'. -/
 @[simp]
-theorem union_disjUnion (h : Disjoint π₁.unionᵢ π₂.unionᵢ) :
+theorem unionᵢ_disjUnion (h : Disjoint π₁.unionᵢ π₂.unionᵢ) :
     (π₁.disjUnion π₂ h).unionᵢ = π₁.unionᵢ ∪ π₂.unionᵢ := by
   simp [disj_union, prepartition.Union, Union_or, Union_union_distrib]
-#align box_integral.prepartition.Union_disj_union BoxIntegral.Prepartition.union_disjUnion
+#align box_integral.prepartition.Union_disj_union BoxIntegral.Prepartition.unionᵢ_disjUnion
 
+/- warning: box_integral.prepartition.sum_disj_union_boxes -> BoxIntegral.Prepartition.sum_disj_union_boxes is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M], (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)) -> (forall (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (Union.union.{u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.hasUnion.{u1} (BoxIntegral.Box.{u1} ι) (fun (a : BoxIntegral.Box.{u1} ι) (b : BoxIntegral.Box.{u1} ι) => Classical.propDecidable (Eq.{succ u1} (BoxIntegral.Box.{u1} ι) a b))) (BoxIntegral.Prepartition.boxes.{u1} ι I π₁) (BoxIntegral.Prepartition.boxes.{u1} ι I π₂)) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (HAdd.hAdd.{u2, u2, u2} M M M (instHAdd.{u2} M (AddZeroClass.toHasAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π₁) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π₂) (fun (J : BoxIntegral.Box.{u1} ι) => f J))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M], (Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)) -> (forall (f : (BoxIntegral.Box.{u1} ι) -> M), Eq.{succ u2} M (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (Union.union.{u1} (Finset.{u1} (BoxIntegral.Box.{u1} ι)) (Finset.instUnionFinset.{u1} (BoxIntegral.Box.{u1} ι) (fun (a : BoxIntegral.Box.{u1} ι) (b : BoxIntegral.Box.{u1} ι) => decidableEq_of_decidableLE.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι) (fun (a : BoxIntegral.Box.{u1} ι) (b : BoxIntegral.Box.{u1} ι) => Classical.propDecidable ((fun (x._@.Mathlib.Init.Algebra.Order._hyg.1911 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Init.Algebra.Order._hyg.1913 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (Preorder.toLE.{u1} (BoxIntegral.Box.{u1} ι) (PartialOrder.toPreorder.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instPartialOrderBox.{u1} ι))) x._@.Mathlib.Init.Algebra.Order._hyg.1911 x._@.Mathlib.Init.Algebra.Order._hyg.1913) a b)) a b)) (BoxIntegral.Prepartition.boxes.{u1} ι I π₁) (BoxIntegral.Prepartition.boxes.{u1} ι I π₂)) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (HAdd.hAdd.{u2, u2, u2} M M M (instHAdd.{u2} M (AddZeroClass.toAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π₁) (fun (J : BoxIntegral.Box.{u1} ι) => f J)) (Finset.sum.{u2, u1} M (BoxIntegral.Box.{u1} ι) _inst_1 (BoxIntegral.Prepartition.boxes.{u1} ι I π₂) (fun (J : BoxIntegral.Box.{u1} ι) => f J))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.sum_disj_union_boxes BoxIntegral.Prepartition.sum_disj_union_boxesₓ'. -/
 @[simp]
 theorem sum_disj_union_boxes {M : Type _} [AddCommMonoid M] (h : Disjoint π₁.unionᵢ π₂.unionᵢ)
     (f : Box ι → M) :
     (∑ J in π₁.boxes ∪ π₂.boxes, f J) = (∑ J in π₁.boxes, f J) + ∑ J in π₂.boxes, f J :=
-  sum_union <| disjoint_boxes_of_disjoint_union h
+  sum_union <| disjoint_boxes_of_disjoint_unionᵢ h
 #align box_integral.prepartition.sum_disj_union_boxes BoxIntegral.Prepartition.sum_disj_union_boxes
 
 section Distortion
 
 variable [Fintype ι]
 
+#print BoxIntegral.Prepartition.distortion /-
 /-- The distortion of a prepartition is the maximum of the distortions of the boxes of this
 prepartition. -/
 def distortion : ℝ≥0 :=
   π.boxes.sup Box.distortion
 #align box_integral.prepartition.distortion BoxIntegral.Prepartition.distortion
+-/
 
+#print BoxIntegral.Prepartition.distortion_le_of_mem /-
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 #align box_integral.prepartition.distortion_le_of_mem BoxIntegral.Prepartition.distortion_le_of_mem
+-/
 
+#print BoxIntegral.Prepartition.distortion_le_iff /-
 theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
   Finset.sup_le_iff
 #align box_integral.prepartition.distortion_le_iff BoxIntegral.Prepartition.distortion_le_iff
+-/
 
-theorem distortion_bUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
+/- warning: box_integral.prepartition.distortion_bUnion -> BoxIntegral.Prepartition.distortion_bunionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Fintype.{u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I) (πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi) _inst_1) (Finset.sup.{0, u1} NNReal (BoxIntegral.Box.{u1} ι) NNReal.semilatticeSup NNReal.orderBot (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => BoxIntegral.Prepartition.distortion.{u1} ι J (πi J) _inst_1))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Fintype.{u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I) (πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.{u1} ι J), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.bunionᵢ.{u1} ι I π πi) _inst_1) (Finset.sup.{0, u1} NNReal (BoxIntegral.Box.{u1} ι) instNNRealSemilatticeSup NNReal.instOrderBotNNRealToLEToPreorderToPartialOrderInstNNRealStrictOrderedSemiring (BoxIntegral.Prepartition.boxes.{u1} ι I π) (fun (J : BoxIntegral.Box.{u1} ι) => BoxIntegral.Prepartition.distortion.{u1} ι J (πi J) _inst_1))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.distortion_bUnion BoxIntegral.Prepartition.distortion_bunionᵢₓ'. -/
+theorem distortion_bunionᵢ (π : Prepartition I) (πi : ∀ J, Prepartition J) :
     (π.bunionᵢ πi).distortion = π.boxes.sup fun J => (πi J).distortion :=
   sup_bunionᵢ _ _
-#align box_integral.prepartition.distortion_bUnion BoxIntegral.Prepartition.distortion_bUnion
+#align box_integral.prepartition.distortion_bUnion BoxIntegral.Prepartition.distortion_bunionᵢ
 
+/- warning: box_integral.prepartition.distortion_disj_union -> BoxIntegral.Prepartition.distortion_disjUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} [_inst_1 : Fintype.{u1} ι] (h : Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ h) _inst_1) (LinearOrder.max.{0} NNReal (ConditionallyCompleteLinearOrder.toLinearOrder.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.conditionallyCompleteLinearOrderBot)) (BoxIntegral.Prepartition.distortion.{u1} ι I π₁ _inst_1) (BoxIntegral.Prepartition.distortion.{u1} ι I π₂ _inst_1))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} [_inst_1 : Fintype.{u1} ι] (h : Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂)), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ h) _inst_1) (Max.max.{0} NNReal (CanonicallyLinearOrderedSemifield.toMax.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal) (BoxIntegral.Prepartition.distortion.{u1} ι I π₁ _inst_1) (BoxIntegral.Prepartition.distortion.{u1} ι I π₂ _inst_1))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.distortion_disj_union BoxIntegral.Prepartition.distortion_disjUnionₓ'. -/
 @[simp]
 theorem distortion_disjUnion (h : Disjoint π₁.unionᵢ π₂.unionᵢ) :
     (π₁.disjUnion π₂ h).distortion = max π₁.distortion π₂.distortion :=
   sup_union
 #align box_integral.prepartition.distortion_disj_union BoxIntegral.Prepartition.distortion_disjUnion
 
+#print BoxIntegral.Prepartition.distortion_of_const /-
 theorem distortion_of_const {c} (h₁ : π.boxes.Nonempty) (h₂ : ∀ J ∈ π, Box.distortion J = c) :
     π.distortion = c :=
   (sup_congr rfl h₂).trans (sup_const h₁ _)
 #align box_integral.prepartition.distortion_of_const BoxIntegral.Prepartition.distortion_of_const
+-/
 
+/- warning: box_integral.prepartition.distortion_top -> BoxIntegral.Prepartition.distortion_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I))) _inst_1) (BoxIntegral.Box.distortion.{u1} ι _inst_1 I)
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I))) _inst_1) (BoxIntegral.Box.distortion.{u1} ι _inst_1 I)
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.distortion_top BoxIntegral.Prepartition.distortion_topₓ'. -/
 @[simp]
 theorem distortion_top (I : Box ι) : distortion (⊤ : Prepartition I) = I.distortion :=
   sup_singleton
 #align box_integral.prepartition.distortion_top BoxIntegral.Prepartition.distortion_top
 
+/- warning: box_integral.prepartition.distortion_bot -> BoxIntegral.Prepartition.distortion_bot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toHasBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderBot.{u1} ι I))) _inst_1) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι), Eq.{1} NNReal (BoxIntegral.Prepartition.distortion.{u1} ι I (Bot.bot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderBot.toBot.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderBotPrepartitionInstLEPrepartition.{u1} ι I))) _inst_1) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.distortion_bot BoxIntegral.Prepartition.distortion_botₓ'. -/
 @[simp]
 theorem distortion_bot (I : Box ι) : distortion (⊥ : Prepartition I) = 0 :=
   sup_empty
@@ -746,21 +1118,33 @@ theorem distortion_bot (I : Box ι) : distortion (⊥ : Prepartition I) = 0 :=
 
 end Distortion
 
+#print BoxIntegral.Prepartition.IsPartition /-
 /-- A prepartition `π` of `I` is a partition if the boxes of `π` cover the whole `I`. -/
 def IsPartition (π : Prepartition I) :=
   ∀ x ∈ I, ∃ J ∈ π, x ∈ J
 #align box_integral.prepartition.is_partition BoxIntegral.Prepartition.IsPartition
+-/
 
-theorem isPartition_iff_union_eq {π : Prepartition I} : π.IsPartition ↔ π.unionᵢ = I := by
+#print BoxIntegral.Prepartition.isPartition_iff_unionᵢ_eq /-
+theorem isPartition_iff_unionᵢ_eq {π : Prepartition I} : π.IsPartition ↔ π.unionᵢ = I := by
   simp_rw [is_partition, Set.Subset.antisymm_iff, π.Union_subset, true_and_iff, Set.subset_def,
     mem_Union, box.mem_coe]
-#align box_integral.prepartition.is_partition_iff_Union_eq BoxIntegral.Prepartition.isPartition_iff_union_eq
+#align box_integral.prepartition.is_partition_iff_Union_eq BoxIntegral.Prepartition.isPartition_iff_unionᵢ_eq
+-/
 
+#print BoxIntegral.Prepartition.isPartition_single_iff /-
 @[simp]
 theorem isPartition_single_iff (h : J ≤ I) : IsPartition (single I J h) ↔ J = I := by
   simp [is_partition_iff_Union_eq]
 #align box_integral.prepartition.is_partition_single_iff BoxIntegral.Prepartition.isPartition_single_iff
+-/
 
+/- warning: box_integral.prepartition.is_partition_top -> BoxIntegral.Prepartition.isPartitionTop is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.IsPartition.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))
+but is expected to have type
+  forall {ι : Type.{u1}} (I : BoxIntegral.Box.{u1} ι), BoxIntegral.Prepartition.IsPartition.{u1} ι I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.is_partition_top BoxIntegral.Prepartition.isPartitionTopₓ'. -/
 theorem isPartitionTop (I : Box ι) : IsPartition (⊤ : Prepartition I) := fun x hx =>
   ⟨I, mem_top.2 rfl, hx⟩
 #align box_integral.prepartition.is_partition_top BoxIntegral.Prepartition.isPartitionTop
@@ -769,62 +1153,92 @@ namespace IsPartition
 
 variable {π}
 
-theorem union_eq (h : π.IsPartition) : π.unionᵢ = I :=
-  isPartition_iff_union_eq.1 h
-#align box_integral.prepartition.is_partition.Union_eq BoxIntegral.Prepartition.IsPartition.union_eq
+#print BoxIntegral.Prepartition.IsPartition.unionᵢ_eq /-
+theorem unionᵢ_eq (h : π.IsPartition) : π.unionᵢ = I :=
+  isPartition_iff_unionᵢ_eq.1 h
+#align box_integral.prepartition.is_partition.Union_eq BoxIntegral.Prepartition.IsPartition.unionᵢ_eq
+-/
 
-theorem union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.unionᵢ ⊆ π.unionᵢ :=
+#print BoxIntegral.Prepartition.IsPartition.unionᵢ_subset /-
+theorem unionᵢ_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.unionᵢ ⊆ π.unionᵢ :=
   h.unionᵢ_eq.symm ▸ π₁.unionᵢ_subset
-#align box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.union_subset
+#align box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.unionᵢ_subset
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (J «expr ∈ » π) -/
+#print BoxIntegral.Prepartition.IsPartition.existsUnique /-
 protected theorem existsUnique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J :=
   by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro₂ J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
 #align box_integral.prepartition.is_partition.exists_unique BoxIntegral.Prepartition.IsPartition.existsUnique
+-/
 
+#print BoxIntegral.Prepartition.IsPartition.nonempty_boxes /-
 theorem nonempty_boxes (h : π.IsPartition) : π.boxes.Nonempty :=
   let ⟨J, hJ, _⟩ := h _ I.upper_mem
   ⟨J, hJ⟩
 #align box_integral.prepartition.is_partition.nonempty_boxes BoxIntegral.Prepartition.IsPartition.nonempty_boxes
+-/
 
+#print BoxIntegral.Prepartition.IsPartition.eq_of_boxes_subset /-
 theorem eq_of_boxes_subset (h₁ : π₁.IsPartition) (h₂ : π₁.boxes ⊆ π₂.boxes) : π₁ = π₂ :=
-  eq_of_boxes_subset_union_superset h₂ <| h₁.unionᵢ_subset _
+  eq_of_boxes_subset_unionᵢ_superset h₂ <| h₁.unionᵢ_subset _
 #align box_integral.prepartition.is_partition.eq_of_boxes_subset BoxIntegral.Prepartition.IsPartition.eq_of_boxes_subset
+-/
 
+/- warning: box_integral.prepartition.is_partition.le_iff -> BoxIntegral.Prepartition.IsPartition.le_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (BoxIntegral.Prepartition.IsPartition.{u1} ι I π₂) -> (Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) π₁ π₂) (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π₁) -> (forall (J' : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J' π₂) -> (Set.Nonempty.{u1} (ι -> Real) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.hasInter.{u1} (ι -> Real)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) J'))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι) J J'))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I}, (BoxIntegral.Prepartition.IsPartition.{u1} ι I π₂) -> (Iff (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) π₁ π₂) (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π₁) -> (forall (J' : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J' π₂) -> (Set.Nonempty.{u1} (ι -> Real) (Inter.inter.{u1} (Set.{u1} (ι -> Real)) (Set.instInterSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι J) (BoxIntegral.Box.toSet.{u1} ι J'))) -> (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) J J'))))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.is_partition.le_iff BoxIntegral.Prepartition.IsPartition.le_iffₓ'. -/
 theorem le_iff (h : π₂.IsPartition) :
     π₁ ≤ π₂ ↔ ∀ J ∈ π₁, ∀ J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J' :=
-  le_iff_nonempty_imp_le_and_union_subset.trans <| and_iff_left <| h.unionᵢ_subset _
+  le_iff_nonempty_imp_le_and_unionᵢ_subset.trans <| and_iff_left <| h.unionᵢ_subset _
 #align box_integral.prepartition.is_partition.le_iff BoxIntegral.Prepartition.IsPartition.le_iff
 
-protected theorem bUnion (h : IsPartition π) (hi : ∀ J ∈ π, IsPartition (πi J)) :
+#print BoxIntegral.Prepartition.IsPartition.bunionᵢ /-
+protected theorem bunionᵢ (h : IsPartition π) (hi : ∀ J ∈ π, IsPartition (πi J)) :
     IsPartition (π.bunionᵢ πi) := fun x hx =>
   let ⟨J, hJ, hxi⟩ := h x hx
   let ⟨Ji, hJi, hx⟩ := hi J hJ x hxi
   ⟨Ji, π.mem_bunionᵢ.2 ⟨J, hJ, hJi⟩, hx⟩
-#align box_integral.prepartition.is_partition.bUnion BoxIntegral.Prepartition.IsPartition.bUnion
+#align box_integral.prepartition.is_partition.bUnion BoxIntegral.Prepartition.IsPartition.bunionᵢ
+-/
 
+#print BoxIntegral.Prepartition.IsPartition.restrict /-
 protected theorem restrict (h : IsPartition π) (hJ : J ≤ I) : IsPartition (π.restrict J) :=
-  isPartition_iff_union_eq.2 <| by simp [h.Union_eq, hJ]
+  isPartition_iff_unionᵢ_eq.2 <| by simp [h.Union_eq, hJ]
 #align box_integral.prepartition.is_partition.restrict BoxIntegral.Prepartition.IsPartition.restrict
+-/
 
+#print BoxIntegral.Prepartition.IsPartition.inf /-
 protected theorem inf (h₁ : IsPartition π₁) (h₂ : IsPartition π₂) : IsPartition (π₁ ⊓ π₂) :=
-  isPartition_iff_union_eq.2 <| by simp [h₁.Union_eq, h₂.Union_eq]
+  isPartition_iff_unionᵢ_eq.2 <| by simp [h₁.Union_eq, h₂.Union_eq]
 #align box_integral.prepartition.is_partition.inf BoxIntegral.Prepartition.IsPartition.inf
+-/
 
 end IsPartition
 
-theorem union_bUnion_partition (h : ∀ J ∈ π, (πi J).IsPartition) :
+#print BoxIntegral.Prepartition.unionᵢ_bunionᵢ_partition /-
+theorem unionᵢ_bunionᵢ_partition (h : ∀ J ∈ π, (πi J).IsPartition) :
     (π.bunionᵢ πi).unionᵢ = π.unionᵢ :=
-  (union_bUnion _ _).trans <|
+  (unionᵢ_bunionᵢ _ _).trans <|
     unionᵢ_congr_of_surjective id surjective_id fun J =>
       unionᵢ_congr_of_surjective id surjective_id fun hJ => (h J hJ).unionᵢ_eq
-#align box_integral.prepartition.Union_bUnion_partition BoxIntegral.Prepartition.union_bUnion_partition
+#align box_integral.prepartition.Union_bUnion_partition BoxIntegral.Prepartition.unionᵢ_bunionᵢ_partition
+-/
 
+/- warning: box_integral.prepartition.is_partition_disj_union_of_eq_diff -> BoxIntegral.Prepartition.isPartitionDisjUnionOfEqDiff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} (h : Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁))), BoxIntegral.Prepartition.IsPartition.{u1} ι I (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ (Eq.subst.{succ u1} (Set.{u1} (ι -> Real)) (fun (_x : Set.{u1} (ι -> Real)) => Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.completeBooleanAlgebra.{u1} (ι -> Real))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) _x) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂) (Eq.symm.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁)) h) (disjoint_sdiff_self_right.{u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))))))
+but is expected to have type
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} {π₁ : BoxIntegral.Prepartition.{u1} ι I} {π₂ : BoxIntegral.Prepartition.{u1} ι I} (h : Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁))), BoxIntegral.Prepartition.IsPartition.{u1} ι I (BoxIntegral.Prepartition.disjUnion.{u1} ι I π₁ π₂ (Eq.rec.{0, succ u1} (Set.{u1} (ι -> Real)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁)) (fun (x._@.Mathlib.Analysis.BoxIntegral.Partition.Basic._hyg.11577 : Set.{u1} (ι -> Real)) (h._@.Mathlib.Analysis.BoxIntegral.Partition.Basic._hyg.11578 : Eq.{succ u1} (Set.{u1} (ι -> Real)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁)) x._@.Mathlib.Analysis.BoxIntegral.Partition.Basic._hyg.11577) => Disjoint.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} (ι -> Real)) (Preorder.toLE.{u1} (Set.{u1} (ι -> Real)) (PartialOrder.toPreorder.{u1} (Set.{u1} (ι -> Real)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (ι -> Real)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} (ι -> Real)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (ι -> Real)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (ι -> Real)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (ι -> Real)) (Set.instCompleteBooleanAlgebraSet.{u1} (ι -> Real))))))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) x._@.Mathlib.Analysis.BoxIntegral.Partition.Basic._hyg.11577) (disjoint_sdiff_self_right.{u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁) (BoxIntegral.Box.toSet.{u1} ι I) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} (ι -> Real)) (Set.instBooleanAlgebraSet.{u1} (ι -> Real)))) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂) (Eq.symm.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₂) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π₁)) h)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.is_partition_disj_union_of_eq_diff BoxIntegral.Prepartition.isPartitionDisjUnionOfEqDiffₓ'. -/
 theorem isPartitionDisjUnionOfEqDiff (h : π₂.unionᵢ = I \ π₁.unionᵢ) :
     IsPartition (π₁.disjUnion π₂ <| h.symm ▸ disjoint_sdiff_self_right) :=
-  isPartition_iff_union_eq.2 <| (union_disjUnion _).trans <| by simp [h, π₁.Union_subset]
+  isPartition_iff_unionᵢ_eq.2 <| (unionᵢ_disjUnion _).trans <| by simp [h, π₁.Union_subset]
 #align box_integral.prepartition.is_partition_disj_union_of_eq_diff BoxIntegral.Prepartition.isPartitionDisjUnionOfEqDiff
 
 end Prepartition

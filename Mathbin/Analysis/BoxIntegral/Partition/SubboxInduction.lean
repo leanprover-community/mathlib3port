@@ -59,8 +59,9 @@ def splitCenter (I : Box ι) : Prepartition I
 theorem mem_splitCenter : J ∈ splitCenter I ↔ ∃ s, I.splitCenterBox s = J := by simp [split_center]
 #align box_integral.prepartition.mem_split_center BoxIntegral.Prepartition.mem_splitCenter
 
-theorem isPartitionSplitCenter (I : Box ι) : IsPartition (splitCenter I) := fun x hx => by simp [hx]
-#align box_integral.prepartition.is_partition_split_center BoxIntegral.Prepartition.isPartitionSplitCenter
+theorem isPartition_splitCenter (I : Box ι) : IsPartition (splitCenter I) := fun x hx => by
+  simp [hx]
+#align box_integral.prepartition.is_partition_split_center BoxIntegral.Prepartition.isPartition_splitCenter
 
 theorem upper_sub_lower_of_mem_splitCenter (h : J ∈ splitCenter I) (i : ι) :
     J.upper i - J.lower i = (I.upper i - I.lower i) / 2 :=
@@ -198,15 +199,15 @@ theorem toSubordinate_toPrepartition_le (π : Prepartition I) (r : (ι → ℝ) 
   (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.1
 #align box_integral.prepartition.to_subordinate_to_prepartition_le BoxIntegral.Prepartition.toSubordinate_toPrepartition_le
 
-theorem isHenstockToSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
+theorem isHenstock_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).IsHenstock :=
   (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.2.1
-#align box_integral.prepartition.is_Henstock_to_subordinate BoxIntegral.Prepartition.isHenstockToSubordinate
+#align box_integral.prepartition.is_Henstock_to_subordinate BoxIntegral.Prepartition.isHenstock_toSubordinate
 
-theorem isSubordinateToSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
+theorem isSubordinate_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).IsSubordinate r :=
   (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.2.2.1
-#align box_integral.prepartition.is_subordinate_to_subordinate BoxIntegral.Prepartition.isSubordinateToSubordinate
+#align box_integral.prepartition.is_subordinate_to_subordinate BoxIntegral.Prepartition.isSubordinate_toSubordinate
 
 @[simp]
 theorem distortion_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
@@ -241,11 +242,11 @@ def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition
     (((π₂.union_toSubordinate r).trans hU).symm ▸ disjoint_sdiff_self_right)
 #align box_integral.tagged_prepartition.union_compl_to_subordinate BoxIntegral.TaggedPrepartition.unionComplToSubordinate
 
-theorem isPartitionUnionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
+theorem isPartition_unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
     (hU : π₂.unionᵢ = I \ π₁.unionᵢ) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     IsPartition (π₁.unionComplToSubordinate π₂ hU r) :=
   Prepartition.isPartitionDisjUnionOfEqDiff ((π₂.union_toSubordinate r).trans hU)
-#align box_integral.tagged_prepartition.is_partition_union_compl_to_subordinate BoxIntegral.TaggedPrepartition.isPartitionUnionComplToSubordinate
+#align box_integral.tagged_prepartition.is_partition_union_compl_to_subordinate BoxIntegral.TaggedPrepartition.isPartition_unionComplToSubordinate
 
 @[simp]
 theorem unionComplToSubordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
@@ -255,11 +256,11 @@ theorem unionComplToSubordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Pr
 #align box_integral.tagged_prepartition.union_compl_to_subordinate_boxes BoxIntegral.TaggedPrepartition.unionComplToSubordinate_boxes
 
 @[simp]
-theorem union_unionComplToSubordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
+theorem unionᵢ_unionComplToSubordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
     (hU : π₂.unionᵢ = I \ π₁.unionᵢ) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π₁.unionComplToSubordinate π₂ hU r).unionᵢ = I :=
-  (isPartitionUnionComplToSubordinate _ _ _ _).unionᵢ_eq
-#align box_integral.tagged_prepartition.Union_union_compl_to_subordinate_boxes BoxIntegral.TaggedPrepartition.union_unionComplToSubordinate_boxes
+  (isPartition_unionComplToSubordinate _ _ _ _).unionᵢ_eq
+#align box_integral.tagged_prepartition.Union_union_compl_to_subordinate_boxes BoxIntegral.TaggedPrepartition.unionᵢ_unionComplToSubordinate_boxes
 
 @[simp]
 theorem distortion_unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)

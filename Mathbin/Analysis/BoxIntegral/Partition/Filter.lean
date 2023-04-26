@@ -381,8 +381,8 @@ protected theorem MemBaseSet.unionComplToSubordinate (hπ₁ : l.MemBaseSet I c 
     (hle : ∀ x ∈ I.Icc, r₂ x ≤ r₁ x) {π₂ : Prepartition I} (hU : π₂.unionᵢ = I \ π₁.unionᵢ)
     (hc : l.bDistortion → π₂.distortion ≤ c) :
     l.MemBaseSet I c r₁ (π₁.unionComplToSubordinate π₂ hU r₂) :=
-  ⟨hπ₁.1.disjUnion ((π₂.isSubordinateToSubordinate r₂).mono hle) _, fun h =>
-    (hπ₁.2 h).disjUnion (π₂.isHenstockToSubordinate _) _, fun h =>
+  ⟨hπ₁.1.disjUnion ((π₂.isSubordinate_toSubordinate r₂).mono hle) _, fun h =>
+    (hπ₁.2 h).disjUnion (π₂.isHenstock_toSubordinate _) _, fun h =>
     (distortion_unionComplToSubordinate _ _ _ _).trans_le (max_le (hπ₁.3 h) (hc h)), fun _ =>
     ⟨⊥, by simp⟩⟩
 #align box_integral.integration_params.mem_base_set.union_compl_to_subordinate BoxIntegral.IntegrationParams.MemBaseSet.unionComplToSubordinate
@@ -411,7 +411,7 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
     simpa [hc]
 #align box_integral.integration_params.mem_base_set.filter BoxIntegral.IntegrationParams.MemBaseSet.filter
 
-theorem bUnionTaggedMemBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
+theorem bUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
     (h : ∀ J ∈ π, l.MemBaseSet J c r (πi J)) (hp : ∀ J ∈ π, (πi J).IsPartition)
     (hc : l.bDistortion → π.compl.distortion ≤ c) : l.MemBaseSet I c r (π.bUnionTagged πi) :=
   by
@@ -424,7 +424,7 @@ theorem bUnionTaggedMemBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepart
   · refine' ⟨_, _, hc hD⟩
     rw [π.Union_compl, ← π.Union_bUnion_partition hp]
     rfl
-#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.bUnionTaggedMemBaseSet
+#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.bUnionTagged_memBaseSet
 
 @[mono]
 theorem RCond.mono {ι : Type _} {r : (ι → ℝ) → Ioi (0 : ℝ)} (h : l₁ ≤ l₂) (hr : l₂.RCond r) :
@@ -566,7 +566,8 @@ theorem eventually_isPartition (l : IntegrationParams) (I : Box ι) :
     ∀ᶠ π in l.toFilterUnion I ⊤, TaggedPrepartition.IsPartition π :=
   eventually_supᵢ.2 fun c =>
     eventually_inf_principal.2 <|
-      eventually_of_forall fun π h => π.isPartition_iff_union_eq.2 (h.trans Prepartition.union_top)
+      eventually_of_forall fun π h =>
+        π.isPartition_iff_unionᵢ_eq.2 (h.trans Prepartition.unionᵢ_top)
 #align box_integral.integration_params.eventually_is_partition BoxIntegral.IntegrationParams.eventually_isPartition
 
 end IntegrationParams
