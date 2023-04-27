@@ -429,7 +429,7 @@ theorem gramSchmidtOrthonormalBasis_det :
     (gramSchmidtOrthonormalBasis h f).toBasis.det f =
       ∏ i, ⟪gramSchmidtOrthonormalBasis h f i, f i⟫ :=
   by
-  convert Matrix.det_of_upper_triangular (gramSchmidtOrthonormalBasis_inv_blockTriangular h f)
+  convert Matrix.det_of_upperTriangular (gramSchmidtOrthonormalBasis_inv_blockTriangular h f)
   ext i
   exact ((gramSchmidtOrthonormalBasis h f).repr_apply_apply (f i) i).symm
 #align gram_schmidt_orthonormal_basis_det gramSchmidtOrthonormalBasis_det
