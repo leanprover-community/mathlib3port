@@ -2923,7 +2923,11 @@ import Mathbin.Topology.Category.Profinite.Projective
 import Mathbin.Topology.Category.Top.Adjunctions
 import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.Category.Top.EpiMono
-import Mathbin.Topology.Category.Top.Limits
+import Mathbin.Topology.Category.Top.Limits.Basic
+import Mathbin.Topology.Category.Top.Limits.Cofiltered
+import Mathbin.Topology.Category.Top.Limits.Konig
+import Mathbin.Topology.Category.Top.Limits.Products
+import Mathbin.Topology.Category.Top.Limits.Pullbacks
 import Mathbin.Topology.Category.Top.OpenNhds
 import Mathbin.Topology.Category.Top.Opens
 import Mathbin.Topology.Category.TopCommRing

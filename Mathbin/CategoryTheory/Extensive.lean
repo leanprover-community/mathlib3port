@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.extensive
-! leanprover-community/mathlib commit ac3ae212f394f508df43e37aa093722fa9b65d31
+! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.CategoryTheory.Limits.Shapes.Types
-import Mathbin.Topology.Category.Top.Limits
+import Mathbin.Topology.Category.Top.Limits.Pullbacks
 import Mathbin.CategoryTheory.Limits.FunctorCategory
 
 /-!

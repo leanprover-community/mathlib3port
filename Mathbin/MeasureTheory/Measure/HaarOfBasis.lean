@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 83df6d6ebd4a43b472501c515516a37a9e3d7503
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Haar
 import Mathbin.Analysis.InnerProductSpace.PiL2
+import Mathbin.MeasureTheory.Constructions.Pi
 
 /-!
 # Additive Haar measure constructed from a basis
@@ -184,4 +185,36 @@ instance (priority := 100) measureSpaceOfInnerProductSpace [NormedAddCommGroup E
 situations if we do not declare it explicitly. -/
 instance Real.measureSpace : MeasureSpace ℝ := by infer_instance
 #align real.measure_space Real.measureSpace
+
+/-! # Miscellaneous instances for `euclidean_space`
+
+In combination with `measure_space_of_inner_product_space`, these put a `measure_space` structure
+on `euclidean_space`. -/
+
+
+namespace EuclideanSpace
+
+variable (ι)
+
+-- TODO: do we want these instances for `pi_Lp` too?
+instance : MeasurableSpace (EuclideanSpace ℝ ι) :=
+  MeasurableSpace.pi
+
+instance : BorelSpace (EuclideanSpace ℝ ι) :=
+  Pi.borelSpace
+
+/-- `pi_Lp.equiv` as a `measurable_equiv`. -/
+@[simps toEquiv]
+protected def measurableEquiv : EuclideanSpace ℝ ι ≃ᵐ (ι → ℝ)
+    where
+  toEquiv := PiLp.equiv _ _
+  measurable_to_fun := measurable_id
+  measurable_inv_fun := measurable_id
+#align euclidean_space.measurable_equiv EuclideanSpace.measurableEquiv
+
+theorem coe_measurableEquiv : ⇑(EuclideanSpace.measurableEquiv ι) = PiLp.equiv 2 _ :=
+  rfl
+#align euclidean_space.coe_measurable_equiv EuclideanSpace.coe_measurableEquiv
+
+end EuclideanSpace
 

@@ -1,14 +1,14 @@
 /-
 Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Sébastien Gouëzel
+Authors: Sébastien Gouëzel, Felix Weilacher
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 9b2b58d6b14b895b2f375108e765cb47de71aebd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Topology.MetricSpace.Polish
+import Mathbin.Topology.Perfect
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 
 /-!
@@ -34,7 +34,7 @@ Then, we show Lusin's theorem that two disjoint analytic sets can be separated b
 * `analytic_set.measurably_separable` shows that two disjoint analytic sets are separated by a
   Borel set.
 
-Finally, we prove the Lusin-Souslin theorem that a continuous injective image of a Borel subset of
+We then prove the Lusin-Souslin theorem that a continuous injective image of a Borel subset of
 a Polish space is Borel. The proof of this nontrivial result relies on the above results on
 analytic sets.
 
@@ -48,6 +48,11 @@ analytic sets.
   to a second-countable topological space is a measurable embedding.
 * `is_clopenable_iff_measurable_set`: in a Polish space, a set is clopenable (i.e., it can be made
   open and closed by using a finer Polish topology) if and only if it is Borel-measurable.
+
+We use this to prove several versions of the Borel isomorphism theorem.
+
+* `measurable_equiv_of_not_countable` : Any two uncountable Polish spaces are Borel isomorphic.
+* `equiv.measurable_equiv` : Any two Polish spaces of the same cardinality are Borel. isomorphic.
 -/
 
 
@@ -768,4 +773,74 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
 #align measure_theory.measurable_set_exists_tendsto MeasureTheory.measurableSet_exists_tendsto
 
 end MeasureTheory
+
+/-! ### The Borel Isomorphism Theorem -/
+
+
+--Note: Move to topology/metric_space/polish when porting.
+instance (priority := 50) polish_of_countable [h : Countable α] [DiscreteTopology α] :
+    PolishSpace α := by
+  obtain ⟨f, hf⟩ := h.exists_injective_nat
+  have : ClosedEmbedding f :=
+    by
+    apply closedEmbedding_of_continuous_injective_closed continuous_of_discreteTopology hf
+    exact fun t _ => isClosed_discrete _
+  exact this.polish_space
+#align polish_of_countable polish_of_countable
+
+/-Note: This is to avoid a loop in TC inference. When ported to Lean 4, this will not
+be necessary, and `second_countable_of_polish` should probably
+just be added as an instance soon after the definition of `polish_space`.-/
+private theorem second_countable_of_polish [h : PolishSpace α] : SecondCountableTopology α :=
+  h.second_countable
+#align second_countable_of_polish second_countable_of_polish
+
+attribute [-instance] polishSpace_of_complete_second_countable
+
+attribute [local instance] second_countable_of_polish
+
+namespace PolishSpace
+
+variable {β : Type _} [TopologicalSpace β] [PolishSpace α] [PolishSpace β]
+
+variable [MeasurableSpace α] [MeasurableSpace β] [BorelSpace α] [BorelSpace β]
+
+noncomputable section
+
+/-- If two Polish spaces admit Borel measurable injections to one another,
+then they are Borel isomorphic.-/
+def borelSchroederBernstein {f : α → β} {g : β → α} (fmeas : Measurable f)
+    (finj : Function.Injective f) (gmeas : Measurable g) (ginj : Function.Injective g) : α ≃ᵐ β :=
+  (fmeas.MeasurableEmbedding finj).schroeder_bernstein (gmeas.MeasurableEmbedding ginj)
+#align polish_space.borel_schroeder_bernstein PolishSpace.borelSchroederBernstein
+
+/-- Any uncountable Polish space is Borel isomorphic to the Cantor space `ℕ → bool`.-/
+def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α ≃ᵐ (ℕ → Bool) :=
+  by
+  apply Nonempty.some
+  obtain ⟨f, -, fcts, finj⟩ :=
+    is_closed_univ.exists_nat_bool_injection_of_not_countable
+      (by rwa [← countable_coe_iff, (Equiv.Set.univ _).countable_iff])
+  obtain ⟨g, gmeas, ginj⟩ := MeasurableSpace.measurable_injection_cantor_of_countablyGenerated α
+  exact ⟨borel_schroeder_bernstein gmeas ginj fcts.measurable finj⟩
+#align polish_space.measurable_equiv_nat_bool_of_not_countable PolishSpace.measurableEquivNatBoolOfNotCountable
+
+/-- The **Borel Isomorphism Theorem**: Any two uncountable Polish spaces are Borel isomorphic.-/
+def measurableEquivOfNotCountable (hα : ¬Countable α) (hβ : ¬Countable β) : α ≃ᵐ β :=
+  (measurableEquivNatBoolOfNotCountable hα).trans (measurableEquivNatBoolOfNotCountable hβ).symm
+#align polish_space.measurable_equiv_of_not_countable PolishSpace.measurableEquivOfNotCountable
+
+/-- The **Borel Isomorphism Theorem**: If two Polish spaces have the same cardinality,
+they are Borel isomorphic.-/
+def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
+  by
+  by_cases h : Countable α
+  · letI := h
+    letI := Countable.of_equiv α e
+    use e <;> apply measurable_of_countable
+  refine' measurable_equiv_of_not_countable h _
+  rwa [e.countable_iff] at h
+#align polish_space.equiv.measurable_equiv PolishSpace.Equiv.measurableEquiv
+
+end PolishSpace
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplicial_set
-! leanprover-community/mathlib commit d79c3671549ace83a93d2a97f316d12ab42232ae
+! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,7 +13,7 @@ import Mathbin.AlgebraicTopology.TopologicalSimplex
 import Mathbin.CategoryTheory.Limits.Presheaf
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Yoneda
-import Mathbin.Topology.Category.Top.Limits
+import Mathbin.Topology.Category.Top.Limits.Basic
 
 /-!
 A simplicial set is just a simplicial object in `Type`,

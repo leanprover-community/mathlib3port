@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit f24cc2891c0e328f0ee8c57387103aa462c44b5e
+! leanprover-community/mathlib commit 52fa514ec337dd970d71d8de8d0fd68b455a1e54
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -624,6 +624,10 @@ theorem BddBelow.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
 #align bdd_below.finite BddBelow.finite
 -/
 
+theorem Set.Infinite.not_bddBelow {s : Set α} : s.Infinite → ¬BddBelow s :=
+  mt BddBelow.finite
+#align set.infinite.not_bdd_below Set.Infinite.not_bddBelow
+
 variable [Fintype α]
 
 #print Finset.filter_lt_eq_Ioi /-
@@ -658,6 +662,10 @@ theorem BddAbove.finite {s : Set α} (hs : BddAbove s) : s.Finite :=
   hs.dual.Finite
 #align bdd_above.finite BddAbove.finite
 -/
+
+theorem Set.Infinite.not_bddAbove {s : Set α} : s.Infinite → ¬BddAbove s :=
+  mt BddAbove.finite
+#align set.infinite.not_bdd_above Set.Infinite.not_bddAbove
 
 variable [Fintype α]
 
@@ -1149,6 +1157,34 @@ theorem Ico_diff_Ico_right (a b c : α) : Ico a b \ Ico c b = Ico a (min b c) :=
 #align finset.Ico_diff_Ico_right Finset.Ico_diff_Ico_right
 
 end LocallyFiniteOrder
+
+section LocallyFiniteOrderBot
+
+variable [LocallyFiniteOrderBot α] {s : Set α}
+
+theorem Set.Infinite.exists_gt (hs : s.Infinite) : ∀ a, ∃ b ∈ s, a < b :=
+  not_bddAbove_iff.1 hs.not_bddAbove
+#align set.infinite.exists_gt Set.Infinite.exists_gt
+
+theorem Set.infinite_iff_exists_gt [Nonempty α] : s.Infinite ↔ ∀ a, ∃ b ∈ s, a < b :=
+  ⟨Set.Infinite.exists_gt, Set.infinite_of_forall_exists_gt⟩
+#align set.infinite_iff_exists_gt Set.infinite_iff_exists_gt
+
+end LocallyFiniteOrderBot
+
+section LocallyFiniteOrderTop
+
+variable [LocallyFiniteOrderTop α] {s : Set α}
+
+theorem Set.Infinite.exists_lt (hs : s.Infinite) : ∀ a, ∃ b ∈ s, b < a :=
+  not_bddBelow_iff.1 hs.not_bddBelow
+#align set.infinite.exists_lt Set.Infinite.exists_lt
+
+theorem Set.infinite_iff_exists_lt [Nonempty α] : s.Infinite ↔ ∀ a, ∃ b ∈ s, b < a :=
+  ⟨Set.Infinite.exists_lt, Set.infinite_of_forall_exists_lt⟩
+#align set.infinite_iff_exists_lt Set.infinite_iff_exists_lt
+
+end LocallyFiniteOrderTop
 
 variable [Fintype α] [LocallyFiniteOrderTop α] [LocallyFiniteOrderBot α]
 

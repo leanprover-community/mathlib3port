@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit c941bb9426d62e266612b6d99e6c9fc93e7a1d07
+! leanprover-community/mathlib commit 52fa514ec337dd970d71d8de8d0fd68b455a1e54
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2022,17 +2022,6 @@ theorem infinite_of_injective_forall_mem [Infinite α] {s : Set β} {f : α → 
 #align set.infinite_of_injective_forall_mem Set.infinite_of_injective_forall_mem
 -/
 
-/- warning: set.infinite.exists_nat_lt -> Set.Infinite.exists_nat_lt is a dubious translation:
-lean 3 declaration is
-  forall {s : Set.{0} Nat}, (Set.Infinite.{0} Nat s) -> (forall (n : Nat), Exists.{1} Nat (fun (m : Nat) => Exists.{0} (Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) m s) (fun (H : Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) m s) => LT.lt.{0} Nat Nat.hasLt n m)))
-but is expected to have type
-  forall {s : Set.{0} Nat}, (Set.Infinite.{0} Nat s) -> (forall (n : Nat), Exists.{1} Nat (fun (m : Nat) => And (Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) m s) (LT.lt.{0} Nat instLTNat n m)))
-Case conversion may be inaccurate. Consider using '#align set.infinite.exists_nat_lt Set.Infinite.exists_nat_ltₓ'. -/
-theorem Infinite.exists_nat_lt {s : Set ℕ} (hs : s.Infinite) (n : ℕ) : ∃ m ∈ s, n < m :=
-  let ⟨m, hm⟩ := (hs.diffₓ <| Set.finite_le_nat n).Nonempty
-  ⟨m, by simpa using hm⟩
-#align set.infinite.exists_nat_lt Set.Infinite.exists_nat_lt
-
 /- warning: set.infinite.exists_not_mem_finset -> Set.Infinite.exists_not_mem_finset is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Infinite.{u1} α s) -> (forall (f : Finset.{u1} α), Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a f))))
@@ -2061,6 +2050,25 @@ theorem not_injOn_infinite_finite_image {f : α → β} {s : Set α} (h_inf : s.
 
 /-! ### Order properties -/
 
+
+section Preorder
+
+variable [Preorder α] [Nonempty α] {s : Set α}
+
+theorem infinite_of_forall_exists_gt (h : ∀ a, ∃ b ∈ s, a < b) : s.Infinite :=
+  by
+  inhabit α
+  set f : ℕ → α := fun n => Nat.recOn n (h default).some fun n a => (h a).some
+  have hf : ∀ n, f n ∈ s := by rintro (_ | _) <;> exact (h _).choose_spec.some
+  refine' infinite_of_injective_forall_mem (strictMono_nat_of_lt_succ fun n => _).Injective hf
+  exact (h _).choose_spec.choose_spec
+#align set.infinite_of_forall_exists_gt Set.infinite_of_forall_exists_gt
+
+theorem infinite_of_forall_exists_lt (h : ∀ a, ∃ b ∈ s, b < a) : s.Infinite :=
+  @infinite_of_forall_exists_gt αᵒᵈ _ _ _ h
+#align set.infinite_of_forall_exists_lt Set.infinite_of_forall_exists_lt
+
+end Preorder
 
 #print Set.finite_isTop /-
 theorem finite_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Finite :=

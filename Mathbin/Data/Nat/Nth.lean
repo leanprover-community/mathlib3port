@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit 52fa514ec337dd970d71d8de8d0fd68b455a1e54
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -317,7 +317,7 @@ theorem nth_count_le (hp : (setOf p).Infinite) (n : ℕ) : n ≤ nth p (count p 
   suffices h : Inf { i : ℕ | p i ∧ n ≤ i } ∈ { i : ℕ | p i ∧ n ≤ i }
   · exact h.2
   apply cinfₛ_mem
-  obtain ⟨m, hp, hn⟩ := hp.exists_nat_lt n
+  obtain ⟨m, hp, hn⟩ := hp.exists_gt n
   exact ⟨m, hp, hn.le⟩
 #align nat.nth_count_le Nat.nth_count_le
 

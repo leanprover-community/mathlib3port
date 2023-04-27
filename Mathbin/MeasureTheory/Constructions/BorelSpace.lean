@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit fbde2f60a46865c85f49b4193175c6e339ff9020
+! leanprover-community/mathlib commit 9b2b58d6b14b895b2f375108e765cb47de71aebd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,6 +280,15 @@ instance Subtype.opensMeasurableSpace {α : Type _} [TopologicalSpace α] [Measu
     rw [borel_comap]
     exact comap_mono h.1⟩
 #align subtype.opens_measurable_space Subtype.opensMeasurableSpace
+
+instance (priority := 100) BorelSpace.countablyGenerated {α : Type _} [TopologicalSpace α]
+    [MeasurableSpace α] [BorelSpace α] [SecondCountableTopology α] : CountablyGenerated α :=
+  by
+  obtain ⟨b, bct, -, hb⟩ := exists_countable_basis α
+  refine' ⟨⟨b, bct, _⟩⟩
+  borelize α
+  exact hb.borel_eq_generate_from
+#align borel_space.countably_generated BorelSpace.countablyGenerated
 
 theorem MeasurableSet.induction_on_open [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
     {C : Set α → Prop} (h_open : ∀ U, IsOpen U → C U)

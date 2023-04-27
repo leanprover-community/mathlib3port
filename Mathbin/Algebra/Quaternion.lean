@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit dc7ac07acd84584426773e69e51035bea9a770e7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -612,10 +612,23 @@ theorem conj_add : (a + b).conj = a.conj + b.conj :=
 theorem conj_mul : (a * b).conj = b.conj * a.conj := by ext <;> simp <;> ring
 #align quaternion_algebra.conj_mul QuaternionAlgebra.conj_mul
 
-theorem conj_conj_mul : (a.conj * b).conj = b.conj * a := by rw [conj_mul, conj_conj]
+instance : StarRing ℍ[R,c₁,c₂] where
+  unit := conj
+  star_involutive := conj_conj
+  star_add := conj_add
+  star_mul := conj_mul
+
+@[simp]
+theorem star_def (a : ℍ[R,c₁,c₂]) : star a = conj a :=
+  rfl
+#align quaternion_algebra.star_def QuaternionAlgebra.star_def
+
+theorem conj_conj_mul : (a.conj * b).conj = b.conj * a :=
+  star_star_mul _ _
 #align quaternion_algebra.conj_conj_mul QuaternionAlgebra.conj_conj_mul
 
-theorem conj_mul_conj : (a * b.conj).conj = b * a.conj := by rw [conj_mul, conj_conj]
+theorem conj_mul_conj : (a * b.conj).conj = b * a.conj :=
+  star_mul_star _ _
 #align quaternion_algebra.conj_mul_conj QuaternionAlgebra.conj_mul_conj
 
 theorem self_add_conj' : a + a.conj = ↑(2 * a.re) := by ext <;> simp [two_mul]
@@ -645,11 +658,7 @@ theorem commute_self_conj : Commute a a.conj :=
 #align quaternion_algebra.commute_self_conj QuaternionAlgebra.commute_self_conj
 
 theorem commute_conj_conj {a b : ℍ[R,c₁,c₂]} (h : Commute a b) : Commute a.conj b.conj :=
-  calc
-    a.conj * b.conj = (b * a).conj := (conj_mul b a).symm
-    _ = (a * b).conj := by rw [h.eq]
-    _ = b.conj * a.conj := conj_mul a b
-    
+  h.star_star
 #align quaternion_algebra.commute_conj_conj QuaternionAlgebra.commute_conj_conj
 
 @[simp, norm_cast]
@@ -662,11 +671,13 @@ theorem conj_im : conj a.im = -a.im :=
 #align quaternion_algebra.conj_im QuaternionAlgebra.conj_im
 
 @[simp, norm_cast]
-theorem conj_nat_cast (n : ℕ) : conj (n : ℍ[R,c₁,c₂]) = n := by rw [← coe_nat_cast, conj_coe]
+theorem conj_nat_cast (n : ℕ) : conj (n : ℍ[R,c₁,c₂]) = n :=
+  @star_natCast ℍ[R,c₁,c₂] _ _ n
 #align quaternion_algebra.conj_nat_cast QuaternionAlgebra.conj_nat_cast
 
 @[simp, norm_cast]
-theorem conj_int_cast (z : ℤ) : conj (z : ℍ[R,c₁,c₂]) = z := by rw [← coe_int_cast, conj_coe]
+theorem conj_int_cast (z : ℤ) : conj (z : ℍ[R,c₁,c₂]) = z :=
+  @star_intCast ℍ[R,c₁,c₂] _ _ z
 #align quaternion_algebra.conj_int_cast QuaternionAlgebra.conj_int_cast
 
 @[simp]
@@ -724,17 +735,6 @@ theorem conj_neg : (-a).conj = -a.conj :=
 theorem conj_sub : (a - b).conj = a.conj - b.conj :=
   (conj : ℍ[R,c₁,c₂] ≃ₗ[R] _).map_sub a b
 #align quaternion_algebra.conj_sub QuaternionAlgebra.conj_sub
-
-instance : StarRing ℍ[R,c₁,c₂] where
-  unit := conj
-  star_involutive := conj_conj
-  star_add := conj_add
-  star_mul := conj_mul
-
-@[simp]
-theorem star_def (a : ℍ[R,c₁,c₂]) : star a = conj a :=
-  rfl
-#align quaternion_algebra.star_def QuaternionAlgebra.star_def
 
 @[simp]
 theorem conj_pow (n : ℕ) : (a ^ n).conj = a.conj ^ n :=

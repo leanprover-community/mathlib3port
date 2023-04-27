@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.block
-! leanprover-community/mathlib commit eba5bb3155cab51d80af00e8d7d69fa271b1302b
+! leanprover-community/mathlib commit b5665fd3fb2a80ee05ff42b6031ef2055b8f9d85
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,6 +199,22 @@ theorem toBlocks_fromBlocks₂₂ (A : Matrix n l α) (B : Matrix n m α) (C : M
     (D : Matrix o m α) : (fromBlocks A B C D).toBlocks₂₂ = D :=
   rfl
 #align matrix.to_blocks_from_blocks₂₂ Matrix.toBlocks_fromBlocks₂₂
+
+/-- Two block matrices are equal if their blocks are equal. -/
+theorem ext_iff_blocks {A B : Matrix (Sum n o) (Sum l m) α} :
+    A = B ↔
+      A.toBlocks₁₁ = B.toBlocks₁₁ ∧
+        A.toBlocks₁₂ = B.toBlocks₁₂ ∧ A.toBlocks₂₁ = B.toBlocks₂₁ ∧ A.toBlocks₂₂ = B.toBlocks₂₂ :=
+  ⟨fun h => h ▸ ⟨rfl, rfl, rfl, rfl⟩, fun ⟨h₁₁, h₁₂, h₂₁, h₂₂⟩ => by
+    rw [← from_blocks_to_blocks A, ← from_blocks_to_blocks B, h₁₁, h₁₂, h₂₁, h₂₂]⟩
+#align matrix.ext_iff_blocks Matrix.ext_iff_blocks
+
+@[simp]
+theorem fromBlocks_inj {A : Matrix n l α} {B : Matrix n m α} {C : Matrix o l α} {D : Matrix o m α}
+    {A' : Matrix n l α} {B' : Matrix n m α} {C' : Matrix o l α} {D' : Matrix o m α} :
+    fromBlocks A B C D = fromBlocks A' B' C' D' ↔ A = A' ∧ B = B' ∧ C = C' ∧ D = D' :=
+  ext_iff_blocks
+#align matrix.from_blocks_inj Matrix.fromBlocks_inj
 
 /- warning: matrix.from_blocks_map -> Matrix.fromBlocks_map is a dubious translation:
 lean 3 declaration is
@@ -898,6 +914,17 @@ theorem blockDiag_blockDiagonal [DecidableEq o] (M : o → Matrix m n α) :
   funext fun k => ext fun i j => blockDiagonal_apply_eq M i j _
 #align matrix.block_diag_block_diagonal Matrix.blockDiag_blockDiagonal
 
+theorem blockDiagonal_injective [DecidableEq o] :
+    Function.Injective (blockDiagonal : (o → Matrix m n α) → Matrix _ _ α) :=
+  Function.LeftInverse.injective blockDiag_blockDiagonal
+#align matrix.block_diagonal_injective Matrix.blockDiagonal_injective
+
+@[simp]
+theorem blockDiagonal_inj [DecidableEq o] {M N : o → Matrix m n α} :
+    blockDiagonal M = blockDiagonal N ↔ M = N :=
+  blockDiagonal_injective.eq_iff
+#align matrix.block_diagonal_inj Matrix.blockDiagonal_inj
+
 /- warning: matrix.block_diag_one -> Matrix.blockDiag_one is a dubious translation:
 lean 3 declaration is
   forall {m : Type.{u1}} {o : Type.{u2}} {α : Type.{u3}} [_inst_1 : Zero.{u3} α] [_inst_3 : DecidableEq.{succ u2} o] [_inst_4 : DecidableEq.{succ u1} m] [_inst_5 : One.{u3} α], Eq.{max (succ u2) (succ (max u1 u3))} (o -> (Matrix.{u1, u1, u3} m m α)) (Matrix.blockDiag.{u1, u1, u2, u3} m m o α (OfNat.ofNat.{max (max u1 u2) u3} (Matrix.{max u1 u2, max u1 u2, u3} (Prod.{u1, u2} m o) (Prod.{u1, u2} m o) α) 1 (OfNat.mk.{max (max u1 u2) u3} (Matrix.{max u1 u2, max u1 u2, u3} (Prod.{u1, u2} m o) (Prod.{u1, u2} m o) α) 1 (One.one.{max (max u1 u2) u3} (Matrix.{max u1 u2, max u1 u2, u3} (Prod.{u1, u2} m o) (Prod.{u1, u2} m o) α) (Matrix.hasOne.{u3, max u1 u2} (Prod.{u1, u2} m o) α (fun (a : Prod.{u1, u2} m o) (b : Prod.{u1, u2} m o) => Prod.decidableEq.{u1, u2} m o (fun (a : m) (b : m) => _inst_4 a b) (fun (a : o) (b : o) => _inst_3 a b) a b) _inst_1 _inst_5))))) (OfNat.ofNat.{max u2 u1 u3} (o -> (Matrix.{u1, u1, u3} m m α)) 1 (OfNat.mk.{max u2 u1 u3} (o -> (Matrix.{u1, u1, u3} m m α)) 1 (One.one.{max u2 u1 u3} (o -> (Matrix.{u1, u1, u3} m m α)) (Pi.instOne.{u2, max u1 u3} o (fun (k : o) => Matrix.{u1, u1, u3} m m α) (fun (i : o) => Matrix.hasOne.{u3, u1} m α (fun (a : m) (b : m) => _inst_4 a b) _inst_1 _inst_5)))))
@@ -1391,6 +1418,17 @@ theorem blockDiag'_blockDiagonal' [DecidableEq o] (M : ∀ i, Matrix (m' i) (n' 
     blockDiag' (blockDiagonal' M) = M :=
   funext fun k => ext fun i j => blockDiagonal'_apply_eq M _ _ _
 #align matrix.block_diag'_block_diagonal' Matrix.blockDiag'_blockDiagonal'
+
+theorem blockDiagonal'_injective [DecidableEq o] :
+    Function.Injective (blockDiagonal' : (∀ i, Matrix (m' i) (n' i) α) → Matrix _ _ α) :=
+  Function.LeftInverse.injective blockDiag'_blockDiagonal'
+#align matrix.block_diagonal'_injective Matrix.blockDiagonal'_injective
+
+@[simp]
+theorem blockDiagonal'_inj [DecidableEq o] {M N : ∀ i, Matrix (m' i) (n' i) α} :
+    blockDiagonal' M = blockDiagonal' N ↔ M = N :=
+  blockDiagonal'_injective.eq_iff
+#align matrix.block_diagonal'_inj Matrix.blockDiagonal'_inj
 
 /- warning: matrix.block_diag'_one -> Matrix.blockDiag'_one is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 37ffa4ee6ae02f5f6ca7226922143d3a10961e3d
+! leanprover-community/mathlib commit efe03a53241aaa777c1016a7a0e71dd3b92a4313
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -904,8 +904,8 @@ instance hasSmul' {α : Type _} [TopologicalSpace α] {R : Type _} [Semiring R] 
   ⟨fun f g => ⟨fun x => f x • g x, Continuous.smul f.2 g.2⟩⟩
 #align continuous_map.has_smul' ContinuousMap.hasSmul'
 
-instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Ring R] [TopologicalSpace R]
-    [TopologicalRing R] (M : Type _) [TopologicalSpace M] [AddCommMonoid M] [ContinuousAdd M]
+instance module' {α : Type _} [TopologicalSpace α] (R : Type _) [Semiring R] [TopologicalSpace R]
+    [TopologicalSemiring R] (M : Type _) [TopologicalSpace M] [AddCommMonoid M] [ContinuousAdd M]
     [Module R M] [ContinuousSMul R M] : Module C(α, R) C(α, M)
     where
   smul := (· • ·)

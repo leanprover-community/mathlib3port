@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.basic
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.Topology.StoneCech
 import Mathbin.CategoryTheory.Monad.Limits
 import Mathbin.Topology.UrysohnsLemma
-import Mathbin.Topology.Category.Top.Limits
+import Mathbin.Topology.Category.Top.Limits.Basic
 
 /-!
 # The category of Compact Hausdorff Spaces

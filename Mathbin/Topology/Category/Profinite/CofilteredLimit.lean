@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.cofiltered_limit
-! leanprover-community/mathlib commit 829895f162a1f29d0133f4b3538f4cd1fb5bffd3
+! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Category.Profinite.Basic
 import Mathbin.Topology.LocallyConstant.Basic
 import Mathbin.Topology.DiscreteQuotient
+import Mathbin.Topology.Category.Top.Limits.Cofiltered
+import Mathbin.Topology.Category.Top.Limits.Konig
 
 /-!
 # Cofiltered limits of profinite sets.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set.pointwise.big_operators
-! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
+! leanprover-community/mathlib commit fa2cb8a9e2b987db233e4e6eb47645feafba8861
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,15 +21,52 @@ import Mathbin.Data.Set.Pointwise.Basic
 
 namespace Set
 
-section BigOperators
-
 open BigOperators Pointwise
 
 open Function
 
-variable {α : Type _} {ι : Type _} [CommMonoid α]
+variable {ι α β F : Type _}
 
-#print Set.mem_finset_prod /-
+section Monoid
+
+variable [Monoid α] [Monoid β] [MonoidHomClass F α β]
+
+@[to_additive]
+theorem image_list_prod (f : F) :
+    ∀ l : List (Set α), (f : α → β) '' l.Prod = (l.map fun s => f '' s).Prod
+  | [] => image_one.trans <| congr_arg singleton (map_one f)
+  | a :: as => by rw [List.map_cons, List.prod_cons, List.prod_cons, image_mul, image_list_prod]
+#align set.image_list_prod Set.image_list_prod
+#align set.image_list_sum Set.image_list_sum
+
+end Monoid
+
+section CommMonoid
+
+variable [CommMonoid α] [CommMonoid β] [MonoidHomClass F α β]
+
+@[to_additive]
+theorem image_multiset_prod (f : F) :
+    ∀ m : Multiset (Set α), (f : α → β) '' m.Prod = (m.map fun s => f '' s).Prod :=
+  Quotient.ind <| by
+    simpa only [Multiset.quot_mk_to_coe, Multiset.coe_prod, Multiset.coe_map] using
+      image_list_prod f
+#align set.image_multiset_prod Set.image_multiset_prod
+#align set.image_multiset_sum Set.image_multiset_sum
+
+@[to_additive]
+theorem image_finset_prod (f : F) (m : Finset ι) (s : ι → Set α) :
+    ((f : α → β) '' ∏ i in m, s i) = ∏ i in m, f '' s i :=
+  (image_multiset_prod f _).trans <| congr_arg Multiset.prod <| Multiset.map_map _ _ _
+#align set.image_finset_prod Set.image_finset_prod
+#align set.image_finset_sum Set.image_finset_sum
+
+/- warning: set.mem_finset_prod -> Set.mem_finset_prod is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : Finset.{u1} ι) (f : ι -> (Set.{u2} α)) (a : α), Iff (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) a (Finset.prod.{u2, u1} (Set.{u2} α) ι (Set.commMonoid.{u2} α _inst_1) t (fun (i : ι) => f i))) (Exists.{max (succ u1) (succ u2)} (ι -> α) (fun (g : ι -> α) => Exists.{0} (forall {i : ι}, (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i))) (fun (hg : forall {i : ι}, (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i))) => Eq.{succ u2} α (Finset.prod.{u2, u1} α ι _inst_1 t (fun (i : ι) => g i)) a)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : Finset.{u2} α) (f : α -> (Set.{u1} ι)) (a : ι), Iff (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) a (Finset.prod.{u1, u2} (Set.{u1} ι) α (Set.commMonoid.{u1} ι _inst_1) t (fun (i : α) => f i))) (Exists.{max (succ u1) (succ u2)} (α -> ι) (fun (g : α -> ι) => Exists.{0} (forall {i : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i t) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i))) (fun (hg : forall {i : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i t) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i))) => Eq.{succ u1} ι (Finset.prod.{u1, u2} ι α _inst_1 t (fun (i : α) => g i)) a)))
+Case conversion may be inaccurate. Consider using '#align set.mem_finset_prod Set.mem_finset_prodₓ'. -/
 /-- The n-ary version of `set.mem_mul`. -/
 @[to_additive " The n-ary version of `set.mem_add`. "]
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
@@ -56,9 +93,13 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
           ⟨g, fun i hi => hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩
 #align set.mem_finset_prod Set.mem_finset_prod
 #align set.mem_finset_sum Set.mem_finset_sum
--/
 
-#print Set.mem_fintype_prod /-
+/- warning: set.mem_fintype_prod -> Set.mem_fintype_prod is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] [_inst_4 : Fintype.{u1} ι] (f : ι -> (Set.{u2} α)) (a : α), Iff (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) a (Finset.prod.{u2, u1} (Set.{u2} α) ι (Set.commMonoid.{u2} α _inst_1) (Finset.univ.{u1} ι _inst_4) (fun (i : ι) => f i))) (Exists.{max (succ u1) (succ u2)} (ι -> α) (fun (g : ι -> α) => Exists.{0} (forall (i : ι), Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i)) (fun (hg : forall (i : ι), Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i)) => Eq.{succ u2} α (Finset.prod.{u2, u1} α ι _inst_1 (Finset.univ.{u1} ι _inst_4) (fun (i : ι) => g i)) a)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] [_inst_4 : Fintype.{u2} α] (f : α -> (Set.{u1} ι)) (a : ι), Iff (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) a (Finset.prod.{u1, u2} (Set.{u1} ι) α (Set.commMonoid.{u1} ι _inst_1) (Finset.univ.{u2} α _inst_4) (fun (i : α) => f i))) (Exists.{max (succ u1) (succ u2)} (α -> ι) (fun (g : α -> ι) => Exists.{0} (forall (i : α), Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i)) (fun (hg : forall (i : α), Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i)) => Eq.{succ u1} ι (Finset.prod.{u1, u2} ι α _inst_1 (Finset.univ.{u2} α _inst_4) (fun (i : α) => g i)) a)))
+Case conversion may be inaccurate. Consider using '#align set.mem_fintype_prod Set.mem_fintype_prodₓ'. -/
 /-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
 @[to_additive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
 theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
@@ -68,13 +109,12 @@ theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
   simp
 #align set.mem_fintype_prod Set.mem_fintype_prod
 #align set.mem_fintype_sum Set.mem_fintype_sum
--/
 
 /- warning: set.list_prod_mem_list_prod -> Set.list_prod_mem_list_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CommMonoid.{u1} α] (t : List.{u2} ι) (f : ι -> (Set.{u1} α)) (g : ι -> α), (forall (i : ι), (Membership.Mem.{u2, u2} ι (List.{u2} ι) (List.hasMem.{u2} ι) i t) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (g i) (f i))) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (List.map.{u2, u1} ι α g t)) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Set.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (List.map.{u2, u1} ι (Set.{u1} α) f t)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : List.{u1} ι) (f : ι -> (Set.{u2} α)) (g : ι -> α), (forall (i : ι), (Membership.Mem.{u1, u1} ι (List.{u1} ι) (List.hasMem.{u1} ι) i t) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i))) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (List.prod.{u2} α (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1))) (MulOneClass.toHasOne.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1))) (List.map.{u1, u2} ι α g t)) (List.prod.{u2} (Set.{u2} α) (Set.mul.{u2} α (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1)))) (Set.one.{u2} α (MulOneClass.toHasOne.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1)))) (List.map.{u1, u2} ι (Set.{u2} α) f t)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CommMonoid.{u1} α] (t : List.{u2} ι) (f : ι -> (Set.{u1} α)) (g : ι -> α), (forall (i : ι), (Membership.mem.{u2, u2} ι (List.{u2} ι) (List.instMembershipList.{u2} ι) i t) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (g i) (f i))) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (List.map.{u2, u1} ι α g t)) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Set.one.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (List.map.{u2, u1} ι (Set.{u1} α) f t)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : List.{u2} α) (f : α -> (Set.{u1} ι)) (g : α -> ι), (forall (i : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) i t) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i))) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (List.prod.{u1} ι (MulOneClass.toMul.{u1} ι (Monoid.toMulOneClass.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1))) (Monoid.toOne.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1)) (List.map.{u2, u1} α ι g t)) (List.prod.{u1} (Set.{u1} ι) (Set.mul.{u1} ι (MulOneClass.toMul.{u1} ι (Monoid.toMulOneClass.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1)))) (Set.one.{u1} ι (Monoid.toOne.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1))) (List.map.{u2, u1} α (Set.{u1} ι) f t)))
 Case conversion may be inaccurate. Consider using '#align set.list_prod_mem_list_prod Set.list_prod_mem_list_prodₓ'. -/
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
@@ -92,9 +132,9 @@ theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α
 
 /- warning: set.list_prod_subset_list_prod -> Set.list_prod_subset_list_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CommMonoid.{u1} α] (t : List.{u2} ι) (f₁ : ι -> (Set.{u1} α)) (f₂ : ι -> (Set.{u1} α)), (forall (i : ι), (Membership.Mem.{u2, u2} ι (List.{u2} ι) (List.hasMem.{u2} ι) i t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Set.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (List.map.{u2, u1} ι (Set.{u1} α) f₁ t)) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Set.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (List.map.{u2, u1} ι (Set.{u1} α) f₂ t)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : List.{u1} ι) (f₁ : ι -> (Set.{u2} α)) (f₂ : ι -> (Set.{u2} α)), (forall (i : ι), (Membership.Mem.{u1, u1} ι (List.{u1} ι) (List.hasMem.{u1} ι) i t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (List.prod.{u2} (Set.{u2} α) (Set.mul.{u2} α (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1)))) (Set.one.{u2} α (MulOneClass.toHasOne.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1)))) (List.map.{u1, u2} ι (Set.{u2} α) f₁ t)) (List.prod.{u2} (Set.{u2} α) (Set.mul.{u2} α (MulOneClass.toHasMul.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1)))) (Set.one.{u2} α (MulOneClass.toHasOne.{u2} α (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α _inst_1)))) (List.map.{u1, u2} ι (Set.{u2} α) f₂ t)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CommMonoid.{u1} α] (t : List.{u2} ι) (f₁ : ι -> (Set.{u1} α)) (f₂ : ι -> (Set.{u1} α)), (forall (i : ι), (Membership.mem.{u2, u2} ι (List.{u2} ι) (List.instMembershipList.{u2} ι) i t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Set.one.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (List.map.{u2, u1} ι (Set.{u1} α) f₁ t)) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Set.one.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (List.map.{u2, u1} ι (Set.{u1} α) f₂ t)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : List.{u2} α) (f₁ : α -> (Set.{u1} ι)) (f₂ : α -> (Set.{u1} ι)), (forall (i : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) i t) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (List.prod.{u1} (Set.{u1} ι) (Set.mul.{u1} ι (MulOneClass.toMul.{u1} ι (Monoid.toMulOneClass.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1)))) (Set.one.{u1} ι (Monoid.toOne.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1))) (List.map.{u2, u1} α (Set.{u1} ι) f₁ t)) (List.prod.{u1} (Set.{u1} ι) (Set.mul.{u1} ι (MulOneClass.toMul.{u1} ι (Monoid.toMulOneClass.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1)))) (Set.one.{u1} ι (Monoid.toOne.{u1} ι (CommMonoid.toMonoid.{u1} ι _inst_1))) (List.map.{u2, u1} α (Set.{u1} ι) f₂ t)))
 Case conversion may be inaccurate. Consider using '#align set.list_prod_subset_list_prod Set.list_prod_subset_list_prodₓ'. -/
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
@@ -112,9 +152,9 @@ theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf
 
 /- warning: set.list_prod_singleton -> Set.list_prod_singleton is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_2 : CommMonoid.{u1} M] (s : List.{u1} M), Eq.{succ u1} (Set.{u1} M) (List.prod.{u1} (Set.{u1} M) (Set.mul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))) (Set.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))) (List.map.{u1, u1} M (Set.{u1} M) (fun (i : M) => Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) i) s)) (Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) (List.prod.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2))) (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2))) s))
+  forall {M : Type.{u1}} [_inst_4 : CommMonoid.{u1} M] (s : List.{u1} M), Eq.{succ u1} (Set.{u1} M) (List.prod.{u1} (Set.{u1} M) (Set.mul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))) (Set.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))) (List.map.{u1, u1} M (Set.{u1} M) (fun (i : M) => Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) i) s)) (Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) (List.prod.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4))) (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4))) s))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_2 : CommMonoid.{u1} M] (s : List.{u1} M), Eq.{succ u1} (Set.{u1} M) (List.prod.{u1} (Set.{u1} M) (Set.mul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))) (Set.one.{u1} M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2))) (List.map.{u1, u1} M (Set.{u1} M) (fun (i : M) => Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.instSingletonSet.{u1} M) i) s)) (Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.instSingletonSet.{u1} M) (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2))) (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)) s))
+  forall {M : Type.{u1}} [_inst_4 : CommMonoid.{u1} M] (s : List.{u1} M), Eq.{succ u1} (Set.{u1} M) (List.prod.{u1} (Set.{u1} M) (Set.mul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)))) (Set.one.{u1} M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4))) (List.map.{u1, u1} M (Set.{u1} M) (fun (i : M) => Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.instSingletonSet.{u1} M) i) s)) (Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.instSingletonSet.{u1} M) (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4))) (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_4)) s))
 Case conversion may be inaccurate. Consider using '#align set.list_prod_singleton Set.list_prod_singletonₓ'. -/
 @[to_additive]
 theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) :
@@ -123,7 +163,12 @@ theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) :
 #align set.list_prod_singleton Set.list_prod_singleton
 #align set.list_sum_singleton Set.list_sum_singleton
 
-#print Set.multiset_prod_mem_multiset_prod /-
+/- warning: set.multiset_prod_mem_multiset_prod -> Set.multiset_prod_mem_multiset_prod is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : Multiset.{u1} ι) (f : ι -> (Set.{u2} α)) (g : ι -> α), (forall (i : ι), (Membership.Mem.{u1, u1} ι (Multiset.{u1} ι) (Multiset.hasMem.{u1} ι) i t) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i))) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (Multiset.prod.{u2} α _inst_1 (Multiset.map.{u1, u2} ι α g t)) (Multiset.prod.{u2} (Set.{u2} α) (Set.commMonoid.{u2} α _inst_1) (Multiset.map.{u1, u2} ι (Set.{u2} α) f t)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : Multiset.{u2} α) (f : α -> (Set.{u1} ι)) (g : α -> ι), (forall (i : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) i t) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i))) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (Multiset.prod.{u1} ι _inst_1 (Multiset.map.{u2, u1} α ι g t)) (Multiset.prod.{u1} (Set.{u1} ι) (Set.commMonoid.{u1} ι _inst_1) (Multiset.map.{u2, u1} α (Set.{u1} ι) f t)))
+Case conversion may be inaccurate. Consider using '#align set.multiset_prod_mem_multiset_prod Set.multiset_prod_mem_multiset_prodₓ'. -/
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g : ι → α)
@@ -134,9 +179,13 @@ theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g
   exact list_prod_mem_list_prod _ _ _ hg
 #align set.multiset_prod_mem_multiset_prod Set.multiset_prod_mem_multiset_prod
 #align set.multiset_sum_mem_multiset_sum Set.multiset_sum_mem_multiset_sum
--/
 
-#print Set.multiset_prod_subset_multiset_prod /-
+/- warning: set.multiset_prod_subset_multiset_prod -> Set.multiset_prod_subset_multiset_prod is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : Multiset.{u1} ι) (f₁ : ι -> (Set.{u2} α)) (f₂ : ι -> (Set.{u2} α)), (forall (i : ι), (Membership.Mem.{u1, u1} ι (Multiset.{u1} ι) (Multiset.hasMem.{u1} ι) i t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (Multiset.prod.{u2} (Set.{u2} α) (Set.commMonoid.{u2} α _inst_1) (Multiset.map.{u1, u2} ι (Set.{u2} α) f₁ t)) (Multiset.prod.{u2} (Set.{u2} α) (Set.commMonoid.{u2} α _inst_1) (Multiset.map.{u1, u2} ι (Set.{u2} α) f₂ t)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : Multiset.{u2} α) (f₁ : α -> (Set.{u1} ι)) (f₂ : α -> (Set.{u1} ι)), (forall (i : α), (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) i t) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (Multiset.prod.{u1} (Set.{u1} ι) (Set.commMonoid.{u1} ι _inst_1) (Multiset.map.{u2, u1} α (Set.{u1} ι) f₁ t)) (Multiset.prod.{u1} (Set.{u1} ι) (Set.commMonoid.{u1} ι _inst_1) (Multiset.map.{u2, u1} α (Set.{u1} ι) f₂ t)))
+Case conversion may be inaccurate. Consider using '#align set.multiset_prod_subset_multiset_prod Set.multiset_prod_subset_multiset_prodₓ'. -/
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι → Set α)
@@ -147,7 +196,6 @@ theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι →
   exact list_prod_subset_list_prod _ _ _ hf
 #align set.multiset_prod_subset_multiset_prod Set.multiset_prod_subset_multiset_prod
 #align set.multiset_sum_subset_multiset_sum Set.multiset_sum_subset_multiset_sum
--/
 
 #print Set.multiset_prod_singleton /-
 @[to_additive]
@@ -158,7 +206,12 @@ theorem multiset_prod_singleton {M : Type _} [CommMonoid M] (s : Multiset M) :
 #align set.multiset_sum_singleton Set.multiset_sum_singleton
 -/
 
-#print Set.finset_prod_mem_finset_prod /-
+/- warning: set.finset_prod_mem_finset_prod -> Set.finset_prod_mem_finset_prod is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : Finset.{u1} ι) (f : ι -> (Set.{u2} α)) (g : ι -> α), (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (g i) (f i))) -> (Membership.Mem.{u2, u2} α (Set.{u2} α) (Set.hasMem.{u2} α) (Finset.prod.{u2, u1} α ι _inst_1 t (fun (i : ι) => g i)) (Finset.prod.{u2, u1} (Set.{u2} α) ι (Set.commMonoid.{u2} α _inst_1) t (fun (i : ι) => f i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : Finset.{u2} α) (f : α -> (Set.{u1} ι)) (g : α -> ι), (forall (i : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i t) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (g i) (f i))) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) (Finset.prod.{u1, u2} ι α _inst_1 t (fun (i : α) => g i)) (Finset.prod.{u1, u2} (Set.{u1} ι) α (Set.commMonoid.{u1} ι _inst_1) t (fun (i : α) => f i)))
+Case conversion may be inaccurate. Consider using '#align set.finset_prod_mem_finset_prod Set.finset_prod_mem_finset_prodₓ'. -/
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α)
@@ -166,9 +219,13 @@ theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι 
   multiset_prod_mem_multiset_prod _ _ _ hg
 #align set.finset_prod_mem_finset_prod Set.finset_prod_mem_finset_prod
 #align set.finset_sum_mem_finset_sum Set.finset_sum_mem_finset_sum
--/
 
-#print Set.finset_prod_subset_finset_prod /-
+/- warning: set.finset_prod_subset_finset_prod -> Set.finset_prod_subset_finset_prod is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u2} α] (t : Finset.{u1} ι) (f₁ : ι -> (Set.{u2} α)) (f₂ : ι -> (Set.{u2} α)), (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) (Finset.prod.{u2, u1} (Set.{u2} α) ι (Set.commMonoid.{u2} α _inst_1) t (fun (i : ι) => f₁ i)) (Finset.prod.{u2, u1} (Set.{u2} α) ι (Set.commMonoid.{u2} α _inst_1) t (fun (i : ι) => f₂ i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CommMonoid.{u1} ι] (t : Finset.{u2} α) (f₁ : α -> (Set.{u1} ι)) (f₂ : α -> (Set.{u1} ι)), (forall (i : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i t) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (f₁ i) (f₂ i))) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (Finset.prod.{u1, u2} (Set.{u1} ι) α (Set.commMonoid.{u1} ι _inst_1) t (fun (i : α) => f₁ i)) (Finset.prod.{u1, u2} (Set.{u1} ι) α (Set.commMonoid.{u1} ι _inst_1) t (fun (i : α) => f₂ i)))
+Case conversion may be inaccurate. Consider using '#align set.finset_prod_subset_finset_prod Set.finset_prod_subset_finset_prodₓ'. -/
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α)
@@ -176,13 +233,12 @@ theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set �
   multiset_prod_subset_multiset_prod _ _ _ hf
 #align set.finset_prod_subset_finset_prod Set.finset_prod_subset_finset_prod
 #align set.finset_sum_subset_finset_sum Set.finset_sum_subset_finset_sum
--/
 
 /- warning: set.finset_prod_singleton -> Set.finset_prod_singleton is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {ι : Type.{u2}} [_inst_2 : CommMonoid.{u1} M] (s : Finset.{u2} ι) (I : ι -> M), Eq.{succ u1} (Set.{u1} M) (Finset.prod.{u1, u2} (Set.{u1} M) ι (Set.commMonoid.{u1} M _inst_2) s (fun (i : ι) => Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) (I i))) (Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) (Finset.prod.{u1, u2} M ι _inst_2 s (fun (i : ι) => I i)))
+  forall {M : Type.{u1}} {ι : Type.{u2}} [_inst_4 : CommMonoid.{u1} M] (s : Finset.{u2} ι) (I : ι -> M), Eq.{succ u1} (Set.{u1} M) (Finset.prod.{u1, u2} (Set.{u1} M) ι (Set.commMonoid.{u1} M _inst_4) s (fun (i : ι) => Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) (I i))) (Singleton.singleton.{u1, u1} M (Set.{u1} M) (Set.hasSingleton.{u1} M) (Finset.prod.{u1, u2} M ι _inst_4 s (fun (i : ι) => I i)))
 but is expected to have type
-  forall {M : Type.{u2}} {ι : Type.{u1}} [_inst_2 : CommMonoid.{u2} M] (s : Finset.{u1} ι) (I : ι -> M), Eq.{succ u2} (Set.{u2} M) (Finset.prod.{u2, u1} (Set.{u2} M) ι (Set.commMonoid.{u2} M _inst_2) s (fun (i : ι) => Singleton.singleton.{u2, u2} M (Set.{u2} M) (Set.instSingletonSet.{u2} M) (I i))) (Singleton.singleton.{u2, u2} M (Set.{u2} M) (Set.instSingletonSet.{u2} M) (Finset.prod.{u2, u1} M ι _inst_2 s (fun (i : ι) => I i)))
+  forall {M : Type.{u2}} {ι : Type.{u1}} [_inst_4 : CommMonoid.{u2} M] (s : Finset.{u1} ι) (I : ι -> M), Eq.{succ u2} (Set.{u2} M) (Finset.prod.{u2, u1} (Set.{u2} M) ι (Set.commMonoid.{u2} M _inst_4) s (fun (i : ι) => Singleton.singleton.{u2, u2} M (Set.{u2} M) (Set.instSingletonSet.{u2} M) (I i))) (Singleton.singleton.{u2, u2} M (Set.{u2} M) (Set.instSingletonSet.{u2} M) (Finset.prod.{u2, u1} M ι _inst_4 s (fun (i : ι) => I i)))
 Case conversion may be inaccurate. Consider using '#align set.finset_prod_singleton Set.finset_prod_singletonₓ'. -/
 @[to_additive]
 theorem finset_prod_singleton {M ι : Type _} [CommMonoid M] (s : Finset ι) (I : ι → M) :
@@ -191,10 +247,28 @@ theorem finset_prod_singleton {M ι : Type _} [CommMonoid M] (s : Finset ι) (I 
 #align set.finset_prod_singleton Set.finset_prod_singleton
 #align set.finset_sum_singleton Set.finset_sum_singleton
 
+/-- The n-ary version of `set.image_mul_prod`. -/
+@[to_additive "The n-ary version of `set.add_image_prod`. "]
+theorem image_finset_prod_pi (l : Finset ι) (S : ι → Set α) :
+    (fun f : ι → α => ∏ i in l, f i) '' (l : Set ι).pi S = ∏ i in l, S i :=
+  by
+  ext
+  simp_rw [mem_finset_prod, mem_image, mem_pi, exists_prop, Finset.mem_coe]
+#align set.image_finset_prod_pi Set.image_finset_prod_pi
+#align set.image_finset_sum_pi Set.image_finset_sum_pi
+
+/-- A special case of `set.image_finset_prod_pi` for `finset.univ`. -/
+@[to_additive "A special case of `set.image_finset_sum_pi` for `finset.univ`. "]
+theorem image_fintype_prod_pi [Fintype ι] (S : ι → Set α) :
+    (fun f : ι → α => ∏ i, f i) '' univ.pi S = ∏ i, S i := by
+  simpa only [Finset.coe_univ] using image_finset_prod_pi Finset.univ S
+#align set.image_fintype_prod_pi Set.image_fintype_prod_pi
+#align set.image_fintype_sum_pi Set.image_fintype_sum_pi
+
+end CommMonoid
+
 /-! TODO: define `decidable_mem_finset_prod` and `decidable_mem_finset_sum`. -/
 
-
-end BigOperators
 
 end Set
 

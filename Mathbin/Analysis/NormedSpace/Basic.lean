@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
+! leanprover-community/mathlib commit 8000bbbe2e9d39b84edb993d88781f536a8a3fa8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -349,6 +349,16 @@ theorem frontier_closedBall [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0)
   rw [frontier, closure_closed_ball, interior_closedBall x hr, closed_ball_diff_ball]
 #align frontier_closed_ball frontier_closedBall
 
+theorem interior_sphere [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
+    interior (sphere x r) = ∅ := by
+  rw [← frontier_closedBall x hr, interior_frontier is_closed_ball]
+#align interior_sphere interior_sphere
+
+theorem frontier_sphere [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
+    frontier (sphere x r) = sphere x r := by
+  rw [is_closed_sphere.frontier_eq, interior_sphere x hr, diff_empty]
+#align frontier_sphere frontier_sphere
+
 instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
     DiscreteTopology <| AddSubgroup.zmultiples e :=
   by
@@ -632,6 +642,17 @@ theorem frontier_closedBall' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ
   rw [frontier, closure_closed_ball, interior_closedBall' x r, closed_ball_diff_ball]
 #align frontier_closed_ball' frontier_closedBall'
 -/
+
+@[simp]
+theorem interior_sphere' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
+    interior (sphere x r) = ∅ := by rw [← frontier_closedBall' x, interior_frontier is_closed_ball]
+#align interior_sphere' interior_sphere'
+
+@[simp]
+theorem frontier_sphere' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
+    frontier (sphere x r) = sphere x r := by
+  rw [is_closed_sphere.frontier_eq, interior_sphere' x, diff_empty]
+#align frontier_sphere' frontier_sphere'
 
 variable {α}
 
