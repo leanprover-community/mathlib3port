@@ -64,7 +64,7 @@ def toTop : TopCat :=
 #align algebraic_geometry.LocallyRingedSpace.to_Top AlgebraicGeometry.LocallyRingedSpace.toTop
 
 instance : CoeSort LocallyRingedSpace (Type u) :=
-  ⟨fun X : LocallyRingedSpace => (X.toTop : Type u)⟩
+  ⟨fun X : LocallyRingedSpace => (X.toTopCat : Type u)⟩
 
 instance (x : X) : LocalRing (X.toPresheafedSpace.stalk x) :=
   X.LocalRing x
@@ -72,7 +72,7 @@ instance (x : X) : LocalRing (X.toPresheafedSpace.stalk x) :=
 -- PROJECT: how about a typeclass "has_structure_sheaf" to mediate the 𝒪 notation, rather
 -- than defining it over and over for PresheafedSpace, LRS, Scheme, etc.
 /-- The structure sheaf of a locally ringed space. -/
-def 𝒪 : Sheaf CommRingCat X.toTop :=
+def 𝒪 : Sheaf CommRingCat X.toTopCat :=
   X.toSheafedSpace.Sheaf
 #align algebraic_geometry.LocallyRingedSpace.𝒪 AlgebraicGeometry.LocallyRingedSpace.𝒪
 
@@ -224,7 +224,7 @@ instance is_sheafedSpace_iso {X Y : LocallyRingedSpace} (f : X ⟶ Y) [IsIso f] 
 /-- The restriction of a locally ringed space along an open embedding.
 -/
 @[simps]
-def restrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTop} (h : OpenEmbedding f) :
+def restrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTopCat} (h : OpenEmbedding f) :
     LocallyRingedSpace
     where
   LocalRing := by
@@ -237,7 +237,7 @@ def restrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTop} (h : Open
 #align algebraic_geometry.LocallyRingedSpace.restrict AlgebraicGeometry.LocallyRingedSpace.restrict
 
 /-- The canonical map from the restriction to the supspace. -/
-def ofRestrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTop} (h : OpenEmbedding f) :
+def ofRestrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTopCat} (h : OpenEmbedding f) :
     X.restrict h ⟶ X :=
   ⟨X.toPresheafedSpace.of_restrict h, fun x => inferInstance⟩
 #align algebraic_geometry.LocallyRingedSpace.of_restrict AlgebraicGeometry.LocallyRingedSpace.ofRestrict

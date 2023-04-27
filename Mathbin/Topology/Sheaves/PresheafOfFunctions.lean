@@ -102,12 +102,12 @@ theorem presheafToType_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f
 /-- The presheaf of continuous functions on `X` with values in fixed target topological space
 `T`. -/
 def presheafToTop (T : TopCat.{v}) : X.Presheaf (Type v) :=
-  (Opens.toTop X).op ⋙ yoneda.obj T
+  (Opens.toTopCat X).op ⋙ yoneda.obj T
 #align Top.presheaf_to_Top TopCat.presheafToTop
 
 @[simp]
 theorem presheafToTop_obj (T : TopCat.{v}) (U : (Opens X)ᵒᵖ) :
-    (presheafToTop X T).obj U = ((Opens.toTop X).obj (unop U) ⟶ T) :=
+    (presheafToTop X T).obj U = ((Opens.toTopCat X).obj (unop U) ⟶ T) :=
   rfl
 #align Top.presheaf_to_Top_obj TopCat.presheafToTop_obj
 
@@ -175,7 +175,7 @@ presheaf_to_TopCommRing X (TopCommRing.of ℂ)
 (this requires `import topology.instances.complex`).
 -/
 def presheafToTopCommRing (T : TopCommRing.{v}) : X.Presheaf CommRingCat.{v} :=
-  (Opens.toTop X).op ⋙ commRingYoneda.obj T
+  (Opens.toTopCat X).op ⋙ commRingYoneda.obj T
 #align Top.presheaf_to_TopCommRing TopCat.presheafToTopCommRing
 
 end TopCat

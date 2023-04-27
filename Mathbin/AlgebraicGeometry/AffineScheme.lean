@@ -87,19 +87,19 @@ theorem mem_spec_essImage (X : Scheme) : X ∈ Scheme.spec.essImage ↔ IsAffine
   ⟨fun h => ⟨Functor.essImage.unit_isIso h⟩, fun h => @mem_essImage_of_unit_isIso _ _ _ X h.1⟩
 #align algebraic_geometry.mem_Spec_ess_image AlgebraicGeometry.mem_spec_essImage
 
-instance isAffineAffineScheme (X : AffineScheme.{u}) : IsAffine X.obj :=
+instance isAffine_affineScheme (X : AffineScheme.{u}) : IsAffine X.obj :=
   ⟨Functor.essImage.unit_isIso X.property⟩
-#align algebraic_geometry.is_affine_AffineScheme AlgebraicGeometry.isAffineAffineScheme
+#align algebraic_geometry.is_affine_AffineScheme AlgebraicGeometry.isAffine_affineScheme
 
-instance specIsAffine (R : CommRingCatᵒᵖ) : IsAffine (Scheme.spec.obj R) :=
-  AlgebraicGeometry.isAffineAffineScheme ⟨_, Scheme.spec.obj_mem_essImage R⟩
-#align algebraic_geometry.Spec_is_affine AlgebraicGeometry.specIsAffine
+instance spec_isAffine (R : CommRingCatᵒᵖ) : IsAffine (Scheme.spec.obj R) :=
+  AlgebraicGeometry.isAffine_affineScheme ⟨_, Scheme.spec.obj_mem_essImage R⟩
+#align algebraic_geometry.Spec_is_affine AlgebraicGeometry.spec_isAffine
 
-theorem isAffineOfIso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] [h : IsAffine Y] : IsAffine X :=
+theorem isAffine_of_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] [h : IsAffine Y] : IsAffine X :=
   by
   rw [← mem_Spec_ess_image] at h⊢
   exact functor.ess_image.of_iso (as_iso f).symm h
-#align algebraic_geometry.is_affine_of_iso AlgebraicGeometry.isAffineOfIso
+#align algebraic_geometry.is_affine_of_iso AlgebraicGeometry.isAffine_of_iso
 
 namespace AffineScheme
 
@@ -177,15 +177,15 @@ theorem top_isAffineOpen (X : Scheme) [IsAffine X] : IsAffineOpen (⊤ : Opens X
   exact set.range_id.symm
 #align algebraic_geometry.top_is_affine_open AlgebraicGeometry.top_isAffineOpen
 
-instance Scheme.affineCoverIsAffine (X : Scheme) (i : X.affineCover.J) :
+instance Scheme.affineCover_isAffine (X : Scheme) (i : X.affineCover.J) :
     IsAffine (X.affineCover.obj i) :=
-  AlgebraicGeometry.specIsAffine _
-#align algebraic_geometry.Scheme.affine_cover_is_affine AlgebraicGeometry.Scheme.affineCoverIsAffine
+  AlgebraicGeometry.spec_isAffine _
+#align algebraic_geometry.Scheme.affine_cover_is_affine AlgebraicGeometry.Scheme.affineCover_isAffine
 
-instance Scheme.affineBasisCoverIsAffine (X : Scheme) (i : X.affineBasisCover.J) :
+instance Scheme.affineBasisCover_isAffine (X : Scheme) (i : X.affineBasisCover.J) :
     IsAffine (X.affineBasisCover.obj i) :=
-  AlgebraicGeometry.specIsAffine _
-#align algebraic_geometry.Scheme.affine_basis_cover_is_affine AlgebraicGeometry.Scheme.affineBasisCoverIsAffine
+  AlgebraicGeometry.spec_isAffine _
+#align algebraic_geometry.Scheme.affine_basis_cover_is_affine AlgebraicGeometry.Scheme.affineBasisCover_isAffine
 
 theorem isBasis_affine_open (X : Scheme) : Opens.IsBasis X.affineOpens :=
   by

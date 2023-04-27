@@ -612,7 +612,7 @@ instance : HasPullbacks Scheme :=
 
 instance {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z) [IsAffine X] [IsAffine Y] [IsAffine Z] :
     IsAffine (pullback f g) :=
-  isAffineOfIso
+  isAffine_of_iso
     (pullback.map f g (spec.map (Γ.map f.op).op) (spec.map (Γ.map g.op).op)
         (ΓSpec.adjunction.Unit.app X) (ΓSpec.adjunction.Unit.app Y) (ΓSpec.adjunction.Unit.app Z)
         (ΓSpec.adjunction.Unit.naturality f) (ΓSpec.adjunction.Unit.naturality g) ≫

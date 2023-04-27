@@ -322,7 +322,7 @@ structure MkCore where
   {J : Type u}
   U : J → TopCat.{u}
   V : ∀ i, J → Opens (U i)
-  t : ∀ i j, (Opens.toTop _).obj (V i j) ⟶ (Opens.toTop _).obj (V j i)
+  t : ∀ i j, (Opens.toTopCat _).obj (V i j) ⟶ (Opens.toTopCat _).obj (V j i)
   v_id : ∀ i, V i i = ⊤
   t_id : ∀ i, ⇑(t i i) = id
   t_inter : ∀ ⦃i j⦄ (k) (x : V i j), ↑x ∈ V i k → @coe (V j i) (U j) _ (t i j x) ∈ V j k
@@ -367,7 +367,7 @@ def mk' (h : MkCore.{u}) : TopCat.GlueData
     where
   J := h.J
   U := h.U
-  V i := (Opens.toTop _).obj (h.V i.1 i.2)
+  V i := (Opens.toTopCat _).obj (h.V i.1 i.2)
   f i j := (h.V i j).inclusion
   f_id i := (h.v_id i).symm ▸ IsIso.of_iso (Opens.inclusionTopIso (h.U i))
   f_open := fun i j : h.J => (h.V i j).OpenEmbedding
@@ -407,7 +407,7 @@ include U
 def ofOpenSubsets : TopCat.GlueData.{u} :=
   mk'.{u}
     { J
-      U := fun i => (Opens.toTop <| TopCat.of α).obj (U i)
+      U := fun i => (Opens.toTopCat <| TopCat.of α).obj (U i)
       V := fun i j => (Opens.map <| Opens.inclusion _).obj (U j)
       t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩
       v_id := fun i => by

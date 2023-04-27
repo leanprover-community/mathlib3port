@@ -191,7 +191,7 @@ theorem functionField_isFractionRing_of_isAffineOpen [IsIntegral X] (U : Opens X
 #align algebraic_geometry.function_field_is_fraction_ring_of_is_affine_open AlgebraicGeometry.functionField_isFractionRing_of_isAffineOpen
 
 instance (x : X.carrier) : IsAffine (X.affineCover.obj x) :=
-  AlgebraicGeometry.specIsAffine _
+  AlgebraicGeometry.spec_isAffine _
 
 instance [h : IsIntegral X] (x : X.carrier) : IsFractionRing (X.Presheaf.stalk x) X.functionField :=
   by

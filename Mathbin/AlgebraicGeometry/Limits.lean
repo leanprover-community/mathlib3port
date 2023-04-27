@@ -44,7 +44,7 @@ instance : HasTerminal Scheme :=
   hasTerminal_of_hasTerminal_of_preservesLimit Scheme.spec
 
 instance : IsAffine (⊤_ Scheme.{u}) :=
-  isAffineOfIso (PreservesTerminal.iso Scheme.spec).inv
+  isAffine_of_iso (PreservesTerminal.iso Scheme.spec).inv
 
 instance : HasFiniteLimits Scheme :=
   hasFiniteLimits_of_hasTerminal_and_pullbacks
@@ -127,10 +127,10 @@ noncomputable def specPunitIsInitial : IsInitial (Scheme.spec.obj (op <| CommRin
   emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.Spec_punit_is_initial AlgebraicGeometry.specPunitIsInitial
 
-instance (priority := 100) isAffineOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
-  isAffineOfIso
+instance (priority := 100) isAffine_of_isEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
+  isAffine_of_iso
     (inv (emptyIsInitial.to X) ≫ emptyIsInitial.to (Scheme.spec.obj (op <| CommRingCat.of PUnit)))
-#align algebraic_geometry.is_affine_of_is_empty AlgebraicGeometry.isAffineOfIsEmpty
+#align algebraic_geometry.is_affine_of_is_empty AlgebraicGeometry.isAffine_of_isEmpty
 
 instance : HasInitial Scheme :=
   hasInitial_of_unique Scheme.empty

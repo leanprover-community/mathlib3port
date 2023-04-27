@@ -101,7 +101,7 @@ theorem to_Γ_Spec_continuous : Continuous X.toΓSpecFun :=
 /-- The canonical (bundled) continuous map from the underlying topological
 space of `X` to the prime spectrum of its global sections. -/
 @[simps]
-def toΓSpecBase : X.toTop ⟶ Spec.topObj (Γ.obj (op X))
+def toΓSpecBase : X.toTopCat ⟶ Spec.topObj (Γ.obj (op X))
     where
   toFun := X.toΓSpecFun
   continuous_toFun := X.to_Γ_Spec_continuous

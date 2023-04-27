@@ -1072,7 +1072,7 @@ def comapFun (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) (V : Opens (Prime
     (s ⟨PrimeSpectrum.comap f y.1, hUV y.2⟩ : _)
 #align algebraic_geometry.structure_sheaf.comap_fun AlgebraicGeometry.StructureSheaf.comapFun
 
-theorem comapFun_isLocallyFraction (f : R →+* S) (U : Opens (PrimeSpectrum.top R))
+theorem comapFunIsLocallyFraction (f : R →+* S) (U : Opens (PrimeSpectrum.top R))
     (V : Opens (PrimeSpectrum.top S)) (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1)
     (s : ∀ x : U, Localizations R x) (hs : (isLocallyFraction R).toPrelocalPredicate.pred s) :
     (isLocallyFraction S).toPrelocalPredicate.pred (comapFun f U V hUV s) :=
@@ -1091,7 +1091,7 @@ theorem comapFun_isLocallyFraction (f : R →+* S) (U : Opens (PrimeSpectrum.top
   erw [← Localization.localRingHom_to_map (PrimeSpectrum.comap f q).asIdeal, ← RingHom.map_mul,
     h_frac.2, Localization.localRingHom_to_map]
   rfl
-#align algebraic_geometry.structure_sheaf.comap_fun_is_locally_fraction AlgebraicGeometry.StructureSheaf.comapFun_isLocallyFraction
+#align algebraic_geometry.structure_sheaf.comap_fun_is_locally_fraction AlgebraicGeometry.StructureSheaf.comapFunIsLocallyFraction
 
 /-- For a ring homomorphism `f : R →+* S` and open sets `U` and `V` of the prime spectra of `R` and
 `S` such that `V ⊆ (comap f) ⁻¹ U`, the induced ring homomorphism from the structure sheaf of `R`
@@ -1104,7 +1104,7 @@ def comap (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) (V : Opens (PrimeSpe
     (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) :
     (structureSheaf R).1.obj (op U) →+* (structureSheaf S).1.obj (op V)
     where
-  toFun s := ⟨comapFun f U V hUV s.1, comapFun_isLocallyFraction f U V hUV s.1 s.2⟩
+  toFun s := ⟨comapFun f U V hUV s.1, comapFunIsLocallyFraction f U V hUV s.1 s.2⟩
   map_one' :=
     Subtype.ext <|
       funext fun p =>

@@ -1964,7 +1964,7 @@ theorem Scheme.restrictFunctor_map_ofRestrict {U V : Opens X.carrier} (i : U ⟶
 #align algebraic_geometry.Scheme.restrict_functor_map_of_restrict AlgebraicGeometry.Scheme.restrictFunctor_map_ofRestrict
 
 theorem Scheme.restrictFunctor_map_base {U V : Opens X.carrier} (i : U ⟶ V) :
-    (X.restrictFunctor.map i).1.1.base = (Opens.toTop _).map i :=
+    (X.restrictFunctor.map i).1.1.base = (Opens.toTopCat _).map i :=
   by
   ext a
   exact

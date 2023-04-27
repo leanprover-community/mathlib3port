@@ -150,13 +150,13 @@ def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : Lo
     exact ⟨V', m', i' ≫ i, p'⟩
 #align Top.prelocal_predicate.sheafify TopCat.PrelocalPredicate.sheafify
 
-theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X}
+theorem PrelocalPredicate.sheafifyOf {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X}
     {f : ∀ x : U, T x} (h : P.pred f) : P.sheafify.pred f := fun x =>
   ⟨U, x.2, 𝟙 _, by
     convert h
     ext ⟨y, w⟩
     rfl⟩
-#align Top.prelocal_predicate.sheafify_of TopCat.PrelocalPredicate.sheafify_of
+#align Top.prelocal_predicate.sheafify_of TopCat.PrelocalPredicate.sheafifyOf
 
 /-- The subpresheaf of dependent functions on `X` satisfying the "pre-local" predicate `P`.
 -/
