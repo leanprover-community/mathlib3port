@@ -55,18 +55,22 @@ variable {V : Type _} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 
 variable {W : Type _} [AddCommGroup W] [Module K W] [FiniteDimensional K W]
 
+#print LinearMap.finiteDimensional /-
 instance finiteDimensional : FiniteDimensional K (V →ₗ[K] W) :=
   Module.Finite.linearMap _ _
 #align linear_map.finite_dimensional LinearMap.finiteDimensional
+-/
 
 variable {A : Type _} [Ring A] [Algebra K A] [Module A V] [IsScalarTower K A V] [Module A W]
   [IsScalarTower K A W]
 
+#print LinearMap.finiteDimensional' /-
 /-- Linear maps over a `k`-algebra are finite dimensional (over `k`) if both the source and
 target are, as they form a subspace of all `k`-linear maps. -/
-instance finite_dimensional' : FiniteDimensional K (V →ₗ[A] W) :=
+instance finiteDimensional' : FiniteDimensional K (V →ₗ[A] W) :=
   FiniteDimensional.of_injective (restrictScalarsLinearMap K A V W) (restrictScalars_injective _)
-#align linear_map.finite_dimensional' LinearMap.finite_dimensional'
+#align linear_map.finite_dimensional' LinearMap.finiteDimensional'
+-/
 
 end LinearMap
 
