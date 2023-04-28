@@ -404,6 +404,12 @@ theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
 
 end CantorInjMetric
 
+/- warning: is_closed.exists_nat_bool_injection_of_not_countable -> IsClosed.exists_nat_bool_injection_of_not_countable is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] {C : Set.{u1} α}, (IsClosed.{u1} α _inst_1 C) -> (Not (Set.Countable.{u1} α C)) -> (Exists.{succ u1} ((Nat -> Bool) -> α) (fun (f : (Nat -> Bool) -> α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.range.{u1, 1} α (Nat -> Bool) f) C) (And (Continuous.{0, u1} (Nat -> Bool) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => Bool.topologicalSpace)) _inst_1 f) (Function.Injective.{1, succ u1} (Nat -> Bool) α f))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α _inst_1] {C : Set.{u1} α}, (IsClosed.{u1} α _inst_1 C) -> (Not (Set.Countable.{u1} α C)) -> (Exists.{succ u1} ((Nat -> Bool) -> α) (fun (f : (Nat -> Bool) -> α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.range.{u1, 1} α (Nat -> Bool) f) C) (And (Continuous.{0, u1} (Nat -> Bool) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => instTopologicalSpaceBool)) _inst_1 f) (Function.Injective.{1, succ u1} (Nat -> Bool) α f))))
+Case conversion may be inaccurate. Consider using '#align is_closed.exists_nat_bool_injection_of_not_countable IsClosed.exists_nat_bool_injection_of_not_countableₓ'. -/
 /-- Any closed uncountable subset of a Polish space admits a continuous injection
 from the Cantor space `ℕ → bool`.-/
 theorem IsClosed.exists_nat_bool_injection_of_not_countable {α : Type _} [TopologicalSpace α]

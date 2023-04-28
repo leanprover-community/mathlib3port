@@ -665,6 +665,12 @@ theorem measurable_to_countable [MeasurableSpace α] [Countable α] [MeasurableS
   · simp only [preimage_singleton_eq_empty.2 hyf, MeasurableSet.empty]
 #align measurable_to_countable measurable_to_countable
 
+/- warning: measurable_to_countable' -> measurable_to_countable' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : Countable.{succ u1} α] [_inst_3 : MeasurableSpace.{u2} β] {f : β -> α}, (forall (x : α), MeasurableSet.{u2} β _inst_3 (Set.preimage.{u2, u1} β α f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x))) -> (Measurable.{u2, u1} β α _inst_3 _inst_1 f)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : Countable.{succ u2} α] [_inst_3 : MeasurableSpace.{u1} β] {f : β -> α}, (forall (x : α), MeasurableSet.{u1} β _inst_3 (Set.preimage.{u1, u2} β α f (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) x))) -> (Measurable.{u1, u2} β α _inst_3 _inst_1 f)
+Case conversion may be inaccurate. Consider using '#align measurable_to_countable' measurable_to_countable'ₓ'. -/
 theorem measurable_to_countable' [MeasurableSpace α] [Countable α] [MeasurableSpace β] {f : β → α}
     (h : ∀ x, MeasurableSet (f ⁻¹' {x})) : Measurable f :=
   measurable_to_countable fun y => h (f y)
@@ -706,6 +712,12 @@ theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f 
   measurable_to_countable
 #align measurable_to_nat measurable_to_nat
 
+/- warning: measurable_to_bool -> measurable_to_bool is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> Bool}, (MeasurableSet.{u1} α _inst_1 (Set.preimage.{u1, 0} α Bool f (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.hasSingleton.{0} Bool) Bool.true))) -> (Measurable.{u1, 0} α Bool _inst_1 Bool.measurableSpace f)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {f : α -> Bool}, (MeasurableSet.{u1} α _inst_1 (Set.preimage.{u1, 0} α Bool f (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.instSingletonSet.{0} Bool) Bool.true))) -> (Measurable.{u1, 0} α Bool _inst_1 instMeasurableSpaceBool f)
+Case conversion may be inaccurate. Consider using '#align measurable_to_bool measurable_to_boolₓ'. -/
 theorem measurable_to_bool {f : α → Bool} (h : MeasurableSet (f ⁻¹' {true})) : Measurable f :=
   by
   apply measurable_to_countable'
@@ -2493,7 +2505,7 @@ def piEquivPiSubtypeProd (p : δ' → Prop) [DecidablePred p] :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {s : Set.{u1} α} [_inst_7 : DecidablePred.{succ u1} α s], (MeasurableSet.{u1} α _inst_1 s) -> (MeasurableEquiv.{u1, u1} (Sum.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) α (Sum.measurableSpace.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (Subtype.measurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1) (Subtype.measurableSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) _inst_1)) _inst_1)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {s : Set.{u1} α} [_inst_7 : DecidablePred.{succ u1} α (fun (x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.17087 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.17087 s)], (MeasurableSet.{u1} α _inst_1 s) -> (MeasurableEquiv.{u1, u1} (Sum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) α (instMeasurableSpaceSum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) _inst_1)) _inst_1)
+  forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {s : Set.{u1} α} [_inst_7 : DecidablePred.{succ u1} α (fun (x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.17268 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x._@.Mathlib.MeasureTheory.MeasurableSpace._hyg.17268 s)], (MeasurableSet.{u1} α _inst_1 s) -> (MeasurableEquiv.{u1, u1} (Sum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) α (instMeasurableSpaceSum.{u1, u1} (Set.Elem.{u1} α s) (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) (instMeasurableSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) _inst_1)) _inst_1)
 Case conversion may be inaccurate. Consider using '#align measurable_equiv.sum_compl MeasurableEquiv.sumComplₓ'. -/
 /-- If `s` is a measurable set in a measurable space, that space is equivalent
 to the sum of `s` and `sᶜ`.-/
@@ -2624,14 +2636,22 @@ namespace MeasurableSpace
 
 variable (α)
 
+#print MeasurableSpace.CountablyGenerated /-
 /-- We say a measurable space is countably generated
 if can be generated by a countable set of sets.-/
 class CountablyGenerated [m : MeasurableSpace α] : Prop where
   IsCountablyGenerated : ∃ b : Set (Set α), b.Countable ∧ m = generateFrom b
 #align measurable_space.countably_generated MeasurableSpace.CountablyGenerated
+-/
 
 open Classical
 
+/- warning: measurable_space.measurable_injection_cantor_of_countably_generated -> MeasurableSpace.measurable_injection_cantor_of_countablyGenerated is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : MeasurableSpace.{u1} α] [h : MeasurableSpace.CountablyGenerated.{u1} α _inst_1] [_inst_2 : MeasurableSingletonClass.{u1} α _inst_1], Exists.{succ u1} (α -> Nat -> Bool) (fun (f : α -> Nat -> Bool) => And (Measurable.{u1, 0} α (Nat -> Bool) _inst_1 (MeasurableSpace.pi.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => Bool.measurableSpace)) f) (Function.Injective.{succ u1, 1} α (Nat -> Bool) f))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : MeasurableSpace.{u1} α] [h : MeasurableSpace.CountablyGenerated.{u1} α _inst_1] [_inst_2 : MeasurableSingletonClass.{u1} α _inst_1], Exists.{succ u1} (α -> Nat -> Bool) (fun (f : α -> Nat -> Bool) => And (Measurable.{u1, 0} α (Nat -> Bool) _inst_1 (MeasurableSpace.pi.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => instMeasurableSpaceBool)) f) (Function.Injective.{succ u1, 1} α (Nat -> Bool) f))
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_injection_cantor_of_countably_generated MeasurableSpace.measurable_injection_cantor_of_countablyGeneratedₓ'. -/
 /-- If a measurable space is countably generated, it admits a measurable injection
 into the Cantor space `ℕ → bool` (equipped with the product sigma algebra). -/
 theorem measurable_injection_cantor_of_countablyGenerated [MeasurableSpace α]
