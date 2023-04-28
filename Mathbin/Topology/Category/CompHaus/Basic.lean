@@ -36,12 +36,14 @@ universe v u
 
 open CategoryTheory
 
+#print CompHaus /-
 /-- The type of Compact Hausdorff topological spaces. -/
 structure CompHaus where
   toTop : TopCat
   [IsCompact : CompactSpace to_Top]
   [is_hausdorff : T2Space to_Top]
 #align CompHaus CompHaus
+-/
 
 namespace CompHaus
 
@@ -57,13 +59,17 @@ instance {X : CompHaus} : CompactSpace X :=
 instance {X : CompHaus} : T2Space X :=
   X.is_hausdorff
 
+#print CompHaus.category /-
 instance category : Category CompHaus :=
   InducedCategory.category toTop
 #align CompHaus.category CompHaus.category
+-/
 
+#print CompHaus.concreteCategory /-
 instance concreteCategory : ConcreteCategory CompHaus :=
   InducedCategory.concreteCategory _
 #align CompHaus.concrete_category CompHaus.concreteCategory
+-/
 
 @[simp]
 theorem coe_toTop {X : CompHaus} : (X.toTop : Type _) = X :=
@@ -72,6 +78,7 @@ theorem coe_toTop {X : CompHaus} : (X.toTop : Type _) = X :=
 
 variable (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X]
 
+#print CompHaus.of /-
 /-- A constructor for objects of the category `CompHaus`,
 taking a type, and bundling the compact Hausdorff topology
 found by typeclass inference. -/
@@ -80,17 +87,32 @@ def of : CompHaus where
   IsCompact := ‹_›
   is_hausdorff := ‹_›
 #align CompHaus.of CompHaus.of
+-/
 
+#print CompHaus.coe_of /-
 @[simp]
 theorem coe_of : (CompHaus.of X : Type _) = X :=
   rfl
 #align CompHaus.coe_of CompHaus.coe_of
+-/
 
+/- warning: CompHaus.is_closed_map -> CompHaus.isClosedMap is a dubious translation:
+lean 3 declaration is
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), IsClosedMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (TopCat.topologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (TopCat.topologicalSpace.{u1} (CompHaus.toTop.{u1} Y)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) f)
+but is expected to have type
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), IsClosedMap.{u1, u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) Y) (CompHaus.instTopologicalSpaceObjCompHausToQuiverToCategoryStructCategoryTypeTypesToPrefunctorForgetConcreteCategory.{u1} X) (CompHaus.instTopologicalSpaceObjCompHausToQuiverToCategoryStructCategoryTypeTypesToPrefunctorForgetConcreteCategory.{u1} Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X Y f)
+Case conversion may be inaccurate. Consider using '#align CompHaus.is_closed_map CompHaus.isClosedMapₓ'. -/
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
 theorem isClosedMap {X Y : CompHaus.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
   (hC.IsCompact.image f.Continuous).IsClosed
 #align CompHaus.is_closed_map CompHaus.isClosedMap
 
+/- warning: CompHaus.is_iso_of_bijective -> CompHaus.isIso_of_bijective is a dubious translation:
+lean 3 declaration is
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) f)) -> (CategoryTheory.IsIso.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y f)
+but is expected to have type
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X Y f)) -> (CategoryTheory.IsIso.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y f)
+Case conversion may be inaccurate. Consider using '#align CompHaus.is_iso_of_bijective CompHaus.isIso_of_bijectiveₓ'. -/
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
 theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     IsIso f := by
@@ -107,6 +129,12 @@ theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bi
     apply E.apply_symm_apply
 #align CompHaus.is_iso_of_bijective CompHaus.isIso_of_bijective
 
+/- warning: CompHaus.iso_of_bijective -> CompHaus.isoOfBijective is a dubious translation:
+lean 3 declaration is
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) f)) -> (CategoryTheory.Iso.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y)
+but is expected to have type
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X Y f)) -> (CategoryTheory.Iso.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y)
+Case conversion may be inaccurate. Consider using '#align CompHaus.iso_of_bijective CompHaus.isoOfBijectiveₓ'. -/
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
 noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     X ≅ Y :=
@@ -116,16 +144,21 @@ noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Funct
 
 end CompHaus
 
+#print compHausToTop /-
 /-- The fully faithful embedding of `CompHaus` in `Top`. -/
 @[simps (config := { rhsMd := semireducible })]
 def compHausToTop : CompHaus.{u} ⥤ TopCat.{u} :=
   inducedFunctor _ deriving Full, Faithful
 #align CompHaus_to_Top compHausToTop
+-/
 
+#print CompHaus.forget_reflectsIsomorphisms /-
 instance CompHaus.forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget CompHaus.{u}) :=
   ⟨by intro A B f hf <;> exact CompHaus.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 #align CompHaus.forget_reflects_isomorphisms CompHaus.forget_reflectsIsomorphisms
+-/
 
+#print stoneCechObj /-
 /-- (Implementation) The object part of the compactification functor from topological spaces to
 compact Hausdorff spaces.
 -/
@@ -133,7 +166,14 @@ compact Hausdorff spaces.
 def stoneCechObj (X : TopCat) : CompHaus :=
   CompHaus.of (StoneCech X)
 #align StoneCech_obj stoneCechObj
+-/
 
+/- warning: stone_cech_equivalence -> stoneCechEquivalence is a dubious translation:
+lean 3 declaration is
+  forall (X : TopCat.{u1}) (Y : CompHaus.{u1}), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) (stoneCechObj.{u1} X) Y) (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1})) X (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} compHausToTop.{u1} Y))
+but is expected to have type
+  forall (X : TopCat.{u1}) (Y : CompHaus.{u1}), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) (stoneCechObj.{u1} X) Y) (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) X (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} compHausToTop.{u1}) Y))
+Case conversion may be inaccurate. Consider using '#align stone_cech_equivalence stoneCechEquivalenceₓ'. -/
 /-- (Implementation) The bijection of homsets to establish the reflective adjunction of compact
 Hausdorff spaces in topological spaces.
 -/
@@ -159,38 +199,55 @@ noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHaus.{u}) :
     exact congr_fun (stoneCechExtend_extends hf) _
 #align stone_cech_equivalence stoneCechEquivalence
 
+#print topToCompHaus /-
 /-- The Stone-Cech compactification functor from topological spaces to compact Hausdorff spaces,
 left adjoint to the inclusion functor.
 -/
 noncomputable def topToCompHaus : TopCat.{u} ⥤ CompHaus.{u} :=
   Adjunction.leftAdjointOfEquiv stoneCechEquivalence.{u} fun _ _ _ _ _ => rfl
 #align Top_to_CompHaus topToCompHaus
+-/
 
+/- warning: Top_to_CompHaus_obj -> topToCompHaus_obj is a dubious translation:
+lean 3 declaration is
+  forall (X : TopCat.{u1}), Eq.{succ (succ u1)} Type.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CompHaus.{u1} Type.{u1} CompHaus.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} CompHaus.{u1} CompHaus.category.{u1} topToCompHaus.{u1} X)) (StoneCech.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))
+but is expected to have type
+  forall (X : TopCat.{u1}), Eq.{succ (succ u1)} Type.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} CompHaus.{u1} CompHaus.category.{u1} topToCompHaus.{u1}) X))) (StoneCech.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))
+Case conversion may be inaccurate. Consider using '#align Top_to_CompHaus_obj topToCompHaus_objₓ'. -/
 theorem topToCompHaus_obj (X : TopCat) : ↥(topToCompHaus.obj X) = StoneCech X :=
   rfl
 #align Top_to_CompHaus_obj topToCompHaus_obj
 
+#print compHausToTop.reflective /-
 /-- The category of compact Hausdorff spaces is reflective in the category of topological spaces.
 -/
 noncomputable instance compHausToTop.reflective : Reflective compHausToTop
     where toIsRightAdjoint := ⟨topToCompHaus, Adjunction.adjunctionOfEquivLeft _ _⟩
 #align CompHaus_to_Top.reflective compHausToTop.reflective
+-/
 
+#print compHausToTop.createsLimits /-
 noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop :=
   monadicCreatesLimits _
 #align CompHaus_to_Top.creates_limits compHausToTop.createsLimits
+-/
 
+#print CompHaus.hasLimits /-
 instance CompHaus.hasLimits : Limits.HasLimits CompHaus :=
   has_limits_of_has_limits_creates_limits compHausToTop
 #align CompHaus.has_limits CompHaus.hasLimits
+-/
 
+#print CompHaus.hasColimits /-
 instance CompHaus.hasColimits : Limits.HasColimits CompHaus :=
   has_colimits_of_reflective compHausToTop
 #align CompHaus.has_colimits CompHaus.hasColimits
+-/
 
 namespace CompHaus
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print CompHaus.limitCone /-
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
 def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F
@@ -229,7 +286,9 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
         simp only [comp_apply, functor.const_obj_map, id_apply]
         exact (hx f).symm }
 #align CompHaus.limit_cone CompHaus.limitCone
+-/
 
+#print CompHaus.limitConeIsLimit /-
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
 def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) :
     Limits.IsLimit (limitCone F)
@@ -237,7 +296,14 @@ def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u
   lift S := (TopCat.limitConeIsLimit (F ⋙ compHausToTop)).lift (compHausToTop.mapCone S)
   uniq S m h := (TopCat.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
 #align CompHaus.limit_cone_is_limit CompHaus.limitConeIsLimit
+-/
 
+/- warning: CompHaus.epi_iff_surjective -> CompHaus.epi_iff_surjective is a dubious translation:
+lean 3 declaration is
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), Iff (CategoryTheory.Epi.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y f) (Function.Surjective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) f))
+but is expected to have type
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), Iff (CategoryTheory.Epi.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y f) (Function.Surjective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X Y f))
+Case conversion may be inaccurate. Consider using '#align CompHaus.epi_iff_surjective CompHaus.epi_iff_surjectiveₓ'. -/
 theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
   by
   constructor
@@ -274,6 +340,12 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
     apply (forget CompHaus).epi_of_epi_map
 #align CompHaus.epi_iff_surjective CompHaus.epi_iff_surjective
 
+/- warning: CompHaus.mono_iff_injective -> CompHaus.mono_iff_injective is a dubious translation:
+lean 3 declaration is
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), Iff (CategoryTheory.Mono.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y f) (Function.Injective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} Y)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} Y))) f))
+but is expected to have type
+  forall {X : CompHaus.{u1}} {Y : CompHaus.{u1}} (f : Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X Y), Iff (CategoryTheory.Mono.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} X Y f) (Function.Injective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} CompHaus.{u1} CompHaus.category.{u1} CompHaus.concreteCategory.{u1})) X Y f))
+Case conversion may be inaccurate. Consider using '#align CompHaus.mono_iff_injective CompHaus.mono_iff_injectiveₓ'. -/
 theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   constructor

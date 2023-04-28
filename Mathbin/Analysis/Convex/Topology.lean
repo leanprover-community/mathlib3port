@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 0e3aacdc98d25e0afe035c452d876d28cbffaa7e
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Topology.Algebra.Module.Basic
 
 /-!
 # Topological properties of convex sets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove the following facts:
 

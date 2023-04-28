@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.functor_category
-! leanprover-community/mathlib commit 7cd8adb7a9d7d0498d2e76c23cd4255f966899f5
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Limits.Presheaf
 
 /-!
 # Preservation of (co)limits in the functor category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 * Show that if `X ⨯ -` preserves colimits in `D` for any `X : D`, then the product functor `F ⨯ -`
 for `F : C ⥤ D` preserves colimits.

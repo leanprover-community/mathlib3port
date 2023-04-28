@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.weakly_initial
-! leanprover-community/mathlib commit 239d882c4fb58361ee8b3b39fb2091320edef10a
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 
 /-!
 # Constructions related to weakly initial objects
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file gives constructions related to weakly initial objects, namely:
 * If a category has small products and a small weakly initial set of objects, then it has a weakly

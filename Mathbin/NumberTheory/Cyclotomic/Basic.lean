@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit fa78268d4d77cb2b2fbc89f0527e2e7807763780
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -359,9 +359,10 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
 theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
   { to_charZero := charZero_of_injective_algebraMap (algebraMap K L).Injective
     to_finiteDimensional :=
-      @Module.Finite.trans _ K L _ _ _ _
-        (@algebraRat L _ (charZero_of_injective_algebraMap (algebraMap K L).Injective)) _ _
-        h.to_finiteDimensional (Finite S K L) }
+      by
+      haveI := charZero_of_injective_algebraMap (algebraMap K L).Injective
+      haveI := Finite S K L
+      exact Module.Finite.trans K _ }
 #align is_cyclotomic_extension.number_field IsCyclotomicExtension.numberField
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField

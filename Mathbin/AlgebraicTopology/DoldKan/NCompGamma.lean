@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.n_comp_gamma
-! leanprover-community/mathlib commit 19d6240dcc5e5c8bd6e1e3c588b92e837af76f9e
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicTopology.DoldKan.GammaCompN
 import Mathbin.AlgebraicTopology.DoldKan.NReflectsIso
 
-/-! The unit isomorphism of the Dold-Kan equivalence
+/-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+ The unit isomorphism of the Dold-Kan equivalence
 
 In order to construct the unit isomorphism of the Dold-Kan equivalence,
 we first construct natural transformations

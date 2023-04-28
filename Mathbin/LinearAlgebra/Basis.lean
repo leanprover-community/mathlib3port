@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 04cdee31e196e30f507e8e9eb2d06e02c9ff6310
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2594,4 +2594,59 @@ theorem quotient_prod_linearEquiv (p : Submodule K V) : Nonempty (((V ⧸ p) × 
 #align quotient_prod_linear_equiv quotient_prod_linearEquiv
 
 end DivisionRing
+
+section RestrictScalars
+
+variable {S : Type _} [CommRing R] [Ring S] [Nontrivial S] [AddCommGroup M]
+
+variable [Algebra R S] [Module S M] [Module R M]
+
+variable [IsScalarTower R S M] [NoZeroSMulDivisors R S] (b : Basis ι S M)
+
+variable (R)
+
+open Submodule
+
+/-- Let `b` be a `S`-basis of `M`. Let `R` be a comm_ring such that `algebra R S` with no zero
+smul divisors, then the submodule of `M` spanned by `b` over `R` admits `b` as a `R`-basis. -/
+noncomputable def Basis.restrictScalars : Basis ι R (span R (Set.range b)) :=
+  Basis.span (b.LinearIndependent.restrictScalars (smul_left_injective R one_ne_zero))
+#align basis.restrict_scalars Basis.restrictScalars
+
+@[simp]
+theorem Basis.restrictScalars_apply (i : ι) : (b.restrictScalars R i : M) = b i := by
+  simp only [Basis.restrictScalars, Basis.span_apply]
+#align basis.restrict_scalars_apply Basis.restrictScalars_apply
+
+@[simp]
+theorem Basis.restrictScalars_repr_apply (m : span R (Set.range b)) (i : ι) :
+    algebraMap R S ((b.restrictScalars R).repr m i) = b.repr m i :=
+  by
+  suffices
+    Finsupp.mapRange.linearMap (Algebra.linearMap R S) ∘ₗ (b.restrict_scalars R).repr.toLinearMap =
+      ((b.repr : M →ₗ[S] ι →₀ S).restrictScalars R).domRestrict _
+    by exact Finsupp.congr_fun (LinearMap.congr_fun this m) i
+  refine' Basis.ext (b.restrict_scalars R) fun _ => _
+  simp only [LinearMap.coe_comp, LinearEquiv.coe_toLinearMap, Function.comp_apply, map_one,
+    Basis.repr_self, Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_single,
+    Algebra.linearMap_apply, LinearMap.domRestrict_apply, LinearEquiv.coe_coe,
+    Basis.restrictScalars_apply, LinearMap.coe_restrictScalars]
+#align basis.restrict_scalars_repr_apply Basis.restrictScalars_repr_apply
+
+/-- Let `b` be a `S`-basis of `M`. Then `m : M` lies in the `R`-module spanned by `b` iff all the
+coordinates of `m` on the basis `b` are in `R` (see `basis.mem_span` for the case `R = S`). -/
+theorem Basis.mem_span_iff_repr_mem (m : M) :
+    m ∈ span R (Set.range b) ↔ ∀ i, b.repr m i ∈ Set.range (algebraMap R S) :=
+  by
+  refine'
+    ⟨fun hm i => ⟨(b.restrict_scalars R).repr ⟨m, hm⟩ i, b.restrict_scalars_repr_apply R ⟨m, hm⟩ i⟩,
+      fun h => _⟩
+  rw [← b.total_repr m, Finsupp.total_apply S _]
+  refine' sum_mem fun i _ => _
+  obtain ⟨_, h⟩ := h i
+  simp_rw [← h, algebraMap_smul]
+  exact smul_mem _ _ (subset_span (Set.mem_range_self i))
+#align basis.mem_span_iff_repr_mem Basis.mem_span_iff_repr_mem
+
+end RestrictScalars
 

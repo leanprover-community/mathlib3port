@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.opposite
-! leanprover-community/mathlib commit 8c75ef3517d4106e89fe524e6281d0b0545f47fc
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Opposites
 
 /-!
 # The opposite of an abelian category is abelian.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

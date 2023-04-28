@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit fa78268d4d77cb2b2fbc89f0527e2e7807763780
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,9 +76,7 @@ namespace FiniteDimensional
 open IsNoetherian
 
 theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensional F A :=
-  let b := Basis.ofVectorSpace F K
-  let c := Basis.ofVectorSpace K A
-  of_fintype_basis <| b.smul c
+  Module.Finite.trans K A
 #align finite_dimensional.trans FiniteDimensional.trans
 
 /-- In a tower of field extensions `L / K / F`, if `L / F` is finite, so is `K / F`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.unbundled_hom
-! leanprover-community/mathlib commit f153a85a8dc0a96ce9133fed69e34df72f7f191f
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 
 /-!
 # Category instances for structures that use unbundled homs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides basic infrastructure to define concrete
 categories using unbundled homs (see `class unbundled_hom`), and

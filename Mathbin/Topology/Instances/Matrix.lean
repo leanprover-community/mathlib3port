@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.matrix
-! leanprover-community/mathlib commit 3e068ece210655b7b9a9477c3aff38a492400aa1
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.LinearAlgebra.Matrix.Trace
 
 /-!
 # Topological properties of matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is a place to collect topological results about matrices.
 

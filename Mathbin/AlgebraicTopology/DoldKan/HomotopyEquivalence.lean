@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.homotopy_equivalence
-! leanprover-community/mathlib commit f951e201d416fb50cc7826171d80aa510ec20747
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.AlgebraicTopology.DoldKan.Normalized
 /-!
 
 # The normalized Moore complex and the alternating face map complex are homotopy equivalent
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, when the category `A` is abelian, we obtain the homotopy equivalence
 `homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex` between the

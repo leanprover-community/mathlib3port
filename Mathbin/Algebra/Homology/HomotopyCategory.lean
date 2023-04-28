@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.homotopy_category
-! leanprover-community/mathlib commit 13ff898b0eee75d3cc75d1c06a491720eaaf911d
+! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Quotient
 
 /-!
 # The homotopy category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 `homotopy_category V c` gives the category of chain complexes of shape `c` in `V`,
 with chain maps identified when they are homotopic.
