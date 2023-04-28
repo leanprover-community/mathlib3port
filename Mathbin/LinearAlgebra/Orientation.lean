@@ -160,14 +160,14 @@ theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
 
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those
 units. -/
-theorem orientation_unitsSmul [Nontrivial R] (e : Basis ι R M) (w : ι → Units R) :
+theorem orientation_unitsSMul [Nontrivial R] (e : Basis ι R M) (w : ι → Units R) :
     (e.units_smul w).Orientation = (∏ i, w i)⁻¹ • e.Orientation :=
   by
   rw [Basis.orientation, Basis.orientation, smul_rayOfNeZero, ray_eq_iff,
     e.det.eq_smul_basis_det (e.units_smul w), det_units_smul_self, Units.smul_def, smul_smul]
   norm_cast
   simp
-#align basis.orientation_units_smul Basis.orientation_unitsSmul
+#align basis.orientation_units_smul Basis.orientation_unitsSMul
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]] -/
 @[simp]

@@ -61,7 +61,7 @@ theorem LDL.lowerInv_eq_gramSchmidtBasis :
             (Pi.basisFun 𝕜 n)))ᵀ :=
   by
   ext (i j)
-  rw [LDL.lowerInv, Basis.CoePiBasisFun.toMatrix_eq_transpose, coe_gramSchmidtBasis]
+  rw [LDL.lowerInv, Basis.coePiBasisFun.toMatrix_eq_transpose, coe_gramSchmidtBasis]
   rfl
 #align LDL.lower_inv_eq_gram_schmidt_basis LDL.lowerInv_eq_gramSchmidtBasis
 

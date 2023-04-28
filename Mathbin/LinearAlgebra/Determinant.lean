@@ -658,7 +658,7 @@ theorem Basis.det_map' (b : Basis ι R M) (f : M ≃ₗ[R] M') :
 theorem Pi.basisFun_det : (Pi.basisFun R ι).det = Matrix.detRowAlternating :=
   by
   ext M
-  rw [Basis.det_apply, Basis.CoePiBasisFun.toMatrix_eq_transpose, det_transpose]
+  rw [Basis.det_apply, Basis.coePiBasisFun.toMatrix_eq_transpose, det_transpose]
 #align pi.basis_fun_det Pi.basisFun_det
 
 /-- If we fix a background basis `e`, then for any other basis `v`, we can characterise the
@@ -680,7 +680,7 @@ theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndepe
 
 /-- If a basis is multiplied columnwise by scalars `w : ι → Rˣ`, then the determinant with respect
 to this basis is multiplied by the product of the inverse of these scalars. -/
-theorem Basis.det_unitsSmul (e : Basis ι R M) (w : ι → Rˣ) :
+theorem Basis.det_unitsSMul (e : Basis ι R M) (w : ι → Rˣ) :
     (e.units_smul w).det = (↑(∏ i, w i)⁻¹ : R) • e.det :=
   by
   ext f
@@ -690,18 +690,18 @@ theorem Basis.det_unitsSmul (e : Basis ι R M) (w : ι → Rˣ) :
   simp only [e.repr_units_smul]
   convert Matrix.det_mul_column (fun i => (↑(w i)⁻¹ : R)) fun i j => e.repr (f j) i
   simp [← Finset.prod_inv_distrib]
-#align basis.det_units_smul Basis.det_unitsSmul
+#align basis.det_units_smul Basis.det_unitsSMul
 
 /-- The determinant of a basis constructed by `units_smul` is the product of the given units. -/
 @[simp]
-theorem Basis.det_unitsSmul_self (w : ι → Rˣ) : e.det (e.units_smul w) = ∏ i, w i := by
+theorem Basis.det_unitsSMul_self (w : ι → Rˣ) : e.det (e.units_smul w) = ∏ i, w i := by
   simp [Basis.det_apply]
-#align basis.det_units_smul_self Basis.det_unitsSmul_self
+#align basis.det_units_smul_self Basis.det_unitsSMul_self
 
 /-- The determinant of a basis constructed by `is_unit_smul` is the product of the given units. -/
 @[simp]
-theorem Basis.det_isUnitSmul {w : ι → R} (hw : ∀ i, IsUnit (w i)) :
-    e.det (e.isUnitSmul hw) = ∏ i, w i :=
-  e.det_unitsSmul_self _
-#align basis.det_is_unit_smul Basis.det_isUnitSmul
+theorem Basis.det_isUnitSMul {w : ι → R} (hw : ∀ i, IsUnit (w i)) :
+    e.det (e.isUnitSMul hw) = ∏ i, w i :=
+  e.det_unitsSMul_self _
+#align basis.det_is_unit_smul Basis.det_isUnitSMul
 

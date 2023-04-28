@@ -61,7 +61,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
       MulZeroClass.mul_zero, MulZeroClass.mul_zero]
     intro hj'
     exact False.elim (hj' hj)
-  simp_rw [Basis.unitsSmul_apply]
+  simp_rw [Basis.unitsSMul_apply]
   erw [hsum]
   simp only [u, Function.comp, smul_eq_mul]
   split_ifs

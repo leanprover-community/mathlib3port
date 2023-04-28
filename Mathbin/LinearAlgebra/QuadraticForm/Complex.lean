@@ -57,7 +57,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
       MulZeroClass.mul_zero, MulZeroClass.mul_zero]
     intro hj'
     exact False.elim (hj' hj)
-  simp_rw [Basis.unitsSmul_apply]
+  simp_rw [Basis.unitsSMul_apply]
   erw [hsum, smul_eq_mul]
   split_ifs
   · simp only [h, zero_smul, MulZeroClass.zero_mul]
