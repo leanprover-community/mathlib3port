@@ -67,19 +67,19 @@ noncomputable instance (priority := 100) preservesLimitsOfShapeOfPreservesFinite
 #align category_theory.limits.preserves_limits_of_shape_of_preserves_finite_limits CategoryTheory.Limits.preservesLimitsOfShapeOfPreservesFiniteLimits
 -/
 
-#print CategoryTheory.Limits.PreservesLimits.preservesFiniteLimitsOfSize /-
-noncomputable instance (priority := 100) PreservesLimits.preservesFiniteLimitsOfSize (F : C ⥤ D)
+#print CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimits /-
+noncomputable instance (priority := 100) PreservesLimitsOfSize.preservesFiniteLimits (F : C ⥤ D)
     [PreservesLimitsOfSize.{w, w₂} F] : PreservesFiniteLimits F :=
   ⟨fun J sJ fJ =>
     haveI := preserves_smallest_limits_of_preserves_limits F
     preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
-#align category_theory.limits.preserves_limits.preserves_finite_limits_of_size CategoryTheory.Limits.PreservesLimits.preservesFiniteLimitsOfSize
+#align category_theory.limits.preserves_limits.preserves_finite_limits_of_size CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimits
 -/
 
 #print CategoryTheory.Limits.PreservesLimits.preservesFiniteLimits /-
 noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D)
     [PreservesLimits F] : PreservesFiniteLimits F :=
-  PreservesLimits.preservesFiniteLimitsOfSize F
+  PreservesLimitsOfSize.preservesFiniteLimits F
 #align category_theory.limits.preserves_limits.preserves_finite_limits CategoryTheory.Limits.PreservesLimits.preservesFiniteLimits
 -/
 
@@ -142,14 +142,18 @@ noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFini
 #align category_theory.limits.preserves_colimits_of_shape_of_preserves_finite_colimits CategoryTheory.Limits.preservesColimitsOfShapeOfPreservesFiniteColimits
 -/
 
-#print CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits /-
+/- warning: category_theory.limits.preserves_colimits.preserves_finite_colimits -> CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂, u₂} D] (F : CategoryTheory.Functor.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfSize.{w, w₂, v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F], CategoryTheory.Limits.PreservesFiniteColimits.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F
+but is expected to have type
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂, u₂} D] (F : CategoryTheory.Functor.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesColimits.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F], CategoryTheory.Limits.PreservesFiniteColimits.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_colimits.preserves_finite_colimits CategoryTheory.Limits.PreservesColimits.preservesFiniteColimitsₓ'. -/
 noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimits (F : C ⥤ D)
     [PreservesColimitsOfSize.{w, w₂} F] : PreservesFiniteColimits F :=
   ⟨fun J sJ fJ =>
     haveI := preserves_smallest_colimits_of_preserves_colimits F
     preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
 #align category_theory.limits.preserves_colimits.preserves_finite_colimits CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits
--/
 
 #print CategoryTheory.Limits.preservesFiniteColimitsOfPreservesFiniteColimitsOfSize /-
 /-- We can always derive `preserves_finite_limits C` by showing that we are preserving limits at an
