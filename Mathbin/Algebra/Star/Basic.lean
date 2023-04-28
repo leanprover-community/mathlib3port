@@ -113,10 +113,12 @@ theorem star_injective [InvolutiveStar R] : Function.Injective (star : R → R) 
 #align star_injective star_injective
 -/
 
+#print star_inj /-
 @[simp]
 theorem star_inj [InvolutiveStar R] {x y : R} : star x = star y ↔ x = y :=
   star_injective.eq_iff
 #align star_inj star_inj
+-/
 
 #print Equiv.star /-
 /-- `star` as an equivalence when it is involutive. -/
@@ -171,29 +173,71 @@ section StarSemigroup
 
 variable [Semigroup R] [StarSemigroup R]
 
+/- warning: star_star_mul -> star_star_mul is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] (x : R) (y : R), Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) y)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y) x)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] (x : R) (y : R), Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toMul.{u1} R _inst_1)) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) y)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toMul.{u1} R _inst_1)) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y) x)
+Case conversion may be inaccurate. Consider using '#align star_star_mul star_star_mulₓ'. -/
 theorem star_star_mul (x y : R) : star (star x * y) = star y * x := by rw [star_mul, star_star]
 #align star_star_mul star_star_mul
 
+/- warning: star_mul_star -> star_mul_star is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] (x : R) (y : R), Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) x (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R _inst_1)) y (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] (x : R) (y : R), Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toMul.{u1} R _inst_1)) x (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toMul.{u1} R _inst_1)) y (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x))
+Case conversion may be inaccurate. Consider using '#align star_mul_star star_mul_starₓ'. -/
 theorem star_mul_star (x y : R) : star (x * star y) = y * star x := by rw [star_mul, star_star]
 #align star_mul_star star_mul_star
 
+/- warning: semiconj_by_star_star_star -> semiconjBy_star_star_star is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R} {z : R}, Iff (SemiconjBy.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) z) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y)) (SemiconjBy.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) x y z)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R} {z : R}, Iff (SemiconjBy.{u1} R (Semigroup.toMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) z) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y)) (SemiconjBy.{u1} R (Semigroup.toMul.{u1} R _inst_1) x y z)
+Case conversion may be inaccurate. Consider using '#align semiconj_by_star_star_star semiconjBy_star_star_starₓ'. -/
 @[simp]
 theorem semiconjBy_star_star_star {x y z : R} :
     SemiconjBy (star x) (star z) (star y) ↔ SemiconjBy x y z := by
   simp_rw [SemiconjBy, ← star_mul, star_inj, eq_comm]
 #align semiconj_by_star_star_star semiconjBy_star_star_star
 
+/- warning: semiconj_by.star_star_star -> SemiconjBy.star_star_star is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R} {z : R}, (SemiconjBy.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) x y z) -> (SemiconjBy.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) z) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R} {z : R}, (SemiconjBy.{u1} R (Semigroup.toMul.{u1} R _inst_1) x y z) -> (SemiconjBy.{u1} R (Semigroup.toMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) z) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y))
+Case conversion may be inaccurate. Consider using '#align semiconj_by.star_star_star SemiconjBy.star_star_starₓ'. -/
 alias semiconjBy_star_star_star ↔ _ SemiconjBy.star_star_star
 #align semiconj_by.star_star_star SemiconjBy.star_star_star
 
+/- warning: commute_star_star -> commute_star_star is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R}, Iff (Commute.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y)) (Commute.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) x y)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R}, Iff (Commute.{u1} R (Semigroup.toMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y)) (Commute.{u1} R (Semigroup.toMul.{u1} R _inst_1) x y)
+Case conversion may be inaccurate. Consider using '#align commute_star_star commute_star_starₓ'. -/
 @[simp]
 theorem commute_star_star {x y : R} : Commute (star x) (star y) ↔ Commute x y :=
   semiconjBy_star_star_star
 #align commute_star_star commute_star_star
 
+/- warning: commute.star_star -> Commute.star_star is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R}, (Commute.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) x y) -> (Commute.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R}, (Commute.{u1} R (Semigroup.toMul.{u1} R _inst_1) x y) -> (Commute.{u1} R (Semigroup.toMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y))
+Case conversion may be inaccurate. Consider using '#align commute.star_star Commute.star_starₓ'. -/
 alias commute_star_star ↔ _ Commute.star_star
 #align commute.star_star Commute.star_star
 
+/- warning: commute_star_comm -> commute_star_comm is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R}, Iff (Commute.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) x) y) (Commute.{u1} R (Semigroup.toHasMul.{u1} R _inst_1) x (Star.star.{u1} R (InvolutiveStar.toHasStar.{u1} R (StarSemigroup.toHasInvolutiveStar.{u1} R _inst_1 _inst_2)) y))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semigroup.{u1} R] [_inst_2 : StarSemigroup.{u1} R _inst_1] {x : R} {y : R}, Iff (Commute.{u1} R (Semigroup.toMul.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) y) (Commute.{u1} R (Semigroup.toMul.{u1} R _inst_1) x (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R _inst_1 _inst_2)) y))
+Case conversion may be inaccurate. Consider using '#align commute_star_comm commute_star_commₓ'. -/
 theorem commute_star_comm {x y : R} : Commute (star x) y ↔ Commute x (star y) := by
   rw [← commute_star_star, star_star]
 #align commute_star_comm commute_star_comm

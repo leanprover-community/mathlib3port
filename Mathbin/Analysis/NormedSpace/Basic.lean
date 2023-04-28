@@ -349,11 +349,23 @@ theorem frontier_closedBall [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0)
   rw [frontier, closure_closed_ball, interior_closedBall x hr, closed_ball_diff_ball]
 #align frontier_closed_ball frontier_closedBall
 
+/- warning: interior_sphere -> interior_sphere is a dubious translation:
+lean 3 declaration is
+  forall {E : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u1} E] [_inst_7 : NormedSpace.{0, u1} Real E Real.normedField _inst_3] (x : E) {r : Real}, (Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{succ u1} (Set.{u1} E) (interior.{u1} E (UniformSpace.toTopologicalSpace.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3))) (Metric.sphere.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3) x r)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} E) (Set.hasEmptyc.{u1} E)))
+but is expected to have type
+  forall {E : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u1} E] [_inst_7 : NormedSpace.{0, u1} Real E Real.normedField _inst_3] (x : E) {r : Real}, (Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{succ u1} (Set.{u1} E) (interior.{u1} E (UniformSpace.toTopologicalSpace.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3))) (Metric.sphere.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3) x r)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} E) (Set.instEmptyCollectionSet.{u1} E)))
+Case conversion may be inaccurate. Consider using '#align interior_sphere interior_sphereₓ'. -/
 theorem interior_sphere [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     interior (sphere x r) = ∅ := by
   rw [← frontier_closedBall x hr, interior_frontier is_closed_ball]
 #align interior_sphere interior_sphere
 
+/- warning: frontier_sphere -> frontier_sphere is a dubious translation:
+lean 3 declaration is
+  forall {E : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u1} E] [_inst_7 : NormedSpace.{0, u1} Real E Real.normedField _inst_3] (x : E) {r : Real}, (Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{succ u1} (Set.{u1} E) (frontier.{u1} E (UniformSpace.toTopologicalSpace.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3))) (Metric.sphere.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3) x r)) (Metric.sphere.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3) x r))
+but is expected to have type
+  forall {E : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u1} E] [_inst_7 : NormedSpace.{0, u1} Real E Real.normedField _inst_3] (x : E) {r : Real}, (Ne.{1} Real r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{succ u1} (Set.{u1} E) (frontier.{u1} E (UniformSpace.toTopologicalSpace.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3))) (Metric.sphere.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3) x r)) (Metric.sphere.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_3) x r))
+Case conversion may be inaccurate. Consider using '#align frontier_sphere frontier_sphereₓ'. -/
 theorem frontier_sphere [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     frontier (sphere x r) = sphere x r := by
   rw [is_closed_sphere.frontier_eq, interior_sphere x hr, diff_empty]
@@ -643,16 +655,20 @@ theorem frontier_closedBall' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ
 #align frontier_closed_ball' frontier_closedBall'
 -/
 
+#print interior_sphere' /-
 @[simp]
 theorem interior_sphere' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
     interior (sphere x r) = ∅ := by rw [← frontier_closedBall' x, interior_frontier is_closed_ball]
 #align interior_sphere' interior_sphere'
+-/
 
+#print frontier_sphere' /-
 @[simp]
 theorem frontier_sphere' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
     frontier (sphere x r) = sphere x r := by
   rw [is_closed_sphere.frontier_eq, interior_sphere' x, diff_empty]
 #align frontier_sphere' frontier_sphere'
+-/
 
 variable {α}
 

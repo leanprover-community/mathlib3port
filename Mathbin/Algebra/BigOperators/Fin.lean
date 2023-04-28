@@ -452,6 +452,7 @@ end PartialProd
 
 end Fin
 
+#print finFunctionFinEquiv /-
 /-- Equivalence between `fin n → fin m` and `fin (m ^ n)`. -/
 @[simps]
 def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
@@ -484,12 +485,16 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
       mul_one, pow_succ, ← Nat.div_div_eq_div_mul, mul_left_comm _ m, ← mul_sum]
     rw [ih _ (Nat.div_lt_of_lt_mul a.is_lt), Nat.mod_add_div]
 #align fin_function_fin_equiv finFunctionFinEquiv
+-/
 
+#print finFunctionFinEquiv_apply /-
 theorem finFunctionFinEquiv_apply {m n : ℕ} (f : Fin n → Fin m) :
     (finFunctionFinEquiv f : ℕ) = ∑ i : Fin n, ↑(f i) * m ^ (i : ℕ) :=
   rfl
 #align fin_function_fin_equiv_apply finFunctionFinEquiv_apply
+-/
 
+#print finFunctionFinEquiv_single /-
 theorem finFunctionFinEquiv_single {m n : ℕ} [NeZero m] (i : Fin n) (j : Fin m) :
     (finFunctionFinEquiv (Pi.single i j) : ℕ) = j * m ^ (i : ℕ) :=
   by
@@ -497,7 +502,9 @@ theorem finFunctionFinEquiv_single {m n : ℕ} [NeZero m] (i : Fin n) (j : Fin m
   rintro x hx
   rw [Pi.single_eq_of_ne hx, Fin.val_zero, MulZeroClass.zero_mul]
 #align fin_function_fin_equiv_single finFunctionFinEquiv_single
+-/
 
+#print finPiFinEquiv /-
 /-- Equivalence between `Π i : fin m, fin (n i)` and `fin (∏ i : fin m, n i)`. -/
 def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃ Fin (∏ i : Fin m, n i) :=
   Equiv.ofRightInverseOfCardLe (le_of_eq <| by simp_rw [Fintype.card_pi, Fintype.card_fin])
@@ -565,12 +572,16 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         · cases j
           rfl)
 #align fin_pi_fin_equiv finPiFinEquiv
+-/
 
+#print finPiFinEquiv_apply /-
 theorem finPiFinEquiv_apply {m : ℕ} {n : Fin m → ℕ} (f : ∀ i : Fin m, Fin (n i)) :
     (finPiFinEquiv f : ℕ) = ∑ i, f i * ∏ j, n (Fin.castLE i.is_lt.le j) :=
   rfl
 #align fin_pi_fin_equiv_apply finPiFinEquiv_apply
+-/
 
+#print finPiFinEquiv_single /-
 theorem finPiFinEquiv_single {m : ℕ} {n : Fin m → ℕ} [∀ i, NeZero (n i)] (i : Fin m)
     (j : Fin (n i)) :
     (finPiFinEquiv (Pi.single i j : ∀ i : Fin m, Fin (n i)) : ℕ) =
@@ -580,6 +591,7 @@ theorem finPiFinEquiv_single {m : ℕ} {n : Fin m → ℕ} [∀ i, NeZero (n i)]
   rintro x hx
   rw [Pi.single_eq_of_ne hx, Fin.val_zero, MulZeroClass.zero_mul]
 #align fin_pi_fin_equiv_single finPiFinEquiv_single
+-/
 
 namespace List
 
