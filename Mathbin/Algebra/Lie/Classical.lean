@@ -146,7 +146,7 @@ namespace Symplectic
 /-- The symplectic Lie algebra: skew-adjoint matrices with respect to the canonical skew-symmetric
 bilinear form. -/
 def sp [Fintype l] : LieSubalgebra R (Matrix (Sum l l) (Sum l l) R) :=
-  skewAdjointMatricesLieSubalgebra (Matrix.j l R)
+  skewAdjointMatricesLieSubalgebra (Matrix.J l R)
 #align lie_algebra.symplectic.sp LieAlgebra.Symplectic.sp
 
 end Symplectic
