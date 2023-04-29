@@ -337,12 +337,24 @@ theorem self_eq_mul_right : a = a * b ↔ b = 1 :=
 #align self_eq_mul_right self_eq_mul_right
 #align self_eq_add_right self_eq_add_right
 
+/- warning: mul_right_ne_self -> mul_right_ne_self is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : LeftCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (LeftCancelMonoid.toMonoid.{u1} M _inst_1)))) a b) a) (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (LeftCancelMonoid.toMonoid.{u1} M _inst_1)))))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : LeftCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (LeftCancelMonoid.toMonoid.{u1} M _inst_1)))) a b) a) (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (LeftCancelMonoid.toOne.{u1} M _inst_1))))
+Case conversion may be inaccurate. Consider using '#align mul_right_ne_self mul_right_ne_selfₓ'. -/
 @[to_additive]
 theorem mul_right_ne_self : a * b ≠ a ↔ b ≠ 1 :=
   mul_right_eq_self.Not
 #align mul_right_ne_self mul_right_ne_self
 #align add_right_ne_self add_right_ne_self
 
+/- warning: self_ne_mul_right -> self_ne_mul_right is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : LeftCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M a (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (LeftCancelMonoid.toMonoid.{u1} M _inst_1)))) a b)) (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (LeftCancelMonoid.toMonoid.{u1} M _inst_1)))))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : LeftCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M a (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (LeftCancelMonoid.toMonoid.{u1} M _inst_1)))) a b)) (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (LeftCancelMonoid.toOne.{u1} M _inst_1))))
+Case conversion may be inaccurate. Consider using '#align self_ne_mul_right self_ne_mul_rightₓ'. -/
 @[to_additive]
 theorem self_ne_mul_right : a ≠ a * b ↔ b ≠ 1 :=
   self_eq_mul_right.Not
@@ -382,12 +394,24 @@ theorem self_eq_mul_left : b = a * b ↔ a = 1 :=
 #align self_eq_mul_left self_eq_mul_left
 #align self_eq_add_left self_eq_add_left
 
+/- warning: mul_left_ne_self -> mul_left_ne_self is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : RightCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M _inst_1)))) a b) b) (Ne.{succ u1} M a (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M _inst_1)))))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : RightCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M _inst_1)))) a b) b) (Ne.{succ u1} M a (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (RightCancelMonoid.toOne.{u1} M _inst_1))))
+Case conversion may be inaccurate. Consider using '#align mul_left_ne_self mul_left_ne_selfₓ'. -/
 @[to_additive]
 theorem mul_left_ne_self : a * b ≠ b ↔ a ≠ 1 :=
   mul_left_eq_self.Not
 #align mul_left_ne_self mul_left_ne_self
 #align add_left_ne_self add_left_ne_self
 
+/- warning: self_ne_mul_left -> self_ne_mul_left is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : RightCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M b (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M _inst_1)))) a b)) (Ne.{succ u1} M a (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M _inst_1)))))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : RightCancelMonoid.{u1} M] {a : M} {b : M}, Iff (Ne.{succ u1} M b (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (RightCancelMonoid.toMonoid.{u1} M _inst_1)))) a b)) (Ne.{succ u1} M a (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (RightCancelMonoid.toOne.{u1} M _inst_1))))
+Case conversion may be inaccurate. Consider using '#align self_ne_mul_left self_ne_mul_leftₓ'. -/
 @[to_additive]
 theorem self_ne_mul_left : b ≠ a * b ↔ a ≠ 1 :=
   self_eq_mul_left.Not
@@ -1142,7 +1166,7 @@ theorem div_eq_inv_self : a / b = b⁻¹ ↔ a = 1 := by rw [div_eq_mul_inv, mul
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3497 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3499 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3497 x._@.Mathlib.Algebra.Group.Basic._hyg.3499) a)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3617 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3619 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3617 x._@.Mathlib.Algebra.Group.Basic._hyg.3619) a)
 Case conversion may be inaccurate. Consider using '#align mul_left_surjective mul_left_surjectiveₓ'. -/
 @[to_additive]
 theorem mul_left_surjective (a : G) : Function.Surjective ((· * ·) a) := fun x =>
