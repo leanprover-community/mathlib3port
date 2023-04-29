@@ -129,7 +129,7 @@ warning: projectivization.subspace.has_Inf -> Projectivization.Subspace.hasInf i
 lean 3 declaration is
   forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], InfSet.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
 but is expected to have type
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Inf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3)
+  PUnit.{max (succ (succ u1)) (succ (succ u2))}
 Case conversion may be inaccurate. Consider using '#align projectivization.subspace.has_Inf Projectivization.Subspace.hasInfₓ'. -/
 /-- Infimums of arbitrary collections of subspaces exist. -/
 instance hasInf : InfSet (Subspace K V) :=
