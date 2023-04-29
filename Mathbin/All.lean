@@ -1464,6 +1464,7 @@ import Mathbin.Data.MvPolynomial.Funext
 import Mathbin.Data.MvPolynomial.Invertible
 import Mathbin.Data.MvPolynomial.Monad
 import Mathbin.Data.MvPolynomial.Pderiv
+import Mathbin.Data.MvPolynomial.Polynomial
 import Mathbin.Data.MvPolynomial.Rename
 import Mathbin.Data.MvPolynomial.Supported
 import Mathbin.Data.MvPolynomial.Variables

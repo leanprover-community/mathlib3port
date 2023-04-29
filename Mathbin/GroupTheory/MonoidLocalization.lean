@@ -153,7 +153,7 @@ quotient is the localization of `M` at `S`, defined as the unique congruence rel
 def r (S : Submonoid M) : Con (M × S) :=
   infₛ { c | ∀ y : S, c 1 (y, y) }
 #align localization.r Localization.r
-#align add_localization.r addLocalization.r
+#align add_localization.r AddLocalization.r
 
 /- warning: localization.r' -> Localization.r' is a dubious translation:
 lean 3 declaration is
@@ -193,7 +193,7 @@ def r' : Con (M × S) :=
         ac_rfl
       
 #align localization.r' Localization.r'
-#align add_localization.r' addLocalization.r'
+#align add_localization.r' AddLocalization.r'
 
 /- warning: localization.r_eq_r' -> Localization.r_eq_r' is a dubious translation:
 lean 3 declaration is
@@ -216,7 +216,7 @@ theorem r_eq_r' : r S = r' S :=
       dsimp only [Prod.mk_mul_mk, Submonoid.coe_mul] at ht⊢
       simp_rw [mul_assoc, ht, mul_comm y q]
 #align localization.r_eq_r' Localization.r_eq_r'
-#align add_localization.r_eq_r' addLocalization.r_eq_r'
+#align add_localization.r_eq_r' AddLocalization.r_eq_r'
 
 variable {S}
 
@@ -230,18 +230,18 @@ Case conversion may be inaccurate. Consider using '#align localization.r_iff_exi
 theorem r_iff_exists {x y : M × S} : r S x y ↔ ∃ c : S, ↑c * (↑y.2 * x.1) = c * (x.2 * y.1) := by
   rw [r_eq_r' S] <;> rfl
 #align localization.r_iff_exists Localization.r_iff_exists
-#align add_localization.r_iff_exists addLocalization.r_iff_exists
+#align add_localization.r_iff_exists AddLocalization.r_iff_exists
 
 end Localization
 
 #print Localization /-
 /-- The localization of a `comm_monoid` at one of its submonoids (as a quotient type). -/
-@[to_additive addLocalization
+@[to_additive AddLocalization
       "The localization of an `add_comm_monoid` at one\nof its submonoids (as a quotient type)."]
 def Localization :=
   (Localization.r S).Quotient
 #align localization Localization
-#align add_localization addLocalization
+#align add_localization AddLocalization
 -/
 
 namespace Localization
@@ -251,7 +251,7 @@ namespace Localization
 instance inhabited : Inhabited (Localization S) :=
   Con.Quotient.inhabited
 #align localization.inhabited Localization.inhabited
-#align add_localization.inhabited addLocalization.inhabited
+#align add_localization.inhabited AddLocalization.inhabited
 -/
 
 #print Localization.mul /-
@@ -261,7 +261,7 @@ instance inhabited : Inhabited (Localization S) :=
 protected irreducible_def mul : Localization S → Localization S → Localization S :=
   (r S).CommMonoid.mul
 #align localization.mul Localization.mul
-#align add_localization.add addLocalization.add
+#align add_localization.add AddLocalization.add
 -/
 
 @[to_additive]
@@ -275,7 +275,7 @@ instance : Mul (Localization S) :=
 protected irreducible_def one : Localization S :=
   (r S).CommMonoid.one
 #align localization.one Localization.one
-#align add_localization.zero addLocalization.zero
+#align add_localization.zero AddLocalization.zero
 -/
 
 @[to_additive]
@@ -293,7 +293,7 @@ trying to unify some huge recursive definition with itself, but unfolded one ste
 protected irreducible_def npow : ℕ → Localization S → Localization S :=
   (r S).CommMonoid.npow
 #align localization.npow Localization.npow
-#align add_localization.nsmul addLocalization.nsmul
+#align add_localization.nsmul AddLocalization.nsmul
 -/
 
 attribute [local semireducible] Localization.mul Localization.one Localization.npow
@@ -328,7 +328,7 @@ class of `(x, y)` in the localization of `M` at `S`. -/
 def mk (x : M) (y : S) : Localization S :=
   (r S).mk' (x, y)
 #align localization.mk Localization.mk
-#align add_localization.mk addLocalization.mk
+#align add_localization.mk AddLocalization.mk
 
 /- warning: localization.mk_eq_mk_iff -> Localization.mk_eq_mk_iff is a dubious translation:
 lean 3 declaration is
@@ -340,7 +340,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_eq_mk_
 theorem mk_eq_mk_iff {a c : M} {b d : S} : mk a b = mk c d ↔ r S ⟨a, b⟩ ⟨c, d⟩ :=
   (r S).Eq
 #align localization.mk_eq_mk_iff Localization.mk_eq_mk_iff
-#align add_localization.mk_eq_mk_iff addLocalization.mk_eq_mk_iff
+#align add_localization.mk_eq_mk_iff AddLocalization.mk_eq_mk_iff
 
 universe u
 
@@ -368,7 +368,7 @@ def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
       exact H h)
     x
 #align localization.rec Localization.rec
-#align add_localization.rec addLocalization.rec
+#align add_localization.rec AddLocalization.rec
 
 /- warning: localization.rec_on_subsingleton₂ -> Localization.recOnSubsingleton₂ is a dubious translation:
 lean 3 declaration is
@@ -384,7 +384,7 @@ def recOnSubsingleton₂ {r : Localization S → Localization S → Sort u}
   @Quotient.recOnSubsingleton₂' _ _ _ _ r (Prod.rec fun _ _ => Prod.rec fun _ _ => h _ _ _ _) x y
     (Prod.rec fun _ _ => Prod.rec fun _ _ => f _ _ _ _)
 #align localization.rec_on_subsingleton₂ Localization.recOnSubsingleton₂
-#align add_localization.rec_on_subsingleton₂ addLocalization.recOnSubsingleton₂
+#align add_localization.rec_on_subsingleton₂ AddLocalization.recOnSubsingleton₂
 
 /- warning: localization.mk_mul -> Localization.mk_mul is a dubious translation:
 lean 3 declaration is
@@ -396,7 +396,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_mul Lo
 theorem mk_mul (a c : M) (b d : S) : mk a b * mk c d = mk (a * c) (b * d) :=
   rfl
 #align localization.mk_mul Localization.mk_mul
-#align add_localization.mk_add addLocalization.mk_add
+#align add_localization.mk_add AddLocalization.mk_add
 
 /- warning: localization.mk_one -> Localization.mk_one is a dubious translation:
 lean 3 declaration is
@@ -408,7 +408,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_one Lo
 theorem mk_one : mk 1 (1 : S) = 1 :=
   rfl
 #align localization.mk_one Localization.mk_one
-#align add_localization.mk_zero addLocalization.mk_zero
+#align add_localization.mk_zero AddLocalization.mk_zero
 
 /- warning: localization.mk_pow -> Localization.mk_pow is a dubious translation:
 lean 3 declaration is
@@ -420,7 +420,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_pow Lo
 theorem mk_pow (n : ℕ) (a : M) (b : S) : mk a b ^ n = mk (a ^ n) (b ^ n) :=
   rfl
 #align localization.mk_pow Localization.mk_pow
-#align add_localization.mk_nsmul addLocalization.mk_nsmul
+#align add_localization.mk_nsmul AddLocalization.mk_nsmul
 
 /- warning: localization.rec_mk -> Localization.ndrec_mk is a dubious translation:
 lean 3 declaration is
@@ -433,7 +433,7 @@ theorem ndrec_mk {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk
     (b : S) : (rec f H (mk a b) : p (mk a b)) = f a b :=
   rfl
 #align localization.rec_mk Localization.ndrec_mk
-#align add_localization.rec_mk addLocalization.ndrec_mk
+#align add_localization.rec_mk AddLocalization.ndrec_mk
 
 /- warning: localization.lift_on -> Localization.liftOn is a dubious translation:
 lean 3 declaration is
@@ -451,7 +451,7 @@ def liftOn {p : Sort u} (x : Localization S) (f : M → S → p)
     (H : ∀ {a c : M} {b d : S} (h : r S (a, b) (c, d)), f a b = f c d) : p :=
   rec f (fun a c b d h => by rw [eq_rec_constant, H h]) x
 #align localization.lift_on Localization.liftOn
-#align add_localization.lift_on addLocalization.liftOn
+#align add_localization.lift_on AddLocalization.liftOn
 
 /- warning: localization.lift_on_mk -> Localization.liftOn_mk is a dubious translation:
 lean 3 declaration is
@@ -464,7 +464,7 @@ theorem liftOn_mk {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) 
     liftOn (mk a b) f H = f a b :=
   rfl
 #align localization.lift_on_mk Localization.liftOn_mk
-#align add_localization.lift_on_mk addLocalization.liftOn_mk
+#align add_localization.lift_on_mk AddLocalization.liftOn_mk
 
 /- warning: localization.ind -> Localization.ind is a dubious translation:
 lean 3 declaration is
@@ -476,7 +476,7 @@ Case conversion may be inaccurate. Consider using '#align localization.ind Local
 theorem ind {p : Localization S → Prop} (H : ∀ y : M × S, p (mk y.1 y.2)) (x) : p x :=
   rec (fun a b => H (a, b)) (fun _ _ _ _ _ => rfl) x
 #align localization.ind Localization.ind
-#align add_localization.ind addLocalization.ind
+#align add_localization.ind AddLocalization.ind
 
 /- warning: localization.induction_on -> Localization.induction_on is a dubious translation:
 lean 3 declaration is
@@ -488,7 +488,7 @@ Case conversion may be inaccurate. Consider using '#align localization.induction
 theorem induction_on {p : Localization S → Prop} (x) (H : ∀ y : M × S, p (mk y.1 y.2)) : p x :=
   ind H x
 #align localization.induction_on Localization.induction_on
-#align add_localization.induction_on addLocalization.induction_on
+#align add_localization.induction_on AddLocalization.induction_on
 
 /- warning: localization.lift_on₂ -> Localization.liftOn₂ is a dubious translation:
 lean 3 declaration is
@@ -510,7 +510,7 @@ def liftOn₂ {p : Sort u} (x y : Localization S) (f : M → S → M → S → p
   liftOn x (fun a b => liftOn y (f a b) fun c c' d d' hy => H ((r S).refl _) hy) fun a a' b b' hx =>
     induction_on y fun ⟨c, d⟩ => H hx ((r S).refl _)
 #align localization.lift_on₂ Localization.liftOn₂
-#align add_localization.lift_on₂ addLocalization.liftOn₂
+#align add_localization.lift_on₂ AddLocalization.liftOn₂
 
 /- warning: localization.lift_on₂_mk -> Localization.liftOn₂_mk is a dubious translation:
 lean 3 declaration is
@@ -523,7 +523,7 @@ theorem liftOn₂_mk {p : Sort _} (f : M → S → M → S → p) (H) (a c : M) 
     liftOn₂ (mk a b) (mk c d) f H = f a b c d :=
   rfl
 #align localization.lift_on₂_mk Localization.liftOn₂_mk
-#align add_localization.lift_on₂_mk addLocalization.liftOn₂_mk
+#align add_localization.lift_on₂_mk AddLocalization.liftOn₂_mk
 
 /- warning: localization.induction_on₂ -> Localization.induction_on₂ is a dubious translation:
 lean 3 declaration is
@@ -536,7 +536,7 @@ theorem induction_on₂ {p : Localization S → Localization S → Prop} (x y)
     (H : ∀ x y : M × S, p (mk x.1 x.2) (mk y.1 y.2)) : p x y :=
   induction_on x fun x => induction_on y <| H x
 #align localization.induction_on₂ Localization.induction_on₂
-#align add_localization.induction_on₂ addLocalization.induction_on₂
+#align add_localization.induction_on₂ AddLocalization.induction_on₂
 
 /- warning: localization.induction_on₃ -> Localization.induction_on₃ is a dubious translation:
 lean 3 declaration is
@@ -549,7 +549,7 @@ theorem induction_on₃ {p : Localization S → Localization S → Localization 
     (H : ∀ x y z : M × S, p (mk x.1 x.2) (mk y.1 y.2) (mk z.1 z.2)) : p x y z :=
   induction_on₂ x y fun x y => induction_on z <| H x y
 #align localization.induction_on₃ Localization.induction_on₃
-#align add_localization.induction_on₃ addLocalization.induction_on₃
+#align add_localization.induction_on₃ AddLocalization.induction_on₃
 
 /- warning: localization.one_rel -> Localization.one_rel is a dubious translation:
 lean 3 declaration is
@@ -560,7 +560,7 @@ Case conversion may be inaccurate. Consider using '#align localization.one_rel L
 @[to_additive]
 theorem one_rel (y : S) : r S 1 (y, y) := fun b hb => hb y
 #align localization.one_rel Localization.one_rel
-#align add_localization.zero_rel addLocalization.zero_rel
+#align add_localization.zero_rel AddLocalization.zero_rel
 
 /- warning: localization.r_of_eq -> Localization.r_of_eq is a dubious translation:
 lean 3 declaration is
@@ -572,7 +572,7 @@ Case conversion may be inaccurate. Consider using '#align localization.r_of_eq L
 theorem r_of_eq {x y : M × S} (h : ↑y.2 * x.1 = ↑x.2 * y.1) : r S x y :=
   r_iff_exists.2 ⟨1, by rw [h]⟩
 #align localization.r_of_eq Localization.r_of_eq
-#align add_localization.r_of_eq addLocalization.r_of_eq
+#align add_localization.r_of_eq AddLocalization.r_of_eq
 
 /- warning: localization.mk_self -> Localization.mk_self is a dubious translation:
 lean 3 declaration is
@@ -586,7 +586,7 @@ theorem mk_self (a : S) : mk (a : M) a = 1 := by
   rw [← mk_one, mk_eq_mk_iff]
   exact one_rel a
 #align localization.mk_self Localization.mk_self
-#align add_localization.mk_self addLocalization.mk_self
+#align add_localization.mk_self AddLocalization.mk_self
 
 section Scalar
 
@@ -2449,7 +2449,7 @@ def monoidOf : Submonoid.LocalizationMap S (Localization S) :=
         r_iff_exists.trans <|
           show (∃ c : S, ↑c * (1 * x) = c * (1 * y)) ↔ _ by rw [one_mul, one_mul] }
 #align localization.monoid_of Localization.monoidOf
-#align add_localization.add_monoid_of addLocalization.addMonoidOf
+#align add_localization.add_monoid_of AddLocalization.addMonoidOf
 -/
 
 variable {S}
@@ -2464,7 +2464,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_one_eq
 theorem mk_one_eq_monoidOf_mk (x) : mk x 1 = (monoidOf S).toMap x :=
   rfl
 #align localization.mk_one_eq_monoid_of_mk Localization.mk_one_eq_monoidOf_mk
-#align add_localization.mk_zero_eq_add_monoid_of_mk addLocalization.mk_zero_eq_addMonoidOf_mk
+#align add_localization.mk_zero_eq_add_monoid_of_mk AddLocalization.mk_zero_eq_addMonoidOf_mk
 
 /- warning: localization.mk_eq_monoid_of_mk'_apply -> Localization.mk_eq_monoidOf_mk'_apply is a dubious translation:
 lean 3 declaration is
@@ -2482,7 +2482,7 @@ theorem mk_eq_monoidOf_mk'_apply (x y) : mk x y = (monoidOf S).mk' x y :=
         show mk x 1 = mk (x * 1) ((1 : S) * 1) by rw [mul_one, mul_one]]
       exact mk_eq_mk_iff.2 (Con.symm _ <| (Localization.r S).mul (Con.refl _ (x, 1)) <| one_rel _)
 #align localization.mk_eq_monoid_of_mk'_apply Localization.mk_eq_monoidOf_mk'_apply
-#align add_localization.mk_eq_add_monoid_of_mk'_apply addLocalization.mk_eq_addMonoidOf_mk'_apply
+#align add_localization.mk_eq_add_monoid_of_mk'_apply AddLocalization.mk_eq_addMonoidOf_mk'_apply
 
 /- warning: localization.mk_eq_monoid_of_mk' -> Localization.mk_eq_monoidOf_mk' is a dubious translation:
 lean 3 declaration is
@@ -2494,7 +2494,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_eq_mon
 theorem mk_eq_monoidOf_mk' : mk = (monoidOf S).mk' :=
   funext fun _ => funext fun _ => mk_eq_monoidOf_mk'_apply _ _
 #align localization.mk_eq_monoid_of_mk' Localization.mk_eq_monoidOf_mk'
-#align add_localization.mk_eq_add_monoid_of_mk' addLocalization.mk_eq_addMonoidOf_mk'
+#align add_localization.mk_eq_add_monoid_of_mk' AddLocalization.mk_eq_addMonoidOf_mk'
 
 universe u
 
@@ -2508,7 +2508,7 @@ Case conversion may be inaccurate. Consider using '#align localization.lift_on_m
 theorem liftOn_mk' {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) :
     liftOn ((monoidOf S).mk' a b) f H = f a b := by rw [← mk_eq_monoid_of_mk', lift_on_mk]
 #align localization.lift_on_mk' Localization.liftOn_mk'
-#align add_localization.lift_on_mk' addLocalization.liftOn_mk'
+#align add_localization.lift_on_mk' AddLocalization.liftOn_mk'
 
 /- warning: localization.lift_on₂_mk' -> Localization.liftOn₂_mk' is a dubious translation:
 lean 3 declaration is
@@ -2521,7 +2521,7 @@ theorem liftOn₂_mk' {p : Sort _} (f : M → S → M → S → p) (H) (a c : M)
     liftOn₂ ((monoidOf S).mk' a b) ((monoidOf S).mk' c d) f H = f a b c d := by
   rw [← mk_eq_monoid_of_mk', lift_on₂_mk]
 #align localization.lift_on₂_mk' Localization.liftOn₂_mk'
-#align add_localization.lift_on₂_mk' addLocalization.liftOn₂_mk'
+#align add_localization.lift_on₂_mk' AddLocalization.liftOn₂_mk'
 
 variable (f : Submonoid.LocalizationMap S N)
 
@@ -2538,7 +2538,7 @@ the localization of `M` at `S` as a quotient type and `N`. -/
 noncomputable def mulEquivOfQuotient (f : Submonoid.LocalizationMap S N) : Localization S ≃* N :=
   (monoidOf S).mulEquivOfLocalizations f
 #align localization.mul_equiv_of_quotient Localization.mulEquivOfQuotient
-#align add_localization.add_equiv_of_quotient addLocalization.addEquivOfQuotient
+#align add_localization.add_equiv_of_quotient AddLocalization.addEquivOfQuotient
 
 variable {f}
 
@@ -2552,7 +2552,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mul_equiv
 theorem mulEquivOfQuotient_apply (x) : mulEquivOfQuotient f x = (monoidOf S).lift f.map_units x :=
   rfl
 #align localization.mul_equiv_of_quotient_apply Localization.mulEquivOfQuotient_apply
-#align add_localization.add_equiv_of_quotient_apply addLocalization.addEquivOfQuotient_apply
+#align add_localization.add_equiv_of_quotient_apply AddLocalization.addEquivOfQuotient_apply
 
 /- warning: localization.mul_equiv_of_quotient_mk' -> Localization.mulEquivOfQuotient_mk' is a dubious translation:
 lean 3 declaration is
@@ -2564,7 +2564,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mul_equiv
 theorem mulEquivOfQuotient_mk' (x y) : mulEquivOfQuotient f ((monoidOf S).mk' x y) = f.mk' x y :=
   (monoidOf S).lift_mk' _ _ _
 #align localization.mul_equiv_of_quotient_mk' Localization.mulEquivOfQuotient_mk'
-#align add_localization.add_equiv_of_quotient_mk' addLocalization.addEquivOfQuotient_mk'
+#align add_localization.add_equiv_of_quotient_mk' AddLocalization.addEquivOfQuotient_mk'
 
 /- warning: localization.mul_equiv_of_quotient_mk -> Localization.mulEquivOfQuotient_mk is a dubious translation:
 lean 3 declaration is
@@ -2576,7 +2576,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mul_equiv
 theorem mulEquivOfQuotient_mk (x y) : mulEquivOfQuotient f (mk x y) = f.mk' x y := by
   rw [mk_eq_monoid_of_mk'_apply] <;> exact mul_equiv_of_quotient_mk' _ _
 #align localization.mul_equiv_of_quotient_mk Localization.mulEquivOfQuotient_mk
-#align add_localization.add_equiv_of_quotient_mk addLocalization.addEquivOfQuotient_mk
+#align add_localization.add_equiv_of_quotient_mk AddLocalization.addEquivOfQuotient_mk
 
 /- warning: localization.mul_equiv_of_quotient_monoid_of -> Localization.mulEquivOfQuotient_monoidOf is a dubious translation:
 lean 3 declaration is
@@ -2588,7 +2588,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mul_equiv
 theorem mulEquivOfQuotient_monoidOf (x) : mulEquivOfQuotient f ((monoidOf S).toMap x) = f.toMap x :=
   (monoidOf S).liftEq _ _
 #align localization.mul_equiv_of_quotient_monoid_of Localization.mulEquivOfQuotient_monoidOf
-#align add_localization.add_equiv_of_quotient_add_monoid_of addLocalization.addEquivOfQuotient_addMonoidOf
+#align add_localization.add_equiv_of_quotient_add_monoid_of AddLocalization.addEquivOfQuotient_addMonoidOf
 
 /- warning: localization.mul_equiv_of_quotient_symm_mk' -> Localization.mulEquivOfQuotient_symm_mk' is a dubious translation:
 lean 3 declaration is
@@ -2601,7 +2601,7 @@ theorem mulEquivOfQuotient_symm_mk' (x y) :
     (mulEquivOfQuotient f).symm (f.mk' x y) = (monoidOf S).mk' x y :=
   f.lift_mk' _ _ _
 #align localization.mul_equiv_of_quotient_symm_mk' Localization.mulEquivOfQuotient_symm_mk'
-#align add_localization.add_equiv_of_quotient_symm_mk' addLocalization.addEquivOfQuotient_symm_mk'
+#align add_localization.add_equiv_of_quotient_symm_mk' AddLocalization.addEquivOfQuotient_symm_mk'
 
 /- warning: localization.mul_equiv_of_quotient_symm_mk -> Localization.mulEquivOfQuotient_symm_mk is a dubious translation:
 lean 3 declaration is
@@ -2613,7 +2613,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mul_equiv
 theorem mulEquivOfQuotient_symm_mk (x y) : (mulEquivOfQuotient f).symm (f.mk' x y) = mk x y := by
   rw [mk_eq_monoid_of_mk'_apply] <;> exact mul_equiv_of_quotient_symm_mk' _ _
 #align localization.mul_equiv_of_quotient_symm_mk Localization.mulEquivOfQuotient_symm_mk
-#align add_localization.add_equiv_of_quotient_symm_mk addLocalization.addEquivOfQuotient_symm_mk
+#align add_localization.add_equiv_of_quotient_symm_mk AddLocalization.addEquivOfQuotient_symm_mk
 
 /- warning: localization.mul_equiv_of_quotient_symm_monoid_of -> Localization.mulEquivOfQuotient_symm_monoidOf is a dubious translation:
 lean 3 declaration is
@@ -2626,7 +2626,7 @@ theorem mulEquivOfQuotient_symm_monoidOf (x) :
     (mulEquivOfQuotient f).symm (f.toMap x) = (monoidOf S).toMap x :=
   f.liftEq _ _
 #align localization.mul_equiv_of_quotient_symm_monoid_of Localization.mulEquivOfQuotient_symm_monoidOf
-#align add_localization.add_equiv_of_quotient_symm_add_monoid_of addLocalization.addEquivOfQuotient_symm_addMonoidOf
+#align add_localization.add_equiv_of_quotient_symm_add_monoid_of AddLocalization.addEquivOfQuotient_symm_addMonoidOf
 
 section Away
 
@@ -2640,7 +2640,7 @@ variable (x : M)
 def Away :=
   Localization (Submonoid.powers x)
 #align localization.away Localization.Away
-#align add_localization.away addLocalization.Away
+#align add_localization.away AddLocalization.Away
 -/
 
 #print Localization.Away.invSelf /-
@@ -2651,7 +2651,7 @@ submonoid generated by `x`. -/
 def Away.invSelf : Away x :=
   mk 1 ⟨x, Submonoid.mem_powers _⟩
 #align localization.away.inv_self Localization.Away.invSelf
-#align add_localization.away.neg_self addLocalization.Away.negSelf
+#align add_localization.away.neg_self AddLocalization.Away.negSelf
 -/
 
 #print Localization.Away.monoidOf /-
@@ -2663,7 +2663,7 @@ of `(y, 1)` in the localization of `M` at the submonoid generated by `x`. -/
 def Away.monoidOf : Submonoid.LocalizationMap.AwayMap x (Away x) :=
   monoidOf (Submonoid.powers x)
 #align localization.away.monoid_of Localization.Away.monoidOf
-#align add_localization.away.add_monoid_of addLocalization.Away.addMonoidOf
+#align add_localization.away.add_monoid_of AddLocalization.Away.addMonoidOf
 -/
 
 /- warning: localization.away.mk_eq_monoid_of_mk' -> Localization.Away.mk_eq_monoidOf_mk' is a dubious translation:
@@ -2676,7 +2676,7 @@ Case conversion may be inaccurate. Consider using '#align localization.away.mk_e
 theorem Away.mk_eq_monoidOf_mk' : mk = (Away.monoidOf x).mk' :=
   mk_eq_monoidOf_mk'
 #align localization.away.mk_eq_monoid_of_mk' Localization.Away.mk_eq_monoidOf_mk'
-#align add_localization.away.mk_eq_add_monoid_of_mk' addLocalization.Away.mk_eq_addMonoidOf_mk'
+#align add_localization.away.mk_eq_add_monoid_of_mk' AddLocalization.Away.mk_eq_addMonoidOf_mk'
 
 /- warning: localization.away.mul_equiv_of_quotient -> Localization.Away.mulEquivOfQuotient is a dubious translation:
 lean 3 declaration is
@@ -2692,7 +2692,7 @@ noncomputable def Away.mulEquivOfQuotient (f : Submonoid.LocalizationMap.AwayMap
     Away x ≃* N :=
   mulEquivOfQuotient f
 #align localization.away.mul_equiv_of_quotient Localization.Away.mulEquivOfQuotient
-#align add_localization.away.add_equiv_of_quotient addLocalization.Away.addEquivOfQuotient
+#align add_localization.away.add_equiv_of_quotient AddLocalization.Away.addEquivOfQuotient
 
 end Away
 
@@ -2842,7 +2842,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_left_i
 theorem mk_left_injective (b : s) : Injective fun a => mk a b := fun c d h => by
   simpa [-mk_eq_monoid_of_mk', mk_eq_mk_iff, r_iff_exists] using h
 #align localization.mk_left_injective Localization.mk_left_injective
-#align add_localization.mk_left_injective addLocalization.mk_left_injective
+#align add_localization.mk_left_injective AddLocalization.mk_left_injective
 
 /- warning: localization.mk_eq_mk_iff' -> Localization.mk_eq_mk_iff' is a dubious translation:
 lean 3 declaration is
@@ -2854,14 +2854,14 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_eq_mk_
 theorem mk_eq_mk_iff' : mk a₁ a₂ = mk b₁ b₂ ↔ ↑b₂ * a₁ = a₂ * b₁ := by
   simp_rw [mk_eq_mk_iff, r_iff_exists, mul_left_cancel_iff, exists_const]
 #align localization.mk_eq_mk_iff' Localization.mk_eq_mk_iff'
-#align add_localization.mk_eq_mk_iff' addLocalization.mk_eq_mk_iff'
+#align add_localization.mk_eq_mk_iff' AddLocalization.mk_eq_mk_iff'
 
 #print Localization.decidableEq /-
 @[to_additive]
 instance decidableEq [DecidableEq α] : DecidableEq (Localization s) := fun a b =>
   Localization.recOnSubsingleton₂ a b fun a₁ a₂ b₁ b₂ => decidable_of_iff' _ mk_eq_mk_iff'
 #align localization.decidable_eq Localization.decidableEq
-#align add_localization.decidable_eq addLocalization.decidableEq
+#align add_localization.decidable_eq AddLocalization.decidableEq
 -/
 
 end Localization
@@ -2917,7 +2917,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_le_mk 
 theorem mk_le_mk : mk a₁ a₂ ≤ mk b₁ b₂ ↔ ↑b₂ * a₁ ≤ a₂ * b₁ :=
   Iff.rfl
 #align localization.mk_le_mk Localization.mk_le_mk
-#align add_localization.mk_le_mk addLocalization.mk_le_mk
+#align add_localization.mk_le_mk AddLocalization.mk_le_mk
 
 /- warning: localization.mk_lt_mk -> Localization.mk_lt_mk is a dubious translation:
 lean 3 declaration is
@@ -2929,7 +2929,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mk_lt_mk 
 theorem mk_lt_mk : mk a₁ a₂ < mk b₁ b₂ ↔ ↑b₂ * a₁ < a₂ * b₁ :=
   Iff.rfl
 #align localization.mk_lt_mk Localization.mk_lt_mk
-#align add_localization.mk_lt_mk addLocalization.mk_lt_mk
+#align add_localization.mk_lt_mk AddLocalization.mk_lt_mk
 
 -- declaring this separately to the instance below makes things faster
 @[to_additive]
@@ -2982,7 +2982,7 @@ instance decidableLe [DecidableRel ((· ≤ ·) : α → α → Prop)] :
     DecidableRel ((· ≤ ·) : Localization s → Localization s → Prop) := fun a b =>
   Localization.recOnSubsingleton₂ a b fun a₁ a₂ b₁ b₂ => decidable_of_iff' _ mk_le_mk
 #align localization.decidable_le Localization.decidableLe
-#align add_localization.decidable_le addLocalization.decidableLe
+#align add_localization.decidable_le AddLocalization.decidableLe
 
 /- warning: localization.decidable_lt -> Localization.decidableLt is a dubious translation:
 lean 3 declaration is
@@ -2995,7 +2995,7 @@ instance decidableLt [DecidableRel ((· < ·) : α → α → Prop)] :
     DecidableRel ((· < ·) : Localization s → Localization s → Prop) := fun a b =>
   Localization.recOnSubsingleton₂ a b fun a₁ a₂ b₁ b₂ => decidable_of_iff' _ mk_lt_mk
 #align localization.decidable_lt Localization.decidableLt
-#align add_localization.decidable_lt addLocalization.decidableLt
+#align add_localization.decidable_lt AddLocalization.decidableLt
 
 /- warning: localization.mk_order_embedding -> Localization.mkOrderEmbedding is a dubious translation:
 lean 3 declaration is
@@ -3013,7 +3013,7 @@ def mkOrderEmbedding (b : s) : α ↪o Localization s
   inj' := mk_left_injective _
   map_rel_iff' a b := by simp [-mk_eq_monoid_of_mk', mk_le_mk]
 #align localization.mk_order_embedding Localization.mkOrderEmbedding
-#align add_localization.mk_order_embedding addLocalization.mkOrderEmbedding
+#align add_localization.mk_order_embedding AddLocalization.mkOrderEmbedding
 
 end OrderedCancelCommMonoid
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.symmetric
-! leanprover-community/mathlib commit 290a7ba01fbcab1b64757bdaa270d28f4dcede35
+! leanprover-community/mathlib commit c813ed7de0f5115f956239124e9b30f3a621966f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -400,7 +400,7 @@ theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintyp
       by
       funext
       simp [Finsupp.toMultiset_sum_single]
-    rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]
+    rw [degrees, support_esymm, sup_image, this, ← comp_sup_eq_sup_comp]
     · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
       simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)
     · intros

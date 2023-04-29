@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.projective
-! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
+! leanprover-community/mathlib commit 3974a774a707e2e06046a14c0eaef4654584fada
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
     (hP : Projective (F.obj P)) : Projective P :=
   ⟨fun X Y f g => by
     intro
-    haveI := adj.left_adjoint_preserves_colimits
+    haveI : PreservesColimitsOfSize.{0, 0} F := adj.left_adjoint_preserves_colimits
     rcases(@hP).1 (F.map f) (F.map g) with ⟨⟩
     use adj.unit.app _ ≫ G.map w ≫ (inv <| adj.unit.app _)
     refine' faithful.map_injective F _
@@ -291,9 +291,9 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
 
 /- warning: category_theory.adjunction.map_projective_presentation -> CategoryTheory.Adjunction.mapProjectivePresentation is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C] {D : Type.{u_1}} [_inst_2 : CategoryTheory.Category.{u_2, u_1} D] {F : CategoryTheory.Functor.{v, u_2, u, u_1} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u_2, v, u_1, u} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{v, u_2, u, u_1} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u_2, v, u_1, u} D _inst_2 C _inst_1 G] (X : C), (CategoryTheory.ProjectivePresentation.{v, u} C _inst_1 X) -> (CategoryTheory.ProjectivePresentation.{u_2, u_1} D _inst_2 (CategoryTheory.Functor.obj.{v, u_2, u, u_1} C _inst_1 D _inst_2 F X)))
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u4, u1, u3, u2} D _inst_2 C _inst_1 G] (X : C), (CategoryTheory.ProjectivePresentation.{u1, u2} C _inst_1 X) -> (CategoryTheory.ProjectivePresentation.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_2 F X)))
 but is expected to have type
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C] {D : Type.{u'}} [_inst_2 : CategoryTheory.Category.{v', u'} D] {F : CategoryTheory.Functor.{v, v', u, u'} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{v', v, u', u} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{v, v', u, u'} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{v', v, u', u} D _inst_2 C _inst_1 G] (X : C), (CategoryTheory.ProjectivePresentation.{v, u} C _inst_1 X) -> (CategoryTheory.ProjectivePresentation.{v', u'} D _inst_2 (Prefunctor.obj.{succ v, succ v', u, u'} C (CategoryTheory.CategoryStruct.toQuiver.{v, u} C (CategoryTheory.Category.toCategoryStruct.{v, u} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{v', u'} D (CategoryTheory.Category.toCategoryStruct.{v', u'} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{v, v', u, u'} C _inst_1 D _inst_2 F) X)))
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} D] {F : CategoryTheory.Functor.{u1, u3, u2, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u3, u1, u4, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u3, u2, u4} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesEpimorphisms.{u3, u1, u4, u2} D _inst_2 C _inst_1 G] (X : C), (CategoryTheory.ProjectivePresentation.{u1, u2} C _inst_1 X) -> (CategoryTheory.ProjectivePresentation.{u3, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u3, u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} D (CategoryTheory.Category.toCategoryStruct.{u3, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u4} C _inst_1 D _inst_2 F) X)))
 Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentationₓ'. -/
 /-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
 `X` to a projective presentation of `F(X)`. -/
@@ -303,7 +303,9 @@ def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
   p := F.obj Y.p
   Projective := adj.map_projective _ Y.Projective
   f := F.map Y.f
-  Epi := by haveI := adj.left_adjoint_preserves_colimits <;> infer_instance
+  Epi := by
+    haveI : PreservesColimitsOfSize.{0, 0} F := adj.left_adjoint_preserves_colimits <;>
+      infer_instance
 #align category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentation
 
 end Adjunction

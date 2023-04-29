@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.opposite
-! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
+! leanprover-community/mathlib commit a5ff45a1c92c278b03b52459a620cfd9c49ebc80
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,8 +29,12 @@ open CategoryTheory.Limits
 variable (C : Type _) [Category C] [Abelian C]
 
 attribute [local instance]
-  has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts
+  has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts abelian.has_finite_biproducts
 
+-- Porting note:
+-- This should have been a global instance,
+-- but triggers https://github.com/leanprover/lean4/issues/2055
+-- when ported to mathlib4.
 instance : Abelian Cᵒᵖ
     where
   normalMonoOfMono X Y f m := normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)

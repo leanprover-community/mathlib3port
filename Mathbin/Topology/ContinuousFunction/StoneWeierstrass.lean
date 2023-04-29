@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.stone_weierstrass
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 16e59248c0ebafabd5d071b1cd41743eb8698ffb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,10 +202,8 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     and finally using compactness to produce the desired function `h`
     as a maximum over finitely many `x` of a minimum over finitely many `y` of the `g x y`.
     -/
-  dsimp [Set.SeparatesPointsStrongly] at sep
-  let g : X → X → L := fun x y => (sep f x y).some
-  have w₁ : ∀ x y, g x y x = f x := fun x y => (sep f x y).choose_spec.1
-  have w₂ : ∀ x y, g x y y = f y := fun x y => (sep f x y).choose_spec.2
+  dsimp only [Set.SeparatesPointsStrongly] at sep
+  choose g hg w₁ w₂ using sep f
   -- For each `x y`, we define `U x y` to be `{z | f z - ε < g x y z}`,
   -- and observe this is a neighbourhood of `y`.
   let U : X → X → Set X := fun x y => { z | f z - ε < g x y z }
@@ -232,7 +230,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- and `h x x = f x`.
   let h : ∀ x, L := fun x =>
     ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)),
-      Finset.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
+      Finset.sup'_mem _ sup_mem _ _ _ fun y _ => hg x y⟩
   have lt_h : ∀ x z, f z - ε < h x z := by
     intro x z
     obtain ⟨y, ym, zm⟩ := Set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z
@@ -241,7 +239,6 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     exact ⟨y, ym, zm⟩
   have h_eq : ∀ x, h x x = f x := by
     intro x
-    simp only [coeFn_coe_base'] at w₁
     simp [coeFn_coe_base', w₁]
   -- For each `x`, we define `W x` to be `{z | h x z < f z + ε}`,
   let W : ∀ x, Set X := fun x => { z | h x z < f z + ε }

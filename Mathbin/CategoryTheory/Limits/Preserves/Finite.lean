@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.finite
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
+! leanprover-community/mathlib commit 3974a774a707e2e06046a14c0eaef4654584fada
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,16 +67,27 @@ noncomputable instance (priority := 100) preservesLimitsOfShapeOfPreservesFinite
 #align category_theory.limits.preserves_limits_of_shape_of_preserves_finite_limits CategoryTheory.Limits.preservesLimitsOfShapeOfPreservesFiniteLimits
 -/
 
+/- warning: category_theory.limits.preserves_limits_of_size.preserves_finite_limits clashes with category_theory.limits.preserves_limits.preserves_finite_limits_of_size -> CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimits
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_limits_of_size.preserves_finite_limits CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimitsₓ'. -/
 #print CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimits /-
-noncomputable instance (priority := 100) PreservesLimitsOfSize.preservesFiniteLimits (F : C ⥤ D)
+-- This is a dangerous instance as it has unbound universe variables.
+/-- If we preserve limits of some arbitrary size, then we preserve all finite limits. -/
+noncomputable def PreservesLimitsOfSize.preservesFiniteLimits (F : C ⥤ D)
     [PreservesLimitsOfSize.{w, w₂} F] : PreservesFiniteLimits F :=
   ⟨fun J sJ fJ =>
     haveI := preserves_smallest_limits_of_preserves_limits F
     preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
-#align category_theory.limits.preserves_limits.preserves_finite_limits_of_size CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimits
+#align category_theory.limits.preserves_limits_of_size.preserves_finite_limits CategoryTheory.Limits.PreservesLimitsOfSize.preservesFiniteLimits
 -/
 
+-- Added as a specialization of the dangerous instance above, for limits indexed in Type 0.
+noncomputable instance (priority := 120) PreservesLimitsOfSize.Zero.preservesFiniteLimits
+    (F : C ⥤ D) [PreservesLimitsOfSize.{0, 0} F] : PreservesFiniteLimits F :=
+  PreservesLimitsOfSize.preservesFiniteLimits F
+#align category_theory.limits.preserves_limits_of_size.zero.preserves_finite_limits CategoryTheory.Limits.PreservesLimitsOfSize.Zero.preservesFiniteLimits
+
 #print CategoryTheory.Limits.PreservesLimits.preservesFiniteLimits /-
+-- An alternative specialization of the dangerous instance for small limits.
 noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D)
     [PreservesLimits F] : PreservesFiniteLimits F :=
   PreservesLimitsOfSize.preservesFiniteLimits F
@@ -142,18 +153,30 @@ noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFini
 #align category_theory.limits.preserves_colimits_of_shape_of_preserves_finite_colimits CategoryTheory.Limits.preservesColimitsOfShapeOfPreservesFiniteColimits
 -/
 
-/- warning: category_theory.limits.preserves_colimits.preserves_finite_colimits -> CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits is a dubious translation:
-lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂, u₂} D] (F : CategoryTheory.Functor.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfSize.{w, w₂, v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F], CategoryTheory.Limits.PreservesFiniteColimits.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F
-but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂, u₂} D] (F : CategoryTheory.Functor.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2) [_inst_5 : CategoryTheory.Limits.PreservesColimits.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F], CategoryTheory.Limits.PreservesFiniteColimits.{v₁, v₂, u₁, u₂} C _inst_1 D _inst_2 F
-Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_colimits.preserves_finite_colimits CategoryTheory.Limits.PreservesColimits.preservesFiniteColimitsₓ'. -/
-noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimits (F : C ⥤ D)
+#print CategoryTheory.Limits.PreservesColimitsOfSize.preservesFiniteColimits /-
+-- This is a dangerous instance as it has unbound universe variables.
+/-- If we preserve colimits of some arbitrary size, then we preserve all finite colimits. -/
+noncomputable def PreservesColimitsOfSize.preservesFiniteColimits (F : C ⥤ D)
     [PreservesColimitsOfSize.{w, w₂} F] : PreservesFiniteColimits F :=
   ⟨fun J sJ fJ =>
     haveI := preserves_smallest_colimits_of_preserves_colimits F
     preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
+#align category_theory.limits.preserves_colimits_of_size.preserves_finite_colimits CategoryTheory.Limits.PreservesColimitsOfSize.preservesFiniteColimits
+-/
+
+-- Added as a specialization of the dangerous instance above, for colimits indexed in Type 0.
+noncomputable instance (priority := 120) PreservesColimitsOfSize.Zero.preservesFiniteColimits
+    (F : C ⥤ D) [PreservesColimitsOfSize.{0, 0} F] : PreservesFiniteColimits F :=
+  PreservesColimitsOfSize.preservesFiniteColimits F
+#align category_theory.limits.preserves_colimits_of_size.zero.preserves_finite_colimits CategoryTheory.Limits.PreservesColimitsOfSize.Zero.preservesFiniteColimits
+
+#print CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits /-
+-- An alternative specialization of the dangerous instance for small colimits.
+noncomputable instance (priority := 120) PreservesColimits.preservesFiniteColimits (F : C ⥤ D)
+    [PreservesColimits F] : PreservesFiniteColimits F :=
+  PreservesColimitsOfSize.preservesFiniteColimits F
 #align category_theory.limits.preserves_colimits.preserves_finite_colimits CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits
+-/
 
 #print CategoryTheory.Limits.preservesFiniteColimitsOfPreservesFiniteColimitsOfSize /-
 /-- We can always derive `preserves_finite_limits C` by showing that we are preserving limits at an

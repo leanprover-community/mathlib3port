@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit 9b2b58d6b14b895b2f375108e765cb47de71aebd
+! leanprover-community/mathlib commit 9c5398f2ded9f4ff733d3c7e2c90457b943fc4fc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1403,6 +1403,25 @@ theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countab
     simp_rw [preimage, mem_Iic, csupₛ_le_iff (bdd _) (h2s.image _), ball_image_iff, set_of_forall]
     exact MeasurableSet.binterᵢ hs fun i hi => measurableSet_le (hf i) measurable_const
 #align measurable_cSup measurable_cSup
+
+theorem measurable_cInf {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countable)
+    (hf : ∀ i, Measurable (f i)) (bdd : ∀ x, BddBelow ((fun i => f i x) '' s)) :
+    Measurable fun x => infₛ ((fun i => f i x) '' s) :=
+  @measurable_cSup αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hs hf bdd
+#align measurable_cInf measurable_cInf
+
+theorem measurable_csupr {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
+    (bdd : ∀ x, BddAbove (range fun i => f i x)) : Measurable fun x => ⨆ i, f i x :=
+  by
+  change Measurable fun x => Sup (range fun i : ι => f i x)
+  simp_rw [← image_univ] at bdd⊢
+  refine' measurable_cSup countable_univ hf bdd
+#align measurable_csupr measurable_csupr
+
+theorem measurable_cinfi {ι : Type _} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i))
+    (bdd : ∀ x, BddBelow (range fun i => f i x)) : Measurable fun x => ⨅ i, f i x :=
+  @measurable_csupr αᵒᵈ _ _ _ _ _ _ _ _ _ _ _ hf bdd
+#align measurable_cinfi measurable_cinfi
 
 end ConditionallyCompleteLinearOrder
 

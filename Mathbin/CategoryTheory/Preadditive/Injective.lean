@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.injective
-! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
+! leanprover-community/mathlib commit 3974a774a707e2e06046a14c0eaef4654584fada
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -321,7 +321,7 @@ theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     (hI : Injective (G.obj I)) : Injective I :=
   ⟨fun X Y f g => by
     intro
-    haveI := adj.right_adjoint_preserves_limits
+    haveI : PreservesLimitsOfSize.{0, 0} G := adj.right_adjoint_preserves_limits
     rcases hI.factors (G.map f) (G.map g) with ⟨⟩
     use inv (adj.counit.app _) ≫ F.map w ≫ adj.counit.app _
     refine' faithful.map_injective G _
@@ -336,7 +336,8 @@ def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
   j := G.obj I.j
   Injective := adj.map_injective _ I.Injective
   f := G.map I.f
-  Mono := by haveI := adj.right_adjoint_preserves_limits <;> infer_instance
+  Mono := by
+    haveI : PreservesLimitsOfSize.{0, 0} G := adj.right_adjoint_preserves_limits <;> infer_instance
 #align category_theory.adjunction.map_injective_presentation CategoryTheory.Adjunction.mapInjectivePresentation
 
 end Adjunction

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit a968611b6a772cf7bdf61146e6d62fc882c92372
+! leanprover-community/mathlib commit c813ed7de0f5115f956239124e9b30f3a621966f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3141,17 +3141,6 @@ Case conversion may be inaccurate. Consider using '#align finset.supr_finset_ima
 theorem supᵢ_finset_image {f : γ → α} {g : α → β} {s : Finset γ} :
     (⨆ x ∈ s.image f, g x) = ⨆ y ∈ s, g (f y) := by rw [← supr_coe, coe_image, supᵢ_image, supr_coe]
 #align finset.supr_finset_image Finset.supᵢ_finset_image
-
-/- warning: finset.sup_finset_image -> Finset.sup_finset_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : DecidableEq.{succ u1} α] {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : SemilatticeSup.{u2} β] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β _inst_3)))] (f : γ -> α) (g : α -> β) (s : Finset.{u3} γ), Eq.{succ u2} β (Finset.sup.{u2, u1} β α _inst_3 _inst_4 (Finset.image.{u3, u1} γ α (fun (a : α) (b : α) => _inst_2 a b) f s) g) (Finset.sup.{u2, u3} β γ _inst_3 _inst_4 s (Function.comp.{succ u3, succ u1, succ u2} γ α β g f))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : DecidableEq.{succ u1} α] {β : Type.{u3}} {γ : Type.{u2}} [_inst_3 : SemilatticeSup.{u3} β] [_inst_4 : OrderBot.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3)))] (f : γ -> α) (g : α -> β) (s : Finset.{u2} γ), Eq.{succ u3} β (Finset.sup.{u3, u1} β α _inst_3 _inst_4 (Finset.image.{u2, u1} γ α (fun (a : α) (b : α) => _inst_2 a b) f s) g) (Finset.sup.{u3, u2} β γ _inst_3 _inst_4 s (Function.comp.{succ u2, succ u1, succ u3} γ α β g f))
-Case conversion may be inaccurate. Consider using '#align finset.sup_finset_image Finset.sup_finset_imageₓ'. -/
-theorem sup_finset_image {β γ : Type _} [SemilatticeSup β] [OrderBot β] (f : γ → α) (g : α → β)
-    (s : Finset γ) : (s.image f).sup g = s.sup (g ∘ f) := by
-  classical induction' s using Finset.induction_on with a s' ha ih <;> simp [*]
-#align finset.sup_finset_image Finset.sup_finset_image
 
 /- warning: finset.infi_finset_image -> Finset.infᵢ_finset_image is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit cd8fafa2fac98e1a67097e8a91ad9901cfde48af
+! leanprover-community/mathlib commit c7bce2818663f456335892ddbdd1809f111a5b72
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ theorem rank_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
     Module.rank ℝ E = 2 * Module.rank ℂ E :=
   Cardinal.lift_inj.1 <|
     by
-    rw [← rank_mul_rank' ℝ ℂ E, Complex.rank_real_complex]
+    rw [← lift_rank_mul_lift_rank ℝ ℂ E, Complex.rank_real_complex]
     simp [bit0]
 #align rank_real_of_complex rank_real_of_complex
 

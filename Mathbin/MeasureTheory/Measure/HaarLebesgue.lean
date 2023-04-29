@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
+! leanprover-community/mathlib commit ef093414afad9796939469de466cc3c206e18223
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,6 +70,16 @@ def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : Posit
     simp only [interior_pi_set, Set.toFinite, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo,
       imp_true_iff, zero_lt_one]
 #align topological_space.positive_compacts.pi_Icc01 TopologicalSpace.PositiveCompacts.piIcc01
+
+/-- The parallelepiped formed from the standard basis for `ι → ℝ` is `[0,1]^ι` -/
+theorem Basis.parallelepiped_basisFun (ι : Type _) [Fintype ι] :
+    (Pi.basisFun ℝ ι).parallelepiped = TopologicalSpace.PositiveCompacts.piIcc01 ι :=
+  SetLike.coe_injective <|
+    by
+    refine' Eq.trans _ ((uIcc_of_le _).trans (Set.pi_univ_Icc _ _).symm)
+    · convert parallelepiped_single 1
+    · exact zero_le_one
+#align basis.parallelepiped_basis_fun Basis.parallelepiped_basisFun
 
 namespace MeasureTheory
 

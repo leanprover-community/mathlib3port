@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.funext
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
+! leanprover-community/mathlib commit 0b89934139d3be96f9dab477f10c20f9f93da580
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.Data.MvPolynomial.Rename
 import Mathbin.RingTheory.Polynomial.Basic
+import Mathbin.Data.MvPolynomial.Polynomial
 
 /-!
 ## Function extensionality for multivariate polynomials
@@ -36,52 +37,19 @@ variable {R : Type _} [CommRing R] [IsDomain R] [Infinite R]
 private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     (h : ∀ x : Fin n → R, eval x p = 0) : p = 0 :=
   by
-  induction' n with n ih generalizing R
-  · let e := MvPolynomial.isEmptyRingEquiv R (Fin 0)
-    apply e.injective
+  induction' n with n ih
+  · apply (MvPolynomial.isEmptyRingEquiv R (Fin 0)).Injective
     rw [RingEquiv.map_zero]
-    convert h finZeroElim
-    suffices
-      (eval₂_hom (RingHom.id _) (IsEmpty.elim' Fin.isEmpty)) p =
-        (eval finZeroElim : MvPolynomial (Fin 0) R →+* R) p
-      by
-      rw [← this]
-      simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply,
-        aeval_eq_eval₂_hom]
-      congr
-    exact eval₂_hom_congr rfl (Subsingleton.elim _ _) rfl
-  · let e := (finSuccEquiv R n).toRingEquiv
-    apply e.injective
-    simp only [RingEquiv.map_zero]
-    apply Polynomial.funext
-    intro q
+    convert h _
+  · apply (finSuccEquiv R n).Injective
+    simp only [AlgEquiv.map_zero]
+    refine' Polynomial.funext fun q => _
     rw [Polynomial.eval_zero]
-    apply ih
-    swap
-    · infer_instance
-    intro x
-    dsimp [e]
-    rw [fin_succ_equiv_apply]
+    apply ih fun x => _
     calc
-      _ = eval _ p := _
+      _ = _ := eval_polynomial_eval_fin_succ_equiv p _ _
       _ = 0 := h _
       
-    · intro i
-      exact Fin.cases (eval x q) x i
-    apply induction_on p
-    · intro r
-      simp only [eval_C, Polynomial.eval_C, RingHom.coe_comp, eval₂_hom_C]
-    · intros
-      simp only [*, RingHom.map_add, Polynomial.eval_add]
-    · intro φ i hφ
-      simp only [*, eval_X, Polynomial.eval_mul, RingHom.map_mul, eval₂_hom_X']
-      congr 1
-      by_cases hi : i = 0
-      · subst hi
-        simp only [Polynomial.eval_X, Fin.cases_zero]
-      · rw [← Fin.succ_pred i hi]
-        simp only [eval_X, Polynomial.eval_C, Fin.cases_succ]
-    · infer_instance
 #align mv_polynomial.funext_fin mv_polynomial.funext_fin
 
 /- warning: mv_polynomial.funext -> MvPolynomial.funext is a dubious translation:

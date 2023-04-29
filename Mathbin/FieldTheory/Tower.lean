@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit fa78268d4d77cb2b2fbc89f0527e2e7807763780
+! leanprover-community/mathlib commit c7bce2818663f456335892ddbdd1809f111a5b72
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Prime
 import Mathbin.RingTheory.AlgebraTower
-import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
-import Mathbin.LinearAlgebra.Matrix.ToLin
+import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 
 /-!
 # Tower of field extensions
@@ -20,8 +20,8 @@ In this file we prove the tower law for arbitrary extensions and finite extensio
 Suppose `L` is a field extension of `K` and `K` is a field extension of `F`.
 Then `[L:F] = [L:K] [K:F]` where `[E₁:E₂]` means the `E₂`-dimension of `E₁`.
 
-In fact we generalize it to vector spaces, where `L` is not necessarily a field,
-but just a vector space over `K`.
+In fact we generalize it to rings and modules, where `L` is not necessarily a field,
+but just a free module over `K`.
 
 ## Implementation notes
 
@@ -40,36 +40,63 @@ universe u v w u₁ v₁ w₁
 
 open Classical BigOperators
 
-section Field
+open FiniteDimensional
 
 open Cardinal
 
 variable (F : Type u) (K : Type v) (A : Type w)
 
-variable [Field F] [DivisionRing K] [AddCommGroup A]
+section Ring
+
+variable [CommRing F] [Ring K] [AddCommGroup A]
 
 variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
-/-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
-`dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem rank_mul_rank' :
+variable [StrongRankCondition F] [StrongRankCondition K] [Module.Free F K] [Module.Free K A]
+
+/-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
+$\operatorname{rank}_F(A) = \operatorname{rank}_F(K) * \operatorname{rank}_K(A)$. -/
+theorem lift_rank_mul_lift_rank :
     Cardinal.lift.{w} (Module.rank F K) * Cardinal.lift.{v} (Module.rank K A) =
       Cardinal.lift.{v} (Module.rank F A) :=
   by
-  let b := Basis.ofVectorSpace F K
-  let c := Basis.ofVectorSpace K A
+  obtain ⟨_, b⟩ := Module.Free.exists_basis F K
+  obtain ⟨_, c⟩ := Module.Free.exists_basis K A
   rw [← (Module.rank F K).lift_id, ← b.mk_eq_rank, ← (Module.rank K A).lift_id, ← c.mk_eq_rank, ←
     lift_umax.{w, v}, ← (b.smul c).mk_eq_rank, mk_prod, lift_mul, lift_lift, lift_lift, lift_lift,
     lift_lift, lift_umax]
-#align rank_mul_rank' rank_mul_rank'
+#align lift_rank_mul_lift_rank lift_rank_mul_lift_rank
 
-/-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
-`dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem rank_mul_rank (F : Type u) (K A : Type v) [Field F] [Field K] [AddCommGroup A] [Algebra F K]
-    [Module K A] [Module F A] [IsScalarTower F K A] :
+/-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
+$\operatorname{rank}_F(A) = \operatorname{rank}_F(K) * \operatorname{rank}_K(A)$.
+
+This is a simpler version of `lift_rank_mul_lift_rank` with `K` and `A` in the same universe. -/
+theorem rank_mul_rank (F : Type u) (K A : Type v) [CommRing F] [Ring K] [AddCommGroup A]
+    [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A] [StrongRankCondition F]
+    [StrongRankCondition K] [Module.Free F K] [Module.Free K A] :
     Module.rank F K * Module.rank K A = Module.rank F A := by
-  convert rank_mul_rank' F K A <;> rw [lift_id]
+  convert lift_rank_mul_lift_rank F K A <;> rw [lift_id]
 #align rank_mul_rank rank_mul_rank
+
+/-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
+$\operatorname{rank}_F(A) = \operatorname{rank}_F(K) * \operatorname{rank}_K(A)$. -/
+theorem FiniteDimensional.finrank_mul_finrank' [Nontrivial K] [Module.Finite F K]
+    [Module.Finite K A] : finrank F K * finrank K A = finrank F A :=
+  by
+  letI := nontrivial_of_invariantBasisNumber F
+  let b := Module.Free.chooseBasis F K
+  let c := Module.Free.chooseBasis K A
+  rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c),
+    Fintype.card_prod]
+#align finite_dimensional.finrank_mul_finrank' FiniteDimensional.finrank_mul_finrank'
+
+end Ring
+
+section Field
+
+variable [Field F] [DivisionRing K] [AddCommGroup A]
+
+variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
 namespace FiniteDimensional
 
@@ -99,16 +126,15 @@ theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
         exact Submodule.subset_span⟩⟩
 #align finite_dimensional.right FiniteDimensional.right
 
-/-- Tower law: if `A` is a `K`-algebra and `K` is a field extension of `F` then
-`dim_F(A) = dim_F(K) * dim_K(A)`. -/
+/-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
+`dim_F(A) = dim_F(K) * dim_K(A)`.
+
+This is `finite_dimensional.finrank_mul_finrank'` with one fewer finiteness assumption. -/
 theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A = finrank F A :=
   by
   by_cases hA : FiniteDimensional K A
   · skip
-    let b := Basis.ofVectorSpace F K
-    let c := Basis.ofVectorSpace K A
-    rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c),
-      Fintype.card_prod]
+    rw [finrank_mul_finrank']
   · rw [finrank_of_infinite_dimensional hA, MulZeroClass.mul_zero, finrank_of_infinite_dimensional]
     exact mt (@right F K A _ _ _ _ _ _ _) hA
 #align finite_dimensional.finrank_mul_finrank FiniteDimensional.finrank_mul_finrank

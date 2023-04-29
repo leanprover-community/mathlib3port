@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit 83df6d6ebd4a43b472501c515516a37a9e3d7503
+! leanprover-community/mathlib commit ef093414afad9796939469de466cc3c206e18223
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ of the basis).
 
 open Set TopologicalSpace MeasureTheory MeasureTheory.Measure FiniteDimensional
 
-open BigOperators
+open BigOperators Pointwise
 
 noncomputable section
 
@@ -120,6 +120,78 @@ theorem parallelepiped_orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ
     simp only [← image_comp, mul_neg, mul_one, Finset.sum_singleton, image_neg, preimage_neg_Icc,
       neg_zero, Finset.univ_unique]
 #align parallelepiped_orthonormal_basis_one_dim parallelepiped_orthonormalBasis_one_dim
+
+theorem parallelepiped_eq_sum_segment (v : ι → E) : parallelepiped v = ∑ i, segment ℝ 0 (v i) :=
+  by
+  ext
+  simp only [mem_parallelepiped_iff, Set.mem_finset_sum, Finset.mem_univ, forall_true_left,
+    segment_eq_image, smul_zero, zero_add, ← Set.pi_univ_Icc, Set.mem_univ_pi]
+  constructor
+  · rintro ⟨t, ht, rfl⟩
+    exact ⟨t • v, fun i => ⟨t i, ht _, by simp⟩, rfl⟩
+  rintro ⟨g, hg, rfl⟩
+  change ∀ i, _ at hg
+  choose t ht hg using hg
+  refine' ⟨t, ht, _⟩
+  simp_rw [hg]
+#align parallelepiped_eq_sum_segment parallelepiped_eq_sum_segment
+
+theorem convex_parallelepiped (v : ι → E) : Convex ℝ (parallelepiped v) :=
+  by
+  rw [parallelepiped_eq_sum_segment]
+  -- TODO: add `convex.sum` to match `convex.add`
+  let this : AddSubmonoid (Set E) :=
+    { carrier := { s | Convex ℝ s }
+      zero_mem' := convex_singleton _
+      add_mem' := fun x y => Convex.add }
+  exact this.sum_mem fun i hi => convex_segment _ _
+#align convex_parallelepiped convex_parallelepiped
+
+/-- A `parallelepiped` is the convex hull of its vertices -/
+theorem parallelepiped_eq_convexHull (v : ι → E) :
+    parallelepiped v = convexHull ℝ (∑ i, {(0 : E), v i}) :=
+  by
+  -- TODO: add `convex_hull_sum` to match `convex_hull_add`
+  let this : Set E →+ Set E :=
+    { toFun := convexHull ℝ
+      map_zero' := convexHull_singleton _
+      map_add' := convexHull_add }
+  simp_rw [parallelepiped_eq_sum_segment, ← convexHull_pair]
+  exact (this.map_sum _ _).symm
+#align parallelepiped_eq_convex_hull parallelepiped_eq_convexHull
+
+/-- The axis aligned parallelepiped over `ι → ℝ` is a cuboid. -/
+theorem parallelepiped_single [DecidableEq ι] (a : ι → ℝ) :
+    (parallelepiped fun i => Pi.single i (a i)) = Set.uIcc 0 a :=
+  by
+  ext
+  simp_rw [Set.uIcc, mem_parallelepiped_iff, Set.mem_Icc, Pi.le_def, ← forall_and, Pi.inf_apply,
+    Pi.sup_apply, ← Pi.single_smul', Pi.one_apply, Pi.zero_apply, ← Pi.smul_apply',
+    Finset.univ_sum_single (_ : ι → ℝ)]
+  constructor
+  · rintro ⟨t, ht, rfl⟩ i
+    specialize ht i
+    simp_rw [smul_eq_mul, Pi.mul_apply]
+    cases' le_total (a i) 0 with hai hai
+    · rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai]
+      exact ⟨le_mul_of_le_one_left hai ht.2, mul_nonpos_of_nonneg_of_nonpos ht.1 hai⟩
+    · rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai]
+      exact ⟨mul_nonneg ht.1 hai, mul_le_of_le_one_left hai ht.2⟩
+  · intro h
+    refine' ⟨fun i => x i / a i, fun i => _, funext fun i => _⟩
+    · specialize h i
+      cases' le_total (a i) 0 with hai hai
+      · rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai] at h
+        exact ⟨div_nonneg_of_nonpos h.2 hai, div_le_one_of_ge h.1 hai⟩
+      · rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai] at h
+        exact ⟨div_nonneg h.1 hai, div_le_one_of_le h.2 hai⟩
+    · specialize h i
+      simp only [smul_eq_mul, Pi.mul_apply]
+      cases' eq_or_ne (a i) 0 with hai hai
+      · rw [hai, inf_idem, sup_idem, ← le_antisymm_iff] at h
+        rw [hai, ← h, zero_div, MulZeroClass.zero_mul]
+      · rw [div_mul_cancel _ hai]
+#align parallelepiped_single parallelepiped_single
 
 end AddCommGroup
 

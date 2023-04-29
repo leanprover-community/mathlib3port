@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
+! leanprover-community/mathlib commit fa2309577c7009ea243cffdf990cd6c84f0ad497
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1544,29 +1544,19 @@ theorem prod_dite_irrel (p : Prop) [Decidable p] (s : Finset α) (f : p → α �
 #align finset.sum_dite_irrel Finset.sum_dite_irrel
 -/
 
-/- warning: finset.sum_pi_single' -> Finset.sum_pi_single' is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : AddCommMonoid.{u2} M] (i : ι) (x : M) (s : Finset.{u1} ι), Eq.{succ u2} M (Finset.sum.{u2, u1} M ι _inst_3 s (fun (j : ι) => Pi.single.{u1, u2} ι (fun (i : ι) => M) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_3))) i x j)) (ite.{succ u2} M (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (Finset.decidableMem.{u1} ι (fun (a : ι) (b : ι) => _inst_2 a b) i s) x (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_3)))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : Type.{u1}} [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : AddCommMonoid.{u1} M] (i : ι) (x : M) (s : Finset.{u2} ι), Eq.{succ u1} M (Finset.sum.{u1, u2} M ι _inst_3 s (fun (j : ι) => Pi.single.{u2, u1} ι (fun (i : ι) => M) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_3)) i x j)) (ite.{succ u1} M (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (Finset.decidableMem.{u2} ι (fun (a : ι) (b : ι) => _inst_2 a b) i s) x (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_3)))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_pi_single' Finset.sum_pi_single'ₓ'. -/
-@[simp]
-theorem sum_pi_single' {ι M : Type _} [DecidableEq ι] [AddCommMonoid M] (i : ι) (x : M)
-    (s : Finset ι) : (∑ j in s, Pi.single i x j) = if i ∈ s then x else 0 :=
-  sum_dite_eq' _ _ _
+@[simp, to_additive]
+theorem prod_pi_mul_single' [DecidableEq α] (a : α) (x : β) (s : Finset α) :
+    (∏ a' in s, Pi.mulSingle a x a') = if a ∈ s then x else 1 :=
+  prod_dite_eq' _ _ _
+#align finset.prod_pi_mul_single' Finset.prod_pi_mul_single'
 #align finset.sum_pi_single' Finset.sum_pi_single'
 
-/- warning: finset.sum_pi_single -> Finset.sum_pi_single is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {M : ι -> Type.{u2}} [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), AddCommMonoid.{u2} (M i)] (i : ι) (f : forall (i : ι), M i) (s : Finset.{u1} ι), Eq.{succ u2} (M i) (Finset.sum.{u2, u1} (M i) ι (_inst_3 i) s (fun (j : ι) => Pi.single.{u1, u2} ι (fun (j : ι) => M j) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => AddZeroClass.toHasZero.{u2} (M i) (AddMonoid.toAddZeroClass.{u2} (M i) (AddCommMonoid.toAddMonoid.{u2} (M i) (_inst_3 i)))) j (f j) i)) (ite.{succ u2} (M i) (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (Finset.decidableMem.{u1} ι (fun (a : ι) (b : ι) => _inst_2 a b) i s) (f i) (OfNat.ofNat.{u2} (M i) 0 (OfNat.mk.{u2} (M i) 0 (Zero.zero.{u2} (M i) (AddZeroClass.toHasZero.{u2} (M i) (AddMonoid.toAddZeroClass.{u2} (M i) (AddCommMonoid.toAddMonoid.{u2} (M i) (_inst_3 i))))))))
-but is expected to have type
-  forall {ι : Type.{u2}} {M : ι -> Type.{u1}} [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : forall (i : ι), AddCommMonoid.{u1} (M i)] (i : ι) (f : forall (i : ι), M i) (s : Finset.{u2} ι), Eq.{succ u1} (M i) (Finset.sum.{u1, u2} (M i) ι (_inst_3 i) s (fun (j : ι) => Pi.single.{u2, u1} ι M (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => AddMonoid.toZero.{u1} (M i) (AddCommMonoid.toAddMonoid.{u1} (M i) (_inst_3 i))) j (f j) i)) (ite.{succ u1} (M i) (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (Finset.decidableMem.{u2} ι (fun (a : ι) (b : ι) => _inst_2 a b) i s) (f i) (OfNat.ofNat.{u1} (M i) 0 (Zero.toOfNat0.{u1} (M i) (AddMonoid.toZero.{u1} (M i) (AddCommMonoid.toAddMonoid.{u1} (M i) (_inst_3 i))))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_pi_single Finset.sum_pi_singleₓ'. -/
-@[simp]
-theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i, AddCommMonoid (M i)]
-    (i : ι) (f : ∀ i, M i) (s : Finset ι) :
-    (∑ j in s, Pi.single j (f j) i) = if i ∈ s then f i else 0 :=
-  sum_dite_eq _ _ _
+@[simp, to_additive]
+theorem prod_pi_mulSingle {β : α → Type _} [DecidableEq α] [∀ a, CommMonoid (β a)] (a : α)
+    (f : ∀ a, β a) (s : Finset α) :
+    (∏ a' in s, Pi.mulSingle a' (f a') a) = if a ∈ s then f a else 1 :=
+  prod_dite_eq _ _ _
+#align finset.prod_pi_mul_single Finset.prod_pi_mulSingle
 #align finset.sum_pi_single Finset.sum_pi_single
 
 /- warning: finset.prod_bij_ne_one -> Finset.prod_bij_ne_one is a dubious translation:
@@ -2382,19 +2372,15 @@ theorem prod_ite_one {f : α → Prop} [DecidablePred f] (hf : (s : Set α).Pair
 #align finset.prod_ite_one Finset.prod_ite_one
 #align finset.sum_ite_zero Finset.sum_ite_zero
 
-/- warning: finset.sum_erase_lt_of_pos -> Finset.sum_erase_lt_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : OrderedAddCommMonoid.{u2} γ] [_inst_4 : CovariantClass.{u2, u2} γ γ (HAdd.hAdd.{u2, u2, u2} γ γ γ (instHAdd.{u2} γ (AddZeroClass.toHasAdd.{u2} γ (AddMonoid.toAddZeroClass.{u2} γ (AddCommMonoid.toAddMonoid.{u2} γ (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3)))))) (LT.lt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ (OrderedAddCommMonoid.toPartialOrder.{u2} γ _inst_3))))] {s : Finset.{u1} α} {d : α}, (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) d s) -> (forall {f : α -> γ}, (LT.lt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ (OrderedAddCommMonoid.toPartialOrder.{u2} γ _inst_3))) (OfNat.ofNat.{u2} γ 0 (OfNat.mk.{u2} γ 0 (Zero.zero.{u2} γ (AddZeroClass.toHasZero.{u2} γ (AddMonoid.toAddZeroClass.{u2} γ (AddCommMonoid.toAddMonoid.{u2} γ (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3))))))) (f d)) -> (LT.lt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ (OrderedAddCommMonoid.toPartialOrder.{u2} γ _inst_3))) (Finset.sum.{u2, u1} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s d) (fun (m : α) => f m)) (Finset.sum.{u2, u1} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u2} γ _inst_3) s (fun (m : α) => f m))))
-but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : OrderedAddCommMonoid.{u1} γ] [_inst_4 : CovariantClass.{u1, u1} γ γ (fun (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22636 : γ) (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22638 : γ) => HAdd.hAdd.{u1, u1, u1} γ γ γ (instHAdd.{u1} γ (AddZeroClass.toAdd.{u1} γ (AddMonoid.toAddZeroClass.{u1} γ (AddCommMonoid.toAddMonoid.{u1} γ (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3))))) x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22636 x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22638) (fun (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22651 : γ) (x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22653 : γ) => LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22651 x._@.Mathlib.Algebra.BigOperators.Basic._hyg.22653)] {s : Finset.{u2} α} {d : α}, (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) d s) -> (forall {f : α -> γ}, (LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) (OfNat.ofNat.{u1} γ 0 (Zero.toOfNat0.{u1} γ (AddMonoid.toZero.{u1} γ (AddCommMonoid.toAddMonoid.{u1} γ (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3))))) (f d)) -> (LT.lt.{u1} γ (Preorder.toLT.{u1} γ (PartialOrder.toPreorder.{u1} γ (OrderedAddCommMonoid.toPartialOrder.{u1} γ _inst_3))) (Finset.sum.{u1, u2} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3) (Finset.erase.{u2} α (fun (a : α) (b : α) => _inst_2 a b) s d) (fun (m : α) => f m)) (Finset.sum.{u1, u2} γ α (OrderedAddCommMonoid.toAddCommMonoid.{u1} γ _inst_3) s (fun (m : α) => f m))))
-Case conversion may be inaccurate. Consider using '#align finset.sum_erase_lt_of_pos Finset.sum_erase_lt_of_posₓ'. -/
-theorem sum_erase_lt_of_pos {γ : Type _} [DecidableEq α] [OrderedAddCommMonoid γ]
-    [CovariantClass γ γ (· + ·) (· < ·)] {s : Finset α} {d : α} (hd : d ∈ s) {f : α → γ}
-    (hdf : 0 < f d) : (∑ m : α in s.eraseₓ d, f m) < ∑ m : α in s, f m :=
+@[to_additive]
+theorem prod_erase_lt_of_one_lt {γ : Type _} [DecidableEq α] [OrderedCommMonoid γ]
+    [CovariantClass γ γ (· * ·) (· < ·)] {s : Finset α} {d : α} (hd : d ∈ s) {f : α → γ}
+    (hdf : 1 < f d) : (∏ m : α in s.eraseₓ d, f m) < ∏ m : α in s, f m :=
   by
   nth_rw_rhs 1 [← Finset.insert_erase hd]
-  rw [Finset.sum_insert (Finset.not_mem_erase d s)]
-  exact lt_add_of_pos_left _ hdf
+  rw [Finset.prod_insert (Finset.not_mem_erase d s)]
+  exact lt_mul_of_one_lt_left' _ hdf
+#align finset.prod_erase_lt_of_one_lt Finset.prod_erase_lt_of_one_lt
 #align finset.sum_erase_lt_of_pos Finset.sum_erase_lt_of_pos
 
 /- warning: finset.eq_one_of_prod_eq_one -> Finset.eq_one_of_prod_eq_one is a dubious translation:

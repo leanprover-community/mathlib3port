@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit f231b9d8ce4970789c592af9508e06a0884f72d1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2206,23 +2206,33 @@ theorem lintegral_supᵢ_ae {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measura
     
 #align measure_theory.lintegral_supr_ae MeasureTheory.lintegral_supᵢ_ae
 
-theorem lintegral_sub {f g : α → ℝ≥0∞} (hg : Measurable g) (hg_fin : (∫⁻ a, g a ∂μ) ≠ ∞)
+theorem lintegral_sub' {f g : α → ℝ≥0∞} (hg : AeMeasurable g μ) (hg_fin : (∫⁻ a, g a ∂μ) ≠ ∞)
     (h_le : g ≤ᵐ[μ] f) : (∫⁻ a, f a - g a ∂μ) = (∫⁻ a, f a ∂μ) - ∫⁻ a, g a ∂μ :=
   by
   refine' ENNReal.eq_sub_of_add_eq hg_fin _
-  rw [← lintegral_add_right _ hg]
+  rw [← lintegral_add_right' _ hg]
   exact lintegral_congr_ae (h_le.mono fun x hx => tsub_add_cancel_of_le hx)
+#align measure_theory.lintegral_sub' MeasureTheory.lintegral_sub'
+
+theorem lintegral_sub {f g : α → ℝ≥0∞} (hg : Measurable g) (hg_fin : (∫⁻ a, g a ∂μ) ≠ ∞)
+    (h_le : g ≤ᵐ[μ] f) : (∫⁻ a, f a - g a ∂μ) = (∫⁻ a, f a ∂μ) - ∫⁻ a, g a ∂μ :=
+  lintegral_sub' hg.AeMeasurable hg_fin h_le
 #align measure_theory.lintegral_sub MeasureTheory.lintegral_sub
 
-theorem lintegral_sub_le (f g : α → ℝ≥0∞) (hf : Measurable f) :
+theorem lintegral_sub_le' (f g : α → ℝ≥0∞) (hf : AeMeasurable f μ) :
     ((∫⁻ x, g x ∂μ) - ∫⁻ x, f x ∂μ) ≤ ∫⁻ x, g x - f x ∂μ :=
   by
   rw [tsub_le_iff_right]
   by_cases hfi : (∫⁻ x, f x ∂μ) = ∞
   · rw [hfi, add_top]
     exact le_top
-  · rw [← lintegral_add_right _ hf]
+  · rw [← lintegral_add_right' _ hf]
     exact lintegral_mono fun x => le_tsub_add
+#align measure_theory.lintegral_sub_le' MeasureTheory.lintegral_sub_le'
+
+theorem lintegral_sub_le (f g : α → ℝ≥0∞) (hf : Measurable f) :
+    ((∫⁻ x, g x ∂μ) - ∫⁻ x, f x ∂μ) ≤ ∫⁻ x, g x - f x ∂μ :=
+  lintegral_sub_le' f g hf.AeMeasurable
 #align measure_theory.lintegral_sub_le MeasureTheory.lintegral_sub_le
 
 theorem lintegral_strict_mono_of_ae_le_of_frequently_ae_lt {f g : α → ℝ≥0∞} (hg : AeMeasurable g μ)
