@@ -372,7 +372,7 @@ def compForgetAugmented : SimplicialObject.Augmented (Type u) :=
 extra degeneracy. -/
 def extraDegeneracyAugmentedCechNerve :
     ExtraDegeneracy (Arrow.mk <| terminal.from G).augmentedCechNerve :=
-  augmentedCechNerve.extraDegeneracy (Arrow.mk <| terminal.from G)
+  AugmentedCechNerve.extraDegeneracy (Arrow.mk <| terminal.from G)
     ⟨fun x => (1 : G),
       @Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _⟩
 #align classifying_space_universal_cover.extra_degeneracy_augmented_cech_nerve classifyingSpaceUniversalCover.extraDegeneracyAugmentedCechNerve

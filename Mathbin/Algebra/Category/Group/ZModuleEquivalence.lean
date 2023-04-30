@@ -28,6 +28,12 @@ universe u
 
 namespace ModuleCat
 
+/- warning: Module.forget₂_AddCommGroup_full -> ModuleCat.forget₂AddCommGroupFull is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Full.{u1, u1, succ u1, succ u1} (ModuleCat.{u1, 0} Int Int.ring) (ModuleCat.moduleCategory.{u1, 0} Int Int.ring) AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} (ModuleCat.{u1, 0} Int Int.ring) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.ring) (ModuleCat.moduleConcreteCategory.{u1, 0} Int Int.ring) AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.concreteCategory.{u1} (ModuleCat.hasForgetToAddCommGroup.{0, u1} Int Int.ring))
+but is expected to have type
+  CategoryTheory.Full.{u1, u1, succ u1, succ u1} (ModuleCat.{u1, 0} Int Int.instRingInt) (ModuleCat.moduleCategory.{u1, 0} Int Int.instRingInt) AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} (ModuleCat.{u1, 0} Int Int.instRingInt) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.instRingInt) (ModuleCat.moduleConcreteCategory.{u1, 0} Int Int.instRingInt) AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.concreteCategory.{u1} (ModuleCat.hasForgetToAddCommGroup.{0, u1} Int Int.instRingInt))
+Case conversion may be inaccurate. Consider using '#align Module.forget₂_AddCommGroup_full ModuleCat.forget₂AddCommGroupFullₓ'. -/
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is full. -/
 instance forget₂AddCommGroupFull : Full (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
     where preimage A B
@@ -39,6 +45,12 @@ instance forget₂AddCommGroupFull : Full (forget₂ (ModuleCat ℤ) AddCommGrou
         rw [int_smul_eq_zsmul, int_smul_eq_zsmul, map_zsmul, RingHom.id_apply] }
 #align Module.forget₂_AddCommGroup_full ModuleCat.forget₂AddCommGroupFull
 
+/- warning: Module.forget₂_AddCommGroup_ess_surj -> ModuleCat.forget₂_addCommGroupCat_essSurj is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.EssSurj.{u1, u1, succ u1, succ u1} (ModuleCat.{u1, 0} Int Int.ring) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.ring) AddCommGroupCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} (ModuleCat.{u1, 0} Int Int.ring) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.ring) (ModuleCat.moduleConcreteCategory.{u1, 0} Int Int.ring) AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.concreteCategory.{u1} (ModuleCat.hasForgetToAddCommGroup.{0, u1} Int Int.ring))
+but is expected to have type
+  CategoryTheory.EssSurj.{u1, u1, succ u1, succ u1} (ModuleCat.{u1, 0} Int Int.instRingInt) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.instRingInt) AddCommGroupCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} (ModuleCat.{u1, 0} Int Int.instRingInt) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.instRingInt) (ModuleCat.moduleConcreteCategory.{u1, 0} Int Int.instRingInt) AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.concreteCategory.{u1} (ModuleCat.hasForgetToAddCommGroup.{0, u1} Int Int.instRingInt))
+Case conversion may be inaccurate. Consider using '#align Module.forget₂_AddCommGroup_ess_surj ModuleCat.forget₂_addCommGroupCat_essSurjₓ'. -/
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is essentially surjective. -/
 instance forget₂_addCommGroupCat_essSurj : EssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
     where mem_essImage A :=
@@ -47,6 +59,12 @@ instance forget₂_addCommGroupCat_essSurj : EssSurj (forget₂ (ModuleCat ℤ) 
           inv := 𝟙 A }⟩⟩
 #align Module.forget₂_AddCommGroup_ess_surj ModuleCat.forget₂_addCommGroupCat_essSurj
 
+/- warning: Module.forget₂_AddCommGroup_is_equivalence -> ModuleCat.forget₂AddCommGroupIsEquivalence is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.IsEquivalence.{u1, u1, succ u1, succ u1} (ModuleCat.{u1, 0} Int Int.ring) (ModuleCat.moduleCategory.{u1, 0} Int Int.ring) AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} (ModuleCat.{u1, 0} Int Int.ring) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.ring) (ModuleCat.moduleConcreteCategory.{u1, 0} Int Int.ring) AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.concreteCategory.{u1} (ModuleCat.hasForgetToAddCommGroup.{0, u1} Int Int.ring))
+but is expected to have type
+  CategoryTheory.IsEquivalence.{u1, u1, succ u1, succ u1} (ModuleCat.{u1, 0} Int Int.instRingInt) (ModuleCat.moduleCategory.{u1, 0} Int Int.instRingInt) AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} (ModuleCat.{u1, 0} Int Int.instRingInt) AddCommGroupCat.{u1} (ModuleCat.moduleCategory.{u1, 0} Int Int.instRingInt) (ModuleCat.moduleConcreteCategory.{u1, 0} Int Int.instRingInt) AddCommGroupCat.largeCategory.{u1} AddCommGroupCat.concreteCategory.{u1} (ModuleCat.hasForgetToAddCommGroup.{0, u1} Int Int.instRingInt))
+Case conversion may be inaccurate. Consider using '#align Module.forget₂_AddCommGroup_is_equivalence ModuleCat.forget₂AddCommGroupIsEquivalenceₓ'. -/
 noncomputable instance forget₂AddCommGroupIsEquivalence :
     IsEquivalence (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u}) :=
   Equivalence.ofFullyFaithfullyEssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat)
