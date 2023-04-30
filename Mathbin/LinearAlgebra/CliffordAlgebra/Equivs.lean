@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.equivs
-! leanprover-community/mathlib commit 4d66277cfec381260ba05c68f9ae6ce2a118031d
+! leanprover-community/mathlib commit cf7a7252c1989efe5800e0b3cdfeb4228ac6b40e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ We show additionally that this equivalence sends `quaternion_algebra.conj` to th
 and vice-versa:
 
 * `clifford_algebra_quaternion.to_quaternion_star`
-* `clifford_algebra_quaternion.of_quaternion_conj`
+* `clifford_algebra_quaternion.of_quaternion_star`
 
 ## Dual numbers
 
@@ -320,20 +320,18 @@ theorem toQuaternion_ι (v : R × R) :
 
 /-- The "clifford conjugate" maps to the quaternion conjugate. -/
 theorem toQuaternion_star (c : CliffordAlgebra (q c₁ c₂)) :
-    toQuaternion (star c) = QuaternionAlgebra.conj (toQuaternion c) :=
+    toQuaternion (star c) = star (toQuaternion c) :=
   by
   simp only [CliffordAlgebra.star_def']
   induction c using CliffordAlgebra.induction
   case h_grade0 r =>
     simp only [reverse.commutes, AlgHom.commutes, QuaternionAlgebra.coe_algebraMap,
-      QuaternionAlgebra.conj_coe]
+      QuaternionAlgebra.star_coe]
   case h_grade1 x =>
     rw [reverse_ι, involute_ι, to_quaternion_ι, AlgHom.map_neg, to_quaternion_ι,
-      QuaternionAlgebra.neg_mk, conj_mk, neg_zero]
-  case h_mul x₁ x₂ hx₁ hx₂ =>
-    simp only [reverse.map_mul, AlgHom.map_mul, hx₁, hx₂, QuaternionAlgebra.conj_mul]
-  case h_add x₁ x₂ hx₁ hx₂ =>
-    simp only [reverse.map_add, AlgHom.map_add, hx₁, hx₂, QuaternionAlgebra.conj_add]
+      QuaternionAlgebra.neg_mk, star_mk, neg_zero]
+  case h_mul x₁ x₂ hx₁ hx₂ => simp only [reverse.map_mul, AlgHom.map_mul, hx₁, hx₂, star_mul]
+  case h_add x₁ x₂ hx₁ hx₂ => simp only [reverse.map_add, AlgHom.map_add, hx₁, hx₂, star_add]
 #align clifford_algebra_quaternion.to_quaternion_star CliffordAlgebraQuaternion.toQuaternion_star
 
 /-- Map a quaternion into the clifford algebra. -/
@@ -392,11 +390,11 @@ protected def equiv : CliffordAlgebra (q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :
 
 /-- The quaternion conjugate maps to the "clifford conjugate" (aka `star`). -/
 @[simp]
-theorem ofQuaternion_conj (q : ℍ[R,c₁,c₂]) : ofQuaternion q.conj = star (ofQuaternion q) :=
+theorem ofQuaternion_star (q : ℍ[R,c₁,c₂]) : ofQuaternion (star q) = star (ofQuaternion q) :=
   CliffordAlgebraQuaternion.equiv.Injective <| by
     rw [equiv_apply, equiv_apply, to_quaternion_star, to_quaternion_of_quaternion,
       to_quaternion_of_quaternion]
-#align clifford_algebra_quaternion.of_quaternion_conj CliffordAlgebraQuaternion.ofQuaternion_conj
+#align clifford_algebra_quaternion.of_quaternion_star CliffordAlgebraQuaternion.ofQuaternion_star
 
 -- this name is too short for us to want it visible after `open clifford_algebra_quaternion`
 attribute [protected] Q

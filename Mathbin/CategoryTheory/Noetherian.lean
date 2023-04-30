@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.noetherian
-! leanprover-community/mathlib commit 7c4c90f422a4a4477e4d8bc4dc9f1e634e6b2349
+! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Simple
 
 /-!
 # Artinian and noetherian categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An artinian category is a category in which objects do not
 have infinite decreasing sequences of subobjects.

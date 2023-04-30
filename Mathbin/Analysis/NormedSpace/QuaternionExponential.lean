@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.quaternion_exponential
-! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
+! leanprover-community/mathlib commit cf7a7252c1989efe5800e0b3cdfeb4228ac6b40e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,10 +32,6 @@ This file contains results about `exp` on `quaternion ℝ`.
 open Quaternion Nat
 
 namespace Quaternion
-
-theorem conj_exp (q : ℍ[ℝ]) : conj (exp ℝ q) = exp ℝ (conj q) :=
-  star_exp q
-#align quaternion.conj_exp Quaternion.conj_exp
 
 @[simp, norm_cast]
 theorem exp_coe (r : ℝ) : exp ℝ (r : ℍ[ℝ]) = ↑(exp ℝ r) :=
@@ -135,7 +131,7 @@ theorem normSq_exp (q : ℍ[ℝ]) : normSq (exp ℝ q) = exp ℝ q.re ^ 2 :=
       congr 1
       obtain hv | hv := eq_or_ne ‖q.im‖ 0
       · simp [hv]
-      rw [norm_sq_add, norm_sq_smul, conj_smul, coe_mul_eq_smul, smul_re, smul_re, conj_re, im_re,
+      rw [norm_sq_add, norm_sq_smul, star_smul, coe_mul_eq_smul, smul_re, smul_re, star_re, im_re,
         smul_zero, smul_zero, MulZeroClass.mul_zero, add_zero, div_pow, norm_sq_coe,
         norm_sq_eq_norm_sq, ← sq, div_mul_cancel _ (pow_ne_zero _ hv)]
     _ = exp ℝ q.re ^ 2 := by rw [Real.cos_sq_add_sin_sq, mul_one]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.zpow
-! leanprover-community/mathlib commit 03fda9112aa6708947da13944a19310684bfdfcb
+! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
 # Integer powers of square matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we define integer power of matrices, relying on
 the nonsingular inverse definition for negative powers.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.action
-! leanprover-community/mathlib commit aa812bd12a4dbbd2c129b38205f222df282df26d
+! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.GroupTheory.SemidirectProduct
 
 /-!
 # Actions as functors and as categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 From a multiplicative action M ↻ X, we can construct a functor from M to the category of
 types, mapping the single object of M to X and an element `m : M` to map `X → X` given by

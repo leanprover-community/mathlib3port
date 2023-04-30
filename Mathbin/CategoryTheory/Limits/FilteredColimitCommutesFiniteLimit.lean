@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.filtered_colimit_commutes_finite_limit
-! leanprover-community/mathlib commit 3f409bd9df181d26dd223170da7b6830ece18442
+! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
 # Filtered colimits commute with finite limits.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that for a functor `F : J × K ⥤ Type v`, when `J` is finite and `K` is filtered,
 the universal morphism `colimit_limit_to_limit_colimit F` comparing the

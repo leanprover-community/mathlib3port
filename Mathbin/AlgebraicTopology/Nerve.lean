@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.nerve
-! leanprover-community/mathlib commit 841aef25c9d7a5a5d63a3dcf7bc43386b2c206d6
+! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.AlgebraicTopology.SimplicialSet
 /-!
 
 # The nerve of a category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides the definition of the nerve of a category `C`,
 which is a simplicial set `nerve C` (see [goerss-jardine-2009], Example I.1.4).

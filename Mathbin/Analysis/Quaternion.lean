@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
+! leanprover-community/mathlib commit cf7a7252c1989efe5800e0b3cdfeb4228ac6b40e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,13 +44,13 @@ open RealInnerProductSpace
 namespace Quaternion
 
 instance : HasInner ℝ ℍ :=
-  ⟨fun a b => (a * b.conj).re⟩
+  ⟨fun a b => (a * star b).re⟩
 
 theorem inner_self (a : ℍ) : ⟪a, a⟫ = normSq a :=
   rfl
 #align quaternion.inner_self Quaternion.inner_self
 
-theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
+theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * star b).re :=
   rfl
 #align quaternion.inner_def Quaternion.inner_def
 
@@ -84,14 +84,14 @@ theorem nnnorm_coe (a : ℝ) : ‖(a : ℍ)‖₊ = ‖a‖₊ :=
 #align quaternion.nnnorm_coe Quaternion.nnnorm_coe
 
 @[simp]
-theorem norm_conj (a : ℍ) : ‖conj a‖ = ‖a‖ := by
-  simp_rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_conj]
-#align quaternion.norm_conj Quaternion.norm_conj
+theorem norm_star (a : ℍ) : ‖star a‖ = ‖a‖ := by
+  simp_rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_star]
+#align quaternion.norm_star Quaternion.norm_star
 
 @[simp]
-theorem nnnorm_conj (a : ℍ) : ‖conj a‖₊ = ‖a‖₊ :=
-  Subtype.ext <| norm_conj a
-#align quaternion.nnnorm_conj Quaternion.nnnorm_conj
+theorem nnnorm_star (a : ℍ) : ‖star a‖₊ = ‖a‖₊ :=
+  Subtype.ext <| norm_star a
+#align quaternion.nnnorm_star Quaternion.nnnorm_star
 
 noncomputable instance : NormedDivisionRing ℍ
     where
@@ -106,7 +106,7 @@ instance : NormedAlgebra ℝ ℍ where
   toAlgebra := (Quaternion.algebra : Algebra ℝ ℍ)
 
 instance : CstarRing ℍ
-    where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) (norm_conj x)
+    where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) (norm_star x)
 
 instance : Coe ℂ ℍ :=
   ⟨fun z => ⟨z.re, z.im, 0, 0⟩⟩
@@ -194,11 +194,6 @@ noncomputable def linearIsometryEquivTuple : ℍ ≃ₗᵢ[ℝ] EuclideanSpace �
     invFun := fun a => ⟨a 0, a 1, a 2, a 3⟩
     norm_map' := norm_piLp_equiv_symm_equivTuple }
 #align quaternion.linear_isometry_equiv_tuple Quaternion.linearIsometryEquivTuple
-
-@[continuity]
-theorem continuous_conj : Continuous (conj : ℍ → ℍ) :=
-  continuous_star
-#align quaternion.continuous_conj Quaternion.continuous_conj
 
 @[continuity]
 theorem continuous_coe : Continuous (coe : ℝ → ℍ) :=
