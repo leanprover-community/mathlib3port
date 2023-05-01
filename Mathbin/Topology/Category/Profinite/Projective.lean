@@ -36,6 +36,7 @@ open CategoryTheory Function
 
 namespace Profinite
 
+#print Profinite.projective_ultrafilter /-
 instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X)
     where Factors Y Z f g hg := by
     rw [epi_iff_surjective] at hg
@@ -49,7 +50,9 @@ instance projective_ultrafilter (X : Type u) : Projective (of <| Ultrafilter X)
     refine' dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
 #align Profinite.projective_ultrafilter Profinite.projective_ultrafilter
+-/
 
+#print Profinite.projectivePresentation /-
 /-- For any profinite `X`, the natural map `ultrafilter X → X` is a projective presentation. -/
 def projectivePresentation (X : Profinite.{u}) : ProjectivePresentation X
     where
@@ -60,6 +63,7 @@ def projectivePresentation (X : Profinite.{u}) : ProjectivePresentation X
     ConcreteCategory.epi_of_surjective _ fun x =>
       ⟨(pure x : Ultrafilter X), congr_fun (ultrafilter_extend_extends (𝟙 X)) x⟩
 #align Profinite.projective_presentation Profinite.projectivePresentation
+-/
 
 instance : EnoughProjectives Profinite.{u} where presentation X := ⟨projectivePresentation X⟩
 
