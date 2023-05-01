@@ -1845,11 +1845,23 @@ namespace Function
 
 variable {ι : Type _} {π : ι → Type _} [DecidableEq ι]
 
+/- warning: function.update_sup -> Function.update_sup is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), SemilatticeSup.{u2} (π i)] (f : forall (i : ι), π i) (i : ι) (a : π i) (b : π i), Eq.{max (succ u1) (succ u2)} (forall (a : ι), π a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i (Sup.sup.{u2} (π i) (SemilatticeSup.toHasSup.{u2} (π i) (_inst_2 i)) a b)) (Sup.sup.{max u1 u2} (forall (a : ι), π a) (Pi.hasSup.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => SemilatticeSup.toHasSup.{u2} (π i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), SemilatticeSup.{u2} (π i)] (f : forall (i : ι), π i) (i : ι) (a : π i) (b : π i), Eq.{max (succ u1) (succ u2)} (forall (a : ι), π a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i (Sup.sup.{u2} (π i) (SemilatticeSup.toSup.{u2} (π i) (_inst_2 i)) a b)) (Sup.sup.{max u1 u2} (forall (a : ι), π a) (Pi.instSupForAll.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => SemilatticeSup.toSup.{u2} (π i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align function.update_sup Function.update_supₓ'. -/
 theorem update_sup [∀ i, SemilatticeSup (π i)] (f : ∀ i, π i) (i : ι) (a b : π i) :
     f.update i (a ⊔ b) = f.update i a ⊔ f.update i b :=
   funext fun j => by obtain rfl | hji := eq_or_ne j i <;> simp [update_noteq, *]
 #align function.update_sup Function.update_sup
 
+/- warning: function.update_inf -> Function.update_inf is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), SemilatticeInf.{u2} (π i)] (f : forall (i : ι), π i) (i : ι) (a : π i) (b : π i), Eq.{max (succ u1) (succ u2)} (forall (a : ι), π a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i (Inf.inf.{u2} (π i) (SemilatticeInf.toHasInf.{u2} (π i) (_inst_2 i)) a b)) (Inf.inf.{max u1 u2} (forall (a : ι), π a) (Pi.hasInf.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => SemilatticeInf.toHasInf.{u2} (π i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), SemilatticeInf.{u2} (π i)] (f : forall (i : ι), π i) (i : ι) (a : π i) (b : π i), Eq.{max (succ u1) (succ u2)} (forall (a : ι), π a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i (Inf.inf.{u2} (π i) (SemilatticeInf.toInf.{u2} (π i) (_inst_2 i)) a b)) (Inf.inf.{max u1 u2} (forall (a : ι), π a) (Pi.instInfForAll.{u1, u2} ι (fun (a : ι) => π a) (fun (i : ι) => SemilatticeInf.toInf.{u2} (π i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align function.update_inf Function.update_infₓ'. -/
 theorem update_inf [∀ i, SemilatticeInf (π i)] (f : ∀ i, π i) (i : ι) (a b : π i) :
     f.update i (a ⊓ b) = f.update i a ⊓ f.update i b :=
   funext fun j => by obtain rfl | hji := eq_or_ne j i <;> simp [update_noteq, *]

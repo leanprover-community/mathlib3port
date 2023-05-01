@@ -558,6 +558,12 @@ def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : f i →ₙ* ∀ i, f i
 
 variable {f}
 
+/- warning: pi.mul_single_sup -> Pi.mulSingle_sup is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), SemilatticeSup.{u2} (f i)] [_inst_3 : forall (i : I), One.{u2} (f i)] (i : I) (x : f i) (y : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i (Sup.sup.{u2} (f i) (SemilatticeSup.toHasSup.{u2} (f i) (_inst_2 i)) x y)) (Sup.sup.{max u1 u2} (forall (i : I), f i) (Pi.hasSup.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => SemilatticeSup.toHasSup.{u2} (f i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i x) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i y))
+but is expected to have type
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), SemilatticeSup.{u2} (f i)] [_inst_3 : forall (i : I), One.{u2} (f i)] (i : I) (x : f i) (y : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.mulSingle.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i (Sup.sup.{u2} (f i) (SemilatticeSup.toSup.{u2} (f i) (_inst_2 i)) x y)) (Sup.sup.{max u2 u1} (forall (i : I), f i) (Pi.instSupForAll.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => SemilatticeSup.toSup.{u2} (f i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i x) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i y))
+Case conversion may be inaccurate. Consider using '#align pi.mul_single_sup Pi.mulSingle_supₓ'. -/
 @[to_additive]
 theorem Pi.mulSingle_sup [∀ i, SemilatticeSup (f i)] [∀ i, One (f i)] (i : I) (x y : f i) :
     Pi.mulSingle i (x ⊔ y) = Pi.mulSingle i x ⊔ Pi.mulSingle i y :=
@@ -565,6 +571,12 @@ theorem Pi.mulSingle_sup [∀ i, SemilatticeSup (f i)] [∀ i, One (f i)] (i : I
 #align pi.mul_single_sup Pi.mulSingle_sup
 #align pi.single_sup Pi.single_sup
 
+/- warning: pi.mul_single_inf -> Pi.mulSingle_inf is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), SemilatticeInf.{u2} (f i)] [_inst_3 : forall (i : I), One.{u2} (f i)] (i : I) (x : f i) (y : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i (Inf.inf.{u2} (f i) (SemilatticeInf.toHasInf.{u2} (f i) (_inst_2 i)) x y)) (Inf.inf.{max u1 u2} (forall (i : I), f i) (Pi.hasInf.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => SemilatticeInf.toHasInf.{u2} (f i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i x) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i y))
+but is expected to have type
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), SemilatticeInf.{u2} (f i)] [_inst_3 : forall (i : I), One.{u2} (f i)] (i : I) (x : f i) (y : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (Pi.mulSingle.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i (Inf.inf.{u2} (f i) (SemilatticeInf.toInf.{u2} (f i) (_inst_2 i)) x y)) (Inf.inf.{max u2 u1} (forall (i : I), f i) (Pi.instInfForAll.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => SemilatticeInf.toInf.{u2} (f i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i x) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_3 i) i y))
+Case conversion may be inaccurate. Consider using '#align pi.mul_single_inf Pi.mulSingle_infₓ'. -/
 @[to_additive]
 theorem Pi.mulSingle_inf [∀ i, SemilatticeInf (f i)] [∀ i, One (f i)] (i : I) (x y : f i) :
     Pi.mulSingle i (x ⊓ y) = Pi.mulSingle i x ⊓ Pi.mulSingle i y :=

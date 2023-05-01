@@ -190,6 +190,12 @@ section PiPartialOrder
 
 variable [DecidableEq ι] [∀ i, PartialOrder (α i)]
 
+/- warning: set.image_update_Icc -> Set.image_update_Icc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Icc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Icc.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Icc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Icc.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Icc Set.image_update_Iccₓ'. -/
 theorem image_update_Icc (f : ∀ i, α i) (i : ι) (a b : α i) :
     f.update i '' Icc a b = Icc (f.update i a) (f.update i b) :=
   by
@@ -205,58 +211,130 @@ theorem image_update_Icc (f : ∀ i, α i) (i : ι) (a b : α i) :
     · simpa only [Function.update_noteq hij.symm, le_antisymm_iff] using h j (mem_univ j)
 #align set.image_update_Icc Set.image_update_Icc
 
+/- warning: set.image_update_Ico -> Set.image_update_Ico is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ico.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Ico.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ico.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Ico.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ico Set.image_update_Icoₓ'. -/
 theorem image_update_Ico (f : ∀ i, α i) (i : ι) (a b : α i) :
     f.update i '' Ico a b = Ico (f.update i a) (f.update i b) := by
   rw [← Icc_diff_right, ← Icc_diff_right, image_diff (f.update_injective _), image_singleton,
     image_update_Icc]
 #align set.image_update_Ico Set.image_update_Ico
 
+/- warning: set.image_update_Ioc -> Set.image_update_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Ioc.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Ioc.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ioc Set.image_update_Iocₓ'. -/
 theorem image_update_Ioc (f : ∀ i, α i) (i : ι) (a b : α i) :
     f.update i '' Ioc a b = Ioc (f.update i a) (f.update i b) := by
   rw [← Icc_diff_left, ← Icc_diff_left, image_diff (f.update_injective _), image_singleton,
     image_update_Icc]
 #align set.image_update_Ioc Set.image_update_Ioc
 
+/- warning: set.image_update_Ioo -> Set.image_update_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioo.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Ioo.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioo.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Ioo.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ioo Set.image_update_Iooₓ'. -/
 theorem image_update_Ioo (f : ∀ i, α i) (i : ι) (a b : α i) :
     f.update i '' Ioo a b = Ioo (f.update i a) (f.update i b) := by
   rw [← Ico_diff_left, ← Ico_diff_left, image_diff (f.update_injective _), image_singleton,
     image_update_Ico]
 #align set.image_update_Ioo Set.image_update_Ioo
 
+/- warning: set.image_update_Icc_left -> Set.image_update_Icc_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Icc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (f i))) (Set.Icc.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Icc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (f i))) (Set.Icc.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+Case conversion may be inaccurate. Consider using '#align set.image_update_Icc_left Set.image_update_Icc_leftₓ'. -/
 theorem image_update_Icc_left (f : ∀ i, α i) (i : ι) (a : α i) :
     f.update i '' Icc a (f i) = Icc (f.update i a) f := by simpa using image_update_Icc f i a (f i)
 #align set.image_update_Icc_left Set.image_update_Icc_left
 
+/- warning: set.image_update_Ico_left -> Set.image_update_Ico_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ico.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (f i))) (Set.Ico.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ico.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (f i))) (Set.Ico.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ico_left Set.image_update_Ico_leftₓ'. -/
 theorem image_update_Ico_left (f : ∀ i, α i) (i : ι) (a : α i) :
     f.update i '' Ico a (f i) = Ico (f.update i a) f := by simpa using image_update_Ico f i a (f i)
 #align set.image_update_Ico_left Set.image_update_Ico_left
 
+/- warning: set.image_update_Ioc_left -> Set.image_update_Ioc_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (f i))) (Set.Ioc.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (f i))) (Set.Ioc.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ioc_left Set.image_update_Ioc_leftₓ'. -/
 theorem image_update_Ioc_left (f : ∀ i, α i) (i : ι) (a : α i) :
     f.update i '' Ioc a (f i) = Ioc (f.update i a) f := by simpa using image_update_Ioc f i a (f i)
 #align set.image_update_Ioc_left Set.image_update_Ioc_left
 
+/- warning: set.image_update_Ioo_left -> Set.image_update_Ioo_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioo.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (f i))) (Set.Ioo.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioo.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (f i))) (Set.Ioo.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i a) f)
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ioo_left Set.image_update_Ioo_leftₓ'. -/
 theorem image_update_Ioo_left (f : ∀ i, α i) (i : ι) (a : α i) :
     f.update i '' Ioo a (f i) = Ioo (f.update i a) f := by simpa using image_update_Ioo f i a (f i)
 #align set.image_update_Ioo_left Set.image_update_Ioo_left
 
+/- warning: set.image_update_Icc_right -> Set.image_update_Icc_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Icc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (f i) b)) (Set.Icc.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) f (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Icc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (f i) b)) (Set.Icc.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) f (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Icc_right Set.image_update_Icc_rightₓ'. -/
 theorem image_update_Icc_right (f : ∀ i, α i) (i : ι) (b : α i) :
     f.update i '' Icc (f i) b = Icc f (f.update i b) := by simpa using image_update_Icc f i (f i) b
 #align set.image_update_Icc_right Set.image_update_Icc_right
 
+/- warning: set.image_update_Ico_right -> Set.image_update_Ico_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ico.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (f i) b)) (Set.Ico.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) f (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ico.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (f i) b)) (Set.Ico.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) f (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ico_right Set.image_update_Ico_rightₓ'. -/
 theorem image_update_Ico_right (f : ∀ i, α i) (i : ι) (b : α i) :
     f.update i '' Ico (f i) b = Ico f (f.update i b) := by simpa using image_update_Ico f i (f i) b
 #align set.image_update_Ico_right Set.image_update_Ico_right
 
+/- warning: set.image_update_Ioc_right -> Set.image_update_Ioc_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (f i) b)) (Set.Ioc.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) f (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (f i) b)) (Set.Ioc.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) f (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ioc_right Set.image_update_Ioc_rightₓ'. -/
 theorem image_update_Ioc_right (f : ∀ i, α i) (i : ι) (b : α i) :
     f.update i '' Ioc (f i) b = Ioc f (f.update i b) := by simpa using image_update_Ioc f i (f i) b
 #align set.image_update_Ioc_right Set.image_update_Ioc_right
 
+/- warning: set.image_update_Ioo_right -> Set.image_update_Ioo_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioo.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (f i) b)) (Set.Ioo.{max u1 u2} (forall (a : ι), α a) (Pi.preorder.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) f (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.Ioo.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (f i) b)) (Set.Ioo.{max u2 u1} (forall (a : ι), α a) (Pi.preorder.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) f (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_Ioo_right Set.image_update_Ioo_rightₓ'. -/
 theorem image_update_Ioo_right (f : ∀ i, α i) (i : ι) (b : α i) :
     f.update i '' Ioo (f i) b = Ioo f (f.update i b) := by simpa using image_update_Ioo f i (f i) b
 #align set.image_update_Ioo_right Set.image_update_Ioo_right
 
 variable [∀ i, One (α i)]
 
+/- warning: set.image_mul_single_Icc -> Set.image_mulSingle_Icc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Icc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Icc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Icc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Icc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Icc Set.image_mulSingle_Iccₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Icc (i : ι) (a b : α i) :
     Pi.mulSingle i '' Icc a b = Icc (Pi.mulSingle i a) (Pi.mulSingle i b) :=
@@ -264,6 +342,12 @@ theorem image_mulSingle_Icc (i : ι) (a b : α i) :
 #align set.image_mul_single_Icc Set.image_mulSingle_Icc
 #align set.image_single_Icc Set.image_single_Icc
 
+/- warning: set.image_mul_single_Ico -> Set.image_mulSingle_Ico is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ico.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Ico.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ico.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Ico.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ico Set.image_mulSingle_Icoₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ico (i : ι) (a b : α i) :
     Pi.mulSingle i '' Ico a b = Ico (Pi.mulSingle i a) (Pi.mulSingle i b) :=
@@ -271,6 +355,12 @@ theorem image_mulSingle_Ico (i : ι) (a b : α i) :
 #align set.image_mul_single_Ico Set.image_mulSingle_Ico
 #align set.image_single_Ico Set.image_single_Ico
 
+/- warning: set.image_mul_single_Ioc -> Set.image_mulSingle_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Ioc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Ioc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ioc Set.image_mulSingle_Iocₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ioc (i : ι) (a b : α i) :
     Pi.mulSingle i '' Ioc a b = Ioc (Pi.mulSingle i a) (Pi.mulSingle i b) :=
@@ -278,6 +368,12 @@ theorem image_mulSingle_Ioc (i : ι) (a b : α i) :
 #align set.image_mul_single_Ioc Set.image_mulSingle_Ioc
 #align set.image_single_Ioc Set.image_single_Ioc
 
+/- warning: set.image_mul_single_Ioo -> Set.image_mulSingle_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioo.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a b)) (Set.Ioo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioo.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a b)) (Set.Ioo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ioo Set.image_mulSingle_Iooₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ioo (i : ι) (a b : α i) :
     Pi.mulSingle i '' Ioo a b = Ioo (Pi.mulSingle i a) (Pi.mulSingle i b) :=
@@ -285,6 +381,12 @@ theorem image_mulSingle_Ioo (i : ι) (a b : α i) :
 #align set.image_mul_single_Ioo Set.image_mulSingle_Ioo
 #align set.image_single_Ioo Set.image_single_Ioo
 
+/- warning: set.image_mul_single_Icc_left -> Set.image_mulSingle_Icc_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Icc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))))) (Set.Icc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Icc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))))) (Set.Icc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u2 u1} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Icc_left Set.image_mulSingle_Icc_leftₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Icc_left (i : ι) (a : α i) :
     Pi.mulSingle i '' Icc a 1 = Icc (Pi.mulSingle i a) 1 :=
@@ -292,6 +394,12 @@ theorem image_mulSingle_Icc_left (i : ι) (a : α i) :
 #align set.image_mul_single_Icc_left Set.image_mulSingle_Icc_left
 #align set.image_single_Icc_left Set.image_single_Icc_left
 
+/- warning: set.image_mul_single_Ico_left -> Set.image_mulSingle_Ico_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ico.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))))) (Set.Ico.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ico.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))))) (Set.Ico.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u2 u1} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ico_left Set.image_mulSingle_Ico_leftₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ico_left (i : ι) (a : α i) :
     Pi.mulSingle i '' Ico a 1 = Ico (Pi.mulSingle i a) 1 :=
@@ -299,6 +407,12 @@ theorem image_mulSingle_Ico_left (i : ι) (a : α i) :
 #align set.image_mul_single_Ico_left Set.image_mulSingle_Ico_left
 #align set.image_single_Ico_left Set.image_single_Ico_left
 
+/- warning: set.image_mul_single_Ioc_left -> Set.image_mulSingle_Ioc_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))))) (Set.Ioc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))))) (Set.Ioc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u2 u1} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ioc_left Set.image_mulSingle_Ioc_leftₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ioc_left (i : ι) (a : α i) :
     Pi.mulSingle i '' Ioc a 1 = Ioc (Pi.mulSingle i a) 1 :=
@@ -306,6 +420,12 @@ theorem image_mulSingle_Ioc_left (i : ι) (a : α i) :
 #align set.image_mul_single_Ioc_left Set.image_mulSingle_Ioc_left
 #align set.image_single_Ioc_left Set.image_single_Ioc_left
 
+/- warning: set.image_mul_single_Ioo_left -> Set.image_mulSingle_Ioo_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioo.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) a (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))))) (Set.Ioo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioo.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) a (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))))) (Set.Ioo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u2 u1} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ioo_left Set.image_mulSingle_Ioo_leftₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ioo_left (i : ι) (a : α i) :
     Pi.mulSingle i '' Ioo a 1 = Ioo (Pi.mulSingle i a) 1 :=
@@ -313,6 +433,12 @@ theorem image_mulSingle_Ioo_left (i : ι) (a : α i) :
 #align set.image_mul_single_Ioo_left Set.image_mulSingle_Ioo_left
 #align set.image_single_Ioo_left Set.image_single_Ioo_left
 
+/- warning: set.image_mul_single_Icc_right -> Set.image_mulSingle_Icc_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Icc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))) b)) (Set.Icc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Icc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))) b)) (Set.Icc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Icc_right Set.image_mulSingle_Icc_rightₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Icc_right (i : ι) (b : α i) :
     Pi.mulSingle i '' Icc 1 b = Icc 1 (Pi.mulSingle i b) :=
@@ -320,6 +446,12 @@ theorem image_mulSingle_Icc_right (i : ι) (b : α i) :
 #align set.image_mul_single_Icc_right Set.image_mulSingle_Icc_right
 #align set.image_single_Icc_right Set.image_single_Icc_right
 
+/- warning: set.image_mul_single_Ico_right -> Set.image_mulSingle_Ico_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ico.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))) b)) (Set.Ico.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ico.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))) b)) (Set.Ico.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ico_right Set.image_mulSingle_Ico_rightₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ico_right (i : ι) (b : α i) :
     Pi.mulSingle i '' Ico 1 b = Ico 1 (Pi.mulSingle i b) :=
@@ -327,6 +459,12 @@ theorem image_mulSingle_Ico_right (i : ι) (b : α i) :
 #align set.image_mul_single_Ico_right Set.image_mulSingle_Ico_right
 #align set.image_single_Ico_right Set.image_single_Ico_right
 
+/- warning: set.image_mul_single_Ioc_right -> Set.image_mulSingle_Ioc_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioc.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))) b)) (Set.Ioc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioc.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))) b)) (Set.Ioc.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ioc_right Set.image_mulSingle_Ioc_rightₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ioc_right (i : ι) (b : α i) :
     Pi.mulSingle i '' Ioc 1 b = Ioc 1 (Pi.mulSingle i b) :=
@@ -334,6 +472,12 @@ theorem image_mulSingle_Ioc_right (i : ι) (b : α i) :
 #align set.image_mul_single_Ioc_right Set.image_mulSingle_Ioc_right
 #align set.image_single_Ioc_right Set.image_single_Ioc_right
 
+/- warning: set.image_mul_single_Ioo_right -> Set.image_mulSingle_Ioo_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : forall (i : ι), PartialOrder.{u2} (α i)] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioo.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (_inst_2 i)) (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))) b)) (Set.Ioo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i) (Set.Ioo.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_2 i)) (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))) b)) (Set.Ioo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_2 i))) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_Ioo_right Set.image_mulSingle_Ioo_rightₓ'. -/
 @[to_additive]
 theorem image_mulSingle_Ioo_right (i : ι) (b : α i) :
     Pi.mulSingle i '' Ioo 1 b = Ioo 1 (Pi.mulSingle i b) :=
@@ -360,16 +504,34 @@ theorem pi_univ_uIcc (a b : ∀ i, α i) : (pi univ fun i => uIcc (a i) (b i)) =
 
 variable [DecidableEq ι]
 
+/- warning: set.image_update_uIcc -> Set.image_update_uIcc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] [_inst_2 : DecidableEq.{succ u1} ι] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i) (Set.uIcc.{u2} (α i) (_inst_1 i) a b)) (Set.uIcc.{max u1 u2} (forall (a : ι), α a) (Pi.lattice.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => _inst_1 i)) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] (f : forall (i : ι), α i) (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i) (Set.uIcc.{u1} (α i) (_inst_1 i) a b)) (Set.uIcc.{max u2 u1} (forall (a : ι), α a) (Pi.lattice.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => _inst_1 i)) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_uIcc Set.image_update_uIccₓ'. -/
 theorem image_update_uIcc (f : ∀ i, α i) (i : ι) (a b : α i) :
     f.update i '' uIcc a b = uIcc (f.update i a) (f.update i b) :=
   (image_update_Icc _ _ _ _).trans <| by simp_rw [uIcc, f.update_sup, f.update_inf]
 #align set.image_update_uIcc Set.image_update_uIcc
 
+/- warning: set.image_update_uIcc_left -> Set.image_update_uIcc_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] [_inst_2 : DecidableEq.{succ u1} ι] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i) (Set.uIcc.{u2} (α i) (_inst_1 i) a (f i))) (Set.uIcc.{max u1 u2} (forall (a : ι), α a) (Pi.lattice.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => _inst_1 i)) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i a) f)
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] (f : forall (i : ι), α i) (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i) (Set.uIcc.{u1} (α i) (_inst_1 i) a (f i))) (Set.uIcc.{max u2 u1} (forall (a : ι), α a) (Pi.lattice.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => _inst_1 i)) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i a) f)
+Case conversion may be inaccurate. Consider using '#align set.image_update_uIcc_left Set.image_update_uIcc_leftₓ'. -/
 theorem image_update_uIcc_left (f : ∀ i, α i) (i : ι) (a : α i) :
     f.update i '' uIcc a (f i) = uIcc (f.update i a) f := by
   simpa using image_update_uIcc f i a (f i)
 #align set.image_update_uIcc_left Set.image_update_uIcc_left
 
+/- warning: set.image_update_uIcc_right -> Set.image_update_uIcc_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] [_inst_2 : DecidableEq.{succ u1} ι] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (a : ι), α a)) (Set.image.{u2, max u1 u2} (α i) (forall (a : ι), α a) (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i) (Set.uIcc.{u2} (α i) (_inst_1 i) (f i) b)) (Set.uIcc.{max u1 u2} (forall (a : ι), α a) (Pi.lattice.{u1, u2} ι (fun (a : ι) => α a) (fun (i : ι) => _inst_1 i)) f (Function.update.{succ u1, succ u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] (f : forall (i : ι), α i) (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (a : ι), α a)) (Set.image.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i) (Set.uIcc.{u1} (α i) (_inst_1 i) (f i) b)) (Set.uIcc.{max u2 u1} (forall (a : ι), α a) (Pi.lattice.{u2, u1} ι (fun (a : ι) => α a) (fun (i : ι) => _inst_1 i)) f (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) f i b))
+Case conversion may be inaccurate. Consider using '#align set.image_update_uIcc_right Set.image_update_uIcc_rightₓ'. -/
 theorem image_update_uIcc_right (f : ∀ i, α i) (i : ι) (b : α i) :
     f.update i '' uIcc (f i) b = uIcc f (f.update i b) := by
   simpa using image_update_uIcc f i (f i) b
@@ -377,6 +539,12 @@ theorem image_update_uIcc_right (f : ∀ i, α i) (i : ι) (b : α i) :
 
 variable [∀ i, One (α i)]
 
+/- warning: set.image_mul_single_uIcc -> Set.image_mulSingle_uIcc is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i) (Set.uIcc.{u2} (α i) (_inst_1 i) a b)) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i) (Set.uIcc.{u1} (α i) (_inst_1 i) a b)) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i a) (Pi.mulSingle.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_uIcc Set.image_mulSingle_uIccₓ'. -/
 @[to_additive]
 theorem image_mulSingle_uIcc (i : ι) (a b : α i) :
     Pi.mulSingle i '' uIcc a b = uIcc (Pi.mulSingle i a) (Pi.mulSingle i b) :=
@@ -384,6 +552,12 @@ theorem image_mulSingle_uIcc (i : ι) (a b : α i) :
 #align set.image_mul_single_uIcc Set.image_mulSingle_uIcc
 #align set.image_single_uIcc Set.image_single_uIcc
 
+/- warning: set.image_mul_single_uIcc_left -> Set.image_mulSingle_uIcc_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (a : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i) (Set.uIcc.{u2} (α i) (_inst_1 i) a (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))))) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (a : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i) (Set.uIcc.{u1} (α i) (_inst_1 i) a (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))))) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i a) (OfNat.ofNat.{max u2 u1} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_uIcc_left Set.image_mulSingle_uIcc_leftₓ'. -/
 @[to_additive]
 theorem image_mulSingle_uIcc_left (i : ι) (a : α i) :
     Pi.mulSingle i '' uIcc a 1 = uIcc (Pi.mulSingle i a) 1 :=
@@ -391,6 +565,12 @@ theorem image_mulSingle_uIcc_left (i : ι) (a : α i) :
 #align set.image_mul_single_uIcc_left Set.image_mulSingle_uIcc_left
 #align set.image_single_uIcc_left Set.image_single_uIcc_left
 
+/- warning: set.image_mul_single_uIcc_right -> Set.image_mulSingle_uIcc_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Lattice.{u2} (α i)] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), One.{u2} (α i)] (i : ι) (b : α i), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.image.{u2, max u1 u2} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i) (Set.uIcc.{u2} (α i) (_inst_1 i) (OfNat.ofNat.{u2} (α i) 1 (OfNat.mk.{u2} (α i) 1 (One.one.{u2} (α i) (_inst_3 i)))) b)) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (OfNat.mk.{max u1 u2} (forall (i : ι), α i) 1 (One.one.{max u1 u2} (forall (i : ι), α i) (Pi.instOne.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_3 i))))) (Pi.mulSingle.{u1, u2} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i b))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Lattice.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : forall (i : ι), One.{u1} (α i)] (i : ι) (b : α i), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.image.{u1, max u2 u1} (α i) (forall (i : ι), α i) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i) (Set.uIcc.{u1} (α i) (_inst_1 i) (OfNat.ofNat.{u1} (α i) 1 (One.toOfNat1.{u1} (α i) (_inst_3 i))) b)) (Set.uIcc.{max u1 u2} (forall (i : ι), α i) (Pi.lattice.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (OfNat.ofNat.{max u1 u2} (forall (i : ι), α i) 1 (One.toOfNat1.{max u2 u1} (forall (j : ι), α j) (Pi.instOne.{u2, u1} ι (fun (j : ι) => α j) (fun (i : ι) => _inst_3 i)))) (Pi.mulSingle.{u2, u1} ι α (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => _inst_3 i) i b))
+Case conversion may be inaccurate. Consider using '#align set.image_mul_single_uIcc_right Set.image_mulSingle_uIcc_rightₓ'. -/
 @[to_additive]
 theorem image_mulSingle_uIcc_right (i : ι) (b : α i) :
     Pi.mulSingle i '' uIcc 1 b = uIcc 1 (Pi.mulSingle i b) :=
