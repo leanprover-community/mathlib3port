@@ -52,7 +52,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
   -- First, we have the topological basis of the cofiltered limit obtained by pulling back
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
-    TopCat.isTopologicalBasis_cofiltered_limit.{u} (F ⋙ Profinite.toTop)
+    TopCat.isTopologicalBasis_cofiltered_limit.{u} (F ⋙ Profinite.toTopCat)
       (Profinite.to_Top.map_cone C) (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _
       (fun i => isClopen_univ) (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
   rotate_left
@@ -219,16 +219,16 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
         exact hj.elim' (C.π.app j x)
     simp only [← not_nonempty_iff, ← not_forall]
     intro h
-    haveI : ∀ j : J, Nonempty ((F ⋙ Profinite.toTop).obj j) := h
-    haveI : ∀ j : J, T2Space ((F ⋙ Profinite.toTop).obj j) := fun j =>
+    haveI : ∀ j : J, Nonempty ((F ⋙ Profinite.toTopCat).obj j) := h
+    haveI : ∀ j : J, T2Space ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
       (inferInstance : T2Space (F.obj j))
-    haveI : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTop).obj j) := fun j =>
+    haveI : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
       (inferInstance : CompactSpace (F.obj j))
-    have cond := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system (F ⋙ Profinite.toTop)
+    have cond := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system (F ⋙ Profinite.toTopCat)
     suffices : Nonempty C.X
     exact IsEmpty.false (S.proj this.some)
     let D := Profinite.to_Top.map_cone C
-    have hD : is_limit D := is_limit_of_preserves Profinite.toTop hC
+    have hD : is_limit D := is_limit_of_preserves Profinite.toTopCat hC
     have CD := (hD.cone_point_unique_up_to_iso (TopCat.limitConeIsLimit.{u} _)).inv
     exact cond.map CD
   · let f' : LocallyConstant C.X S := ⟨S.proj, S.proj_is_locally_constant⟩

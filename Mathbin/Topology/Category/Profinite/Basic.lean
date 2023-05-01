@@ -51,14 +51,17 @@ open CategoryTheory
 
 open Topology
 
+#print Profinite /-
 /-- The type of profinite topological spaces. -/
 structure Profinite where
   toCompHaus : CompHaus
   [IsTotallyDisconnected : TotallyDisconnectedSpace to_CompHaus]
 #align Profinite Profinite
+-/
 
 namespace Profinite
 
+#print Profinite.of /-
 /-- Construct a term of `Profinite` from a type endowed with the structure of a
 compact, Hausdorff and totally disconnected topological space.
 -/
@@ -66,21 +69,28 @@ def of (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] [TotallyDi
     Profinite :=
   ⟨⟨⟨X⟩⟩⟩
 #align Profinite.of Profinite.of
+-/
 
 instance : Inhabited Profinite :=
   ⟨Profinite.of PEmpty⟩
 
+#print Profinite.category /-
 instance category : Category Profinite :=
   InducedCategory.category toCompHaus
 #align Profinite.category Profinite.category
+-/
 
+#print Profinite.concreteCategory /-
 instance concreteCategory : ConcreteCategory Profinite :=
   InducedCategory.concreteCategory _
 #align Profinite.concrete_category Profinite.concreteCategory
+-/
 
+#print Profinite.hasForget₂ /-
 instance hasForget₂ : HasForget₂ Profinite TopCat :=
   InducedCategory.hasForget₂ _
 #align Profinite.has_forget₂ Profinite.hasForget₂
+-/
 
 instance : CoeSort Profinite (Type _) :=
   ⟨fun X => X.toCompHaus⟩
@@ -100,11 +110,23 @@ theorem coe_toCompHaus {X : Profinite} : (X.toCompHaus : Type _) = X :=
   rfl
 #align Profinite.coe_to_CompHaus Profinite.coe_toCompHaus
 
+/- warning: Profinite.coe_id -> Profinite.coe_id is a dubious translation:
+lean 3 declaration is
+  forall (X : Profinite.{u1}), Eq.{succ u1} ((fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X)))) (CategoryTheory.CategoryStruct.id.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1}) X)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X X) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X)))) (CategoryTheory.CategoryStruct.id.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1}) X)) (id.{succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))))
+but is expected to have type
+  forall (X : Profinite.{u1}), Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X)) (CategoryTheory.CategoryStruct.id.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1}) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X)) (id.{succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X))
+Case conversion may be inaccurate. Consider using '#align Profinite.coe_id Profinite.coe_idₓ'. -/
 @[simp]
 theorem coe_id (X : Profinite) : (𝟙 X : X → X) = id :=
   rfl
 #align Profinite.coe_id Profinite.coe_id
 
+/- warning: Profinite.coe_comp -> Profinite.coe_comp is a dubious translation:
+lean 3 declaration is
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} {Z : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (g : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Y Z), Eq.{succ u1} ((fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1}) X Y Z f g)) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Z) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1}) X Y Z f g)) (Function.comp.{succ u1, succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z))) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Y Z) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Z)))) g) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) f))
+but is expected to have type
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} {Z : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (g : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Y Z), Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Z)) (CategoryTheory.CategoryStruct.comp.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1}) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Z) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y Z g)) (Function.comp.{succ u1, succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Z) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y Z g) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f))
+Case conversion may be inaccurate. Consider using '#align Profinite.coe_comp Profinite.coe_compₓ'. -/
 @[simp]
 theorem coe_comp {X Y Z : Profinite} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X → Z) = g ∘ f :=
   rfl
@@ -112,26 +134,33 @@ theorem coe_comp {X Y Z : Profinite} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X 
 
 end Profinite
 
+#print profiniteToCompHaus /-
 /-- The fully faithful embedding of `Profinite` in `CompHaus`. -/
 @[simps]
 def profiniteToCompHaus : Profinite ⥤ CompHaus :=
   inducedFunctor _ deriving Full, Faithful
 #align Profinite_to_CompHaus profiniteToCompHaus
+-/
 
+#print Profinite.toTopCat /-
 /-- The fully faithful embedding of `Profinite` in `Top`. This is definitionally the same as the
 obvious composite. -/
 @[simps]
-def Profinite.toTop : Profinite ⥤ TopCat :=
+def Profinite.toTopCat : Profinite ⥤ TopCat :=
   forget₂ _ _ deriving Full, Faithful
-#align Profinite.to_Top Profinite.toTop
+#align Profinite.to_Top Profinite.toTopCat
+-/
 
+#print Profinite.to_compHausToTopCat /-
 @[simp]
-theorem Profinite.to_compHausToTop : profiniteToCompHaus ⋙ compHausToTop = Profinite.toTop :=
+theorem Profinite.to_compHausToTopCat : profiniteToCompHaus ⋙ compHausToTop = Profinite.toTopCat :=
   rfl
-#align Profinite.to_CompHaus_to_Top Profinite.to_compHausToTop
+#align Profinite.to_CompHaus_to_Top Profinite.to_compHausToTopCat
+-/
 
 section Profinite
 
+#print CompHaus.toProfiniteObj /-
 -- Without explicit universe annotations here, Lean introduces two universe variables and
 -- unhelpfully defines a function `CompHaus.{max u₁ u₂} → Profinite.{max u₁ u₂}`.
 /--
@@ -147,7 +176,14 @@ def CompHaus.toProfiniteObj (X : CompHaus.{u}) : Profinite.{u}
       is_hausdorff := ConnectedComponents.t2 }
   IsTotallyDisconnected := ConnectedComponents.totallyDisconnectedSpace
 #align CompHaus.to_Profinite_obj CompHaus.toProfiniteObj
+-/
 
+/- warning: Profinite.to_CompHaus_equivalence -> Profinite.toCompHausEquivalence is a dubious translation:
+lean 3 declaration is
+  forall (X : CompHaus.{u1}) (Y : Profinite.{u1}), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) (CompHaus.toProfiniteObj.{u1} X) Y) (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} CompHaus.{u1} CompHaus.category.{u1} profiniteToCompHaus.{u1} Y))
+but is expected to have type
+  forall (X : CompHaus.{u1}) (Y : Profinite.{u1}), Equiv.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) (CompHaus.toProfiniteObj.{u1} X) Y) (Quiver.Hom.{succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) X (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} CompHaus.{u1} CompHaus.category.{u1} profiniteToCompHaus.{u1}) Y))
+Case conversion may be inaccurate. Consider using '#align Profinite.to_CompHaus_equivalence Profinite.toCompHausEquivalenceₓ'. -/
 /-- (Implementation) The bijection of homsets to establish the reflective adjunction of Profinite
 spaces in compact Hausdorff spaces.
 -/
@@ -162,32 +198,45 @@ def Profinite.toCompHausEquivalence (X : CompHaus.{u}) (Y : Profinite.{u}) :
   right_inv f := ContinuousMap.ext fun x => rfl
 #align Profinite.to_CompHaus_equivalence Profinite.toCompHausEquivalence
 
+#print CompHaus.toProfinite /-
 /-- The connected_components functor from compact Hausdorff spaces to profinite spaces,
 left adjoint to the inclusion functor.
 -/
 def CompHaus.toProfinite : CompHaus ⥤ Profinite :=
   Adjunction.leftAdjointOfEquiv Profinite.toCompHausEquivalence fun _ _ _ _ _ => rfl
 #align CompHaus.to_Profinite CompHaus.toProfinite
+-/
 
+/- warning: CompHaus.to_Profinite_obj' -> CompHaus.toProfinite_obj' is a dubious translation:
+lean 3 declaration is
+  forall (X : CompHaus.{u1}), Eq.{succ (succ u1)} Type.{u1} (coeSort.{succ (succ u1), succ (succ u1)} Profinite.{u1} Type.{u1} Profinite.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Profinite.{u1} Profinite.category.{u1} CompHaus.toProfinite.{u1} X)) (ConnectedComponents.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CompHaus.{u1} Type.{u1} CompHaus.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} (CompHaus.toTop.{u1} X)))
+but is expected to have type
+  forall (X : CompHaus.{u1}), Eq.{succ (succ u1)} Type.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} CompHaus.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CompHaus.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CompHaus.{u1} CompHaus.category.{u1})) Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} CompHaus.{u1} CompHaus.category.{u1} Profinite.{u1} Profinite.category.{u1} CompHaus.toProfinite.{u1}) X)))) (ConnectedComponents.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} X)) (TopCat.topologicalSpace_coe.{u1} (CompHaus.toTop.{u1} X)))
+Case conversion may be inaccurate. Consider using '#align CompHaus.to_Profinite_obj' CompHaus.toProfinite_obj'ₓ'. -/
 theorem CompHaus.toProfinite_obj' (X : CompHaus) :
     ↥(CompHaus.toProfinite.obj X) = ConnectedComponents X :=
   rfl
 #align CompHaus.to_Profinite_obj' CompHaus.toProfinite_obj'
 
+#print FintypeCat.botTopology /-
 /-- Finite types are given the discrete topology. -/
 def FintypeCat.botTopology (A : FintypeCat) : TopologicalSpace A :=
   ⊥
 #align Fintype.bot_topology FintypeCat.botTopology
+-/
 
 section DiscreteTopology
 
 attribute [local instance] FintypeCat.botTopology
 
+#print FintypeCat.discreteTopology /-
 @[local instance]
 theorem FintypeCat.discreteTopology (A : FintypeCat) : DiscreteTopology A :=
   ⟨rfl⟩
 #align Fintype.discrete_topology FintypeCat.discreteTopology
+-/
 
+#print FintypeCat.toProfinite /-
 /-- The natural functor from `Fintype` to `Profinite`, endowing a finite type with the
 discrete topology. -/
 @[simps]
@@ -196,6 +245,7 @@ def FintypeCat.toProfinite : FintypeCat ⥤ Profinite
   obj A := Profinite.of A
   map _ _ f := ⟨f⟩
 #align Fintype.to_Profinite FintypeCat.toProfinite
+-/
 
 end DiscreteTopology
 
@@ -203,6 +253,7 @@ end Profinite
 
 namespace Profinite
 
+#print Profinite.limitCone /-
 -- TODO the following construction of limits could be generalised
 -- to allow diagrams in lower universes.
 /-- An explicit limit cone for a functor `F : J ⥤ Profinite`, defined in terms of
@@ -217,7 +268,9 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.
         exact Subtype.totallyDisconnectedSpace }
   π := { app := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).π.app }
 #align Profinite.limit_cone Profinite.limitCone
+-/
 
+#print Profinite.limitConeIsLimit /-
 /-- The limit cone `Profinite.limit_cone F` is indeed a limit cone. -/
 def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) :
     Limits.IsLimit (limitCone F)
@@ -227,64 +280,102 @@ def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) :
       (profiniteToCompHaus.mapCone S)
   uniq S m h := (CompHaus.limitConeIsLimit.{u, u} _).uniq (profiniteToCompHaus.mapCone S) _ h
 #align Profinite.limit_cone_is_limit Profinite.limitConeIsLimit
+-/
 
+#print Profinite.toProfiniteAdjToCompHaus /-
 /-- The adjunction between CompHaus.to_Profinite and Profinite.to_CompHaus -/
 def toProfiniteAdjToCompHaus : CompHaus.toProfinite ⊣ profiniteToCompHaus :=
   Adjunction.adjunctionOfEquivLeft _ _
 #align Profinite.to_Profinite_adj_to_CompHaus Profinite.toProfiniteAdjToCompHaus
+-/
 
+#print Profinite.toCompHaus.reflective /-
 /-- The category of profinite sets is reflective in the category of compact hausdroff spaces -/
 instance toCompHaus.reflective : Reflective profiniteToCompHaus
     where toIsRightAdjoint := ⟨CompHaus.toProfinite, Profinite.toProfiniteAdjToCompHaus⟩
 #align Profinite.to_CompHaus.reflective Profinite.toCompHaus.reflective
+-/
 
+#print Profinite.toCompHaus.createsLimits /-
 noncomputable instance toCompHaus.createsLimits : CreatesLimits profiniteToCompHaus :=
   monadicCreatesLimits _
 #align Profinite.to_CompHaus.creates_limits Profinite.toCompHaus.createsLimits
+-/
 
-noncomputable instance toTop.reflective : Reflective Profinite.toTop :=
+#print Profinite.toTopCat.reflective /-
+noncomputable instance toTopCat.reflective : Reflective Profinite.toTopCat :=
   Reflective.comp profiniteToCompHaus compHausToTop
-#align Profinite.to_Top.reflective Profinite.toTop.reflective
+#align Profinite.to_Top.reflective Profinite.toTopCat.reflective
+-/
 
-noncomputable instance toTop.createsLimits : CreatesLimits Profinite.toTop :=
+#print Profinite.toTopCat.createsLimits /-
+noncomputable instance toTopCat.createsLimits : CreatesLimits Profinite.toTopCat :=
   monadicCreatesLimits _
-#align Profinite.to_Top.creates_limits Profinite.toTop.createsLimits
+#align Profinite.to_Top.creates_limits Profinite.toTopCat.createsLimits
+-/
 
+#print Profinite.hasLimits /-
 instance hasLimits : Limits.HasLimits Profinite :=
-  has_limits_of_has_limits_creates_limits Profinite.toTop
+  has_limits_of_has_limits_creates_limits Profinite.toTopCat
 #align Profinite.has_limits Profinite.hasLimits
+-/
 
+#print Profinite.hasColimits /-
 instance hasColimits : Limits.HasColimits Profinite :=
   has_colimits_of_reflective profiniteToCompHaus
 #align Profinite.has_colimits Profinite.hasColimits
+-/
 
+#print Profinite.forgetPreservesLimits /-
 noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Profinite) := by
-  apply limits.comp_preserves_limits Profinite.toTop (forget TopCat)
+  apply limits.comp_preserves_limits Profinite.toTopCat (forget TopCat)
 #align Profinite.forget_preserves_limits Profinite.forgetPreservesLimits
+-/
 
 variable {X Y : Profinite.{u}} (f : X ⟶ Y)
 
+/- warning: Profinite.is_closed_map -> Profinite.isClosedMap is a dubious translation:
+lean 3 declaration is
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), IsClosedMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (TopCat.topologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (TopCat.topologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) f)
+but is expected to have type
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), IsClosedMap.{u1, u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Profinite.instTopologicalSpaceObjProfiniteToQuiverToCategoryStructCategoryTypeTypesToPrefunctorForgetConcreteCategory.{u1} X) (Profinite.instTopologicalSpaceObjProfiniteToQuiverToCategoryStructCategoryTypeTypesToPrefunctorForgetConcreteCategory.{u1} Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f)
+Case conversion may be inaccurate. Consider using '#align Profinite.is_closed_map Profinite.isClosedMapₓ'. -/
 /-- Any morphism of profinite spaces is a closed map. -/
 theorem isClosedMap : IsClosedMap f :=
   CompHaus.isClosedMap _
 #align Profinite.is_closed_map Profinite.isClosedMap
 
+/- warning: Profinite.is_iso_of_bijective -> Profinite.isIso_of_bijective is a dubious translation:
+lean 3 declaration is
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) f)) -> (CategoryTheory.IsIso.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y f)
+but is expected to have type
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f)) -> (CategoryTheory.IsIso.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y f)
+Case conversion may be inaccurate. Consider using '#align Profinite.is_iso_of_bijective Profinite.isIso_of_bijectiveₓ'. -/
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 theorem isIso_of_bijective (bij : Function.Bijective f) : IsIso f :=
   haveI := CompHaus.isIso_of_bijective (Profinite_to_CompHaus.map f) bij
   is_iso_of_fully_faithful profiniteToCompHaus _
 #align Profinite.is_iso_of_bijective Profinite.isIso_of_bijective
 
+/- warning: Profinite.iso_of_bijective -> Profinite.isoOfBijective is a dubious translation:
+lean 3 declaration is
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) f)) -> (CategoryTheory.Iso.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y)
+but is expected to have type
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), (Function.Bijective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f)) -> (CategoryTheory.Iso.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y)
+Case conversion may be inaccurate. Consider using '#align Profinite.iso_of_bijective Profinite.isoOfBijectiveₓ'. -/
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
   letI := Profinite.isIso_of_bijective f bij
   as_iso f
 #align Profinite.iso_of_bijective Profinite.isoOfBijective
 
+#print Profinite.forget_reflectsIsomorphisms /-
 instance forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget Profinite) :=
   ⟨by intro A B f hf <;> exact Profinite.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 #align Profinite.forget_reflects_isomorphisms Profinite.forget_reflectsIsomorphisms
+-/
 
+#print Profinite.isoOfHomeo /-
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
 def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
@@ -298,7 +389,9 @@ def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
     ext x
     exact f.apply_symm_apply x
 #align Profinite.iso_of_homeo Profinite.isoOfHomeo
+-/
 
+#print Profinite.homeoOfIso /-
 /-- Construct a homeomorphism from an isomorphism. -/
 @[simps]
 def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
@@ -313,7 +406,9 @@ def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
   continuous_toFun := f.Hom.Continuous
   continuous_invFun := f.inv.Continuous
 #align Profinite.homeo_of_iso Profinite.homeoOfIso
+-/
 
+#print Profinite.isoEquivHomeo /-
 /-- The equivalence between isomorphisms in `Profinite` and homeomorphisms
 of topological spaces. -/
 @[simps]
@@ -328,7 +423,14 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y)
     ext
     rfl
 #align Profinite.iso_equiv_homeo Profinite.isoEquivHomeo
+-/
 
+/- warning: Profinite.epi_iff_surjective -> Profinite.epi_iff_surjective is a dubious translation:
+lean 3 declaration is
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), Iff (CategoryTheory.Epi.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y f) (Function.Surjective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) f))
+but is expected to have type
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), Iff (CategoryTheory.Epi.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y f) (Function.Surjective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f))
+Case conversion may be inaccurate. Consider using '#align Profinite.epi_iff_surjective Profinite.epi_iff_surjectiveₓ'. -/
 theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
   by
   constructor
@@ -364,6 +466,12 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     apply (forget Profinite).epi_of_epi_map
 #align Profinite.epi_iff_surjective Profinite.epi_iff_surjective
 
+/- warning: Profinite.mono_iff_injective -> Profinite.mono_iff_injective is a dubious translation:
+lean 3 declaration is
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), Iff (CategoryTheory.Mono.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y f) (Function.Injective.{succ u1, succ u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (coeFn.{succ u1, succ u1} (Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y) (fun (_x : ContinuousMap.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) => (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) -> (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) (ContinuousMap.hasCoeToFun.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (coeSort.{succ (succ u1), succ (succ u1)} (CategoryTheory.Bundled.{u1, u1} TopologicalSpace.{u1}) Type.{u1} (CategoryTheory.Bundled.hasCoeToSort.{u1, u1} TopologicalSpace.{u1}) (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} X))) (CategoryTheory.Bundled.str.{u1, u1} TopologicalSpace.{u1} (CompHaus.toTop.{u1} (Profinite.toCompHaus.{u1} Y)))) f))
+but is expected to have type
+  forall {X : Profinite.{u1}} {Y : Profinite.{u1}} (f : Quiver.Hom.{succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) X Y), Iff (CategoryTheory.Mono.{u1, succ u1} Profinite.{u1} Profinite.category.{u1} X Y f) (Function.Injective.{succ u1, succ u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X) (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) Y) (Prefunctor.map.{succ u1, succ u1, succ u1, succ u1} Profinite.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Profinite.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Profinite.{u1} Profinite.category.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} Profinite.{u1} Profinite.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} Profinite.{u1} Profinite.category.{u1} Profinite.concreteCategory.{u1})) X Y f))
+Case conversion may be inaccurate. Consider using '#align Profinite.mono_iff_injective Profinite.mono_iff_injectiveₓ'. -/
 theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   constructor
