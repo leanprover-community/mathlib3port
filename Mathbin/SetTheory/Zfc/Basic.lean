@@ -1384,14 +1384,16 @@ def unionₛ : ZFSet → ZFSet :=
 -- mathport name: Set.sUnion
 prefix:110 "⋃₀ " => ZFSet.unionₛ
 
+#print ZFSet.interₛ /-
 /-- The intersection operator, the collection of elements in all of the elements of a ZFC set. We
 special-case `⋂₀ ∅ = ∅`. -/
-noncomputable def sInter (x : ZFSet) : ZFSet := by
+noncomputable def interₛ (x : ZFSet) : ZFSet := by
   classical exact dite x.nonempty (fun h => { y ∈ h.some | ∀ z ∈ x, y ∈ z }) fun _ => ∅
-#align Set.sInter ZFSet.sInter
+#align Set.sInter ZFSet.interₛ
+-/
 
 -- mathport name: Set.sInter
-prefix:110 "⋂₀ " => ZFSet.sInter
+prefix:110 "⋂₀ " => ZFSet.interₛ
 
 /- warning: Set.mem_sUnion -> ZFSet.mem_unionₛ is a dubious translation:
 lean 3 declaration is
@@ -1408,12 +1410,14 @@ theorem mem_unionₛ {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
 #align Set.mem_sUnion ZFSet.mem_unionₛ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
+#print ZFSet.mem_interₛ /-
+theorem mem_interₛ {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
   by
   rw [sInter, dif_pos h]
   simp only [mem_to_set, mem_sep, and_iff_right_iff_imp]
   exact fun H => H _ h.some_mem
-#align Set.mem_sInter ZFSet.mem_sInter
+#align Set.mem_sInter ZFSet.mem_interₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.unionₛ_empty /-
@@ -1425,18 +1429,22 @@ theorem unionₛ_empty : ⋃₀ (∅ : ZFSet) = ∅ := by
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.interₛ_empty /-
 @[simp]
-theorem sInter_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
+theorem interₛ_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
   dif_neg <| by simp
-#align Set.sInter_empty ZFSet.sInter_empty
+#align Set.sInter_empty ZFSet.interₛ_empty
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_of_mem_sInter {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+#print ZFSet.mem_of_mem_interₛ /-
+theorem mem_of_mem_interₛ {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
   by
   rcases eq_empty_or_nonempty x with (rfl | hx)
   · exact (not_mem_empty z hz).elim
   · exact (mem_sInter hx).1 hy z hz
-#align Set.mem_of_mem_sInter ZFSet.mem_of_mem_sInter
+#align Set.mem_of_mem_sInter ZFSet.mem_of_mem_interₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.mem_unionₛ_of_mem /-
@@ -1446,9 +1454,11 @@ theorem mem_unionₛ_of_mem {x y z : ZFSet} (hy : y ∈ z) (hz : z ∈ x) : y �
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem not_mem_sInter_of_not_mem {x y z : ZFSet} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
-  fun hx => hy <| mem_of_mem_sInter hx hz
-#align Set.not_mem_sInter_of_not_mem ZFSet.not_mem_sInter_of_not_mem
+#print ZFSet.not_mem_interₛ_of_not_mem /-
+theorem not_mem_interₛ_of_not_mem {x y z : ZFSet} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
+  fun hx => hy <| mem_of_mem_interₛ hx hz
+#align Set.not_mem_sInter_of_not_mem ZFSet.not_mem_interₛ_of_not_mem
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.unionₛ_singleton /-
@@ -1459,29 +1469,33 @@ theorem unionₛ_singleton {x : ZFSet.{u}} : ⋃₀ ({x} : ZFSet) = x :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.interₛ_singleton /-
 @[simp]
-theorem sInter_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
+theorem interₛ_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
   ext fun y => by simp_rw [mem_sInter (singleton_nonempty x), mem_singleton, forall_eq]
-#align Set.sInter_singleton ZFSet.sInter_singleton
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.to_set_unionₛ /-
-@[simp]
-theorem to_set_unionₛ (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
-  by
-  ext
-  simp
-#align Set.to_set_sUnion ZFSet.to_set_unionₛ
+#align Set.sInter_singleton ZFSet.interₛ_singleton
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
+#print ZFSet.toSet_unionₛ /-
+@[simp]
+theorem toSet_unionₛ (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
+  by
+  ext
+  simp
+#align Set.to_set_sUnion ZFSet.toSet_unionₛ
+-/
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.toSet_interₛ /-
+theorem toSet_interₛ {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
   by
   ext
   simp [mem_sInter h]
-#align Set.to_set_sInter ZFSet.toSet_sInter
+#align Set.to_set_sInter ZFSet.toSet_interₛ
+-/
 
 #print ZFSet.singleton_injective /-
 theorem singleton_injective : Function.Injective (@singleton ZFSet ZFSet _) := fun x y H =>
@@ -2183,17 +2197,17 @@ theorem ofSet.inj {x y : ZFSet.{u}} (h : (x : Class.{u}) = y) : x = y :=
 #align Class.of_Set.inj Class.ofSet.inj
 -/
 
-#print Class.toSet_of_setCat /-
+#print Class.toSet_of_ZFSet /-
 @[simp]
-theorem toSet_of_setCat (A : Class.{u}) (x : ZFSet.{u}) : ToSet A x ↔ A x :=
+theorem toSet_of_ZFSet (A : Class.{u}) (x : ZFSet.{u}) : ToSet A x ↔ A x :=
   ⟨fun ⟨y, yx, py⟩ => by rwa [of_Set.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
-#align Class.to_Set_of_Set Class.toSet_of_setCat
+#align Class.to_Set_of_Set Class.toSet_of_ZFSet
 -/
 
 #print Class.coe_mem /-
 @[simp, norm_cast]
 theorem coe_mem {x : ZFSet.{u}} {A : Class.{u}} : (x : Class.{u}) ∈ A ↔ A x :=
-  toSet_of_setCat _ _
+  toSet_of_ZFSet _ _
 #align Class.coe_mem Class.coe_mem
 -/
 
@@ -2316,30 +2330,39 @@ theorem mem_unionₛ {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.interₛ_apply /-
 @[simp]
-theorem sInter_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z :=
+theorem interₛ_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z :=
   by
   refine' ⟨fun hxy z hxz => hxy _ ⟨z, rfl, hxz⟩, _⟩
   rintro H - ⟨z, rfl, hxz⟩
   exact H _ hxz
-#align Class.sInter_apply Class.sInter_apply
+#align Class.sInter_apply Class.interₛ_apply
+-/
 
+/- warning: Class.coe_sInter clashes with Class.sInter_coe -> Class.coe_interₛ
+Case conversion may be inaccurate. Consider using '#align Class.coe_sInter Class.coe_interₛₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.coe_interₛ /-
 @[simp, norm_cast]
-theorem coe_sInter {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x : Class.{u}) :=
-  Set.ext fun y => (ZFSet.mem_sInter h).trans sInter_apply.symm
-#align Class.coe_sInter Class.coe_sInter
+theorem coe_interₛ {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x : Class.{u}) :=
+  Set.ext fun y => (ZFSet.mem_interₛ h).trans interₛ_apply.symm
+#align Class.coe_sInter Class.coe_interₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_of_mem_sInter {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+#print Class.mem_of_mem_interₛ /-
+theorem mem_of_mem_interₛ {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
   by
   obtain ⟨w, rfl, hw⟩ := hy
   exact coe_mem.2 (hw z hz)
-#align Class.mem_of_mem_sInter Class.mem_of_mem_sInter
+#align Class.mem_of_mem_sInter Class.mem_of_mem_interₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z, z ∈ x → y ∈ z :=
+#print Class.mem_interₛ /-
+theorem mem_interₛ {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z, z ∈ x → y ∈ z :=
   by
   refine' ⟨fun hy z => mem_of_mem_sInter hy, fun H => _⟩
   simp_rw [mem_def, sInter_apply]
@@ -2347,7 +2370,8 @@ theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z
   obtain ⟨y, rfl, hzy⟩ := H z (coe_mem.2 hz)
   refine' ⟨y, rfl, fun w hxw => _⟩
   simpa only [coe_mem, coe_apply] using H w (coe_mem.2 hxw)
-#align Class.mem_sInter Class.mem_sInter
+#align Class.mem_sInter Class.mem_interₛ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.unionₛ_empty /-
@@ -2360,12 +2384,14 @@ theorem unionₛ_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.interₛ_empty /-
 @[simp]
-theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ :=
+theorem interₛ_empty : ⋂₀ (∅ : Class.{u}) = univ :=
   by
   ext
   simp [sInter, ← univ]
-#align Class.sInter_empty Class.sInter_empty
+#align Class.sInter_empty Class.interₛ_empty
+-/
 
 #print Class.eq_univ_of_powerset_subset /-
 /-- An induction principle for sets. If every subset of a class is a member, then the class is
@@ -2436,7 +2462,7 @@ theorem map_fval {f : ZFSet.{u} → ZFSet.{u}} [H : PSet.Definable 1 f] {x y : Z
     (h : y ∈ x) : (ZFSet.map f x ′ y : Class.{u}) = f y :=
   Class.iota_val _ _ fun z =>
     by
-    rw [Class.toSet_of_setCat, Class.coe_apply, mem_map]
+    rw [Class.toSet_of_ZFSet, Class.coe_apply, mem_map]
     exact
       ⟨fun ⟨w, wz, pr⟩ => by
         let ⟨wy, fw⟩ := ZFSet.pair_injective pr
