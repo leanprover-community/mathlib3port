@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.add_circle
-! leanprover-community/mathlib commit a8c97ed34c07fcfd7ebc6b83179b8f687275eba9
+! leanprover-community/mathlib commit 011cafb4a5bc695875d186e245d6b3df03bf6c40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,7 @@ import Mathbin.MeasureTheory.Function.L2Space
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Integral.Periodic
 import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
+import Mathbin.MeasureTheory.Integral.FundThmCalculus
 
 /-!
 

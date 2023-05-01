@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.fourier_transform
-! leanprover-community/mathlib commit 3353f3371120058977ce1e20bf7fc8986c0fb042
+! leanprover-community/mathlib commit 9425b6f8220e53b059f5a4904786c3c4b50fc057
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,13 +91,12 @@ theorem fourierIntegral_smul_const (e : Multiplicative 𝕜 →* 𝕊) (μ : Mea
 #align vector_fourier.fourier_integral_smul_const VectorFourier.fourierIntegral_smul_const
 
 /-- The uniform norm of the Fourier integral of `f` is bounded by the `L¹` norm of `f`. -/
-theorem fourierIntegral_norm_le (e : Multiplicative 𝕜 →* 𝕊) {μ : Measure V} (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜)
-    {f : V → E} (hf : Integrable f μ) (w : W) : ‖fourierIntegral e μ L f w‖ ≤ ‖hf.toL1 f‖ :=
+theorem norm_fourierIntegral_le_integral_norm (e : Multiplicative 𝕜 →* 𝕊) (μ : Measure V)
+    (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (w : W) : ‖fourierIntegral e μ L f w‖ ≤ ∫ v : V, ‖f v‖ ∂μ :=
   by
-  rw [L1.norm_of_fun_eq_integral_norm]
   refine' (norm_integral_le_integral_norm _).trans (le_of_eq _)
   simp_rw [norm_smul, Complex.norm_eq_abs, abs_coe_circle, one_mul]
-#align vector_fourier.fourier_integral_norm_le VectorFourier.fourierIntegral_norm_le
+#align vector_fourier.norm_fourier_integral_le_integral_norm VectorFourier.norm_fourierIntegral_le_integral_norm
 
 /-- The Fourier integral converts right-translation into scalar multiplication by a phase factor.-/
 theorem fourierIntegral_comp_add_right [HasMeasurableAdd V] (e : Multiplicative 𝕜 →* 𝕊)
@@ -129,20 +128,32 @@ section Continuous
 variable [TopologicalSpace 𝕜] [TopologicalRing 𝕜] [TopologicalSpace V] [BorelSpace V]
   [TopologicalSpace W] {e : Multiplicative 𝕜 →* 𝕊} {μ : Measure V} {L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜}
 
-/-- If `f` is integrable, then the Fourier integral is convergent for all `w`. -/
-theorem fourierIntegralConvergent (he : Continuous e) (hL : Continuous fun p : V × W => L p.1 p.2)
-    {f : V → E} (hf : Integrable f μ) (w : W) : Integrable (fun v : V => e[-L v w] • f v) μ :=
+/-- For any `w`, the Fourier integral is convergent iff `f` is integrable. -/
+theorem fourier_integral_convergent_iff (he : Continuous e)
+    (hL : Continuous fun p : V × W => L p.1 p.2) {f : V → E} (w : W) :
+    Integrable f μ ↔ Integrable (fun v : V => e[-L v w] • f v) μ :=
   by
-  rw [continuous_induced_rng] at he
-  have c : Continuous fun v => e[-L v w] :=
+  -- first prove one-way implication
+  have aux :
+    ∀ {g : V → E} (hg : integrable g μ) (x : W), integrable (fun v : V => e[-L v x] • g v) μ :=
     by
-    refine' he.comp (continuous_of_add.comp (Continuous.neg _))
-    exact hL.comp (continuous_prod_mk.mpr ⟨continuous_id, continuous_const⟩)
-  rw [← integrable_norm_iff (c.ae_strongly_measurable.smul hf.1)]
-  convert hf.norm
+    intro g hg x
+    have c : Continuous fun v => e[-L v x] :=
+      by
+      refine' (continuous_induced_rng.mp he).comp (continuous_of_add.comp (Continuous.neg _))
+      exact hL.comp (continuous_prod_mk.mpr ⟨continuous_id, continuous_const⟩)
+    rw [← integrable_norm_iff (c.ae_strongly_measurable.smul hg.1)]
+    convert hg.norm
+    ext1 v
+    rw [norm_smul, Complex.norm_eq_abs, abs_coe_circle, one_mul]
+  -- then use it for both directions
+  refine' ⟨fun hf => aux hf w, fun hf => _⟩
+  convert aux hf (-w)
   ext1 v
-  rw [norm_smul, Complex.norm_eq_abs, abs_coe_circle, one_mul]
-#align vector_fourier.fourier_integral_convergent VectorFourier.fourierIntegralConvergent
+  rw [← smul_assoc, smul_eq_mul, ← Submonoid.coe_mul, ← MonoidHom.map_mul, ← ofAdd_add,
+    LinearMap.map_neg, neg_neg, ← sub_eq_add_neg, sub_self, ofAdd_zero, MonoidHom.map_one,
+    Submonoid.coe_one, one_smul]
+#align vector_fourier.fourier_integral_convergent_iff VectorFourier.fourier_integral_convergent_iff
 
 variable [CompleteSpace E]
 
@@ -154,8 +165,8 @@ theorem fourierIntegral_add (he : Continuous e) (hL : Continuous fun p : V × W 
   dsimp only [Pi.add_apply, fourier_integral]
   simp_rw [smul_add]
   rw [integral_add]
-  · exact fourier_integral_convergent he hL hf w
-  · exact fourier_integral_convergent he hL hg w
+  · exact (fourier_integral_convergent_iff he hL w).mp hf
+  · exact (fourier_integral_convergent_iff he hL w).mp hg
 #align vector_fourier.fourier_integral_add VectorFourier.fourierIntegral_add
 
 /-- The Fourier integral of an `L^1` function is a continuous function. -/
@@ -164,7 +175,7 @@ theorem fourierIntegral_continuous [TopologicalSpace.FirstCountableTopology W] (
     Continuous (fourierIntegral e μ L f) :=
   by
   apply continuous_of_dominated
-  · exact fun w => (fourier_integral_convergent he hL hf w).1
+  · exact fun w => ((fourier_integral_convergent_iff he hL w).mp hf).1
   · refine' fun w => ae_of_all _ fun v => _
     · exact fun v => ‖f v‖
     · rw [norm_smul, Complex.norm_eq_abs, abs_coe_circle, one_mul]
@@ -207,10 +218,10 @@ theorem fourierIntegral_smul_const (e : Multiplicative 𝕜 →* 𝕊) (μ : Mea
 #align fourier.fourier_integral_smul_const Fourier.fourierIntegral_smul_const
 
 /-- The uniform norm of the Fourier transform of `f` is bounded by the `L¹` norm of `f`. -/
-theorem fourierIntegral_norm_le (e : Multiplicative 𝕜 →* 𝕊) {μ : Measure 𝕜} {f : 𝕜 → E}
-    (hf : Integrable f μ) (w : 𝕜) : ‖fourierIntegral e μ f w‖ ≤ ‖hf.toL1 f‖ :=
-  VectorFourier.fourierIntegral_norm_le _ _ _ _
-#align fourier.fourier_integral_norm_le Fourier.fourierIntegral_norm_le
+theorem norm_fourierIntegral_le_integral_norm (e : Multiplicative 𝕜 →* 𝕊) (μ : Measure 𝕜)
+    (f : 𝕜 → E) (w : 𝕜) : ‖fourierIntegral e μ f w‖ ≤ ∫ x : 𝕜, ‖f x‖ ∂μ :=
+  VectorFourier.norm_fourierIntegral_le_integral_norm _ _ _ _ _
+#align fourier.norm_fourier_integral_le_integral_norm Fourier.norm_fourierIntegral_le_integral_norm
 
 /-- The Fourier transform converts right-translation into scalar multiplication by a phase factor.-/
 theorem fourierIntegral_comp_add_right [HasMeasurableAdd 𝕜] (e : Multiplicative 𝕜 →* 𝕊)

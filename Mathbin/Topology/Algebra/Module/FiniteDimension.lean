@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.finite_dimension
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit 9425b6f8220e53b059f5a4904786c3c4b50fc057
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -362,9 +362,11 @@ instance canLiftContinuousLinearMap : CanLift (E →ₗ[𝕜] F) (E →L[𝕜] F
 
 end LinearMap
 
-namespace LinearEquiv
+section
 
 variable [T2Space E] [T2Space F] [FiniteDimensional 𝕜 E]
+
+namespace LinearEquiv
 
 /-- The continuous linear equivalence induced by a linear equivalence on a finite dimensional
 space. -/
@@ -420,6 +422,72 @@ instance canLiftContinuousLinearEquiv :
 #align linear_equiv.can_lift_continuous_linear_equiv LinearEquiv.canLiftContinuousLinearEquiv
 
 end LinearEquiv
+
+variable [FiniteDimensional 𝕜 F]
+
+/-- Two finite-dimensional topological vector spaces over a complete normed field are continuously
+linearly equivalent if they have the same (finite) dimension. -/
+theorem FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq
+    (cond : finrank 𝕜 E = finrank 𝕜 F) : Nonempty (E ≃L[𝕜] F) :=
+  (nonempty_linearEquiv_of_finrank_eq cond).map LinearEquiv.toContinuousLinearEquiv
+#align finite_dimensional.nonempty_continuous_linear_equiv_of_finrank_eq FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq
+
+/-- Two finite-dimensional topological vector spaces over a complete normed field are continuously
+linearly equivalent if and only if they have the same (finite) dimension. -/
+theorem FiniteDimensional.nonempty_continuousLinearEquiv_iff_finrank_eq :
+    Nonempty (E ≃L[𝕜] F) ↔ finrank 𝕜 E = finrank 𝕜 F :=
+  ⟨fun ⟨h⟩ => h.toLinearEquiv.finrank_eq, fun h =>
+    FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq h⟩
+#align finite_dimensional.nonempty_continuous_linear_equiv_iff_finrank_eq FiniteDimensional.nonempty_continuousLinearEquiv_iff_finrank_eq
+
+/-- A continuous linear equivalence between two finite-dimensional topological vector spaces over a
+complete normed field of the same (finite) dimension. -/
+def ContinuousLinearEquiv.ofFinrankEq (cond : finrank 𝕜 E = finrank 𝕜 F) : E ≃L[𝕜] F :=
+  (LinearEquiv.ofFinrankEq E F cond).toContinuousLinearEquiv
+#align continuous_linear_equiv.of_finrank_eq ContinuousLinearEquiv.ofFinrankEq
+
+end
+
+namespace Basis
+
+variable {ι : Type _} [Fintype ι] [T2Space E]
+
+/-- Construct a continuous linear map given the value at a finite basis. -/
+def constrL (v : Basis ι 𝕜 E) (f : ι → F) : E →L[𝕜] F :=
+  haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v
+  (v.constr 𝕜 f).toContinuousLinearMap
+#align basis.constrL Basis.constrL
+
+@[simp, norm_cast]
+theorem coe_constrL (v : Basis ι 𝕜 E) (f : ι → F) : (v.constrL f : E →ₗ[𝕜] F) = v.constr 𝕜 f :=
+  rfl
+#align basis.coe_constrL Basis.coe_constrL
+
+/-- The continuous linear equivalence between a vector space over `𝕜` with a finite basis and
+functions from its basis indexing type to `𝕜`. -/
+def equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
+  {
+    v.equivFun with
+    continuous_toFun :=
+      haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis v
+      v.equiv_fun.to_linear_map.continuous_of_finite_dimensional
+    continuous_invFun := by
+      change Continuous v.equiv_fun.symm.to_fun
+      exact v.equiv_fun.symm.to_linear_map.continuous_of_finite_dimensional }
+#align basis.equiv_funL Basis.equivFunL
+
+@[simp]
+theorem constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) :
+    (v.constrL f) e = ∑ i, v.equivFun e i • f i :=
+  v.constr_apply_fintype 𝕜 _ _
+#align basis.constrL_apply Basis.constrL_apply
+
+@[simp]
+theorem constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
+  v.constr_basis 𝕜 _ _
+#align basis.constrL_basis Basis.constrL_basis
+
+end Basis
 
 namespace ContinuousLinearMap
 

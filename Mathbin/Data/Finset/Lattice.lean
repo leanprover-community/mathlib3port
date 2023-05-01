@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit c813ed7de0f5115f956239124e9b30f3a621966f
+! leanprover-community/mathlib commit 9d684a893c52e1d6692a504a118bfccbae04feeb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.Data.Finset.Option
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Multiset.Lattice
 import Mathbin.Order.CompleteLattice
+import Mathbin.Order.Hom.Lattice
 
 /-!
 # Lattice operations on finsets
@@ -22,7 +23,7 @@ import Mathbin.Order.CompleteLattice
 -/
 
 
-variable {α β γ ι : Type _}
+variable {F α β γ ι : Type _}
 
 namespace Finset
 
@@ -147,6 +148,18 @@ theorem sup_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f 
   by subst hs <;> exact Finset.fold_congr hfg
 #align finset.sup_congr Finset.sup_congr
 -/
+
+/- warning: map_finset_sup -> map_finset_sup is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u4}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)))] [_inst_3 : SemilatticeSup.{u3} β] [_inst_4 : OrderBot.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3)))] [_inst_5 : SupBotHomClass.{u1, u2, u3} F α β (SemilatticeSup.toHasSup.{u2} α _inst_1) (SemilatticeSup.toHasSup.{u3} β _inst_3) (OrderBot.toHasBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1))) _inst_2) (OrderBot.toHasBot.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) _inst_4)] (f : F) (s : Finset.{u4} ι) (g : ι -> α), Eq.{succ u3} β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (SupHomClass.toFunLike.{u1, u2, u3} F α β (SemilatticeSup.toHasSup.{u2} α _inst_1) (SemilatticeSup.toHasSup.{u3} β _inst_3) (SupBotHomClass.toSupHomClass.{u1, u2, u3} F α β (SemilatticeSup.toHasSup.{u2} α _inst_1) (SemilatticeSup.toHasSup.{u3} β _inst_3) (OrderBot.toHasBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1))) _inst_2) (OrderBot.toHasBot.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) _inst_4) _inst_5))) f (Finset.sup.{u2, u4} α ι _inst_1 _inst_2 s g)) (Finset.sup.{u3, u4} β ι _inst_3 _inst_4 s (Function.comp.{succ u4, succ u2, succ u3} ι α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (SupHomClass.toFunLike.{u1, u2, u3} F α β (SemilatticeSup.toHasSup.{u2} α _inst_1) (SemilatticeSup.toHasSup.{u3} β _inst_3) (SupBotHomClass.toSupHomClass.{u1, u2, u3} F α β (SemilatticeSup.toHasSup.{u2} α _inst_1) (SemilatticeSup.toHasSup.{u3} β _inst_3) (OrderBot.toHasBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1))) _inst_2) (OrderBot.toHasBot.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) _inst_4) _inst_5))) f) g))
+but is expected to have type
+  forall {F : Type.{u2}} {α : Type.{u1}} {β : Type.{u4}} {ι : Type.{u3}} [_inst_1 : SemilatticeSup.{u4} β] [_inst_2 : OrderBot.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeSup.toPartialOrder.{u4} β _inst_1)))] [_inst_3 : SemilatticeSup.{u3} ι] [_inst_4 : OrderBot.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeSup.toPartialOrder.{u3} ι _inst_3)))] [_inst_5 : SupBotHomClass.{u2, u4, u3} F β ι (SemilatticeSup.toSup.{u4} β _inst_1) (SemilatticeSup.toSup.{u3} ι _inst_3) (OrderBot.toBot.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeSup.toPartialOrder.{u4} β _inst_1))) _inst_2) (OrderBot.toBot.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeSup.toPartialOrder.{u3} ι _inst_3))) _inst_4)] (f : F) (s : Finset.{u1} α) (g : α -> β), Eq.{succ u3} ((fun (x._@.Mathlib.Order.Hom.Lattice._hyg.433 : β) => ι) (Finset.sup.{u4, u1} β α _inst_1 _inst_2 s g)) (FunLike.coe.{succ u2, succ u4, succ u3} F β (fun (_x : β) => (fun (x._@.Mathlib.Order.Hom.Lattice._hyg.433 : β) => ι) _x) (SupHomClass.toFunLike.{u2, u4, u3} F β ι (SemilatticeSup.toSup.{u4} β _inst_1) (SemilatticeSup.toSup.{u3} ι _inst_3) (SupBotHomClass.toSupHomClass.{u2, u4, u3} F β ι (SemilatticeSup.toSup.{u4} β _inst_1) (SemilatticeSup.toSup.{u3} ι _inst_3) (OrderBot.toBot.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeSup.toPartialOrder.{u4} β _inst_1))) _inst_2) (OrderBot.toBot.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeSup.toPartialOrder.{u3} ι _inst_3))) _inst_4) _inst_5)) f (Finset.sup.{u4, u1} β α _inst_1 _inst_2 s g)) (Finset.sup.{u3, u1} ι α _inst_3 _inst_4 s (Function.comp.{succ u1, succ u4, succ u3} α β ι (FunLike.coe.{succ u2, succ u4, succ u3} F β (fun (_x : β) => (fun (x._@.Mathlib.Order.Hom.Lattice._hyg.433 : β) => ι) _x) (SupHomClass.toFunLike.{u2, u4, u3} F β ι (SemilatticeSup.toSup.{u4} β _inst_1) (SemilatticeSup.toSup.{u3} ι _inst_3) (SupBotHomClass.toSupHomClass.{u2, u4, u3} F β ι (SemilatticeSup.toSup.{u4} β _inst_1) (SemilatticeSup.toSup.{u3} ι _inst_3) (OrderBot.toBot.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeSup.toPartialOrder.{u4} β _inst_1))) _inst_2) (OrderBot.toBot.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeSup.toPartialOrder.{u3} ι _inst_3))) _inst_4) _inst_5)) f) g))
+Case conversion may be inaccurate. Consider using '#align map_finset_sup map_finset_supₓ'. -/
+@[simp]
+theorem map_finset_sup [SemilatticeSup β] [OrderBot β] [SupBotHomClass F α β] (f : F) (s : Finset ι)
+    (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
+  Finset.cons_induction_on s (map_bot f) fun i s _ h => by rw [sup_cons, sup_cons, map_sup, h]
+#align map_finset_sup map_finset_sup
 
 /- warning: finset.sup_le_iff -> Finset.sup_le_iff is a dubious translation:
 lean 3 declaration is
@@ -633,6 +646,18 @@ theorem inf_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f 
 #align finset.inf_congr Finset.inf_congr
 -/
 
+/- warning: map_finset_inf -> map_finset_inf is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u4}} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))] [_inst_3 : SemilatticeInf.{u3} β] [_inst_4 : OrderTop.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β _inst_3)))] [_inst_5 : InfTopHomClass.{u1, u2, u3} F α β (SemilatticeInf.toHasInf.{u2} α _inst_1) (SemilatticeInf.toHasInf.{u3} β _inst_3) (OrderTop.toHasTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) _inst_2) (OrderTop.toHasTop.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β _inst_3))) _inst_4)] (f : F) (s : Finset.{u4} ι) (g : ι -> α), Eq.{succ u3} β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (InfHomClass.toFunLike.{u1, u2, u3} F α β (SemilatticeInf.toHasInf.{u2} α _inst_1) (SemilatticeInf.toHasInf.{u3} β _inst_3) (InfTopHomClass.toInfHomClass.{u1, u2, u3} F α β (SemilatticeInf.toHasInf.{u2} α _inst_1) (SemilatticeInf.toHasInf.{u3} β _inst_3) (OrderTop.toHasTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) _inst_2) (OrderTop.toHasTop.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β _inst_3))) _inst_4) _inst_5))) f (Finset.inf.{u2, u4} α ι _inst_1 _inst_2 s g)) (Finset.inf.{u3, u4} β ι _inst_3 _inst_4 s (Function.comp.{succ u4, succ u2, succ u3} ι α β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (InfHomClass.toFunLike.{u1, u2, u3} F α β (SemilatticeInf.toHasInf.{u2} α _inst_1) (SemilatticeInf.toHasInf.{u3} β _inst_3) (InfTopHomClass.toInfHomClass.{u1, u2, u3} F α β (SemilatticeInf.toHasInf.{u2} α _inst_1) (SemilatticeInf.toHasInf.{u3} β _inst_3) (OrderTop.toHasTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) _inst_2) (OrderTop.toHasTop.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β _inst_3))) _inst_4) _inst_5))) f) g))
+but is expected to have type
+  forall {F : Type.{u2}} {α : Type.{u1}} {β : Type.{u4}} {ι : Type.{u3}} [_inst_1 : SemilatticeInf.{u4} β] [_inst_2 : OrderTop.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeInf.toPartialOrder.{u4} β _inst_1)))] [_inst_3 : SemilatticeInf.{u3} ι] [_inst_4 : OrderTop.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι _inst_3)))] [_inst_5 : InfTopHomClass.{u2, u4, u3} F β ι (SemilatticeInf.toInf.{u4} β _inst_1) (SemilatticeInf.toInf.{u3} ι _inst_3) (OrderTop.toTop.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeInf.toPartialOrder.{u4} β _inst_1))) _inst_2) (OrderTop.toTop.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι _inst_3))) _inst_4)] (f : F) (s : Finset.{u1} α) (g : α -> β), Eq.{succ u3} ((fun (x._@.Mathlib.Order.Hom.Lattice._hyg.494 : β) => ι) (Finset.inf.{u4, u1} β α _inst_1 _inst_2 s g)) (FunLike.coe.{succ u2, succ u4, succ u3} F β (fun (_x : β) => (fun (x._@.Mathlib.Order.Hom.Lattice._hyg.494 : β) => ι) _x) (InfHomClass.toFunLike.{u2, u4, u3} F β ι (SemilatticeInf.toInf.{u4} β _inst_1) (SemilatticeInf.toInf.{u3} ι _inst_3) (InfTopHomClass.toInfHomClass.{u2, u4, u3} F β ι (SemilatticeInf.toInf.{u4} β _inst_1) (SemilatticeInf.toInf.{u3} ι _inst_3) (OrderTop.toTop.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeInf.toPartialOrder.{u4} β _inst_1))) _inst_2) (OrderTop.toTop.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι _inst_3))) _inst_4) _inst_5)) f (Finset.inf.{u4, u1} β α _inst_1 _inst_2 s g)) (Finset.inf.{u3, u1} ι α _inst_3 _inst_4 s (Function.comp.{succ u1, succ u4, succ u3} α β ι (FunLike.coe.{succ u2, succ u4, succ u3} F β (fun (_x : β) => (fun (x._@.Mathlib.Order.Hom.Lattice._hyg.494 : β) => ι) _x) (InfHomClass.toFunLike.{u2, u4, u3} F β ι (SemilatticeInf.toInf.{u4} β _inst_1) (SemilatticeInf.toInf.{u3} ι _inst_3) (InfTopHomClass.toInfHomClass.{u2, u4, u3} F β ι (SemilatticeInf.toInf.{u4} β _inst_1) (SemilatticeInf.toInf.{u3} ι _inst_3) (OrderTop.toTop.{u4} β (Preorder.toLE.{u4} β (PartialOrder.toPreorder.{u4} β (SemilatticeInf.toPartialOrder.{u4} β _inst_1))) _inst_2) (OrderTop.toTop.{u3} ι (Preorder.toLE.{u3} ι (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι _inst_3))) _inst_4) _inst_5)) f) g))
+Case conversion may be inaccurate. Consider using '#align map_finset_inf map_finset_infₓ'. -/
+@[simp]
+theorem map_finset_inf [SemilatticeInf β] [OrderTop β] [InfTopHomClass F α β] (f : F) (s : Finset ι)
+    (g : ι → α) : f (s.inf g) = s.inf (f ∘ g) :=
+  Finset.cons_induction_on s (map_top f) fun i s _ h => by rw [inf_cons, inf_cons, map_inf, h]
+#align map_finset_inf map_finset_inf
+
 /- warning: finset.inf_bUnion -> Finset.inf_bunionᵢ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {f : β -> α} [_inst_3 : DecidableEq.{succ u2} β] (s : Finset.{u3} γ) (t : γ -> (Finset.{u2} β)), Eq.{succ u1} α (Finset.inf.{u1, u2} α β _inst_1 _inst_2 (Finset.bunionᵢ.{u3, u2} γ β (fun (a : β) (b : β) => _inst_3 a b) s t) f) (Finset.inf.{u1, u3} α γ _inst_1 _inst_2 s (fun (x : γ) => Finset.inf.{u1, u2} α β _inst_1 _inst_2 (t x) f))
@@ -768,48 +793,6 @@ Case conversion may be inaccurate. Consider using '#align finset.inf_erase_top F
 theorem inf_erase_top [DecidableEq α] (s : Finset α) : (s.eraseₓ ⊤).inf id = s.inf id :=
   @sup_erase_bot αᵒᵈ _ _ _ _
 #align finset.inf_erase_top Finset.inf_erase_top
-
-/- warning: finset.sup_sdiff_left -> Finset.sup_sdiff_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : BooleanAlgebra.{u1} α] (s : Finset.{u2} β) (f : β -> α) (a : α), Eq.{succ u1} α (Finset.sup.{u1, u2} α β (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)) s (fun (b : β) => SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_3) a (f b))) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_3) a (Finset.inf.{u1, u2} α β (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_3)))) s f))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : BooleanAlgebra.{u2} α] (s : Finset.{u1} β) (f : β -> α) (a : α), Eq.{succ u2} α (Finset.sup.{u2, u1} α β (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3))))) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_3)) s (fun (b : β) => SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_3) a (f b))) (SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_3) a (Finset.inf.{u2, u1} α β (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_3)) s f))
-Case conversion may be inaccurate. Consider using '#align finset.sup_sdiff_left Finset.sup_sdiff_leftₓ'. -/
-theorem sup_sdiff_left {α β : Type _} [BooleanAlgebra α] (s : Finset β) (f : β → α) (a : α) :
-    (s.sup fun b => a \ f b) = a \ s.inf f :=
-  by
-  refine' Finset.cons_induction_on s _ fun b t _ h => _
-  · rw [sup_empty, inf_empty, sdiff_top]
-  · rw [sup_cons, inf_cons, h, sdiff_inf]
-#align finset.sup_sdiff_left Finset.sup_sdiff_left
-
-/- warning: finset.inf_sdiff_left -> Finset.inf_sdiff_left is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : BooleanAlgebra.{u1} α] {s : Finset.{u2} β}, (Finset.Nonempty.{u2} β s) -> (forall (f : β -> α) (a : α), Eq.{succ u1} α (Finset.inf.{u1, u2} α β (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_3)))) s (fun (b : β) => SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_3) a (f b))) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_3) a (Finset.sup.{u1, u2} α β (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)) s f)))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : BooleanAlgebra.{u2} α] {s : Finset.{u1} β}, (Finset.Nonempty.{u1} β s) -> (forall (f : β -> α) (a : α), Eq.{succ u2} α (Finset.inf.{u2, u1} α β (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_3)) s (fun (b : β) => SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_3) a (f b))) (SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_3) a (Finset.sup.{u2, u1} α β (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3))))) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_3)) s f)))
-Case conversion may be inaccurate. Consider using '#align finset.inf_sdiff_left Finset.inf_sdiff_leftₓ'. -/
-theorem inf_sdiff_left {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs : s.Nonempty)
-    (f : β → α) (a : α) : (s.inf fun b => a \ f b) = a \ s.sup f :=
-  by
-  induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
-  · rw [sup_singleton, inf_singleton]
-  · rw [sup_cons, inf_cons, h, sdiff_sup]
-#align finset.inf_sdiff_left Finset.inf_sdiff_left
-
-/- warning: finset.inf_sdiff_right -> Finset.inf_sdiff_right is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : BooleanAlgebra.{u1} α] {s : Finset.{u2} β}, (Finset.Nonempty.{u2} β s) -> (forall (f : β -> α) (a : α), Eq.{succ u1} α (Finset.inf.{u1, u2} α β (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_3)))) s (fun (b : β) => SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_3) (f b) a)) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_3) (Finset.inf.{u1, u2} α β (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_3)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_3)))) s f) a))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : BooleanAlgebra.{u2} α] {s : Finset.{u1} β}, (Finset.Nonempty.{u1} β s) -> (forall (f : β -> α) (a : α), Eq.{succ u2} α (Finset.inf.{u2, u1} α β (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_3)) s (fun (b : β) => SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_3) (f b) a)) (SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_3) (Finset.inf.{u2, u1} α β (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_3)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_3)) s f) a))
-Case conversion may be inaccurate. Consider using '#align finset.inf_sdiff_right Finset.inf_sdiff_rightₓ'. -/
-theorem inf_sdiff_right {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs : s.Nonempty)
-    (f : β → α) (a : α) : (s.inf fun b => f b \ a) = s.inf f \ a :=
-  by
-  induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
-  · rw [inf_singleton, inf_singleton]
-  · rw [inf_cons, inf_cons, h, inf_sdiff]
-#align finset.inf_sdiff_right Finset.inf_sdiff_right
 
 /- warning: finset.comp_inf_eq_inf_comp -> Finset.comp_inf_eq_inf_comp is a dubious translation:
 lean 3 declaration is
@@ -1019,6 +1002,54 @@ theorem inf_sup_distrib_right (s : Finset ι) (f : ι → α) (a : α) :
 end OrderTop
 
 end DistribLattice
+
+section BooleanAlgebra
+
+variable [BooleanAlgebra α] {s : Finset ι}
+
+/- warning: finset.sup_sdiff_left -> Finset.sup_sdiff_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : BooleanAlgebra.{u1} α] (s : Finset.{u2} ι) (f : ι -> α) (a : α), Eq.{succ u1} α (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)) s (fun (b : ι) => SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) a (f b))) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) a (Finset.inf.{u1, u2} α ι (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) s f))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : BooleanAlgebra.{u2} α] (s : Finset.{u1} ι) (f : ι -> α) (a : α), Eq.{succ u2} α (Finset.sup.{u2, u1} α ι (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1))))) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_1)) s (fun (b : ι) => SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_1) a (f b))) (SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_1) a (Finset.inf.{u2, u1} α ι (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_1)) s f))
+Case conversion may be inaccurate. Consider using '#align finset.sup_sdiff_left Finset.sup_sdiff_leftₓ'. -/
+theorem sup_sdiff_left (s : Finset ι) (f : ι → α) (a : α) :
+    (s.sup fun b => a \ f b) = a \ s.inf f :=
+  by
+  refine' Finset.cons_induction_on s _ fun b t _ h => _
+  · rw [sup_empty, inf_empty, sdiff_top]
+  · rw [sup_cons, inf_cons, h, sdiff_inf]
+#align finset.sup_sdiff_left Finset.sup_sdiff_left
+
+/- warning: finset.inf_sdiff_left -> Finset.inf_sdiff_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : BooleanAlgebra.{u1} α] {s : Finset.{u2} ι}, (Finset.Nonempty.{u2} ι s) -> (forall (f : ι -> α) (a : α), Eq.{succ u1} α (Finset.inf.{u1, u2} α ι (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) s (fun (b : ι) => SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) a (f b))) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) a (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)) s f)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : BooleanAlgebra.{u2} α] {s : Finset.{u1} ι}, (Finset.Nonempty.{u1} ι s) -> (forall (f : ι -> α) (a : α), Eq.{succ u2} α (Finset.inf.{u2, u1} α ι (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_1)) s (fun (b : ι) => SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_1) a (f b))) (SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_1) a (Finset.sup.{u2, u1} α ι (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1))))) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α (Lattice.toSemilatticeSup.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_1)) s f)))
+Case conversion may be inaccurate. Consider using '#align finset.inf_sdiff_left Finset.inf_sdiff_leftₓ'. -/
+theorem inf_sdiff_left (hs : s.Nonempty) (f : ι → α) (a : α) :
+    (s.inf fun b => a \ f b) = a \ s.sup f :=
+  by
+  induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
+  · rw [sup_singleton, inf_singleton]
+  · rw [sup_cons, inf_cons, h, sdiff_sup]
+#align finset.inf_sdiff_left Finset.inf_sdiff_left
+
+/- warning: finset.inf_sdiff_right -> Finset.inf_sdiff_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : BooleanAlgebra.{u1} α] {s : Finset.{u2} ι}, (Finset.Nonempty.{u2} ι s) -> (forall (f : ι -> α) (a : α), Eq.{succ u1} α (Finset.inf.{u1, u2} α ι (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) s (fun (b : ι) => SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) (f b) a)) (SDiff.sdiff.{u1} α (BooleanAlgebra.toHasSdiff.{u1} α _inst_1) (Finset.inf.{u1, u2} α ι (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1)))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α (BiheytingAlgebra.toHeytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) s f) a))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : BooleanAlgebra.{u2} α] {s : Finset.{u1} ι}, (Finset.Nonempty.{u1} ι s) -> (forall (f : ι -> α) (a : α), Eq.{succ u2} α (Finset.inf.{u2, u1} α ι (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_1)) s (fun (b : ι) => SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_1) (f b) a)) (SDiff.sdiff.{u2} α (BooleanAlgebra.toSDiff.{u2} α _inst_1) (Finset.inf.{u2, u1} α ι (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1))))) (BoundedOrder.toOrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α (BooleanAlgebra.toBiheytingAlgebra.{u2} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u2} α _inst_1)) s f) a))
+Case conversion may be inaccurate. Consider using '#align finset.inf_sdiff_right Finset.inf_sdiff_rightₓ'. -/
+theorem inf_sdiff_right (hs : s.Nonempty) (f : ι → α) (a : α) :
+    (s.inf fun b => f b \ a) = s.inf f \ a :=
+  by
+  induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
+  · rw [inf_singleton, inf_singleton]
+  · rw [inf_cons, inf_cons, h, inf_sdiff]
+#align finset.inf_sdiff_right Finset.inf_sdiff_right
+
+end BooleanAlgebra
 
 section LinearOrder
 

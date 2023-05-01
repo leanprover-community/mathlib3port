@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit d4817f8867c368d6c5571f7379b3888aaec1d95a
+! leanprover-community/mathlib commit 011cafb4a5bc695875d186e245d6b3df03bf6c40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
+import Mathbin.MeasureTheory.Integral.FundThmCalculus
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 /-!

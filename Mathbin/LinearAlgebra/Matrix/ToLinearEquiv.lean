@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_linear_equiv
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit e42cfdb03b7902f8787a1eb552cb8f77766b45b9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
 import Mathbin.LinearAlgebra.Matrix.Nondegenerate
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.Matrix.ToLin
@@ -53,14 +54,8 @@ variable [DecidableEq n]
 See `matrix.to_linear_equiv` for the same map on arbitrary modules.
 -/
 def toLinearEquiv' (P : Matrix n n R) (h : Invertible P) : (n → R) ≃ₗ[R] n → R :=
-  { P.toLin' with
-    invFun := (⅟ P).toLin'
-    left_inv := fun v =>
-      show ((⅟ P).toLin'.comp P.toLin') v = v by
-        rw [← Matrix.toLin'_mul, P.inv_of_mul_self, Matrix.toLin'_one, LinearMap.id_apply]
-    right_inv := fun v =>
-      show (P.toLin'.comp (⅟ P).toLin') v = v by
-        rw [← Matrix.toLin'_mul, P.mul_inv_of_self, Matrix.toLin'_one, LinearMap.id_apply] }
+  GeneralLinearGroup.generalLinearEquiv _ _ <|
+    Matrix.GeneralLinearGroup.toLinear <| unitOfInvertible P
 #align matrix.to_linear_equiv' Matrix.toLinearEquiv'
 
 @[simp]
@@ -71,8 +66,8 @@ theorem toLinearEquiv'_apply (P : Matrix n n R) (h : Invertible P) :
 
 @[simp]
 theorem toLinearEquiv'_symm_apply (P : Matrix n n R) (h : Invertible P) :
-    (↑(P.toLinearEquiv' h).symm : Module.End R (n → R)) = P⁻¹.toLin' :=
-  show (⅟ P).toLin' = _ from congr_arg _ P.invOf_eq_nonsing_inv
+    (↑(P.toLinearEquiv' h).symm : Module.End R (n → R)) = (⅟ P).toLin' :=
+  rfl
 #align matrix.to_linear_equiv'_symm_apply Matrix.toLinearEquiv'_symm_apply
 
 end ToLinearEquiv'

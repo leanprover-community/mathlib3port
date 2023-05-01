@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.euclidean_dist
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9425b6f8220e53b059f5a4904786c3c4b50fc057
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,8 +16,9 @@ import Mathbin.Analysis.InnerProductSpace.PiL2
 
 When we define a smooth bump function on a normed space, it is useful to have a smooth distance on
 the space. Since the default distance is not guaranteed to be smooth, we define `to_euclidean` to be
-an equivalence between a finite dimensional normed space and the standard Euclidean space of the
-same dimension. Then we define `euclidean.dist x y = dist (to_euclidean x) (to_euclidean y)` and
+an equivalence between a finite dimensional topological vector space and the standard Euclidean
+space of the same dimension.
+Then we define `euclidean.dist x y = dist (to_euclidean x) (to_euclidean y)` and
 provide some definitions (`euclidean.ball`, `euclidean.closed_ball`) and simple lemmas about this
 distance. This way we hide the usage of `to_euclidean` behind an API.
 -/
@@ -27,13 +28,16 @@ open Topology
 
 open Set
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+variable {E : Type _} [AddCommGroup E] [TopologicalSpace E] [TopologicalAddGroup E] [T2Space E]
+  [Module ℝ E] [ContinuousSMul ℝ E] [FiniteDimensional ℝ E]
 
 noncomputable section
 
+open FiniteDimensional
+
 /-- If `E` is a finite dimensional space over `ℝ`, then `to_euclidean` is a continuous `ℝ`-linear
 equivalence between `E` and the Euclidean space of the same dimension. -/
-def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Fin <| FiniteDimensional.finrank ℝ E) :=
+def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Fin <| finrank ℝ E) :=
   ContinuousLinearEquiv.ofFinrankEq finrank_euclideanSpace_fin.symm
 #align to_euclidean toEuclidean
 
@@ -108,7 +112,7 @@ theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs
 
 theorem nhds_basis_closedBall {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (closedBall x) :=
   by
-  rw [to_euclidean.to_homeomorph.nhds_eq_comap]
+  rw [to_euclidean.to_homeomorph.nhds_eq_comap x]
   exact metric.nhds_basis_closed_ball.comap _
 #align euclidean.nhds_basis_closed_ball Euclidean.nhds_basis_closedBall
 
@@ -118,7 +122,7 @@ theorem closedBall_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : closedBall x r ∈ 
 
 theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ball x) :=
   by
-  rw [to_euclidean.to_homeomorph.nhds_eq_comap]
+  rw [to_euclidean.to_homeomorph.nhds_eq_comap x]
   exact metric.nhds_basis_ball.comap _
 #align euclidean.nhds_basis_ball Euclidean.nhds_basis_ball
 
@@ -128,14 +132,15 @@ theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ball x r ∈ 𝓝 x :=
 
 end Euclidean
 
-variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E} {n : ℕ∞}
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {G : Type _} [NormedAddCommGroup G]
+  [NormedSpace ℝ G] [FiniteDimensional ℝ G] {f g : F → G} {n : ℕ∞}
 
 theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) :=
   by
   simp only [Euclidean.dist]
   apply @ContDiff.dist ℝ
-  exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>
-    to_euclidean.injective.ne (h x)]
+  exacts[(@toEuclidean G _ _ _ _ _ _ _).ContDiff.comp hf,
+    (@toEuclidean G _ _ _ _ _ _ _).ContDiff.comp hg, fun x => to_euclidean.injective.ne (h x)]
 #align cont_diff.euclidean_dist ContDiff.euclidean_dist
 

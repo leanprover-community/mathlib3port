@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.lattice
-! leanprover-community/mathlib commit d6aad9528ddcac270ed35c6f7b5f1d8af25341d6
+! leanprover-community/mathlib commit e4bc74cbaf429d706cb9140902f7ca6c431e75a4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1840,6 +1840,22 @@ instance [∀ i, DistribLattice (α' i)] : DistribLattice (∀ i, α' i) := by
   refine_struct { Pi.lattice with } <;> pi_instance_derive_field
 
 end Pi
+
+namespace Function
+
+variable {ι : Type _} {π : ι → Type _} [DecidableEq ι]
+
+theorem update_sup [∀ i, SemilatticeSup (π i)] (f : ∀ i, π i) (i : ι) (a b : π i) :
+    f.update i (a ⊔ b) = f.update i a ⊔ f.update i b :=
+  funext fun j => by obtain rfl | hji := eq_or_ne j i <;> simp [update_noteq, *]
+#align function.update_sup Function.update_sup
+
+theorem update_inf [∀ i, SemilatticeInf (π i)] (f : ∀ i, π i) (i : ι) (a b : π i) :
+    f.update i (a ⊓ b) = f.update i a ⊓ f.update i b :=
+  funext fun j => by obtain rfl | hji := eq_or_ne j i <;> simp [update_noteq, *]
+#align function.update_inf Function.update_inf
+
+end Function
 
 /-!
 ### Monotone functions and lattices

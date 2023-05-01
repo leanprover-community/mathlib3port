@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
+! leanprover-community/mathlib commit 8b8ba04e2f326f3f7cf24ad129beda58531ada61
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -631,4 +631,133 @@ theorem ContinuousOn.stronglyMeasurableAtFilterNhdsWithin {α β : Type _} [Meas
     StronglyMeasurableAtFilter f (𝓝[s] x) μ :=
   ⟨s, self_mem_nhdsWithin, hf.AeStronglyMeasurable hs⟩
 #align continuous_on.strongly_measurable_at_filter_nhds_within ContinuousOn.stronglyMeasurableAtFilterNhdsWithin
+
+/-! ### Lemmas about adding and removing interval boundaries
+
+The primed lemmas take explicit arguments about the measure being finite at the endpoint, while
+the unprimed ones use `[has_no_atoms μ]`.
+-/
+
+
+section PartialOrder
+
+variable [PartialOrder α] [MeasurableSingletonClass α] {f : α → E} {μ : Measure α} {a b : α}
+
+theorem integrableOn_Icc_iff_integrableOn_Ioc' (ha : μ {a} ≠ ∞) :
+    IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioc a b) μ :=
+  by
+  by_cases hab : a ≤ b
+  ·
+    rw [← Ioc_union_left hab, integrable_on_union,
+      eq_true (integrable_on_singleton_iff.mpr <| Or.inr ha.lt_top), and_true_iff]
+  · rw [Icc_eq_empty hab, Ioc_eq_empty]
+    contrapose! hab
+    exact hab.le
+#align integrable_on_Icc_iff_integrable_on_Ioc' integrableOn_Icc_iff_integrableOn_Ioc'
+
+theorem integrableOn_Icc_iff_integrableOn_Ico' (hb : μ {b} ≠ ∞) :
+    IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ico a b) μ :=
+  by
+  by_cases hab : a ≤ b
+  ·
+    rw [← Ico_union_right hab, integrable_on_union,
+      eq_true (integrable_on_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
+  · rw [Icc_eq_empty hab, Ico_eq_empty]
+    contrapose! hab
+    exact hab.le
+#align integrable_on_Icc_iff_integrable_on_Ico' integrableOn_Icc_iff_integrableOn_Ico'
+
+theorem integrableOn_Ico_iff_integrableOn_Ioo' (ha : μ {a} ≠ ∞) :
+    IntegrableOn f (Ico a b) μ ↔ IntegrableOn f (Ioo a b) μ :=
+  by
+  by_cases hab : a < b
+  ·
+    rw [← Ioo_union_left hab, integrable_on_union,
+      eq_true (integrable_on_singleton_iff.mpr <| Or.inr ha.lt_top), and_true_iff]
+  · rw [Ioo_eq_empty hab, Ico_eq_empty hab]
+#align integrable_on_Ico_iff_integrable_on_Ioo' integrableOn_Ico_iff_integrableOn_Ioo'
+
+theorem integrableOn_Ioc_iff_integrableOn_Ioo' (hb : μ {b} ≠ ∞) :
+    IntegrableOn f (Ioc a b) μ ↔ IntegrableOn f (Ioo a b) μ :=
+  by
+  by_cases hab : a < b
+  ·
+    rw [← Ioo_union_right hab, integrable_on_union,
+      eq_true (integrable_on_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
+  · rw [Ioo_eq_empty hab, Ioc_eq_empty hab]
+#align integrable_on_Ioc_iff_integrable_on_Ioo' integrableOn_Ioc_iff_integrableOn_Ioo'
+
+theorem integrableOn_Icc_iff_integrableOn_Ioo' (ha : μ {a} ≠ ∞) (hb : μ {b} ≠ ∞) :
+    IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioo a b) μ := by
+  rw [integrableOn_Icc_iff_integrableOn_Ioc' ha, integrableOn_Ioc_iff_integrableOn_Ioo' hb]
+#align integrable_on_Icc_iff_integrable_on_Ioo' integrableOn_Icc_iff_integrableOn_Ioo'
+
+theorem integrableOn_Ici_iff_integrableOn_Ioi' (hb : μ {b} ≠ ∞) :
+    IntegrableOn f (Ici b) μ ↔ IntegrableOn f (Ioi b) μ := by
+  rw [← Ioi_union_left, integrable_on_union,
+    eq_true (integrable_on_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
+#align integrable_on_Ici_iff_integrable_on_Ioi' integrableOn_Ici_iff_integrableOn_Ioi'
+
+theorem integrableOn_Iic_iff_integrableOn_Iio' (hb : μ {b} ≠ ∞) :
+    IntegrableOn f (Iic b) μ ↔ IntegrableOn f (Iio b) μ := by
+  rw [← Iio_union_right, integrable_on_union,
+    eq_true (integrable_on_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
+#align integrable_on_Iic_iff_integrable_on_Iio' integrableOn_Iic_iff_integrableOn_Iio'
+
+variable [HasNoAtoms μ]
+
+theorem integrableOn_Icc_iff_integrableOn_Ioc :
+    IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioc a b) μ :=
+  integrableOn_Icc_iff_integrableOn_Ioc'
+    (by
+      rw [measure_singleton]
+      exact ENNReal.zero_ne_top)
+#align integrable_on_Icc_iff_integrable_on_Ioc integrableOn_Icc_iff_integrableOn_Ioc
+
+theorem integrableOn_Icc_iff_integrableOn_Ico :
+    IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ico a b) μ :=
+  integrableOn_Icc_iff_integrableOn_Ico'
+    (by
+      rw [measure_singleton]
+      exact ENNReal.zero_ne_top)
+#align integrable_on_Icc_iff_integrable_on_Ico integrableOn_Icc_iff_integrableOn_Ico
+
+theorem integrableOn_Ico_iff_integrableOn_Ioo :
+    IntegrableOn f (Ico a b) μ ↔ IntegrableOn f (Ioo a b) μ :=
+  integrableOn_Ico_iff_integrableOn_Ioo'
+    (by
+      rw [measure_singleton]
+      exact ENNReal.zero_ne_top)
+#align integrable_on_Ico_iff_integrable_on_Ioo integrableOn_Ico_iff_integrableOn_Ioo
+
+theorem integrableOn_Ioc_iff_integrableOn_Ioo :
+    IntegrableOn f (Ioc a b) μ ↔ IntegrableOn f (Ioo a b) μ :=
+  integrableOn_Ioc_iff_integrableOn_Ioo'
+    (by
+      rw [measure_singleton]
+      exact ENNReal.zero_ne_top)
+#align integrable_on_Ioc_iff_integrable_on_Ioo integrableOn_Ioc_iff_integrableOn_Ioo
+
+theorem integrableOn_Icc_iff_integrableOn_Ioo :
+    IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioo a b) μ := by
+  rw [integrableOn_Icc_iff_integrableOn_Ioc, integrableOn_Ioc_iff_integrableOn_Ioo]
+#align integrable_on_Icc_iff_integrable_on_Ioo integrableOn_Icc_iff_integrableOn_Ioo
+
+theorem integrableOn_Ici_iff_integrableOn_Ioi :
+    IntegrableOn f (Ici b) μ ↔ IntegrableOn f (Ioi b) μ :=
+  integrableOn_Ici_iff_integrableOn_Ioi'
+    (by
+      rw [measure_singleton]
+      exact ENNReal.zero_ne_top)
+#align integrable_on_Ici_iff_integrable_on_Ioi integrableOn_Ici_iff_integrableOn_Ioi
+
+theorem integrableOn_Iic_iff_integrableOn_Iio :
+    IntegrableOn f (Iic b) μ ↔ IntegrableOn f (Iio b) μ :=
+  integrableOn_Iic_iff_integrableOn_Iio'
+    (by
+      rw [measure_singleton]
+      exact ENNReal.zero_ne_top)
+#align integrable_on_Iic_iff_integrable_on_Iio integrableOn_Iic_iff_integrableOn_Iio
+
+end PartialOrder
 
