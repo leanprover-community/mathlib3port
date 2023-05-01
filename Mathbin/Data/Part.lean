@@ -355,13 +355,13 @@ theorem some_toOption (a : α) [Decidable (some a).Dom] : (some a).toOption = Op
 
 #print Part.noneDecidable /-
 instance noneDecidable : Decidable (@none α).Dom :=
-  Decidable.false
+  decidableFalse
 #align part.none_decidable Part.noneDecidable
 -/
 
 #print Part.someDecidable /-
 instance someDecidable (a : α) : Decidable (some a).Dom :=
-  Decidable.true
+  decidableTrue
 #align part.some_decidable Part.someDecidable
 -/
 

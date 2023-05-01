@@ -260,7 +260,7 @@ instance {α} : Membership α (LazyList α) :=
 
 #print LazyList.Mem.decidable /-
 instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
-  | LazyList.nil => Decidable.false
+  | LazyList.nil => decidableFalse
   | LazyList.cons y ys =>
     if h : x = y then Decidable.isTrue (Or.inl h)
     else decidable_of_decidable_of_iff (mem.decidable (ys ())) (by simp [*, (· ∈ ·), LazyList.Mem])

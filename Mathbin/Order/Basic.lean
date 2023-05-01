@@ -1808,8 +1808,8 @@ instance : LinearOrder PUnit := by
           max := fun _ _ => star
           min := fun _ _ => star
           DecidableEq := PUnit.decidableEq
-          decidableLe := fun _ _ => Decidable.true
-          decidableLt := fun _ _ => Decidable.false } <;>
+          decidableLe := fun _ _ => decidableTrue
+          decidableLt := fun _ _ => decidableFalse } <;>
       intros <;>
     first
       |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]|exact Or.inl trivial

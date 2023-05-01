@@ -38,7 +38,7 @@ section Miscellany
 /- We add the `inline` attribute to optimize VM computation using these declarations. For example,
   `if p ∧ q then ... else ...` will not evaluate the decidability of `q` if `p` is false. -/
 attribute [inline]
-  And.decidable Or.decidable Decidable.false Xor'.decidable Iff.decidable Decidable.true Implies.decidable Not.decidable Ne.decidable Bool.decidableEq Decidable.decide
+  And.decidable Or.decidable decidableFalse Xor'.decidable Iff.decidable decidableTrue Implies.decidable Not.decidable Ne.decidable Bool.decidableEq Decidable.decide
 
 attribute [simp] cast_eq cast_hEq
 

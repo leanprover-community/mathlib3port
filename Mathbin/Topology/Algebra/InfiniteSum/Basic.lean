@@ -898,7 +898,7 @@ theorem tsum_fintype [Fintype β] (f : β → α) : (∑' b, f b) = ∑ b, f b :
 
 /- warning: tsum_bool -> tsum_bool is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_2] (f : Bool -> α), Eq.{succ u1} α (tsum.{u1, 0} α _inst_1 _inst_2 Bool (fun (i : Bool) => f i)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (f (Decidable.decide False Decidable.false)) (f (Decidable.decide True Decidable.true)))
+  forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_2] (f : Bool -> α), Eq.{succ u1} α (tsum.{u1, 0} α _inst_1 _inst_2 Bool (fun (i : Bool) => f i)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (f (Decidable.decide False decidableFalse)) (f (Decidable.decide True decidableTrue)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_2] (f : Bool -> α), Eq.{succ u1} α (tsum.{u1, 0} α _inst_1 _inst_2 Bool (fun (i : Bool) => f i)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (f (Decidable.decide False instDecidableFalse)) (f (Decidable.decide True instDecidableTrue)))
 Case conversion may be inaccurate. Consider using '#align tsum_bool tsum_boolₓ'. -/

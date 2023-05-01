@@ -505,7 +505,7 @@ lean 3 declaration is
 but is expected to have type
   forall (V : Type.{u1}), DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.bot.adj_decidable SimpleGraph.Bot.adjDecidableₓ'. -/
-instance Bot.adjDecidable : DecidableRel (⊥ : SimpleGraph V).Adj := fun v w => Decidable.false
+instance Bot.adjDecidable : DecidableRel (⊥ : SimpleGraph V).Adj := fun v w => decidableFalse
 #align simple_graph.bot.adj_decidable SimpleGraph.Bot.adjDecidable
 
 /- warning: simple_graph.sup.adj_decidable -> SimpleGraph.Sup.adjDecidable is a dubious translation:
