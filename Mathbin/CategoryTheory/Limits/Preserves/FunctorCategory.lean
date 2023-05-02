@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.functor_category
-! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
+! leanprover-community/mathlib commit 39478763114722f0ec7613cb2f3f7701f9b86c8d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,6 +134,8 @@ instance whiskeringRightPreservesLimits {C : Type u} [Category C] {D : Type _} [
   ⟨⟩
 #align category_theory.whiskering_right_preserves_limits CategoryTheory.whiskeringRightPreservesLimits
 
+/- warning: category_theory.preserves_limit_of_Lan_preserves_limit clashes with category_theory.preserves_limit_of_Lan_presesrves_limit -> CategoryTheory.preservesLimitOfLanPreservesLimit
+Case conversion may be inaccurate. Consider using '#align category_theory.preserves_limit_of_Lan_preserves_limit CategoryTheory.preservesLimitOfLanPreservesLimitₓ'. -/
 #print CategoryTheory.preservesLimitOfLanPreservesLimit /-
 /-- If `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves limits of shape `J`, so will `F`. -/
 noncomputable def preservesLimitOfLanPreservesLimit {C D : Type u} [SmallCategory C]
@@ -143,7 +145,7 @@ noncomputable def preservesLimitOfLanPreservesLimit {C D : Type u} [SmallCategor
   apply preserves_limits_of_shape_of_reflects_of_preserves F yoneda
   exact preserves_limits_of_shape_of_nat_iso (comp_yoneda_iso_yoneda_comp_Lan F).symm
   infer_instance
-#align category_theory.preserves_limit_of_Lan_presesrves_limit CategoryTheory.preservesLimitOfLanPreservesLimit
+#align category_theory.preserves_limit_of_Lan_preserves_limit CategoryTheory.preservesLimitOfLanPreservesLimit
 -/
 
 end CategoryTheory

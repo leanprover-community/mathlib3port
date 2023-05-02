@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.functor.flat
-! leanprover-community/mathlib commit 14e80e85cbca5872a329fbfd3d1f3fd64e306934
+! leanprover-community/mathlib commit 39478763114722f0ec7613cb2f3f7701f9b86c8d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,7 +404,7 @@ theorem flat_iff_lan_flat (F : C ⥤ D) :
     haveI : preserves_finite_limits F :=
       by
       apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
-      intros ; skip; apply preserves_limit_of_Lan_presesrves_limit
+      intros ; skip; apply preserves_limit_of_Lan_preserves_limit
     apply flat_of_preserves_finite_limits⟩
 #align category_theory.flat_iff_Lan_flat CategoryTheory.flat_iff_lan_flat
 
@@ -417,7 +417,7 @@ noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D)
   toFun _ := inferInstance
   invFun _ := by
     apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
-    intros ; skip; apply preserves_limit_of_Lan_presesrves_limit
+    intros ; skip; apply preserves_limit_of_Lan_preserves_limit
   left_inv x := by
     cases x; unfold preserves_finite_limits_of_flat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]; congr

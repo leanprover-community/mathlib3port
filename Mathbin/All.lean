@@ -2122,6 +2122,7 @@ import Mathbin.MeasureTheory.Function.L2Space
 import Mathbin.MeasureTheory.Function.LocallyIntegrable
 import Mathbin.MeasureTheory.Function.LpOrder
 import Mathbin.MeasureTheory.Function.LpSpace
+import Mathbin.MeasureTheory.Function.SimpleFunc
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
 import Mathbin.MeasureTheory.Function.SpecialFunctions.Arctan

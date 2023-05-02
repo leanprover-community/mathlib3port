@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit 155d5519569cecf21f48c534da8b729890e20ce6
+! leanprover-community/mathlib commit 8130e5155d637db35907c272de9aec9dc851c03a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,16 +41,6 @@ universe u'' u' u v w
 
 variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 
-#print SubmoduleClass /-
-/-- `submodule_class S R M` says `S` is a type of submodules `s ≤ M`.
-
-Note that only `R` is marked as `out_param` since `M` is already supplied by the `set_like` class.
--/
-class SubmoduleClass (S : Type _) (R : outParam <| Type _) (M : Type _) [AddZeroClass M] [SMul R M]
-  [SetLike S M] [AddSubmonoidClass S M] extends SMulMemClass S R M
-#align submodule_class SubmoduleClass
--/
-
 #print Submodule /-
 /-- A submodule of a module is one which is closed under vector operations.
   This is a sufficient condition for the subset of vectors in the submodule
@@ -80,7 +70,7 @@ instance : AddSubmonoidClass (Submodule R M) M
   zero_mem := zero_mem'
   add_mem := add_mem'
 
-instance : SubmoduleClass (Submodule R M) R M where smul_mem := smul_mem'
+instance : SMulMemClass (Submodule R M) R M where smul_mem := smul_mem'
 
 /- warning: submodule.mem_to_add_submonoid -> Submodule.mem_toAddSubmonoid is a dubious translation:
 lean 3 declaration is
@@ -261,40 +251,30 @@ theorem coe_toSubMulAction (p : Submodule R M) : (p.toSubMulAction : Set M) = p 
 
 end Submodule
 
-namespace SubmoduleClass
+namespace SMulMemClass
 
 variable [Semiring R] [AddCommMonoid M] [Module R M] {A : Type _} [SetLike A M]
-  [AddSubmonoidClass A M] [hA : SubmoduleClass A R M] (S' : A)
+  [AddSubmonoidClass A M] [hA : SMulMemClass A R M] (S' : A)
 
 include hA
 
-#print SubmoduleClass.toModule /-
--- Prefer subclasses of `module` over `submodule_class`.
+-- Prefer subclasses of `module` over `smul_mem_class`.
 /-- A submodule of a `module` is a `module`.  -/
 instance (priority := 75) toModule : Module R S' :=
   Subtype.coe_injective.Module R (AddSubmonoidClass.Subtype S') (SetLike.val_smul S')
-#align submodule_class.to_module SubmoduleClass.toModule
--/
+#align smul_mem_class.to_module SMulMemClass.toModule
 
-#print SubmoduleClass.subtype /-
 /-- The natural `R`-linear map from a submodule of an `R`-module `M` to `M`. -/
 protected def subtype : S' →ₗ[R] M :=
   ⟨coe, fun _ _ => rfl, fun _ _ => rfl⟩
-#align submodule_class.subtype SubmoduleClass.subtype
--/
+#align smul_mem_class.subtype SMulMemClass.subtype
 
-/- warning: submodule_class.coe_subtype -> SubmoduleClass.coeSubtype is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] {A : Type.{u3}} [_inst_4 : SetLike.{u3, u2} A M] [_inst_5 : AddSubmonoidClass.{u3, u2} A M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) _inst_4] [hA : SubmoduleClass.{u3, u1, u2} A R M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (SMulZeroClass.toHasSmul.{u1, u2} R M (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R _inst_1) (AddZeroClass.toHasZero.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Module.toMulActionWithZero.{u1, u2} R M _inst_1 _inst_2 _inst_3)))) _inst_4 _inst_5] (S' : A), Eq.{succ u2} ((fun (_x : LinearMap.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (AddSubmonoidClass.toAddCommMonoid.{u2, u3} M _inst_2 A _inst_4 _inst_5 S') _inst_2 (SubmoduleClass.toModule.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S') _inst_3) => (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') -> M) (SubmoduleClass.subtype.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S')) (coeFn.{succ u2, succ u2} (LinearMap.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (AddSubmonoidClass.toAddCommMonoid.{u2, u3} M _inst_2 A _inst_4 _inst_5 S') _inst_2 (SubmoduleClass.toModule.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S') _inst_3) (fun (_x : LinearMap.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (AddSubmonoidClass.toAddCommMonoid.{u2, u3} M _inst_2 A _inst_4 _inst_5 S') _inst_2 (SubmoduleClass.toModule.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S') _inst_3) => (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') -> M) (LinearMap.hasCoeToFun.{u1, u1, u2, u2} R R (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M _inst_1 _inst_1 (AddSubmonoidClass.toAddCommMonoid.{u2, u3} M _inst_2 A _inst_4 _inst_5 S') _inst_2 (SubmoduleClass.toModule.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S') _inst_3 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (SubmoduleClass.subtype.{u1, u2, u3} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S')) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (coeBase.{succ u2, succ u2} (coeSort.{succ u3, succ (succ u2)} A Type.{u2} (SetLike.hasCoeToSort.{u3, u2} A M _inst_4) S') M (coeSubtype.{succ u2} M (fun (x : M) => Membership.Mem.{u2, u3} M A (SetLike.hasMem.{u3, u2} A M _inst_4) x S'))))))
-but is expected to have type
-  forall {R : Type.{u2}} {M : Type.{u3}} [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u2, u3} R M _inst_1 _inst_2] {A : Type.{u1}} [_inst_4 : SetLike.{u1, u3} A M] [_inst_5 : AddSubmonoidClass.{u1, u3} A M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_2)) _inst_4] [hA : SubmoduleClass.{u1, u2, u3} A R M (AddMonoid.toAddZeroClass.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_2)) (SMulZeroClass.toSMul.{u2, u3} R M (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u2, u3} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u2, u3} R M (Semiring.toMonoidWithZero.{u2} R _inst_1) (AddMonoid.toZero.{u3} M (AddCommMonoid.toAddMonoid.{u3} M _inst_2)) (Module.toMulActionWithZero.{u2, u3} R M _inst_1 _inst_2 _inst_3)))) _inst_4 _inst_5] (S' : A), Eq.{succ u3} (forall (a : Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')), (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6190 : Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')) => M) a) (FunLike.coe.{succ u3, succ u3, succ u3} (LinearMap.{u2, u2, u3, u3} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')) M (AddSubmonoidClass.toAddCommMonoid.{u3, u1} M _inst_2 A _inst_4 _inst_5 S') _inst_2 (SubmoduleClass.toModule.{u2, u3, u1} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S') _inst_3) (Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')) (fun (_x : Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6190 : Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')) => M) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, u3, u3} R R (Subtype.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S')) M _inst_1 _inst_1 (AddSubmonoidClass.toAddCommMonoid.{u3, u1} M _inst_2 A _inst_4 _inst_5 S') _inst_2 (SubmoduleClass.toModule.{u2, u3, u1} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S') _inst_3 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (SubmoduleClass.subtype.{u2, u3, u1} R M _inst_1 _inst_2 _inst_3 A _inst_4 _inst_5 hA S')) (Subtype.val.{succ u3} M (fun (x : M) => Membership.mem.{u3, u1} M A (SetLike.instMembership.{u1, u3} A M _inst_4) x S'))
-Case conversion may be inaccurate. Consider using '#align submodule_class.coe_subtype SubmoduleClass.coeSubtypeₓ'. -/
 @[simp]
-protected theorem coeSubtype : (SubmoduleClass.subtype S' : S' → M) = coe :=
+protected theorem coeSubtype : (SMulMemClass.subtype S' : S' → M) = coe :=
   rfl
-#align submodule_class.coe_subtype SubmoduleClass.coeSubtype
+#align smul_mem_class.coe_subtype SMulMemClass.coeSubtype
 
-end SubmoduleClass
+end SMulMemClass
 
 namespace Submodule
 
