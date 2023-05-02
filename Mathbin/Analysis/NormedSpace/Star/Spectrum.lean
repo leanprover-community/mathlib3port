@@ -193,7 +193,7 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
   coe_injective' := FunLike.coe_injective'
   map_star φ a := by
     suffices hsa : ∀ s : selfAdjoint A, (φ s)⋆ = φ s
-    · rw [← realPart_add_i_smul_imaginaryPart a]
+    · rw [← realPart_add_I_smul_imaginaryPart a]
       simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_val_eq]
     · intro s
       have := AlgHom.apply_mem_spectrum φ (s : A)

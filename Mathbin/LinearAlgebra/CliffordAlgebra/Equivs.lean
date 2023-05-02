@@ -183,7 +183,7 @@ def ofComplex : ℂ →ₐ[ℝ] CliffordAlgebra q :=
 
 @[simp]
 theorem ofComplex_i : ofComplex Complex.I = ι q 1 :=
-  Complex.liftAux_apply_i _ _
+  Complex.liftAux_apply_I _ _
 #align clifford_algebra_complex.of_complex_I CliffordAlgebraComplex.ofComplex_i
 
 @[simp]
