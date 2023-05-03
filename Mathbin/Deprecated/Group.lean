@@ -638,7 +638,7 @@ theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Mˣ) : ↑((map' hf : M
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.mulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.instMulOneClassUnits.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) (fun (x._@.Mathlib.Deprecated.Group._hyg.1922 : Units.{u1} M _inst_1) => Units.val.{u1} M _inst_1 x._@.Mathlib.Deprecated.Group._hyg.1922)
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.instMulOneClassUnits.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) (fun (x._@.Mathlib.Deprecated.Group._hyg.1920 : Units.{u1} M _inst_1) => Units.val.{u1} M _inst_1 x._@.Mathlib.Deprecated.Group._hyg.1920)
 Case conversion may be inaccurate. Consider using '#align units.coe_is_monoid_hom Units.coe_isMonoidHomₓ'. -/
 theorem coe_isMonoidHom : IsMonoidHom (coe : Mˣ → M) :=
   (coeHom M).isMonoidHom_coe

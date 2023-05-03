@@ -222,7 +222,7 @@ theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Typ
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))] {β : Type.{u2}} [_inst_4 : Fintype.{u2} β] (f : β -> α), Exists.{succ u1} α (fun (M : α) => forall (i : β), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (f i) M)
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : IsDirected.{u2} α (fun (x._@.Mathlib.Data.Fintype.Order._hyg.1052 : α) (x._@.Mathlib.Data.Fintype.Order._hyg.1054 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Data.Fintype.Order._hyg.1052 x._@.Mathlib.Data.Fintype.Order._hyg.1054)] {β : Type.{u1}} [_inst_4 : Fintype.{u1} β] (f : β -> α), Exists.{succ u2} α (fun (M : α) => forall (i : β), LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) (f i) M)
+  forall {α : Type.{u2}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : IsDirected.{u2} α (fun (x._@.Mathlib.Data.Fintype.Order._hyg.1044 : α) (x._@.Mathlib.Data.Fintype.Order._hyg.1046 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Data.Fintype.Order._hyg.1044 x._@.Mathlib.Data.Fintype.Order._hyg.1046)] {β : Type.{u1}} [_inst_4 : Fintype.{u1} β] (f : β -> α), Exists.{succ u2} α (fun (M : α) => forall (i : β), LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) (f i) M)
 Case conversion may be inaccurate. Consider using '#align fintype.exists_le Fintype.exists_leₓ'. -/
 theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β]
     (f : β → α) : ∃ M, ∀ i, f i ≤ M :=
@@ -233,7 +233,7 @@ theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))] {β : Type.{u2}} [_inst_4 : Fintype.{u2} β] (f : β -> α), BddAbove.{u1} α _inst_2 (Set.range.{u1, succ u2} α β f)
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : IsDirected.{u2} α (fun (x._@.Mathlib.Data.Fintype.Order._hyg.1107 : α) (x._@.Mathlib.Data.Fintype.Order._hyg.1109 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Data.Fintype.Order._hyg.1107 x._@.Mathlib.Data.Fintype.Order._hyg.1109)] {β : Type.{u1}} [_inst_4 : Fintype.{u1} β] (f : β -> α), BddAbove.{u2} α _inst_2 (Set.range.{u2, succ u1} α β f)
+  forall {α : Type.{u2}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : IsDirected.{u2} α (fun (x._@.Mathlib.Data.Fintype.Order._hyg.1099 : α) (x._@.Mathlib.Data.Fintype.Order._hyg.1101 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Data.Fintype.Order._hyg.1099 x._@.Mathlib.Data.Fintype.Order._hyg.1101)] {β : Type.{u1}} [_inst_4 : Fintype.{u1} β] (f : β -> α), BddAbove.{u2} α _inst_2 (Set.range.{u2, succ u1} α β f)
 Case conversion may be inaccurate. Consider using '#align fintype.bdd_above_range Fintype.bddAbove_rangeₓ'. -/
 theorem Fintype.bddAbove_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _}
     [Fintype β] (f : β → α) : BddAbove (Set.range f) :=

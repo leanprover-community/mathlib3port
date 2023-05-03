@@ -922,7 +922,7 @@ instance decidableNonneg : ∀ a : ℤ√d, Decidable (nonneg a)
 lean 3 declaration is
   forall {d : Nat}, DecidableRel.{1} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (LE.le.{0} (Zsqrtd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) (Zsqrtd.hasLe d))
 but is expected to have type
-  forall {d : Nat}, DecidableRel.{1} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (fun (x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7392 : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7394 : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) => LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7392 x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7394)
+  forall {d : Nat}, DecidableRel.{1} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (fun (x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7357 : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7359 : Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) => LE.le.{0} (Zsqrtd (Nat.cast.{0} Int instNatCastInt d)) (Zsqrtd.instLEZsqrtdCastIntInstNatCastInt d) x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7357 x._@.Mathlib.NumberTheory.Zsqrtd.Basic._hyg.7359)
 Case conversion may be inaccurate. Consider using '#align zsqrtd.decidable_le Zsqrtd.decidableLEₓ'. -/
 instance decidableLE : @DecidableRel (ℤ√d) (· ≤ ·) := fun _ _ => decidable_nonneg _
 #align zsqrtd.decidable_le Zsqrtd.decidableLE

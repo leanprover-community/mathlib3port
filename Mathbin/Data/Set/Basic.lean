@@ -1202,7 +1202,7 @@ theorem union_assoc (a b c : Set α) : a ∪ b ∪ c = a ∪ (b ∪ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7936 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7938 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7936 x._@.Mathlib.Data.Set.Basic._hyg.7938)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7931 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7933 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7931 x._@.Mathlib.Data.Set.Basic._hyg.7933)
 Case conversion may be inaccurate. Consider using '#align set.union_is_assoc Set.union_isAssocₓ'. -/
 instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
   ⟨union_assoc⟩
@@ -1212,7 +1212,7 @@ instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7981 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7983 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7981 x._@.Mathlib.Data.Set.Basic._hyg.7983)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7976 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7978 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7976 x._@.Mathlib.Data.Set.Basic._hyg.7978)
 Case conversion may be inaccurate. Consider using '#align set.union_is_comm Set.union_isCommₓ'. -/
 instance union_isComm : IsCommutative (Set α) (· ∪ ·) :=
   ⟨union_comm⟩
@@ -1555,7 +1555,7 @@ theorem inter_assoc (a b c : Set α) : a ∩ b ∩ c = a ∩ (b ∩ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9578 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9580 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9578 x._@.Mathlib.Data.Set.Basic._hyg.9580)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9573 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9575 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9573 x._@.Mathlib.Data.Set.Basic._hyg.9575)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_assoc Set.inter_isAssocₓ'. -/
 instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
   ⟨inter_assoc⟩
@@ -1565,7 +1565,7 @@ instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9623 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9625 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9623 x._@.Mathlib.Data.Set.Basic._hyg.9625)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9618 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9620 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9618 x._@.Mathlib.Data.Set.Basic._hyg.9620)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_comm Set.inter_isCommₓ'. -/
 instance inter_isComm : IsCommutative (Set α) (· ∩ ·) :=
   ⟨inter_comm⟩
