@@ -4101,7 +4101,7 @@ theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] 
 
 theorem exists_mem_forall_mem_nhdsWithin_pos_measure [TopologicalSpace α]
     [SecondCountableTopology α] {s : Set α} (hs : μ s ≠ 0) : ∃ x ∈ s, ∀ t ∈ 𝓝[s] x, 0 < μ t :=
-  μ.toOuterMeasure.exists_mem_forall_mem_nhdsWithin_pos hs
+  μ.toOuterMeasure.exists_mem_forall_mem_nhds_within_pos hs
 #align measure_theory.exists_mem_forall_mem_nhds_within_pos_measure MeasureTheory.exists_mem_forall_mem_nhdsWithin_pos_measure
 
 theorem exists_ne_forall_mem_nhds_pos_measure_preimage {β} [TopologicalSpace β] [T1Space β]

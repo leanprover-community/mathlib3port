@@ -293,7 +293,7 @@ theorem measure_unionᵢ_null_iff' {ι : Prop} {s : ι → Set α} : μ (⋃ i, 
 
 theorem measure_bUnion_null_iff {s : Set ι} (hs : s.Countable) {t : ι → Set α} :
     μ (⋃ i ∈ s, t i) = 0 ↔ ∀ i ∈ s, μ (t i) = 0 :=
-  μ.toOuterMeasure.bUnion_null_iff hs
+  μ.toOuterMeasure.bunionᵢ_null_iff hs
 #align measure_theory.measure_bUnion_null_iff MeasureTheory.measure_bUnion_null_iff
 
 theorem measure_unionₛ_null_iff {S : Set (Set α)} (hS : S.Countable) :
