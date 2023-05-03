@@ -319,7 +319,7 @@ theorem id_eq_path_refl (x : FundamentalGroupoid X) : 𝟙 x = ⟦Path.refl x⟧
 
 /-- The functor sending a topological space `X` to its fundamental groupoid.
 -/
-def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat
+def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.Grpd
     where
   obj X := { α := FundamentalGroupoid X }
   map X Y f :=

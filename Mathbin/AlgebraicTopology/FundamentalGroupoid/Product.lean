@@ -75,7 +75,7 @@ def piToPiTop : (∀ i, πₓ (X i)) ⥤ πₓ (TopCat.of (∀ i, X i))
 of the induced projections. This shows that `fundamental_groupoid_functor` preserves products.
 -/
 @[simps]
-def piIso : CategoryTheory.GroupoidCat.of (∀ i : I, πₓ (X i)) ≅ πₓ (TopCat.of (∀ i, X i))
+def piIso : CategoryTheory.Grpd.of (∀ i : I, πₓ (X i)) ≅ πₓ (TopCat.of (∀ i, X i))
     where
   Hom := piToPiTop X
   inv := CategoryTheory.Functor.pi' (proj X)
@@ -112,8 +112,7 @@ theorem coneDiscreteComp_obj_mapCone :
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
 def piTopToPiCone :
-    Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) ⟶
-      GroupoidCat.piLimitFan fun i : I => πₓ (X i)
+    Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) ⟶ Grpd.piLimitFan fun i : I => πₓ (X i)
     where Hom := CategoryTheory.Functor.pi' (proj X)
 #align fundamental_groupoid_functor.pi_Top_to_pi_cone FundamentalGroupoidFunctor.piTopToPiCone
 
@@ -192,7 +191,7 @@ theorem prodToProdTop_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ : x�
 of the induced left and right projections.
 -/
 @[simps]
-def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopCat.of (A × B))
+def prodIso : CategoryTheory.Grpd.of (πₓ A × πₓ B) ≅ πₓ (TopCat.of (A × B))
     where
   Hom := prodToProdTop A B
   inv := (projLeft A B).prod' (projRight A B)

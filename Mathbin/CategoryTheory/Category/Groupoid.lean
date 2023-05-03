@@ -34,37 +34,50 @@ universe v u
 
 namespace CategoryTheory
 
+#print CategoryTheory.Grpd /-
 -- intended to be used with explicit universe parameters
 /-- Category of groupoids -/
 @[nolint check_univs]
-def GroupoidCat :=
+def Grpd :=
   Bundled Groupoid.{v, u}
-#align category_theory.Groupoid CategoryTheory.GroupoidCat
+#align category_theory.Groupoid CategoryTheory.Grpd
+-/
 
 namespace Groupoid
 
-instance : Inhabited GroupoidCat :=
+instance : Inhabited Grpd :=
   ⟨Bundled.of (SingleObj PUnit)⟩
 
-instance str (C : GroupoidCat.{v, u}) : Groupoid.{v, u} C.α :=
+#print CategoryTheory.Grpd.str' /-
+instance str' (C : Grpd.{v, u}) : Groupoid.{v, u} C.α :=
   C.str
-#align category_theory.Groupoid.str CategoryTheory.GroupoidCat.str
+#align category_theory.Groupoid.str CategoryTheory.Grpd.str'
+-/
 
-instance : CoeSort GroupoidCat (Type _) :=
+instance : CoeSort Grpd (Type _) :=
   Bundled.hasCoeToSort
 
+#print CategoryTheory.Grpd.of /-
 /-- Construct a bundled `Groupoid` from the underlying type and the typeclass. -/
-def of (C : Type u) [Groupoid.{v} C] : GroupoidCat.{v, u} :=
+def of (C : Type u) [Groupoid.{v} C] : Grpd.{v, u} :=
   Bundled.of C
-#align category_theory.Groupoid.of CategoryTheory.GroupoidCat.of
+#align category_theory.Groupoid.of CategoryTheory.Grpd.of
+-/
 
+/- warning: category_theory.Groupoid.coe_of -> CategoryTheory.Grpd.coe_of is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Groupoid.{u2, u1} C], Eq.{succ (succ u1)} Type.{u1} (coeSort.{succ (max (succ u1) u1 (succ u2)), succ (succ u1)} CategoryTheory.Grpd.{u2, u1} Type.{u1} CategoryTheory.Grpd.hasCoeToSort.{u1, u2} (CategoryTheory.Grpd.of.{u2, u1} C _inst_1)) C
+but is expected to have type
+  forall (C : Type.{u2}) [_inst_1 : CategoryTheory.Groupoid.{u1, u2} C], Eq.{succ (succ u2)} Type.{u2} (CategoryTheory.Bundled.α.{u2, max u2 (succ u1)} CategoryTheory.Groupoid.{u1, u2} (CategoryTheory.Grpd.of.{u1, u2} C _inst_1)) C
+Case conversion may be inaccurate. Consider using '#align category_theory.Groupoid.coe_of CategoryTheory.Grpd.coe_ofₓ'. -/
 @[simp]
 theorem coe_of (C : Type u) [Groupoid C] : (of C : Type u) = C :=
   rfl
-#align category_theory.Groupoid.coe_of CategoryTheory.GroupoidCat.coe_of
+#align category_theory.Groupoid.coe_of CategoryTheory.Grpd.coe_of
 
+#print CategoryTheory.Grpd.category /-
 /-- Category structure on `Groupoid` -/
-instance category : LargeCategory.{max v u} GroupoidCat.{v, u}
+instance category : LargeCategory.{max v u} Grpd.{v, u}
     where
   Hom C D := C ⥤ D
   id C := 𝟭 C
@@ -72,51 +85,74 @@ instance category : LargeCategory.{max v u} GroupoidCat.{v, u}
   id_comp' C D F := by cases F <;> rfl
   comp_id' C D F := by cases F <;> rfl
   assoc' := by intros <;> rfl
-#align category_theory.Groupoid.category CategoryTheory.GroupoidCat.category
+#align category_theory.Groupoid.category CategoryTheory.Grpd.category
+-/
 
+#print CategoryTheory.Grpd.objects /-
 /-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
-def objects : GroupoidCat.{v, u} ⥤ Type u
-    where
+def objects : Grpd.{v, u} ⥤ Type u where
   obj := Bundled.α
   map C D F := F.obj
-#align category_theory.Groupoid.objects CategoryTheory.GroupoidCat.objects
+#align category_theory.Groupoid.objects CategoryTheory.Grpd.objects
+-/
 
+#print CategoryTheory.Grpd.forgetToCat /-
 /-- Forgetting functor to `Cat` -/
-def forgetToCat : GroupoidCat.{v, u} ⥤ Cat.{v, u}
+def forgetToCat : Grpd.{v, u} ⥤ Cat.{v, u}
     where
   obj C := Cat.of C
   map C D := id
-#align category_theory.Groupoid.forget_to_Cat CategoryTheory.GroupoidCat.forgetToCat
+#align category_theory.Groupoid.forget_to_Cat CategoryTheory.Grpd.forgetToCat
+-/
 
+/- warning: category_theory.Groupoid.forget_to_Cat_full -> CategoryTheory.Grpd.forgetToCatFull is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Full.{max u1 u2, max u1 u2, max (succ u2) u2 (succ u1), max (succ u2) u2 (succ u1)} CategoryTheory.Grpd.{u1, u2} CategoryTheory.Grpd.category.{u1, u2} CategoryTheory.Cat.{u1, u2} CategoryTheory.Cat.category.{u1, u2} CategoryTheory.Grpd.forgetToCat.{u1, u2}
+but is expected to have type
+  CategoryTheory.Full.{max u1 u2, max u1 u2, max (succ u1) (succ u2), max (succ u1) (succ u2)} CategoryTheory.Grpd.{u2, u1} CategoryTheory.Grpd.category.{u2, u1} CategoryTheory.Cat.{u2, u1} CategoryTheory.Cat.category.{u2, u1} CategoryTheory.Grpd.forgetToCat.{u2, u1}
+Case conversion may be inaccurate. Consider using '#align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCatFullₓ'. -/
 instance forgetToCatFull : Full forgetToCat where preimage C D := id
-#align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.GroupoidCat.forgetToCatFull
+#align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCatFull
 
+/- warning: category_theory.Groupoid.forget_to_Cat_faithful -> CategoryTheory.Grpd.forgetToCat_faithful is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Faithful.{max u1 u2, max u1 u2, max (succ u2) u2 (succ u1), max (succ u2) u2 (succ u1)} CategoryTheory.Grpd.{u1, u2} CategoryTheory.Grpd.category.{u1, u2} CategoryTheory.Cat.{u1, u2} CategoryTheory.Cat.category.{u1, u2} CategoryTheory.Grpd.forgetToCat.{u1, u2}
+but is expected to have type
+  CategoryTheory.Faithful.{max u1 u2, max u1 u2, max (succ u1) (succ u2), max (succ u1) (succ u2)} CategoryTheory.Grpd.{u2, u1} CategoryTheory.Grpd.category.{u2, u1} CategoryTheory.Cat.{u2, u1} CategoryTheory.Cat.category.{u2, u1} CategoryTheory.Grpd.forgetToCat.{u2, u1}
+Case conversion may be inaccurate. Consider using '#align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.Grpd.forgetToCat_faithfulₓ'. -/
 instance forgetToCat_faithful : Faithful forgetToCat where
-#align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.GroupoidCat.forgetToCat_faithful
+#align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.Grpd.forgetToCat_faithful
 
+#print CategoryTheory.Grpd.hom_to_functor /-
 /-- Convert arrows in the category of groupoids to functors,
 which sometimes helps in applying simp lemmas -/
-theorem hom_to_functor {C D E : GroupoidCat.{v, u}} (f : C ⟶ D) (g : D ⟶ E) : f ≫ g = f ⋙ g :=
+theorem hom_to_functor {C D E : Grpd.{v, u}} (f : C ⟶ D) (g : D ⟶ E) : f ≫ g = f ⋙ g :=
   rfl
-#align category_theory.Groupoid.hom_to_functor CategoryTheory.GroupoidCat.hom_to_functor
+#align category_theory.Groupoid.hom_to_functor CategoryTheory.Grpd.hom_to_functor
+-/
 
+#print CategoryTheory.Grpd.id_to_functor /-
 /-- Converts identity in the category of groupoids to the functor identity -/
-theorem id_to_functor {C : GroupoidCat.{v, u}} : 𝟭 C = 𝟙 C :=
+theorem id_to_functor {C : Grpd.{v, u}} : 𝟭 C = 𝟙 C :=
   rfl
-#align category_theory.Groupoid.id_to_functor CategoryTheory.GroupoidCat.id_to_functor
+#align category_theory.Groupoid.id_to_functor CategoryTheory.Grpd.id_to_functor
+-/
 
 section Products
 
 attribute [local tidy] tactic.discrete_cases
 
+#print CategoryTheory.Grpd.piLimitFan /-
 /-- Construct the product over an indexed family of groupoids, as a fan. -/
-def piLimitFan ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.Fan F :=
+def piLimitFan ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.Fan F :=
   Limits.Fan.mk (@of (∀ j : J, F j) _) fun j => CategoryTheory.Pi.eval _ j
-#align category_theory.Groupoid.pi_limit_fan CategoryTheory.GroupoidCat.piLimitFan
+#align category_theory.Groupoid.pi_limit_fan CategoryTheory.Grpd.piLimitFan
+-/
 
+#print CategoryTheory.Grpd.piLimitFanIsLimit /-
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/
-def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.IsLimit (piLimitFan F) :=
+def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.IsLimit (piLimitFan F) :=
   Limits.mkFanLimit (piLimitFan F) (fun s => Functor.pi' fun j => s.proj j)
     (by
       intros
@@ -127,26 +163,33 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.I
       apply functor.pi_ext
       intro j; specialize w j
       simpa)
-#align category_theory.Groupoid.pi_limit_fan_is_limit CategoryTheory.GroupoidCat.piLimitFanIsLimit
+#align category_theory.Groupoid.pi_limit_fan_is_limit CategoryTheory.Grpd.piLimitFanIsLimit
+-/
 
-instance has_pi : Limits.HasProducts GroupoidCat.{u, u} :=
+#print CategoryTheory.Grpd.has_pi /-
+instance has_pi : Limits.HasProducts Grpd.{u, u} :=
   Limits.hasProducts_of_limit_fans piLimitFan piLimitFanIsLimit
-#align category_theory.Groupoid.has_pi CategoryTheory.GroupoidCat.has_pi
+#align category_theory.Groupoid.has_pi CategoryTheory.Grpd.has_pi
+-/
 
+#print CategoryTheory.Grpd.piIsoPi /-
 /-- The product of a family of groupoids is isomorphic
 to the product object in the category of Groupoids -/
-noncomputable def piIsoPi (J : Type u) (f : J → GroupoidCat.{u, u}) : @of (∀ j, f j) _ ≅ ∏ f :=
+noncomputable def piIsoPi (J : Type u) (f : J → Grpd.{u, u}) : @of (∀ j, f j) _ ≅ ∏ f :=
   Limits.IsLimit.conePointUniqueUpToIso (piLimitFanIsLimit f)
     (Limits.limit.isLimit (Discrete.functor f))
-#align category_theory.Groupoid.pi_iso_pi CategoryTheory.GroupoidCat.piIsoPi
+#align category_theory.Groupoid.pi_iso_pi CategoryTheory.Grpd.piIsoPi
+-/
 
+#print CategoryTheory.Grpd.piIsoPi_hom_π /-
 @[simp]
-theorem piIsoPi_hom_π (J : Type u) (f : J → GroupoidCat.{u, u}) (j : J) :
+theorem piIsoPi_hom_π (J : Type u) (f : J → Grpd.{u, u}) (j : J) :
     (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.Pi.eval _ j :=
   by
   simp [pi_iso_pi]
   rfl
-#align category_theory.Groupoid.pi_iso_pi_hom_π CategoryTheory.GroupoidCat.piIsoPi_hom_π
+#align category_theory.Groupoid.pi_iso_pi_hom_π CategoryTheory.Grpd.piIsoPi_hom_π
+-/
 
 end Products
 

@@ -192,6 +192,7 @@ theorem trans_apply (f : r ≼i s) (g : s ≼i t) (a : α) : (f.trans g) a = g (
   rfl
 #align initial_seg.trans_apply InitialSeg.trans_apply
 
+#print InitialSeg.subsingleton_of_trichotomous_of_irrefl /-
 instance subsingleton_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s]
     [IsWellFounded α r] : Subsingleton (r ≼i s) :=
   ⟨fun f g => by
@@ -201,6 +202,7 @@ instance subsingleton_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl 
     rw [f.init_iff, g.init_iff]
     exact exists_congr fun x => and_congr_left fun hx => IH _ hx ▸ Iff.rfl⟩
 #align initial_seg.subsingleton_of_trichotomous_of_irrefl InitialSeg.subsingleton_of_trichotomous_of_irrefl
+-/
 
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a => by
