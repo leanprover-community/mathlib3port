@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.complex_deriv
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Complex
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Complex trigonometric functions

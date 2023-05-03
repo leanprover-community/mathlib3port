@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.Z_Module_equivalence
-! leanprover-community/mathlib commit bf1b813e20e108e8868341ca94bb3404a2506ae5
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Module.Basic
 
 /-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+
 The forgetful functor from ℤ-modules to additive commutative groups is
 an equivalence of categories.
 

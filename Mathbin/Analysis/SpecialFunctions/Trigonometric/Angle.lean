@@ -4,14 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathbin.Analysis.Normed.Group.AddCircle
 import Mathbin.Algebra.CharZero.Quotient
-import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Topology.Instances.Sign
 
 /-!
@@ -501,27 +500,27 @@ theorem abs_cos_eq_of_two_zsmul_eq {θ ψ : Angle} (h : (2 : ℤ) • θ = (2 : 
 #align real.angle.abs_cos_eq_of_two_zsmul_eq Real.Angle.abs_cos_eq_of_two_zsmul_eq
 
 @[simp]
-theorem coe_toIcoMod (θ ψ : ℝ) : ↑(toIcoMod ψ two_pi_pos θ) = (θ : Angle) :=
+theorem coe_toIcoMod (θ ψ : ℝ) : ↑(toIcoMod two_pi_pos ψ θ) = (θ : Angle) :=
   by
   rw [angle_eq_iff_two_pi_dvd_sub]
-  refine' ⟨-toIcoDiv ψ two_pi_pos θ, _⟩
+  refine' ⟨-toIcoDiv two_pi_pos ψ θ, _⟩
   rw [toIcoMod_sub_self, zsmul_eq_mul, mul_comm]
 #align real.angle.coe_to_Ico_mod Real.Angle.coe_toIcoMod
 
 @[simp]
-theorem coe_toIocMod (θ ψ : ℝ) : ↑(toIocMod ψ two_pi_pos θ) = (θ : Angle) :=
+theorem coe_toIocMod (θ ψ : ℝ) : ↑(toIocMod two_pi_pos ψ θ) = (θ : Angle) :=
   by
   rw [angle_eq_iff_two_pi_dvd_sub]
-  refine' ⟨-toIocDiv ψ two_pi_pos θ, _⟩
+  refine' ⟨-toIocDiv two_pi_pos ψ θ, _⟩
   rw [toIocMod_sub_self, zsmul_eq_mul, mul_comm]
 #align real.angle.coe_to_Ioc_mod Real.Angle.coe_toIocMod
 
 /-- Convert a `real.angle` to a real number in the interval `Ioc (-π) π`. -/
 def toReal (θ : Angle) : ℝ :=
-  (toIocMod_periodic (-π) two_pi_pos).lift θ
+  (toIocMod_periodic two_pi_pos (-π)).lift θ
 #align real.angle.to_real Real.Angle.toReal
 
-theorem toReal_coe (θ : ℝ) : (θ : Angle).toReal = toIocMod (-π) two_pi_pos θ :=
+theorem toReal_coe (θ : ℝ) : (θ : Angle).toReal = toIocMod two_pi_pos (-π) θ :=
   rfl
 #align real.angle.to_real_coe Real.Angle.toReal_coe
 
@@ -559,13 +558,13 @@ theorem coe_toReal (θ : Angle) : (θ.toReal : Angle) = θ :=
 theorem neg_pi_lt_toReal (θ : Angle) : -π < θ.toReal :=
   by
   induction θ using Real.Angle.induction_on
-  exact left_lt_toIocMod _ two_pi_pos _
+  exact left_lt_toIocMod _ _ _
 #align real.angle.neg_pi_lt_to_real Real.Angle.neg_pi_lt_toReal
 
 theorem toReal_le_pi (θ : Angle) : θ.toReal ≤ π :=
   by
   induction θ using Real.Angle.induction_on
-  convert toIocMod_le_right _ two_pi_pos _
+  convert toIocMod_le_right two_pi_pos _ _
   ring
 #align real.angle.to_real_le_pi Real.Angle.toReal_le_pi
 
@@ -578,7 +577,7 @@ theorem toReal_mem_Ioc (θ : Angle) : θ.toReal ∈ Set.Ioc (-π) π :=
 #align real.angle.to_real_mem_Ioc Real.Angle.toReal_mem_Ioc
 
 @[simp]
-theorem toIocMod_toReal (θ : Angle) : toIocMod (-π) two_pi_pos θ.toReal = θ.toReal :=
+theorem toIocMod_toReal (θ : Angle) : toIocMod two_pi_pos (-π) θ.toReal = θ.toReal :=
   by
   induction θ using Real.Angle.induction_on
   rw [to_real_coe]

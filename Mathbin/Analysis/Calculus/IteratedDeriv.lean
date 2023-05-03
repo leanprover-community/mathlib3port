@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.iterated_deriv
-! leanprover-community/mathlib commit d524d0a578db1146460c1aca35bb5db68466347a
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Deriv
-import Mathbin.Analysis.Calculus.ContDiff
+import Mathbin.Analysis.Calculus.ContDiffDef
 
 /-!
 # One-dimensional iterated derivatives

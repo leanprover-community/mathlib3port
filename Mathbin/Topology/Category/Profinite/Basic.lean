@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Calle Sönne
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.basic
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.CategoryTheory.Fintype
 
 /-!
 # The category of Profinite Types
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We construct the category of profinite topological spaces,
 often called profinite sets -- perhaps they could be called

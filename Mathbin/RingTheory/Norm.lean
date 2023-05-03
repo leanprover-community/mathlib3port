@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit 5fe298160aa02b0f3cf95690a1265232cdd9563c
+! leanprover-community/mathlib commit fecd3520d2a236856f254f27714b80dcfe28ea57
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,6 +87,13 @@ theorem norm_eq_one_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Basis
 #align algebra.norm_eq_one_of_not_exists_basis Algebra.norm_eq_one_of_not_exists_basis
 
 variable {R}
+
+theorem norm_eq_one_of_not_module_finite (h : ¬Module.Finite R S) (x : S) : norm R x = 1 :=
+  by
+  refine' norm_eq_one_of_not_exists_basis _ (mt _ h) _
+  rintro ⟨s, ⟨b⟩⟩
+  exact Module.Finite.of_basis b
+#align algebra.norm_eq_one_of_not_module_finite Algebra.norm_eq_one_of_not_module_finite
 
 -- Can't be a `simp` lemma because it depends on a choice of basis
 theorem norm_eq_matrix_det [Fintype ι] [DecidableEq ι] (b : Basis ι R S) (s : S) :
@@ -323,7 +330,7 @@ variable (K)
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
 of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/
-theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlgClosed E] {x : L} :
+theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlgClosed E] (x : L) :
     algebraMap K E (norm K x) = ∏ σ : L →ₐ[K] E, σ x :=
   by
   have hx := IsSeparable.isIntegral K x
@@ -360,6 +367,47 @@ theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSep
   · apply IsAlgClosed.splits_codomain
   · infer_instance
 #align algebra.is_integral_norm Algebra.isIntegral_norm
+
+variable {F} (L)
+
+-- TODO. Generalize this proof to rings
+theorem norm_norm [Algebra L F] [IsScalarTower K L F] [IsSeparable K F] (x : F) :
+    norm K (norm L x) = norm K x :=
+  by
+  by_cases hKF : FiniteDimensional K F
+  · haveI := hKF
+    let A := AlgebraicClosure K
+    apply (algebraMap K A).Injective
+    haveI : FiniteDimensional L F := FiniteDimensional.right K L F
+    haveI : FiniteDimensional K L := FiniteDimensional.left K L F
+    haveI : IsSeparable K L := isSeparable_tower_bot_of_isSeparable K L F
+    haveI : IsSeparable L F := isSeparable_tower_top_of_isSeparable K L F
+    letI :
+      ∀ σ : L →ₐ[K] A,
+        haveI := σ.to_ring_hom.to_algebra
+        Fintype (F →ₐ[L] A) :=
+      fun _ => inferInstance
+    rw [norm_eq_prod_embeddings K A (_ : F),
+      Fintype.prod_equiv algHomEquivSigma (fun σ : F →ₐ[K] A => σ x)
+        (fun π : Σf : L →ₐ[K] A, _ => (π.2 : F → A) x) fun _ => rfl]
+    suffices
+      ∀ σ : L →ₐ[K] A,
+        haveI := σ.to_ring_hom.to_algebra
+        (∏ π : F →ₐ[L] A, π x) = σ (norm L x)
+      by simp_rw [← Finset.univ_sigma_univ, Finset.prod_sigma, this, norm_eq_prod_embeddings]
+    · intro σ
+      letI : Algebra L A := σ.to_ring_hom.to_algebra
+      rw [← norm_eq_prod_embeddings L A (_ : F)]
+      rfl
+  · rw [norm_eq_one_of_not_module_finite hKF]
+    by_cases hKL : FiniteDimensional K L
+    · have hLF : ¬FiniteDimensional L F := by
+        refine' (mt _) hKF
+        intro hKF
+        exact FiniteDimensional.trans K L F
+      rw [norm_eq_one_of_not_module_finite hLF, _root_.map_one]
+    · rw [norm_eq_one_of_not_module_finite hKL]
+#align algebra.norm_norm Algebra.norm_norm
 
 end EqProdEmbeddings
 

@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_analytic
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Analysis.Analytic.Basic
-import Mathbin.Analysis.Calculus.ContDiff
+import Mathbin.Analysis.Calculus.Deriv
+import Mathbin.Analysis.Calculus.ContDiffDef
 
 /-!
 # Frechet derivatives of analytic functions.

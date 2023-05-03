@@ -567,6 +567,7 @@ import Mathbin.Analysis.Convex.Caratheodory
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.Analysis.Convex.Complex
 import Mathbin.Analysis.Convex.Cone.Basic
+import Mathbin.Analysis.Convex.Cone.Proper
 import Mathbin.Analysis.Convex.Contractible
 import Mathbin.Analysis.Convex.Exposed
 import Mathbin.Analysis.Convex.Extrema
@@ -774,7 +775,6 @@ import Mathbin.CategoryTheory.Abelian.RightDerived
 import Mathbin.CategoryTheory.Abelian.Subobject
 import Mathbin.CategoryTheory.Abelian.Transfer
 import Mathbin.CategoryTheory.Action
-import Mathbin.CategoryTheory.Additive.Basic
 import Mathbin.CategoryTheory.Adhesive
 import Mathbin.CategoryTheory.Adjunction.AdjointFunctorTheorems
 import Mathbin.CategoryTheory.Adjunction.Basic
@@ -990,7 +990,7 @@ import Mathbin.CategoryTheory.Monad.Types
 import Mathbin.CategoryTheory.Monoidal.Bimod
 import Mathbin.CategoryTheory.Monoidal.CommMon_
 import Mathbin.CategoryTheory.Monoidal.End
-import Mathbin.CategoryTheory.Monoidal.Mod
+import Mathbin.CategoryTheory.Monoidal.Mod_
 import Mathbin.CategoryTheory.Monoidal.Mon_
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Monoidal.Category

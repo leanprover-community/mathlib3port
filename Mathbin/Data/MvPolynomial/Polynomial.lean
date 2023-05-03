@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.polynomial
-! leanprover-community/mathlib commit 0b89934139d3be96f9dab477f10c20f9f93da580
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Polynomial.Eval
 
 /-!
 # Some lemmas relating polynomials and multivariable polynomials.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit b2d7b50dc4b9fcb559e3459777e6c0c2400fe81c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,17 +64,17 @@ variable {𝕜 B : Type _}
 section Continuity
 
 variable [LinearOrderedAddCommGroup 𝕜] [Archimedean 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜]
-  (a : 𝕜) {p : 𝕜} (hp : 0 < p) (x : 𝕜)
+  {p : 𝕜} (hp : 0 < p) (a x : 𝕜)
 
-theorem continuous_right_toIcoMod : ContinuousWithinAt (toIcoMod a hp) (Ici x) x :=
+theorem continuous_right_toIcoMod : ContinuousWithinAt (toIcoMod hp a) (Ici x) x :=
   by
   intro s h
   rw [Filter.mem_map, mem_nhdsWithin_iff_exists_mem_nhds_inter]
   haveI : Nontrivial 𝕜 := ⟨⟨0, p, hp.ne⟩⟩
   simp_rw [mem_nhds_iff_exists_Ioo_subset] at h⊢
   obtain ⟨l, u, hxI, hIs⟩ := h
-  let d := toIcoDiv a hp x • p
-  have hd := toIcoMod_mem_Ico a hp x
+  let d := toIcoDiv hp a x • p
+  have hd := toIcoMod_mem_Ico hp a x
   simp_rw [subset_def, mem_inter_iff]
   refine' ⟨_, ⟨l + d, min (a + p) u + d, _, fun x => id⟩, fun y => _⟩ <;>
     simp_rw [← sub_mem_Ioo_iff_left, mem_Ioo, lt_min_iff]
@@ -85,10 +85,10 @@ theorem continuous_right_toIcoMod : ContinuousWithinAt (toIcoMod a hp) (Ici x) x
     exacts[⟨h.1, h.2.2⟩, ⟨hd.1.trans (sub_le_sub_right h' _), h.2.1⟩]
 #align continuous_right_to_Ico_mod continuous_right_toIcoMod
 
-theorem continuous_left_toIocMod : ContinuousWithinAt (toIocMod a hp) (Iic x) x :=
+theorem continuous_left_toIocMod : ContinuousWithinAt (toIocMod hp a) (Iic x) x :=
   by
   rw [(funext fun y => Eq.trans (by rw [neg_neg]) <| toIocMod_neg _ _ _ :
-      toIocMod a hp = (fun x => p - x) ∘ toIcoMod (-a) hp ∘ Neg.neg)]
+      toIocMod hp a = (fun x => p - x) ∘ toIcoMod hp (-a) ∘ Neg.neg)]
   exact
     (continuous_sub_left _).ContinuousAt.comp_continuousWithinAt <|
       (continuous_right_toIcoMod _ _ _).comp continuous_neg.continuous_within_at fun y => neg_le_neg
@@ -96,7 +96,7 @@ theorem continuous_left_toIocMod : ContinuousWithinAt (toIocMod a hp) (Iic x) x 
 
 variable {x} (hx : (x : 𝕜 ⧸ zmultiples p) ≠ a)
 
-theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod a hp =ᶠ[𝓝 x] toIocMod a hp :=
+theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod hp a =ᶠ[𝓝 x] toIocMod hp a :=
   IsOpen.mem_nhds
       (by
         rw [Ico_eq_locus_Ioc_eq_unionᵢ_Ioo]
@@ -104,19 +104,19 @@ theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod a hp =ᶠ[𝓝 x] toIocMod a h
     (memIooMod_iff_toIcoMod_eq_toIocMod hp).1 ((memIooMod_iff_ne_mod_zmultiples hp).2 hx)
 #align to_Ico_mod_eventually_eq_to_Ioc_mod toIcoMod_eventuallyEq_toIocMod
 
-theorem continuousAt_toIcoMod : ContinuousAt (toIcoMod a hp) x :=
-  let h := toIcoMod_eventuallyEq_toIocMod a hp hx
+theorem continuousAt_toIcoMod : ContinuousAt (toIcoMod hp a) x :=
+  let h := toIcoMod_eventuallyEq_toIocMod hp a hx
   continuousAt_iff_continuous_left_right.2 <|
-    ⟨(continuous_left_toIocMod a hp x).congr_of_eventuallyEq (h.filter_mono nhdsWithin_le_nhds)
+    ⟨(continuous_left_toIocMod hp a x).congr_of_eventuallyEq (h.filter_mono nhdsWithin_le_nhds)
         h.eq_of_nhds,
-      continuous_right_toIcoMod a hp x⟩
+      continuous_right_toIcoMod hp a x⟩
 #align continuous_at_to_Ico_mod continuousAt_toIcoMod
 
-theorem continuousAt_toIocMod : ContinuousAt (toIocMod a hp) x :=
-  let h := toIcoMod_eventuallyEq_toIocMod a hp hx
+theorem continuousAt_toIocMod : ContinuousAt (toIocMod hp a) x :=
+  let h := toIcoMod_eventuallyEq_toIocMod hp a hx
   continuousAt_iff_continuous_left_right.2 <|
-    ⟨continuous_left_toIocMod a hp x,
-      (continuous_right_toIcoMod a hp x).congr_of_eventuallyEq
+    ⟨continuous_left_toIocMod hp a x,
+      (continuous_right_toIcoMod hp a x).congr_of_eventuallyEq
         (h.symm.filter_mono nhdsWithin_le_nhds) h.symm.eq_of_nhds⟩
 #align continuous_at_to_Ioc_mod continuousAt_toIocMod
 
@@ -196,13 +196,13 @@ variable (a : 𝕜) [Archimedean 𝕜]
 /-- The equivalence between `add_circle p` and the half-open interval `[a, a + p)`, whose inverse
 is the natural quotient map. -/
 def equivIco : AddCircle p ≃ Ico a (a + p) :=
-  quotientAddGroup.equivIcoMod a hp.out
+  quotientAddGroup.equivIcoMod hp.out a
 #align add_circle.equiv_Ico AddCircle.equivIco
 
 /-- The equivalence between `add_circle p` and the half-open interval `(a, a + p]`, whose inverse
 is the natural quotient map. -/
 def equivIoc : AddCircle p ≃ Ioc a (a + p) :=
-  quotientAddGroup.equivIocMod a hp.out
+  quotientAddGroup.equivIocMod hp.out a
 #align add_circle.equiv_Ioc AddCircle.equivIoc
 
 /-- Given a function on `𝕜`, return the unique function on `add_circle p` agreeing with `f` on
@@ -271,14 +271,14 @@ theorem continuousAt_equivIco : ContinuousAt (equivIco p a) x :=
   by
   induction x using QuotientAddGroup.induction_on'
   rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
-  apply ContinuousAt.codRestrict; exact continuousAt_toIcoMod a hp.out hx
+  exact (continuousAt_toIcoMod hp.out a hx).codRestrict _
 #align add_circle.continuous_at_equiv_Ico AddCircle.continuousAt_equivIco
 
 theorem continuousAt_equivIoc : ContinuousAt (equivIoc p a) x :=
   by
   induction x using QuotientAddGroup.induction_on'
   rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
-  apply ContinuousAt.codRestrict; exact continuousAt_toIocMod a hp.out hx
+  exact (continuousAt_toIocMod hp.out a hx).codRestrict _
 #align add_circle.continuous_at_equiv_Ioc AddCircle.continuousAt_equivIoc
 
 end Continuity
@@ -600,16 +600,16 @@ def equivIccQuot : 𝕋 ≃ Quot (EndpointIdent p a)
 
 theorem equivIccQuot_comp_mk_eq_toIcoMod :
     equivIccQuot p a ∘ Quotient.mk'' = fun x =>
-      Quot.mk _ ⟨toIcoMod a hp.out x, Ico_subset_Icc_self <| toIcoMod_mem_Ico a _ x⟩ :=
+      Quot.mk _ ⟨toIcoMod hp.out a x, Ico_subset_Icc_self <| toIcoMod_mem_Ico _ _ x⟩ :=
   rfl
 #align add_circle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod AddCircle.equivIccQuot_comp_mk_eq_toIcoMod
 
 theorem equivIccQuot_comp_mk_eq_toIocMod :
     equivIccQuot p a ∘ Quotient.mk'' = fun x =>
-      Quot.mk _ ⟨toIocMod a hp.out x, Ioc_subset_Icc_self <| toIocMod_mem_Ioc a _ x⟩ :=
+      Quot.mk _ ⟨toIocMod hp.out a x, Ioc_subset_Icc_self <| toIocMod_mem_Ioc _ _ x⟩ :=
   by
   rw [equiv_Icc_quot_comp_mk_eq_to_Ico_mod]; funext
-  by_cases MemIooMod a p x
+  by_cases MemIooMod p a x
   · simp_rw [(memIooMod_iff_toIcoMod_eq_toIocMod hp.out).1 h]
   · simp_rw [not_imp_comm.1 (memIooMod_iff_toIcoMod_ne_left hp.out).2 h,
       not_imp_comm.1 (memIooMod_iff_toIocMod_ne_right hp.out).2 h]

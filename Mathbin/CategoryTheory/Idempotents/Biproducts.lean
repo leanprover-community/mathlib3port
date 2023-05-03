@@ -4,19 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.biproducts
-! leanprover-community/mathlib commit 31019c2504b17f85af7e0577585fad996935a317
+! leanprover-community/mathlib commit 362c2263e25ed3b9ed693773f32f91243612e1da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Idempotents.Karoubi
-import Mathbin.CategoryTheory.Additive.Basic
 
 /-!
 
 # Biproducts in the idempotent completion of a preadditive category
 
-In this file, we define an instance expressing that if `C` is an additive category,
-then `karoubi C` is also an additive category.
+In this file, we define an instance expressing that if `C` is an additive category
+(i.e. is preadditive and has finite biproducts), then `karoubi C` is also an additive category.
 
 We also obtain that for all `P : karoubi C` where `C` is a preadditive category `C`, there
 is a canonical isomorphism `P ⊞ P.complement ≅ (to_karoubi C).obj P.X` in the category
@@ -112,10 +111,7 @@ theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproduct
               simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
 #align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_hasFiniteBiproducts
 
-instance {D : Type _} [Category D] [AdditiveCategory D] : AdditiveCategory (Karoubi D)
-    where
-  toPreadditive := inferInstance
-  to_hasFiniteBiproducts := karoubi_hasFiniteBiproducts
+attribute [instance] karoubi_has_finite_biproducts
 
 /-- `P.complement` is the formal direct factor of `P.X` given by the idempotent
 endomorphism `𝟙 P.X - P.p` -/

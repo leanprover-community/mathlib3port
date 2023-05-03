@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_invariant_forms
-! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
+! leanprover-community/mathlib commit ef74e2bd3a553d31fdb139188a251509b6c6b038
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,7 @@ that they form a module.
 
 open Complex UpperHalfPlane
 
-open UpperHalfPlane
+open UpperHalfPlane ModularForm
 
 noncomputable section
 
@@ -44,19 +44,16 @@ open ModularForm
 
 variable (F : Type _) (Γ : outParam <| Subgroup SL(2, ℤ)) (k : outParam ℤ)
 
--- mathport name: «expr ∣[ , ]»
-scoped[SlashInvariantForms] notation:73 f "∣[" k:0 "," A "]" => SlashAction.map ℂ k A f
-
 /-- Functions `ℍ → ℂ` that are invariant under the `slash_action`. -/
 structure SlashInvariantForm where
   toFun : ℍ → ℂ
-  slash_action_eq' : ∀ γ : Γ, to_fun∣[k,γ] = to_fun
+  slash_action_eq' : ∀ γ : Γ, to_fun ∣[k] γ = to_fun
 #align slash_invariant_form SlashInvariantForm
 
 /-- `slash_invariant_form_class F Γ k` asserts `F` is a type of bundled functions that are invariant
 under the `slash_action`. -/
 class SlashInvariantFormClass extends FunLike F ℍ fun _ => ℂ where
-  slash_action_eq : ∀ (f : F) (γ : Γ), (f : ℍ → ℂ)∣[k,γ] = f
+  slash_action_eq : ∀ (f : F) (γ : Γ), (f : ℍ → ℂ) ∣[k] γ = f
 #align slash_invariant_form_class SlashInvariantFormClass
 
 attribute [nolint dangerous_instance] SlashInvariantFormClass.toFunLike
@@ -183,7 +180,7 @@ instance hasNeg : Neg (SlashInvariantForm Γ k) :=
   ⟨fun f =>
     { toFun := -f
       slash_action_eq' := fun γ => by
-        simpa [ModularForm.subgroup_slash, ModularForm.neg_slash] using f.slash_action_eq' γ }⟩
+        simpa [ModularForm.subgroup_slash, SlashAction.neg_slash] using f.slash_action_eq' γ }⟩
 #align slash_invariant_form.has_neg SlashInvariantForm.hasNeg
 
 @[simp]

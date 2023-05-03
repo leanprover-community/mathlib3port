@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.arg
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 
@@ -450,18 +449,18 @@ theorem arg_neg_coe_angle {x : ℂ} (hx : x ≠ 0) : (arg (-x) : Real.Angle) = a
 #align complex.arg_neg_coe_angle Complex.arg_neg_coe_angle
 
 theorem arg_mul_cos_add_sin_mul_i_eq_toIocMod {r : ℝ} (hr : 0 < r) (θ : ℝ) :
-    arg (r * (cos θ + sin θ * I)) = toIocMod (-π) Real.two_pi_pos θ :=
+    arg (r * (cos θ + sin θ * I)) = toIocMod Real.two_pi_pos (-π) θ :=
   by
-  have hi : toIocMod (-π) Real.two_pi_pos θ ∈ Ioc (-π) π :=
+  have hi : toIocMod Real.two_pi_pos (-π) θ ∈ Ioc (-π) π :=
     by
-    convert toIocMod_mem_Ioc _ Real.two_pi_pos _
+    convert toIocMod_mem_Ioc _ _ _
     ring
   convert arg_mul_cos_add_sin_mul_I hr hi using 3
   simp [toIocMod, cos_sub_int_mul_two_pi, sin_sub_int_mul_two_pi]
 #align complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_mul_cos_add_sin_mul_i_eq_toIocMod
 
 theorem arg_cos_add_sin_mul_i_eq_toIocMod (θ : ℝ) :
-    arg (cos θ + sin θ * I) = toIocMod (-π) Real.two_pi_pos θ := by
+    arg (cos θ + sin θ * I) = toIocMod Real.two_pi_pos (-π) θ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod zero_lt_one]
 #align complex.arg_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_cos_add_sin_mul_i_eq_toIocMod
 

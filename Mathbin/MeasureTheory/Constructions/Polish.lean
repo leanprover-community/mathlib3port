@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Felix Weilacher
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 9b2b58d6b14b895b2f375108e765cb47de71aebd
+! leanprover-community/mathlib commit 11d5ff217c07a8070cddfc5d94608854306f7f68
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Real.Cardinality
 import Mathbin.Topology.Perfect
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 
@@ -788,34 +789,32 @@ instance (priority := 50) polish_of_countable [h : Countable α] [DiscreteTopolo
   exact this.polish_space
 #align polish_of_countable polish_of_countable
 
+namespace PolishSpace
+
 /-Note: This is to avoid a loop in TC inference. When ported to Lean 4, this will not
 be necessary, and `second_countable_of_polish` should probably
 just be added as an instance soon after the definition of `polish_space`.-/
 private theorem second_countable_of_polish [h : PolishSpace α] : SecondCountableTopology α :=
   h.second_countable
-#align second_countable_of_polish second_countable_of_polish
+#align polish_space.second_countable_of_polish polish_space.second_countable_of_polish
 
 attribute [-instance] polishSpace_of_complete_second_countable
 
 attribute [local instance] second_countable_of_polish
 
-namespace PolishSpace
-
 variable {β : Type _} [TopologicalSpace β] [PolishSpace α] [PolishSpace β]
 
 variable [MeasurableSpace α] [MeasurableSpace β] [BorelSpace α] [BorelSpace β]
 
-noncomputable section
-
 /-- If two Polish spaces admit Borel measurable injections to one another,
 then they are Borel isomorphic.-/
-def borelSchroederBernstein {f : α → β} {g : β → α} (fmeas : Measurable f)
+noncomputable def borelSchroederBernstein {f : α → β} {g : β → α} (fmeas : Measurable f)
     (finj : Function.Injective f) (gmeas : Measurable g) (ginj : Function.Injective g) : α ≃ᵐ β :=
   (fmeas.MeasurableEmbedding finj).schroeder_bernstein (gmeas.MeasurableEmbedding ginj)
 #align polish_space.borel_schroeder_bernstein PolishSpace.borelSchroederBernstein
 
 /-- Any uncountable Polish space is Borel isomorphic to the Cantor space `ℕ → bool`.-/
-def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α ≃ᵐ (ℕ → Bool) :=
+noncomputable def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α ≃ᵐ (ℕ → Bool) :=
   by
   apply Nonempty.some
   obtain ⟨f, -, fcts, finj⟩ :=
@@ -826,13 +825,13 @@ def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α ≃ᵐ (ℕ �
 #align polish_space.measurable_equiv_nat_bool_of_not_countable PolishSpace.measurableEquivNatBoolOfNotCountable
 
 /-- The **Borel Isomorphism Theorem**: Any two uncountable Polish spaces are Borel isomorphic.-/
-def measurableEquivOfNotCountable (hα : ¬Countable α) (hβ : ¬Countable β) : α ≃ᵐ β :=
+noncomputable def measurableEquivOfNotCountable (hα : ¬Countable α) (hβ : ¬Countable β) : α ≃ᵐ β :=
   (measurableEquivNatBoolOfNotCountable hα).trans (measurableEquivNatBoolOfNotCountable hβ).symm
 #align polish_space.measurable_equiv_of_not_countable PolishSpace.measurableEquivOfNotCountable
 
 /-- The **Borel Isomorphism Theorem**: If two Polish spaces have the same cardinality,
 they are Borel isomorphic.-/
-def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
+noncomputable def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
   by
   by_cases h : Countable α
   · letI := h
@@ -843,4 +842,65 @@ def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
 #align polish_space.equiv.measurable_equiv PolishSpace.Equiv.measurableEquiv
 
 end PolishSpace
+
+namespace MeasureTheory
+
+-- todo after the port: move to topology/metric_space/polish
+instance [PolishSpace α] : PolishSpace (univ : Set α) :=
+  isClosed_univ.PolishSpace
+
+variable (α) [MeasurableSpace α] [PolishSpace α] [BorelSpace α]
+
+theorem exists_nat_measurableEquiv_range_coe_fin_of_finite [Finite α] :
+    ∃ n : ℕ, Nonempty (α ≃ᵐ range (coe : Fin n → ℝ)) :=
+  by
+  obtain ⟨n, ⟨n_equiv⟩⟩ := Finite.exists_equiv_fin α
+  refine' ⟨n, ⟨PolishSpace.Equiv.measurableEquiv (n_equiv.trans _)⟩⟩
+  exact Equiv.ofInjective _ (nat.cast_injective.comp Fin.val_injective)
+#align measure_theory.exists_nat_measurable_equiv_range_coe_fin_of_finite MeasureTheory.exists_nat_measurableEquiv_range_coe_fin_of_finite
+
+theorem measurableEquiv_range_coe_nat_of_infinite_of_countable [Infinite α] [Countable α] :
+    Nonempty (α ≃ᵐ range (coe : ℕ → ℝ)) :=
+  by
+  have : PolishSpace (range (coe : ℕ → ℝ)) :=
+    nat.closed_embedding_coe_real.is_closed_map.closed_range.polish_space
+  refine' ⟨PolishSpace.Equiv.measurableEquiv _⟩
+  refine' (nonempty_equiv_of_countable.some : α ≃ ℕ).trans _
+  exact Equiv.ofInjective coe Nat.cast_injective
+#align measure_theory.measurable_equiv_range_coe_nat_of_infinite_of_countable MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countable
+
+/-- Any Polish Borel space is measurably equivalent to a subset of the reals. -/
+theorem exists_subset_real_measurableEquiv : ∃ s : Set ℝ, MeasurableSet s ∧ Nonempty (α ≃ᵐ s) :=
+  by
+  by_cases hα : Countable α
+  · cases finite_or_infinite α
+    · obtain ⟨n, h_nonempty_equiv⟩ := exists_nat_measurable_equiv_range_coe_fin_of_finite α
+      refine' ⟨_, _, h_nonempty_equiv⟩
+      letI : MeasurableSpace (Fin n) := borel (Fin n)
+      haveI : BorelSpace (Fin n) := ⟨rfl⟩
+      refine' MeasurableEmbedding.measurableSet_range _
+      · infer_instance
+      ·
+        exact
+          continuous_of_discrete_topology.measurable_embedding
+            (nat.cast_injective.comp Fin.val_injective)
+    · refine' ⟨_, _, measurable_equiv_range_coe_nat_of_infinite_of_countable α⟩
+      refine' MeasurableEmbedding.measurableSet_range _
+      · infer_instance
+      · exact continuous_of_discrete_topology.measurable_embedding Nat.cast_injective
+  · refine'
+      ⟨univ, MeasurableSet.univ,
+        ⟨(PolishSpace.measurableEquivOfNotCountable hα _ : α ≃ᵐ (univ : Set ℝ))⟩⟩
+    rw [countable_coe_iff]
+    exact Cardinal.not_countable_real
+#align measure_theory.exists_subset_real_measurable_equiv MeasureTheory.exists_subset_real_measurableEquiv
+
+/-- Any Polish Borel space embeds measurably into the reals. -/
+theorem exists_measurableEmbedding_real : ∃ f : α → ℝ, MeasurableEmbedding f :=
+  by
+  obtain ⟨s, hs, ⟨e⟩⟩ := exists_subset_real_measurable_equiv α
+  exact ⟨coe ∘ e, (MeasurableEmbedding.subtype_coe hs).comp e.measurable_embedding⟩
+#align measure_theory.exists_measurable_embedding_real MeasureTheory.exists_measurableEmbedding_real
+
+end MeasureTheory
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.projective_resolution
-! leanprover-community/mathlib commit 324a7502510e835cdbd3de1519b6c66b51fb2467
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Homology.HomotopyCategory
 
 /-!
 # Projective resolutions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A projective resolution `P : ProjectiveResolution Z` of an object `Z : C` consists of
 a `ℕ`-indexed chain complex `P.complex` of projective objects,

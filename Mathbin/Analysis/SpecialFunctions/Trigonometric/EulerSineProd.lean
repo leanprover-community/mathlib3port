@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.euler_sine_prod
-! leanprover-community/mathlib commit 980755c33b9168bc82f774f665eaa27878140fac
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Real.Pi.Wallis
+import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.MeasureTheory.Integral.PeakFunction
 
 /-! # Euler's infinite product for the sine function

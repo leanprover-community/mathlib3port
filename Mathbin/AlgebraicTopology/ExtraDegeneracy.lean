@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.extra_degeneracy
-! leanprover-community/mathlib commit 324a7502510e835cdbd3de1519b6c66b51fb2467
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Tactic.FinCases
 /-!
 
 # Augmented simplicial objects with an extra degeneracy
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In simplicial homotopy theory, in order to prove that the connected components
 of a simplicial set `X` are contractible, it suffices to construct an extra

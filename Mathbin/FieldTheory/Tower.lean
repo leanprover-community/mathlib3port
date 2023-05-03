@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit c7bce2818663f456335892ddbdd1809f111a5b72
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 
 /-!
 # Tower of field extensions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove the tower law for arbitrary extensions and finite extensions.
 Suppose `L` is a field extension of `K` and `K` is a field extension of `F`.

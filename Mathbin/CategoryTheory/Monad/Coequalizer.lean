@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.coequalizer
-! leanprover-community/mathlib commit 3a061790136d13594ec10c7c90d202335ac5d854
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Monad.Algebra
 
 /-!
 # Special coequalizers associated to a monad
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Associated to a monad `T : C ⥤ C` we have important coequalizer constructions:
 Any algebra is a coequalizer (in the category of algebras) of free algebras. Furthermore, this

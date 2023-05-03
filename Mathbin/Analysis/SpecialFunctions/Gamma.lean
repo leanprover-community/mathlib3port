@@ -4,13 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.ExpDecay
-import Mathbin.Analysis.Calculus.ParametricIntegral
-import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.Analysis.Convolution
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
 

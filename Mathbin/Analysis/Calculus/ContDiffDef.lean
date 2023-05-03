@@ -4,14 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit 2cf3ee29d9361ee308a14a46d820a49b8856d041
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Fderiv
-import Mathbin.Analysis.NormedSpace.Multilinear
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
-import Mathbin.Data.Enat.Basic
 
 /-!
 # Higher differentiability

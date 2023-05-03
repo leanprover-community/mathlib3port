@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.bounds
-! leanprover-community/mathlib commit 9df54c1b9dd5b6d6ed1472bfb6c10819aa95b5d7
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 /-!

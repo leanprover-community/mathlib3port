@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.basic
-! leanprover-community/mathlib commit c4658a649d216f57e99621708b09dcb3dcccbd23
+! leanprover-community/mathlib commit ef55335933293309ff8c0b1d20ffffeecbe5c39f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.FiniteDimensional
 /-!
 
 # Projective Spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the definition of the projectivization of a vector space over a field,
 as well as the bijection between said projectivization and the collection of all one

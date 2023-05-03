@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit fe44cd36149e675eb5dec87acc7e8f1d6568e081
+! leanprover-community/mathlib commit ef74e2bd3a553d31fdb139188a251509b6c6b038
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,13 +44,12 @@ open ModularForm
 
 variable (F : Type _) (Γ : Subgroup SL(2, ℤ)) (k : ℤ)
 
--- mathport name: «expr ∣[ , ]»
-local notation:73 f "∣[" k:0 "," A "]" => SlashAction.map ℂ k A f
+open ModularForm
 
 /-- These are `slash_invariant_form`'s that are holomophic and bounded at infinity. -/
 structure ModularForm extends SlashInvariantForm Γ k where
   holo' : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (to_fun : ℍ → ℂ)
-  bdd_at_infty' : ∀ A : SL(2, ℤ), IsBoundedAtImInfty (to_fun∣[k,A])
+  bdd_at_infty' : ∀ A : SL(2, ℤ), IsBoundedAtImInfty (to_fun ∣[k] A)
 #align modular_form ModularForm
 
 /-- The `slash_invariant_form` associated to a `modular_form`. -/
@@ -59,7 +58,7 @@ add_decl_doc ModularForm.toSlashInvariantForm
 /-- These are `slash_invariant_form`s that are holomophic and zero at infinity. -/
 structure CuspForm extends SlashInvariantForm Γ k where
   holo' : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (to_fun : ℍ → ℂ)
-  zero_at_infty' : ∀ A : SL(2, ℤ), IsZeroAtImInfty (to_fun∣[k,A])
+  zero_at_infty' : ∀ A : SL(2, ℤ), IsZeroAtImInfty (to_fun ∣[k] A)
 #align cusp_form CuspForm
 
 /-- The `slash_invariant_form` associated to a `cusp_form`. -/
@@ -70,7 +69,7 @@ add_decl_doc CuspForm.toSlashInvariantForm
 at infinity. -/
 class ModularFormClass extends SlashInvariantFormClass F Γ k where
   holo : ∀ f : F, Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
-  bdd_at_infty : ∀ (f : F) (A : SL(2, ℤ)), IsBoundedAtImInfty (f∣[k,A])
+  bdd_at_infty : ∀ (f : F) (A : SL(2, ℤ)), IsBoundedAtImInfty (f ∣[k] A)
 #align modular_form_class ModularFormClass
 
 /-- `cusp_form_class F Γ k` says that `F` is a type of bundled functions that extend
@@ -78,7 +77,7 @@ class ModularFormClass extends SlashInvariantFormClass F Γ k where
 at infinity. -/
 class CuspFormClass extends SlashInvariantFormClass F Γ k where
   holo : ∀ f : F, Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
-  zero_at_infty : ∀ (f : F) (A : SL(2, ℤ)), IsZeroAtImInfty (f∣[k,A])
+  zero_at_infty : ∀ (f : F) (A : SL(2, ℤ)), IsZeroAtImInfty (f ∣[k] A)
 #align cusp_form_class CuspFormClass
 
 instance (priority := 100) ModularFormClass.modularForm : ModularFormClass (ModularForm Γ k) Γ k

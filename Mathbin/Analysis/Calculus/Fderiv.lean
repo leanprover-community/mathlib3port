@@ -4,14 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv
-! leanprover-community/mathlib commit 4601791ea62fea875b488dafc4e6dede19e8363f
+! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathbin.Analysis.Calculus.TangentCone
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.Analysis.NormedSpace.Units
 
 /-!
 # The Fréchet derivative
