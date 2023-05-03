@@ -544,7 +544,7 @@ theorem basicOpen_basicOpen_is_basicOpen {X : Scheme} {U : Opens X.carrier} (hU 
     ∃ f' : X.Presheaf.obj (op U), X.basicOpen f' = X.basicOpen g :=
   by
   haveI := is_localization_basic_open hU f
-  obtain ⟨x, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.surj' (Submonoid.powers f) g
+  obtain ⟨x, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.surj'' (Submonoid.powers f) g
   use f * x
   rw [Algebra.smul_def, Scheme.basic_open_mul, Scheme.basic_open_mul]
   erw [Scheme.basic_open_res]

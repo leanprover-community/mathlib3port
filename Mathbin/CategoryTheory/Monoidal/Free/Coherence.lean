@@ -76,7 +76,7 @@ local infixr:10 " ⟶ᵐ " => Hom
 /-- Auxiliary definition for `inclusion`. -/
 @[simp]
 def inclusionObj : NormalMonoidalObject C → F C
-  | normal_monoidal_object.unit => unit
+  | normal_monoidal_object.unit => Unit
   | normal_monoidal_object.tensor n a => tensor (inclusion_obj n) (of a)
 #align category_theory.free_monoidal_category.inclusion_obj CategoryTheory.FreeMonoidalCategory.inclusionObj
 
