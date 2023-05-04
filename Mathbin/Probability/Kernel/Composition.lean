@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
+! leanprover-community/mathlib commit 15e02bcd7f0487553848c8fa2fe8f9db6b2c5284
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,7 +19,7 @@ We define
 * the map and comap of a kernel along a measurable function.
 * the composition `η ∘ₖ κ` of s-finite kernels `κ : kernel α β` and `η : kernel β γ`,
   a kernel from `α` to `γ`.
-* the product `prod κ η` of s-finite kernels `κ : kernel α β` and `η : kernel α γ`,
+* the product `κ ×ₖ η` of s-finite kernels `κ : kernel α β` and `η : kernel α γ`,
   a kernel from `α` to `β × γ`.
 
 A note on names:
@@ -42,7 +42,7 @@ Kernels built from other kernels:
   We define a notation `η ∘ₖ κ = comp η κ`.
   `∫⁻ c, g c ∂((η ∘ₖ κ) a) = ∫⁻ b, ∫⁻ c, g c ∂(η b) ∂(κ a)`
 * `prod (κ : kernel α β) (η : kernel α γ) : kernel α (β × γ)`: product of 2 s-finite kernels.
-  `∫⁻ bc, f bc ∂(prod κ η a) = ∫⁻ b, ∫⁻ c, f (b, c) ∂(η a) ∂(κ a)`
+  `∫⁻ bc, f bc ∂((κ ×ₖ η) a) = ∫⁻ b, ∫⁻ c, f (b, c) ∂(η a) ∂(κ a)`
 
 ## Main statements
 
@@ -57,6 +57,7 @@ Kernels built from other kernels:
 
 * `κ ⊗ₖ η = probability_theory.kernel.comp_prod κ η`
 * `η ∘ₖ κ = probability_theory.kernel.comp η κ`
+* `κ ×ₖ η = probability_theory.kernel.prod κ η`
 
 -/
 
@@ -821,36 +822,39 @@ noncomputable def prod (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α 
   κ ⊗ₖ swapLeft (prodMkLeft η β)
 #align probability_theory.kernel.prod ProbabilityTheory.kernel.prod
 
+-- mathport name: kernel.prod
+scoped[ProbabilityTheory] infixl:100 " ×ₖ " => ProbabilityTheory.kernel.prod
+
 theorem prod_apply (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ) [IsSFiniteKernel η] (a : α)
     {s : Set (β × γ)} (hs : MeasurableSet s) :
-    (prod κ η) a s = ∫⁻ b : β, (η a) { c : γ | (b, c) ∈ s } ∂κ a := by
+    (κ ×ₖ η) a s = ∫⁻ b : β, (η a) { c : γ | (b, c) ∈ s } ∂κ a := by
   simp_rw [Prod, comp_prod_apply _ _ _ hs, swap_left_apply _ _, prod_mk_left_apply,
     Prod.swap_prod_mk]
 #align probability_theory.kernel.prod_apply ProbabilityTheory.kernel.prod_apply
 
 theorem lintegral_prod (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ) [IsSFiniteKernel η]
     (a : α) {g : β × γ → ℝ≥0∞} (hg : Measurable g) :
-    (∫⁻ c, g c ∂(prod κ η) a) = ∫⁻ b, ∫⁻ c, g (b, c) ∂η a ∂κ a := by
+    (∫⁻ c, g c ∂(κ ×ₖ η) a) = ∫⁻ b, ∫⁻ c, g (b, c) ∂η a ∂κ a := by
   simp_rw [Prod, lintegral_comp_prod _ _ _ hg, swap_left_apply, prod_mk_left_apply,
     Prod.swap_prod_mk]
 #align probability_theory.kernel.lintegral_prod ProbabilityTheory.kernel.lintegral_prod
 
 instance IsMarkovKernel.prod (κ : kernel α β) [IsMarkovKernel κ] (η : kernel α γ)
-    [IsMarkovKernel η] : IsMarkovKernel (prod κ η) :=
+    [IsMarkovKernel η] : IsMarkovKernel (κ ×ₖ η) :=
   by
   rw [Prod]
   infer_instance
 #align probability_theory.kernel.is_markov_kernel.prod ProbabilityTheory.kernel.IsMarkovKernel.prod
 
 instance IsFiniteKernel.prod (κ : kernel α β) [IsFiniteKernel κ] (η : kernel α γ)
-    [IsFiniteKernel η] : IsFiniteKernel (prod κ η) :=
+    [IsFiniteKernel η] : IsFiniteKernel (κ ×ₖ η) :=
   by
   rw [Prod]
   infer_instance
 #align probability_theory.kernel.is_finite_kernel.prod ProbabilityTheory.kernel.IsFiniteKernel.prod
 
 instance IsSFiniteKernel.prod (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ)
-    [IsSFiniteKernel η] : IsSFiniteKernel (prod κ η) :=
+    [IsSFiniteKernel η] : IsSFiniteKernel (κ ×ₖ η) :=
   by
   rw [Prod]
   infer_instance

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.positive
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem isPositive_iff_complex (T : E' →L[ℂ] E') :
     IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ :=
   by
   simp_rw [is_positive, forall_and, is_self_adjoint_iff_is_symmetric,
-    LinearMap.isSymmetric_iff_inner_map_self_real, eq_conj_iff_re]
+    LinearMap.isSymmetric_iff_inner_map_self_real, conj_eq_iff_re]
   rfl
 #align continuous_linear_map.is_positive_iff_complex ContinuousLinearMap.isPositive_iff_complex
 

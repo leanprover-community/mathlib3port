@@ -3,8 +3,8 @@ Copyright (c) 2022 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
-! This file was ported from Lean 3 source module representation_theory.group_cohomology_resolution
-! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
+! This file was ported from Lean 3 source module representation_theory.group_cohomology.resolution
+! leanprover-community/mathlib commit ef997baa41b5c428be3fb50089a7139bf4ee886b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,13 +263,13 @@ end GroupCohomology.resolution
 
 namespace Rep
 
-variable (n) [Group G]
+variable (n) [Group G] (A : Rep k G)
 
 open GroupCohomology.resolution
 
 /-- Given a `k`-linear `G`-representation `A`, the set of representation morphisms
 `Hom(k[Gⁿ⁺¹], A)` is `k`-linearly isomorphic to the set of functions `Gⁿ → A`. -/
-noncomputable def diagonalHomEquiv (A : Rep k G) :
+noncomputable def diagonalHomEquiv :
     (Rep.ofMulAction k G (Fin (n + 1) → G) ⟶ A) ≃ₗ[k] (Fin n → G) → A :=
   Linear.homCongr k
         ((diagonalSucc k G n).trans ((Representation.ofMulAction k G G).repOfTprodIso 1))
@@ -278,14 +278,14 @@ noncomputable def diagonalHomEquiv (A : Rep k G) :
     (Finsupp.llift A k k (Fin n → G)).symm
 #align Rep.diagonal_hom_equiv Rep.diagonalHomEquiv
 
-variable {n}
+variable {n A}
 
 /-- Given a `k`-linear `G`-representation `A`, `diagonal_hom_equiv` is a `k`-linear isomorphism of
 the set of representation morphisms `Hom(k[Gⁿ⁺¹], A)` with `Fun(Gⁿ, A)`. This lemma says that this
 sends a morphism of representations `f : k[Gⁿ⁺¹] ⟶ A` to the function
 `(g₁, ..., gₙ) ↦ f(1, g₁, g₁g₂, ..., g₁g₂...gₙ).` -/
-theorem diagonalHomEquiv_apply {A : Rep k G} (f : Rep.ofMulAction k G (Fin (n + 1) → G) ⟶ A)
-    (x : Fin n → G) : diagonalHomEquiv n A f x = f.hom (Finsupp.single (Fin.partialProd x) 1) :=
+theorem diagonalHomEquiv_apply (f : Rep.ofMulAction k G (Fin (n + 1) → G) ⟶ A) (x : Fin n → G) :
+    diagonalHomEquiv n A f x = f.hom (Finsupp.single (Fin.partialProd x) 1) :=
   by
   unfold diagonal_hom_equiv
   simpa only [LinearEquiv.trans_apply, Rep.leftRegularHomEquiv_apply,
@@ -300,7 +300,7 @@ the set of representation morphisms `Hom(k[Gⁿ⁺¹], A)` with `Fun(Gⁿ, A)`. 
 inverse map sends a function `f : Gⁿ → A` to the representation morphism sending
 `(g₀, ... gₙ) ↦ ρ(g₀)(f(g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ))`, where `ρ` is the representation attached
 to `A`. -/
-theorem diagonalHomEquiv_symm_apply {A : Rep k G} (f : (Fin n → G) → A) (x : Fin (n + 1) → G) :
+theorem diagonalHomEquiv_symm_apply (f : (Fin n → G) → A) (x : Fin (n + 1) → G) :
     ((diagonalHomEquiv n A).symm f).hom (Finsupp.single x 1) =
       A.ρ (x 0) (f fun i : Fin n => (x ↑i)⁻¹ * x i.succ) :=
   by
@@ -314,6 +314,22 @@ theorem diagonalHomEquiv_symm_apply {A : Rep k G} (f : (Fin n → G) → A) (x :
     zero_smul, one_smul, Rep.of_ρ, Rep.Action_ρ_eq_ρ, Rep.trivial_def (x 0)⁻¹,
     Finsupp.llift_apply A k k]
 #align Rep.diagonal_hom_equiv_symm_apply Rep.diagonalHomEquiv_symm_apply
+
+/-- Auxiliary lemma for defining group cohomology, used to show that the isomorphism
+`diagonal_hom_equiv` commutes with the differentials in two complexes which compute
+group cohomology. -/
+theorem diagonalHomEquiv_symm_partialProd_succ (f : (Fin n → G) → A) (g : Fin (n + 1) → G)
+    (a : Fin (n + 1)) :
+    ((diagonalHomEquiv n A).symm f).hom (Finsupp.single (Fin.partialProd g ∘ a.succ.succAbove) 1) =
+      f (Fin.contractNth a (· * ·) g) :=
+  by
+  simp only [diagonal_hom_equiv_symm_apply, Function.comp_apply, Fin.succ_succAbove_zero,
+    Fin.partialProd_zero, map_one, Fin.coe_eq_castSucc, Fin.succ_succAbove_succ,
+    LinearMap.one_apply, Fin.partialProd_succ]
+  congr
+  ext
+  rw [← Fin.partialProd_succ, Fin.inv_partialProd_mul_eq_contractNth]
+#align Rep.diagonal_hom_equiv_symm_partial_prod_succ Rep.diagonalHomEquiv_symm_partialProd_succ
 
 end Rep
 

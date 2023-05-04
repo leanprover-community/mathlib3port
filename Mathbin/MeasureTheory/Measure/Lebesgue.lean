@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.lebesgue
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit ec4528061e02f0acc848ed06eb22573645602c7e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -742,4 +742,32 @@ theorem Real.integrableOfSummableNormIcc {E : Type _} [NormedAddCommGroup E] {f 
 #align real.integrable_of_summable_norm_Icc Real.integrableOfSummableNormIcc
 
 end SummableNormIcc
+
+/-!
+### Substituting `-x` for `x`
+
+These lemmas are stated in terms of either `Iic` or `Ioi` (neglecting `Iio` and `Ici`) to match
+mathlib's conventions for integrals over finite intervals (see `interval_integral`). For the case
+of finite integrals, see `interval_integral.integral_comp_neg`.
+-/
+
+
+@[simp]
+theorem integral_comp_neg_Iic {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [CompleteSpace E] (c : ℝ) (f : ℝ → E) : (∫ x in Iic c, f (-x)) = ∫ x in Ioi (-c), f x :=
+  by
+  have A : MeasurableEmbedding fun x : ℝ => -x :=
+    (Homeomorph.neg ℝ).ClosedEmbedding.MeasurableEmbedding
+  have := A.set_integral_map f (Ici (-c))
+  rw [measure.map_neg_eq_self (volume : Measure ℝ)] at this
+  simp_rw [← integral_Ici_eq_integral_Ioi, this, neg_preimage, preimage_neg_Ici, neg_neg]
+#align integral_comp_neg_Iic integral_comp_neg_Iic
+
+@[simp]
+theorem integral_comp_neg_Ioi {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [CompleteSpace E] (c : ℝ) (f : ℝ → E) : (∫ x in Ioi c, f (-x)) = ∫ x in Iic (-c), f x :=
+  by
+  rw [← neg_neg c, ← integral_comp_neg_Iic]
+  simp only [neg_neg]
+#align integral_comp_neg_Ioi integral_comp_neg_Ioi
 

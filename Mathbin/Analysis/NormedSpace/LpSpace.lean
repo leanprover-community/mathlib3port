@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1092,7 +1092,7 @@ protected theorem hasSum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) :
   have :
     |‖(∑ i in s, lp.single p i (f i : E i)) - f‖ ^ p.to_real| =
       ‖(∑ i in s, lp.single p i (f i : E i)) - f‖ ^ p.to_real :=
-    by simp only [Real.abs_rpow_of_nonneg (norm_nonneg _), abs_norm_eq_norm]
+    by simp only [Real.abs_rpow_of_nonneg (norm_nonneg _), abs_norm]
   linarith
 #align lp.has_sum_single lp.hasSum_single
 

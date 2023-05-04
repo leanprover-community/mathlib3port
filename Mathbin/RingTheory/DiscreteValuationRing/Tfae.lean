@@ -3,8 +3,8 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
-! This file was ported from Lean 3 source module ring_theory.valuation.tfae
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring.tfae
+! leanprover-community/mathlib commit c163ec99dfc664628ca15d215fce0a5b9c265b68
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

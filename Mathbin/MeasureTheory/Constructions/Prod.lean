@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.prod
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 726d2fe4fd196a6e796d3bc827d025abd32673ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1273,6 +1273,59 @@ theorem set_integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β →
     (∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν := by
   simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
 #align measure_theory.set_integral_prod_mul MeasureTheory.set_integral_prod_mul
+
+/-! ### Marginals of a measure defined on a product -/
+
+
+namespace Measure
+
+variable {ρ : Measure (α × β)}
+
+/-- Marginal measure on `α` obtained from a measure `ρ` on `α × β`, defined by `ρ.map prod.fst`. -/
+noncomputable def fst (ρ : Measure (α × β)) : Measure α :=
+  ρ.map Prod.fst
+#align measure_theory.measure.fst MeasureTheory.Measure.fst
+
+theorem fst_apply {s : Set α} (hs : MeasurableSet s) : ρ.fst s = ρ (Prod.fst ⁻¹' s) := by
+  rw [fst, measure.map_apply measurable_fst hs]
+#align measure_theory.measure.fst_apply MeasureTheory.Measure.fst_apply
+
+theorem fst_univ : ρ.fst univ = ρ univ := by rw [fst_apply MeasurableSet.univ, preimage_univ]
+#align measure_theory.measure.fst_univ MeasureTheory.Measure.fst_univ
+
+instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.fst :=
+  by
+  rw [fst]
+  infer_instance
+
+instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.fst
+    where measure_univ := by
+    rw [fst_univ]
+    exact measure_univ
+
+/-- Marginal measure on `β` obtained from a measure on `ρ` `α × β`, defined by `ρ.map prod.snd`. -/
+noncomputable def snd (ρ : Measure (α × β)) : Measure β :=
+  ρ.map Prod.snd
+#align measure_theory.measure.snd MeasureTheory.Measure.snd
+
+theorem snd_apply {s : Set β} (hs : MeasurableSet s) : ρ.snd s = ρ (Prod.snd ⁻¹' s) := by
+  rw [snd, measure.map_apply measurable_snd hs]
+#align measure_theory.measure.snd_apply MeasureTheory.Measure.snd_apply
+
+theorem snd_univ : ρ.snd univ = ρ univ := by rw [snd_apply MeasurableSet.univ, preimage_univ]
+#align measure_theory.measure.snd_univ MeasureTheory.Measure.snd_univ
+
+instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.snd :=
+  by
+  rw [snd]
+  infer_instance
+
+instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.snd
+    where measure_univ := by
+    rw [snd_univ]
+    exact measure_univ
+
+end Measure
 
 end MeasureTheory
 

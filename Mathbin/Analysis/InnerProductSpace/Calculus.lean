@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.calculus
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -411,8 +411,7 @@ theorem contDiffOn_homeomorphUnitBall_symm {f : E → E}
   refine' ContDiffAt.congr_of_eventuallyEq _ hf
   suffices ContDiffAt ℝ n (fun y => (1 - ‖(y : E)‖ ^ 2).sqrt⁻¹) y by exact this.smul contDiffAt_id
   have h : 0 < 1 - ‖(y : E)‖ ^ 2 := by
-    rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm_eq_norm, ← sq_lt_sq, one_pow, ← sub_pos] at
-      hy
+    rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm, ← sq_lt_sq, one_pow, ← sub_pos] at hy
   refine' ContDiffAt.inv _ (real.sqrt_ne_zero'.mpr h)
   refine' ContDiffAt.comp _ (cont_diff_at_sqrt h.ne.symm) _
   exact cont_diff_at_const.sub (contDiff_norm_sq ℝ).ContDiffAt

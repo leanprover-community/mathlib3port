@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit 23b80727b34e571e2e3bd8e8b720820cb215e880
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ theorem IsSymmetric.coe_reApplyInnerSelf_apply {T : E →L[𝕜] E} (hT : IsSymm
   by
   rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ⟪T x, x⟫ = r
   · simp [hr, T.re_apply_inner_self_apply]
-  rw [← eq_conj_iff_real]
+  rw [← conj_eq_iff_real]
   exact hT.conj_inner_sym x x
 #align linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_reApplyInnerSelf_apply
 
@@ -185,7 +185,7 @@ theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymm
       inner_add_right, inner_sub_left, inner_sub_right, hT x, ← inner_conj_symm x (T y)]
     suffices (re ⟪T y, x⟫ : 𝕜) = ⟪T y, x⟫
       by
-      rw [eq_conj_iff_re.mpr this]
+      rw [conj_eq_iff_re.mpr this]
       ring_nf
     · rw [← re_add_im ⟪T y, x⟫]
       simp_rw [h, MulZeroClass.mul_zero, add_zero]

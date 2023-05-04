@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.hermitian
-! leanprover-community/mathlib commit 9abfa6f0727d5adc99067e325e15d1a9de17fd8e
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -281,7 +281,7 @@ variable [IsROrC α] [IsROrC β]
 
 /-- The diagonal elements of a complex hermitian matrix are real. -/
 theorem IsHermitian.coe_re_apply_self {A : Matrix n n α} (h : A.IsHermitian) (i : n) :
-    (re (A i i) : α) = A i i := by rw [← eq_conj_iff_re, ← star_def, ← conj_transpose_apply, h.eq]
+    (re (A i i) : α) = A i i := by rw [← conj_eq_iff_re, ← star_def, ← conj_transpose_apply, h.eq]
 #align matrix.is_hermitian.coe_re_apply_self Matrix.IsHermitian.coe_re_apply_self
 
 /-- The diagonal elements of a complex hermitian matrix are real. -/

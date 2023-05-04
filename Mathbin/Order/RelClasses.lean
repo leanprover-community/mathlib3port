@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit bc7d81beddb3d6c66f71449c5bc76c38cb77cf9e
+! leanprover-community/mathlib commit 7413128c3bcb3b0818e3e18720abc9ea3100fb49
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Order.Basic
 import Mathbin.Logic.IsEmpty
+import Mathbin.Logic.Relation
+import Mathbin.Order.Basic
 
 /-!
 # Unbundled relation classes
@@ -434,6 +435,9 @@ instance (priority := 100) IsWellFounded.isIrrefl (r : α → α → Prop) [IsWe
     IsIrrefl α r :=
   IsAsymm.isIrrefl
 #align is_well_founded.is_irrefl IsWellFounded.isIrrefl
+
+instance (r : α → α → Prop) [i : IsWellFounded α r] : IsWellFounded α (Relation.TransGen r) :=
+  ⟨i.wf.TransGen⟩
 
 #print WellFoundedLT /-
 /-- A class for a well founded relation `<`. -/

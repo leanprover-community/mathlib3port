@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_integers
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit c163ec99dfc664628ca15d215fce0a5b9c265b68
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.Padics.PadicNumbers
-import Mathbin.RingTheory.DiscreteValuationRing
+import Mathbin.RingTheory.DiscreteValuationRing.Basic
 import Mathbin.Topology.MetricSpace.CauSeqFilter
 
 /-!

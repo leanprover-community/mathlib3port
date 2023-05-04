@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_ring
-! leanprover-community/mathlib commit a47cda9662ff3925c6df271090b5808adbca5b46
+! leanprover-community/mathlib commit c163ec99dfc664628ca15d215fce0a5b9c265b68
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.RingTheory.Valuation.Integers
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Localization.Integer
-import Mathbin.RingTheory.DiscreteValuationRing
+import Mathbin.RingTheory.DiscreteValuationRing.Basic
 import Mathbin.RingTheory.Bezout
 import Mathbin.Tactic.FieldSimp
 

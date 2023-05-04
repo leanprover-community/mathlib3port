@@ -723,6 +723,7 @@ import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 import Mathbin.Analysis.SpecialFunctions.Exponential
 import Mathbin.Analysis.SpecialFunctions.Gamma
 import Mathbin.Analysis.SpecialFunctions.Gaussian
+import Mathbin.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.Analysis.SpecialFunctions.JapaneseBracket
 import Mathbin.Analysis.SpecialFunctions.Log.Base
@@ -2463,7 +2464,8 @@ import Mathbin.RepresentationTheory.Rep
 import Mathbin.RepresentationTheory.Basic
 import Mathbin.RepresentationTheory.Character
 import Mathbin.RepresentationTheory.FdRep
-import Mathbin.RepresentationTheory.GroupCohomologyResolution
+import Mathbin.RepresentationTheory.GroupCohomology.Basic
+import Mathbin.RepresentationTheory.GroupCohomology.Resolution
 import Mathbin.RepresentationTheory.Invariants
 import Mathbin.RepresentationTheory.Maschke
 import Mathbin.RingTheory.Adjoin.Basic
@@ -2495,7 +2497,8 @@ import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.DedekindDomain.Pid
 import Mathbin.RingTheory.DedekindDomain.SelmerGroup
 import Mathbin.RingTheory.Derivation
-import Mathbin.RingTheory.DiscreteValuationRing
+import Mathbin.RingTheory.DiscreteValuationRing.Basic
+import Mathbin.RingTheory.DiscreteValuationRing.Tfae
 import Mathbin.RingTheory.Discriminant
 import Mathbin.RingTheory.EisensteinCriterion
 import Mathbin.RingTheory.Etale
@@ -2619,7 +2622,6 @@ import Mathbin.RingTheory.Valuation.Integers
 import Mathbin.RingTheory.Valuation.Integral
 import Mathbin.RingTheory.Valuation.Quotient
 import Mathbin.RingTheory.Valuation.RamificationGroup
-import Mathbin.RingTheory.Valuation.Tfae
 import Mathbin.RingTheory.Valuation.ValuationRing
 import Mathbin.RingTheory.Valuation.ValuationSubring
 import Mathbin.RingTheory.WittVector.Basic

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.open_mapping
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
       simpa [gray, ray] using h w e2
     have h4 : ‖z - z₀‖ < r := by simpa [dist_eq_norm] using mem_ball.mp hz
     replace h4 : ↑‖z - z₀‖ ∈ ball (0 : ℂ) r := by
-      simpa only [mem_ball_zero_iff, norm_eq_abs, abs_of_real, abs_norm_eq_norm]
+      simpa only [mem_ball_zero_iff, norm_eq_abs, abs_of_real, abs_norm]
     simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right,
       Function.comp_apply, coe_smul] using h3 (↑‖z - z₀‖) h4
   · right

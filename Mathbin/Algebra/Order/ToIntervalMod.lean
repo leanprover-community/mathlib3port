@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit b2d7b50dc4b9fcb559e3459777e6c0c2400fe81c
+! leanprover-community/mathlib commit 645b6de46f671ac56ffea84c8752ee1cc2b8c898
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,12 @@ interval.
 * `to_Ioc_div hp a b` (where `hp : 0 < p`): The unique integer such that this multiple of `p`,
   subtracted from `b`, is in `Ioc a (a + p)`.
 * `to_Ioc_mod hp a b` (where `hp : 0 < p`): Reduce `b` to the interval `Ioc a (a + p)`.
+* `add_comm_group.modeq p a b`: `a` and `b` are congruent modulo a multiple of `p`. See also
+  `smodeq` which is a more general version in arbitrary submodules.
 
+## TODO
+
+Unify `smodeq` and `add_comm_group.modeq`, which were originally developed independently.
 -/
 
 
@@ -461,141 +466,132 @@ theorem toIocMod_eq_toIocMod : toIocMod hp a b = toIocMod hp a c ↔ ∃ n : ℤ
 
 section IcoIoc
 
+namespace AddCommGroup
+
 variable (a b)
 
 omit hα
 
-/-- `mem_Ioo_mod p a b` means that `b` lies in the open interval `(a, a + p)` modulo `p`.
-Equivalently (as shown below), `b` is not congruent to `a` modulo `p`, or `to_Ico_mod hp a` agrees
-with `to_Ioc_mod hp a` at `b`, or `to_Ico_div hp a` agrees with `to_Ioc_div hp a` at `b`. -/
-def MemIooMod (p a b : α) : Prop :=
-  ∃ z : ℤ, b - z • p ∈ Set.Ioo a (a + p)
-#align mem_Ioo_mod MemIooMod
+/-- `add_comm_group.modeq p a b` means that `b` does not lie in the open interval `(a, a + p)`
+modulo `p`.
+
+Equivalently (as shown below), `b` is congruent to `a` modulo `p`, or `to_Ico_mod hp a` disagrees
+with `to_Ioc_mod hp a` at `b`, or `to_Ico_div hp a` disagrees with `to_Ioc_div hp a` at `b`. -/
+def Modeq (p a b : α) : Prop :=
+  ∀ z : ℤ, b - z • p ∉ Set.Ioo a (a + p)
+#align add_comm_group.modeq AddCommGroup.Modeq
 
 include hα
 
-theorem tFAE_memIooMod :
+theorem tFAE_modeq :
     TFAE
-      [MemIooMod p a b, toIcoMod hp a b = toIocMod hp a b, toIcoMod hp a b + p ≠ toIocMod hp a b,
-        toIcoMod hp a b ≠ a] :=
+      [Modeq p a b, toIcoMod hp a b ≠ toIocMod hp a b, toIcoMod hp a b + p = toIocMod hp a b,
+        toIcoMod hp a b = a] :=
   by
-  tfae_have 1 → 2
-  ·
+  rw [modeq]
+  tfae_have 2 → 1
+  · rw [← not_exists, not_imp_not]
     exact fun ⟨i, hi⟩ =>
       ((toIcoMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ico_self hi, i, (sub_add_cancel b _).symm⟩).trans
         ((toIocMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ioc_self hi, i, (sub_add_cancel b _).symm⟩).symm
-  tfae_have 2 → 3
+  tfae_have 3 → 2
   · intro h
-    rw [h, Ne, add_right_eq_self]
+    rw [← h, Ne, eq_comm, add_right_eq_self]
     exact hp.ne'
-  tfae_have 3 → 4
-  · refine' mt fun h => _
+  tfae_have 4 → 3
+  · intro h
     rw [h, eq_comm, toIocMod_eq_iff, Set.right_mem_Ioc]
     refine' ⟨lt_add_of_pos_right a hp, toIcoDiv hp a b - 1, _⟩
     rw [sub_one_zsmul, add_add_add_comm, add_right_neg, add_zero]
     conv_lhs => rw [← toIcoMod_add_toIcoDiv_zsmul hp a b, h]
-  tfae_have 4 → 1
-  · have h' := toIcoMod_mem_Ico hp a b
+  tfae_have 1 → 4
+  · rw [← not_exists, not_imp_comm]
+    have h' := toIcoMod_mem_Ico hp a b
     exact fun h => ⟨_, h'.1.lt_of_ne' h, h'.2⟩
   tfae_finish
-#align tfae_mem_Ioo_mod tFAE_memIooMod
+#align add_comm_group.tfae_modeq AddCommGroup.tFAE_modeq
 
 variable {a b}
 
-theorem memIooMod_iff_toIcoMod_eq_toIocMod : MemIooMod p a b ↔ toIcoMod hp a b = toIocMod hp a b :=
-  (tFAE_memIooMod hp a b).out 0 1
-#align mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod memIooMod_iff_toIcoMod_eq_toIocMod
+theorem modeq_iff_toIcoMod_ne_toIocMod : Modeq p a b ↔ toIcoMod hp a b ≠ toIocMod hp a b :=
+  (tFAE_modeq hp a b).out 0 1
+#align add_comm_group.modeq_iff_to_Ico_mod_ne_to_Ioc_mod AddCommGroup.modeq_iff_toIcoMod_ne_toIocMod
 
-theorem memIooMod_iff_toIcoMod_add_period_ne_toIocMod :
-    MemIooMod p a b ↔ toIcoMod hp a b + p ≠ toIocMod hp a b :=
-  (tFAE_memIooMod hp a b).out 0 2
-#align mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod memIooMod_iff_toIcoMod_add_period_ne_toIocMod
+theorem modeq_iff_toIcoMod_add_period_eq_toIocMod :
+    Modeq p a b ↔ toIcoMod hp a b + p = toIocMod hp a b :=
+  (tFAE_modeq hp a b).out 0 2
+#align add_comm_group.modeq_iff_to_Ico_mod_add_period_eq_to_Ioc_mod AddCommGroup.modeq_iff_toIcoMod_add_period_eq_toIocMod
 
-theorem memIooMod_iff_toIcoMod_ne_left : MemIooMod p a b ↔ toIcoMod hp a b ≠ a :=
-  (tFAE_memIooMod hp a b).out 0 3
-#align mem_Ioo_mod_iff_to_Ico_mod_ne_left memIooMod_iff_toIcoMod_ne_left
+theorem modeq_iff_toIcoMod_eq_left : Modeq p a b ↔ toIcoMod hp a b = a :=
+  (tFAE_modeq hp a b).out 0 3
+#align add_comm_group.modeq_iff_to_Ico_mod_eq_left AddCommGroup.modeq_iff_toIcoMod_eq_left
 
-theorem not_memIooMod_iff_toIcoMod_add_period_eq_toIocMod :
-    ¬MemIooMod p a b ↔ toIcoMod hp a b + p = toIocMod hp a b :=
-  (memIooMod_iff_toIcoMod_add_period_ne_toIocMod hp).not_left
-#align not_mem_Ioo_mod_iff_to_Ico_mod_add_period_eq_to_Ioc_mod not_memIooMod_iff_toIcoMod_add_period_eq_toIocMod
+theorem not_modeq_iff_toIcoMod_eq_toIocMod : ¬Modeq p a b ↔ toIcoMod hp a b = toIocMod hp a b :=
+  (modeq_iff_toIcoMod_ne_toIocMod _).not_left
+#align add_comm_group.not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod AddCommGroup.not_modeq_iff_toIcoMod_eq_toIocMod
 
-theorem not_memIooMod_iff_toIcoMod_eq_left : ¬MemIooMod p a b ↔ toIcoMod hp a b = a :=
-  (memIooMod_iff_toIcoMod_ne_left hp).not_left
-#align not_mem_Ioo_mod_iff_to_Ico_mod_eq_left not_memIooMod_iff_toIcoMod_eq_left
-
-theorem memIooMod_iff_toIocMod_ne_right : MemIooMod p a b ↔ toIocMod hp a b ≠ a + p :=
+theorem modeq_iff_toIocMod_eq_right : Modeq p a b ↔ toIocMod hp a b = a + p :=
   by
-  rw [memIooMod_iff_toIcoMod_eq_toIocMod, toIcoMod_eq_iff hp]
+  rw [modeq_iff_to_Ico_mod_ne_to_Ioc_mod hp, Ne, toIcoMod_eq_iff hp, not_iff_comm]
   obtain ⟨h₁, h₂⟩ := toIocMod_mem_Ioc hp a b
   exact
-    ⟨fun h => h.1.2.Ne, fun h =>
-      ⟨⟨h₁.le, h₂.lt_of_ne h⟩, _, (toIocMod_add_toIocDiv_zsmul _ _ _).symm⟩⟩
-#align mem_Ioo_mod_iff_to_Ioc_mod_ne_right memIooMod_iff_toIocMod_ne_right
+    ⟨fun h => ⟨⟨h₁.le, h₂.lt_of_ne h⟩, _, (toIocMod_add_toIocDiv_zsmul _ _ _).symm⟩, fun h =>
+      h.1.2.Ne⟩
+#align add_comm_group.modeq_iff_to_Ioc_mod_eq_right AddCommGroup.modeq_iff_toIocMod_eq_right
 
-theorem not_memIooMod_iff_to_Ioc_eq_right : ¬MemIooMod p a b ↔ toIocMod hp a b = a + p :=
-  (memIooMod_iff_toIocMod_ne_right hp).not_left
-#align not_mem_Ioo_mod_iff_to_Ioc_eq_right not_memIooMod_iff_to_Ioc_eq_right
-
-theorem memIooMod_iff_toIcoDiv_eq_toIocDiv : MemIooMod p a b ↔ toIcoDiv hp a b = toIocDiv hp a b :=
-  by
-  rw [memIooMod_iff_toIcoMod_eq_toIocMod hp, toIcoMod, toIocMod, sub_right_inj,
+theorem not_modeq_iff_toIcoDiv_eq_toIocDiv : ¬Modeq p a b ↔ toIcoDiv hp a b = toIocDiv hp a b := by
+  rw [not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp, toIcoMod, toIocMod, sub_right_inj,
     (zsmul_strictMono_left hp).Injective.eq_iff]
-#align mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div memIooMod_iff_toIcoDiv_eq_toIocDiv
+#align add_comm_group.not_modeq_iff_to_Ico_div_eq_to_Ioc_div AddCommGroup.not_modeq_iff_toIcoDiv_eq_toIocDiv
 
-theorem memIooMod_iff_toIcoDiv_ne_toIocDiv_add_one :
-    MemIooMod p a b ↔ toIcoDiv hp a b ≠ toIocDiv hp a b + 1 := by
-  rw [memIooMod_iff_toIcoMod_add_period_ne_toIocMod hp, Ne, Ne, toIcoMod, toIocMod, ←
-    eq_sub_iff_add_eq, sub_sub, sub_right_inj, ← add_one_zsmul,
-    (zsmul_strictMono_left hp).Injective.eq_iff]
-#align mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one memIooMod_iff_toIcoDiv_ne_toIocDiv_add_one
-
-theorem not_memIooMod_iff_toIcoDiv_eq_toIocDiv_add_one :
-    ¬MemIooMod p a b ↔ toIcoDiv hp a b = toIocDiv hp a b + 1 :=
-  (memIooMod_iff_toIcoDiv_ne_toIocDiv_add_one hp).not_left
-#align not_mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div_add_one not_memIooMod_iff_toIcoDiv_eq_toIocDiv_add_one
+theorem modeq_iff_toIcoDiv_eq_toIocDiv_add_one :
+    Modeq p a b ↔ toIcoDiv hp a b = toIocDiv hp a b + 1 := by
+  rw [modeq_iff_to_Ico_mod_add_period_eq_to_Ioc_mod hp, toIcoMod, toIocMod, ← eq_sub_iff_add_eq,
+    sub_sub, sub_right_inj, ← add_one_zsmul, (zsmul_strictMono_left hp).Injective.eq_iff]
+#align add_comm_group.modeq_iff_to_Ico_div_eq_to_Ioc_div_add_one AddCommGroup.modeq_iff_toIcoDiv_eq_toIocDiv_add_one
 
 include hp
 
-theorem memIooMod_iff_ne_add_zsmul : MemIooMod p a b ↔ ∀ z : ℤ, b ≠ a + z • p :=
+theorem modeq_iff_eq_add_zsmul : Modeq p a b ↔ ∃ z : ℤ, b = a + z • p :=
   by
-  rw [memIooMod_iff_toIcoMod_ne_left hp, ← not_iff_not]
-  push_neg; constructor <;> intro h
+  rw [modeq_iff_to_Ico_mod_eq_left hp]
+  constructor <;> intro h
   · rw [← h]
     exact ⟨_, (toIcoMod_add_toIcoDiv_zsmul _ _ _).symm⟩
   · rw [toIcoMod_eq_iff, Set.left_mem_Ico]
     exact ⟨lt_add_of_pos_right a hp, h⟩
-#align mem_Ioo_mod_iff_ne_add_zsmul memIooMod_iff_ne_add_zsmul
+#align add_comm_group.modeq_iff_eq_add_zsmul AddCommGroup.modeq_iff_eq_add_zsmul
 
-theorem not_memIooMod_iff_eq_add_zsmul : ¬MemIooMod p a b ↔ ∃ z : ℤ, b = a + z • p := by
-  simpa only [not_forall, not_ne_iff] using (memIooMod_iff_ne_add_zsmul hp).Not
-#align not_mem_Ioo_mod_iff_eq_add_zsmul not_memIooMod_iff_eq_add_zsmul
+theorem not_modeq_iff_ne_add_zsmul : ¬Modeq p a b ↔ ∀ z : ℤ, b ≠ a + z • p := by
+  rw [modeq_iff_eq_add_zsmul hp, not_exists]
+#align add_comm_group.not_modeq_iff_ne_add_zsmul AddCommGroup.not_modeq_iff_ne_add_zsmul
 
-theorem not_memIooMod_iff_eq_mod_zmultiples :
-    ¬MemIooMod p a b ↔ (b : α ⧸ AddSubgroup.zmultiples p) = a := by
-  simp_rw [not_memIooMod_iff_eq_add_zsmul hp, QuotientAddGroup.eq_iff_sub_mem,
+theorem modeq_iff_eq_mod_zmultiples : Modeq p a b ↔ (b : α ⧸ AddSubgroup.zmultiples p) = a := by
+  simp_rw [modeq_iff_eq_add_zsmul hp, QuotientAddGroup.eq_iff_sub_mem,
     AddSubgroup.mem_zmultiples_iff, eq_sub_iff_add_eq', eq_comm]
-#align not_mem_Ioo_mod_iff_eq_mod_zmultiples not_memIooMod_iff_eq_mod_zmultiples
+#align add_comm_group.modeq_iff_eq_mod_zmultiples AddCommGroup.modeq_iff_eq_mod_zmultiples
 
-theorem memIooMod_iff_ne_mod_zmultiples :
-    MemIooMod p a b ↔ (b : α ⧸ AddSubgroup.zmultiples p) ≠ a :=
-  (not_memIooMod_iff_eq_mod_zmultiples hp).not_right
-#align mem_Ioo_mod_iff_ne_mod_zmultiples memIooMod_iff_ne_mod_zmultiples
+theorem not_modeq_iff_ne_mod_zmultiples : ¬Modeq p a b ↔ (b : α ⧸ AddSubgroup.zmultiples p) ≠ a :=
+  (modeq_iff_eq_mod_zmultiples hp).Not
+#align add_comm_group.not_modeq_iff_ne_mod_zmultiples AddCommGroup.not_modeq_iff_ne_mod_zmultiples
+
+end AddCommGroup
 
 theorem Ico_eq_locus_Ioc_eq_unionᵢ_Ioo :
-    { b | toIcoMod hp a b = toIocMod hp a b } = ⋃ z : ℤ, Set.Ioo (a + z • p) (a + p + z • p) :=
-  by
-  ext1; simp_rw [Set.mem_setOf, Set.mem_unionᵢ, ← Set.sub_mem_Ioo_iff_left]
-  exact (memIooMod_iff_toIcoMod_eq_toIocMod hp).symm
+    { b | toIcoMod hp a b = toIocMod hp a b } = ⋃ z : ℤ, Set.Ioo (a + z • p) (a + p + z • p) := by
+  ext1;
+  simp_rw [Set.mem_setOf, Set.mem_unionᵢ, ← Set.sub_mem_Ioo_iff_left, ←
+    AddCommGroup.not_modeq_iff_toIcoMod_eq_toIocMod, AddCommGroup.Modeq, not_forall,
+    Classical.not_not]
 #align Ico_eq_locus_Ioc_eq_Union_Ioo Ico_eq_locus_Ioc_eq_unionᵢ_Ioo
 
 theorem toIocDiv_wcovby_toIcoDiv (a b : α) : toIocDiv hp a b ⩿ toIcoDiv hp a b :=
   by
   suffices toIocDiv hp a b = toIcoDiv hp a b ∨ toIocDiv hp a b + 1 = toIcoDiv hp a b by
     rwa [wcovby_iff_eq_or_covby, ← Order.succ_eq_iff_covby]
-  rw [eq_comm, ← memIooMod_iff_toIcoDiv_eq_toIocDiv, eq_comm, ←
-    not_memIooMod_iff_toIcoDiv_eq_toIocDiv_add_one]
-  exact em _
+  rw [eq_comm, ← AddCommGroup.not_modeq_iff_toIcoDiv_eq_toIocDiv, eq_comm, ←
+    AddCommGroup.modeq_iff_toIcoDiv_eq_toIocDiv_add_one]
+  exact em' _
 #align to_Ioc_div_wcovby_to_Ico_div toIocDiv_wcovby_toIcoDiv
 
 theorem toIcoMod_le_toIocMod (a b : α) : toIcoMod hp a b ≤ toIocMod hp a b :=

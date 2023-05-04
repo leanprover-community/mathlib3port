@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.continuous_functional_calculus
-! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
+! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
   refine' ⟨u.unit_of_nearby _ _, rfl⟩
   simp only [Complex.abs_ofReal, map_inv₀, Units.coe_map, Units.val_inv_eq_inv_val, [anonymous],
     RingHom.toMonoidHom_eq_coe, Units.val_mk0, Units.coe_map_inv, norm_algebraMap', inv_inv,
-    Complex.norm_eq_abs, abs_norm_eq_norm, Subtype.val_eq_coe, coe_coe]
+    Complex.norm_eq_abs, abs_norm, Subtype.val_eq_coe, coe_coe]
   /- Since `a` is invertible, by `spectrum_star_mul_self_of_is_star_normal`, the spectrum (in `A`)
     of `star a * a` is contained in the half-open interval `(0, ‖star a * a‖]`. Therefore, by basic
     spectral mapping properties, the spectrum of `‖star a * a‖ • 1 - star a * a` is contained in

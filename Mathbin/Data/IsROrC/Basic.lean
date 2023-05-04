@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.basic
-! leanprover-community/mathlib commit 468b141b14016d54b479eb7a0fff1e360b7e3cf6
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,7 +357,7 @@ theorem conj_smul (r : ℝ) (z : K) : conj (r • z) = r • conj z :=
   simp only [one_mul, Algebra.smul_mul_assoc]
 #align is_R_or_C.conj_smul IsROrC.conj_smul
 
-theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
+theorem conj_eq_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
   by
   constructor
   · intro h
@@ -373,7 +373,7 @@ theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
     simpa [neg_eq_iff_add_eq_zero, add_self_eq_zero]
   · rintro ⟨r, rfl⟩
     apply conj_of_real
-#align is_R_or_C.eq_conj_iff_real IsROrC.eq_conj_iff_real
+#align is_R_or_C.conj_eq_iff_real IsROrC.conj_eq_iff_real
 
 @[simp]
 theorem star_def : (Star.star : K → K) = conj :=
@@ -390,9 +390,9 @@ abbrev conjToRingEquiv : K ≃+* Kᵐᵒᵖ :=
 
 variable {K}
 
-theorem eq_conj_iff_re {z : K} : conj z = z ↔ (re z : K) = z :=
-  eq_conj_iff_real.trans ⟨by rintro ⟨r, rfl⟩ <;> simp, fun h => ⟨_, h.symm⟩⟩
-#align is_R_or_C.eq_conj_iff_re IsROrC.eq_conj_iff_re
+theorem conj_eq_iff_re {z : K} : conj z = z ↔ (re z : K) = z :=
+  conj_eq_iff_real.trans ⟨by rintro ⟨r, rfl⟩ <;> simp, fun h => ⟨_, h.symm⟩⟩
+#align is_R_or_C.conj_eq_iff_re IsROrC.conj_eq_iff_re
 
 /-- The norm squared function. -/
 def normSq : K →*₀ ℝ where

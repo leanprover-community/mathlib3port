@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit 60da01b41bbe4206f05d34fd70c8dd7498717a30
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ def IsReal.embedding {φ : K →+* ℂ} (hφ : IsReal φ) : K →+* ℝ
   toFun x := (φ x).re
   map_one' := by simp only [map_one, one_re]
   map_mul' := by
-    simp only [complex.eq_conj_iff_im.mp (RingHom.congr_fun hφ _), map_mul, mul_re,
+    simp only [complex.conj_eq_iff_im.mp (RingHom.congr_fun hφ _), map_mul, mul_re,
       MulZeroClass.mul_zero, tsub_zero, eq_self_iff_true, forall_const]
   map_zero' := by simp only [map_zero, zero_re]
   map_add' := by simp only [map_add, add_re, eq_self_iff_true, forall_const]
@@ -207,7 +207,7 @@ def IsReal.embedding {φ : K →+* ℂ} (hφ : IsReal φ) : K →+* ℝ
 theorem IsReal.coe_embedding_apply {φ : K →+* ℂ} (hφ : IsReal φ) (x : K) :
     (hφ.Embedding x : ℂ) = φ x := by
   ext; · rfl
-  · rw [of_real_im, eq_comm, ← Complex.eq_conj_iff_im]
+  · rw [of_real_im, eq_comm, ← Complex.conj_eq_iff_im]
     rw [is_real] at hφ
     exact RingHom.congr_fun hφ x
 #align number_field.complex_embedding.is_real.coe_embedding_apply NumberField.ComplexEmbedding.IsReal.coe_embedding_apply

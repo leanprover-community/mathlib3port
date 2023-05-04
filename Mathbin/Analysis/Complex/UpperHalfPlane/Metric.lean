@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.metric
-! leanprover-community/mathlib commit f06058e64b7e8397234455038f3f8aec83aaba5a
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ protected theorem dist_triangle (a b c : ℍ) : dist a c ≤ dist a b + dist b c
     exact
       div_le_div_of_le (mul_nonneg zero_le_two (sqrt_nonneg _))
         (EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist (a : ℂ) b c (conj ↑b))
-  · rw [dist_comm, dist_pos, Ne.def, Complex.eq_conj_iff_im]
+  · rw [dist_comm, dist_pos, Ne.def, Complex.conj_eq_iff_im]
     exact b.im_ne_zero
 #align upper_half_plane.dist_triangle UpperHalfPlane.dist_triangle
 

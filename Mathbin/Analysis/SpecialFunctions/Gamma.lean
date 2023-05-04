@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.ExpDecay
+import Mathbin.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathbin.Analysis.Convolution
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
 
@@ -68,13 +69,6 @@ noncomputable section
 open Filter intervalIntegral Set Real MeasureTheory Asymptotics
 
 open Nat Topology ENNReal BigOperators ComplexConjugate
-
-theorem integral_exp_neg_Ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 :=
-  by
-  refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ _ tendsto_id) _
-  · simpa only [neg_mul, one_mul] using expNegIntegrableOnIoi 0 zero_lt_one
-  · simpa using tendsto_exp_neg_at_top_nhds_0.const_sub 1
-#align integral_exp_neg_Ioi integral_exp_neg_Ioi
 
 namespace Real
 
@@ -177,7 +171,7 @@ theorem gammaIntegral_of_real (s : ℝ) :
 
 theorem gammaIntegral_one : gammaIntegral 1 = 1 := by
   simpa only [← of_real_one, Gamma_integral_of_real, of_real_inj, sub_self, rpow_zero,
-    mul_one] using integral_exp_neg_Ioi
+    mul_one] using integral_exp_neg_Ioi_zero
 #align complex.Gamma_integral_one Complex.gammaIntegral_one
 
 end Complex
@@ -753,7 +747,7 @@ theorem gamma_one : gamma 1 = 1 := by
 #align real.Gamma_one Real.gamma_one
 
 theorem Complex.gamma_of_real (s : ℝ) : Complex.gamma (s : ℂ) = gamma s := by
-  rw [Gamma, eq_comm, ← Complex.eq_conj_iff_re, ← Complex.gamma_conj, Complex.conj_ofReal]
+  rw [Gamma, eq_comm, ← Complex.conj_eq_iff_re, ← Complex.gamma_conj, Complex.conj_ofReal]
 #align complex.Gamma_of_real Complex.gamma_of_real
 
 theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! := by
