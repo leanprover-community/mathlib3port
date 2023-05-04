@@ -1062,99 +1062,59 @@ theorem Iic_inter_Ioc_of_le (h : a ≤ c) : Iic a ∩ Ioc b c = Ioc b a :=
   ext fun x => ⟨fun H => ⟨H.2.1, H.1⟩, fun H => ⟨H.2, H.1, H.2.trans h⟩⟩
 #align set.Iic_inter_Ioc_of_le Set.Iic_inter_Ioc_of_le
 
-/- warning: set.not_mem_Icc_of_lt -> Set.not_mem_Icc_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) c a) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Icc.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c a) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Icc_of_lt Set.not_mem_Icc_of_ltₓ'. -/
+#print Set.not_mem_Icc_of_lt /-
 theorem not_mem_Icc_of_lt (ha : c < a) : c ∉ Icc a b := fun h => ha.not_le h.1
 #align set.not_mem_Icc_of_lt Set.not_mem_Icc_of_lt
+-/
 
-/- warning: set.not_mem_Icc_of_gt -> Set.not_mem_Icc_of_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b c) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Icc.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Icc_of_gt Set.not_mem_Icc_of_gtₓ'. -/
+#print Set.not_mem_Icc_of_gt /-
 theorem not_mem_Icc_of_gt (hb : b < c) : c ∉ Icc a b := fun h => hb.not_le h.2
 #align set.not_mem_Icc_of_gt Set.not_mem_Icc_of_gt
+-/
 
-/- warning: set.not_mem_Ico_of_lt -> Set.not_mem_Ico_of_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) c a) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Ico.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c a) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ico_of_lt Set.not_mem_Ico_of_ltₓ'. -/
+#print Set.not_mem_Ico_of_lt /-
 theorem not_mem_Ico_of_lt (ha : c < a) : c ∉ Ico a b := fun h => ha.not_le h.1
 #align set.not_mem_Ico_of_lt Set.not_mem_Ico_of_lt
+-/
 
-/- warning: set.not_mem_Ioc_of_gt -> Set.not_mem_Ioc_of_gt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b c) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Ioc.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ioc_of_gt Set.not_mem_Ioc_of_gtₓ'. -/
+#print Set.not_mem_Ioc_of_gt /-
 theorem not_mem_Ioc_of_gt (hb : b < c) : c ∉ Ioc a b := fun h => hb.not_le h.2
 #align set.not_mem_Ioc_of_gt Set.not_mem_Ioc_of_gt
+-/
 
-/- warning: set.not_mem_Ioi_self -> Set.not_mem_Ioi_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (Set.Ioi.{u1} α _inst_1 a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α}, Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ioi_self Set.not_mem_Ioi_selfₓ'. -/
+#print Set.not_mem_Ioi_self /-
 @[simp]
 theorem not_mem_Ioi_self : a ∉ Ioi a :=
   lt_irrefl _
 #align set.not_mem_Ioi_self Set.not_mem_Ioi_self
+-/
 
-/- warning: set.not_mem_Iio_self -> Set.not_mem_Iio_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {b : α}, Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b (Set.Iio.{u1} α _inst_1 b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {b : α}, Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (Set.Iio.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) b))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Iio_self Set.not_mem_Iio_selfₓ'. -/
+#print Set.not_mem_Iio_self /-
 @[simp]
 theorem not_mem_Iio_self : b ∉ Iio b :=
   lt_irrefl _
 #align set.not_mem_Iio_self Set.not_mem_Iio_self
+-/
 
-/- warning: set.not_mem_Ioc_of_le -> Set.not_mem_Ioc_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c a) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Ioc.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c a) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ioc_of_le Set.not_mem_Ioc_of_leₓ'. -/
+#print Set.not_mem_Ioc_of_le /-
 theorem not_mem_Ioc_of_le (ha : c ≤ a) : c ∉ Ioc a b := fun h => lt_irrefl _ <| h.1.trans_le ha
 #align set.not_mem_Ioc_of_le Set.not_mem_Ioc_of_le
+-/
 
-/- warning: set.not_mem_Ico_of_ge -> Set.not_mem_Ico_of_ge is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b c) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Ico.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ico_of_ge Set.not_mem_Ico_of_geₓ'. -/
+#print Set.not_mem_Ico_of_ge /-
 theorem not_mem_Ico_of_ge (hb : b ≤ c) : c ∉ Ico a b := fun h => lt_irrefl _ <| h.2.trans_le hb
 #align set.not_mem_Ico_of_ge Set.not_mem_Ico_of_ge
+-/
 
-/- warning: set.not_mem_Ioo_of_le -> Set.not_mem_Ioo_of_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c a) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Ioo.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c a) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ioo_of_le Set.not_mem_Ioo_of_leₓ'. -/
+#print Set.not_mem_Ioo_of_le /-
 theorem not_mem_Ioo_of_le (ha : c ≤ a) : c ∉ Ioo a b := fun h => lt_irrefl _ <| h.1.trans_le ha
 #align set.not_mem_Ioo_of_le Set.not_mem_Ioo_of_le
+-/
 
-/- warning: set.not_mem_Ioo_of_ge -> Set.not_mem_Ioo_of_ge is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b c) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c (Set.Ioo.{u1} α _inst_1 a b)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)))
-Case conversion may be inaccurate. Consider using '#align set.not_mem_Ioo_of_ge Set.not_mem_Ioo_of_geₓ'. -/
+#print Set.not_mem_Ioo_of_ge /-
 theorem not_mem_Ioo_of_ge (hb : b ≤ c) : c ∉ Ioo a b := fun h => lt_irrefl _ <| h.2.trans_le hb
 #align set.not_mem_Ioo_of_ge Set.not_mem_Ioo_of_ge
+-/
 
 end Preorder
 
