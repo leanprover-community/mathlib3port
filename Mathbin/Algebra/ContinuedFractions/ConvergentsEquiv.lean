@@ -89,6 +89,7 @@ section WithDivisionRing
 
 variable [DivisionRing K]
 
+#print GeneralizedContinuedFraction.squashSeq /-
 /-- Given a sequence of gcf.pairs `s = [(a₀, bₒ), (a₁, b₁), ...]`, `squash_seq s n`
 combines `⟨aₙ, bₙ⟩` and `⟨aₙ₊₁, bₙ₊₁⟩` at position `n` to `⟨aₙ, bₙ + aₙ₊₁ / bₙ₊₁⟩`. For example,
 `squash_seq s 0 = [(a₀, bₒ + a₁ / b₁), (a₁, b₁),...]`.
@@ -103,10 +104,12 @@ def squashSeq (s : Seq <| Pair K) (n : ℕ) : Seq (Pair K) :=
       s
   | _ => s
 #align generalized_continued_fraction.squash_seq GeneralizedContinuedFraction.squashSeq
+-/
 
 /-! We now prove some simple lemmas about the squashed sequence -/
 
 
+#print GeneralizedContinuedFraction.squashSeq_eq_self_of_terminated /-
 /-- If the sequence already terminated at position `n + 1`, nothing gets squashed. -/
 theorem squashSeq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (n + 1)) :
     squashSeq s n = s :=
@@ -114,17 +117,25 @@ theorem squashSeq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (
   change s.nth (n + 1) = none at terminated_at_succ_n
   cases s_nth_eq : s.nth n <;> simp only [*, squash_seq]
 #align generalized_continued_fraction.squash_seq_eq_self_of_terminated GeneralizedContinuedFraction.squashSeq_eq_self_of_terminated
+-/
 
+/- warning: generalized_continued_fraction.squash_seq_nth_of_not_terminated -> GeneralizedContinuedFraction.squashSeq_nth_of_not_terminated is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} {n : Nat} {s : Stream'.Seq.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)} [_inst_1 : DivisionRing.{u1} K] {gp_n : GeneralizedContinuedFraction.Pair.{u1} K} {gp_succ_n : GeneralizedContinuedFraction.Pair.{u1} K}, (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) s n) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) gp_n)) -> (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) s (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) gp_succ_n)) -> (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) (GeneralizedContinuedFraction.squashSeq.{u1} K _inst_1 s n) n) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) (GeneralizedContinuedFraction.Pair.mk.{u1} K (GeneralizedContinuedFraction.Pair.a.{u1} K gp_n) (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toHasAdd.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) (GeneralizedContinuedFraction.Pair.b.{u1} K gp_n) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivInvMonoid.toHasDiv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K _inst_1))) (GeneralizedContinuedFraction.Pair.a.{u1} K gp_succ_n) (GeneralizedContinuedFraction.Pair.b.{u1} K gp_succ_n))))))
+but is expected to have type
+  forall {K : Type.{u1}} {n : Nat} {s : Stream'.Seq.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)} [_inst_1 : DivisionRing.{u1} K] {gp_n : GeneralizedContinuedFraction.Pair.{u1} K} {gp_succ_n : GeneralizedContinuedFraction.Pair.{u1} K}, (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) s n) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) gp_n)) -> (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) s (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) gp_succ_n)) -> (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) (GeneralizedContinuedFraction.squashSeq.{u1} K _inst_1 s n) n) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) (GeneralizedContinuedFraction.Pair.mk.{u1} K (GeneralizedContinuedFraction.Pair.a.{u1} K gp_n) (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toAdd.{u1} K (NonUnitalNonAssocSemiring.toDistrib.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (GeneralizedContinuedFraction.Pair.b.{u1} K gp_n) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivisionRing.toDiv.{u1} K _inst_1)) (GeneralizedContinuedFraction.Pair.a.{u1} K gp_succ_n) (GeneralizedContinuedFraction.Pair.b.{u1} K gp_succ_n))))))
+Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.squash_seq_nth_of_not_terminated GeneralizedContinuedFraction.squashSeq_nth_of_not_terminatedₓ'. -/
 /-- If the sequence has not terminated before position `n + 1`, the value at `n + 1` gets
 squashed into position `n`. -/
-theorem squashSeq_get?_of_not_terminated {gp_n gp_succ_n : Pair K} (s_nth_eq : s.get? n = some gp_n)
+theorem squashSeq_nth_of_not_terminated {gp_n gp_succ_n : Pair K} (s_nth_eq : s.get? n = some gp_n)
     (s_succ_nth_eq : s.get? (n + 1) = some gp_succ_n) :
     (squashSeq s n).get? n = some ⟨gp_n.a, gp_n.b + gp_succ_n.a / gp_succ_n.b⟩ := by
   simp [*, squash_seq]
-#align generalized_continued_fraction.squash_seq_nth_of_not_terminated GeneralizedContinuedFraction.squashSeq_get?_of_not_terminated
+#align generalized_continued_fraction.squash_seq_nth_of_not_terminated GeneralizedContinuedFraction.squashSeq_nth_of_not_terminated
 
+#print GeneralizedContinuedFraction.squashSeq_nth_of_lt /-
 /-- The values before the squashed position stay the same. -/
-theorem squashSeq_get?_of_lt {m : ℕ} (m_lt_n : m < n) : (squashSeq s n).get? m = s.get? m :=
+theorem squashSeq_nth_of_lt {m : ℕ} (m_lt_n : m < n) : (squashSeq s n).get? m = s.get? m :=
   by
   cases s_succ_nth_eq : s.nth (n + 1)
   case none => rw [squash_seq_eq_self_of_terminated s_succ_nth_eq]
@@ -133,8 +144,10 @@ theorem squashSeq_get?_of_lt {m : ℕ} (m_lt_n : m < n) : (squashSeq s n).get? m
     obtain ⟨gp_m, s_mth_eq⟩ : ∃ gp_m, s.nth m = some gp_m;
     exact s.ge_stable (le_of_lt m_lt_n) s_nth_eq
     simp [*, squash_seq, m_lt_n.ne]
-#align generalized_continued_fraction.squash_seq_nth_of_lt GeneralizedContinuedFraction.squashSeq_get?_of_lt
+#align generalized_continued_fraction.squash_seq_nth_of_lt GeneralizedContinuedFraction.squashSeq_nth_of_lt
+-/
 
+#print GeneralizedContinuedFraction.squashSeq_succ_n_tail_eq_squashSeq_tail_n /-
 /-- Squashing at position `n + 1` and taking the tail is the same as squashing the tail of the
 sequence at position `n`. -/
 theorem squashSeq_succ_n_tail_eq_squashSeq_tail_n :
@@ -161,7 +174,9 @@ theorem squashSeq_succ_n_tail_eq_squashSeq_tail_n :
       · simp only [*, squash_seq, seq.nth_tail, seq.nth_zip_with, Option.map₂_none_right]
       · simp [*, squash_seq]
 #align generalized_continued_fraction.squash_seq_succ_n_tail_eq_squash_seq_tail_n GeneralizedContinuedFraction.squashSeq_succ_n_tail_eq_squashSeq_tail_n
+-/
 
+#print GeneralizedContinuedFraction.succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squashSeq /-
 /-- The auxiliary function `convergents'_aux` returns the same value for a sequence and the
 corresponding squashed sequence at the squashed position. -/
 theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squashSeq :
@@ -194,46 +209,54 @@ theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squashSeq :
         (squash_seq_nth_of_lt m.succ_pos).trans s_head_eq
       simp only [*, convergents'_aux, squash_seq_succ_n_tail_eq_squash_seq_tail_n]
 #align generalized_continued_fraction.succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq GeneralizedContinuedFraction.succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squashSeq
+-/
 
 /-! Let us now lift the squashing operation to gcfs. -/
 
 
+#print GeneralizedContinuedFraction.squashGCF /-
 /-- Given a gcf `g = [h; (a₀, bₒ), (a₁, b₁), ...]`, we have
 - `squash_nth.gcf g 0 = [h + a₀ / b₀); (a₀, bₒ), ...]`,
 - `squash_nth.gcf g (n + 1) = ⟨g.h, squash_seq g.s n⟩`
 -/
-def squashGcf (g : GeneralizedContinuedFraction K) : ℕ → GeneralizedContinuedFraction K
+def squashGCF (g : GeneralizedContinuedFraction K) : ℕ → GeneralizedContinuedFraction K
   | 0 =>
     match g.s.get? 0 with
     | none => g
     | some gp => ⟨g.h + gp.a / gp.b, g.s⟩
   | n + 1 => ⟨g.h, squashSeq g.s n⟩
-#align generalized_continued_fraction.squash_gcf GeneralizedContinuedFraction.squashGcf
+#align generalized_continued_fraction.squash_gcf GeneralizedContinuedFraction.squashGCF
+-/
 
 /-! Again, we derive some simple lemmas that are not really of interest. This time for the
 squashed gcf. -/
 
 
+#print GeneralizedContinuedFraction.squashGCF_eq_self_of_terminated /-
 /-- If the gcf already terminated at position `n`, nothing gets squashed. -/
-theorem squashGcf_eq_self_of_terminated (terminated_at_n : TerminatedAt g n) : squashGcf g n = g :=
+theorem squashGCF_eq_self_of_terminated (terminated_at_n : TerminatedAt g n) : squashGCF g n = g :=
   by
   cases n
   case zero =>
     change g.s.nth 0 = none at terminated_at_n
     simp only [convergents', squash_gcf, convergents'_aux, terminated_at_n]
   case succ => cases g; simp [squash_seq_eq_self_of_terminated terminated_at_n, squash_gcf]
-#align generalized_continued_fraction.squash_gcf_eq_self_of_terminated GeneralizedContinuedFraction.squashGcf_eq_self_of_terminated
+#align generalized_continued_fraction.squash_gcf_eq_self_of_terminated GeneralizedContinuedFraction.squashGCF_eq_self_of_terminated
+-/
 
+#print GeneralizedContinuedFraction.squashGCF_nth_of_lt /-
 /-- The values before the squashed position stay the same. -/
-theorem squashGcf_get?_of_lt {m : ℕ} (m_lt_n : m < n) :
-    (squashGcf g (n + 1)).s.get? m = g.s.get? m := by
+theorem squashGCF_nth_of_lt {m : ℕ} (m_lt_n : m < n) :
+    (squashGCF g (n + 1)).s.get? m = g.s.get? m := by
   simp only [squash_gcf, squash_seq_nth_of_lt m_lt_n]
-#align generalized_continued_fraction.squash_gcf_nth_of_lt GeneralizedContinuedFraction.squashGcf_get?_of_lt
+#align generalized_continued_fraction.squash_gcf_nth_of_lt GeneralizedContinuedFraction.squashGCF_nth_of_lt
+-/
 
+#print GeneralizedContinuedFraction.succ_nth_convergent'_eq_squashGCF_nth_convergent' /-
 /-- `convergents'` returns the same value for a gcf and the corresponding squashed gcf at the
 squashed position. -/
-theorem succ_nth_convergent'_eq_squashGcf_nth_convergent' :
-    g.convergents' (n + 1) = (squashGcf g n).convergents' n :=
+theorem succ_nth_convergent'_eq_squashGCF_nth_convergent' :
+    g.convergents' (n + 1) = (squashGCF g n).convergents' n :=
   by
   cases n
   case zero =>
@@ -242,11 +265,13 @@ theorem succ_nth_convergent'_eq_squashGcf_nth_convergent' :
   case succ =>
     simp only [succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq, convergents',
       squash_gcf]
-#align generalized_continued_fraction.succ_nth_convergent'_eq_squash_gcf_nth_convergent' GeneralizedContinuedFraction.succ_nth_convergent'_eq_squashGcf_nth_convergent'
+#align generalized_continued_fraction.succ_nth_convergent'_eq_squash_gcf_nth_convergent' GeneralizedContinuedFraction.succ_nth_convergent'_eq_squashGCF_nth_convergent'
+-/
 
+#print GeneralizedContinuedFraction.continuantsAux_eq_continuantsAux_squashGCF_of_le /-
 /-- The auxiliary continuants before the squashed position stay the same. -/
-theorem continuantsAux_eq_continuantsAux_squashGcf_of_le {m : ℕ} :
-    m ≤ n → continuantsAux g m = (squashGcf g n).continuantsAux m :=
+theorem continuantsAux_eq_continuantsAux_squashGCF_of_le {m : ℕ} :
+    m ≤ n → continuantsAux g m = (squashGCF g n).continuantsAux m :=
   Nat.strong_induction_on m
     (by
       clear m
@@ -266,15 +291,22 @@ theorem continuantsAux_eq_continuantsAux_squashGcf_of_le {m : ℕ} :
             have : (squash_gcf g (n' + 1)).s.get? m'' = g.s.nth m'' :=
               squash_gcf_nth_of_lt (nat.succ_lt_succ_iff.mp m'_lt_n)
             simp [continuants_aux, succ_m''th_conts_aux_eq, m''th_conts_aux_eq, this])
-#align generalized_continued_fraction.continuants_aux_eq_continuants_aux_squash_gcf_of_le GeneralizedContinuedFraction.continuantsAux_eq_continuantsAux_squashGcf_of_le
+#align generalized_continued_fraction.continuants_aux_eq_continuants_aux_squash_gcf_of_le GeneralizedContinuedFraction.continuantsAux_eq_continuantsAux_squashGCF_of_le
+-/
 
 end WithDivisionRing
 
+/- warning: generalized_continued_fraction.succ_nth_convergent_eq_squash_gcf_nth_convergent -> GeneralizedContinuedFraction.succ_nth_convergent_eq_squashGCF_nth_convergent is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} {n : Nat} {g : GeneralizedContinuedFraction.{u1} K} [_inst_1 : Field.{u1} K], (forall {b : K}, (Eq.{succ u1} (Option.{u1} K) (Stream'.Seq.get?.{u1} K (GeneralizedContinuedFraction.partialDenominators.{u1} K g) n) (Option.some.{u1} K b)) -> (Ne.{succ u1} K b (OfNat.ofNat.{u1} K 0 (OfNat.mk.{u1} K 0 (Zero.zero.{u1} K (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1)))))))))))) -> (Eq.{succ u1} K (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K _inst_1) g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (GeneralizedContinuedFraction.squashGCF.{u1} K (Field.toDivisionRing.{u1} K _inst_1) g n) n))
+but is expected to have type
+  forall {K : Type.{u1}} {n : Nat} {g : GeneralizedContinuedFraction.{u1} K} [_inst_1 : Field.{u1} K], (forall {b : K}, (Eq.{succ u1} (Option.{u1} K) (Stream'.Seq.get?.{u1} K (GeneralizedContinuedFraction.partialDenominators.{u1} K g) n) (Option.some.{u1} K b)) -> (Ne.{succ u1} K b (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K _inst_1)))))))) -> (Eq.{succ u1} K (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K _inst_1) g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K _inst_1) (GeneralizedContinuedFraction.squashGCF.{u1} K (Field.toDivisionRing.{u1} K _inst_1) g n) n))
+Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.succ_nth_convergent_eq_squash_gcf_nth_convergent GeneralizedContinuedFraction.succ_nth_convergent_eq_squashGCF_nth_convergentₓ'. -/
 /-- The convergents coincide in the expected way at the squashed position if the partial denominator
 at the squashed position is not zero. -/
-theorem succ_get?_convergent_eq_squashGcf_get?_convergent [Field K]
+theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
     (nth_part_denom_ne_zero : ∀ {b : K}, g.partialDenominators.get? n = some b → b ≠ 0) :
-    g.convergents (n + 1) = (squashGcf g n).convergents n :=
+    g.convergents (n + 1) = (squashGCF g n).convergents n :=
   by
   cases' Decidable.em (g.terminated_at n) with terminated_at_n not_terminated_at_n
   · have : squash_gcf g n = g := squash_gcf_eq_self_of_terminated terminated_at_n
@@ -348,10 +380,16 @@ theorem succ_get?_convergent_eq_squashGcf_get?_convergent [Field K]
         simpa only [eq1, eq2, eq3, eq4, mul_div_cancel _ b_ne_zero]
       field_simp
       congr 1 <;> ring
-#align generalized_continued_fraction.succ_nth_convergent_eq_squash_gcf_nth_convergent GeneralizedContinuedFraction.succ_get?_convergent_eq_squashGcf_get?_convergent
+#align generalized_continued_fraction.succ_nth_convergent_eq_squash_gcf_nth_convergent GeneralizedContinuedFraction.succ_nth_convergent_eq_squashGCF_nth_convergent
 
 end Squash
 
+/- warning: generalized_continued_fraction.convergents_eq_convergents' -> GeneralizedContinuedFraction.convergents_eq_convergents' is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} {n : Nat} {g : GeneralizedContinuedFraction.{u1} K} [_inst_1 : LinearOrderedField.{u1} K], (forall {gp : GeneralizedContinuedFraction.Pair.{u1} K} {m : Nat}, (LT.lt.{0} Nat Nat.hasLt m n) -> (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) (GeneralizedContinuedFraction.s.{u1} K g) m) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) gp)) -> (And (LT.lt.{u1} K (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))))) (OfNat.ofNat.{u1} K 0 (OfNat.mk.{u1} K 0 (Zero.zero.{u1} K (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))))))) (GeneralizedContinuedFraction.Pair.a.{u1} K gp)) (LT.lt.{u1} K (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))))) (OfNat.ofNat.{u1} K 0 (OfNat.mk.{u1} K 0 (Zero.zero.{u1} K (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))))))) (GeneralizedContinuedFraction.Pair.b.{u1} K gp)))) -> (Eq.{succ u1} K (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) g n) (GeneralizedContinuedFraction.convergents'.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) g n))
+but is expected to have type
+  forall {K : Type.{u1}} {n : Nat} {g : GeneralizedContinuedFraction.{u1} K} [_inst_1 : LinearOrderedField.{u1} K], (forall {gp : GeneralizedContinuedFraction.Pair.{u1} K} {m : Nat}, (LT.lt.{0} Nat instLTNat m n) -> (Eq.{succ u1} (Option.{u1} (GeneralizedContinuedFraction.Pair.{u1} K)) (Stream'.Seq.get?.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) (GeneralizedContinuedFraction.s.{u1} K g) m) (Option.some.{u1} (GeneralizedContinuedFraction.Pair.{u1} K) gp)) -> (And (LT.lt.{u1} K (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))) (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (LinearOrderedSemifield.toSemifield.{u1} K (LinearOrderedField.toLinearOrderedSemifield.{u1} K _inst_1))))))) (GeneralizedContinuedFraction.Pair.a.{u1} K gp)) (LT.lt.{u1} K (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))) (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (LinearOrderedSemifield.toSemifield.{u1} K (LinearOrderedField.toLinearOrderedSemifield.{u1} K _inst_1))))))) (GeneralizedContinuedFraction.Pair.b.{u1} K gp)))) -> (Eq.{succ u1} K (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) g n) (GeneralizedContinuedFraction.convergents'.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) g n))
+Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.convergents_eq_convergents' GeneralizedContinuedFraction.convergents_eq_convergents'ₓ'. -/
 /-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of the
 gcf coincide at position `n` if the sequence of fractions contains strictly positive values only.
 Requiring positivity of all values is just one possible condition to obtain this result.
@@ -421,6 +459,12 @@ open GeneralizedContinuedFraction
 
 namespace ContinuedFraction
 
+/- warning: continued_fraction.convergents_eq_convergents' -> ContinuedFraction.convergents_eq_convergents' is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] {c : ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))}, Eq.{succ u1} (Stream'.{u1} K) (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (HasLiftT.mk.{succ u1, succ u1} (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (CoeTCₓ.coe.{succ u1, succ u1} (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (coeBase.{succ u1, succ u1} (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (ContinuedFraction.hasCoeToGeneralizedContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))))))))) c)) (GeneralizedContinuedFraction.convergents'.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (HasLiftT.mk.{succ u1, succ u1} (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (CoeTCₓ.coe.{succ u1, succ u1} (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (coeBase.{succ u1, succ u1} (ContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (GeneralizedContinuedFraction.{u1} K) (ContinuedFraction.hasCoeToGeneralizedContinuedFraction.{u1} K (AddMonoidWithOne.toOne.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))) (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (OrderedAddCommGroup.toPartialOrder.{u1} K (StrictOrderedRing.toOrderedAddCommGroup.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))))))))) c))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] {c : ContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))) (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (LinearOrderedSemifield.toSemifield.{u1} K (LinearOrderedField.toLinearOrderedSemifield.{u1} K _inst_1))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))))}, Eq.{succ u1} (Stream'.{u1} K) (GeneralizedContinuedFraction.convergents.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) (Subtype.val.{succ u1} (GeneralizedContinuedFraction.{u1} K) (fun (g : GeneralizedContinuedFraction.{u1} K) => GeneralizedContinuedFraction.IsSimpleContinuedFraction.{u1} K g (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (Subtype.val.{succ u1} (SimpleContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (fun (s : SimpleContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) => SimpleContinuedFraction.IsContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))) (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (LinearOrderedSemifield.toSemifield.{u1} K (LinearOrderedField.toLinearOrderedSemifield.{u1} K _inst_1))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))) s) c))) (GeneralizedContinuedFraction.convergents'.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)) (Subtype.val.{succ u1} (GeneralizedContinuedFraction.{u1} K) (fun (g : GeneralizedContinuedFraction.{u1} K) => GeneralizedContinuedFraction.IsSimpleContinuedFraction.{u1} K g (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (Subtype.val.{succ u1} (SimpleContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (fun (s : SimpleContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) => SimpleContinuedFraction.IsContinuedFraction.{u1} K (NonAssocRing.toOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))) (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (LinearOrderedSemifield.toSemifield.{u1} K (LinearOrderedField.toLinearOrderedSemifield.{u1} K _inst_1))))) (Preorder.toLT.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))) s) c)))
+Case conversion may be inaccurate. Consider using '#align continued_fraction.convergents_eq_convergents' ContinuedFraction.convergents_eq_convergents'ₓ'. -/
 /-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of a
 (regular) continued fraction coincide. -/
 theorem convergents_eq_convergents' [LinearOrderedField K] {c : ContinuedFraction K} :

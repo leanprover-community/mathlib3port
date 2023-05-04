@@ -1181,6 +1181,7 @@ theorem chain_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) :
 
 variable {r : α → α → Prop} {s : Cycle α}
 
+#print Cycle.Chain.imp /-
 theorem Chain.imp {r₁ r₂ : α → α → Prop} (H : ∀ a b, r₁ a b → r₂ a b) (p : Chain r₁ s) :
     Chain r₂ s := by
   induction s using Cycle.induction_on
@@ -1188,11 +1189,14 @@ theorem Chain.imp {r₁ r₂ : α → α → Prop} (H : ∀ a b, r₁ a b → r�
   · rw [chain_coe_cons] at p⊢
     exact p.imp H
 #align cycle.chain.imp Cycle.Chain.imp
+-/
 
+#print Cycle.chain_mono /-
 /-- As a function from a relation to a predicate, `chain` is monotonic. -/
 theorem chain_mono : Monotone (Chain : (α → α → Prop) → Cycle α → Prop) := fun a b hab s =>
   Chain.imp hab
 #align cycle.chain_mono Cycle.chain_mono
+-/
 
 #print Cycle.chain_of_pairwise /-
 theorem chain_of_pairwise : (∀ a ∈ s, ∀ b ∈ s, r a b) → Chain r s :=
@@ -1240,6 +1244,7 @@ theorem chain_iff_pairwise [IsTrans α r] : Chain r s ↔ ∀ a ∈ s, ∀ b ∈
 #align cycle.chain_iff_pairwise Cycle.chain_iff_pairwise
 -/
 
+#print Cycle.Chain.eq_nil_of_irrefl /-
 theorem Chain.eq_nil_of_irrefl [IsTrans α r] [IsIrrefl α r] (h : Chain r s) : s = nil :=
   by
   induction' s using Cycle.induction_on with a l _ h
@@ -1247,10 +1252,13 @@ theorem Chain.eq_nil_of_irrefl [IsTrans α r] [IsIrrefl α r] (h : Chain r s) : 
   · have ha := mem_cons_self a l
     exact (irrefl_of r a <| chain_iff_pairwise.1 h a ha a ha).elim
 #align cycle.chain.eq_nil_of_irrefl Cycle.Chain.eq_nil_of_irrefl
+-/
 
+#print Cycle.Chain.eq_nil_of_well_founded /-
 theorem Chain.eq_nil_of_well_founded [IsWellFounded α r] (h : Chain r s) : s = nil :=
   Chain.eq_nil_of_irrefl <| h.imp fun _ _ => Relation.TransGen.single
 #align cycle.chain.eq_nil_of_well_founded Cycle.Chain.eq_nil_of_well_founded
+-/
 
 #print Cycle.forall_eq_of_chain /-
 theorem forall_eq_of_chain [IsTrans α r] [IsAntisymm α r] (hs : Chain r s) {a b : α} (ha : a ∈ s)
