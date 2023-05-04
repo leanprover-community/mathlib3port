@@ -65,7 +65,7 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
     apply integrable.smul_of_top_right (hmg.mono (diff_subset _ _) le_rfl)
     apply
       mem_ℒp_top_of_bound
-        ((integrable_of_integral_eq_one h'i).AeStronglyMeasurable.monoSet (diff_subset _ _)) 1
+        ((integrable_of_integral_eq_one h'i).AeStronglyMeasurable.mono_set (diff_subset _ _)) 1
     filter_upwards [self_mem_ae_restrict (hs.diff u_open.measurable_set)]with x hx
     simpa only [Pi.zero_apply, dist_zero_left] using (hi x hx).le
   have B : integrable_on (fun x => φ i x • g x) (s ∩ u) μ :=
@@ -230,7 +230,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
     apply mul_nonneg (inv_nonneg.2 _) (pow_nonneg (hnc x hx) _)
     exact set_integral_nonneg hs.measurable_set fun x hx => pow_nonneg (hnc x hx) _
   have I : ∀ n, integrable_on (fun x => c x ^ n) s μ := fun n =>
-    ContinuousOn.integrableOnCompact hs (hc.pow n)
+    ContinuousOn.integrableOn_compact hs (hc.pow n)
   have J : ∀ n, 0 ≤ᵐ[μ.restrict s] fun x : α => c x ^ n :=
     by
     intro n

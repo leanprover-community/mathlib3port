@@ -78,7 +78,7 @@ theorem rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) (s : �
   simp_rw [mul_comm]
 #align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg
 
-theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
+theorem integrableOn_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (Ioi 0) :=
   by
   rw [← Ioc_union_Ioi_eq_Ioi (zero_le_one : (0 : ℝ) ≤ 1), integrable_on_union]
@@ -86,29 +86,30 @@ theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1
   · rw [← integrableOn_Icc_iff_integrableOn_Ioc]
     refine' integrable_on.mul_continuous_on _ _ is_compact_Icc
     · refine' (intervalIntegrable_iff_integrable_Icc_of_le zero_le_one).mp _
-      exact intervalIntegral.intervalIntegrableRpow' hs
+      exact intervalIntegral.intervalIntegrable_rpow' hs
     · exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousOn
   · have B : (0 : ℝ) < 1 / 2 := by norm_num
-    apply integrableOfIsOExpNeg B _ (is_o.is_O (rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg hb _))
+    apply
+      integrable_of_isBigO_exp_neg B _ (is_o.is_O (rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg hb _))
     intro x hx
     have N : x ≠ 0 := by
       refine' (zero_lt_one.trans_le _).ne'
       exact hx
     apply ((continuous_at_rpow_const _ _ (Or.inl N)).mul _).ContinuousWithinAt
     exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousAt
-#align integrable_on_rpow_mul_exp_neg_mul_sq integrableOnRpowMulExpNegMulSq
+#align integrable_on_rpow_mul_exp_neg_mul_sq integrableOn_rpow_mul_exp_neg_mul_sq
 
-theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
+theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     Integrable fun x : ℝ => x ^ s * exp (-b * x ^ 2) :=
   by
   rw [← integrable_on_univ, ← @Iio_union_Ici _ _ (0 : ℝ), integrable_on_union,
     integrableOn_Ici_iff_integrableOn_Ioi]
-  refine' ⟨_, integrableOnRpowMulExpNegMulSq hb hs⟩
+  refine' ⟨_, integrableOn_rpow_mul_exp_neg_mul_sq hb hs⟩
   rw [←
     (measure.measure_preserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
       (Homeomorph.neg ℝ).toMeasurableEquiv.MeasurableEmbedding]
   simp only [Function.comp, neg_sq, neg_preimage, preimage_neg_Iio, neg_neg, neg_zero]
-  apply integrable.mono' (integrableOnRpowMulExpNegMulSq hb hs)
+  apply integrable.mono' (integrableOn_rpow_mul_exp_neg_mul_sq hb hs)
   · apply Measurable.aeStronglyMeasurable
     exact
       (measurable_id'.neg.pow measurable_const).mul
@@ -119,16 +120,16 @@ theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 <
     rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (exp_pos _).le]
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le
     simpa [abs_of_nonneg h'x] using abs_rpow_le_abs_rpow (-x) s
-#align integrable_rpow_mul_exp_neg_mul_sq integrableRpowMulExpNegMulSq
+#align integrable_rpow_mul_exp_neg_mul_sq integrable_rpow_mul_exp_neg_mul_sq
 
-theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) := by
-  simpa using integrableRpowMulExpNegMulSq hb (by norm_num : (-1 : ℝ) < 0)
-#align integrable_exp_neg_mul_sq integrableExpNegMulSq
+theorem integrable_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) :=
+  by simpa using integrable_rpow_mul_exp_neg_mul_sq hb (by norm_num : (-1 : ℝ) < 0)
+#align integrable_exp_neg_mul_sq integrable_exp_neg_mul_sq
 
 theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
     IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (Ioi 0) ↔ 0 < b :=
   by
-  refine' ⟨fun h => _, fun h => (integrableExpNegMulSq h).IntegrableOn⟩
+  refine' ⟨fun h => _, fun h => (integrable_exp_neg_mul_sq h).IntegrableOn⟩
   by_contra' hb
   have : (∫⁻ x : ℝ in Ioi 0, 1) ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ :=
     by
@@ -141,13 +142,13 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
 
 theorem integrable_exp_neg_mul_sq_iff {b : ℝ} :
     (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b :=
-  ⟨fun h => integrableOn_Ioi_exp_neg_mul_sq_iff.mp h.IntegrableOn, integrableExpNegMulSq⟩
+  ⟨fun h => integrableOn_Ioi_exp_neg_mul_sq_iff.mp h.IntegrableOn, integrable_exp_neg_mul_sq⟩
 #align integrable_exp_neg_mul_sq_iff integrable_exp_neg_mul_sq_iff
 
-theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) :
+theorem integrable_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
     Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
-  simpa using integrableRpowMulExpNegMulSq hb (by norm_num : (-1 : ℝ) < 1)
-#align integrable_mul_exp_neg_mul_sq integrableMulExpNegMulSq
+  simpa using integrable_rpow_mul_exp_neg_mul_sq hb (by norm_num : (-1 : ℝ) < 1)
+#align integrable_mul_exp_neg_mul_sq integrable_mul_exp_neg_mul_sq
 
 theorem norm_cexp_neg_mul_sq (b : ℂ) (x : ℝ) : ‖Complex.exp (-b * x ^ 2)‖ = exp (-b.re * x ^ 2) :=
   by
@@ -155,7 +156,7 @@ theorem norm_cexp_neg_mul_sq (b : ℂ) (x : ℝ) : ‖Complex.exp (-b * x ^ 2)�
     mul_comm]
 #align norm_cexp_neg_mul_sq norm_cexp_neg_mul_sq
 
-theorem integrableCexpNegMulSq {b : ℂ} (hb : 0 < b.re) :
+theorem integrable_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     Integrable fun x : ℝ => cexp (-b * x ^ 2) :=
   by
   refine'
@@ -164,21 +165,21 @@ theorem integrableCexpNegMulSq {b : ℂ} (hb : 0 < b.re) :
       _⟩
   rw [← has_finite_integral_norm_iff]
   simp_rw [norm_cexp_neg_mul_sq]
-  exact (integrableExpNegMulSq hb).2
-#align integrable_cexp_neg_mul_sq integrableCexpNegMulSq
+  exact (integrable_exp_neg_mul_sq hb).2
+#align integrable_cexp_neg_mul_sq integrable_cexp_neg_mul_sq
 
-theorem integrableMulCexpNegMulSq {b : ℂ} (hb : 0 < b.re) :
+theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     Integrable fun x : ℝ => ↑x * cexp (-b * x ^ 2) :=
   by
   refine' ⟨(continuous_of_real.mul (complex.continuous_exp.comp _)).AeStronglyMeasurable, _⟩
   · exact continuous_const.mul (continuous_of_real.pow 2)
-  have := (integrableMulExpNegMulSq hb).HasFiniteIntegral
+  have := (integrable_mul_exp_neg_mul_sq hb).HasFiniteIntegral
   rw [← has_finite_integral_norm_iff] at this⊢
   convert this
   ext1 x
   rw [norm_mul, norm_mul, norm_cexp_neg_mul_sq b, Complex.norm_eq_abs, abs_of_real,
     Real.norm_eq_abs, norm_of_nonneg (exp_pos _).le]
-#align integrable_mul_cexp_neg_mul_sq integrableMulCexpNegMulSq
+#align integrable_mul_cexp_neg_mul_sq integrable_mul_cexp_neg_mul_sq
 
 theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     (∫ r : ℝ in Ioi 0, (r : ℂ) * cexp (-b * r ^ 2)) = (2 * b)⁻¹ :=
@@ -201,7 +202,7 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
       tendsto_exp_at_bot.comp
         (tendsto.neg_const_mul_at_top (neg_lt_zero.2 hb) (tendsto_pow_at_top two_ne_zero))
   convert integral_Ioi_of_has_deriv_at_of_tendsto' (fun x hx => (A ↑x).comp_of_real)
-      (integrableMulCexpNegMulSq hb).IntegrableOn B
+      (integrable_mul_cexp_neg_mul_sq hb).IntegrableOn B
   simp only [MulZeroClass.mul_zero, of_real_zero, zero_pow', Ne.def, bit0_eq_zero, Nat.one_ne_zero,
     not_false_iff, Complex.exp_zero, mul_one, sub_neg_eq_add, zero_add]
 #align integral_mul_cexp_neg_mul_sq integral_mul_cexp_neg_mul_sq
@@ -276,7 +277,7 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
   have f_int : integrable (f b) volume :=
     by
     simp_rw [← integrable_norm_iff (f_meas b), norm_cexp_neg_mul_sq b]
-    exact integrableExpNegMulSq hb
+    exact integrable_exp_neg_mul_sq hb
   have f_cts : ∀ x : ℝ, ContinuousAt (fun c => f c x) b := fun x =>
     (complex.continuous_exp.comp (continuous_id'.neg.mul continuous_const)).ContinuousAt
   have f_le_bd : ∀ᶠ c : ℂ in 𝓝 b, ∀ᵐ x : ℝ, ‖f c x‖ ≤ exp (-d * x ^ 2) :=
@@ -286,7 +287,7 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
     rw [norm_cexp_neg_mul_sq, exp_le_exp]
     exact mul_le_mul_of_nonneg_right (neg_le_neg (le_of_lt hc)) (sq_nonneg _)
   exact
-    continuous_at_of_dominated (eventually_of_forall f_meas) f_le_bd (integrableExpNegMulSq hd)
+    continuous_at_of_dominated (eventually_of_forall f_meas) f_le_bd (integrable_exp_neg_mul_sq hd)
       (ae_of_all _ f_cts)
 #align continuous_at_gaussian_integral continuousAt_gaussian_integral
 
@@ -342,7 +343,7 @@ theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
   by
   have full_integral := integral_gaussian_complex hb
   have : MeasurableSet (Ioi (0 : ℝ)) := measurableSet_Ioi
-  rw [← integral_add_compl this (integrableCexpNegMulSq hb), compl_Ioi] at full_integral
+  rw [← integral_add_compl this (integrable_cexp_neg_mul_sq hb), compl_Ioi] at full_integral
   suffices (∫ x : ℝ in Iic 0, cexp (-b * x ^ 2)) = ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2)
     by
     rw [this, ← mul_two] at full_integral
@@ -354,14 +355,14 @@ theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
     have := @intervalIntegral.integral_comp_sub_left _ _ _ _ 0 c (fun x => cexp (-b * x ^ 2)) 0
     simpa [zero_sub, neg_sq, neg_zero] using this
   have t1 :=
-    interval_integral_tendsto_integral_Ioi _ (integrableCexpNegMulSq hb).IntegrableOn tendsto_id
+    interval_integral_tendsto_integral_Ioi _ (integrable_cexp_neg_mul_sq hb).IntegrableOn tendsto_id
   have t2 :
     tendsto (fun c : ℝ => ∫ x : ℝ in 0 ..c, cexp (-b * x ^ 2)) at_top
       (𝓝 (∫ x : ℝ in Iic 0, cexp (-b * x ^ 2))) :=
     by
     simp_rw [this]
     refine' interval_integral_tendsto_integral_Iic _ _ tendsto_neg_at_top_at_bot
-    apply (integrableCexpNegMulSq hb).IntegrableOn
+    apply (integrable_cexp_neg_mul_sq hb).IntegrableOn
   exact tendsto_nhds_unique t2 t1
 #align integral_gaussian_complex_Ioi integral_gaussian_complex_Ioi
 
@@ -516,7 +517,7 @@ theorem tendsto_verticalIntegral (hb : 0 < b.re) (c : ℝ) :
   exact (tendsto_const_mul_at_top_of_pos hb).mpr tendsto_id
 #align gaussian_fourier.tendsto_vertical_integral GaussianFourier.tendsto_verticalIntegral
 
-theorem integrableCexpNegMulSqAddRealMulI (hb : 0 < b.re) (c : ℝ) :
+theorem integrable_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
     Integrable fun x : ℝ => cexp (-b * (x + c * I) ^ 2) :=
   by
   refine'
@@ -530,8 +531,8 @@ theorem integrableCexpNegMulSqAddRealMulI (hb : 0 < b.re) (c : ℝ) :
   suffices integrable fun x : ℝ => exp (-(b.re * x ^ 2)) by
     exact (integrable.comp_sub_right this (b.im * c / b.re)).HasFiniteIntegral.const_mul _
   simp_rw [← neg_mul]
-  apply integrableExpNegMulSq hb
-#align gaussian_fourier.integrable_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integrableCexpNegMulSqAddRealMulI
+  apply integrable_exp_neg_mul_sq hb
+#align gaussian_fourier.integrable_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integrable_cexp_neg_mul_sq_add_real_mul_i
 
 theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
     (∫ x : ℝ, cexp (-b * (x + c * I) ^ 2)) = (π / b) ^ (1 / 2 : ℂ) :=
@@ -575,7 +576,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
   rw [this, ← add_zero ((π / b : ℂ) ^ (1 / 2 : ℂ)), ← integral_gaussian_complex hb]
   refine' tendsto.add _ (tendsto_vertical_integral hb c)
   exact
-    interval_integral_tendsto_integral (integrableCexpNegMulSq hb) tendsto_neg_at_top_at_bot
+    interval_integral_tendsto_integral (integrable_cexp_neg_mul_sq hb) tendsto_neg_at_top_at_bot
       tendsto_id
 #align gaussian_fourier.integral_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integral_cexp_neg_mul_sq_add_real_mul_i
 

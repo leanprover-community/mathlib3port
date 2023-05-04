@@ -42,13 +42,13 @@ def measurableEquivRealProd : ℂ ≃ᵐ ℝ × ℝ :=
   equivRealProdClm.toHomeomorph.toMeasurableEquiv
 #align complex.measurable_equiv_real_prod Complex.measurableEquivRealProd
 
-theorem volumePreservingEquivPi : MeasurePreserving measurableEquivPi :=
+theorem volume_preserving_equiv_pi : MeasurePreserving measurableEquivPi :=
   (measurableEquivPi.symm.Measurable.MeasurePreserving _).symm _
-#align complex.volume_preserving_equiv_pi Complex.volumePreservingEquivPi
+#align complex.volume_preserving_equiv_pi Complex.volume_preserving_equiv_pi
 
-theorem volumePreservingEquivRealProd : MeasurePreserving measurableEquivRealProd :=
-  (volumePreservingFinTwoArrow ℝ).comp volumePreservingEquivPi
-#align complex.volume_preserving_equiv_real_prod Complex.volumePreservingEquivRealProd
+theorem volume_preserving_equiv_real_prod : MeasurePreserving measurableEquivRealProd :=
+  (volume_preserving_finTwoArrow ℝ).comp volume_preserving_equiv_pi
+#align complex.volume_preserving_equiv_real_prod Complex.volume_preserving_equiv_real_prod
 
 end Complex
 

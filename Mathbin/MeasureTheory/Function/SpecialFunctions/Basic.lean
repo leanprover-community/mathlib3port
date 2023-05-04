@@ -247,9 +247,9 @@ theorem Measurable.re (hf : Measurable f) : Measurable fun x => IsROrC.re (f x) 
 #align measurable.re Measurable.re
 
 @[measurability]
-theorem AeMeasurable.re (hf : AeMeasurable f μ) : AeMeasurable (fun x => IsROrC.re (f x)) μ :=
-  IsROrC.measurable_re.compAeMeasurable hf
-#align ae_measurable.re AeMeasurable.re
+theorem AEMeasurable.re (hf : AEMeasurable f μ) : AEMeasurable (fun x => IsROrC.re (f x)) μ :=
+  IsROrC.measurable_re.comp_aemeasurable hf
+#align ae_measurable.re AEMeasurable.re
 
 @[measurability]
 theorem Measurable.im (hf : Measurable f) : Measurable fun x => IsROrC.im (f x) :=
@@ -257,9 +257,9 @@ theorem Measurable.im (hf : Measurable f) : Measurable fun x => IsROrC.im (f x) 
 #align measurable.im Measurable.im
 
 @[measurability]
-theorem AeMeasurable.im (hf : AeMeasurable f μ) : AeMeasurable (fun x => IsROrC.im (f x)) μ :=
-  IsROrC.measurable_im.compAeMeasurable hf
-#align ae_measurable.im AeMeasurable.im
+theorem AEMeasurable.im (hf : AEMeasurable f μ) : AEMeasurable (fun x => IsROrC.im (f x)) μ :=
+  IsROrC.measurable_im.comp_aemeasurable hf
+#align ae_measurable.im AEMeasurable.im
 
 omit m
 
@@ -284,15 +284,15 @@ theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x))
   all_goals infer_instance
 #align measurable_of_re_im measurable_of_re_im
 
-theorem aeMeasurableOfReIm (hre : AeMeasurable (fun x => IsROrC.re (f x)) μ)
-    (him : AeMeasurable (fun x => IsROrC.im (f x)) μ) : AeMeasurable f μ :=
+theorem aEMeasurable_of_re_im (hre : AEMeasurable (fun x => IsROrC.re (f x)) μ)
+    (him : AEMeasurable (fun x => IsROrC.im (f x)) μ) : AEMeasurable f μ :=
   by
   convert(is_R_or_C.measurable_of_real.comp_ae_measurable hre).add
       ((is_R_or_C.measurable_of_real.comp_ae_measurable him).mul_const IsROrC.i)
   · ext1 x
     exact (IsROrC.re_add_im _).symm
   all_goals infer_instance
-#align ae_measurable_of_re_im aeMeasurableOfReIm
+#align ae_measurable_of_re_im aEMeasurable_of_re_im
 
 end
 

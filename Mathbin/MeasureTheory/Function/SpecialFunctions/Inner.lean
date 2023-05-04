@@ -31,14 +31,14 @@ theorem Measurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeas
 #align measurable.inner Measurable.inner
 
 @[measurability]
-theorem AeMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
+theorem AEMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
     [TopologicalSpace.SecondCountableTopology E] {μ : MeasureTheory.Measure α} {f g : α → E}
-    (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun x => ⟪f x, g x⟫) μ :=
+    (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) : AEMeasurable (fun x => ⟪f x, g x⟫) μ :=
   by
   refine' ⟨fun x => ⟪hf.mk f x, hg.mk g x⟫, hf.measurable_mk.inner hg.measurable_mk, _⟩
   refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
   dsimp only
   congr
   exacts[hxf, hxg]
-#align ae_measurable.inner AeMeasurable.inner
+#align ae_measurable.inner AEMeasurable.inner
 

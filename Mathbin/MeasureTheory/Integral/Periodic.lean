@@ -34,7 +34,7 @@ open MeasureTheory NNReal ENNReal
 
 attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
 
-theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
+theorem isAddFundamentalDomain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
     IsAddFundamentalDomain (AddSubgroup.zmultiples T) (Ioc t (t + T)) μ :=
   by
@@ -43,9 +43,9 @@ theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strictMono_left hT).Injective).Bijective
   refine' this.exists_unique_iff.2 _
   simpa only [add_comm x] using existsUnique_add_zsmul_mem_Ioc hT x t
-#align is_add_fundamental_domain_Ioc isAddFundamentalDomainIoc
+#align is_add_fundamental_domain_Ioc isAddFundamentalDomain_Ioc
 
-theorem isAddFundamentalDomainIoc' {T : ℝ} (hT : 0 < T) (t : ℝ)
+theorem isAddFundamentalDomain_Ioc' {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
     IsAddFundamentalDomain (AddSubgroup.zmultiples T).opposite (Ioc t (t + T)) μ :=
   by
@@ -54,7 +54,7 @@ theorem isAddFundamentalDomainIoc' {T : ℝ} (hT : 0 < T) (t : ℝ)
     (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strictMono_left hT).Injective).Bijective
   refine' this.exists_unique_iff.2 _
   simpa using existsUnique_add_zsmul_mem_Ioc hT x t
-#align is_add_fundamental_domain_Ioc' isAddFundamentalDomainIoc'
+#align is_add_fundamental_domain_Ioc' isAddFundamentalDomain_Ioc'
 
 namespace AddCircle
 
@@ -65,7 +65,7 @@ include hT
 /-- Equip the "additive circle" `ℝ ⧸ (ℤ ∙ T)` with, as a standard measure, the Haar measure of total
 mass `T` -/
 noncomputable instance measureSpace : MeasureSpace (AddCircle T) :=
-  { AddCircle.measurableSpace with volume := ENNReal.ofReal T • add_haar_measure ⊤ }
+  { AddCircle.measurableSpace with volume := ENNReal.ofReal T • addHaarMeasure ⊤ }
 #align add_circle.measure_space AddCircle.measureSpace
 
 @[simp]
@@ -87,12 +87,12 @@ instance isFiniteMeasure : IsFiniteMeasure (volume : Measure (AddCircle T))
 considered with respect to the standard measure (defined to be the Haar measure of total mass `T`)
 on the additive circle, and with respect to the restriction of Lebsegue measure on `ℝ` to an
 interval (t, t + T]. -/
-protected theorem measurePreservingMk (t : ℝ) :
+protected theorem measurePreserving_mk (t : ℝ) :
     MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (Ioc t (t + T))) :=
-  MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomainIoc' hT.out t)
+  MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomain_Ioc' hT.out t)
     (⊤ : PositiveCompacts (AddCircle T)) (by simp) T.toNNReal
     (by simp [← ENNReal.ofReal_coe_nnreal, Real.coe_toNNReal T hT.out.le])
-#align add_circle.measure_preserving_mk AddCircle.measurePreservingMk
+#align add_circle.measure_preserving_mk AddCircle.measurePreserving_mk
 
 theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
     volume (Metric.closedBall x ε) = ENNReal.ofReal (min T (2 * ε)) :=
@@ -114,7 +114,7 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
     simpa only [hT', Real.closedBall_eq_Icc, zero_add, zero_sub] using Ioc_subset_Icc_self
   rw [add_haar_closed_ball_center]
   simp only [restrict_apply' measurableSet_Ioc, (by linarith : -(T / 2) + T = T / 2), h₂, ←
-    (AddCircle.measurePreservingMk T (-(T / 2))).measure_preimage measurableSet_closedBall]
+    (AddCircle.measurePreserving_mk T (-(T / 2))).measure_preimage measurableSet_closedBall]
   by_cases hε : ε < T / 2
   · simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
   · simp [hε, min_eq_left (by linarith : T ≤ 2 * ε)]
@@ -165,7 +165,7 @@ protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) 
   swap; exact volume
   simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk] at this
-  rw [← (AddCircle.measurePreservingMk T t).map_eq]
+  rw [← (AddCircle.measurePreserving_mk T t).map_eq]
   convert this.symm using 1
   -- TODO : there is no "set_lintegral_eq_subtype"?
   · rw [← map_comap_subtype_coe m _]
@@ -191,7 +191,7 @@ protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
   have := integral_map_equiv (measurable_equiv_Ioc T t).symm f
   simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk, coe_coe] at this
-  rw [← (AddCircle.measurePreservingMk T t).map_eq, set_integral_eq_subtype m, ← this]
+  rw [← (AddCircle.measurePreserving_mk T t).map_eq, set_integral_eq_subtype m, ← this]
   have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) :=
     by
     ext1 x
@@ -232,10 +232,10 @@ instance isFiniteMeasure : IsFiniteMeasure (volume : Measure UnitAddCircle) :=
 considered with respect to the standard measure (defined to be the Haar measure of total mass 1)
 on the additive circle, and with respect to the restriction of Lebsegue measure on `ℝ` to an
 interval (t, t + 1]. -/
-protected theorem measurePreservingMk (t : ℝ) :
+protected theorem measurePreserving_mk (t : ℝ) :
     MeasurePreserving (coe : ℝ → UnitAddCircle) (volume.restrict (Ioc t (t + 1))) :=
-  AddCircle.measurePreservingMk 1 t
-#align unit_add_circle.measure_preserving_mk UnitAddCircle.measurePreservingMk
+  AddCircle.measurePreserving_mk 1 t
+#align unit_add_circle.measure_preserving_mk UnitAddCircle.measurePreserving_mk
 
 /-- The integral of a measurable function over `unit_add_circle` is equal to the integral over an
 interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
@@ -278,7 +278,7 @@ theorem intervalIntegral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : �
   haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume :=
     ⟨fun c s hs => measure_preimage_add _ _ _⟩
   exact
-    (isAddFundamentalDomainIoc hT t).set_integral_eq (isAddFundamentalDomainIoc hT s)
+    (isAddFundamentalDomain_Ioc hT t).set_integral_eq (isAddFundamentalDomain_Ioc hT s)
       hf.map_vadd_zmultiples
 #align function.periodic.interval_integral_add_eq_of_pos Function.Periodic.intervalIntegral_add_eq_of_pos
 

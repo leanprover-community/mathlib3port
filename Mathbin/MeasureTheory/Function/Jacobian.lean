@@ -288,7 +288,7 @@ theorem exists_partition_approximatesLinearOn_of_hasFderivWithinAt [SecondCounta
   · rw [unionᵢ_disjointed]
     exact st
   · intro n
-    exact (t_approx n).monoSet (inter_subset_inter_right _ (disjointed_subset _ _))
+    exact (t_approx n).mono_set (inter_subset_inter_right _ (disjointed_subset _ _))
 #align exists_partition_approximates_linear_on_of_has_fderiv_within_at exists_partition_approximatesLinearOn_of_hasFderivWithinAt
 
 namespace MeasureTheory
@@ -787,8 +787,8 @@ Lusin-Souslin theorem.
 /-- The derivative of a function on a measurable set is almost everywhere measurable on this set
 with respect to Lebesgue measure. Note that, in general, it is not genuinely measurable there,
 as `f'` is not unique (but only on a set of measure `0`, as the argument shows). -/
-theorem aeMeasurableFderivWithin (hs : MeasurableSet s)
-    (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : AeMeasurable f' (μ.restrict s) :=
+theorem aEMeasurable_fderiv_within (hs : MeasurableSet s)
+    (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : AEMeasurable f' (μ.restrict s) :=
   by
   /- It suffices to show that `f'` can be uniformly approximated by a measurable function.
     Fix `ε > 0`. Thanks to `exists_partition_approximates_linear_on_of_has_fderiv_within_at`, one
@@ -797,7 +797,7 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s)
     `approximates_linear_on.norm_fderiv_sub_le` that `f'` is uniformly approximated by `A n`, which
     gives the conclusion. -/
   -- fix a precision `ε`
-  refine' aeMeasurableOfUnifApprox fun ε εpos => _
+  refine' aEMeasurable_of_unif_approx fun ε εpos => _
   let δ : ℝ≥0 := ⟨ε, le_of_lt εpos⟩
   have δpos : 0 < δ := εpos
   -- partition `s` into sets `s ∩ t n` on which `f` is approximated by linear maps `A n`.
@@ -844,27 +844,27 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s)
   rw [← nndist_eq_nnnorm] at hx1
   rw [hx2, dist_comm]
   exact hx1
-#align measure_theory.ae_measurable_fderiv_within MeasureTheory.aeMeasurableFderivWithin
+#align measure_theory.ae_measurable_fderiv_within MeasureTheory.aEMeasurable_fderiv_within
 
-theorem aeMeasurableOfRealAbsDetFderivWithin (hs : MeasurableSet s)
+theorem aEMeasurable_ofReal_abs_det_fderiv_within (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) :
-    AeMeasurable (fun x => ENNReal.ofReal (|(f' x).det|)) (μ.restrict s) :=
+    AEMeasurable (fun x => ENNReal.ofReal (|(f' x).det|)) (μ.restrict s) :=
   by
   apply ennreal.measurable_of_real.comp_ae_measurable
   refine' continuous_abs.measurable.comp_ae_measurable _
   refine' continuous_linear_map.continuous_det.measurable.comp_ae_measurable _
   exact ae_measurable_fderiv_within μ hs hf'
-#align measure_theory.ae_measurable_of_real_abs_det_fderiv_within MeasureTheory.aeMeasurableOfRealAbsDetFderivWithin
+#align measure_theory.ae_measurable_of_real_abs_det_fderiv_within MeasureTheory.aEMeasurable_ofReal_abs_det_fderiv_within
 
-theorem aeMeasurableToNnrealAbsDetFderivWithin (hs : MeasurableSet s)
+theorem aEMeasurable_toNNReal_abs_det_fderiv_within (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) :
-    AeMeasurable (fun x => |(f' x).det|.toNNReal) (μ.restrict s) :=
+    AEMeasurable (fun x => |(f' x).det|.toNNReal) (μ.restrict s) :=
   by
   apply measurable_real_to_nnreal.comp_ae_measurable
   refine' continuous_abs.measurable.comp_ae_measurable _
   refine' continuous_linear_map.continuous_det.measurable.comp_ae_measurable _
   exact ae_measurable_fderiv_within μ hs hf'
-#align measure_theory.ae_measurable_to_nnreal_abs_det_fderiv_within MeasureTheory.aeMeasurableToNnrealAbsDetFderivWithin
+#align measure_theory.ae_measurable_to_nnreal_abs_det_fderiv_within MeasureTheory.aEMeasurable_toNNReal_abs_det_fderiv_within
 
 /-- If a function is differentiable and injective on a measurable set,
 then the image is measurable.-/
@@ -985,7 +985,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
         exact subset.antisymm (subset_inter subset.rfl t_cover) (inter_subset_left _ _)
       rw [← this]
     _ = (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s := by
-      simp only [lintegral_add_right' _ aeMeasurableConst, set_lintegral_const]
+      simp only [lintegral_add_right' _ aemeasurable_const, set_lintegral_const]
     
 #align measure_theory.add_haar_image_le_lintegral_abs_det_fderiv_aux1 MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv_aux1
 

@@ -107,7 +107,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
   refine' lt_of_le_of_lt (set_lintegral_mono (by measurability) (by measurability) h_int) _
   refine' integrable_on.set_lintegral_lt_top _
   rw [← intervalIntegrable_iff_integrable_Ioc_of_le zero_le_one]
-  apply intervalIntegral.intervalIntegrableRpow'
+  apply intervalIntegral.intervalIntegrable_rpow'
   rwa [neg_lt_neg_iff, inv_mul_lt_iff' hr, one_mul]
 #align finite_integral_rpow_sub_one_pow_aux finite_integral_rpow_sub_one_pow_aux
 
@@ -169,7 +169,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm
 
-theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure]
+theorem integrable_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure]
     {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) : Integrable fun x : E => (1 + ‖x‖) ^ (-r) :=
   by
   refine' ⟨by measurability, _⟩
@@ -178,20 +178,20 @@ theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAd
     lintegral_nnnorm_eq_of_nonneg fun _ => rpow_nonneg_of_nonneg (by positivity) _
   rw [has_finite_integral, this]
   exact finite_integral_one_add_norm hnr
-#align integrable_one_add_norm integrableOneAddNorm
+#align integrable_one_add_norm integrable_one_add_norm
 
-theorem integrableRpowNegOneAddNormSq [MeasureSpace E] [BorelSpace E]
+theorem integrable_rpow_neg_one_add_norm_sq [MeasureSpace E] [BorelSpace E]
     [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
     Integrable fun x : E => (1 + ‖x‖ ^ 2) ^ (-r / 2) :=
   by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   refine'
-    ((integrableOneAddNorm hnr).const_mul <| 2 ^ (r / 2)).mono (by measurability)
+    ((integrable_one_add_norm hnr).const_mul <| 2 ^ (r / 2)).mono (by measurability)
       (eventually_of_forall fun x => _)
   have h1 : 0 ≤ (1 + ‖x‖ ^ 2) ^ (-r / 2) := by positivity
   have h2 : 0 ≤ (1 + ‖x‖) ^ (-r) := by positivity
   have h3 : 0 ≤ (2 : ℝ) ^ (r / 2) := by positivity
   simp_rw [norm_mul, norm_eq_abs, abs_of_nonneg h1, abs_of_nonneg h2, abs_of_nonneg h3]
   exact rpow_neg_one_add_norm_sq_le _ hr
-#align integrable_rpow_neg_one_add_norm_sq integrableRpowNegOneAddNormSq
+#align integrable_rpow_neg_one_add_norm_sq integrable_rpow_neg_one_add_norm_sq
 

@@ -82,7 +82,7 @@ theorem condCount_univ [Fintype Ω] {s : Set Ω} :
 
 variable [MeasurableSingletonClass Ω]
 
-theorem condCountIsProbabilityMeasure {s : Set Ω} (hs : s.Finite) (hs' : s.Nonempty) :
+theorem condCount_isProbabilityMeasure {s : Set Ω} (hs : s.Finite) (hs' : s.Nonempty) :
     IsProbabilityMeasure (condCount s) :=
   {
     measure_univ :=
@@ -90,7 +90,7 @@ theorem condCountIsProbabilityMeasure {s : Set Ω} (hs : s.Finite) (hs' : s.None
       rw [cond_count, cond_apply _ hs.measurable_set, Set.inter_univ, ENNReal.inv_mul_cancel]
       · exact fun h => hs'.ne_empty <| measure.empty_of_count_eq_zero h
       · exact (measure.count_apply_lt_top.2 hs).Ne }
-#align probability_theory.cond_count_is_probability_measure ProbabilityTheory.condCountIsProbabilityMeasure
+#align probability_theory.cond_count_is_probability_measure ProbabilityTheory.condCount_isProbabilityMeasure
 
 theorem condCount_singleton (ω : Ω) (t : Set Ω) [Decidable (ω ∈ t)] :
     condCount {ω} t = if ω ∈ t then 1 else 0 :=

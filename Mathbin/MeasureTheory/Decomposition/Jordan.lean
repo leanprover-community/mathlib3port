@@ -58,8 +58,8 @@ finite measures. -/
 @[ext]
 structure JordanDecomposition (α : Type _) [MeasurableSpace α] where
   (posPart negPart : Measure α)
-  [posPartFinite : IsFiniteMeasure pos_part]
-  [negPartFinite : IsFiniteMeasure neg_part]
+  [posPart_finite : IsFiniteMeasure pos_part]
+  [negPart_finite : IsFiniteMeasure neg_part]
   MutuallySingular : pos_part ⟂ₘ neg_part
 #align measure_theory.jordan_decomposition MeasureTheory.JordanDecomposition
 
@@ -221,8 +221,8 @@ def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
   let hi := choose_spec s.exists_compl_positive_negative
   { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1
     negPart := s.toMeasureOfLeZero (iᶜ) hi.1.compl hi.2.2
-    posPartFinite := inferInstance
-    negPartFinite := inferInstance
+    posPart_finite := inferInstance
+    negPart_finite := inferInstance
     MutuallySingular := by
       refine' ⟨iᶜ, hi.1.compl, _, _⟩
       · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.compl]

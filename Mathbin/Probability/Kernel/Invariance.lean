@@ -54,7 +54,7 @@ noncomputable def mapMeasure (κ : kernel α β) (μ : Measure α) : Measure β 
     (by
       intro f hf₁ hf₂
       simp_rw [measure_Union hf₂ hf₁,
-        lintegral_tsum fun i => (kernel.measurable_coe κ (hf₁ i)).AeMeasurable])
+        lintegral_tsum fun i => (kernel.measurable_coe κ (hf₁ i)).AEMeasurable])
 #align probability_theory.kernel.map_measure ProbabilityTheory.kernel.mapMeasure
 
 @[simp]

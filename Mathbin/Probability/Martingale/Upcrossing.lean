@@ -450,15 +450,15 @@ theorem Adapted.upcrossingStrat_adapted (hf : Adapted ℱ f) : Adapted ℱ (upcr
   exact (hf.is_stopping_time_upper_crossing_time n).compl
 #align measure_theory.adapted.upcrossing_strat_adapted MeasureTheory.Adapted.upcrossingStrat_adapted
 
-theorem Submartingale.sumUpcrossingStratMul [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (a b : ℝ)
-    (N : ℕ) :
+theorem Submartingale.sum_upcrossingStrat_mul [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
+    (a b : ℝ) (N : ℕ) :
     Submartingale
       (fun n : ℕ => ∑ k in Finset.range n, upcrossingStrat a b f N k * (f (k + 1) - f k)) ℱ μ :=
-  hf.sumMulSub hf.Adapted.upcrossingStrat_adapted (fun _ _ => upcrossingStrat_le_one) fun _ _ =>
+  hf.sum_mul_sub hf.Adapted.upcrossingStrat_adapted (fun _ _ => upcrossingStrat_le_one) fun _ _ =>
     upcrossingStrat_nonneg
-#align measure_theory.submartingale.sum_upcrossing_strat_mul MeasureTheory.Submartingale.sumUpcrossingStratMul
+#align measure_theory.submartingale.sum_upcrossing_strat_mul MeasureTheory.Submartingale.sum_upcrossingStrat_mul
 
-theorem Submartingale.sumSubUpcrossingStratMul [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
+theorem Submartingale.sum_sub_upcrossingStrat_mul [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (a b : ℝ) (N : ℕ) :
     Submartingale
       (fun n : ℕ => ∑ k in Finset.range n, (1 - upcrossingStrat a b f N k) * (f (k + 1) - f k)) ℱ
@@ -470,7 +470,7 @@ theorem Submartingale.sumSubUpcrossingStratMul [IsFiniteMeasure μ] (hf : Submar
   · exact fun n ω => sub_le_self _ upcrossing_strat_nonneg
   · intro n ω
     simp [upcrossing_strat_le_one]
-#align measure_theory.submartingale.sum_sub_upcrossing_strat_mul MeasureTheory.Submartingale.sumSubUpcrossingStratMul
+#align measure_theory.submartingale.sum_sub_upcrossing_strat_mul MeasureTheory.Submartingale.sum_sub_upcrossingStrat_mul
 
 theorem Submartingale.sum_mul_upcrossingStrat_le [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) :
     μ[∑ k in Finset.range n, upcrossingStrat a b f N k * (f (k + 1) - f k)] ≤ μ[f n] - μ[f 0] :=
@@ -929,7 +929,7 @@ theorem Adapted.measurable_upcrossingsBefore (hf : Adapted ℱ f) (hab : a < b) 
         ℱ.le N _ (hf.is_stopping_time_upper_crossing_time.measurable_set_lt_of_pred N)
 #align measure_theory.adapted.measurable_upcrossings_before MeasureTheory.Adapted.measurable_upcrossingsBefore
 
-theorem Adapted.integrableUpcrossingsBefore [IsFiniteMeasure μ] (hf : Adapted ℱ f) (hab : a < b) :
+theorem Adapted.integrable_upcrossingsBefore [IsFiniteMeasure μ] (hf : Adapted ℱ f) (hab : a < b) :
     Integrable (fun ω => (upcrossingsBefore a b f N ω : ℝ)) μ :=
   haveI : ∀ᵐ ω ∂μ, ‖(upcrossings_before a b f N ω : ℝ)‖ ≤ N :=
     by
@@ -939,7 +939,7 @@ theorem Adapted.integrableUpcrossingsBefore [IsFiniteMeasure μ] (hf : Adapted �
   ⟨Measurable.aeStronglyMeasurable
       (measurable_from_top.comp (hf.measurable_upcrossings_before hab)),
     has_finite_integral_of_bounded this⟩
-#align measure_theory.adapted.integrable_upcrossings_before MeasureTheory.Adapted.integrableUpcrossingsBefore
+#align measure_theory.adapted.integrable_upcrossings_before MeasureTheory.Adapted.integrable_upcrossingsBefore
 
 /-- The number of upcrossings of a realization of a stochastic process (`upcrossing` takes value
 in `ℝ≥0∞` and so is allowed to be `∞`). -/
@@ -1002,7 +1002,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
     ·
       exact fun n =>
         measurable_from_top.comp_ae_measurable
-          (hf.adapted.measurable_upcrossings_before hab).AeMeasurable
+          (hf.adapted.measurable_upcrossings_before hab).AEMeasurable
     · refine' eventually_of_forall fun ω N M hNM => _
       rw [Nat.cast_le]
       exact upcrossings_before_mono hab hNM ω

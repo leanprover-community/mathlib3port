@@ -148,9 +148,9 @@ theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.r
   rw [← restrict_apply_self, restrict_sub_eq_restrict_sub_restrict, sub_eq_zero_of_le] <;> simp [*]
 #align measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict
 
-instance isFiniteMeasureSub [IsFiniteMeasure μ] : IsFiniteMeasure (μ - ν) :=
-  isFiniteMeasureOfLe μ sub_le
-#align measure_theory.measure.is_finite_measure_sub MeasureTheory.Measure.isFiniteMeasureSub
+instance isFiniteMeasure_sub [IsFiniteMeasure μ] : IsFiniteMeasure (μ - ν) :=
+  isFiniteMeasure_of_le μ sub_le
+#align measure_theory.measure.is_finite_measure_sub MeasureTheory.Measure.isFiniteMeasure_sub
 
 end Measure
 

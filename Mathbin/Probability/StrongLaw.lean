@@ -130,17 +130,17 @@ theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 
   Set.indicator_apply_nonneg fun _ => h
 #align probability_theory.truncation_nonneg ProbabilityTheory.truncation_nonneg
 
-theorem MeasureTheory.AeStronglyMeasurable.memℒpTruncation [IsFiniteMeasure μ]
+theorem MeasureTheory.AeStronglyMeasurable.memℒp_truncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
-  Memℒp.ofBound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
-#align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AeStronglyMeasurable.memℒpTruncation
+  Memℒp.of_bound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
+#align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AeStronglyMeasurable.memℒp_truncation
 
-theorem MeasureTheory.AeStronglyMeasurable.integrableTruncation [IsFiniteMeasure μ]
+theorem MeasureTheory.AeStronglyMeasurable.integrable_truncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
   exact hf.mem_ℒp_truncation
-#align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AeStronglyMeasurable.integrableTruncation
+#align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AeStronglyMeasurable.integrable_truncation
 
 theorem moment_truncation_eq_intervalIntegral (hf : AeStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
     {n : ℕ} (hn : n ≠ 0) : (∫ x, truncation f A x ^ n ∂μ) = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
@@ -283,7 +283,7 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         simp_rw [intervalIntegral.integral_of_le I, ← integral_mul_left]
         apply set_integral_mono_on
         · exact continuous_const.integrable_on_Ioc
-        · exact (continuous_id.add continuous_const).integrableOnIoc
+        · exact (continuous_id.add continuous_const).integrableOn_Ioc
         · exact measurableSet_Ioc
         · intro x hx
           simp only [Nat.cast_add, Nat.cast_one, Set.mem_Ioc] at hx
@@ -417,9 +417,9 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       rw [← intervalIntegral.integral_const_mul, intervalIntegral.integral_of_le Ik,
         intervalIntegral.integral_of_le Ik]
       refine' set_integral_mono_on _ _ measurableSet_Ioc fun x hx => _
-      · apply Continuous.integrableOnIoc
+      · apply Continuous.integrableOn_Ioc
         exact continuous_const.mul (continuous_pow 2)
-      · apply Continuous.integrableOnIoc
+      · apply Continuous.integrableOn_Ioc
         exact continuous_const.mul continuous_id'
       ·
         calc
@@ -482,7 +482,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   have c_pos : 0 < c := zero_lt_one.trans c_one
   let ρ : Measure ℝ := measure.map (X 0) ℙ
   have hX : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
-    (hident i).symm.aeStronglyMeasurableSnd hint.1
+    (hident i).symm.aeStronglyMeasurable_snd hint.1
   have A : ∀ i, strongly_measurable (indicator (Set.Ioc (-i : ℝ) i) id) := fun i =>
     strongly_measurable_id.indicator measurableSet_Ioc
   set Y := fun n : ℕ => truncation (X n) n with hY
@@ -514,7 +514,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         congr 1
         rw [hS, indep_fun.variance_sum]
         · intro j hj
-          exact (hident j).aeStronglyMeasurableFst.memℒpTruncation
+          exact (hident j).aeStronglyMeasurable_fst.memℒp_truncation
         · intro k hk l hl hkl
           exact (hindep hkl).comp (A k).Measurable (A l).Measurable
       _ =
@@ -569,7 +569,9 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         by
         refine' sum_le_sum fun i hi => _
         apply meas_ge_le_variance_div_sq
-        · exact mem_ℒp_finset_sum' _ fun j hj => (hident j).aeStronglyMeasurableFst.memℒpTruncation
+        ·
+          exact
+            mem_ℒp_finset_sum' _ fun j hj => (hident j).aeStronglyMeasurable_fst.memℒp_truncation
         · apply mul_pos (Nat.cast_pos.2 _) εpos
           refine' zero_lt_one.trans_le _
           apply Nat.le_floor
@@ -633,7 +635,7 @@ theorem strong_law_aux3 :
   ext1 n
   simp only [sum_sub_distrib, sum_const, card_range, nsmul_eq_mul, sum_apply, sub_left_inj]
   rw [integral_finset_sum _ fun i hi => _]
-  exact ((hident i).symm.integrableSnd hint).1.integrableTruncation
+  exact ((hident i).symm.integrable_snd hint).1.integrable_truncation
 #align probability_theory.strong_law_aux3 ProbabilityTheory.strong_law_aux3
 
 include hindep hnonneg

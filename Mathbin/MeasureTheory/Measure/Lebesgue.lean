@@ -136,9 +136,9 @@ theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.c
       ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
 #align real.volume_emetric_closed_ball Real.volume_emetric_closedBall
 
-instance hasNoAtomsVolume : HasNoAtoms (volume : Measure ℝ) :=
+instance hasNoAtoms_volume : HasNoAtoms (volume : Measure ℝ) :=
   ⟨fun x => volume_singleton⟩
-#align real.has_no_atoms_volume Real.hasNoAtomsVolume
+#align real.has_no_atoms_volume Real.hasNoAtoms_volume
 
 @[simp]
 theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal (|b - a|) := by
@@ -173,28 +173,28 @@ theorem volume_Iio {a : ℝ} : volume (Iio a) = ∞ :=
 theorem volume_Iic {a : ℝ} : volume (Iic a) = ∞ := by simp [← measure_congr Iio_ae_eq_Iic]
 #align real.volume_Iic Real.volume_Iic
 
-instance locallyFiniteVolume : IsLocallyFiniteMeasure (volume : Measure ℝ) :=
+instance locally_finite_volume : IsLocallyFiniteMeasure (volume : Measure ℝ) :=
   ⟨fun x =>
     ⟨Ioo (x - 1) (x + 1),
       IsOpen.mem_nhds isOpen_Ioo ⟨sub_lt_self _ zero_lt_one, lt_add_of_pos_right _ zero_lt_one⟩, by
       simp only [Real.volume_Ioo, ENNReal.ofReal_lt_top]⟩⟩
-#align real.locally_finite_volume Real.locallyFiniteVolume
+#align real.locally_finite_volume Real.locally_finite_volume
 
-instance isFiniteMeasureRestrictIcc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Icc x y)) :=
+instance isFiniteMeasure_restrict_Icc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Icc x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Icc Real.isFiniteMeasureRestrictIcc
+#align real.is_finite_measure_restrict_Icc Real.isFiniteMeasure_restrict_Icc
 
-instance isFiniteMeasureRestrictIco (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ico x y)) :=
+instance isFiniteMeasure_restrict_Ico (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ico x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ico Real.isFiniteMeasureRestrictIco
+#align real.is_finite_measure_restrict_Ico Real.isFiniteMeasure_restrict_Ico
 
-instance isFiniteMeasureRestrictIoc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioc x y)) :=
+instance isFiniteMeasure_restrict_Ioc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioc x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ioc Real.isFiniteMeasureRestrictIoc
+#align real.is_finite_measure_restrict_Ioc Real.isFiniteMeasure_restrict_Ioc
 
-instance isFiniteMeasureRestrictIoo (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioo x y)) :=
+instance isFiniteMeasure_restrict_Ioo (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioo x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ioo Real.isFiniteMeasureRestrictIoo
+#align real.is_finite_measure_restrict_Ioo Real.isFiniteMeasure_restrict_Ioo
 
 theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
   by
@@ -404,7 +404,7 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
 #align real.smul_map_diagonal_volume_pi Real.smul_map_diagonal_volume_pi
 
 /-- A transvection preserves Lebesgue measure. -/
-theorem volumePreservingTransvectionStruct [DecidableEq ι] (t : TransvectionStruct ι ℝ) :
+theorem volume_preserving_transvectionStruct [DecidableEq ι] (t : TransvectionStruct ι ℝ) :
     MeasurePreserving t.toMatrix.toLin' :=
   by
   /- We separate the coordinate along which there is a shearing from the other ones, and apply
@@ -444,10 +444,10 @@ theorem volumePreservingTransvectionStruct [DecidableEq ι] (t : TransvectionStr
         measurable_pi_apply ⟨t.j, t.hij.symm⟩
       refine' (measurable_pi_lambda _ fun i => Measurable.const_mul _ _).add measurable_snd
       exact this.comp measurable_fst
-    (measure_preserving.id _).skewProduct g_meas
+    (measure_preserving.id _).skew_product g_meas
       (eventually_of_forall fun a => map_add_left_eq_self _ _)
   exact ((A.symm e).comp B).comp A
-#align real.volume_preserving_transvection_struct Real.volumePreservingTransvectionStruct
+#align real.volume_preserving_transvection_struct Real.volume_preserving_transvectionStruct
 
 /-- Any invertible matrix rescales Lebesgue measure through the absolute value of its
 determinant. -/
@@ -587,17 +587,17 @@ theorem volume_regionBetween_eq_lintegral' (hf : Measurable f) (hg : Measurable 
 
 /-- The volume of the region between two almost everywhere measurable functions on a measurable set
     can be represented as a Lebesgue integral. -/
-theorem volume_regionBetween_eq_lintegral [SigmaFinite μ] (hf : AeMeasurable f (μ.restrict s))
-    (hg : AeMeasurable g (μ.restrict s)) (hs : MeasurableSet s) :
+theorem volume_regionBetween_eq_lintegral [SigmaFinite μ] (hf : AEMeasurable f (μ.restrict s))
+    (hg : AEMeasurable g (μ.restrict s)) (hs : MeasurableSet s) :
     μ.Prod volume (regionBetween f g s) = ∫⁻ y in s, ENNReal.ofReal ((g - f) y) ∂μ :=
   by
   have h₁ :
     (fun y => ENNReal.ofReal ((g - f) y)) =ᵐ[μ.restrict s] fun y =>
-      ENNReal.ofReal ((AeMeasurable.mk g hg - AeMeasurable.mk f hf) y) :=
+      ENNReal.ofReal ((AEMeasurable.mk g hg - AEMeasurable.mk f hf) y) :=
     (hg.ae_eq_mk.sub hf.ae_eq_mk).fun_comp _
   have h₂ :
     (μ.restrict s).Prod volume (regionBetween f g s) =
-      (μ.restrict s).Prod volume (regionBetween (AeMeasurable.mk f hf) (AeMeasurable.mk g hg) s) :=
+      (μ.restrict s).Prod volume (regionBetween (AEMeasurable.mk f hf) (AEMeasurable.mk g hg) s) :=
     by
     apply measure_congr
     apply eventually_eq.rfl.inter
@@ -612,7 +612,7 @@ theorem volume_regionBetween_eq_lintegral [SigmaFinite μ] (hf : AeMeasurable f 
   · rw [measure.restrict_prod_eq_prod_univ]
     exact
       (measure.restrict_eq_self _
-          (regionBetween_subset (AeMeasurable.mk f hf) (AeMeasurable.mk g hg) s)).symm
+          (regionBetween_subset (AEMeasurable.mk f hf) (AEMeasurable.mk g hg) s)).symm
 #align volume_region_between_eq_lintegral volume_regionBetween_eq_lintegral
 
 theorem volume_regionBetween_eq_integral' [SigmaFinite μ] (f_int : IntegrableOn f s μ)
@@ -719,7 +719,7 @@ open ContinuousMap
 `Icc a b` has volume `b - a`. -/
 /-- If the sequence with `n`-th term the the sup norm of `λ x, f (x + n)` on the interval `Icc 0 1`,
 for `n ∈ ℤ`, is summable, then `f` is integrable on `ℝ`. -/
-theorem Real.integrableOfSummableNormIcc {E : Type _} [NormedAddCommGroup E] {f : C(ℝ, E)}
+theorem Real.integrable_of_summable_norm_Icc {E : Type _} [NormedAddCommGroup E] {f : C(ℝ, E)}
     (hf : Summable fun n : ℤ => ‖(f.comp <| ContinuousMap.addRight n).restrict (Icc 0 1)‖) :
     Integrable f :=
   by
@@ -739,7 +739,7 @@ theorem Real.integrableOfSummableNormIcc {E : Type _} [NormedAddCommGroup E] {f 
       ⟨x - n, ⟨sub_nonneg.mpr x.2.1, sub_le_iff_le_add'.mpr x.2.2⟩⟩
   simpa only [ContinuousMap.restrict_apply, comp_apply, coe_add_right, Subtype.coe_mk,
     sub_add_cancel] using this
-#align real.integrable_of_summable_norm_Icc Real.integrableOfSummableNormIcc
+#align real.integrable_of_summable_norm_Icc Real.integrable_of_summable_norm_Icc
 
 end SummableNormIcc
 

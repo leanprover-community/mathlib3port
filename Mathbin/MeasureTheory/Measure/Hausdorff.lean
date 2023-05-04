@@ -671,7 +671,7 @@ theorem hausdorffMeasure_mono {d₁ d₂ : ℝ} (h : d₁ ≤ d₂) (s : Set X) 
 
 variable (X)
 
-theorem noAtomsHausdorff {d : ℝ} (hd : 0 < d) : HasNoAtoms (hausdorffMeasure d : Measure X) :=
+theorem no_atoms_hausdorff {d : ℝ} (hd : 0 < d) : HasNoAtoms (hausdorffMeasure d : Measure X) :=
   by
   refine' ⟨fun x => _⟩
   rw [← nonpos_iff_eq_zero, hausdorff_measure_apply]
@@ -679,7 +679,7 @@ theorem noAtomsHausdorff {d : ℝ} (hd : 0 < d) : HasNoAtoms (hausdorffMeasure d
   · exact subset_Union (fun n => {x} : ℕ → Set X) 0
   · simp only [EMetric.diam_singleton, zero_le]
   · simp [hd]
-#align measure_theory.measure.no_atoms_hausdorff MeasureTheory.Measure.noAtomsHausdorff
+#align measure_theory.measure.no_atoms_hausdorff MeasureTheory.Measure.no_atoms_hausdorff
 
 variable {X}
 

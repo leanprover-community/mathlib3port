@@ -479,15 +479,15 @@ theorem stronglyMeasurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace �
   exact (measurable_deriv f).StronglyMeasurable
 #align strongly_measurable_deriv stronglyMeasurable_deriv
 
-theorem aeMeasurableDeriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F]
-    [BorelSpace F] (f : 𝕜 → F) (μ : Measure 𝕜) : AeMeasurable (deriv f) μ :=
-  (measurable_deriv f).AeMeasurable
-#align ae_measurable_deriv aeMeasurableDeriv
+theorem aEMeasurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F]
+    [BorelSpace F] (f : 𝕜 → F) (μ : Measure 𝕜) : AEMeasurable (deriv f) μ :=
+  (measurable_deriv f).AEMeasurable
+#align ae_measurable_deriv aEMeasurable_deriv
 
-theorem aeStronglyMeasurableDeriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
+theorem aeStronglyMeasurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
     [SecondCountableTopology F] (f : 𝕜 → F) (μ : Measure 𝕜) : AeStronglyMeasurable (deriv f) μ :=
   (stronglyMeasurable_deriv f).AeStronglyMeasurable
-#align ae_strongly_measurable_deriv aeStronglyMeasurableDeriv
+#align ae_strongly_measurable_deriv aeStronglyMeasurable_deriv
 
 end fderiv
 
@@ -865,15 +865,15 @@ theorem stronglyMeasurable_derivWithin_Ici [SecondCountableTopology F] :
   exact (measurable_derivWithin_Ici f).StronglyMeasurable
 #align strongly_measurable_deriv_within_Ici stronglyMeasurable_derivWithin_Ici
 
-theorem aeMeasurableDerivWithinIci [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
-    AeMeasurable (fun x => derivWithin f (Ici x) x) μ :=
-  (measurable_derivWithin_Ici f).AeMeasurable
-#align ae_measurable_deriv_within_Ici aeMeasurableDerivWithinIci
+theorem aEMeasurable_derivWithin_Ici [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
+    AEMeasurable (fun x => derivWithin f (Ici x) x) μ :=
+  (measurable_derivWithin_Ici f).AEMeasurable
+#align ae_measurable_deriv_within_Ici aEMeasurable_derivWithin_Ici
 
-theorem aeStronglyMeasurableDerivWithinIci [SecondCountableTopology F] (μ : Measure ℝ) :
+theorem aeStronglyMeasurable_derivWithin_Ici [SecondCountableTopology F] (μ : Measure ℝ) :
     AeStronglyMeasurable (fun x => derivWithin f (Ici x) x) μ :=
   (stronglyMeasurable_derivWithin_Ici f).AeStronglyMeasurable
-#align ae_strongly_measurable_deriv_within_Ici aeStronglyMeasurableDerivWithinIci
+#align ae_strongly_measurable_deriv_within_Ici aeStronglyMeasurable_derivWithin_Ici
 
 /-- The set of right differentiability points of a function taking values in a complete space is
 Borel-measurable. -/
@@ -895,15 +895,15 @@ theorem stronglyMeasurable_derivWithin_Ioi [SecondCountableTopology F] :
   exact (measurable_derivWithin_Ioi f).StronglyMeasurable
 #align strongly_measurable_deriv_within_Ioi stronglyMeasurable_derivWithin_Ioi
 
-theorem aeMeasurableDerivWithinIoi [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
-    AeMeasurable (fun x => derivWithin f (Ioi x) x) μ :=
-  (measurable_derivWithin_Ioi f).AeMeasurable
-#align ae_measurable_deriv_within_Ioi aeMeasurableDerivWithinIoi
+theorem aEMeasurable_derivWithin_Ioi [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
+    AEMeasurable (fun x => derivWithin f (Ioi x) x) μ :=
+  (measurable_derivWithin_Ioi f).AEMeasurable
+#align ae_measurable_deriv_within_Ioi aEMeasurable_derivWithin_Ioi
 
-theorem aeStronglyMeasurableDerivWithinIoi [SecondCountableTopology F] (μ : Measure ℝ) :
+theorem aeStronglyMeasurable_derivWithin_Ioi [SecondCountableTopology F] (μ : Measure ℝ) :
     AeStronglyMeasurable (fun x => derivWithin f (Ioi x) x) μ :=
   (stronglyMeasurable_derivWithin_Ioi f).AeStronglyMeasurable
-#align ae_strongly_measurable_deriv_within_Ioi aeStronglyMeasurableDerivWithinIoi
+#align ae_strongly_measurable_deriv_within_Ioi aeStronglyMeasurable_derivWithin_Ioi
 
 end RightDeriv
 

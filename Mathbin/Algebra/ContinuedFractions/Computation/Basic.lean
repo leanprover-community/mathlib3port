@@ -70,6 +70,7 @@ namespace GeneralizedContinuedFraction
 -- Fix a carrier `K`.
 variable (K : Type _)
 
+#print GeneralizedContinuedFraction.IntFractPair /-
 /-- We collect an integer part `b = ⌊v⌋` and fractional part `fr = v - ⌊v⌋` of a value `v` in a pair
 `⟨b, fr⟩`.
 -/
@@ -77,6 +78,7 @@ structure IntFractPair where
   b : ℤ
   fr : K
 #align generalized_continued_fraction.int_fract_pair GeneralizedContinuedFraction.IntFractPair
+-/
 
 variable {K}
 
@@ -89,15 +91,19 @@ namespace IntFractPair
 instance [Repr K] : Repr (IntFractPair K) :=
   ⟨fun p => "(b : " ++ repr p.b ++ ", fract : " ++ repr p.fr ++ ")"⟩
 
+#print GeneralizedContinuedFraction.IntFractPair.inhabited /-
 instance inhabited [Inhabited K] : Inhabited (IntFractPair K) :=
   ⟨⟨0, default⟩⟩
 #align generalized_continued_fraction.int_fract_pair.inhabited GeneralizedContinuedFraction.IntFractPair.inhabited
+-/
 
+#print GeneralizedContinuedFraction.IntFractPair.mapFr /-
 /-- Maps a function `f` on the fractional components of a given pair.
 -/
 def mapFr {β : Type _} (f : K → β) (gp : IntFractPair K) : IntFractPair β :=
   ⟨gp.b, f gp.fr⟩
 #align generalized_continued_fraction.int_fract_pair.mapFr GeneralizedContinuedFraction.IntFractPair.mapFr
+-/
 
 section coe
 
@@ -107,11 +113,19 @@ section coe
 -- Fix another type `β` which we will convert to.
 variable {β : Type _} [Coe K β]
 
+#print GeneralizedContinuedFraction.IntFractPair.coe /-
 /-- Coerce a pair by coercing the fractional component. -/
-instance hasCoeToIntFractPair : Coe (IntFractPair K) (IntFractPair β) :=
+instance coe : Coe (IntFractPair K) (IntFractPair β) :=
   ⟨mapFr coe⟩
-#align generalized_continued_fraction.int_fract_pair.has_coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.hasCoeToIntFractPair
+#align generalized_continued_fraction.int_fract_pair.has_coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe
+-/
 
+/- warning: generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair -> GeneralizedContinuedFraction.IntFractPair.coe_to_intFractPair is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Coe.{succ u_1, succ u_2} K β] {b : Int} {fr : K}, Eq.{succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_2} β) ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (HasLiftT.mk.{succ u_1, succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (CoeTCₓ.coe.{succ u_1, succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (coeBase.{succ u_1, succ u_2} (GeneralizedContinuedFraction.IntFractPair.{u_1} K) (GeneralizedContinuedFraction.IntFractPair.{u_2} β) (GeneralizedContinuedFraction.IntFractPair.coe.{u_1, u_2} K β _inst_1)))) (GeneralizedContinuedFraction.IntFractPair.mk.{u_1} K b fr)) (GeneralizedContinuedFraction.IntFractPair.mk.{u_2} β b ((fun (a : Type.{u_1}) (b : Type.{u_2}) [self : HasLiftT.{succ u_1, succ u_2} a b] => self.0) K β (HasLiftT.mk.{succ u_1, succ u_2} K β (CoeTCₓ.coe.{succ u_1, succ u_2} K β (coeBase.{succ u_1, succ u_2} K β _inst_1))) fr))
+but is expected to have type
+  forall {K : Type.{u_1}} {β : Type.{u_1}} [_inst_1 : Coe.{succ u_1, succ u_1} K β] {b : Int} {fr : K}, Eq.{succ u_1} (GeneralizedContinuedFraction.IntFractPair.{u_1} β) (GeneralizedContinuedFraction.IntFractPair.coeFn.{u_1, u_1} K β _inst_1 (GeneralizedContinuedFraction.IntFractPair.mk.{u_1} K b fr)) (GeneralizedContinuedFraction.IntFractPair.mk.{u_1} β b (Coe.coe.{succ u_1, succ u_1} K β _inst_1 fr))
+Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe_to_intFractPairₓ'. -/
 @[simp, norm_cast]
 theorem coe_to_intFractPair {b : ℤ} {fr : K} :
     (↑(IntFractPair.mk b fr) : IntFractPair β) = IntFractPair.mk b (↑fr : β) :=
@@ -125,11 +139,14 @@ end coe
 -- Fix a discrete linear ordered field with `floor` function.
 variable [LinearOrderedField K] [FloorRing K]
 
+#print GeneralizedContinuedFraction.IntFractPair.of /-
 /-- Creates the integer and fractional part of a value `v`, i.e. `⟨⌊v⌋, v - ⌊v⌋⟩`. -/
 protected def of (v : K) : IntFractPair K :=
   ⟨⌊v⌋, Int.fract v⟩
 #align generalized_continued_fraction.int_fract_pair.of GeneralizedContinuedFraction.IntFractPair.of
+-/
 
+#print GeneralizedContinuedFraction.IntFractPair.stream /-
 /-- Creates the stream of integer and fractional parts of a value `v` needed to obtain the continued
 fraction representation of `v` in `generalized_continued_fraction.of`. More precisely, given a value
 `v : K`, it recursively computes a stream of option `ℤ × K` pairs as follows:
@@ -149,7 +166,9 @@ protected def stream (v : K) : Stream' <| Option (IntFractPair K)
   | n + 1 =>
     (Stream' n).bind fun ap_n => if ap_n.fr = 0 then none else some (IntFractPair.of ap_n.fr⁻¹)
 #align generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
+-/
 
+#print GeneralizedContinuedFraction.IntFractPair.stream_isSeq /-
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
@@ -158,7 +177,9 @@ theorem stream_isSeq (v : K) : (IntFractPair.stream v).IsSeq :=
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
 #align generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_isSeq
+-/
 
+#print GeneralizedContinuedFraction.IntFractPair.seq1 /-
 /--
 Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
 parts of a value `v`. The first value of `int_fract_pair.stream` is never `none`, so we can safely
@@ -177,10 +198,12 @@ protected def seq1 (v : K) : Stream'.Seq1 <| IntFractPair K :=
           @stream_isSeq
           _ _ _ v⟩⟩
 #align generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1
+-/
 
 -- the proof that the stream is a sequence
 end IntFractPair
 
+#print GeneralizedContinuedFraction.of /-
 /-- Returns the `generalized_continued_fraction` of a value. In fact, the returned gcf is also
 a `continued_fraction` that terminates if and only if `v` is rational (those proofs will be
 added in a future commit).
@@ -199,6 +222,7 @@ protected def of [LinearOrderedField K] [FloorRing K] (v : K) : GeneralizedConti
         s.map
       fun p => ⟨1, p.b⟩⟩
 #align generalized_continued_fraction.of GeneralizedContinuedFraction.of
+-/
 
 -- the sequence consists of the remaining integer parts as the partial
 -- denominators; all partial numerators are simply 1

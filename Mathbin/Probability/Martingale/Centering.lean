@@ -90,16 +90,16 @@ theorem adapted_martingalePart (hf : Adapted ℱ f) : Adapted ℱ (martingalePar
   Adapted.sub hf adapted_predictable_part'
 #align measure_theory.adapted_martingale_part MeasureTheory.adapted_martingalePart
 
-theorem integrableMartingalePart (hf_int : ∀ n, Integrable (f n) μ) (n : ℕ) :
+theorem integrable_martingalePart (hf_int : ∀ n, Integrable (f n) μ) (n : ℕ) :
     Integrable (martingalePart f ℱ μ n) μ :=
   by
   rw [martingale_part_eq_sum]
   exact
     (hf_int 0).add
       (integrable_finset_sum' _ fun i hi => ((hf_int _).sub (hf_int _)).sub integrable_condexp)
-#align measure_theory.integrable_martingale_part MeasureTheory.integrableMartingalePart
+#align measure_theory.integrable_martingale_part MeasureTheory.integrable_martingalePart
 
-theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrable (f n) μ)
+theorem martingale_martingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrable (f n) μ)
     [SigmaFiniteFiltration μ ℱ] : Martingale (martingalePart f ℱ μ) ℱ μ :=
   by
   refine' ⟨adapted_martingale_part hf, fun i j hij => _⟩
@@ -147,7 +147,7 @@ theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrabl
   refine' (eventuallyEq_sum fun k hk => h_ge k (finset.mem_Ico.mp hk).1).trans _
   simp only [Finset.sum_const_zero, Pi.zero_apply]
   rfl
-#align measure_theory.martingale_martingale_part MeasureTheory.martingaleMartingalePart
+#align measure_theory.martingale_martingale_part MeasureTheory.martingale_martingalePart
 
 -- The following two lemmas demonstrate the essential uniqueness of the decomposition
 theorem martingalePart_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → Ω → E}

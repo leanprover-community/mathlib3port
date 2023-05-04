@@ -99,7 +99,7 @@ theorem stoppedValue_stoppedValue_leastGe (f : ℕ → Ω → ℝ) (π : Ω → 
   rw [least_ge_eq_min _ _ _ hπn]
 #align measure_theory.stopped_value_stopped_value_least_ge MeasureTheory.stoppedValue_stoppedValue_leastGe
 
-theorem Submartingale.stoppedValueLeastGe [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (r : ℝ) :
+theorem Submartingale.stoppedValue_leastGe [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (r : ℝ) :
     Submartingale (fun i => stoppedValue f (leastGe f r i)) ℱ μ :=
   by
   rw [submartingale_iff_expected_stopped_value_mono]
@@ -119,7 +119,7 @@ theorem Submartingale.stoppedValueLeastGe [IsFiniteMeasure μ] (hf : Submartinga
     exact fun i =>
       integrable_stopped_value _ (hf.adapted.is_stopping_time_least_ge _ _) hf.integrable
         least_ge_le
-#align measure_theory.submartingale.stopped_value_least_ge MeasureTheory.Submartingale.stoppedValueLeastGe
+#align measure_theory.submartingale.stopped_value_least_ge MeasureTheory.Submartingale.stoppedValue_leastGe
 
 variable {r : ℝ} {R : ℝ≥0}
 
@@ -344,11 +344,11 @@ theorem process_difference_le (s : ℕ → Set Ω) (ω : Ω) (n : ℕ) :
   rw [Pi.one_apply, norm_one]
 #align measure_theory.borel_cantelli.process_difference_le MeasureTheory.BorelCantelli.process_difference_le
 
-theorem integrableProcess (μ : Measure Ω) [IsFiniteMeasure μ] (hs : ∀ n, measurable_set[ℱ n] (s n))
+theorem integrable_process (μ : Measure Ω) [IsFiniteMeasure μ] (hs : ∀ n, measurable_set[ℱ n] (s n))
     (n : ℕ) : Integrable (process s n) μ :=
-  integrableFinsetSum' _ fun k hk =>
-    IntegrableOn.integrableIndicator (integrableConst 1) <| ℱ.le _ _ <| hs _
-#align measure_theory.borel_cantelli.integrable_process MeasureTheory.BorelCantelli.integrableProcess
+  integrable_finset_sum' _ fun k hk =>
+    IntegrableOn.integrable_indicator (integrable_const 1) <| ℱ.le _ _ <| hs _
+#align measure_theory.borel_cantelli.integrable_process MeasureTheory.BorelCantelli.integrable_process
 
 end BorelCantelli
 

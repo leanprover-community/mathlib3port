@@ -39,9 +39,9 @@ section
 
 variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]
 
-theorem Memℒp.integrableSq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
+theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
   simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow two_ne_zero ENNReal.two_ne_top
-#align measure_theory.mem_ℒp.integrable_sq MeasureTheory.Memℒp.integrableSq
+#align measure_theory.mem_ℒp.integrable_sq MeasureTheory.Memℒp.integrable_sq
 
 theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ :=
@@ -91,8 +91,8 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
     ring
   simp_rw [← IsROrC.norm_eq_abs, ← Real.rpow_nat_cast] at h'
   refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
-  · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
-  · exact ((Lp.ae_strongly_measurable g).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
+  · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
+  · exact ((Lp.ae_strongly_measurable g).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
   simp only [Nat.cast_bit0, ENNReal.add_lt_top, Nat.cast_one]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 #align measure_theory.L2.snorm_inner_lt_top MeasureTheory.L2.snorm_inner_lt_top
@@ -118,7 +118,7 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
   rw [integral_eq_lintegral_of_nonneg_ae]
   rotate_left
   · exact Filter.eventually_of_forall fun x => sq_nonneg _
-  · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
+  · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
   congr
   ext1 x
   have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ) := by simp
@@ -149,12 +149,12 @@ theorem mem_L1_inner (f g : α →₂[μ] E) :
   exact snorm_inner_lt_top f g
 #align measure_theory.L2.mem_L1_inner MeasureTheory.L2.mem_L1_inner
 
-theorem integrableInner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
+theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
   (integrable_congr
         (AeEqFun.coeFn_mk (fun x => ⟪f x, g x⟫)
           ((lp.aeStronglyMeasurable f).inner (lp.aeStronglyMeasurable g)))).mp
     (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
-#align measure_theory.L2.integrable_inner MeasureTheory.L2.integrableInner
+#align measure_theory.L2.integrable_inner MeasureTheory.L2.integrable_inner
 
 private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f g + inner f' g :=
   by

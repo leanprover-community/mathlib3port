@@ -213,10 +213,10 @@ instance nhdsWithinSingleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ :=
   infer_instance
 #align interval_integral.FTC_filter.nhds_within_singleton intervalIntegral.FTCFilter.nhdsWithinSingleton
 
-theorem finiteAtInner {a : ℝ} (l : Filter ℝ) {l'} [h : FTCFilter a l l'] {μ : Measure ℝ}
+theorem finite_at_inner {a : ℝ} (l : Filter ℝ) {l'} [h : FTCFilter a l l'] {μ : Measure ℝ}
     [IsLocallyFiniteMeasure μ] : μ.FiniteAtFilter l' :=
-  (μ.finiteAtNhds a).filter_mono h.le_nhds
-#align interval_integral.FTC_filter.finite_at_inner intervalIntegral.FTCFilter.finiteAtInner
+  (μ.finite_at_nhds a).filter_mono h.le_nhds
+#align interval_integral.FTC_filter.finite_at_inner intervalIntegral.FTCFilter.finite_at_inner
 
 instance nhds (a : ℝ) : FTCFilter a (𝓝 a) (𝓝 a)
     where
@@ -357,7 +357,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) :
     (fun t => (∫ x in u t..v t, f x ∂μ) - ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
       ∫ x in u t..v t, (1 : ℝ) ∂μ :=
-  measure_integral_sub_linear_isLittleO_of_tendsto_ae' hfm hf (FTCFilter.finiteAtInner l) hu hv
+  measure_integral_sub_linear_isLittleO_of_tendsto_ae' hfm hf (FTCFilter.finite_at_inner l) hu hv
 #align interval_integral.measure_integral_sub_linear_is_o_of_tendsto_ae intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae
 
 /-- Fundamental theorem of calculus-1, local version for any measure.
@@ -372,7 +372,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) (huv : u ≤ᶠ[lt] v) :
     (fun t => (∫ x in u t..v t, f x ∂μ) - (μ (Ioc (u t) (v t))).toReal • c) =o[lt] fun t =>
       (μ <| Ioc (u t) (v t)).toReal :=
-  measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le' hfm hf (FTCFilter.finiteAtInner l) hu
+  measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le' hfm hf (FTCFilter.finite_at_inner l) hu
     hv huv
 #align interval_integral.measure_integral_sub_linear_is_o_of_tendsto_ae_of_le intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le
 
@@ -388,7 +388,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) (huv : v ≤ᶠ[lt] u) :
     (fun t => (∫ x in u t..v t, f x ∂μ) + (μ (Ioc (v t) (u t))).toReal • c) =o[lt] fun t =>
       (μ <| Ioc (v t) (u t)).toReal :=
-  measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge' hfm hf (FTCFilter.finiteAtInner l) hu
+  measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge' hfm hf (FTCFilter.finite_at_inner l) hu
     hv huv
 #align interval_integral.measure_integral_sub_linear_is_o_of_tendsto_ae_of_ge intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge
 
@@ -456,7 +456,7 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_right
       fun t => ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   simpa using
-    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab stronglyMeasurableAtBot hmeas
+    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab strongly_measurable_at_bot hmeas
       ((tendsto_bot : tendsto _ ⊥ (𝓝 0)).mono_left inf_le_left) hf
       (tendsto_const_pure : tendsto _ _ (pure a)) tendsto_const_pure hu hv
 #align interval_integral.measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae_right intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_right
@@ -477,8 +477,8 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_left
       fun t => ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   simpa using
-    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab hmeas stronglyMeasurableAtBot hf
-      ((tendsto_bot : tendsto _ ⊥ (𝓝 0)).mono_left inf_le_left) hu hv
+    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab hmeas strongly_measurable_at_bot
+      hf ((tendsto_bot : tendsto _ ⊥ (𝓝 0)).mono_left inf_le_left) hu hv
       (tendsto_const_pure : tendsto _ _ (pure b)) tendsto_const_pure
 #align interval_integral.measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae_left intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_left
 
@@ -1278,7 +1278,7 @@ theorem integral_deriv_eq_sub' (f) (hderiv : deriv f = f')
 
 
 /-- When the right derivative of a function is nonnegative, then it is automatically integrable. -/
-theorem integrableOnDerivRightOfNonneg (hcont : ContinuousOn g (Icc a b))
+theorem integrableOn_deriv_right_of_nonneg (hcont : ContinuousOn g (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivWithinAt g (g' x) (Ioi x) x)
     (g'pos : ∀ x ∈ Ioo a b, 0 ≤ g' x) : IntegrableOn g' (Ioc a b) :=
   by
@@ -1286,9 +1286,9 @@ theorem integrableOnDerivRightOfNonneg (hcont : ContinuousOn g (Icc a b))
   swap
   · simp [Ioc_eq_empty hab]
   rw [integrableOn_Ioc_iff_integrableOn_Ioo]
-  have meas_g' : AeMeasurable g' (volume.restrict (Ioo a b)) :=
+  have meas_g' : AEMeasurable g' (volume.restrict (Ioo a b)) :=
     by
-    apply (aeMeasurableDerivWithinIoi g _).congr
+    apply (aEMeasurable_derivWithin_Ioi g _).congr
     refine' (ae_restrict_mem measurableSet_Ioo).mono fun x hx => _
     exact (hderiv x hx).derivWithin (uniqueDiffWithinAt_Ioi _)
   suffices H : (∫⁻ x in Ioo a b, ‖g' x‖₊) ≤ ENNReal.ofReal (g b - g a)
@@ -1315,19 +1315,19 @@ theorem integrableOnDerivRightOfNonneg (hcont : ContinuousOn g (Icc a b))
     · convert NNReal.coe_le_coe.2 (fle x)
       simp only [Real.norm_of_nonneg (g'pos x hx), coe_nnnorm]
   exact lt_irrefl _ (hf.trans_le (ENNReal.ofReal_le_ofReal B))
-#align interval_integral.integrable_on_deriv_right_of_nonneg intervalIntegral.integrableOnDerivRightOfNonneg
+#align interval_integral.integrable_on_deriv_right_of_nonneg intervalIntegral.integrableOn_deriv_right_of_nonneg
 
 /-- When the derivative of a function is nonnegative, then it is automatically integrable,
 Ioc version. -/
-theorem integrableOnDerivOfNonneg (hcont : ContinuousOn g (Icc a b))
+theorem integrableOn_deriv_of_nonneg (hcont : ContinuousOn g (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (g'pos : ∀ x ∈ Ioo a b, 0 ≤ g' x) :
     IntegrableOn g' (Ioc a b) :=
-  integrableOnDerivRightOfNonneg hcont (fun x hx => (hderiv x hx).HasDerivWithinAt) g'pos
-#align interval_integral.integrable_on_deriv_of_nonneg intervalIntegral.integrableOnDerivOfNonneg
+  integrableOn_deriv_right_of_nonneg hcont (fun x hx => (hderiv x hx).HasDerivWithinAt) g'pos
+#align interval_integral.integrable_on_deriv_of_nonneg intervalIntegral.integrableOn_deriv_of_nonneg
 
 /-- When the derivative of a function is nonnegative, then it is automatically integrable,
 interval version. -/
-theorem intervalIntegrableDerivOfNonneg (hcont : ContinuousOn g (uIcc a b))
+theorem intervalIntegrable_deriv_of_nonneg (hcont : ContinuousOn g (uIcc a b))
     (hderiv : ∀ x ∈ Ioo (min a b) (max a b), HasDerivAt g (g' x) x)
     (hpos : ∀ x ∈ Ioo (min a b) (max a b), 0 ≤ g' x) : IntervalIntegrable g' volume a b :=
   by
@@ -1338,7 +1338,7 @@ theorem intervalIntegrableDerivOfNonneg (hcont : ContinuousOn g (uIcc a b))
   · simp only [uIcc_of_ge, min_eq_right, max_eq_left, hab, IntervalIntegrable, Ioc_eq_empty_of_le,
       integrable_on_empty, true_and_iff] at hcont hderiv hpos⊢
     exact integrable_on_deriv_of_nonneg hcont hderiv hpos
-#align interval_integral.interval_integrable_deriv_of_nonneg intervalIntegral.intervalIntegrableDerivOfNonneg
+#align interval_integral.interval_integrable_deriv_of_nonneg intervalIntegral.intervalIntegrable_deriv_of_nonneg
 
 /-!
 ### Integration by parts
@@ -1354,8 +1354,8 @@ theorem integral_deriv_mul_eq_sub {u v u' v' : ℝ → A} (hu : ∀ x ∈ uIcc a
     (hv' : IntervalIntegrable v' volume a b) :
     (∫ x in a..b, u' x * v x + u x * v' x) = u b * v b - u a * v a :=
   (integral_eq_sub_of_hasDerivAt fun x hx => (hu x hx).mul (hv x hx)) <|
-    (hu'.mulContinuousOn (HasDerivAt.continuousOn hv)).add
-      (hv'.continuousOnMul (HasDerivAt.continuousOn hu))
+    (hu'.mul_continuousOn (HasDerivAt.continuousOn hv)).add
+      (hv'.continuousOn_mul (HasDerivAt.continuousOn hu))
 #align interval_integral.integral_deriv_mul_eq_sub intervalIntegral.integral_deriv_mul_eq_sub
 
 theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → A}
@@ -1446,7 +1446,7 @@ theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : Co
   by
   refine'
     integral_comp_smul_deriv''' hf hff' (hg.mono <| image_subset _ Ioo_subset_Icc_self) _
-      (hf'.smul (hg.comp hf <| subset_preimage_image f _)).integrableOnIcc
+      (hf'.smul (hg.comp hf <| subset_preimage_image f _)).integrableOn_Icc
   rw [hf.image_uIcc] at hg⊢
   exact hg.integrable_on_Icc
 #align interval_integral.integral_comp_smul_deriv'' intervalIntegral.integral_comp_smul_deriv''

@@ -224,10 +224,10 @@ class SigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f : Filtration ι m
   SigmaFinite : ∀ i : ι, SigmaFinite (μ.trim (f.le i))
 #align measure_theory.sigma_finite_filtration MeasureTheory.SigmaFiniteFiltration
 
-instance sigmaFiniteOfSigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f : Filtration ι m)
+instance sigmaFinite_of_sigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f : Filtration ι m)
     [hf : SigmaFiniteFiltration μ f] (i : ι) : SigmaFinite (μ.trim (f.le i)) := by
   apply hf.sigma_finite
-#align measure_theory.sigma_finite_of_sigma_finite_filtration MeasureTheory.sigmaFiniteOfSigmaFiniteFiltration
+#align measure_theory.sigma_finite_of_sigma_finite_filtration MeasureTheory.sigmaFinite_of_sigmaFiniteFiltration
 
 -- can't exact here
 instance (priority := 100) IsFiniteMeasure.sigmaFiniteFiltration [Preorder ι] (μ : Measure Ω)
@@ -237,11 +237,11 @@ instance (priority := 100) IsFiniteMeasure.sigmaFiniteFiltration [Preorder ι] (
 
 /-- Given a integrable function `g`, the conditional expectations of `g` with respect to a
 filtration is uniformly integrable. -/
-theorem Integrable.uniformIntegrableCondexpFiltration [Preorder ι] {μ : Measure Ω}
+theorem Integrable.uniformIntegrable_condexp_filtration [Preorder ι] {μ : Measure Ω}
     [IsFiniteMeasure μ] {f : Filtration ι m} {g : Ω → ℝ} (hg : Integrable g μ) :
     UniformIntegrable (fun i => μ[g|f i]) 1 μ :=
-  hg.uniformIntegrableCondexp f.le
-#align measure_theory.integrable.uniform_integrable_condexp_filtration MeasureTheory.Integrable.uniformIntegrableCondexpFiltration
+  hg.uniformIntegrable_condexp f.le
+#align measure_theory.integrable.uniform_integrable_condexp_filtration MeasureTheory.Integrable.uniformIntegrable_condexp_filtration
 
 section OfSet
 
@@ -360,7 +360,7 @@ theorem stronglyMeasurable_limit_process' : strongly_measurable[m] (limitProcess
   stronglyMeasurable_limitProcess.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)
 #align measure_theory.filtration.strongly_measurable_limit_process' MeasureTheory.Filtration.stronglyMeasurable_limit_process'
 
-theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _} [NormedAddCommGroup F]
+theorem memℒp_limitProcess_of_snorm_bdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _} [NormedAddCommGroup F]
     {ℱ : Filtration ℕ m} {f : ℕ → Ω → F} (hfm : ∀ n, AeStronglyMeasurable (f n) μ)
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (limitProcess f ℱ μ) p μ :=
   by
@@ -374,7 +374,7 @@ theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _
     simp_rw [liminf_eq, eventually_at_top]
     exact supₛ_le fun b ⟨a, ha⟩ => (ha a le_rfl).trans (hbdd _)
   · exact zero_mem_ℒp
-#align measure_theory.filtration.mem_ℒp_limit_process_of_snorm_bdd MeasureTheory.Filtration.memℒpLimitProcessOfSnormBdd
+#align measure_theory.filtration.mem_ℒp_limit_process_of_snorm_bdd MeasureTheory.Filtration.memℒp_limitProcess_of_snorm_bdd
 
 end Limit
 

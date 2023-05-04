@@ -308,14 +308,14 @@ theorem u_neg (x : E) : u (-x) = u x :=
 variable [MeasurableSpace E] [BorelSpace E]
 
 -- mathport name: exprμ
-local notation "μ" => MeasureTheory.Measure.add_haar
+local notation "μ" => MeasureTheory.Measure.addHaar
 
 variable (E)
 
 theorem u_int_pos : 0 < ∫ x : E, u x ∂μ :=
   by
   refine' (integral_pos_iff_support_of_nonneg u_nonneg _).mpr _
-  · exact (u_continuous E).integrableOfHasCompactSupport (u_compact_support E)
+  · exact (u_continuous E).integrable_of_hasCompactSupport (u_compact_support E)
   · rw [u_support]
     exact measure_ball_pos _ _ zero_lt_one
 #align exists_cont_diff_bump_base.u_int_pos ExistsContDiffBumpBase.u_int_pos

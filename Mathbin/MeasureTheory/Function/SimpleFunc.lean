@@ -214,10 +214,10 @@ protected theorem measurable [MeasurableSpace β] (f : α →ₛ β) : Measurabl
 #align measure_theory.simple_func.measurable MeasureTheory.SimpleFunc.measurable
 
 @[measurability]
-protected theorem aeMeasurable [MeasurableSpace β] {μ : Measure α} (f : α →ₛ β) :
-    AeMeasurable f μ :=
-  f.Measurable.AeMeasurable
-#align measure_theory.simple_func.ae_measurable MeasureTheory.SimpleFunc.aeMeasurable
+protected theorem aEMeasurable [MeasurableSpace β] {μ : Measure α} (f : α →ₛ β) :
+    AEMeasurable f μ :=
+  f.Measurable.AEMeasurable
+#align measure_theory.simple_func.ae_measurable MeasureTheory.SimpleFunc.aEMeasurable
 
 protected theorem sum_measure_preimage_singleton (f : α →ₛ β) {μ : Measure α} (s : Finset β) :
     (∑ y in s, μ (f ⁻¹' {y})) = μ (f ⁻¹' ↑s) :=
@@ -1207,10 +1207,10 @@ protected theorem map {g : β → γ} (hf : f.FinMeasSupp μ) (hg : g 0 = 0) : (
   flip lt_of_le_of_lt hf (measure_mono <| support_comp_subset hg f)
 #align measure_theory.simple_func.fin_meas_supp.map MeasureTheory.SimpleFunc.FinMeasSupp.map
 
-theorem ofMap {g : β → γ} (h : (f.map g).FinMeasSupp μ) (hg : ∀ b, g b = 0 → b = 0) :
+theorem of_map {g : β → γ} (h : (f.map g).FinMeasSupp μ) (hg : ∀ b, g b = 0 → b = 0) :
     f.FinMeasSupp μ :=
   flip lt_of_le_of_lt h <| measure_mono <| support_subset_comp hg _
-#align measure_theory.simple_func.fin_meas_supp.of_map MeasureTheory.SimpleFunc.FinMeasSupp.ofMap
+#align measure_theory.simple_func.fin_meas_supp.of_map MeasureTheory.SimpleFunc.FinMeasSupp.of_map
 
 theorem map_iff {g : β → γ} (hg : ∀ {b}, g b = 0 ↔ b = 0) :
     (f.map g).FinMeasSupp μ ↔ f.FinMeasSupp μ :=
@@ -1257,17 +1257,17 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
     · exact mul_ne_top ha (fin_meas_supp_iff.1 hm _ ha0).Ne
 #align measure_theory.simple_func.fin_meas_supp.lintegral_lt_top MeasureTheory.SimpleFunc.FinMeasSupp.lintegral_lt_top
 
-theorem ofLintegralNeTop {f : α →ₛ ℝ≥0∞} (h : f.lintegral μ ≠ ∞) : f.FinMeasSupp μ :=
+theorem of_lintegral_ne_top {f : α →ₛ ℝ≥0∞} (h : f.lintegral μ ≠ ∞) : f.FinMeasSupp μ :=
   by
   refine' fin_meas_supp_iff.2 fun b hb => _
   rw [f.lintegral_eq_of_subset' (Finset.subset_insert b _)] at h
   refine' ENNReal.lt_top_of_mul_ne_top_right _ hb
   exact (lt_top_of_sum_ne_top h (Finset.mem_insert_self _ _)).Ne
-#align measure_theory.simple_func.fin_meas_supp.of_lintegral_ne_top MeasureTheory.SimpleFunc.FinMeasSupp.ofLintegralNeTop
+#align measure_theory.simple_func.fin_meas_supp.of_lintegral_ne_top MeasureTheory.SimpleFunc.FinMeasSupp.of_lintegral_ne_top
 
 theorem iff_lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hf : ∀ᵐ a ∂μ, f a ≠ ∞) :
     f.FinMeasSupp μ ↔ f.lintegral μ < ∞ :=
-  ⟨fun h => h.lintegral_lt_top hf, fun h => ofLintegralNeTop h.Ne⟩
+  ⟨fun h => h.lintegral_lt_top hf, fun h => of_lintegral_ne_top h.Ne⟩
 #align measure_theory.simple_func.fin_meas_supp.iff_lintegral_lt_top MeasureTheory.SimpleFunc.FinMeasSupp.iff_lintegral_lt_top
 
 end FinMeasSupp

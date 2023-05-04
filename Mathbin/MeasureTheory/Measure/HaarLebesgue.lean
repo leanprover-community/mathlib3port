@@ -91,27 +91,27 @@ open Measure TopologicalSpace.PositiveCompacts FiniteDimensional
 
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ`. -/
-theorem add_haar_measure_eq_volume : add_haar_measure icc01 = volume :=
+theorem addHaarMeasure_eq_volume : addHaarMeasure icc01 = volume :=
   by
   convert(add_haar_measure_unique volume Icc01).symm
   simp [Icc01]
-#align measure_theory.add_haar_measure_eq_volume MeasureTheory.add_haar_measure_eq_volume
+#align measure_theory.add_haar_measure_eq_volume MeasureTheory.addHaarMeasure_eq_volume
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
-theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] :
-    add_haar_measure (piIcc01 ι) = volume :=
+theorem addHaarMeasure_eq_volume_pi (ι : Type _) [Fintype ι] :
+    addHaarMeasure (piIcc01 ι) = volume :=
   by
   convert(add_haar_measure_unique volume (pi_Icc01 ι)).symm
   simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, positive_compacts.coe_mk,
     compacts.coe_mk, Finset.prod_const_one, ENNReal.ofReal_one, Real.volume_Icc, one_smul, sub_zero]
-#align measure_theory.add_haar_measure_eq_volume_pi MeasureTheory.add_haar_measure_eq_volume_pi
+#align measure_theory.add_haar_measure_eq_volume_pi MeasureTheory.addHaarMeasure_eq_volume_pi
 
-instance isAddHaarMeasureVolumePi (ι : Type _) [Fintype ι] :
+instance isAddHaarMeasure_volume_pi (ι : Type _) [Fintype ι] :
     IsAddHaarMeasure (volume : Measure (ι → ℝ)) :=
   by
   rw [← add_haar_measure_eq_volume_pi]
   infer_instance
-#align measure_theory.is_add_haar_measure_volume_pi MeasureTheory.isAddHaarMeasureVolumePi
+#align measure_theory.is_add_haar_measure_volume_pi MeasureTheory.isAddHaarMeasure_volume_pi
 
 namespace Measure
 
@@ -409,7 +409,7 @@ variable {μ} {s : Set E}
 
 -- Note: We might want to rename this once we acquire the lemma corresponding to
 -- `measurable_set.const_smul`
-theorem NullMeasurableSet.constSmul (hs : NullMeasurableSet s μ) (r : ℝ) :
+theorem NullMeasurableSet.const_smul (hs : NullMeasurableSet s μ) (r : ℝ) :
     NullMeasurableSet (r • s) μ :=
   by
   obtain rfl | hs' := s.eq_empty_or_nonempty
@@ -420,7 +420,7 @@ theorem NullMeasurableSet.constSmul (hs : NullMeasurableSet s μ) (r : ℝ) :
   refine' ⟨_, ht.const_smul_of_ne_zero hr, _⟩
   rw [← measure_symm_diff_eq_zero_iff] at hst⊢
   rw [← smul_set_symm_diff₀ hr, add_haar_smul μ, hst, MulZeroClass.mul_zero]
-#align measure_theory.measure.null_measurable_set.const_smul MeasureTheory.Measure.NullMeasurableSet.constSmul
+#align measure_theory.measure.null_measurable_set.const_smul MeasureTheory.Measure.NullMeasurableSet.const_smul
 
 variable (μ)
 
@@ -656,7 +656,7 @@ variable {ι G : Type _} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup G] [N
   [MeasurableSpace G] [BorelSpace G]
 
 theorem addHaar_parallelepiped (b : Basis ι ℝ G) (v : ι → G) :
-    b.add_haar (parallelepiped v) = ENNReal.ofReal (|b.det v|) :=
+    b.addHaar (parallelepiped v) = ENNReal.ofReal (|b.det v|) :=
   by
   have : FiniteDimensional ℝ G := FiniteDimensional.of_fintype_basis b
   have A : parallelepiped v = b.constr ℕ v '' parallelepiped b :=
@@ -678,7 +678,7 @@ parallelepiped spanned by the vectors `v₁, ..., vₙ`. Note that it is not alw
 as it can be zero, but it is always locally finite and translation invariant. -/
 noncomputable irreducible_def AlternatingMap.measure (ω : AlternatingMap ℝ G ℝ (Fin n)) :
   Measure G :=
-  ‖ω (finBasisOfFinrankEq ℝ G _i.out)‖₊ • (finBasisOfFinrankEq ℝ G _i.out).add_haar
+  ‖ω (finBasisOfFinrankEq ℝ G _i.out)‖₊ • (finBasisOfFinrankEq ℝ G _i.out).addHaar
 #align alternating_map.measure AlternatingMap.measure
 
 theorem AlternatingMap.measure_parallelepiped (ω : AlternatingMap ℝ G ℝ (Fin n)) (v : Fin n → G) :

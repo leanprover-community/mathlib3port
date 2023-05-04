@@ -162,7 +162,7 @@ theorem eNNReal_mass {μ : FiniteMeasure Ω} : (μ.mass : ℝ≥0∞) = (μ : Me
   eNNReal_coeFn_eq_coeFn_to_measure μ Set.univ
 #align measure_theory.finite_measure.ennreal_mass MeasureTheory.FiniteMeasure.eNNReal_mass
 
-instance hasZero : Zero (FiniteMeasure Ω) where zero := ⟨0, MeasureTheory.isFiniteMeasureZero⟩
+instance hasZero : Zero (FiniteMeasure Ω) where zero := ⟨0, MeasureTheory.isFiniteMeasure_zero⟩
 #align measure_theory.finite_measure.has_zero MeasureTheory.FiniteMeasure.hasZero
 
 @[simp]
@@ -204,13 +204,13 @@ theorem eq_of_forall_apply_eq (μ ν : FiniteMeasure Ω)
 instance : Inhabited (FiniteMeasure Ω) :=
   ⟨0⟩
 
-instance : Add (FiniteMeasure Ω) where add μ ν := ⟨μ + ν, MeasureTheory.isFiniteMeasureAdd⟩
+instance : Add (FiniteMeasure Ω) where add μ ν := ⟨μ + ν, MeasureTheory.isFiniteMeasure_add⟩
 
 variable {R : Type _} [SMul R ℝ≥0] [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0 ℝ≥0∞]
   [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
 
 instance : SMul R (FiniteMeasure Ω)
-    where smul (c : R) μ := ⟨c • μ, MeasureTheory.isFiniteMeasureSmulOfNnrealTower⟩
+    where smul (c : R) μ := ⟨c • μ, MeasureTheory.isFiniteMeasure_smul_of_nNReal_tower⟩
 
 @[simp, norm_cast]
 theorem coe_zero : (coe : FiniteMeasure Ω → Measure Ω) 0 = 0 :=
@@ -273,7 +273,7 @@ theorem coeFn_smul_apply [IsScalarTower R ℝ≥0 ℝ≥0] (c : R) (μ : FiniteM
 def restrict (μ : FiniteMeasure Ω) (A : Set Ω) : FiniteMeasure Ω
     where
   val := (μ : Measure Ω).restrict A
-  property := MeasureTheory.isFiniteMeasureRestrict μ A
+  property := MeasureTheory.isFiniteMeasure_restrict μ A
 #align measure_theory.finite_measure.restrict MeasureTheory.FiniteMeasure.restrict
 
 theorem restrict_measure_eq (μ : FiniteMeasure Ω) (A : Set Ω) :
@@ -683,15 +683,15 @@ condition that the integrals of all bounded continuous real-valued functions con
 
 variable {Ω : Type _} [MeasurableSpace Ω] [TopologicalSpace Ω] [OpensMeasurableSpace Ω]
 
-theorem integrableOfBoundedContinuousToNnreal (μ : Measure Ω) [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ≥0) :
-    Integrable ((coe : ℝ≥0 → ℝ) ∘ ⇑f) μ :=
+theorem integrable_of_bounded_continuous_to_nNReal (μ : Measure Ω) [IsFiniteMeasure μ]
+    (f : Ω →ᵇ ℝ≥0) : Integrable ((coe : ℝ≥0 → ℝ) ∘ ⇑f) μ :=
   by
   refine' ⟨(nnreal.continuous_coe.comp f.continuous).Measurable.AeStronglyMeasurable, _⟩
   simp only [has_finite_integral, NNReal.nnnorm_eq]
   exact lintegral_lt_top_of_bounded_continuous_to_nnreal _ f
-#align measure_theory.finite_measure.integrable_of_bounded_continuous_to_nnreal MeasureTheory.FiniteMeasure.integrableOfBoundedContinuousToNnreal
+#align measure_theory.finite_measure.integrable_of_bounded_continuous_to_nnreal MeasureTheory.FiniteMeasure.integrable_of_bounded_continuous_to_nNReal
 
-theorem integrableOfBoundedContinuousToReal (μ : Measure Ω) [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ) :
+theorem integrable_of_bounded_continuous_to_real (μ : Measure Ω) [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ) :
     Integrable (⇑f) μ :=
   by
   refine' ⟨f.continuous.measurable.ae_strongly_measurable, _⟩
@@ -704,7 +704,7 @@ theorem integrableOfBoundedContinuousToReal (μ : Measure Ω) [IsFiniteMeasure �
   · exact ENNReal.ofReal_lt_top
   · exact aux ▸ integrable_of_bounded_continuous_to_nnreal μ f.nnnorm
   · exact eventually_of_forall fun ω => norm_nonneg (f ω)
-#align measure_theory.finite_measure.integrable_of_bounded_continuous_to_real MeasureTheory.FiniteMeasure.integrableOfBoundedContinuousToReal
+#align measure_theory.finite_measure.integrable_of_bounded_continuous_to_real MeasureTheory.FiniteMeasure.integrable_of_bounded_continuous_to_real
 
 theorem BoundedContinuousFunction.integral_eq_integral_nnrealPart_sub (μ : Measure Ω)
     [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ) :

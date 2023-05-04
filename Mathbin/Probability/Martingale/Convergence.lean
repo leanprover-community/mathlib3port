@@ -251,10 +251,10 @@ theorem Submartingale.ae_tendsto_limitProcess [IsFiniteMeasure μ] (hf : Submart
       simp_rw [g', dif_pos hω]
       exact hω.some_spec
     have hg'm : @ae_strongly_measurable _ _ _ (⨆ n, ℱ n) g' (μ.trim hle) :=
-      (@aeMeasurableOfTendstoMetrizableAe' _ _ (⨆ n, ℱ n) _ _ _ _ _ _ _
+      (@aEMeasurable_of_tendsto_metrizable_ae' _ _ (⨆ n, ℱ n) _ _ _ _ _ _ _
           (fun n =>
             ((hf.strongly_measurable n).Measurable.mono (le_supₛ ⟨n, rfl⟩ : ℱ n ≤ ⨆ n, ℱ n)
-                le_rfl).AeMeasurable)
+                le_rfl).AEMeasurable)
           hg').AeStronglyMeasurable
     obtain ⟨g, hgm, hae⟩ := hg'm
     have hg : ∀ᵐ ω ∂μ.trim hle, tendsto (fun n => f n ω) at_top (𝓝 (g ω)) :=
@@ -265,11 +265,11 @@ theorem Submartingale.ae_tendsto_limitProcess [IsFiniteMeasure μ] (hf : Submart
 #align measure_theory.submartingale.ae_tendsto_limit_process MeasureTheory.Submartingale.ae_tendsto_limitProcess
 
 /-- The limiting process of an Lᵖ-bounded submartingale is Lᵖ. -/
-theorem Submartingale.memℒpLimitProcess {p : ℝ≥0∞} (hf : Submartingale f ℱ μ)
+theorem Submartingale.memℒp_limitProcess {p : ℝ≥0∞} (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (ℱ.limitProcess f μ) p μ :=
-  memℒpLimitProcessOfSnormBdd
+  memℒp_limitProcess_of_snorm_bdd
     (fun n => ((hf.StronglyMeasurable n).mono (ℱ.le n)).AeStronglyMeasurable) hbdd
-#align measure_theory.submartingale.mem_ℒp_limit_process MeasureTheory.Submartingale.memℒpLimitProcess
+#align measure_theory.submartingale.mem_ℒp_limit_process MeasureTheory.Submartingale.memℒp_limitProcess
 
 end AeConvergence
 
@@ -393,7 +393,7 @@ expectation of its limiting process wrt. `ℱ n`. -/
 theorem Martingale.ae_eq_condexp_limitProcess (hf : Martingale f ℱ μ)
     (hbdd : UniformIntegrable f 1 μ) (n : ℕ) : f n =ᵐ[μ] μ[ℱ.limitProcess f μ|ℱ n] :=
   let ⟨R, hR⟩ := hbdd.2.2
-  hf.eq_condexp_of_tendsto_snorm ((memℒpLimitProcessOfSnormBdd hbdd.1 hR).Integrable le_rfl)
+  hf.eq_condexp_of_tendsto_snorm ((memℒp_limitProcess_of_snorm_bdd hbdd.1 hR).Integrable le_rfl)
     (hf.Submartingale.tendsto_snorm_one_limitProcess hbdd) n
 #align measure_theory.martingale.ae_eq_condexp_limit_process MeasureTheory.Martingale.ae_eq_condexp_limitProcess
 
@@ -473,8 +473,8 @@ theorem Integrable.tendsto_snorm_condexp (hg : Integrable g μ)
     Tendsto (fun n => snorm (μ[g|ℱ n] - g) 1 μ) atTop (𝓝 0) :=
   tendsto_Lp_of_tendstoInMeasure _ le_rfl ENNReal.one_ne_top
     (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable)
-    (memℒp_one_iff_integrable.2 hg) hg.uniformIntegrableCondexpFiltration.2.1
-    (tendstoInMeasureOfTendstoAe
+    (memℒp_one_iff_integrable.2 hg) hg.uniformIntegrable_condexp_filtration.2.1
+    (tendstoInMeasure_of_tendsto_ae
       (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable)
       (hg.tendsto_ae_condexp hgmeas))
 #align measure_theory.integrable.tendsto_snorm_condexp MeasureTheory.Integrable.tendsto_snorm_condexp

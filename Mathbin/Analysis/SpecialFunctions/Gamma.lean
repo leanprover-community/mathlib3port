@@ -92,7 +92,7 @@ theorem Gamma_integrand_isLittleO (s : ℝ) :
 #align real.Gamma_integrand_is_o Real.Gamma_integrand_isLittleO
 
 /-- The Euler integral for the `Γ` function converges for positive real `s`. -/
-theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) :
+theorem Gamma_integral_convergent {s : ℝ} (h : 0 < s) :
     IntegrableOn (fun x : ℝ => exp (-x) * x ^ (s - 1)) (Ioi 0) :=
   by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
@@ -101,11 +101,11 @@ theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) :
     refine' integrable_on.continuous_on_mul continuous_on_id.neg.exp _ is_compact_Icc
     refine' (intervalIntegrable_iff_integrable_Icc_of_le zero_le_one).mp _
     exact interval_integrable_rpow' (by linarith)
-  · refine' integrableOfIsOExpNeg one_half_pos _ (Gamma_integrand_is_o _).IsBigO
+  · refine' integrable_of_isBigO_exp_neg one_half_pos _ (Gamma_integrand_is_o _).IsBigO
     refine' continuous_on_id.neg.exp.mul (continuous_on_id.rpow_const _)
     intro x hx
     exact Or.inl ((zero_lt_one : (0 : ℝ) < 1).trans_le hx).ne'
-#align real.Gamma_integral_convergent Real.gammaIntegralConvergent
+#align real.Gamma_integral_convergent Real.Gamma_integral_convergent
 
 end Real
 
@@ -117,7 +117,7 @@ equal but not definitionally so. We use the first of these throughout. -/
 /-- The integral defining the `Γ` function converges for complex `s` with `0 < re s`.
 
 This is proved by reduction to the real case. -/
-theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
+theorem Gamma_integral_convergent {s : ℂ} (hs : 0 < s.re) :
     IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) :=
   by
   constructor
@@ -132,13 +132,13 @@ theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
       exact Or.inl hx
     exact ContinuousAt.comp this continuous_of_real.continuous_at
   · rw [← has_finite_integral_norm_iff]
-    refine' has_finite_integral.congr (Real.gammaIntegralConvergent hs).2 _
+    refine' has_finite_integral.congr (Real.Gamma_integral_convergent hs).2 _
     refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
     dsimp only
     rw [norm_eq_abs, map_mul, abs_of_nonneg <| le_of_lt <| exp_pos <| -x,
       abs_cpow_eq_rpow_re_of_pos hx _]
     simp
-#align complex.Gamma_integral_convergent Complex.gammaIntegralConvergent
+#align complex.Gamma_integral_convergent Complex.Gamma_integral_convergent
 
 /-- Euler's integral for the `Γ` function (of a complex variable `s`), defined as
 `∫ x in Ioi 0, exp (-x) * x ^ (s - 1)`.
@@ -190,7 +190,7 @@ def partialGamma (s : ℂ) (X : ℝ) : ℂ :=
 
 theorem tendsto_partialGamma {s : ℂ} (hs : 0 < s.re) :
     Tendsto (fun X : ℝ => partialGamma s X) atTop (𝓝 <| gammaIntegral s) :=
-  intervalIntegral_tendsto_integral_Ioi 0 (gammaIntegralConvergent hs) tendsto_id
+  intervalIntegral_tendsto_integral_Ioi 0 (Gamma_integral_convergent hs) tendsto_id
 #align complex.tendsto_partial_Gamma Complex.tendsto_partialGamma
 
 private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 < s.re) (hX : 0 ≤ X) :
@@ -232,7 +232,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
   rw [← has_finite_integral_norm_iff]
   simp_rw [norm_eq_abs, map_mul]
   refine'
-    (((Real.gammaIntegralConvergent hs).monoSet Ioc_subset_Ioi_self).HasFiniteIntegral.congr
+    (((Real.Gamma_integral_convergent hs).mono_set Ioc_subset_Ioi_self).HasFiniteIntegral.congr
           _).const_mul
       _
   rw [eventually_eq, ae_restrict_iff']
@@ -526,7 +526,7 @@ theorem dGamma_integrand_isLittleO_atTop (s : ℝ) :
 
 /-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
 `1 < re s`. -/
-theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
+theorem dGamma_integral_abs_convergent (s : ℝ) (hs : 1 < s) :
     IntegrableOn (fun x : ℝ => ‖exp (-x) * log x * x ^ (s - 1)‖) (Ioi 0) :=
   by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
@@ -548,7 +548,7 @@ theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
       exact hx.1.le
     · exact (abs_log_mul_self_rpow_lt x (s - 1) hx.1 hx.2 (sub_pos.mpr hs)).le
   · have := (dGamma_integrand_isLittleO_atTop s).IsBigO.norm_left
-    refine' integrableOfIsOExpNeg one_half_pos (ContinuousOn.mul _ _).norm this
+    refine' integrable_of_isBigO_exp_neg one_half_pos (ContinuousOn.mul _ _).norm this
     · refine' (continuous_exp.comp continuous_neg).ContinuousOn.mul (continuous_on_log.mono _)
       simp
     · apply ContinuousAt.continuousOn fun x hx => _
@@ -556,7 +556,7 @@ theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
       dsimp
       right
       linarith
-#align dGamma_integral_abs_convergent dGammaIntegralAbsConvergent
+#align dGamma_integral_abs_convergent dGamma_integral_abs_convergent
 
 /-- A uniform bound for the `s`-derivative of the `Γ` integrand for `s` in vertical strips. -/
 theorem loc_unif_bound_dGammaIntegrand {t : ℂ} {s1 s2 x : ℝ} (ht1 : s1 ≤ t.re) (ht2 : t.re ≤ s2)
@@ -633,12 +633,12 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 1 < s.re) :
   have bound_integrable : integrable bound μ :=
     by
     apply integrable.add
-    · refine' dGammaIntegralAbsConvergent (s.re - ε) _
+    · refine' dGamma_integral_abs_convergent (s.re - ε) _
       field_simp
       rw [one_lt_div]
       · linarith
       · exact zero_lt_two
-    · refine' dGammaIntegralAbsConvergent (s.re + ε) _
+    · refine' dGamma_integral_abs_convergent (s.re + ε) _
       linarith
   have h_diff :
     ∀ᵐ x : ℝ ∂μ,
@@ -1239,11 +1239,11 @@ noncomputable def betaIntegral (u v : ℂ) : ℂ :=
 #align complex.beta_integral Complex.betaIntegral
 
 /-- Auxiliary lemma for `beta_integral_convergent`, showing convergence at the left endpoint. -/
-theorem betaIntegralConvergentLeft {u : ℂ} (hu : 0 < re u) (v : ℂ) :
+theorem beta_integral_convergent_left {u : ℂ} (hu : 0 < re u) (v : ℂ) :
     IntervalIntegrable (fun x => x ^ (u - 1) * (1 - x) ^ (v - 1) : ℝ → ℂ) volume 0 (1 / 2) :=
   by
-  apply IntervalIntegrable.mulContinuousOn
-  · refine' intervalIntegral.intervalIntegrableCpow' _
+  apply IntervalIntegrable.mul_continuousOn
+  · refine' intervalIntegral.intervalIntegrable_cpow' _
     rwa [sub_re, one_re, ← zero_sub, sub_lt_sub_iff_right]
   · apply ContinuousAt.continuousOn
     intro x hx
@@ -1253,10 +1253,10 @@ theorem betaIntegralConvergentLeft {u : ℂ} (hu : 0 < re u) (v : ℂ) :
     · exact continuousAt_const
     · rw [sub_re, one_re, of_real_re, sub_pos]
       exact Or.inl (hx.2.trans_lt (by norm_num : (1 / 2 : ℝ) < 1))
-#align complex.beta_integral_convergent_left Complex.betaIntegralConvergentLeft
+#align complex.beta_integral_convergent_left Complex.beta_integral_convergent_left
 
 /-- The Beta integral is convergent for all `u, v` of positive real part. -/
-theorem betaIntegralConvergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
+theorem beta_integral_convergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
     IntervalIntegrable (fun x => x ^ (u - 1) * (1 - x) ^ (v - 1) : ℝ → ℂ) volume 0 1 :=
   by
   refine' (beta_integral_convergent_left hu v).trans _
@@ -1269,7 +1269,7 @@ theorem betaIntegralConvergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
         ring
   · norm_num
   · norm_num
-#align complex.beta_integral_convergent Complex.betaIntegralConvergent
+#align complex.beta_integral_convergent Complex.beta_integral_convergent
 
 theorem betaIntegral_symm (u v : ℂ) : betaIntegral v u = betaIntegral u v :=
   by
@@ -1429,11 +1429,11 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
       · ext1 x
         congr
         abel
-  · apply IntervalIntegrable.constMul
+  · apply IntervalIntegrable.const_mul
     convert beta_integral_convergent hu hv'
     ext1 x
     rw [add_sub_cancel]
-  · apply IntervalIntegrable.constMul
+  · apply IntervalIntegrable.const_mul
     convert beta_integral_convergent hu' hv
     ext1 x
     rw [add_sub_cancel]
@@ -1554,8 +1554,8 @@ theorem approx_gamma_integral_tendsto_gamma_integral {s : ℂ} (hs : 0 < re s) :
     rw [integrable_indicator_iff (measurableSet_Ioc : MeasurableSet (Ioc (_ : ℝ) _)), integrable_on,
       measure.restrict_restrict_of_subset Ioc_subset_Ioi_self, ← integrable_on, ←
       intervalIntegrable_iff_integrable_Ioc_of_le (by positivity : (0 : ℝ) ≤ n)]
-    apply IntervalIntegrable.continuousOnMul
-    · refine' intervalIntegral.intervalIntegrableCpow' _
+    apply IntervalIntegrable.continuousOn_mul
+    · refine' intervalIntegral.intervalIntegrable_cpow' _
       rwa [sub_re, one_re, ← zero_sub, sub_lt_sub_iff_right]
     · apply Continuous.continuousOn
       continuity
@@ -1580,7 +1580,7 @@ theorem approx_gamma_integral_tendsto_gamma_integral {s : ℂ} (hs : 0 < re s) :
       rw [neg_div, ← sub_eq_add_neg]
   -- let `convert` identify the remaining goals
   convert tendsto_integral_of_dominated_convergence _ (fun n => (f_ible n).1)
-      (Real.gammaIntegralConvergent hs) _
+      (Real.Gamma_integral_convergent hs) _
       ((ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ f_tends))
   -- limit of f is the integrand we want
   · ext1 n

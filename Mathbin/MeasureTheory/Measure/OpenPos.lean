@@ -66,9 +66,9 @@ theorem measure_pos_of_mem_nhds (h : s ∈ 𝓝 x) : 0 < μ s :=
   measure_pos_of_nonempty_interior _ ⟨x, mem_interior_iff_mem_nhds.2 h⟩
 #align measure_theory.measure.measure_pos_of_mem_nhds MeasureTheory.Measure.measure_pos_of_mem_nhds
 
-theorem isOpenPosMeasureSmul {c : ℝ≥0∞} (h : c ≠ 0) : IsOpenPosMeasure (c • μ) :=
+theorem isOpenPosMeasure_smul {c : ℝ≥0∞} (h : c ≠ 0) : IsOpenPosMeasure (c • μ) :=
   ⟨fun U Uo Une => mul_ne_zero h (Uo.measure_ne_zero μ Une)⟩
-#align measure_theory.measure.is_open_pos_measure_smul MeasureTheory.Measure.isOpenPosMeasureSmul
+#align measure_theory.measure.is_open_pos_measure_smul MeasureTheory.Measure.isOpenPosMeasure_smul
 
 variable {μ ν}
 

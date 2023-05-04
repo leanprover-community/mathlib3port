@@ -44,18 +44,18 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 protected theorem re {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) :
     AeStronglyMeasurable (fun x => IsROrC.re (f x)) μ :=
-  IsROrC.continuous_re.compAeStronglyMeasurable hf
+  IsROrC.continuous_re.comp_aeStronglyMeasurable hf
 #align measure_theory.ae_strongly_measurable.re MeasureTheory.AeStronglyMeasurable.re
 
 protected theorem im {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) :
     AeStronglyMeasurable (fun x => IsROrC.im (f x)) μ :=
-  IsROrC.continuous_im.compAeStronglyMeasurable hf
+  IsROrC.continuous_im.comp_aeStronglyMeasurable hf
 #align measure_theory.ae_strongly_measurable.im MeasureTheory.AeStronglyMeasurable.im
 
 protected theorem inner {m : MeasurableSpace α} {μ : Measure α} {f g : α → E}
     (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
     AeStronglyMeasurable (fun x => ⟪f x, g x⟫) μ :=
-  continuous_inner.compAeStronglyMeasurable (hf.prod_mk hg)
+  continuous_inner.comp_aeStronglyMeasurable (hf.prod_mk hg)
 #align measure_theory.ae_strongly_measurable.inner MeasureTheory.AeStronglyMeasurable.inner
 
 end AeStronglyMeasurable

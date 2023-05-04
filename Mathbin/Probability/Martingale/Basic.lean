@@ -73,28 +73,28 @@ def Submartingale [LE E] (f : ι → Ω → E) (ℱ : Filtration ι m0)
   Adapted ℱ f ∧ (∀ i j, i ≤ j → f i ≤ᵐ[μ] μ[f j|ℱ i]) ∧ ∀ i, Integrable (f i) μ
 #align measure_theory.submartingale MeasureTheory.Submartingale
 
-theorem martingaleConst (ℱ : Filtration ι m0) (μ : Measure Ω) [IsFiniteMeasure μ] (x : E) :
+theorem martingale_const (ℱ : Filtration ι m0) (μ : Measure Ω) [IsFiniteMeasure μ] (x : E) :
     Martingale (fun _ _ => x) ℱ μ :=
   ⟨adapted_const ℱ _, fun i j hij => by rw [condexp_const (ℱ.le _)]⟩
-#align measure_theory.martingale_const MeasureTheory.martingaleConst
+#align measure_theory.martingale_const MeasureTheory.martingale_const
 
-theorem martingaleConstFun [OrderBot ι] (ℱ : Filtration ι m0) (μ : Measure Ω) [IsFiniteMeasure μ]
+theorem martingale_const_fun [OrderBot ι] (ℱ : Filtration ι m0) (μ : Measure Ω) [IsFiniteMeasure μ]
     {f : Ω → E} (hf : strongly_measurable[ℱ ⊥] f) (hfint : Integrable f μ) :
     Martingale (fun _ => f) ℱ μ :=
   by
   refine' ⟨fun i => hf.mono <| ℱ.mono bot_le, fun i j hij => _⟩
   rw [condexp_of_strongly_measurable (ℱ.le _) (hf.mono <| ℱ.mono bot_le) hfint]
   infer_instance
-#align measure_theory.martingale_const_fun MeasureTheory.martingaleConstFun
+#align measure_theory.martingale_const_fun MeasureTheory.martingale_const_fun
 
 variable (E)
 
-theorem martingaleZero (ℱ : Filtration ι m0) (μ : Measure Ω) : Martingale (0 : ι → Ω → E) ℱ μ :=
+theorem martingale_zero (ℱ : Filtration ι m0) (μ : Measure Ω) : Martingale (0 : ι → Ω → E) ℱ μ :=
   ⟨adapted_zero E ℱ, fun i j hij =>
     by
     rw [Pi.zero_apply, condexp_zero]
     simp⟩
-#align measure_theory.martingale_zero MeasureTheory.martingaleZero
+#align measure_theory.martingale_zero MeasureTheory.martingale_zero
 
 variable {E}
 
@@ -116,7 +116,7 @@ theorem condexp_ae_eq (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ
 
 @[protected]
 theorem integrable (hf : Martingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
-  integrableCondexp.congr (hf.condexp_ae_eq (le_refl i))
+  integrable_condexp.congr (hf.condexp_ae_eq (le_refl i))
 #align measure_theory.martingale.integrable MeasureTheory.Martingale.integrable
 
 theorem set_integral_eq [SigmaFiniteFiltration μ ℱ] (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j)
@@ -166,10 +166,10 @@ theorem martingale_iff [PartialOrder E] :
     ⟨hf₁.1, fun i j hij => (hf₁.2.1 i j hij).antisymm (hf₂.2.1 i j hij)⟩⟩
 #align measure_theory.martingale_iff MeasureTheory.martingale_iff
 
-theorem martingaleCondexp (f : Ω → E) (ℱ : Filtration ι m0) (μ : Measure Ω)
+theorem martingale_condexp (f : Ω → E) (ℱ : Filtration ι m0) (μ : Measure Ω)
     [SigmaFiniteFiltration μ ℱ] : Martingale (fun i => μ[f|ℱ i]) ℱ μ :=
   ⟨fun i => stronglyMeasurable_condexp, fun i j hij => condexp_condexp_of_le (ℱ.mono hij) (ℱ.le j)⟩
-#align measure_theory.martingale_condexp MeasureTheory.martingaleCondexp
+#align measure_theory.martingale_condexp MeasureTheory.martingale_condexp
 
 namespace Supermartingale
 
@@ -213,10 +213,10 @@ theorem add [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Superm
   refine' add_le_add _ _ <;> assumption
 #align measure_theory.supermartingale.add MeasureTheory.Supermartingale.add
 
-theorem addMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Supermartingale f ℱ μ)
-    (hg : Martingale g ℱ μ) : Supermartingale (f + g) ℱ μ :=
+theorem add_martingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
+    (hf : Supermartingale f ℱ μ) (hg : Martingale g ℱ μ) : Supermartingale (f + g) ℱ μ :=
   hf.add hg.Supermartingale
-#align measure_theory.supermartingale.add_martingale MeasureTheory.Supermartingale.addMartingale
+#align measure_theory.supermartingale.add_martingale MeasureTheory.Supermartingale.add_martingale
 
 theorem neg [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Supermartingale f ℱ μ) :
     Submartingale (-f) ℱ μ :=
@@ -262,10 +262,10 @@ theorem add [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submar
   refine' add_le_add _ _ <;> assumption
 #align measure_theory.submartingale.add MeasureTheory.Submartingale.add
 
-theorem addMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ)
+theorem add_martingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ)
     (hg : Martingale g ℱ μ) : Submartingale (f + g) ℱ μ :=
   hf.add hg.Submartingale
-#align measure_theory.submartingale.add_martingale MeasureTheory.Submartingale.addMartingale
+#align measure_theory.submartingale.add_martingale MeasureTheory.Submartingale.add_martingale
 
 theorem neg [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ) :
     Supermartingale (-f) ℱ μ :=
@@ -284,17 +284,17 @@ theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (
   exact supermartingale.set_integral_le hf.neg hij hs
 #align measure_theory.submartingale.set_integral_le MeasureTheory.Submartingale.set_integral_le
 
-theorem subSupermartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
+theorem sub_supermartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
     (hf : Submartingale f ℱ μ) (hg : Supermartingale g ℱ μ) : Submartingale (f - g) ℱ μ :=
   by
   rw [sub_eq_add_neg]
   exact hf.add hg.neg
-#align measure_theory.submartingale.sub_supermartingale MeasureTheory.Submartingale.subSupermartingale
+#align measure_theory.submartingale.sub_supermartingale MeasureTheory.Submartingale.sub_supermartingale
 
-theorem subMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ)
+theorem sub_martingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ)
     (hg : Martingale g ℱ μ) : Submartingale (f - g) ℱ μ :=
-  hf.subSupermartingale hg.Supermartingale
-#align measure_theory.submartingale.sub_martingale MeasureTheory.Submartingale.subMartingale
+  hf.sub_supermartingale hg.Supermartingale
+#align measure_theory.submartingale.sub_martingale MeasureTheory.Submartingale.sub_martingale
 
 protected theorem sup {f g : ι → Ω → ℝ} (hf : Submartingale f ℱ μ) (hg : Submartingale g ℱ μ) :
     Submartingale (f ⊔ g) ℱ μ :=
@@ -316,14 +316,14 @@ protected theorem sup {f g : ι → Ω → ℝ} (hf : Submartingale f ℱ μ) (h
 #align measure_theory.submartingale.sup MeasureTheory.Submartingale.sup
 
 protected theorem pos {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ) : Submartingale (f⁺) ℱ μ :=
-  hf.sup (martingaleZero _ _ _).Submartingale
+  hf.sup (martingale_zero _ _ _).Submartingale
 #align measure_theory.submartingale.pos MeasureTheory.Submartingale.pos
 
 end Submartingale
 
 section Submartingale
 
-theorem submartingaleOfSetIntegralLe [IsFiniteMeasure μ] {f : ι → Ω → ℝ} (hadp : Adapted ℱ f)
+theorem submartingale_of_set_integral_le [IsFiniteMeasure μ] {f : ι → Ω → ℝ} (hadp : Adapted ℱ f)
     (hint : ∀ i, Integrable (f i) μ)
     (hf :
       ∀ i j : ι,
@@ -343,16 +343,16 @@ theorem submartingaleOfSetIntegralLe [IsFiniteMeasure μ] {f : ι → Ω → ℝ
   rwa [← set_integral_trim _ (strongly_measurable_condexp.sub <| hadp i) hs,
     integral_sub' integrable_condexp.integrable_on (hint i).IntegrableOn, sub_nonneg,
     set_integral_condexp (ℱ.le i) (hint j) hs]
-#align measure_theory.submartingale_of_set_integral_le MeasureTheory.submartingaleOfSetIntegralLe
+#align measure_theory.submartingale_of_set_integral_le MeasureTheory.submartingale_of_set_integral_le
 
-theorem submartingaleOfCondexpSubNonneg [IsFiniteMeasure μ] {f : ι → Ω → ℝ} (hadp : Adapted ℱ f)
+theorem submartingale_of_condexp_sub_nonneg [IsFiniteMeasure μ] {f : ι → Ω → ℝ} (hadp : Adapted ℱ f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i j, i ≤ j → 0 ≤ᵐ[μ] μ[f j - f i|ℱ i]) :
     Submartingale f ℱ μ := by
   refine' ⟨hadp, fun i j hij => _, hint⟩
   rw [← condexp_of_strongly_measurable (ℱ.le _) (hadp _) (hint _), ← eventually_sub_nonneg]
   exact eventually_le.trans (hf i j hij) (condexp_sub (hint _) (hint _)).le
   infer_instance
-#align measure_theory.submartingale_of_condexp_sub_nonneg MeasureTheory.submartingaleOfCondexpSubNonneg
+#align measure_theory.submartingale_of_condexp_sub_nonneg MeasureTheory.submartingale_of_condexp_sub_nonneg
 
 theorem Submartingale.condexp_sub_nonneg {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ) {i j : ι}
     (hij : i ≤ j) : 0 ≤ᵐ[μ] μ[f j - f i|ℱ i] :=
@@ -370,31 +370,31 @@ theorem submartingale_iff_condexp_sub_nonneg [IsFiniteMeasure μ] {f : ι → Ω
     Submartingale f ℱ μ ↔
       Adapted ℱ f ∧ (∀ i, Integrable (f i) μ) ∧ ∀ i j, i ≤ j → 0 ≤ᵐ[μ] μ[f j - f i|ℱ i] :=
   ⟨fun h => ⟨h.Adapted, h.Integrable, fun i j => h.condexp_sub_nonneg⟩, fun ⟨hadp, hint, h⟩ =>
-    submartingaleOfCondexpSubNonneg hadp hint h⟩
+    submartingale_of_condexp_sub_nonneg hadp hint h⟩
 #align measure_theory.submartingale_iff_condexp_sub_nonneg MeasureTheory.submartingale_iff_condexp_sub_nonneg
 
 end Submartingale
 
 namespace Supermartingale
 
-theorem subSubmartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
+theorem sub_submartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
     (hf : Supermartingale f ℱ μ) (hg : Submartingale g ℱ μ) : Supermartingale (f - g) ℱ μ :=
   by
   rw [sub_eq_add_neg]
   exact hf.add hg.neg
-#align measure_theory.supermartingale.sub_submartingale MeasureTheory.Supermartingale.subSubmartingale
+#align measure_theory.supermartingale.sub_submartingale MeasureTheory.Supermartingale.sub_submartingale
 
-theorem subMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Supermartingale f ℱ μ)
-    (hg : Martingale g ℱ μ) : Supermartingale (f - g) ℱ μ :=
-  hf.subSubmartingale hg.Submartingale
-#align measure_theory.supermartingale.sub_martingale MeasureTheory.Supermartingale.subMartingale
+theorem sub_martingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
+    (hf : Supermartingale f ℱ μ) (hg : Martingale g ℱ μ) : Supermartingale (f - g) ℱ μ :=
+  hf.sub_submartingale hg.Submartingale
+#align measure_theory.supermartingale.sub_martingale MeasureTheory.Supermartingale.sub_martingale
 
 section
 
 variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
   [OrderedSMul ℝ F]
 
-theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermartingale f ℱ μ) :
+theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermartingale f ℱ μ) :
     Supermartingale (c • f) ℱ μ :=
   by
   refine' ⟨hf.1.smul c, fun i j hij => _, fun i => (hf.2.2 i).smul c⟩
@@ -402,9 +402,9 @@ theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermar
   filter_upwards [hf.2.1 i j hij]with _ hle
   simp
   exact smul_le_smul_of_nonneg hle hc
-#align measure_theory.supermartingale.smul_nonneg MeasureTheory.Supermartingale.smulNonneg
+#align measure_theory.supermartingale.smul_nonneg MeasureTheory.Supermartingale.smul_nonneg
 
-theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermartingale f ℱ μ) :
+theorem smul_nonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
   by
   rw [← neg_neg c,
@@ -412,7 +412,7 @@ theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermar
       ext (i x)
       simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
-#align measure_theory.supermartingale.smul_nonpos MeasureTheory.Supermartingale.smulNonpos
+#align measure_theory.supermartingale.smul_nonpos MeasureTheory.Supermartingale.smul_nonpos
 
 end
 
@@ -425,7 +425,7 @@ section
 variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
   [OrderedSMul ℝ F]
 
-theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) :
+theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
   by
   rw [← neg_neg c,
@@ -433,9 +433,9 @@ theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submarti
       ext (i x)
       simp : - -c • f = -(c • -f))]
   exact supermartingale.neg (hf.neg.smul_nonneg hc)
-#align measure_theory.submartingale.smul_nonneg MeasureTheory.Submartingale.smulNonneg
+#align measure_theory.submartingale.smul_nonneg MeasureTheory.Submartingale.smul_nonneg
 
-theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submartingale f ℱ μ) :
+theorem smul_nonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submartingale f ℱ μ) :
     Supermartingale (c • f) ℱ μ :=
   by
   rw [← neg_neg c,
@@ -443,7 +443,7 @@ theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submarti
       ext (i x)
       simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
-#align measure_theory.submartingale.smul_nonpos MeasureTheory.Submartingale.smulNonpos
+#align measure_theory.submartingale.smul_nonpos MeasureTheory.Submartingale.smul_nonpos
 
 end
 
@@ -453,8 +453,8 @@ section Nat
 
 variable {𝒢 : Filtration ℕ m0}
 
-theorem submartingaleOfSetIntegralLeSucc [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
-    (hint : ∀ i, Integrable (f i) μ)
+theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+    (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
     (hf :
       ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f i ω ∂μ) ≤ ∫ ω in s, f (i + 1) ω ∂μ) :
     Submartingale f 𝒢 μ :=
@@ -463,29 +463,29 @@ theorem submartingaleOfSetIntegralLeSucc [IsFiniteMeasure μ] {f : ℕ → Ω �
   induction' hij with k hk₁ hk₂
   · exact le_rfl
   · exact le_trans hk₂ (hf k s (𝒢.mono hk₁ _ hs))
-#align measure_theory.submartingale_of_set_integral_le_succ MeasureTheory.submartingaleOfSetIntegralLeSucc
+#align measure_theory.submartingale_of_set_integral_le_succ MeasureTheory.submartingale_of_set_integral_le_succ
 
-theorem supermartingaleOfSetIntegralSuccLe [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
-    (hint : ∀ i, Integrable (f i) μ)
+theorem supermartingale_of_set_integral_succ_le [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+    (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
     (hf :
       ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f (i + 1) ω ∂μ) ≤ ∫ ω in s, f i ω ∂μ) :
     Supermartingale f 𝒢 μ := by
   rw [← neg_neg f]
   refine' (submartingale_of_set_integral_le_succ hadp.neg (fun i => (hint i).neg) _).neg
   simpa only [integral_neg, Pi.neg_apply, neg_le_neg_iff]
-#align measure_theory.supermartingale_of_set_integral_succ_le MeasureTheory.supermartingaleOfSetIntegralSuccLe
+#align measure_theory.supermartingale_of_set_integral_succ_le MeasureTheory.supermartingale_of_set_integral_succ_le
 
-theorem martingaleOfSetIntegralEqSucc [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
+theorem martingale_of_set_integral_eq_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ)
     (hf :
       ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f i ω ∂μ) = ∫ ω in s, f (i + 1) ω ∂μ) :
     Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨supermartingaleOfSetIntegralSuccLe hadp hint fun i s hs => (hf i s hs).ge,
-      submartingaleOfSetIntegralLeSucc hadp hint fun i s hs => (hf i s hs).le⟩
-#align measure_theory.martingale_of_set_integral_eq_succ MeasureTheory.martingaleOfSetIntegralEqSucc
+    ⟨supermartingale_of_set_integral_succ_le hadp hint fun i s hs => (hf i s hs).ge,
+      submartingale_of_set_integral_le_succ hadp hint fun i s hs => (hf i s hs).le⟩
+#align measure_theory.martingale_of_set_integral_eq_succ MeasureTheory.martingale_of_set_integral_eq_succ
 
-theorem submartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
+theorem submartingale_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, f i ≤ᵐ[μ] μ[f (i + 1)|𝒢 i]) : Submartingale f 𝒢 μ :=
   by
   refine' submartingale_of_set_integral_le_succ hadp hint fun i s hs => _
@@ -493,9 +493,9 @@ theorem submartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : A
     (set_integral_condexp (𝒢.le i) (hint _) hs).symm
   rw [this]
   exact set_integral_mono_ae (hint i).IntegrableOn integrable_condexp.integrable_on (hf i)
-#align measure_theory.submartingale_nat MeasureTheory.submartingaleNat
+#align measure_theory.submartingale_nat MeasureTheory.submartingale_nat
 
-theorem supermartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
+theorem supermartingale_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, μ[f (i + 1)|𝒢 i] ≤ᵐ[μ] f i) :
     Supermartingale f 𝒢 μ := by
   rw [← neg_neg f]
@@ -503,37 +503,37 @@ theorem supermartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp :
     (submartingale_nat hadp.neg (fun i => (hint i).neg) fun i =>
         eventually_le.trans _ (condexp_neg _).symm.le).neg
   filter_upwards [hf i]with x hx using neg_le_neg hx
-#align measure_theory.supermartingale_nat MeasureTheory.supermartingaleNat
+#align measure_theory.supermartingale_nat MeasureTheory.supermartingale_nat
 
-theorem martingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
+theorem martingale_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, f i =ᵐ[μ] μ[f (i + 1)|𝒢 i]) : Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨supermartingaleNat hadp hint fun i => (hf i).symm.le,
-      submartingaleNat hadp hint fun i => (hf i).le⟩
-#align measure_theory.martingale_nat MeasureTheory.martingaleNat
+    ⟨supermartingale_nat hadp hint fun i => (hf i).symm.le,
+      submartingale_nat hadp hint fun i => (hf i).le⟩
+#align measure_theory.martingale_nat MeasureTheory.martingale_nat
 
-theorem submartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
-    (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, 0 ≤ᵐ[μ] μ[f (i + 1) - f i|𝒢 i]) :
-    Submartingale f 𝒢 μ :=
+theorem submartingale_of_condexp_sub_nonneg_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+    (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
+    (hf : ∀ i, 0 ≤ᵐ[μ] μ[f (i + 1) - f i|𝒢 i]) : Submartingale f 𝒢 μ :=
   by
   refine' submartingale_nat hadp hint fun i => _
   rw [← condexp_of_strongly_measurable (𝒢.le _) (hadp _) (hint _), ← eventually_sub_nonneg]
   exact eventually_le.trans (hf i) (condexp_sub (hint _) (hint _)).le
   infer_instance
-#align measure_theory.submartingale_of_condexp_sub_nonneg_nat MeasureTheory.submartingaleOfCondexpSubNonnegNat
+#align measure_theory.submartingale_of_condexp_sub_nonneg_nat MeasureTheory.submartingale_of_condexp_sub_nonneg_nat
 
-theorem supermartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+theorem supermartingale_of_condexp_sub_nonneg_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
     (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
     (hf : ∀ i, 0 ≤ᵐ[μ] μ[f i - f (i + 1)|𝒢 i]) : Supermartingale f 𝒢 μ :=
   by
   rw [← neg_neg f]
   refine' (submartingale_of_condexp_sub_nonneg_nat hadp.neg (fun i => (hint i).neg) _).neg
   simpa only [Pi.zero_apply, Pi.neg_apply, neg_sub_neg]
-#align measure_theory.supermartingale_of_condexp_sub_nonneg_nat MeasureTheory.supermartingaleOfCondexpSubNonnegNat
+#align measure_theory.supermartingale_of_condexp_sub_nonneg_nat MeasureTheory.supermartingale_of_condexp_sub_nonneg_nat
 
-theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
-    (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, μ[f (i + 1) - f i|𝒢 i] =ᵐ[μ] 0) :
-    Martingale f 𝒢 μ :=
+theorem martingale_of_condexp_sub_eq_zero_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
+    (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
+    (hf : ∀ i, μ[f (i + 1) - f i|𝒢 i] =ᵐ[μ] 0) : Martingale f 𝒢 μ :=
   by
   refine'
     martingale_iff.2
@@ -543,7 +543,7 @@ theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω →
   refine' (eventually_eq.trans _ (condexp_neg _).symm).le
   filter_upwards [hf i]with x hx
   simpa only [Pi.zero_apply, Pi.neg_apply, zero_eq_neg]
-#align measure_theory.martingale_of_condexp_sub_eq_zero_nat MeasureTheory.martingaleOfCondexpSubEqZeroNat
+#align measure_theory.martingale_of_condexp_sub_eq_zero_nat MeasureTheory.martingale_of_condexp_sub_eq_zero_nat
 
 -- Note that one cannot use `submartingale.zero_le_of_predictable` to prove the other two
 -- corresponding lemmas without imposing more restrictions to the ordering of `E`
@@ -597,14 +597,14 @@ theorem Martingale.eq_zero_of_predictable [SigmaFiniteFiltration μ 𝒢] {f : �
 namespace Submartingale
 
 @[protected]
-theorem integrableStoppedValue [LE E] {f : ℕ → Ω → E} (hf : Submartingale f 𝒢 μ) {τ : Ω → ℕ}
+theorem integrable_stoppedValue [LE E] {f : ℕ → Ω → E} (hf : Submartingale f 𝒢 μ) {τ : Ω → ℕ}
     (hτ : IsStoppingTime 𝒢 τ) {N : ℕ} (hbdd : ∀ ω, τ ω ≤ N) : Integrable (stoppedValue f τ) μ :=
-  integrableStoppedValue ℕ hτ hf.Integrable hbdd
-#align measure_theory.submartingale.integrable_stopped_value MeasureTheory.Submartingale.integrableStoppedValue
+  integrable_stoppedValue ℕ hτ hf.Integrable hbdd
+#align measure_theory.submartingale.integrable_stopped_value MeasureTheory.Submartingale.integrable_stoppedValue
 
 end Submartingale
 
-theorem Submartingale.sumMulSub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → Ω → ℝ}
+theorem Submartingale.sum_mul_sub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → Ω → ℝ}
     (hf : Submartingale f 𝒢 μ) (hξ : Adapted 𝒢 ξ) (hbdd : ∀ n ω, ξ n ω ≤ R)
     (hnonneg : ∀ n ω, 0 ≤ ξ n ω) :
     Submartingale (fun n => ∑ k in Finset.range n, ξ k * (f (k + 1) - f k)) 𝒢 μ :=
@@ -632,20 +632,20 @@ theorem Submartingale.sumMulSub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → �
       (eventually_le.mul_nonneg (eventually_of_forall (hnonneg _))
         (hf.condexp_sub_nonneg (Nat.le_succ _)))
       (condexp_strongly_measurable_mul (hξ _)
-            (((hf.integrable _).sub (hf.integrable _)).bddMul
+            (((hf.integrable _).sub (hf.integrable _)).bdd_mul
               hξ.strongly_measurable.ae_strongly_measurable (hξbdd _))
             ((hf.integrable _).sub (hf.integrable _))).symm.le
-#align measure_theory.submartingale.sum_mul_sub MeasureTheory.Submartingale.sumMulSub
+#align measure_theory.submartingale.sum_mul_sub MeasureTheory.Submartingale.sum_mul_sub
 
 /-- Given a discrete submartingale `f` and a predictable process `ξ` (i.e. `ξ (n + 1)` is adapted)
 the process defined by `λ n, ∑ k in finset.range n, ξ (k + 1) * (f (k + 1) - f k)` is also a
 submartingale. -/
-theorem Submartingale.sumMulSub' [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → Ω → ℝ}
+theorem Submartingale.sum_mul_sub' [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → Ω → ℝ}
     (hf : Submartingale f 𝒢 μ) (hξ : Adapted 𝒢 fun n => ξ (n + 1)) (hbdd : ∀ n ω, ξ n ω ≤ R)
     (hnonneg : ∀ n ω, 0 ≤ ξ n ω) :
     Submartingale (fun n => ∑ k in Finset.range n, ξ (k + 1) * (f (k + 1) - f k)) 𝒢 μ :=
-  hf.sumMulSub hξ (fun n => hbdd _) fun n => hnonneg _
-#align measure_theory.submartingale.sum_mul_sub' MeasureTheory.Submartingale.sumMulSub'
+  hf.sum_mul_sub hξ (fun n => hbdd _) fun n => hnonneg _
+#align measure_theory.submartingale.sum_mul_sub' MeasureTheory.Submartingale.sum_mul_sub'
 
 end Nat
 

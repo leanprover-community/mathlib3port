@@ -113,8 +113,8 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
     mul_assoc, hI₂]
 #align add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self
 
-theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n • y :=
-  { measure_preserving_zsmul volume (abs_pos.mp <| lt_trans zero_lt_one hn) with
+theorem ergodic_zsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n • y :=
+  { measurePreserving_zsmul volume (abs_pos.mp <| lt_trans zero_lt_one hn) with
     ae_empty_or_univ := fun s hs hs' =>
       by
       let u : ℕ → AddCircle T := fun j => ↑((↑1 : ℝ) / ↑(n.nat_abs ^ j) * T)
@@ -132,13 +132,13 @@ theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n
         simp_rw [hu₀]
         exact Nat.tendsto_pow_atTop_atTop_of_one_lt hn
       exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hs.null_measurable_set hu₁ hu₂ }
-#align add_circle.ergodic_zsmul AddCircle.ergodicZsmul
+#align add_circle.ergodic_zsmul AddCircle.ergodic_zsmul
 
-theorem ergodicNsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n • y :=
-  ergodicZsmul (by simp [hn] : 1 < |(n : ℤ)|)
-#align add_circle.ergodic_nsmul AddCircle.ergodicNsmul
+theorem ergodic_nsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n • y :=
+  ergodic_zsmul (by simp [hn] : 1 < |(n : ℤ)|)
+#align add_circle.ergodic_nsmul AddCircle.ergodic_nsmul
 
-theorem ergodicZsmulAdd (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x :=
+theorem ergodic_zsmul_add (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x :=
   by
   set f : AddCircle T → AddCircle T := fun y => n • y + x
   let e : AddCircle T ≃ᵐ AddCircle T := MeasurableEquiv.addLeft (DivisibleBy.div x <| n - 1)
@@ -161,11 +161,11 @@ theorem ergodicZsmulAdd (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun 
   simp only [f, hnx, MeasurableEquiv.coe_add_left, MeasurableEquiv.symm_add_left, comp_app,
     smul_add, zsmul_neg', neg_smul, neg_add_rev]
   abel
-#align add_circle.ergodic_zsmul_add AddCircle.ergodicZsmulAdd
+#align add_circle.ergodic_zsmul_add AddCircle.ergodic_zsmul_add
 
-theorem ergodicNsmulAdd (x : AddCircle T) {n : ℕ} (h : 1 < n) : Ergodic fun y => n • y + x :=
-  ergodicZsmulAdd x (by simp [h] : 1 < |(n : ℤ)|)
-#align add_circle.ergodic_nsmul_add AddCircle.ergodicNsmulAdd
+theorem ergodic_nsmul_add (x : AddCircle T) {n : ℕ} (h : 1 < n) : Ergodic fun y => n • y + x :=
+  ergodic_zsmul_add x (by simp [h] : 1 < |(n : ℤ)|)
+#align add_circle.ergodic_nsmul_add AddCircle.ergodic_nsmul_add
 
 end AddCircle
 

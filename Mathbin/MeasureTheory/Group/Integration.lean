@@ -37,10 +37,10 @@ section MeasurableInv
 variable [Group G] [HasMeasurableInv G]
 
 @[to_additive]
-theorem Integrable.compInv [IsInvInvariant μ] {f : G → F} (hf : Integrable f μ) :
+theorem Integrable.comp_inv [IsInvInvariant μ] {f : G → F} (hf : Integrable f μ) :
     Integrable (fun t => f t⁻¹) μ :=
-  (hf.monoMeasure (map_inv_eq_self μ).le).compMeasurable measurable_inv
-#align measure_theory.integrable.comp_inv MeasureTheory.Integrable.compInv
+  (hf.mono_measure (map_inv_eq_self μ).le).comp_measurable measurable_inv
+#align measure_theory.integrable.comp_inv MeasureTheory.Integrable.comp_inv
 #align measure_theory.integrable.comp_neg MeasureTheory.Integrable.comp_neg
 
 @[to_additive]
@@ -144,42 +144,42 @@ theorem integral_eq_zero_of_mul_right_eq_neg [IsMulRightInvariant μ] (hf' : ∀
 #align measure_theory.integral_eq_zero_of_add_right_eq_neg MeasureTheory.integral_eq_zero_of_add_right_eq_neg
 
 @[to_additive]
-theorem Integrable.compMulLeft {f : G → F} [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
+theorem Integrable.comp_mul_left {f : G → F} [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
     Integrable (fun t => f (g * t)) μ :=
-  (hf.monoMeasure (map_mul_left_eq_self μ g).le).compMeasurable <| measurable_const_mul g
-#align measure_theory.integrable.comp_mul_left MeasureTheory.Integrable.compMulLeft
+  (hf.mono_measure (map_mul_left_eq_self μ g).le).comp_measurable <| measurable_const_mul g
+#align measure_theory.integrable.comp_mul_left MeasureTheory.Integrable.comp_mul_left
 #align measure_theory.integrable.comp_add_left MeasureTheory.Integrable.comp_add_left
 
 @[to_additive]
-theorem Integrable.compMulRight {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
-    Integrable (fun t => f (t * g)) μ :=
-  (hf.monoMeasure (map_mul_right_eq_self μ g).le).compMeasurable <| measurable_mul_const g
-#align measure_theory.integrable.comp_mul_right MeasureTheory.Integrable.compMulRight
+theorem Integrable.comp_mul_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ)
+    (g : G) : Integrable (fun t => f (t * g)) μ :=
+  (hf.mono_measure (map_mul_right_eq_self μ g).le).comp_measurable <| measurable_mul_const g
+#align measure_theory.integrable.comp_mul_right MeasureTheory.Integrable.comp_mul_right
 #align measure_theory.integrable.comp_add_right MeasureTheory.Integrable.comp_add_right
 
 @[to_additive]
-theorem Integrable.compDivRight {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
-    Integrable (fun t => f (t / g)) μ :=
+theorem Integrable.comp_div_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ)
+    (g : G) : Integrable (fun t => f (t / g)) μ :=
   by
   simp_rw [div_eq_mul_inv]
   exact hf.comp_mul_right g⁻¹
-#align measure_theory.integrable.comp_div_right MeasureTheory.Integrable.compDivRight
+#align measure_theory.integrable.comp_div_right MeasureTheory.Integrable.comp_div_right
 #align measure_theory.integrable.comp_sub_right MeasureTheory.Integrable.comp_sub_right
 
 variable [HasMeasurableInv G]
 
 @[to_additive]
-theorem Integrable.compDivLeft {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ]
+theorem Integrable.comp_div_left {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ]
     (hf : Integrable f μ) (g : G) : Integrable (fun t => f (g / t)) μ :=
-  ((measurePreservingDivLeft μ g).integrable_comp hf.AeStronglyMeasurable).mpr hf
-#align measure_theory.integrable.comp_div_left MeasureTheory.Integrable.compDivLeft
+  ((measurePreserving_div_left μ g).integrable_comp hf.AeStronglyMeasurable).mpr hf
+#align measure_theory.integrable.comp_div_left MeasureTheory.Integrable.comp_div_left
 #align measure_theory.integrable.comp_sub_left MeasureTheory.Integrable.comp_sub_left
 
 @[simp, to_additive]
 theorem integrable_comp_div_left (f : G → F) [IsInvInvariant μ] [IsMulLeftInvariant μ] (g : G) :
     Integrable (fun t => f (g / t)) μ ↔ Integrable f μ :=
   by
-  refine' ⟨fun h => _, fun h => h.compDivLeft g⟩
+  refine' ⟨fun h => _, fun h => h.comp_div_left g⟩
   convert h.comp_inv.comp_mul_left g⁻¹
   simp_rw [div_inv_eq_mul, mul_inv_cancel_left]
 #align measure_theory.integrable_comp_div_left MeasureTheory.integrable_comp_div_left

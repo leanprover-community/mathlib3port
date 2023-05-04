@@ -590,12 +590,12 @@ theorem normed_neg (f : ContDiffBump (0 : E)) (x : E) : f.normed μ (-x) = f.nor
 variable [BorelSpace E] [FiniteDimensional ℝ E] [IsLocallyFiniteMeasure μ]
 
 protected theorem integrable : Integrable f μ :=
-  f.Continuous.integrableOfHasCompactSupport f.HasCompactSupport
+  f.Continuous.integrable_of_hasCompactSupport f.HasCompactSupport
 #align cont_diff_bump.integrable ContDiffBump.integrable
 
-protected theorem integrableNormed : Integrable (f.normed μ) μ :=
+protected theorem integrable_normed : Integrable (f.normed μ) μ :=
   f.Integrable.div_const _
-#align cont_diff_bump.integrable_normed ContDiffBump.integrableNormed
+#align cont_diff_bump.integrable_normed ContDiffBump.integrable_normed
 
 variable [μ.IsOpenPosMeasure]
 

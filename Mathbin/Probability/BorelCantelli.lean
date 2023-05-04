@@ -41,7 +41,7 @@ section BorelCantelli
 variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAddCommGroup β]
   [BorelSpace β] {f : ι → Ω → β} {i j : ι} {s : ι → Set Ω}
 
-theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
+theorem IndepFun.indepCat_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f i))
     (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
     IndepCat (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
   by
@@ -50,13 +50,13 @@ theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
       (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
     by rwa [supᵢ_singleton] at this
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
-#align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepComapNaturalOfLt
+#align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepCat_comap_natural_of_lt
 
 theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
     [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
   condexp_indepCat_eq (hf j).Measurable.comap_le (Filtration.le _ _)
-    (comap_measurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
+    (comap_measurable <| f j).StronglyMeasurable (hfi.indepCat_comap_natural_of_lt hf hij)
 #align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
 theorem IndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, MeasurableSet (s n))

@@ -215,7 +215,7 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
 
 /-- Given a integrable function `g`, the conditional expectations of `g` with respect to
 a sequence of sub-σ-algebras is uniformly integrable. -/
-theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {g : α → ℝ}
+theorem Integrable.uniformIntegrable_condexp {ι : Type _} [IsFiniteMeasure μ] {g : α → ℝ}
     (hint : Integrable g μ) {ℱ : ι → MeasurableSpace α} (hℱ : ∀ i, ℱ i ≤ m0) :
     UniformIntegrable (fun i => μ[g|ℱ i]) 1 μ :=
   by
@@ -265,7 +265,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
       (@Measurable.nnnorm _ _ _ _ _ (ℱ n) _ strongly_measurable_condexp.measurable)
   rw [← snorm_congr_ae (condexp_indicator hint hmeasℱ)]
   exact snorm_one_condexp_le_snorm _
-#align measure_theory.integrable.uniform_integrable_condexp MeasureTheory.Integrable.uniformIntegrableCondexp
+#align measure_theory.integrable.uniform_integrable_condexp MeasureTheory.Integrable.uniformIntegrable_condexp
 
 section PullOut
 

@@ -147,7 +147,7 @@ theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeas
 
 theorem average_pair {f : α → E} {g : α → F} (hfi : Integrable f μ) (hgi : Integrable g μ) :
     (⨍ x, (f x, g x) ∂μ) = (⨍ x, f x ∂μ, ⨍ x, g x ∂μ) :=
-  integral_pair hfi.toAverage hgi.toAverage
+  integral_pair hfi.to_average hgi.to_average
 #align measure_theory.average_pair MeasureTheory.average_pair
 
 theorem measure_smul_set_average (f : α → E) {s : Set α} (h : μ s ≠ ∞) :

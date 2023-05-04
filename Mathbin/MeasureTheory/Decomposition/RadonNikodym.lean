@@ -72,7 +72,7 @@ theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition �
 `ν.with_density (rn_deriv μ ν) = μ`. -/
 theorem absolutelyContinuous_iff_withDensity_rnDeriv_eq {μ ν : Measure α}
     [HaveLebesgueDecomposition μ ν] : μ ≪ ν ↔ ν.withDensity (rnDeriv μ ν) = μ :=
-  ⟨withDensity_rnDeriv_eq μ ν, fun h => h ▸ withDensityAbsolutelyContinuous _ _⟩
+  ⟨withDensity_rnDeriv_eq μ ν, fun h => h ▸ withDensity_absolutelyContinuous _ _⟩
 #align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq
 
 theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]

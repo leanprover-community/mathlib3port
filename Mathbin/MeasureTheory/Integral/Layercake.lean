@@ -164,7 +164,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
   rw [aux₂]
   have mble := measurableSet_region_between_oc measurable_zero f_mble MeasurableSet.univ
   simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble
-  exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).AeMeasurable.indicator mble
+  exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).AEMeasurable.indicator mble
 #align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable
 
 /-- The layer cake formula / Cavalieri's principle / tail probability formula:
@@ -187,14 +187,14 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   by
   have ex_G : ∃ G : ℝ → ℝ, Measurable G ∧ 0 ≤ G ∧ g =ᵐ[volume.restrict (Ioi 0)] G :=
     by
-    refine' AeMeasurable.exists_measurable_nonneg _ g_nn
-    exact aeMeasurableIoiOfForallIoc fun t ht => (g_intble t ht).1.1.AeMeasurable
+    refine' AEMeasurable.exists_measurable_nonneg _ g_nn
+    exact aEMeasurable_Ioi_of_forall_Ioc fun t ht => (g_intble t ht).1.1.AEMeasurable
   rcases ex_G with ⟨G, G_mble, G_nn, g_eq_G⟩
   have g_eq_G_on : ∀ t, g =ᵐ[volume.restrict (Ioc 0 t)] G := fun t =>
     ae_mono (measure.restrict_mono Ioc_subset_Ioi_self le_rfl) g_eq_G
   have G_intble : ∀ t > 0, IntervalIntegrable G volume 0 t :=
     by
-    refine' fun t t_pos => ⟨(g_intble t t_pos).1.congrFunAe (g_eq_G_on t), _⟩
+    refine' fun t t_pos => ⟨(g_intble t t_pos).1.congr_fun_ae (g_eq_G_on t), _⟩
     rw [Ioc_eq_empty_of_le t_pos.lt.le]
     exact integrable_on_empty
   have eq₁ :
@@ -229,7 +229,8 @@ theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn 
     (∫⁻ ω, ENNReal.ofReal (f ω) ∂μ) = ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } :=
   by
   set cst := fun t : ℝ => (1 : ℝ) with def_cst
-  have cst_intble : ∀ t > 0, IntervalIntegrable cst volume 0 t := fun _ _ => intervalIntegrableConst
+  have cst_intble : ∀ t > 0, IntervalIntegrable cst volume 0 t := fun _ _ =>
+    intervalIntegrable_const
   have key :=
     lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble cst_intble
       (eventually_of_forall fun t => zero_le_one)
@@ -265,7 +266,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     rw [g_def]
     exact Real.rpow_nonneg_of_nonneg (mem_Ioi.mp t_pos).le (p - 1)
   have g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t := fun _ _ =>
-    intervalIntegral.intervalIntegrableRpow' one_lt_p
+    intervalIntegral.intervalIntegrable_rpow' one_lt_p
   have key := lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble g_intble g_nn
   simp_rw [g_def] at key
   rw [← key, ← lintegral_const_mul (ENNReal.ofReal p)] <;> simp_rw [obs]

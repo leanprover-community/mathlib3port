@@ -115,8 +115,8 @@ theorem MeasureTheory.Integrable.intervalIntegrable (hf : Integrable f μ) :
 
 theorem MeasureTheory.IntegrableOn.intervalIntegrable (hf : IntegrableOn f [a, b] μ) :
     IntervalIntegrable f μ a b :=
-  ⟨MeasureTheory.IntegrableOn.monoSet hf (Ioc_subset_Icc_self.trans Icc_subset_uIcc),
-    MeasureTheory.IntegrableOn.monoSet hf (Ioc_subset_Icc_self.trans Icc_subset_uIcc')⟩
+  ⟨MeasureTheory.IntegrableOn.mono_set hf (Ioc_subset_Icc_self.trans Icc_subset_uIcc),
+    MeasureTheory.IntegrableOn.mono_set hf (Ioc_subset_Icc_self.trans Icc_subset_uIcc')⟩
 #align measure_theory.integrable_on.interval_integrable MeasureTheory.IntegrableOn.intervalIntegrable
 
 theorem intervalIntegrable_const_iff {c : E} :
@@ -125,10 +125,10 @@ theorem intervalIntegrable_const_iff {c : E} :
 #align interval_integrable_const_iff intervalIntegrable_const_iff
 
 @[simp]
-theorem intervalIntegrableConst [IsLocallyFiniteMeasure μ] {c : E} :
+theorem intervalIntegrable_const [IsLocallyFiniteMeasure μ] {c : E} :
     IntervalIntegrable (fun _ => c) μ a b :=
   intervalIntegrable_const_iff.2 <| Or.inr measure_Ioc_lt_top
-#align interval_integrable_const intervalIntegrableConst
+#align interval_integrable_const intervalIntegrable_const
 
 end
 
@@ -150,11 +150,11 @@ theorem refl : IntervalIntegrable f μ a a := by constructor <;> simp
 @[trans]
 theorem trans {a b c : ℝ} (hab : IntervalIntegrable f μ a b) (hbc : IntervalIntegrable f μ b c) :
     IntervalIntegrable f μ a c :=
-  ⟨(hab.1.union hbc.1).monoSet Ioc_subset_Ioc_union_Ioc,
-    (hbc.2.union hab.2).monoSet Ioc_subset_Ioc_union_Ioc⟩
+  ⟨(hab.1.union hbc.1).mono_set Ioc_subset_Ioc_union_Ioc,
+    (hbc.2.union hab.2).mono_set Ioc_subset_Ioc_union_Ioc⟩
 #align interval_integrable.trans IntervalIntegrable.trans
 
-theorem transIterateIco {a : ℕ → ℝ} {m n : ℕ} (hmn : m ≤ n)
+theorem trans_iterate_Ico {a : ℕ → ℝ} {m n : ℕ} (hmn : m ≤ n)
     (hint : ∀ k ∈ Ico m n, IntervalIntegrable f μ (a k) (a <| k + 1)) :
     IntervalIntegrable f μ (a m) (a n) := by
   revert hint
@@ -162,13 +162,13 @@ theorem transIterateIco {a : ℕ → ℝ} {m n : ℕ} (hmn : m ≤ n)
   · simp
   · intro p hp IH h
     exact (IH fun k hk => h k (Ico_subset_Ico_right p.le_succ hk)).trans (h p (by simp [hp]))
-#align interval_integrable.trans_iterate_Ico IntervalIntegrable.transIterateIco
+#align interval_integrable.trans_iterate_Ico IntervalIntegrable.trans_iterate_Ico
 
-theorem transIterate {a : ℕ → ℝ} {n : ℕ}
+theorem trans_iterate {a : ℕ → ℝ} {n : ℕ}
     (hint : ∀ k < n, IntervalIntegrable f μ (a k) (a <| k + 1)) :
     IntervalIntegrable f μ (a 0) (a n) :=
-  transIterateIco bot_le fun k hk => hint k hk.2
-#align interval_integrable.trans_iterate IntervalIntegrable.transIterate
+  trans_iterate_Ico bot_le fun k hk => hint k hk.2
+#align interval_integrable.trans_iterate IntervalIntegrable.trans_iterate
 
 theorem neg (h : IntervalIntegrable f μ a b) : IntervalIntegrable (-f) μ a b :=
   ⟨h.1.neg, h.2.neg⟩
@@ -196,46 +196,46 @@ theorem mono (hf : IntervalIntegrable f ν a b) (h1 : [c, d] ⊆ [a, b]) (h2 : �
   intervalIntegrable_iff.mpr <| hf.def.mono (uIoc_subset_uIoc_of_uIcc_subset_uIcc h1) h2
 #align interval_integrable.mono IntervalIntegrable.mono
 
-theorem monoMeasure (hf : IntervalIntegrable f ν a b) (h : μ ≤ ν) : IntervalIntegrable f μ a b :=
+theorem mono_measure (hf : IntervalIntegrable f ν a b) (h : μ ≤ ν) : IntervalIntegrable f μ a b :=
   hf.mono rfl.Subset h
-#align interval_integrable.mono_measure IntervalIntegrable.monoMeasure
+#align interval_integrable.mono_measure IntervalIntegrable.mono_measure
 
-theorem monoSet (hf : IntervalIntegrable f μ a b) (h : [c, d] ⊆ [a, b]) :
+theorem mono_set (hf : IntervalIntegrable f μ a b) (h : [c, d] ⊆ [a, b]) :
     IntervalIntegrable f μ c d :=
   hf.mono h rfl.le
-#align interval_integrable.mono_set IntervalIntegrable.monoSet
+#align interval_integrable.mono_set IntervalIntegrable.mono_set
 
-theorem monoSetAe (hf : IntervalIntegrable f μ a b) (h : Ι c d ≤ᵐ[μ] Ι a b) :
+theorem mono_set_ae (hf : IntervalIntegrable f μ a b) (h : Ι c d ≤ᵐ[μ] Ι a b) :
     IntervalIntegrable f μ c d :=
-  intervalIntegrable_iff.mpr <| hf.def.monoSetAe h
-#align interval_integrable.mono_set_ae IntervalIntegrable.monoSetAe
+  intervalIntegrable_iff.mpr <| hf.def.mono_set_ae h
+#align interval_integrable.mono_set_ae IntervalIntegrable.mono_set_ae
 
-theorem monoSet' (hf : IntervalIntegrable f μ a b) (hsub : Ι c d ⊆ Ι a b) :
+theorem mono_set' (hf : IntervalIntegrable f μ a b) (hsub : Ι c d ⊆ Ι a b) :
     IntervalIntegrable f μ c d :=
-  hf.monoSetAe <| eventually_of_forall hsub
-#align interval_integrable.mono_set' IntervalIntegrable.monoSet'
+  hf.mono_set_ae <| eventually_of_forall hsub
+#align interval_integrable.mono_set' IntervalIntegrable.mono_set'
 
-theorem monoFun [NormedAddCommGroup F] {g : ℝ → F} (hf : IntervalIntegrable f μ a b)
+theorem mono_fun [NormedAddCommGroup F] {g : ℝ → F} (hf : IntervalIntegrable f μ a b)
     (hgm : AeStronglyMeasurable g (μ.restrict (Ι a b)))
     (hle : (fun x => ‖g x‖) ≤ᵐ[μ.restrict (Ι a b)] fun x => ‖f x‖) : IntervalIntegrable g μ a b :=
   intervalIntegrable_iff.2 <| hf.def.Integrable.mono hgm hle
-#align interval_integrable.mono_fun IntervalIntegrable.monoFun
+#align interval_integrable.mono_fun IntervalIntegrable.mono_fun
 
-theorem monoFun' {g : ℝ → ℝ} (hg : IntervalIntegrable g μ a b)
+theorem mono_fun' {g : ℝ → ℝ} (hg : IntervalIntegrable g μ a b)
     (hfm : AeStronglyMeasurable f (μ.restrict (Ι a b)))
     (hle : (fun x => ‖f x‖) ≤ᵐ[μ.restrict (Ι a b)] g) : IntervalIntegrable f μ a b :=
   intervalIntegrable_iff.2 <| hg.def.Integrable.mono' hfm hle
-#align interval_integrable.mono_fun' IntervalIntegrable.monoFun'
+#align interval_integrable.mono_fun' IntervalIntegrable.mono_fun'
 
 protected theorem aeStronglyMeasurable (h : IntervalIntegrable f μ a b) :
     AeStronglyMeasurable f (μ.restrict (Ioc a b)) :=
   h.1.AeStronglyMeasurable
 #align interval_integrable.ae_strongly_measurable IntervalIntegrable.aeStronglyMeasurable
 
-protected theorem aeStronglyMeasurable' (h : IntervalIntegrable f μ a b) :
+protected theorem ae_strongly_measurable' (h : IntervalIntegrable f μ a b) :
     AeStronglyMeasurable f (μ.restrict (Ioc b a)) :=
   h.2.AeStronglyMeasurable
-#align interval_integrable.ae_strongly_measurable' IntervalIntegrable.aeStronglyMeasurable'
+#align interval_integrable.ae_strongly_measurable' IntervalIntegrable.ae_strongly_measurable'
 
 end
 
@@ -260,42 +260,42 @@ theorem sub (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b
 
 theorem sum (s : Finset ι) {f : ι → ℝ → E} (h : ∀ i ∈ s, IntervalIntegrable (f i) μ a b) :
     IntervalIntegrable (∑ i in s, f i) μ a b :=
-  ⟨integrableFinsetSum' s fun i hi => (h i hi).1, integrableFinsetSum' s fun i hi => (h i hi).2⟩
+  ⟨integrable_finset_sum' s fun i hi => (h i hi).1, integrable_finset_sum' s fun i hi => (h i hi).2⟩
 #align interval_integrable.sum IntervalIntegrable.sum
 
-theorem mulContinuousOn {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
+theorem mul_continuousOn {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g [a, b]) : IntervalIntegrable (fun x => f x * g x) μ a b :=
   by
   rw [intervalIntegrable_iff] at hf⊢
   exact hf.mul_continuous_on_of_subset hg measurableSet_Ioc isCompact_uIcc Ioc_subset_Icc_self
-#align interval_integrable.mul_continuous_on IntervalIntegrable.mulContinuousOn
+#align interval_integrable.mul_continuous_on IntervalIntegrable.mul_continuousOn
 
-theorem continuousOnMul {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
+theorem continuousOn_mul {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g [a, b]) : IntervalIntegrable (fun x => g x * f x) μ a b :=
   by
   rw [intervalIntegrable_iff] at hf⊢
   exact hf.continuous_on_mul_of_subset hg isCompact_uIcc measurableSet_Ioc Ioc_subset_Icc_self
-#align interval_integrable.continuous_on_mul IntervalIntegrable.continuousOnMul
+#align interval_integrable.continuous_on_mul IntervalIntegrable.continuousOn_mul
 
 @[simp]
-theorem constMul {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
+theorem const_mul {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
     IntervalIntegrable (fun x => c * f x) μ a b :=
-  hf.continuousOnMul continuousOn_const
-#align interval_integrable.const_mul IntervalIntegrable.constMul
+  hf.continuousOn_mul continuousOn_const
+#align interval_integrable.const_mul IntervalIntegrable.const_mul
 
 @[simp]
-theorem mulConst {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
+theorem mul_const {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
     IntervalIntegrable (fun x => f x * c) μ a b :=
-  hf.mulContinuousOn continuousOn_const
-#align interval_integrable.mul_const IntervalIntegrable.mulConst
+  hf.mul_continuousOn continuousOn_const
+#align interval_integrable.mul_const IntervalIntegrable.mul_const
 
 @[simp]
-theorem divConst {𝕜 : Type _} {f : ℝ → 𝕜} [NormedField 𝕜] (h : IntervalIntegrable f μ a b) (c : 𝕜) :
-    IntervalIntegrable (fun x => f x / c) μ a b := by
+theorem div_const {𝕜 : Type _} {f : ℝ → 𝕜} [NormedField 𝕜] (h : IntervalIntegrable f μ a b)
+    (c : 𝕜) : IntervalIntegrable (fun x => f x / c) μ a b := by
   simpa only [div_eq_mul_inv] using mul_const h c⁻¹
-#align interval_integrable.div_const IntervalIntegrable.divConst
+#align interval_integrable.div_const IntervalIntegrable.div_const
 
-theorem compMulLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+theorem comp_mul_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (c * x)) volume (a / c) (b / c) :=
   by
   rcases eq_or_ne c 0 with (hc | hc);
@@ -315,14 +315,14 @@ theorem compMulLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     ring
   · rw [preimage_mul_const_uIcc (inv_ne_zero hc)]
     field_simp [hc]
-#align interval_integrable.comp_mul_left IntervalIntegrable.compMulLeft
+#align interval_integrable.comp_mul_left IntervalIntegrable.comp_mul_left
 
-theorem compMulRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+theorem comp_mul_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (x * c)) volume (a / c) (b / c) := by
   simpa only [mul_comm] using comp_mul_left hf c
-#align interval_integrable.comp_mul_right IntervalIntegrable.compMulRight
+#align interval_integrable.comp_mul_right IntervalIntegrable.comp_mul_right
 
-theorem compAddRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+theorem comp_add_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (x + c)) volume (a - c) (b - c) :=
   by
   wlog h : a ≤ b
@@ -335,27 +335,27 @@ theorem compAddRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   rw [← Am] at hf
   convert(MeasurableEmbedding.integrableOn_map_iff A).mp hf
   rw [preimage_add_const_uIcc]
-#align interval_integrable.comp_add_right IntervalIntegrable.compAddRight
+#align interval_integrable.comp_add_right IntervalIntegrable.comp_add_right
 
-theorem compAddLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+theorem comp_add_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (c + x)) volume (a - c) (b - c) := by
-  simpa only [add_comm] using IntervalIntegrable.compAddRight hf c
-#align interval_integrable.comp_add_left IntervalIntegrable.compAddLeft
+  simpa only [add_comm] using IntervalIntegrable.comp_add_right hf c
+#align interval_integrable.comp_add_left IntervalIntegrable.comp_add_left
 
-theorem compSubRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+theorem comp_sub_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (x - c)) volume (a + c) (b + c) := by
-  simpa only [sub_neg_eq_add] using IntervalIntegrable.compAddRight hf (-c)
-#align interval_integrable.comp_sub_right IntervalIntegrable.compSubRight
+  simpa only [sub_neg_eq_add] using IntervalIntegrable.comp_add_right hf (-c)
+#align interval_integrable.comp_sub_right IntervalIntegrable.comp_sub_right
 
 theorem iff_comp_neg :
     IntervalIntegrable f volume a b ↔ IntervalIntegrable (fun x => f (-x)) volume (-a) (-b) := by
   constructor; all_goals intro hf; convert comp_mul_left hf (-1); simp; field_simp; field_simp
 #align interval_integrable.iff_comp_neg IntervalIntegrable.iff_comp_neg
 
-theorem compSubLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+theorem comp_sub_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (c - x)) volume (c - a) (c - b) := by
   simpa only [neg_sub, ← sub_eq_add_neg] using iff_comp_neg.mp (hf.comp_add_left c)
-#align interval_integrable.comp_sub_left IntervalIntegrable.compSubLeft
+#align interval_integrable.comp_sub_left IntervalIntegrable.comp_sub_left
 
 end IntervalIntegrable
 
@@ -365,13 +365,13 @@ variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ]
 
 theorem ContinuousOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : ContinuousOn u (uIcc a b)) :
     IntervalIntegrable u μ a b :=
-  (ContinuousOn.integrableOnIcc hu).IntervalIntegrable
+  (ContinuousOn.integrableOn_Icc hu).IntervalIntegrable
 #align continuous_on.interval_integrable ContinuousOn.intervalIntegrable
 
-theorem ContinuousOn.intervalIntegrableOfIcc {u : ℝ → E} {a b : ℝ} (h : a ≤ b)
+theorem ContinuousOn.intervalIntegrable_of_Icc {u : ℝ → E} {a b : ℝ} (h : a ≤ b)
     (hu : ContinuousOn u (Icc a b)) : IntervalIntegrable u μ a b :=
   ContinuousOn.intervalIntegrable ((uIcc_of_le h).symm ▸ hu)
-#align continuous_on.interval_integrable_of_Icc ContinuousOn.intervalIntegrableOfIcc
+#align continuous_on.interval_integrable_of_Icc ContinuousOn.intervalIntegrable_of_Icc
 
 /-- A continuous function on `ℝ` is `interval_integrable` with respect to any locally finite measure
 `ν` on ℝ. -/
@@ -390,7 +390,7 @@ variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ] [ConditionallyCompleteLi
 theorem MonotoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : MonotoneOn u (uIcc a b)) :
     IntervalIntegrable u μ a b := by
   rw [intervalIntegrable_iff]
-  exact (hu.integrable_on_is_compact isCompact_uIcc).monoSet Ioc_subset_Icc_self
+  exact (hu.integrable_on_is_compact isCompact_uIcc).mono_set Ioc_subset_Icc_self
 #align monotone_on.interval_integrable MonotoneOn.intervalIntegrable
 
 theorem AntitoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : AntitoneOn u (uIcc a b)) :
@@ -424,7 +424,7 @@ theorem Filter.Tendsto.eventually_intervalIntegrable_ae {f : ℝ → E} {μ : Me
     [IsMeasurablyGenerated l'] (hμ : μ.FiniteAtFilter l') {c : E} (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c))
     {u v : ι → ℝ} {lt : Filter ι} (hu : Tendsto u lt l) (hv : Tendsto v lt l) :
     ∀ᶠ t in lt, IntervalIntegrable f μ (u t) (v t) :=
-  have := (hf.integrableAtFilterAe hfm hμ).Eventually
+  have := (hf.integrableAtFilter_ae hfm hμ).Eventually
   ((hu.Ioc hv).Eventually this).And <| (hv.Ioc hu).Eventually this
 #align filter.tendsto.eventually_interval_integrable_ae Filter.Tendsto.eventually_intervalIntegrable_ae
 
@@ -529,12 +529,12 @@ theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : (∫ x in a..b, f x
       or_false_iff] using not_and_distrib.mp h
 #align interval_integral.integral_undef intervalIntegral.integral_undef
 
-theorem intervalIntegrableOfIntegralNeZero {a b : ℝ} {f : ℝ → E} {μ : Measure ℝ}
+theorem intervalIntegrable_of_integral_ne_zero {a b : ℝ} {f : ℝ → E} {μ : Measure ℝ}
     (h : (∫ x in a..b, f x ∂μ) ≠ 0) : IntervalIntegrable f μ a b :=
   by
   contrapose! h
   exact intervalIntegral.integral_undef h
-#align interval_integral.interval_integrable_of_integral_ne_zero intervalIntegral.intervalIntegrableOfIntegralNeZero
+#align interval_integral.interval_integrable_of_integral_ne_zero intervalIntegral.intervalIntegrable_of_integral_ne_zero
 
 theorem integral_non_aeStronglyMeasurable (hf : ¬AeStronglyMeasurable f (μ.restrict (Ι a b))) :
     (∫ x in a..b, f x ∂μ) = 0 := by
@@ -931,7 +931,7 @@ theorem sum_integral_adjacent_intervals_Ico {a : ℕ → ℝ} {m n : ℕ} (hmn :
   · simp
   · intro p hmp IH h
     rw [Finset.sum_Ico_succ_top hmp, IH, integral_add_adjacent_intervals]
-    · apply IntervalIntegrable.transIterateIco hmp fun k hk => h k _
+    · apply IntervalIntegrable.trans_iterate_Ico hmp fun k hk => h k _
       exact (Ico_subset_Ico le_rfl (Nat.le_succ _)) hk
     · apply h
       simp [hmp]
@@ -1085,7 +1085,7 @@ theorem hasSum_intervalIntegral_of_summable_norm [Countable ι] {f : ι → C(�
         ae_of_all _ fun x hx =>
           ((f i).restrict ↑(⟨uIcc a b, isCompact_uIcc⟩ : compacts ℝ)).norm_coe_le_norm
             ⟨x, ⟨hx.1.le, hx.2⟩⟩)
-      (ae_of_all _ fun x hx => hf_sum) intervalIntegrableConst
+      (ae_of_all _ fun x hx => hf_sum) intervalIntegrable_const
       (ae_of_all _ fun x hx => Summable.hasSum _)
   -- next line is slow, & doesn't work with "exact" in place of "apply" -- ?
   apply ContinuousMap.summable_apply (summable_of_summable_norm hf_sum) ⟨x, ⟨hx.1.le, hx.2⟩⟩

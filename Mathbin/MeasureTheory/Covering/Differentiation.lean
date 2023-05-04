@@ -476,26 +476,26 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
     
 #align vitali_family.exists_measurable_supersets_lim_ratio VitaliFamily.exists_measurable_supersets_limRatio
 
-theorem aeMeasurableLimRatio : AeMeasurable (v.limRatio ρ) μ :=
+theorem aEMeasurable_limRatio : AEMeasurable (v.limRatio ρ) μ :=
   by
-  apply ENNReal.aeMeasurableOfExistAlmostDisjointSupersets _ _ fun p q hpq => _
+  apply ENNReal.aEMeasurable_of_exist_almost_disjoint_supersets _ _ fun p q hpq => _
   exact v.exists_measurable_supersets_lim_ratio hρ hpq
-#align vitali_family.ae_measurable_lim_ratio VitaliFamily.aeMeasurableLimRatio
+#align vitali_family.ae_measurable_lim_ratio VitaliFamily.aEMeasurable_limRatio
 
 /-- A measurable version of `v.lim_ratio ρ`. Do *not* use this definition: it is only a temporary
 device to show that `v.lim_ratio` is almost everywhere equal to the Radon-Nikodym derivative. -/
 noncomputable def limRatioMeas : α → ℝ≥0∞ :=
-  (v.aeMeasurableLimRatio hρ).mk _
+  (v.aEMeasurable_limRatio hρ).mk _
 #align vitali_family.lim_ratio_meas VitaliFamily.limRatioMeas
 
 theorem limRatioMeas_measurable : Measurable (v.limRatioMeas hρ) :=
-  AeMeasurable.measurable_mk _
+  AEMeasurable.measurable_mk _
 #align vitali_family.lim_ratio_meas_measurable VitaliFamily.limRatioMeas_measurable
 
 theorem ae_tendsto_limRatioMeas :
     ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 (v.limRatioMeas hρ x)) :=
   by
-  filter_upwards [v.ae_tendsto_lim_ratio hρ, AeMeasurable.ae_eq_mk (v.ae_measurable_lim_ratio hρ)]
+  filter_upwards [v.ae_tendsto_lim_ratio hρ, AEMeasurable.ae_eq_mk (v.ae_measurable_lim_ratio hρ)]
   intro x hx h'x
   rwa [h'x] at hx
 #align vitali_family.ae_tendsto_lim_ratio_meas VitaliFamily.ae_tendsto_limRatioMeas
@@ -878,7 +878,7 @@ theorem ae_tendsto_lintegral_div' {f : α → ℝ≥0∞} (hf : Measurable f) (h
   rw [← with_density_apply f ha]
 #align vitali_family.ae_tendsto_lintegral_div' VitaliFamily.ae_tendsto_lintegral_div'
 
-theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (h'f : (∫⁻ y, f y ∂μ) ≠ ∞) :
+theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) (h'f : (∫⁻ y, f y ∂μ) ≠ ∞) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, f y ∂μ) / μ a) (v.filterAt x) (𝓝 (f x)) :=
   by
   have A : (∫⁻ y, hf.mk f y ∂μ) ≠ ∞ := by

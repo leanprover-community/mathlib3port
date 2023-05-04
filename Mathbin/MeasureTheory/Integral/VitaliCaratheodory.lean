@@ -189,7 +189,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
   ·
     calc
       (∫⁻ x, ∑' n : ℕ, g n x ∂μ) = ∑' n, ∫⁻ x, g n x ∂μ := by
-        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nNReal_eNNReal.AeMeasurable]
+        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nNReal_eNNReal.AEMeasurable]
       _ ≤ ∑' n, (∫⁻ x, eapprox_diff f n x ∂μ) + δ n := (ENNReal.tsum_le_tsum hg)
       _ = (∑' n, ∫⁻ x, eapprox_diff f n x ∂μ) + ∑' n, δ n := ENNReal.tsum_add
       _ ≤ (∫⁻ x : α, f x ∂μ) + ε := by
@@ -197,7 +197,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
         rw [← lintegral_tsum]
         · simp_rw [tsum_eapprox_diff f hf, le_refl]
         · intro n
-          exact (simple_func.measurable _).coe_nNReal_eNNReal.AeMeasurable
+          exact (simple_func.measurable _).coe_nNReal_eNNReal.AEMeasurable
       
 #align measure_theory.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.exists_le_lowerSemicontinuous_lintegral_ge
 
@@ -236,8 +236,8 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge [SigmaFinite μ] (f : α → 
 there exists a lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aeMeasurable [SigmaFinite μ] (f : α → ℝ≥0)
-    (fmeas : AeMeasurable f μ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
+theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable [SigmaFinite μ] (f : α → ℝ≥0)
+    (fmeas : AEMeasurable f μ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
     ∃ g : α → ℝ≥0∞,
       (∀ x, (f x : ℝ≥0∞) < g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε :=
   by
@@ -272,7 +272,7 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aeMeasurable [SigmaFinite 
             lintegral_indicator, MulZeroClass.mul_zero, restrict_apply]
       _ = (∫⁻ x, f x ∂μ) + ε := by simp only [add_assoc, ENNReal.add_halves, zero_add]
       
-#align measure_theory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable MeasureTheory.exists_lt_lowerSemicontinuous_lintegral_ge_of_aeMeasurable
+#align measure_theory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable MeasureTheory.exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable
 
 variable {μ}
 
@@ -288,7 +288,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nNReal [SigmaFinite μ] (f : �
           (∀ᵐ x ∂μ, g x < ⊤) ∧
             Integrable (fun x => (g x).toReal) μ ∧ (∫ x, (g x).toReal ∂μ) < (∫ x, f x ∂μ) + ε :=
   by
-  have fmeas : AeMeasurable f μ :=
+  have fmeas : AEMeasurable f μ :=
     by
     convert fint.ae_strongly_measurable.real_to_nnreal.ae_measurable
     ext1 x

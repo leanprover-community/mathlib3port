@@ -137,7 +137,7 @@ theorem MeasureTheory.Memℒp.variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2
     ENNReal.toReal_ofReal]
   · rfl
   · exact integral_nonneg fun ω => pow_two_nonneg _
-  · convert(hX.sub <| mem_ℒp_const (μ[X])).integrableNormRpow two_ne_zero ENNReal.two_ne_top
+  · convert(hX.sub <| mem_ℒp_const (μ[X])).integrable_norm_rpow two_ne_zero ENNReal.two_ne_top
     ext ω
     simp only [Pi.sub_apply, Real.norm_eq_abs, [anonymous], ENNReal.one_toReal, Real.rpow_two,
       pow_bit0_abs]
@@ -148,7 +148,7 @@ theorem MeasureTheory.Memℒp.variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2
 theorem evariance_zero : evariance 0 μ = 0 := by simp [evariance]
 #align probability_theory.evariance_zero ProbabilityTheory.evariance_zero
 
-theorem evariance_eq_zero_iff (hX : AeMeasurable X μ) : evariance X μ = 0 ↔ X =ᵐ[μ] fun ω => μ[X] :=
+theorem evariance_eq_zero_iff (hX : AEMeasurable X μ) : evariance X μ = 0 ↔ X =ᵐ[μ] fun ω => μ[X] :=
   by
   rw [evariance, lintegral_eq_zero_iff']
   constructor <;> intro hX <;> filter_upwards [hX]with ω hω
@@ -254,7 +254,7 @@ theorem variance_le_expectation_sq [IsProbabilityMeasure (ℙ : Measure Ω)] {X 
       convert A.add B
       simp
   · exact ae_of_all _ fun x => sq_nonneg _
-  · exact (AeMeasurable.powConst (hm.ae_measurable.sub_const _) _).AeStronglyMeasurable
+  · exact (AEMeasurable.pow_const (hm.ae_measurable.sub_const _) _).AeStronglyMeasurable
 #align probability_theory.variance_le_expectation_sq ProbabilityTheory.variance_le_expectation_sq
 
 theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}

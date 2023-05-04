@@ -135,7 +135,7 @@ protected theorem adapted (h : ProgMeasurable f u) : Adapted f u :=
   have : u i = (fun p : Set.Iic i × Ω => u p.1 p.2) ∘ fun x => (⟨i, set.mem_Iic.mpr le_rfl⟩, x) :=
     rfl
   rw [this]
-  exact (h i).compMeasurable measurable_prod_mk_left
+  exact (h i).comp_measurable measurable_prod_mk_left
 #align measure_theory.prog_measurable.adapted MeasureTheory.ProgMeasurable.adapted
 
 protected theorem comp {t : ι → Ω → ι} [TopologicalSpace ι] [BorelSpace ι] [MetrizableSpace ι]
@@ -149,7 +149,7 @@ protected theorem comp {t : ι → Ω → ι} [TopologicalSpace ι] [BorelSpace 
         (⟨t (p.fst : ι) p.snd, set.mem_Iic.mpr ((ht_le _ _).trans p.fst.prop)⟩, p.snd) :=
     rfl
   rw [this]
-  exact (h i).compMeasurable ((ht i).Measurable.subtype_mk.prod_mk measurable_snd)
+  exact (h i).comp_measurable ((ht i).Measurable.subtype_mk.prod_mk measurable_snd)
 #align measure_theory.prog_measurable.comp MeasureTheory.ProgMeasurable.comp
 
 section Arithmetic

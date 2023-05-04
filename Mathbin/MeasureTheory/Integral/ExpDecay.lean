@@ -29,7 +29,7 @@ open Real intervalIntegral MeasureTheory Set Filter
 open Topology
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
-theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
+theorem exp_neg_integrableOn_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) :
     IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) :=
   by
   have : tendsto (fun x => -exp (-b * x) / b) at_top (𝓝 (-0 / b)) :=
@@ -38,13 +38,13 @@ theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
     exact tendsto_exp_at_bot.comp (tendsto_id.neg_const_mul_at_top (Right.neg_neg_iff.2 h))
   refine' integrable_on_Ioi_deriv_of_nonneg' (fun x hx => _) (fun x hx => (exp_pos _).le) this
   simpa [h.ne'] using ((hasDerivAt_id x).const_mul b).neg.exp.neg.div_const b
-#align exp_neg_integrable_on_Ioi expNegIntegrableOnIoi
+#align exp_neg_integrable_on_Ioi exp_neg_integrableOn_Ioi
 
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
 `f` is integrable on `(a, ∞)`. -/
-theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : ContinuousOn f (Ici a))
-    (h2 : f =O[atTop] fun x => exp (-b * x)) : IntegrableOn f (Ioi a) :=
-  by
+theorem integrable_of_isBigO_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b)
+    (h1 : ContinuousOn f (Ici a)) (h2 : f =O[atTop] fun x => exp (-b * x)) :
+    IntegrableOn f (Ioi a) := by
   cases' h2.is_O_with with c h3
   rw [Asymptotics.isBigOWith_iff, eventually_at_top] at h3
   cases' h3 with r bdr
@@ -54,7 +54,7 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
     by
     rw [← intervalIntegrable_iff_integrable_Ioc_of_le (le_max_left a r)]
     have u : Icc a v ⊆ Ici a := Icc_subset_Ici_self
-    exact (h1.mono u).intervalIntegrableOfIcc (le_max_left a r)
+    exact (h1.mono u).intervalIntegrable_of_Icc (le_max_left a r)
   suffices integrable_on f (Ioi v)
     by
     have t : integrable_on f (Ioc a v ∪ Ioi v) := integrable_on_union.mpr ⟨int_left, this⟩
@@ -63,7 +63,7 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
   constructor
   · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSet_Ioi
   have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
-    (expNegIntegrableOnIoi v h0).HasFiniteIntegral.const_mul c
+    (exp_neg_integrableOn_Ioi v h0).HasFiniteIntegral.const_mul c
   apply this.mono
   refine' (ae_restrict_iff' measurableSet_Ioi).mpr _
   refine' ae_of_all _ fun x h1x => _
@@ -71,5 +71,5 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
   rw [mem_Ioi] at h1x
   specialize bdr x ((le_max_right a r).trans h1x.le)
   exact bdr.trans (mul_le_mul_of_nonneg_right (le_abs_self c) (norm_nonneg _))
-#align integrable_of_is_O_exp_neg integrableOfIsOExpNeg
+#align integrable_of_is_O_exp_neg integrable_of_isBigO_exp_neg
 

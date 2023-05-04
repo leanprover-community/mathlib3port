@@ -101,7 +101,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
 /-- A convex set in a finite dimensional real vector space is null measurable with respect to an
 additive Haar measure on this space. -/
 protected theorem nullMeasurableSet (hs : Convex ℝ s) : NullMeasurableSet s μ :=
-  nullMeasurableSetOfNullFrontier (hs.add_haar_frontier μ)
+  nullMeasurableSet_of_null_frontier (hs.add_haar_frontier μ)
 #align convex.null_measurable_set Convex.nullMeasurableSet
 
 end Convex

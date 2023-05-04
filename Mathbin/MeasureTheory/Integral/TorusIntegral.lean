@@ -164,7 +164,7 @@ theorem torusIntegrable_zero_radius {f : ℂⁿ → E} {c : ℂⁿ} : TorusInteg
 #align torus_integrable.torus_integrable_zero_radius TorusIntegrable.torusIntegrable_zero_radius
 
 /-- The function given in the definition of `torus_integral` is integrable. -/
-theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
+theorem function_integrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
     IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
       (Icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
   by
@@ -176,7 +176,7 @@ theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
               ((continuous_of_real.comp (continuous_apply i)).mul continuous_const).cexp).mul
           continuous_const
   simp [norm_smul, map_prod]
-#align torus_integrable.function_integrable TorusIntegrable.functionIntegrable
+#align torus_integrable.function_integrable TorusIntegrable.function_integrable
 
 end TorusIntegrable
 

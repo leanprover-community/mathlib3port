@@ -394,7 +394,7 @@ theorem set_integral_eq_of_subset_of_ae_diff_eq_zero (ht : NullMeasurableSet t �
     (h't : ∀ᵐ x ∂μ, x ∈ t \ s → f x = 0) : (∫ x in t, f x ∂μ) = ∫ x in s, f x ∂μ :=
   by
   by_cases h : integrable_on f t μ; swap
-  · have : ¬integrable_on f s μ := fun H => h (H.ofAeDiffEqZero ht h't)
+  · have : ¬integrable_on f s μ := fun H => h (H.of_ae_diff_eq_zero ht h't)
     rw [integral_undef h, integral_undef this]
   let f' := h.1.mk f
   calc
@@ -459,7 +459,7 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] {f : α → E}
 theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hfi : Integrable f μ) :
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
   have h_meas : NullMeasurableSet { x | 0 ≤ f x } μ :=
-    aeStronglyMeasurableConst.nullMeasurableSetLe hfi.1
+    aeStronglyMeasurable_const.nullMeasurableSet_le hfi.1
   calc
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, ‖f x‖ ∂μ) + ∫ x in { x | 0 ≤ f x }ᶜ, ‖f x‖ ∂μ := by
       rw [← integral_add_compl₀ h_meas hfi.norm]
@@ -525,7 +525,7 @@ theorem integral_indicatorConstLp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt 
 #align measure_theory.integral_indicator_const_Lp MeasureTheory.integral_indicatorConstLp
 
 theorem set_integral_map {β} [MeasurableSpace β] {g : α → β} {f : β → E} {s : Set β}
-    (hs : MeasurableSet s) (hf : AeStronglyMeasurable f (Measure.map g μ)) (hg : AeMeasurable g μ) :
+    (hs : MeasurableSet s) (hf : AeStronglyMeasurable f (Measure.map g μ)) (hg : AEMeasurable g μ) :
     (∫ y in s, f y ∂Measure.map g μ) = ∫ x in g ⁻¹' s, f (g x) ∂μ :=
   by
   rw [measure.restrict_map_of_ae_measurable hg hs,
@@ -548,13 +548,13 @@ theorem ClosedEmbedding.set_integral_map [TopologicalSpace α] [BorelSpace α] {
 theorem MeasurePreserving.set_integral_preimage_emb {β} {_ : MeasurableSpace β} {f : α → β} {ν}
     (h₁ : MeasurePreserving f μ ν) (h₂ : MeasurableEmbedding f) (g : β → E) (s : Set β) :
     (∫ x in f ⁻¹' s, g (f x) ∂μ) = ∫ y in s, g y ∂ν :=
-  (h₁.restrictPreimageEmb h₂ s).integral_comp h₂ _
+  (h₁.restrict_preimage_emb h₂ s).integral_comp h₂ _
 #align measure_theory.measure_preserving.set_integral_preimage_emb MeasureTheory.MeasurePreserving.set_integral_preimage_emb
 
 theorem MeasurePreserving.set_integral_image_emb {β} {_ : MeasurableSpace β} {f : α → β} {ν}
     (h₁ : MeasurePreserving f μ ν) (h₂ : MeasurableEmbedding f) (g : β → E) (s : Set α) :
     (∫ y in f '' s, g y ∂ν) = ∫ x in s, g (f x) ∂μ :=
-  Eq.symm <| (h₁.restrictImageEmb h₂ s).integral_comp h₂ _
+  Eq.symm <| (h₁.restrict_image_emb h₂ s).integral_comp h₂ _
 #align measure_theory.measure_preserving.set_integral_image_emb MeasureTheory.MeasurePreserving.set_integral_image_emb
 
 theorem set_integral_map_equiv {β} [MeasurableSpace β] (e : α ≃ᵐ β) (f : β → E) (s : Set β) :
@@ -845,7 +845,7 @@ section IntegrableUnion
 
 variable {μ : Measure α} [NormedAddCommGroup E] [Countable β]
 
-theorem integrableOnUnionOfSummableIntegralNorm {f : α → E} {s : β → Set α}
+theorem integrableOn_unionᵢ_of_summable_integral_norm {f : α → E} {s : β → Set α}
     (hs : ∀ b : β, MeasurableSet (s b)) (hi : ∀ b : β, IntegrableOn f (s b) μ)
     (h : Summable fun b : β => ∫ a : α in s b, ‖f a‖ ∂μ) : IntegrableOn f (unionᵢ s) μ :=
   by
@@ -862,34 +862,34 @@ theorem integrableOnUnionOfSummableIntegralNorm {f : α → E} {s : β → Set �
   have S'' := ENNReal.tsum_coe_eq S'.has_sum
   simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S''
   convert ENNReal.ofReal_lt_top
-#align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOnUnionOfSummableIntegralNorm
+#align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOn_unionᵢ_of_summable_integral_norm
 
 variable [TopologicalSpace α] [BorelSpace α] [MetrizableSpace α] [IsLocallyFiniteMeasure μ]
 
 /-- If `s` is a countable family of compact sets, `f` is a continuous function, and the sequence
 `‖f.restrict (s i)‖ * μ (s i)` is summable, then `f` is integrable on the union of the `s i`. -/
-theorem integrableOnUnionOfSummableNormRestrict {f : C(α, E)} {s : β → Compacts α}
+theorem integrableOn_unionᵢ_of_summable_norm_restrict {f : C(α, E)} {s : β → Compacts α}
     (hf : Summable fun i : β => ‖f.restrict (s i)‖ * ENNReal.toReal (μ <| s i)) :
     IntegrableOn f (⋃ i : β, s i) μ :=
   by
   refine'
     integrable_on_Union_of_summable_integral_norm (fun i => (s i).IsCompact.IsClosed.MeasurableSet)
-      (fun i => (map_continuous f).ContinuousOn.integrableOnCompact (s i).IsCompact)
+      (fun i => (map_continuous f).ContinuousOn.integrableOn_compact (s i).IsCompact)
       (summable_of_nonneg_of_le (fun ι => integral_nonneg fun x => norm_nonneg _) (fun i => _) hf)
   rw [← (Real.norm_of_nonneg (integral_nonneg fun a => norm_nonneg _) : ‖_‖ = ∫ x in s i, ‖f x‖ ∂μ)]
   exact
     norm_set_integral_le_of_norm_le_const' (s i).IsCompact.measure_lt_top
       (s i).IsCompact.IsClosed.MeasurableSet fun x hx =>
       (norm_norm (f x)).symm ▸ (f.restrict ↑(s i)).norm_coe_le_norm ⟨x, hx⟩
-#align measure_theory.integrable_on_Union_of_summable_norm_restrict MeasureTheory.integrableOnUnionOfSummableNormRestrict
+#align measure_theory.integrable_on_Union_of_summable_norm_restrict MeasureTheory.integrableOn_unionᵢ_of_summable_norm_restrict
 
 /-- If `s` is a countable family of compact sets covering `α`, `f` is a continuous function, and
 the sequence `‖f.restrict (s i)‖ * μ (s i)` is summable, then `f` is integrable. -/
-theorem integrableOfSummableNormRestrict {f : C(α, E)} {s : β → Compacts α}
+theorem integrable_of_summable_norm_restrict {f : C(α, E)} {s : β → Compacts α}
     (hf : Summable fun i : β => ‖f.restrict (s i)‖ * ENNReal.toReal (μ <| s i))
     (hs : (⋃ i : β, ↑(s i)) = (univ : Set α)) : Integrable f μ := by
   simpa only [hs, integrable_on_univ] using integrable_on_Union_of_summable_norm_restrict hf
-#align measure_theory.integrable_of_summable_norm_restrict MeasureTheory.integrableOfSummableNormRestrict
+#align measure_theory.integrable_of_summable_norm_restrict MeasureTheory.integrable_of_summable_norm_restrict
 
 end IntegrableUnion
 
@@ -1093,7 +1093,7 @@ theorem ContinuousAt.integral_sub_linear_isLittleO_ae [TopologicalSpace α] [Ope
     {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (ha.mono_left inf_le_left).integral_sub_linear_isLittleO_ae hfm (μ.finiteAtNhds a) hs m hsμ
+  (ha.mono_left inf_le_left).integral_sub_linear_isLittleO_ae hfm (μ.finite_at_nhds a) hs m hsμ
 #align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isLittleO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
@@ -1193,7 +1193,7 @@ theorem integral_comp_comm' (L : E →L[𝕜] F) {K} (hL : AntilipschitzWith K L
 
 theorem integral_comp_L1_comm (L : E →L[𝕜] F) (φ : α →₁[μ] E) :
     (∫ a, L (φ a) ∂μ) = L (∫ a, φ a ∂μ) :=
-  L.integral_comp_comm (L1.integrableCoeFn φ)
+  L.integral_comp_comm (L1.integrable_coeFn φ)
 #align continuous_linear_map.integral_comp_L1_comm ContinuousLinearMap.integral_comp_L1_comm
 
 end ContinuousLinearMap
@@ -1331,7 +1331,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
     rw [lintegral_coe_eq_integral, ENNReal.toReal_ofReal, ← integral_smul_const]
     · rfl
     · exact integral_nonneg fun x => NNReal.coe_nonneg _
-    · refine' ⟨f_meas.coe_nnreal_real.AeMeasurable.AeStronglyMeasurable, _⟩
+    · refine' ⟨f_meas.coe_nnreal_real.AEMeasurable.AeStronglyMeasurable, _⟩
       rw [with_density_apply _ s_meas] at hs
       rw [has_finite_integral]
       convert hs
@@ -1367,7 +1367,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
       simpa only [Ne.def, ENNReal.coe_eq_zero] using h'x
 #align integral_with_density_eq_integral_smul integral_withDensity_eq_integral_smul
 
-theorem integral_withDensity_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeMeasurable f μ) (g : α → E) :
+theorem integral_withDensity_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AEMeasurable f μ) (g : α → E) :
     (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ :=
   by
   let f' := hf.mk _
@@ -1393,7 +1393,7 @@ theorem set_integral_withDensity_eq_set_integral_smul {f : α → ℝ≥0} (f_me
 #align set_integral_with_density_eq_set_integral_smul set_integral_withDensity_eq_set_integral_smul
 
 theorem set_integral_withDensity_eq_set_integral_smul₀ {f : α → ℝ≥0} {s : Set α}
-    (hf : AeMeasurable f (μ.restrict s)) (g : α → E) (hs : MeasurableSet s) :
+    (hf : AEMeasurable f (μ.restrict s)) (g : α → E) (hs : MeasurableSet s) :
     (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
   rw [restrict_with_density hs, integral_withDensity_eq_integral_smul₀ hf]
 #align set_integral_with_density_eq_set_integral_smul₀ set_integral_withDensity_eq_set_integral_smul₀
@@ -1431,7 +1431,7 @@ namespace MeasureTheory
 
 variable {f : β → ℝ} {m m0 : MeasurableSpace β} {μ : Measure β}
 
-theorem Integrable.simpleFuncMul (g : SimpleFunc β ℝ) (hf : Integrable f μ) :
+theorem Integrable.simpleFunc_mul (g : SimpleFunc β ℝ) (hf : Integrable f μ) :
     Integrable (g * f) μ :=
   by
   refine'
@@ -1449,14 +1449,14 @@ theorem Integrable.simpleFuncMul (g : SimpleFunc β ℝ) (hf : Integrable f μ) 
     · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, MulZeroClass.zero_mul]
   rw [this, integrable_indicator_iff hs]
   exact (hf.smul c).IntegrableOn
-#align measure_theory.integrable.simple_func_mul MeasureTheory.Integrable.simpleFuncMul
+#align measure_theory.integrable.simple_func_mul MeasureTheory.Integrable.simpleFunc_mul
 
-theorem Integrable.simpleFuncMul' (hm : m ≤ m0) (g : @SimpleFunc β m ℝ) (hf : Integrable f μ) :
+theorem Integrable.simpleFunc_mul' (hm : m ≤ m0) (g : @SimpleFunc β m ℝ) (hf : Integrable f μ) :
     Integrable (g * f) μ :=
   by
   rw [← simple_func.coe_to_larger_space_eq hm g]
   exact hf.simple_func_mul (g.to_larger_space hm)
-#align measure_theory.integrable.simple_func_mul' MeasureTheory.Integrable.simpleFuncMul'
+#align measure_theory.integrable.simple_func_mul' MeasureTheory.Integrable.simpleFunc_mul'
 
 end MeasureTheory
 

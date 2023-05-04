@@ -41,7 +41,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup G]
   {f : α → G}
 
-theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ)
+theorem Memℒp.finStronglyMeasurable_of_stronglyMeasurable (hf : Memℒp f p μ)
     (hf_meas : StronglyMeasurable f) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ := by
   borelize G
@@ -56,13 +56,13 @@ theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ)
     apply simple_func.tendsto_approx_on
     apply subset_closure
     simp
-#align measure_theory.mem_ℒp.fin_strongly_measurable_of_strongly_measurable MeasureTheory.Memℒp.finStronglyMeasurableOfStronglyMeasurable
+#align measure_theory.mem_ℒp.fin_strongly_measurable_of_strongly_measurable MeasureTheory.Memℒp.finStronglyMeasurable_of_stronglyMeasurable
 
 theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AeFinStronglyMeasurable f μ :=
   ⟨hf.AeStronglyMeasurable.mk f,
     ((memℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp
-          hf).finStronglyMeasurableOfStronglyMeasurable
+          hf).finStronglyMeasurable_of_stronglyMeasurable
       hf.AeStronglyMeasurable.stronglyMeasurable_mk hp_ne_zero hp_ne_top,
     hf.AeStronglyMeasurable.ae_eq_mk⟩
 #align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aeFinStronglyMeasurable
@@ -73,7 +73,7 @@ theorem Integrable.aeFinStronglyMeasurable (hf : Integrable f μ) : AeFinStrongl
 
 theorem lp.finStronglyMeasurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ :=
-  (lp.memℒp f).finStronglyMeasurableOfStronglyMeasurable (lp.stronglyMeasurable f) hp_ne_zero
+  (lp.memℒp f).finStronglyMeasurable_of_stronglyMeasurable (lp.stronglyMeasurable f) hp_ne_zero
     hp_ne_top
 #align measure_theory.Lp.fin_strongly_measurable MeasureTheory.lp.finStronglyMeasurable
 

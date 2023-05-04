@@ -107,7 +107,7 @@ def join (m : Measure (Measure α)) : Measure α :=
       intro f hf h
       simp_rw [measure_Union h hf]
       apply lintegral_tsum
-      intro i; exact (measurable_coe (hf i)).AeMeasurable)
+      intro i; exact (measurable_coe (hf i)).AEMeasurable)
 #align measure_theory.measure.join MeasureTheory.Measure.join
 
 @[simp]

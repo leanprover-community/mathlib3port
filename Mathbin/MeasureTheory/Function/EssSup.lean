@@ -233,7 +233,7 @@ theorem essSup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν �
 theorem essSup_mono_measure' {α : Type _} {β : Type _} {m : MeasurableSpace α}
     {μ ν : MeasureTheory.Measure α} [CompleteLattice β] {f : α → β} (hμν : ν ≤ μ) :
     essSup f ν ≤ essSup f μ :=
-  essSup_mono_measure (Measure.absolutelyContinuousOfLe hμν)
+  essSup_mono_measure (Measure.absolutelyContinuous_of_le hμν)
 #align ess_sup_mono_measure' essSup_mono_measure'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
@@ -262,7 +262,7 @@ include mγ
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem essSup_comp_le_essSup_map_measure (hf : AeMeasurable f μ) :
+theorem essSup_comp_le_essSup_map_measure (hf : AEMeasurable f μ) :
     essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) :=
   by
   refine'
@@ -305,7 +305,7 @@ variable [MeasurableSpace β] [TopologicalSpace β] [SecondCountableTopology β]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem essSup_map_measure_of_measurable (hg : Measurable g) (hf : AeMeasurable f μ) :
+theorem essSup_map_measure_of_measurable (hg : Measurable g) (hf : AEMeasurable f μ) :
     essSup g (Measure.map f μ) = essSup (g ∘ f) μ :=
   by
   refine' le_antisymm _ (essSup_comp_le_essSup_map_measure hf)
@@ -323,7 +323,7 @@ theorem essSup_map_measure_of_measurable (hg : Measurable g) (hf : AeMeasurable 
   exact h_le
 #align ess_sup_map_measure_of_measurable essSup_map_measure_of_measurable
 
-theorem essSup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : AeMeasurable f μ) :
+theorem essSup_map_measure (hg : AEMeasurable g (Measure.map f μ)) (hf : AEMeasurable f μ) :
     essSup g (Measure.map f μ) = essSup (g ∘ f) μ :=
   by
   rw [essSup_congr_ae hg.ae_eq_mk, essSup_map_measure_of_measurable hg.measurable_mk hf]

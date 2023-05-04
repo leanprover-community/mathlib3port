@@ -318,13 +318,13 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     · refine' sum_congr rfl fun J hJ => _
       rw [← simple_func.integral_eq_integral, simple_func.box_integral_eq_integral _ _ _ _ hl,
         hNxn J hJ]
-      exact (hfi _).monoSet (prepartition.le_of_mem _ hJ)
+      exact (hfi _).mono_set (prepartition.le_of_mem _ hJ)
   · /-  For the last jump, we use the fact that the distance between `f (Nx x) x` and `g x` is less
         than or equal to the distance between `f N₀ x` and `g x` and the integral of `‖f N₀ x - g x‖`
         is less than or equal to `ε`. -/
     refine' le_trans _ hN₀
     have hfi : ∀ (n), ∀ J ∈ π, integrable_on (f n) (↑J) μ := fun n J hJ =>
-      (hfi n).monoSet (π.le_of_mem' J hJ)
+      (hfi n).mono_set (π.le_of_mem' J hJ)
     have hgi : ∀ J ∈ π, integrable_on g (↑J) μ := fun J hJ => hgi.mono_set (π.le_of_mem' J hJ)
     have hfgi : ∀ (n), ∀ J ∈ π, integrable_on (fun x => ‖f n x - g x‖) J μ := fun n J hJ =>
       ((hfi n J hJ).sub (hgi J hJ)).norm

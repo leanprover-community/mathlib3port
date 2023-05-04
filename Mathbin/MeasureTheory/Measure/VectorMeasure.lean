@@ -1484,22 +1484,22 @@ theorem toMeasureOfLeZero_apply (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) (hj�
 #align measure_theory.signed_measure.to_measure_of_le_zero_apply MeasureTheory.SignedMeasure.toMeasureOfLeZero_apply
 
 /-- `signed_measure.to_measure_of_zero_le` is a finite measure. -/
-instance toMeasureOfZeroLeFinite (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) :
+instance toMeasureOfZeroLe_finite (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) :
     IsFiniteMeasure (s.toMeasureOfZeroLe i hi₁ hi)
     where measure_univ_lt_top :=
     by
     rw [to_measure_of_zero_le_apply s hi hi₁ MeasurableSet.univ]
     exact ENNReal.coe_lt_top
-#align measure_theory.signed_measure.to_measure_of_zero_le_finite MeasureTheory.SignedMeasure.toMeasureOfZeroLeFinite
+#align measure_theory.signed_measure.to_measure_of_zero_le_finite MeasureTheory.SignedMeasure.toMeasureOfZeroLe_finite
 
 /-- `signed_measure.to_measure_of_le_zero` is a finite measure. -/
-instance toMeasureOfLeZeroFinite (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) :
+instance toMeasureOfLeZero_finite (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) :
     IsFiniteMeasure (s.toMeasureOfLeZero i hi₁ hi)
     where measure_univ_lt_top :=
     by
     rw [to_measure_of_le_zero_apply s hi hi₁ MeasurableSet.univ]
     exact ENNReal.coe_lt_top
-#align measure_theory.signed_measure.to_measure_of_le_zero_finite MeasureTheory.SignedMeasure.toMeasureOfLeZeroFinite
+#align measure_theory.signed_measure.to_measure_of_le_zero_finite MeasureTheory.SignedMeasure.toMeasureOfLeZero_finite
 
 theorem toMeasureOfZeroLe_toSignedMeasure (hs : 0 ≤[univ] s) :
     (s.toMeasureOfZeroLe univ MeasurableSet.univ hs).toSignedMeasure = s :=

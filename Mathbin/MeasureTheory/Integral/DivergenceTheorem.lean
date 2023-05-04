@@ -129,11 +129,11 @@ theorem integral_divergence_of_hasFderivWithinAt_off_countable_aux₁ (I : Box (
   refine' (A.unique B).trans (sum_congr rfl fun i hi => _)
   refine' congr_arg₂ Sub.sub _ _
   · have := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (I.lower_le_upper i))
-    have := (this.integrable_on_compact (box.is_compact_Icc _)).monoSet box.coe_subset_Icc
+    have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
     exact (this.has_box_integral ⊥ rfl).integral_eq
     infer_instance
   · have := box.continuous_on_face_Icc (Hc i) (Set.left_mem_Icc.2 (I.lower_le_upper i))
-    have := (this.integrable_on_compact (box.is_compact_Icc _)).monoSet box.coe_subset_Icc
+    have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
     exact (this.has_box_integral ⊥ rfl).integral_eq
     infer_instance
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ MeasureTheory.integral_divergence_of_hasFderivWithinAt_off_countable_aux₁
@@ -197,9 +197,9 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
   have hd : d ∈ Icc (I.lower i) (I.upper i) :=
     is_closed_Icc.mem_of_tendsto hcd (eventually_of_forall hc)
   have Hic : ∀ k, integrable_on (fun x => f (i.insert_nth (c k) x) i) (I.face i).Icc := fun k =>
-    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuousOn Hc) (hc k)).integrableOnIcc
+    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuousOn Hc) (hc k)).integrableOn_Icc
   have Hid : integrable_on (fun x => f (i.insert_nth d x) i) (I.face i).Icc :=
-    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuousOn Hc) hd).integrableOnIcc
+    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuousOn Hc) hd).integrableOn_Icc
   have H :
     tendsto (fun k => ∫ x in ((J k).face i).Icc, f (i.insert_nth d x) i) at_top
       (𝓝 <| ∫ x in (I.face i).Icc, f (i.insert_nth d x) i) :=
@@ -227,7 +227,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
   refine' (hcd.eventually (Metric.ball_mem_nhds _ δpos)).mono fun k hk => _
   have Hsub : ((J k).face i).Icc ⊆ (I.face i).Icc := box.le_iff_Icc.1 (box.face_mono (hJ_le _) i)
   rw [mem_closedBall_zero_iff, Real.norm_eq_abs, abs_of_nonneg dist_nonneg, dist_eq_norm, ←
-    integral_sub (Hid.mono_set Hsub) ((Hic _).monoSet Hsub)]
+    integral_sub (Hid.mono_set Hsub) ((Hic _).mono_set Hsub)]
   calc
     ‖∫ x in ((J k).face i).Icc, f (i.insert_nth d x) i - f (i.insert_nth (c k) x) i‖ ≤
         (ε / ∏ j, (I.face i).upper j - (I.face i).lower j) * (volume ((J k).face i).Icc).toReal :=

@@ -52,26 +52,26 @@ variable {f : ℝ → ℝ} {μ ν : Measure ℝ} [IsLocallyFiniteMeasure μ] (c 
 
 
 @[simp]
-theorem intervalIntegrablePow : IntervalIntegrable (fun x => x ^ n) μ a b :=
+theorem intervalIntegrable_pow : IntervalIntegrable (fun x => x ^ n) μ a b :=
   (continuous_pow n).IntervalIntegrable a b
-#align interval_integral.interval_integrable_pow intervalIntegral.intervalIntegrablePow
+#align interval_integral.interval_integrable_pow intervalIntegral.intervalIntegrable_pow
 
-theorem intervalIntegrableZpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) :
+theorem intervalIntegrable_zpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x => x ^ n) μ a b :=
   (continuousOn_id.zpow₀ n fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
-#align interval_integral.interval_integrable_zpow intervalIntegral.intervalIntegrableZpow
+#align interval_integral.interval_integrable_zpow intervalIntegral.intervalIntegrable_zpow
 
 /-- See `interval_integrable_rpow'` for a version with a weaker hypothesis on `r`, but assuming the
 measure is volume. -/
-theorem intervalIntegrableRpow {r : ℝ} (h : 0 ≤ r ∨ (0 : ℝ) ∉ [a, b]) :
+theorem intervalIntegrable_rpow {r : ℝ} (h : 0 ≤ r ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x => x ^ r) μ a b :=
   (continuousOn_id.rpow_const fun x hx =>
       h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
-#align interval_integral.interval_integrable_rpow intervalIntegral.intervalIntegrableRpow
+#align interval_integral.interval_integrable_rpow intervalIntegral.intervalIntegrable_rpow
 
 /-- See `interval_integrable_rpow` for a version applying to any locally finite measure, but with a
 stronger hypothesis on `r`. -/
-theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
+theorem intervalIntegrable_rpow' {r : ℝ} (h : -1 < r) :
     IntervalIntegrable (fun x => x ^ r) volume a b :=
   by
   suffices ∀ c : ℝ, IntervalIntegrable (fun x => x ^ r) volume 0 c by
@@ -104,11 +104,11 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     rw [uIoc_of_le (by linarith : 0 ≤ -c)] at hx
     simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, log_neg_eq_log, mul_comm,
       rpow_def_of_pos hx.1, rpow_def_of_neg (by linarith [hx.1] : -x < 0)]
-#align interval_integral.interval_integrable_rpow' intervalIntegral.intervalIntegrableRpow'
+#align interval_integral.interval_integrable_rpow' intervalIntegral.intervalIntegrable_rpow'
 
 /-- See `interval_integrable_cpow'` for a version with a weaker hypothesis on `r`, but assuming the
 measure is volume. -/
-theorem intervalIntegrableCpow {r : ℂ} (h : 0 ≤ r.re ∨ (0 : ℝ) ∉ [a, b]) :
+theorem intervalIntegrable_cpow {r : ℂ} (h : 0 ≤ r.re ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x : ℝ => (x : ℂ) ^ r) μ a b :=
   by
   by_cases h2 : (0 : ℝ) ∉ [a, b]
@@ -130,7 +130,7 @@ theorem intervalIntegrableCpow {r : ℂ} (h : 0 ≤ r.re ∨ (0 : ℝ) ∉ [a, b
   intro c
   rcases le_or_lt 0 c with (hc | hc)
   · -- case `0 ≤ c`: integrand is identically 1
-    have : IntervalIntegrable (fun x => 1 : ℝ → ℝ) μ 0 c := intervalIntegrableConst
+    have : IntervalIntegrable (fun x => 1 : ℝ → ℝ) μ 0 c := intervalIntegrable_const
     rw [intervalIntegrable_iff_integrable_Ioc_of_le hc] at this⊢
     refine' integrable_on.congr_fun this (fun x hx => _) measurableSet_Ioc
     dsimp only
@@ -160,11 +160,11 @@ theorem intervalIntegrableCpow {r : ℂ} (h : 0 ≤ r.re ∨ (0 : ℝ) ∉ [a, b
       exact
         is_finite_measure_on_compacts_of_is_locally_finite_measure.lt_top_of_is_compact
           is_compact_Icc
-#align interval_integral.interval_integrable_cpow intervalIntegral.intervalIntegrableCpow
+#align interval_integral.interval_integrable_cpow intervalIntegral.intervalIntegrable_cpow
 
 /-- See `interval_integrable_cpow` for a version applying to any locally finite measure, but with a
 stronger hypothesis on `r`. -/
-theorem intervalIntegrableCpow' {r : ℂ} (h : -1 < r.re) :
+theorem intervalIntegrable_cpow' {r : ℂ} (h : -1 < r.re) :
     IntervalIntegrable (fun x : ℝ => (x : ℂ) ^ r) volume a b :=
   by
   suffices ∀ c : ℝ, IntervalIntegrable (fun x => (x : ℂ) ^ r) volume 0 c by
@@ -176,7 +176,7 @@ theorem intervalIntegrableCpow' {r : ℂ} (h : -1 < r.re) :
     · rw [intervalIntegrable_iff]
       apply integrable_on.congr_fun
       · rw [← intervalIntegrable_iff]
-        exact intervalIntegral.intervalIntegrableRpow' h
+        exact intervalIntegral.intervalIntegrable_rpow' h
       · intro x hx
         rw [uIoc_of_le hc] at hx
         dsimp only
@@ -199,33 +199,33 @@ theorem intervalIntegrableCpow' {r : ℂ} (h : -1 < r.re) :
     have : -x ≤ 0 := by linarith [hx.1]
     rw [Complex.of_real_cpow_of_nonpos this, mul_comm]
     simp
-#align interval_integral.interval_integrable_cpow' intervalIntegral.intervalIntegrableCpow'
+#align interval_integral.interval_integrable_cpow' intervalIntegral.intervalIntegrable_cpow'
 
 @[simp]
-theorem intervalIntegrableId : IntervalIntegrable (fun x => x) μ a b :=
+theorem intervalIntegrable_id : IntervalIntegrable (fun x => x) μ a b :=
   continuous_id.IntervalIntegrable a b
-#align interval_integral.interval_integrable_id intervalIntegral.intervalIntegrableId
+#align interval_integral.interval_integrable_id intervalIntegral.intervalIntegrable_id
 
 @[simp]
-theorem intervalIntegrableConst : IntervalIntegrable (fun x => c) μ a b :=
+theorem intervalIntegrable_const : IntervalIntegrable (fun x => c) μ a b :=
   continuous_const.IntervalIntegrable a b
-#align interval_integral.interval_integrable_const intervalIntegral.intervalIntegrableConst
+#align interval_integral.interval_integrable_const intervalIntegral.intervalIntegrable_const
 
-theorem intervalIntegrableOneDiv (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) (hf : ContinuousOn f [a, b]) :
-    IntervalIntegrable (fun x => 1 / f x) μ a b :=
+theorem intervalIntegrable_one_div (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0)
+    (hf : ContinuousOn f [a, b]) : IntervalIntegrable (fun x => 1 / f x) μ a b :=
   (continuousOn_const.div hf h).IntervalIntegrable
-#align interval_integral.interval_integrable_one_div intervalIntegral.intervalIntegrableOneDiv
+#align interval_integral.interval_integrable_one_div intervalIntegral.intervalIntegrable_one_div
 
 @[simp]
-theorem intervalIntegrableInv (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) (hf : ContinuousOn f [a, b]) :
+theorem intervalIntegrable_inv (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) (hf : ContinuousOn f [a, b]) :
     IntervalIntegrable (fun x => (f x)⁻¹) μ a b := by
   simpa only [one_div] using interval_integrable_one_div h hf
-#align interval_integral.interval_integrable_inv intervalIntegral.intervalIntegrableInv
+#align interval_integral.interval_integrable_inv intervalIntegral.intervalIntegrable_inv
 
 @[simp]
-theorem intervalIntegrableExp : IntervalIntegrable exp μ a b :=
+theorem intervalIntegrable_exp : IntervalIntegrable exp μ a b :=
   continuous_exp.IntervalIntegrable a b
-#align interval_integral.interval_integrable_exp intervalIntegral.intervalIntegrableExp
+#align interval_integral.interval_integrable_exp intervalIntegral.intervalIntegrable_exp
 
 @[simp]
 theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) :
@@ -234,32 +234,32 @@ theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x 
 #align interval_integrable.log IntervalIntegrable.log
 
 @[simp]
-theorem intervalIntegrableLog (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=
+theorem intervalIntegrable_log (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=
   IntervalIntegrable.log continuousOn_id fun x hx => ne_of_mem_of_not_mem hx h
-#align interval_integral.interval_integrable_log intervalIntegral.intervalIntegrableLog
+#align interval_integral.interval_integrable_log intervalIntegral.intervalIntegrable_log
 
 @[simp]
-theorem intervalIntegrableSin : IntervalIntegrable sin μ a b :=
+theorem intervalIntegrable_sin : IntervalIntegrable sin μ a b :=
   continuous_sin.IntervalIntegrable a b
-#align interval_integral.interval_integrable_sin intervalIntegral.intervalIntegrableSin
+#align interval_integral.interval_integrable_sin intervalIntegral.intervalIntegrable_sin
 
 @[simp]
-theorem intervalIntegrableCos : IntervalIntegrable cos μ a b :=
+theorem intervalIntegrable_cos : IntervalIntegrable cos μ a b :=
   continuous_cos.IntervalIntegrable a b
-#align interval_integral.interval_integrable_cos intervalIntegral.intervalIntegrableCos
+#align interval_integral.interval_integrable_cos intervalIntegral.intervalIntegrable_cos
 
-theorem intervalIntegrableOneDivOneAddSq :
+theorem intervalIntegrable_one_div_one_add_sq :
     IntervalIntegrable (fun x : ℝ => 1 / (1 + x ^ 2)) μ a b :=
   by
   refine' (continuous_const.div _ fun x => _).IntervalIntegrable a b
   · continuity
   · nlinarith
-#align interval_integral.interval_integrable_one_div_one_add_sq intervalIntegral.intervalIntegrableOneDivOneAddSq
+#align interval_integral.interval_integrable_one_div_one_add_sq intervalIntegral.intervalIntegrable_one_div_one_add_sq
 
 @[simp]
-theorem intervalIntegrableInvOneAddSq : IntervalIntegrable (fun x : ℝ => (1 + x ^ 2)⁻¹) μ a b := by
-  simpa only [one_div] using interval_integrable_one_div_one_add_sq
-#align interval_integral.interval_integrable_inv_one_add_sq intervalIntegral.intervalIntegrableInvOneAddSq
+theorem intervalIntegrable_inv_one_add_sq : IntervalIntegrable (fun x : ℝ => (1 + x ^ 2)⁻¹) μ a b :=
+  by simpa only [one_div] using interval_integrable_one_div_one_add_sq
+#align interval_integral.interval_integrable_inv_one_add_sq intervalIntegral.intervalIntegrable_inv_one_add_sq
 
 /-! ### Integrals of the form `c * ∫ x in a..b, f (c * x + d)` -/
 

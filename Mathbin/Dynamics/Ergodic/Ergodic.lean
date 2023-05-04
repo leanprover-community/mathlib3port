@@ -76,9 +76,9 @@ theorem prob_eq_zero_or_one [IsProbabilityMeasure μ] (hf : PreErgodic f μ) (hs
   simpa [hs] using hf.measure_self_or_compl_eq_zero hs hs'
 #align pre_ergodic.prob_eq_zero_or_one PreErgodic.prob_eq_zero_or_one
 
-theorem ofIterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=
+theorem of_iterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=
   ⟨fun s hs hs' => hf.ae_empty_or_univ hs <| IsFixedPt.preimage_iterate hs' n⟩
-#align pre_ergodic.of_iterate PreErgodic.ofIterate
+#align pre_ergodic.of_iterate PreErgodic.of_iterate
 
 end PreErgodic
 
@@ -86,7 +86,7 @@ namespace MeasureTheory.MeasurePreserving
 
 variable {β : Type _} {m' : MeasurableSpace β} {μ' : Measure β} {s' : Set β} {g : α → β}
 
-theorem preErgodicOfPreErgodicConjugate (hg : MeasurePreserving g μ μ') (hf : PreErgodic f μ)
+theorem preErgodic_of_preErgodic_conjugate (hg : MeasurePreserving g μ μ') (hf : PreErgodic f μ)
     {f' : β → β} (h_comm : g ∘ f = f' ∘ g) : PreErgodic f' μ' :=
   ⟨by
     intro s hs₀ hs₁
@@ -94,7 +94,7 @@ theorem preErgodicOfPreErgodicConjugate (hg : MeasurePreserving g μ μ') (hf : 
     cases' hf.ae_empty_or_univ (hg.measurable hs₀) hs₁ with hs₂ hs₂ <;> [left, right]
     · simpa only [ae_eq_empty, hg.measure_preimage hs₀] using hs₂
     · simpa only [ae_eq_univ, ← preimage_compl, hg.measure_preimage hs₀.compl] using hs₂⟩
-#align measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodicOfPreErgodicConjugate
+#align measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodic_of_preErgodic_conjugate
 
 theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ :=
@@ -115,8 +115,8 @@ theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ'
     rw [h.comp_left_iff, (measure_preserving.symm e h).comp_right_iff]
   replace h : PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ := h.pre_ergodic_conjugate_iff
   exact
-    ⟨fun hf => { this.mp hf.toMeasurePreserving, h.mp hf.toPreErgodic with }, fun hf =>
-      { this.mpr hf.toMeasurePreserving, h.mpr hf.toPreErgodic with }⟩
+    ⟨fun hf => { this.mp hf.to_measurePreserving, h.mp hf.to_preErgodic with }, fun hf =>
+      { this.mpr hf.to_measurePreserving, h.mpr hf.to_preErgodic with }⟩
 #align measure_theory.measure_preserving.ergodic_conjugate_iff MeasureTheory.MeasurePreserving.ergodic_conjugate_iff
 
 end MeasureTheory.MeasurePreserving
@@ -138,7 +138,7 @@ namespace Ergodic
 
 /-- An ergodic map is quasi ergodic. -/
 theorem quasiErgodic (hf : Ergodic f μ) : QuasiErgodic f μ :=
-  { hf.toPreErgodic, hf.toMeasurePreserving.QuasiMeasurePreserving with }
+  { hf.to_preErgodic, hf.to_measurePreserving.QuasiMeasurePreserving with }
 #align ergodic.quasi_ergodic Ergodic.quasiErgodic
 
 /-- See also `ergodic.ae_empty_or_univ_of_preimage_ae_le`. -/

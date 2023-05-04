@@ -498,7 +498,7 @@ theorem le_measurableSpace_of_const_le (hτ : IsStoppingTime f τ) {i : ι} (hτ
 
 end Preorder
 
-instance sigmaFiniteStoppingTime {ι} [SemilatticeSup ι] [OrderBot ι]
+instance sigmaFinite_stopping_time {ι} [SemilatticeSup ι] [OrderBot ι]
     [(Filter.atTop : Filter ι).IsCountablyGenerated] {μ : Measure Ω} {f : Filtration ι m}
     {τ : Ω → ι} [SigmaFiniteFiltration μ f] (hτ : IsStoppingTime f τ) :
     SigmaFinite (μ.trim hτ.measurableSpace_le) :=
@@ -507,9 +507,9 @@ instance sigmaFiniteStoppingTime {ι} [SemilatticeSup ι] [OrderBot ι]
   · exact f ⊥
   · exact hτ.le_measurable_space_of_const_le fun _ => bot_le
   · infer_instance
-#align measure_theory.is_stopping_time.sigma_finite_stopping_time MeasureTheory.IsStoppingTime.sigmaFiniteStoppingTime
+#align measure_theory.is_stopping_time.sigma_finite_stopping_time MeasureTheory.IsStoppingTime.sigmaFinite_stopping_time
 
-instance sigmaFiniteStoppingTimeOfLe {ι} [SemilatticeSup ι] [OrderBot ι] {μ : Measure Ω}
+instance sigmaFinite_stopping_time_of_le {ι} [SemilatticeSup ι] [OrderBot ι] {μ : Measure Ω}
     {f : Filtration ι m} {τ : Ω → ι} [SigmaFiniteFiltration μ f] (hτ : IsStoppingTime f τ) {n : ι}
     (hτ_le : ∀ ω, τ ω ≤ n) : SigmaFinite (μ.trim (hτ.measurableSpace_le_of_le hτ_le)) :=
   by
@@ -517,7 +517,7 @@ instance sigmaFiniteStoppingTimeOfLe {ι} [SemilatticeSup ι] [OrderBot ι] {μ 
   · exact f ⊥
   · exact hτ.le_measurable_space_of_const_le fun _ => bot_le
   · infer_instance
-#align measure_theory.is_stopping_time.sigma_finite_stopping_time_of_le MeasureTheory.IsStoppingTime.sigmaFiniteStoppingTimeOfLe
+#align measure_theory.is_stopping_time.sigma_finite_stopping_time_of_le MeasureTheory.IsStoppingTime.sigmaFinite_stopping_time_of_le
 
 section LinearOrder
 
@@ -1066,7 +1066,7 @@ section StoppedValue
 
 variable [PartialOrder ι] {ℱ : Filtration ι m} [NormedAddCommGroup E]
 
-theorem memℒpStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ)
+theorem memℒp_stoppedValue_of_mem_finset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ)
     {s : Finset ι} (hbdd : ∀ ω, τ ω ∈ s) : Memℒp (stoppedValue u τ) p μ :=
   by
   rw [stopped_value_eq_of_mem_finset hbdd]
@@ -1076,27 +1076,28 @@ theorem memℒpStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n
   refine' ((Finset.finite_toSet s).Subset fun ω hω => _).Countable
   obtain ⟨y, rfl⟩ := hω
   exact hbdd y
-#align measure_theory.mem_ℒp_stopped_value_of_mem_finset MeasureTheory.memℒpStoppedValueOfMemFinset
+#align measure_theory.mem_ℒp_stopped_value_of_mem_finset MeasureTheory.memℒp_stoppedValue_of_mem_finset
 
-theorem memℒpStoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
+theorem memℒp_stoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Memℒp (u n) p μ) {N : ι} (hbdd : ∀ ω, τ ω ≤ N) : Memℒp (stoppedValue u τ) p μ :=
-  memℒpStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
-#align measure_theory.mem_ℒp_stopped_value MeasureTheory.memℒpStoppedValue
+  memℒp_stoppedValue_of_mem_finset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
+#align measure_theory.mem_ℒp_stopped_value MeasureTheory.memℒp_stoppedValue
 
-theorem integrableStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Integrable (u n) μ)
-    {s : Finset ι} (hbdd : ∀ ω, τ ω ∈ s) : Integrable (stoppedValue u τ) μ :=
+theorem integrable_stoppedValue_of_mem_finset (hτ : IsStoppingTime ℱ τ)
+    (hu : ∀ n, Integrable (u n) μ) {s : Finset ι} (hbdd : ∀ ω, τ ω ∈ s) :
+    Integrable (stoppedValue u τ) μ :=
   by
   simp_rw [← mem_ℒp_one_iff_integrable] at hu⊢
   exact mem_ℒp_stopped_value_of_mem_finset hτ hu hbdd
-#align measure_theory.integrable_stopped_value_of_mem_finset MeasureTheory.integrableStoppedValueOfMemFinset
+#align measure_theory.integrable_stopped_value_of_mem_finset MeasureTheory.integrable_stoppedValue_of_mem_finset
 
 variable (ι)
 
-theorem integrableStoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
+theorem integrable_stoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Integrable (u n) μ) {N : ι} (hbdd : ∀ ω, τ ω ≤ N) :
     Integrable (stoppedValue u τ) μ :=
-  integrableStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
-#align measure_theory.integrable_stopped_value MeasureTheory.integrableStoppedValue
+  integrable_stoppedValue_of_mem_finset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
+#align measure_theory.integrable_stopped_value MeasureTheory.integrable_stoppedValue
 
 end StoppedValue
 
@@ -1105,8 +1106,8 @@ section StoppedProcess
 variable [LinearOrder ι] [TopologicalSpace ι] [OrderTopology ι] [FirstCountableTopology ι]
   {ℱ : Filtration ι m} [NormedAddCommGroup E]
 
-theorem memℒpStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ) (n : ι)
-    {s : Finset ι} (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) : Memℒp (stoppedProcess u τ n) p μ :=
+theorem memℒp_stoppedProcess_of_mem_finset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Memℒp (u n) p μ)
+    (n : ι) {s : Finset ι} (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) : Memℒp (stoppedProcess u τ n) p μ :=
   by
   rw [stopped_process_eq_of_mem_finset n hbdd]
   swap; · infer_instance
@@ -1119,24 +1120,25 @@ theorem memℒpStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀
       simp only [Finset.sum_apply]
     refine' mem_ℒp_finset_sum _ fun i hi => mem_ℒp.indicator _ (hu i)
     exact ℱ.le i { a : Ω | τ a = i } (hτ.measurable_set_eq i)
-#align measure_theory.mem_ℒp_stopped_process_of_mem_finset MeasureTheory.memℒpStoppedProcessOfMemFinset
+#align measure_theory.mem_ℒp_stopped_process_of_mem_finset MeasureTheory.memℒp_stoppedProcess_of_mem_finset
 
-theorem memℒpStoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
+theorem memℒp_stoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Memℒp (u n) p μ) (n : ι) : Memℒp (stoppedProcess u τ n) p μ :=
-  memℒpStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_Iio.mpr h
-#align measure_theory.mem_ℒp_stopped_process MeasureTheory.memℒpStoppedProcess
+  memℒp_stoppedProcess_of_mem_finset hτ hu n fun ω h => Finset.mem_Iio.mpr h
+#align measure_theory.mem_ℒp_stopped_process MeasureTheory.memℒp_stoppedProcess
 
-theorem integrableStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Integrable (u n) μ)
-    (n : ι) {s : Finset ι} (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) : Integrable (stoppedProcess u τ n) μ :=
+theorem integrable_stoppedProcess_of_mem_finset (hτ : IsStoppingTime ℱ τ)
+    (hu : ∀ n, Integrable (u n) μ) (n : ι) {s : Finset ι} (hbdd : ∀ ω, τ ω < n → τ ω ∈ s) :
+    Integrable (stoppedProcess u τ n) μ :=
   by
   simp_rw [← mem_ℒp_one_iff_integrable] at hu⊢
   exact mem_ℒp_stopped_process_of_mem_finset hτ hu n hbdd
-#align measure_theory.integrable_stopped_process_of_mem_finset MeasureTheory.integrableStoppedProcessOfMemFinset
+#align measure_theory.integrable_stopped_process_of_mem_finset MeasureTheory.integrable_stoppedProcess_of_mem_finset
 
-theorem integrableStoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
+theorem integrable_stoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Integrable (u n) μ) (n : ι) : Integrable (stoppedProcess u τ n) μ :=
-  integrableStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_Iio.mpr h
-#align measure_theory.integrable_stopped_process MeasureTheory.integrableStoppedProcess
+  integrable_stoppedProcess_of_mem_finset hτ hu n fun ω h => Finset.mem_Iio.mpr h
+#align measure_theory.integrable_stopped_process MeasureTheory.integrable_stoppedProcess
 
 end StoppedProcess
 

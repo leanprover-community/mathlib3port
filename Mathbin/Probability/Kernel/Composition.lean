@@ -138,7 +138,7 @@ theorem compProdFun_unionᵢ (κ : kernel α β) (η : kernel (α × β) γ) [Is
   · intro i
     have hm : MeasurableSet { p : (α × β) × γ | (p.1.2, p.2) ∈ f i } :=
       measurable_fst.snd.prod_mk measurable_snd (hf_meas i)
-    exact ((measurable_prod_mk_mem η hm).comp measurable_prod_mk_left).AeMeasurable
+    exact ((measurable_prod_mk_mem η hm).comp measurable_prod_mk_left).AEMeasurable
 #align probability_theory.kernel.comp_prod_fun_Union ProbabilityTheory.kernel.compProdFun_unionᵢ
 
 theorem compProdFun_tsum_right (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α)
@@ -156,7 +156,7 @@ theorem compProdFun_tsum_right (κ : kernel α β) (η : kernel (α × β) γ) [
   rw [this, lintegral_tsum fun n : ℕ => _]
   exact
     ((measurable_prod_mk_mem (seq η n) ((measurable_fst.snd.prod_mk measurable_snd) hs)).comp
-        measurable_prod_mk_left).AeMeasurable
+        measurable_prod_mk_left).AEMeasurable
 #align probability_theory.kernel.comp_prod_fun_tsum_right ProbabilityTheory.kernel.compProdFun_tsum_right
 
 theorem compProdFun_tsum_left (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel κ] (a : α)

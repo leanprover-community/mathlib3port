@@ -44,7 +44,7 @@ unsafe def measurability : user_attribute
 /- Mark some measurability lemmas already defined in `measure_theory.measurable_space_def` and
 `measure_theory.measure_space_def` -/
 attribute [measurability]
-  measurable_id measurable_id' aeMeasurableId aeMeasurableId' measurable_const aeMeasurableConst AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurableSet MeasurableSet.unionᵢ MeasurableSet.interᵢ MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symmDiff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurableSet_eq Finset.measurableSet MeasurableSpace.measurableSet_top
+  measurable_id measurable_id' aemeasurable_id aemeasurable_id' measurable_const aemeasurable_const AEMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurableSet MeasurableSet.unionᵢ MeasurableSet.interᵢ MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symmDiff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurableSet_eq Finset.measurableSet MeasurableSpace.measurableSet_top
 
 namespace Tactic
 
@@ -98,7 +98,7 @@ unsafe def goal_is_not_measurable : tactic Unit := do
   let t ← tactic.target
   match t with
     | q(Measurable $(l)) => failed
-    | q(AeMeasurable $(l) $(r)) => failed
+    | q(AEMeasurable $(l) $(r)) => failed
     | q(MeasurableSet $(l)) => failed
     | _ => skip
 #align tactic.goal_is_not_measurable tactic.goal_is_not_measurable

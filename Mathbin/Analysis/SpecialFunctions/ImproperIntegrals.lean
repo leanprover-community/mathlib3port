@@ -31,7 +31,7 @@ open Real Set Filter MeasureTheory intervalIntegral
 
 open Topology
 
-theorem integrableOnExpIic (c : ℝ) : IntegrableOn exp (Iic c) :=
+theorem integrableOn_exp_Iic (c : ℝ) : IntegrableOn exp (Iic c) :=
   by
   refine'
     integrable_on_Iic_of_interval_integral_norm_bounded (exp c) c
@@ -39,13 +39,13 @@ theorem integrableOnExpIic (c : ℝ) : IntegrableOn exp (Iic c) :=
       (eventually_of_mem (Iic_mem_at_bot 0) fun y hy => _)
   simp_rw [norm_of_nonneg (exp_pos _).le, integral_exp, sub_le_self_iff]
   exact (exp_pos _).le
-#align integrable_on_exp_Iic integrableOnExpIic
+#align integrable_on_exp_Iic integrableOn_exp_Iic
 
 theorem integral_exp_Iic (c : ℝ) : (∫ x : ℝ in Iic c, exp x) = exp c :=
   by
   refine'
-    tendsto_nhds_unique (interval_integral_tendsto_integral_Iic _ (integrableOnExpIic _) tendsto_id)
-      _
+    tendsto_nhds_unique
+      (interval_integral_tendsto_integral_Iic _ (integrableOn_exp_Iic _) tendsto_id) _
   simp_rw [integral_exp, show 𝓝 (exp c) = 𝓝 (exp c - 0) by rw [sub_zero]]
   exact tendsto_exp_at_bot.const_sub _
 #align integral_exp_Iic integral_exp_Iic
@@ -63,7 +63,7 @@ theorem integral_exp_neg_Ioi_zero : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 := by
 #align integral_exp_neg_Ioi_zero integral_exp_neg_Ioi_zero
 
 /-- If `0 < c`, then `(λ t : ℝ, t ^ a)` is integrable on `(c, ∞)` for all `a < -1`. -/
-theorem integrableOnIoiRpowOfLt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
+theorem integrableOn_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
     IntegrableOn (fun t : ℝ => t ^ a) (Ioi c) :=
   by
   have hd : ∀ (x : ℝ) (hx : x ∈ Ici c), HasDerivAt (fun t => t ^ (a + 1) / (a + 1)) (x ^ a) x :=
@@ -77,7 +77,7 @@ theorem integrableOnIoiRpowOfLt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
     simpa only [neg_neg] using tendsto_rpow_neg_atTop (by linarith : 0 < -(a + 1))
   exact
     integrable_on_Ioi_deriv_of_nonneg' hd (fun t ht => rpow_nonneg_of_nonneg (hc.trans ht).le a) ht
-#align integrable_on_Ioi_rpow_of_lt integrableOnIoiRpowOfLt
+#align integrable_on_Ioi_rpow_of_lt integrableOn_Ioi_rpow_of_lt
 
 theorem integral_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
     (∫ t : ℝ in Ioi c, t ^ a) = -c ^ (a + 1) / (a + 1) :=
@@ -91,28 +91,28 @@ theorem integral_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
     by
     apply tendsto.div_const
     simpa only [neg_neg] using tendsto_rpow_neg_atTop (by linarith : 0 < -(a + 1))
-  convert integral_Ioi_of_has_deriv_at_of_tendsto' hd (integrableOnIoiRpowOfLt ha hc) ht
+  convert integral_Ioi_of_has_deriv_at_of_tendsto' hd (integrableOn_Ioi_rpow_of_lt ha hc) ht
   simp only [neg_div, zero_div, zero_sub]
 #align integral_Ioi_rpow_of_lt integral_Ioi_rpow_of_lt
 
-theorem integrableOnIoiCpowOfLt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c) :
+theorem integrableOn_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c) :
     IntegrableOn (fun t : ℝ => (t : ℂ) ^ a) (Ioi c) :=
   by
   rw [integrable_on, ← integrable_norm_iff, ← integrable_on]
-  refine' (integrableOnIoiRpowOfLt ha hc).congr_fun (fun x hx => _) measurableSet_Ioi
+  refine' (integrableOn_Ioi_rpow_of_lt ha hc).congr_fun (fun x hx => _) measurableSet_Ioi
   · dsimp only
     rw [Complex.norm_eq_abs, Complex.abs_cpow_eq_rpow_re_of_pos (hc.trans hx)]
   · refine' ContinuousOn.aeStronglyMeasurable (fun t ht => _) measurableSet_Ioi
     exact
       (Complex.continuousAt_of_real_cpow_const _ _ (Or.inr (hc.trans ht).ne')).ContinuousWithinAt
-#align integrable_on_Ioi_cpow_of_lt integrableOnIoiCpowOfLt
+#align integrable_on_Ioi_cpow_of_lt integrableOn_Ioi_cpow_of_lt
 
 theorem integral_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c) :
     (∫ t : ℝ in Ioi c, (t : ℂ) ^ a) = -(c : ℂ) ^ (a + 1) / (a + 1) :=
   by
   refine'
     tendsto_nhds_unique
-      (interval_integral_tendsto_integral_Ioi c (integrableOnIoiCpowOfLt ha hc) tendsto_id) _
+      (interval_integral_tendsto_integral_Ioi c (integrableOn_Ioi_cpow_of_lt ha hc) tendsto_id) _
   suffices
     tendsto (fun x : ℝ => ((x : ℂ) ^ (a + 1) - (c : ℂ) ^ (a + 1)) / (a + 1)) at_top
       (𝓝 <| -c ^ (a + 1) / (a + 1))

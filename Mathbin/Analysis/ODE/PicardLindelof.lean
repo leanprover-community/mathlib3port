@@ -274,9 +274,9 @@ instance [CompleteSpace E] : CompleteSpace v.FunSpace :=
     isClosed_setOf_lipschitzWith v.C
   exact this.preimage ContinuousMap.continuous_coe
 
-theorem intervalIntegrableVComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
+theorem intervalIntegrable_vComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
   f.continuous_vComp.IntervalIntegrable _ _
-#align picard_lindelof.fun_space.interval_integrable_v_comp PicardLindelof.FunSpace.intervalIntegrableVComp
+#align picard_lindelof.fun_space.interval_integrable_v_comp PicardLindelof.FunSpace.intervalIntegrable_vComp
 
 variable [CompleteSpace E]
 
@@ -331,7 +331,7 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     ‖∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ‖ ≤
         ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * |τ - v.t₀|) ^ n / n ! * d) :=
       by
-      refine' norm_integral_le_of_norm_le (Continuous.integrableOnUIoc _) _
+      refine' norm_integral_le_of_norm_le (Continuous.integrableOn_uIoc _) _
       · continuity
       · refine' (ae_restrict_mem measurableSet_Ioc).mono fun τ hτ => _
         refine'

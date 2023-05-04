@@ -1151,14 +1151,14 @@ theorem mapₗ_congr {f g : α → β} (hf : Measurable f) (hg : Measurable g) (
 /-- The pushforward of a measure. It is defined to be `0` if `f` is not an almost everywhere
 measurable function. -/
 irreducible_def map [MeasurableSpace α] (f : α → β) (μ : Measure α) : Measure β :=
-  if hf : AeMeasurable f μ then mapₗ (hf.mk f) μ else 0
+  if hf : AEMeasurable f μ then mapₗ (hf.mk f) μ else 0
 #align measure_theory.measure.map MeasureTheory.Measure.map
 
 include m0
 
-theorem mapₗ_mk_apply_of_aeMeasurable {f : α → β} (hf : AeMeasurable f μ) :
+theorem mapₗ_mk_apply_of_aEMeasurable {f : α → β} (hf : AEMeasurable f μ) :
     mapₗ (hf.mk f) μ = map f μ := by simp [map, hf]
-#align measure_theory.measure.mapₗ_mk_apply_of_ae_measurable MeasureTheory.Measure.mapₗ_mk_apply_of_aeMeasurable
+#align measure_theory.measure.mapₗ_mk_apply_of_ae_measurable MeasureTheory.Measure.mapₗ_mk_apply_of_aEMeasurable
 
 theorem mapₗ_apply_of_measurable {f : α → β} (hf : Measurable f) (μ : Measure α) :
     mapₗ f μ = map f μ :=
@@ -1174,21 +1174,21 @@ theorem map_add (μ ν : Measure α) {f : α → β} (hf : Measurable f) :
 
 @[simp]
 theorem map_zero (f : α → β) : (0 : Measure α).map f = 0 := by
-  by_cases hf : AeMeasurable f (0 : Measure α) <;> simp [map, hf]
+  by_cases hf : AEMeasurable f (0 : Measure α) <;> simp [map, hf]
 #align measure_theory.measure.map_zero MeasureTheory.Measure.map_zero
 
-theorem map_of_not_aeMeasurable {f : α → β} {μ : Measure α} (hf : ¬AeMeasurable f μ) :
+theorem map_of_not_aEMeasurable {f : α → β} {μ : Measure α} (hf : ¬AEMeasurable f μ) :
     μ.map f = 0 := by simp [map, hf]
-#align measure_theory.measure.map_of_not_ae_measurable MeasureTheory.Measure.map_of_not_aeMeasurable
+#align measure_theory.measure.map_of_not_ae_measurable MeasureTheory.Measure.map_of_not_aEMeasurable
 
 theorem map_congr {f g : α → β} (h : f =ᵐ[μ] g) : Measure.map f μ = Measure.map g μ :=
   by
-  by_cases hf : AeMeasurable f μ
-  · have hg : AeMeasurable g μ := hf.congr h
+  by_cases hf : AEMeasurable f μ
+  · have hg : AEMeasurable g μ := hf.congr h
     simp only [← mapₗ_mk_apply_of_ae_measurable hf, ← mapₗ_mk_apply_of_ae_measurable hg]
     exact
       mapₗ_congr hf.measurable_mk hg.measurable_mk (hf.ae_eq_mk.symm.trans (h.trans hg.ae_eq_mk))
-  · have hg : ¬AeMeasurable g μ := by simpa [← aeMeasurable_congr h] using hf
+  · have hg : ¬AEMeasurable g μ := by simpa [← aemeasurable_congr h] using hf
     simp [map_of_not_ae_measurable, hf, hg]
 #align measure_theory.measure.map_congr MeasureTheory.Measure.map_congr
 
@@ -1196,15 +1196,15 @@ theorem map_congr {f g : α → β} (h : f =ᵐ[μ] g) : Measure.map f μ = Meas
 protected theorem map_smul (c : ℝ≥0∞) (μ : Measure α) (f : α → β) : (c • μ).map f = c • μ.map f :=
   by
   rcases eq_or_ne c 0 with (rfl | hc); · simp
-  by_cases hf : AeMeasurable f μ
-  · have hfc : AeMeasurable f (c • μ) :=
+  by_cases hf : AEMeasurable f μ
+  · have hfc : AEMeasurable f (c • μ) :=
       ⟨hf.mk f, hf.measurable_mk, (ae_smul_measure_iff hc).2 hf.ae_eq_mk⟩
     simp only [← mapₗ_mk_apply_of_ae_measurable hf, ← mapₗ_mk_apply_of_ae_measurable hfc,
       LinearMap.map_smulₛₗ, RingHom.id_apply]
     congr 1
     apply mapₗ_congr hfc.measurable_mk hf.measurable_mk
     exact eventually_eq.trans ((ae_smul_measure_iff hc).1 hfc.ae_eq_mk.symm) hf.ae_eq_mk
-  · have hfc : ¬AeMeasurable f (c • μ) := by
+  · have hfc : ¬AEMeasurable f (c • μ) := by
       intro hfc
       exact hf ⟨hfc.mk f, hfc.measurable_mk, (ae_smul_measure_iff hc).1 hfc.ae_eq_mk⟩
     simp [map_of_not_ae_measurable hf, map_of_not_ae_measurable hfc]
@@ -1219,20 +1219,20 @@ protected theorem map_smul_nNReal (c : ℝ≥0) (μ : Measure α) (f : α → β
 /-- We can evaluate the pushforward on measurable sets. For non-measurable sets, see
   `measure_theory.measure.le_map_apply` and `measurable_equiv.map_apply`. -/
 @[simp]
-theorem map_apply_of_aeMeasurable {f : α → β} (hf : AeMeasurable f μ) {s : Set β}
+theorem map_apply_of_aEMeasurable {f : α → β} (hf : AEMeasurable f μ) {s : Set β}
     (hs : MeasurableSet s) : μ.map f s = μ (f ⁻¹' s) := by
   simpa only [mapₗ, hf.measurable_mk, hs, dif_pos, lift_linear_apply, outer_measure.map_apply,
     coe_to_outer_measure, ← mapₗ_mk_apply_of_ae_measurable hf] using
     measure_congr (hf.ae_eq_mk.symm.preimage s)
-#align measure_theory.measure.map_apply_of_ae_measurable MeasureTheory.Measure.map_apply_of_aeMeasurable
+#align measure_theory.measure.map_apply_of_ae_measurable MeasureTheory.Measure.map_apply_of_aEMeasurable
 
 @[simp]
 theorem map_apply {f : α → β} (hf : Measurable f) {s : Set β} (hs : MeasurableSet s) :
     μ.map f s = μ (f ⁻¹' s) :=
-  map_apply_of_aeMeasurable hf.AeMeasurable hs
+  map_apply_of_aEMeasurable hf.AEMeasurable hs
 #align measure_theory.measure.map_apply MeasureTheory.Measure.map_apply
 
-theorem map_toOuterMeasure {f : α → β} (hf : AeMeasurable f μ) :
+theorem map_toOuterMeasure {f : α → β} (hf : AEMeasurable f μ) :
     (μ.map f).toOuterMeasure = (OuterMeasure.map f μ.toOuterMeasure).trim :=
   by
   rw [← trimmed, outer_measure.trim_eq_trim_iff]
@@ -1263,23 +1263,23 @@ theorem map_mono {f : α → β} (h : μ ≤ ν) (hf : Measurable f) : μ.map f 
 
 /-- Even if `s` is not measurable, we can bound `map f μ s` from below.
   See also `measurable_equiv.map_apply`. -/
-theorem le_map_apply {f : α → β} (hf : AeMeasurable f μ) (s : Set β) : μ (f ⁻¹' s) ≤ μ.map f s :=
+theorem le_map_apply {f : α → β} (hf : AEMeasurable f μ) (s : Set β) : μ (f ⁻¹' s) ≤ μ.map f s :=
   calc
     μ (f ⁻¹' s) ≤ μ (f ⁻¹' toMeasurable (μ.map f) s) :=
       measure_mono <| preimage_mono <| subset_toMeasurable _ _
     _ = μ.map f (toMeasurable (μ.map f) s) :=
-      (map_apply_of_aeMeasurable hf <| measurableSet_toMeasurable _ _).symm
+      (map_apply_of_aEMeasurable hf <| measurableSet_toMeasurable _ _).symm
     _ = μ.map f s := measure_toMeasurable _
     
 #align measure_theory.measure.le_map_apply MeasureTheory.Measure.le_map_apply
 
 /-- Even if `s` is not measurable, `map f μ s = 0` implies that `μ (f ⁻¹' s) = 0`. -/
-theorem preimage_null_of_map_null {f : α → β} (hf : AeMeasurable f μ) {s : Set β}
+theorem preimage_null_of_map_null {f : α → β} (hf : AEMeasurable f μ) {s : Set β}
     (hs : μ.map f s = 0) : μ (f ⁻¹' s) = 0 :=
   nonpos_iff_eq_zero.mp <| (le_map_apply hf s).trans_eq hs
 #align measure_theory.measure.preimage_null_of_map_null MeasureTheory.Measure.preimage_null_of_map_null
 
-theorem tendsto_ae_map {f : α → β} (hf : AeMeasurable f μ) : Tendsto f μ.ae (μ.map f).ae :=
+theorem tendsto_ae_map {f : α → β} (hf : AEMeasurable f μ) : Tendsto f μ.ae (μ.map f).ae :=
   fun s hs => preimage_null_of_map_null hf hs
 #align measure_theory.measure.tendsto_ae_map MeasureTheory.Measure.tendsto_ae_map
 
@@ -1402,7 +1402,7 @@ section Subtype
 
 section ComapAnyMeasure
 
-theorem MeasurableSet.nullMeasurableSetSubtypeCoe {t : Set s} (hs : NullMeasurableSet s μ)
+theorem MeasurableSet.nullMeasurableSet_subtype_coe {t : Set s} (hs : NullMeasurableSet s μ)
     (ht : MeasurableSet t) : NullMeasurableSet ((coe : s → α) '' t) μ :=
   by
   rw [Subtype.measurableSpace, comap_eq_generate_from] at ht
@@ -1419,17 +1419,18 @@ theorem MeasurableSet.nullMeasurableSetSubtypeCoe {t : Set s} (hs : NullMeasurab
   · intro f
     rw [image_Union]
     exact null_measurable_set.Union
-#align measure_theory.measure.measurable_set.null_measurable_set_subtype_coe MeasureTheory.Measure.MeasurableSet.nullMeasurableSetSubtypeCoe
+#align measure_theory.measure.measurable_set.null_measurable_set_subtype_coe MeasureTheory.Measure.MeasurableSet.nullMeasurableSet_subtype_coe
 
-theorem NullMeasurableSet.subtypeCoe {t : Set s} (hs : NullMeasurableSet s μ)
+theorem NullMeasurableSet.subtype_coe {t : Set s} (hs : NullMeasurableSet s μ)
     (ht : NullMeasurableSet t (μ.comap Subtype.val)) : NullMeasurableSet ((coe : s → α) '' t) μ :=
   NullMeasurableSet.image coe μ Subtype.coe_injective
-    (fun t => MeasurableSet.nullMeasurableSetSubtypeCoe hs) ht
-#align measure_theory.measure.null_measurable_set.subtype_coe MeasureTheory.Measure.NullMeasurableSet.subtypeCoe
+    (fun t => MeasurableSet.nullMeasurableSet_subtype_coe hs) ht
+#align measure_theory.measure.null_measurable_set.subtype_coe MeasureTheory.Measure.NullMeasurableSet.subtype_coe
 
 theorem measure_subtype_coe_le_comap (hs : NullMeasurableSet s μ) (t : Set s) :
     μ ((coe : s → α) '' t) ≤ μ.comap Subtype.val t :=
-  le_comap_apply _ _ Subtype.coe_injective (fun t => MeasurableSet.nullMeasurableSetSubtypeCoe hs) _
+  le_comap_apply _ _ Subtype.coe_injective (fun t => MeasurableSet.nullMeasurableSet_subtype_coe hs)
+    _
 #align measure_theory.measure.measure_subtype_coe_le_comap MeasureTheory.Measure.measure_subtype_coe_le_comap
 
 theorem measure_subtype_coe_eq_zero_of_comap_eq_zero (hs : NullMeasurableSet s μ) {t : Set s}
@@ -2379,16 +2380,16 @@ def AbsolutelyContinuous {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :
 -- mathport name: measure.absolutely_continuous
 scoped[MeasureTheory] infixl:50 " ≪ " => MeasureTheory.Measure.AbsolutelyContinuous
 
-theorem absolutelyContinuousOfLe (h : μ ≤ ν) : μ ≪ ν := fun s hs =>
+theorem absolutelyContinuous_of_le (h : μ ≤ ν) : μ ≪ ν := fun s hs =>
   nonpos_iff_eq_zero.1 <| hs ▸ le_iff'.1 h s
-#align measure_theory.measure.absolutely_continuous_of_le MeasureTheory.Measure.absolutelyContinuousOfLe
+#align measure_theory.measure.absolutely_continuous_of_le MeasureTheory.Measure.absolutelyContinuous_of_le
 
 alias absolutely_continuous_of_le ← _root_.has_le.le.absolutely_continuous
 #align has_le.le.absolutely_continuous LE.le.absolutelyContinuous
 
-theorem absolutelyContinuousOfEq (h : μ = ν) : μ ≪ ν :=
+theorem absolutelyContinuous_of_eq (h : μ = ν) : μ ≪ ν :=
   h.le.AbsolutelyContinuous
-#align measure_theory.measure.absolutely_continuous_of_eq MeasureTheory.Measure.absolutelyContinuousOfEq
+#align measure_theory.measure.absolutely_continuous_of_eq MeasureTheory.Measure.absolutelyContinuous_of_eq
 
 alias absolutely_continuous_of_eq ← _root_.eq.absolutely_continuous
 #align eq.absolutely_continuous Eq.absolutelyContinuous
@@ -2428,9 +2429,10 @@ protected theorem smul [Monoid R] [DistribMulAction R ℝ≥0∞] [IsScalarTower
 
 end AbsolutelyContinuous
 
-theorem absolutelyContinuousOfLeSmul {μ' : Measure α} {c : ℝ≥0∞} (hμ'_le : μ' ≤ c • μ) : μ' ≪ μ :=
-  (Measure.absolutelyContinuousOfLe hμ'_le).trans (Measure.AbsolutelyContinuous.rfl.smul c)
-#align measure_theory.measure.absolutely_continuous_of_le_smul MeasureTheory.Measure.absolutelyContinuousOfLeSmul
+theorem absolutelyContinuous_of_le_smul {μ' : Measure α} {c : ℝ≥0∞} (hμ'_le : μ' ≤ c • μ) :
+    μ' ≪ μ :=
+  (Measure.absolutelyContinuous_of_le hμ'_le).trans (Measure.AbsolutelyContinuous.rfl.smul c)
+#align measure_theory.measure.absolutely_continuous_of_le_smul MeasureTheory.Measure.absolutelyContinuous_of_le_smul
 
 theorem ae_le_iff_absolutelyContinuous : μ.ae ≤ ν.ae ↔ μ ≪ ν :=
   ⟨fun h s => by
@@ -2440,7 +2442,7 @@ theorem ae_le_iff_absolutelyContinuous : μ.ae ≤ ν.ae ↔ μ ≪ ν :=
 
 alias ae_le_iff_absolutely_continuous ↔
   _root_.has_le.le.absolutely_continuous_of_ae absolutely_continuous.ae_le
-#align has_le.le.absolutely_continuous_of_ae LE.le.absolutelyContinuousOfAe
+#align has_le.le.absolutely_continuous_of_ae LE.le.absolutelyContinuous_of_ae
 #align measure_theory.measure.absolutely_continuous.ae_le MeasureTheory.Measure.AbsolutelyContinuous.ae_le
 
 alias absolutely_continuous.ae_le ← ae_mono'
@@ -2476,15 +2478,15 @@ protected theorem Measurable.quasiMeasurePreserving {m0 : MeasurableSpace α} (h
   ⟨hf, AbsolutelyContinuous.rfl⟩
 #align measurable.quasi_measure_preserving Measurable.quasiMeasurePreserving
 
-theorem monoLeft (h : QuasiMeasurePreserving f μa μb) (ha : μa' ≪ μa) :
+theorem mono_left (h : QuasiMeasurePreserving f μa μb) (ha : μa' ≪ μa) :
     QuasiMeasurePreserving f μa' μb :=
   ⟨h.1, (ha.map h.1).trans h.2⟩
-#align measure_theory.measure.quasi_measure_preserving.mono_left MeasureTheory.Measure.QuasiMeasurePreserving.monoLeft
+#align measure_theory.measure.quasi_measure_preserving.mono_left MeasureTheory.Measure.QuasiMeasurePreserving.mono_left
 
-theorem monoRight (h : QuasiMeasurePreserving f μa μb) (ha : μb ≪ μb') :
+theorem mono_right (h : QuasiMeasurePreserving f μa μb) (ha : μb ≪ μb') :
     QuasiMeasurePreserving f μa μb' :=
   ⟨h.1, h.2.trans ha⟩
-#align measure_theory.measure.quasi_measure_preserving.mono_right MeasureTheory.Measure.QuasiMeasurePreserving.monoRight
+#align measure_theory.measure.quasi_measure_preserving.mono_right MeasureTheory.Measure.QuasiMeasurePreserving.mono_right
 
 @[mono]
 theorem mono (ha : μa' ≪ μa) (hb : μb ≪ μb') (h : QuasiMeasurePreserving f μa μb) :
@@ -2505,16 +2507,16 @@ protected theorem iterate {f : α → α} (hf : QuasiMeasurePreserving f μa μa
   | n + 1 => (iterate n).comp hf
 #align measure_theory.measure.quasi_measure_preserving.iterate MeasureTheory.Measure.QuasiMeasurePreserving.iterate
 
-protected theorem aeMeasurable (hf : QuasiMeasurePreserving f μa μb) : AeMeasurable f μa :=
-  hf.1.AeMeasurable
-#align measure_theory.measure.quasi_measure_preserving.ae_measurable MeasureTheory.Measure.QuasiMeasurePreserving.aeMeasurable
+protected theorem aEMeasurable (hf : QuasiMeasurePreserving f μa μb) : AEMeasurable f μa :=
+  hf.1.AEMeasurable
+#align measure_theory.measure.quasi_measure_preserving.ae_measurable MeasureTheory.Measure.QuasiMeasurePreserving.aEMeasurable
 
 theorem ae_map_le (h : QuasiMeasurePreserving f μa μb) : (μa.map f).ae ≤ μb.ae :=
   h.2.ae_le
 #align measure_theory.measure.quasi_measure_preserving.ae_map_le MeasureTheory.Measure.QuasiMeasurePreserving.ae_map_le
 
 theorem tendsto_ae (h : QuasiMeasurePreserving f μa μb) : Tendsto f μa.ae μb.ae :=
-  (tendsto_ae_map h.AeMeasurable).mono_right h.ae_map_le
+  (tendsto_ae_map h.AEMeasurable).mono_right h.ae_map_le
 #align measure_theory.measure.quasi_measure_preserving.tendsto_ae MeasureTheory.Measure.QuasiMeasurePreserving.tendsto_ae
 
 theorem ae (h : QuasiMeasurePreserving f μa μb) {p : β → Prop} (hg : ∀ᵐ x ∂μb, p x) :
@@ -2529,13 +2531,13 @@ theorem ae_eq (h : QuasiMeasurePreserving f μa μb) {g₁ g₂ : β → δ} (hg
 
 theorem preimage_null (h : QuasiMeasurePreserving f μa μb) {s : Set β} (hs : μb s = 0) :
     μa (f ⁻¹' s) = 0 :=
-  preimage_null_of_map_null h.AeMeasurable (h.2 hs)
+  preimage_null_of_map_null h.AEMeasurable (h.2 hs)
 #align measure_theory.measure.quasi_measure_preserving.preimage_null MeasureTheory.Measure.QuasiMeasurePreserving.preimage_null
 
 theorem preimage_mono_ae {s t : Set β} (hf : QuasiMeasurePreserving f μa μb) (h : s ≤ᵐ[μb] t) :
     f ⁻¹' s ≤ᵐ[μa] f ⁻¹' t :=
   eventually_map.mp <|
-    Eventually.filter_mono (tendsto_ae_map hf.AeMeasurable) (Eventually.filter_mono hf.ae_map_le h)
+    Eventually.filter_mono (tendsto_ae_map hf.AEMeasurable) (Eventually.filter_mono hf.ae_map_le h)
 #align measure_theory.measure.quasi_measure_preserving.preimage_mono_ae MeasureTheory.Measure.QuasiMeasurePreserving.preimage_mono_ae
 
 theorem preimage_ae_eq {s t : Set β} (hf : QuasiMeasurePreserving f μa μb) (h : s =ᵐ[μb] t) :
@@ -2643,7 +2645,7 @@ theorem pairwise_aeDisjoint_of_aeDisjoint_forall_ne_one {G α : Type _} [Group G
   change μ (g₁ • s ∩ g₂ • s) = 0
   exact this ▸ (h_qmp g₂⁻¹).preimage_null (h_ae_disjoint g hg)
 #align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one MeasureTheory.Measure.pairwise_aeDisjoint_of_aeDisjoint_forall_ne_one
-#align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero MeasureTheory.Measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero
+#align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero MeasureTheory.Measure.pairwise_aeDisjoint_of_aeDisjoint_forall_ne_zero
 
 end Pointwise
 
@@ -2690,13 +2692,13 @@ theorem NullMeasurableSet.preimage {ν : Measure β} {f : α → β} {t : Set β
     hf.ae_eq ht.toMeasurable_ae_eq.symm⟩
 #align measure_theory.null_measurable_set.preimage MeasureTheory.NullMeasurableSet.preimage
 
-theorem NullMeasurableSet.monoAc (h : NullMeasurableSet s μ) (hle : ν ≪ μ) :
+theorem NullMeasurableSet.mono_ac (h : NullMeasurableSet s μ) (hle : ν ≪ μ) :
     NullMeasurableSet s ν :=
   h.Preimage <| (QuasiMeasurePreserving.id μ).mono_left hle
-#align measure_theory.null_measurable_set.mono_ac MeasureTheory.NullMeasurableSet.monoAc
+#align measure_theory.null_measurable_set.mono_ac MeasureTheory.NullMeasurableSet.mono_ac
 
 theorem NullMeasurableSet.mono (h : NullMeasurableSet s μ) (hle : ν ≤ μ) : NullMeasurableSet s ν :=
-  h.monoAc hle.AbsolutelyContinuous
+  h.mono_ac hle.AbsolutelyContinuous
 #align measure_theory.null_measurable_set.mono MeasureTheory.NullMeasurableSet.mono
 
 theorem AeDisjoint.preimage {ν : Measure β} {f : α → β} {s t : Set β} (ht : AeDisjoint ν s t)
@@ -2724,22 +2726,22 @@ theorem ae_mono (h : μ ≤ ν) : μ.ae ≤ ν.ae :=
   h.AbsolutelyContinuous.ae_le
 #align measure_theory.ae_mono MeasureTheory.ae_mono
 
-theorem mem_ae_map_iff {f : α → β} (hf : AeMeasurable f μ) {s : Set β} (hs : MeasurableSet s) :
+theorem mem_ae_map_iff {f : α → β} (hf : AEMeasurable f μ) {s : Set β} (hs : MeasurableSet s) :
     s ∈ (μ.map f).ae ↔ f ⁻¹' s ∈ μ.ae := by
   simp only [mem_ae_iff, map_apply_of_ae_measurable hf hs.compl, preimage_compl]
 #align measure_theory.mem_ae_map_iff MeasureTheory.mem_ae_map_iff
 
-theorem mem_ae_of_mem_ae_map {f : α → β} (hf : AeMeasurable f μ) {s : Set β}
+theorem mem_ae_of_mem_ae_map {f : α → β} (hf : AEMeasurable f μ) {s : Set β}
     (hs : s ∈ (μ.map f).ae) : f ⁻¹' s ∈ μ.ae :=
   (tendsto_ae_map hf).Eventually hs
 #align measure_theory.mem_ae_of_mem_ae_map MeasureTheory.mem_ae_of_mem_ae_map
 
-theorem ae_map_iff {f : α → β} (hf : AeMeasurable f μ) {p : β → Prop}
+theorem ae_map_iff {f : α → β} (hf : AEMeasurable f μ) {p : β → Prop}
     (hp : MeasurableSet { x | p x }) : (∀ᵐ y ∂μ.map f, p y) ↔ ∀ᵐ x ∂μ, p (f x) :=
   mem_ae_map_iff hf hp
 #align measure_theory.ae_map_iff MeasureTheory.ae_map_iff
 
-theorem ae_of_ae_map {f : α → β} (hf : AeMeasurable f μ) {p : β → Prop} (h : ∀ᵐ y ∂μ.map f, p y) :
+theorem ae_of_ae_map {f : α → β} (hf : AEMeasurable f μ) {p : β → Prop} (h : ∀ᵐ y ∂μ.map f, p y) :
     ∀ᵐ x ∂μ, p (f x) :=
   mem_ae_of_mem_ae_map hf h
 #align measure_theory.ae_of_ae_map MeasureTheory.ae_of_ae_map
@@ -2747,7 +2749,7 @@ theorem ae_of_ae_map {f : α → β} (hf : AeMeasurable f μ) {p : β → Prop} 
 theorem ae_map_mem_range {m0 : MeasurableSpace α} (f : α → β) (hf : MeasurableSet (range f))
     (μ : Measure α) : ∀ᵐ x ∂μ.map f, x ∈ range f :=
   by
-  by_cases h : AeMeasurable f μ
+  by_cases h : AEMeasurable f μ
   · change range f ∈ (μ.map f).ae
     rw [mem_ae_map_iff h hf]
     apply eventually_of_forall
@@ -2910,17 +2912,17 @@ theorem ae_add_measure_iff {p : α → Prop} {ν} :
   add_eq_zero_iff
 #align measure_theory.ae_add_measure_iff MeasureTheory.ae_add_measure_iff
 
-theorem ae_eq_comp' {ν : Measure β} {f : α → β} {g g' : β → δ} (hf : AeMeasurable f μ)
+theorem ae_eq_comp' {ν : Measure β} {f : α → β} {g g' : β → δ} (hf : AEMeasurable f μ)
     (h : g =ᵐ[ν] g') (h2 : μ.map f ≪ ν) : g ∘ f =ᵐ[μ] g' ∘ f :=
   (tendsto_ae_map hf).mono_right h2.ae_le h
 #align measure_theory.ae_eq_comp' MeasureTheory.ae_eq_comp'
 
 theorem Measure.QuasiMeasurePreserving.ae_eq_comp {ν : Measure β} {f : α → β} {g g' : β → δ}
     (hf : QuasiMeasurePreserving f μ ν) (h : g =ᵐ[ν] g') : g ∘ f =ᵐ[μ] g' ∘ f :=
-  ae_eq_comp' hf.AeMeasurable h hf.AbsolutelyContinuous
+  ae_eq_comp' hf.AEMeasurable h hf.AbsolutelyContinuous
 #align measure_theory.measure.quasi_measure_preserving.ae_eq_comp MeasureTheory.Measure.QuasiMeasurePreserving.ae_eq_comp
 
-theorem ae_eq_comp {f : α → β} {g g' : β → δ} (hf : AeMeasurable f μ) (h : g =ᵐ[μ.map f] g') :
+theorem ae_eq_comp {f : α → β} {g g' : β → δ} (hf : AEMeasurable f μ) (h : g =ᵐ[μ.map f] g') :
     g ∘ f =ᵐ[μ] g' ∘ f :=
   ae_eq_comp' hf h AbsolutelyContinuous.rfl
 #align measure_theory.ae_eq_comp MeasureTheory.ae_eq_comp
@@ -3092,10 +3094,10 @@ theorem measure_lt_top (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) : μ 
   (measure_mono (subset_univ s)).trans_lt IsFiniteMeasure.measure_univ_lt_top
 #align measure_theory.measure_lt_top MeasureTheory.measure_lt_top
 
-instance isFiniteMeasureRestrict (μ : Measure α) (s : Set α) [h : IsFiniteMeasure μ] :
+instance isFiniteMeasure_restrict (μ : Measure α) (s : Set α) [h : IsFiniteMeasure μ] :
     IsFiniteMeasure (μ.restrict s) :=
   ⟨by simp [measure_lt_top μ s]⟩
-#align measure_theory.is_finite_measure_restrict MeasureTheory.isFiniteMeasureRestrict
+#align measure_theory.is_finite_measure_restrict MeasureTheory.isFiniteMeasure_restrict
 
 theorem measure_ne_top (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) : μ s ≠ ∞ :=
   ne_of_lt (measure_lt_top μ s)
@@ -3130,15 +3132,15 @@ theorem coe_measureUnivNnreal (μ : Measure α) [IsFiniteMeasure μ] :
   ENNReal.coe_toNNReal (measure_ne_top μ univ)
 #align measure_theory.coe_measure_univ_nnreal MeasureTheory.coe_measureUnivNnreal
 
-instance isFiniteMeasureZero : IsFiniteMeasure (0 : Measure α) :=
+instance isFiniteMeasure_zero : IsFiniteMeasure (0 : Measure α) :=
   ⟨by simp⟩
-#align measure_theory.is_finite_measure_zero MeasureTheory.isFiniteMeasureZero
+#align measure_theory.is_finite_measure_zero MeasureTheory.isFiniteMeasure_zero
 
-instance (priority := 100) isFiniteMeasureOfIsEmpty [IsEmpty α] : IsFiniteMeasure μ :=
+instance (priority := 100) isFiniteMeasure_of_isEmpty [IsEmpty α] : IsFiniteMeasure μ :=
   by
   rw [eq_zero_of_is_empty μ]
   infer_instance
-#align measure_theory.is_finite_measure_of_is_empty MeasureTheory.isFiniteMeasureOfIsEmpty
+#align measure_theory.is_finite_measure_of_is_empty MeasureTheory.isFiniteMeasure_of_isEmpty
 
 @[simp]
 theorem measureUnivNnreal_zero : measureUnivNnreal (0 : Measure α) = 0 :=
@@ -3147,39 +3149,39 @@ theorem measureUnivNnreal_zero : measureUnivNnreal (0 : Measure α) = 0 :=
 
 omit m0
 
-instance isFiniteMeasureAdd [IsFiniteMeasure μ] [IsFiniteMeasure ν] : IsFiniteMeasure (μ + ν)
+instance isFiniteMeasure_add [IsFiniteMeasure μ] [IsFiniteMeasure ν] : IsFiniteMeasure (μ + ν)
     where measure_univ_lt_top :=
     by
     rw [measure.coe_add, Pi.add_apply, ENNReal.add_lt_top]
     exact ⟨measure_lt_top _ _, measure_lt_top _ _⟩
-#align measure_theory.is_finite_measure_add MeasureTheory.isFiniteMeasureAdd
+#align measure_theory.is_finite_measure_add MeasureTheory.isFiniteMeasure_add
 
-instance isFiniteMeasureSmulNnreal [IsFiniteMeasure μ] {r : ℝ≥0} : IsFiniteMeasure (r • μ)
+instance isFiniteMeasure_smul_nNReal [IsFiniteMeasure μ] {r : ℝ≥0} : IsFiniteMeasure (r • μ)
     where measure_univ_lt_top := ENNReal.mul_lt_top ENNReal.coe_ne_top (measure_ne_top _ _)
-#align measure_theory.is_finite_measure_smul_nnreal MeasureTheory.isFiniteMeasureSmulNnreal
+#align measure_theory.is_finite_measure_smul_nnreal MeasureTheory.isFiniteMeasure_smul_nNReal
 
-instance isFiniteMeasureSmulOfNnrealTower {R} [SMul R ℝ≥0] [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0 ℝ≥0∞]
-    [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [IsFiniteMeasure μ] {r : R} : IsFiniteMeasure (r • μ) :=
-  by
+instance isFiniteMeasure_smul_of_nNReal_tower {R} [SMul R ℝ≥0] [SMul R ℝ≥0∞]
+    [IsScalarTower R ℝ≥0 ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [IsFiniteMeasure μ] {r : R} :
+    IsFiniteMeasure (r • μ) := by
   rw [← smul_one_smul ℝ≥0 r μ]
   infer_instance
-#align measure_theory.is_finite_measure_smul_of_nnreal_tower MeasureTheory.isFiniteMeasureSmulOfNnrealTower
+#align measure_theory.is_finite_measure_smul_of_nnreal_tower MeasureTheory.isFiniteMeasure_smul_of_nNReal_tower
 
-theorem isFiniteMeasureOfLe (μ : Measure α) [IsFiniteMeasure μ] (h : ν ≤ μ) : IsFiniteMeasure ν :=
+theorem isFiniteMeasure_of_le (μ : Measure α) [IsFiniteMeasure μ] (h : ν ≤ μ) : IsFiniteMeasure ν :=
   { measure_univ_lt_top := lt_of_le_of_lt (h Set.univ MeasurableSet.univ) (measure_lt_top _ _) }
-#align measure_theory.is_finite_measure_of_le MeasureTheory.isFiniteMeasureOfLe
+#align measure_theory.is_finite_measure_of_le MeasureTheory.isFiniteMeasure_of_le
 
 @[instance]
-theorem Measure.isFiniteMeasureMap {m : MeasurableSpace α} (μ : Measure α) [IsFiniteMeasure μ]
+theorem Measure.isFiniteMeasure_map {m : MeasurableSpace α} (μ : Measure α) [IsFiniteMeasure μ]
     (f : α → β) : IsFiniteMeasure (μ.map f) :=
   by
-  by_cases hf : AeMeasurable f μ
+  by_cases hf : AEMeasurable f μ
   · constructor
     rw [map_apply_of_ae_measurable hf MeasurableSet.univ]
     exact measure_lt_top μ _
   · rw [map_of_not_ae_measurable hf]
-    exact MeasureTheory.isFiniteMeasureZero
-#align measure_theory.measure.is_finite_measure_map MeasureTheory.Measure.isFiniteMeasureMap
+    exact MeasureTheory.isFiniteMeasure_zero
+#align measure_theory.measure.is_finite_measure_map MeasureTheory.Measure.isFiniteMeasure_map
 
 @[simp]
 theorem measureUnivNnreal_eq_zero [IsFiniteMeasure μ] : measureUnivNnreal μ = 0 ↔ μ = 0 :=
@@ -3250,10 +3252,10 @@ export IsProbabilityMeasure (measure_univ)
 
 attribute [simp] is_probability_measure.measure_univ
 
-instance (priority := 100) IsProbabilityMeasure.toIsFiniteMeasure (μ : Measure α)
+instance (priority := 100) IsProbabilityMeasure.to_isFiniteMeasure (μ : Measure α)
     [IsProbabilityMeasure μ] : IsFiniteMeasure μ :=
   ⟨by simp only [measure_univ, ENNReal.one_lt_top]⟩
-#align measure_theory.is_probability_measure.to_is_finite_measure MeasureTheory.IsProbabilityMeasure.toIsFiniteMeasure
+#align measure_theory.is_probability_measure.to_is_finite_measure MeasureTheory.IsProbabilityMeasure.to_isFiniteMeasure
 
 theorem IsProbabilityMeasure.ne_zero (μ : Measure α) [IsProbabilityMeasure μ] : μ ≠ 0 :=
   mt measure_univ_eq_zero.2 <| by simp [measure_univ]
@@ -3278,19 +3280,19 @@ theorem prob_le_one [IsProbabilityMeasure μ] : μ s ≤ 1 :=
   (measure_mono <| Set.subset_univ _).trans_eq measure_univ
 #align measure_theory.prob_le_one MeasureTheory.prob_le_one
 
-theorem isProbabilityMeasureSmul [IsFiniteMeasure μ] (h : μ ≠ 0) :
+theorem isProbabilityMeasure_smul [IsFiniteMeasure μ] (h : μ ≠ 0) :
     IsProbabilityMeasure ((μ univ)⁻¹ • μ) :=
   by
   constructor
   rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel]
   · rwa [Ne, measure_univ_eq_zero]
   · exact measure_ne_top _ _
-#align measure_theory.is_probability_measure_smul MeasureTheory.isProbabilityMeasureSmul
+#align measure_theory.is_probability_measure_smul MeasureTheory.isProbabilityMeasure_smul
 
-theorem isProbabilityMeasureMap [IsProbabilityMeasure μ] {f : α → β} (hf : AeMeasurable f μ) :
+theorem isProbabilityMeasure_map [IsProbabilityMeasure μ] {f : α → β} (hf : AEMeasurable f μ) :
     IsProbabilityMeasure (map f μ) :=
   ⟨by simp [map_apply_of_ae_measurable, hf]⟩
-#align measure_theory.is_probability_measure_map MeasureTheory.isProbabilityMeasureMap
+#align measure_theory.is_probability_measure_map MeasureTheory.isProbabilityMeasure_map
 
 @[simp]
 theorem one_le_prob_iff [IsProbabilityMeasure μ] : 1 ≤ μ s ↔ μ s = 1 :=
@@ -3451,19 +3453,19 @@ def FiniteAtFilter {m0 : MeasurableSpace α} (μ : Measure α) (f : Filter α) :
   ∃ s ∈ f, μ s < ∞
 #align measure_theory.measure.finite_at_filter MeasureTheory.Measure.FiniteAtFilter
 
-theorem finiteAtFilterOfFinite {m0 : MeasurableSpace α} (μ : Measure α) [IsFiniteMeasure μ]
+theorem finiteAtFilter_of_finite {m0 : MeasurableSpace α} (μ : Measure α) [IsFiniteMeasure μ]
     (f : Filter α) : μ.FiniteAtFilter f :=
   ⟨univ, univ_mem, measure_lt_top μ univ⟩
-#align measure_theory.measure.finite_at_filter_of_finite MeasureTheory.Measure.finiteAtFilterOfFinite
+#align measure_theory.measure.finite_at_filter_of_finite MeasureTheory.Measure.finiteAtFilter_of_finite
 
 theorem FiniteAtFilter.exists_mem_basis {f : Filter α} (hμ : FiniteAtFilter μ f) {p : ι → Prop}
     {s : ι → Set α} (hf : f.HasBasis p s) : ∃ (i : _)(hi : p i), μ (s i) < ∞ :=
   (hf.exists_iff fun s t hst ht => (measure_mono hst).trans_lt ht).1 hμ
 #align measure_theory.measure.finite_at_filter.exists_mem_basis MeasureTheory.Measure.FiniteAtFilter.exists_mem_basis
 
-theorem finiteAtBot {m0 : MeasurableSpace α} (μ : Measure α) : μ.FiniteAtFilter ⊥ :=
+theorem finite_at_bot {m0 : MeasurableSpace α} (μ : Measure α) : μ.FiniteAtFilter ⊥ :=
   ⟨∅, mem_bot, by simp only [measure_empty, WithTop.zero_lt_top]⟩
-#align measure_theory.measure.finite_at_bot MeasureTheory.Measure.finiteAtBot
+#align measure_theory.measure.finite_at_bot MeasureTheory.Measure.finite_at_bot
 
 /-- `μ` has finite spanning sets in `C` if there is a countable sequence of sets in `C` that have
   finite measures. This structure is a type, which is useful if we want to record extra properties
@@ -3528,7 +3530,7 @@ theorem measurable_spanningSets (μ : Measure α) [SigmaFinite μ] (i : ℕ) :
 
 theorem measure_spanningSets_lt_top (μ : Measure α) [SigmaFinite μ] (i : ℕ) :
     μ (spanningSets μ i) < ∞ :=
-  measure_bUnion_lt_top (finite_le_nat i) fun j _ => (μ.toFiniteSpanningSetsIn.Finite j).Ne
+  measure_bunionᵢ_lt_top (finite_le_nat i) fun j _ => (μ.toFiniteSpanningSetsIn.Finite j).Ne
 #align measure_theory.measure_spanning_sets_lt_top MeasureTheory.measure_spanningSets_lt_top
 
 theorem unionᵢ_spanningSets (μ : Measure α) [SigmaFinite μ] : (⋃ i : ℕ, spanningSets μ i) = univ :=
@@ -3837,13 +3839,13 @@ protected theorem isCountablySpanning (h : μ.FiniteSpanningSetsIn C) : IsCounta
 
 end FiniteSpanningSetsIn
 
-theorem sigmaFiniteOfCountable {S : Set (Set α)} (hc : S.Countable) (hμ : ∀ s ∈ S, μ s < ∞)
+theorem sigmaFinite_of_countable {S : Set (Set α)} (hc : S.Countable) (hμ : ∀ s ∈ S, μ s < ∞)
     (hU : ⋃₀ S = univ) : SigmaFinite μ :=
   by
   obtain ⟨s, hμ, hs⟩ : ∃ s : ℕ → Set α, (∀ n, μ (s n) < ∞) ∧ (⋃ n, s n) = univ
   exact (@exists_seq_cover_iff_countable _ (fun x => μ x < ⊤) ⟨∅, by simp⟩).2 ⟨S, hc, hμ, hU⟩
   exact ⟨⟨⟨fun n => s n, fun n => trivial, hμ, hs⟩⟩⟩
-#align measure_theory.measure.sigma_finite_of_countable MeasureTheory.Measure.sigmaFiniteOfCountable
+#align measure_theory.measure.sigma_finite_of_countable MeasureTheory.Measure.sigmaFinite_of_countable
 
 /-- Given measures `μ`, `ν` where `ν ≤ μ`, `finite_spanning_sets_in.of_le` provides the induced
 `finite_spanning_set` with respect to `ν` from a `finite_spanning_set` with respect to `μ`. -/
@@ -3855,17 +3857,17 @@ def FiniteSpanningSetsIn.ofLe (h : ν ≤ μ) {C : Set (Set α)} (S : μ.FiniteS
   spanning := S.spanning
 #align measure_theory.measure.finite_spanning_sets_in.of_le MeasureTheory.Measure.FiniteSpanningSetsIn.ofLe
 
-theorem sigmaFiniteOfLe (μ : Measure α) [hs : SigmaFinite μ] (h : ν ≤ μ) : SigmaFinite ν :=
+theorem sigmaFinite_of_le (μ : Measure α) [hs : SigmaFinite μ] (h : ν ≤ μ) : SigmaFinite ν :=
   ⟨hs.out.map <| FiniteSpanningSetsIn.ofLe h⟩
-#align measure_theory.measure.sigma_finite_of_le MeasureTheory.Measure.sigmaFiniteOfLe
+#align measure_theory.measure.sigma_finite_of_le MeasureTheory.Measure.sigmaFinite_of_le
 
 end Measure
 
 /-- Every finite measure is σ-finite. -/
-instance (priority := 100) IsFiniteMeasure.toSigmaFinite {m0 : MeasurableSpace α} (μ : Measure α)
+instance (priority := 100) IsFiniteMeasure.to_sigmaFinite {m0 : MeasurableSpace α} (μ : Measure α)
     [IsFiniteMeasure μ] : SigmaFinite μ :=
   ⟨⟨⟨fun _ => univ, fun _ => trivial, fun _ => measure_lt_top μ _, unionᵢ_const _⟩⟩⟩
-#align measure_theory.is_finite_measure.to_sigma_finite MeasureTheory.IsFiniteMeasure.toSigmaFinite
+#align measure_theory.is_finite_measure.to_sigma_finite MeasureTheory.IsFiniteMeasure.to_sigmaFinite
 
 theorem sigmaFinite_bot_iff (μ : @Measure α ⊥) : SigmaFinite μ ↔ IsFiniteMeasure μ :=
   by
@@ -3922,20 +3924,20 @@ instance Add.sigmaFinite (μ ν : Measure α) [SigmaFinite μ] [SigmaFinite ν] 
   refine' @sum.sigma_finite _ _ _ _ _ (Bool.rec _ _) <;> simpa
 #align measure_theory.add.sigma_finite MeasureTheory.Add.sigmaFinite
 
-theorem SigmaFinite.ofMap (μ : Measure α) {f : α → β} (hf : AeMeasurable f μ)
+theorem SigmaFinite.of_map (μ : Measure α) {f : α → β} (hf : AEMeasurable f μ)
     (h : SigmaFinite (μ.map f)) : SigmaFinite μ :=
   ⟨⟨⟨fun n => f ⁻¹' spanningSets (μ.map f) n, fun n => trivial, fun n => by
         simp only [← map_apply_of_ae_measurable hf, measurable_spanning_sets,
           measure_spanning_sets_lt_top],
         by rw [← preimage_Union, Union_spanning_sets, preimage_univ]⟩⟩⟩
-#align measure_theory.sigma_finite.of_map MeasureTheory.SigmaFinite.ofMap
+#align measure_theory.sigma_finite.of_map MeasureTheory.SigmaFinite.of_map
 
-theorem MeasurableEquiv.sigmaFiniteMap {μ : Measure α} (f : α ≃ᵐ β) (h : SigmaFinite μ) :
+theorem MeasurableEquiv.sigmaFinite_map {μ : Measure α} (f : α ≃ᵐ β) (h : SigmaFinite μ) :
     SigmaFinite (μ.map f) :=
   by
   refine' sigma_finite.of_map _ f.symm.measurable.ae_measurable _
   rwa [map_map f.symm.measurable f.measurable, f.symm_comp_self, measure.map_id]
-#align measurable_equiv.sigma_finite_map MeasurableEquiv.sigmaFiniteMap
+#align measurable_equiv.sigma_finite_map MeasurableEquiv.sigmaFinite_map
 
 /-- Similar to `ae_of_forall_measure_lt_top_ae_restrict`, but where you additionally get the
   hypothesis that another σ-finite measure has finite values on `s`. -/
@@ -3962,25 +3964,25 @@ theorem ae_of_forall_measure_lt_top_ae_restrict {μ : Measure α} [SigmaFinite �
 
 /-- A measure is called locally finite if it is finite in some neighborhood of each point. -/
 class IsLocallyFiniteMeasure [TopologicalSpace α] (μ : Measure α) : Prop where
-  finiteAtNhds : ∀ x, μ.FiniteAtFilter (𝓝 x)
+  finite_at_nhds : ∀ x, μ.FiniteAtFilter (𝓝 x)
 #align measure_theory.is_locally_finite_measure MeasureTheory.IsLocallyFiniteMeasure
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsFiniteMeasure.toIsLocallyFiniteMeasure [TopologicalSpace α]
+instance (priority := 100) IsFiniteMeasure.to_isLocallyFiniteMeasure [TopologicalSpace α]
     (μ : Measure α) [IsFiniteMeasure μ] : IsLocallyFiniteMeasure μ :=
-  ⟨fun x => finiteAtFilterOfFinite _ _⟩
-#align measure_theory.is_finite_measure.to_is_locally_finite_measure MeasureTheory.IsFiniteMeasure.toIsLocallyFiniteMeasure
+  ⟨fun x => finiteAtFilter_of_finite _ _⟩
+#align measure_theory.is_finite_measure.to_is_locally_finite_measure MeasureTheory.IsFiniteMeasure.to_isLocallyFiniteMeasure
 
-theorem Measure.finiteAtNhds [TopologicalSpace α] (μ : Measure α) [IsLocallyFiniteMeasure μ]
+theorem Measure.finite_at_nhds [TopologicalSpace α] (μ : Measure α) [IsLocallyFiniteMeasure μ]
     (x : α) : μ.FiniteAtFilter (𝓝 x) :=
-  IsLocallyFiniteMeasure.finiteAtNhds x
-#align measure_theory.measure.finite_at_nhds MeasureTheory.Measure.finiteAtNhds
+  IsLocallyFiniteMeasure.finite_at_nhds x
+#align measure_theory.measure.finite_at_nhds MeasureTheory.Measure.finite_at_nhds
 
-theorem Measure.smulFinite (μ : Measure α) [IsFiniteMeasure μ] {c : ℝ≥0∞} (hc : c ≠ ∞) :
+theorem Measure.smul_finite (μ : Measure α) [IsFiniteMeasure μ] {c : ℝ≥0∞} (hc : c ≠ ∞) :
     IsFiniteMeasure (c • μ) := by
   lift c to ℝ≥0 using hc
-  exact MeasureTheory.isFiniteMeasureSmulNnreal
-#align measure_theory.measure.smul_finite MeasureTheory.Measure.smulFinite
+  exact MeasureTheory.isFiniteMeasure_smul_nNReal
+#align measure_theory.measure.smul_finite MeasureTheory.Measure.smul_finite
 
 theorem Measure.exists_isOpen_measure_lt_top [TopologicalSpace α] (μ : Measure α)
     [IsLocallyFiniteMeasure μ] (x : α) : ∃ s : Set α, x ∈ s ∧ IsOpen s ∧ μ s < ∞ := by
@@ -3988,7 +3990,7 @@ theorem Measure.exists_isOpen_measure_lt_top [TopologicalSpace α] (μ : Measure
     (μ.finite_at_nhds x).exists_mem_basis (nhds_basis_opens x)
 #align measure_theory.measure.exists_is_open_measure_lt_top MeasureTheory.Measure.exists_isOpen_measure_lt_top
 
-instance isLocallyFiniteMeasureSmulNnreal [TopologicalSpace α] (μ : Measure α)
+instance isLocallyFiniteMeasure_smul_nNReal [TopologicalSpace α] (μ : Measure α)
     [IsLocallyFiniteMeasure μ] (c : ℝ≥0) : IsLocallyFiniteMeasure (c • μ) :=
   by
   refine' ⟨fun x => _⟩
@@ -3997,7 +3999,7 @@ instance isLocallyFiniteMeasureSmulNnreal [TopologicalSpace α] (μ : Measure α
   apply ENNReal.mul_lt_top _ μo.ne
   simp only [RingHom.toMonoidHom_eq_coe, [anonymous], ENNReal.coe_ne_top, ENNReal.coe_ofNNRealHom,
     Ne.def, not_false_iff]
-#align measure_theory.is_locally_finite_measure_smul_nnreal MeasureTheory.isLocallyFiniteMeasureSmulNnreal
+#align measure_theory.is_locally_finite_measure_smul_nnreal MeasureTheory.isLocallyFiniteMeasure_smul_nNReal
 
 protected theorem Measure.isTopologicalBasis_isOpen_lt_top [TopologicalSpace α] (μ : Measure α)
     [IsLocallyFiniteMeasure μ] : TopologicalSpace.IsTopologicalBasis { s | IsOpen s ∧ μ s < ∞ } :=
@@ -4056,24 +4058,24 @@ theorem CompactSpace.isFiniteMeasure [TopologicalSpace α] [CompactSpace α]
 omit m0
 
 -- see Note [lower instance priority]
-instance (priority := 100) sigmaFiniteOfLocallyFinite [TopologicalSpace α]
+instance (priority := 100) sigmaFinite_of_locally_finite [TopologicalSpace α]
     [SecondCountableTopology α] [IsLocallyFiniteMeasure μ] : SigmaFinite μ :=
   by
   choose s hsx hsμ using μ.finite_at_nhds
   rcases TopologicalSpace.countable_cover_nhds hsx with ⟨t, htc, htU⟩
   refine' measure.sigma_finite_of_countable (htc.image s) (ball_image_iff.2 fun x hx => hsμ x) _
   rwa [sUnion_image]
-#align measure_theory.sigma_finite_of_locally_finite MeasureTheory.sigmaFiniteOfLocallyFinite
+#align measure_theory.sigma_finite_of_locally_finite MeasureTheory.sigmaFinite_of_locally_finite
 
 /-- A measure which is finite on compact sets in a locally compact space is locally finite.
 Not registered as an instance to avoid a loop with the other direction. -/
-theorem isLocallyFiniteMeasureOfIsFiniteMeasureOnCompacts [TopologicalSpace α]
+theorem isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts [TopologicalSpace α]
     [LocallyCompactSpace α] [IsFiniteMeasureOnCompacts μ] : IsLocallyFiniteMeasure μ :=
   ⟨by
     intro x
     rcases exists_compact_mem_nhds x with ⟨K, K_compact, K_mem⟩
     exact ⟨K, K_mem, K_compact.measure_lt_top⟩⟩
-#align measure_theory.is_locally_finite_measure_of_is_finite_measure_on_compacts MeasureTheory.isLocallyFiniteMeasureOfIsFiniteMeasureOnCompacts
+#align measure_theory.is_locally_finite_measure_of_is_finite_measure_on_compacts MeasureTheory.isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
 
 theorem exists_pos_measure_of_cover [Countable ι] {U : ι → Set α} (hU : (⋃ i, U i) = univ)
     (hμ : μ ≠ 0) : ∃ i, 0 < μ (U i) := by
@@ -4186,17 +4188,17 @@ namespace FiniteAtFilter
 
 variable {f g : Filter α}
 
-theorem filterMono (h : f ≤ g) : μ.FiniteAtFilter g → μ.FiniteAtFilter f := fun ⟨s, hs, hμ⟩ =>
+theorem filter_mono (h : f ≤ g) : μ.FiniteAtFilter g → μ.FiniteAtFilter f := fun ⟨s, hs, hμ⟩ =>
   ⟨s, h hs, hμ⟩
-#align measure_theory.measure.finite_at_filter.filter_mono MeasureTheory.Measure.FiniteAtFilter.filterMono
+#align measure_theory.measure.finite_at_filter.filter_mono MeasureTheory.Measure.FiniteAtFilter.filter_mono
 
-theorem infOfLeft (h : μ.FiniteAtFilter f) : μ.FiniteAtFilter (f ⊓ g) :=
+theorem inf_of_left (h : μ.FiniteAtFilter f) : μ.FiniteAtFilter (f ⊓ g) :=
   h.filter_mono inf_le_left
-#align measure_theory.measure.finite_at_filter.inf_of_left MeasureTheory.Measure.FiniteAtFilter.infOfLeft
+#align measure_theory.measure.finite_at_filter.inf_of_left MeasureTheory.Measure.FiniteAtFilter.inf_of_left
 
-theorem infOfRight (h : μ.FiniteAtFilter g) : μ.FiniteAtFilter (f ⊓ g) :=
+theorem inf_of_right (h : μ.FiniteAtFilter g) : μ.FiniteAtFilter (f ⊓ g) :=
   h.filter_mono inf_le_right
-#align measure_theory.measure.finite_at_filter.inf_of_right MeasureTheory.Measure.FiniteAtFilter.infOfRight
+#align measure_theory.measure.finite_at_filter.inf_of_right MeasureTheory.Measure.FiniteAtFilter.inf_of_right
 
 @[simp]
 theorem inf_ae_iff : μ.FiniteAtFilter (f ⊓ μ.ae) ↔ μ.FiniteAtFilter f :=
@@ -4208,15 +4210,15 @@ theorem inf_ae_iff : μ.FiniteAtFilter (f ⊓ μ.ae) ↔ μ.FiniteAtFilter f :=
 #align measure_theory.measure.finite_at_filter.inf_ae_iff MeasureTheory.Measure.FiniteAtFilter.inf_ae_iff
 
 alias inf_ae_iff ↔ of_inf_ae _
-#align measure_theory.measure.finite_at_filter.of_inf_ae MeasureTheory.Measure.FiniteAtFilter.ofInfAe
+#align measure_theory.measure.finite_at_filter.of_inf_ae MeasureTheory.Measure.FiniteAtFilter.of_inf_ae
 
-theorem filterMonoAe (h : f ⊓ μ.ae ≤ g) (hg : μ.FiniteAtFilter g) : μ.FiniteAtFilter f :=
+theorem filter_mono_ae (h : f ⊓ μ.ae ≤ g) (hg : μ.FiniteAtFilter g) : μ.FiniteAtFilter f :=
   inf_ae_iff.1 (hg.filter_mono h)
-#align measure_theory.measure.finite_at_filter.filter_mono_ae MeasureTheory.Measure.FiniteAtFilter.filterMonoAe
+#align measure_theory.measure.finite_at_filter.filter_mono_ae MeasureTheory.Measure.FiniteAtFilter.filter_mono_ae
 
-protected theorem measureMono (h : μ ≤ ν) : ν.FiniteAtFilter f → μ.FiniteAtFilter f :=
+protected theorem measure_mono (h : μ ≤ ν) : ν.FiniteAtFilter f → μ.FiniteAtFilter f :=
   fun ⟨s, hs, hν⟩ => ⟨s, hs, (Measure.le_iff'.1 h s).trans_lt hν⟩
-#align measure_theory.measure.finite_at_filter.measure_mono MeasureTheory.Measure.FiniteAtFilter.measureMono
+#align measure_theory.measure.finite_at_filter.measure_mono MeasureTheory.Measure.FiniteAtFilter.measure_mono
 
 @[mono]
 protected theorem mono (hf : f ≤ g) (hμ : μ ≤ ν) : ν.FiniteAtFilter g → μ.FiniteAtFilter f :=
@@ -4227,28 +4229,28 @@ protected theorem eventually (h : μ.FiniteAtFilter f) : ∀ᶠ s in f.smallSets
   (eventually_small_sets' fun s t hst ht => (measure_mono hst).trans_lt ht).2 h
 #align measure_theory.measure.finite_at_filter.eventually MeasureTheory.Measure.FiniteAtFilter.eventually
 
-theorem filterSup : μ.FiniteAtFilter f → μ.FiniteAtFilter g → μ.FiniteAtFilter (f ⊔ g) :=
+theorem filter_sup : μ.FiniteAtFilter f → μ.FiniteAtFilter g → μ.FiniteAtFilter (f ⊔ g) :=
   fun ⟨s, hsf, hsμ⟩ ⟨t, htg, htμ⟩ =>
   ⟨s ∪ t, union_mem_sup hsf htg, (measure_union_le s t).trans_lt (ENNReal.add_lt_top.2 ⟨hsμ, htμ⟩)⟩
-#align measure_theory.measure.finite_at_filter.filter_sup MeasureTheory.Measure.FiniteAtFilter.filterSup
+#align measure_theory.measure.finite_at_filter.filter_sup MeasureTheory.Measure.FiniteAtFilter.filter_sup
 
 end FiniteAtFilter
 
-theorem finiteAtNhdsWithin [TopologicalSpace α] {m0 : MeasurableSpace α} (μ : Measure α)
+theorem finite_at_nhdsWithin [TopologicalSpace α] {m0 : MeasurableSpace α} (μ : Measure α)
     [IsLocallyFiniteMeasure μ] (x : α) (s : Set α) : μ.FiniteAtFilter (𝓝[s] x) :=
-  (finiteAtNhds μ x).inf_of_left
-#align measure_theory.measure.finite_at_nhds_within MeasureTheory.Measure.finiteAtNhdsWithin
+  (finite_at_nhds μ x).inf_of_left
+#align measure_theory.measure.finite_at_nhds_within MeasureTheory.Measure.finite_at_nhdsWithin
 
 @[simp]
 theorem finite_at_principal : μ.FiniteAtFilter (𝓟 s) ↔ μ s < ∞ :=
   ⟨fun ⟨t, ht, hμ⟩ => (measure_mono ht).trans_lt hμ, fun h => ⟨s, mem_principal_self s, h⟩⟩
 #align measure_theory.measure.finite_at_principal MeasureTheory.Measure.finite_at_principal
 
-theorem isLocallyFiniteMeasureOfLe [TopologicalSpace α] {m : MeasurableSpace α} {μ ν : Measure α}
+theorem isLocallyFiniteMeasure_of_le [TopologicalSpace α] {m : MeasurableSpace α} {μ ν : Measure α}
     [H : IsLocallyFiniteMeasure μ] (h : ν ≤ μ) : IsLocallyFiniteMeasure ν :=
-  let F := H.finiteAtNhds
+  let F := H.finite_at_nhds
   ⟨fun x => (F x).measure_mono h⟩
-#align measure_theory.measure.is_locally_finite_measure_of_le MeasureTheory.Measure.isLocallyFiniteMeasureOfLe
+#align measure_theory.measure.is_locally_finite_measure_of_le MeasureTheory.Measure.isLocallyFiniteMeasure_of_le
 
 end Measure
 
@@ -4418,10 +4420,10 @@ theorem map_ae (f : α ≃ᵐ β) (μ : Measure α) : Filter.map f μ.ae = (map 
   simp_rw [mem_map, mem_ae_iff, ← preimage_compl, f.map_apply]
 #align measurable_equiv.map_ae MeasurableEquiv.map_ae
 
-theorem quasiMeasurePreservingSymm (μ : Measure α) (e : α ≃ᵐ β) :
+theorem quasiMeasurePreserving_symm (μ : Measure α) (e : α ≃ᵐ β) :
     QuasiMeasurePreserving e.symm (map e μ) μ :=
   ⟨e.symm.Measurable, by rw [measure.map_map, e.symm_comp_self, measure.map_id] <;> measurability⟩
-#align measurable_equiv.quasi_measure_preserving_symm MeasurableEquiv.quasiMeasurePreservingSymm
+#align measurable_equiv.quasi_measure_preserving_symm MeasurableEquiv.quasiMeasurePreserving_symm
 
 end MeasurableEquiv
 
@@ -4514,14 +4516,14 @@ theorem restrict_trim (hm : m ≤ m0) (μ : Measure α) (hs : @MeasurableSet α 
     trim_measurable_set_eq hm (@MeasurableSet.inter α m t s ht hs)]
 #align measure_theory.restrict_trim MeasureTheory.restrict_trim
 
-instance isFiniteMeasureTrim (hm : m ≤ m0) [IsFiniteMeasure μ] : IsFiniteMeasure (μ.trim hm)
+instance isFiniteMeasure_trim (hm : m ≤ m0) [IsFiniteMeasure μ] : IsFiniteMeasure (μ.trim hm)
     where measure_univ_lt_top :=
     by
     rw [trim_measurable_set_eq hm (@MeasurableSet.univ _ m)]
     exact measure_lt_top _ _
-#align measure_theory.is_finite_measure_trim MeasureTheory.isFiniteMeasureTrim
+#align measure_theory.is_finite_measure_trim MeasureTheory.isFiniteMeasure_trim
 
-theorem sigmaFiniteTrimMono {m m₂ m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0)
+theorem sigmaFinite_trim_mono {m m₂ m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0)
     (hm₂ : m₂ ≤ m) [SigmaFinite (μ.trim (hm₂.trans hm))] : SigmaFinite (μ.trim hm) :=
   by
   have h := measure.finite_spanning_sets_in (μ.trim (hm₂.trans hm)) Set.univ
@@ -4541,7 +4543,7 @@ theorem sigmaFiniteTrimMono {m m₂ m0 : MeasurableSpace α} {μ : Measure α} (
         rw [@trim_trim _ _ μ _ _ hm₂ hm]
       _ < ∞ := measure_spanning_sets_lt_top _ _
       
-#align measure_theory.sigma_finite_trim_mono MeasureTheory.sigmaFiniteTrimMono
+#align measure_theory.sigma_finite_trim_mono MeasureTheory.sigmaFinite_trim_mono
 
 theorem sigmaFinite_trim_bot_iff : SigmaFinite (μ.trim bot_le) ↔ IsFiniteMeasure μ :=
   by
@@ -4584,7 +4586,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
 finite measure. -/
 theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measure α)
     [IsLocallyFiniteMeasure μ] : ∃ (U : _)(_ : U ⊇ s), IsOpen U ∧ μ U < ∞ :=
-  h.exists_open_superset_measure_lt_top' fun x hx => μ.finiteAtNhds x
+  h.exists_open_superset_measure_lt_top' fun x hx => μ.finite_at_nhds x
 #align is_compact.exists_open_superset_measure_lt_top IsCompact.exists_open_superset_measure_lt_top
 
 theorem measure_lt_top_of_nhdsWithin (h : IsCompact s) (hμ : ∀ x ∈ s, μ.FiniteAtFilter (𝓝[s] x)) :
@@ -4601,11 +4603,11 @@ theorem measure_zero_of_nhdsWithin (hs : IsCompact s) :
 end IsCompact
 
 -- see Note [lower instance priority]
-instance (priority := 100) isFiniteMeasureOnCompactsOfIsLocallyFiniteMeasure [TopologicalSpace α]
+instance (priority := 100) isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure [TopologicalSpace α]
     {m : MeasurableSpace α} {μ : Measure α} [IsLocallyFiniteMeasure μ] :
     IsFiniteMeasureOnCompacts μ :=
-  ⟨fun s hs => hs.measure_lt_top_of_nhdsWithin fun x hx => μ.finiteAtNhdsWithin _ _⟩
-#align is_finite_measure_on_compacts_of_is_locally_finite_measure isFiniteMeasureOnCompactsOfIsLocallyFiniteMeasure
+  ⟨fun s hs => hs.measure_lt_top_of_nhdsWithin fun x hx => μ.finite_at_nhdsWithin _ _⟩
+#align is_finite_measure_on_compacts_of_is_locally_finite_measure isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
 
 theorem isFiniteMeasure_iff_isFiniteMeasureOnCompacts_of_compactSpace [TopologicalSpace α]
     [MeasurableSpace α] {μ : Measure α} [CompactSpace α] :

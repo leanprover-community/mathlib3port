@@ -133,11 +133,11 @@ include hT
 
 /-- Haar measure on the additive circle, normalised to have total measure 1. -/
 def haarAddCircle : Measure (AddCircle T) :=
-  add_haar_measure ⊤deriving IsAddHaarMeasure
+  addHaarMeasure ⊤deriving IsAddHaarMeasure
 #align add_circle.haar_add_circle AddCircle.haarAddCircle
 
 instance : IsProbabilityMeasure (@haarAddCircle T _) :=
-  IsProbabilityMeasure.mk add_haar_measure_self
+  IsProbabilityMeasure.mk add_haarMeasure_self
 
 theorem volume_eq_smul_haarAddCircle :
     (volume : Measure (AddCircle T)) = ENNReal.ofReal T • haarAddCircle :=

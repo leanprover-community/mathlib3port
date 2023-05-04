@@ -235,13 +235,13 @@ theorem cgf_neg : cgf (-X) μ t = cgf X μ (-t) := by simp_rw [cgf, mgf_neg]
 #align probability_theory.cgf_neg ProbabilityTheory.cgf_neg
 
 /-- This is a trivial application of `indep_fun.comp` but it will come up frequently. -/
-theorem IndepFunCat.expMul {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ) (s t : ℝ) :
+theorem IndepFunCat.exp_mul {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ) (s t : ℝ) :
     IndepFunCat (fun ω => exp (s * X ω)) (fun ω => exp (t * Y ω)) μ :=
   by
   have h_meas : ∀ t, Measurable fun x => exp (t * x) := fun t => (measurable_id'.const_mul t).exp
   change indep_fun ((fun x => exp (s * x)) ∘ X) ((fun x => exp (t * x)) ∘ Y) μ
   exact indep_fun.comp h_indep (h_meas s) (h_meas t)
-#align probability_theory.indep_fun.exp_mul ProbabilityTheory.IndepFunCat.expMul
+#align probability_theory.indep_fun.exp_mul ProbabilityTheory.IndepFunCat.exp_mul
 
 theorem IndepFunCat.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
     (hX : AeStronglyMeasurable (fun ω => exp (t * X ω)) μ)
@@ -274,16 +274,16 @@ theorem IndepFunCat.cgf_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
   exact log_mul (mgf_pos' hμ h_int_X).ne' (mgf_pos' hμ h_int_Y).ne'
 #align probability_theory.indep_fun.cgf_add ProbabilityTheory.IndepFunCat.cgf_add
 
-theorem aeStronglyMeasurableExpMulAdd {X Y : Ω → ℝ}
+theorem aeStronglyMeasurable_exp_mul_add {X Y : Ω → ℝ}
     (h_int_X : AeStronglyMeasurable (fun ω => exp (t * X ω)) μ)
     (h_int_Y : AeStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
     AeStronglyMeasurable (fun ω => exp (t * (X + Y) ω)) μ :=
   by
   simp_rw [Pi.add_apply, mul_add, exp_add]
   exact ae_strongly_measurable.mul h_int_X h_int_Y
-#align probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aeStronglyMeasurableExpMulAdd
+#align probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aeStronglyMeasurable_exp_mul_add
 
-theorem aeStronglyMeasurableExpMulSum {X : ι → Ω → ℝ} {s : Finset ι}
+theorem aeStronglyMeasurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
     (h_int : ∀ i ∈ s, AeStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
     AeStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
   classical
@@ -295,18 +295,18 @@ theorem aeStronglyMeasurableExpMulSum {X : ι → Ω → ℝ} {s : Finset ι}
       specialize h_rec this
       rw [sum_insert hi_notin_s]
       apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
-#align probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aeStronglyMeasurableExpMulSum
+#align probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aeStronglyMeasurable_exp_mul_sum
 
-theorem IndepFunCat.integrableExpMulAdd {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
+theorem IndepFunCat.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
     (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
     (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) :
     Integrable (fun ω => exp (t * (X + Y) ω)) μ :=
   by
   simp_rw [Pi.add_apply, mul_add, exp_add]
-  exact (h_indep.exp_mul t t).integrableMul h_int_X h_int_Y
-#align probability_theory.indep_fun.integrable_exp_mul_add ProbabilityTheory.IndepFunCat.integrableExpMulAdd
+  exact (h_indep.exp_mul t t).integrable_mul h_int_X h_int_Y
+#align probability_theory.indep_fun.integrable_exp_mul_add ProbabilityTheory.IndepFunCat.integrable_exp_mul_add
 
-theorem IndepFun.integrableExpMulSum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
+theorem IndepFun.integrable_exp_mul_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : IndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i))
     {s : Finset ι} (h_int : ∀ i ∈ s, Integrable (fun ω => exp (t * X i ω)) μ) :
     Integrable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
@@ -320,7 +320,7 @@ theorem IndepFun.integrableExpMulSum [IsProbabilityMeasure μ] {X : ι → Ω �
       rw [sum_insert hi_notin_s]
       refine' indep_fun.integrable_exp_mul_add _ (h_int i (mem_insert_self _ _)) h_rec
       exact (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm
-#align probability_theory.Indep_fun.integrable_exp_mul_sum ProbabilityTheory.IndepFun.integrableExpMulSum
+#align probability_theory.Indep_fun.integrable_exp_mul_sum ProbabilityTheory.IndepFun.integrable_exp_mul_sum
 
 theorem IndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : IndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i))
