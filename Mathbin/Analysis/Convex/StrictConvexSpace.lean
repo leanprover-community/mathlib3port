@@ -105,7 +105,7 @@ theorem StrictConvexSpace.ofNormComboLtOne
   by
   refine'
     StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ
-      ((convex_closedBall _ _).strict_convex' fun x hx y hy hne => _)
+      ((convex_closedBall _ _).strictConvex' fun x hx y hy hne => _)
   rw [interior_closedBall (0 : E) one_ne_zero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at
     hx hy
   rcases h x y hx hy hne with ⟨a, b, hab, hlt⟩

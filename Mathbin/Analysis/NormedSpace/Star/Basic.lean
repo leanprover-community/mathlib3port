@@ -276,10 +276,10 @@ instance Pi.cstarRing : CstarRing (∀ i, R i)
 #align pi.cstar_ring Pi.cstarRing
 -/
 
-#print Pi.cstar_ring' /-
-instance Pi.cstar_ring' : CstarRing (ι → R₁) :=
+#print Pi.cstarRing' /-
+instance Pi.cstarRing' : CstarRing (ι → R₁) :=
   Pi.cstarRing
-#align pi.cstar_ring' Pi.cstar_ring'
+#align pi.cstar_ring' Pi.cstarRing'
 -/
 
 end ProdPi
