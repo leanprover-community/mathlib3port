@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.primes_congruent_one
-! leanprover-community/mathlib commit 55d224c38461be1e8e4363247dd110137c24a4ff
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Nat.PrimeFin
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
 
 /-!

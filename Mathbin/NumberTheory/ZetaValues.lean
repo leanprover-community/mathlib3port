@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module number_theory.zeta_values
-! leanprover-community/mathlib commit 8cce17e5783303db93df6810de9d85dd0f9e402a
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.BernoulliPolynomials
-import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Analysis.Fourier.AddCircle
 import Mathbin.Analysis.PSeries

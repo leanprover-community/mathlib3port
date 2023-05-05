@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.open_immersion
-! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,7 +17,6 @@ import Mathbin.AlgebraicGeometry.Scheme
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.Algebra.Category.Ring.Instances
-import Mathbin.Topology.LocalAtTarget
 
 /-!
 # Open immersions of structured spaces

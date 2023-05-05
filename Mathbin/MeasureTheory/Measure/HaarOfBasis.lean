@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit ef093414afad9796939469de466cc3c206e18223
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Haar
 import Mathbin.Analysis.InnerProductSpace.PiL2
-import Mathbin.MeasureTheory.Constructions.Pi
 
 /-!
 # Additive Haar measure constructed from a basis

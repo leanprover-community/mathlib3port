@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.hahn_banach.extension
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit aa1dbeab548d61bc840a099abae4437046eaaf00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   refine' ⟨h, le_antisymm _ _⟩
   ·
     calc
-      ‖g.extend_to_𝕜‖ ≤ ‖g‖ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
+      ‖g.extend_to_𝕜‖ = ‖g‖ := g.norm_extend_to_𝕜
       _ = ‖fr‖ := hnormeq
       _ ≤ ‖re_clm‖ * ‖f‖ := (ContinuousLinearMap.op_norm_comp_le _ _)
       _ = ‖f‖ := by rw [re_clm_norm, one_mul]

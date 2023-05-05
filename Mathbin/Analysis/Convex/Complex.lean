@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.complex
-! leanprover-community/mathlib commit 15730e8d0af237a2ebafeb8cfbbcf71f6160c2e9
+! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Complex.Module
 
 /-!
 # Convexity of half spaces in ℂ
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The open and closed half-spaces in ℂ given by an inequality on either the real or imaginary part
 are all convex over ℝ.

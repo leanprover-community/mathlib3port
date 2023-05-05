@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.nakayama
-! leanprover-community/mathlib commit 5cfb8dbcc9965bd6270947f4643172c20979245a
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RingTheory.Noetherian
 import Mathbin.RingTheory.JacobsonIdeal
 
 /-!

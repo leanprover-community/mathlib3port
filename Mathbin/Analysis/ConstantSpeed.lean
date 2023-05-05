@@ -4,12 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module analysis.constant_speed
-! leanprover-community/mathlib commit 168eeff2a36ad2298744206421f5d33784e9b3d4
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue
-import Mathbin.Analysis.Calculus.Monotone
 import Mathbin.Data.Set.Function
 import Mathbin.Analysis.BoundedVariation
 import Mathbin.Tactic.SwapVar

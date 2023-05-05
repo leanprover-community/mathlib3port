@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module data.complex.determinant
-! leanprover-community/mathlib commit 65ec59902eb17e4ab7da8d7e3d0bd9774d1b8b99
+! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Determinant
 
 /-!
 # Determinants of maps in the complex numbers as a vector space over `ℝ`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides results about the determinants of maps in the complex numbers as a vector
 space over `ℝ`.

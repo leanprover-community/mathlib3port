@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.cover_preserving
-! leanprover-community/mathlib commit e2e38c005fc6f715502490da6cb0ec84df9ed228
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.CategoryTheory.Sites.Limits
 import Mathbin.CategoryTheory.Functor.Flat
-import Mathbin.CategoryTheory.Limits.Preserves.Filtered
+import Mathbin.CategoryTheory.Sites.Sheaf
+import Mathbin.Tactic.ApplyFun
 
 /-!
 # Cover-preserving functors between sites.

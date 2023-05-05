@@ -4,15 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.between
-! leanprover-community/mathlib commit 2de9c37fa71dde2f1c6feff19876dd6a7b1519f0
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Analysis.Convex.Segment
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathbin.LinearAlgebra.AffineSpace.MidpointZero
 import Mathbin.Tactic.FieldSimp
+import Mathbin.Algebra.CharP.Invertible
 
 /-!
 # Betweenness in affine spaces

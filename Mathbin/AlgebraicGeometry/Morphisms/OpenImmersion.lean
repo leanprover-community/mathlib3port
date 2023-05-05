@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.open_immersion
-! leanprover-community/mathlib commit 68fa0fd2d0aa7061ad59baa5ec17cf0ff1e6d036
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
 import Mathbin.Topology.LocalAtTarget
+import Mathbin.AlgebraicGeometry.Morphisms.Basic
 
 /-!
 

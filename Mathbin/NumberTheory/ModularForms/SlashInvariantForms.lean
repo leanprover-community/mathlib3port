@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_invariant_forms
-! leanprover-community/mathlib commit ef74e2bd3a553d31fdb139188a251509b6c6b038
+! leanprover-community/mathlib commit 738054fa93d43512da144ec45ce799d18fd44248
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,8 +104,7 @@ instance (priority := 100) SlashInvariantFormClass.coeToFun [SlashInvariantFormC
 #align slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
 
 @[simp]
-theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) :
-    SlashAction.map ℂ k γ ⇑f = ⇑f :=
+theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) : ⇑f ∣[k] γ = ⇑f :=
   SlashInvariantFormClass.slash_action_eq f γ
 #align slash_invariant_form.slash_action_eqn SlashInvariantForm.slash_action_eqn
 
@@ -130,7 +129,8 @@ theorem SlashInvariantFormClass.coe_coe [SlashInvariantFormClass F Γ k] (f : F)
 instance hasAdd : Add (SlashInvariantForm Γ k) :=
   ⟨fun f g =>
     { toFun := f + g
-      slash_action_eq' := fun γ => by convert SlashAction.add_action k γ (f : ℍ → ℂ) g <;> simp }⟩
+      slash_action_eq' := fun γ => by
+        rw [SlashAction.add_slash, slash_action_eqn, slash_action_eqn] }⟩
 #align slash_invariant_form.has_add SlashInvariantForm.hasAdd
 
 @[simp]
@@ -160,8 +160,7 @@ variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 instance hasSmul : SMul α (SlashInvariantForm Γ k) :=
   ⟨fun c f =>
     { toFun := c • f
-      slash_action_eq' := fun γ => by
-        rw [← smul_one_smul ℂ c ⇑f, SlashAction.smul_action k γ ⇑f, slash_action_eqn] }⟩
+      slash_action_eq' := fun γ => by rw [SlashAction.smul_slash_of_tower, slash_action_eqn] }⟩
 #align slash_invariant_form.has_smul SlashInvariantForm.hasSmul
 
 @[simp]
@@ -179,8 +178,7 @@ end
 instance hasNeg : Neg (SlashInvariantForm Γ k) :=
   ⟨fun f =>
     { toFun := -f
-      slash_action_eq' := fun γ => by
-        simpa [ModularForm.subgroup_slash, SlashAction.neg_slash] using f.slash_action_eq' γ }⟩
+      slash_action_eq' := fun γ => by rw [SlashAction.neg_slash, slash_action_eqn] }⟩
 #align slash_invariant_form.has_neg SlashInvariantForm.hasNeg
 
 @[simp]

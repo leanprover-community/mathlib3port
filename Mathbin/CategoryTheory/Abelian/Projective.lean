@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.projective
-! leanprover-community/mathlib commit f8d8465c3c392a93b9ed226956e26dee00975946
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Homology.QuasiIso
-import Mathbin.CategoryTheory.Abelian.Homology
 import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 import Mathbin.CategoryTheory.Preadditive.Yoneda.Limits
 import Mathbin.CategoryTheory.Preadditive.Yoneda.Projective

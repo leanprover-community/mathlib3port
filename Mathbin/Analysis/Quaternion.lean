@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit cf7a7252c1989efe5800e0b3cdfeb4228ac6b40e
+! leanprover-community/mathlib commit 07992a1d1f7a4176c6d3f160209608be4e198566
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,8 +55,8 @@ theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * star b).re :=
 #align quaternion.inner_def Quaternion.inner_def
 
 noncomputable instance : NormedAddCommGroup ℍ :=
-  @InnerProductSpace.OfCore.toNormedAddCommGroup ℝ ℍ _ _ _
-    { inner := HasInner.inner
+  @InnerProductSpace.Core.toNormedAddCommGroup ℝ ℍ _ _ _
+    { toHasInner := inferInstance
       conj_symm := fun x y => by simp [inner_def, mul_comm]
       nonneg_re := fun x => normSq_nonneg
       definite := fun x => normSq_eq_zero.1

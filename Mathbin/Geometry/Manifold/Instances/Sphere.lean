@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 07992a1d1f7a4176c6d3f160209608be4e198566
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ def stereographic (hv : ‖v‖ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ �
   open_target := isOpen_univ
   continuous_toFun :=
     continuousOn_stereoToFun.comp continuous_subtype_val.ContinuousOn fun w h =>
-      h ∘ Subtype.ext ∘ Eq.symm ∘ (inner_eq_norm_mul_iff_of_norm_one hv (by simp)).mp
+      h ∘ Subtype.ext ∘ Eq.symm ∘ (inner_eq_one_iff_of_norm_one hv (by simp)).mp
   continuous_invFun := (continuous_stereoInvFun hv).ContinuousOn
 #align stereographic stereographic
 
@@ -408,7 +408,7 @@ end ChartedSpace
 section SmoothManifold
 
 theorem sphere_ext_iff (u v : sphere (0 : E) 1) : u = v ↔ ⟪(u : E), v⟫_ℝ = 1 := by
-  simp [Subtype.ext_iff, inner_eq_norm_mul_iff_of_norm_one]
+  simp [Subtype.ext_iff, inner_eq_one_iff_of_norm_one]
 #align sphere_ext_iff sphere_ext_iff
 
 theorem stereographic'_symm_apply {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1)
@@ -505,7 +505,7 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
   have hfxv : f x = -↑v ↔ ⟪f x, -↑v⟫_ℝ = 1 :=
     by
     have hfx : ‖f x‖ = 1 := by simpa using hf' x
-    rw [inner_eq_norm_mul_iff_of_norm_one hfx]
+    rw [inner_eq_one_iff_of_norm_one hfx]
     exact norm_eq_of_mem_sphere (-v)
   dsimp [chart_at]
   simp [not_iff_not, Subtype.ext_iff, hfxv, real_inner_comm]

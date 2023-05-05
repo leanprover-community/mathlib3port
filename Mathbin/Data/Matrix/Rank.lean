@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieer
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit 17219820a8aa8abe85adf5dfde19af1dd1bd8ae7
+! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Data.Complex.Module
 
 /-!
 # Rank of matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The rank of a matrix `A` is defined to be the rank of range of the linear map corresponding to `A`.
 This definition does not depend on the choice of basis, see `matrix.rank_eq_finrank_range_to_lin`.

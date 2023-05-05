@@ -1749,6 +1749,7 @@ import Mathbin.Dynamics.OmegaLimit
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.FieldTheory.AbelRuffini
 import Mathbin.FieldTheory.Adjoin
+import Mathbin.FieldTheory.AxGrothendieck
 import Mathbin.FieldTheory.Cardinality
 import Mathbin.FieldTheory.ChevalleyWarning
 import Mathbin.FieldTheory.Finite.Basic
@@ -2538,6 +2539,7 @@ import Mathbin.RingTheory.IsAdjoinRoot
 import Mathbin.RingTheory.IsTensorProduct
 import Mathbin.RingTheory.Jacobson
 import Mathbin.RingTheory.JacobsonIdeal
+import Mathbin.RingTheory.Kaehler
 import Mathbin.RingTheory.LaurentSeries
 import Mathbin.RingTheory.LocalProperties
 import Mathbin.RingTheory.Localization.AsSubring

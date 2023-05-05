@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.left_derived
-! leanprover-community/mathlib commit 13ff898b0eee75d3cc75d1c06a491720eaaf911d
+! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 
 /-!
 # Left-derived functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the left-derived functors `F.left_derived n : C ⥤ D` for any additive functor `F`
 out of a category with projective resolutions.

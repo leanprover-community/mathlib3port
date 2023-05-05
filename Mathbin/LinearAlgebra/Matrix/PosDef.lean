@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.pos_def
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 07992a1d1f7a4176c6d3f160209608be4e198566
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,18 +153,20 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
 @[reducible]
 noncomputable def NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
     NormedAddCommGroup (n → 𝕜) :=
-  @InnerProductSpace.OfCore.toNormedAddCommGroup _ _ _ _ _
+  @InnerProductSpace.Core.toNormedAddCommGroup _ _ _ _ _
     { inner := fun x y => dotProduct (star x) (M.mulVec y)
       conj_symm := fun x y => by
-        rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
-          hM.is_hermitian.eq]
+        dsimp only [HasInner.inner] <;>
+          rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
+            hM.is_hermitian.eq]
       nonneg_re := fun x => by
         by_cases h : x = 0
         · simp [h]
         · exact le_of_lt (hM.2 x h)
-      definite := fun x hx => by
+      definite := fun x (hx : dotProduct _ _ = 0) =>
+        by
         by_contra' h
-        simpa [hx, lt_self_iff_false] using hM.2 x h
+        simpa [hx, lt_irrefl] using hM.2 x h
       add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const]
       smul_left := fun x y r => by
         rw [← smul_eq_mul, ← smul_dot_product, starRingEnd_apply, ← star_smul] }

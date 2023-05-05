@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_actions
-! leanprover-community/mathlib commit ef74e2bd3a553d31fdb139188a251509b6c6b038
+! leanprover-community/mathlib commit 738054fa93d43512da144ec45ce799d18fd44248
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,9 +50,9 @@ class SlashAction (β G α γ : Type _) [Group G] [AddMonoid α] [SMul γ α] wh
   map : β → G → α → α
   zero_slash : ∀ (k : β) (g : G), map k g 0 = 0
   slash_one : ∀ (k : β) (a : α), map k 1 a = a
-  right_action : ∀ (k : β) (g h : G) (a : α), map k h (map k g a) = map k (g * h) a
-  smul_action : ∀ (k : β) (g : G) (a : α) (z : γ), map k g (z • a) = z • map k g a
-  AddAction : ∀ (k : β) (g : G) (a b : α), map k g (a + b) = map k g a + map k g b
+  slash_mul : ∀ (k : β) (g h : G) (a : α), map k (g * h) a = map k h (map k g a)
+  smul_slash : ∀ (k : β) (g : G) (a : α) (z : γ), map k g (z • a) = z • map k g a
+  add_slash : ∀ (k : β) (g : G) (a b : α), map k g (a + b) = map k g a + map k g b
 #align slash_action SlashAction
 
 -- mathport name: modular_form.slash
@@ -65,18 +65,18 @@ scoped[ModularForm] notation:100 f " ∣[" k "] " a:100 => SlashAction.map ℂ k
 theorem SlashAction.neg_slash {β G α γ : Type _} [Group G] [AddGroup α] [SMul γ α]
     [SlashAction β G α γ] (k : β) (g : G) (a : α) : (-a) ∣[k;γ] g = -a ∣[k;γ] g :=
   eq_neg_of_add_eq_zero_left <| by
-    rw [← SlashAction.add_action, add_left_neg, SlashAction.zero_slash]
+    rw [← SlashAction.add_slash, add_left_neg, SlashAction.zero_slash]
 #align slash_action.neg_slash SlashAction.neg_slash
 
 @[simp]
 theorem SlashAction.smul_slash_of_tower {R β G α : Type _} (γ : Type _) [Group G] [AddGroup α]
     [Monoid γ] [MulAction γ α] [SMul R γ] [SMul R α] [IsScalarTower R γ α] [SlashAction β G α γ]
     (k : β) (g : G) (a : α) (r : R) : (r • a) ∣[k;γ] g = r • a ∣[k;γ] g := by
-  rw [← smul_one_smul γ r a, SlashAction.smul_action, smul_one_smul]
+  rw [← smul_one_smul γ r a, SlashAction.smul_slash, smul_one_smul]
 #align slash_action.smul_slash_of_tower SlashAction.smul_slash_of_tower
 
 attribute [simp]
-  SlashAction.zero_slash SlashAction.slash_one SlashAction.smul_action SlashAction.add_action
+  SlashAction.zero_slash SlashAction.slash_one SlashAction.smul_slash SlashAction.add_slash
 
 /-- Slash_action induced by a monoid homomorphism.-/
 def monoidHomSlashAction {β G H α γ : Type _} [Group G] [AddMonoid α] [SMul γ α] [Group H]
@@ -85,9 +85,9 @@ def monoidHomSlashAction {β G H α γ : Type _} [Group G] [AddMonoid α] [SMul 
   map k g := SlashAction.map γ k (h g)
   zero_slash k g := SlashAction.zero_slash k (h g)
   slash_one k a := by simp only [map_one, SlashAction.slash_one]
-  right_action k g gg a := by simp only [map_mul, SlashAction.right_action]
-  smul_action _ _ := SlashAction.smul_action _ _
-  AddAction _ g _ _ := SlashAction.add_action _ (h g) _ _
+  slash_mul k g gg a := by simp only [map_mul, SlashAction.slash_mul]
+  smul_slash _ _ := SlashAction.smul_slash _ _
+  add_slash _ g _ _ := SlashAction.add_slash _ (h g) _ _
 #align monoid_hom_slash_action monoidHomSlashAction
 
 namespace ModularForm
@@ -107,8 +107,8 @@ section
 -- temporary notation until the instance is built
 local notation:100 f " ∣[" k "]" γ:100 => ModularForm.slash k γ f
 
-private theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) :
-    (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by
+private theorem slash_mul (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : f ∣[k](A * B) = (f ∣[k]A) ∣[k]B :=
+  by
   ext1
   simp_rw [slash, UpperHalfPlane.denom_cocycle A B x]
   have e3 : (A * B) • x = A • B • x := by convert UpperHalfPlane.mul_smul' A B x
@@ -125,14 +125,14 @@ private theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → 
         ((↑(↑B : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) ^ (k - 1) :=
     by simp_rw [← mul_zpow]
   simp_rw [this, ← mul_assoc, ← mul_zpow]
-#align modular_form.slash_right_action modular_form.slash_right_action
+#align modular_form.slash_mul modular_form.slash_mul
 
-private theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
+private theorem add_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
     (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
   ext1
   simp only [slash, Pi.add_apply, denom, coe_coe, zpow_neg]
   ring
-#align modular_form.slash_add modular_form.slash_add
+#align modular_form.add_slash modular_form.add_slash
 
 private theorem slash_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f :=
   funext <| by simp [slash]
@@ -160,9 +160,9 @@ instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ
   map := slash
   zero_slash := zero_slash
   slash_one := slash_one
-  right_action := slash_right_action
-  smul_action := smul_slash
-  AddAction := slash_add
+  slash_mul := slash_mul
+  smul_slash := smul_slash
+  add_slash := add_slash
 
 end
 

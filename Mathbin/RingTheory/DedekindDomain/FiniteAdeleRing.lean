@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.finite_adele_ring
-! leanprover-community/mathlib commit a8e7ac804fc39df0340c64906075787e0c90fa60
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.DedekindDomain.AdicValuation
-import Mathbin.Topology.Algebra.UniformRing
 
 /-!
 # The finite adèle ring of a Dedekind domain

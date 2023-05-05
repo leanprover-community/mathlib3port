@@ -4,15 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.associated_prime
-! leanprover-community/mathlib commit 210657c4ea4a4a7b234392f70a3a2a83346dfa90
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.Span
 import Mathbin.RingTheory.Ideal.Operations
-import Mathbin.RingTheory.Finiteness
-import Mathbin.RingTheory.Localization.Ideal
-import Mathbin.RingTheory.Ideal.MinimalPrime
+import Mathbin.RingTheory.Ideal.QuotientOperations
+import Mathbin.RingTheory.Noetherian
 
 /-!
 

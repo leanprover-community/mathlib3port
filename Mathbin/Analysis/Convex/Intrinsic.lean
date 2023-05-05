@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Reichert, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.intrinsic
-! leanprover-community/mathlib commit 9f26ebf297c6a5ca26573a970411e606bb2ebe63
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.AddTorsorBases
-import Mathbin.Analysis.NormedSpace.LinearIsometry
 
 /-!
 # Intrinsic frontier and interior

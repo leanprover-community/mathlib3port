@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.determinant
-! leanprover-community/mathlib commit 31c458dc7baf3de906b95d9c5c968b6a4d75fee1
+! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 
 /-!
 # Determinants in free (finite) modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Quite a lot of our results on determinants (that you might know in vector spaces) will work for all
 free (finite) modules over any commutative ring.

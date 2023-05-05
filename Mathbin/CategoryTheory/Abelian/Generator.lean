@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.generator
-! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.CategoryTheory.Abelian.Subobject
 import Mathbin.CategoryTheory.Limits.EssentiallySmall
 import Mathbin.CategoryTheory.Preadditive.Injective
 import Mathbin.CategoryTheory.Preadditive.Generator
-import Mathbin.CategoryTheory.Preadditive.Yoneda.Limits
+import Mathbin.CategoryTheory.Abelian.Opposite
 
 /-!
 # A complete abelian category with enough injectives and a separator has an injective coseparator

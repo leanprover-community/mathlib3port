@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.basic
-! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
+! leanprover-community/mathlib commit caf83ba4dfbf4e2f28e1ae6a0780cbafc3d19d6f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ Classes of kernels:
 * `is_s_finite_kernel κ`: a kernel is called s-finite if it is a countable sum of finite kernels.
 
 Particular kernels:
-* `deterministic {f : α → β} (hf : measurable f)`: kernel `a ↦ measure.dirac (f a)`.
+* `deterministic (f : α → β) (hf : measurable f)`: kernel `a ↦ measure.dirac (f a)`.
 * `const α (μβ : measure β)`: constant kernel `a ↦ μβ`.
 * `kernel.restrict κ (hs : measurable_set s)`: kernel for which the image of `a : α` is
   `(κ a).restrict s`.
@@ -361,7 +361,7 @@ end SFinite
 section Deterministic
 
 /-- Kernel which to `a` associates the dirac measure at `f a`. This is a Markov kernel. -/
-noncomputable def deterministic {f : α → β} (hf : Measurable f) : kernel α β
+noncomputable def deterministic (f : α → β) (hf : Measurable f) : kernel α β
     where
   val a := Measure.dirac (f a)
   property := by
@@ -371,12 +371,12 @@ noncomputable def deterministic {f : α → β} (hf : Measurable f) : kernel α 
 #align probability_theory.kernel.deterministic ProbabilityTheory.kernel.deterministic
 
 theorem deterministic_apply {f : α → β} (hf : Measurable f) (a : α) :
-    deterministic hf a = Measure.dirac (f a) :=
+    deterministic f hf a = Measure.dirac (f a) :=
   rfl
 #align probability_theory.kernel.deterministic_apply ProbabilityTheory.kernel.deterministic_apply
 
 theorem deterministic_apply' {f : α → β} (hf : Measurable f) (a : α) {s : Set β}
-    (hs : MeasurableSet s) : deterministic hf a s = s.indicator (fun _ => 1) (f a) :=
+    (hs : MeasurableSet s) : deterministic f hf a s = s.indicator (fun _ => 1) (f a) :=
   by
   rw [deterministic]
   change measure.dirac (f a) s = s.indicator 1 (f a)
@@ -384,7 +384,7 @@ theorem deterministic_apply' {f : α → β} (hf : Measurable f) (a : α) {s : S
 #align probability_theory.kernel.deterministic_apply' ProbabilityTheory.kernel.deterministic_apply'
 
 instance isMarkovKernel_deterministic {f : α → β} (hf : Measurable f) :
-    IsMarkovKernel (deterministic hf) :=
+    IsMarkovKernel (deterministic f hf) :=
   ⟨fun a => by
     rw [deterministic_apply hf]
     infer_instance⟩

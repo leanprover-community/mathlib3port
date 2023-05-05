@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 338fe44f54751b9f7deaca47ffca3509f53140ae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -450,10 +450,6 @@ noncomputable instance : IsROrC ℂ
     simp only [← Complex.normSq_eq_abs, ← Complex.normSq_apply, AddMonoidHom.coe_mk,
       Complex.norm_eq_abs]
   mul_im_i_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.I_im]
-  inv_def_ax z := by
-    simp only [Complex.inv_def, Complex.normSq_eq_abs, Complex.coe_algebraMap,
-      Complex.ofReal_eq_coe, Complex.norm_eq_abs]
-  div_i_ax := Complex.div_I
 
 theorem IsROrC.re_eq_complex_re : ⇑(IsROrC.re : ℂ →+ ℝ) = Complex.re :=
   rfl

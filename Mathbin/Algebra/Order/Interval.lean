@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.interval
-! leanprover-community/mathlib commit 9114ddffa023340c9ec86965e00cdd6fe26fcdf6
+! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,7 +20,7 @@ import Mathbin.Tactic.Positivity
 
 This file defines arithmetic operations on intervals and prove their correctness. Note that this is
 full precision operations. The essentials of float operations can be found
-in `data.fp.basic`. We hsve not yet integrated these with the rest of the library.
+in `data.fp.basic`. We have not yet integrated these with the rest of the library.
 -/
 
 
