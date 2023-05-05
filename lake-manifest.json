@@ -4,9 +4,9 @@
  [{"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "81891a5fa291ce57749ad086b9cb2379acee403b",
+    "rev": "d11fdaa489ff2fce82fc32bd898b5419abb1ab55",
     "name": "lean3port",
-    "inputRev?": "81891a5fa291ce57749ad086b9cb2379acee403b"}},
+    "inputRev?": "d11fdaa489ff2fce82fc32bd898b5419abb1ab55"}},
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
