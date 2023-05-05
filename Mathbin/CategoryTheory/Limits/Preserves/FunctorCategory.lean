@@ -134,8 +134,6 @@ instance whiskeringRightPreservesLimits {C : Type u} [Category C] {D : Type _} [
   ⟨⟩
 #align category_theory.whiskering_right_preserves_limits CategoryTheory.whiskeringRightPreservesLimits
 
-/- warning: category_theory.preserves_limit_of_Lan_preserves_limit clashes with category_theory.preserves_limit_of_Lan_presesrves_limit -> CategoryTheory.preservesLimitOfLanPreservesLimit
-Case conversion may be inaccurate. Consider using '#align category_theory.preserves_limit_of_Lan_preserves_limit CategoryTheory.preservesLimitOfLanPreservesLimitₓ'. -/
 #print CategoryTheory.preservesLimitOfLanPreservesLimit /-
 /-- If `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves limits of shape `J`, so will `F`. -/
 noncomputable def preservesLimitOfLanPreservesLimit {C D : Type u} [SmallCategory C]
