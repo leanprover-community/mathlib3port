@@ -54,7 +54,7 @@ open BigOperators
 
 open nonZeroDivisors
 
-section AbsNorm
+section abs_norm
 
 namespace Submodule
 
@@ -491,7 +491,7 @@ end Ideal
 
 end RingOfIntegers
 
-end AbsNorm
+end abs_norm
 
 section SpanNorm
 

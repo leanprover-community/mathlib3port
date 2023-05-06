@@ -450,10 +450,12 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
 #align strict_mono_on.Iic_id_le StrictMonoOn.Iic_id_le
 -/
 
+#print StrictMonoOn.Ici_le_id /-
 theorem StrictMonoOn.Ici_le_id [PredOrder α] [IsPredArchimedean α] [OrderTop α] {n : α} {φ : α → α}
     (hφ : StrictMonoOn φ (Set.Ici n)) : ∀ m, n ≤ m → φ m ≤ m :=
   @StrictMonoOn.Iic_id_le αᵒᵈ _ _ _ _ _ _ fun i hi j hj hij => hφ hj hi hij
 #align strict_mono_on.Ici_le_id StrictMonoOn.Ici_le_id
+-/
 
 variable [Preorder β] {ψ : α → β}
 
@@ -503,11 +505,23 @@ theorem strictAntiOn_Iic_of_succ_lt [SuccOrder α] [IsSuccArchimedean α] {n : �
   @strictMonoOn_Iic_of_lt_succ α βᵒᵈ _ _ ψ _ _ n hψ i hi j hj hij
 #align strict_anti_on_Iic_of_succ_lt strictAntiOn_Iic_of_succ_lt
 
+/- warning: strict_mono_on_Ici_of_pred_lt -> strictMonoOn_Ici_of_pred_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {ψ : α -> β} [_inst_3 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_4 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3] {n : α}, (forall (m : α), (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_2) (ψ (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 m)) (ψ m))) -> (StrictMonoOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 ψ (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β] {ψ : α -> β} [_inst_3 : PredOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] [_inst_4 : IsPredArchimedean.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3] {n : α}, (forall (m : α), (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) n m) -> (LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (ψ (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 m)) (ψ m))) -> (StrictMonoOn.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 ψ (Set.Ici.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) n))
+Case conversion may be inaccurate. Consider using '#align strict_mono_on_Ici_of_pred_lt strictMonoOn_Ici_of_pred_ltₓ'. -/
 theorem strictMonoOn_Ici_of_pred_lt [PredOrder α] [IsPredArchimedean α] {n : α}
     (hψ : ∀ m, n < m → ψ (pred m) < ψ m) : StrictMonoOn ψ (Set.Ici n) := fun i hi j hj hij =>
   @strictMonoOn_Iic_of_lt_succ αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
 #align strict_mono_on_Ici_of_pred_lt strictMonoOn_Ici_of_pred_lt
 
+/- warning: strict_anti_on_Ici_of_lt_pred -> strictAntiOn_Ici_of_lt_pred is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {ψ : α -> β} [_inst_3 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_4 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3] {n : α}, (forall (m : α), (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_2) (ψ m) (ψ (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 m)))) -> (StrictAntiOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 ψ (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β] {ψ : α -> β} [_inst_3 : PredOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] [_inst_4 : IsPredArchimedean.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3] {n : α}, (forall (m : α), (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) n m) -> (LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (ψ m) (ψ (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 m)))) -> (StrictAntiOn.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 ψ (Set.Ici.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) n))
+Case conversion may be inaccurate. Consider using '#align strict_anti_on_Ici_of_lt_pred strictAntiOn_Ici_of_lt_predₓ'. -/
 theorem strictAntiOn_Ici_of_lt_pred [PredOrder α] [IsPredArchimedean α] {n : α}
     (hψ : ∀ m, n < m → ψ m < ψ (pred m)) : StrictAntiOn ψ (Set.Ici n) := fun i hi j hj hij =>
   @strictAntiOn_Iic_of_succ_lt αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
