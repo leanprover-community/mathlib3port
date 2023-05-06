@@ -2646,6 +2646,12 @@ class CountablyGenerated [m : MeasurableSpace α] : Prop where
 
 open Classical
 
+/- warning: measurable_space.measurable_injection_nat_bool_of_countably_generated -> MeasurableSpace.measurable_injection_nat_bool_of_countablyGenerated is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : MeasurableSpace.{u1} α] [h : MeasurableSpace.CountablyGenerated.{u1} α _inst_1] [_inst_2 : MeasurableSingletonClass.{u1} α _inst_1], Exists.{succ u1} (α -> Nat -> Bool) (fun (f : α -> Nat -> Bool) => And (Measurable.{u1, 0} α (Nat -> Bool) _inst_1 (MeasurableSpace.pi.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => Bool.measurableSpace)) f) (Function.Injective.{succ u1, 1} α (Nat -> Bool) f))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : MeasurableSpace.{u1} α] [h : MeasurableSpace.CountablyGenerated.{u1} α _inst_1] [_inst_2 : MeasurableSingletonClass.{u1} α _inst_1], Exists.{succ u1} (α -> Nat -> Bool) (fun (f : α -> Nat -> Bool) => And (Measurable.{u1, 0} α (Nat -> Bool) _inst_1 (MeasurableSpace.pi.{0, 0} Nat (fun (ᾰ : Nat) => Bool) (fun (a : Nat) => instMeasurableSpaceBool)) f) (Function.Injective.{succ u1, 1} α (Nat -> Bool) f))
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_injection_nat_bool_of_countably_generated MeasurableSpace.measurable_injection_nat_bool_of_countablyGeneratedₓ'. -/
 /-- If a measurable space is countably generated, it admits a measurable injection
 into the Cantor space `ℕ → bool` (equipped with the product sigma algebra). -/
 theorem measurable_injection_nat_bool_of_countablyGenerated [MeasurableSpace α]

@@ -74,7 +74,7 @@ theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2
   have h := (sin_two_mul θ).symm
   rw [mul_assoc] at h
   rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← MulZeroClass.zero_mul (1 / 2 : ℂ), mul_one_div,
-    CancelFactors.cancel_factors_eq_div h two_ne_zero, mul_comm]
+    CancelDenoms.cancel_factors_eq_div h two_ne_zero, mul_comm]
   simpa only [zero_div, MulZeroClass.zero_mul, Ne.def, not_false_iff, field_simps] using
     sin_eq_zero_iff
 #align complex.tan_eq_zero_iff Complex.tan_eq_zero_iff

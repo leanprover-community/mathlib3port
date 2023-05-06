@@ -1199,7 +1199,7 @@ theorem sin_mul_I : sin (x * I) = sinh x * I :=
     rw [mul_comm, ← sinh_mul_I]
     ring_nf
     simp
-  simpa only [neg_mul, div_I, neg_neg] using CancelFactors.cancel_factors_eq_div h I_ne_zero
+  simpa only [neg_mul, div_I, neg_neg] using CancelDenoms.cancel_factors_eq_div h I_ne_zero
 #align complex.sin_mul_I Complex.sin_mul_I
 -/
 
