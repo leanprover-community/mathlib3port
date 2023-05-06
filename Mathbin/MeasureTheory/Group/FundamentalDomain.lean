@@ -510,7 +510,7 @@ theorem measure_le_of_pairwise_disjoint (hs : IsFundamentalDomain G s μ)
   calc
     μ t = ∑' g : G, μ (g • t ∩ s) := hs.measure_eq_tsum t
     _ = μ (⋃ g : G, g • t ∩ s) :=
-      (Eq.symm <| measure_Union₀ hd fun g => (ht.smul _).inter hs.NullMeasurableSet)
+      (Eq.symm <| measure_unionᵢ₀ hd fun g => (ht.smul _).inter hs.NullMeasurableSet)
     _ ≤ μ s := measure_mono (unionᵢ_subset fun g => inter_subset_right _ _)
     
 #align measure_theory.is_fundamental_domain.measure_le_of_pairwise_disjoint MeasureTheory.IsFundamentalDomain.measure_le_of_pairwise_disjoint
