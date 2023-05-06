@@ -1216,7 +1216,7 @@ theorem lintegral_tsum [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ i
 open Measure
 
 theorem lintegral_Union₀ [Countable β] {s : β → Set α} (hm : ∀ i, NullMeasurableSet (s i) μ)
-    (hd : Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) :
+    (hd : Pairwise (AEDisjoint μ on s)) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ := by
   simp only [measure.restrict_Union_ae hd hm, lintegral_sum_measure]
 #align measure_theory.lintegral_Union₀ MeasureTheory.lintegral_Union₀
@@ -1224,11 +1224,11 @@ theorem lintegral_Union₀ [Countable β] {s : β → Set α} (hm : ∀ i, NullM
 theorem lintegral_unionᵢ [Countable β] {s : β → Set α} (hm : ∀ i, MeasurableSet (s i))
     (hd : Pairwise (Disjoint on s)) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ :=
-  lintegral_Union₀ (fun i => (hm i).NullMeasurableSet) hd.AeDisjoint f
+  lintegral_Union₀ (fun i => (hm i).NullMeasurableSet) hd.AEDisjoint f
 #align measure_theory.lintegral_Union MeasureTheory.lintegral_unionᵢ
 
 theorem lintegral_bUnion₀ {t : Set β} {s : β → Set α} (ht : t.Countable)
-    (hm : ∀ i ∈ t, NullMeasurableSet (s i) μ) (hd : t.Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) :
+    (hm : ∀ i ∈ t, NullMeasurableSet (s i) μ) (hd : t.Pairwise (AEDisjoint μ on s)) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i ∈ t, s i, f a ∂μ) = ∑' i : t, ∫⁻ a in s i, f a ∂μ :=
   by
   haveI := ht.to_encodable
@@ -1238,11 +1238,11 @@ theorem lintegral_bUnion₀ {t : Set β} {s : β → Set α} (ht : t.Countable)
 theorem lintegral_bUnion {t : Set β} {s : β → Set α} (ht : t.Countable)
     (hm : ∀ i ∈ t, MeasurableSet (s i)) (hd : t.PairwiseDisjoint s) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i ∈ t, s i, f a ∂μ) = ∑' i : t, ∫⁻ a in s i, f a ∂μ :=
-  lintegral_bUnion₀ ht (fun i hi => (hm i hi).NullMeasurableSet) hd.AeDisjoint f
+  lintegral_bUnion₀ ht (fun i hi => (hm i hi).NullMeasurableSet) hd.AEDisjoint f
 #align measure_theory.lintegral_bUnion MeasureTheory.lintegral_bUnion
 
 theorem lintegral_bUnion_finset₀ {s : Finset β} {t : β → Set α}
-    (hd : Set.Pairwise (↑s) (AeDisjoint μ on t)) (hm : ∀ b ∈ s, NullMeasurableSet (t b) μ)
+    (hd : Set.Pairwise (↑s) (AEDisjoint μ on t)) (hm : ∀ b ∈ s, NullMeasurableSet (t b) μ)
     (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ b ∈ s, t b, f a ∂μ) = ∑ b in s, ∫⁻ a in t b, f a ∂μ := by
   simp only [← Finset.mem_coe, lintegral_bUnion₀ s.countable_to_set hm hd, ← s.tsum_subtype']
 #align measure_theory.lintegral_bUnion_finset₀ MeasureTheory.lintegral_bUnion_finset₀
@@ -1250,7 +1250,7 @@ theorem lintegral_bUnion_finset₀ {s : Finset β} {t : β → Set α}
 theorem lintegral_bUnion_finset {s : Finset β} {t : β → Set α} (hd : Set.PairwiseDisjoint (↑s) t)
     (hm : ∀ b ∈ s, MeasurableSet (t b)) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ b ∈ s, t b, f a ∂μ) = ∑ b in s, ∫⁻ a in t b, f a ∂μ :=
-  lintegral_bUnion_finset₀ hd.AeDisjoint (fun b hb => (hm b hb).NullMeasurableSet) f
+  lintegral_bUnion_finset₀ hd.AEDisjoint (fun b hb => (hm b hb).NullMeasurableSet) f
 #align measure_theory.lintegral_bUnion_finset MeasureTheory.lintegral_bUnion_finset
 
 theorem lintegral_unionᵢ_le [Countable β] (s : β → Set α) (f : α → ℝ≥0∞) :

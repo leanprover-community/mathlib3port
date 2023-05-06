@@ -59,7 +59,7 @@ theorem exists_pair_mem_lattice_not_disjoint_vadd [AddCommGroup L] [Countable L]
   exact
     ((fund.measure_eq_tsum _).trans
           (measure_Union₀
-              (Pairwise.mono h fun i j hij => (hij.mono inf_le_left inf_le_left).AeDisjoint)
+              (Pairwise.mono h fun i j hij => (hij.mono inf_le_left inf_le_left).AEDisjoint)
               fun _ => (hS.vadd _).inter fund.null_measurable_set).symm).trans_le
       (measure_mono <| Union_subset fun _ => inter_subset_right _ _)
 #align measure_theory.exists_pair_mem_lattice_not_disjoint_vadd MeasureTheory.exists_pair_mem_lattice_not_disjoint_vadd

@@ -126,11 +126,11 @@ theorem ae_uIoc_iff [LinearOrder α] {a b : α} {P : α → Prop} :
 #align measure_theory.ae_uIoc_iff MeasureTheory.ae_uIoc_iff
 
 theorem measure_union (hd : Disjoint s₁ s₂) (h : MeasurableSet s₂) : μ (s₁ ∪ s₂) = μ s₁ + μ s₂ :=
-  measure_union₀ h.NullMeasurableSet hd.AeDisjoint
+  measure_union₀ h.NullMeasurableSet hd.AEDisjoint
 #align measure_theory.measure_union MeasureTheory.measure_union
 
 theorem measure_union' (hd : Disjoint s₁ s₂) (h : MeasurableSet s₁) : μ (s₁ ∪ s₂) = μ s₁ + μ s₂ :=
-  measure_union₀' h.NullMeasurableSet hd.AeDisjoint
+  measure_union₀' h.NullMeasurableSet hd.AEDisjoint
 #align measure_theory.measure_union' MeasureTheory.measure_union'
 
 theorem measure_inter_add_diff (s : Set α) (ht : MeasurableSet t) : μ (s ∩ t) + μ (s \ t) = μ s :=
@@ -159,7 +159,7 @@ theorem measure_add_measure_compl (h : MeasurableSet s) : μ s + μ (sᶜ) = μ 
 #align measure_theory.measure_add_measure_compl MeasureTheory.measure_add_measure_compl
 
 theorem measure_bUnion₀ {s : Set β} {f : β → Set α} (hs : s.Countable)
-    (hd : s.Pairwise (AeDisjoint μ on f)) (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) :
+    (hd : s.Pairwise (AEDisjoint μ on f)) (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) :
     μ (⋃ b ∈ s, f b) = ∑' p : s, μ (f p) :=
   by
   haveI := hs.to_encodable
@@ -169,10 +169,10 @@ theorem measure_bUnion₀ {s : Set β} {f : β → Set α} (hs : s.Countable)
 
 theorem measure_bUnion {s : Set β} {f : β → Set α} (hs : s.Countable) (hd : s.PairwiseDisjoint f)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑' p : s, μ (f p) :=
-  measure_bUnion₀ hs hd.AeDisjoint fun b hb => (h b hb).NullMeasurableSet
+  measure_bUnion₀ hs hd.AEDisjoint fun b hb => (h b hb).NullMeasurableSet
 #align measure_theory.measure_bUnion MeasureTheory.measure_bUnion
 
-theorem measure_sUnion₀ {S : Set (Set α)} (hs : S.Countable) (hd : S.Pairwise (AeDisjoint μ))
+theorem measure_sUnion₀ {S : Set (Set α)} (hs : S.Countable) (hd : S.Pairwise (AEDisjoint μ))
     (h : ∀ s ∈ S, NullMeasurableSet s μ) : μ (⋃₀ S) = ∑' s : S, μ s := by
   rw [sUnion_eq_bUnion, measure_bUnion₀ hs hd h]
 #align measure_theory.measure_sUnion₀ MeasureTheory.measure_sUnion₀
@@ -183,7 +183,7 @@ theorem measure_unionₛ {S : Set (Set α)} (hs : S.Countable) (hd : S.Pairwise 
 #align measure_theory.measure_sUnion MeasureTheory.measure_unionₛ
 
 theorem measure_bUnion_finset₀ {s : Finset ι} {f : ι → Set α}
-    (hd : Set.Pairwise (↑s) (AeDisjoint μ on f)) (hm : ∀ b ∈ s, NullMeasurableSet (f b) μ) :
+    (hd : Set.Pairwise (↑s) (AEDisjoint μ on f)) (hm : ∀ b ∈ s, NullMeasurableSet (f b) μ) :
     μ (⋃ b ∈ s, f b) = ∑ p in s, μ (f p) :=
   by
   rw [← Finset.sum_attach, Finset.attach_eq_univ, ← tsum_fintype]
@@ -192,7 +192,7 @@ theorem measure_bUnion_finset₀ {s : Finset ι} {f : ι → Set α}
 
 theorem measure_bUnion_finset {s : Finset ι} {f : ι → Set α} (hd : PairwiseDisjoint (↑s) f)
     (hm : ∀ b ∈ s, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑ p in s, μ (f p) :=
-  measure_bUnion_finset₀ hd.AeDisjoint fun b hb => (hm b hb).NullMeasurableSet
+  measure_bUnion_finset₀ hd.AEDisjoint fun b hb => (hm b hb).NullMeasurableSet
 #align measure_theory.measure_bUnion_finset MeasureTheory.measure_bUnion_finset
 
 /-- The measure of a disjoint union (even uncountable) of measurable sets is at least the sum of
@@ -1713,14 +1713,14 @@ theorem restrict_union_add_inter' (hs : MeasurableSet s) (t : Set α) :
   simpa only [union_comm, inter_comm, add_comm] using restrict_union_add_inter t hs
 #align measure_theory.measure.restrict_union_add_inter' MeasureTheory.Measure.restrict_union_add_inter'
 
-theorem restrict_union₀ (h : AeDisjoint μ s t) (ht : NullMeasurableSet t μ) :
+theorem restrict_union₀ (h : AEDisjoint μ s t) (ht : NullMeasurableSet t μ) :
     μ.restrict (s ∪ t) = μ.restrict s + μ.restrict t := by
   simp [← restrict_union_add_inter₀ s ht, restrict_zero_set h]
 #align measure_theory.measure.restrict_union₀ MeasureTheory.Measure.restrict_union₀
 
 theorem restrict_union (h : Disjoint s t) (ht : MeasurableSet t) :
     μ.restrict (s ∪ t) = μ.restrict s + μ.restrict t :=
-  restrict_union₀ h.AeDisjoint ht.NullMeasurableSet
+  restrict_union₀ h.AEDisjoint ht.NullMeasurableSet
 #align measure_theory.measure.restrict_union MeasureTheory.Measure.restrict_union
 
 theorem restrict_union' (h : Disjoint s t) (hs : MeasurableSet s) :
@@ -1747,7 +1747,7 @@ theorem restrict_union_le (s s' : Set α) : μ.restrict (s ∪ s') ≤ μ.restri
   apply measure_union_le
 #align measure_theory.measure.restrict_union_le MeasureTheory.Measure.restrict_union_le
 
-theorem restrict_unionᵢ_apply_ae [Countable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s))
+theorem restrict_unionᵢ_apply_ae [Countable ι] {s : ι → Set α} (hd : Pairwise (AEDisjoint μ on s))
     (hm : ∀ i, NullMeasurableSet (s i) μ) {t : Set α} (ht : MeasurableSet t) :
     μ.restrict (⋃ i, s i) t = ∑' i, μ.restrict (s i) t :=
   by
@@ -1760,7 +1760,7 @@ theorem restrict_unionᵢ_apply_ae [Countable ι] {s : ι → Set α} (hd : Pair
 theorem restrict_unionᵢ_apply [Countable ι] {s : ι → Set α} (hd : Pairwise (Disjoint on s))
     (hm : ∀ i, MeasurableSet (s i)) {t : Set α} (ht : MeasurableSet t) :
     μ.restrict (⋃ i, s i) t = ∑' i, μ.restrict (s i) t :=
-  restrict_unionᵢ_apply_ae hd.AeDisjoint (fun i => (hm i).NullMeasurableSet) ht
+  restrict_unionᵢ_apply_ae hd.AEDisjoint (fun i => (hm i).NullMeasurableSet) ht
 #align measure_theory.measure.restrict_Union_apply MeasureTheory.Measure.restrict_unionᵢ_apply
 
 theorem restrict_unionᵢ_apply_eq_supᵢ [Countable ι] {s : ι → Set α} (hd : Directed (· ⊆ ·) s)
@@ -2175,14 +2175,14 @@ omit m0
 
 end Sum
 
-theorem restrict_unionᵢ_ae [Countable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s))
+theorem restrict_unionᵢ_ae [Countable ι] {s : ι → Set α} (hd : Pairwise (AEDisjoint μ on s))
     (hm : ∀ i, NullMeasurableSet (s i) μ) : μ.restrict (⋃ i, s i) = sum fun i => μ.restrict (s i) :=
   ext fun t ht => by simp only [sum_apply _ ht, restrict_Union_apply_ae hd hm ht]
 #align measure_theory.measure.restrict_Union_ae MeasureTheory.Measure.restrict_unionᵢ_ae
 
 theorem restrict_unionᵢ [Countable ι] {s : ι → Set α} (hd : Pairwise (Disjoint on s))
     (hm : ∀ i, MeasurableSet (s i)) : μ.restrict (⋃ i, s i) = sum fun i => μ.restrict (s i) :=
-  restrict_unionᵢ_ae hd.AeDisjoint fun i => (hm i).NullMeasurableSet
+  restrict_unionᵢ_ae hd.AEDisjoint fun i => (hm i).NullMeasurableSet
 #align measure_theory.measure.restrict_Union MeasureTheory.Measure.restrict_unionᵢ
 
 theorem restrict_unionᵢ_le [Countable ι] {s : ι → Set α} :
@@ -2628,11 +2628,11 @@ open Pointwise
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 @[to_additive]
-theorem pairwise_aeDisjoint_of_aeDisjoint_forall_ne_one {G α : Type _} [Group G] [MulAction G α]
+theorem pairwise_aEDisjoint_of_aEDisjoint_forall_ne_one {G α : Type _} [Group G] [MulAction G α]
     [MeasurableSpace α] {μ : Measure α} {s : Set α}
-    (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AeDisjoint μ (g • s) s)
+    (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AEDisjoint μ (g • s) s)
     (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ) :
-    Pairwise (AeDisjoint μ on fun g : G => g • s) :=
+    Pairwise (AEDisjoint μ on fun g : G => g • s) :=
   by
   intro g₁ g₂ hg
   let g := g₂⁻¹ * g₁
@@ -2644,8 +2644,8 @@ theorem pairwise_aeDisjoint_of_aeDisjoint_forall_ne_one {G α : Type _} [Group G
       smul_smul, inv_mul_self, one_smul]
   change μ (g₁ • s ∩ g₂ • s) = 0
   exact this ▸ (h_qmp g₂⁻¹).preimage_null (h_ae_disjoint g hg)
-#align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one MeasureTheory.Measure.pairwise_aeDisjoint_of_aeDisjoint_forall_ne_one
-#align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero MeasureTheory.Measure.pairwise_aeDisjoint_of_aeDisjoint_forall_ne_zero
+#align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one MeasureTheory.Measure.pairwise_aEDisjoint_of_aEDisjoint_forall_ne_one
+#align measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero MeasureTheory.Measure.pairwise_aEDisjoint_of_aEDisjoint_forall_ne_zero
 
 end Pointwise
 
@@ -2701,10 +2701,10 @@ theorem NullMeasurableSet.mono (h : NullMeasurableSet s μ) (hle : ν ≤ μ) : 
   h.mono_ac hle.AbsolutelyContinuous
 #align measure_theory.null_measurable_set.mono MeasureTheory.NullMeasurableSet.mono
 
-theorem AeDisjoint.preimage {ν : Measure β} {f : α → β} {s t : Set β} (ht : AeDisjoint ν s t)
-    (hf : QuasiMeasurePreserving f μ ν) : AeDisjoint μ (f ⁻¹' s) (f ⁻¹' t) :=
+theorem AEDisjoint.preimage {ν : Measure β} {f : α → β} {s t : Set β} (ht : AEDisjoint ν s t)
+    (hf : QuasiMeasurePreserving f μ ν) : AEDisjoint μ (f ⁻¹' s) (f ⁻¹' t) :=
   hf.preimage_null ht
-#align measure_theory.ae_disjoint.preimage MeasureTheory.AeDisjoint.preimage
+#align measure_theory.ae_disjoint.preimage MeasureTheory.AEDisjoint.preimage
 
 @[simp]
 theorem ae_eq_bot : μ.ae = ⊥ ↔ μ = 0 := by

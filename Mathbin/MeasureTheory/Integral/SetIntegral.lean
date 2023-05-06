@@ -94,7 +94,7 @@ theorem set_integral_congr_set_ae (hst : s =ᵐ[μ] t) : (∫ x in s, f x ∂μ)
   rw [measure.restrict_congr_set hst]
 #align measure_theory.set_integral_congr_set_ae MeasureTheory.set_integral_congr_set_ae
 
-theorem integral_union_ae (hst : AeDisjoint μ s t) (ht : NullMeasurableSet t μ)
+theorem integral_union_ae (hst : AEDisjoint μ s t) (ht : NullMeasurableSet t μ)
     (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
     (∫ x in s ∪ t, f x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in t, f x ∂μ := by
   simp only [integrable_on, measure.restrict_union₀ hst ht, integral_add_measure hfs hft]
@@ -102,7 +102,7 @@ theorem integral_union_ae (hst : AeDisjoint μ s t) (ht : NullMeasurableSet t μ
 
 theorem integral_union (hst : Disjoint s t) (ht : MeasurableSet t) (hfs : IntegrableOn f s μ)
     (hft : IntegrableOn f t μ) : (∫ x in s ∪ t, f x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in t, f x ∂μ :=
-  integral_union_ae hst.AeDisjoint ht.NullMeasurableSet hfs hft
+  integral_union_ae hst.AEDisjoint ht.NullMeasurableSet hfs hft
 #align measure_theory.integral_union MeasureTheory.integral_union
 
 theorem integral_diff (ht : MeasurableSet t) (hfs : IntegrableOn f s μ) (hts : t ⊆ s) :
@@ -160,7 +160,7 @@ theorem integral_univ : (∫ x in univ, f x ∂μ) = ∫ x, f x ∂μ := by rw [
 theorem integral_add_compl₀ (hs : NullMeasurableSet s μ) (hfi : Integrable f μ) :
     ((∫ x in s, f x ∂μ) + ∫ x in sᶜ, f x ∂μ) = ∫ x, f x ∂μ := by
   rw [←
-    integral_union_ae (@disjoint_compl_right (Set α) _ _).AeDisjoint hs.compl hfi.integrable_on
+    integral_union_ae (@disjoint_compl_right (Set α) _ _).AEDisjoint hs.compl hfi.integrable_on
       hfi.integrable_on,
     union_compl_self, integral_univ]
 #align measure_theory.integral_add_compl₀ MeasureTheory.integral_add_compl₀
@@ -243,7 +243,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
 #align measure_theory.tendsto_set_integral_of_monotone MeasureTheory.tendsto_set_integral_of_monotone
 
 theorem hasSum_integral_unionᵢ_ae {ι : Type _} [Countable ι] {s : ι → Set α}
-    (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AeDisjoint μ on s))
+    (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AEDisjoint μ on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
   by
@@ -255,7 +255,7 @@ theorem hasSum_integral_unionᵢ {ι : Type _} [Countable ι] {s : ι → Set α
     (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
-  hasSum_integral_unionᵢ_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AeDisjoint)
+  hasSum_integral_unionᵢ_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AEDisjoint)
     hfi
 #align measure_theory.has_sum_integral_Union MeasureTheory.hasSum_integral_unionᵢ
 
@@ -266,7 +266,7 @@ theorem integral_unionᵢ {ι : Type _} [Countable ι] {s : ι → Set α} (hm :
 #align measure_theory.integral_Union MeasureTheory.integral_unionᵢ
 
 theorem integral_unionᵢ_ae {ι : Type _} [Countable ι] {s : ι → Set α}
-    (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AeDisjoint μ on s))
+    (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AEDisjoint μ on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) : (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
   (HasSum.tsum_eq (hasSum_integral_unionᵢ_ae hm hd hfi)).symm
 #align measure_theory.integral_Union_ae MeasureTheory.integral_unionᵢ_ae

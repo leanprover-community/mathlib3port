@@ -254,7 +254,7 @@ end NullMeasurableSet
 exists a subordinate family `tᵢ ⊆ sᵢ` of measurable pairwise disjoint sets such that
 `tᵢ =ᵐ[μ] sᵢ`. -/
 theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α}
-    (h : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AeDisjoint μ on s)) :
+    (h : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AEDisjoint μ on s)) :
     ∃ t : ι → Set α,
       (∀ i, t i ⊆ s i) ∧
         (∀ i, s i =ᵐ[μ] t i) ∧ (∀ i, MeasurableSet (t i)) ∧ Pairwise (Disjoint on t) :=
@@ -278,7 +278,7 @@ theorem measure_unionᵢ {m0 : MeasurableSpace α} {μ : Measure α} [Countable 
   · exact μ.m_Union
 #align measure_theory.measure_Union MeasureTheory.measure_unionᵢ
 
-theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDisjoint μ on f))
+theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AEDisjoint μ on f))
     (h : ∀ i, NullMeasurableSet (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) :=
   by
   rcases exists_subordinate_pairwise_disjoint h hd with ⟨t, ht_sub, ht_eq, htm, htd⟩
@@ -290,7 +290,7 @@ theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDi
 #align measure_theory.measure_Union₀ MeasureTheory.measure_Union₀
 
 theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ)
-    (hd : AeDisjoint μ s t) : μ (s ∪ t) = μ s + μ t :=
+    (hd : AEDisjoint μ s t) : μ (s ∪ t) = μ s + μ t :=
   by
   rw [union_eq_Union, measure_Union₀, tsum_fintype, Fintype.sum_bool, cond, cond]
   exacts[(pairwise_on_bool ae_disjoint.symmetric).2 hd, fun b => Bool.casesOn b ht hs]
@@ -309,7 +309,7 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
           (measure_mono <| diff_subset_diff_left hsub)
       _ = μ (s' ∩ t ∪ s' \ t) :=
         (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <|
-            (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm
+            (@disjoint_inf_sdiff _ s' t _).AEDisjoint).symm
       _ = μ s' := (congr_arg μ (inter_union_diff _ _))
       _ = μ s := hs'
       
@@ -331,11 +331,11 @@ theorem measure_union_add_inter₀' (hs : NullMeasurableSet s μ) (t : Set α) :
   rw [union_comm, inter_comm, measure_union_add_inter₀ t hs, add_comm]
 #align measure_theory.measure_union_add_inter₀' MeasureTheory.measure_union_add_inter₀'
 
-theorem measure_union₀ (ht : NullMeasurableSet t μ) (hd : AeDisjoint μ s t) :
+theorem measure_union₀ (ht : NullMeasurableSet t μ) (hd : AEDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by rw [← measure_union_add_inter₀ s ht, hd.eq, add_zero]
 #align measure_theory.measure_union₀ MeasureTheory.measure_union₀
 
-theorem measure_union₀' (hs : NullMeasurableSet s μ) (hd : AeDisjoint μ s t) :
+theorem measure_union₀' (hs : NullMeasurableSet s μ) (hd : AEDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by rw [union_comm, measure_union₀ hs hd.symm, add_comm]
 #align measure_theory.measure_union₀' MeasureTheory.measure_union₀'
 
@@ -486,7 +486,7 @@ def completion {_ : MeasurableSpace α} (μ : Measure α) :
     @MeasureTheory.Measure (NullMeasurableSpace α μ) _
     where
   toOuterMeasure := μ.toOuterMeasure
-  m_unionᵢ s hs hd := measure_Union₀ (hd.mono fun i j h => h.AeDisjoint) hs
+  m_unionᵢ s hs hd := measure_Union₀ (hd.mono fun i j h => h.AEDisjoint) hs
   trimmed := by
     refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
     rw [outer_measure.trim_eq_infi]; simp only [to_outer_measure_apply]

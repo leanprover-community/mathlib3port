@@ -79,7 +79,7 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
     · simpa only [Ne.def, AddSubgroup.mk_eq_zero_iff] using hg'
     change ae_disjoint volume (g +ᵥ I) I
     refine'
-      ae_disjoint.congr (Disjoint.aeDisjoint _)
+      ae_disjoint.congr (Disjoint.aedisjoint _)
         ((quasi_measure_preserving_add_left volume (-g)).vadd_ae_eq_of_ae_eq g hI) hI
     have hBg : g +ᵥ B = ball (g + x) (T / (2 * n)) := by
       rw [add_comm g x, ← singleton_add_ball _ x g, add_ball, thickening_singleton]

@@ -157,7 +157,7 @@ theorem measure_smul_set_average (f : α → E) {s : Set α} (h : μ s ≠ ∞) 
   rw [← measure_smul_average, restrict_apply_univ]
 #align measure_theory.measure_smul_set_average MeasureTheory.measure_smul_set_average
 
-theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht : NullMeasurableSet t μ)
+theorem average_union {f : α → E} {s t : Set α} (hd : AEDisjoint μ s t) (ht : NullMeasurableSet t μ)
     (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
     (⨍ x in s ∪ t, f x ∂μ) =
       (((μ s).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in s, f x ∂μ) +
@@ -167,7 +167,7 @@ theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht
   rw [restrict_union₀ hd ht, average_add_measure hfs hft, restrict_apply_univ, restrict_apply_univ]
 #align measure_theory.average_union MeasureTheory.average_union
 
-theorem average_union_mem_openSegment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t)
+theorem average_union_mem_openSegment {f : α → E} {s t : Set α} (hd : AEDisjoint μ s t)
     (ht : NullMeasurableSet t μ) (hs₀ : μ s ≠ 0) (ht₀ : μ t ≠ 0) (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞)
     (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
     (⨍ x in s ∪ t, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in t, f x ∂μ) :=
@@ -179,7 +179,7 @@ theorem average_union_mem_openSegment {f : α → E} {s t : Set α} (hd : AeDisj
       ⟨(μ s).toReal, (μ t).toReal, hs₀, ht₀, (average_union hd ht hsμ htμ hfs hft).symm⟩
 #align measure_theory.average_union_mem_open_segment MeasureTheory.average_union_mem_openSegment
 
-theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t)
+theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AEDisjoint μ s t)
     (ht : NullMeasurableSet t μ) (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) (hfs : IntegrableOn f s μ)
     (hft : IntegrableOn f t μ) :
     (⨍ x in s ∪ t, f x ∂μ) ∈ [⨍ x in s, f x ∂μ -[ℝ] ⨍ x in t, f x ∂μ] :=
