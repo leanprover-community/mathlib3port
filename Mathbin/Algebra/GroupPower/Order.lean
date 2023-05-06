@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.order
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1057,6 +1057,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align abs_neg_one_pow abs_neg_one_powₓ'. -/
 theorem abs_neg_one_pow (n : ℕ) : |(-1 : R) ^ n| = 1 := by rw [← pow_abs, abs_neg, abs_one, one_pow]
 #align abs_neg_one_pow abs_neg_one_pow
+
+theorem abs_pow_eq_one (a : R) {n : ℕ} (h : 0 < n) : |a ^ n| = 1 ↔ |a| = 1 :=
+  by
+  convert pow_left_inj (abs_nonneg a) zero_le_one h
+  exacts[(pow_abs _ _).symm, (one_pow _).symm]
+#align abs_pow_eq_one abs_pow_eq_one
 
 /- warning: pow_bit0_nonneg -> pow_bit0_nonneg is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Felix Weilacher
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 11d5ff217c07a8070cddfc5d94608854306f7f68
+! leanprover-community/mathlib commit 3905fa80e62c0898131285baab35559fbc4e5cda
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,8 +52,10 @@ analytic sets.
 
 We use this to prove several versions of the Borel isomorphism theorem.
 
-* `measurable_equiv_of_not_countable` : Any two uncountable Polish spaces are Borel isomorphic.
-* `equiv.measurable_equiv` : Any two Polish spaces of the same cardinality are Borel. isomorphic.
+* `polish_space.measurable_equiv_of_not_countable` : Any two uncountable Polish spaces
+  are Borel isomorphic.
+* `polish_space.equiv.measurable_equiv` : Any two Polish spaces of the same cardinality
+  are Borel isomorphic.
 -/
 
 
@@ -820,7 +822,7 @@ noncomputable def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α
   obtain ⟨f, -, fcts, finj⟩ :=
     is_closed_univ.exists_nat_bool_injection_of_not_countable
       (by rwa [← countable_coe_iff, (Equiv.Set.univ _).countable_iff])
-  obtain ⟨g, gmeas, ginj⟩ := MeasurableSpace.measurable_injection_cantor_of_countablyGenerated α
+  obtain ⟨g, gmeas, ginj⟩ := MeasurableSpace.measurable_injection_nat_bool_of_countablyGenerated α
   exact ⟨borel_schroeder_bernstein gmeas ginj fcts.measurable finj⟩
 #align polish_space.measurable_equiv_nat_bool_of_not_countable PolishSpace.measurableEquivNatBoolOfNotCountable
 

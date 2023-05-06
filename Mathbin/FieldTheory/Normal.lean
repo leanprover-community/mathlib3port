@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 3d32bf9cef95940e3fe1ca0dd2412e0f21579f46
+! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -521,6 +521,10 @@ instance is_finiteDimensional [FiniteDimensional F K] : FiniteDimensional F (nor
     f.to_linear_map.finite_dimensional_range
   apply IntermediateField.finiteDimensional_supᵢ_of_finite
 #align normal_closure.is_finite_dimensional normalClosure.is_finiteDimensional
+
+instance isScalarTower : IsScalarTower F (normalClosure F K L) L :=
+  IsScalarTower.subalgebra' F L L _
+#align normal_closure.is_scalar_tower normalClosure.isScalarTower
 
 end normalClosure
 

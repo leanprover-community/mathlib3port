@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.intermediate_field
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit efed3cad43feb69219272b517de4aa4f21a81127
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -506,6 +506,11 @@ theorem val_mk {x : L} (hx : x ∈ S) : S.val ⟨x, hx⟩ = x :=
 theorem range_val : S.val.range = S.toSubalgebra :=
   S.toSubalgebra.range_val
 #align intermediate_field.range_val IntermediateField.range_val
+
+@[simp]
+theorem fieldRange_val : S.val.fieldRange = S :=
+  SetLike.ext' Subtype.range_val
+#align intermediate_field.field_range_val IntermediateField.fieldRange_val
 
 theorem aeval_coe {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L]
     (x : S) (P : R[X]) : aeval (x : L) P = aeval x P :=

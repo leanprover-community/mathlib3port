@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 07992a1d1f7a4176c6d3f160209608be4e198566
+! leanprover-community/mathlib commit 25580801f04aed44a0daf912d3760d0eaaf6d1bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -327,8 +327,8 @@ theorem cauchy_schwarz_aux (x y : F) :
   rw [← @of_real_inj 𝕜, coe_norm_sq_eq_inner_self]
   simp only [inner_sub_sub_self, inner_smul_left, inner_smul_right, conj_of_real, mul_sub, ←
     coe_norm_sq_eq_inner_self x, ← coe_norm_sq_eq_inner_self y]
-  rw [← mul_assoc, mul_conj, IsROrC.conj_mul_eq_normSq_left, norm_sq_eq_def', mul_left_comm, ←
-    inner_conj_symm y, mul_conj, norm_sq_eq_def']
+  rw [← mul_assoc, mul_conj, IsROrC.conj_mul, norm_sq_eq_def', mul_left_comm, ← inner_conj_symm y,
+    mul_conj, norm_sq_eq_def']
   push_cast
   ring
 #align inner_product_space.core.cauchy_schwarz_aux InnerProductSpace.Core.cauchy_schwarz_aux
@@ -404,8 +404,7 @@ def toNormedSpace : NormedSpace 𝕜 F
     where norm_smul_le r x :=
     by
     rw [norm_eq_sqrt_inner, inner_smul_left, inner_smul_right, ← mul_assoc]
-    rw [IsROrC.conj_mul_eq_normSq_left, of_real_mul_re, sqrt_mul, ← coe_norm_sq_eq_inner_self,
-      of_real_re]
+    rw [IsROrC.conj_mul, of_real_mul_re, sqrt_mul, ← coe_norm_sq_eq_inner_self, of_real_re]
     · simp [sqrt_norm_sq_eq_norm, IsROrC.sqrt_normSq_eq_norm]
     · exact norm_sq_nonneg r
 #align inner_product_space.core.to_normed_space InnerProductSpace.Core.toNormedSpace

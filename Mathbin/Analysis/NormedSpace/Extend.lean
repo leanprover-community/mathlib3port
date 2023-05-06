@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module analysis.normed_space.extend
-! leanprover-community/mathlib commit aa1dbeab548d61bc840a099abae4437046eaaf00
+! leanprover-community/mathlib commit 25580801f04aed44a0daf912d3760d0eaaf6d1bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem norm_extendTo𝕜'_apply_sq (f : F →ₗ[ℝ] ℝ) (x : F) :
     ‖(f.extendTo𝕜' x : 𝕜)‖ ^ 2 = f (conj (f.extendTo𝕜' x : 𝕜) • x) :=
   calc
     ‖(f.extendTo𝕜' x : 𝕜)‖ ^ 2 = re (conj (f.extendTo𝕜' x) * f.extendTo𝕜' x : 𝕜) := by
-      rw [IsROrC.conj_mul_eq_normSq_left, norm_sq_eq_def', of_real_re]
+      rw [IsROrC.conj_mul, norm_sq_eq_def', of_real_re]
     _ = f (conj (f.extendTo𝕜' x : 𝕜) • x) := by
       rw [← smul_eq_mul, ← map_smul, extend_to_𝕜'_apply_re]
     

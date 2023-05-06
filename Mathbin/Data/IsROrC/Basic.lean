@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.basic
-! leanprover-community/mathlib commit 338fe44f54751b9f7deaca47ffca3509f53140ae
+! leanprover-community/mathlib commit 25580801f04aed44a0daf912d3760d0eaaf6d1bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -497,6 +497,9 @@ theorem mul_conj (z : K) : z * conj z = (normSq z : K) := by
     sub_eq_neg_add, neg_zero, is_R_or_C_simps]
 #align is_R_or_C.mul_conj IsROrC.mul_conj
 
+theorem conj_mul (x : K) : conj x * x = (normSq x : K) := by rw [mul_comm, mul_conj]
+#align is_R_or_C.conj_mul IsROrC.conj_mul
+
 theorem add_conj (z : K) : z + conj z = 2 * re z := by
   simp only [ext_iff, two_mul, map_add, add_zero, of_real_im, conj_im, of_real_re, eq_self_iff_true,
     add_right_neg, conj_re, and_self_iff]
@@ -892,17 +895,6 @@ theorem abs_sq_re_add_conj' (x : K) : abs (conj x + x) ^ 2 = re (conj x + x) ^ 2
   simp only [sq, ← norm_sq_eq_abs, norm_sq, map_add, add_zero, MonoidWithZeroHom.coe_mk,
     add_left_neg, MulZeroClass.mul_zero, is_R_or_C_simps]
 #align is_R_or_C.abs_sq_re_add_conj' IsROrC.abs_sq_re_add_conj'
-
-theorem conj_mul_eq_normSq_left (x : K) : conj x * x = (normSq x : K) :=
-  by
-  rw [ext_iff]
-  refine'
-    ⟨by
-      simp only [norm_sq, neg_mul, MonoidWithZeroHom.coe_mk, sub_neg_eq_add, map_add, sub_zero,
-        MulZeroClass.mul_zero, is_R_or_C_simps],
-      _⟩
-  simp only [mul_comm, mul_neg, add_left_neg, is_R_or_C_simps]
-#align is_R_or_C.conj_mul_eq_norm_sq_left IsROrC.conj_mul_eq_normSq_left
 
 /-! ### Cauchy sequences -/
 

@@ -2276,6 +2276,7 @@ import Mathbin.NumberTheory.NumberField.CanonicalEmbedding
 import Mathbin.NumberTheory.NumberField.ClassNumber
 import Mathbin.NumberTheory.NumberField.Embeddings
 import Mathbin.NumberTheory.NumberField.Norm
+import Mathbin.NumberTheory.NumberField.Units
 import Mathbin.NumberTheory.Padics.Hensel
 import Mathbin.NumberTheory.Padics.PadicIntegers
 import Mathbin.NumberTheory.Padics.PadicNorm

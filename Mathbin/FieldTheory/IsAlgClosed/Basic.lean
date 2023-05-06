@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.basic
-! leanprover-community/mathlib commit 0ac3057eb6231d2c8dfcd46767cf4a166961c0f1
+! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -450,6 +450,12 @@ section EquivOfAlgebraic
 variable [Algebra R S] [Algebra R L] [IsScalarTower R S L]
 
 variable [Algebra K J] [Algebra J L] [IsAlgClosure J L] [Algebra K L] [IsScalarTower K J L]
+
+/-- If `J` is an algebraic extension of `K` and `L` is an algebraic closure of `J`, then it is
+  also an algebraic closure of `K`. -/
+theorem ofAlgebraic (hKJ : Algebra.IsAlgebraic K J) : IsAlgClosure K L :=
+  ⟨IsAlgClosure.alg_closed J, Algebra.isAlgebraic_trans hKJ IsAlgClosure.algebraic⟩
+#align is_alg_closure.of_algebraic IsAlgClosure.ofAlgebraic
 
 /-- A (random) isomorphism between an algebraic closure of `R` and an algebraic closure of
   an algebraic extension of `R` -/

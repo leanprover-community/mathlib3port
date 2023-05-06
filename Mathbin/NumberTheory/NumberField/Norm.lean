@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.number_field.norm
-! leanprover-community/mathlib commit ee0c179cd3c8a45aa5bffbf1b41d8dbede452865
+! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ rings of integers.
 
 open NumberField BigOperators
 
-open Finset NumberField Algebra
+open Finset NumberField Algebra FiniteDimensional
 
 namespace RingOfIntegers
 
@@ -46,7 +46,18 @@ theorem coe_algebraMap_norm [IsSeparable K L] (x : 𝓞 L) :
   rfl
 #align ring_of_integers.coe_algebra_map_norm RingOfIntegers.coe_algebraMap_norm
 
-theorem isUnit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x := by
+theorem coe_norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
+    (norm K (algebraMap (𝓞 K) (𝓞 L) x) : K) = Algebra.norm K (algebraMap K L x) :=
+  rfl
+#align ring_of_integers.coe_norm_algebra_map RingOfIntegers.coe_norm_algebraMap
+
+theorem norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
+    norm K (algebraMap (𝓞 K) (𝓞 L) x) = x ^ finrank K L := by
+  rw [← Subtype.coe_inj, RingOfIntegers.coe_norm_algebraMap, Algebra.norm_algebraMap,
+    SubsemiringClass.coe_pow]
+#align ring_of_integers.norm_algebra_map RingOfIntegers.norm_algebraMap
+
+theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x := by
   classical
     refine' ⟨fun hx => _, IsUnit.map _⟩
     replace hx : IsUnit (algebraMap (𝓞 K) (𝓞 L) <| norm K x) := hx.map (algebraMap (𝓞 K) <| 𝓞 L)
@@ -63,7 +74,7 @@ theorem isUnit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x
         _
     · rw [prod_singleton, AlgEquiv.coe_refl, id]
     · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebra_map_norm]
-#align ring_of_integers.is_unit_norm RingOfIntegers.isUnit_norm
+#align ring_of_integers.is_unit_norm_of_is_galois RingOfIntegers.isUnit_norm_of_isGalois
 
 /-- If `L/K` is a finite Galois extension of fields, then, for all `(x : 𝓞 L)` we have that
 `x ∣ algebra_map (𝓞 K) (𝓞 L) (norm K x)`. -/
@@ -76,6 +87,35 @@ theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L
     rw [coe_algebra_map_norm K x, norm_eq_prod_automorphisms]
     simp [← Finset.mul_prod_erase _ _ (mem_univ AlgEquiv.refl)]
 #align ring_of_integers.dvd_norm RingOfIntegers.dvd_norm
+
+variable (F : Type _) [Field F] [Algebra K F] [IsSeparable K F] [FiniteDimensional K F]
+
+theorem norm_norm [IsSeparable K L] [Algebra F L] [IsSeparable F L] [FiniteDimensional F L]
+    [IsScalarTower K F L] (x : 𝓞 L) : norm K (norm F x) = norm K x := by
+  rw [← Subtype.coe_inj, norm_apply_coe, norm_apply_coe, norm_apply_coe, Algebra.norm_norm]
+#align ring_of_integers.norm_norm RingOfIntegers.norm_norm
+
+variable {F}
+
+theorem isUnit_norm [CharZero K] {x : 𝓞 F} : IsUnit (norm K x) ↔ IsUnit x :=
+  by
+  letI : Algebra K (AlgebraicClosure K) := AlgebraicClosure.algebra K
+  let L := normalClosure K F (AlgebraicClosure F)
+  haveI : FiniteDimensional F L := FiniteDimensional.right K F L
+  haveI : IsAlgClosure K (AlgebraicClosure F) :=
+    IsAlgClosure.ofAlgebraic K F (AlgebraicClosure F) (Algebra.isAlgebraic_of_finite K F)
+  haveI : IsGalois F L := IsGalois.tower_top_of_isGalois K F L
+  calc
+    IsUnit (norm K x) ↔ IsUnit ((norm K) x ^ finrank F L) :=
+      (isUnit_pow_iff (pos_iff_ne_zero.mp finrank_pos)).symm
+    _ ↔ IsUnit (norm K (algebraMap (𝓞 F) (𝓞 L) x)) := by
+      rw [← norm_norm K F (algebraMap (𝓞 F) (𝓞 L) x), norm_algebraMap F _, map_pow]
+    _ ↔ IsUnit (algebraMap (𝓞 F) (𝓞 L) x) := (is_unit_norm_of_is_galois K)
+    _ ↔ IsUnit (norm F (algebraMap (𝓞 F) (𝓞 L) x)) := (is_unit_norm_of_is_galois F).symm
+    _ ↔ IsUnit (x ^ finrank F L) := (congr_arg IsUnit (norm_algebraMap F _)).to_iff
+    _ ↔ IsUnit x := isUnit_pow_iff (pos_iff_ne_zero.mp finrank_pos)
+    
+#align ring_of_integers.is_unit_norm RingOfIntegers.isUnit_norm
 
 end RingOfIntegers
 

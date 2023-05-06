@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.equiv
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -998,6 +998,10 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.map_neg_one
 theorem map_neg_one : f (-1) = -1 :=
   f.map_one ▸ f.map_neg 1
 #align ring_equiv.map_neg_one RingEquiv.map_neg_one
+
+theorem map_eq_neg_one_iff {x : R} : f x = -1 ↔ x = -1 := by
+  rw [← neg_eq_iff_eq_neg, ← neg_eq_iff_eq_neg, ← map_neg, RingEquiv.map_eq_one_iff]
+#align ring_equiv.map_eq_neg_one_iff RingEquiv.map_eq_neg_one_iff
 
 end Ring
 

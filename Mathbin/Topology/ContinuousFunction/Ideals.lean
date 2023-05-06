@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ideals
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 25580801f04aed44a0daf912d3760d0eaaf6d1bb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
       ext
       simp only [comp_apply, coe_mk, algebraMapClm_coe, map_pow, coe_mul, coe_star, Pi.mul_apply,
         Pi.star_apply, star_def, ContinuousMap.coe_coe]
-      simpa only [norm_sq_eq_def', conj_mul_eq_norm_sq_left, of_real_pow]
+      simpa only [norm_sq_eq_def', IsROrC.conj_mul, of_real_pow]
   /- Get the function `g'` which is guaranteed to exist above. By the extreme value theorem and
     compactness of `t`, there is some `0 < c` such that `c ≤ g' x` for all `x ∈ t`. Then by
     `main_lemma_aux` there is some `g` for which `g * g'` is the desired function. -/
