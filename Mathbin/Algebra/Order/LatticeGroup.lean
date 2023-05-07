@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.order.lattice_group
-! leanprover-community/mathlib commit 474656fdf40ae1741dfffcdd7c685a0f198da61a
+! leanprover-community/mathlib commit db07e6feaf211fe704c1e79ba5f480fd6d218523
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,21 +69,6 @@ lattice, ordered, group
 -- Needed for squares
 -- Needed for squares
 universe u
-
-/- warning: linear_ordered_comm_group.to_covariant_class -> LinearOrderedCommGroup.to_covariantClass is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : LinearOrderedCommGroup.{u1} α], CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α (LinearOrderedCommGroup.toOrderedCommGroup.{u1} α _inst_1))))))))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (LinearOrderedCommGroup.toOrderedCommGroup.{u1} α _inst_1)))))
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : LinearOrderedCommGroup.{u1} α], CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.18 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.20 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α (LinearOrderedCommGroup.toOrderedCommGroup.{u1} α _inst_1)))))))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.18 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.20) (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.33 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.35 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (LinearOrderedCommGroup.toOrderedCommGroup.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.33 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.35)
-Case conversion may be inaccurate. Consider using '#align linear_ordered_comm_group.to_covariant_class LinearOrderedCommGroup.to_covariantClassₓ'. -/
--- A linearly ordered additive commutative group is a lattice ordered commutative group
--- see Note [lower instance priority]
-@[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.to_covariantClass (α : Type u)
-    [LinearOrderedCommGroup α] : CovariantClass α α (· * ·) (· ≤ ·)
-    where elim a b c bc := LinearOrderedCommGroup.mul_le_mul_left _ _ bc a
-#align linear_ordered_comm_group.to_covariant_class LinearOrderedCommGroup.to_covariantClass
-#align linear_ordered_add_comm_group.to_covariant_class LinearOrderedAddCommGroup.to_covariantClass
 
 variable {α : Type u} [Lattice α] [CommGroup α]
 

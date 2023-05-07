@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.NonemptyFinLinOrd
-! leanprover-community/mathlib commit 75be6b616681ab6ca66d798ead117e75cd64f125
+! leanprover-community/mathlib commit fa4a805d16a9cd9c96e0f8edeb57dc5a07af1a19
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Order
 import Mathbin.Data.Set.Finite
+import Mathbin.Order.Category.FinPartOrd
 import Mathbin.Order.Category.LinOrd
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
@@ -22,6 +23,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
 
 This defines `NonemptyFinLinOrd`, the category of nonempty finite linear orders with monotone maps.
 This is the index category for simplicial objects.
+
+Note: `NonemptyFinLinOrd` is *not* a subcategory of `FinBddDistLat` because its morphisms do not
+preserve `⊥` and `⊤`.
 -/
 
 
@@ -108,6 +112,12 @@ instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrdCat :=
 #align NonemptyFinLinOrd.has_forget_to_LinOrd NonemptyFinLinOrdCat.hasForgetToLinOrd
 -/
 
+instance hasForgetToFinPartOrd : HasForget₂ NonemptyFinLinOrdCat FinPartOrd
+    where forget₂ :=
+    { obj := fun X => FinPartOrd.of X
+      map := fun X Y => id }
+#align NonemptyFinLinOrd.has_forget_to_FinPartOrd NonemptyFinLinOrdCat.hasForgetToFinPartOrd
+
 #print NonemptyFinLinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
 between them. -/
@@ -141,7 +151,7 @@ lean 3 declaration is
 but is expected to have type
   CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} NonemptyFinLinOrdCat.{u1} NonemptyFinLinOrdCat.{u1} instNonemptyFinLinOrdCatLargeCategory.{u1} instNonemptyFinLinOrdCatLargeCategory.{u1}
 Case conversion may be inaccurate. Consider using '#align NonemptyFinLinOrd.dual_equiv NonemptyFinLinOrdCat.dualEquivₓ'. -/
-/-- The equivalence between `FinPartOrd` and itself induced by `order_dual` both ways. -/
+/-- The equivalence between `NonemptyFinLinOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
   Equivalence.mk dual dual
@@ -262,4 +272,13 @@ theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linOrdCat :
   rfl
 #align NonemptyFinLinOrd_dual_comp_forget_to_LinOrd nonemptyFinLinOrdCat_dual_comp_forget_to_linOrdCat
 -/
+
+/-- The forgetful functor `NonemptyFinLinOrd ⥤ FinPartOrd` and `order_dual` commute. -/
+def nonemptyFinLinOrdDualCompForgetToFinPartOrd :
+    NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat FinPartOrd ≅
+      forget₂ NonemptyFinLinOrdCat FinPartOrd ⋙ FinPartOrd.dual
+    where
+  hom := { app := fun X => OrderHom.id }
+  inv := { app := fun X => OrderHom.id }
+#align NonemptyFinLinOrd_dual_comp_forget_to_FinPartOrd nonemptyFinLinOrdDualCompForgetToFinPartOrd
 
