@@ -485,23 +485,41 @@ instance [CommRing R] (c : RingCon R) : CommRing c.Quotient :=
     (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
 
+/- warning: ring_con.is_scalar_tower_right -> RingCon.isScalarTower_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : Add.{u2} R] [_inst_2 : MulOneClass.{u2} R] [_inst_3 : SMul.{u1, u2} α R] [_inst_4 : IsScalarTower.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toHasMul.{u2} R _inst_2)) _inst_3] (c : RingCon.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2)), IsScalarTower.{u1, u2, u2} α (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.hasSmul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c) (Mul.toSMul.{u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.hasMul.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c)) (RingCon.Quotient.hasSmul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c)
+but is expected to have type
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : Add.{u2} R] [_inst_2 : MulOneClass.{u2} R] [_inst_3 : SMul.{u1, u2} α R] [_inst_4 : IsScalarTower.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toMul.{u2} R _inst_2)) _inst_3] (c : RingCon.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2)), IsScalarTower.{u1, u2, u2} α (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.instSMulQuotientToMul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c) (Mul.toSMul.{u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.instMulQuotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c)) (RingCon.instSMulQuotientToMul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c)
+Case conversion may be inaccurate. Consider using '#align ring_con.is_scalar_tower_right RingCon.isScalarTower_rightₓ'. -/
 instance isScalarTower_right [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
     (c : RingCon R) : IsScalarTower α c.Quotient c.Quotient
     where smul_assoc a :=
     Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul_assoc _ _ _
 #align ring_con.is_scalar_tower_right RingCon.isScalarTower_right
 
-instance sMulCommClass [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
+/- warning: ring_con.smul_comm_class -> RingCon.smulCommClass is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : Add.{u2} R] [_inst_2 : MulOneClass.{u2} R] [_inst_3 : SMul.{u1, u2} α R] [_inst_4 : IsScalarTower.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toHasMul.{u2} R _inst_2)) _inst_3] [_inst_5 : SMulCommClass.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toHasMul.{u2} R _inst_2))] (c : RingCon.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2)), SMulCommClass.{u1, u2, u2} α (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.hasSmul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c) (Mul.toSMul.{u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.hasMul.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c))
+but is expected to have type
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : Add.{u2} R] [_inst_2 : MulOneClass.{u2} R] [_inst_3 : SMul.{u1, u2} α R] [_inst_4 : IsScalarTower.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toMul.{u2} R _inst_2)) _inst_3] [_inst_5 : SMulCommClass.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toMul.{u2} R _inst_2))] (c : RingCon.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2)), SMulCommClass.{u1, u2, u2} α (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.instSMulQuotientToMul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c) (Mul.toSMul.{u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.instMulQuotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c))
+Case conversion may be inaccurate. Consider using '#align ring_con.smul_comm_class RingCon.smulCommClassₓ'. -/
+instance smulCommClass [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
     [SMulCommClass α R R] (c : RingCon R) : SMulCommClass α c.Quotient c.Quotient
     where smul_comm a :=
     Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| (mul_smul_comm _ _ _).symm
-#align ring_con.smul_comm_class RingCon.sMulCommClass
+#align ring_con.smul_comm_class RingCon.smulCommClass
 
-instance smul_comm_class' [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
+/- warning: ring_con.smul_comm_class' -> RingCon.smulCommClass' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : Add.{u2} R] [_inst_2 : MulOneClass.{u2} R] [_inst_3 : SMul.{u1, u2} α R] [_inst_4 : IsScalarTower.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toHasMul.{u2} R _inst_2)) _inst_3] [_inst_5 : SMulCommClass.{u2, u1, u2} R α R (Mul.toSMul.{u2} R (MulOneClass.toHasMul.{u2} R _inst_2)) _inst_3] (c : RingCon.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2)), SMulCommClass.{u2, u1, u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) α (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (Mul.toSMul.{u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c) (RingCon.Quotient.hasMul.{u2} R _inst_1 (MulOneClass.toHasMul.{u2} R _inst_2) c)) (RingCon.Quotient.hasSmul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c)
+but is expected to have type
+  forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : Add.{u2} R] [_inst_2 : MulOneClass.{u2} R] [_inst_3 : SMul.{u1, u2} α R] [_inst_4 : IsScalarTower.{u1, u2, u2} α R R _inst_3 (Mul.toSMul.{u2} R (MulOneClass.toMul.{u2} R _inst_2)) _inst_3] [_inst_5 : SMulCommClass.{u2, u1, u2} R α R (Mul.toSMul.{u2} R (MulOneClass.toMul.{u2} R _inst_2)) _inst_3] (c : RingCon.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2)), SMulCommClass.{u2, u1, u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) α (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (Mul.toSMul.{u2} (RingCon.Quotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c) (RingCon.instMulQuotient.{u2} R _inst_1 (MulOneClass.toMul.{u2} R _inst_2) c)) (RingCon.instSMulQuotientToMul.{u1, u2} α R _inst_1 _inst_2 _inst_3 _inst_4 c)
+Case conversion may be inaccurate. Consider using '#align ring_con.smul_comm_class' RingCon.smulCommClass'ₓ'. -/
+instance smulCommClass' [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
     [SMulCommClass R α R] (c : RingCon R) : SMulCommClass c.Quotient α c.Quotient :=
   haveI := SMulCommClass.symm R α R
   SMulCommClass.symm _ _ _
-#align ring_con.smul_comm_class' RingCon.smul_comm_class'
+#align ring_con.smul_comm_class' RingCon.smulCommClass'
 
 instance [Monoid α] [NonAssocSemiring R] [DistribMulAction α R] [IsScalarTower α R R]
     (c : RingCon R) : DistribMulAction α c.Quotient :=
