@@ -66,6 +66,12 @@ section Sym
 
 variable (α) (n : ℕ)
 
+/- warning: sym.E1 -> Sym.e1 is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (Nat.succ n)) (Nat.succ k)) (fun (s : Sym.{0} (Fin (Nat.succ n)) (Nat.succ k)) => Membership.Mem.{0, 0} (Fin (Nat.succ n)) (Sym.{0} (Fin (Nat.succ n)) (Nat.succ k)) (Sym.hasMem.{0} (Fin (Nat.succ n)) (Nat.succ k)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin (Nat.succ n)) (HasLiftT.mk.{1, 1} Nat (Fin (Nat.succ n)) (CoeTCₓ.coe.{1, 1} Nat (Fin (Nat.succ n)) (Nat.castCoe.{0} (Fin (Nat.succ n)) (AddMonoidWithOne.toNatCast.{0} (Fin (Nat.succ n)) (Fin.addMonoidWithOne (Nat.succ n) (NeZero.succ n)))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) s)) (Sym.{0} (Fin (Nat.succ n)) k)
+but is expected to have type
+  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (s : Sym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => Membership.mem.{0, 0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Sym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Sym.instMembershipSym.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n))) s)) (Sym.{0} (Fin (Nat.succ n)) k)
+Case conversion may be inaccurate. Consider using '#align sym.E1 Sym.e1ₓ'. -/
 /-- Over `fin n+1`, the multisets of size `k+1` containing `0` are equivalent to those of size `k`,
 as demonstrated by respectively erasing or appending `0`.
 -/
@@ -77,6 +83,12 @@ protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃
   right_inv s := by simp
 #align sym.E1 Sym.e1
 
+/- warning: sym.E2 -> Sym.e2 is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (fun (s : Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) => Not (Membership.Mem.{0, 0} (Fin (Nat.succ (Nat.succ n))) (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (Sym.hasMem.{0} (Fin (Nat.succ (Nat.succ n))) k) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin (Nat.succ (Nat.succ n))) (HasLiftT.mk.{1, 1} Nat (Fin (Nat.succ (Nat.succ n))) (CoeTCₓ.coe.{1, 1} Nat (Fin (Nat.succ (Nat.succ n))) (Nat.castCoe.{0} (Fin (Nat.succ (Nat.succ n))) (AddMonoidWithOne.toNatCast.{0} (Fin (Nat.succ (Nat.succ n))) (Fin.addMonoidWithOne (Nat.succ (Nat.succ n)) (Sym.e2._proof_1 n)))))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) s))) (Sym.{0} (Fin (Nat.succ n)) k)
+but is expected to have type
+  forall {n : Nat} {k : Nat}, Equiv.{1, 1} (Subtype.{1} (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (fun (s : Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) => Not (Membership.mem.{0, 0} (Fin (Nat.succ (Nat.succ n))) (Sym.{0} (Fin (Nat.succ (Nat.succ n))) k) (Sym.instMembershipSym.{0} (Fin (Nat.succ (Nat.succ n))) k) (OfNat.ofNat.{0} (Fin (Nat.succ (Nat.succ n))) 0 (Fin.instOfNatFin (Nat.succ (Nat.succ n)) 0 (NeZero.succ (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) s))) (Sym.{0} (Fin (Nat.succ n)) k)
+Case conversion may be inaccurate. Consider using '#align sym.E2 Sym.e2ₓ'. -/
 /-- The multisets of size `k` over `fin n+2` not containing `0`
 are equivalent to those of size `k` over `fin n+1`,
 as demonstrated by respectively decrementing or incrementing every element of the multiset.
@@ -100,6 +112,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
     rw [← Fin.zero_succAbove v, ← @Fin.castSucc_zero n.succ, Fin.predAbove_succAbove 0 v]
 #align sym.E2 Sym.e2
 
+#print Sym.card_sym_fin_eq_multichoose /-
 theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k :=
   by
   apply @pincer_recursion fun n k => card (Sym (Fin n) k) = multichoose n k
@@ -119,7 +132,9 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multich
     apply (Equiv.sumCongr sym.E1.symm sym.E2.symm).trans
     apply Equiv.sumCompl
 #align sym.card_sym_fin_eq_multichoose Sym.card_sym_fin_eq_multichoose
+-/
 
+#print Sym.card_sym_eq_multichoose /-
 /-- For any fintype `α` of cardinality `n`, `card (sym α k) = multichoose (card α) k` -/
 theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintype α] [Fintype (Sym α k)] :
     card (Sym α k) = multichoose (card α) k :=
@@ -127,13 +142,16 @@ theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintype α] [Fintype (S
   rw [← card_sym_fin_eq_multichoose]
   exact card_congr (equiv_congr (equiv_fin α))
 #align sym.card_sym_eq_multichoose Sym.card_sym_eq_multichoose
+-/
 
+#print Sym.card_sym_eq_choose /-
 /-- The *stars and bars* lemma: the cardinality of `sym α k` is equal to
 `nat.choose (card α + k - 1) k`. -/
 theorem card_sym_eq_choose {α : Type _} [Fintype α] (k : ℕ) [Fintype (Sym α k)] :
     card (Sym α k) = (card α + k - 1).choose k := by
   rw [card_sym_eq_multichoose, Nat.multichoose_eq]
 #align sym.card_sym_eq_choose Sym.card_sym_eq_choose
+-/
 
 end Sym
 
@@ -143,6 +161,7 @@ namespace Sym2
 
 variable [DecidableEq α]
 
+#print Sym2.card_image_diag /-
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
 theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk').card = s.card :=
   by
@@ -153,7 +172,9 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk').card = s.c
   · simp only [mem_coe, mem_diag] at hx
     rw [hx.2]
 #align sym2.card_image_diag Sym2.card_image_diag
+-/
 
+#print Sym2.two_mul_card_image_offDiag /-
 theorem two_mul_card_image_offDiag (s : Finset α) :
     2 * (s.offDiag.image Quotient.mk').card = s.offDiag.card :=
   by
@@ -178,7 +199,9 @@ theorem two_mul_card_image_offDiag (s : Finset α) :
   simp only [not_and, Prod.mk.inj_iff, mem_singleton]
   exact fun _ => hxy'
 #align sym2.two_mul_card_image_off_diag Sym2.two_mul_card_image_offDiag
+-/
 
+#print Sym2.card_image_offDiag /-
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
 This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal comes from exactly two
 pairs: `(x, y)` and `(y, x)`. -/
@@ -187,7 +210,9 @@ theorem card_image_offDiag (s : Finset α) : (s.offDiag.image Quotient.mk').card
   rw [Nat.choose_two_right, mul_tsub, mul_one, ← off_diag_card,
     Nat.div_eq_of_eq_mul_right zero_lt_two (two_mul_card_image_off_diag s).symm]
 #align sym2.card_image_off_diag Sym2.card_image_offDiag
+-/
 
+#print Sym2.card_subtype_diag /-
 theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card α :=
   by
   convert card_image_diag (univ : Finset α)
@@ -197,7 +222,9 @@ theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card
   obtain ⟨a, ha⟩ := Quotient.exists_rep x
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 #align sym2.card_subtype_diag Sym2.card_subtype_diag
+-/
 
+#print Sym2.card_subtype_not_diag /-
 theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 :=
   by
   convert card_image_off_diag (univ : Finset α)
@@ -207,7 +234,9 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } 
   obtain ⟨a, ha⟩ := Quotient.exists_rep x
   exact and_iff_right ⟨a, mem_univ _, ha⟩
 #align sym2.card_subtype_not_diag Sym2.card_subtype_not_diag
+-/
 
+#print Finset.card_sym2 /-
 /-- Finset **stars and bars** for the case `n = 2`. -/
 theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 :=
   by
@@ -222,11 +251,14 @@ theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) /
   rw [hab]
   exact is_diag_mk_of_mem_diag ha
 #align finset.card_sym2 Finset.card_sym2
+-/
 
+#print Sym2.card /-
 /-- Type **stars and bars** for the case `n = 2`. -/
 protected theorem card [Fintype α] : card (Sym2 α) = card α * (card α + 1) / 2 :=
   Finset.card_sym2 _
 #align sym2.card Sym2.card
+-/
 
 end Sym2
 
