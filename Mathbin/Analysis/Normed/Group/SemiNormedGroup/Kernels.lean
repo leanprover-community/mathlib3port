@@ -276,14 +276,14 @@ instance explicitCokernelπ.epi {X Y : SemiNormedGroup.{u}} {f : X ⟶ Y} :
   rw [H]
 #align SemiNormedGroup.explicit_cokernel_π.epi SemiNormedGroup.explicitCokernelπ.epi
 
-theorem isQuotientExplicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
+theorem isQuotient_explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
     NormedAddGroupHom.IsQuotient (explicitCokernelπ f) :=
   NormedAddGroupHom.isQuotientQuotient _
-#align SemiNormedGroup.is_quotient_explicit_cokernel_π SemiNormedGroup.isQuotientExplicitCokernelπ
+#align SemiNormedGroup.is_quotient_explicit_cokernel_π SemiNormedGroup.isQuotient_explicitCokernelπ
 
 theorem normNoninc_explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
     (explicitCokernelπ f).NormNoninc :=
-  (isQuotientExplicitCokernelπ f).norm_le
+  (isQuotient_explicitCokernelπ f).norm_le
 #align SemiNormedGroup.norm_noninc_explicit_cokernel_π SemiNormedGroup.normNoninc_explicitCokernelπ
 
 open NNReal
