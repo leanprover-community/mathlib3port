@@ -55,6 +55,7 @@ open Topology Pointwise
 
 namespace Ideal
 
+#print Ideal.adic_basis /-
 theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
   { inter := by
       suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
@@ -73,22 +74,35 @@ theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n •
       rintro a ⟨x, b, hx, hb, rfl⟩
       exact (I ^ n).smul_mem x hb }
 #align ideal.adic_basis Ideal.adic_basis
+-/
 
+#print Ideal.ringFilterBasis /-
 /-- The adic ring filter basis associated to an ideal `I` is made of powers of `I`. -/
 def ringFilterBasis (I : Ideal R) :=
   I.adic_basis.toRing_subgroups_basis.toRingFilterBasis
 #align ideal.ring_filter_basis Ideal.ringFilterBasis
+-/
 
+#print Ideal.adicTopology /-
 /-- The adic topology associated to an ideal `I`. This topology admits powers of `I` as a basis of
 neighborhoods of zero. It is compatible with the ring structure and is non-archimedean. -/
 def adicTopology (I : Ideal R) : TopologicalSpace R :=
   (adic_basis I).topology
 #align ideal.adic_topology Ideal.adicTopology
+-/
 
+#print Ideal.nonarchimedean /-
 theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
   I.adic_basis.toRing_subgroups_basis.nonarchimedean
 #align ideal.nonarchimedean Ideal.nonarchimedean
+-/
 
+/- warning: ideal.has_basis_nhds_zero_adic -> Ideal.hasBasis_nhds_zero_adic is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), Filter.HasBasis.{u1, 1} R Nat (nhds.{u1} R (Ideal.adicTopology.{u1} R _inst_1 I) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))))) (fun (n : Nat) => True) (fun (n : Nat) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) I n))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), Filter.HasBasis.{u1, 1} R Nat (nhds.{u1} R (Ideal.adicTopology.{u1} R _inst_1 I) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (fun (n : Nat) => True) (fun (n : Nat) => SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) I n))
+Case conversion may be inaccurate. Consider using '#align ideal.has_basis_nhds_zero_adic Ideal.hasBasis_nhds_zero_adicₓ'. -/
 /-- For the `I`-adic topology, the neighborhoods of zero has basis given by the powers of `I`. -/
 theorem hasBasis_nhds_zero_adic (I : Ideal R) :
     HasBasis (@nhds R I.adicTopology (0 : R)) (fun n : ℕ => True) fun n =>
@@ -104,6 +118,12 @@ theorem hasBasis_nhds_zero_adic (I : Ideal R) :
       exact ⟨(I ^ i : Ideal R), ⟨i, by simp⟩, h⟩⟩
 #align ideal.has_basis_nhds_zero_adic Ideal.hasBasis_nhds_zero_adic
 
+/- warning: ideal.has_basis_nhds_adic -> Ideal.hasBasis_nhds_adic is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (x : R), Filter.HasBasis.{u1, 1} R Nat (nhds.{u1} R (Ideal.adicTopology.{u1} R _inst_1 I) x) (fun (n : Nat) => True) (fun (n : Nat) => Set.image.{u1, u1} R R (fun (y : R) => HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toHasAdd.{u1} R (Ring.toDistrib.{u1} R (CommRing.toRing.{u1} R _inst_1)))) x y) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) I n)))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (x : R), Filter.HasBasis.{u1, 1} R Nat (nhds.{u1} R (Ideal.adicTopology.{u1} R _inst_1 I) x) (fun (n : Nat) => True) (fun (n : Nat) => Set.image.{u1, u1} R R (fun (y : R) => HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) x y) (SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) I n)))
+Case conversion may be inaccurate. Consider using '#align ideal.has_basis_nhds_adic Ideal.hasBasis_nhds_adicₓ'. -/
 theorem hasBasis_nhds_adic (I : Ideal R) (x : R) :
     HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n =>
       (fun y => x + y) '' (I ^ n : Ideal R) :=
@@ -115,6 +135,12 @@ theorem hasBasis_nhds_adic (I : Ideal R) (x : R) :
 
 variable (I : Ideal R) (M : Type _) [AddCommGroup M] [Module R M]
 
+/- warning: ideal.adic_module_basis -> Ideal.adic_module_basis is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (M : Type.{u2}) [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)], RingFilterBasis.SubmodulesBasis.{0, u1, u2} Nat R _inst_1 M _inst_2 _inst_3 (Ideal.ringFilterBasis.{u1} R _inst_1 I) (fun (n : Nat) => SMul.smul.{u1, u2} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (Submodule.hasSmul'.{u1, u2} R M (CommRing.toCommSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) I n) (Top.top.{u2} (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (Submodule.hasTop.{u1, u2} R M (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)))
+but is expected to have type
+  forall {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] (I : Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (M : Type.{u1}) [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)], RingFilterBasis.SubmodulesBasis.{0, u2, u1} Nat R _inst_1 M _inst_2 _inst_3 (Ideal.ringFilterBasis.{u2} R _inst_1 I) (fun (n : Nat) => HSMul.hSMul.{u2, u1, u1} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) (Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) (instHSMul.{u2, u1} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) (Submodule.hasSmul'.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3)) (HPow.hPow.{u2, 0, u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) Nat (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (instHPow.{u2, 0} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) Nat (Monoid.Pow.{u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (MonoidWithZero.toMonoid.{u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (Semiring.toMonoidWithZero.{u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (IdemSemiring.toSemiring.{u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1))) (Submodule.idemSemiring.{u2, u2} R (CommRing.toCommSemiring.{u2} R _inst_1) R (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (Algebra.id.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))))) I n) (Top.top.{u1} (Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3) (Submodule.instTopSubmodule.{u2, u1} R M (Ring.toSemiring.{u2} R (CommRing.toRing.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3)))
+Case conversion may be inaccurate. Consider using '#align ideal.adic_module_basis Ideal.adic_module_basisₓ'. -/
 theorem adic_module_basis :
     I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
@@ -129,13 +155,21 @@ theorem adic_module_basis :
         exact smul_mem_smul a_in mem_top⟩ }
 #align ideal.adic_module_basis Ideal.adic_module_basis
 
+#print Ideal.adicModuleTopology /-
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/
 def adicModuleTopology : TopologicalSpace M :=
   @ModuleFilterBasis.topology R M _ I.adic_basis.topology _ _
     (I.RingFilterBasis.ModuleFilterBasis (I.adic_module_basis M))
 #align ideal.adic_module_topology Ideal.adicModuleTopology
+-/
 
+/- warning: ideal.open_add_subgroup -> Ideal.openAddSubgroup is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), Nat -> (OpenAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Ideal.adicTopology.{u1} R _inst_1 I))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), Nat -> (OpenAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.adicTopology.{u1} R _inst_1 I))
+Case conversion may be inaccurate. Consider using '#align ideal.open_add_subgroup Ideal.openAddSubgroupₓ'. -/
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology
 on a `R`-module `M`, seen as open additive subgroups of `M`. -/
 def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
@@ -150,12 +184,20 @@ end Ideal
 
 section IsAdic
 
+#print IsAdic /-
 /-- Given a topology on a ring `R` and an ideal `J`, `is_adic J` means the topology is the
 `J`-adic one. -/
 def IsAdic [H : TopologicalSpace R] (J : Ideal R) : Prop :=
   H = J.adicTopology
 #align is_adic IsAdic
+-/
 
+/- warning: is_adic_iff -> isAdic_iff is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [top : TopologicalSpace.{u1} R] [_inst_2 : TopologicalRing.{u1} R top (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))] {J : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))}, Iff (IsAdic.{u1} R _inst_1 top J) (And (forall (n : Nat), IsOpen.{u1} R top ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) J n))) (forall (s : Set.{u1} R), (Membership.Mem.{u1, u1} (Set.{u1} R) (Filter.{u1} R) (Filter.hasMem.{u1} R) s (nhds.{u1} R top (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))))))) -> (Exists.{1} Nat (fun (n : Nat) => HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (HasLiftT.mk.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (CoeTCₓ.coe.{succ u1, succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Set.{u1} R) (SetLike.Set.hasCoeT.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) J n)) s))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [top : TopologicalSpace.{u1} R] [_inst_2 : TopologicalRing.{u1} R top (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1)))] {J : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))}, Iff (IsAdic.{u1} R _inst_1 top J) (And (forall (n : Nat), IsOpen.{u1} R top (SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) J n))) (forall (s : Set.{u1} R), (Membership.mem.{u1, u1} (Set.{u1} R) (Filter.{u1} R) (instMembershipSetFilter.{u1} R) s (nhds.{u1} R top (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))) -> (Exists.{1} Nat (fun (n : Nat) => HasSubset.Subset.{u1} (Set.{u1} R) (Set.instHasSubsetSet.{u1} R) (SetLike.coe.{u1, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (instHPow.{u1, 0} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.idemSemiring.{u1, u1} R (CommRing.toCommSemiring.{u1} R _inst_1) R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) J n)) s))))
+Case conversion may be inaccurate. Consider using '#align is_adic_iff isAdic_iffₓ'. -/
 /-- A topological ring is `J`-adic if and only if it admits the powers of `J` as a basis of
 open neighborhoods of zero. -/
 theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} :
@@ -190,6 +232,7 @@ theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} 
 
 variable [TopologicalSpace R] [TopologicalRing R]
 
+#print is_ideal_adic_pow /-
 theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : IsAdic (J ^ n) :=
   by
   rw [isAdic_iff] at h⊢
@@ -208,7 +251,9 @@ theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : 
     apply Ideal.pow_le_pow
     apply Nat.le_add_left
 #align is_ideal_adic_pow is_ideal_adic_pow
+-/
 
+#print is_bot_adic_iff /-
 theorem is_bot_adic_iff {A : Type _} [CommRing A] [TopologicalSpace A] [TopologicalRing A] :
     IsAdic (⊥ : Ideal A) ↔ DiscreteTopology A :=
   by
@@ -224,13 +269,16 @@ theorem is_bot_adic_iff {A : Type _} [CommRing A] [TopologicalSpace A] [Topologi
       use 1
       simp [mem_of_mem_nhds U_nhds]
 #align is_bot_adic_iff is_bot_adic_iff
+-/
 
 end IsAdic
 
+#print WithIdeal /-
 /-- The ring `R` is equipped with a preferred ideal. -/
 class WithIdeal (R : Type _) [CommRing R] where
   i : Ideal R
 #align with_ideal WithIdeal
+-/
 
 namespace WithIdeal
 
@@ -248,11 +296,13 @@ instance (priority := 100) : UniformSpace R :=
 instance (priority := 100) : UniformAddGroup R :=
   comm_topologicalAddGroup_is_uniform
 
+#print WithIdeal.topologicalSpaceModule /-
 /-- The adic topology on a `R` module coming from the ideal `with_ideal.I`.
 This cannot be an instance because `R` cannot be inferred from `M`. -/
 def topologicalSpaceModule (M : Type _) [AddCommGroup M] [Module R M] : TopologicalSpace M :=
   (i : Ideal R).adicModuleTopology M
 #align with_ideal.topological_space_module WithIdeal.topologicalSpaceModule
+-/
 
 /-
 The next examples are kept to make sure potential future refactors won't break the instance
