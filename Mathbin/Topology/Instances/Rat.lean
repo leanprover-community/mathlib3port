@@ -109,7 +109,7 @@ end Rat
 lean 3 declaration is
   forall (x : Nat) (y : Nat), Eq.{1} Real (Dist.dist.{0} Rat (PseudoMetricSpace.toHasDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) y)) (Dist.dist.{0} Nat Nat.hasDist x y)
 but is expected to have type
-  forall (x : Nat) (y : Nat), Eq.{1} Real (Dist.dist.{0} Rat (PseudoMetricSpace.toDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) x) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))) y)) (Dist.dist.{0} Nat Nat.instDistNat x y)
+  forall (x : Nat) (y : Nat), Eq.{1} Real (Dist.dist.{0} Rat (PseudoMetricSpace.toDist.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) x) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) y)) (Dist.dist.{0} Nat Nat.instDistNat x y)
 Case conversion may be inaccurate. Consider using '#align nat.dist_cast_rat Nat.dist_cast_ratₓ'. -/
 @[norm_cast, simp]
 theorem Nat.dist_cast_rat (x y : ℕ) : dist (x : ℚ) y = dist x y := by
@@ -120,7 +120,7 @@ theorem Nat.dist_cast_rat (x y : ℕ) : dist (x : ℚ) y = dist x y := by
 lean 3 declaration is
   UniformEmbedding.{0, 0} Nat Rat Nat.uniformSpace (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))))
 but is expected to have type
-  UniformEmbedding.{0, 0} Nat Rat instUniformSpaceNat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))))
+  UniformEmbedding.{0, 0} Nat Rat instUniformSpaceNat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring))
 Case conversion may be inaccurate. Consider using '#align nat.uniform_embedding_coe_rat Nat.uniformEmbedding_coe_ratₓ'. -/
 theorem Nat.uniformEmbedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
   uniformEmbedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
@@ -130,7 +130,7 @@ theorem Nat.uniformEmbedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
 lean 3 declaration is
   ClosedEmbedding.{0, 0} Nat Rat Nat.topologicalSpace (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))))
 but is expected to have type
-  ClosedEmbedding.{0, 0} Nat Rat instTopologicalSpaceNat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing))))
+  ClosedEmbedding.{0, 0} Nat Rat instTopologicalSpaceNat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring))
 Case conversion may be inaccurate. Consider using '#align nat.closed_embedding_coe_rat Nat.closedEmbedding_coe_ratₓ'. -/
 theorem Nat.closedEmbedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
   closedEmbedding_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist

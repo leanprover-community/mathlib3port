@@ -712,7 +712,7 @@ variable [Ring α] {a b : α} {n : ℕ}
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], Even.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1)))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) (Neg.neg.{u1} α (Ring.toNeg.{u1} α _inst_1) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) (Neg.neg.{u1} α (Ring.toNeg.{u1} α _inst_1) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (Semiring.toNatCast.{u1} α (Ring.toSemiring.{u1} α _inst_1)) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))
 Case conversion may be inaccurate. Consider using '#align even_neg_two even_neg_twoₓ'. -/
 @[simp]
 theorem even_neg_two : Even (-2 : α) := by simp only [even_neg, even_two]
@@ -747,7 +747,7 @@ theorem odd_neg : Odd (-a) ↔ Odd a :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α _inst_1))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) (Neg.neg.{u1} α (Ring.toNeg.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))
+  forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α], Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) (Neg.neg.{u1} α (Ring.toNeg.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (Ring.toSemiring.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align odd_neg_one odd_neg_oneₓ'. -/
 @[simp]
 theorem odd_neg_one : Odd (-1 : α) := by simp

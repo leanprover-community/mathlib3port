@@ -1024,7 +1024,7 @@ theorem coe_int_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d :=
 lean 3 declaration is
   forall (r : Rat), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) (Rat.num r)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) (Rat.den r))) r
 but is expected to have type
-  forall (r : Rat), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat (Rat.num r)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) (Rat.den r))) r
+  forall (r : Rat), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat (Rat.num r)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Rat.den r))) r
 Case conversion may be inaccurate. Consider using '#align rat.num_div_denom Rat.num_div_denₓ'. -/
 @[simp]
 theorem num_div_den (r : ℚ) : (r.num / r.den : ℚ) = r := by
@@ -1056,7 +1056,7 @@ instance canLift : CanLift ℚ ℤ coe fun q => q.den = 1 :=
 lean 3 declaration is
   forall (n : Nat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
 but is expected to have type
-  forall (n : Nat), Eq.{1} Rat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) n) (Rat.divInt (Nat.cast.{0} Int instNatCastInt n) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+  forall (n : Nat), Eq.{1} Rat (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (Rat.divInt (Nat.cast.{0} Int instNatCastInt n) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align rat.coe_nat_eq_mk Rat.coe_nat_eq_divIntₓ'. -/
 theorem coe_nat_eq_divInt (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_ofNat, coe_int_eq_mk]
 #align rat.coe_nat_eq_mk Rat.coe_nat_eq_divInt
@@ -1065,7 +1065,7 @@ theorem coe_nat_eq_divInt (n : ℕ) : ↑n = n /. 1 := by rw [← Int.cast_ofNat
 lean 3 declaration is
   forall (n : Nat), Eq.{1} Int (Rat.num ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
 but is expected to have type
-  forall (n : Nat), Eq.{1} Int (Rat.num (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) n)) (Nat.cast.{0} Int instNatCastInt n)
+  forall (n : Nat), Eq.{1} Int (Rat.num (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n)) (Nat.cast.{0} Int instNatCastInt n)
 Case conversion may be inaccurate. Consider using '#align rat.coe_nat_num Rat.coe_nat_numₓ'. -/
 @[simp, norm_cast]
 theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_ofNat, coe_int_num]
@@ -1075,7 +1075,7 @@ theorem coe_nat_num (n : ℕ) : (n : ℚ).num = n := by rw [← Int.cast_ofNat, 
 lean 3 declaration is
   forall (n : Nat), Eq.{1} Nat (Rat.den ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))
 but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Rat.den (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) n)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
+  forall (n : Nat), Eq.{1} Nat (Rat.den (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
 Case conversion may be inaccurate. Consider using '#align rat.coe_nat_denom Rat.coe_nat_denₓ'. -/
 @[simp, norm_cast]
 theorem coe_nat_den (n : ℕ) : (n : ℚ).den = 1 := by rw [← Int.cast_ofNat, coe_int_denom]

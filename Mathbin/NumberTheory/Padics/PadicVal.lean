@@ -266,7 +266,7 @@ theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
 lean 3 declaration is
   forall {p : Nat} {n : Nat}, Eq.{1} Int (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (padicValNat p n))
 but is expected to have type
-  forall {p : Nat} {n : Nat}, Eq.{1} Int (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n)) (Nat.cast.{0} Int instNatCastInt (padicValNat p n))
+  forall {p : Nat} {n : Nat}, Eq.{1} Int (padicValRat p (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n)) (Nat.cast.{0} Int instNatCastInt (padicValNat p n))
 Case conversion may be inaccurate. Consider using '#align padic_val_rat.of_nat padicValRat.of_natₓ'. -/
 /-- The `p`-adic value of an integer `z ≠ 0` is its `p`-adic value as a rational. -/
 @[simp]
@@ -277,7 +277,7 @@ theorem of_nat {n : ℕ} : padicValRat p n = padicValNat p n := by simp [padicVa
 lean 3 declaration is
   forall {p : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) p) -> (Eq.{1} Int (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) p)) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
 but is expected to have type
-  forall {p : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) p) -> (Eq.{1} Int (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) p)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+  forall {p : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) p) -> (Eq.{1} Int (padicValRat p (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align padic_val_rat.self padicValRat.selfₓ'. -/
 /-- If `p ≠ 0` and `p ≠ 1`, then `padic_val_rat p p` is `1`. -/
 theorem self (hp : 1 < p) : padicValRat p p = 1 := by simp [hp]
@@ -293,7 +293,7 @@ variable {p : ℕ}
 lean 3 declaration is
   forall {p : Nat} (n : Nat), LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) n))
 but is expected to have type
-  forall {p : Nat} (n : Nat), LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n))
+  forall {p : Nat} (n : Nat), LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (padicValRat p (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n))
 Case conversion may be inaccurate. Consider using '#align zero_le_padic_val_rat_of_nat zero_le_padicValRat_of_natₓ'. -/
 theorem zero_le_padicValRat_of_nat (n : ℕ) : 0 ≤ padicValRat p n := by simp
 #align zero_le_padic_val_rat_of_nat zero_le_padicValRat_of_nat
@@ -302,7 +302,7 @@ theorem zero_le_padicValRat_of_nat (n : ℕ) : 0 ≤ padicValRat p n := by simp
 lean 3 declaration is
   forall {p : Nat} (n : Nat), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (padicValNat p n)) (padicValRat p ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing))))))))) n))
 but is expected to have type
-  forall {p : Nat} (n : Nat), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (padicValNat p n)) (padicValRat p (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n))
+  forall {p : Nat} (n : Nat), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (padicValNat p n)) (padicValRat p (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n))
 Case conversion may be inaccurate. Consider using '#align padic_val_rat_of_nat padicValRat_of_natₓ'. -/
 /-- `padic_val_rat` coincides with `padic_val_nat`. -/
 @[norm_cast]
