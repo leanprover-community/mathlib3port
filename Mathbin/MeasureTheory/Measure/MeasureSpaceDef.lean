@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit 146a2eed7ad5887ade571e073d0805d2ac618043
+! leanprover-community/mathlib commit b5ad141426bb005414324f89719c77c0aa3ec612
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.Filter.CountableInter
 
 /-!
 # Measure spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines measure spaces, the almost-everywhere filter and ae_measurable functions.
 See `measure_theory.measure_space` for their properties and for extended documentation.

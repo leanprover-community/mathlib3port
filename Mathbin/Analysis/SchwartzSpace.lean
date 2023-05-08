@@ -451,7 +451,7 @@ variable (𝕜)
 `𝓢(E, F)`. -/
 @[protected]
 def seminorm (k n : ℕ) : Seminorm 𝕜 𝓢(E, F) :=
-  Seminorm.ofSmulLe (seminormAux k n) (seminormAux_zero k n) (seminormAux_add_le k n)
+  Seminorm.ofSMulLe (seminormAux k n) (seminormAux_zero k n) (seminormAux_add_le k n)
     (seminormAux_smul_le k n)
 #align schwartz_map.seminorm SchwartzMap.seminorm
 

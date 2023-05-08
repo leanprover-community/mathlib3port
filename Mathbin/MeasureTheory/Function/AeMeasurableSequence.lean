@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_measurable_sequence
-! leanprover-community/mathlib commit d003c55042c3cd08aefd1ae9a42ef89441cdaaf3
+! leanprover-community/mathlib commit b5ad141426bb005414324f89719c77c0aa3ec612
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.MeasurableSpace
 
 /-!
 # Sequence of measurable functions associated to a sequence of a.e.-measurable functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define here tools to prove statements about limits (infi, supr...) of sequences of
 `ae_measurable` functions.

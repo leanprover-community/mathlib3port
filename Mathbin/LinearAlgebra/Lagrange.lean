@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Wrenna Robson
 
 ! This file was ported from Lean 3 source module linear_algebra.lagrange
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit b5ad141426bb005414324f89719c77c0aa3ec612
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Polynomial.Basic
 
 /-!
 # Lagrange interpolation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main definitions
 * In everything that follows, `s : finset ι` is a finite set of indexes, with `v : ι → F` an

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.continuants_recurrence
-! leanprover-community/mathlib commit 5f11361a98ae4acd77f5c1837686f6f0102cdc25
+! leanprover-community/mathlib commit b5ad141426bb005414324f89719c77c0aa3ec612
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.ContinuedFractions.Translations
 
 /-!
 # Recurrence Lemmas for the `continuants` Function of Continued Fractions.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Summary
 

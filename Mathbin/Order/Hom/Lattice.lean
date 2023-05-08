@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.lattice
-! leanprover-community/mathlib commit 9d684a893c52e1d6692a504a118bfccbae04feeb
+! leanprover-community/mathlib commit 7581030920af3dcb241d1df0e36f6ec8289dd6be
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2493,4 +2493,256 @@ theorem symm_dual_comp (g : BoundedLatticeHom βᵒᵈ γᵒᵈ) (f : BoundedLat
 #align bounded_lattice_hom.symm_dual_comp BoundedLatticeHom.symm_dual_comp
 
 end BoundedLatticeHom
+
+/-! ### `with_top`, `with_bot` -/
+
+
+namespace SupHom
+
+variable [SemilatticeSup α] [SemilatticeSup β] [SemilatticeSup γ]
+
+/-- Adjoins a `⊤` to the domain and codomain of a `sup_hom`. -/
+@[simps]
+protected def withTop (f : SupHom α β) : SupHom (WithTop α) (WithTop β)
+    where
+  toFun := Option.map f
+  map_sup' a b :=
+    match a, b with
+    | ⊤, ⊤ => rfl
+    | ⊤, (b : α) => rfl
+    | (a : α), ⊤ => rfl
+    | (a : α), (b : α) => congr_arg _ (f.map_sup' _ _)
+#align sup_hom.with_top SupHom.withTop
+
+@[simp]
+theorem withTop_id : (SupHom.id α).WithTop = SupHom.id _ :=
+  FunLike.coe_injective Option.map_id
+#align sup_hom.with_top_id SupHom.withTop_id
+
+@[simp]
+theorem withTop_comp (f : SupHom β γ) (g : SupHom α β) :
+    (f.comp g).WithTop = f.WithTop.comp g.WithTop :=
+  FunLike.coe_injective (Option.map_comp_map _ _).symm
+#align sup_hom.with_top_comp SupHom.withTop_comp
+
+/-- Adjoins a `⊥` to the domain and codomain of a `sup_hom`. -/
+@[simps]
+protected def withBot (f : SupHom α β) : SupBotHom (WithBot α) (WithBot β)
+    where
+  toFun := Option.map f
+  map_sup' a b :=
+    match a, b with
+    | ⊥, ⊥ => rfl
+    | ⊥, (b : α) => rfl
+    | (a : α), ⊥ => rfl
+    | (a : α), (b : α) => congr_arg _ (f.map_sup' _ _)
+  map_bot' := rfl
+#align sup_hom.with_bot SupHom.withBot
+
+@[simp]
+theorem withBot_id : (SupHom.id α).WithBot = SupBotHom.id _ :=
+  FunLike.coe_injective Option.map_id
+#align sup_hom.with_bot_id SupHom.withBot_id
+
+@[simp]
+theorem withBot_comp (f : SupHom β γ) (g : SupHom α β) :
+    (f.comp g).WithBot = f.WithBot.comp g.WithBot :=
+  FunLike.coe_injective (Option.map_comp_map _ _).symm
+#align sup_hom.with_bot_comp SupHom.withBot_comp
+
+/-- Adjoins a `⊤` to the codomain of a `sup_hom`. -/
+@[simps]
+def withTop' [OrderTop β] (f : SupHom α β) : SupHom (WithTop α) β
+    where
+  toFun a := a.elim ⊤ f
+  map_sup' a b :=
+    match a, b with
+    | ⊤, ⊤ => top_sup_eq.symm
+    | ⊤, (b : α) => top_sup_eq.symm
+    | (a : α), ⊤ => sup_top_eq.symm
+    | (a : α), (b : α) => f.map_sup' _ _
+#align sup_hom.with_top' SupHom.withTop'
+
+/-- Adjoins a `⊥` to the domain of a `sup_hom`. -/
+@[simps]
+def withBot' [OrderBot β] (f : SupHom α β) : SupBotHom (WithBot α) β
+    where
+  toFun a := a.elim ⊥ f
+  map_sup' a b :=
+    match a, b with
+    | ⊥, ⊥ => bot_sup_eq.symm
+    | ⊥, (b : α) => bot_sup_eq.symm
+    | (a : α), ⊥ => sup_bot_eq.symm
+    | (a : α), (b : α) => f.map_sup' _ _
+  map_bot' := rfl
+#align sup_hom.with_bot' SupHom.withBot'
+
+end SupHom
+
+namespace InfHom
+
+variable [SemilatticeInf α] [SemilatticeInf β] [SemilatticeInf γ]
+
+/-- Adjoins a `⊤` to the domain and codomain of an `inf_hom`. -/
+@[simps]
+protected def withTop (f : InfHom α β) : InfTopHom (WithTop α) (WithTop β)
+    where
+  toFun := Option.map f
+  map_inf' a b :=
+    match a, b with
+    | ⊤, ⊤ => rfl
+    | ⊤, (b : α) => rfl
+    | (a : α), ⊤ => rfl
+    | (a : α), (b : α) => congr_arg _ (f.map_inf' _ _)
+  map_top' := rfl
+#align inf_hom.with_top InfHom.withTop
+
+@[simp]
+theorem withTop_id : (InfHom.id α).WithTop = InfTopHom.id _ :=
+  FunLike.coe_injective Option.map_id
+#align inf_hom.with_top_id InfHom.withTop_id
+
+@[simp]
+theorem withTop_comp (f : InfHom β γ) (g : InfHom α β) :
+    (f.comp g).WithTop = f.WithTop.comp g.WithTop :=
+  FunLike.coe_injective (Option.map_comp_map _ _).symm
+#align inf_hom.with_top_comp InfHom.withTop_comp
+
+/-- Adjoins a `⊥ to the domain and codomain of an `inf_hom`. -/
+@[simps]
+protected def withBot (f : InfHom α β) : InfHom (WithBot α) (WithBot β)
+    where
+  toFun := Option.map f
+  map_inf' a b :=
+    match a, b with
+    | ⊥, ⊥ => rfl
+    | ⊥, (b : α) => rfl
+    | (a : α), ⊥ => rfl
+    | (a : α), (b : α) => congr_arg _ (f.map_inf' _ _)
+#align inf_hom.with_bot InfHom.withBot
+
+@[simp]
+theorem withBot_id : (InfHom.id α).WithBot = InfHom.id _ :=
+  FunLike.coe_injective Option.map_id
+#align inf_hom.with_bot_id InfHom.withBot_id
+
+@[simp]
+theorem withBot_comp (f : InfHom β γ) (g : InfHom α β) :
+    (f.comp g).WithBot = f.WithBot.comp g.WithBot :=
+  FunLike.coe_injective (Option.map_comp_map _ _).symm
+#align inf_hom.with_bot_comp InfHom.withBot_comp
+
+/-- Adjoins a `⊤` to the codomain of an `inf_hom`. -/
+@[simps]
+def withTop' [OrderTop β] (f : InfHom α β) : InfTopHom (WithTop α) β
+    where
+  toFun a := a.elim ⊤ f
+  map_inf' a b :=
+    match a, b with
+    | ⊤, ⊤ => top_inf_eq.symm
+    | ⊤, (b : α) => top_inf_eq.symm
+    | (a : α), ⊤ => inf_top_eq.symm
+    | (a : α), (b : α) => f.map_inf' _ _
+  map_top' := rfl
+#align inf_hom.with_top' InfHom.withTop'
+
+/-- Adjoins a `⊥` to the codomain of an `inf_hom`. -/
+@[simps]
+def withBot' [OrderBot β] (f : InfHom α β) : InfHom (WithBot α) β
+    where
+  toFun a := a.elim ⊥ f
+  map_inf' a b :=
+    match a, b with
+    | ⊥, ⊥ => bot_inf_eq.symm
+    | ⊥, (b : α) => bot_inf_eq.symm
+    | (a : α), ⊥ => inf_bot_eq.symm
+    | (a : α), (b : α) => f.map_inf' _ _
+#align inf_hom.with_bot' InfHom.withBot'
+
+end InfHom
+
+namespace LatticeHom
+
+variable [Lattice α] [Lattice β] [Lattice γ]
+
+/-- Adjoins a `⊤` to the domain and codomain of a `lattice_hom`. -/
+@[simps]
+protected def withTop (f : LatticeHom α β) : LatticeHom (WithTop α) (WithTop β) :=
+  { f.toInfHom.WithTop with toSupHom := f.toSupHom.WithTop }
+#align lattice_hom.with_top LatticeHom.withTop
+
+@[simp]
+theorem withTop_id : (LatticeHom.id α).WithTop = LatticeHom.id _ :=
+  FunLike.coe_injective Option.map_id
+#align lattice_hom.with_top_id LatticeHom.withTop_id
+
+@[simp]
+theorem withTop_comp (f : LatticeHom β γ) (g : LatticeHom α β) :
+    (f.comp g).WithTop = f.WithTop.comp g.WithTop :=
+  FunLike.coe_injective (Option.map_comp_map _ _).symm
+#align lattice_hom.with_top_comp LatticeHom.withTop_comp
+
+/-- Adjoins a `⊥` to the domain and codomain of a `lattice_hom`. -/
+@[simps]
+protected def withBot (f : LatticeHom α β) : LatticeHom (WithBot α) (WithBot β) :=
+  { f.toInfHom.WithBot with toSupHom := f.toSupHom.WithBot }
+#align lattice_hom.with_bot LatticeHom.withBot
+
+@[simp]
+theorem withBot_id : (LatticeHom.id α).WithBot = LatticeHom.id _ :=
+  FunLike.coe_injective Option.map_id
+#align lattice_hom.with_bot_id LatticeHom.withBot_id
+
+@[simp]
+theorem withBot_comp (f : LatticeHom β γ) (g : LatticeHom α β) :
+    (f.comp g).WithBot = f.WithBot.comp g.WithBot :=
+  FunLike.coe_injective (Option.map_comp_map _ _).symm
+#align lattice_hom.with_bot_comp LatticeHom.withBot_comp
+
+/-- Adjoins a `⊤` and `⊥` to the domain and codomain of a `lattice_hom`. -/
+@[simps]
+def withTopWithBot (f : LatticeHom α β) :
+    BoundedLatticeHom (WithTop <| WithBot α) (WithTop <| WithBot β) :=
+  ⟨f.WithBot.WithTop, rfl, rfl⟩
+#align lattice_hom.with_top_with_bot LatticeHom.withTopWithBot
+
+@[simp]
+theorem withTopWithBot_id : (LatticeHom.id α).withTopWithBot = BoundedLatticeHom.id _ :=
+  FunLike.coe_injective <|
+    by
+    refine' (congr_arg Option.map _).trans Option.map_id
+    rw [with_bot_id]
+    rfl
+#align lattice_hom.with_top_with_bot_id LatticeHom.withTopWithBot_id
+
+@[simp]
+theorem withTopWithBot_comp (f : LatticeHom β γ) (g : LatticeHom α β) :
+    (f.comp g).withTopWithBot = f.withTopWithBot.comp g.withTopWithBot :=
+  FunLike.coe_injective <|
+    (congr_arg Option.map <| (Option.map_comp_map _ _).symm).trans (Option.map_comp_map _ _).symm
+#align lattice_hom.with_top_with_bot_comp LatticeHom.withTopWithBot_comp
+
+/-- Adjoins a `⊥` to the codomain of a `lattice_hom`. -/
+@[simps]
+def withTop' [OrderTop β] (f : LatticeHom α β) : LatticeHom (WithTop α) β :=
+  { f.toSupHom.withTop', f.toInfHom.withTop' with }
+#align lattice_hom.with_top' LatticeHom.withTop'
+
+/-- Adjoins a `⊥` to the domain and codomain of a `lattice_hom`. -/
+@[simps]
+def withBot' [OrderBot β] (f : LatticeHom α β) : LatticeHom (WithBot α) β :=
+  { f.toSupHom.withBot', f.toInfHom.withBot' with }
+#align lattice_hom.with_bot' LatticeHom.withBot'
+
+/-- Adjoins a `⊤` and `⊥` to the codomain of a `lattice_hom`. -/
+@[simps]
+def withTopWithBot' [BoundedOrder β] (f : LatticeHom α β) :
+    BoundedLatticeHom (WithTop <| WithBot α) β
+    where
+  toLatticeHom := f.withBot'.withTop'
+  map_top' := rfl
+  map_bot' := rfl
+#align lattice_hom.with_top_with_bot' LatticeHom.withTopWithBot'
+
+end LatticeHom
 

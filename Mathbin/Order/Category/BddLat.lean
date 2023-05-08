@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.BddLat
-! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
+! leanprover-community/mathlib commit 7581030920af3dcb241d1df0e36f6ec8289dd6be
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.CategoryTheory.Adjunction.Opposites
 import Mathbin.Order.Category.BddOrd
 import Mathbin.Order.Category.Lat
 import Mathbin.Order.Category.Semilat
@@ -182,4 +183,47 @@ theorem bddLat_dual_comp_forget_to_semilatInf :
     BddLat.dual ⋙ forget₂ BddLat SemilatInf = forget₂ BddLat SemilatSup ⋙ SemilatSup.dual :=
   rfl
 #align BddLat_dual_comp_forget_to_SemilatInf bddLat_dual_comp_forget_to_semilatInf
+
+/-- The functor that adds a bottom and a top element to a lattice. This is the free functor. -/
+def latToBddLat : LatCat.{u} ⥤ BddLat
+    where
+  obj X := BddLat.of <| WithTop <| WithBot X
+  map X Y := LatticeHom.withTopWithBot
+  map_id' X := LatticeHom.withTopWithBot_id
+  map_comp' X Y Z _ _ := LatticeHom.withTopWithBot_comp _ _
+#align Lat_to_BddLat latToBddLat
+
+/-- `Lat_to_BddLat` is left adjoint to the forgetful functor, meaning it is the free
+functor from `Lat` to `BddLat`. -/
+def latToBddLatForgetAdjunction : latToBddLat.{u} ⊣ forget₂ BddLat LatCat :=
+  Adjunction.mkOfHomEquiv
+    { homEquiv := fun X Y =>
+        { toFun := fun f =>
+            { toFun := f ∘ some ∘ some
+              map_sup' := fun a b => (congr_arg f <| by rfl).trans (f.map_sup' _ _)
+              map_inf' := fun a b => (congr_arg f <| by rfl).trans (f.map_inf' _ _) }
+          invFun := LatticeHom.withTopWithBot'
+          left_inv := fun f =>
+            BoundedLatticeHom.ext fun a =>
+              match a with
+              | none => f.map_top'.symm
+              | some none => f.map_bot'.symm
+              | some (some a) => rfl
+          right_inv := fun f => LatticeHom.ext fun a => rfl }
+      homEquiv_naturality_left_symm := fun X Y Z f g =>
+        BoundedLatticeHom.ext fun a =>
+          match a with
+          | none => rfl
+          | some none => rfl
+          | some (some a) => rfl
+      homEquiv_naturality_right := fun X Y Z f g => LatticeHom.ext fun a => rfl }
+#align Lat_to_BddLat_forget_adjunction latToBddLatForgetAdjunction
+
+/-- `Lat_to_BddLat` and `order_dual` commute. -/
+@[simps]
+def latToBddLatCompDualIsoDualCompLatToBddLat :
+    latToBddLat.{u} ⋙ BddLat.dual ≅ LatCat.dual ⋙ latToBddLat :=
+  Adjunction.leftAdjointUniq (latToBddLatForgetAdjunction.comp BddLat.dualEquiv.toAdjunction)
+    (LatCat.dualEquiv.toAdjunction.comp latToBddLatForgetAdjunction)
+#align Lat_to_BddLat_comp_dual_iso_dual_comp_Lat_to_BddLat latToBddLatCompDualIsoDualCompLatToBddLat
 

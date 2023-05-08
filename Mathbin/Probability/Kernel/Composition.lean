@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit caf83ba4dfbf4e2f28e1ae6a0780cbafc3d19d6f
+! leanprover-community/mathlib commit 483dd86cfec4a1380d22b1f6acd4c3dc53f501ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Probability.Kernel.Basic
+import Mathbin.Probability.Kernel.MeasurableIntegral
 
 /-!
 # Product and composition of kernels

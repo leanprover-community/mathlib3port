@@ -2443,6 +2443,8 @@ import Mathbin.Probability.Integration
 import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition
 import Mathbin.Probability.Kernel.Invariance
+import Mathbin.Probability.Kernel.MeasurableIntegral
+import Mathbin.Probability.Kernel.WithDensity
 import Mathbin.Probability.Martingale.Basic
 import Mathbin.Probability.Martingale.BorelCantelli
 import Mathbin.Probability.Martingale.Centering
