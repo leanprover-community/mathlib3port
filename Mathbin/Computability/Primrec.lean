@@ -56,7 +56,7 @@ warning: nat.elim_zero -> Nat.rec_zero is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C -> C), Eq.{u1} C (Nat.rec.{u1} C a f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) ((fun (t : Nat) => Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2994 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2994) a f t) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2991 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2991) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
 Case conversion may be inaccurate. Consider using '#align nat.elim_zero Nat.rec_zeroₓ'. -/
 @[simp]
 theorem rec_zero {C} (a f) : @Nat.rec C a f 0 = a :=
@@ -68,7 +68,7 @@ warning: nat.elim_succ -> Nat.rec_add_one is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C -> C) (n : Nat), Eq.{u1} C (Nat.rec.{u1} C a f (Nat.succ n)) (f n (Nat.rec.{u1} C a f n))
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) ((fun (t : Nat) => Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3047 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3047) a f t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n ((fun (t : Nat) => Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3070 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3070) a f t) n))
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3041 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3041) a f n))
 Case conversion may be inaccurate. Consider using '#align nat.elim_succ Nat.rec_add_oneₓ'. -/
 @[simp]
 theorem rec_add_one {C} (a f n) : @Nat.rec C a f (succ n) = f n (Nat.rec a f n) :=
@@ -91,7 +91,7 @@ warning: nat.cases_zero -> Nat.rec_zero is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C), Eq.{u1} C (Nat.casesOn.{u1} C a f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) ((fun (t : Nat) => Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2994 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2994) a f t) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2991 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2991) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
 Case conversion may be inaccurate. Consider using '#align nat.cases_zero Nat.rec_zeroₓ'. -/
 @[simp]
 theorem rec_zero {C} (a f) : @Nat.casesOn C a f 0 = a :=
@@ -103,7 +103,7 @@ warning: nat.cases_succ -> Nat.rec_add_one is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C) (n : Nat), Eq.{u1} C (Nat.casesOn.{u1} C a f (Nat.succ n)) (f n)
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) ((fun (t : Nat) => Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3047 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3047) a f t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n ((fun (t : Nat) => Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3070 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3070) a f t) n))
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3041 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3041) a f n))
 Case conversion may be inaccurate. Consider using '#align nat.cases_succ Nat.rec_add_oneₓ'. -/
 @[simp]
 theorem rec_add_one {C} (a f n) : @Nat.casesOn C a f (succ n) = f n :=
