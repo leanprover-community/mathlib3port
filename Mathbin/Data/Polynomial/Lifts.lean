@@ -384,7 +384,7 @@ def mapAlg (R : Type u) [CommSemiring R] (S : Type v) [Semiring S] [Algebra R S]
 #print Polynomial.mapAlg_eq_map /-
 /-- `map_alg` is the morphism induced by `R → S`. -/
 theorem mapAlg_eq_map (p : R[X]) : mapAlg R S p = map (algebraMap R S) p := by
-  simp only [map_alg, aeval_def, eval₂, map, algebra_map_apply, RingHom.coe_comp]
+  simp only [map_alg, aeval_def, eval₂, map, algebraMap_apply, RingHom.coe_comp]
 #align polynomial.map_alg_eq_map Polynomial.mapAlg_eq_map
 -/
 

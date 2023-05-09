@@ -62,7 +62,7 @@ def reesAlgebra : Subalgebra R R[X]
     exact Ideal.add_mem _ (hf i) (hg i)
   zero_mem' i := Ideal.zero_mem _
   algebraMap_mem' r i := by
-    rw [algebra_map_apply, coeff_C]
+    rw [algebraMap_apply, coeff_C]
     split_ifs
     · subst h
       simp

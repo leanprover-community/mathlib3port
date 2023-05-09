@@ -205,13 +205,13 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       (congr_arg (norm K) (eq_sub_of_add_eq _))
     _ = _ := _
     
-  · simp only [Algebra.smul_def, algebra_map_apply R K L, Algebra.norm_algebraMap, _root_.map_mul,
+  · simp only [Algebra.smul_def, algebraMap_apply R K L, Algebra.norm_algebraMap, _root_.map_mul,
       _root_.map_pow, finrank_K_L, power_basis.norm_gen_eq_coeff_zero_minpoly,
       minpoly.isIntegrallyClosed_eq_field_fractions' K hBint, coeff_map, ← hn]
     ring
   swap
   ·
-    simp_rw [← smul_sum, ← smul_sub, Algebra.smul_def p, algebra_map_apply R K L, _root_.map_mul,
+    simp_rw [← smul_sum, ← smul_sub, Algebra.smul_def p, algebraMap_apply R K L, _root_.map_mul,
       Algebra.norm_algebraMap, finrank_K_L, hr, ← hn]
   calc
     _ =
@@ -394,8 +394,8 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
         rw [h] at hk
         simpa using hk
     obtain ⟨r, hr⟩ := is_integral_iff.1 (is_integral_norm K hintsum)
-    rw [Algebra.smul_def, mul_assoc, ← mul_sub, _root_.map_mul, algebra_map_apply R K L, map_pow,
-      Algebra.norm_algebraMap, _root_.map_mul, algebra_map_apply R K L, Algebra.norm_algebraMap,
+    rw [Algebra.smul_def, mul_assoc, ← mul_sub, _root_.map_mul, algebraMap_apply R K L, map_pow,
+      Algebra.norm_algebraMap, _root_.map_mul, algebraMap_apply R K L, Algebra.norm_algebraMap,
       finrank B, ← hr, power_basis.norm_gen_eq_coeff_zero_minpoly,
       minpoly.isIntegrallyClosed_eq_field_fractions' K hBint, coeff_map,
       show (-1 : K) = algebraMap R K (-1) by simp, ← map_pow, ← map_pow, ← _root_.map_mul, ←

@@ -1124,7 +1124,7 @@ instance [Nontrivial Γ] [Nontrivial R] : Nontrivial (Subalgebra R (HahnSeries �
       intro x
       rw [ext_iff, Function.funext_iff, not_forall]
       refine' ⟨a, _⟩
-      rw [single_coeff_same, algebra_map_apply, C_apply, single_coeff_of_ne ha]
+      rw [single_coeff_same, algebraMap_apply, C_apply, single_coeff_of_ne ha]
       exact zero_ne_one⟩⟩
 
 section Domain
@@ -1315,7 +1315,7 @@ def toPowerSeriesAlg : HahnSeries ℕ A ≃ₐ[R] PowerSeries A :=
   { toPowerSeries with
     commutes' := fun r => by
       ext n
-      simp only [algebra_map_apply, PowerSeries.algebraMap_apply, [anonymous], C_apply,
+      simp only [algebraMap_apply, PowerSeries.algebraMap_apply, [anonymous], C_apply,
         coeff_to_power_series]
       cases n
       · simp only [PowerSeries.coeff_zero_eq_constantCoeff, single_coeff_same]

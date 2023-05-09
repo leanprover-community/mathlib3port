@@ -150,7 +150,7 @@ instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
       rw [Ne.def, SetLike.ext_iff, not_forall]
       refine' ⟨X, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top,
-        algebra_map_apply, not_forall]
+        algebraMap_apply, not_forall]
       intro x
       rw [ext_iff, not_forall]
       refine' ⟨1, _⟩
@@ -564,7 +564,7 @@ variable [CommSemiring S] [Algebra S R] [Algebra S A'] [Algebra S B']
 /-- Version of `aeval` for defining algebra homs out of `R[X]` over a smaller base ring
   than `R`. -/
 def aevalTower (f : R →ₐ[S] A') (x : A') : R[X] →ₐ[S] A' :=
-  { eval₂RingHom (↑f) x with commutes' := fun r => by simp [algebra_map_apply] }
+  { eval₂RingHom (↑f) x with commutes' := fun r => by simp [algebraMap_apply] }
 #align polynomial.aeval_tower Polynomial.aevalTower
 -/
 

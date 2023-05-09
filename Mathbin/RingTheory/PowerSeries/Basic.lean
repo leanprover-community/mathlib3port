@@ -628,7 +628,7 @@ instance [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries 
       intro x
       rw [ext_iff, not_forall]
       refine' ⟨Finsupp.single default 1, _⟩
-      simp [algebra_map_apply, coeff_C]⟩⟩
+      simp [algebraMap_apply, coeff_C]⟩⟩
 
 end Algebra
 
@@ -1140,7 +1140,7 @@ as an algebra homomorphism.
 -/
 def coeToMvPowerSeries.algHom : MvPolynomial σ R →ₐ[R] MvPowerSeries σ A :=
   { (MvPowerSeries.map σ (algebraMap R A)).comp coeToMvPowerSeries.ringHom with
-    commutes' := fun r => by simp [algebra_map_apply, MvPowerSeries.algebraMap_apply] }
+    commutes' := fun r => by simp [algebraMap_apply, MvPowerSeries.algebraMap_apply] }
 #align mv_polynomial.coe_to_mv_power_series.alg_hom MvPolynomial.coeToMvPowerSeries.algHom
 
 @[simp]
@@ -2573,7 +2573,7 @@ as an algebra homomorphism.
 -/
 def coeToPowerSeries.algHom : R[X] →ₐ[R] PowerSeries A :=
   { (PowerSeries.map (algebraMap R A)).comp coeToPowerSeries.ringHom with
-    commutes' := fun r => by simp [algebra_map_apply, PowerSeries.algebraMap_apply] }
+    commutes' := fun r => by simp [algebraMap_apply, PowerSeries.algebraMap_apply] }
 #align polynomial.coe_to_power_series.alg_hom Polynomial.coeToPowerSeries.algHom
 
 @[simp]

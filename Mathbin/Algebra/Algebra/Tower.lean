@@ -199,7 +199,7 @@ variable {R S A B}
 #print AlgHom.map_algebraMap /-
 @[simp]
 theorem AlgHom.map_algebraMap (f : A →ₐ[S] B) (r : R) : f (algebraMap R A r) = algebraMap R B r :=
-  by rw [algebra_map_apply R S A r, f.commutes, ← algebra_map_apply R S B]
+  by rw [algebraMap_apply R S A r, f.commutes, ← algebraMap_apply R S B]
 #align alg_hom.map_algebra_map AlgHom.map_algebraMap
 -/
 
@@ -264,9 +264,8 @@ namespace AlgHom
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrictScalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
   { (f : A →+* B) with
-    commutes' := fun r =>
-      by
-      rw [algebra_map_apply R S A, algebra_map_apply R S B]
+    commutes' := fun r => by
+      rw [algebraMap_apply R S A, algebraMap_apply R S B]
       exact f.commutes (algebraMap R S r) }
 #align alg_hom.restrict_scalars AlgHom.restrictScalars
 -/
@@ -310,9 +309,8 @@ namespace AlgEquiv
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrictScalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
   { (f : A ≃+* B) with
-    commutes' := fun r =>
-      by
-      rw [algebra_map_apply R S A, algebra_map_apply R S B]
+    commutes' := fun r => by
+      rw [algebraMap_apply R S A, algebraMap_apply R S B]
       exact f.commutes (algebraMap R S r) }
 #align alg_equiv.restrict_scalars AlgEquiv.restrictScalars
 -/

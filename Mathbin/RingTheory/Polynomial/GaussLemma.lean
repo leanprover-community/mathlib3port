@@ -173,7 +173,7 @@ theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0
   by
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ p
-  rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hc
+  rw [Subtype.coe_mk, Algebra.smul_def, algebraMap_apply] at hc
   apply isUnit_of_mul_isUnit_right
   rw [← hc, (integer_normalization R⁰ p).eq_C_content_mul_primPart, ← hu, ← RingHom.map_mul,
     is_unit_iff]
@@ -197,7 +197,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
       hp.irreducible_of_irreducible_map_of_injective (IsFractionRing.injective _ _)⟩
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ a
   obtain ⟨⟨d, d0⟩, hd⟩ := integer_normalization_map_to_map R⁰ b
-  rw [Algebra.smul_def, algebra_map_apply, Subtype.coe_mk] at hc hd
+  rw [Algebra.smul_def, algebraMap_apply, Subtype.coe_mk] at hc hd
   rw [mem_nonZeroDivisors_iff_ne_zero] at c0 d0
   have hcd0 : c * d ≠ 0 := mul_ne_zero c0 d0
   rw [Ne.def, ← C_eq_zero] at hcd0
@@ -238,7 +238,7 @@ theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.Is
   by
   rcases h_dvd with ⟨r, hr⟩
   obtain ⟨⟨s, s0⟩, hs⟩ := integer_normalization_map_to_map R⁰ r
-  rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hs
+  rw [Subtype.coe_mk, Algebra.smul_def, algebraMap_apply] at hs
   have h : p ∣ q * C s := by
     use integer_normalization R⁰ r
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)

@@ -112,7 +112,7 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
   { U with
     algebraMap_mem' := fun x => by
-      rw [algebra_map_apply R S A]
+      rw [algebraMap_apply R S A]
       exact U.algebra_map_mem _ }
 #align subalgebra.restrict_scalars Subalgebra.restrictScalars
 -/

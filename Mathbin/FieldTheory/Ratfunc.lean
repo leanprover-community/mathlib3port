@@ -914,8 +914,8 @@ by mapping both the numerator and denominator and quotienting them. -/
 def mapAlgHom (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) : Ratfunc K →ₐ[S] Ratfunc R :=
   { mapRingHom φ hφ with
     commutes' := fun r => by
-      simp_rw [RingHom.toFun_eq_coe, coe_map_ring_hom_eq_coe_map, algebra_map_apply r,
-        map_apply_div, map_one, AlgHom.commutes] }
+      simp_rw [RingHom.toFun_eq_coe, coe_map_ring_hom_eq_coe_map, algebraMap_apply r, map_apply_div,
+        map_one, AlgHom.commutes] }
 #align ratfunc.map_alg_hom Ratfunc.mapAlgHom
 
 theorem coe_mapAlgHom_eq_coe_map (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤ R[X]⁰.comap φ) :
@@ -928,7 +928,7 @@ by mapping both the numerator and denominator and quotienting them. -/
 def liftAlgHom : Ratfunc K →ₐ[S] L :=
   { liftRingHom φ.toRingHom hφ with
     commutes' := fun r => by
-      simp_rw [RingHom.toFun_eq_coe, AlgHom.toRingHom_eq_coe, algebra_map_apply r,
+      simp_rw [RingHom.toFun_eq_coe, AlgHom.toRingHom_eq_coe, algebraMap_apply r,
         lift_ring_hom_apply_div, AlgHom.coe_toRingHom, map_one, div_one, AlgHom.commutes] }
 #align ratfunc.lift_alg_hom Ratfunc.liftAlgHom
 

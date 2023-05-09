@@ -726,7 +726,7 @@ theorem algebraMap_apply (x : ℤ_[p]) : algebraMap ℤ_[p] ℚ_[p] x = x :=
 instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
     where
   map_units := fun ⟨x, hx⟩ => by
-    rwa [[anonymous], algebra_map_apply, isUnit_iff_ne_zero, PadicInt.coe_ne_zero, ←
+    rwa [[anonymous], algebraMap_apply, isUnit_iff_ne_zero, PadicInt.coe_ne_zero, ←
       mem_nonZeroDivisors_iff_ne_zero]
   surj x := by
     by_cases hx : ‖x‖ ≤ 1
@@ -752,11 +752,11 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
       use
         (⟨a, le_of_eq ha_norm⟩,
           ⟨(p ^ n : ℤ_[p]), mem_non_zero_divisors_iff_ne_zero.mpr (NeZero.ne _)⟩)
-      simp only [[anonymous], map_pow, map_natCast, algebra_map_apply, PadicInt.coe_pow,
+      simp only [[anonymous], map_pow, map_natCast, algebraMap_apply, PadicInt.coe_pow,
         PadicInt.coe_nat_cast, Subtype.coe_mk]
   eq_iff_exists x y :=
     by
-    rw [algebra_map_apply, algebra_map_apply, Subtype.coe_inj]
+    rw [algebraMap_apply, algebraMap_apply, Subtype.coe_inj]
     refine' ⟨fun h => ⟨1, by rw [h]⟩, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
     exact (mul_eq_mul_left_iff.mp h).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc)
