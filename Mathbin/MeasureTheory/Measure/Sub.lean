@@ -28,6 +28,7 @@ namespace MeasureTheory
 
 namespace Measure
 
+#print MeasureTheory.Measure.hasSub /-
 /-- The measure `μ - ν` is defined to be the least measure `τ` such that `μ ≤ τ + ν`.
 It is the equivalent of `(μ - ν) ⊔ 0` if `μ` and `ν` were signed measures.
 Compare with `ennreal.has_sub`.
@@ -37,40 +38,65 @@ Specifically, note that if you have `α = {1,2}`, and  `μ {1} = 2`, `μ {2} = 0
 noncomputable instance hasSub {α : Type _} [MeasurableSpace α] : Sub (Measure α) :=
   ⟨fun μ ν => infₛ { τ | μ ≤ τ + ν }⟩
 #align measure_theory.measure.has_sub MeasureTheory.Measure.hasSub
+-/
 
 variable {α : Type _} {m : MeasurableSpace α} {μ ν : Measure α} {s : Set α}
 
+/- warning: measure_theory.measure.sub_def -> MeasureTheory.Measure.sub_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m}, Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) (InfSet.infₛ.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasInf.{u1} α m) (setOf.{u1} (MeasureTheory.Measure.{u1} α m) (fun (d : MeasureTheory.Measure.{u1} α m) => LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) μ (HAdd.hAdd.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHAdd.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instAdd.{u1} α m)) d ν))))
+but is expected to have type
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m}, Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) (InfSet.infₛ.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instInfSetMeasure.{u1} α m) (setOf.{u1} (MeasureTheory.Measure.{u1} α m) (fun (d : MeasureTheory.Measure.{u1} α m) => LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) μ (HAdd.hAdd.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHAdd.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instAdd.{u1} α m)) d ν))))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measure.sub_def MeasureTheory.Measure.sub_defₓ'. -/
 theorem sub_def : μ - ν = infₛ { d | μ ≤ d + ν } :=
   rfl
 #align measure_theory.measure.sub_def MeasureTheory.Measure.sub_def
 
+#print MeasureTheory.Measure.sub_le_of_le_add /-
 theorem sub_le_of_le_add {d} (h : μ ≤ d + ν) : μ - ν ≤ d :=
   infₛ_le h
 #align measure_theory.measure.sub_le_of_le_add MeasureTheory.Measure.sub_le_of_le_add
+-/
 
+#print MeasureTheory.Measure.sub_eq_zero_of_le /-
 theorem sub_eq_zero_of_le (h : μ ≤ ν) : μ - ν = 0 :=
   nonpos_iff_eq_zero'.1 <| sub_le_of_le_add <| by rwa [zero_add]
 #align measure_theory.measure.sub_eq_zero_of_le MeasureTheory.Measure.sub_eq_zero_of_le
+-/
 
+#print MeasureTheory.Measure.sub_le /-
 theorem sub_le : μ - ν ≤ μ :=
   sub_le_of_le_add <| Measure.le_add_right le_rfl
 #align measure_theory.measure.sub_le MeasureTheory.Measure.sub_le
+-/
 
+#print MeasureTheory.Measure.sub_top /-
 @[simp]
 theorem sub_top : μ - ⊤ = 0 :=
   sub_eq_zero_of_le le_top
 #align measure_theory.measure.sub_top MeasureTheory.Measure.sub_top
+-/
 
+#print MeasureTheory.Measure.zero_sub /-
 @[simp]
 theorem zero_sub : 0 - μ = 0 :=
   sub_eq_zero_of_le μ.zero_le
 #align measure_theory.measure.zero_sub MeasureTheory.Measure.zero_sub
+-/
 
+#print MeasureTheory.Measure.sub_self /-
 @[simp]
 theorem sub_self : μ - μ = 0 :=
   sub_eq_zero_of_le le_rfl
 #align measure_theory.measure.sub_self MeasureTheory.Measure.sub_self
+-/
 
+/- warning: measure_theory.measure.sub_apply -> MeasureTheory.Measure.sub_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α} [_inst_1 : MeasureTheory.FiniteMeasure.{u1} α m ν], (MeasurableSet.{u1} α m s) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) ν μ) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) s) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.hasSub) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) μ s) (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) ν s)))
+but is expected to have type
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α} [_inst_1 : MeasureTheory.FiniteMeasure.{u1} α m ν], (MeasurableSet.{u1} α m s) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) ν μ) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν)) s) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.instSubENNReal) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m ν) s)))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_applyₓ'. -/
 /-- This application lemma only works in special circumstances. Given knowledge of
 when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be written. -/
 theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s :=
@@ -104,12 +130,15 @@ theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ)
     apply measure.of_measurable_apply _ h₁
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
 
+#print MeasureTheory.Measure.sub_add_cancel_of_le /-
 theorem sub_add_cancel_of_le [FiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
   by
   ext (s h_s_meas)
   rw [add_apply, sub_apply h_s_meas h₁, tsub_add_cancel_of_le (h₁ s h_s_meas)]
 #align measure_theory.measure.sub_add_cancel_of_le MeasureTheory.Measure.sub_add_cancel_of_le
+-/
 
+#print MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict /-
 theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     (μ - ν).restrict s = μ.restrict s - ν.restrict s :=
   by
@@ -142,15 +171,24 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     rw [Set.mem_setOf_eq, ← restrict_add]
     exact restrict_mono subset.rfl h_t_in
 #align measure_theory.measure.restrict_sub_eq_restrict_sub_restrict MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict
+-/
 
+/- warning: measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict -> MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α}, (LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) (MeasureTheory.Measure.restrict.{u1} α m μ s) (MeasureTheory.Measure.restrict.{u1} α m ν s)) -> (MeasurableSet.{u1} α m s) -> (Eq.{1} ENNReal (coeFn.{succ u1, succ u1} (MeasureTheory.Measure.{u1} α m) (fun (_x : MeasureTheory.Measure.{u1} α m) => (Set.{u1} α) -> ENNReal) (MeasureTheory.Measure.instCoeFun.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) s) (OfNat.ofNat.{0} ENNReal 0 (OfNat.mk.{0} ENNReal 0 (Zero.zero.{0} ENNReal ENNReal.hasZero))))
+but is expected to have type
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α}, (LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) (MeasureTheory.Measure.restrict.{u1} α m μ s) (MeasureTheory.Measure.restrict.{u1} α m ν s)) -> (MeasurableSet.{u1} α m s) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν)) s) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrictₓ'. -/
 theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.restrict s)
     (h_meas_s : MeasurableSet s) : (μ - ν) s = 0 := by
   rw [← restrict_apply_self, restrict_sub_eq_restrict_sub_restrict, sub_eq_zero_of_le] <;> simp [*]
 #align measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict
 
+#print MeasureTheory.Measure.finiteMeasure_sub /-
 instance finiteMeasure_sub [FiniteMeasure μ] : FiniteMeasure (μ - ν) :=
   finiteMeasureOfLe μ sub_le
 #align measure_theory.measure.is_finite_measure_sub MeasureTheory.Measure.finiteMeasure_sub
+-/
 
 end Measure
 
