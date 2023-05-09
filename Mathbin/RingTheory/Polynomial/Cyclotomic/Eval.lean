@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.eval
-! leanprover-community/mathlib commit b13c1a07b23d09d72cd393a8e72fdd88dab90fa5
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,7 +274,7 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     refine' ⟨ζ, (mem_primitiveRoots hn).mpr hζ, _⟩
     suffices ¬SameRay ℝ (q : ℂ) (-ζ) by
       convert norm_add_lt_of_not_sameRay this <;>
-        simp [Real.norm_of_nonneg hq.le, hζ.norm'_eq_one hn.ne', -Complex.norm_eq_abs]
+        simp [abs_of_pos hq, hζ.norm'_eq_one hn.ne', -Complex.norm_eq_abs]
     rw [Complex.sameRay_iff]
     push_neg
     refine' ⟨by exact_mod_cast hq.ne', neg_ne_zero.mpr <| hζ.ne_zero hn.ne', _⟩

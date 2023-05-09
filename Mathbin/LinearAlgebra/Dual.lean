@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle, Kyle Miller
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit b1c017582e9f18d8494e5c18602a8cb4a6f843ac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,19 +100,11 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R -/
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
+@[reducible]
 def Dual :=
-  M →ₗ[R] R deriving AddCommMonoid,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R»
+  M →ₗ[R] R
 #align module.dual Module.Dual
-
-instance {S : Type _} [CommRing S] {N : Type _} [AddCommGroup N] [Module S N] :
-    AddCommGroup (Dual S N) :=
-  LinearMap.addCommGroup
-
-instance : LinearMapClass (Dual R M) R M R :=
-  LinearMap.semilinearMapClass
 
 /-- The canonical pairing of a vector space and its algebraic dual. -/
 def dualPairing (R M) [CommSemiring R] [AddCommMonoid M] [Module R M] :
@@ -408,10 +400,15 @@ section Finite
 variable [Finite ι]
 
 /-- A vector space is linearly equivalent to its dual space. -/
-@[simps]
 def toDualEquiv : M ≃ₗ[R] Dual R M :=
   LinearEquiv.ofBijective b.toDual ⟨ker_eq_bot.mp b.toDual_ker, range_eq_top.mp b.toDual_range⟩
 #align basis.to_dual_equiv Basis.toDualEquiv
+
+-- `simps` times out when generating this
+@[simp]
+theorem toDualEquiv_apply (m : M) : b.toDualEquiv m = b.toDual m :=
+  rfl
+#align basis.to_dual_equiv_apply Basis.toDualEquiv_apply
 
 /-- Maps a basis for `V` to a basis for the dual space. -/
 def dualBasis : Basis ι R (Dual R M) :=

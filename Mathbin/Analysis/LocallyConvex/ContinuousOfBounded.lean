@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.continuous_of_bounded
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,9 +128,8 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
       rw [← hy]
       refine' (bE1 (n + 1)).2.smul_mem _ hx
       have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
-      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat,
-        Nat.cast_add, Nat.cast_one, inv_le h' zero_lt_one]
-      norm_cast
+      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, IsROrC.norm_nat_cast, Nat.cast_add,
+        Nat.cast_one, inv_le h' zero_lt_one]
       simp
     intro n hn
     -- The converse direction follows from continuity of the scalar multiplication
@@ -166,9 +165,8 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   rcases hf _ h_bounded hV with ⟨r, hr, h'⟩
   cases' exists_nat_gt r with n hn
   -- We now find a contradiction between `f (u n) ∉ V` and the absorbing property
-  have h1 : r ≤ ‖(n : 𝕜')‖ :=
-    by
-    rw [IsROrC.norm_eq_abs, IsROrC.abs_cast_nat]
+  have h1 : r ≤ ‖(n : 𝕜')‖ := by
+    rw [IsROrC.norm_nat_cast]
     exact hn.le
   have hn' : 0 < ‖(n : 𝕜')‖ := lt_of_lt_of_le hr h1
   rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn'

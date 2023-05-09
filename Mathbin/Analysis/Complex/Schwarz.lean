@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.schwarz
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
   calc
     ‖dslope f c z‖ = ‖dslope (g ∘ f) c z‖ :=
       by
-      rw [g.dslope_comp, hgf, IsROrC.norm_of_real, norm_norm]
+      rw [g.dslope_comp, hgf, IsROrC.norm_of_real, abs_norm]
       exact fun _ => hd.differentiable_at (ball_mem_nhds _ hR₁)
     _ ≤ R₂ / R₁ :=
       by

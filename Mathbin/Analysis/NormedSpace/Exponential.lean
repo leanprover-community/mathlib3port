@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit da3fc4a33ff6bc75f077f691dc94c217b8d41559
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -409,7 +409,7 @@ theorem expSeries_radius_eq_top : (expSeries 𝕂 𝔸).radius = ∞ :=
   refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial r) _
   filter_upwards [eventually_cofinite_ne 0]with n hn
   rw [norm_mul, norm_norm (expSeries 𝕂 𝔸 n), expSeries, norm_smul, norm_inv, norm_pow,
-    NNReal.norm_eq, norm_eq_abs, abs_cast_nat, mul_comm, ← mul_assoc, ← div_eq_mul_inv]
+    NNReal.norm_eq, norm_nat_cast, mul_comm, ← mul_assoc, ← div_eq_mul_inv]
   have : ‖ContinuousMultilinearMap.mkPiAlgebraFin 𝕂 n 𝔸‖ ≤ 1 :=
     norm_mk_pi_algebra_fin_le_of_pos (Nat.pos_of_ne_zero hn)
   exact mul_le_of_le_one_right (div_nonneg (pow_nonneg r.coe_nonneg n) n !.cast_nonneg) this

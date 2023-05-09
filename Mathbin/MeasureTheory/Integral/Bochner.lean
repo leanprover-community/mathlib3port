@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit fbde2f60a46865c85f49b4193175c6e339ff9020
+! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1743,6 +1743,26 @@ theorem integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : �
     _ = f a := by simp [measure.dirac_apply_of_mem]
     
 #align measure_theory.integral_dirac MeasureTheory.integral_dirac
+
+theorem set_integral_dirac' {mα : MeasurableSpace α} {f : α → E} (hf : StronglyMeasurable f) (a : α)
+    {s : Set α} (hs : MeasurableSet s) [Decidable (a ∈ s)] :
+    (∫ x in s, f x ∂Measure.dirac a) = if a ∈ s then f a else 0 :=
+  by
+  rw [restrict_dirac' hs]
+  swap; · infer_instance
+  split_ifs
+  · exact integral_dirac' _ _ hf
+  · exact integral_zero_measure _
+#align measure_theory.set_integral_dirac' MeasureTheory.set_integral_dirac'
+
+theorem set_integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : α → E) (a : α)
+    (s : Set α) [Decidable (a ∈ s)] : (∫ x in s, f x ∂Measure.dirac a) = if a ∈ s then f a else 0 :=
+  by
+  rw [restrict_dirac]
+  split_ifs
+  · exact integral_dirac _ _
+  · exact integral_zero_measure _
+#align measure_theory.set_integral_dirac MeasureTheory.set_integral_dirac
 
 theorem mul_meas_ge_le_integral_of_nonneg [IsFiniteMeasure μ] {f : α → ℝ} (hf_nonneg : 0 ≤ f)
     (hf_int : Integrable f μ) (ε : ℝ) : ε * (μ { x | ε ≤ f x }).toReal ≤ ∫ x, f x ∂μ :=

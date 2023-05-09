@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module analysis.normed_space.is_R_or_C
-! leanprover-community/mathlib commit 468b141b14016d54b479eb7a0fff1e360b7e3cf6
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) •
 theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) :
     ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r := by
   have : ‖x‖ ≠ 0 := by simp [hx]
-  field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg, is_R_or_C_simps]
+  field_simp [norm_smul, r_nonneg, is_R_or_C_simps]
 #align norm_smul_inv_norm' norm_smul_inv_norm'
 
 theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)

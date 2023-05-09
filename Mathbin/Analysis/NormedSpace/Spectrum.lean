@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -539,7 +539,7 @@ theorem exp_mem_exp [IsROrC 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [Complet
     by
     refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ‖a - ↑ₐ z‖) _
     filter_upwards [Filter.eventually_cofinite_ne 0]with n hn
-    rw [norm_smul, mul_comm, norm_inv, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, ← div_eq_mul_inv]
+    rw [norm_smul, mul_comm, norm_inv, IsROrC.norm_nat_cast, ← div_eq_mul_inv]
     exact
       div_le_div (pow_nonneg (norm_nonneg _) n) (norm_pow_le' (a - ↑ₐ z) (zero_lt_iff.mpr hn))
         (by exact_mod_cast Nat.factorial_pos n)

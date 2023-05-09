@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,21 +79,21 @@ theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ‖f x‖ ^
 
 theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ :=
   by
-  have h : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ ‖f x‖ * ‖g x‖ := fun x => abs_inner_le_norm _ _
-  have h' : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ IsROrC.abs (‖f x‖ ^ 2 + ‖g x‖ ^ 2) :=
+  have h : ∀ x, ‖⟪f x, g x⟫‖ ≤ ‖‖f x‖ ^ (2 : ℝ) + ‖g x‖ ^ (2 : ℝ)‖ :=
     by
-    refine' fun x => le_trans (h x) _
-    rw [IsROrC.abs_to_real, abs_eq_self.mpr]
-    swap
-    · exact add_nonneg (by simp) (by simp)
-    refine' le_trans _ (half_le_self (add_nonneg (sq_nonneg _) (sq_nonneg _)))
-    refine' (le_div_iff (zero_lt_two' ℝ)).mpr ((le_of_eq _).trans (two_mul_le_add_sq _ _))
-    ring
-  simp_rw [← IsROrC.norm_eq_abs, ← Real.rpow_nat_cast] at h'
-  refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
+    intro x
+    rw [← @Nat.cast_two ℝ, Real.rpow_nat_cast, Real.rpow_nat_cast]
+    calc
+      ‖⟪f x, g x⟫‖ ≤ ‖f x‖ * ‖g x‖ := norm_inner_le_norm _ _
+      _ ≤ 2 * ‖f x‖ * ‖g x‖ :=
+        (mul_le_mul_of_nonneg_right (le_mul_of_one_le_left (norm_nonneg _) one_le_two)
+          (norm_nonneg _))
+      _ ≤ ‖‖f x‖ ^ 2 + ‖g x‖ ^ 2‖ := (two_mul_le_add_sq _ _).trans (le_abs_self _)
+      
+  refine' (snorm_mono_ae (ae_of_all _ h)).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
   · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
   · exact ((Lp.ae_strongly_measurable g).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
-  simp only [Nat.cast_bit0, ENNReal.add_lt_top, Nat.cast_one]
+  rw [ENNReal.add_lt_top]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 #align measure_theory.L2.snorm_inner_lt_top MeasureTheory.L2.snorm_inner_lt_top
 

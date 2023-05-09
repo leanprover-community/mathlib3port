@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module analysis.calculus.uniform_limits_deriv
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -360,7 +360,7 @@ theorem hasFderivAt_of_tendstoUniformlyOnFilter [NeBot l]
   conv =>
     congr
     ext
-    rw [← norm_norm, ← norm_inv, ← @IsROrC.norm_of_real 𝕜 _ _, IsROrC.of_real_inv, ← norm_smul]
+    rw [← abs_norm, ← abs_inv, ← @IsROrC.norm_of_real 𝕜 _ _, IsROrC.of_real_inv, ← norm_smul]
   rw [← tendsto_zero_iff_norm_tendsto_zero]
   have :
     (fun a : ι × E => (‖a.2 - x‖⁻¹ : 𝕜) • (g a.2 - g x - (g' x) (a.2 - x))) =

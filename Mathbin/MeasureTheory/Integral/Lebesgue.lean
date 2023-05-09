@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 7317149f12f55affbc900fc873d0d422485122b9
+! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,6 +43,46 @@ open Function (support)
 open Classical Topology BigOperators NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
+
+section MoveThis
+
+variable {α : Type _} {mα : MeasurableSpace α} {a : α} {s : Set α}
+
+include mα
+
+-- todo after the port: move to measure_theory/measure/measure_space
+theorem restrict_dirac' (hs : MeasurableSet s) [Decidable (a ∈ s)] :
+    (Measure.dirac a).restrict s = if a ∈ s then Measure.dirac a else 0 :=
+  by
+  ext1 t ht
+  classical
+    simp only [measure.restrict_apply ht, measure.dirac_apply' _ (ht.inter hs), Set.indicator_apply,
+      Set.mem_inter_iff, Pi.one_apply]
+    by_cases has : a ∈ s
+    · simp only [has, and_true_iff, if_true]
+      split_ifs with hat
+      · rw [measure.dirac_apply_of_mem hat]
+      · simp only [measure.dirac_apply' _ ht, Set.indicator_apply, hat, if_false]
+    · simp only [has, and_false_iff, if_false, measure.coe_zero, Pi.zero_apply]
+#align measure_theory.restrict_dirac' MeasureTheory.restrict_dirac'
+
+-- todo after the port: move to measure_theory/measure/measure_space
+theorem restrict_dirac [MeasurableSingletonClass α] [Decidable (a ∈ s)] :
+    (Measure.dirac a).restrict s = if a ∈ s then Measure.dirac a else 0 :=
+  by
+  ext1 t ht
+  classical
+    simp only [measure.restrict_apply ht, measure.dirac_apply _, Set.indicator_apply,
+      Set.mem_inter_iff, Pi.one_apply]
+    by_cases has : a ∈ s
+    · simp only [has, and_true_iff, if_true]
+      split_ifs with hat
+      · rw [measure.dirac_apply_of_mem hat]
+      · simp only [measure.dirac_apply' _ ht, Set.indicator_apply, hat, if_false]
+    · simp only [has, and_false_iff, if_false, measure.coe_zero, Pi.zero_apply]
+#align measure_theory.restrict_dirac MeasureTheory.restrict_dirac
+
+end MoveThis
 
 -- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
@@ -1415,6 +1455,26 @@ theorem lintegral_dirac' (a : α) {f : α → ℝ≥0∞} (hf : Measurable f) : 
 theorem lintegral_dirac [MeasurableSingletonClass α] (a : α) (f : α → ℝ≥0∞) :
     (∫⁻ a, f a ∂dirac a) = f a := by simp [lintegral_congr_ae (ae_eq_dirac f)]
 #align measure_theory.lintegral_dirac MeasureTheory.lintegral_dirac
+
+theorem set_lintegral_dirac' {a : α} {f : α → ℝ≥0∞} (hf : Measurable f) {s : Set α}
+    (hs : MeasurableSet s) [Decidable (a ∈ s)] :
+    (∫⁻ x in s, f x ∂Measure.dirac a) = if a ∈ s then f a else 0 :=
+  by
+  rw [restrict_dirac' hs]
+  swap; · infer_instance
+  split_ifs
+  · exact lintegral_dirac' _ hf
+  · exact lintegral_zero_measure _
+#align measure_theory.set_lintegral_dirac' MeasureTheory.set_lintegral_dirac'
+
+theorem set_lintegral_dirac {a : α} (f : α → ℝ≥0∞) (s : Set α) [MeasurableSingletonClass α]
+    [Decidable (a ∈ s)] : (∫⁻ x in s, f x ∂Measure.dirac a) = if a ∈ s then f a else 0 :=
+  by
+  rw [restrict_dirac]
+  split_ifs
+  · exact lintegral_dirac _ _
+  · exact lintegral_zero_measure _
+#align measure_theory.set_lintegral_dirac MeasureTheory.set_lintegral_dirac
 
 theorem lintegral_count' {f : α → ℝ≥0∞} (hf : Measurable f) : (∫⁻ a, f a ∂count) = ∑' a, f a :=
   by

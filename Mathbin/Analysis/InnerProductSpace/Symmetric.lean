@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -186,7 +186,7 @@ theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymm
     suffices (re ⟪T y, x⟫ : 𝕜) = ⟪T y, x⟫
       by
       rw [conj_eq_iff_re.mpr this]
-      ring_nf
+      ring
     · rw [← re_add_im ⟪T y, x⟫]
       simp_rw [h, MulZeroClass.mul_zero, add_zero]
       norm_cast

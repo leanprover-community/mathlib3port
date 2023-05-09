@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit 8c8c544bf24ced19b1e76c34bb3262bdae620f82
+! leanprover-community/mathlib commit f81174bd8aa3896304e8e1c1cb1d11cb0e0a05df
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.Fderiv
+import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.LinearAlgebra.AffineSpace.Slope
 
@@ -2137,9 +2138,9 @@ namespace Polynomial
 /-! ### Derivative of a polynomial -/
 
 
-variable {x : 𝕜} {s : Set 𝕜}
+variable {R : Type _} [CommSemiring R] [Algebra R 𝕜]
 
-variable (p : 𝕜[X])
+variable (p : 𝕜[X]) (q : R[X]) {x : 𝕜} {s : Set 𝕜}
 
 /-- The derivative (in the analysis sense) of a polynomial `p` is given by `p.derivative`. -/
 protected theorem hasStrictDerivAt (x : 𝕜) :
@@ -2159,35 +2160,73 @@ protected theorem hasStrictDerivAt (x : 𝕜) :
       ring
 #align polynomial.has_strict_deriv_at Polynomial.hasStrictDerivAt
 
+protected theorem hasStrictDerivAt_aeval (x : 𝕜) :
+    HasStrictDerivAt (fun x => aeval x q) (aeval x q.derivative) x := by
+  simpa only [aeval_def, eval₂_eq_eval_map, derivative_map] using
+    (q.map (algebraMap R 𝕜)).HasStrictDerivAt x
+#align polynomial.has_strict_deriv_at_aeval Polynomial.hasStrictDerivAt_aeval
+
 /-- The derivative (in the analysis sense) of a polynomial `p` is given by `p.derivative`. -/
 protected theorem hasDerivAt (x : 𝕜) : HasDerivAt (fun x => p.eval x) (p.derivative.eval x) x :=
   (p.HasStrictDerivAt x).HasDerivAt
 #align polynomial.has_deriv_at Polynomial.hasDerivAt
+
+protected theorem hasDerivAt_aeval (x : 𝕜) :
+    HasDerivAt (fun x => aeval x q) (aeval x q.derivative) x :=
+  (q.hasStrictDerivAt_aeval x).HasDerivAt
+#align polynomial.has_deriv_at_aeval Polynomial.hasDerivAt_aeval
 
 protected theorem hasDerivWithinAt (x : 𝕜) (s : Set 𝕜) :
     HasDerivWithinAt (fun x => p.eval x) (p.derivative.eval x) s x :=
   (p.HasDerivAt x).HasDerivWithinAt
 #align polynomial.has_deriv_within_at Polynomial.hasDerivWithinAt
 
+protected theorem hasDerivWithinAt_aeval (x : 𝕜) (s : Set 𝕜) :
+    HasDerivWithinAt (fun x => aeval x q) (aeval x q.derivative) s x :=
+  (q.hasDerivAt_aeval x).HasDerivWithinAt
+#align polynomial.has_deriv_within_at_aeval Polynomial.hasDerivWithinAt_aeval
+
 protected theorem differentiableAt : DifferentiableAt 𝕜 (fun x => p.eval x) x :=
   (p.HasDerivAt x).DifferentiableAt
 #align polynomial.differentiable_at Polynomial.differentiableAt
+
+protected theorem differentiableAt_aeval : DifferentiableAt 𝕜 (fun x => aeval x q) x :=
+  (q.hasDerivAt_aeval x).DifferentiableAt
+#align polynomial.differentiable_at_aeval Polynomial.differentiableAt_aeval
 
 protected theorem differentiableWithinAt : DifferentiableWithinAt 𝕜 (fun x => p.eval x) s x :=
   p.DifferentiableAt.DifferentiableWithinAt
 #align polynomial.differentiable_within_at Polynomial.differentiableWithinAt
 
+protected theorem differentiableWithinAt_aeval :
+    DifferentiableWithinAt 𝕜 (fun x => aeval x q) s x :=
+  q.differentiableAt_aeval.DifferentiableWithinAt
+#align polynomial.differentiable_within_at_aeval Polynomial.differentiableWithinAt_aeval
+
 protected theorem differentiable : Differentiable 𝕜 fun x => p.eval x := fun x => p.DifferentiableAt
 #align polynomial.differentiable Polynomial.differentiable
+
+protected theorem differentiable_aeval : Differentiable 𝕜 fun x : 𝕜 => aeval x q := fun x =>
+  q.differentiableAt_aeval
+#align polynomial.differentiable_aeval Polynomial.differentiable_aeval
 
 protected theorem differentiableOn : DifferentiableOn 𝕜 (fun x => p.eval x) s :=
   p.Differentiable.DifferentiableOn
 #align polynomial.differentiable_on Polynomial.differentiableOn
 
+protected theorem differentiableOn_aeval : DifferentiableOn 𝕜 (fun x => aeval x q) s :=
+  q.differentiable_aeval.DifferentiableOn
+#align polynomial.differentiable_on_aeval Polynomial.differentiableOn_aeval
+
 @[simp]
 protected theorem deriv : deriv (fun x => p.eval x) x = p.derivative.eval x :=
   (p.HasDerivAt x).deriv
 #align polynomial.deriv Polynomial.deriv
+
+@[simp]
+protected theorem deriv_aeval : deriv (fun x => aeval x q) x = aeval x q.derivative :=
+  (q.hasDerivAt_aeval x).deriv
+#align polynomial.deriv_aeval Polynomial.deriv_aeval
 
 protected theorem derivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin (fun x => p.eval x) s x = p.derivative.eval x :=
@@ -2196,15 +2235,31 @@ protected theorem derivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
   exact p.deriv
 #align polynomial.deriv_within Polynomial.derivWithin
 
+protected theorem derivWithin_aeval (hxs : UniqueDiffWithinAt 𝕜 s x) :
+    derivWithin (fun x => aeval x q) s x = aeval x q.derivative := by
+  simpa only [aeval_def, eval₂_eq_eval_map, derivative_map] using
+    (q.map (algebraMap R 𝕜)).derivWithin hxs
+#align polynomial.deriv_within_aeval Polynomial.derivWithin_aeval
+
 protected theorem hasFderivAt (x : 𝕜) :
     HasFderivAt (fun x => p.eval x) (smulRight (1 : 𝕜 →L[𝕜] 𝕜) (p.derivative.eval x)) x :=
   p.HasDerivAt x
 #align polynomial.has_fderiv_at Polynomial.hasFderivAt
 
+protected theorem hasFderivAt_aeval (x : 𝕜) :
+    HasFderivAt (fun x => aeval x q) (smulRight (1 : 𝕜 →L[𝕜] 𝕜) (aeval x q.derivative)) x :=
+  q.hasDerivAt_aeval x
+#align polynomial.has_fderiv_at_aeval Polynomial.hasFderivAt_aeval
+
 protected theorem hasFderivWithinAt (x : 𝕜) :
     HasFderivWithinAt (fun x => p.eval x) (smulRight (1 : 𝕜 →L[𝕜] 𝕜) (p.derivative.eval x)) s x :=
   (p.HasFderivAt x).HasFderivWithinAt
 #align polynomial.has_fderiv_within_at Polynomial.hasFderivWithinAt
+
+protected theorem hasFderivWithinAt_aeval (x : 𝕜) :
+    HasFderivWithinAt (fun x => aeval x q) (smulRight (1 : 𝕜 →L[𝕜] 𝕜) (aeval x q.derivative)) s x :=
+  (q.hasFderivAt_aeval x).HasFderivWithinAt
+#align polynomial.has_fderiv_within_at_aeval Polynomial.hasFderivWithinAt_aeval
 
 @[simp]
 protected theorem fderiv :
@@ -2212,10 +2267,21 @@ protected theorem fderiv :
   (p.HasFderivAt x).fderiv
 #align polynomial.fderiv Polynomial.fderiv
 
+@[simp]
+protected theorem fderiv_aeval :
+    fderiv 𝕜 (fun x => aeval x q) x = smulRight (1 : 𝕜 →L[𝕜] 𝕜) (aeval x q.derivative) :=
+  (q.hasFderivAt_aeval x).fderiv
+#align polynomial.fderiv_aeval Polynomial.fderiv_aeval
+
 protected theorem fderivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (fun x => p.eval x) s x = smulRight (1 : 𝕜 →L[𝕜] 𝕜) (p.derivative.eval x) :=
   (p.HasFderivWithinAt x).fderivWithin hxs
 #align polynomial.fderiv_within Polynomial.fderivWithin
+
+protected theorem fderivWithin_aeval (hxs : UniqueDiffWithinAt 𝕜 s x) :
+    fderivWithin 𝕜 (fun x => aeval x q) s x = smulRight (1 : 𝕜 →L[𝕜] 𝕜) (aeval x q.derivative) :=
+  (q.hasFderivWithinAt_aeval x).fderivWithin hxs
+#align polynomial.fderiv_within_aeval Polynomial.fderivWithin_aeval
 
 end Polynomial
 

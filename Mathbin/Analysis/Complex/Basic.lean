@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit 338fe44f54751b9f7deaca47ffca3509f53140ae
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -464,7 +464,7 @@ section ComplexOrder
 open ComplexOrder
 
 theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑‖z‖ := by
-  rw [eq_re_of_real_le hz, IsROrC.norm_of_real, Real.norm_of_nonneg (Complex.le_def.2 hz).1]
+  rw [eq_re_of_real_le hz, IsROrC.norm_of_real, _root_.abs_of_nonneg (Complex.le_def.2 hz).1]
 #align complex.eq_coe_norm_of_nonneg Complex.eq_coe_norm_of_nonneg
 
 end ComplexOrder
@@ -483,9 +483,6 @@ local notation "imC" => @IsROrC.im ℂ _
 
 -- mathport name: exprIC
 local notation "IC" => @IsROrC.i ℂ _
-
--- mathport name: exprabsC
-local notation "absC" => @IsROrC.abs ℂ _
 
 -- mathport name: exprnorm_sqC
 local notation "norm_sqC" => @IsROrC.normSq ℂ _
@@ -506,13 +503,9 @@ theorem i_to_complex : IC = Complex.I :=
 #align is_R_or_C.I_to_complex IsROrC.i_to_complex
 
 @[simp]
-theorem normSq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
-  simp [IsROrC.normSq, Complex.normSq]
+theorem normSq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x :=
+  rfl
 #align is_R_or_C.norm_sq_to_complex IsROrC.normSq_to_complex
-
-@[simp]
-theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by simp [IsROrC.abs, Complex.abs]
-#align is_R_or_C.abs_to_complex IsROrC.abs_to_complex
 
 section tsum
 

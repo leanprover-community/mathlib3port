@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
+! leanprover-community/mathlib commit d4437c68c8d350fc9d4e95e1e174409db35e30d7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -332,6 +332,14 @@ theorem AlgHom.restrictNormal_comp [Normal F E] :
   AlgHom.ext fun _ =>
     (algebraMap E K₃).Injective (by simp only [AlgHom.comp_apply, AlgHom.restrictNormal_commutes])
 #align alg_hom.restrict_normal_comp AlgHom.restrictNormal_comp
+
+theorem AlgHom.fieldRange_of_normal {E : IntermediateField F K} [Normal F E] (f : E →ₐ[F] K) :
+    f.fieldRange = E := by
+  haveI : IsScalarTower F E E := by infer_instance
+  let g := f.restrict_normal' E
+  rw [← show E.val.comp ↑g = f from fun_like.ext_iff.mpr (f.restrict_normal_commutes E), ←
+    AlgHom.map_fieldRange, g.field_range_eq_top, ← E.val.field_range_eq_map, E.field_range_val]
+#align alg_hom.field_range_of_normal AlgHom.fieldRange_of_normal
 
 /-- Restrict algebra isomorphism to a normal subfield -/
 def AlgEquiv.restrictNormal [h : Normal F E] : E ≃ₐ[F] E :=

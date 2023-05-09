@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.FinPartOrd
-! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
+! leanprover-community/mathlib commit 937b1c59c58710ef8ed91f8727ef402d49d621a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,8 +16,8 @@ import Mathbin.Order.Category.PartOrd
 
 This defines `FinPartOrd`, the category of finite partial orders.
 
-Note: `FinPartOrd` is NOT a subcategory of `BddOrd` because its morphisms do not
-preserve `⊥` and `⊤`.
+Note: `FinPartOrd` is *not* a subcategory of `BddOrd` because finite orders are not necessarily
+bounded.
 
 ## TODO
 

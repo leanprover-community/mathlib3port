@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.FinBoolAlg
-! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
+! leanprover-community/mathlib commit 937b1c59c58710ef8ed91f8727ef402d49d621a2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fintype.Powerset
 import Mathbin.Order.Category.BoolAlg
-import Mathbin.Order.Category.FinPartOrd
+import Mathbin.Order.Category.FinBddDistLat
 import Mathbin.Order.Hom.CompleteLattice
 
 /-!
@@ -78,6 +78,14 @@ instance hasForgetToBoolAlg : HasForget₂ FinBoolAlg BoolAlg :=
   InducedCategory.hasForget₂ FinBoolAlg.toBoolAlg
 #align FinBoolAlg.has_forget_to_BoolAlg FinBoolAlg.hasForgetToBoolAlg
 
+instance hasForgetToFinBddDistLat : HasForget₂ FinBoolAlg FinBddDistLat
+    where
+  forget₂ :=
+    { obj := fun X => FinBddDistLat.of X
+      map := fun X Y f => f }
+  forget_comp := rfl
+#align FinBoolAlg.has_forget_to_FinBddDistLat FinBoolAlg.hasForgetToFinBddDistLat
+
 instance forgetToBoolAlgFull : Full (forget₂ FinBoolAlg BoolAlg) :=
   InducedCategory.full _
 #align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlg.forgetToBoolAlgFull
@@ -130,6 +138,12 @@ def dualEquiv : FinBoolAlg ≌ FinBoolAlg :=
 #align FinBoolAlg.dual_equiv FinBoolAlg.dualEquiv
 
 end FinBoolAlg
+
+theorem finBoolAlg_dual_comp_forget_to_finBddDistLat :
+    FinBoolAlg.dual ⋙ forget₂ FinBoolAlg FinBddDistLat =
+      forget₂ FinBoolAlg FinBddDistLat ⋙ FinBddDistLat.dual :=
+  rfl
+#align FinBoolAlg_dual_comp_forget_to_FinBddDistLat finBoolAlg_dual_comp_forget_to_finBddDistLat
 
 /-- The powerset functor. `set` as a functor. -/
 @[simps]

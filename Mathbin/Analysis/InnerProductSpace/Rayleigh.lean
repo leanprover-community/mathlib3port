@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     let c : 𝕜 := ↑‖x‖⁻¹ * r
     have : c ≠ 0 := by simp [c, hx, hr.ne']
     refine' ⟨c • x, _, _⟩
-    · field_simp [norm_smul, IsROrC.norm_eq_abs, abs_of_nonneg hr.le]
+    · field_simp [norm_smul, abs_of_pos hr]
     · rw [T.rayleigh_smul x this]
       exact hxT
   · rintro ⟨x, hx, hxT⟩

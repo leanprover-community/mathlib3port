@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.adjoin
-! leanprover-community/mathlib commit 039a089d2a4b93c761b234f3e5f5aeb752bac60f
+! leanprover-community/mathlib commit d4437c68c8d350fc9d4e95e1e174409db35e30d7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -276,6 +276,17 @@ theorem AlgHom.map_fieldRange {K L : Type _} [Field K] [Field L] [Algebra F K] [
     (f : E →ₐ[F] K) (g : K →ₐ[F] L) : f.fieldRange.map g = (g.comp f).fieldRange :=
   SetLike.ext' (Set.range_comp g f).symm
 #align alg_hom.map_field_range AlgHom.map_fieldRange
+
+theorem AlgHom.fieldRange_eq_top {K : Type _} [Field K] [Algebra F K] {f : E →ₐ[F] K} :
+    f.fieldRange = ⊤ ↔ Function.Surjective f :=
+  SetLike.ext'_iff.trans Set.range_iff_surjective
+#align alg_hom.field_range_eq_top AlgHom.fieldRange_eq_top
+
+@[simp]
+theorem AlgEquiv.fieldRange_eq_top {K : Type _} [Field K] [Algebra F K] (f : E ≃ₐ[F] K) :
+    (f : E →ₐ[F] K).fieldRange = ⊤ :=
+  AlgHom.fieldRange_eq_top.mpr f.Surjective
+#align alg_equiv.field_range_eq_top AlgEquiv.fieldRange_eq_top
 
 end Lattice
 

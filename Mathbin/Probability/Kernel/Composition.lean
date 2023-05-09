@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit 483dd86cfec4a1380d22b1f6acd4c3dc53f501ff
+! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ noncomputable def compProdFun (κ : kernel α β) (η : kernel (α × β) γ) (a
 theorem compProdFun_empty (κ : kernel α β) (η : kernel (α × β) γ) (a : α) :
     compProdFun κ η a ∅ = 0 := by
   simp only [comp_prod_fun, Set.mem_empty_iff_false, Set.setOf_false, measure_empty,
-    lintegral_const, MulZeroClass.zero_mul]
+    MeasureTheory.lintegral_const, MulZeroClass.zero_mul]
 #align probability_theory.kernel.comp_prod_fun_empty ProbabilityTheory.kernel.compProdFun_empty
 
 theorem compProdFun_unionᵢ (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α)
@@ -385,7 +385,7 @@ theorem compProd_apply_univ_le (κ : kernel α β) [IsSFiniteKernel κ] (η : ke
   calc
     (∫⁻ b, η (a, b) Set.univ ∂κ a) ≤ ∫⁻ b, Cη ∂κ a :=
       lintegral_mono fun b => measure_le_bound η (a, b) Set.univ
-    _ = Cη * κ a Set.univ := (lintegral_const Cη)
+    _ = Cη * κ a Set.univ := (MeasureTheory.lintegral_const Cη)
     _ = κ a Set.univ * Cη := mul_comm _ _
     
 #align probability_theory.kernel.comp_prod_apply_univ_le ProbabilityTheory.kernel.compProd_apply_univ_le

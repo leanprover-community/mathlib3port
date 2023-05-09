@@ -2315,6 +2315,7 @@ import Mathbin.Order.Category.BddOrd
 import Mathbin.Order.Category.BoolAlg
 import Mathbin.Order.Category.CompleteLat
 import Mathbin.Order.Category.DistLat
+import Mathbin.Order.Category.FinBddDistLat
 import Mathbin.Order.Category.FinBoolAlg
 import Mathbin.Order.Category.FinPartOrd
 import Mathbin.Order.Category.Frm

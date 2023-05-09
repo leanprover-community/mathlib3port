@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.kernel.invariance
-! leanprover-community/mathlib commit 97d1aa955750bd57a7eeef91de310e633881670b
+! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ namespace Kernel
 /-- The push-forward of a measure along a kernel. -/
 noncomputable def mapMeasure (κ : kernel α β) (μ : Measure α) : Measure β :=
   Measure.ofMeasurable (fun s hs => ∫⁻ x, κ x s ∂μ)
-    (by simp only [measure_empty, lintegral_const, MulZeroClass.zero_mul])
+    (by simp only [measure_empty, MeasureTheory.lintegral_const, MulZeroClass.zero_mul])
     (by
       intro f hf₁ hf₂
       simp_rw [measure_Union hf₂ hf₁,

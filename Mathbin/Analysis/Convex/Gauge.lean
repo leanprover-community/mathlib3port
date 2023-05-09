@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 468b141b14016d54b479eb7a0fff1e360b7e3cf6
+! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -322,13 +322,11 @@ variable [IsROrC 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
 
 theorem gauge_norm_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (‖r‖ • x) = gauge s (r • x) :=
   by
-  rw [@IsROrC.real_smul_eq_coe_smul 𝕜]
-  obtain rfl | hr := eq_or_ne r 0
-  · simp only [norm_zero, IsROrC.of_real_zero]
   unfold gauge
   congr with θ
+  rw [@IsROrC.real_smul_eq_coe_smul 𝕜]
   refine' and_congr_right fun hθ => (hs.smul _).mem_smul_iff _
-  rw [IsROrC.norm_of_real, norm_norm]
+  rw [IsROrC.norm_of_real, abs_norm]
 #align gauge_norm_smul gauge_norm_smul
 
 /-- If `s` is balanced, then the Minkowski functional is ℂ-homogeneous. -/
