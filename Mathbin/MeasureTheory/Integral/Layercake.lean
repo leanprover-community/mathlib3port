@@ -188,7 +188,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   have ex_G : ∃ G : ℝ → ℝ, Measurable G ∧ 0 ≤ G ∧ g =ᵐ[volume.restrict (Ioi 0)] G :=
     by
     refine' AEMeasurable.exists_measurable_nonneg _ g_nn
-    exact aEMeasurable_Ioi_of_forall_Ioc fun t ht => (g_intble t ht).1.1.AEMeasurable
+    exact aemeasurable_Ioi_of_forall_Ioc fun t ht => (g_intble t ht).1.1.AEMeasurable
   rcases ex_G with ⟨G, G_mble, G_nn, g_eq_G⟩
   have g_eq_G_on : ∀ t, g =ᵐ[volume.restrict (Ioc 0 t)] G := fun t =>
     ae_mono (measure.restrict_mono Ioc_subset_Ioi_self le_rfl) g_eq_G

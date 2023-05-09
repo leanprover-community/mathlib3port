@@ -1148,7 +1148,7 @@ theorem AEMeasurable.isLUB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
     AEMeasurable g μ := by
   by_cases hμ : μ = 0
   · rw [hμ]
-    exact aEMeasurable_zero_measure
+    exact aemeasurable_zero_measure
   have : μ.ae.ne_bot := by simpa [ne_bot_iff]
   by_cases hι : Nonempty ι
   · exact ae_measurable.is_lub_of_nonempty hι hf hg
@@ -1182,7 +1182,7 @@ theorem AEMeasurable.isGLB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
   haveI hα : Nonempty α := inferInstance
   cases' isEmpty_or_nonempty ι with hι hι
   · simp only [IsEmpty.exists_iff, set_of_false, isGLB_empty_iff] at hg
-    exact aEMeasurable_const' (hg.mono fun a ha => hg.mono fun b hb => (hb _).antisymm (ha _))
+    exact aemeasurable_const' (hg.mono fun a ha => hg.mono fun b hb => (hb _).antisymm (ha _))
   let p : δ → (ι → α) → Prop := fun x f' => IsGLB { a | ∃ i, f' i = a } (g x)
   let g_seq := (aeSeqSet hf p).piecewise g fun _ => hα.some
   have hg_seq : ∀ b, IsGLB { a | ∃ i, aeSeq hf p i b = a } (g_seq b) :=
@@ -1213,7 +1213,7 @@ theorem aEMeasurable_restrict_of_monotoneOn [LinearOrder β] [OrderClosedTopolog
     {s : Set β} (hs : MeasurableSet s) {f : β → α} (hf : MonotoneOn f s) :
     AEMeasurable f (μ.restrict s) :=
   have this : Monotone (f ∘ coe : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ (hxy : x ≤ y) => hf hx hy hxy
-  aEMeasurable_restrict_of_measurable_subtype hs this.Measurable
+  aemeasurable_restrict_of_measurable_subtype hs this.Measurable
 #align ae_measurable_restrict_of_monotone_on aEMeasurable_restrict_of_monotoneOn
 
 protected theorem Antitone.measurable [LinearOrder β] [OrderClosedTopology β] {f : β → α}
@@ -2301,7 +2301,7 @@ theorem aEMeasurable_of_unif_approx {β} [MeasurableSpace β] [PseudoMetricSpace
 theorem measurable_of_tendsto_metrizable_ae {μ : Measure α} [μ.IsComplete] {f : ℕ → α → β}
     {g : α → β} (hf : ∀ n, Measurable (f n))
     (h_ae_tendsto : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : Measurable g :=
-  aEMeasurable_iff_measurable.mp
+  aemeasurable_iff_measurable.mp
     (aEMeasurable_of_tendsto_metrizable_ae' (fun i => (hf i).AEMeasurable) h_ae_tendsto)
 #align measurable_of_tendsto_metrizable_ae measurable_of_tendsto_metrizable_ae
 
@@ -2427,7 +2427,7 @@ theorem measurable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
 
 theorem aEMeasurable_smul_const {f : α → 𝕜} {μ : Measure α} {c : E} (hc : c ≠ 0) :
     AEMeasurable (fun x => f x • c) μ ↔ AEMeasurable f μ :=
-  (closedEmbedding_smul_left hc).MeasurableEmbedding.aEMeasurable_comp_iff
+  (closedEmbedding_smul_left hc).MeasurableEmbedding.aemeasurable_comp_iff
 #align ae_measurable_smul_const aEMeasurable_smul_const
 
 end NormedSpace

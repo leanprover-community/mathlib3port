@@ -109,8 +109,8 @@ protected theorem comp_of_aEMeasurable {u : γ → δ} (h : IdentDistrib f g μ 
       exact hu.comp_ae_measurable h.ae_measurable_snd
     map_eq :=
       by
-      rw [← AEMeasurable.map_map_of_aEMeasurable hu h.ae_measurable_fst, ←
-        AEMeasurable.map_map_of_aEMeasurable _ h.ae_measurable_snd, h.map_eq]
+      rw [← AEMeasurable.map_map_of_aemeasurable hu h.ae_measurable_fst, ←
+        AEMeasurable.map_map_of_aemeasurable _ h.ae_measurable_snd, h.map_eq]
       rwa [← h.map_eq] }
 #align probability_theory.ident_distrib.comp_of_ae_measurable ProbabilityTheory.IdentDistrib.comp_of_aEMeasurable
 
