@@ -456,7 +456,7 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
   have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g :=
     by
-    refine' Monotone.map_csupr_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_csupᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · simpa using HD_bound_aux1 _ 0
@@ -488,7 +488,7 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
   have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g :=
     by
-    refine' Monotone.map_csupr_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_csupᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · simpa using HD_bound_aux2 _ 0

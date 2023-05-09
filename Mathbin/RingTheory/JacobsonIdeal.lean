@@ -217,7 +217,7 @@ theorem map_jacobson_of_bijective {f : R →+* S} (hf : Function.Bijective f) :
 
 theorem comap_jacobson {f : R →+* S} {K : Ideal S} :
     comap f K.jacobson = infₛ (comap f '' { J : Ideal S | K ≤ J ∧ J.IsMaximal }) :=
-  trans (comap_Inf' f _) infₛ_eq_infᵢ.symm
+  trans (comap_infₛ' f _) infₛ_eq_infᵢ.symm
 #align ideal.comap_jacobson Ideal.comap_jacobson
 
 theorem comap_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) {K : Ideal S} :

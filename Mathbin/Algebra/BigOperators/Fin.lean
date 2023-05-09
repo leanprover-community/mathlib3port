@@ -554,7 +554,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
           replace this := this (Fin.init n) (n (Fin.last _)) (Fin.init f) (f (Fin.last _))
           rw [← Fin.snoc_init_self f]
           simp (config := { singlePass := true }) only [← Fin.snoc_init_self n]
-          simp_rw [Fin.snoc_cast_succ, Fin.init_snoc, Fin.snoc_last, Fin.snoc_init_self n]
+          simp_rw [Fin.snoc_castSucc, Fin.init_snoc, Fin.snoc_last, Fin.snoc_init_self n]
           exact this
         intro n nn f fn
         cases nn

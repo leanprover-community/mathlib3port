@@ -592,10 +592,10 @@ theorem Set.Finite.nullMeasurableSet_interₛ {s : Set (Set α)} (hs : s.Finite)
 #align set.finite.null_measurable_set_sInter Set.Finite.nullMeasurableSet_interₛ
 -/
 
-#print MeasureTheory.nullMeasurableSet_to_measurable /-
-theorem nullMeasurableSet_to_measurable : NullMeasurableSet (toMeasurable μ s) μ :=
+#print MeasureTheory.nullMeasurableSet_toMeasurable /-
+theorem nullMeasurableSet_toMeasurable : NullMeasurableSet (toMeasurable μ s) μ :=
   (measurableSet_toMeasurable _ _).NullMeasurableSet
-#align measure_theory.null_measurable_set_to_measurable MeasureTheory.nullMeasurableSet_to_measurable
+#align measure_theory.null_measurable_set_to_measurable MeasureTheory.nullMeasurableSet_toMeasurable
 -/
 
 end

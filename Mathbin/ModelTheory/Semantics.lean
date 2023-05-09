@@ -438,7 +438,7 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
       · rw [if_neg h]
         refine' (congr rfl (ext _)).trans (snoc_last _ _)
         simp
-    · simp only [Function.comp_apply, Fin.snoc_cast_succ]
+    · simp only [Function.comp_apply, Fin.snoc_castSucc]
       refine' (congr rfl (ext _)).trans (snoc_cast_succ _ _ _)
       simp only [cast_refl, coe_cast_succ, OrderIso.coe_refl, id.def]
       split_ifs <;> simp

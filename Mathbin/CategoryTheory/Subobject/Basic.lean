@@ -1002,7 +1002,7 @@ section Exists
 
 variable [HasImages C]
 
-#print CategoryTheory.Subobject.exists_ /-
+#print CategoryTheory.Subobject.exists /-
 /-- The functor from subobjects of `X` to subobjects of `Y` given by
 sending the subobject `S` to its "image" under `f`, usually denoted $\exists_f$.
 For instance, when `C` is the category of types,
@@ -1011,15 +1011,15 @@ viewing `subobject X` as `set X` this is just `set.image f`.
 This functor is left adjoint to the `pullback f` functor (shown in `exists_pullback_adj`)
 provided both are defined, and generalises the `map f` functor, again provided it is defined.
 -/
-def exists_ (f : X ⟶ Y) : Subobject X ⥤ Subobject Y :=
-  lower (MonoOver.exists_ f)
-#align category_theory.subobject.exists CategoryTheory.Subobject.exists_
+def exists (f : X ⟶ Y) : Subobject X ⥤ Subobject Y :=
+  lower (MonoOver.exists f)
+#align category_theory.subobject.exists CategoryTheory.Subobject.exists
 -/
 
 #print CategoryTheory.Subobject.exists_iso_map /-
 /-- When `f : X ⟶ Y` is a monomorphism, `exists f` agrees with `map f`.
 -/
-theorem exists_iso_map (f : X ⟶ Y) [Mono f] : exists_ f = map f :=
+theorem exists_iso_map (f : X ⟶ Y) [Mono f] : exists f = map f :=
   lower_iso _ _ (MonoOver.existsIsoMap f)
 #align category_theory.subobject.exists_iso_map CategoryTheory.Subobject.exists_iso_map
 -/
@@ -1028,7 +1028,7 @@ theorem exists_iso_map (f : X ⟶ Y) [Mono f] : exists_ f = map f :=
 /-- `exists f : subobject X ⥤ subobject Y` is
 left adjoint to `pullback f : subobject Y ⥤ subobject X`.
 -/
-def existsPullbackAdj (f : X ⟶ Y) [HasPullbacks C] : exists_ f ⊣ pullback f :=
+def existsPullbackAdj (f : X ⟶ Y) [HasPullbacks C] : exists f ⊣ pullback f :=
   lowerAdjunction (MonoOver.existsPullbackAdj f)
 #align category_theory.subobject.exists_pullback_adj CategoryTheory.Subobject.existsPullbackAdj
 -/

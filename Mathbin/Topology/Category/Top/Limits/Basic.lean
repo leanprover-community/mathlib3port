@@ -256,53 +256,53 @@ instance forgetPreservesColimits : PreservesColimits (forget : TopCat.{u} ⥤ Ty
 #align Top.forget_preserves_colimits TopCat.forgetPreservesColimits
 -/
 
-/- warning: Top.is_terminal_punit -> TopCat.isTerminalPunit is a dubious translation:
+/- warning: Top.is_terminal_punit -> TopCat.isTerminalPUnit is a dubious translation:
 lean 3 declaration is
   CategoryTheory.Limits.IsTerminal.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (TopCat.of.{u1} PUnit.{succ u1} PUnit.topologicalSpace.{u1})
 but is expected to have type
   CategoryTheory.Limits.IsTerminal.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (TopCat.of.{u1} PUnit.{succ u1} instTopologicalSpacePUnit.{u1})
-Case conversion may be inaccurate. Consider using '#align Top.is_terminal_punit TopCat.isTerminalPunitₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Top.is_terminal_punit TopCat.isTerminalPUnitₓ'. -/
 /-- The terminal object of `Top` is `punit`. -/
-def isTerminalPunit : IsTerminal (TopCat.of PUnit.{u + 1}) :=
+def isTerminalPUnit : IsTerminal (TopCat.of PUnit.{u + 1}) :=
   haveI : ∀ X, Unique (X ⟶ TopCat.of PUnit.{u + 1}) := fun X =>
     ⟨⟨⟨fun x => PUnit.unit, by continuity⟩⟩, fun f => by ext⟩
   limits.is_terminal.of_unique _
-#align Top.is_terminal_punit TopCat.isTerminalPunit
+#align Top.is_terminal_punit TopCat.isTerminalPUnit
 
-/- warning: Top.terminal_iso_punit -> TopCat.terminalIsoPunit is a dubious translation:
+/- warning: Top.terminal_iso_punit -> TopCat.terminalIsoPUnit is a dubious translation:
 lean 3 declaration is
-  CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.terminal.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} TopCat.terminalIsoPunit._proof_1.{u1}) (TopCat.of.{u1} PUnit.{succ u1} PUnit.topologicalSpace.{u1})
+  CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.terminal.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} TopCat.terminalIsoPUnit._proof_1.{u1}) (TopCat.of.{u1} PUnit.{succ u1} PUnit.topologicalSpace.{u1})
 but is expected to have type
   CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.terminal.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) TopCat.topCat_hasLimitsOfSize.{0, u1})) (TopCat.of.{u1} PUnit.{succ u1} instTopologicalSpacePUnit.{u1})
-Case conversion may be inaccurate. Consider using '#align Top.terminal_iso_punit TopCat.terminalIsoPunitₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Top.terminal_iso_punit TopCat.terminalIsoPUnitₓ'. -/
 /-- The terminal object of `Top` is `punit`. -/
-def terminalIsoPunit : ⊤_ TopCat.{u} ≅ TopCat.of PUnit :=
-  terminalIsTerminal.uniqueUpToIso isTerminalPunit
-#align Top.terminal_iso_punit TopCat.terminalIsoPunit
+def terminalIsoPUnit : ⊤_ TopCat.{u} ≅ TopCat.of PUnit :=
+  terminalIsTerminal.uniqueUpToIso isTerminalPUnit
+#align Top.terminal_iso_punit TopCat.terminalIsoPUnit
 
-/- warning: Top.is_initial_pempty -> TopCat.isInitialPempty is a dubious translation:
+/- warning: Top.is_initial_pempty -> TopCat.isInitialPEmpty is a dubious translation:
 lean 3 declaration is
   CategoryTheory.Limits.IsInitial.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (TopCat.of.{u1} PEmpty.{succ u1} PEmpty.topologicalSpace.{u1})
 but is expected to have type
   CategoryTheory.Limits.IsInitial.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (TopCat.of.{u1} PEmpty.{succ u1} instTopologicalSpacePEmpty.{u1})
-Case conversion may be inaccurate. Consider using '#align Top.is_initial_pempty TopCat.isInitialPemptyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Top.is_initial_pempty TopCat.isInitialPEmptyₓ'. -/
 /-- The initial object of `Top` is `pempty`. -/
-def isInitialPempty : IsInitial (TopCat.of PEmpty.{u + 1}) :=
+def isInitialPEmpty : IsInitial (TopCat.of PEmpty.{u + 1}) :=
   haveI : ∀ X, Unique (TopCat.of PEmpty.{u + 1} ⟶ X) := fun X =>
     ⟨⟨⟨fun x => x.elim, by continuity⟩⟩, fun f => by ext ⟨⟩⟩
   limits.is_initial.of_unique _
-#align Top.is_initial_pempty TopCat.isInitialPempty
+#align Top.is_initial_pempty TopCat.isInitialPEmpty
 
-/- warning: Top.initial_iso_pempty -> TopCat.initialIsoPempty is a dubious translation:
+/- warning: Top.initial_iso_pempty -> TopCat.initialIsoPEmpty is a dubious translation:
 lean 3 declaration is
-  CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.initial.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} TopCat.initialIsoPempty._proof_1.{u1}) (TopCat.of.{u1} PEmpty.{succ u1} PEmpty.topologicalSpace.{u1})
+  CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.Limits.initial.{u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} TopCat.initialIsoPEmpty._proof_1.{u1}) (TopCat.of.{u1} PEmpty.{succ u1} PEmpty.topologicalSpace.{u1})
 but is expected to have type
   CategoryTheory.Iso.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.initial.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Limits.hasColimitsOfShapeOfHasColimitsOfSize.{0, 0, u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) TopCat.topCat_hasColimitsOfSize.{0, u1})) (TopCat.of.{u1} PEmpty.{succ u1} instTopologicalSpacePEmpty.{u1})
-Case conversion may be inaccurate. Consider using '#align Top.initial_iso_pempty TopCat.initialIsoPemptyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Top.initial_iso_pempty TopCat.initialIsoPEmptyₓ'. -/
 /-- The initial object of `Top` is `pempty`. -/
-def initialIsoPempty : ⊥_ TopCat.{u} ≅ TopCat.of PEmpty :=
-  initialIsInitial.uniqueUpToIso isInitialPempty
-#align Top.initial_iso_pempty TopCat.initialIsoPempty
+def initialIsoPEmpty : ⊥_ TopCat.{u} ≅ TopCat.of PEmpty :=
+  initialIsInitial.uniqueUpToIso isInitialPEmpty
+#align Top.initial_iso_pempty TopCat.initialIsoPEmpty
 
 end TopCat
 

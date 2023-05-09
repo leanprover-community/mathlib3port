@@ -495,7 +495,7 @@ def finitaryExtensiveTopAux (Z : TopCat.{u}) (f : Z ⟶ TopCat.of (Sum PUnit.{u 
 
 instance : FinitaryExtensive TopCat.{u} :=
   by
-  rw [finitary_extensive_iff_of_is_terminal TopCat.{u} _ TopCat.isTerminalPunit _
+  rw [finitary_extensive_iff_of_is_terminal TopCat.{u} _ TopCat.isTerminalPUnit _
       (TopCat.binaryCofanIsColimit _ _)]
   apply
     binary_cofan.is_van_kampen_mk _ _ (fun X Y => TopCat.binaryCofanIsColimit X Y) _

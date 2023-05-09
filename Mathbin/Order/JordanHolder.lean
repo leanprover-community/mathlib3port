@@ -744,9 +744,9 @@ def snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) : Composit
   series := Fin.snoc s x
   step' i := by
     refine' Fin.lastCases _ _ i
-    · rwa [Fin.snoc_cast_succ, Fin.succ_last, Fin.snoc_last, ← top]
+    · rwa [Fin.snoc_castSucc, Fin.succ_last, Fin.snoc_last, ← top]
     · intro i
-      rw [Fin.snoc_cast_succ, ← Fin.castSucc_fin_succ, Fin.snoc_cast_succ]
+      rw [Fin.snoc_castSucc, ← Fin.castSucc_fin_succ, Fin.snoc_castSucc]
       exact s.step _
 #align composition_series.snoc CompositionSeries.snoc
 -/
@@ -776,7 +776,7 @@ Case conversion may be inaccurate. Consider using '#align composition_series.sno
 @[simp]
 theorem snoc_castSucc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x)
     (i : Fin (s.length + 1)) : snoc s x hsat i.cast_succ = s i :=
-  Fin.snoc_cast_succ _ _ _
+  Fin.snoc_castSucc _ _ _
 #align composition_series.snoc_cast_succ CompositionSeries.snoc_castSucc
 
 #print CompositionSeries.bot_snoc /-
