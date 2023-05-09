@@ -322,8 +322,7 @@ theorem countable_meas_le_ne_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder 
 #align measure.countable_meas_le_ne_meas_lt Measure.countable_meas_le_ne_meas_lt
 
 theorem meas_le_ae_eq_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder R] [MeasurableSpace R]
-    [MeasurableSingletonClass R] (ν : Measure R) [HasNoAtoms ν] {g : α → R}
-    (g_mble : Measurable g) :
+    [MeasurableSingletonClass R] (ν : Measure R) [NoAtoms ν] {g : α → R} (g_mble : Measurable g) :
     (fun t => μ { a : α | t ≤ g a }) =ᵐ[ν] fun t => μ { a : α | t < g a } :=
   Set.Countable.measure_zero (Measure.countable_meas_le_ne_meas_lt μ g_mble) _
 #align measure.meas_le_ae_eq_meas_lt Measure.meas_le_ae_eq_meas_lt

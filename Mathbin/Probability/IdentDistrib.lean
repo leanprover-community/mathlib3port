@@ -325,7 +325,7 @@ section UniformIntegrable
 open TopologicalSpace
 
 variable {E : Type _} [MeasurableSpace E] [NormedAddCommGroup E] [BorelSpace E]
-  [SecondCountableTopology E] {μ : Measure α} [IsFiniteMeasure μ]
+  [SecondCountableTopology E] {μ : Measure α} [FiniteMeasure μ]
 
 /-- This lemma is superceded by `mem_ℒp.uniform_integrable_of_ident_distrib` which only require
 `ae_strongly_measurable`. -/

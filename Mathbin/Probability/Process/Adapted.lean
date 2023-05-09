@@ -117,12 +117,13 @@ measurable with respect to a filtration `f` if at each point in time `i`, `u` re
 The usual definition uses the interval `[0,i]`, which we replace by `set.Iic i`. We recover the
 usual definition for index types `ℝ≥0` or `ℕ`. -/
 def ProgMeasurable [MeasurableSpace ι] (f : Filtration ι m) (u : ι → Ω → β) : Prop :=
-  ∀ i, strongly_measurable[Subtype.measurableSpace.Prod (f i)] fun p : Set.Iic i × Ω => u p.1 p.2
+  ∀ i,
+    strongly_measurable[Subtype.instMeasurableSpace.Prod (f i)] fun p : Set.Iic i × Ω => u p.1 p.2
 #align measure_theory.prog_measurable MeasureTheory.ProgMeasurable
 
 theorem progMeasurable_const [MeasurableSpace ι] (f : Filtration ι m) (b : β) :
     ProgMeasurable f (fun _ _ => b : ι → Ω → β) := fun i =>
-  @stronglyMeasurable_const _ _ (Subtype.measurableSpace.Prod (f i)) _ _
+  @stronglyMeasurable_const _ _ (Subtype.instMeasurableSpace.Prod (f i)) _ _
 #align measure_theory.prog_measurable_const MeasureTheory.progMeasurable_const
 
 namespace ProgMeasurable

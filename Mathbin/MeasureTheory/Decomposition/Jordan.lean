@@ -58,8 +58,8 @@ finite measures. -/
 @[ext]
 structure JordanDecomposition (α : Type _) [MeasurableSpace α] where
   (posPart negPart : Measure α)
-  [posPart_finite : IsFiniteMeasure pos_part]
-  [negPart_finite : IsFiniteMeasure neg_part]
+  [posPart_finite : FiniteMeasure pos_part]
+  [negPart_finite : FiniteMeasure neg_part]
   MutuallySingular : pos_part ⟂ₘ neg_part
 #align measure_theory.jordan_decomposition MeasureTheory.JordanDecomposition
 
@@ -210,7 +210,7 @@ namespace SignedMeasure
 
 open Classical JordanDecomposition Measure Set VectorMeasure
 
-variable {s : SignedMeasure α} {μ ν : Measure α} [IsFiniteMeasure μ] [IsFiniteMeasure ν]
+variable {s : SignedMeasure α} {μ ν : Measure α} [FiniteMeasure μ] [FiniteMeasure ν]
 
 /-- Given a signed measure `s`, `s.to_jordan_decomposition` is the Jordan decomposition `j`,
 such that `s = j.to_signed_measure`. This property is known as the Jordan decomposition

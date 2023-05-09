@@ -174,12 +174,11 @@ theorem hasFiniteIntegral_const_iff {c : β} :
     or_iff_not_imp_left]
 #align measure_theory.has_finite_integral_const_iff MeasureTheory.hasFiniteIntegral_const_iff
 
-theorem hasFiniteIntegral_const [IsFiniteMeasure μ] (c : β) :
-    HasFiniteIntegral (fun x : α => c) μ :=
+theorem hasFiniteIntegral_const [FiniteMeasure μ] (c : β) : HasFiniteIntegral (fun x : α => c) μ :=
   hasFiniteIntegral_const_iff.2 (Or.inr <| measure_lt_top _ _)
 #align measure_theory.has_finite_integral_const MeasureTheory.hasFiniteIntegral_const
 
-theorem hasFiniteIntegral_of_bounded [IsFiniteMeasure μ] {f : α → β} {C : ℝ}
+theorem hasFiniteIntegral_of_bounded [FiniteMeasure μ] {f : α → β} {C : ℝ}
     (hC : ∀ᵐ a ∂μ, ‖f a‖ ≤ C) : HasFiniteIntegral f μ :=
   (hasFiniteIntegral_const C).mono' hC
 #align measure_theory.has_finite_integral_of_bounded MeasureTheory.hasFiniteIntegral_of_bounded
@@ -274,12 +273,12 @@ theorem hasFiniteIntegral_toReal_of_lintegral_ne_top {f : α → ℝ≥0∞} (hf
     simp [← h]
 #align measure_theory.has_finite_integral_to_real_of_lintegral_ne_top MeasureTheory.hasFiniteIntegral_toReal_of_lintegral_ne_top
 
-theorem isFiniteMeasure_withDensity_ofReal {f : α → ℝ} (hfi : HasFiniteIntegral f μ) :
-    IsFiniteMeasure (μ.withDensity fun x => ENNReal.ofReal <| f x) :=
+theorem finiteMeasure_withDensity_ofReal {f : α → ℝ} (hfi : HasFiniteIntegral f μ) :
+    FiniteMeasure (μ.withDensity fun x => ENNReal.ofReal <| f x) :=
   by
   refine' is_finite_measure_with_density ((lintegral_mono fun x => _).trans_lt hfi).Ne
   exact Real.ofReal_le_ennnorm (f x)
-#align measure_theory.is_finite_measure_with_density_of_real MeasureTheory.isFiniteMeasure_withDensity_ofReal
+#align measure_theory.is_finite_measure_with_density_of_real MeasureTheory.finiteMeasure_withDensity_ofReal
 
 section DominatedConvergence
 
@@ -503,7 +502,7 @@ theorem integrable_const_iff {c : β} : Integrable (fun x : α => c) μ ↔ c = 
   rw [integrable, and_iff_right this, has_finite_integral_const_iff]
 #align measure_theory.integrable_const_iff MeasureTheory.integrable_const_iff
 
-theorem integrable_const [IsFiniteMeasure μ] (c : β) : Integrable (fun x : α => c) μ :=
+theorem integrable_const [FiniteMeasure μ] (c : β) : Integrable (fun x : α => c) μ :=
   integrable_const_iff.2 <| Or.inr <| measure_lt_top _ _
 #align measure_theory.integrable_const MeasureTheory.integrable_const
 
@@ -514,7 +513,7 @@ theorem Memℒp.integrable_norm_rpow {f : α → β} {p : ℝ≥0∞} (hf : Mem�
   exact hf.norm_rpow hp_ne_zero hp_ne_top
 #align measure_theory.mem_ℒp.integrable_norm_rpow MeasureTheory.Memℒp.integrable_norm_rpow
 
-theorem Memℒp.integrable_norm_rpow' [IsFiniteMeasure μ] {f : α → β} {p : ℝ≥0∞} (hf : Memℒp f p μ) :
+theorem Memℒp.integrable_norm_rpow' [FiniteMeasure μ] {f : α → β} {p : ℝ≥0∞} (hf : Memℒp f p μ) :
     Integrable (fun x : α => ‖f x‖ ^ p.toReal) μ :=
   by
   by_cases h_zero : p = 0
@@ -600,7 +599,7 @@ theorem Integrable.to_average {f : α → β} (h : Integrable f μ) : Integrable
     simpa
 #align measure_theory.integrable.to_average MeasureTheory.Integrable.to_average
 
-theorem integrable_average [IsFiniteMeasure μ] {f : α → β} :
+theorem integrable_average [FiniteMeasure μ] {f : α → β} :
     Integrable f ((μ univ)⁻¹ • μ) ↔ Integrable f μ :=
   (eq_or_ne μ 0).byCases (fun h => by simp [h]) fun h =>
     integrable_smul_measure (ENNReal.inv_ne_zero.2 <| measure_ne_top _ _)
@@ -818,7 +817,7 @@ theorem Integrable.prod_mk {f : α → β} {g : α → γ} (hf : Integrable f μ
           ⟩
 #align measure_theory.integrable.prod_mk MeasureTheory.Integrable.prod_mk
 
-theorem Memℒp.integrable {q : ℝ≥0∞} (hq1 : 1 ≤ q) {f : α → β} [IsFiniteMeasure μ]
+theorem Memℒp.integrable {q : ℝ≥0∞} (hq1 : 1 ≤ q) {f : α → β} [FiniteMeasure μ]
     (hfq : Memℒp f q μ) : Integrable f μ :=
   memℒp_one_iff_integrable.mp (hfq.memℒp_of_exponent_le hq1)
 #align measure_theory.mem_ℒp.integrable MeasureTheory.Memℒp.integrable

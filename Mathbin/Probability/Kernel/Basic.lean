@@ -118,7 +118,7 @@ end Kernel
 
 /-- A kernel is a Markov kernel if every measure in its image is a probability measure. -/
 class IsMarkovKernel (κ : kernel α β) : Prop where
-  IsProbabilityMeasure : ∀ a, IsProbabilityMeasure (κ a)
+  ProbabilityMeasure : ∀ a, ProbabilityMeasure (κ a)
 #align probability_theory.is_markov_kernel ProbabilityTheory.IsMarkovKernel
 
 /-- A kernel is finite if every measure in its image is finite, with a uniform bound. -/
@@ -167,13 +167,13 @@ instance IsFiniteKernel.add (κ η : kernel α β) [IsFiniteKernel κ] [IsFinite
 variable {κ : kernel α β}
 
 instance IsMarkovKernel.is_probability_measure' [h : IsMarkovKernel κ] (a : α) :
-    IsProbabilityMeasure (κ a) :=
-  IsMarkovKernel.isProbabilityMeasure a
+    ProbabilityMeasure (κ a) :=
+  IsMarkovKernel.probabilityMeasure a
 #align probability_theory.is_markov_kernel.is_probability_measure' ProbabilityTheory.IsMarkovKernel.is_probability_measure'
 
-instance IsFiniteKernel.isFiniteMeasure [h : IsFiniteKernel κ] (a : α) : IsFiniteMeasure (κ a) :=
+instance IsFiniteKernel.finiteMeasure [h : IsFiniteKernel κ] (a : α) : FiniteMeasure (κ a) :=
   ⟨(kernel.measure_le_bound κ a Set.univ).trans_lt (IsFiniteKernel.bound_lt_top κ)⟩
-#align probability_theory.is_finite_kernel.is_finite_measure ProbabilityTheory.IsFiniteKernel.isFiniteMeasure
+#align probability_theory.is_finite_kernel.is_finite_measure ProbabilityTheory.IsFiniteKernel.finiteMeasure
 
 instance (priority := 100) IsMarkovKernel.isFiniteKernel [h : IsMarkovKernel κ] :
     IsFiniteKernel κ :=
@@ -469,12 +469,12 @@ theorem const_apply (μβ : Measure β) (a : α) : const α μβ a = μβ :=
   rfl
 #align probability_theory.kernel.const_apply ProbabilityTheory.kernel.const_apply
 
-instance isFiniteKernel_const {μβ : Measure β} [hμβ : IsFiniteMeasure μβ] :
+instance isFiniteKernel_const {μβ : Measure β} [hμβ : FiniteMeasure μβ] :
     IsFiniteKernel (const α μβ) :=
   ⟨⟨μβ Set.univ, measure_lt_top _ _, fun a => le_rfl⟩⟩
 #align probability_theory.kernel.is_finite_kernel_const ProbabilityTheory.kernel.isFiniteKernel_const
 
-instance isMarkovKernel_const {μβ : Measure β} [hμβ : IsProbabilityMeasure μβ] :
+instance isMarkovKernel_const {μβ : Measure β} [hμβ : ProbabilityMeasure μβ] :
     IsMarkovKernel (const α μβ) :=
   ⟨fun a => hμβ⟩
 #align probability_theory.kernel.is_markov_kernel_const ProbabilityTheory.kernel.isMarkovKernel_const

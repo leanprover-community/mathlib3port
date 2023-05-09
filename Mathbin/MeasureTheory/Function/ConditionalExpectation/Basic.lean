@@ -1010,10 +1010,10 @@ theorem integrableOn_condexpL2_of_measure_ne_top (hm : m ≤ m0) (hμs : μ s �
   integrableOn_lp_of_measure_ne_top (condexpL2 𝕜 hm f : α →₂[μ] E) fact_one_le_two_ennreal.elim hμs
 #align measure_theory.integrable_on_condexp_L2_of_measure_ne_top MeasureTheory.integrableOn_condexpL2_of_measure_ne_top
 
-theorem integrable_condexpL2_of_isFiniteMeasure (hm : m ≤ m0) [IsFiniteMeasure μ] {f : α →₂[μ] E} :
+theorem integrable_condexpL2_of_finiteMeasure (hm : m ≤ m0) [FiniteMeasure μ] {f : α →₂[μ] E} :
     Integrable (condexpL2 𝕜 hm f) μ :=
   integrableOn_univ.mp <| integrableOn_condexpL2_of_measure_ne_top hm (measure_ne_top _ _) f
-#align measure_theory.integrable_condexp_L2_of_is_finite_measure MeasureTheory.integrable_condexpL2_of_isFiniteMeasure
+#align measure_theory.integrable_condexp_L2_of_is_finite_measure MeasureTheory.integrable_condexpL2_of_finiteMeasure
 
 theorem norm_condexpL2_le_one (hm : m ≤ m0) : ‖@condexpL2 α E 𝕜 _ _ _ _ _ _ μ hm‖ ≤ 1 :=
   haveI : Fact (m ≤ m0) := ⟨hm⟩
@@ -2138,8 +2138,7 @@ theorem condexp_of_stronglyMeasurable (hm : m ≤ m0) [hμm : SigmaFinite (μ.tr
   infer_instance
 #align measure_theory.condexp_of_strongly_measurable MeasureTheory.condexp_of_stronglyMeasurable
 
-theorem condexp_const (hm : m ≤ m0) (c : F') [IsFiniteMeasure μ] :
-    μ[fun x : α => c|m] = fun _ => c :=
+theorem condexp_const (hm : m ≤ m0) (c : F') [FiniteMeasure μ] : μ[fun x : α => c|m] = fun _ => c :=
   condexp_of_stronglyMeasurable hm (@stronglyMeasurable_const _ _ m _ _) (integrable_const c)
 #align measure_theory.condexp_const MeasureTheory.condexp_const
 
@@ -2315,7 +2314,7 @@ theorem condexp_bot_ae_eq (f : α → F') :
     simp only [h, ae_zero]
 #align measure_theory.condexp_bot_ae_eq MeasureTheory.condexp_bot_ae_eq
 
-theorem condexp_bot [IsProbabilityMeasure μ] (f : α → F') : μ[f|⊥] = fun _ => ∫ x, f x ∂μ :=
+theorem condexp_bot [ProbabilityMeasure μ] (f : α → F') : μ[f|⊥] = fun _ => ∫ x, f x ∂μ :=
   by
   refine' (condexp_bot' f).trans _
   rw [measure_univ, ENNReal.one_toReal, inv_one, one_smul]

@@ -166,7 +166,7 @@ theorem IndepCat.symm {m₁ m₂ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ 
 #align probability_theory.indep.symm ProbabilityTheory.IndepCat.symm
 
 theorem indepCat_bot_right (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : Measure Ω}
-    [IsProbabilityMeasure μ] : IndepCat m' ⊥ μ :=
+    [ProbabilityMeasure μ] : IndepCat m' ⊥ μ :=
   by
   intro s t hs ht
   rw [Set.mem_setOf_eq, MeasurableSpace.measurableSet_bot_iff] at ht
@@ -176,18 +176,18 @@ theorem indepCat_bot_right (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {�
 #align probability_theory.indep_bot_right ProbabilityTheory.indepCat_bot_right
 
 theorem indepCat_bot_left (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : Measure Ω}
-    [IsProbabilityMeasure μ] : IndepCat ⊥ m' μ :=
+    [ProbabilityMeasure μ] : IndepCat ⊥ m' μ :=
   (indepCat_bot_right m').symm
 #align probability_theory.indep_bot_left ProbabilityTheory.indepCat_bot_left
 
-theorem indepSetCat_empty_right {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
+theorem indepSetCat_empty_right {m : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
     (s : Set Ω) : IndepSetCat s ∅ μ :=
   by
   simp only [indep_set, generate_from_singleton_empty]
   exact indep_bot_right _
 #align probability_theory.indep_set_empty_right ProbabilityTheory.indepSetCat_empty_right
 
-theorem indepSetCat_empty_left {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
+theorem indepSetCat_empty_left {m : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
     (s : Set Ω) : IndepSetCat ∅ s μ :=
   (indepSetCat_empty_right s).symm
 #align probability_theory.indep_set_empty_left ProbabilityTheory.indepSetCat_empty_left
@@ -358,9 +358,9 @@ section FromPiSystemsToMeasurableSpaces
 
 
 private theorem indep_sets.indep_aux {m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω}
-    {μ : Measure Ω} [IsProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h2 : m2 ≤ m)
-    (hp2 : IsPiSystem p2) (hpm2 : m2 = generateFrom p2) (hyp : IndepSetsCat p1 p2 μ) {t1 t2 : Set Ω}
-    (ht1 : t1 ∈ p1) (ht2m : measurable_set[m2] t2) : μ (t1 ∩ t2) = μ t1 * μ t2 :=
+    {μ : Measure Ω} [ProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h2 : m2 ≤ m) (hp2 : IsPiSystem p2)
+    (hpm2 : m2 = generateFrom p2) (hyp : IndepSetsCat p1 p2 μ) {t1 t2 : Set Ω} (ht1 : t1 ∈ p1)
+    (ht2m : measurable_set[m2] t2) : μ (t1 ∩ t2) = μ t1 * μ t2 :=
   by
   let μ_inter := μ.restrict t1
   let ν := μ t1 • μ
@@ -378,7 +378,7 @@ private theorem indep_sets.indep_aux {m2 : MeasurableSpace Ω} {m : MeasurableSp
 #align probability_theory.indep_sets.indep_aux probability_theory.indep_sets.indep_aux
 
 theorem IndepSetsCat.indepCat {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {μ : Measure Ω}
-    [IsProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h1 : m1 ≤ m) (h2 : m2 ≤ m) (hp1 : IsPiSystem p1)
+    [ProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h1 : m1 ≤ m) (h2 : m2 ≤ m) (hp1 : IsPiSystem p1)
     (hp2 : IsPiSystem p2) (hpm1 : m1 = generateFrom p1) (hpm2 : m2 = generateFrom p2)
     (hyp : IndepSetsCat p1 p2 μ) : IndepCat m1 m2 μ :=
   by
@@ -398,7 +398,7 @@ theorem IndepSetsCat.indepCat {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace 
   exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
 #align probability_theory.indep_sets.indep ProbabilityTheory.IndepSetsCat.indepCat
 
-theorem IndepSetsCat.indep' {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
+theorem IndepSetsCat.indep' {m : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
     {p1 p2 : Set (Set Ω)} (hp1m : ∀ s ∈ p1, MeasurableSet s) (hp2m : ∀ s ∈ p2, MeasurableSet s)
     (hp1 : IsPiSystem p1) (hp2 : IsPiSystem p2) (hyp : IndepSetsCat p1 p2 μ) :
     IndepCat (generateFrom p1) (generateFrom p2) μ :=
@@ -407,7 +407,7 @@ theorem IndepSetsCat.indep' {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbab
 
 variable {m0 : MeasurableSpace Ω} {μ : Measure Ω}
 
-theorem indepSetsCat_piUnionᵢInter_of_disjoint [IsProbabilityMeasure μ] {s : ι → Set (Set Ω)}
+theorem indepSetsCat_piUnionᵢInter_of_disjoint [ProbabilityMeasure μ] {s : ι → Set (Set Ω)}
     {S T : Set ι} (h_indep : IndepSets s μ) (hST : Disjoint S T) :
     IndepSetsCat (piUnionᵢInter s S) (piUnionᵢInter s T) μ :=
   by
@@ -450,7 +450,7 @@ theorem indepSetsCat_piUnionᵢInter_of_disjoint [IsProbabilityMeasure μ] {s : 
       h_indep p1 ht1_m, ht2_eq, ← h_indep p2 ht2_m]
 #align probability_theory.indep_sets_pi_Union_Inter_of_disjoint ProbabilityTheory.indepSetsCat_piUnionᵢInter_of_disjoint
 
-theorem IndepSet.indepCat_generateFrom_of_disjoint [IsProbabilityMeasure μ] {s : ι → Set Ω}
+theorem IndepSet.indepCat_generateFrom_of_disjoint [ProbabilityMeasure μ] {s : ι → Set Ω}
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (S T : Set ι) (hST : Disjoint S T) :
     IndepCat (generateFrom { t | ∃ n ∈ S, s n = t }) (generateFrom { t | ∃ k ∈ T, s k = t }) μ :=
   by
@@ -466,7 +466,7 @@ theorem IndepSet.indepCat_generateFrom_of_disjoint [IsProbabilityMeasure μ] {s 
   · classical exact indep_sets_pi_Union_Inter_of_disjoint (Indep.Indep_sets (fun n => rfl) hs) hST
 #align probability_theory.Indep_set.indep_generate_from_of_disjoint ProbabilityTheory.IndepSet.indepCat_generateFrom_of_disjoint
 
-theorem indepCat_supᵢ_of_disjoint [IsProbabilityMeasure μ] {m : ι → MeasurableSpace Ω}
+theorem indepCat_supᵢ_of_disjoint [ProbabilityMeasure μ] {m : ι → MeasurableSpace Ω}
     (h_le : ∀ i, m i ≤ m0) (h_indep : Indep m μ) {S T : Set ι} (hST : Disjoint S T) :
     IndepCat (⨆ i ∈ S, m i) (⨆ i ∈ T, m i) μ :=
   by
@@ -480,7 +480,7 @@ theorem indepCat_supᵢ_of_disjoint [IsProbabilityMeasure μ] {m : ι → Measur
 #align probability_theory.indep_supr_of_disjoint ProbabilityTheory.indepCat_supᵢ_of_disjoint
 
 theorem indepCat_supᵢ_of_directed_le {Ω} {m : ι → MeasurableSpace Ω} {m' m0 : MeasurableSpace Ω}
-    {μ : Measure Ω} [IsProbabilityMeasure μ] (h_indep : ∀ i, IndepCat (m i) m' μ)
+    {μ : Measure Ω} [ProbabilityMeasure μ] (h_indep : ∀ i, IndepCat (m i) m' μ)
     (h_le : ∀ i, m i ≤ m0) (h_le' : m' ≤ m0) (hm : Directed (· ≤ ·) m) : IndepCat (⨆ i, m i) m' μ :=
   by
   let p : ι → Set (Set Ω) := fun n => { t | measurable_set[m n] t }
@@ -502,7 +502,7 @@ theorem indepCat_supᵢ_of_directed_le {Ω} {m : ι → MeasurableSpace Ω} {m' 
   exact (generate_from_Union_measurable_set _).symm
 #align probability_theory.indep_supr_of_directed_le ProbabilityTheory.indepCat_supᵢ_of_directed_le
 
-theorem IndepSet.indepCat_generateFrom_lt [Preorder ι] [IsProbabilityMeasure μ] {s : ι → Set Ω}
+theorem IndepSet.indepCat_generateFrom_lt [Preorder ι] [ProbabilityMeasure μ] {s : ι → Set Ω}
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (i : ι) :
     IndepCat (generateFrom {s i}) (generateFrom { t | ∃ j < i, s j = t }) μ :=
   by
@@ -511,7 +511,7 @@ theorem IndepSet.indepCat_generateFrom_lt [Preorder ι] [IsProbabilityMeasure μ
   simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.setOf_eq_eq_singleton']
 #align probability_theory.Indep_set.indep_generate_from_lt ProbabilityTheory.IndepSet.indepCat_generateFrom_lt
 
-theorem IndepSet.indepCat_generateFrom_le [LinearOrder ι] [IsProbabilityMeasure μ] {s : ι → Set Ω}
+theorem IndepSet.indepCat_generateFrom_le [LinearOrder ι] [ProbabilityMeasure μ] {s : ι → Set Ω}
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (i : ι) {k : ι} (hk : i < k) :
     IndepCat (generateFrom {s k}) (generateFrom { t | ∃ j ≤ i, s j = t }) μ :=
   by
@@ -520,21 +520,21 @@ theorem IndepSet.indepCat_generateFrom_le [LinearOrder ι] [IsProbabilityMeasure
   simp only [Set.mem_singleton_iff, exists_prop, exists_eq_left, Set.setOf_eq_eq_singleton']
 #align probability_theory.Indep_set.indep_generate_from_le ProbabilityTheory.IndepSet.indepCat_generateFrom_le
 
-theorem IndepSet.indepCat_generateFrom_le_nat [IsProbabilityMeasure μ] {s : ℕ → Set Ω}
+theorem IndepSet.indepCat_generateFrom_le_nat [ProbabilityMeasure μ] {s : ℕ → Set Ω}
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (n : ℕ) :
     IndepCat (generateFrom {s (n + 1)}) (generateFrom { t | ∃ k ≤ n, s k = t }) μ :=
   hs.indepCat_generateFrom_le hsm _ n.lt_succ_self
 #align probability_theory.Indep_set.indep_generate_from_le_nat ProbabilityTheory.IndepSet.indepCat_generateFrom_le_nat
 
 theorem indepCat_supᵢ_of_monotone [SemilatticeSup ι] {Ω} {m : ι → MeasurableSpace Ω}
-    {m' m0 : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {m' m0 : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
     (h_indep : ∀ i, IndepCat (m i) m' μ) (h_le : ∀ i, m i ≤ m0) (h_le' : m' ≤ m0)
     (hm : Monotone m) : IndepCat (⨆ i, m i) m' μ :=
   indepCat_supᵢ_of_directed_le h_indep h_le h_le' (Monotone.directed_le hm)
 #align probability_theory.indep_supr_of_monotone ProbabilityTheory.indepCat_supᵢ_of_monotone
 
 theorem indepCat_supᵢ_of_antitone [SemilatticeInf ι] {Ω} {m : ι → MeasurableSpace Ω}
-    {m' m0 : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {m' m0 : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
     (h_indep : ∀ i, IndepCat (m i) m' μ) (h_le : ∀ i, m i ≤ m0) (h_le' : m' ≤ m0)
     (hm : Antitone m) : IndepCat (⨆ i, m i) m' μ :=
   indepCat_supᵢ_of_directed_le h_indep h_le h_le' (directed_of_inf hm)
@@ -584,7 +584,7 @@ theorem IndepSets.piUnionᵢInter_of_not_mem {π : ι → Set (Set Ω)} {a : ι}
 #align probability_theory.Indep_sets.pi_Union_Inter_of_not_mem ProbabilityTheory.IndepSets.piUnionᵢInter_of_not_mem
 
 /-- The measurable space structures generated by independent pi-systems are independent. -/
-theorem IndepSets.indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace Ω) (h_le : ∀ i, m i ≤ m0)
+theorem IndepSets.indep [ProbabilityMeasure μ] (m : ι → MeasurableSpace Ω) (h_le : ∀ i, m i ≤ m0)
     (π : ι → Set (Set Ω)) (h_pi : ∀ n, IsPiSystem (π n))
     (h_generate : ∀ i, m i = generateFrom (π i)) (h_ind : IndepSets π μ) : Indep m μ := by
   classical
@@ -630,7 +630,7 @@ variable {s t : Set Ω} (S T : Set (Set Ω))
 
 theorem indepSetCat_iff_indepSetsCat_singleton {m0 : MeasurableSpace Ω} (hs_meas : MeasurableSet s)
     (ht_meas : MeasurableSet t) (μ : Measure Ω := by exact MeasureTheory.MeasureSpace.volume)
-    [IsProbabilityMeasure μ] : IndepSetCat s t μ ↔ IndepSetsCat {s} {t} μ :=
+    [ProbabilityMeasure μ] : IndepSetCat s t μ ↔ IndepSetsCat {s} {t} μ :=
   ⟨IndepCat.indepSetsCat, fun h =>
     IndepSetsCat.indepCat (generateFrom_le fun u hu => by rwa [set.mem_singleton_iff.mp hu])
       (generateFrom_le fun u hu => by rwa [set.mem_singleton_iff.mp hu]) (IsPiSystem.singleton s)
@@ -639,13 +639,13 @@ theorem indepSetCat_iff_indepSetsCat_singleton {m0 : MeasurableSpace Ω} (hs_mea
 
 theorem indepSetCat_iff_measure_inter_eq_mul {m0 : MeasurableSpace Ω} (hs_meas : MeasurableSet s)
     (ht_meas : MeasurableSet t) (μ : Measure Ω := by exact MeasureTheory.MeasureSpace.volume)
-    [IsProbabilityMeasure μ] : IndepSetCat s t μ ↔ μ (s ∩ t) = μ s * μ t :=
+    [ProbabilityMeasure μ] : IndepSetCat s t μ ↔ μ (s ∩ t) = μ s * μ t :=
   (indepSetCat_iff_indepSetsCat_singleton hs_meas ht_meas μ).trans indepSetsCat_singleton_iff
 #align probability_theory.indep_set_iff_measure_inter_eq_mul ProbabilityTheory.indepSetCat_iff_measure_inter_eq_mul
 
 theorem IndepSetsCat.indepSetCat_of_mem {m0 : MeasurableSpace Ω} (hs : s ∈ S) (ht : t ∈ T)
     (hs_meas : MeasurableSet s) (ht_meas : MeasurableSet t)
-    (μ : Measure Ω := by exact MeasureTheory.MeasureSpace.volume) [IsProbabilityMeasure μ]
+    (μ : Measure Ω := by exact MeasureTheory.MeasureSpace.volume) [ProbabilityMeasure μ]
     (h_indep : IndepSetsCat S T μ) : IndepSetCat s t μ :=
   (indepSetCat_iff_measure_inter_eq_mul hs_meas ht_meas μ).mpr (h_indep s t hs ht)
 #align probability_theory.indep_sets.indep_set_of_mem ProbabilityTheory.IndepSetsCat.indepSetCat_of_mem
@@ -735,7 +735,7 @@ theorem indepFun_iff_measure_inter_preimage_eq_mul {ι : Type _} {β : ι → Ty
 #align probability_theory.Indep_fun_iff_measure_inter_preimage_eq_mul ProbabilityTheory.indepFun_iff_measure_inter_preimage_eq_mul
 
 theorem indepFunCat_iff_indepSetCat_preimage {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'}
-    [IsProbabilityMeasure μ] (hf : Measurable f) (hg : Measurable g) :
+    [ProbabilityMeasure μ] (hf : Measurable f) (hg : Measurable g) :
     IndepFunCat f g μ ↔
       ∀ s t, MeasurableSet s → MeasurableSet t → IndepSetCat (f ⁻¹' s) (g ⁻¹' t) μ :=
   by
@@ -775,7 +775,7 @@ theorem IndepFunCat.comp {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'}
 /-- If `f` is a family of mutually independent random variables (`Indep_fun m f μ`) and `S, T` are
 two disjoint finite index sets, then the tuple formed by `f i` for `i ∈ S` is independent of the
 tuple `(f i)_i` for `i ∈ T`. -/
-theorem IndepFun.indepFunCat_finset [IsProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
+theorem IndepFun.indepFunCat_finset [ProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
     {m : ∀ i, MeasurableSpace (β i)} {f : ∀ i, Ω → β i} (S T : Finset ι) (hST : Disjoint S T)
     (hf_Indep : IndepFun m f μ) (hf_meas : ∀ i, Measurable (f i)) :
     IndepFunCat (fun a (i : S) => f i a) (fun a (i : T) => f i a) μ :=
@@ -897,7 +897,7 @@ theorem IndepFun.indepFunCat_finset [IsProbabilityMeasure μ] {ι : Type _} {β 
       rw [h_sets_s'_univ hi, Set.univ_inter]
 #align probability_theory.Indep_fun.indep_fun_finset ProbabilityTheory.IndepFun.indepFunCat_finset
 
-theorem IndepFun.indepFunCat_prod [IsProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
+theorem IndepFun.indepFunCat_prod [ProbabilityMeasure μ] {ι : Type _} {β : ι → Type _}
     {m : ∀ i, MeasurableSpace (β i)} {f : ∀ i, Ω → β i} (hf_Indep : IndepFun m f μ)
     (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
     IndepFunCat (fun a => (f i a, f j a)) (f k) μ := by
@@ -935,7 +935,7 @@ theorem IndepFun.indepFunCat_prod [IsProbabilityMeasure μ] {ι : Type _} {β : 
 #align probability_theory.Indep_fun.indep_fun_prod ProbabilityTheory.IndepFun.indepFunCat_prod
 
 @[to_additive]
-theorem IndepFun.mul [IsProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : MeasurableSpace β}
+theorem IndepFun.mul [ProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : MeasurableSpace β}
     [Mul β] [HasMeasurableMul₂ β] {f : ι → Ω → β} (hf_Indep : IndepFun (fun _ => m) f μ)
     (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
     IndepFunCat (f i * f j) (f k) μ :=
@@ -948,8 +948,8 @@ theorem IndepFun.mul [IsProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : 
 #align probability_theory.Indep_fun.add ProbabilityTheory.IndepFun.add
 
 @[to_additive]
-theorem IndepFun.indepFunCat_finset_prod_of_not_mem [IsProbabilityMeasure μ] {ι : Type _}
-    {β : Type _} {m : MeasurableSpace β} [CommMonoid β] [HasMeasurableMul₂ β] {f : ι → Ω → β}
+theorem IndepFun.indepFunCat_finset_prod_of_not_mem [ProbabilityMeasure μ] {ι : Type _} {β : Type _}
+    {m : MeasurableSpace β} [CommMonoid β] [HasMeasurableMul₂ β] {f : ι → Ω → β}
     (hf_Indep : IndepFun (fun _ => m) f μ) (hf_meas : ∀ i, Measurable (f i)) {s : Finset ι} {i : ι}
     (hi : i ∉ s) : IndepFunCat (∏ j in s, f j) (f i) μ := by
   classical
@@ -977,7 +977,7 @@ theorem IndepFun.indepFunCat_finset_prod_of_not_mem [IsProbabilityMeasure μ] {�
 #align probability_theory.Indep_fun.indep_fun_finset_sum_of_not_mem ProbabilityTheory.IndepFun.indepFunCat_finset_sum_of_not_mem
 
 @[to_additive]
-theorem IndepFun.indepFunCat_prod_range_succ [IsProbabilityMeasure μ] {β : Type _}
+theorem IndepFun.indepFunCat_prod_range_succ [ProbabilityMeasure μ] {β : Type _}
     {m : MeasurableSpace β} [CommMonoid β] [HasMeasurableMul₂ β] {f : ℕ → Ω → β}
     (hf_Indep : IndepFun (fun _ => m) f μ) (hf_meas : ∀ i, Measurable (f i)) (n : ℕ) :
     IndepFunCat (∏ j in Finset.range n, f j) (f n) μ :=
@@ -1028,14 +1028,14 @@ theorem measure_eq_zero_or_one_or_top_of_indepSetCat_self {t : Set Ω}
   exact Or.inr (Or.inl h_indep.symm)
 #align probability_theory.measure_eq_zero_or_one_or_top_of_indep_set_self ProbabilityTheory.measure_eq_zero_or_one_or_top_of_indepSetCat_self
 
-theorem measure_eq_zero_or_one_of_indepSetCat_self [IsFiniteMeasure μ] {t : Set Ω}
+theorem measure_eq_zero_or_one_of_indepSetCat_self [FiniteMeasure μ] {t : Set Ω}
     (h_indep : IndepSetCat t t μ) : μ t = 0 ∨ μ t = 1 :=
   by
   have h_0_1_top := measure_eq_zero_or_one_or_top_of_indep_set_self h_indep
   simpa [measure_ne_top μ] using h_0_1_top
 #align probability_theory.measure_eq_zero_or_one_of_indep_set_self ProbabilityTheory.measure_eq_zero_or_one_of_indepSetCat_self
 
-variable [IsProbabilityMeasure μ] {s : ι → MeasurableSpace Ω}
+variable [ProbabilityMeasure μ] {s : ι → MeasurableSpace Ω}
 
 open Filter
 

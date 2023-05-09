@@ -136,9 +136,9 @@ theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.c
       ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
 #align real.volume_emetric_closed_ball Real.volume_emetric_closedBall
 
-instance hasNoAtoms_volume : HasNoAtoms (volume : Measure ℝ) :=
+instance noAtoms_volume : NoAtoms (volume : Measure ℝ) :=
   ⟨fun x => volume_singleton⟩
-#align real.has_no_atoms_volume Real.hasNoAtoms_volume
+#align real.has_no_atoms_volume Real.noAtoms_volume
 
 @[simp]
 theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal (|b - a|) := by
@@ -173,28 +173,28 @@ theorem volume_Iio {a : ℝ} : volume (Iio a) = ∞ :=
 theorem volume_Iic {a : ℝ} : volume (Iic a) = ∞ := by simp [← measure_congr Iio_ae_eq_Iic]
 #align real.volume_Iic Real.volume_Iic
 
-instance locally_finite_volume : IsLocallyFiniteMeasure (volume : Measure ℝ) :=
+instance locally_finite_volume : LocallyFiniteMeasure (volume : Measure ℝ) :=
   ⟨fun x =>
     ⟨Ioo (x - 1) (x + 1),
       IsOpen.mem_nhds isOpen_Ioo ⟨sub_lt_self _ zero_lt_one, lt_add_of_pos_right _ zero_lt_one⟩, by
       simp only [Real.volume_Ioo, ENNReal.ofReal_lt_top]⟩⟩
 #align real.locally_finite_volume Real.locally_finite_volume
 
-instance isFiniteMeasure_restrict_Icc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Icc x y)) :=
+instance finiteMeasure_restrict_Icc (x y : ℝ) : FiniteMeasure (volume.restrict (Icc x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Icc Real.isFiniteMeasure_restrict_Icc
+#align real.is_finite_measure_restrict_Icc Real.finiteMeasure_restrict_Icc
 
-instance isFiniteMeasure_restrict_Ico (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ico x y)) :=
+instance finiteMeasure_restrict_Ico (x y : ℝ) : FiniteMeasure (volume.restrict (Ico x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ico Real.isFiniteMeasure_restrict_Ico
+#align real.is_finite_measure_restrict_Ico Real.finiteMeasure_restrict_Ico
 
-instance isFiniteMeasure_restrict_Ioc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioc x y)) :=
+instance finiteMeasure_restrict_Ioc (x y : ℝ) : FiniteMeasure (volume.restrict (Ioc x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ioc Real.isFiniteMeasure_restrict_Ioc
+#align real.is_finite_measure_restrict_Ioc Real.finiteMeasure_restrict_Ioc
 
-instance isFiniteMeasure_restrict_Ioo (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioo x y)) :=
+instance finiteMeasure_restrict_Ioo (x y : ℝ) : FiniteMeasure (volume.restrict (Ioo x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ioo Real.isFiniteMeasure_restrict_Ioo
+#align real.is_finite_measure_restrict_Ioo Real.finiteMeasure_restrict_Ioo
 
 theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
   by
@@ -642,8 +642,8 @@ end regionBetween
 /-- Consider a real set `s`. If a property is true almost everywhere in `s ∩ (a, b)` for
 all `a, b ∈ s`, then it is true almost everywhere in `s`. Formulated with `μ.restrict`.
 See also `ae_of_mem_of_ae_of_mem_inter_Ioo`. -/
-theorem ae_restrict_of_ae_restrict_inter_Ioo {μ : Measure ℝ} [HasNoAtoms μ] {s : Set ℝ}
-    {p : ℝ → Prop} (h : ∀ a b, a ∈ s → b ∈ s → a < b → ∀ᵐ x ∂μ.restrict (s ∩ Ioo a b), p x) :
+theorem ae_restrict_of_ae_restrict_inter_Ioo {μ : Measure ℝ} [NoAtoms μ] {s : Set ℝ} {p : ℝ → Prop}
+    (h : ∀ a b, a ∈ s → b ∈ s → a < b → ∀ᵐ x ∂μ.restrict (s ∩ Ioo a b), p x) :
     ∀ᵐ x ∂μ.restrict s, p x :=
   by
   /- By second-countability, we cover `s` by countably many intervals `(a, b)` (except maybe for
@@ -678,7 +678,7 @@ theorem ae_restrict_of_ae_restrict_inter_Ioo {μ : Measure ℝ} [HasNoAtoms μ] 
 /-- Consider a real set `s`. If a property is true almost everywhere in `s ∩ (a, b)` for
 all `a, b ∈ s`, then it is true almost everywhere in `s`. Formulated with bare membership.
 See also `ae_restrict_of_ae_restrict_inter_Ioo`. -/
-theorem ae_of_mem_of_ae_of_mem_inter_Ioo {μ : Measure ℝ} [HasNoAtoms μ] {s : Set ℝ} {p : ℝ → Prop}
+theorem ae_of_mem_of_ae_of_mem_inter_Ioo {μ : Measure ℝ} [NoAtoms μ] {s : Set ℝ} {p : ℝ → Prop}
     (h : ∀ a b, a ∈ s → b ∈ s → a < b → ∀ᵐ x ∂μ, x ∈ s ∩ Ioo a b → p x) : ∀ᵐ x ∂μ, x ∈ s → p x :=
   by
   /- By second-countability, we cover `s` by countably many intervals `(a, b)` (except maybe for

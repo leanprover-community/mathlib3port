@@ -45,11 +45,11 @@ namespace Box
 
 variable (I : Box ι)
 
-theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
+theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
   show μ (Icc I.lower I.upper) < ∞ from I.isCompact_Icc.measure_lt_top
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
 
-theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
+theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ] : μ I < ∞ :=
   (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
 #align box_integral.box.measure_coe_lt_top BoxIntegral.Box.measure_coe_lt_top
 
@@ -88,7 +88,7 @@ theorem Ioo_ae_eq_Icc : I.Ioo =ᵐ[volume] I.Icc :=
 end Box
 
 theorem Prepartition.measure_unionᵢ_toReal [Finite ι] {I : Box ι} (π : Prepartition I)
-    (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
+    (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ] :
     (μ π.unionᵢ).toReal = ∑ J in π.boxes, (μ J).toReal :=
   by
   erw [← ENNReal.toReal_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
@@ -108,7 +108,7 @@ namespace Measure
 /-- If `μ` is a locally finite measure on `ℝⁿ`, then `λ J, (μ J).to_real` is a box-additive
 function. -/
 @[simps]
-def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ
+def toBoxAdditive (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ
     where
   toFun J := (μ J).toReal
   sum_partition_boxes' J hJ π hπ := by rw [← π.measure_Union_to_real, hπ.Union_eq]

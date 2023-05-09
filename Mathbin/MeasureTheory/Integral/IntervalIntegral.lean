@@ -96,13 +96,13 @@ theorem intervalIntegrable_iff_integrable_Ioc_of_le (hab : a ≤ b) :
   rw [intervalIntegrable_iff, uIoc_of_le hab]
 #align interval_integrable_iff_integrable_Ioc_of_le intervalIntegrable_iff_integrable_Ioc_of_le
 
-theorem intervalIntegrable_iff' [HasNoAtoms μ] :
+theorem intervalIntegrable_iff' [NoAtoms μ] :
     IntervalIntegrable f μ a b ↔ IntegrableOn f (uIcc a b) μ := by
   rw [intervalIntegrable_iff, ← Icc_min_max, uIoc, integrableOn_Icc_iff_integrableOn_Ioc]
 #align interval_integrable_iff' intervalIntegrable_iff'
 
 theorem intervalIntegrable_iff_integrable_Icc_of_le {f : ℝ → E} {a b : ℝ} (hab : a ≤ b)
-    {μ : Measure ℝ} [HasNoAtoms μ] : IntervalIntegrable f μ a b ↔ IntegrableOn f (Icc a b) μ := by
+    {μ : Measure ℝ} [NoAtoms μ] : IntervalIntegrable f μ a b ↔ IntegrableOn f (Icc a b) μ := by
   rw [intervalIntegrable_iff_integrable_Ioc_of_le hab, integrableOn_Icc_iff_integrableOn_Ioc]
 #align interval_integrable_iff_integrable_Icc_of_le intervalIntegrable_iff_integrable_Icc_of_le
 
@@ -125,7 +125,7 @@ theorem intervalIntegrable_const_iff {c : E} :
 #align interval_integrable_const_iff intervalIntegrable_const_iff
 
 @[simp]
-theorem intervalIntegrable_const [IsLocallyFiniteMeasure μ] {c : E} :
+theorem intervalIntegrable_const [LocallyFiniteMeasure μ] {c : E} :
     IntervalIntegrable (fun _ => c) μ a b :=
   intervalIntegrable_const_iff.2 <| Or.inr measure_Ioc_lt_top
 #align interval_integrable_const intervalIntegrable_const
@@ -361,7 +361,7 @@ end IntervalIntegrable
 
 section
 
-variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ]
+variable {μ : Measure ℝ} [LocallyFiniteMeasure μ]
 
 theorem ContinuousOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : ContinuousOn u (uIcc a b)) :
     IntervalIntegrable u μ a b :=
@@ -384,7 +384,7 @@ end
 
 section
 
-variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ] [ConditionallyCompleteLinearOrder E]
+variable {μ : Measure ℝ} [LocallyFiniteMeasure μ] [ConditionallyCompleteLinearOrder E]
   [OrderTopology E] [SecondCountableTopology E]
 
 theorem MonotoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : MonotoneOn u (uIcc a b)) :
@@ -988,7 +988,7 @@ theorem integral_Iic_sub_Iic (ha : IntegrableOn f (Iic a) μ) (hb : IntegrableOn
 #align interval_integral.integral_Iic_sub_Iic intervalIntegral.integral_Iic_sub_Iic
 
 /-- If `μ` is a finite measure then `∫ x in a..b, c ∂μ = (μ (Iic b) - μ (Iic a)) • c`. -/
-theorem integral_const_of_cdf [IsFiniteMeasure μ] (c : E) :
+theorem integral_const_of_cdf [FiniteMeasure μ] (c : E) :
     (∫ x in a..b, c ∂μ) = ((μ (Iic b)).toReal - (μ (Iic a)).toReal) • c :=
   by
   simp only [sub_smul, ← set_integral_const]
@@ -1235,7 +1235,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
     rwa [closure_Icc]
 #align interval_integral.continuous_within_at_primitive intervalIntegral.continuousWithinAt_primitive
 
-theorem continuousOn_primitive [HasNoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ) :
+theorem continuousOn_primitive [NoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Ioc a x, f t ∂μ) (Icc a b) :=
   by
   by_cases h : a ≤ b
@@ -1252,7 +1252,7 @@ theorem continuousOn_primitive [HasNoAtoms μ] (h_int : IntegrableOn f (Icc a b)
     exact continuousOn_empty _
 #align interval_integral.continuous_on_primitive intervalIntegral.continuousOn_primitive
 
-theorem continuousOn_primitive_Icc [HasNoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ) :
+theorem continuousOn_primitive_Icc [NoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Icc a x, f t ∂μ) (Icc a b) :=
   by
   rw [show (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ
@@ -1263,7 +1263,7 @@ theorem continuousOn_primitive_Icc [HasNoAtoms μ] (h_int : IntegrableOn f (Icc 
 #align interval_integral.continuous_on_primitive_Icc intervalIntegral.continuousOn_primitive_Icc
 
 /-- Note: this assumes that `f` is `interval_integrable`, in contrast to some other lemmas here. -/
-theorem continuousOn_primitive_interval' [HasNoAtoms μ] (h_int : IntervalIntegrable f μ b₁ b₂)
+theorem continuousOn_primitive_interval' [NoAtoms μ] (h_int : IntervalIntegrable f μ b₁ b₂)
     (ha : a ∈ [b₁, b₂]) : ContinuousOn (fun b => ∫ x in a..b, f x ∂μ) [b₁, b₂] :=
   by
   intro b₀ hb₀
@@ -1272,12 +1272,12 @@ theorem continuousOn_primitive_interval' [HasNoAtoms μ] (h_int : IntervalIntegr
   simpa [intervalIntegrable_iff, uIoc] using h_int
 #align interval_integral.continuous_on_primitive_interval' intervalIntegral.continuousOn_primitive_interval'
 
-theorem continuousOn_primitive_interval [HasNoAtoms μ] (h_int : IntegrableOn f (uIcc a b) μ) :
+theorem continuousOn_primitive_interval [NoAtoms μ] (h_int : IntegrableOn f (uIcc a b) μ) :
     ContinuousOn (fun x => ∫ t in a..x, f t ∂μ) (uIcc a b) :=
   continuousOn_primitive_interval' h_int.IntervalIntegrable left_mem_uIcc
 #align interval_integral.continuous_on_primitive_interval intervalIntegral.continuousOn_primitive_interval
 
-theorem continuousOn_primitive_interval_left [HasNoAtoms μ] (h_int : IntegrableOn f (uIcc a b) μ) :
+theorem continuousOn_primitive_interval_left [NoAtoms μ] (h_int : IntegrableOn f (uIcc a b) μ) :
     ContinuousOn (fun x => ∫ t in x..b, f t ∂μ) (uIcc a b) :=
   by
   rw [uIcc_comm a b] at h_int⊢
@@ -1285,7 +1285,7 @@ theorem continuousOn_primitive_interval_left [HasNoAtoms μ] (h_int : Integrable
   exact (continuous_on_primitive_interval h_int).neg
 #align interval_integral.continuous_on_primitive_interval_left intervalIntegral.continuousOn_primitive_interval_left
 
-variable [HasNoAtoms μ]
+variable [NoAtoms μ]
 
 theorem continuous_primitive (h_int : ∀ a b, IntervalIntegrable f μ a b) (a : ℝ) :
     Continuous fun b => ∫ x in a..b, f x ∂μ :=

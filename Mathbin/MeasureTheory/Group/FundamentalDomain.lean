@@ -103,7 +103,7 @@ theorem mk'' (h_meas : NullMeasurableSet s μ) (h_ae_covers : ∀ᵐ x ∂μ, �
     (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ) : IsFundamentalDomain G s μ :=
   { NullMeasurableSet := h_meas
     ae_covers := h_ae_covers
-    AEDisjoint := pairwise_aEDisjoint_of_aEDisjoint_forall_ne_one h_ae_disjoint h_qmp }
+    AEDisjoint := pairwise_aedisjoint_of_aedisjoint_forall_ne_one h_ae_disjoint h_qmp }
 #align measure_theory.is_fundamental_domain.mk'' MeasureTheory.IsFundamentalDomain.mk''
 #align measure_theory.is_add_fundamental_domain.mk'' MeasureTheory.IsAddFundamentalDomain.mk''
 
@@ -114,12 +114,12 @@ to check that its translates `g • s` are (almost) disjoint and that the sum `�
 sufficiently large. -/
 @[to_additive MeasureTheory.IsAddFundamentalDomain.mk_of_measure_univ_le
       "\nIf a measurable space has a finite measure `μ` and a countable additive group `G` acts\nquasi-measure-preservingly, then to show that a set `s` is a fundamental domain, it is sufficient\nto check that its translates `g +ᵥ s` are (almost) disjoint and that the sum `∑' g, μ (g +ᵥ s)` is\nsufficiently large."]
-theorem mk_of_measure_univ_le [IsFiniteMeasure μ] [Countable G] (h_meas : NullMeasurableSet s μ)
+theorem mk_of_measure_univ_le [FiniteMeasure μ] [Countable G] (h_meas : NullMeasurableSet s μ)
     (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AEDisjoint μ (g • s) s)
     (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ)
     (h_measure_univ_le : μ (univ : Set α) ≤ ∑' g : G, μ (g • s)) : IsFundamentalDomain G s μ :=
   have ae_disjoint : Pairwise (AEDisjoint μ on fun g : G => g • s) :=
-    pairwise_aEDisjoint_of_aEDisjoint_forall_ne_one h_ae_disjoint h_qmp
+    pairwise_aedisjoint_of_aedisjoint_forall_ne_one h_ae_disjoint h_qmp
   { NullMeasurableSet := h_meas
     AEDisjoint
     ae_covers :=

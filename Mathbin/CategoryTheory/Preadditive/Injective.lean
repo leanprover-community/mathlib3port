@@ -31,15 +31,18 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C]
 
+#print CategoryTheory.Injective /-
 /--
 An object `J` is injective iff every morphism into `J` can be obtained by extending a monomorphism.
 -/
 class Injective (J : C) : Prop where
   Factors : ∀ {X Y : C} (g : X ⟶ J) (f : X ⟶ Y) [Mono f], ∃ h : Y ⟶ J, f ≫ h = g
 #align category_theory.injective CategoryTheory.Injective
+-/
 
 section
 
+#print CategoryTheory.InjectivePresentation /-
 /-- An injective presentation of an object `X` consists of a monomorphism `f : X ⟶ J`
 to some injective object `J`.
 -/
@@ -50,44 +53,54 @@ structure InjectivePresentation (X : C) where
   f : X ⟶ J
   Mono : Mono f := by infer_instance
 #align category_theory.injective_presentation CategoryTheory.InjectivePresentation
+-/
 
 attribute [instance] injective_presentation.injective injective_presentation.mono
 
 variable (C)
 
+#print CategoryTheory.EnoughInjectives /-
 /-- A category "has enough injectives" if every object has an injective presentation,
 i.e. if for every object `X` there is an injective object `J` and a monomorphism `X ↪ J`. -/
 class EnoughInjectives : Prop where
   presentation : ∀ X : C, Nonempty (InjectivePresentation X)
 #align category_theory.enough_injectives CategoryTheory.EnoughInjectives
+-/
 
 end
 
 namespace Injective
 
+#print CategoryTheory.Injective.factorThru /-
 /--
 Let `J` be injective and `g` a morphism into `J`, then `g` can be factored through any monomorphism.
 -/
 def factorThru {J X Y : C} [Injective J] (g : X ⟶ J) (f : X ⟶ Y) [Mono f] : Y ⟶ J :=
   (Injective.factors g f).some
 #align category_theory.injective.factor_thru CategoryTheory.Injective.factorThru
+-/
 
+#print CategoryTheory.Injective.comp_factorThru /-
 @[simp]
 theorem comp_factorThru {J X Y : C} [Injective J] (g : X ⟶ J) (f : X ⟶ Y) [Mono f] :
     f ≫ factorThru g f = g :=
   (Injective.factors g f).choose_spec
 #align category_theory.injective.comp_factor_thru CategoryTheory.Injective.comp_factorThru
+-/
 
 section
 
 open ZeroObject
 
+#print CategoryTheory.Injective.zero_injective /-
 instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] : Injective (0 : C)
     where Factors X Y g f mono := ⟨0, by ext⟩
 #align category_theory.injective.zero_injective CategoryTheory.Injective.zero_injective
+-/
 
 end
 
+#print CategoryTheory.Injective.of_iso /-
 theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Injective P) : Injective Q :=
   {
     Factors := fun X Y g f mono =>
@@ -96,10 +109,13 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Injective P) : Injective Q :=
       refine' ⟨h ≫ i.hom, _⟩
       rw [← category.assoc, h_eq, category.assoc, iso.inv_hom_id, category.comp_id] }
 #align category_theory.injective.of_iso CategoryTheory.Injective.of_iso
+-/
 
+#print CategoryTheory.Injective.iso_iff /-
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 #align category_theory.injective.iso_iff CategoryTheory.Injective.iso_iff
+-/
 
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
 instance (X : Type u₁) [Nonempty X] : Injective X
@@ -115,6 +131,7 @@ instance (X : Type u₁) [Nonempty X] : Injective X
         rw [mono (Classical.choose_spec h)]
       · exact False.elim (h ⟨y, rfl⟩)⟩
 
+#print CategoryTheory.Injective.Type.enoughInjectives /-
 instance Type.enoughInjectives : EnoughInjectives (Type u₁)
     where presentation X :=
     Nonempty.intro
@@ -125,6 +142,7 @@ instance Type.enoughInjectives : EnoughInjectives (Type u₁)
           rw [mono_iff_injective]
           exact Option.some_injective X }
 #align category_theory.injective.Type.enough_injectives CategoryTheory.Injective.Type.enoughInjectives
+-/
 
 instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] : Injective (P ⨯ Q)
     where Factors X Y g f mono := by
@@ -175,14 +193,24 @@ instance {P : C} [Projective P] : Injective (op P)
     where Factors X Y g f mono :=
     ⟨(@projective.factor_thru C _ P _ _ _ g.unop f.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
+#print CategoryTheory.Injective.injective_iff_projective_op /-
 theorem injective_iff_projective_op {J : C} : Injective J ↔ Projective (op J) :=
   ⟨fun h => inferInstance, fun h => show Injective (unop (op J)) from inferInstance⟩
 #align category_theory.injective.injective_iff_projective_op CategoryTheory.Injective.injective_iff_projective_op
+-/
 
+#print CategoryTheory.Injective.projective_iff_injective_op /-
 theorem projective_iff_injective_op {P : C} : Projective P ↔ Injective (op P) :=
   ⟨fun h => inferInstance, fun h => show Projective (unop (op P)) from inferInstance⟩
 #align category_theory.injective.projective_iff_injective_op CategoryTheory.Injective.projective_iff_injective_op
+-/
 
+/- warning: category_theory.injective.injective_iff_preserves_epimorphisms_yoneda_obj -> CategoryTheory.Injective.injective_iff_preservesEpimorphisms_yoneda_obj is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (J : C), Iff (CategoryTheory.Injective.{u1, u2} C _inst_1 J) (CategoryTheory.Functor.PreservesEpimorphisms.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.obj.{u1, max u2 u1, u2, max u1 u2 (succ u1)} C _inst_1 (CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.yoneda.{u1, u2} C _inst_1) J))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (J : C), Iff (CategoryTheory.Injective.{u1, u2} C _inst_1 J) (CategoryTheory.Functor.PreservesEpimorphisms.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1} (Prefunctor.obj.{succ u1, max (succ u1) (succ u2), u2, max (succ u1) u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 (succ u1)} (CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 (succ u1)} (CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}))) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u2, max u2 (succ u1)} C _inst_1 (CategoryTheory.Functor.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u1, u1, u2, succ u1} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.yoneda.{u1, u2} C _inst_1)) J))
+Case conversion may be inaccurate. Consider using '#align category_theory.injective.injective_iff_preserves_epimorphisms_yoneda_obj CategoryTheory.Injective.injective_iff_preservesEpimorphisms_yoneda_objₓ'. -/
 theorem injective_iff_preservesEpimorphisms_yoneda_obj (J : C) :
     Injective J ↔ (yoneda.obj J).PreservesEpimorphisms :=
   by
@@ -198,6 +226,12 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {L : C ⥤ D} {R : D ⥤ C} [PreservesMonomorphisms L]
 
+/- warning: category_theory.injective.injective_of_adjoint -> CategoryTheory.Injective.injective_of_adjoint is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {L : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {R : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1} [_inst_3 : CategoryTheory.Functor.PreservesMonomorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_2 L], (CategoryTheory.Adjunction.{u1, u2, u3, u4} C _inst_1 D _inst_2 L R) -> (forall (J : D) [_inst_4 : CategoryTheory.Injective.{u2, u4} D _inst_2 J], CategoryTheory.Injective.{u1, u3} C _inst_1 (CategoryTheory.Functor.obj.{u2, u1, u4, u3} D _inst_2 C _inst_1 R J))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {L : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {R : CategoryTheory.Functor.{u2, u1, u4, u3} D _inst_2 C _inst_1} [_inst_3 : CategoryTheory.Functor.PreservesMonomorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_2 L], (CategoryTheory.Adjunction.{u1, u2, u3, u4} C _inst_1 D _inst_2 L R) -> (forall (J : D) [_inst_4 : CategoryTheory.Injective.{u2, u4} D _inst_2 J], CategoryTheory.Injective.{u1, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u1, u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u4, u3} D _inst_2 C _inst_1 R) J))
+Case conversion may be inaccurate. Consider using '#align category_theory.injective.injective_of_adjoint CategoryTheory.Injective.injective_of_adjointₓ'. -/
 theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : Injective <| R.obj J :=
   ⟨fun A A' g f im =>
     ⟨adj.hom_equiv _ _ (factor_thru ((adj.hom_equiv A J).symm g) (L.map f)),
@@ -210,39 +244,50 @@ section EnoughInjectives
 
 variable [EnoughInjectives C]
 
+#print CategoryTheory.Injective.under /-
 /-- `injective.under X` provides an arbitrarily chosen injective object equipped with
 an monomorphism `injective.ι : X ⟶ injective.under X`.
 -/
 def under (X : C) : C :=
   (EnoughInjectives.presentation X).some.j
 #align category_theory.injective.under CategoryTheory.Injective.under
+-/
 
+#print CategoryTheory.Injective.injective_under /-
 instance injective_under (X : C) : Injective (under X) :=
   (EnoughInjectives.presentation X).some.Injective
 #align category_theory.injective.injective_under CategoryTheory.Injective.injective_under
+-/
 
+#print CategoryTheory.Injective.ι /-
 /-- The monomorphism `injective.ι : X ⟶ injective.under X`
 from the arbitrarily chosen injective object under `X`.
 -/
 def ι (X : C) : X ⟶ under X :=
   (EnoughInjectives.presentation X).some.f
 #align category_theory.injective.ι CategoryTheory.Injective.ι
+-/
 
+#print CategoryTheory.Injective.ι_mono /-
 instance ι_mono (X : C) : Mono (ι X) :=
   (EnoughInjectives.presentation X).some.Mono
 #align category_theory.injective.ι_mono CategoryTheory.Injective.ι_mono
+-/
 
 section
 
 variable [HasZeroMorphisms C] {X Y : C} (f : X ⟶ Y) [HasCokernel f]
 
+#print CategoryTheory.Injective.syzygies /-
 /-- When `C` has enough injectives, the object `injective.syzygies f` is
 an arbitrarily chosen injective object under `cokernel f`.
 -/
 def syzygies : C :=
   under (cokernel f)deriving Injective
 #align category_theory.injective.syzygies CategoryTheory.Injective.syzygies
+-/
 
+#print CategoryTheory.Injective.d /-
 /-- When `C` has enough injective,
 `injective.d f : Y ⟶ syzygies f` is the composition
 `cokernel.π f ≫ ι (cokernel f)`.
@@ -252,6 +297,7 @@ def syzygies : C :=
 abbrev d : Y ⟶ syzygies f :=
   cokernel.π f ≫ ι (cokernel f)
 #align category_theory.injective.d CategoryTheory.Injective.d
+-/
 
 end
 
@@ -263,13 +309,17 @@ instance [EnoughInjectives C] : EnoughProjectives Cᵒᵖ :=
 instance [EnoughProjectives C] : EnoughInjectives Cᵒᵖ :=
   ⟨fun X => ⟨⟨_, inferInstance, (Projective.π (unop X)).op, inferInstance⟩⟩⟩
 
+#print CategoryTheory.Injective.enoughProjectives_of_enoughInjectives_op /-
 theorem enoughProjectives_of_enoughInjectives_op [EnoughInjectives Cᵒᵖ] : EnoughProjectives C :=
   ⟨fun X => ⟨⟨_, inferInstance, (Injective.ι (op X)).unop, inferInstance⟩⟩⟩
 #align category_theory.injective.enough_projectives_of_enough_injectives_op CategoryTheory.Injective.enoughProjectives_of_enoughInjectives_op
+-/
 
+#print CategoryTheory.Injective.enoughInjectives_of_enoughProjectives_op /-
 theorem enoughInjectives_of_enoughProjectives_op [EnoughProjectives Cᵒᵖ] : EnoughInjectives C :=
   ⟨fun X => ⟨⟨_, inferInstance, (Projective.π (op X)).unop, inferInstance⟩⟩⟩
 #align category_theory.injective.enough_injectives_of_enough_projectives_op CategoryTheory.Injective.enoughInjectives_of_enoughProjectives_op
+-/
 
 open Injective
 
@@ -277,6 +327,7 @@ section
 
 variable [HasZeroMorphisms C] [HasImages Cᵒᵖ] [HasEqualizers Cᵒᵖ]
 
+#print CategoryTheory.Injective.Exact.desc /-
 /-- Given a pair of exact morphism `f : Q ⟶ R` and `g : R ⟶ S` and a map `h : R ⟶ J` to an injective
 object `J` such that `f ≫ h = 0`, then `g` descents to a map `S ⟶ J`. See below:
 
@@ -292,12 +343,15 @@ def Exact.desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) (g : R �
     (hgf : Exact g.op f.op) (w : f ≫ h = 0) : S ⟶ J :=
   (Exact.lift h.op g.op f.op hgf (congr_arg Quiver.Hom.op w)).unop
 #align category_theory.injective.exact.desc CategoryTheory.Injective.Exact.desc
+-/
 
+#print CategoryTheory.Injective.Exact.comp_desc /-
 @[simp]
 theorem Exact.comp_desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) (g : R ⟶ S)
     (hgf : Exact g.op f.op) (w : f ≫ h = 0) : g ≫ Exact.desc h f g hgf w = h := by
   convert congr_arg Quiver.Hom.unop (exact.lift_comp h.op g.op f.op hgf (congr_arg Quiver.Hom.op w))
 #align category_theory.injective.exact.comp_desc CategoryTheory.Injective.Exact.comp_desc
+-/
 
 end
 
@@ -307,6 +361,12 @@ namespace Adjunction
 
 variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
+/- warning: category_theory.adjunction.map_injective -> CategoryTheory.Adjunction.map_injective is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesMonomorphisms.{u1, u4, u2, u3} C _inst_1 D _inst_2 F] (I : D), (CategoryTheory.Injective.{u4, u3} D _inst_2 I) -> (CategoryTheory.Injective.{u1, u2} C _inst_1 (CategoryTheory.Functor.obj.{u4, u1, u3, u2} D _inst_2 C _inst_1 G I)))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {F : CategoryTheory.Functor.{u3, u2, u4, u1} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u2, u3, u1, u4} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u3, u2, u4, u1} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesMonomorphisms.{u3, u2, u4, u1} C _inst_1 D _inst_2 F] (I : D), (CategoryTheory.Injective.{u2, u1} D _inst_2 I) -> (CategoryTheory.Injective.{u3, u4} C _inst_1 (Prefunctor.obj.{succ u2, succ u3, u1, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u1, u4} D _inst_2 C _inst_1 G) I)))
+Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.map_injective CategoryTheory.Adjunction.map_injectiveₓ'. -/
 theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : Injective I) :
     Injective (G.obj I) :=
   ⟨fun X Y f g => by
@@ -317,6 +377,12 @@ theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : I
     simp⟩
 #align category_theory.adjunction.map_injective CategoryTheory.Adjunction.map_injective
 
+/- warning: category_theory.adjunction.injective_of_map_injective -> CategoryTheory.Adjunction.injective_of_map_injective is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Full.{u4, u1, u3, u2} D _inst_2 C _inst_1 G] [_inst_4 : CategoryTheory.Faithful.{u4, u1, u3, u2} D _inst_2 C _inst_1 G] (I : D), (CategoryTheory.Injective.{u1, u2} C _inst_1 (CategoryTheory.Functor.obj.{u4, u1, u3, u2} D _inst_2 C _inst_1 G I)) -> (CategoryTheory.Injective.{u4, u3} D _inst_2 I))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {F : CategoryTheory.Functor.{u3, u2, u4, u1} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u2, u3, u1, u4} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u3, u2, u4, u1} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Full.{u2, u3, u1, u4} D _inst_2 C _inst_1 G] [_inst_4 : CategoryTheory.Faithful.{u2, u3, u1, u4} D _inst_2 C _inst_1 G] (I : D), (CategoryTheory.Injective.{u3, u4} C _inst_1 (Prefunctor.obj.{succ u2, succ u3, u1, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} C (CategoryTheory.Category.toCategoryStruct.{u3, u4} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u1, u4} D _inst_2 C _inst_1 G) I)) -> (CategoryTheory.Injective.{u2, u1} D _inst_2 I))
+Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.injective_of_map_injective CategoryTheory.Adjunction.injective_of_map_injectiveₓ'. -/
 theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     (hI : Injective (G.obj I)) : Injective I :=
   ⟨fun X Y f g => by
@@ -328,6 +394,12 @@ theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     simpa⟩
 #align category_theory.adjunction.injective_of_map_injective CategoryTheory.Adjunction.injective_of_map_injective
 
+/- warning: category_theory.adjunction.map_injective_presentation -> CategoryTheory.Adjunction.mapInjectivePresentation is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesMonomorphisms.{u1, u4, u2, u3} C _inst_1 D _inst_2 F] (X : D), (CategoryTheory.InjectivePresentation.{u4, u3} D _inst_2 X) -> (CategoryTheory.InjectivePresentation.{u1, u2} C _inst_1 (CategoryTheory.Functor.obj.{u4, u1, u3, u2} D _inst_2 C _inst_1 G X)))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u4, u1, u3, u2} D _inst_2 C _inst_1}, (CategoryTheory.Adjunction.{u1, u4, u2, u3} C _inst_1 D _inst_2 F G) -> (forall [_inst_3 : CategoryTheory.Functor.PreservesMonomorphisms.{u1, u4, u2, u3} C _inst_1 D _inst_2 F] (X : D), (CategoryTheory.InjectivePresentation.{u4, u3} D _inst_2 X) -> (CategoryTheory.InjectivePresentation.{u1, u2} C _inst_1 (Prefunctor.obj.{succ u4, succ u1, u3, u2} D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u4, u1, u3, u2} D _inst_2 C _inst_1 G) X)))
+Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.map_injective_presentation CategoryTheory.Adjunction.mapInjectivePresentationₓ'. -/
 /-- Given an adjunction `F ⊣ G` such that `F` preserves monos, `G` maps an injective presentation
 of `X` to an injective presentation of `G(X)`. -/
 def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
@@ -346,6 +418,12 @@ namespace Equivalence
 
 variable {D : Type _} [Category D] (F : C ≌ D)
 
+/- warning: category_theory.equivalence.injective_presentation_of_map_injective_presentation -> CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentation is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Equivalence.{u1, u4, u2, u3} C _inst_1 D _inst_2) (X : C), (CategoryTheory.InjectivePresentation.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u1, u4, u2, u3} C _inst_1 D _inst_2 (CategoryTheory.Equivalence.functor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X)) -> (CategoryTheory.InjectivePresentation.{u1, u2} C _inst_1 X)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Equivalence.{u1, u4, u2, u3} C D _inst_1 _inst_2) (X : C), (CategoryTheory.InjectivePresentation.{u4, u3} D _inst_2 (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 (CategoryTheory.Equivalence.functor.{u1, u4, u2, u3} C D _inst_1 _inst_2 F)) X)) -> (CategoryTheory.InjectivePresentation.{u1, u2} C _inst_1 X)
+Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.injective_presentation_of_map_injective_presentation CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentationₓ'. -/
 /-- Given an equivalence of categories `F`, an injective presentation of `F(X)` induces an
 injective presentation of `X.` -/
 def injectivePresentationOfMapInjectivePresentation (X : C)
@@ -357,6 +435,12 @@ def injectivePresentationOfMapInjectivePresentation (X : C)
   Mono := mono_comp _ _
 #align category_theory.equivalence.injective_presentation_of_map_injective_presentation CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentation
 
+/- warning: category_theory.equivalence.enough_injectives_iff -> CategoryTheory.Equivalence.enoughInjectives_iff is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D], (CategoryTheory.Equivalence.{u1, u4, u2, u3} C _inst_1 D _inst_2) -> (Iff (CategoryTheory.EnoughInjectives.{u1, u2} C _inst_1) (CategoryTheory.EnoughInjectives.{u4, u3} D _inst_2))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D], (CategoryTheory.Equivalence.{u3, u2, u4, u1} C D _inst_1 _inst_2) -> (Iff (CategoryTheory.EnoughInjectives.{u3, u4} C _inst_1) (CategoryTheory.EnoughInjectives.{u2, u1} D _inst_2))
+Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.enough_injectives_iff CategoryTheory.Equivalence.enoughInjectives_iffₓ'. -/
 theorem enoughInjectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInjectives D :=
   by
   constructor

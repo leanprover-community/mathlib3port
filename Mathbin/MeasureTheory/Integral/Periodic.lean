@@ -33,7 +33,7 @@ open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgro
 
 open MeasureTheory NNReal ENNReal
 
-attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
+attribute [-instance] QuotientAddGroup.measurableSpace Quotient.instMeasurableSpace
 
 theorem isAddFundamentalDomain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
@@ -80,9 +80,9 @@ protected theorem measure_univ : volume (Set.univ : Set (AddCircle T)) = ENNReal
 instance : IsAddHaarMeasure (volume : Measure (AddCircle T)) :=
   IsAddHaarMeasure.smul _ (by simp [hT.out]) ENNReal.ofReal_ne_top
 
-instance isFiniteMeasure : IsFiniteMeasure (volume : Measure (AddCircle T))
+instance finiteMeasure : FiniteMeasure (volume : Measure (AddCircle T))
     where measure_univ_lt_top := by simp
-#align add_circle.is_finite_measure AddCircle.isFiniteMeasure
+#align add_circle.is_finite_measure AddCircle.finiteMeasure
 
 /-- The covering map from `ℝ` to the "additive circle" `ℝ ⧸ (ℤ ∙ T)` is measure-preserving,
 considered with respect to the standard measure (defined to be the Haar measure of total mass `T`)
@@ -225,9 +225,9 @@ noncomputable instance measureSpace : MeasureSpace UnitAddCircle :=
 protected theorem measure_univ : volume (Set.univ : Set UnitAddCircle) = 1 := by simp
 #align unit_add_circle.measure_univ UnitAddCircle.measure_univ
 
-instance isFiniteMeasure : IsFiniteMeasure (volume : Measure UnitAddCircle) :=
-  AddCircle.isFiniteMeasure 1
-#align unit_add_circle.is_finite_measure UnitAddCircle.isFiniteMeasure
+instance finiteMeasure : FiniteMeasure (volume : Measure UnitAddCircle) :=
+  AddCircle.finiteMeasure 1
+#align unit_add_circle.is_finite_measure UnitAddCircle.finiteMeasure
 
 /-- The covering map from `ℝ` to the "unit additive circle" `ℝ ⧸ ℤ` is measure-preserving,
 considered with respect to the standard measure (defined to be the Haar measure of total mass 1)

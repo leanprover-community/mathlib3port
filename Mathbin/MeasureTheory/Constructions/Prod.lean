@@ -121,7 +121,7 @@ along one of the variables (using either the Lebesgue or Bochner integral) is me
   are countably spanning. -/
 theorem generateFrom_prod_eq {α β} {C : Set (Set α)} {D : Set (Set β)} (hC : IsCountablySpanning C)
     (hD : IsCountablySpanning D) :
-    @Prod.measurableSpace _ _ (generateFrom C) (generateFrom D) =
+    @Prod.instMeasurableSpace _ _ (generateFrom C) (generateFrom D) =
       generateFrom (image2 (· ×ˢ ·) C D) :=
   by
   apply le_antisymm
@@ -152,7 +152,7 @@ theorem generateFrom_prod_eq {α β} {C : Set (Set α)} {D : Set (Set β)} (hC :
   generate the σ-algebra on `α × β`. -/
 theorem generateFrom_eq_prod {C : Set (Set α)} {D : Set (Set β)} (hC : generateFrom C = ‹_›)
     (hD : generateFrom D = ‹_›) (h2C : IsCountablySpanning C) (h2D : IsCountablySpanning D) :
-    generateFrom (image2 (· ×ˢ ·) C D) = Prod.measurableSpace := by
+    generateFrom (image2 (· ×ˢ ·) C D) = Prod.instMeasurableSpace := by
   rw [← hC, ← hD, generateFrom_prod_eq h2C h2D]
 #align generate_from_eq_prod generateFrom_eq_prod
 
@@ -161,7 +161,7 @@ theorem generateFrom_eq_prod {C : Set (Set α)} {D : Set (Set β)} (hC : generat
   `t : set β`. -/
 theorem generateFrom_prod :
     generateFrom (image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) =
-      Prod.measurableSpace :=
+      Prod.instMeasurableSpace :=
   generateFrom_eq_prod generateFrom_measurableSet generateFrom_measurableSet
     isCountablySpanning_measurableSet isCountablySpanning_measurableSet
 #align generate_from_prod generateFrom_prod
@@ -175,7 +175,7 @@ theorem isPiSystem_prod :
 
 /-- If `ν` is a finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }` is
   a measurable function. `measurable_measure_prod_mk_left` is strictly more general. -/
-theorem measurable_measure_prod_mk_left_finite [IsFiniteMeasure ν] {s : Set (α × β)}
+theorem measurable_measure_prod_mk_left_finite [FiniteMeasure ν] {s : Set (α × β)}
     (hs : MeasurableSet s) : Measurable fun x => ν (Prod.mk x ⁻¹' s) :=
   by
   refine' induction_on_inter generate_from_prod.symm isPiSystem_prod _ _ _ _ hs
@@ -451,21 +451,20 @@ instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : Measurabl
   · exact v_open.measure_pos ν ⟨y, yv⟩
 
 instance {α β : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} (μ : Measure α)
-    (ν : Measure β) [IsFiniteMeasure μ] [IsFiniteMeasure ν] : IsFiniteMeasure (μ.Prod ν) :=
+    (ν : Measure β) [FiniteMeasure μ] [FiniteMeasure ν] : FiniteMeasure (μ.Prod ν) :=
   by
   constructor
   rw [← univ_prod_univ, prod_prod]
   exact mul_lt_top (measure_lt_top _ _).Ne (measure_lt_top _ _).Ne
 
 instance {α β : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} (μ : Measure α)
-    (ν : Measure β) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] :
-    IsProbabilityMeasure (μ.Prod ν) :=
+    (ν : Measure β) [ProbabilityMeasure μ] [ProbabilityMeasure ν] : ProbabilityMeasure (μ.Prod ν) :=
   ⟨by rw [← univ_prod_univ, prod_prod, measure_univ, measure_univ, mul_one]⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {mα : MeasurableSpace α}
-    {mβ : MeasurableSpace β} (μ : Measure α) (ν : Measure β) [IsFiniteMeasureOnCompacts μ]
-    [IsFiniteMeasureOnCompacts ν] [SigmaFinite ν] : IsFiniteMeasureOnCompacts (μ.Prod ν) :=
+    {mβ : MeasurableSpace β} (μ : Measure α) (ν : Measure β) [FiniteMeasureOnCompacts μ]
+    [FiniteMeasureOnCompacts ν] [SigmaFinite ν] : FiniteMeasureOnCompacts (μ.Prod ν) :=
   by
   refine' ⟨fun K hK => _⟩
   set L := (Prod.fst '' K) ×ˢ (Prod.snd '' K) with hL
@@ -1293,12 +1292,12 @@ theorem fst_apply {s : Set α} (hs : MeasurableSet s) : ρ.fst s = ρ (Prod.fst 
 theorem fst_univ : ρ.fst univ = ρ univ := by rw [fst_apply MeasurableSet.univ, preimage_univ]
 #align measure_theory.measure.fst_univ MeasureTheory.Measure.fst_univ
 
-instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.fst :=
+instance [FiniteMeasure ρ] : FiniteMeasure ρ.fst :=
   by
   rw [fst]
   infer_instance
 
-instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.fst
+instance [ProbabilityMeasure ρ] : ProbabilityMeasure ρ.fst
     where measure_univ := by
     rw [fst_univ]
     exact measure_univ
@@ -1315,12 +1314,12 @@ theorem snd_apply {s : Set β} (hs : MeasurableSet s) : ρ.snd s = ρ (Prod.snd 
 theorem snd_univ : ρ.snd univ = ρ univ := by rw [snd_apply MeasurableSet.univ, preimage_univ]
 #align measure_theory.measure.snd_univ MeasureTheory.Measure.snd_univ
 
-instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.snd :=
+instance [FiniteMeasure ρ] : FiniteMeasure ρ.snd :=
   by
   rw [snd]
   infer_instance
 
-instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.snd
+instance [ProbabilityMeasure ρ] : ProbabilityMeasure ρ.snd
     where measure_univ := by
     rw [snd_univ]
     exact measure_univ

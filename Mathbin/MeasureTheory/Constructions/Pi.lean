@@ -480,12 +480,12 @@ theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) :
   simp [hμt]
 #align measure_theory.measure.pi_eval_preimage_null MeasureTheory.Measure.pi_eval_preimage_null
 
-theorem pi_hyperplane (i : ι) [HasNoAtoms (μ i)] (x : α i) :
+theorem pi_hyperplane (i : ι) [NoAtoms (μ i)] (x : α i) :
     Measure.pi μ { f : ∀ i, α i | f i = x } = 0 :=
   show Measure.pi μ (eval i ⁻¹' {x}) = 0 from pi_eval_preimage_null _ (measure_singleton x)
 #align measure_theory.measure.pi_hyperplane MeasureTheory.Measure.pi_hyperplane
 
-theorem ae_eval_ne (i : ι) [HasNoAtoms (μ i)] (x : α i) : ∀ᵐ y : ∀ i, α i ∂Measure.pi μ, y i ≠ x :=
+theorem ae_eval_ne (i : ι) [NoAtoms (μ i)] (x : α i) : ∀ᵐ y : ∀ i, α i ∂Measure.pi μ, y i ≠ x :=
   compl_mem_ae_iff.2 (pi_hyperplane μ i x)
 #align measure_theory.measure.ae_eval_ne MeasureTheory.Measure.ae_eval_ne
 
@@ -523,7 +523,7 @@ theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i ∈ I, s 
 
 section Intervals
 
-variable {μ} [∀ i, PartialOrder (α i)] [∀ i, HasNoAtoms (μ i)]
+variable {μ} [∀ i, PartialOrder (α i)] [∀ i, NoAtoms (μ i)]
 
 theorem pi_Iio_ae_eq_pi_Iic {s : Set ι} {f : ∀ i, α i} :
     (pi s fun i => Iio (f i)) =ᵐ[Measure.pi μ] pi s fun i => Iic (f i) :=
@@ -594,15 +594,15 @@ end Intervals
 
 /-- If one of the measures `μ i` has no atoms, them `measure.pi µ`
 has no atoms. The instance below assumes that all `μ i` have no atoms. -/
-theorem pi_hasNoAtoms (i : ι) [HasNoAtoms (μ i)] : HasNoAtoms (Measure.pi μ) :=
+theorem pi_noAtoms (i : ι) [NoAtoms (μ i)] : NoAtoms (Measure.pi μ) :=
   ⟨fun x => flip measure_mono_null (pi_hyperplane μ i (x i)) (singleton_subset_iff.2 rfl)⟩
-#align measure_theory.measure.pi_has_no_atoms MeasureTheory.Measure.pi_hasNoAtoms
+#align measure_theory.measure.pi_has_no_atoms MeasureTheory.Measure.pi_noAtoms
 
-instance [h : Nonempty ι] [∀ i, HasNoAtoms (μ i)] : HasNoAtoms (Measure.pi μ) :=
-  h.elim fun i => pi_hasNoAtoms i
+instance [h : Nonempty ι] [∀ i, NoAtoms (μ i)] : NoAtoms (Measure.pi μ) :=
+  h.elim fun i => pi_noAtoms i
 
-instance [∀ i, TopologicalSpace (α i)] [∀ i, IsLocallyFiniteMeasure (μ i)] :
-    IsLocallyFiniteMeasure (Measure.pi μ) :=
+instance [∀ i, TopologicalSpace (α i)] [∀ i, LocallyFiniteMeasure (μ i)] :
+    LocallyFiniteMeasure (Measure.pi μ) :=
   by
   refine' ⟨fun x => _⟩
   choose s hxs ho hμ using fun i => (μ i).exists_isOpen_measure_lt_top (x i)
@@ -661,9 +661,8 @@ instance pi.isOpenPosMeasure [∀ i, TopologicalSpace (α i)] [∀ i, IsOpenPosM
   apply (hs i).1.measure_pos (μ i) ⟨a i, (hs i).2⟩
 #align measure_theory.measure.pi.is_open_pos_measure MeasureTheory.Measure.pi.isOpenPosMeasure
 
-instance pi.isFiniteMeasureOnCompacts [∀ i, TopologicalSpace (α i)]
-    [∀ i, IsFiniteMeasureOnCompacts (μ i)] :
-    IsFiniteMeasureOnCompacts (MeasureTheory.Measure.pi μ) :=
+instance pi.finiteMeasureOnCompacts [∀ i, TopologicalSpace (α i)]
+    [∀ i, FiniteMeasureOnCompacts (μ i)] : FiniteMeasureOnCompacts (MeasureTheory.Measure.pi μ) :=
   by
   constructor
   intro K hK
@@ -672,7 +671,7 @@ instance pi.isFiniteMeasureOnCompacts [∀ i, TopologicalSpace (α i)]
   rw [measure.pi_pi]
   refine' WithTop.prod_lt_top _
   exact fun i _ => ne_of_lt (IsCompact.measure_lt_top (IsCompact.image hK (continuous_apply i)))
-#align measure_theory.measure.pi.is_finite_measure_on_compacts MeasureTheory.Measure.pi.isFiniteMeasureOnCompacts
+#align measure_theory.measure.pi.is_finite_measure_on_compacts MeasureTheory.Measure.pi.finiteMeasureOnCompacts
 
 @[to_additive]
 instance pi.isHaarMeasure [∀ i, Group (α i)] [∀ i, TopologicalSpace (α i)]

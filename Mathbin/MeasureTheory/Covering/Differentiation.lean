@@ -126,7 +126,7 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] :
 
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
 (This is a trivial result, following from the fact that the measure is locally finite). -/
-theorem eventually_measure_lt_top [IsLocallyFiniteMeasure μ] (x : α) :
+theorem eventually_measure_lt_top [LocallyFiniteMeasure μ] (x : α) :
     ∀ᶠ a in v.filterAt x, μ a < ∞ :=
   by
   obtain ⟨ε, εpos, με⟩ : ∃ (ε : ℝ)(hi : 0 < ε), μ (closed_ball x ε) < ∞ :=
@@ -137,7 +137,7 @@ theorem eventually_measure_lt_top [IsLocallyFiniteMeasure μ] (x : α) :
 /-- If two measures `ρ` and `ν` have, at every point of a set `s`, arbitrarily small sets in a
 Vitali family satisfying `ρ a ≤ ν a`, then `ρ s ≤ ν s` if `ρ ≪ μ`.-/
 theorem measure_le_of_frequently_le [SecondCountableTopology α] [BorelSpace α] {ρ : Measure α}
-    (ν : Measure α) [IsLocallyFiniteMeasure ν] (hρ : ρ ≪ μ) (s : Set α)
+    (ν : Measure α) [LocallyFiniteMeasure ν] (hρ : ρ ≪ μ) (s : Set α)
     (hs : ∀ x ∈ s, ∃ᶠ a in v.filterAt x, ρ a ≤ ν a) : ρ s ≤ ν s :=
   by
   -- this follows from a covering argument using the sets satisfying `ρ a ≤ ν a`.
@@ -168,8 +168,8 @@ theorem measure_le_of_frequently_le [SecondCountableTopology α] [BorelSpace α]
 
 section
 
-variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {ρ : Measure α}
-  [IsLocallyFiniteMeasure ρ]
+variable [SecondCountableTopology α] [BorelSpace α] [LocallyFiniteMeasure μ] {ρ : Measure α}
+  [LocallyFiniteMeasure ρ]
 
 /-- If a measure `ρ` is singular with respect to `μ`, then for `μ` almost every `x`, the ratio
 `ρ a / μ a` tends to zero when `a` shrinks to `x` along the Vitali family. This makes sense

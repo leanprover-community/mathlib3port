@@ -34,7 +34,7 @@ open MeasureTheory ProbabilityTheory MeasurableSpace TopologicalSpace
 
 namespace ProbabilityTheory
 
-variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
+variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
 
 section BorelCantelli
 

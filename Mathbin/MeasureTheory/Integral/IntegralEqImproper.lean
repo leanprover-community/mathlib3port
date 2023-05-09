@@ -205,7 +205,7 @@ theorem aeCover_Ioo_of_Ioo : AeCover (μ.restrict <| Ioo A B) l fun i => Ioo (a 
     Measurable := fun i => measurableSet_Ioo }
 #align measure_theory.ae_cover_Ioo_of_Ioo MeasureTheory.aeCover_Ioo_of_Ioo
 
-variable [HasNoAtoms μ]
+variable [NoAtoms μ]
 
 theorem aeCover_Ioc_of_Icc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
     AeCover (μ.restrict <| Ioc A B) l fun i => Icc (a i) (b i) := by

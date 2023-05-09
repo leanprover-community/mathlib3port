@@ -214,7 +214,7 @@ instance nhdsWithinSingleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ :=
 #align interval_integral.FTC_filter.nhds_within_singleton intervalIntegral.FTCFilter.nhdsWithinSingleton
 
 theorem finite_at_inner {a : ℝ} (l : Filter ℝ) {l'} [h : FTCFilter a l l'] {μ : Measure ℝ}
-    [IsLocallyFiniteMeasure μ] : μ.FiniteAtFilter l' :=
+    [LocallyFiniteMeasure μ] : μ.FiniteAtFilter l' :=
   (μ.finite_at_nhds a).filter_mono h.le_nhds
 #align interval_integral.FTC_filter.finite_at_inner intervalIntegral.FTCFilter.finite_at_inner
 
@@ -336,7 +336,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge' [IsMeasurably
 
 section
 
-variable [IsLocallyFiniteMeasure μ] [FTCFilter a l l']
+variable [LocallyFiniteMeasure μ] [FTCFilter a l l']
 
 include a
 
@@ -396,7 +396,7 @@ end
 
 attribute [local instance] FTC_filter.meas_gen
 
-variable [FTCFilter a la la'] [FTCFilter b lb lb'] [IsLocallyFiniteMeasure μ]
+variable [FTCFilter a la la'] [FTCFilter b lb lb'] [LocallyFiniteMeasure μ]
 
 /-- Fundamental theorem of calculus-1, strict derivative in both limits for a locally finite
 measure.

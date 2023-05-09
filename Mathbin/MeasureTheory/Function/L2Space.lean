@@ -248,7 +248,7 @@ section InnerContinuous
 
 variable {α : Type _} [TopologicalSpace α] [MeasureSpace α] [BorelSpace α] {𝕜 : Type _} [IsROrC 𝕜]
 
-variable (μ : Measure α) [IsFiniteMeasure μ]
+variable (μ : Measure α) [FiniteMeasure μ]
 
 open BoundedContinuousFunction ComplexConjugate
 

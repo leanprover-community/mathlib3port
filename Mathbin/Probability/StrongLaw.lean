@@ -130,12 +130,12 @@ theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 
   Set.indicator_apply_nonneg fun _ => h
 #align probability_theory.truncation_nonneg ProbabilityTheory.truncation_nonneg
 
-theorem MeasureTheory.AeStronglyMeasurable.memℒp_truncation [IsFiniteMeasure μ]
+theorem MeasureTheory.AeStronglyMeasurable.memℒp_truncation [FiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
   Memℒp.of_bound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
 #align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AeStronglyMeasurable.memℒp_truncation
 
-theorem MeasureTheory.AeStronglyMeasurable.integrable_truncation [IsFiniteMeasure μ]
+theorem MeasureTheory.AeStronglyMeasurable.integrable_truncation [FiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
@@ -232,7 +232,7 @@ end Truncation
 
 section StrongLawAe
 
-variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω)]
+variable {Ω : Type _} [MeasureSpace Ω] [ProbabilityMeasure (ℙ : Measure Ω)]
 
 section MomentEstimates
 
@@ -775,7 +775,7 @@ end StrongLawAe
 
 section StrongLawLp
 
-variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω)]
+variable {Ω : Type _} [MeasureSpace Ω] [ProbabilityMeasure (ℙ : Measure Ω)]
 
 /-- *Strong law of large numbers*, Lᵖ version: if `X n` is a sequence of independent
 identically distributed real-valued random variables in Lᵖ, then `∑ i in range n, X i / n`

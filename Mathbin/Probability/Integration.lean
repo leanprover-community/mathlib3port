@@ -321,9 +321,8 @@ theorem IndepFunCat.integral_mul' (hXY : IndepFunCat X Y μ) (hX : AeStronglyMea
 /-- Independence of functions `f` and `g` into arbitrary types is characterized by the relation
   `E[(φ ∘ f) * (ψ ∘ g)] = E[φ ∘ f] * E[ψ ∘ g]` for all measurable `φ` and `ψ` with values in `ℝ`
   satisfying appropriate integrability conditions. -/
-theorem indepFunCat_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _}
-    {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'} {f : Ω → β} {g : Ω → β'}
-    {hfm : Measurable f} {hgm : Measurable g} :
+theorem indepFunCat_iff_integral_comp_mul [FiniteMeasure μ] {β β' : Type _} {mβ : MeasurableSpace β}
+    {mβ' : MeasurableSpace β'} {f : Ω → β} {g : Ω → β'} {hfm : Measurable f} {hgm : Measurable g} :
     IndepFunCat f g μ ↔
       ∀ {φ : β → ℝ} {ψ : β' → ℝ},
         Measurable φ →

@@ -210,7 +210,7 @@ theorem LocallyIntegrable.aeStronglyMeasurable [SecondCountableTopology X]
   simpa only [restrict_univ] using (locally_integrable_on_univ.mpr hf).AeStronglyMeasurable
 #align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aeStronglyMeasurable
 
-theorem locallyIntegrable_const [IsLocallyFiniteMeasure μ] (c : E) :
+theorem locallyIntegrable_const [LocallyFiniteMeasure μ] (c : E) :
     LocallyIntegrable (fun x => c) μ := by
   intro x
   rcases μ.finite_at_nhds x with ⟨U, hU, h'U⟩
@@ -218,7 +218,7 @@ theorem locallyIntegrable_const [IsLocallyFiniteMeasure μ] (c : E) :
   simp only [h'U, integrable_on_const, or_true_iff]
 #align measure_theory.locally_integrable_const MeasureTheory.locallyIntegrable_const
 
-theorem locallyIntegrableOn_const [IsLocallyFiniteMeasure μ] (c : E) :
+theorem locallyIntegrableOn_const [LocallyFiniteMeasure μ] (c : E) :
     LocallyIntegrableOn (fun x => c) s μ :=
   (locallyIntegrable_const c).LocallyIntegrableOn s
 #align measure_theory.locally_integrable_on_const MeasureTheory.locallyIntegrableOn_const
@@ -253,7 +253,7 @@ open MeasureTheory
 
 section borel
 
-variable [OpensMeasurableSpace X] [IsLocallyFiniteMeasure μ]
+variable [OpensMeasurableSpace X] [LocallyFiniteMeasure μ]
 
 variable {K : Set X} {a b : X}
 
@@ -344,7 +344,7 @@ theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b 
       ((ae_restrict_iff' h's).mpr <| ae_of_all _ fun y hy => hC (f y) (mem_image_of_mem f hy))
 #align monotone_on.integrable_on_of_measure_ne_top MonotoneOn.integrableOn_of_measure_ne_top
 
-theorem MonotoneOn.integrableOn_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)
+theorem MonotoneOn.integrableOn_isCompact [FiniteMeasureOnCompacts μ] (hs : IsCompact s)
     (hmono : MonotoneOn f s) : IntegrableOn f s μ :=
   by
   obtain rfl | h := s.eq_empty_or_nonempty
@@ -361,12 +361,12 @@ theorem AntitoneOn.integrableOn_of_measure_ne_top (hanti : AntitoneOn f s) {a b 
   hanti.dual_right.integrableOn_of_measure_ne_top ha hb hs h's
 #align antitone_on.integrable_on_of_measure_ne_top AntitoneOn.integrableOn_of_measure_ne_top
 
-theorem AntioneOn.integrableOn_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)
+theorem AntioneOn.integrableOn_isCompact [FiniteMeasureOnCompacts μ] (hs : IsCompact s)
     (hanti : AntitoneOn f s) : IntegrableOn f s μ :=
   hanti.dual_right.integrableOn_isCompact hs
 #align antione_on.integrable_on_is_compact AntioneOn.integrableOn_isCompact
 
-theorem Monotone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hmono : Monotone f) :
+theorem Monotone.locallyIntegrable [LocallyFiniteMeasure μ] (hmono : Monotone f) :
     LocallyIntegrable f μ := by
   intro x
   rcases μ.finite_at_nhds x with ⟨U, hU, h'U⟩
@@ -379,7 +379,7 @@ theorem Monotone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hmono : Monotone
       ((measure_mono abU).trans_lt h'U).Ne measurableSet_Icc
 #align monotone.locally_integrable Monotone.locallyIntegrable
 
-theorem Antitone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hanti : Antitone f) :
+theorem Antitone.locallyIntegrable [LocallyFiniteMeasure μ] (hanti : Antitone f) :
     LocallyIntegrable f μ :=
   hanti.dual_right.LocallyIntegrable
 #align antitone.locally_integrable Antitone.locallyIntegrable

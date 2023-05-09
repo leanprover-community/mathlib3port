@@ -45,7 +45,7 @@ variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α)
 
 section
 
-variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ]
+variable [SecondCountableTopology α] [BorelSpace α] [LocallyFiniteMeasure μ]
 
 open Topology
 
@@ -154,7 +154,7 @@ end
 
 section Applications
 
-variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {E : Type _}
+variable [SecondCountableTopology α] [BorelSpace α] [LocallyFiniteMeasure μ] {E : Type _}
   [NormedAddCommGroup E]
 
 /-- A version of *Lebesgue's density theorem* for a sequence of closed balls whose centers are

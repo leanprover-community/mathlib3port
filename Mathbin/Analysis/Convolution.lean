@@ -1081,7 +1081,7 @@ theorem convolution_eq_right {x₀ : G} (hg : ∀ x ∈ ball x₀ φ.r, g x = g 
 
 variable [BorelSpace G]
 
-variable [IsLocallyFiniteMeasure μ] [IsOpenPosMeasure μ]
+variable [LocallyFiniteMeasure μ] [IsOpenPosMeasure μ]
 
 variable [FiniteDimensional ℝ G]
 
@@ -1775,7 +1775,7 @@ noncomputable def posConvolution (f : ℝ → E) (g : ℝ → E') (L : E →L[�
 #align pos_convolution posConvolution
 
 theorem posConvolution_eq_convolution_indicator (f : ℝ → E) (g : ℝ → E') (L : E →L[ℝ] E' →L[ℝ] F)
-    (ν : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) [HasNoAtoms ν] :
+    (ν : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) [NoAtoms ν] :
     posConvolution f g L ν = convolution (indicator (Ioi 0) f) (indicator (Ioi 0) g) L ν :=
   by
   ext1 x
@@ -1812,7 +1812,7 @@ theorem posConvolution_eq_convolution_indicator (f : ℝ → E) (g : ℝ → E')
 #align pos_convolution_eq_convolution_indicator posConvolution_eq_convolution_indicator
 
 theorem integrable_posConvolution {f : ℝ → E} {g : ℝ → E'} {μ ν : Measure ℝ} [SigmaFinite μ]
-    [SigmaFinite ν] [IsAddRightInvariant μ] [HasNoAtoms ν] (hf : IntegrableOn f (Ioi 0) ν)
+    [SigmaFinite ν] [IsAddRightInvariant μ] [NoAtoms ν] (hf : IntegrableOn f (Ioi 0) ν)
     (hg : IntegrableOn g (Ioi 0) μ) (L : E →L[ℝ] E' →L[ℝ] F) :
     Integrable (posConvolution f g L ν) μ :=
   by
@@ -1824,7 +1824,7 @@ theorem integrable_posConvolution {f : ℝ → E} {g : ℝ → E'} {μ ν : Meas
 /-- The integral over `Ioi 0` of a forward convolution of two functions is equal to the product
 of their integrals over this set. (Compare `integral_convolution` for the two-sided convolution.) -/
 theorem integral_pos_convolution [CompleteSpace E] [CompleteSpace E'] {μ ν : Measure ℝ}
-    [SigmaFinite μ] [SigmaFinite ν] [IsAddRightInvariant μ] [HasNoAtoms ν] {f : ℝ → E} {g : ℝ → E'}
+    [SigmaFinite μ] [SigmaFinite ν] [IsAddRightInvariant μ] [NoAtoms ν] {f : ℝ → E} {g : ℝ → E'}
     (hf : IntegrableOn f (Ioi 0) ν) (hg : IntegrableOn g (Ioi 0) μ) (L : E →L[ℝ] E' →L[ℝ] F) :
     (∫ x : ℝ in Ioi 0, ∫ t : ℝ in 0 ..x, L (f t) (g (x - t)) ∂ν ∂μ) =
       L (∫ x : ℝ in Ioi 0, f x ∂ν) (∫ x : ℝ in Ioi 0, g x ∂μ) :=

@@ -575,7 +575,7 @@ theorem ContinuousOn.aeStronglyMeasurable_of_isCompact [TopologicalSpace α] [Op
 #align continuous_on.ae_strongly_measurable_of_is_compact ContinuousOn.aeStronglyMeasurable_of_isCompact
 
 theorem ContinuousOn.integrable_at_nhdsWithin_of_isSeparable [TopologicalSpace α]
-    [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ]
+    [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [LocallyFiniteMeasure μ]
     {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ht : MeasurableSet t)
     (h't : TopologicalSpace.IsSeparable t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
@@ -586,7 +586,7 @@ theorem ContinuousOn.integrable_at_nhdsWithin_of_isSeparable [TopologicalSpace �
 
 theorem ContinuousOn.integrable_at_nhdsWithin [TopologicalSpace α]
     [SecondCountableTopologyEither α E] [OpensMeasurableSpace α] {μ : Measure α}
-    [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t)
+    [LocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t)
     (ht : MeasurableSet t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhdsWithin, hft.ae_strongly_measurable ht⟩
@@ -594,7 +594,7 @@ theorem ContinuousOn.integrable_at_nhdsWithin [TopologicalSpace α]
 #align continuous_on.integrable_at_nhds_within ContinuousOn.integrable_at_nhdsWithin
 
 theorem Continuous.integrable_at_nhds [TopologicalSpace α] [SecondCountableTopologyEither α E]
-    [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ] {f : α → E}
+    [OpensMeasurableSpace α] {μ : Measure α} [LocallyFiniteMeasure μ] {f : α → E}
     (hf : Continuous f) (a : α) : IntegrableAtFilter f (𝓝 a) μ :=
   by
   rw [← nhdsWithin_univ]
@@ -704,7 +704,7 @@ theorem integrableOn_Iic_iff_integrableOn_Iio' (hb : μ {b} ≠ ∞) :
     eq_true (integrable_on_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
 #align integrable_on_Iic_iff_integrable_on_Iio' integrableOn_Iic_iff_integrableOn_Iio'
 
-variable [HasNoAtoms μ]
+variable [NoAtoms μ]
 
 theorem integrableOn_Icc_iff_integrableOn_Ioc :
     IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioc a b) μ :=

@@ -37,7 +37,7 @@ include mα mβ
 
 /-- This is an auxiliary lemma for `measurable_prod_mk_mem`. -/
 theorem measurable_prod_mk_mem_of_finite (κ : kernel α β) {t : Set (α × β)} (ht : MeasurableSet t)
-    (hκs : ∀ a, IsFiniteMeasure (κ a)) : Measurable fun a => κ a { b | (a, b) ∈ t } :=
+    (hκs : ∀ a, FiniteMeasure (κ a)) : Measurable fun a => κ a { b | (a, b) ∈ t } :=
   by
   -- `t` is a measurable set in the product `α × β`: we use that the product σ-algebra is generated
   -- by boxes to prove the result by induction.

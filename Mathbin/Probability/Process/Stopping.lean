@@ -909,7 +909,7 @@ theorem progMeasurable_min_stopping_time [MetrizableSpace ι] (hτ : IsStoppingT
   intro i
   let m_prod : MeasurableSpace (Set.Iic i × Ω) := MeasurableSpace.prod _ (f i)
   let m_set : ∀ t : Set (Set.Iic i × Ω), MeasurableSpace t := fun _ =>
-    @Subtype.measurableSpace (Set.Iic i × Ω) _ m_prod
+    @Subtype.instMeasurableSpace (Set.Iic i × Ω) _ m_prod
   let s := { p : Set.Iic i × Ω | τ p.2 ≤ i }
   have hs : measurable_set[m_prod] s := @measurable_snd (Set.Iic i) Ω _ (f i) _ (hτ i)
   have h_meas_fst :

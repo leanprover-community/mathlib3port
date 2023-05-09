@@ -695,7 +695,7 @@ instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : IsAddLeftInvariant ω.Measure
   rw [AlternatingMap.measure]
   infer_instance
 
-instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : IsLocallyFiniteMeasure ω.Measure :=
+instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : LocallyFiniteMeasure ω.Measure :=
   by
   rw [AlternatingMap.measure]
   infer_instance
