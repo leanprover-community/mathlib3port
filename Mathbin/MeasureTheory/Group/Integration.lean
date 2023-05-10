@@ -34,7 +34,7 @@ variable {μ : Measure G} {f : G → E} {g : G}
 
 section MeasurableInv
 
-variable [Group G] [HasMeasurableInv G]
+variable [Group G] [MeasurableInv G]
 
 @[to_additive]
 theorem Integrable.comp_inv [IsInvInvariant μ] {f : G → F} (hf : Integrable f μ) :
@@ -56,7 +56,7 @@ end MeasurableInv
 
 section MeasurableMul
 
-variable [Group G] [HasMeasurableMul G]
+variable [Group G] [MeasurableMul G]
 
 /-- Translating a function by left-multiplication does not change its `measure_theory.lintegral`
 with respect to a left-invariant measure. -/
@@ -166,7 +166,7 @@ theorem Integrable.comp_div_right {f : G → F} [IsMulRightInvariant μ] (hf : I
 #align measure_theory.integrable.comp_div_right MeasureTheory.Integrable.comp_div_right
 #align measure_theory.integrable.comp_sub_right MeasureTheory.Integrable.comp_sub_right
 
-variable [HasMeasurableInv G]
+variable [MeasurableInv G]
 
 @[to_additive]
 theorem Integrable.comp_div_left {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ]
@@ -197,7 +197,7 @@ end MeasurableMul
 
 section Smul
 
-variable [Group G] [MeasurableSpace α] [MulAction G α] [HasMeasurableSmul G α]
+variable [Group G] [MeasurableSpace α] [MulAction G α] [MeasurableSMul G α]
 
 @[simp, to_additive]
 theorem integral_smul_eq_self {μ : Measure α} [SmulInvariantMeasure G α μ] (f : α → E) {g : G} :

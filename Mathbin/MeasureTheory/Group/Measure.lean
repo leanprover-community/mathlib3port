@@ -119,9 +119,9 @@ instance isMulRightInvariant_smul_nNReal [IsMulRightInvariant μ] (c : ℝ≥0) 
 #align measure_theory.is_mul_right_invariant_smul_nnreal MeasureTheory.isMulRightInvariant_smul_nNReal
 #align measure_theory.is_add_right_invariant_smul_nnreal MeasureTheory.is_add_right_invariant_smul_nnreal
 
-section HasMeasurableMul
+section MeasurableMul
 
-variable [HasMeasurableMul G]
+variable [MeasurableMul G]
 
 @[to_additive]
 theorem measurePreserving_mul_left (μ : Measure G) [IsMulLeftInvariant μ] (g : G) :
@@ -204,7 +204,7 @@ theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
 
 @[to_additive]
 instance [IsMulLeftInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : MeasurableSpace H}
-    {ν : Measure H} [HasMeasurableMul H] [IsMulLeftInvariant ν] [SigmaFinite ν] :
+    {ν : Measure H} [MeasurableMul H] [IsMulLeftInvariant ν] [SigmaFinite ν] :
     IsMulLeftInvariant (μ.Prod ν) := by
   constructor
   rintro ⟨g, h⟩
@@ -218,7 +218,7 @@ instance [IsMulLeftInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : Mea
 
 @[to_additive]
 instance [IsMulRightInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : MeasurableSpace H}
-    {ν : Measure H} [HasMeasurableMul H] [IsMulRightInvariant ν] [SigmaFinite ν] :
+    {ν : Measure H} [MeasurableMul H] [IsMulRightInvariant ν] [SigmaFinite ν] :
     IsMulRightInvariant (μ.Prod ν) := by
   constructor
   rintro ⟨g, h⟩
@@ -231,7 +231,7 @@ instance [IsMulRightInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : Me
     infer_instance
 
 @[to_additive]
-theorem isMulLeftInvariant_map {H : Type _} [MeasurableSpace H] [Mul H] [HasMeasurableMul H]
+theorem isMulLeftInvariant_map {H : Type _} [MeasurableSpace H] [Mul H] [MeasurableMul H]
     [IsMulLeftInvariant μ] (f : G →ₙ* H) (hf : Measurable f) (h_surj : Surjective f) :
     IsMulLeftInvariant (Measure.map f μ) :=
   by
@@ -246,7 +246,7 @@ theorem isMulLeftInvariant_map {H : Type _} [MeasurableSpace H] [Mul H] [HasMeas
 #align measure_theory.is_mul_left_invariant_map MeasureTheory.isMulLeftInvariant_map
 #align measure_theory.is_add_left_invariant_map MeasureTheory.is_add_left_invariant_map
 
-end HasMeasurableMul
+end MeasurableMul
 
 end Mul
 
@@ -264,7 +264,7 @@ end DivInvMonoid
 
 section Group
 
-variable [Group G] [HasMeasurableMul G]
+variable [Group G] [MeasurableMul G]
 
 @[to_additive]
 theorem measurePreserving_div_right (μ : Measure G) [IsMulRightInvariant μ] (g : G) :
@@ -387,7 +387,7 @@ theorem map_inv_eq_self (μ : Measure G) [IsInvInvariant μ] : map Inv.inv μ = 
 #align measure_theory.measure.map_inv_eq_self MeasureTheory.Measure.map_inv_eq_self
 #align measure_theory.measure.map_neg_eq_self MeasureTheory.Measure.map_neg_eq_self
 
-variable [HasMeasurableInv G]
+variable [MeasurableInv G]
 
 @[to_additive]
 theorem measurePreserving_inv (μ : Measure G) [IsInvInvariant μ] : MeasurePreserving Inv.inv μ μ :=
@@ -399,7 +399,7 @@ end Inv
 
 section InvolutiveInv
 
-variable [InvolutiveInv G] [HasMeasurableInv G]
+variable [InvolutiveInv G] [MeasurableInv G]
 
 @[simp, to_additive]
 theorem inv_apply (μ : Measure G) (s : Set G) : μ.inv s = μ s⁻¹ :=
@@ -434,7 +434,7 @@ end InvolutiveInv
 
 section DivisionMonoid
 
-variable [DivisionMonoid G] [HasMeasurableMul G] [HasMeasurableInv G] {μ : Measure G}
+variable [DivisionMonoid G] [MeasurableMul G] [MeasurableInv G] {μ : Measure G}
 
 @[to_additive]
 instance [IsMulLeftInvariant μ] : IsMulRightInvariant μ.inv :=
@@ -488,7 +488,7 @@ end DivisionMonoid
 
 section Group
 
-variable [Group G] [HasMeasurableMul G] [HasMeasurableInv G] {μ : Measure G}
+variable [Group G] [MeasurableMul G] [MeasurableInv G] {μ : Measure G}
 
 @[to_additive]
 theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant μ] (x : G) :
@@ -795,7 +795,7 @@ instance (priority := 100) IsHaarMeasure.sigmaFinite [SigmaCompactSpace G] : Sig
 @[to_additive]
 instance {G : Type _} [Group G] [TopologicalSpace G] {mG : MeasurableSpace G} {H : Type _} [Group H]
     [TopologicalSpace H] {mH : MeasurableSpace H} (μ : Measure G) (ν : Measure H) [IsHaarMeasure μ]
-    [IsHaarMeasure ν] [SigmaFinite μ] [SigmaFinite ν] [HasMeasurableMul G] [HasMeasurableMul H] :
+    [IsHaarMeasure ν] [SigmaFinite μ] [SigmaFinite ν] [MeasurableMul G] [MeasurableMul H] :
     IsHaarMeasure (μ.Prod ν) where
 
 /-- If the neutral element of a group is not isolated, then a Haar measure on this group has

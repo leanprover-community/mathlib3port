@@ -261,12 +261,12 @@ protected theorem nnnorm [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistr
   h.comp measurable_nnnorm
 #align probability_theory.ident_distrib.nnnorm ProbabilityTheory.IdentDistrib.nnnorm
 
-protected theorem pow [Pow γ ℕ] [HasMeasurablePow γ ℕ] (h : IdentDistrib f g μ ν) {n : ℕ} :
+protected theorem pow [Pow γ ℕ] [MeasurablePow γ ℕ] (h : IdentDistrib f g μ ν) {n : ℕ} :
     IdentDistrib (fun x => f x ^ n) (fun x => g x ^ n) μ ν :=
   h.comp (measurable_id.pow_const n)
 #align probability_theory.ident_distrib.pow ProbabilityTheory.IdentDistrib.pow
 
-protected theorem sq [Pow γ ℕ] [HasMeasurablePow γ ℕ] (h : IdentDistrib f g μ ν) :
+protected theorem sq [Pow γ ℕ] [MeasurablePow γ ℕ] (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => f x ^ 2) (fun x => g x ^ 2) μ ν :=
   h.comp (measurable_id.pow_const 2)
 #align probability_theory.ident_distrib.sq ProbabilityTheory.IdentDistrib.sq
@@ -277,30 +277,30 @@ protected theorem coe_nNReal_eNNReal {f : α → ℝ≥0} {g : β → ℝ≥0} (
 #align probability_theory.ident_distrib.coe_nnreal_ennreal ProbabilityTheory.IdentDistrib.coe_nNReal_eNNReal
 
 @[to_additive]
-theorem mul_const [Mul γ] [HasMeasurableMul γ] (h : IdentDistrib f g μ ν) (c : γ) :
+theorem mul_const [Mul γ] [MeasurableMul γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => f x * c) (fun x => g x * c) μ ν :=
   h.comp (measurable_mul_const c)
 #align probability_theory.ident_distrib.mul_const ProbabilityTheory.IdentDistrib.mul_const
 #align probability_theory.ident_distrib.add_const ProbabilityTheory.IdentDistrib.add_const
 
 @[to_additive]
-theorem const_mul [Mul γ] [HasMeasurableMul γ] (h : IdentDistrib f g μ ν) (c : γ) :
+theorem const_mul [Mul γ] [MeasurableMul γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => c * f x) (fun x => c * g x) μ ν :=
   h.comp (measurable_const_mul c)
 #align probability_theory.ident_distrib.const_mul ProbabilityTheory.IdentDistrib.const_mul
 #align probability_theory.ident_distrib.const_add ProbabilityTheory.IdentDistrib.const_add
 
 @[to_additive]
-theorem div_const [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : γ) :
+theorem div_const [Div γ] [MeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => f x / c) (fun x => g x / c) μ ν :=
-  h.comp (HasMeasurableDiv.measurable_div_const c)
+  h.comp (MeasurableDiv.measurable_div_const c)
 #align probability_theory.ident_distrib.div_const ProbabilityTheory.IdentDistrib.div_const
 #align probability_theory.ident_distrib.sub_const ProbabilityTheory.IdentDistrib.sub_const
 
 @[to_additive]
-theorem const_div [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : γ) :
+theorem const_div [Div γ] [MeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => c / f x) (fun x => c / g x) μ ν :=
-  h.comp (HasMeasurableDiv.measurable_const_div c)
+  h.comp (MeasurableDiv.measurable_div_const c)
 #align probability_theory.ident_distrib.const_div ProbabilityTheory.IdentDistrib.const_div
 #align probability_theory.ident_distrib.const_sub ProbabilityTheory.IdentDistrib.const_sub
 

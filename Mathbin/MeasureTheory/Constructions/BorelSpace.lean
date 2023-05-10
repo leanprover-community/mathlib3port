@@ -875,34 +875,32 @@ theorem ContinuousOn.measurable_piecewise {f g : α → γ} {s : Set α} [∀ j 
 #align continuous_on.measurable_piecewise ContinuousOn.measurable_piecewise
 
 @[to_additive]
-instance (priority := 100) ContinuousMul.hasMeasurableMul [Mul γ] [ContinuousMul γ] :
-    HasMeasurableMul γ
+instance (priority := 100) ContinuousMul.measurableMul [Mul γ] [ContinuousMul γ] : MeasurableMul γ
     where
   measurable_const_mul c := (continuous_const.mul continuous_id).Measurable
   measurable_mul_const c := (continuous_id.mul continuous_const).Measurable
-#align has_continuous_mul.has_measurable_mul ContinuousMul.hasMeasurableMul
+#align has_continuous_mul.has_measurable_mul ContinuousMul.measurableMul
 #align has_continuous_add.has_measurable_add ContinuousAdd.has_measurable_add
 
-instance (priority := 100) ContinuousSub.hasMeasurableSub [Sub γ] [ContinuousSub γ] :
-    HasMeasurableSub γ
+instance (priority := 100) ContinuousSub.measurableSub [Sub γ] [ContinuousSub γ] : MeasurableSub γ
     where
   measurable_const_sub c := (continuous_const.sub continuous_id).Measurable
   measurable_sub_const c := (continuous_id.sub continuous_const).Measurable
-#align has_continuous_sub.has_measurable_sub ContinuousSub.hasMeasurableSub
+#align has_continuous_sub.has_measurable_sub ContinuousSub.measurableSub
 
 @[to_additive]
-instance (priority := 100) TopologicalGroup.hasMeasurableInv [Group γ] [TopologicalGroup γ] :
-    HasMeasurableInv γ :=
+instance (priority := 100) TopologicalGroup.measurableInv [Group γ] [TopologicalGroup γ] :
+    MeasurableInv γ :=
   ⟨continuous_inv.Measurable⟩
-#align topological_group.has_measurable_inv TopologicalGroup.hasMeasurableInv
+#align topological_group.has_measurable_inv TopologicalGroup.measurableInv
 #align topological_add_group.has_measurable_neg TopologicalAddGroup.has_measurable_neg
 
-instance (priority := 100) ContinuousSMul.hasMeasurableSmul {M α} [TopologicalSpace M]
+instance (priority := 100) ContinuousSMul.measurableSMul {M α} [TopologicalSpace M]
     [TopologicalSpace α] [MeasurableSpace M] [MeasurableSpace α] [OpensMeasurableSpace M]
-    [BorelSpace α] [SMul M α] [ContinuousSMul M α] : HasMeasurableSmul M α :=
+    [BorelSpace α] [SMul M α] [ContinuousSMul M α] : MeasurableSMul M α :=
   ⟨fun c => (continuous_const_smul _).Measurable, fun y =>
     (continuous_id.smul continuous_const).Measurable⟩
-#align has_continuous_smul.has_measurable_smul ContinuousSMul.hasMeasurableSmul
+#align has_continuous_smul.has_measurable_smul ContinuousSMul.measurableSMul
 
 section Lattice
 
@@ -982,29 +980,29 @@ theorem Continuous.ae_measurable2 [SecondCountableTopology α] [SecondCountableT
   h.Measurable.comp_aemeasurable (hf.prod_mk hg)
 #align continuous.ae_measurable2 Continuous.ae_measurable2
 
-instance (priority := 100) HasContinuousInv₀.hasMeasurableInv [GroupWithZero γ] [T1Space γ]
-    [HasContinuousInv₀ γ] : HasMeasurableInv γ :=
+instance (priority := 100) HasContinuousInv₀.measurableInv [GroupWithZero γ] [T1Space γ]
+    [HasContinuousInv₀ γ] : MeasurableInv γ :=
   ⟨measurable_of_continuousOn_compl_singleton 0 continuousOn_inv₀⟩
-#align has_continuous_inv₀.has_measurable_inv HasContinuousInv₀.hasMeasurableInv
+#align has_continuous_inv₀.has_measurable_inv HasContinuousInv₀.measurableInv
 
 @[to_additive]
-instance (priority := 100) ContinuousMul.hasMeasurableMul₂ [SecondCountableTopology γ] [Mul γ]
-    [ContinuousMul γ] : HasMeasurableMul₂ γ :=
+instance (priority := 100) ContinuousMul.measurableMul₂ [SecondCountableTopology γ] [Mul γ]
+    [ContinuousMul γ] : MeasurableMul₂ γ :=
   ⟨continuous_mul.Measurable⟩
-#align has_continuous_mul.has_measurable_mul₂ ContinuousMul.hasMeasurableMul₂
-#align has_continuous_add.has_measurable_mul₂ ContinuousAdd.hasMeasurableMul₂
+#align has_continuous_mul.has_measurable_mul₂ ContinuousMul.measurableMul₂
+#align has_continuous_add.has_measurable_mul₂ ContinuousAdd.measurableMul₂
 
-instance (priority := 100) ContinuousSub.hasMeasurableSub₂ [SecondCountableTopology γ] [Sub γ]
-    [ContinuousSub γ] : HasMeasurableSub₂ γ :=
+instance (priority := 100) ContinuousSub.measurableSub₂ [SecondCountableTopology γ] [Sub γ]
+    [ContinuousSub γ] : MeasurableSub₂ γ :=
   ⟨continuous_sub.Measurable⟩
-#align has_continuous_sub.has_measurable_sub₂ ContinuousSub.hasMeasurableSub₂
+#align has_continuous_sub.has_measurable_sub₂ ContinuousSub.measurableSub₂
 
-instance (priority := 100) ContinuousSMul.hasMeasurableSmul₂ {M α} [TopologicalSpace M]
+instance (priority := 100) ContinuousSMul.measurableSMul₂ {M α} [TopologicalSpace M]
     [SecondCountableTopology M] [MeasurableSpace M] [OpensMeasurableSpace M] [TopologicalSpace α]
     [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α] [SMul M α] [ContinuousSMul M α] :
-    HasMeasurableSmul₂ M α :=
+    MeasurableSMul₂ M α :=
   ⟨continuous_smul.Measurable⟩
-#align has_continuous_smul.has_measurable_smul₂ ContinuousSMul.hasMeasurableSmul₂
+#align has_continuous_smul.has_measurable_smul₂ ContinuousSMul.measurableSMul₂
 
 end
 
@@ -1956,7 +1954,7 @@ theorem measurable_toNNReal : Measurable ENNReal.toNNReal :=
   ENNReal.measurable_of_measurable_nNReal measurable_id
 #align ennreal.measurable_to_nnreal ENNReal.measurable_toNNReal
 
-instance : HasMeasurableMul₂ ℝ≥0∞ :=
+instance : MeasurableMul₂ ℝ≥0∞ :=
   by
   refine' ⟨measurable_of_measurable_nnreal_nnreal _ _ _⟩
   · simp only [← ENNReal.coe_mul, measurable_mul.coe_nnreal_ennreal]
@@ -1965,12 +1963,12 @@ instance : HasMeasurableMul₂ ℝ≥0∞ :=
   · simp only [ENNReal.mul_top', ENNReal.coe_eq_zero]
     exact measurable_const.piecewise (measurable_set_singleton _) measurable_const
 
-instance : HasMeasurableSub₂ ℝ≥0∞ :=
+instance : MeasurableSub₂ ℝ≥0∞ :=
   ⟨by
     apply measurable_of_measurable_nnreal_nnreal <;>
       simp [← WithTop.coe_sub, continuous_sub.measurable.coe_nnreal_ennreal]⟩
 
-instance : HasMeasurableInv ℝ≥0∞ :=
+instance : MeasurableInv ℝ≥0∞ :=
   ⟨continuous_inv.Measurable⟩
 
 end ENNReal
@@ -2043,7 +2041,7 @@ theorem AEMeasurable.eNNReal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0
   by
   simp_rw [ENNReal.tsum_eq_supᵢ_sum]
   apply aEMeasurable_supᵢ
-  exact fun s => Finset.aEMeasurable_sum s fun i _ => h i
+  exact fun s => Finset.aemeasurable_sum s fun i _ => h i
 #align ae_measurable.ennreal_tsum AEMeasurable.eNNReal_tsum
 
 @[measurability]

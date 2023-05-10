@@ -196,8 +196,8 @@ section Group
 
 variable [AddGroup G]
 
-theorem MeasureTheory.AeStronglyMeasurable.convolution_integrand' [HasMeasurableAdd₂ G]
-    [HasMeasurableNeg G] [SigmaFinite ν] (hf : AeStronglyMeasurable f ν)
+theorem MeasureTheory.AeStronglyMeasurable.convolution_integrand' [MeasurableAdd₂ G]
+    [MeasurableNeg G] [SigmaFinite ν] (hf : AeStronglyMeasurable f ν)
     (hg : AeStronglyMeasurable g <| map (fun p : G × G => p.1 - p.2) (μ.Prod ν)) :
     AeStronglyMeasurable (fun p : G × G => L (f p.2) (g (p.1 - p.2))) (μ.Prod ν) :=
   L.aeStronglyMeasurable_comp₂ hf.snd <| hg.comp_measurable measurable_sub
@@ -205,7 +205,7 @@ theorem MeasureTheory.AeStronglyMeasurable.convolution_integrand' [HasMeasurable
 
 section
 
-variable [HasMeasurableAdd G] [HasMeasurableNeg G]
+variable [MeasurableAdd G] [MeasurableNeg G]
 
 theorem MeasureTheory.AeStronglyMeasurable.convolution_integrand_snd'
     (hf : AeStronglyMeasurable f μ) {x : G}
@@ -266,7 +266,7 @@ end
 
 section Left
 
-variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
+variable [MeasurableAdd₂ G] [MeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
 
 theorem MeasureTheory.AeStronglyMeasurable.convolution_integrand_snd (hf : AeStronglyMeasurable f μ)
     (hg : AeStronglyMeasurable g μ) (x : G) :
@@ -297,7 +297,7 @@ end Left
 
 section Right
 
-variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
+variable [MeasurableAdd₂ G] [MeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
   [SigmaFinite ν]
 
 theorem MeasureTheory.AeStronglyMeasurable.convolution_integrand (hf : AeStronglyMeasurable f ν)
@@ -393,7 +393,7 @@ variable [AddCommGroup G]
 
 section MeasurableGroup
 
-variable [HasMeasurableNeg G] [IsAddLeftInvariant μ]
+variable [MeasurableNeg G] [IsAddLeftInvariant μ]
 
 /-- A sufficient condition to prove that `f ⋆[L, μ] g` exists.
 We assume that the integrand has compact support and `g` is bounded on this support (note that
@@ -402,7 +402,7 @@ integrable on the support of the integrand, and that both functions are strongly
 
 This is a variant of `bdd_above.convolution_exists_at'` in an abelian group with a left-invariant
 measure. This allows us to state the boundedness and measurability of `g` in a more natural way. -/
-theorem BddAbove.convolutionExistsAt [HasMeasurableAdd₂ G] [SigmaFinite μ] {x₀ : G} {s : Set G}
+theorem BddAbove.convolutionExistsAt [MeasurableAdd₂ G] [SigmaFinite μ] {x₀ : G} {s : Set G}
     (hbg : BddAbove ((fun i => ‖g i‖) '' ((fun t => x₀ - t) ⁻¹' s))) (hs : MeasurableSet s)
     (h2s : (support fun t => L (f t) (g (x₀ - t))) ⊆ s) (hf : IntegrableOn f s μ)
     (hmg : AeStronglyMeasurable g μ) : ConvolutionExistsAt f g x₀ L μ :=
@@ -416,7 +416,7 @@ theorem BddAbove.convolutionExistsAt [HasMeasurableAdd₂ G] [SigmaFinite μ] {x
       map_mono_of_ae_measurable restrict_le_self (measurable_const.sub measurable_id').AEMeasurable
 #align bdd_above.convolution_exists_at BddAbove.convolutionExistsAt
 
-variable {L} [HasMeasurableAdd G] [IsNegInvariant μ]
+variable {L} [MeasurableAdd G] [IsNegInvariant μ]
 
 theorem convolutionExistsAt_flip :
     ConvolutionExistsAt g f x L.flip μ ↔ ConvolutionExistsAt f g x L μ := by
@@ -570,7 +570,7 @@ theorem convolution_mono_right_of_nonneg {f g g' : G → ℝ}
 
 variable (L)
 
-theorem convolution_congr [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [SigmaFinite μ]
+theorem convolution_congr [MeasurableAdd₂ G] [MeasurableNeg G] [SigmaFinite μ]
     [IsAddRightInvariant μ] (h1 : f =ᵐ[μ] f') (h2 : g =ᵐ[μ] g') : f ⋆[L, μ] g = f' ⋆[L, μ] g' :=
   by
   ext x
@@ -599,7 +599,7 @@ theorem support_convolution_subset_swap : support (f ⋆[L, μ] g) ⊆ support g
 
 section
 
-variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
+variable [MeasurableAdd₂ G] [MeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
 
 theorem MeasureTheory.Integrable.integrable_convolution (hf : Integrable f μ)
     (hg : Integrable g μ) : Integrable (f ⋆[L, μ] g) μ :=
@@ -841,9 +841,9 @@ variable [IsAddLeftInvariant μ] [IsNegInvariant μ]
 
 section Measurable
 
-variable [HasMeasurableNeg G]
+variable [MeasurableNeg G]
 
-variable [HasMeasurableAdd G]
+variable [MeasurableAdd G]
 
 variable (L)
 
@@ -1174,7 +1174,7 @@ variable [AddGroup G]
 
 variable [SigmaFinite μ] [SigmaFinite ν] [IsAddRightInvariant μ]
 
-theorem integral_convolution [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [NormedSpace ℝ E]
+theorem integral_convolution [MeasurableAdd₂ G] [MeasurableNeg G] [NormedSpace ℝ E]
     [NormedSpace ℝ E'] [CompleteSpace E] [CompleteSpace E'] (hf : Integrable f ν)
     (hg : Integrable g μ) : (∫ x, (f ⋆[L, ν] g) x ∂μ) = L (∫ x, f x ∂ν) (∫ x, g x ∂μ) :=
   by
@@ -1183,7 +1183,7 @@ theorem integral_convolution [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [Norme
   exact (L.flip (∫ x, g x ∂μ)).integral_comp_comm hf
 #align integral_convolution integral_convolution
 
-variable [HasMeasurableAdd₂ G] [IsAddRightInvariant ν] [HasMeasurableNeg G]
+variable [MeasurableAdd₂ G] [IsAddRightInvariant ν] [MeasurableNeg G]
 
 /-- Convolution is associative. This has a weak but inconvenient integrability condition.
 See also `convolution_assoc`. -/

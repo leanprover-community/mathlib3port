@@ -45,12 +45,12 @@ variable {G : Type _} [Group G] [MeasurableSpace G] [TopologicalSpace G] [Topolo
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/
 @[to_additive
       "Measurability of the action of the additive topological group `G` on the left-coset\n  space `G/Γ`."]
-instance QuotientGroup.hasMeasurableSmul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)] :
-    HasMeasurableSmul G (G ⧸ Γ)
+instance QuotientGroup.measurableSMul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)] :
+    MeasurableSMul G (G ⧸ Γ)
     where
   measurable_const_smul g := (continuous_const_smul g).Measurable
   measurable_smul_const x := (QuotientGroup.continuous_smul₁ x).Measurable
-#align quotient_group.has_measurable_smul QuotientGroup.hasMeasurableSmul
+#align quotient_group.has_measurable_smul QuotientGroup.measurableSMul
 #align quotient_add_group.has_measurable_vadd quotientAddGroup.has_measurable_vadd
 
 variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opposite 𝓕 μ)

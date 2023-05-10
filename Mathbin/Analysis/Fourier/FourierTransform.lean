@@ -98,8 +98,8 @@ theorem norm_fourierIntegral_le_integral_norm (e : Multiplicative 𝕜 →* 𝕊
 #align vector_fourier.norm_fourier_integral_le_integral_norm VectorFourier.norm_fourierIntegral_le_integral_norm
 
 /-- The Fourier integral converts right-translation into scalar multiplication by a phase factor.-/
-theorem fourierIntegral_comp_add_right [HasMeasurableAdd V] (e : Multiplicative 𝕜 →* 𝕊)
-    (μ : Measure V) [μ.IsAddRightInvariant] (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (v₀ : V) :
+theorem fourierIntegral_comp_add_right [MeasurableAdd V] (e : Multiplicative 𝕜 →* 𝕊) (μ : Measure V)
+    [μ.IsAddRightInvariant] (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (v₀ : V) :
     fourierIntegral e μ L (f ∘ fun v => v + v₀) = fun w => e[L v₀ w] • fourierIntegral e μ L f w :=
   by
   ext1 w
@@ -223,8 +223,8 @@ theorem norm_fourierIntegral_le_integral_norm (e : Multiplicative 𝕜 →* 𝕊
 #align fourier.norm_fourier_integral_le_integral_norm Fourier.norm_fourierIntegral_le_integral_norm
 
 /-- The Fourier transform converts right-translation into scalar multiplication by a phase factor.-/
-theorem fourierIntegral_comp_add_right [HasMeasurableAdd 𝕜] (e : Multiplicative 𝕜 →* 𝕊)
-    (μ : Measure 𝕜) [μ.IsAddRightInvariant] (f : 𝕜 → E) (v₀ : 𝕜) :
+theorem fourierIntegral_comp_add_right [MeasurableAdd 𝕜] (e : Multiplicative 𝕜 →* 𝕊) (μ : Measure 𝕜)
+    [μ.IsAddRightInvariant] (f : 𝕜 → E) (v₀ : 𝕜) :
     fourierIntegral e μ (f ∘ fun v => v + v₀) = fun w => e[v₀ * w] • fourierIntegral e μ f w :=
   VectorFourier.fourierIntegral_comp_add_right _ _ _ _ _
 #align fourier.fourier_integral_comp_add_right Fourier.fourierIntegral_comp_add_right

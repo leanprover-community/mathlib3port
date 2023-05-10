@@ -51,7 +51,7 @@ variable {E L : Type _} [MeasurableSpace E] {μ : Measure E} {F s : Set E}
 countable subgroup `L` of `E`, then there exists two distincts points `x, y ∈ L` such that `(x + s)`
 and `(y + s)` are not disjoint. -/
 theorem exists_pair_mem_lattice_not_disjoint_vadd [AddCommGroup L] [Countable L] [AddAction L E]
-    [MeasurableSpace L] [HasMeasurableVadd L E] [VaddInvariantMeasure L E μ]
+    [MeasurableSpace L] [MeasurableVAdd L E] [VaddInvariantMeasure L E μ]
     (fund : IsAddFundamentalDomain L F μ) (hS : NullMeasurableSet s μ) (h : μ F < μ s) :
     ∃ x y : L, x ≠ y ∧ ¬Disjoint (x +ᵥ s) (y +ᵥ s) :=
   by

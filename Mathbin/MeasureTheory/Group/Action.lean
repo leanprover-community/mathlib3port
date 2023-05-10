@@ -84,9 +84,9 @@ instance smul_nNReal [SmulInvariantMeasure M α μ] (c : ℝ≥0) : SmulInvarian
 
 end SmulInvariantMeasure
 
-section HasMeasurableSmul
+section MeasurableSMul
 
-variable {m : MeasurableSpace α} [MeasurableSpace M] [SMul M α] [HasMeasurableSmul M α] (c : M)
+variable {m : MeasurableSpace α} [MeasurableSpace M] [SMul M α] [MeasurableSMul M α] (c : M)
   (μ : Measure α) [SmulInvariantMeasure M α μ]
 
 @[simp, to_additive]
@@ -105,10 +105,10 @@ theorem map_smul : map ((· • ·) c) μ = μ :=
 #align measure_theory.map_smul MeasureTheory.map_smul
 #align measure_theory.map_vadd MeasureTheory.map_vadd
 
-end HasMeasurableSmul
+end MeasurableSMul
 
 variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpace G]
-  [HasMeasurableSmul G α] (c : G) (μ : Measure α)
+  [MeasurableSMul G α] (c : G) (μ : Measure α)
 
 /-- Equivalent definitions of a measure invariant under a multiplicative action of a group.
 
@@ -272,18 +272,18 @@ theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[�
 #align measure_theory.smul_ae_eq_self_of_mem_zpowers MeasureTheory.smul_ae_eq_self_of_mem_zpowers
 
 theorem vadd_ae_eq_self_of_mem_zmultiples {G : Type _} [MeasurableSpace G] [AddGroup G]
-    [AddAction G α] [VaddInvariantMeasure G α μ] [HasMeasurableVadd G α] {x y : G}
+    [AddAction G α] [VaddInvariantMeasure G α μ] [MeasurableVAdd G α] {x y : G}
     (hs : (x +ᵥ s : Set α) =ᵐ[μ] s) (hy : y ∈ AddSubgroup.zmultiples x) :
     (y +ᵥ s : Set α) =ᵐ[μ] s :=
   by
   letI : MeasurableSpace (Multiplicative G) := (by infer_instance : MeasurableSpace G)
   letI : smul_invariant_measure (Multiplicative G) α μ :=
     ⟨fun g => vadd_invariant_measure.measure_preimage_vadd μ (Multiplicative.toAdd g)⟩
-  letI : HasMeasurableSmul (Multiplicative G) α :=
+  letI : MeasurableSMul (Multiplicative G) α :=
     { measurable_const_smul := fun g => measurable_const_vadd (Multiplicative.toAdd g)
       measurable_smul_const := fun a =>
         @measurable_vadd_const (Multiplicative G) α (by infer_instance : VAdd G α) _ _
-          (by infer_instance : HasMeasurableVadd G α) a }
+          (by infer_instance : MeasurableVAdd G α) a }
   exact @smul_ae_eq_self_of_mem_zpowers (Multiplicative G) α _ _ _ _ _ _ _ _ _ _ hs hy
 #align measure_theory.vadd_ae_eq_self_of_mem_zmultiples MeasureTheory.vadd_ae_eq_self_of_mem_zmultiples
 

@@ -936,7 +936,7 @@ theorem IndepFun.indepFunCat_prod [ProbabilityMeasure μ] {ι : Type _} {β : ι
 
 @[to_additive]
 theorem IndepFun.mul [ProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : MeasurableSpace β}
-    [Mul β] [HasMeasurableMul₂ β] {f : ι → Ω → β} (hf_Indep : IndepFun (fun _ => m) f μ)
+    [Mul β] [MeasurableMul₂ β] {f : ι → Ω → β} (hf_Indep : IndepFun (fun _ => m) f μ)
     (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
     IndepFunCat (f i * f j) (f k) μ :=
   by
@@ -949,7 +949,7 @@ theorem IndepFun.mul [ProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : Me
 
 @[to_additive]
 theorem IndepFun.indepFunCat_finset_prod_of_not_mem [ProbabilityMeasure μ] {ι : Type _} {β : Type _}
-    {m : MeasurableSpace β} [CommMonoid β] [HasMeasurableMul₂ β] {f : ι → Ω → β}
+    {m : MeasurableSpace β} [CommMonoid β] [MeasurableMul₂ β] {f : ι → Ω → β}
     (hf_Indep : IndepFun (fun _ => m) f μ) (hf_meas : ∀ i, Measurable (f i)) {s : Finset ι} {i : ι}
     (hi : i ∉ s) : IndepFunCat (∏ j in s, f j) (f i) μ := by
   classical
@@ -978,7 +978,7 @@ theorem IndepFun.indepFunCat_finset_prod_of_not_mem [ProbabilityMeasure μ] {ι 
 
 @[to_additive]
 theorem IndepFun.indepFunCat_prod_range_succ [ProbabilityMeasure μ] {β : Type _}
-    {m : MeasurableSpace β} [CommMonoid β] [HasMeasurableMul₂ β] {f : ℕ → Ω → β}
+    {m : MeasurableSpace β} [CommMonoid β] [MeasurableMul₂ β] {f : ℕ → Ω → β}
     (hf_Indep : IndepFun (fun _ => m) f μ) (hf_meas : ∀ i, Measurable (f i)) (n : ℕ) :
     IndepFunCat (∏ j in Finset.range n, f j) (f n) μ :=
   hf_Indep.indepFunCat_finset_prod_of_not_mem hf_meas Finset.not_mem_range_self

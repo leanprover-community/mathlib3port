@@ -799,7 +799,7 @@ theorem measurableSet_stopping_time_le [TopologicalSpace ι] [SecondCountableTop
 
 theorem measurableSet_eq_stopping_time [AddGroup ι] [TopologicalSpace ι] [MeasurableSpace ι]
     [BorelSpace ι] [OrderTopology ι] [MeasurableSingletonClass ι] [SecondCountableTopology ι]
-    [HasMeasurableSub₂ ι] (hτ : IsStoppingTime f τ) (hπ : IsStoppingTime f π) :
+    [MeasurableSub₂ ι] (hτ : IsStoppingTime f τ) (hπ : IsStoppingTime f π) :
     measurable_set[hτ.MeasurableSpace] { ω | τ ω = π ω } :=
   by
   rw [hτ.measurable_set]

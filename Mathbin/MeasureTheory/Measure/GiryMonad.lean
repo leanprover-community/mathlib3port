@@ -62,7 +62,7 @@ theorem measurable_of_measurable_coe (f : β → Measure α)
       MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
 #align measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurable_of_measurable_coe
 
-instance {α : Type _} {m : MeasurableSpace α} : HasMeasurableAdd₂ (Measure α) :=
+instance {α : Type _} {m : MeasurableSpace α} : MeasurableAdd₂ (Measure α) :=
   by
   refine' ⟨measure.measurable_of_measurable_coe _ fun s hs => _⟩
   simp_rw [measure.coe_add, Pi.add_apply]

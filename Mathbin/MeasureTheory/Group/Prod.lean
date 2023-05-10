@@ -50,13 +50,13 @@ open Classical ENNReal Pointwise MeasureTheory
 
 variable (G : Type _) [MeasurableSpace G]
 
-variable [Group G] [HasMeasurableMul₂ G]
+variable [Group G] [MeasurableMul₂ G]
 
 variable (μ ν : Measure G) [SigmaFinite ν] [SigmaFinite μ] {s : Set G}
 
 /-- The map `(x, y) ↦ (x, xy)` as a `measurable_equiv`. -/
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a `measurable_equiv`."]
-protected def MeasurableEquiv.shearMulRight [HasMeasurableInv G] : G × G ≃ᵐ G × G :=
+protected def MeasurableEquiv.shearMulRight [MeasurableInv G] : G × G ≃ᵐ G × G :=
   {
     Equiv.prodShear (Equiv.refl _)
       Equiv.mulLeft with
@@ -68,7 +68,7 @@ protected def MeasurableEquiv.shearMulRight [HasMeasurableInv G] : G × G ≃ᵐ
 /-- The map `(x, y) ↦ (x, y / x)` as a `measurable_equiv` with as inverse `(x, y) ↦ (x, yx)` -/
 @[to_additive
       "The map `(x, y) ↦ (x, y - x)` as a `measurable_equiv` with as inverse `(x, y) ↦ (x, y + x)`."]
-protected def MeasurableEquiv.shearDivRight [HasMeasurableInv G] : G × G ≃ᵐ G × G :=
+protected def MeasurableEquiv.shearDivRight [MeasurableInv G] : G × G ≃ᵐ G × G :=
   {
     Equiv.prodShear (Equiv.refl _)
       Equiv.divRight with
@@ -126,7 +126,7 @@ theorem measurable_measure_mul_right (hs : MeasurableSet s) :
 #align measure_theory.measurable_measure_mul_right MeasureTheory.measurable_measure_mul_right
 #align measure_theory.measurable_measure_add_right MeasureTheory.measurable_measure_add_right
 
-variable [HasMeasurableInv G]
+variable [MeasurableInv G]
 
 /-- The map `(x, y) ↦ (x, x⁻¹y)` is measure-preserving.
 This is the function `S⁻¹` in [Halmos, §59],
@@ -415,7 +415,7 @@ theorem measurePreserving_mul_prod [IsMulRightInvariant μ] :
 #align measure_theory.measure_preserving_mul_prod MeasureTheory.measurePreserving_mul_prod
 #align measure_theory.measure_preserving_add_prod MeasureTheory.measurePreserving_add_prod
 
-variable [HasMeasurableInv G]
+variable [MeasurableInv G]
 
 /-- The map `(x, y) ↦ (x, y / x)` is measure-preserving. -/
 @[to_additive measure_preserving_prod_sub "The map `(x, y) ↦ (x, y - x)` is measure-preserving."]
@@ -459,7 +459,7 @@ end RightInvariant
 
 section QuasiMeasurePreserving
 
-variable [HasMeasurableInv G]
+variable [MeasurableInv G]
 
 @[to_additive]
 theorem quasiMeasurePreserving_inv_of_right_invariant [IsMulRightInvariant μ] :

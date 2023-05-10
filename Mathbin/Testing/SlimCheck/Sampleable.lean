@@ -271,9 +271,14 @@ def Nat.shrink' (k : ℕ) :
       nat.shrink' m h₀ (⟨k - m, h₁⟩::ls)
 #align slim_check.nat.shrink' SlimCheck.Nat.shrink'
 
+/- warning: slim_check.nat.shrink -> SlimCheck.Nat.shrink is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), List.{0} (Subtype.{1} Nat (fun (m : Nat) => WellFoundedRelation.R.{1} Nat (hasWellFoundedOfHasSizeof.{1} Nat Nat.hasSizeof) m n))
+but is expected to have type
+  Nat -> (List.{0} Nat)
+Case conversion may be inaccurate. Consider using '#align slim_check.nat.shrink SlimCheck.Nat.shrinkₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print SlimCheck.Nat.shrink /-
 /-- `nat.shrink n` creates a list of smaller natural numbers by
 successively dividing by 2 and subtracting the difference from
 `n`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
@@ -286,7 +291,6 @@ def Nat.shrink (n : ℕ) : List { m : ℕ // WellFoundedRelation.R m n } :=
     ⟨n / 11, this _ (by norm_num)⟩::⟨n / 3, this _ (by norm_num)⟩::Nat.shrink' n n le_rfl []
   else []
 #align slim_check.nat.shrink SlimCheck.Nat.shrink
--/
 
 open Gen
 

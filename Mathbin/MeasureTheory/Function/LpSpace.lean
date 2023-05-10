@@ -1271,7 +1271,7 @@ theorem Memℒp.memℒp_of_exponent_le {p q : ℝ≥0∞} [FiniteMeasure μ] {f 
   exact snorm'_lt_top_of_snorm'_lt_top_of_exponent_le hfq_m hfq_lt_top (le_of_lt hp_pos) hpq_real
 #align measure_theory.mem_ℒp.mem_ℒp_of_exponent_le MeasureTheory.Memℒp.memℒp_of_exponent_le
 
-section HasMeasurableAdd
+section MeasurableAdd
 
 -- variable [has_measurable_add₂ E]
 theorem snorm'_sum_le {ι} {f : ι → α → E} {s : Finset ι}
@@ -1319,7 +1319,7 @@ theorem memℒp_finset_sum' {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀
   simp
 #align measure_theory.mem_ℒp_finset_sum' MeasureTheory.memℒp_finset_sum'
 
-end HasMeasurableAdd
+end MeasurableAdd
 
 section NormedSpace
 
@@ -2965,7 +2965,7 @@ private theorem lintegral_rpow_tsum_coe_nnnorm_sub_le_tsum {f : ℕ → α → E
   refine' (lintegral_liminf_le' _).trans _
   ·
     exact fun n =>
-      (Finset.aEMeasurable_sum (Finset.range (n + 1)) fun i _ =>
+      (Finset.aemeasurable_sum (Finset.range (n + 1)) fun i _ =>
             ((hf (i + 1)).sub (hf i)).ennnorm).pow_const
         _
   · exact liminf_le_of_frequently_le' (frequently_of_forall h)
